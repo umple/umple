@@ -19,23 +19,28 @@
 package cruise.umple.core;
 
 public class GenerationArgumentDescriptor{
-	private String id;
-	private Object value;
+	private String fId;
+	private Object fValue;
 	
 	public static GenerationArgumentDescriptor arg(String id, Object value){
 		return new GenerationArgumentDescriptor(id, value);
 	}
 	
 	private GenerationArgumentDescriptor(String id, Object value) {
-		this.id= id;
-		this.value= value;
+		this.fId= id;
+		this.fValue= value;
 	}
 	
 	public String id(){
-		return this.id;
+		return this.fId;
 	}
 	
 	public Object value(){
-		return this.value;
+		return this.fValue;
+	}
+	
+	@Override
+	public String toString() {
+		return this.id()+ CommonConstants.UNDERSCORE+ this.value();
 	}
 }

@@ -73,7 +73,7 @@ public class CppAttributeGetterImpl extends CppGenerationTemplate{
   protected final String TEXT_37 = "\tif(index<0){" + NL + "\t\treturn wasRemoved;" + NL + "\t}" + NL + "\t" + NL + "\tint size= this->";
   protected final String TEXT_38 = "();" + NL + "\tif(index> size){" + NL + "\t\treturn false;" + NL + "\t}" + NL + "\t";
   protected final String TEXT_39 = NL + "\twasRemoved= size== this->";
-  protected final String TEXT_40 = "()-1;";
+  protected final String TEXT_40 = "()+1;";
   protected final String TEXT_41 = NL;
   protected final String TEXT_42 = "\tint indexOf_";
   protected final String TEXT_43 = "= IndexOf(this->";
@@ -96,7 +96,7 @@ public class CppAttributeGetterImpl extends CppGenerationTemplate{
   protected final String TEXT_60 = "->";
   protected final String TEXT_61 = "(NULL);";
   protected final String TEXT_62 = NL + "}";
-  protected final String TEXT_63 = "\t" + NL + "\t\tthis->";
+  protected final String TEXT_63 = "\t" + NL + "\tthis->";
   protected final String TEXT_64 = "= NULL;";
   protected final String TEXT_65 = NL + "if(this->";
   protected final String TEXT_66 = "!= NULL){" + NL + "\t";
@@ -121,49 +121,59 @@ public class CppAttributeGetterImpl extends CppGenerationTemplate{
   protected final String TEXT_85 = "\t" + NL + "if(this->";
   protected final String TEXT_86 = "!= NULL){" + NL + "\tthis->";
   protected final String TEXT_87 = "->deleteAssociatedObjects();" + NL + "}";
-  protected final String TEXT_88 = NL + "for(unsigned int index=0; index<this->";
-  protected final String TEXT_89 = "->size();index++){";
-  protected final String TEXT_90 = NL + "\ta";
-  protected final String TEXT_91 = "->";
-  protected final String TEXT_92 = "(NULL);" + NL + "}";
-  protected final String TEXT_93 = NL;
-  protected final String TEXT_94 = NL;
-  protected final String TEXT_95 = NL + "this->";
-  protected final String TEXT_96 = "->clear();" + NL + "for(unsigned int index=0; index<";
-  protected final String TEXT_97 = "->size();index++){";
-  protected final String TEXT_98 = NL + "\ttemp->";
-  protected final String TEXT_99 = "(this);" + NL + "}";
-  protected final String TEXT_100 = NL;
-  protected final String TEXT_101 = NL;
-  protected final String TEXT_102 = NL + "this->";
-  protected final String TEXT_103 = "->clear();" + NL + "for(unsigned int index=0; index<";
-  protected final String TEXT_104 = "->size();index++){";
-  protected final String TEXT_105 = NL + "\tif(current";
-  protected final String TEXT_106 = "->";
-  protected final String TEXT_107 = "()<= current";
-  protected final String TEXT_108 = "->";
-  protected final String TEXT_109 = "()){" + NL + "\t\tcurrent";
-  protected final String TEXT_110 = "->deleteAssociatedObjects();" + NL + "\t}else{" + NL + "\t\tcurrent";
-  protected final String TEXT_111 = "->";
-  protected final String TEXT_112 = "(this);" + NL + "\t}" + NL + "}";
-  protected final String TEXT_113 = NL;
-  protected final String TEXT_114 = NL + "for(unsigned int index=0; index<this->";
-  protected final String TEXT_115 = "->size();index++){";
-  protected final String TEXT_116 = NL + "\ta";
-  protected final String TEXT_117 = "->deleteAssociatedObjects();" + NL + "}";
-  protected final String TEXT_118 = NL;
-  protected final String TEXT_119 = NL + "for(unsigned int index=0; index<this->";
-  protected final String TEXT_120 = "->size();index++){";
-  protected final String TEXT_121 = NL + "\t";
-  protected final String TEXT_122 = "(current, NULL);" + NL + "}" + NL + "this->";
-  protected final String TEXT_123 = "->clear();";
-  protected final String TEXT_124 = NL;
-  protected final String TEXT_125 = "this->";
-  protected final String TEXT_126 = "(";
-  protected final String TEXT_127 = ");";
-  protected final String TEXT_128 = "this->";
-  protected final String TEXT_129 = "(";
-  protected final String TEXT_130 = ", index);";
+  protected final String TEXT_88 = NL + "int ";
+  protected final String TEXT_89 = "_length= this->";
+  protected final String TEXT_90 = "->size();" + NL + "for(unsigned int index=0; index<";
+  protected final String TEXT_91 = "_length;index++){";
+  protected final String TEXT_92 = NL + "\ta";
+  protected final String TEXT_93 = "->";
+  protected final String TEXT_94 = "(NULL);" + NL + "}";
+  protected final String TEXT_95 = NL;
+  protected final String TEXT_96 = NL;
+  protected final String TEXT_97 = NL + "this->";
+  protected final String TEXT_98 = "->clear();" + NL + "int ";
+  protected final String TEXT_99 = "_length= ";
+  protected final String TEXT_100 = "->size();" + NL + "for(unsigned int index=0; index<";
+  protected final String TEXT_101 = "_length;index++){";
+  protected final String TEXT_102 = NL + "\ttemp->";
+  protected final String TEXT_103 = "(this);" + NL + "}";
+  protected final String TEXT_104 = NL;
+  protected final String TEXT_105 = NL;
+  protected final String TEXT_106 = NL + "this->";
+  protected final String TEXT_107 = "->clear();" + NL + "int ";
+  protected final String TEXT_108 = "_length= ";
+  protected final String TEXT_109 = "->size();" + NL + "for(unsigned int index=0; index<";
+  protected final String TEXT_110 = "_length;index++){";
+  protected final String TEXT_111 = NL + "\tif(current";
+  protected final String TEXT_112 = "->";
+  protected final String TEXT_113 = "()<= current";
+  protected final String TEXT_114 = "->";
+  protected final String TEXT_115 = "()){" + NL + "\t\tcurrent";
+  protected final String TEXT_116 = "->deleteAssociatedObjects();" + NL + "\t}else{" + NL + "\t\tcurrent";
+  protected final String TEXT_117 = "->";
+  protected final String TEXT_118 = "(this);" + NL + "\t}" + NL + "}";
+  protected final String TEXT_119 = NL;
+  protected final String TEXT_120 = NL + "int ";
+  protected final String TEXT_121 = "_length= this->";
+  protected final String TEXT_122 = "->size();" + NL + "for(unsigned int index=0; ";
+  protected final String TEXT_123 = "_length;index++){";
+  protected final String TEXT_124 = NL + "\ta";
+  protected final String TEXT_125 = "->deleteAssociatedObjects();" + NL + "}";
+  protected final String TEXT_126 = NL;
+  protected final String TEXT_127 = NL + "int ";
+  protected final String TEXT_128 = "_length= this->";
+  protected final String TEXT_129 = "->size();" + NL + "for(unsigned int index=0; index<";
+  protected final String TEXT_130 = "_length;index++){";
+  protected final String TEXT_131 = NL + "\t";
+  protected final String TEXT_132 = "(current, NULL);" + NL + "}" + NL + "this->";
+  protected final String TEXT_133 = "->clear();";
+  protected final String TEXT_134 = NL;
+  protected final String TEXT_135 = "this->";
+  protected final String TEXT_136 = "(";
+  protected final String TEXT_137 = ");";
+  protected final String TEXT_138 = "this->";
+  protected final String TEXT_139 = "(";
+  protected final String TEXT_140 = ", index);";
 
   /**
   * @param argument
@@ -327,7 +337,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String elementName;
 	@GenerationProcedureParameter(id = IModelingConstants.MODELING_DEFAULT_SINGLE_PARAMETER_NAME) String paramName;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherEndTypeName;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName;
 	@GenerationElementParameter(id = IModelingElementDefinitions.LOWER_BOUND) int lowerBound;
 	
@@ -583,8 +593,8 @@ public void postExecute(){
 
 getRegistry().define(ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION, new GenerationProcdure(this) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	@GenerationArgument boolean check;
 		
@@ -660,7 +670,7 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationArgument boolean nullify;
 	
 	String setterMethodName;
@@ -712,8 +722,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	String existingVariableName;
 		
 @Override
@@ -754,8 +764,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 		
 	String numberOfOtherEndMethodName;
 	String minimumNumberOtherEndMethodName;
@@ -817,7 +827,7 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 		
 @Override
 public void execute() {
@@ -843,8 +853,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	String setterMethodName;
 	
@@ -855,12 +865,16 @@ public void execute() {
     stringBuffer.append(TEXT_88);
     stringBuffer.append(name);
     stringBuffer.append(TEXT_89);
-    getterCall(typeName + "*" + " a" + typeName, 1);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_90);
-    stringBuffer.append(typeName);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_91);
-    stringBuffer.append(setterMethodName);
+    getterCall(typeName + "*" + " a" + typeName, 1);
     stringBuffer.append(TEXT_92);
+    stringBuffer.append(typeName);
+    stringBuffer.append(TEXT_93);
+    stringBuffer.append(setterMethodName);
+    stringBuffer.append(TEXT_94);
     
 
 }
@@ -872,10 +886,10 @@ String getterCall= getRegistry().generationPointString(element, ICppDefinitions.
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_VARIABLE_ARGUMENT, thisCall),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_TYPE_ARGUMENT, typeName),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_ASSIGNEE_ARGUMENT, assignee),
-		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "index"));
+		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "0"));
 
 
-    stringBuffer.append(TEXT_93);
+    stringBuffer.append(TEXT_95);
     stringBuffer.append(StringUtil.indent(getterCall, indent));
     
 
@@ -898,8 +912,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 	String nameAsCopy, removeMethodName, copyCall;
 	
@@ -907,17 +921,21 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_94);
-    stringBuffer.append(copyCall);
-    stringBuffer.append(TEXT_95);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_96);
-    stringBuffer.append(nameAsCopy);
+    stringBuffer.append(copyCall);
     stringBuffer.append(TEXT_97);
-    getterCall(typeName + "*" + " temp", 1);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_98);
-    stringBuffer.append(removeMethodName);
+    stringBuffer.append(nameAsCopy);
     stringBuffer.append(TEXT_99);
+    stringBuffer.append(nameAsCopy);
+    stringBuffer.append(TEXT_100);
+    stringBuffer.append(nameAsCopy);
+    stringBuffer.append(TEXT_101);
+    getterCall(typeName + "*" + " temp", 1);
+    stringBuffer.append(TEXT_102);
+    stringBuffer.append(removeMethodName);
+    stringBuffer.append(TEXT_103);
     
 
 }
@@ -928,10 +946,10 @@ String getterCall= getRegistry().generationPointString(element, ICppDefinitions.
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_VARIABLE_ARGUMENT, nameAsCopy),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_TYPE_ARGUMENT, typeName),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_ASSIGNEE_ARGUMENT, assignee),
-		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "index"));
+		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "0"));
 
 
-    stringBuffer.append(TEXT_100);
+    stringBuffer.append(TEXT_104);
     stringBuffer.append(StringUtil.indent(getterCall, indent));
     
 
@@ -961,8 +979,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 		
 	String numberOfOtherEndMethodName, minimumNumberOtherEndMethodName, removeMethodName, nameAsCopy, copyCall;
 		
@@ -970,29 +988,33 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_101);
-    stringBuffer.append(copyCall);
-    stringBuffer.append(TEXT_102);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_103);
-    stringBuffer.append(nameAsCopy);
-    stringBuffer.append(TEXT_104);
-    getterCall(typeName + "*" + " current" + typeName, 1);
     stringBuffer.append(TEXT_105);
-    stringBuffer.append(typeName);
+    stringBuffer.append(copyCall);
     stringBuffer.append(TEXT_106);
-    stringBuffer.append(numberOfOtherEndMethodName);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_107);
-    stringBuffer.append(typeName);
+    stringBuffer.append(nameAsCopy);
     stringBuffer.append(TEXT_108);
-    stringBuffer.append(minimumNumberOtherEndMethodName);
+    stringBuffer.append(nameAsCopy);
     stringBuffer.append(TEXT_109);
-    stringBuffer.append(typeName);
+    stringBuffer.append(nameAsCopy);
     stringBuffer.append(TEXT_110);
-    stringBuffer.append(typeName);
+    getterCall(typeName + "*" + " current" + typeName, 1);
     stringBuffer.append(TEXT_111);
-    stringBuffer.append(removeMethodName);
+    stringBuffer.append(typeName);
     stringBuffer.append(TEXT_112);
+    stringBuffer.append(numberOfOtherEndMethodName);
+    stringBuffer.append(TEXT_113);
+    stringBuffer.append(typeName);
+    stringBuffer.append(TEXT_114);
+    stringBuffer.append(minimumNumberOtherEndMethodName);
+    stringBuffer.append(TEXT_115);
+    stringBuffer.append(typeName);
+    stringBuffer.append(TEXT_116);
+    stringBuffer.append(typeName);
+    stringBuffer.append(TEXT_117);
+    stringBuffer.append(removeMethodName);
+    stringBuffer.append(TEXT_118);
     
 
 }
@@ -1004,10 +1026,10 @@ String getterCall= getRegistry().generationPointString(element, ICppDefinitions.
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_VARIABLE_ARGUMENT, thisCall),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_TYPE_ARGUMENT, typeName),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_ASSIGNEE_ARGUMENT, assignee),
-		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "index"));
+		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "0"));
 
 
-    stringBuffer.append(TEXT_113);
+    stringBuffer.append(TEXT_119);
     stringBuffer.append(StringUtil.indent(getterCall, indent));
     
 
@@ -1043,19 +1065,23 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_114);
+    stringBuffer.append(TEXT_120);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_115);
+    stringBuffer.append(TEXT_121);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_122);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_123);
     getterCall(typeName + "*" + " a" + typeName, 1);
-    stringBuffer.append(TEXT_116);
+    stringBuffer.append(TEXT_124);
     stringBuffer.append(typeName);
-    stringBuffer.append(TEXT_117);
+    stringBuffer.append(TEXT_125);
     
 
 }
@@ -1067,10 +1093,10 @@ String getterCall= getRegistry().generationPointString(element, ICppDefinitions.
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_VARIABLE_ARGUMENT, thisCall),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_TYPE_ARGUMENT, typeName),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_ASSIGNEE_ARGUMENT, assignee),
-		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "index"));
+		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "0"));
 
 
-    stringBuffer.append(TEXT_118);
+    stringBuffer.append(TEXT_126);
     stringBuffer.append(StringUtil.indent(getterCall, indent));
     
 
@@ -1087,8 +1113,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
-	@GenerationElementParameter(id = NAME) String name;
-	@GenerationElementParameter(id = TYPE_NAME) String typeName;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherEndTypeName;
 	
 	String friendDeleteMethod;
@@ -1096,15 +1122,19 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_119);
+    stringBuffer.append(TEXT_127);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_120);
+    stringBuffer.append(TEXT_128);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_129);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_130);
     getterCall(typeName + "*" + " current", 1);
-    stringBuffer.append(TEXT_121);
+    stringBuffer.append(TEXT_131);
     stringBuffer.append(friendDeleteMethod);
-    stringBuffer.append(TEXT_122);
+    stringBuffer.append(TEXT_132);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_123);
+    stringBuffer.append(TEXT_133);
     
 
 }
@@ -1116,10 +1146,10 @@ String getterCall= getRegistry().generationPointString(element, ICppDefinitions.
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_VARIABLE_ARGUMENT, thisCall),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_TYPE_ARGUMENT, typeName),
 		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_ASSIGNEE_ARGUMENT, assignee),
-		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "index"));
+		GenerationArgumentDescriptor.arg(ICppDefinitions.GETTER_BY_INDEX_INDEX_VARIABLE_ARGUMENT, "0"));
 
 
-    stringBuffer.append(TEXT_124);
+    stringBuffer.append(TEXT_134);
     stringBuffer.append(StringUtil.indent(getterCall, indent));
     
 
@@ -1151,19 +1181,19 @@ public void execute() {
 
 if(filterAddAt){
 	
-    stringBuffer.append(TEXT_125);
+    stringBuffer.append(TEXT_135);
     stringBuffer.append(addMethodName);
-    stringBuffer.append(TEXT_126);
+    stringBuffer.append(TEXT_136);
     stringBuffer.append(paramName);
-    stringBuffer.append(TEXT_127);
+    stringBuffer.append(TEXT_137);
     	
 }else{
 	
-    stringBuffer.append(TEXT_128);
+    stringBuffer.append(TEXT_138);
     stringBuffer.append(addAtMethodName);
-    stringBuffer.append(TEXT_129);
+    stringBuffer.append(TEXT_139);
     stringBuffer.append(paramName);
-    stringBuffer.append(TEXT_130);
+    stringBuffer.append(TEXT_140);
     
 }
 

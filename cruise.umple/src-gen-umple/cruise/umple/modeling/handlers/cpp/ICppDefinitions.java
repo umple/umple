@@ -24,9 +24,10 @@ public interface ICppDefinitions {
 	public final static String DEEP_COPY_METHOD_DECLARATION= "cpp.deepCopy.method.declaration"; //$NON-NLS-1$
 	public final static String DEEP_COPY_METHOD_IMPLEMENTATION= "cpp.deepCopy.method.implementation"; //$NON-NLS-1$
 	
-	public final static String ASSIGNMENT_OPERATOR_IMPLEMENTATION= "cpp.assignment.operator.implementation"; //$NON-NLS-1$
-	
 	public final static String METHOD_CONST= "method.const"; //$NON-NLS-1$
+	public final static String METHOD_STATIC= "method.static"; //$NON-NLS-1$
+	public final static String METHOD_INLINE= "method.inline"; //$NON-NLS-1$
+	public final static String METHOD_INIT= "method.init"; //$NON-NLS-1$
 	public final static String METHOD_VIRTUAL= "method.virtual"; //$NON-NLS-1$
 	public final static String METHOD_PURE= "method.pure"; //$NON-NLS-1$
 	
@@ -39,8 +40,8 @@ public interface ICppDefinitions {
 	public final static String HASH_CDOE_DECLARATION= "modeling.hash.code.declaration"; //$NON-NLS-1$
 	public final static String HASH_CDOE_IMPLEMENTATION= "modeling.hash.code.implementation"; //$NON-NLS-1$
 	
-	public String PRE_PROCESSORS_INCUDES_DEFINITIONS="cpp.pre.processors.includes.definition";  //$NON-NLS-1$
-	public String GNUC_DEFINITION="cpp.gnuc.definition";  //$NON-NLS-1$
+	public final static String PRE_PROCESSORS_INCUDES_DEFINITIONS="cpp.pre.processors.includes.definition";  //$NON-NLS-1$
+	public final static String GNUC_DEFINITION="cpp.gnuc.definition";  //$NON-NLS-1$
 	
 	public final static String IS_POINTER_TYPE= "is.pointer.type.decision.point";  //$NON-NLS-1$
 	public final static String IS_CONST_TYPE_PARAMETER= "is.const.parameter";  //$NON-NLS-1$
@@ -84,8 +85,6 @@ public interface ICppDefinitions {
 	
 	public final static String HEADER_CONTENTS= "cpp.header.contents"; //$NON-NLS-1$
 	public final static String BODY_CONTENTS= "cpp.body.contents"; //$NON-NLS-1$
-	
-	public final static String PRE_CLASS_DEFINED_OPERATORS="cpp.definition.class.predefined.operators";  //$NON-NLS-1$
 	
 	public final static String ADD_IMPLEMENTATION= "cpp.add.implementation"; //$NON-NLS-1$
 	
@@ -147,7 +146,7 @@ public interface ICppDefinitions {
 	
 	public final static String ATTRIBUTE_DISABLE_DELETE= "cpp.attribute.disable.delete";  //$NON-NLS-1$
 	public final static String ATTRIBUTE_EQUALITY= "cpp.attribute.equality";  //$NON-NLS-1$
-	public final static String ATTRIBUTE_EQUALITY_DECLARATION= "cpp.attribute.equality.declaration";  //$NON-NLS-1$
+	public final static String ATTRIBUTE_EQUALITY_ENTRY= "cpp.attribute.equality.entry";  //$NON-NLS-1$
 	public final static String ATTRIBUTES_DECLARATION= "cpp.attributes.declaration";  //$NON-NLS-1$
 	public final static String HELPER_ATTRIBUTES_DECLARATION= "cpp.helper.attributes.declaration";  //$NON-NLS-1$
 	
@@ -213,5 +212,44 @@ public interface ICppDefinitions {
 	public final static String STRUCT_INCOMPLETE_DECLARATION= "cpp.struct.incomplete.declaration"; //$NON-NLS-1$
 	public final static String INCOMPLETE_DECLARATIONS= "cpp.class.inline.declarations"; //$NON-NLS-1$
 	
+	public final static String PREDEFINED_TEMPLATES_FILE= "cpp.predefined.templates.definitions.file"; //$NON-NLS-1$
+	public final static String PREDEFINED_TEMPLATES_DEFINITIONS= "cpp.predefined.templates.definitions"; //$NON-NLS-1$
+	
+	public final static String FULL_PATH_ARGUMENT= "cpp.full.path.argument"; //$NON-NLS-1$
+	
+	public final static String TEMPLATES_DEFINITIONS= "cpp.templates.definitions"; //$NON-NLS-1$
 	public final static String THREAD_IMPLEMENTATION= "cpp.thread.implementation"; //$NON-NLS-1$
+	
+	public final static String PREDEFINED_OPERATORS_REGISTER= "cpp.predefined.operators.register"; //$NON-NLS-1$
+	public final static String PREDEFINED_OPERATORS_DECLARATION= "cpp.predefined.operators.declaration"; //$NON-NLS-1$
+	public final static String PREDEFINED_OPERATORS_IMPLEMENTATION= "cpp.predefined.operators.implementation"; //$NON-NLS-1$
+	
+	public final static String ASSIGNMENT_OPERATOR_DECLARATION= "cpp.assignment.operator.declaration"; //$NON-NLS-1$
+	public final static String ASSIGNMENT_OPERATOR_IMPLEMENTATION= "cpp.assignment.operator.implementation"; //$NON-NLS-1$
+	
+	public final static String ATTRIBUTE_EQUALITY_OPERATOR_DECLARATION= "cpp.attribute.operator.equality.declaration";  //$NON-NLS-1$
+	public final static String ATTRIBUTE_EQUALITY_OPERATOR_IMPLEMENTATION= "cpp.attribute.operator.equality.implementation";  //$NON-NLS-1$
+	
+	public final static String PRE_PROCESSING_DEFINITION_NAME= "cpp.pre.processing.name"; //$NON-NLS-1$
+	public final static String PREDEFINED_PACKAGE_CONTENTS= "cpp.package.prdefined.contents";   //$NON-NLS-1$
+	
+	public final static String POINTER_STRING= "cpp.pointer.string"; //$NON-NLS-1$
+	public final static String REFERENCE_STRING= "cpp.reference.string"; //$NON-NLS-1$
+	
+	public final static String INCLUDES= "class.header.includes"; //$NON-NLS-1$
+	public final static String BODY_INCLUDES= "class.body.includes"; //$NON-NLS-1$
+	
+	public final static String GLOBAL_DEFINITIONS= "package.definitions"; //$NON-NLS-1$
+	public final static String PACKAGE_INCLUDES= "package.header.includes"; //$NON-NLS-1$
+	
+	public final static String CONSTRUCTOR_IMPLEMENATION= "class.header.constructor.impl"; //$NON-NLS-1$
+	public final static String HEADER_INLINE_FUNCTION_CONTENTS= "class.header.inline.function.contents"; //$NON-NLS-1$
+	
+	public final static String FRIEND_SETTER_DECLARATION= "cpp.friend.setter.declaration";	 //$NON-NLS-1$
+	public final static String FRIEND_SETTER_IMPLEMENTATION= "cpp.friend.setter.implementation";	 //$NON-NLS-1$
+	
+	public final static String CONSTRUCTOR_PARAMETERS_LIST= "cpp.constructor.parameters.list";	 //$NON-NLS-1$
+	public final static String CONSTRUCTOR_ALL_PARAMETERS_LIST= "cpp.constructor.all.parameters.list";	 //$NON-NLS-1$
+	
+	public final static String MAIN_CONTENTS= "cpp.main.contents";	 //$NON-NLS-1$
 }

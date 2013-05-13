@@ -41,6 +41,7 @@ public class GenerationTemplateDelegator implements IGenerationTemplateRegistry{
 		this.fRegistry= registry;
 	}
 
+	@Override
 	public void define(IGenerationTemplateRegistry generationTemplateRegistry, String id, GenerationCallback callback){
 		List<GenerationCallback> list = this.invocations.get(id);
 		if(list== null){

@@ -22,18 +22,24 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import cruise.umple.core.GenerationCallback.GenerationBaseElement;
-import cruise.umple.core.CommonConstants;
-import cruise.umple.core.GenerationValueAnnotation;
-import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.compiler.Action;
 import cruise.umple.compiler.Activity;
 import cruise.umple.compiler.Event;
 import cruise.umple.compiler.Guard;
+import cruise.umple.compiler.Position;
 import cruise.umple.compiler.State;
 import cruise.umple.compiler.StateMachine;
 import cruise.umple.compiler.Transition;
 import cruise.umple.compiler.UmpleClass;
+import cruise.umple.compiler.UmpleModel;
+import cruise.umple.core.CommonConstants;
+import cruise.umple.core.GenerationCallback.GenerationBaseElement;
+import cruise.umple.core.GenerationCallback.GenerationElementParameter;
+import cruise.umple.core.GenerationCallback.GenerationRegistry;
+import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.GenerationValueAnnotation;
+import cruise.umple.cpp.util.UmpleCPPGenerationUtil;
+import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.cpp.ICppStatemachinesDefinitions;
 
 public class UmpleStatemachineGenerationPolicy{
@@ -140,17 +146,25 @@ public class UmpleStatemachineGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.TRANSITION_EFFECT_CODE_BODY)
-	public static String getTransitionEffectCodeBody(@GenerationBaseElement Transition element, String language){
+	public static String getTransitionEffectCodeBody(@GenerationBaseElement Transition element,
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			String language){
 		Action action = element.getAction();
 		if(action== null){
 			return CommonConstants.BLANK;
 		}
 		String code = action.getCodeblock().getCode(language);
-		if(code!= null&& !code.isEmpty()){
-			return code;
+		if(code== null|| code.isEmpty()){
+			code = action.getActionCode();
 		}
-		String actionCode = action.getActionCode();
-		return actionCode!= null?actionCode: CommonConstants.BLANK;
+		
+		if(code== null|| code.isEmpty()){
+			return CommonConstants.BLANK;
+		}
+		
+		code = addLineNumbersInformation(generationValueGetter, language,  element.getFromState().getStateMachine(), action.getPosition(), code);
+		
+		return code;
 	}
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.TRANSITION_GUARD_CODE_BODY)
@@ -161,16 +175,39 @@ public class UmpleStatemachineGenerationPolicy{
 		}
 		
 		String code = guard.getCodeblock().getCode(language);
-		if(code!= null&& !code.isEmpty()){
-			return code;
+		if(code== null|| code.isEmpty()){
+			String condition = guard.getCondition();
+			code= condition!= null?condition: CommonConstants.BLANK;
 		}
 		
-		String condition = guard.getCondition();
-		return condition!= null?condition: CommonConstants.BLANK;
+		if(code== null|| code.isEmpty()){
+			return CommonConstants.BLANK;
+		}
+		
+		return code;
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.LINE_NUMBERS)
+	public static List<String> getLineNumbers(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Transition element,
+			@GenerationElementParameter(id = ICppStatemachinesDefinitions.TRANSITION_GUARD_CODE_BODY) String guardBody,
+			String language) {
+		
+		if(guardBody== null|| guardBody.isEmpty()){
+			return null;
+		}
+		
+		Guard guard = element.getGuard();
+		if(guard== null){
+			return null;
+		}
+		
+		String lineInformation = addLineNumbersInformation(generationValueGetter, language,  element.getFromState().getStateMachine(), guard.getPosition());
+		return Arrays.asList(new String[]{lineInformation});
 	}
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY)
-	public static String getStateDoActivityCode(@GenerationBaseElement State element, String language){
+	public static String getStateDoActivityCode(@GenerationBaseElement State element, 
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,String language){
 		Activity activity = element.getActivity();
 		if(activity== null){
 			return CommonConstants.BLANK;
@@ -182,35 +219,99 @@ public class UmpleStatemachineGenerationPolicy{
 		}
 		
 		String activityCode = activity.getActivityCode();
+		activityCode = addLineNumbersInformation(generationValueGetter, language,  element.getStateMachine(), activity.getPosition(), activityCode);
+		
 		return activityCode;
 	}
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_ENTRY_CODE_BODY)
-	public static String getStateEntryCode(@GenerationBaseElement State element, String language){
-		for(Action action: element.getActions()){
-			if(action.getActionType().equals(ENTRY)){
-				String code = action.getCodeblock().getCode(language);
-				if(code!= null&& !code.isEmpty()){
-					return code;
-				}
-				return action.getActionCode();
-			}
-		}
-		return CommonConstants.BLANK;
+	public static String getStateEntryCode(@GenerationBaseElement State element,
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, String language){
+		return getStateActionCode(element, generationValueGetter, language, ENTRY);
+	}
+
+	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_EXIT_CODE_BODY)
+	public static String getStateExitCode(@GenerationBaseElement State element, @GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			String language){
+		return getStateActionCode(element, generationValueGetter, language, EXIT);
 	}
 	
-	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_EXIT_CODE_BODY)
-	public static String getStateExitCode(@GenerationBaseElement State element, String language){
+	private static String getStateActionCode(State element,	GenerationPolicyRegistry generationValueGetter, String language, String actionID) {
+		String entries= CommonConstants.BLANK;
 		for(Action action: element.getActions()){
-			if(action.getActionType().equals(EXIT)){
+			if(actionID.equals(action.getActionType())){
 				String code = action.getCodeblock().getCode(language);
-				if(code!= null&& !code.isEmpty()){
-					return code;
+				
+				String actionCode = getActionCode(action, code);
+				actionCode = addLineNumbersInformation(generationValueGetter, language,  element.getStateMachine(), action.getPosition(), actionCode);
+				
+				if(!entries.isEmpty()){
+					entries= entries+ CommonConstants.NEW_LINE;
 				}
-				return action.getActionCode();
+				entries= entries+ actionCode;
 			}
 		}
-		return CommonConstants.BLANK;
+		return entries;
+	}
+	
+	private static String getPositionString(String language,
+			UmpleClass umpleClass, UmpleModel modelPackage, Position position) {
+		String positionString= CommonConstants.BLANK;
+		if(modelPackage!= null){
+			List<String> positions = UmpleCPPGenerationUtil.getPositions(Arrays.asList(new Position[]{position}), 
+					language, umpleClass, modelPackage);
+			positionString = positions.get(0);
+		}
+		return positionString;
+	}
+
+	private static String getActionCode(Action action, String code) {
+		if(code!= null&& !code.isEmpty()){
+			return code;
+		}
+		return action.getActionCode();
+	}
+	
+	private static String addLineNumbersInformation(GenerationPolicyRegistry generationValueGetter, 
+			String language, StateMachine statemachine, Position position) {
+		return getPositionString(generationValueGetter, language, statemachine, position, CommonConstants.BLANK);
+	}
+	
+	private static String addLineNumbersInformation(GenerationPolicyRegistry generationValueGetter, 
+			String language, StateMachine statemachine, Position position, String actionCode) {
+		String extended= actionCode;
+		
+		String positionString = getPositionString(generationValueGetter,
+				language, statemachine, position, extended);
+		
+		if(positionString!= null && !positionString.isEmpty()&& extended!= null&& !extended.isEmpty()){
+			extended= positionString+ CommonConstants.NEW_LINE+ extended;
+		}
+		return extended;
+	}
+
+	private static String getPositionString(GenerationPolicyRegistry generationValueGetter, String language,
+			StateMachine statemachine, Position position, String extended) {
+		UmpleClass umpleClass= null;
+		StateMachine statemachineSearch= statemachine;
+		while(umpleClass== null&& statemachineSearch!= null){
+			umpleClass = statemachineSearch.getUmpleClass();
+			State parentState = statemachineSearch.getParentState();
+			if(parentState== null){
+				break;
+			}
+			statemachineSearch= parentState.getStateMachine();
+		}
+		
+		if(umpleClass== null){
+			return extended;
+		}
+		
+		Object object = generationValueGetter.getPathMap(umpleClass).get(CommonConstants.BLANK);
+		UmpleModel modelPackage= object instanceof UmpleModel?(UmpleModel) object: null;
+		
+		String positionString = getPositionString(language, umpleClass, modelPackage, position);
+		return positionString;
 	}
 	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATES)

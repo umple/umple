@@ -98,7 +98,7 @@ public class CPPDependsPointsHandler{
 		}
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.INCLUDES)
+	@GenerationPoint(generationPoint = ICppDefinitions.INCLUDES)
 	public static String getHeaderIncludes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
 			@GenerationLoopElement Object modelPackage){
 		List<Object> values = generationValueGetter.getValues(ICppDefinitions.HEADER_INCLUDES_TRACKER, element);
@@ -124,7 +124,7 @@ public class CPPDependsPointsHandler{
 		return getIncludedReferences(generationValueGetter, GenerationUtil.listToGeneratedString(0, 0, declarations), ICppDefinitions.HEADER_INCLUDES_TRACKER, element, false);
 	}
 
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.BODY_INCLUDES)
+	@GenerationPoint(generationPoint = ICppDefinitions.BODY_INCLUDES)
 	public static String getBodyIncludes(@GenerationRegistry final GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement final Object element,
 			@GenerationLoopElement Object modelPackage){
 		List<Object> values = generationValueGetter.getValues(ICppDefinitions.BODY_INCLUDES_TRACKER, element);
@@ -531,7 +531,7 @@ public class CPPDependsPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.HIGHEST)),
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		
-		generationValueGetter.addValue(ICppHandlerDefinitions.PRE_PROCESSING_DEFINITION_NAME, modelPackageName+ CommonConstants.UNDERSCORE+ name, element);
+		generationValueGetter.addValue(ICppDefinitions.PRE_PROCESSING_DEFINITION_NAME, modelPackageName+ CommonConstants.UNDERSCORE+ name, element);
 	}
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
@@ -806,6 +806,7 @@ public class CPPDependsPointsHandler{
 			@GenerationArgument(id= IModelingDecisions.DEPENDS_OUTSIDE_ARGUMENT) boolean isOutside,
 			@GenerationArgument(id= IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT) String includeId) {
 		
+		
 		if(include!= null&& !include.isEmpty()){
 			String includeStatement = generationValueGetter.use(ICppDefinitions.BUILTIN_INCLUDE_STATEMENT, include);
 			generationValueGetter.addUniqueValue((includeId!= null?includeId: CommonConstants.BLANK)+ library, includeStatement, container);
@@ -859,9 +860,9 @@ public class CPPDependsPointsHandler{
 		
 		for(Object item: allParameters){
 			@SuppressWarnings("unchecked")
-			SimpleEntry<String, SimpleEntry<String, String>> simpleEntry= (SimpleEntry<String, SimpleEntry<String, String>>) item;
+			SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>> simpleEntry= (SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>) item;
 			
-			String value = simpleEntry.getKey();
+			String value = simpleEntry.getKey().getValue();
 			generationValueGetter.generationPointString(parent, IModelingDecisions.DEPENDS_GENERATION_POINT, 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, value), 
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
@@ -880,6 +881,7 @@ public class CPPDependsPointsHandler{
 			@GenerationArgument(id= IModelingDecisions.DEPENDS_PRIORITY) int priority,
 			@GenerationArgument(id= IModelingDecisions.DEPENDS_IS_CUSTOM_ARGUMENT) boolean isCustom,
 			@GenerationArgument(id= IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT) String includeId,
+			@GenerationArgument(id= IModelingDecisions.MODEL_PATH, adjust= false) String modelPath,
 			@GenerationProcedureParameter(id= IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType,
 			@GenerationLoopElement Object modelPackage) {
 		
@@ -934,8 +936,8 @@ public class CPPDependsPointsHandler{
 				return;
 			}
 			
-			String modelPath = generationValueGetter.generationPointString(rootType, IModelingDecisions.MODEL_PATH);
-			includeStatement = generationValueGetter.use(ICppDefinitions.INCLUDE_STATEMENT, typeName, modelPath);
+			String expectedModelPath = modelPath== null?generationValueGetter.generationPointString(rootType, IModelingDecisions.MODEL_PATH):modelPath;
+			includeStatement = generationValueGetter.use(ICppDefinitions.INCLUDE_STATEMENT, typeName, expectedModelPath);
 		}
 		
 		SimpleEntry<Object, String> entry= new SimpleEntry<Object, String>(rootType, includeStatement);

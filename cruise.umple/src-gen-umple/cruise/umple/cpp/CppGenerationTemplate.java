@@ -22,15 +22,11 @@ import cruise.umple.core.GenerationCallback;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.IGenerationProcdure;
 import cruise.umple.cpp.utils.StringUtil;
-import cruise.umple.modeling.handlers.IModelingElementDefinitions;
-import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
-import cruise.umple.modeling.handlers.cpp.ICppHandlerDefinitions;
 import cruise.umple.templates.GenerationTemplateDelegator;
 import cruise.umple.templates.IGenerationTemplate;
 import cruise.umple.templates.IGenerationTemplateRegistry;
 
-public abstract class CppGenerationTemplate implements IGenerationTemplate, IGenerationTemplateRegistry, 
-						ICppHandlerDefinitions, IModelingElementDefinitions, ICppDefinitions{
+public abstract class CppGenerationTemplate implements IGenerationTemplate, IGenerationTemplateRegistry{
 	
 	private GenerationPolicyRegistry instance;
 	private GenerationTemplateDelegator generationTemplateDelegator;

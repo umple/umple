@@ -36,14 +36,14 @@ public @interface GenerationPoint {
 	String[] ifNotConditionIds() default {};
 	
 	public class InterceptorResponse{
-		private Object value;
+		private Object fValue;
 		
 		public InterceptorResponse(Object value) {
-			this.value = value;
+			this.fValue = value;
 		}
 		
 		public Object getValue() {
-			return this.value;
+			return this.fValue;
 		}
 		
 	}
