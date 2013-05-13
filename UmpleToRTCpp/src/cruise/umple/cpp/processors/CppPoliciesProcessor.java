@@ -21,14 +21,6 @@ package cruise.umple.cpp.processors;
 import java.util.ArrayList;
 import java.util.List;
 
-import cruise.umple.modeling.handlers.cpp.CPPBaseGenerationPointsHandler;
-import cruise.umple.modeling.handlers.cpp.CPPContentsPointsHandler;
-import cruise.umple.modeling.handlers.cpp.CPPDependsPointsHandler;
-import cruise.umple.modeling.handlers.cpp.CppCustomGetterFunctionsPointsHandler;
-import cruise.umple.modeling.handlers.cpp.CppStatemachinePointsHandler;
-import cruise.umple.modeling.handlers.cpp.ICppModelingPriorityHandler;
-import cruise.umple.modeling.handlers.cpp.StlGenerationPointsHandler;
-
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.IPoliciesProcessor;
 import cruise.umple.cpp.core.ContentsDescriptor;
@@ -42,12 +34,22 @@ import cruise.umple.cpp.jet.util.CppConstructor;
 import cruise.umple.cpp.jet.util.CppNameHelper;
 import cruise.umple.cpp.jet.util.CppStlTemplateHelper;
 import cruise.umple.cpp.jet.util.CppTemplateHelper;
+import cruise.umple.cpp.jet.util.CppTestsHelper;
+import cruise.umple.cpp.utils.CPPCommonConstants;
+import cruise.umple.modeling.handlers.IModelingConstants;
 import cruise.umple.modeling.handlers.IModelingPriorityHandler;
 import cruise.umple.modeling.handlers.IModelingStatemachinePriorityHandler;
 import cruise.umple.modeling.handlers.ModelingAssociationsGenerationPointsHandler;
 import cruise.umple.modeling.handlers.ModelingBaseDecisionPointsHandler;
 import cruise.umple.modeling.handlers.ModelingBaseGenerationPointsHandler;
 import cruise.umple.modeling.handlers.ModelingConstructorPointsHandler;
+import cruise.umple.modeling.handlers.cpp.CPPBaseGenerationPointsHandler;
+import cruise.umple.modeling.handlers.cpp.CPPContentsPointsHandler;
+import cruise.umple.modeling.handlers.cpp.CPPDependsPointsHandler;
+import cruise.umple.modeling.handlers.cpp.CppCustomGetterFunctionsPointsHandler;
+import cruise.umple.modeling.handlers.cpp.CppStatemachinePointsHandler;
+import cruise.umple.modeling.handlers.cpp.ICppModelingPriorityHandler;
+import cruise.umple.modeling.handlers.cpp.StlGenerationPointsHandler;
 
 abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 	
@@ -61,13 +63,19 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 	}
 	
 	abstract public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor);
-
+	
 	public CppPoliciesProcessor() {
+		registerGenerationLanguages();
 		registerTypesPolicies();
 		registerGenerationPoints();
 		registerHelperTemplates();
 	}
-
+	
+	@Override
+	public void registerGenerationLanguages() {
+		this.generationPolicyRegistry.addUniqueValue(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE);
+	}
+	
 	@Override
 	public void registerHelperTemplates(){
 		new CppTemplateHelper().init(this.getGenerationPolicyRegistry());
@@ -79,6 +87,8 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		new CppStatemachine().init(this.getGenerationPolicyRegistry());
 		new CppConstructor().init(this.getGenerationPolicyRegistry());
 		new CppStlTemplateHelper().init(this.getGenerationPolicyRegistry());
+		
+		new CppTestsHelper().init(this.getGenerationPolicyRegistry());
 	}
 	
 	@Override
@@ -100,6 +110,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		
 		this.getGenerationPolicyRegistry().register(new CppStatemachinePointsHandler());
 		
+		//this.getGenerationPolicyRegistry().register(new CppTestsPointsHandler());
 	}
 	
 	public List<ContentsDescriptor> getContentDescriptors(){

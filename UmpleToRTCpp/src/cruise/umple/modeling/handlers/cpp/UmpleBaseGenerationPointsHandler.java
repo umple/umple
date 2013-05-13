@@ -35,6 +35,7 @@ import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
+import cruise.umple.core.GenerationCallback.GenerationStringSegment;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.IGenerationPointPriorityConstants;
@@ -62,6 +63,34 @@ public class UmpleBaseGenerationPointsHandler{
 		buffer.append("//This code was generated using the UMPLE "+version +" modeling language"); //$NON-NLS-1$ //$NON-NLS-2$
 		buffer.append(CommonConstants.NEW_LINE);
 		return buffer.toString();
+	}
+	
+	@GenerationPoint(generationPoint = IModelingConstants.MULTILINE_COMMENTS_STRING, priority= IGenerationPointPriorityConstants.LOWEST)
+	public static String lineNumbers(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationStringSegment String currentString,
+			@GenerationBaseElement Object element){
+		List<Object> values = generationValueGetter.getValues(IModelingConstants.GENERATION_LANGUAGE);
+		if(values.isEmpty()){
+			return null;
+		}
+		Object language = values.get(0);
+		List<?> lineNumbers= generationValueGetter.getList(element, IModelingElementDefinitions.LINE_NUMBERS, language);
+		if(lineNumbers.isEmpty()){
+			return null;
+		}
+		List<String> comments= new ArrayList<String>();
+		
+		for(Object object: lineNumbers){
+			if(object instanceof String == false){
+				continue;
+			}
+			comments.add((String) object);
+		}
+		String listToGeneratedString = GenerationUtil.listToGeneratedString(0, 0, comments);
+		if(currentString!= null&& !currentString.isEmpty()){
+			listToGeneratedString= CommonConstants.NEW_LINE+ listToGeneratedString;
+		}
+		return listToGeneratedString; 
 	}
 	
 	@DecisionPoint(watchIf= {IModelingDecisions.ATTRIBUTE_GENERATION_POINT,
@@ -96,8 +125,8 @@ public class UmpleBaseGenerationPointsHandler{
 		}
 		
 		Map<String, Object> map= new HashMap<String, Object>();
-		map.put(IModelingConstants.RETURN_TYPE, normalizedType);
-		map.put(IModelingConstants.PARAMETERS_STRING, CPPTypesConstants.VOID);
+		map.put(IModelingConstants.METHOD_RETURN_TYPE, normalizedType);
+		map.put(IModelingConstants.METHOD_PARAMETERS_STRING, CPPTypesConstants.VOID);
 		
 		map.put(IModelingConstants.CODY_BODY, StringUtil.indent(generationValueGetter.use(ICppDefinitions.RETURN_STATEMENET, 
 				defaultValue), 1));
@@ -182,7 +211,7 @@ public class UmpleBaseGenerationPointsHandler{
 		generationValueGetter.addUniqueValue(ICppDefinitions.PREDEFINED_FUNCTIONS, singelton);
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.CLASS_DECLARATIONS_EXTENSION, ifConditionIds= {IModelingElementDefinitions.IS_SINGLETON})
+	@GenerationPoint(generationPoint = IModelingConstants.CLASS_DECLARATIONS_EXTENSION, ifConditionIds= {IModelingElementDefinitions.IS_SINGLETON})
 	public static void signletonExtension(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationArgument List<String> calls,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
@@ -200,7 +229,6 @@ public class UmpleBaseGenerationPointsHandler{
 		return StringUtil.indent(CommonConstants.NEW_LINE+ code+ CommonConstants.NEW_LINE, 1);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@GenerationPoint(generationPoint = ICppDefinitions.METHOD_IMPLEMENTATION_BEFORE)
 	public static String before(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationArgument(id= IModelingConstants.METHOD_NAME) String methodName,
@@ -211,10 +239,9 @@ public class UmpleBaseGenerationPointsHandler{
 		if(list.isEmpty()){
 			return null;
 		}
-		return GenerationUtil.listToGeneratedString(0, 1, (List<Object>) list)+ CommonConstants.NEW_LINE;
+		return GenerationUtil.listToGeneratedString(0, 1, list)+ CommonConstants.NEW_LINE;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@GenerationPoint(generationPoint = ICppDefinitions.METHOD_IMPLEMENTATION_AFTER)
 	public static String after(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationArgument(id= IModelingConstants.METHOD_NAME) String methodName,
@@ -224,10 +251,9 @@ public class UmpleBaseGenerationPointsHandler{
 		if(list.isEmpty()){
 			return null;
 		}
-		return CommonConstants.NEW_LINE+ GenerationUtil.listToGeneratedString(0, 1, (List<Object>) list);
+		return CommonConstants.NEW_LINE+ GenerationUtil.listToGeneratedString(0, 1, list);
 	}
 
-	@SuppressWarnings("unchecked")
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_BEFORE)
 	public static String beforeConstructor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
@@ -236,10 +262,9 @@ public class UmpleBaseGenerationPointsHandler{
 		if(list.isEmpty()){
 			return null;
 		}
-		return GenerationUtil.listToGeneratedString(0, 1, (List<Object>) list)+ CommonConstants.NEW_LINE;
+		return GenerationUtil.listToGeneratedString(0, 1, list)+ CommonConstants.NEW_LINE;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_AFTER)
 	public static String afterConstructor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
@@ -248,7 +273,7 @@ public class UmpleBaseGenerationPointsHandler{
 		if(list.isEmpty()){
 			return null;
 		}
-		return CommonConstants.NEW_LINE+ GenerationUtil.listToGeneratedString(0, 1, (List<Object>) list);
+		return CommonConstants.NEW_LINE+ GenerationUtil.listToGeneratedString(0, 1, list);
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.PRIVATE_DECLARATIONS, group= IUmpleModelingPriorities.AUTOUNIQUE_ATTRIBUTES)
@@ -325,12 +350,14 @@ public class UmpleBaseGenerationPointsHandler{
 			String returnStatement= generationValueGetter.use(ICppDefinitions.RETURN_STATEMENET, defaultValue);
 			returnStatement= StringUtil.indent(returnStatement, 1);
 			addMethodDetails(generationValueGetter, ICppUmpleDefinitions.DEFAULT_GETTER_IMPLEMENTATION, 
-					normalizedType, CPPTypesConstants.VOID, returnStatement, parent, element, defaultGetterMethod, VisibilityConstants.PUBLIC, IModelingConstants.METHOD_OUTGOING_GROUP);
+					normalizedType, CPPTypesConstants.VOID, returnStatement, parent, element, defaultGetterMethod, 
+					VisibilityConstants.PUBLIC, IModelingConstants.METHOD_OUTGOING_GROUP, name);
 			
 			//Reset extra method for the defaulted attributes
 			String resetImplementationBody = generationValueGetter.use(ICppUmpleDefinitions.RESET_IMPLEMENTATION, name, defaultGetterMethod);
 			addMethodDetails(generationValueGetter, ICppUmpleDefinitions.RESET_IMPLEMENTATION, 
-					CPPTypesConstants.BOOL, CPPTypesConstants.VOID, resetImplementationBody, parent, element, resetCall, VisibilityConstants.PUBLIC, IModelingConstants.METHOD_OUTGOING_GROUP);
+					CPPTypesConstants.BOOL, CPPTypesConstants.VOID, resetImplementationBody, parent, element, resetCall, 
+					VisibilityConstants.PUBLIC, IModelingConstants.METHOD_OUTGOING_GROUP, name);
 			
 			
 			return generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, resetCall, CommonConstants.BLANK, Boolean.TRUE);
@@ -414,7 +441,7 @@ public class UmpleBaseGenerationPointsHandler{
 		}
 		
 		String equalityDeclaration = generationValueGetter.generationPointString(element, ICppDefinitions.ATTRIBUTE_EQUALITY);
-		generationValueGetter.addValue(ICppDefinitions.ATTRIBUTE_EQUALITY_DECLARATION, equalityDeclaration, parent);
+		generationValueGetter.addValue(ICppDefinitions.ATTRIBUTE_EQUALITY_ENTRY, equalityDeclaration, parent);
 		
 		return true;
 	}
@@ -578,12 +605,13 @@ public class UmpleBaseGenerationPointsHandler{
 	}
 	
 	private static void addMethodDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, String id, String returnType, String parametersString,
-			String codeBody, Object parent, Object element, String name, String visibility, String groupId){
+			String codeBody, Object parent, Object element, String name, String visibility, String groupId, String identifier){
 		Map<String, Object> map= new HashMap<String, Object>();
-		map.put(IModelingConstants.RETURN_TYPE, returnType);
-		map.put(IModelingConstants.PARAMETERS_STRING, parametersString);
+		map.put(IModelingConstants.METHOD_RETURN_TYPE, returnType);
+		map.put(IModelingConstants.METHOD_PARAMETERS_STRING, parametersString);
 		map.put(IModelingConstants.CODY_BODY, codeBody);
 		map.put(IModelingConstants.METHOD_NAME, name);
+		map.put(IModelingConstants.METHOD_ID, identifier);
 		map.put(IModelingConstants.METHOD_GROUP, groupId);
 		map.put(IModelingConstants.METHOD_OBJECT, element);
 		generationValueGetter.addValue(id, map, parent, visibility);
