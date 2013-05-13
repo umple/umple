@@ -27,6 +27,8 @@ import cruise.umple.core.GenerationPolicyRegistry;
 
 public class GenerationUtil {
 
+	public static boolean SEPARATE_TEMPLATES_DEFINITIONS= false;
+	
 	private GenerationUtil() {
 		// prevent external construction
 	}
@@ -103,10 +105,10 @@ public class GenerationUtil {
 		return listToGeneratedString(seaprate, indent, generationValueGetter.getValues(id, element));
 	}
 
-	public static String listToGeneratedString(int seaprate, int indent, List<Object> values) {
+	public static String listToGeneratedString(int seaprate, int indent, List<?> values) {
 		String results= CommonConstants.BLANK;
 		if(values!= null){
-			Iterator<Object> iterator = values.iterator();
+			Iterator<?> iterator = values.iterator();
 			while(iterator.hasNext()){
 				Object next = iterator.next();
 				results= results+ next;

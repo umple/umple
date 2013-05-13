@@ -27,7 +27,8 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD })
 public @interface LoopProcessorAnnotation {
 	String[] processPath() default {};
-	String aspect() default LoopAspectConstants.DEFAULT;
+	int[] aspect() default LoopAspectConstants.DEFAULT;
+	int aspectGroup() default GenerationGroupDefinition.DEFAULT_PRIORITY;
 	int priority() default GenerationPolicyRegistryPriorities.MEDIUM;
 	String[] ifConditionIds() default {};
 	String[] ifNotConditionIds() default {};
@@ -35,7 +36,8 @@ public @interface LoopProcessorAnnotation {
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.METHOD })
 	public @interface LoopProcessorAnnotations {
-		String aspect() default LoopAspectConstants.DEFAULT;
+		int[] aspect() default LoopAspectConstants.DEFAULT;
+		int aspectGroup() default GenerationGroupDefinition.DEFAULT_PRIORITY;
 		LoopProcessorAnnotation[] loopProcessorAnnotations();
 		int priority() default GenerationPolicyRegistryPriorities.MEDIUM;
 		String[] ifConditionIds() default {};
@@ -43,11 +45,10 @@ public @interface LoopProcessorAnnotation {
 	}
 	
 	public interface LoopAspectConstants{
-		public static final String BEFORE= "-1"; //$NON-NLS-1$
-		public static final String DEFAULT= "0"; //$NON-NLS-1$
-		public static final String PRE= "1"; //$NON-NLS-1$
-		public static final String AFTER= "2"; //$NON-NLS-1$
-		public static final String FINALIZE= "3"; //$NON-NLS-1$
-		public static final String ALL= "*"; //$NON-NLS-1$
+		public static final int BEFORE= -1;
+		public static final int DEFAULT= 0;
+		public static final int PRE= 1;
+		public static final int AFTER= 2;
+		public static final int FINALIZE= 3;
 	}
 }

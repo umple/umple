@@ -16,31 +16,11 @@
 * @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
 * @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
 *******************************************************************************/
-package cruise.umple.core;
+package cruise.umple.modeling.handlers.cpp;
 
-public class GenerationArgumentDescriptor{
-	private String fId;
-	private Object fValue;
+public interface ICppTestsDefinitions {
 	
-	public static GenerationArgumentDescriptor arg(String id, Object value){
-		return new GenerationArgumentDescriptor(id, value);
-	}
-	
-	private GenerationArgumentDescriptor(String id, Object value) {
-		this.fId= id;
-		this.fValue= value;
-	}
-	
-	public String id(){
-		return this.fId;
-	}
-	
-	public Object value(){
-		return this.fValue;
-	}
-	
-	@Override
-	public String toString() {
-		return this.id()+ CommonConstants.UNDERSCORE+ this.value();
-	}
+	public final static String CONSTRUCT_CLASS= "cpp.tests.construct.class";	 //$NON-NLS-1$
+	public final static String ASSERT_GETTER= "cpp.tests.assert.getter";	 	//$NON-NLS-1$
+	public final static String METHOD_CALL= "cpp.tests.method.call";	 	//$NON-NLS-1$
 }

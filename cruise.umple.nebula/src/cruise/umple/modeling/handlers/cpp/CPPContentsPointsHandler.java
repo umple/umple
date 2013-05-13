@@ -29,14 +29,14 @@ import java.util.Set;
 
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.GenerationArgumentDescriptor;
-import cruise.umple.core.GenerationPoint;
-import cruise.umple.core.GenerationPolicyRegistry;
-import cruise.umple.core.IGenerationPointPriorityConstants;
-import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
+import cruise.umple.core.GenerationPoint;
+import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.IGenerationPointPriorityConstants;
+import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
 import cruise.umple.cpp.utils.CPPTypesConstants;
@@ -214,10 +214,6 @@ public class CPPContentsPointsHandler{
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object interfaceObject,
 			@GenerationBaseElement Object element){
-		
-		String assignmentImplementation= generationValueGetter.generate(ICppDefinitions.ASSIGNMENT_OPERATOR_IMPLEMENTATION, element);
-		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC, 
-				CommonConstants.BLANK, assignmentImplementation);
 		
 		String deepCopyDeclaration = generationValueGetter.generate(ICppDefinitions.DEEP_COPY_METHOD_DECLARATION, element);
 		String deepCopyImplementation= generationValueGetter.generate(ICppDefinitions.DEEP_COPY_METHOD_IMPLEMENTATION, element);
@@ -399,18 +395,58 @@ public class CPPContentsPointsHandler{
 	/////////////////////////////////////////////////////////PREDEFINED OPERATORS////////////////////////////////////////////////////////////////////////////////
 	@GenerationPoint(generationPoint = ICppDefinitions.PUBLIC_CONTENTS, priority=IGenerationPointPriorityConstants.HIGHEST, 
 			group= IModelingPriorityHandler.PRE_DEFINED_DETAILS)
-	public static void getPredefinedContents(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationBaseElement Object element,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String typeName){
-		String operators = generationValueGetter.generate(ICppDefinitions.PRE_CLASS_DEFINED_OPERATORS, element);
-		generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, operators, element, 
-				IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC);
+	public static void predefinedCalls(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element){
+		
+		List<Object> declarations= new ArrayList<Object>();
+		List<Object> implementations= new ArrayList<Object>();
 		
 		
-		String results= GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.ATTRIBUTE_EQUALITY_DECLARATION, element);
-		String predefined = generationValueGetter.use(ICppHandlerDefinitions.PREDEFINED_OPERATORS_IMPLEMENTATION, typeName, results);
-		generationValueGetter.addUniqueValue(ICppDefinitions.BODY_CONTENTS, predefined, element, 
+		for(Object object: generationValueGetter.getValues(ICppDefinitions.PREDEFINED_OPERATORS_REGISTER, element)){
+			if(object instanceof SimpleEntry== false){
+				continue;
+			}
+			SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
+			declarations.add(entry.getKey());
+			implementations.add(entry.getValue());
+		}
+		
+		String declaration= GenerationUtil.listToGeneratedString(1, 0, declarations);
+		String implementation= GenerationUtil.listToGeneratedString(1, 0, implementations);
+		
+		declaration= generationValueGetter.use(ICppDefinitions.PREDEFINED_OPERATORS_DECLARATION, declaration);
+		implementation= generationValueGetter.use(ICppDefinitions.PREDEFINED_OPERATORS_IMPLEMENTATION, implementation);
+		
+		generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, 
 				IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC);
+
+		generationValueGetter.addUniqueValue(ICppDefinitions.BODY_CONTENTS, implementation, element, 
+				IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC);
+	}
+	
+	@GenerationPoint(generationPoint = ICppDefinitions.PREDEFINED_OPERATORS_REGISTER, priority=IGenerationPointPriorityConstants.HIGHEST)
+	public static void predefineOperatorRegister(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String typeName,
+			@GenerationBaseElement Object element){
+		
+		String operators = generationValueGetter.generate(ICppDefinitions.ATTRIBUTE_EQUALITY_OPERATOR_DECLARATION, element);
+		
+		String results= GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.ATTRIBUTE_EQUALITY_ENTRY, element);
+		String predefined = generationValueGetter.use(ICppDefinitions.ATTRIBUTE_EQUALITY_OPERATOR_IMPLEMENTATION, typeName, results);
+		
+		generationValueGetter.addUniqueValue(ICppDefinitions.PREDEFINED_OPERATORS_REGISTER, 
+				new SimpleEntry<String, String>(operators, predefined), element);
+	}
+	
+	@GenerationPoint(generationPoint = ICppDefinitions.PREDEFINED_OPERATORS_REGISTER, priority=IGenerationPointPriorityConstants.HIGHEST)
+	public static void assignmentOperatorRegister(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element){
+		
+		String assignmentDeclaration= generationValueGetter.generate(ICppDefinitions.ASSIGNMENT_OPERATOR_DECLARATION, element);
+		String assignmentImplementation= generationValueGetter.generate(ICppDefinitions.ASSIGNMENT_OPERATOR_IMPLEMENTATION, element);
+		
+		generationValueGetter.addUniqueValue(ICppDefinitions.PREDEFINED_OPERATORS_REGISTER, 
+				new SimpleEntry<String, String>(assignmentDeclaration, assignmentImplementation), element);
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.HELPER_CODES)
@@ -425,10 +461,10 @@ public class CPPContentsPointsHandler{
 		return GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.HELPER_INCLUDES, modelPackage);
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.PACKAGE_INCLUDES)
+	@GenerationPoint(generationPoint = ICppDefinitions.PACKAGE_INCLUDES)
 	public static String packageIncludes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationLoopElement Object modelPackage){
-		return generationValueGetter.generationPointString(modelPackage, ICppHandlerDefinitions.BODY_INCLUDES);
+		return generationValueGetter.generationPointString(modelPackage, ICppDefinitions.BODY_INCLUDES);
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -466,9 +502,11 @@ public class CPPContentsPointsHandler{
 		String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
 		
 		String qualifiedMethodName = generationValueGetter.use(ICppDefinitions.QUALIFIED_METHOD_NAME, parentName, deleteMethodName);
-		String implementation = generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, element, CPPTypesConstants.VOID, 
-				qualifiedMethodName, CPPTypesConstants.VOID, implementationDetails,
-				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, deleteMethodName));
+		String implementation = generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, element, 
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_RETURN_TYPE, CPPTypesConstants.VOID),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONTENTS, implementationDetails),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_PARAMETERS_STRING, CPPTypesConstants.VOID),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, qualifiedMethodName));
 		
 		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_FINALIZE_GROUP, VisibilityConstants.PUBLIC, 
 				declaration, implementation);
@@ -496,21 +534,23 @@ public class CPPContentsPointsHandler{
 		
 		String qualifiedMethodName = generationValueGetter.use(ICppDefinitions.QUALIFIED_METHOD_NAME, parentName, hashCodeMethodName);
 		
-		String implementation = isVirtual.booleanValue()?null:CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, element, CPPTypesConstants.SIZE_T, 
-				qualifiedMethodName, CPPTypesConstants.VOID, implementationDetails,
-				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, hashCodeMethodName));
+		String implementation = isVirtual.booleanValue()?null:CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppDefinitions.METHOD_IMPLEMENTATION, element,
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_RETURN_TYPE, CPPTypesConstants.SIZE_T),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_CONTENTS, implementationDetails),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_PARAMETERS_STRING, CPPTypesConstants.VOID),
+				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, qualifiedMethodName));
 		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_FINALIZE_GROUP, VisibilityConstants.PUBLIC, 
 				declaration, implementation);
 	}
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.PREDEFINED_PACKAGE_CONTENTS)
+	@GenerationPoint(generationPoint = ICppDefinitions.PREDEFINED_PACKAGE_CONTENTS)
 	public static String predefined(@GenerationRegistry GenerationPolicyRegistry generationValueGetter){
 		return generationValueGetter.use(ICppDefinitions.PREDEFINED_FUNCTIONS);
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.PREDEFINED_PACKAGE_CONTENTS)
+	@GenerationPoint(generationPoint = ICppDefinitions.PREDEFINED_PACKAGE_CONTENTS)
 	public static String singletonHelper(@GenerationRegistry GenerationPolicyRegistry generationValueGetter){
 		return GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.PREDEFINED_FUNCTIONS);
 	}
@@ -518,10 +558,12 @@ public class CPPContentsPointsHandler{
 	@GenerationPoint(generationPoint = ICppDefinitions.CLASS_GLOBAL)
 	public static String friendSetterDeclarations(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationBaseElement Object element){
-		return GenerationUtil.getImplementationDetails(generationValueGetter, ICppHandlerDefinitions.FRIEND_SETTER_DECLARATION, element);
+		return GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.FRIEND_SETTER_DECLARATION, element);
 	}
 	
-	private static List<Object> getParametersRecursively(GenerationPolicyRegistry generationValueGetter, Object element) {
+	@GenerationPoint(generationPoint = ICppDefinitions.CONSTRUCTOR_ALL_PARAMETERS_LIST)
+	public static List<Object> getParametersRecursively(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element) {
 		Object current= element;
 		List<Object> all= new ArrayList<Object>();
 		List<Object> path= new ArrayList<Object>(); 
@@ -542,7 +584,9 @@ public class CPPContentsPointsHandler{
 		return all;
 	}
 	
-	private static List<Object> getParametersObjects(GenerationPolicyRegistry generationValueGetter, Object element) {
+	@GenerationPoint(generationPoint = ICppDefinitions.CONSTRUCTOR_PARAMETERS_LIST)
+	public static List<Object> getParametersObjects(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element) {
 		List<Object> values = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, element, Boolean.TRUE);
 		List<Object> all = new ArrayList<Object>(values);
 		if(all.isEmpty()){
@@ -767,7 +811,7 @@ public class CPPContentsPointsHandler{
 	@GenerationPoint(generationPoint = ICppDefinitions.PUBLIC_IMPLEMENTATION, priority= IGenerationPointPriorityConstants.HIGHEST)
 	public static String friendSetterImplementations(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationBaseElement Object element){
-		return GenerationUtil.getImplementationDetails(generationValueGetter, ICppHandlerDefinitions.FRIEND_SETTER_IMPLEMENTATION, element);
+		return GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.FRIEND_SETTER_IMPLEMENTATION, element);
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.PUBLIC_IMPLEMENTATION)

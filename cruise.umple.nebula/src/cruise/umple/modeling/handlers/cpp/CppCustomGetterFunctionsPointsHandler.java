@@ -118,7 +118,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 		
 		for(Object item: allParameters){
 			@SuppressWarnings("unchecked")
-			SimpleEntry<String, SimpleEntry<String, String>> simpleEntry= (SimpleEntry<String, SimpleEntry<String, String>>) item;
+			SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>> simpleEntry= (SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>) item;
 			
 			SimpleEntry<String, String> entry = simpleEntry.getValue();
 			parameterStrings.add(generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, entry.getKey(), entry.getValue()));			
@@ -211,7 +211,6 @@ public class CppCustomGetterFunctionsPointsHandler{
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.ADD_GENERATION_POINT)
 	public static void setAddDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ADD_AT_FILTER_DECISION) boolean filterAddAt,
 			@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimtiveType,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String type,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
@@ -225,18 +224,13 @@ public class CppCustomGetterFunctionsPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.FALSE));
 		String parametersString = generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, type, newInstance, Boolean.valueOf(!isPrimtiveType));
 		
-		String body= null;
-		if(filterAddAt){
-			body = generationValueGetter.use(ICppAssociationsDefinitionsConstants.ADD_CHECK_EXISTING, name, newInstance);
-			
-			boolean hasMaximumGetter = generationValueGetter.getBoolean(element, IModelingDecisions.HAS_MAXIMUM_GETTER);
-			if(hasMaximumGetter){
-				body = body+ CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppAssociationsDefinitionsConstants.ADD_MAXIMUM_CHECK, element);
-			}
-			body= body+ CommonConstants.NEW_LINE+ generationValueGetter.generate(id, element, generationArguments);
-		}else{
-			body = generationValueGetter.generate(ICppAssociationsDefinitionsConstants.ADD_IMPLEMENTATION, element);
+		String body = generationValueGetter.use(ICppAssociationsDefinitionsConstants.ADD_CHECK_EXISTING, name, newInstance);
+		
+		boolean hasMaximumGetter = generationValueGetter.getBoolean(element, IModelingDecisions.HAS_MAXIMUM_GETTER);
+		if(hasMaximumGetter){
+			body = body+ CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppAssociationsDefinitionsConstants.ADD_MAXIMUM_CHECK, element);
 		}
+		body= body+ CommonConstants.NEW_LINE+ generationValueGetter.generate(id, element, generationArguments);
 		
 		
 		addMethodDetails(generationValueGetter, ICppAssociationsDefinitionsConstants.ADD_IMPLEMENTATION, 
@@ -251,8 +245,6 @@ public class CppCustomGetterFunctionsPointsHandler{
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String type,
-			@GenerationArgument String id,
-			@GenerationArgument Object generationArguments,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
 		String newInstanceParameter= generationValueGetter.generationPointString(element, ICppNameConstants.NEW_INSTANCE, 
@@ -265,13 +257,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 				CPPTypesConstants.INTEGER, CPPCommonConstants.INDEX_VARIABLE);
 		String addAtParametersString= GenerationUtil.asStringParameters(Arrays.asList(new String[]{newInstanceParameterAsString, addAtIndexParameter}));
 		
-		String body = generationValueGetter.use(ICppAssociationsDefinitionsConstants.ADD_CHECK_EXISTING, name, newInstanceParameter);
-		
-		boolean hasMaximumGetter = generationValueGetter.getBoolean(element, IModelingDecisions.HAS_MAXIMUM_GETTER);
-		if(hasMaximumGetter){
-			body = body+ CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppAssociationsDefinitionsConstants.ADD_MAXIMUM_CHECK, element);
-		}
-		body= body+ CommonConstants.NEW_LINE+ generationValueGetter.generate(id, element, generationArguments);
+		String body=  generationValueGetter.generate(ICppAssociationsDefinitionsConstants.ADD_AT_IMPLEMENTATION, element, name, newInstanceParameter);
 		
 		addMethodDetails(generationValueGetter, ICppAssociationsDefinitionsConstants.ADD_AT_IMPLEMENTATION, 
 				CPPTypesConstants.BOOL, addAtParametersString, body, parent, element,addAtMethodName, 
@@ -372,12 +358,13 @@ public class CppCustomGetterFunctionsPointsHandler{
 			@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType,
 			@GenerationProcedureParameter(id = IModelingConstants.GETTER_METHOD_NAME) String getterMethodName,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
+			@GenerationProcedureParameter(id = IModelingConstants.MULTILINE_COMMENTS_STRING) String elementComments,
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_TYPE_NAME) String normalizedType,
 			@GenerationBaseElement Object element,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
 		getter(generationValueGetter, normalizedType, element, parent, getterMethodName, ICppAssociationsDefinitionsConstants.GETTER_IMPLEMENTATION,
-				IModelingConstants.METHOD_INCOMING_GROUP, isPrimitiveType, name);
+				IModelingConstants.METHOD_INCOMING_GROUP, isPrimitiveType, name, elementComments);
 		
 	}
 	
@@ -399,17 +386,19 @@ public class CppCustomGetterFunctionsPointsHandler{
 	public static void isAGetter(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationProcedureParameter(id = IModelingConstants.GETTER_METHOD_NAME) String getterMethodName,
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_TYPE_NAME) String normalizedType,
+			@GenerationProcedureParameter(id = IModelingConstants.MULTILINE_COMMENTS_STRING) String elementComments,
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
 		getter(generationValueGetter, normalizedType, element, parent, getterMethodName, ICppAssociationsDefinitionsConstants.IS_A_GETTER_IMPLEMENTATION,
-				IModelingConstants.METHOD_INCOMING_GROUP, true, name);
+				IModelingConstants.METHOD_INCOMING_GROUP, true, name, elementComments);
 		
 	}
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.GETTER_MANY_GENERATION_POINT, ifConditionIds= IModelingDecisions.ATTRIBUTE_IS_SETTABLE)
-	public static void getterMany(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+	public static void getterMany(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationProcedureParameter(id = IModelingConstants.MULTILINE_COMMENTS_STRING) String elementComments,
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_ROLE_NAME) String normalizedRoleName,
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_TYPE_NAME) String normalizedType,
 			@GenerationProcedureParameter(id = IModelingConstants.GETTER_METHOD_NAME) String getterMethodName,
@@ -422,8 +411,8 @@ public class CppCustomGetterFunctionsPointsHandler{
 				copyOf);
 		
 		addMethodDetails(generationValueGetter, ICppAssociationsDefinitionsConstants.GETTER_MANY_IMPLEMENTATION, 
-				normalizedType, CPPTypesConstants.VOID, getterDeclarationBody, parent, element, getterMethodName, 
-				VisibilityConstants.PUBLIC, IModelingConstants.METHOD_INCOMING_GROUP, name);
+				normalizedType, CPPTypesConstants.VOID, getterDeclarationBody, parent, element, getterMethodName, VisibilityConstants.PUBLIC, 
+				IModelingConstants.METHOD_INCOMING_GROUP, elementComments, false, name, false, false, false);
 	}
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.GETTER_BY_INDEX_GENERATION_POINT, ifConditionIds= IModelingDecisions.ATTRIBUTE_IS_SETTABLE)
@@ -597,17 +586,19 @@ public class CppCustomGetterFunctionsPointsHandler{
 	}
 	
 	private static void setFriendsSetter(GenerationPolicyRegistry generationValueGetter, Object otherEndType, Object element, Object parent) {
-		String declaration = generationValueGetter.generate(ICppHandlerDefinitions.FRIEND_SETTER_DECLARATION, element);
-		generationValueGetter.addUniqueValue(ICppHandlerDefinitions.FRIEND_SETTER_DECLARATION, declaration, otherEndType);
+		String declaration = generationValueGetter.generate(ICppDefinitions.FRIEND_SETTER_DECLARATION, element);
+		generationValueGetter.addUniqueValue(ICppDefinitions.FRIEND_SETTER_DECLARATION, declaration, otherEndType);
 		
-		String implementation = generationValueGetter.generate(ICppHandlerDefinitions.FRIEND_SETTER_IMPLEMENTATION, element);
-		generationValueGetter.addUniqueValue(ICppHandlerDefinitions.FRIEND_SETTER_IMPLEMENTATION, implementation, parent);
+		String implementation = generationValueGetter.generate(ICppDefinitions.FRIEND_SETTER_IMPLEMENTATION, element);
+		generationValueGetter.addUniqueValue(ICppDefinitions.FRIEND_SETTER_IMPLEMENTATION, implementation, parent);
 	}
 	
 	private static void getter(GenerationPolicyRegistry generationValueGetter,
-			String normalizedType, Object element, Object parent, String getterMethod, String id, String group, boolean isPrimitiveType, String identifier) {
+			String normalizedType, Object element, Object parent, String getterMethod, String id, String group, boolean isPrimitiveType, String identifier, 
+			String elementComments) {
 		addMethodDetails(generationValueGetter, id, normalizedType, CPPTypesConstants.VOID, 
-				CommonConstants.BLANK, parent, element, getterMethod, VisibilityConstants.PUBLIC, group, isPrimitiveType, identifier);
+				CommonConstants.BLANK, parent, element, getterMethod, VisibilityConstants.PUBLIC, group, elementComments, isPrimitiveType, identifier, 
+				false, false, false);
 	}
 	
 	private static void addMethodDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, String id, String returnType, String parametersString,
@@ -641,7 +632,6 @@ public class CppCustomGetterFunctionsPointsHandler{
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.METHOD_IMPLEMENTATION_AFTER, priority= IGenerationPointPriorityConstants.LOWEST)
 	public static String afterSetter(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationBaseElement Object element,
 			@GenerationArgument(id= IModelingConstants.METHOD_ID) String methodId) {
 		if(ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION.equals(methodId)){
 			String use = generationValueGetter.use(ICppDefinitions.RETURN_STATEMENET, IModelingConstants.WAS_SET);
@@ -674,11 +664,12 @@ public class CppCustomGetterFunctionsPointsHandler{
 			String codeBody, Object parent, Object element, String name, String visibility, String groupId, String comment, boolean isConstant, String identifier, 
 			boolean isVirtual, boolean isPure, boolean isDefaultedImplementation){
 		Map<String, Object> map= new HashMap<String, Object>();
-		map.put(IModelingConstants.RETURN_TYPE, returnType);
-		map.put(IModelingConstants.PARAMETERS_STRING, parametersString);
+		map.put(IModelingConstants.METHOD_RETURN_TYPE, returnType);
+		map.put(IModelingConstants.METHOD_PARAMETERS_STRING, parametersString);
 		map.put(IModelingConstants.CODY_BODY, codeBody);
 		map.put(IModelingConstants.METHOD_COMMENT, comment);
 		map.put(IModelingConstants.METHOD_NAME, name);
+		map.put(IModelingConstants.METHOD_ID, identifier);
 		map.put(IModelingConstants.METHOD_GROUP, groupId);
 		map.put(IModelingConstants.METHOD_OBJECT, element);
 		map.put(ICppDefinitions.METHOD_CONST, Boolean.valueOf(isConstant));
@@ -690,6 +681,9 @@ public class CppCustomGetterFunctionsPointsHandler{
 		if(identifier!= null&& !identifier.isEmpty()){
 			generationValueGetter.addValue(id, map, identifier, parent, visibility);
 		}
+		
+		generationValueGetter.addUniqueValue(IModelingConstants.METHOD_IDS, identifier, parent);
+		
 	}
 	
 }

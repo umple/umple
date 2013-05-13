@@ -458,12 +458,12 @@ public class StlGenerationPointsHandler{
 		return CommonConstants.NEW_LINE+ generationValueGetter.use(ICppDefinitions.COMPARATORS_DETAILS, implementationAndSeparateDetails)+ CommonConstants.NEW_LINE;
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.PREDEFINED_PACKAGE_CONTENTS)
+	@GenerationPoint(generationPoint = ICppDefinitions.PREDEFINED_PACKAGE_CONTENTS)
 	public static String getSetTemplateImplementation(@GenerationRegistry GenerationPolicyRegistry generationValueGetter){
 		return GenerationUtil.getImplementationDetails(generationValueGetter, ISTLConstants.GET_SET_ELEMENT_TEMPLATE_IMPLEMENTATION);
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.PREDEFINED_PACKAGE_CONTENTS)
+	@GenerationPoint(generationPoint = ICppDefinitions.PREDEFINED_PACKAGE_CONTENTS)
 	public static String copySetTemplate(@GenerationRegistry GenerationPolicyRegistry generationValueGetter){
 		return GenerationUtil.getImplementationDetails(generationValueGetter, ISTLConstants.COPY_SET_ELEMENT_TEMPLATE_IMPLEMENTATION);
 	}

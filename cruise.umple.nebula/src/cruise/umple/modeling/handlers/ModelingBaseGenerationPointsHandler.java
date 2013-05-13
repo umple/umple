@@ -217,6 +217,9 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(roleName.isEmpty()){
+			roleName= seekOtherEnd?otherEndName:name;
+		}
 		return generationValueGetter.use(ICppNameConstants.SET, roleName);
 	}
 	
@@ -230,6 +233,9 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(roleName.isEmpty()){
+			roleName= seekOtherEnd?otherEndName:name;
+		}
 		return generationValueGetter.use(ICppNameConstants.SET, roleName);
 	}
 	
@@ -240,6 +246,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String pluralName= generationValueGetter.getString(element, IModelingElementDefinitions.PLURAL_NAME, seekOtherEnd?otherEndName:name);
+		if(pluralName.isEmpty()){
+			pluralName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(IModelingConstants.MINIMUM_NUMBER_OF, pluralName);
 	}
 	
@@ -250,6 +260,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String pluralName= generationValueGetter.getString(element, IModelingElementDefinitions.PLURAL_NAME, seekOtherEnd?otherEndName:name);
+		if(pluralName.isEmpty()){
+			pluralName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(IModelingConstants.MAXIMUM_NUMBER_OF, pluralName);
 	}
 	
@@ -263,6 +277,9 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(roleName.isEmpty()){
+			roleName= seekOtherEnd?otherEndName:name;
+		}
 		return generationValueGetter.use(ICppNameConstants.GET, roleName);
 	}
 	
@@ -276,6 +293,9 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(roleName.isEmpty()){
+			roleName= seekOtherEnd?otherEndName:name;
+		}
 		return generationValueGetter.use(ICppNameConstants.GET, roleName);
 	}
 	
@@ -286,6 +306,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.GET, singularName);
 	}
 	
@@ -296,6 +320,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String pluralName= generationValueGetter.getString(element, IModelingElementDefinitions.PLURAL_NAME, seekOtherEnd?otherEndName:name);
+		if(pluralName.isEmpty()){
+			pluralName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.NUMBER_OF, pluralName);
 	}
 	
@@ -306,6 +334,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String pluralName= generationValueGetter.getString(element, IModelingElementDefinitions.PLURAL_NAME, seekOtherEnd?otherEndName:name);
+		if(pluralName.isEmpty()){
+			pluralName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.CONTAINS, pluralName);
 	}
 	
@@ -316,6 +348,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.INDEX_OF, singularName);
 	}
 	
@@ -326,6 +362,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.IS_A, singularName);
 	}
 	
@@ -336,6 +376,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.REMOVE_AT, singularName);
 	}
 	
@@ -346,6 +390,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationBaseElement Object element){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.REMOVE, singularName);
 	}
 	
@@ -356,6 +404,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.ADD_METHOD, singularName);
 	}
 	
@@ -366,6 +418,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.ADD_OR_MOVE_AT, singularName);
 	}
 	
@@ -376,6 +432,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.ADD_AT, singularName);
 	}
 	
@@ -390,6 +450,9 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(roleName.isEmpty()){
+			roleName= seekOtherEnd?otherEndName:name;
+		}
 		return generationValueGetter.use(ICppNameConstants.EXISTING, roleName);
 	}
 	
@@ -400,6 +463,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.ADD_METHOD, singularName);
 	}
 	
@@ -410,6 +477,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.ADD_AT, singularName);
 	}
 	
@@ -420,6 +491,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.REMOVE, singularName);
 	}
 	
@@ -430,6 +505,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.PLACE_HOLDER, singularName);
 	}
 	
@@ -440,6 +519,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
 		String pluralName= generationValueGetter.getString(element, IModelingElementDefinitions.PLURAL_NAME, seekOtherEnd?otherEndName:name);
+		if(pluralName.isEmpty()){
+			pluralName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.NUMBER_OF, pluralName);
 	}
 	
@@ -450,6 +533,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.COPY_OF, singularName);
 	}
 	
@@ -460,6 +547,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.INDEX_OF, singularName);
 	}
 	
@@ -470,6 +561,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.IS_NEW, singularName);
 	}
 	
@@ -480,6 +575,9 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
 		return generationValueGetter.use(ICppNameConstants.NEW_INSTANCE, singularName);
 	}
 	
@@ -490,6 +588,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.NEW_INSTANCE, singularName);
 	}
 	
@@ -500,6 +602,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.VARIABLE_PARAMETER, singularName);
 	}
 	
@@ -510,6 +616,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
 		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
+		}
+		
 		return generationValueGetter.use(ICppNameConstants.VARIABLE_PARAMETER, singularName);
 	}
 	
@@ -601,7 +711,7 @@ public class ModelingBaseGenerationPointsHandler {
 		return !isInternal;
 	}
 	
-	@GenerationPoint(generationPoint = IModelingConstants.MULTILINE_COMMENTS_STRING, unique= true)
+	@GenerationPoint(generationPoint = IModelingConstants.MULTILINE_COMMENTS_STRING, priority= IGenerationPointPriorityConstants.HIGH)
 	public static String getNormalizedReturnType(@GenerationElementParameter(id = IModelingElementDefinitions.COMMENTS) List<String> comments){
 		return GenerationUtil.multiLineComment(comments); 
 	}

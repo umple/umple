@@ -67,57 +67,61 @@ public class CppStlTemplateHelper extends CppGenerationTemplate{
   protected final String TEXT_35 = "->push_back(";
   protected final String TEXT_36 = ");";
   protected final String TEXT_37 = "->insert(";
-  protected final String TEXT_38 = ");";
-  protected final String TEXT_39 = "std::copy(";
-  protected final String TEXT_40 = "->begin(), ";
-  protected final String TEXT_41 = "->end(), ";
-  protected final String TEXT_42 = "->begin());";
-  protected final String TEXT_43 = " ";
-  protected final String TEXT_44 = " = ";
-  protected final String TEXT_45 = ";" + NL;
-  protected final String TEXT_46 = "::iterator ";
-  protected final String TEXT_47 = "(";
-  protected final String TEXT_48 = "->begin());";
-  protected final String TEXT_49 = NL;
+  protected final String TEXT_38 = "->begin()+ ";
+  protected final String TEXT_39 = ", ";
+  protected final String TEXT_40 = ");";
+  protected final String TEXT_41 = "->insert(";
+  protected final String TEXT_42 = ");";
+  protected final String TEXT_43 = "std::copy(";
+  protected final String TEXT_44 = "->begin(), ";
+  protected final String TEXT_45 = "->end(), ";
+  protected final String TEXT_46 = "->begin());";
+  protected final String TEXT_47 = " ";
+  protected final String TEXT_48 = " = ";
+  protected final String TEXT_49 = ";" + NL;
   protected final String TEXT_50 = "::iterator ";
   protected final String TEXT_51 = "(";
-  protected final String TEXT_52 = "->begin());" + NL + "copySet(";
-  protected final String TEXT_53 = ", ";
-  protected final String TEXT_54 = ", ";
-  protected final String TEXT_55 = ");";
-  protected final String TEXT_56 = " ";
-  protected final String TEXT_57 = " = ";
-  protected final String TEXT_58 = ";" + NL;
-  protected final String TEXT_59 = "(*(";
-  protected final String TEXT_60 = "))[";
-  protected final String TEXT_61 = "];";
-  protected final String TEXT_62 = "return ";
-  protected final String TEXT_63 = "= ";
-  protected final String TEXT_64 = "::iterator ";
-  protected final String TEXT_65 = "(";
-  protected final String TEXT_66 = "->begin());" + NL;
-  protected final String TEXT_67 = "(";
-  protected final String TEXT_68 = "*)GetAt(";
-  protected final String TEXT_69 = ", ";
-  protected final String TEXT_70 = ");";
-  protected final String TEXT_71 = "return ";
-  protected final String TEXT_72 = "= ";
-  protected final String TEXT_73 = NL + "//A template function to get an item in a set by index" + NL + "template < typename InputIterator> " + NL + "void* GetAt(InputIterator& it, int index) {" + NL + "\tstd::advance(it, index);" + NL + "\treturn *it;" + NL + "};" + NL;
-  protected final String TEXT_74 = NL + "//A template function to copy set" + NL + "template<typename InputIterator, typename T>" + NL + "void copySet(InputIterator& it, InputIterator& end ,T* setObj) {\t" + NL + "\tfor (; it != end; ++it) {" + NL + "\t\tsetObj->insert(*it);" + NL + "\t}" + NL + "};" + NL;
-  protected final String TEXT_75 = "<";
-  protected final String TEXT_76 = ">";
-  protected final String TEXT_77 = "*";
-  protected final String TEXT_78 = "<";
-  protected final String TEXT_79 = ", ";
+  protected final String TEXT_52 = "->begin());";
+  protected final String TEXT_53 = NL;
+  protected final String TEXT_54 = "::iterator ";
+  protected final String TEXT_55 = "(";
+  protected final String TEXT_56 = "->begin());" + NL + "copySet(";
+  protected final String TEXT_57 = ", ";
+  protected final String TEXT_58 = ", ";
+  protected final String TEXT_59 = ");";
+  protected final String TEXT_60 = " ";
+  protected final String TEXT_61 = " = ";
+  protected final String TEXT_62 = ";" + NL;
+  protected final String TEXT_63 = "(*(";
+  protected final String TEXT_64 = "))[";
+  protected final String TEXT_65 = "];";
+  protected final String TEXT_66 = "return ";
+  protected final String TEXT_67 = "= ";
+  protected final String TEXT_68 = "::iterator ";
+  protected final String TEXT_69 = "(";
+  protected final String TEXT_70 = "->begin());" + NL;
+  protected final String TEXT_71 = "(";
+  protected final String TEXT_72 = "*)GetAt(";
+  protected final String TEXT_73 = ", ";
+  protected final String TEXT_74 = ");";
+  protected final String TEXT_75 = "return ";
+  protected final String TEXT_76 = "= ";
+  protected final String TEXT_77 = NL + "//A template function to get an item in a set by index" + NL + "template < typename InputIterator> " + NL + "void* GetAt(InputIterator& it, int index) {" + NL + "\tstd::advance(it, index);" + NL + "\treturn *it;" + NL + "};" + NL;
+  protected final String TEXT_78 = NL + "//A template function to copy set" + NL + "template<typename InputIterator, typename T>" + NL + "void copySet(InputIterator& it, InputIterator& end ,T* setObj) {\t" + NL + "\tfor (; it != end; ++it) {" + NL + "\t\tsetObj->insert(*it);" + NL + "\t}" + NL + "};" + NL;
+  protected final String TEXT_79 = "<";
   protected final String TEXT_80 = ">";
   protected final String TEXT_81 = "*";
-  protected final String TEXT_82 = NL + "std::for_each(";
-  protected final String TEXT_83 = "->begin(), ";
-  protected final String TEXT_84 = "->end(), /*std::default_delete<";
-  protected final String TEXT_85 = ">*/ deleteElement());";
-  protected final String TEXT_86 = NL;
-  protected final String TEXT_87 = "->clear();" + NL + "delete ";
-  protected final String TEXT_88 = ";";
+  protected final String TEXT_82 = "<";
+  protected final String TEXT_83 = ", ";
+  protected final String TEXT_84 = ">";
+  protected final String TEXT_85 = "*";
+  protected final String TEXT_86 = NL + "std::for_each(";
+  protected final String TEXT_87 = "->begin(), ";
+  protected final String TEXT_88 = "->end(), /*std::default_delete<";
+  protected final String TEXT_89 = ">*/ deleteElement());";
+  protected final String TEXT_90 = NL;
+  protected final String TEXT_91 = "->clear();" + NL + "delete ";
+  protected final String TEXT_92 = ";";
 
   /**
   * @param argument
@@ -416,15 +420,42 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
 	@GenerationArgument(id= ICppDefinitions.ADD_VARIABLE_ARGUMENT) String fullName;
 	@GenerationArgument(id= ICppDefinitions.ADD_PARAMETER_ARGUMENT) String parameter;
+	@GenerationArgument(id= ICppDefinitions.ADD_INDEX_ARGUMENT) String indexParameter;
 	
 @Override
 public void execute() {
+
+if(indexParameter== null|| indexParameter.isEmpty()){
+	insertWithoutIndex();
+	return;
+}
+
+insertWithIndex();
+
+}
+
+private void insertWithoutIndex(){
 
 
     stringBuffer.append(fullName);
     stringBuffer.append(TEXT_35);
     stringBuffer.append(parameter);
     stringBuffer.append(TEXT_36);
+    
+
+}
+
+private void insertWithIndex(){
+
+
+    stringBuffer.append(fullName);
+    stringBuffer.append(TEXT_37);
+    stringBuffer.append(fullName);
+    stringBuffer.append(TEXT_38);
+    stringBuffer.append(indexParameter);
+    stringBuffer.append(TEXT_39);
+    stringBuffer.append(parameter);
+    stringBuffer.append(TEXT_40);
     
 
 }
@@ -448,9 +479,9 @@ public void execute() {
 
 
     stringBuffer.append(fullName);
-    stringBuffer.append(TEXT_37);
+    stringBuffer.append(TEXT_41);
     stringBuffer.append(parameter);
-    stringBuffer.append(TEXT_38);
+    stringBuffer.append(TEXT_42);
     
 
 }
@@ -477,13 +508,13 @@ public void execute() {
 
 
     initialize();
-    stringBuffer.append(TEXT_39);
+    stringBuffer.append(TEXT_43);
     stringBuffer.append(sourceFullName);
-    stringBuffer.append(TEXT_40);
+    stringBuffer.append(TEXT_44);
     stringBuffer.append(sourceFullName);
-    stringBuffer.append(TEXT_41);
+    stringBuffer.append(TEXT_45);
     stringBuffer.append(targetFullName);
-    stringBuffer.append(TEXT_42);
+    stringBuffer.append(TEXT_46);
     
 
 }
@@ -495,11 +526,11 @@ private void initialize(){
 
 
     stringBuffer.append(listType);
-    stringBuffer.append(TEXT_43);
+    stringBuffer.append(TEXT_47);
     stringBuffer.append(targetFullName);
-    stringBuffer.append(TEXT_44);
+    stringBuffer.append(TEXT_48);
     stringBuffer.append(listDefinition);
-    stringBuffer.append(TEXT_45);
+    stringBuffer.append(TEXT_49);
     
 
 }
@@ -535,24 +566,24 @@ public void execute() {
 
     initialize();
     stringBuffer.append(listIterativeType);
-    stringBuffer.append(TEXT_46);
-    stringBuffer.append(beginIterator);
-    stringBuffer.append(TEXT_47);
-    stringBuffer.append(sourceFullName);
-    stringBuffer.append(TEXT_48);
-    stringBuffer.append(TEXT_49);
-    stringBuffer.append(listIterativeType);
     stringBuffer.append(TEXT_50);
-    stringBuffer.append(endIterator);
+    stringBuffer.append(beginIterator);
     stringBuffer.append(TEXT_51);
     stringBuffer.append(sourceFullName);
     stringBuffer.append(TEXT_52);
-    stringBuffer.append(beginIterator);
     stringBuffer.append(TEXT_53);
-    stringBuffer.append(endIterator);
+    stringBuffer.append(listIterativeType);
     stringBuffer.append(TEXT_54);
-    stringBuffer.append(targetFullName);
+    stringBuffer.append(endIterator);
     stringBuffer.append(TEXT_55);
+    stringBuffer.append(sourceFullName);
+    stringBuffer.append(TEXT_56);
+    stringBuffer.append(beginIterator);
+    stringBuffer.append(TEXT_57);
+    stringBuffer.append(endIterator);
+    stringBuffer.append(TEXT_58);
+    stringBuffer.append(targetFullName);
+    stringBuffer.append(TEXT_59);
     
 
 }
@@ -564,11 +595,11 @@ private void initialize(){
 
 
     stringBuffer.append(listType);
-    stringBuffer.append(TEXT_56);
+    stringBuffer.append(TEXT_60);
     stringBuffer.append(targetFullName);
-    stringBuffer.append(TEXT_57);
+    stringBuffer.append(TEXT_61);
     stringBuffer.append(listDefinition);
-    stringBuffer.append(TEXT_58);
+    stringBuffer.append(TEXT_62);
     
 
 } 
@@ -606,11 +637,11 @@ public void execute() {
 
 
     setAssigneeOrReturn();
-    stringBuffer.append(TEXT_59);
+    stringBuffer.append(TEXT_63);
     stringBuffer.append(fullName);
-    stringBuffer.append(TEXT_60);
+    stringBuffer.append(TEXT_64);
     stringBuffer.append(indexVariable);
-    stringBuffer.append(TEXT_61);
+    stringBuffer.append(TEXT_65);
     
 
 }
@@ -618,13 +649,13 @@ public void execute() {
 private void setAssigneeOrReturn(){
 	if(assignee== null|| assignee.isEmpty()){
 		
-    stringBuffer.append(TEXT_62);
+    stringBuffer.append(TEXT_66);
     
 		return;
 	}
 	
     stringBuffer.append(assignee);
-    stringBuffer.append(TEXT_63);
+    stringBuffer.append(TEXT_67);
     
 }
 
@@ -653,19 +684,19 @@ public void execute() {
 
 
     stringBuffer.append(listIterativeType);
-    stringBuffer.append(TEXT_64);
-    stringBuffer.append(beginIterator);
-    stringBuffer.append(TEXT_65);
-    stringBuffer.append(fullName);
-    stringBuffer.append(TEXT_66);
-    setAssigneeOrReturn();
-    stringBuffer.append(TEXT_67);
-    stringBuffer.append(type);
     stringBuffer.append(TEXT_68);
     stringBuffer.append(beginIterator);
     stringBuffer.append(TEXT_69);
-    stringBuffer.append(indexVariable);
+    stringBuffer.append(fullName);
     stringBuffer.append(TEXT_70);
+    setAssigneeOrReturn();
+    stringBuffer.append(TEXT_71);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_72);
+    stringBuffer.append(beginIterator);
+    stringBuffer.append(TEXT_73);
+    stringBuffer.append(indexVariable);
+    stringBuffer.append(TEXT_74);
     
 
 }
@@ -675,13 +706,13 @@ public void execute() {
 private void setAssigneeOrReturn(){
 	if(assignee== null|| assignee.isEmpty()){
 		
-    stringBuffer.append(TEXT_71);
+    stringBuffer.append(TEXT_75);
     
 		return;
 	}
 	
     stringBuffer.append(assignee);
-    stringBuffer.append(TEXT_72);
+    stringBuffer.append(TEXT_76);
     
 }
 
@@ -708,7 +739,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_73);
+    stringBuffer.append(TEXT_77);
     
 
 }
@@ -728,7 +759,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_74);
+    stringBuffer.append(TEXT_78);
     
 
 }
@@ -753,10 +784,10 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
     stringBuffer.append(manyTypeName);
-    stringBuffer.append(TEXT_75);
+    stringBuffer.append(TEXT_79);
     stringBuffer.append(type);
     setPointer(isPointerType);
-    stringBuffer.append(TEXT_76);
+    stringBuffer.append(TEXT_80);
     setPointer(isPointer);
     
 }
@@ -766,7 +797,7 @@ private void setPointer(boolean flag){
 		return;
 	}
 	
-    stringBuffer.append(TEXT_77);
+    stringBuffer.append(TEXT_81);
     
 }
 
@@ -791,12 +822,12 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
     stringBuffer.append(manyTypeName);
-    stringBuffer.append(TEXT_78);
+    stringBuffer.append(TEXT_82);
     stringBuffer.append(type);
     setPointer(isPointerType);
-    stringBuffer.append(TEXT_79);
+    stringBuffer.append(TEXT_83);
     stringBuffer.append(comparator);
-    stringBuffer.append(TEXT_80);
+    stringBuffer.append(TEXT_84);
     setPointer(isPointer);
     
 }
@@ -806,7 +837,7 @@ private void setPointer(boolean flag){
 		return;
 	}
 	
-    stringBuffer.append(TEXT_81);
+    stringBuffer.append(TEXT_85);
     
 }
 
@@ -828,18 +859,18 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_82);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_83);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_84);
-    stringBuffer.append(type);
-    stringBuffer.append(TEXT_85);
     stringBuffer.append(TEXT_86);
     stringBuffer.append(name);
     stringBuffer.append(TEXT_87);
     stringBuffer.append(name);
     stringBuffer.append(TEXT_88);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_89);
+    stringBuffer.append(TEXT_90);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_91);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_92);
     
 
 }
