@@ -105,21 +105,24 @@ public class CppStatemachinePointsHandler{
 	
 	@LoopProcessorAnnotation(priority= GenerationPolicyRegistryPriorities.HIEGHEST, aspect= LoopAspectConstants.AFTER, processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR})
 	public static void classProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object uClass,
+			@GenerationLoopElement Object model,
 			@GenerationElementParameter(id = ICppStatemachinesDefinitions.STATEMACHINES) List<?> statemachines){
-		elementProcessor(generationValueGetter, statemachines, uClass);
+		elementProcessor(generationValueGetter, statemachines, uClass, model);
 	}
 
 	@LoopProcessorAnnotation(priority= GenerationPolicyRegistryPriorities.HIEGHEST, aspect= LoopAspectConstants.AFTER, processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
 	public static void interfaceProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
+			@GenerationLoopElement Object model,
 			@GenerationElementParameter(id = ICppStatemachinesDefinitions.STATEMACHINES) List<?> statemachines){
-		elementProcessor(generationValueGetter, statemachines, element);
+		elementProcessor(generationValueGetter, statemachines, element, model);
 	}
 	
-	private static void elementProcessor(GenerationPolicyRegistry generationValueGetter, List<?> statemachines, Object element) {
+	private static void elementProcessor(GenerationPolicyRegistry generationValueGetter, List<?> statemachines, Object element, Object model) {
 		if(statemachines==null|| statemachines.isEmpty()){
 			return;
 		}
 		
+		generationValueGetter.addUniqueValue(ICppDefinitions.TEMPLATES_DEFINITIONS, generationValueGetter.use(ICppDefinitions.THREAD_IMPLEMENTATION), model);
 		generationValueGetter.generationPointString(element, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.ASSERT_LIBRARY),
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
@@ -636,11 +639,24 @@ public class CppStatemachinePointsHandler{
 						
 						String guardCode = generationValueGetter.generationPointString(transition, ICppStatemachinesDefinitions.TRANSITION_GUARD_CODE_BODY);
 						if (guardCode!= null&& !guardCode.isEmpty()) {
+							
+							String guardsComments = 
+									generationValueGetter.generationPointString(transition, IModelingConstants.MULTILINE_COMMENTS_STRING);
+							
 							nextBody= StringUtil.indent(CommonConstants.NEW_LINE+ nextBody, 1);
 							nextBody= generationValueGetter.use(ICppDefinitions.IF_CONDITION_BLOCK, guardCode, nextBody);
+							
+							if(!guardsComments.isEmpty()){
+								nextBody= guardsComments + CommonConstants.NEW_LINE+ nextBody;
+							}
+							
 							nextBody= nextBody+ CommonConstants.NEW_LINE;
 						}
-						body= body+ /*CommonConstants.NEW_LINE+*/ nextBody;
+						
+						if(!body.isEmpty()){
+							body= body+ CommonConstants.NEW_LINE;
+						}
+						body= body+ nextBody;
 					}
 
 					switchCases = switchCases+ generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_SWITCH_CASE_DECLARATION,
@@ -1006,16 +1022,16 @@ public class CppStatemachinePointsHandler{
 			String mediator= generationValueGetter.use(ICppStatemachinesDefinitions.DO_ACTIVITY_MEDIATOR_IMPLEMENTATION, parentName, doActivityInstance); 
 			
 			Map<String, Object> map= new HashMap<String, Object>();
-			map.put(IModelingConstants.RETURN_TYPE, CPPTypesConstants.VOID);
+			map.put(IModelingConstants.METHOD_RETURN_TYPE, CPPTypesConstants.VOID);
 			map.put(IModelingConstants.CODY_BODY, StringUtil.indent(mediator, 1));
 			map.put(IModelingConstants.METHOD_NAME, doActivityInstance);
-			map.put(IModelingConstants.PARAMETERS_STRING, voidPointerNameParameter);
+			map.put(IModelingConstants.METHOD_PARAMETERS_STRING, voidPointerNameParameter);
 			map.put(IModelingConstants.METHOD_GROUP, IModelingConstants.METHOD_OPERATIONS_GROUP);
 			map.put(IModelingConstants.METHOD_OBJECT, element);
 			generationValueGetter.addValue(ICppStatemachinesDefinitions.DO_ACTIVITY_IMPLEMENTATION, map, element, VisibilityConstants.PRIVATE);
 			
 			Map<String, Object> newMap= new HashMap<String, Object>();
-			newMap.put(IModelingConstants.RETURN_TYPE, CPPTypesConstants.VOID);
+			newMap.put(IModelingConstants.METHOD_RETURN_TYPE, CPPTypesConstants.VOID);
 			newMap.put(IModelingConstants.CODY_BODY, StringUtil.indent(doActivityCode, 1));
 			newMap.put(IModelingConstants.METHOD_NAME, doActivityInstance);
 			newMap.put(IModelingConstants.METHOD_GROUP, IModelingConstants.METHOD_OPERATIONS_GROUP);
@@ -1164,7 +1180,7 @@ public class CppStatemachinePointsHandler{
 		return languageStatemachineQualifiedTypeName;
 	}
 	
-	@GenerationPoint(generationPoint = ICppHandlerDefinitions.GLOBAL_DEFINITIONS)
+	@GenerationPoint(generationPoint = ICppDefinitions.GLOBAL_DEFINITIONS)
 	public static String eventsGlobalDefinitions(@GenerationRegistry final GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingElementDefinitions.CLASSES) List<?> classes,
 			@GenerationElementParameter(id = IModelingElementDefinitions.INTERFACES) List<?> interfaces){
@@ -1307,7 +1323,8 @@ public class CppStatemachinePointsHandler{
 	}
 	
 	@SuppressWarnings("unchecked")
-	private static List<Object> getAllStateMachines(GenerationPolicyRegistry generationValueGetter, Object uClass) {
+	@GenerationPoint(generationPoint = ICppStatemachinesDefinitions.ALL_STATEMACHINES)
+	public static List<Object> getAllStateMachines(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object uClass) {
 		return (List<Object>) generationValueGetter.getList(uClass, ICppStatemachinesDefinitions.ALL_STATEMACHINES);
 	}
 	
@@ -1406,8 +1423,8 @@ public class CppStatemachinePointsHandler{
 	private static void addMethodDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, String id, String returnType, String parametersString,
 			String codeBody, Object parent, Object element, String name, String visibility, String groupId, String comment){
 		Map<String, Object> map= new HashMap<String, Object>();
-		map.put(IModelingConstants.RETURN_TYPE, returnType);
-		map.put(IModelingConstants.PARAMETERS_STRING, parametersString);
+		map.put(IModelingConstants.METHOD_RETURN_TYPE, returnType);
+		map.put(IModelingConstants.METHOD_PARAMETERS_STRING, parametersString);
 		map.put(IModelingConstants.CODY_BODY, codeBody);
 		map.put(IModelingConstants.METHOD_COMMENT, comment);
 		map.put(IModelingConstants.METHOD_NAME, name);

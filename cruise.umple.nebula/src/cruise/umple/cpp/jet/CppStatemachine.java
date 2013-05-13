@@ -118,13 +118,13 @@ public class CppStatemachine extends CppGenerationTemplate{
   protected final String TEXT_86 = ": return \"";
   protected final String TEXT_87 = "\";";
   protected final String TEXT_88 = "class ";
-  protected final String TEXT_89 = "{" + NL + "" + NL + "\tpublic:" + NL + "\t    typedef enum{ ";
-  protected final String TEXT_90 = " } enum_type;" + NL + "\t" + NL + "\tprivate:" + NL + "\t    enum_type _val;" + NL + "\t" + NL + "\tpublic:" + NL + "\t    ";
+  protected final String TEXT_89 = "{" + NL + "" + NL + "\tpublic:" + NL + "\t\ttypedef enum{ ";
+  protected final String TEXT_90 = " } enum_type;" + NL + "\t\t" + NL + "\t    ";
   protected final String TEXT_91 = "(";
   protected final String TEXT_92 = "){" + NL + "\t\t\t";
   protected final String TEXT_93 = NL + "\t    }" + NL + "\t" + NL + "\t    operator enum_type() const {" + NL + "\t        return _val;" + NL + "\t    }" + NL + "\t    " + NL + "\t    operator int() { " + NL + "\t\t\treturn static_cast<int>(_val); " + NL + "\t\t}" + NL + "\t\t" + NL + "\t\toperator string() { " + NL + "\t\t\tswitch (_val){";
   protected final String TEXT_94 = NL;
-  protected final String TEXT_95 = "\t\t\t\t" + NL + "\t\t\t\tdefault:  return \"[Unknown ENUM Type]\";" + NL + "\t\t\t}" + NL + "\t\t}" + NL + "};";
+  protected final String TEXT_95 = "\t\t\t\t" + NL + "\t\t\t\tdefault:  return \"[Unknown ENUM Type]\";" + NL + "\t\t\t}" + NL + "\t\t}" + NL + "\t\t" + NL + "\tprivate:" + NL + "\t    enum_type _val;" + NL + "\t\t" + NL + "};";
   protected final String TEXT_96 = NL;
   protected final String TEXT_97 = NL;
   protected final String TEXT_98 = "enum_type val = ";

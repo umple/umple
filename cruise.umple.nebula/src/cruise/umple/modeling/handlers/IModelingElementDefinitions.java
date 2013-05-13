@@ -39,6 +39,7 @@ public interface IModelingElementDefinitions {
 	public static final String PRIORITY= "priority"; //$NON-NLS-1$
 	public static final String GENERATES= "generates"; //$NON-NLS-1$
 	public static final String VERSION_NUMBER= "versionNumber"; //$NON-NLS-1$
+	public static final String LINE_NUMBERS= "lineNumbers"; //$NON-NLS-1$
 	
 	public static final String TYPE_NAME= "typeName"; //$NON-NLS-1$
 	public static final String IS_ABSTRACT= "isAbstract"; //$NON-NLS-1$
@@ -58,6 +59,7 @@ public interface IModelingElementDefinitions {
 	
 	public static final String NAMESPACE= "namespace"; //$NON-NLS-1$
 	public static final String FILE= "file"; //$NON-NLS-1$
+	public static final String FILE_PATH= "filePath"; //$NON-NLS-1$
 	
 	public static final String TYPE_PARAMETER_NAME= "type.parameter.name.normalizedTypeName"; //$NON-NLS-1$
 	

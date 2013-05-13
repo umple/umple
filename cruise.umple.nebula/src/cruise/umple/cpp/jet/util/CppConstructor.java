@@ -75,7 +75,7 @@ public class CppConstructor extends CppGenerationTemplate{
   protected final String TEXT_39 = "& other)";
   protected final String TEXT_40 = "{";
   protected final String TEXT_41 = NL;
-  protected final String TEXT_42 = "\tdeepCopy(other);";
+  protected final String TEXT_42 = "\tinternalCopy(other);";
   protected final String TEXT_43 = NL + "}";
   protected final String TEXT_44 = NL + " : ";
   protected final String TEXT_45 = "(other) ";
@@ -919,7 +919,7 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	
-	@GenerationElementParameter(id = NAME) String name;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationArgument String nameAsVariable;
 			
 @Override
@@ -985,8 +985,8 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	
 	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherTypeName;
-	@GenerationElementParameter(id = LOWER_BOUND) int lowerBound;
-	@GenerationElementParameter(id = UPPER_BOUND) int upperBound;
+	@GenerationElementParameter(id = IModelingElementDefinitions.LOWER_BOUND) int lowerBound;
+	@GenerationElementParameter(id = IModelingElementDefinitions.UPPER_BOUND) int upperBound;
 	@GenerationArgument String nameAsVariable;
 	@GenerationArgument boolean set;
 	

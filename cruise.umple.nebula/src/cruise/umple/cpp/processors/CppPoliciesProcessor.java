@@ -34,6 +34,9 @@ import cruise.umple.cpp.jet.util.CppConstructor;
 import cruise.umple.cpp.jet.util.CppNameHelper;
 import cruise.umple.cpp.jet.util.CppStlTemplateHelper;
 import cruise.umple.cpp.jet.util.CppTemplateHelper;
+import cruise.umple.cpp.jet.util.CppTestsHelper;
+import cruise.umple.cpp.utils.CPPCommonConstants;
+import cruise.umple.modeling.handlers.IModelingConstants;
 import cruise.umple.modeling.handlers.IModelingPriorityHandler;
 import cruise.umple.modeling.handlers.IModelingStatemachinePriorityHandler;
 import cruise.umple.modeling.handlers.ModelingAssociationsGenerationPointsHandler;
@@ -48,24 +51,32 @@ import cruise.umple.modeling.handlers.cpp.CppStatemachinePointsHandler;
 import cruise.umple.modeling.handlers.cpp.ICppModelingPriorityHandler;
 import cruise.umple.modeling.handlers.cpp.StlGenerationPointsHandler;
 
-
 abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 	
 	private GenerationPolicyRegistry generationPolicyRegistry = new GenerationPolicyRegistry();
 	
-	public void generateRootElement(Object rootElement) throws Exception {
+	public void generateRootElement(Object rootElement) {
 		this.getGenerationPolicyRegistry().process(rootElement);
 		this.handleGeneratedContents(getContentDescriptors());
+		
+		//this.generationPolicyRegistry.getGenerationLogger().showLogDetails();
 	}
 	
 	abstract public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor);
-
+	
 	public CppPoliciesProcessor() {
+		registerGenerationLanguages();
 		registerTypesPolicies();
 		registerGenerationPoints();
 		registerHelperTemplates();
 	}
-
+	
+	@Override
+	public void registerGenerationLanguages() {
+		this.generationPolicyRegistry.addUniqueValue(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE);
+	}
+	
+	@Override
 	public void registerHelperTemplates(){
 		new CppTemplateHelper().init(this.getGenerationPolicyRegistry());
 		new CppAttributeGetterImpl().init(this.getGenerationPolicyRegistry());
@@ -76,8 +87,11 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		new CppStatemachine().init(this.getGenerationPolicyRegistry());
 		new CppConstructor().init(this.getGenerationPolicyRegistry());
 		new CppStlTemplateHelper().init(this.getGenerationPolicyRegistry());
+		
+		new CppTestsHelper().init(this.getGenerationPolicyRegistry());
 	}
 	
+	@Override
 	public void registerGenerationPoints(){
 		this.getGenerationPolicyRegistry().register(IModelingPriorityHandler.class);
 		this.getGenerationPolicyRegistry().register(ICppModelingPriorityHandler.class);
@@ -96,6 +110,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		
 		this.getGenerationPolicyRegistry().register(new CppStatemachinePointsHandler());
 		
+		//this.getGenerationPolicyRegistry().register(new CppTestsPointsHandler());
 	}
 	
 	public List<ContentsDescriptor> getContentDescriptors(){

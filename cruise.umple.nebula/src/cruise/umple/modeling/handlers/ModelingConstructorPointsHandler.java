@@ -31,7 +31,6 @@ import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPolicyRegistry;
-import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
 
 
 public class ModelingConstructorPointsHandler{
@@ -40,11 +39,15 @@ public class ModelingConstructorPointsHandler{
 	public static void constructorParameters(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_TYPE_NAME) String normalizedType,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationArgument boolean isAttribute,
 			@GenerationArgument String typeParameterName) {
 		SimpleEntry<String, String> simpleEntry = new SimpleEntry<String, String>(normalizedType, typeParameterName);
-		SimpleEntry<String, SimpleEntry<String, String>> entry= new SimpleEntry<String, SimpleEntry<String, String>>(typeName, simpleEntry);
+		SimpleEntry<String, String> simpleEntryKey = new SimpleEntry<String, String>(name, typeName);
+		SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>> entry= new SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>(
+				simpleEntryKey, simpleEntry);
+		
 		generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, entry, parent, Boolean.valueOf(isAttribute));
 	}
 	

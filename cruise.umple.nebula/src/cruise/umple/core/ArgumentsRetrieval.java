@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,7 @@ public class ArgumentsRetrieval{
 		}
 		
 		private List<Object> getValue(String id, boolean all, List<Object> elements) {
+			
 			Map<String, List<Object>> map = this.data.get(id);
 			if(map== null){
 				return new ArrayList<Object>();
@@ -58,9 +60,32 @@ public class ArgumentsRetrieval{
 			List<Object> list;
 			if(all){
 				list= new ArrayList<Object>();
+				
 				for(String key: map.keySet()){
-					if(identifier.startsWith(key)){
-						list.addAll(map.get(key));
+					int indexOf = identifier.indexOf(CommonConstants.UNDERSCORE);
+					String identifierValue = identifier.substring(0, indexOf);
+					String identifierType = identifier.substring(indexOf+1, identifier.length());
+					String[] identifierValues = identifierValue.split(CommonConstants.PLUS_SEPARATOR);
+					String[] identifierTypes = identifierType.split(CommonConstants.PLUS_SEPARATOR);
+					
+					int keyIndexOf = key.indexOf(CommonConstants.UNDERSCORE);
+					String keyIdentifierValue = key.substring(0, keyIndexOf);
+					String keyIdentifierType = key.substring(keyIndexOf+1, key.length());
+					List<String> keyIdentifierValues = Arrays.asList(keyIdentifierValue.split(CommonConstants.PLUS_SEPARATOR));
+					List<String> keyIdentifierTypes = Arrays.asList(keyIdentifierType.split(CommonConstants.PLUS_SEPARATOR));
+					
+					for(int index=0; index<identifierValues.length; index++){
+						String current= identifierValues[index];
+						String currentType= identifierTypes[index];
+						int indexOfCurrent = keyIdentifierValues.indexOf(current);
+						if(indexOfCurrent>-1&& keyIdentifierTypes.get(indexOfCurrent).equals(currentType)){
+							for(Object currentValue: map.get(key)){
+								if(list.contains(currentValue)){
+									continue;
+								}
+								list.add(currentValue);
+							}
+						}
 					}
 				}
 			}else{
@@ -81,18 +106,29 @@ public class ArgumentsRetrieval{
 					if(obj instanceof Collection){
 						List<Object> asList = Arrays.asList(obj);
 						for(Object sub: asList){
+							if(sub instanceof GenerationArgumentDescriptor){
+								sub= sub.toString();
+							}
 							all.add(sub);
 						}
 						continue;
 					}else if(obj.getClass().isArray()){
 						Object[] array = (Object[]) obj;
 						for(Object sub: array){
+							if(sub instanceof GenerationArgumentDescriptor){
+								sub= sub.toString();
+							}
 							all.add(sub);
 						}
 						continue;
 					}
 					
 				}
+				
+				if(obj instanceof GenerationArgumentDescriptor){
+					obj= obj.toString();
+				}
+				
 				all.add(obj);
 			}
 			return all;
@@ -138,21 +174,34 @@ public class ArgumentsRetrieval{
 		private static String identifier(List<Object> elements) {
 			String identifier= CommonConstants.BLANK;
 			String types= CommonConstants.BLANK;
-			for(Object object: elements){
+			
+			Iterator<Object> iterator = elements.iterator();
+			while(iterator.hasNext()){
+				Object object = iterator.next();
+				
 				if(object== null){
-					types= types+ object;
-				}else{
-					types= types+ object.getClass().getName();
+					continue;
+					//types= types+ object;
 				}
+				
+				types= types+ object.getClass().getName();
 				
 				if(object instanceof String|| object instanceof Integer|| object instanceof Double|| object instanceof Boolean
 						|| object instanceof Float	/*TODO: List */){
 					identifier= identifier+ object;
+				}else if(object instanceof GenerationArgumentDescriptor){
+					identifier= identifier+ object.toString();
 				}else{
 					identifier= identifier+ System.identityHashCode(object);
 				}
-				 
+				
+				if(iterator.hasNext()){
+					identifier= identifier+ CommonConstants.PLUS;
+					types= types+ CommonConstants.PLUS;
+				}
 			}
-			return identifier+ CommonConstants.UNDERSCORE+ types;
+			
+			String string = identifier+ CommonConstants.UNDERSCORE+ types;
+			return string;
 		}
 	}
