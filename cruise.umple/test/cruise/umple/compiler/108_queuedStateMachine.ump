@@ -1,0 +1,13 @@
+class QueuedSM
+{
+  queued sm{
+    State1
+    {
+      e1 -> State2;
+    }
+    State2
+    {
+      e2 -> State1;
+    }
+  }
+}

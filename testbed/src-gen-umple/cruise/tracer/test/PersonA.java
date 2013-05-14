@@ -32,7 +32,7 @@ public class PersonA
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/tcl/Documents/7--Research/2-CRuiSE/codebase/googleumple/umple/testbed/src/TestHarnessTracer.ump,9,PersonA,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/tcl/nobackup-tmp/CheckoutForUmplePatchTest3/umple/testbed/src/TestHarnessTracer.ump,9,PersonA,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
     name = aName;
     wasSet = true;
     return wasSet;

@@ -875,6 +875,34 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
+  public void queuedStateMachine()
+  {
+                            
+    assertParse("108_queuedStateMachine.ump","[classDefinition][name:QueuedSM][stateMachine][inlineStateMachine][queued:queued][name:sm][state][stateName:State1][transition][event:e1][stateName:State2][state][stateName:State2][transition][event:e2][stateName:State1]");
+    
+    UmpleClass c = model.getUmpleClass("QueuedSM");
+    
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("sm", sm.getName());
+    
+    Assert.assertEquals(2, sm.numberOfStates());
+    State state1 = sm.getState(0);
+    Assert.assertEquals("State1", state1.getName());
+    Assert.assertEquals(1, state1.numberOfTransitions());
+    Transition t1 = state1.getTransition(0);
+    Event event1 = t1.getEvent();
+    Assert.assertEquals("e1", event1.getName());
+
+    State state2 = sm.getState(1);
+    Assert.assertEquals("State2", state2.getName());
+    Assert.assertEquals(1, state2.numberOfTransitions());
+    Transition t2 = state2.getTransition(0);
+    Event event2 = t2.getEvent();
+    Assert.assertEquals("e2", event2.getName());
+  }
+
+  
+  @Test
   public void malformedStateMachine(){
 	  assertHasWarning("107_badStateMachineSyntaxBrokenArrow.ump", 0, 1006, new Position("107_badStateMachineSyntaxBrokenArrow.ump", 4, 2, 45));
 	  assertHasWarning("107_badStateMachineSyntaxEmptyCodeBlock.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyCodeBlock.ump", 4, 2, 45));
