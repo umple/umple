@@ -3142,6 +3142,7 @@ this("UmpleInternalParser", aModel);
     return token;
   }
   
+
   // Analyze state machine related tokens within the context of an Umple class
   private void analyzeStateMachineToken(Token token, UmpleClass aClass, int analysisStep)
   {

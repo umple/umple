@@ -1,0 +1,10 @@
+namespace example;
+
+class Course
+{
+  queued status
+  {
+    Open { }
+    Full { }
+  }
+}
