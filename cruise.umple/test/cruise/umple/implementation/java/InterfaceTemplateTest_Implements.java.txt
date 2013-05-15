@@ -26,7 +26,7 @@ public class Something implements ISomething
   public void delete()
   {}
 
-  @umplesourcefile(line=8,file="../../../../../../cruise.umple/test/cruise/umple/implementation/InterfaceTemplateTest.ump",javaline=31,length=2)
+  @umplesourcefile(line=8,file="../InterfaceTemplateTest.ump",javaline=31,length=2)
   @Override
   public String getCode(String [] aParam, Integer anotherParam){
           return "";
