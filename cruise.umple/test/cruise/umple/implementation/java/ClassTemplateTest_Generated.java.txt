@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 
@@ -29,7 +29,7 @@ public class Mentor
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  @umplesourcefile(line=5,file="cruise.umpletestcruiseumpleimplementationjavaClassTemplateTest_Generated.ump",javaline=35,length=2)
+  @umplesourcefile(line=5,file="ClassTemplateTest_Generated.ump",javaline=35,length=2)
   public static main()
   {}
 
