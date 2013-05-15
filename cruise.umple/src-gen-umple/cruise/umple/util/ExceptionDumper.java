@@ -12,6 +12,8 @@ import java.io.*;
 // line 997 "../../../../src/Util_Code.ump"
 public class ExceptionDumper
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -34,8 +36,8 @@ public class ExceptionDumper
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1003 ../../../../src/Util_Code.ump
+  @umplesourcefile(line=1003,file="Util_Code.ump",javaline=41,length=21)
   public static void dumpCompilerError(Exception ex) {
      String generatedSourcePath = System.getenv("GeneratedSourcePath");
     if (generatedSourcePath == null) {
@@ -45,7 +47,8 @@ public class ExceptionDumper
       System.err.println("Using GeneratedSourcePath="+generatedSourcePath);
     }
     System.err.println("Exception "+ex.getClass().getName()+" in");
-    StackTraceElement [] st = ex.getStackTrace();
+    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(),ex);
+    /*StackTraceElement [] st = ex.getStackTrace();
     StackTraceElement ust = null;
     for (int i=0;i<st.length;i++) {
       System.err.println(st[i].toString());
@@ -55,10 +58,11 @@ public class ExceptionDumper
           System.err.println("   => "+ust.getFileName()+":"+ust.getLineNumber());
          }
       }
-    }
+    }*/
   }
   
     // Translate the java stack trace line information into the corresponding Umple line
+  @umplesourcefile(line=1027,file="Util_Code.ump",javaline=66,length=73)
     public static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
       StackTraceElement newSt;
       String javaFileName = javaStack.getFileName();
@@ -132,4 +136,5 @@ public class ExceptionDumper
       return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName, umpleLineNumber);
      
     }
+
 }

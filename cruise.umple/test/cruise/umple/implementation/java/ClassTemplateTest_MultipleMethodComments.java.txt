@@ -5,6 +5,8 @@
 
 public class Foo
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -28,6 +30,7 @@ public class Foo
   /**
    * Inline comment above method.
    */
+  @umplesourcefile(line=4,file="MultipleMethodComments.ump",javaline=31,length=1)
   public void testMethod1(){
     // I am a comment inside a method.
   }
@@ -37,6 +40,7 @@ public class Foo
    * Multiple inline comments
    * above method.
    */
+  @umplesourcefile(line=11,file="MultipleMethodComments.ump",javaline=40,length=1)
   public void testMethod2(){
     // I am a comment inside a method.
   }
@@ -45,6 +49,7 @@ public class Foo
   /**
    * Multiline comment above method.
    */
+  @umplesourcefile(line=17,file="MultipleMethodComments.ump",javaline=50,length=1)
   public void testMethod3(){
     // I am a comment inside a method.
   }
@@ -54,6 +59,7 @@ public class Foo
    * Multiple multiline comments
    * above method.
    */
+  @umplesourcefile(line=26,file="MultipleMethodComments.ump",javaline=59,length=1)
   public void testMethod4(){
     // I am a comment inside a method.
   }

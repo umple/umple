@@ -16,6 +16,8 @@ import java.util.*;
 // line 433 "../../../../src/StateMachine_Code.ump"
 public class Transition
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -426,12 +428,13 @@ public class Transition
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 435 ../../../../src/StateMachine_Code.ump
+  @umplesourcefile(line=435,file="StateMachine_Code.ump",javaline=433,length=6)
   public static Transition createPlaceholder(State nextState)
   {
     StateMachine nullSm = new StateMachine("null");
     State nullState = new State("null",nullSm);
     return new Transition(nullState, nextState);
   }
+
 }

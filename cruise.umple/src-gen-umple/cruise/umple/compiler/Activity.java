@@ -15,6 +15,8 @@ import cruise.umple.compiler.Position;
 // line 61 "../../../../src/StateMachine.ump"
 public class Activity
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -159,7 +161,7 @@ public class Activity
     }
   }
 
-  // line 87 "../../../../src/StateMachine.ump"
+  @umplesourcefile(line=87,file="../../../../src/StateMachine.ump",javaline=165,length=6)
   public void setActivityCode(String lang, String code){
     if(activityCode!=null){
   	  activityCode+= lang+code;

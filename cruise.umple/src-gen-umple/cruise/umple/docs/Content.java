@@ -14,6 +14,8 @@ import java.util.*;
 // line 330 "../../../../src/Documenter_Code.ump"
 public class Content
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -175,10 +177,11 @@ public class Content
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 333 ../../../../src/Documenter_Code.ump
+  @umplesourcefile(line=333,file="Documenter_Code.ump",javaline=182,length=4)
   public String getTitleFilename()
   {
     return title.replace(" ","") + ".html";
   }
+
 }

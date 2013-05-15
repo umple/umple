@@ -13,6 +13,8 @@ import cruise.umple.util.*;
 // line 12 "../../../../src/Generator_CodeYuml.ump"
 public class YumlGenerator implements CodeGenerator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -74,7 +76,7 @@ public class YumlGenerator implements CodeGenerator
    * Allows independent code generation tools
    * Different generators will do different things regarding where the files are put, etc.
    */
-  // line 21 "../../../../src/Generator.ump"
+  @umplesourcefile(line=21,file="../../../../src/Generator.ump",javaline=75,length=2)
   @Override
   public boolean setOutput(String aString){
           return false;
@@ -93,8 +95,8 @@ public class YumlGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 15 ../../../../src/Generator_CodeYuml.ump
+  @umplesourcefile(line=15,file="Generator_CodeYuml.ump",javaline=100,length=63)
   public void generate()
   {
     StringBuilder yuml = new StringBuilder();
@@ -158,4 +160,5 @@ public class YumlGenerator implements CodeGenerator
 
     model.setCode(yuml.toString());
   }
+
 }

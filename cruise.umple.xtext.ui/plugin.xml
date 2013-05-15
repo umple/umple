@@ -31,11 +31,20 @@
          <action
                class="cruise.umple.ui.eclipse.UmpleAction"
                icon="$nl$/icons/action.compileUmple.gif"
-               id="cruise.umple.ui.eclipse.UmpleAction"
+               id="Compile"
                label="&amp;Compile Umple"
                menubarPath="UmpleMenu/UmpleGroup"
                toolbarPath="UmpleGroup"
                tooltip="Compile Umple">
+         </action>
+         <action
+               class="cruise.umple.ui.eclipse.UmpleAction"
+               icon="$nl$/icons/action.compileUmple.gif"
+               id="CompileAndRun"
+               label="&amp;Compile and Run Umple"
+               menubarPath="UmpleMenu/UmpleGroup"
+               toolbarPath="UmpleGroup"
+               tooltip="Compile and Run Umple">
          </action>
       </actionSet>
    </extension>

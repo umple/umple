@@ -14,6 +14,8 @@ import java.util.*;
 // line 591 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -132,8 +134,8 @@ public class UmpleInterface extends UmpleClassifier
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 593 ../../../../src/Umple_Code.ump
+  @umplesourcefile(line=593,file="Umple_Code.ump",javaline=139,length=24)
   public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;
     String methodName = comparedMethod.getName();
@@ -158,4 +160,5 @@ public class UmpleInterface extends UmpleClassifier
     }
     return isMethod;  
   }
+
 }

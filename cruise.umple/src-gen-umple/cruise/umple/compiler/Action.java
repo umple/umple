@@ -11,6 +11,8 @@ import cruise.umple.compiler.Position;
 // line 122 "../../../../src/StateMachine.ump"
 public class Action
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -198,7 +200,7 @@ public class Action
   public void delete()
   {}
 
-  // line 147 "../../../../src/StateMachine.ump"
+  @umplesourcefile(line=147,file="../../../../src/StateMachine.ump",javaline=204,length=6)
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;

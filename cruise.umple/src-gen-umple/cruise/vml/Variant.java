@@ -14,6 +14,8 @@ package cruise.vml;
 // line 385 "../../../src/Vml_Code.ump"
 public class Variant
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -169,8 +171,8 @@ public class Variant
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 161 ../../../src/Vml_Code.ump
+  @umplesourcefile(line=161,file="Vml_Code.ump",javaline=176,length=11)
   public String toString()
   {
     if (name == null)
@@ -182,4 +184,5 @@ public class Variant
       return name;
     }
   }
+
 }

@@ -12,6 +12,8 @@ import org.apache.tools.ant.*;
 // line 188 "../../../../src/Builder_Code.ump"
 public class Builder
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -34,8 +36,8 @@ public class Builder
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 194 ../../../../src/Builder_Code.ump
+  @umplesourcefile(line=194,file="Builder_Code.ump",javaline=41,length=23)
   public URL compile(String directory, String jarname, String projectName, String javaTarget)
   {
 
@@ -60,6 +62,7 @@ public class Builder
     }
   }
   
+  @umplesourcefile(line=218,file="Builder_Code.ump",javaline=66,length=11)
   public void load(String directory, String jarname) 
   {
     try {
@@ -72,6 +75,7 @@ public class Builder
     }
   }
   
+  @umplesourcefile(line=230,file="Builder_Code.ump",javaline=79,length=26)
   public boolean runAnt(String buildFilename)
   {
     try
@@ -99,6 +103,7 @@ public class Builder
     }
   }
   
+  @umplesourcefile(line=257,file="Builder_Code.ump",javaline=107,length=11)
   public void runAntOLD(String buildFilename)
   {
     File buildFile = new File(buildFilename);
@@ -111,6 +116,7 @@ public class Builder
     p.executeTarget(p.getDefaultTarget());    
   }
   
+  @umplesourcefile(line=269,file="Builder_Code.ump",javaline=120,length=34)
   private String createAntFile(String baseDirectory, String buildname, String jarname, String javaTarget)
   {
     
@@ -145,4 +151,5 @@ public class Builder
       return null;
     }
   }
+
 }

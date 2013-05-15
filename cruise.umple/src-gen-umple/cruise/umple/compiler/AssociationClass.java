@@ -17,6 +17,8 @@ import java.util.*;
 // line 645 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -167,8 +169,9 @@ public class AssociationClass extends UmpleClass
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
-   public AssociationClass(String name)  {
+    @umplesourcefile(line=0,file="",javaline=173,length=3)
+ public AssociationClass(String name)  {
 super(name);
   }
+
 }

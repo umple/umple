@@ -1009,7 +1009,8 @@ class ExceptionDumper {
       System.err.println("Using GeneratedSourcePath="+generatedSourcePath);
     }
     System.err.println("Exception "+ex.getClass().getName()+" in");
-    StackTraceElement [] st = ex.getStackTrace();
+    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(),ex);
+    /*StackTraceElement [] st = ex.getStackTrace();
     StackTraceElement ust = null;
     for (int i=0;i<st.length;i++) {
       System.err.println(st[i].toString());
@@ -1019,7 +1020,7 @@ class ExceptionDumper {
           System.err.println("   => "+ust.getFileName()+":"+ust.getLineNumber());
          }
       }
-    }
+    }*/
   }
   
     // Translate the java stack trace line information into the corresponding Umple line

@@ -15,6 +15,8 @@ import java.util.*;
 // line 417 "../../../../src/Umple_Code.ump"
 public class Method
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -335,8 +337,8 @@ public class Method
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 419 ../../../../src/Umple_Code.ump
+  @umplesourcefile(line=419,file="Umple_Code.ump",javaline=342,length=7)
   public boolean getExistsInLanguage(String lang) 
   {
     if(getMethodBody().getExtraCode(lang)==null)
@@ -344,6 +346,7 @@ public class Method
     else 
       return true;
   }
+  @umplesourcefile(line=426,file="Umple_Code.ump",javaline=350,length=31)
   public String toString()
   {    
     StringBuffer methodBuffer = new StringBuffer();
@@ -375,4 +378,5 @@ public class Method
     methodBuffer.append("  }");
     return methodBuffer.toString();
   }
+
 }

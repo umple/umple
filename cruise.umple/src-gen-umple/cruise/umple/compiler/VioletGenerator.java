@@ -14,6 +14,8 @@ import java.util.*;
 // line 12 "../../../../src/Violet_Code.ump"
 public class VioletGenerator implements CodeGenerator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -254,7 +256,7 @@ public class VioletGenerator implements CodeGenerator
    * Allows independent code generation tools
    * Different generators will do different things regarding where the files are put, etc.
    */
-  // line 21 "../../../../src/Generator.ump"
+  @umplesourcefile(line=21,file="../../../../src/Generator.ump",javaline=255,length=2)
   @Override
   public boolean setOutput(String aString){
           return false;
@@ -273,8 +275,8 @@ public class VioletGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 14 ../../../../src/Violet_Code.ump
+  @umplesourcefile(line=14,file="Violet_Code.ump",javaline=280,length=7)
   public void generate()
   {
     UmpleFile umpleFile = model.getUmpleFile();
@@ -283,6 +285,7 @@ public class VioletGenerator implements CodeGenerator
     SampleFileWriter.createFile(filename, toXml());
   }
   
+  @umplesourcefile(line=22,file="Violet_Code.ump",javaline=289,length=21)
   public VioletClass newClass(String name)
   {
   
@@ -305,6 +308,7 @@ public class VioletGenerator implements CodeGenerator
     return vClass;
   }
   
+  @umplesourcefile(line=44,file="Violet_Code.ump",javaline=312,length=6)
   public VioletAssociation newAssociation(String startLabel, String endLabel, VioletClass startClass, VioletClass endClass)
   {
     VioletAssociation vAss = new VioletAssociation(startLabel,endLabel,startClass,endClass);
@@ -312,6 +316,7 @@ public class VioletGenerator implements CodeGenerator
     return vAss;
   }
 
+  @umplesourcefile(line=51,file="Violet_Code.ump",javaline=320,length=37)
   public void draw(UmpleModel model)
   {
     Map<UmpleClass,VioletClass> classToVioletMap = new HashMap<UmpleClass,VioletClass>();
@@ -351,6 +356,7 @@ public class VioletGenerator implements CodeGenerator
   }
 
 
+  @umplesourcefile(line=90,file="Violet_Code.ump",javaline=360,length=15)
   public String toXml()
   {
     VioletDiagram diagram = new VioletDiagram();
@@ -366,4 +372,5 @@ public class VioletGenerator implements CodeGenerator
     }
     return diagram.toXml();
   }
+
 }

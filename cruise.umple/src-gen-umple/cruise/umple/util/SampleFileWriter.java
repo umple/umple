@@ -12,6 +12,8 @@ import org.junit.*;
 // line 567 "../../../../src/Util_Code.ump"
 public class SampleFileWriter
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -34,12 +36,13 @@ public class SampleFileWriter
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 574 ../../../../src/Util_Code.ump
+  @umplesourcefile(line=574,file="Util_Code.ump",javaline=41,length=11)
   public static File[] getAllFiles(File inputDirectory)
   {
     File[] allFiles = inputDirectory.listFiles();
     Arrays.sort(allFiles, new Comparator<File>(){
+  @umplesourcefile(line=578,file="Util_Code.ump",javaline=46,length=4)
       public int compare(File f1, File f2)
       {
         return f1.getName().compareTo(f2.getName());
@@ -48,6 +51,7 @@ public class SampleFileWriter
     return allFiles;
   }
 
+  @umplesourcefile(line=586,file="Util_Code.ump",javaline=55,length=27)
   public static String readContent(File filename)
   {
     BufferedReader reader = null;
@@ -76,6 +80,7 @@ public class SampleFileWriter
 
   }
   
+  @umplesourcefile(line=614,file="Util_Code.ump",javaline=84,length=11)
   public static void assertEitherFileContent(File expected1, File expected2, String actual)
   {
     try
@@ -88,6 +93,7 @@ public class SampleFileWriter
     }
   }
   
+  @umplesourcefile(line=626,file="Util_Code.ump",javaline=97,length=45)
   public static void assertPartialFileContent(File partial, String actual)
   {
     BufferedReader expectedReader = null;
@@ -145,11 +151,13 @@ public class SampleFileWriter
     if (!foundMatch) { Assert.fail("Did not find expected lines"); }
   }
   
+  @umplesourcefile(line=683,file="Util_Code.ump",javaline=155,length=4)
   public static void assertFileContent(File expected, String actual)
   {
     assertFileContent(expected, actual, true);
   }
   
+  @umplesourcefile(line=688,file="Util_Code.ump",javaline=161,length=38)
   public static void assertFileContent(File expected, String actual, boolean ignoreLineComments)
   {
     
@@ -199,6 +207,7 @@ public class SampleFileWriter
     }    
   }
   
+  @umplesourcefile(line=737,file="Util_Code.ump",javaline=211,length=14)
   public static void closeAsRequired(BufferedReader reader)
   {
     if (reader != null)
@@ -214,6 +223,7 @@ public class SampleFileWriter
     }
   }
   
+  @umplesourcefile(line=752,file="Util_Code.ump",javaline=227,length=14)
   public static void closeAsRequired(InputStream reader)
   {
     if (reader != null)
@@ -229,6 +239,7 @@ public class SampleFileWriter
     }
   }
   
+  @umplesourcefile(line=767,file="Util_Code.ump",javaline=243,length=19)
   public static String rationalize(String rawPath)
   {
     String path = rawPath;
@@ -249,6 +260,7 @@ public class SampleFileWriter
     return path;
   }
   
+  @umplesourcefile(line=787,file="Util_Code.ump",javaline=264,length=16)
   public static void createFile(String filename, String input)
   {
     File f = new File(filename);
@@ -266,6 +278,7 @@ public class SampleFileWriter
     }
   }
   
+  @umplesourcefile(line=804,file="Util_Code.ump",javaline=282,length=14)
   public static void destroy(String filename)
   {
     
@@ -281,6 +294,7 @@ public class SampleFileWriter
     }
   }
   
+  @umplesourcefile(line=819,file="Util_Code.ump",javaline=298,length=15)
   private static void destroy(File path)
   {
     if( path.exists() ) {
@@ -296,4 +310,5 @@ public class SampleFileWriter
     }
     path.delete();
   }
+
 }

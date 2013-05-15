@@ -9,6 +9,8 @@ package cruise.umple.compiler.exceptions;
 // line 25 "../../../../../src/UmpleExceptions.ump"
 public class SemanticException
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -31,7 +33,7 @@ public class SemanticException
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 29 ../../../../../src/UmpleExceptions.ump
   static final long serialVersionUID = 2;
+
 }

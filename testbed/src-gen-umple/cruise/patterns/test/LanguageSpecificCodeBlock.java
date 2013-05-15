@@ -6,6 +6,8 @@ package cruise.patterns.test;
 // line 66 "../../../../src/TestHarnessPatterns.ump"
 public class LanguageSpecificCodeBlock
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -97,7 +99,7 @@ public class LanguageSpecificCodeBlock
   public void delete()
   {}
 
-  // line 72 "../../../../src/TestHarnessPatterns.ump"
+  @umplesourcefile(line=72,file="../../../../src/TestHarnessPatterns.ump",javaline=103,length=1)
   public boolean isJava(){
     return true;
   }

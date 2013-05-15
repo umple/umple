@@ -13,6 +13,8 @@ import java.util.*;
 // line 1858 "../../../../src/Umple_Code.ump"
 public class Comment
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -65,7 +67,6 @@ public class Comment
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1860 ../../../../src/Umple_Code.ump
   public Boolean isInline = true;
 
@@ -79,6 +80,7 @@ public class Comment
    * 
    * @return The processed/formatted comment appropriate for use in generated code output.
    */
+  @umplesourcefile(line=1872,file="Umple_Code.ump",javaline=84,length=116)
   public static String format(String type,List<Comment> allComments)
   {
     //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
@@ -195,4 +197,5 @@ public class Comment
 
     return output.trim();
   }
+
 }

@@ -16,6 +16,8 @@ import cruise.umple.compiler.sdl.*;
 // line 12 "../../../../src/Generator_CodeSDL.ump"
 public class SDLGenerator implements CodeGenerator,CodeTranslator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -85,7 +87,6 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 15 ../../../../src/Generator_CodeSDL.ump
   private static List<String> SdlPrimitives;
 
@@ -97,6 +98,7 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
 
   }
   
+  @umplesourcefile(line=25,file="Generator_CodeSDL.ump",javaline=102,length=19)
   public void prepare()
   {
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(model.getUmpleClasses());
@@ -118,6 +120,7 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
   }
   
    
+  @umplesourcefile(line=46,file="Generator_CodeSDL.ump",javaline=124,length=14)
   public ILang getLanguageFor(UmpleElement aElement)
   {
     if (aElement instanceof UmpleInterface)
@@ -133,11 +136,13 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
     }
   }
   
+  @umplesourcefile(line=61,file="Generator_CodeSDL.ump",javaline=140,length=4)
   public String translate(String format, Constraint constraint)
   {
   	return "{0}";
   }
   
+  @umplesourcefile(line=66,file="Generator_CodeSDL.ump",javaline=146,length=9)
   public String translate(String name, UmpleInterface aInterface)
   {
     String result = "";
@@ -148,6 +153,7 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
     return result;
   }
   
+  @umplesourcefile(line=76,file="Generator_CodeSDL.ump",javaline=157,length=44)
   public String translate(String name, UmpleClass aClass)
   {
     if ("constructorMandatory".equals(name))
@@ -193,45 +199,53 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
     return "UNKNOWN ID: " + name;
   }
   
+  @umplesourcefile(line=121,file="Generator_CodeSDL.ump",javaline=203,length=4)
    private String getExtendAndImplements(UmpleClass uClass)
   {
 	return ""; 
   }
   
+  @umplesourcefile(line=126,file="Generator_CodeSDL.ump",javaline=209,length=4)
    private String getImplementsInterfacesNames(UmpleClass uClass)
    {
 	return ""; 
    }
 
+  @umplesourcefile(line=131,file="Generator_CodeSDL.ump",javaline=215,length=4)
  private String getExtendClassesNames(UmpleClass uClass)
   {
 	return ""; 
   }
 
 
+  @umplesourcefile(line=137,file="Generator_CodeSDL.ump",javaline=222,length=5)
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
    
     return "UNKNOWN ID: " + keyName;
   }
   
+  @umplesourcefile(line=143,file="Generator_CodeSDL.ump",javaline=229,length=5)
   public String translate(String keyName, State state)
   {
    
     return "UNKNOWN ID: " + keyName;
   }
   
+  @umplesourcefile(line=149,file="Generator_CodeSDL.ump",javaline=236,length=5)
   public String translate(String keyName, StateMachine sm)
   {
    
     return "UNKNOWN ID: " + keyName;
   }
   
+  @umplesourcefile(line=155,file="Generator_CodeSDL.ump",javaline=243,length=4)
   public String translate(String keyName, Event event)
   {
     return "UNKNOWN ID: " + keyName;
   }
   
+  @umplesourcefile(line=160,file="Generator_CodeSDL.ump",javaline=249,length=6)
   public void generate()
   {
     prepare();
@@ -240,6 +254,7 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
   }
   
   
+  @umplesourcefile(line=168,file="Generator_CodeSDL.ump",javaline=258,length=28)
   private void writeFile()
   {
     try //Output all elements in a single file
@@ -270,11 +285,13 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
   }
   
 
+  @umplesourcefile(line=198,file="Generator_CodeSDL.ump",javaline=289,length=4)
 public String translate(String id, Attribute attribute) {
 
 	return null;
 }
 
+  @umplesourcefile(line=203,file="Generator_CodeSDL.ump",javaline=295,length=4)
 public String translate(String keyName, TraceItem ti)
   {
   	return null;
@@ -282,10 +299,12 @@ public String translate(String keyName, TraceItem ti)
   
 
 @Override
+  @umplesourcefile(line=210,file="Generator_CodeSDL.ump",javaline=303,length=3)
 public String translate(String id, AssociationVariable aVar) {
 	return null;
 }
 
+  @umplesourcefile(line=214,file="Generator_CodeSDL.ump",javaline=308,length=15)
   private String getUpperCaseName(String name)
   {
     if (name == null || name.length() == 0)
@@ -302,6 +321,7 @@ public String translate(String id, AssociationVariable aVar) {
     }
   }
   
+  @umplesourcefile(line=230,file="Generator_CodeSDL.ump",javaline=325,length=26)
   private void prepare(UmpleClass aClass)
   {
     if (aClass.getGeneratedClass() != null)
@@ -330,12 +350,14 @@ public String translate(String id, AssociationVariable aVar) {
   }
   
   
+  @umplesourcefile(line=258,file="Generator_CodeSDL.ump",javaline=354,length=4)
   public String nameOf(AssociationVariable av)
   {
 	return "";
   }
   
   
+  @umplesourcefile(line=264,file="Generator_CodeSDL.ump",javaline=361,length=5)
   private void generateNullableConstructorSignature(GeneratedClass genClass)
   {
     String currentConstructor = genClass.getLookup("constructorSignature");
@@ -343,13 +365,16 @@ public String translate(String id, AssociationVariable aVar) {
   }
   
 
+  @umplesourcefile(line=271,file="Generator_CodeSDL.ump",javaline=369,length=4)
   private void addImports(UmpleClass aClass, GeneratedClass genClass)
   {
 
   }
 
+  @umplesourcefile(line=276,file="Generator_CodeSDL.ump",javaline=375,length=4)
   private void addAssociationImports(UmpleClass aClass, GeneratedClass genClass)
   {
 
   }
+
 }

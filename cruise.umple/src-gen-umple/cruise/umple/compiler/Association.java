@@ -17,6 +17,8 @@ import java.util.*;
 // line 1110 "../../../../src/Umple_Code.ump"
 public class Association
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -291,8 +293,8 @@ public class Association
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1113 ../../../../src/Umple_Code.ump
+  @umplesourcefile(line=1113,file="Umple_Code.ump",javaline=298,length=14)
   public void setLeftAndRight()
   {
     String name = this.getName();
@@ -308,6 +310,7 @@ public class Association
 
   }
 
+  @umplesourcefile(line=1128,file="Umple_Code.ump",javaline=314,length=20)
   public int whoIsInvalid()
   {
     if (!getIsLeftNavigable() || !getIsRightNavigable())
@@ -329,11 +332,13 @@ public class Association
     return -1;
   }
 
+  @umplesourcefile(line=1149,file="Umple_Code.ump",javaline=336,length=4)
   public boolean isValid()
   {
     return whoIsInvalid() == -1;
   }
 
+  @umplesourcefile(line=1154,file="Umple_Code.ump",javaline=342,length=17)
   public String getArrowString()
   {
     String arrow = "--";
@@ -352,6 +357,7 @@ public class Association
     return arrow;
   }
 
+  @umplesourcefile(line=1172,file="Umple_Code.ump",javaline=361,length=15)
   public String toGenericString()
   {
     String leftSide = getEnd(0).toGenericString();
@@ -368,6 +374,7 @@ public class Association
     }
   }
 
+  @umplesourcefile(line=1188,file="Umple_Code.ump",javaline=378,length=20)
   public String deriveName()
   {
     AssociationEnd firstEnd = this.getEnd(0);
@@ -389,13 +396,16 @@ public class Association
     }
   }
   
+  @umplesourcefile(line=1209,file="Umple_Code.ump",javaline=400,length=4)
   public void setImmutable()
   {
     this.immutable = true;
   }
   
+  @umplesourcefile(line=1214,file="Umple_Code.ump",javaline=406,length=4)
   public boolean isImmutable()
   {
     return this.immutable;
   }
+
 }

@@ -17,6 +17,8 @@ import java.util.*;
 // line 16 "../../../../src/Trace_Code.ump"
 public class UmpleVariable
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -246,7 +248,7 @@ public class UmpleVariable
    * @params uClass: the umple class to look within for the trace item
    * @return Attribute_Traceitem for this UmpleVariable(either association or attribute);
    */
-  // line 24 "../../../../src/Trace_Code.ump"
+  @umplesourcefile(line=24,file="../../../../src/Trace_Code.ump",javaline=245,length=32)
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all of the trace directives from the passed umple class
     for(TraceDirective td: uClass.getTraceDirectives())
@@ -297,8 +299,8 @@ public class UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1052 ../../../../src/Umple_Code.ump
+  @umplesourcefile(line=1052,file="Umple_Code.ump",javaline=304,length=15)
   public String getUpperCaseName()
   {
     if (name == null || name.length() == 0)
@@ -315,8 +317,10 @@ public class UmpleVariable
     }
   }
 
+  @umplesourcefile(line=1068,file="Umple_Code.ump",javaline=321,length=4)
   public boolean isImmutable()
   {
     return "immutable".equals(modifier);
   }
+
 }

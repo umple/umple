@@ -13,6 +13,8 @@ import cruise.umple.util.*;
 // line 1160 "../../../../src/UmpleSync_Code.ump"
 public class DeleteGeneralizationAction extends SynchronizationAction
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -39,8 +41,8 @@ public class DeleteGeneralizationAction extends SynchronizationAction
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1163 ../../../../src/UmpleSync_Code.ump
+  @umplesourcefile(line=1163,file="UmpleSync_Code.ump",javaline=46,length=77)
   public void go()
   {
     try
@@ -118,4 +120,5 @@ public class DeleteGeneralizationAction extends SynchronizationAction
       setUmpleCode(output);
     }
   }
+
 }

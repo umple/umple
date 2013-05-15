@@ -20,6 +20,8 @@ package cruise.umple.compiler;
 // line 1737 "../../../../src/Umple_Code.ump"
 public class Point
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -121,8 +123,8 @@ public class Point
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1740 ../../../../src/Umple_Code.ump
+  @umplesourcefile(line=1740,file="Umple_Code.ump",javaline=128,length=12)
   public static Point create(int n)
   {
     int p = (int)Math.sqrt(n) + 1;
@@ -136,8 +138,10 @@ public class Point
     }
   }
 
+  @umplesourcefile(line=1753,file="Umple_Code.ump",javaline=142,length=4)
   public String toString()
   {
     return "(" + getX() + "," + getY() + ")";
   }
+
 }

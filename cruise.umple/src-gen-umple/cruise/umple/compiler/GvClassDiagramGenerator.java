@@ -15,6 +15,8 @@ import cruise.umple.compiler.exceptions.*;
 // line 18 "../../../../src/Generator_CodeGvClassDiagram.ump"
 public class GvClassDiagramGenerator implements CodeGenerator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -84,8 +86,8 @@ public class GvClassDiagramGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 21 ../../../../src/Generator_CodeGvClassDiagram.ump
+  @umplesourcefile(line=21,file="Generator_CodeGvClassDiagram.ump",javaline=91,length=150)
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -114,6 +116,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
   }
 
   // Actually output the class contents  
+  @umplesourcefile(line=49,file="Generator_CodeGvClassDiagram.ump",javaline=120,length=37)
   private void visitClass(UmpleClass uClass, Set visitedClasses, StringBuilder code, StringBuilder associations)
   {
     // Ensure we only visit once
@@ -226,6 +229,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
     }
   }
   
+  @umplesourcefile(line=161,file="Generator_CodeGvClassDiagram.ump",javaline=233,length=6)
   private void terminateCode(StringBuilder code, StringBuilder associations) {
 
     code.append("\n  // All associations\n");
@@ -238,6 +242,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
   } 
 
   // Used to indent code
+  @umplesourcefile(line=173,file="Generator_CodeGvClassDiagram.ump",javaline=246,length=5)
   private void appendSpaces(StringBuilder code, int numSpaces) {
     for(int i=0; i<numSpaces; i++) {
       code.append(" ");
@@ -245,6 +250,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
   }
 
   // Output the graphviz file to a file with the .gv suffix
+  @umplesourcefile(line=180,file="Generator_CodeGvClassDiagram.ump",javaline=254,length=18)
   private void writeModel()
   {
     try
@@ -263,4 +269,5 @@ public class GvClassDiagramGenerator implements CodeGenerator
       throw new UmpleCompilerException("There was a problem with generating GraphViz Class Diagram code." + e, e);
     }
   }
+
 }

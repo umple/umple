@@ -7,6 +7,8 @@ import java.util.*;
 // line 42 "../../../src/LocalHarness.ump"
 public class MentorAN
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

@@ -12,6 +12,8 @@ package cruise.umple.compiler;
 // line 461 "../../../../src/Umple_Code.ump"
 public class MethodBody
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -67,21 +69,25 @@ public class MethodBody
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
-   public MethodBody(String aValue)  {
+    @umplesourcefile(line=0,file="",javaline=73,length=3)
+ public MethodBody(String aValue)  {
 this(new CodeBlock(aValue!=null ? aValue : ""));
   }
 // line 467 ../../../../src/Umple_Code.ump
+  @umplesourcefile(line=467,file="Umple_Code.ump",javaline=78,length=4)
   public String getExtraCode(String lang)
   {
   return codeblock.getCode(lang);
   }
+  @umplesourcefile(line=471,file="Umple_Code.ump",javaline=83,length=4)
   public void setExtraCode(String code)
   {
     codeblock.setCode(code);
   }
+  @umplesourcefile(line=475,file="Umple_Code.ump",javaline=88,length=4)
   public void setExtraCode(String lang, String code)
   {
     codeblock.setCode(lang,code);
   }
+
 }

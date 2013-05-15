@@ -9,6 +9,8 @@ package cruise.umple.util;
 // line 12 "../../../../src/Util_Code.ump"
 public class TriState
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -86,8 +88,10 @@ public class TriState
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 19 ../../../../src/Util_Code.ump
+  @umplesourcefile(line=19,file="Util_Code.ump",javaline=93,length=1)
   public boolean isTrue() { return isSet && status; }
+  @umplesourcefile(line=20,file="Util_Code.ump",javaline=95,length=1)
   public boolean isFalse() { return isSet && !status; }
+
 }

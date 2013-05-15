@@ -17,6 +17,8 @@ package cruise.umple.compiler;
 // line 1223 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -310,30 +312,34 @@ public class AssociationEnd
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1226 ../../../../src/Umple_Code.ump
   private static int MULT_MANY = -1;
 
+  @umplesourcefile(line=1228,file="Umple_Code.ump",javaline=319,length=4)
   public boolean isNavigable()
   {
     return !getModifier().toLowerCase().equals("nonnavigable");
   }  
 
+  @umplesourcefile(line=1233,file="Umple_Code.ump",javaline=325,length=4)
   public String getLowerBoundString()
   {
     return getMultiplicity().getLowerBound() == -1 ? "*" : getMultiplicity().getLowerBound() + "";
   }
 
+  @umplesourcefile(line=1238,file="Umple_Code.ump",javaline=331,length=4)
   public String getUpperBoundString()
   {
     return getMultiplicity().getUpperBound() == -1 ? "*" : getMultiplicity().getUpperBound() + "";
   }
 
+  @umplesourcefile(line=1243,file="Umple_Code.ump",javaline=337,length=4)
   public String getDisplayRoleName()
   {
     return isDefaultRoleName ? "" : getRoleName();
   }
 
+  @umplesourcefile(line=1248,file="Umple_Code.ump",javaline=343,length=19)
   public String toSimpleString()
   {
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
@@ -354,6 +360,7 @@ public class AssociationEnd
     }
   }
 
+  @umplesourcefile(line=1268,file="Umple_Code.ump",javaline=364,length=23)
   public String toGenericString()
   {
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
@@ -378,6 +385,7 @@ public class AssociationEnd
     }
   }
 
+  @umplesourcefile(line=1292,file="Umple_Code.ump",javaline=389,length=27)
   public String toString()
   {
     String asText = "";
@@ -406,11 +414,13 @@ public class AssociationEnd
     return asText;
   }
 
+  @umplesourcefile(line=1320,file="Umple_Code.ump",javaline=418,length=4)
   private String formatEnd(int aValue)
   {
     return aValue == MULT_MANY ? "*" : aValue + "";
   }
 
+  @umplesourcefile(line=1325,file="Umple_Code.ump",javaline=424,length=16)
   private String formatGenericEnd(int aValue, String defaultIfNotOneOrMany)
   {
 
@@ -427,4 +437,5 @@ public class AssociationEnd
       return defaultIfNotOneOrMany;
     }
   }
+
 }

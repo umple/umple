@@ -11,6 +11,8 @@ import java.util.*;
 // line 307 "../../../../src/Umple.ump"
 public class UmpleClassifier extends UmpleElement
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

@@ -11,6 +11,8 @@ package cruise.umple.compiler;
 // line 129 "../../../../src/UmpleHelper_Code.ump"
 public class UmpleParserFactory
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -33,8 +35,8 @@ public class UmpleParserFactory
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 132 ../../../../src/UmpleHelper_Code.ump
+  @umplesourcefile(line=132,file="UmpleHelper_Code.ump",javaline=40,length=25)
   public static UmpleParser create(String className) 
   {
     
@@ -61,16 +63,19 @@ public class UmpleParserFactory
     }
   }
   
+  @umplesourcefile(line=158,file="UmpleHelper_Code.ump",javaline=67,length=4)
   public static UmpleParser create(String umpleParserName, UmpleModel model)
   {
     return create(umpleParserName,model,false);
   }
   
+  @umplesourcefile(line=163,file="UmpleHelper_Code.ump",javaline=73,length=4)
   public static UmpleParser create(String umpleParserName, boolean failHardIfInvalid)
   {
     return create(umpleParserName,null,failHardIfInvalid);
   }
   
+  @umplesourcefile(line=168,file="UmpleHelper_Code.ump",javaline=79,length=13)
   public static UmpleParser create(String umpleParserName, UmpleModel model, boolean failHardIfInvalid)
   {
     UmpleParser p = create(umpleParserName);
@@ -84,4 +89,5 @@ public class UmpleParserFactory
     }
     return p;
   }
+
 }

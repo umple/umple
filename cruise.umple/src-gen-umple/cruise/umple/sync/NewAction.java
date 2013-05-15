@@ -13,6 +13,8 @@ import cruise.umple.compiler.*;
 // line 230 "../../../../src/UmpleSync_Code.ump"
 public class NewAction extends SynchronizationAction
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -39,8 +41,8 @@ public class NewAction extends SynchronizationAction
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 233 ../../../../src/UmpleSync_Code.ump
+  @umplesourcefile(line=233,file="UmpleSync_Code.ump",javaline=46,length=102)
   public void go()
   {
     try
@@ -143,4 +145,5 @@ public class NewAction extends SynchronizationAction
       setUmpleCode(output);
     }
   }
+
 }

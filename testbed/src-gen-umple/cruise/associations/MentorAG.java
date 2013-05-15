@@ -7,6 +7,8 @@ import java.util.*;
 // line 495 "../../../src/TestHarnessAssociations.ump"
 public class MentorAG
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

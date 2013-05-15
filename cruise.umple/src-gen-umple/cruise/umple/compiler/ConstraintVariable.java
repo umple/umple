@@ -10,6 +10,8 @@ package cruise.umple.compiler;
 // line 220 "../../../../src/Umple.ump"
 public class ConstraintVariable
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -173,7 +175,7 @@ public class ConstraintVariable
   public void delete()
   {}
 
-  // line 233 "../../../../src/Umple.ump"
+  @umplesourcefile(line=233,file="../../../../src/Umple.ump",javaline=179,length=11)
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
