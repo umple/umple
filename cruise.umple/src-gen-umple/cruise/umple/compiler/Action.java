@@ -200,7 +200,7 @@ public class Action
   public void delete()
   {}
 
-  @umplesourcefile(line=147,file="../../../../src/StateMachine.ump",javaline=204,length=6)
+  @umplesourcefile(line=147,file="/home/geoff/programs/umple/debug/cruise.umple/src/StateMachine.ump",javaline=204,length=6)
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;
