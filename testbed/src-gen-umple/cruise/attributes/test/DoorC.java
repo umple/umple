@@ -8,6 +8,8 @@ import java.sql.Time;
 // line 18 "../../../../src/TestHarnessAttributes.ump"
 public class DoorC
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

@@ -12,6 +12,8 @@ import cruise.umple.util.*;
 // line 12 "../../../../src/Generator_CodeJson.ump"
 public class JsonGenerator implements CodeGenerator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -81,8 +83,8 @@ public class JsonGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 15 ../../../../src/Generator_CodeJson.ump
+  @umplesourcefile(line=15,file="Generator_CodeJson.ump",javaline=88,length=117)
   public void generate()
   {
     String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");
@@ -200,4 +202,5 @@ public class JsonGenerator implements CodeGenerator
     String json = "{" + jsonForClasses  + ", " + jsonForAssociations + " }";
     model.setCode(json);
   }
+
 }

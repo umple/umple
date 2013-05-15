@@ -9,6 +9,8 @@ package cruise.umple.util;
 // line 841 "../../../../src/Util_Code.ump"
 public class Word
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

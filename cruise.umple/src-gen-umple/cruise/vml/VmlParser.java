@@ -16,6 +16,8 @@ import java.util.*;
 // line 401 "../../../src/Vml_Code.ump"
 public class VmlParser extends Parser
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -67,8 +69,8 @@ public class VmlParser extends Parser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 180 ../../../src/Vml_Code.ump
+  @umplesourcefile(line=180,file="Vml_Code.ump",javaline=74,length=23)
   private void init()
   {
     addCouple(new Couple("\"","\""));
@@ -93,6 +95,7 @@ public class VmlParser extends Parser
     system = new VmlSystem();
   }  
   
+  @umplesourcefile(line=204,file="Vml_Code.ump",javaline=99,length=19)
   public ParseResult analyze()
   {
     for(Token t : getRootToken().getSubTokens())
@@ -113,6 +116,7 @@ public class VmlParser extends Parser
     return getParseResult();
   }
   
+  @umplesourcefile(line=224,file="Vml_Code.ump",javaline=120,length=26)
   private void handleConcern(Token concernToken)
   {
     variationPointToRequiresListMap = new HashMap<VariationPoint,List<String>>();
@@ -140,6 +144,7 @@ public class VmlParser extends Parser
     system.addConcern(c);
   }
   
+  @umplesourcefile(line=251,file="Vml_Code.ump",javaline=148,length=59)
   private void handleInvoke(Token invokeToken)
   {
     String concernName = invokeToken.getValue("concern");
@@ -200,6 +205,7 @@ public class VmlParser extends Parser
     }
   }
   
+  @umplesourcefile(line=311,file="Vml_Code.ump",javaline=209,length=44)
   private void handleVariationPoint(Token variationToken, Concern c)
   {
     VariationPoint vp = new VariationPoint(variationToken.getValue("name"));
@@ -245,6 +251,7 @@ public class VmlParser extends Parser
     variationPointToRequiresListMap.put(vp,allRequires);
   }
   
+  @umplesourcefile(line=356,file="Vml_Code.ump",javaline=255,length=9)
   private void handleVariant(VariationPoint vp, Token variantToken)
   {
     Variant v = new Variant(variantToken.getValue("name"));
@@ -254,4 +261,5 @@ public class VmlParser extends Parser
     }
     vp.addVariant(v);
   }
+
 }

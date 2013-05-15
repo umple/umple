@@ -19,6 +19,8 @@ import java.util.*;
 // line 16 "../../../../src/GeneratorHelper_CodeTrace.ump"
 public class GeneratorHelper
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -41,8 +43,8 @@ public class GeneratorHelper
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 26 ../../../../src/GeneratorHelper_Code.ump
+  @umplesourcefile(line=26,file="GeneratorHelper_Code.ump",javaline=48,length=11)
   public static void postpare(UmpleModel model)
   {
     postpareClass(model);
@@ -56,6 +58,7 @@ public class GeneratorHelper
   }
 
   // Undo all class level internal changes
+  @umplesourcefile(line=39,file="GeneratorHelper_Code.ump",javaline=62,length=6)
   private static void postpare(UmpleClass aClass)
   {
     postpareClass(aClass);
@@ -63,6 +66,7 @@ public class GeneratorHelper
     postpareTrace(aClass);
   }
 // line 20 ../../../../src/GeneratorHelper_CodeClass.ump
+  @umplesourcefile(line=20,file="GeneratorHelper_CodeClass.ump",javaline=70,length=12)
   public static void postpareClass(UmpleModel model)
   {
     int maxIndex = model.numberOfUmpleClasses() - 1;
@@ -77,6 +81,7 @@ public class GeneratorHelper
   }
   
   // Remove all internally added attributes / associations of a class
+  @umplesourcefile(line=34,file="GeneratorHelper_CodeClass.ump",javaline=85,length=22)
   private static void postpareClass(UmpleClass aClass)
   {
     int maxIndex = aClass.numberOfCodeInjections() - 1;
@@ -100,6 +105,7 @@ public class GeneratorHelper
     }  
   }  
   
+  @umplesourcefile(line=57,file="GeneratorHelper_CodeClass.ump",javaline=109,length=28)
   public static String toCode(List<CodeInjection> allCodeInjections)
   {
     String asCode = null;
@@ -129,6 +135,7 @@ public class GeneratorHelper
     return positionString + asCode;
   }  
 
+  @umplesourcefile(line=86,file="GeneratorHelper_CodeClass.ump",javaline=139,length=14)
   public static String doIndent(String code, String indents)
   {
     StringBuilder builder = new StringBuilder(code.length() + indents.length()); //Assume generally only one line, will expand otherwise
@@ -144,12 +151,14 @@ public class GeneratorHelper
     return builder.toString();
   }
 // line 20 ../../../../src/GeneratorHelper_CodeStateMachine.ump
+  @umplesourcefile(line=20,file="GeneratorHelper_CodeStateMachine.ump",javaline=155,length=4)
   private static void postpareStateMachine(UmpleModel aModel)
   {
     
   }
 
   // Remove all internal state machine entities
+  @umplesourcefile(line=26,file="GeneratorHelper_CodeStateMachine.ump",javaline=162,length=39)
   private static void postpareStateMachine(UmpleClass aClass)
   {
     List<State> shouldDelete = new ArrayList<State>();
@@ -190,6 +199,7 @@ public class GeneratorHelper
     }
   }  
 
+  @umplesourcefile(line=66,file="GeneratorHelper_CodeStateMachine.ump",javaline=203,length=17)
   public static void prepareAutoTransitions(StateMachine sm, CodeTranslator codeTranslate, Map<String,String> lookups)
   {
     for (State s : sm.getStates())
@@ -209,6 +219,7 @@ public class GeneratorHelper
   } 
   
   // Add the necessary entry action to delete the object once the final state is reached
+  @umplesourcefile(line=85,file="GeneratorHelper_CodeStateMachine.ump",javaline=223,length=13)
   public static void prepareFinalState(StateMachine sm, Map<String,String> lookups)
   {
     for (State s : sm.getStates())
@@ -224,6 +235,7 @@ public class GeneratorHelper
   }  
 
   // Add the necessary before / after hooks to support nested state machines
+  @umplesourcefile(line=100,file="GeneratorHelper_CodeStateMachine.ump",javaline=239,length=46)
   public static void prepareNestedStateMachine(StateMachine sm, int concurrentIndex, Map<String,String> lookups)
   {
     String entryEventName = lookups.get("entryEventName");
@@ -271,6 +283,7 @@ public class GeneratorHelper
     }  
   }
 
+  @umplesourcefile(line=147,file="GeneratorHelper_CodeStateMachine.ump",javaline=287,length=16)
   public static String getFullActivityName(State currentState)
   {
     String name = getNameWithCapital(currentState.getName());
@@ -288,12 +301,14 @@ public class GeneratorHelper
     return name;
   }
   
+  @umplesourcefile(line=164,file="GeneratorHelper_CodeStateMachine.ump",javaline=305,length=4)
   private static String getNameWithCapital(String name)
   {
     return name.substring(0, 1).toUpperCase() + name.substring(1);
   }
   
   // Mark all internal states are ready for deletion
+  @umplesourcefile(line=170,file="GeneratorHelper_CodeStateMachine.ump",javaline=312,length=11)
   private static void postpareInternalStates(StateMachine sm, List<State> shouldDelete)
   {
     for (int i=sm.numberOfStates() - 1; i >= 0; i--)
@@ -306,10 +321,12 @@ public class GeneratorHelper
     }
   }
 // line 19 ../../../../src/GeneratorHelper_CodeTrace.ump
+  @umplesourcefile(line=19,file="GeneratorHelper_CodeTrace.ump",javaline=325,length=2)
   private static void postpareTrace(UmpleModel aModel)
   {}
 
   // Currently no internal trace entities to remove at the class level
+  @umplesourcefile(line=23,file="GeneratorHelper_CodeTrace.ump",javaline=330,length=2)
   private static void postpareTrace(UmpleClass aClass)
   {}
   
@@ -321,9 +338,11 @@ public class GeneratorHelper
   static private boolean generateConsole = true;
   static private boolean generateFile = true;
   static private boolean generateString = true;
+  @umplesourcefile(line=34,file="GeneratorHelper_CodeTrace.ump",javaline=342,length=3)
   public static boolean getWillGenerateString(){
   	return generateString;
   }
+  @umplesourcefile(line=37,file="GeneratorHelper_CodeTrace.ump",javaline=346,length=48)
   public static void prepareAllTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
   {    
     for(TraceDirective td: aClass.getTraceDirectives())
@@ -377,6 +396,7 @@ public class GeneratorHelper
   // expects the following action semantic lookups
   //  + packageName: What package should this class belong to?
   //  + extraCode: What is the code required to execute the trace 
+  @umplesourcefile(line=90,file="GeneratorHelper_CodeTrace.ump",javaline=400,length=20)
   public static void prepareStringTracer(UmpleModel model, Map<String,String> lookups)
   {
     UmpleClass aClass = model.addUmpleClass("StringTracer");
@@ -397,6 +417,7 @@ public class GeneratorHelper
     }
     aClass.createGeneratedClass(model);
   }
+  @umplesourcefile(line=110,file="GeneratorHelper_CodeTrace.ump",javaline=421,length=17)
   public static void prepareConsoleTracer(UmpleModel model, Map<String,String> lookups)
   {
     UmpleClass aClass = model.addUmpleClass("ConsoleTracer");
@@ -414,6 +435,7 @@ public class GeneratorHelper
     }
     aClass.createGeneratedClass(model);
   }
+  @umplesourcefile(line=127,file="GeneratorHelper_CodeTrace.ump",javaline=439,length=20)
   public static void prepareFileTracer(UmpleModel model, Map<String,String> lookups)
   {
     UmpleClass aClass = model.addUmpleClass("FileTracer");
@@ -475,4 +497,5 @@ public class GeneratorHelper
     
     return flag;
   }
+
 }

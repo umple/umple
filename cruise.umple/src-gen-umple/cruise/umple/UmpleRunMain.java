@@ -16,6 +16,8 @@ import java.io.*;
 // line 190 "../../../src/Main_Code.ump"
 public class UmpleRunMain
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -38,13 +40,15 @@ public class UmpleRunMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 200 ../../../src/Main_Code.ump
   public static String console;
     public static boolean displayOutput = true;
 
+  @umplesourcefile(line=203,file="Main_Code.ump",javaline=48,length=75)
     public static void main(String[] args) 
     {
+    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
         console = "";
 
         if (args.length < 2)
@@ -117,6 +121,7 @@ public class UmpleRunMain
         }
     }
 
+  @umplesourcefile(line=277,file="Main_Code.ump",javaline=125,length=9)
     private static void print(String output)
     {
         console += output;
@@ -127,11 +132,13 @@ public class UmpleRunMain
 
     }
 
+  @umplesourcefile(line=287,file="Main_Code.ump",javaline=136,length=4)
     private static void println(String output)
     {
         print(output + "\n");
     }
 
+  @umplesourcefile(line=292,file="Main_Code.ump",javaline=142,length=8)
     private static void printerr(String err)
     {
         console += err;
@@ -140,4 +147,65 @@ public class UmpleRunMain
             System.err.print(err);
         }
     }
+
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          Class clazz = Class.forName(element.getClassName());
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())
+          {
+            if(meth.getName().equals(methodName))
+            {
+              int line = -1;
+              String file = "";
+              for(java.lang.annotation.Annotation anno: meth.getAnnotations())
+              {
+                if(anno.annotationType().getSimpleName().equals("umplesourcefile"))
+                {
+                  int methodlength = (Integer)anno.annotationType().getMethod("length", new Class[]{}).invoke(anno,new Object[]{});
+                  int distanceFromStart = (element.getLineNumber()-(Integer)anno.annotationType().getMethod("javaline", new Class[]{}).invoke(anno,new Object[]{}));
+                  distanceFromStart-=("main".equals(methodName))?2:0;
+                  line = (Integer)anno.annotationType().getMethod("line", new Class[]{}).invoke(anno,new Object[]{})+distanceFromStart;
+                  file = (String)anno.annotationType().getMethod("file", new Class[]{}).invoke(anno,new Object[]{});
+                  if(file == "")
+                  {
+                    break;
+                  }
+                  else if(distanceFromStart>=0&&distanceFromStart<=methodlength)
+                  {
+                    result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file,line));
+                    methodFound = true;
+                    break;
+                  }
+                }
+              }
+              if(methodFound)
+              {
+                break;
+              }
+            }
+          }
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+      e.printStackTrace();
+    }
+  }
 }

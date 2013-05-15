@@ -15,6 +15,8 @@ import java.util.List;
 // line 1674 "../../../../src/Parser_Code.ump"
 public class ErrorType
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -153,10 +155,11 @@ public class ErrorType
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1679 ../../../../src/Parser_Code.ump
+  @umplesourcefile(line=1679,file="Parser_Code.ump",javaline=160,length=4)
   public String format(List<String> arguments)
   {
     return StringFormatter.format(errorFormat, arguments.toArray());
   }
+
 }

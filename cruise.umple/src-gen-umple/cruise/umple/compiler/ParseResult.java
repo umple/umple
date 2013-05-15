@@ -15,6 +15,8 @@ import java.util.*;
 // line 1586 "../../../../src/Parser_Code.ump"
 public class ParseResult
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -219,8 +221,8 @@ public class ParseResult
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 1614 ../../../../src/Parser_Code.ump
+  @umplesourcefile(line=1614,file="Parser_Code.ump",javaline=226,length=7)
   public String toString()
   {
     String ret = "";
@@ -229,6 +231,7 @@ public class ParseResult
     return ret;
   }
 
+  @umplesourcefile(line=1622,file="Parser_Code.ump",javaline=235,length=29)
   public String toJSON ()
   {
     String ret = "{ \"results\" : [ ";
@@ -258,4 +261,5 @@ public class ParseResult
     ret += "]}";
     return ret;
   }
+
 }

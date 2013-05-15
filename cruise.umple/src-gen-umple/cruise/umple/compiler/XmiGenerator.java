@@ -15,6 +15,8 @@ import cruise.umple.compiler.exceptions.*;
 // line 12 "../../../../src/Generator_CodeXmi.ump"
 public class XmiGenerator implements CodeGenerator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -84,8 +86,8 @@ public class XmiGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 15 ../../../../src/Generator_CodeXmi.ump
+  @umplesourcefile(line=15,file="Generator_CodeXmi.ump",javaline=91,length=132)
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -219,6 +221,7 @@ public class XmiGenerator implements CodeGenerator
     writeModel();
   }
 
+  @umplesourcefile(line=148,file="Generator_CodeXmi.ump",javaline=225,length=18)
   private void writeModel()
   {
     try
@@ -237,4 +240,5 @@ public class XmiGenerator implements CodeGenerator
       throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
     }
   }
+
 }

@@ -13,6 +13,8 @@ import cruise.umple.util.*;
 // line 657 "../../../../src/UmpleSync_Code.ump"
 public class NewAssociationAction extends SynchronizationAction
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -39,8 +41,8 @@ public class NewAssociationAction extends SynchronizationAction
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 660 ../../../../src/UmpleSync_Code.ump
+  @umplesourcefile(line=660,file="UmpleSync_Code.ump",javaline=46,length=14)
   public void go()
   {
     boolean shouldContinue = true;
@@ -56,6 +58,7 @@ public class NewAssociationAction extends SynchronizationAction
     }
   }
   
+  @umplesourcefile(line=675,file="UmpleSync_Code.ump",javaline=62,length=91)
   private boolean addAssociationPosition()
   {
     try
@@ -148,6 +151,7 @@ public class NewAssociationAction extends SynchronizationAction
     }
   }
   
+  @umplesourcefile(line=767,file="UmpleSync_Code.ump",javaline=155,length=54)
   private boolean addAssociationDescription()
   {
     try
@@ -203,6 +207,7 @@ public class NewAssociationAction extends SynchronizationAction
     }
   }
   
+  @umplesourcefile(line=822,file="UmpleSync_Code.ump",javaline=211,length=11)
   private boolean handleException(Exception e)
   {
     String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
@@ -214,4 +219,5 @@ public class NewAssociationAction extends SynchronizationAction
     setUmpleCode(output);
     return false;
   }
+
 }

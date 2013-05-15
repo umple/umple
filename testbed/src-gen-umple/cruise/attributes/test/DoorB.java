@@ -6,6 +6,8 @@ package cruise.attributes.test;
 // line 12 "../../../../src/TestHarnessAttributes.ump"
 public class DoorB
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

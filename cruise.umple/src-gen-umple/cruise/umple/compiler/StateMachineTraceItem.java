@@ -15,6 +15,8 @@ import java.util.*;
 // line 225 "../../../../src/Trace_Code.ump"
 public class StateMachineTraceItem implements TraceItem
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -316,11 +318,12 @@ public class StateMachineTraceItem implements TraceItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 233 ../../../../src/Trace_Code.ump
+  @umplesourcefile(line=233,file="Trace_Code.ump",javaline=323,length=3)
   public Boolean getIsPre(){
   	return conditionallyWhere;
   }
+  @umplesourcefile(line=236,file="Trace_Code.ump",javaline=327,length=3)
   public Boolean getIsPost(){
   	return !conditionallyWhere;
   }
@@ -332,6 +335,7 @@ public class StateMachineTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace 
    */
+  @umplesourcefile(line=247,file="Trace_Code.ump",javaline=339,length=45)
   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
   {
   	String name = "";
@@ -380,8 +384,10 @@ public class StateMachineTraceItem implements TraceItem
   /* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
    * @return the if statement for the trace if one exists
    */
+  @umplesourcefile(line=295,file="Trace_Code.ump",javaline=388,length=4)
   public String getExtremities(CodeTranslator gen, String name)
   {
     return gen.translate("Closed",constraint);
   }
+
 }

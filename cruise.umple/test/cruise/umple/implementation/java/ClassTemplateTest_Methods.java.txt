@@ -1,10 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package example;
 
 public class CodeTranslator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -24,10 +26,12 @@ public class CodeTranslator
   public void delete()
   {}
 
+  @umplesourcefile(line=5,file="../../../../../../cruise.umple/test/cruise/umple/implementation/ClassTemplateTest_Methods.ump",javaline=31,length=1)
   public String translate(String id, Attribute attribute){
     return "1";
   }
 
+  @umplesourcefile(line=8,file="../../../../../../cruise.umple/test/cruise/umple/implementation/ClassTemplateTest_Methods.ump",javaline=36,length=1)
   public String translate(String id, AssociationVariable associationVariable){
     return "1";
   }

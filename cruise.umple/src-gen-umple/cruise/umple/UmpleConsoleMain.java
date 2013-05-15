@@ -19,6 +19,8 @@ import java.io.*;
 // line 19 "../../../src/Main_Code.ump"
 public class UmpleConsoleMain
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -41,13 +43,15 @@ public class UmpleConsoleMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 30 ../../../src/Main_Code.ump
   public static String console;
     private static OptionParser optparser;
 
+  @umplesourcefile(line=33,file="Main_Code.ump",javaline=51,length=74)
     public static void main(String[] args) 
     {
+    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
 
         console = "";
 
@@ -119,16 +123,19 @@ public class UmpleConsoleMain
         System.exit(0);
     }
 
+  @umplesourcefile(line=106,file="Main_Code.ump",javaline=127,length=5)
     private static void println(String output)
     {
         console += output + "\n";
         System.out.println(output);
     }
+  @umplesourcefile(line=111,file="Main_Code.ump",javaline=133,length=5)
     private static void printerr(String err)
     {
         console += err;
         System.err.print(err);
     }
+  @umplesourcefile(line=116,file="Main_Code.ump",javaline=139,length=7)
     private static void printUsage() {
         println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
         try{
@@ -141,6 +148,7 @@ public class UmpleConsoleMain
      * Argument: optSet - set of the options and corresponding arguments
      * Return: boolean - If application should terminate immediately after return
      */
+  @umplesourcefile(line=128,file="Main_Code.ump",javaline=152,length=14)
     private static boolean preModelOptionProcess(OptionSet optSet) {
         if (optSet == null) {
             return true;
@@ -156,6 +164,7 @@ public class UmpleConsoleMain
         return false;
     }
 
+  @umplesourcefile(line=143,file="Main_Code.ump",javaline=168,length=17)
     private static boolean postModelOptionProcess(OptionSet optset, UmpleModel model) {
         if (optset.has("generate")) {
             boolean override=false;
@@ -174,6 +183,7 @@ public class UmpleConsoleMain
         return false;
     }
 
+  @umplesourcefile(line=161,file="Main_Code.ump",javaline=187,length=24)
     private static OptionSet optParse(String[] args)
     {
         optparser = new OptionParser();
@@ -198,4 +208,65 @@ public class UmpleConsoleMain
 
         return optSet;
     }
+
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          Class clazz = Class.forName(element.getClassName());
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())
+          {
+            if(meth.getName().equals(methodName))
+            {
+              int line = -1;
+              String file = "";
+              for(java.lang.annotation.Annotation anno: meth.getAnnotations())
+              {
+                if(anno.annotationType().getSimpleName().equals("umplesourcefile"))
+                {
+                  int methodlength = (Integer)anno.annotationType().getMethod("length", new Class[]{}).invoke(anno,new Object[]{});
+                  int distanceFromStart = (element.getLineNumber()-(Integer)anno.annotationType().getMethod("javaline", new Class[]{}).invoke(anno,new Object[]{}));
+                  distanceFromStart-=("main".equals(methodName))?2:0;
+                  line = (Integer)anno.annotationType().getMethod("line", new Class[]{}).invoke(anno,new Object[]{})+distanceFromStart;
+                  file = (String)anno.annotationType().getMethod("file", new Class[]{}).invoke(anno,new Object[]{});
+                  if(file == "")
+                  {
+                    break;
+                  }
+                  else if(distanceFromStart>=0&&distanceFromStart<=methodlength)
+                  {
+                    result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file,line));
+                    methodFound = true;
+                    break;
+                  }
+                }
+              }
+              if(methodFound)
+              {
+                break;
+              }
+            }
+          }
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+      e.printStackTrace();
+    }
+  }
 }

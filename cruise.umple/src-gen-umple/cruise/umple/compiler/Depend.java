@@ -12,6 +12,8 @@ package cruise.umple.compiler;
 // line 402 "../../../../src/Umple_Code.ump"
 public class Depend
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -128,8 +130,8 @@ public class Depend
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 404 ../../../../src/Umple_Code.ump
+  @umplesourcefile(line=404,file="Umple_Code.ump",javaline=135,length=9)
   public String getPackageName()
   {
     if (name == null || "".equals(name))
@@ -139,4 +141,5 @@ public class Depend
     int dotIndex = name.lastIndexOf(".");
     return dotIndex >= 0 ? name.substring(0,dotIndex) : name;
   }
+
 }

@@ -7,6 +7,8 @@ import java.util.*;
 // line 448 "../../../src/TestHarnessAssociations.ump"
 public class StudentAC
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

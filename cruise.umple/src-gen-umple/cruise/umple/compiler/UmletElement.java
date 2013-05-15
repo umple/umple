@@ -10,6 +10,8 @@ import java.util.*;
 // line 31 "../../../../src/Umlet.ump"
 public class UmletElement
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

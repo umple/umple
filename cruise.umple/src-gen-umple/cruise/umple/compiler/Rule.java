@@ -13,6 +13,8 @@ import java.util.*;
 // line 143 "../../../../src/Parser.ump"
 public class Rule
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

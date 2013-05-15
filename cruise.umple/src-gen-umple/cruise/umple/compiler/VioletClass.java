@@ -9,6 +9,8 @@ package cruise.umple.compiler;
 // line 34 "../../../../src/Violet.ump"
 public class VioletClass
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

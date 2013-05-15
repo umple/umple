@@ -14,6 +14,8 @@ import java.util.*;
 // line 1653 "../../../../src/Parser_Code.ump"
 public class ErrorMessage
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -132,16 +134,18 @@ public class ErrorMessage
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
-   public ErrorMessage(int errorCode,Position pos,String... parameters)  {
+    @umplesourcefile(line=0,file="",javaline=138,length=4)
+ public ErrorMessage(int errorCode,Position pos,String... parameters)  {
 this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
 // line 1660 ../../../../src/Parser_Code.ump
+  @umplesourcefile(line=1660,file="Parser_Code.ump",javaline=144,length=4)
   public String getFormattedMessage()
   {
     return errorType.format(this.parameters);
   }
+  @umplesourcefile(line=1664,file="Parser_Code.ump",javaline=149,length=7)
   public String toString()
   {
     String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
@@ -149,4 +153,5 @@ this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     err += " of file \"" + StringFormatter.stripLeadingPath(this.position.getFilename()) + "\":\n";
     return  err + errorType.format(this.parameters);
   }
+
 }

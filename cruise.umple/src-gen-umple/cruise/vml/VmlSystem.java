@@ -22,6 +22,8 @@ import java.util.*;
 // line 392 "../../../src/Vml_Code.ump"
 public class VmlSystem
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -278,8 +280,8 @@ public class VmlSystem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 70 ../../../src/Vml_Code.ump
+  @umplesourcefile(line=70,file="Vml_Code.ump",javaline=285,length=15)
   public Concern getConcern(String concernName)
   {
     if (concernName == null)
@@ -295,4 +297,5 @@ public class VmlSystem
     }
     return null;
   }
+
 }

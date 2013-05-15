@@ -10,6 +10,8 @@ package cruise.umple.compiler;
 // line 203 "../../../../src/Umple.ump"
 public class PrimitiveType extends Type
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

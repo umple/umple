@@ -11,6 +11,8 @@ package cruise.umple.compiler;
 // line 443 "../../../../src/StateMachine_Code.ump"
 public class Event
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -204,10 +206,10 @@ public class Event
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 445 ../../../../src/StateMachine_Code.ump
   private static int nextAutoTransitionId = 1;
 
+  @umplesourcefile(line=447,file="StateMachine_Code.ump",javaline=213,length=7)
   public static Event createAutoTransition()
   {
     Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
@@ -215,4 +217,5 @@ public class Event
     Event.nextAutoTransitionId += 1;
     return e;
   }
+
 }

@@ -27,7 +27,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_7 = "\"";
   protected final String TEXT_8 = NL + "public ";
   protected final String TEXT_9 = "class ";
-  protected final String TEXT_10 = NL + "{";
+  protected final String TEXT_10 = NL + "{" + NL + "  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)" + NL + "  public @interface umplesourcefile{int line();String file();int javaline();int length();}";
   protected final String TEXT_11 = NL + NL + "  //------------------------" + NL + "  // CONSTRUCTOR" + NL + "  //------------------------" + NL;
   protected final String TEXT_12 = NL + "    ";
   protected final String TEXT_13 = " = new ArrayList<";
@@ -1998,7 +1998,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_1978 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";" + NL + "\t  ";
   protected final String TEXT_1979 = NL + "  }";
   protected final String TEXT_1980 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_1981 = NL + "  ";
+  protected final String TEXT_1981 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              int line = -1;" + NL + "              String file = \"\";" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int methodlength = (Integer)anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int distanceFromStart = (element.getLineNumber()-(Integer)anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{}));" + NL + "                  distanceFromStart-=(\"main\".equals(methodName))?2:0;" + NL + "                  line = (Integer)anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{})+distanceFromStart;" + NL + "                  file = (String)anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  if(file == \"\")" + NL + "                  {" + NL + "                    break;" + NL + "                  }" + NL + "                  else if(distanceFromStart>=0&&distanceFromStart<=methodlength)" + NL + "                  {" + NL + "                    result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file,line));" + NL + "                    methodFound = true;" + NL + "                    break;" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "  }";
   protected final String TEXT_1982 = NL + "}";
 
   // Add a newline to the end of the input
@@ -8341,72 +8341,75 @@ if (p != null) {
     
     if (uClass.hasMethods())
     {
-    	for (Method aMethod : uClass.getMethods()) 
-    	{
-    	    if(!aMethod.getExistsInLanguage("Java"))
-    		  continue;
-    	    Position p = aMethod.getPosition();
-    	    String positionHeader = "";
-    	    if (p != null) {
-            	positionHeader = "\n  // line " + p.getLineNumber() + " \"" + p.getRelativePath(uClass, "Java") + "\"";
-            }
-    		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
-    		String methodName = aMethod.getName();
-    		String methodType = aMethod.getType();
-    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
-    		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
-    		String properMethodBody = "    " + methodBody; 
-    		String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
-    		String paramName="";
-    		String paramType="";
-    		String aSingleParameter="";
-    		String isList="";
-    	    String parameters = ""; 
-    		if (aMethod.hasMethodParameters())
-    		{
-    			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
-    			{
-    				paramName = aMethodParam.getName();
-    				paramType = aMethodParam.getType();
-    				isList = aMethodParam.getIsList() ? " [] " : " ";
-    				aSingleParameter = paramType + isList + paramName;
-        			parameters += aSingleParameter + ", ";
-    			}
-    			
-    			String finalParams = parameters.substring(0, parameters.length()-2);
-				
-				if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
-				
-				if (p != null)
-				{
-				  appendln(stringBuffer, positionHeader);
-				}
-				
-    			append(stringBuffer,override);
-    			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);	
-    			appendln(stringBuffer, "{");
-    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			appendln(stringBuffer, properMethodBody);
-    			appendln(stringBuffer, "  }");
-    			
-    		}
-    		else{
-	   			
-	   			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
-	   			
-	   			if (p != null)
-				{
-				  appendln(stringBuffer, positionHeader);
-				}
-	   			
-    			append(stringBuffer,override);    			
-    			append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
-    		    appendln(stringBuffer, "{");
-    		    if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			appendln(stringBuffer, properMethodBody);
-    			appendln(stringBuffer, "  }");
-    		}
-    	}
+      for (Method aMethod : uClass.getMethods()) 
+      {
+        if(!aMethod.getExistsInLanguage("Java"))
+          continue;
+        Position p = aMethod.getPosition();
+        String positionHeader = "";
+        if (p != null) {
+          int javaline = stringBuffer.toString().split("\\n").length;
+//        use annotations instead
+//        positionHeader = "\n  // line " + p.getLineNumber() + " \"" + p.getRelativePath(uClass, "Java") + "\"";
+          positionHeader = "\n  @umplesourcefile(line="+p.getLineNumber()+",file=\""+p.getRelativePath(uClass, "Java") + "\",javaline="+(javaline+3)+",length="+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length)+")";
+        }
+        String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+        String methodName = aMethod.getName();
+        String methodType = aMethod.getType();
+        String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
+        String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
+        String properMethodBody = "    " + methodBody; 
+        String override =  aMethod.getIsImplemented() ? "  @Override\n" : "";
+        String paramName="";
+        String paramType="";
+        String aSingleParameter="";
+        String isList="";
+          String parameters = ""; 
+        if (aMethod.hasMethodParameters())
+        {
+          for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+          {
+            paramName = aMethodParam.getName();
+            paramType = aMethodParam.getType();
+            isList = aMethodParam.getIsList() ? " [] " : " ";
+            aSingleParameter = paramType + isList + paramName;
+              parameters += aSingleParameter + ", ";
+          }
+          
+          String finalParams = parameters.substring(0, parameters.length()-2);
+        
+        if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+        
+        if (p != null)
+        {
+          appendln(stringBuffer, positionHeader);
+        }
+        
+          append(stringBuffer,override);
+          append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);  
+          appendln(stringBuffer, "{");
+          if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+          appendln(stringBuffer, properMethodBody);
+          appendln(stringBuffer, "  }");
+          
+        }
+        else{
+           
+           if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+           
+           if (p != null)
+        {
+          appendln(stringBuffer, positionHeader);
+        }
+           
+          append(stringBuffer,override);          
+          append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
+            appendln(stringBuffer, "{");
+            if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+          appendln(stringBuffer, properMethodBody);
+          appendln(stringBuffer, "  }");
+        }
+      }
     }
 
      } 
@@ -8532,8 +8535,102 @@ if (p != null) {
   {
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
     stringBuffer.append(TEXT_1980);
+    
+  java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");
+  java.util.regex.Pattern methodNamePattern = java.util.regex.Pattern.compile("[ |\\t]*(public|private|protected)[ |\\t]+(.*)[(](.*)[)].*");
+  String extraCode = uClass.getExtraCode();
+  String[] lines = extraCode.split("\\n");
+  extraCode = "";
+  boolean setIsMainMethodToFalse = false;
+  boolean isMainMethod = false;
+  boolean isMainClass = false;
+  int linenumber = 0;
+  int javaline = stringBuffer.toString().split("\\n").length+1;
+  String umplefilename = "";
+  for(int i=0;i<lines.length;i++)
+  {
+    String l = lines[i];
+    java.util.regex.Matcher lineNumberMatcher = lineNumberPattern.matcher(l);
+    java.util.regex.Matcher methodNameMatcher = methodNamePattern.matcher(l);
+     
+    if(l.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String\\[\\](.*)"))
+    {
+       isMainMethod = true;
+       isMainClass = true;
+    }
+    if(isMainMethod&&l.contains("{"))
+    {
+      setIsMainMethodToFalse=true;
+      l+="\n    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());";
+      l+="\n    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());";
+      javaline+=2;
+    }
+    if(lineNumberMatcher.find())
+    {
+      umplefilename = lineNumberMatcher.group(2);
+      linenumber = Integer.parseInt(lineNumberMatcher.group(1))-1;
+    }
+    if(methodNameMatcher.matches())
+    {
+      
+      int j=i;
+      int braces = 1;
+      boolean start=false;
+      boolean isMultiComment=false;
+      for(;j<lines.length&&braces>0;j++)
+      {
+        int tempbraces=0;
+        boolean isLineComment=false;
+        for(int k=0;k<lines[j].length();k++)
+        {
+          if(k>0&&lines[j].substring(k-1,k+1).equals("//")){
+            isLineComment=true;
+          }
+          if(k>0&&lines[j].substring(k-1,k+1).equals("/*")){
+            isMultiComment=true;
+          }
+          if(k>0&&lines[j].substring(k-1,k+1).equals("*/")){
+            isMultiComment=false;
+          }
+          if(lines[j].charAt(k)=='{'){
+            if(start)
+            {
+              tempbraces++;
+            }
+            else
+            {
+              start = true;
+            }
+          }
+          else if(lines[j].charAt(k)=='}'){
+            if(start)
+            {
+              tempbraces--;
+            }
+          }
+        }
+        if(!isLineComment&&!isMultiComment)
+        {
+          braces+=tempbraces;
+        }
+      }
+      j+=isMainMethod?2:0;
+      l ="  @umplesourcefile(line="+linenumber+",file=\""+umplefilename.replaceAll("(\\.\\.)*(/\\.\\.)*(/src)*(/)*","")+"\",javaline="+javaline+",length="+(j-i)+")\n"+l;
+      javaline++;
+    }
+    if(setIsMainMethodToFalse){
+      isMainMethod=false;
+      setIsMainMethodToFalse=false;
+    }
+    linenumber++;
+    javaline++;
+    extraCode+=l+"\n";
+  }
+  
+    stringBuffer.append(extraCode);
+    if(isMainClass){
     stringBuffer.append(TEXT_1981);
-    stringBuffer.append(uClass.getExtraCode());
+    }
      } 
     stringBuffer.append(TEXT_1982);
     return stringBuffer.toString();

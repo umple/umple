@@ -10,6 +10,8 @@ import java.util.*;
 // line 289 "../../../../src/Util_Code.ump"
 public class ErrorItem
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -105,12 +107,13 @@ public class ErrorItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
-   public ErrorItem(String aId,String [] aParts)  {
+    @umplesourcefile(line=0,file="",javaline=111,length=7)
+ public ErrorItem(String aId,String [] aParts)  {
 this(aId);
     for (String part : aParts)
     {
       addPart(part);
     }
   }
+
 }

@@ -6,6 +6,8 @@ import java.util.*;
 
 public class StringTracer
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // STATIC VARIABLES
@@ -117,8 +119,10 @@ public class StringTracer
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
-  public static void handle(String message) { getInstance().addTrace(message); }
+    @umplesourcefile(line=0,file="",javaline=123,length=1)
+public static void handle(String message) { getInstance().addTrace(message); }
+  @umplesourcefile(line=1,file="",javaline=125,length=1)
 public void reset() { getInstance().traces.clear(); }
 static{getInstance();}
+
 }

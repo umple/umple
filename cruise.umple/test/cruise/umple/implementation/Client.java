@@ -6,6 +6,8 @@
 // line 1 "BasicPrecondition1.ump"
 public class Client
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -43,7 +45,7 @@ public class Client
   public void delete()
   {}
 
-  // line 4 "BasicPrecondition1.ump"
+  @umplesourcefile(line=4,file="BasicPrecondition1.ump",javaline=49,length=2)
   public int someMethod(Integer arg){
 
     if ( !(arg>5))

@@ -7,6 +7,8 @@ import java.util.*;
 // line 620 "../../../src/TestHarnessAssociations.ump"
 public class ClassOptionalNAssociation
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

@@ -10,6 +10,8 @@ import java.io.*;
 // line 77 "../../../../src/Util_Code.ump"
 public class Input
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -61,8 +63,8 @@ public class Input
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 84 ../../../../src/Util_Code.ump
+  @umplesourcefile(line=84,file="Util_Code.ump",javaline=68,length=12)
   public String readUmpleFile(String[] args, PrintStream writer)
   {
     if (args.length > 0)
@@ -76,6 +78,7 @@ public class Input
     }
   }
   
+  @umplesourcefile(line=97,file="Util_Code.ump",javaline=82,length=8)
   public String readLine()
   {
     try {
@@ -84,4 +87,5 @@ public class Input
       return "";
     }
   }
+
 }

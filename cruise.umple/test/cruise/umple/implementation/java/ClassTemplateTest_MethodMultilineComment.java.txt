@@ -5,6 +5,8 @@
 
 public class Foo
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -28,6 +30,7 @@ public class Foo
   /**
    * I am a comment above a method.
    */
+  @umplesourcefile(line=6,file="MethodMultilineComment.ump",javaline=31,length=1)
   public void testMethod(){
     // I am a comment inside a method.
   }

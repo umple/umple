@@ -6,6 +6,8 @@ package cruise.statemachine.test;
 // line 198 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseV
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -152,9 +154,10 @@ public class CourseV
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 209 ../../../../src/TestHarnessStateMachineJava.ump
+  @umplesourcefile(line=209,file="TestHarnessStateMachineJava.ump",javaline=159,length=3)
   public void doX() { 
     count += 1;
   }
+
 }

@@ -15,6 +15,8 @@ import cruise.umple.compiler.exceptions.*;
 // line 12 "../../../../src/Generator_CodeEcore.ump"
 public class EcoreGenerator implements CodeGenerator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -84,8 +86,8 @@ public class EcoreGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 15 ../../../../src/Generator_CodeEcore.ump
+  @umplesourcefile(line=15,file="Generator_CodeEcore.ump",javaline=91,length=173)
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -260,6 +262,7 @@ public class EcoreGenerator implements CodeGenerator
     writeModel();
   }
 
+  @umplesourcefile(line=189,file="Generator_CodeEcore.ump",javaline=266,length=13)
   private String getFullyQualifiedName(String packageName, String className)
   {
     try
@@ -274,6 +277,7 @@ public class EcoreGenerator implements CodeGenerator
     }
   }
 
+  @umplesourcefile(line=203,file="Generator_CodeEcore.ump",javaline=281,length=10)
   private String getTargetNamespaceName(){ 
     if (model.getDefaultNamespace() != null){
       if (model.getDefaultNamespace().length() > 0 )
@@ -285,6 +289,7 @@ public class EcoreGenerator implements CodeGenerator
     return model.getUmpleFile().getSimpleFileName();
   }
 
+  @umplesourcefile(line=214,file="Generator_CodeEcore.ump",javaline=293,length=18)
   private void writeModel()
   {
     try
@@ -303,4 +308,5 @@ public class EcoreGenerator implements CodeGenerator
       throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
     }
   }
+
 }

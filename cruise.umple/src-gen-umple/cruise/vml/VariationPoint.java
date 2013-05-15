@@ -16,6 +16,8 @@ import java.util.*;
 // line 376 "../../../src/Vml_Code.ump"
 public class VariationPoint
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -411,8 +413,8 @@ public class VariationPoint
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 129 ../../../src/Vml_Code.ump
+  @umplesourcefile(line=129,file="Vml_Code.ump",javaline=418,length=11)
   public String toString()
   {
     if (codeSnippet == null)
@@ -425,6 +427,7 @@ public class VariationPoint
     }
   }
   
+  @umplesourcefile(line=141,file="Vml_Code.ump",javaline=431,length=15)
   public Variant getVariant(String name)
   {
     if (name == null)
@@ -440,4 +443,5 @@ public class VariationPoint
     }
     return null;
   }
+
 }

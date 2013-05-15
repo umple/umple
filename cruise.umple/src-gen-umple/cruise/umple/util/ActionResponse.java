@@ -10,6 +10,8 @@ import java.util.*;
 // line 206 "../../../../src/Util_Code.ump"
 public class ActionResponse
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // STATIC VARIABLES
@@ -111,13 +113,14 @@ public class ActionResponse
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 213 ../../../../src/Util_Code.ump
+  @umplesourcefile(line=213,file="Util_Code.ump",javaline=118,length=4)
   public void merge(ActionResponse other)
   {
     errors.addAll(other.errors);
   }  
 
+  @umplesourcefile(line=218,file="Util_Code.ump",javaline=124,length=11)
   public boolean isError(String errorId)
   {
     for (ErrorItem error : errors)
@@ -130,6 +133,7 @@ public class ActionResponse
     return false;
   }
   
+  @umplesourcefile(line=230,file="Util_Code.ump",javaline=137,length=25)
   public boolean isError(String errorId, String[] allErrorData)
   {
     for (ErrorItem error : errors)
@@ -157,11 +161,13 @@ public class ActionResponse
   }
   
   
+  @umplesourcefile(line=257,file="Util_Code.ump",javaline=165,length=4)
   public boolean isValid()
   {
     return numberOfErrors() == 0;
   }
   
+  @umplesourcefile(line=262,file="Util_Code.ump",javaline=171,length=25)
   public String getMessage()
   {
     
@@ -187,4 +193,5 @@ public class ActionResponse
       return builder.toString();
     }
   }
+
 }

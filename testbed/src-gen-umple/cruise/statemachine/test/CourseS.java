@@ -7,6 +7,8 @@ import java.util.*;
 // line 145 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseS
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

@@ -7,6 +7,8 @@ import java.sql.Date;
 // line 3 "../../../../src/TestHarnessPatterns.ump"
 public class WidgetA
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

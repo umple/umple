@@ -38,6 +38,7 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
   {
     try
     {
+      MessageDialog.openError(window.getShell(), "UMPLE Plug-in", action.getId() + "\n");
       // Save all current work
       window.getActivePage().saveAllEditors(false);
     
@@ -45,7 +46,7 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
       // Check 1. Verify that a FileEditor View is opened
       if (editor == null)
       {
-    	  throw new Exception("Please open an Umple file.");
+        throw new Exception("Please open an Umple file.");
       }
       IResource fName = (IResource) editor.getEditorInput().getAdapter(IResource.class);
       

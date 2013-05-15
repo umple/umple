@@ -14,6 +14,8 @@ import cruise.umple.util.StringFormatter;
 // line 14 "../../../../src/Compiler.ump"
 public class CodeCompiler
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -36,10 +38,10 @@ public class CodeCompiler
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 22 ../../../../src/Compiler.ump
   public static String console;
 
+  @umplesourcefile(line=24,file="Compiler.ump",javaline=45,length=14)
   public static boolean compile(UmpleModel model, String entryClass) {
     boolean error_flag = true;
     for (UmpleElement currentElement : model.getUmpleElements())
@@ -55,6 +57,7 @@ public class CodeCompiler
     return error_flag;
   }
 
+  @umplesourcefile(line=39,file="Compiler.ump",javaline=61,length=27)
   private static boolean compileJava(UmpleElement aClass, UmpleModel model) {
     String path="";
     for (GenerateTarget gt : model.getGenerates()) {
@@ -84,6 +87,7 @@ public class CodeCompiler
   }
 
   // To do: Use model to determine generation path
+  @umplesourcefile(line=68,file="Compiler.ump",javaline=91,length=43)
   private static String translateLineToUmple(String line, UmpleModel model) {
     String modifiedLine = line;
     StackTraceElement ust;
@@ -128,12 +132,14 @@ public class CodeCompiler
     return(ust.getFileName()+":"+ust.getLineNumber()+":"+lineParts[2]);
   }
 
+  @umplesourcefile(line=112,file="Compiler.ump",javaline=136,length=5)
   private static void println(String output)
   {
     console += output + "\n";
     System.out.println(output);
   }
 
+  @umplesourcefile(line=118,file="Compiler.ump",javaline=143,length=13)
   public static String getSimpleFileName(String fileName)
   {
 
@@ -147,4 +153,5 @@ public class CodeCompiler
       return fileName.substring(lastIndex+1, fileName.length());
     }
   }
+
 }

@@ -12,6 +12,8 @@ import java.net.*;
 // line 307 "../../../../src/Builder_Code.ump"
 public class DynamicClassPathLoader
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -34,16 +36,17 @@ public class DynamicClassPathLoader
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 314 ../../../../src/Builder_Code.ump
   private static final Class<?>[] parameters = new Class[]{URL.class};
 
+  @umplesourcefile(line=316,file="Builder_Code.ump",javaline=43,length=5)
   public static void addJar(String baseDirectory, String jarname) throws IOException
   {
     URL url = new URL("jar:file:///" + new File(baseDirectory).getAbsolutePath() + "/"+ jarname +"!/");
     DynamicClassPathLoader.addURL(url);
   }
   
+  @umplesourcefile(line=322,file="Builder_Code.ump",javaline=50,length=16)
   public static void addURL(URL url) throws IOException
   {
     URLClassLoader sysloader = (URLClassLoader)ClassLoader.getSystemClassLoader();
@@ -60,4 +63,5 @@ public class DynamicClassPathLoader
       throw new RuntimeException("Error, could not add URL to system classloader",e);
     }
   }
+
 }

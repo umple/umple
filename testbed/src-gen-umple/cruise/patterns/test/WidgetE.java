@@ -7,6 +7,8 @@ import java.util.*;
 // line 38 "../../../../src/TestHarnessPatterns.ump"
 public class WidgetE
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

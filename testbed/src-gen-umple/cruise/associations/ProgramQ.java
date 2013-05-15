@@ -6,6 +6,8 @@ package cruise.associations;
 // line 262 "../../../src/TestHarnessAssociations.ump"
 public class ProgramQ
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

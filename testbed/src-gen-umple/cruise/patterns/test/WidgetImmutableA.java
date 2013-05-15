@@ -6,6 +6,8 @@ package cruise.patterns.test;
 // line 4 "../../../../src/TestHarnessPatternsImmutable.ump"
 public class WidgetImmutableA
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES

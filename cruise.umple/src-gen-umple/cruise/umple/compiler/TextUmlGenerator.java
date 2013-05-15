@@ -15,6 +15,8 @@ import cruise.umple.compiler.exceptions.*;
 // line 12 "../../../../src/Generator_CodeTextUml.ump"
 public class TextUmlGenerator implements CodeGenerator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -84,8 +86,8 @@ public class TextUmlGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 15 ../../../../src/Generator_CodeTextUml.ump
+  @umplesourcefile(line=15,file="Generator_CodeTextUml.ump",javaline=91,length=117)
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -204,6 +206,7 @@ public class TextUmlGenerator implements CodeGenerator
     writeModel();
   }
 
+  @umplesourcefile(line=133,file="Generator_CodeTextUml.ump",javaline=210,length=18)
   private void writeModel()
   {
     try
@@ -222,4 +225,5 @@ public class TextUmlGenerator implements CodeGenerator
       throw new UmpleCompilerException("There was a problem with generating TextUml code." + e, e);
     }
   }
+
 }

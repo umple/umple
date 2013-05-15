@@ -10,6 +10,8 @@ import java.util.*;
 // line 847 "../../../../src/Util_Code.ump"
 public class Glossary
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int line();String file();int javaline();int length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -91,8 +93,8 @@ public class Glossary
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  
   // line 855 ../../../../src/Util_Code.ump
+  @umplesourcefile(line=855,file="Util_Code.ump",javaline=98,length=31)
   private void init()
   {
     addWord(new Word("fish","fish"));
@@ -126,6 +128,7 @@ public class Glossary
   }
   
   
+  @umplesourcefile(line=888,file="Util_Code.ump",javaline=132,length=53)
   public String getSingular(String plural)
   {
     if (plural == null || plural.length() == 0)
@@ -180,6 +183,7 @@ public class Glossary
     }
   }
   
+  @umplesourcefile(line=942,file="Util_Code.ump",javaline=187,length=53)
   public String getPlural(String singular)
   {
     if (singular == null || singular.length() == 0)
@@ -233,4 +237,5 @@ public class Glossary
       }
     }
   }
+
 }
