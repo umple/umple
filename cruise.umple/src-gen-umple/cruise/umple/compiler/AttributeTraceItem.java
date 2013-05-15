@@ -373,12 +373,12 @@ public class AttributeTraceItem implements TraceItem
     placeholderTraceDirective.removeAttributeTraceItem(this);
   }
 
-  @umplesourcefile(line=119,file="../../../../src/Trace_Code.ump",javaline=377,length=1)
+  @umplesourcefile(line=119,file="/home/geoff/programs/umple/debug/cruise.umple/src/Trace_Code.ump",javaline=377,length=1)
   public Attribute getAttribute(int index){
     return (Attribute)getUmpleVariable(index);
   }
 
-  @umplesourcefile(line=122,file="../../../../src/Trace_Code.ump",javaline=382,length=1)
+  @umplesourcefile(line=122,file="/home/geoff/programs/umple/debug/cruise.umple/src/Trace_Code.ump",javaline=382,length=1)
   public Boolean addAttribute(Attribute attr){
     return addUmpleVariable(attr);
   }

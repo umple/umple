@@ -99,7 +99,7 @@ public class LanguageSpecificCodeBlock
   public void delete()
   {}
 
-  @umplesourcefile(line=72,file="../../../../src/TestHarnessPatterns.ump",javaline=103,length=1)
+  @umplesourcefile(line=72,file="/home/geoff/programs/umple/debug/testbed/src/TestHarnessPatterns.ump",javaline=103,length=1)
   public boolean isJava(){
     return true;
   }

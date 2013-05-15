@@ -26,13 +26,13 @@ public class CodeTranslator implements ICodeTranslator
   public void delete()
   {}
 
-  @umplesourcefile(line=5,file="../ClassTemplateTest_ImplementedMethods.ump",javaline=31,length=2)
+  @umplesourcefile(line=5,file="ClassTemplateTest_ImplementedMethods.ump",javaline=31,length=2)
   @Override
   public String translate(String id, Attribute attribute){
           return "";
   }
 
-  @umplesourcefile(line=6,file="../ClassTemplateTest_ImplementedMethods.ump",javaline=37,length=2)
+  @umplesourcefile(line=6,file="ClassTemplateTest_ImplementedMethods.ump",javaline=37,length=2)
   @Override
   public String translate(String id, AssociationVariable associationVariable){
           return "";

@@ -8351,7 +8351,7 @@ if (p != null) {
           int javaline = stringBuffer.toString().split("\\n").length;
 //        use annotations instead
 //        positionHeader = "\n  // line " + p.getLineNumber() + " \"" + p.getRelativePath(uClass, "Java") + "\"";
-          positionHeader = "\n  @umplesourcefile(line="+p.getLineNumber()+",file=\""+p.getRelativePath(uClass, "Java") + "\",javaline="+(javaline+3)+",length="+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length)+")";
+          positionHeader = "\n  @umplesourcefile(line="+p.getLineNumber()+",file=\""+p.getFilename()+ "\",javaline="+(javaline+3)+",length="+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length)+")";
         }
         String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
         String methodName = aMethod.getName();
@@ -8615,7 +8615,7 @@ if (p != null) {
         }
       }
       j+=isMainMethod?2:0;
-      l ="  @umplesourcefile(line="+linenumber+",file=\""+umplefilename.replaceAll("(\\.\\.)*(/\\.\\.)*(/src)*(/)*","")+"\",javaline="+javaline+",length="+(j-i)+")\n"+l;
+      l ="  @umplesourcefile(line="+linenumber+",file=\""+umplefilename.replaceAll("(.*)/","")+"\",javaline="+javaline+",length="+(j-i)+")\n"+l;
       javaline++;
     }
     if(setIsMainMethodToFalse){
