@@ -100,9 +100,13 @@
 %>
     ( new Thread()
     {
+      Thread thread;
+      {
+        thread = Thread.currentThread();
+      }
       public void run()
       {
-        while( true )
+        while( thread.isAlive() )
         {
           <%= traceItem.trace(gen,av,"at_p",uClass) %>
           try

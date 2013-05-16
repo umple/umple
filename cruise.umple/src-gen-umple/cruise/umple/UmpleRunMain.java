@@ -152,6 +152,12 @@ public class UmpleRunMain
   {
     public void uncaughtException(Thread t, Throwable e)
     {
+      translate(e);
+      translate(e.getCause());
+      e.printStackTrace();
+    }
+    public void translate(Throwable e)
+    {
       java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
       StackTraceElement[] elements = e.getStackTrace();
       try
@@ -205,7 +211,6 @@ public class UmpleRunMain
         e1.printStackTrace();
       }
       e.setStackTrace(result.toArray(new StackTraceElement[0]));
-      e.printStackTrace();
     }
   }
 }

@@ -126,10 +126,17 @@ class StateMachineTraceItem
   Constraint constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
   
+  boolean isIn = false;
+  boolean isOut = false;
+  
   boolean entry = false;
   boolean exit = false;
+  
+  int level = -1;
+  
   boolean traceStateMachineFlag = false;
   0..* -- 0..1 StateMachine;
+  0..* -- 0..1 State;
   0..* -- 0..1 Transition;
   
   Position position = null;

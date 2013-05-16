@@ -47,7 +47,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_27 = NL + "    ";
   protected final String TEXT_28 = " = ";
   protected final String TEXT_29 = ";";
-  protected final String TEXT_30 = NL + "    ( new Thread()" + NL + "    {" + NL + "      public void run()" + NL + "      {" + NL + "        while( true )" + NL + "        {";
+  protected final String TEXT_30 = NL + "    ( new Thread()" + NL + "    {" + NL + "      Thread thread;" + NL + "      {" + NL + "        thread = Thread.currentThread();" + NL + "      }" + NL + "      public void run()" + NL + "      {" + NL + "        while( thread.isAlive() )" + NL + "        {";
   protected final String TEXT_31 = NL + "          ";
   protected final String TEXT_32 = NL + "          try" + NL + "          {" + NL + "            Thread.sleep(";
   protected final String TEXT_33 = ");" + NL + "          }" + NL + "          catch (InterruptedException e)" + NL + "          {" + NL + "            e.printStackTrace();" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "    }" + NL + "    ).start();";
@@ -1998,7 +1998,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_1978 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";" + NL + "\t  ";
   protected final String TEXT_1979 = NL + "  }";
   protected final String TEXT_1980 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_1981 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              int line = -1;" + NL + "              String file = \"\";" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int methodlength = (Integer)anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int distanceFromStart = (element.getLineNumber()-(Integer)anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{}));" + NL + "                  distanceFromStart-=(\"main\".equals(methodName))?2:0;" + NL + "                  line = (Integer)anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{})+distanceFromStart;" + NL + "                  file = (String)anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  if(file == \"\")" + NL + "                  {" + NL + "                    break;" + NL + "                  }" + NL + "                  else if(distanceFromStart>=0&&distanceFromStart<=methodlength)" + NL + "                  {" + NL + "                    result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file,line));" + NL + "                    methodFound = true;" + NL + "                    break;" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "  }";
+  protected final String TEXT_1981 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      translate(e);" + NL + "      translate(e.getCause());" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "    public void translate(Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              int line = -1;" + NL + "              String file = \"\";" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int methodlength = (Integer)anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int distanceFromStart = (element.getLineNumber()-(Integer)anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{}));" + NL + "                  distanceFromStart-=(\"main\".equals(methodName))?2:0;" + NL + "                  line = (Integer)anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{})+distanceFromStart;" + NL + "                  file = (String)anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  if(file == \"\")" + NL + "                  {" + NL + "                    break;" + NL + "                  }" + NL + "                  else if(distanceFromStart>=0&&distanceFromStart<=methodlength)" + NL + "                  {" + NL + "                    result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file,line));" + NL + "                    methodFound = true;" + NL + "                    break;" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "    }" + NL + "  }";
   protected final String TEXT_1982 = NL + "}";
 
   // Add a newline to the end of the input
@@ -3909,7 +3909,7 @@ public class JavaClassGenerator implements ILang
 
     for(State state : sm.getStates())
     {
-  	  TraceItem traceItem = state.getTraced("normal",uClass);
+  	  TraceItem traceItem = state.getTraced("transition",uClass);
       List<Transition> allT = state.getTransitionsFor(e);
   
       if (allT.size() == 0)
@@ -3945,17 +3945,10 @@ public class JavaClassGenerator implements ILang
         }
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
         }
-        allCases.append((traceItem!=null?
-  GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,""),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, t, "changes state", uClass, "transition")))
-   ,"    ")+"\n":
-   ""));
+        allCases.append(traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
         allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
-
+        allCases.append(traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
+        
         allCases.append(StringFormatter.format("{0}wasEventProcessed = true;\n",tabSpace));
         allCases.append(StringFormatter.format("{0}break;\n",tabSpace));
 
@@ -8351,7 +8344,7 @@ if (p != null) {
           int javaline = stringBuffer.toString().split("\\n").length;
 //        use annotations instead
 //        positionHeader = "\n  // line " + p.getLineNumber() + " \"" + p.getRelativePath(uClass, "Java") + "\"";
-          positionHeader = "\n  @umplesourcefile(line="+p.getLineNumber()+",file=\""+p.getFilename()+ "\",javaline="+(javaline+3)+",length="+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length)+")";
+          positionHeader = "\n  @umplesourcefile(line="+p.getLineNumber()+",file=\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\",javaline="+(javaline+3)+",length="+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length)+")";
         }
         String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
         String methodName = aMethod.getName();
@@ -8615,7 +8608,7 @@ if (p != null) {
         }
       }
       j+=isMainMethod?2:0;
-      l ="  @umplesourcefile(line="+linenumber+",file=\""+umplefilename.replaceAll("(.*)/","")+"\",javaline="+javaline+",length="+(j-i)+")\n"+l;
+      l ="  @umplesourcefile(line="+linenumber+",file=\""+umplefilename.replaceAll("\\\\","/").replaceAll("(.*)/","")+"\",javaline="+javaline+",length="+(j-i)+")\n"+l;
       javaline++;
     }
     if(setIsMainMethodToFalse){

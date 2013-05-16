@@ -13,17 +13,19 @@ traceType : tracer [tracerType] ( [=verbisty:verbose] )? ( [tracerArgument] )* ;
 
 trace : [[traceDirective]] | [[traceCase]]
 
-traceDirective- : trace [[traceItem]] [[executeClause]]? [[traceWhen]]? [[traceFor]]? [[tracePeriod]]? [[traceDuring]]? [[traceCaseActivation]]? [[traceRecord]]? ;
+traceDirective- : trace [[traceItem]] ( [[executeClause]]|[[traceWhen]]|[[traceFor]]|[[tracePeriod]]|[[traceDuring]]|[[traceCaseActivation]]|[[traceRecord]]|[[traceLevel]] )* ;
 
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]
-traceEntity- : [[traceOptions]]? [trace_entity] ( , [trace_entity] )* 
-traceOptions- : set,get | set | get | entry | exit | cardinality | transition
+traceEntity- : [[traceOptions]] [trace_entity] ( , [trace_entity] )* 
+traceOptions : [[traceOption]] ( , [[traceOption]] )*
+traceOption- : [=option:set|get|in|out|entry|exit|cardinality|transition]
 PreOrPostCondition- : (giving | where)? [[traceCondition]]
 
 executeClause- : execute { [**trace_execute] }
 traceWhen :  [=conditionType:where|until|after|giving]? [ [[constraintToken]] ]
 
 traceFor- : for [trace_for]
+traceLevel- : level [trace_level]
 tracePeriod- : period [trace_period]
 traceDuring- : during [trace_duration]
 traceRecord- : record [[recordEntity]]

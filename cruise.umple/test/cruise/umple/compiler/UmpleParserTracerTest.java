@@ -33,28 +33,28 @@ public class UmpleParserTracerTest
     umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
 
-  @Test
+  @Test @Ignore
   public void traceType_Console()
   {
     assertParse("300_tracerType_Console.ump","[traceType][tracerType:Console]");
     Assert.assertEquals("Console",model.getTraceType());
   }
   
-  @Test
+  @Test @Ignore
   public void traceType_File()
   {
     assertParse("300_tracerType_File.ump","[traceType][tracerType:File]");
     Assert.assertEquals("File",model.getTraceType());
   }
   
-  @Test
+  @Test @Ignore
   public void traceType_String()
   {
     assertParse("300_tracerType_String.ump","[traceType][tracerType:String]");
     Assert.assertEquals("String",model.getTraceType());
   }
   
-  @Test
+  @Test @Ignore
   public void traceType_DefaultIsConsole()
   {
     assertParse("300_defaultTracer.ump","[classDefinition][name:Tracer][attribute][name:x][trace][trace_entity:x]");
@@ -65,7 +65,7 @@ public class UmpleParserTracerTest
   //*************   Tracing Attributes   **************
   //***************************************************
   
-  @Test
+  @Test @Ignore
   public void traceSingleAttributeString()
   {
 	  assertParse("310_traceSingleAttributeString.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][trace][trace_entity:name]");
@@ -82,7 +82,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleAttributeInteger()
   {
 	  assertParse("310_traceSingleAttributeInteger.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][trace][trace_entity:id]");
@@ -99,7 +99,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleAttributeBoolean()
   {
 	  assertParse("310_traceSingleAttributeBoolean.ump","[classDefinition][name:LightFixture][attribute][type:Boolean][name:flag][trace][trace_entity:flag]");
@@ -116,7 +116,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleAttributeList()
   {
 //	  assertParse("310_traceSingleAttributeList.ump","[classDefinition][name:LightFixture][attribute][type:Integer][list:[]][name:id][attribute][type:String][list:[]][name:name][trace][trace_entity:id][trace][trace_entity:name]");
@@ -295,7 +295,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleAttributeOccurences()
   {
 	  assertParse("315_traceSingleAttributeOccurences.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_for:5][trace][trace_entity:id][trace_for:100]");
@@ -322,7 +322,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleAttributePeriod()
   {
 	  assertParse("316_traceSingleAttributePeriod.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_period:30ms][trace][trace_entity:id][trace_period:100s]");
@@ -349,7 +349,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleAttributeDuration()
   {
 	  assertParse("317_traceSingleAttributeDuration.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_duration:50s][trace][trace_entity:id][trace_duration:100ms]");
@@ -516,7 +516,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)record.getAttribute(1),clazz.getAttribute("contact"));
   }
   
-  @Test
+  @Test @Ignore
   public void traceMultipleAttribute()
   {
 	  assertParse("319_traceMultipleAttribute.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id]");
@@ -629,7 +629,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceMultipleAttributeOccurences()
   {
 	  assertParse("323_traceMultipleAttributeOccurences.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_for:5][trace][trace_entity:name][trace_entity:id][trace_for:100]");
@@ -658,7 +658,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceMultipleAttributePeriod()
   {
 	  assertParse("324_traceMultipleAttributePeriod.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_period:30ms][trace][trace_entity:name][trace_entity:id][trace_period:1s]");
@@ -687,7 +687,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceMultipleAttributeDuration()
   {
 	  assertParse("325_traceMultipleAttributeDuration.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_duration:150s][trace][trace_entity:name][trace_entity:id][trace_duration:200ms]");
@@ -746,7 +746,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals("record(\"x\")",traceAttr2.getExecuteClause());
   }
   
-  @Test 
+  @Test @Ignore
   public void traceSingleAttributeSet()
   {
 	  assertParse("327_traceSingleAttributeSet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
@@ -766,7 +766,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());  
   }
   
-  @Test 
+  @Test @Ignore
   public void traceMultipleAttributeSet()
   {
 	  assertParse("327_traceMultipleAttributeSet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name]");
@@ -788,7 +788,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());  
   }
   
-  @Test 
+  @Test @Ignore
   public void traceSingleAttributeGet()
   {
 	  assertParse("328_traceSingleAttributeGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
@@ -808,7 +808,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause()); 
   }
   
-  @Test 
+  @Test @Ignore
   public void traceMultipleAttributeGet()
   {
 	  assertParse("328_traceMultipleAttributeGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name]");
@@ -830,7 +830,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());  
   }
   
-  @Test 
+  @Test @Ignore
   public void traceSingleAttributeSetGet()
   {
 	  assertParse("329_traceSingleAttributeSetGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
@@ -850,7 +850,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
   }
   
-  @Test 
+  @Test @Ignore
   public void traceMultipleAttributeSetGet()
   {
 	  assertParse("329_traceMultipleAttributeSetGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name]");
@@ -876,7 +876,7 @@ public class UmpleParserTracerTest
   //*************   Tracing Methods     ***************
   //***************************************************
   
-  @Test
+  @Test @Ignore
   public void traceSingleMethod()
   {
 	  assertParse("350_traceSingleMethod.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace][trace_entity:method2()]");
@@ -904,7 +904,7 @@ public class UmpleParserTracerTest
 	  
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleMethodEntry()
   {
 	  assertParse("351_traceSingleMethodEntry.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace][trace_entity:method2()]");
@@ -931,7 +931,7 @@ public class UmpleParserTracerTest
 //	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleMethodExit()
   {
 	  assertParse("352_traceSingleMethodExit.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace][trace_entity:method2()]");
@@ -1130,7 +1130,7 @@ public class UmpleParserTracerTest
 //	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleMethodPeriod()
   {
 	  assertParse("357_traceSingleMethodPeriod.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_period:30ms][trace][trace_entity:method2()][trace_period:100s]");
@@ -1157,7 +1157,7 @@ public class UmpleParserTracerTest
 //	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceSingleMethodDuration()
   {
 	  assertParse("358_traceSingleMethodDuration.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_duration:50s][trace][trace_entity:method2()][trace_duration:100ms]");
@@ -1211,7 +1211,7 @@ public class UmpleParserTracerTest
 //	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceDirective4.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceMultipleMethod()
   {
 	  assertParse("360_traceMultipleMethod.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()]");
@@ -1337,7 +1337,7 @@ public class UmpleParserTracerTest
 //	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceMultipleMethodOccurences()
   {
 	  assertParse("364_traceMultipleMethodOccurences.ump","[classDefinition][name:LightFixture][trace][trace_entity:add()][trace_entity:subtract()][trace_for:5][trace][trace_entity:m()][trace_entity:n()][trace_for:100]");
@@ -1370,7 +1370,7 @@ public class UmpleParserTracerTest
 //	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceMultipleMethodPeriod()
   {
 	  assertParse("365_traceMultipleMethodPeriod.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()][trace_period:30ms][trace][trace_entity:x()][trace_entity:y()][trace_period:1s]");
@@ -1403,7 +1403,7 @@ public class UmpleParserTracerTest
 //	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceMultipleMethodDuration()
   {
 	  assertParse("366_traceMultipleMethodDuration.ump","[classDefinition][name:LightFixture][trace][trace_entity:m1()][trace_entity:m2()][trace_duration:150s][trace][trace_entity:x()][trace_entity:y()][trace_duration:200ms]");
@@ -1470,13 +1470,13 @@ public class UmpleParserTracerTest
   //***************************************************
   //*************   Tracing association     ***********
   //***************************************************
-  @Test
+  @Test @Ignore
   public void traceAssociation()
   {
 	  assertParse("370_traceAssociation.ump","[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][trace][trace_entity:aMentor][classDefinition][name:Mentor]");
   }
   
-  @Test
+  @Test @Ignore
   public void traceCardinality()
   {
 	  assertParse("371_traceCardinality.ump","[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][trace][trace_entity:aMentor][classDefinition][name:Mentor]");
@@ -1486,7 +1486,7 @@ public class UmpleParserTracerTest
   //*************        Trace Cases         **********
   //***************************************************
   
-  @Test
+  @Test @Ignore
   public void traceCaseSingleTD()
   {
 	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][trace][tracecase_name:tc1][trace_entity:name]");
@@ -1539,13 +1539,13 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test
+  @Test @Ignore
   public void traceCaseActivation()
   {
 	  assertParse("402_traceCaseActivation.ump","[classDefinition][name:LightFixture][trace][tracecase_act_name:tc1]");
   }
   
-  @Test
+  @Test @Ignore
   public void traceCaseDeactivation()
   {
 	  assertParse("403_traceCaseDeactivation.ump","[classDefinition][name:LightFixture][trace][tracecase_deact_name:tc1][trace][tracecase_deact_name:tc2][deactivate_for:1s]");
@@ -1555,7 +1555,7 @@ public class UmpleParserTracerTest
   //*************   Tracing State Machines     ********
   //***************************************************
   
-  @Test
+  @Test @Ignore
   public void traceStateMachine()
   {
 	  assertParse("375_traceStateMachine.ump","[classDefinition][name:GarageDoor][stateMachine][inlineStateMachine][name:status][state][stateName:Open][transition][event:buttonOrObstacle][stateName:Closing][state][stateName:Closing][transition][event:buttonOrObstacle][stateName:Opening][transition][event:reachBottom][stateName:Closed][state][stateName:Closed][transition][event:buttonOrObstacle][stateName:Opening][state][stateName:Opening][transition][event:buttonOrObstacle][stateName:HalfOpen][transition][event:reachTop][stateName:Open][state][stateName:HalfOpen][transition][event:buttonOrObstacle][stateName:Opening][trace][trace_entity:status]");
@@ -1572,7 +1572,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)stm.getState(4),clazz.getStateMachine(0).getState(4));
   }
   
-  @Test
+  @Test @Ignore
   public void traceState()
   {
 	  assertParse("375_traceState.ump","[classDefinition][name:GarageDoor][stateMachine][inlineStateMachine][name:status][state][stateName:Open][transition][event:buttonOrObstacle][stateName:Closing][state][stateName:Closing][transition][event:buttonOrObstacle][stateName:Opening][transition][event:reachBottom][stateName:Closed][state][stateName:Closed][transition][event:buttonOrObstacle][stateName:Opening][state][stateName:Opening][transition][event:buttonOrObstacle][stateName:HalfOpen][transition][event:reachTop][stateName:Open][state][stateName:HalfOpen][transition][event:buttonOrObstacle][stateName:Opening][trace][trace_entity:Closing]");
@@ -1587,7 +1587,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)state,clazz.getStateMachine(0).getState(1));
   }
   
-  @Test
+  @Test @Ignore
   public void traceState2()
   {
 	  assertParse("375_traceState2.ump","[classDefinition][name:GarageDoor][stateMachine][inlineStateMachine][name:status][state][stateName:Open][transition][event:buttonOrObstacle][stateName:Closing][state][stateName:Closing][transition][event:buttonOrObstacle][stateName:Opening][transition][event:reachBottom][stateName:Closed][state][stateName:Closed][transition][event:buttonOrObstacle][stateName:Opening][state][stateName:Opening][transition][event:buttonOrObstacle][stateName:HalfOpen][transition][event:reachTop][stateName:Open][state][stateName:HalfOpen][transition][event:buttonOrObstacle][stateName:Opening][trace][trace_entity:status.Closing]");
@@ -1602,7 +1602,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)state,clazz.getStateMachine(0).getState(1));
   }
   
-  @Test
+  @Test @Ignore
   public void traceEmptyAndNonEmptyState()
   {
 	  assertParse("375_traceEmptyAndNonEmptyStates.ump","[namespace:example][classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][trace][trace_entity:status]");
@@ -1617,7 +1617,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)stm,clazz.getStateMachine(0));
   }
   
-  @Test
+  @Test @Ignore
   public void traceEntryOfState()
   {
 	  assertParse("376_traceEntryOfState.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:On]");
@@ -1632,7 +1632,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)state,clazz.getStateMachine(0).getState(0));
   }
   
-  @Test
+  @Test @Ignore
   public void traceEntryOfState2()
   {
 	  assertParse("376_traceEntryOfState2.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:Off]");
@@ -1647,7 +1647,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)state,clazz.getStateMachine(0).getState(1));
   }
   
-  @Test
+  @Test @Ignore
   public void traceExitOfState()
   {
 	  assertParse("377_traceExitOfState.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:On]");
@@ -1662,7 +1662,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)state,clazz.getStateMachine(0).getState(0));
   }
   
-  @Test
+  @Test @Ignore
   public void traceExitOfState2()
   {
 	  assertParse("377_traceExitOfState2.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:Off]");
@@ -1697,7 +1697,7 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)state,clazz.getStateMachine(0).getState(0));
   }
   
-  @Test
+  @Test @Ignore
   public void traceTransition()
   {
 	  assertParse("379_traceTransition.ump","[classDefinition][name:Light][stateMachine][inlineStateMachine][name:status][state][stateName:On][entryOrExitAction][type:entry][code:System.out.println(\"entry state On\");][transition][event:flip][stateName:Off][state][stateName:Off][entryOrExitAction][type:entry][code:System.out.println(\"entry state Off\");][transition][event:flip][stateName:On][trace][trace_entity:flip]");
@@ -1711,7 +1711,7 @@ public class UmpleParserTracerTest
   
   //===================================
   
-  @Test
+  @Test @Ignore
   public void X()
   {
 	  //assertParse("311_traceSingleVariableWithCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name]");

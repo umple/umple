@@ -77,15 +77,15 @@ class State
       {
       	StateMachine sm = smti.getStateMachine();
       	Transition  tsn = smti.getTransition();
+      	State st = smti.getState();
         if(tsn!=null)
         {
-          //if the trace item is for a transition, just return it
           return smti;
         }
         else if(sm==null)
         {
-        	//if the trace item is not for a transition, and does not contain a state machine, return null
-        	return null;
+          //if the trace item is not for a transition, and does not contain a state machine, return null
+          return null;
         }
       	else if(smti.getTraceStateMachineFlag())
       	{
@@ -96,17 +96,99 @@ class State
       	  }
       	}
       	//for the case that you are tracing a specific state 
-      	else if(this.getName().equals(sm.getState(0).getName()))
-      	{
-      	  //refer to above
-          if((smti.getExit()==smti.getEntry())||("entry".equals(method)&&smti.getEntry())||("exit".equals(method)&&smti.getExit()))
+      	else if(method.equals("transition")&&smti.getIsOut())
+        {
+          State state = this;
+          if(sm.findState(this.getName(),true)!=null)
+            { 
+              if(smti.getLevel()==-1)
+              {
+                return smti;
+              }
+              else if((sm.getRecentSearchDepth()-1)<=smti.getLevel())
+              {
+                if((sm.getRecentSearchDepth()-1)==0)
+                {
+                  if(st==null)
+                  {
+                    return smti;
+                  }
+                  else if(st.equals(this))
+                  {
+                    System.out.println(getName()+"=Success1");
+                    return smti;
+                  }
+                }
+                else
+                {
+                  System.out.println(getName()+"=Success2");
+                  return smti;
+                }
+              }
+            }           
+          
+      	  System.out.println(getName()+"=Failure");
+      	  return null;
+      	}
+      	else if(method.equals("transition")&&smti.getIsIn())
+        {
+          if(st!=null)
           {
-          	return smti;
+            for(Transition t:st.getNextTransition())
+            {
+              ((Object)null).toString();
+              //System.out.println("\t\t"+t.getFromState().getName()+"\t"+t.getNextState().getName());
+              if(!t.getFromState().getName().equals(this.getName()))
+              {
+                continue;
+              }
+              if(sm.findState(this.getName(),true)!=null)
+              { 
+                if(smti.getLevel()==-1)
+                {
+                  return smti;
+                }
+                else if((sm.getRecentSearchDepth())<=smti.getLevel())
+                {
+                  if((sm.getRecentSearchDepth())==0)
+                  {
+                    if(st==null)
+                    {
+                      return smti;
+                    }
+                    else if(t.getFromState().equals(this))
+                    {
+                      System.out.println(getName()+"=Success1");
+                      return smti;
+                    }
+                  }
+                  else
+                  {
+                    System.out.println(getName()+"=Success2");
+                    return smti;
+                  }
+                }
+              }           
+            }
+          }
+      	  System.out.println(getName()+"=Failure");
+      	  return null;
+      	}
+        else 
+        {
+          for(int i=0;i<sm.numberOfStates();i++)
+          {
+            if(getName().equals(sm.getState(i).getName()))
+            {
+              if((smti.getExit()==smti.getEntry())||("entry".equals(method)&&smti.getEntry())||("exit".equals(method)&&smti.getExit()))
+              {
+          	    return smti;
+              }
+            }
           }
         }
       }
     }
-    
     return null;
   }
 }
@@ -258,16 +340,31 @@ class StateMachineTraceItem
     {
       Transition aTransition = (Transition)o;
       name = aTransition.getEvent().getName();
-      obj = ","+aTransition.getFromState().getName();
-      extra = "," + aTransition.getNextState().getName();
+      obj = aTransition.getFromState().getName();
+      extra = "," + aTransition.getNextState().getName()+"\"";
     }
     else if(o instanceof State)
     {
       State state = (State)o;
-      name = getStateMachine().getName();
+      name = getStateMachine().getName()+"\"";
       obj = state.getName();
     }
-      	
+    if(getTraceDirective().getTraceRecord()!=null)
+    {
+      for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+      {
+        extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+      }
+      if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+      {
+        extra+= concatinator+"\"";
+        for(String record:getTraceDirective().getTraceRecord().getRecord())
+        {
+          extra+=","+record.replace("\"","");
+        }
+        extra+= "\"";
+      }
+    }
     for(String str: args){
       extra+=comma+str;
     }

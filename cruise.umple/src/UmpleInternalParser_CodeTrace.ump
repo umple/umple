@@ -77,6 +77,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
   // Process Trace statement subtokens. Token could be trace directive or trace case
   private void analyzeTraceStatement( UmpleClass aClass, Token token)
   {
+  
     TraceDirective traceDirective = new TraceDirective(model.getTracer());
     AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
     MethodTraceEntity mte = new MethodTraceEntity();
@@ -197,7 +198,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
       	traceAttr.setTraceGet(false);
       	traceAttr.setTraceConstructor(true);
         traceAttr.setPeriodClause(token.getValue("trace_period"));
-      }    
+      }
       else if( traceToken.is("trace_duration") )
       {
         traceAttr.setDuringClause(token.getValue("trace_duration"));
@@ -280,19 +281,29 @@ private void analyzeTraceToken(Token token, int analysisStep)
     {
       traceAttr.setPosition(traceToken.getPosition());
       traceAttr.addUmpleVariable(attr);
-      if( traceToken.getParentToken().getSubToken(1).getName().equals("set") )
+      for(Token sub: traceToken.getParentToken().getSubTokens())
       {
-        traceAttr.setTraceSet(true);
-      }
-      else if( traceToken.getParentToken().getSubToken(1).getName().equals("get") )
-      {
-        traceAttr.setTraceSet(false);
-        traceAttr.setTraceGet(true);
-      }
-      else if( traceToken.getParentToken().getSubToken(1).getName().equals("set,get") )
-      {
-        traceAttr.setTraceSet(true);
-        traceAttr.setTraceGet(true);
+        if(sub.is("traceOptions"))
+        {
+          boolean wasSet = false;
+          for(Token sub2: sub.getSubTokens())
+          {
+            if( "get".equals(sub2.getValue("option")) )
+            {
+              wasSet = true;
+              traceAttr.setTraceGet(true);
+            }
+            if( "set".equals(sub2.getValue("option")) )
+            {
+              wasSet = true;
+              traceAttr.setTraceSet(true);
+            }
+          }
+          if(!wasSet)
+          {
+            traceAttr.setTraceSet(true);
+          }
+        }
       }
     }
   }
@@ -302,22 +313,26 @@ private void analyzeTraceToken(Token token, int analysisStep)
     List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
     StateMachine stm = null;
     State state = null;
-    String stmTraceItem = traceToken.getValue("trace_entity");        
-    if( traceToken.getParentToken().getSubToken(1).getName().equals("transition"))
+    String stmTraceItem = traceToken.getValue("trace_entity");
+    
+    if( "transition".equals(traceToken.getParentToken().getSubToken(1).getValue("option")))
     {
       StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
-          
-      for( int i = 0 ; i < stms.size() ; ++i )
+      tracedStm.setPosition(traceToken.getPosition());
+      if( traceToken.getParentToken().getValue("trace_level")!=null )
       {
-        for( int j = 0 ; j < stms.get(i).numberOfStates() ; ++j )
+        tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("trace_level")));
+      }
+      for( StateMachine sm:stms  )
+      {
+        for( State nestedState:sm.getStates())
         {
-          State nestedState = stms.get(i).getState(j);
-          for( int k = 0 ; k < nestedState.numberOfTransitions() ; ++k )
+          for( Transition tsn:nestedState.getTransitions())
           {
-            if( nestedState.getTransition(k).getEvent().getName().equals(traceToken.getValue()) )
+            if( tsn.getEvent().getName().equals(traceToken.getValue()) )
             {
-              tracedStm.setTransition(nestedState.getTransition(k));
-              tracedStm.setStateMachine(stms.get(i));
+              tracedStm.setTransition(tsn);
+              tracedStm.setStateMachine(sm);
               traceDirective.addStateMachineTraceItem(tracedStm);
             }
           }
@@ -325,57 +340,92 @@ private void analyzeTraceToken(Token token, int analysisStep)
       }
       
     }
-      
+    
     if( stmTraceItem != null && stmTraceItem.contains("."))
     {
       String delimiter = "\\.";
       String[] temp = stmTraceItem.split(delimiter);
       stmTraceItem = temp[temp.length-1];
     }
-    
-    for( int i = 0 ; i < stms.size() ; ++i )
+    if(stm==null)
     {
-      for( int j = 0 ; j < stms.get(i).numberOfStates() ; ++j )
+      for( StateMachine sm:stms )
       {
-        State nestedState = stms.get(i).getState(j);
-        if( nestedState.getName().equals(stmTraceItem))
+        state=sm.findState(stmTraceItem, true);
+        if(state!=null)
         {
-          stm = new StateMachine(stms.get(i).getName());
-          stm.addState(nestedState);
-          state = nestedState;
+          stm=state.getStateMachine();
           break;
-        }  
-      }
-      if( stms.get(i).getFullName().equals(stmTraceItem))
-      {
-        stm = stms.get(i);
-        break;
+        }
       }
     }
-    
+    if(stm==null)
+    {
+      for( StateMachine sm:stms )
+      {
+        if( sm.getFullName().equals(stmTraceItem))
+        {
+          stm = sm;
+          break;
+        }            
+      }
+    }
+    //System.out.println(stmTraceItem+"<>"+stm);  
     // if trace entity is a state machine  
     if( stm != null)
-    {    
+    {  
       StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
       tracedStm.setPosition(traceToken.getPosition());  
       tracedStm.setStateMachine(stm);
-      if( traceToken.getParentToken().getSubToken(1).getName().equals("entry") )  
+      tracedStm.setState(state);
+      if( traceToken.getParentToken().getValue("trace_level")!=null )
       {
-        tracedStm.setEntry(true); 
-        tracedStm.setExit(false);  
-      } 
-      else if( traceToken.getParentToken().getSubToken(1).getName().equals("exit") )
+        tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("trace_level")));
+      }
+      for(Token sub: traceToken.getParentToken().getSubTokens())
       {
-        tracedStm.setEntry(false);
-        tracedStm.setExit(true);  
-      }  
-      else
-      {
-        tracedStm.setEntry(true);
-        tracedStm.setExit(true);  
+        if(sub.is("traceOptions"))
+        {
+          boolean wasSet = false;
+          boolean wasInOut = false;
+          for(Token sub2: sub.getSubTokens())
+          {
+            if( "entry".equals(sub2.getValue("option")) )
+            {
+              wasSet = true;
+              tracedStm.setEntry(true);
+            }
+            if( "exit".equals(sub2.getValue("option")) )
+            {
+              wasSet = true;
+              tracedStm.setEntry(false);
+            }
+            if( "in".equals(sub2.getValue("option")) )
+            {
+              wasInOut = true;
+              tracedStm.setIsIn(true);
+            }
+            if( "out".equals(sub2.getValue("option")) )
+            {
+              wasInOut = true;
+              tracedStm.setIsOut(true);
+            }
+          }
+          if(!wasSet)
+          {
+            tracedStm.setEntry(false);
+            tracedStm.setExit(false);
+          }
+          if(!wasInOut)
+          {
+            tracedStm.setIsOut(true);
+            tracedStm.setIsIn(false);
+          }
+        }
       }
       tracedStm.setTraceStateMachineFlag(state == null);
       traceDirective.addStateMachineTraceItem(tracedStm);
+      
     }
   }
 
