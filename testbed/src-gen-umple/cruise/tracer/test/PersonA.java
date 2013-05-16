@@ -2,8 +2,6 @@
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.tracer.test;
-import cruise.util.StringTracer;
-import java.util.Date;
 
 // line 6 "../../../../src/TestHarnessTracer.ump"
 public class PersonA
@@ -34,7 +32,6 @@ public class PersonA
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/hatch/testbed/src/TestHarnessTracer.ump,9,PersonA,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
     name = aName;
     wasSet = true;
     return wasSet;
