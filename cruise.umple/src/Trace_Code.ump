@@ -136,7 +136,6 @@ class State
           {
             for(Transition t:st.getNextTransition())
             {
-              ((Object)null).toString();
               //System.out.println("\t\t"+t.getFromState().getName()+"\t"+t.getNextState().getName());
               if(!t.getFromState().getName().equals(this.getName()))
               {
