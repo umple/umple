@@ -15,6 +15,7 @@ import org.junit.*;
 
 import cruise.umple.util.AssertHelper;
 import cruise.umple.util.SampleFileWriter;
+import cruise.umple.docs.Documenter;
 
 public class DocumenterTest
 {

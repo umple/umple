@@ -9,10 +9,10 @@ import java.util.*;
  * An element of a trace directive that indicates to trace one or more state machines
  * or transitions
  * @umplesource Trace.ump 122
- * @umplesource Trace_Code.ump 225
+ * @umplesource Trace_Code.ump 307
  */
 // line 122 "../../../../src/Trace.ump"
-// line 225 "../../../../src/Trace_Code.ump"
+// line 307 "../../../../src/Trace_Code.ump"
 public class StateMachineTraceItem implements TraceItem
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -24,8 +24,11 @@ public class StateMachineTraceItem implements TraceItem
 
   //StateMachineTraceItem Attributes
   private Constraint constraint;
+  private boolean isIn;
+  private boolean isOut;
   private boolean entry;
   private boolean exit;
+  private int level;
   private boolean traceStateMachineFlag;
   private Position position;
   private String periodClause;
@@ -36,6 +39,7 @@ public class StateMachineTraceItem implements TraceItem
 
   //StateMachineTraceItem Associations
   private StateMachine stateMachine;
+  private State state;
   private Transition transition;
   private TraceDirective traceDirective;
 
@@ -46,8 +50,11 @@ public class StateMachineTraceItem implements TraceItem
   public StateMachineTraceItem(TraceDirective aTraceDirective)
   {
     constraint = null;
+    isIn = false;
+    isOut = false;
     entry = false;
     exit = false;
+    level = -1;
     traceStateMachineFlag = false;
     position = null;
     periodClause = null;
@@ -74,6 +81,22 @@ public class StateMachineTraceItem implements TraceItem
     return wasSet;
   }
 
+  public boolean setIsIn(boolean aIsIn)
+  {
+    boolean wasSet = false;
+    isIn = aIsIn;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setIsOut(boolean aIsOut)
+  {
+    boolean wasSet = false;
+    isOut = aIsOut;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setEntry(boolean aEntry)
   {
     boolean wasSet = false;
@@ -86,6 +109,14 @@ public class StateMachineTraceItem implements TraceItem
   {
     boolean wasSet = false;
     exit = aExit;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setLevel(int aLevel)
+  {
+    boolean wasSet = false;
+    level = aLevel;
     wasSet = true;
     return wasSet;
   }
@@ -156,6 +187,16 @@ public class StateMachineTraceItem implements TraceItem
     return getTraceDirective().getTracerType();
   }
 
+  public boolean getIsIn()
+  {
+    return isIn;
+  }
+
+  public boolean getIsOut()
+  {
+    return isOut;
+  }
+
   public boolean getEntry()
   {
     return entry;
@@ -164,6 +205,11 @@ public class StateMachineTraceItem implements TraceItem
   public boolean getExit()
   {
     return exit;
+  }
+
+  public int getLevel()
+  {
+    return level;
   }
 
   public boolean getTraceStateMachineFlag()
@@ -211,6 +257,11 @@ public class StateMachineTraceItem implements TraceItem
     return stateMachine;
   }
 
+  public State getState()
+  {
+    return state;
+  }
+
   public Transition getTransition()
   {
     return transition;
@@ -233,6 +284,23 @@ public class StateMachineTraceItem implements TraceItem
     if (aStateMachine != null)
     {
       aStateMachine.addStateMachineTraceItem(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setState(State aState)
+  {
+    boolean wasSet = false;
+    State existingState = state;
+    state = aState;
+    if (existingState != null && !existingState.equals(aState))
+    {
+      existingState.removeStateMachineTraceItem(this);
+    }
+    if (aState != null)
+    {
+      aState.addStateMachineTraceItem(this);
     }
     wasSet = true;
     return wasSet;
@@ -282,6 +350,12 @@ public class StateMachineTraceItem implements TraceItem
       this.stateMachine = null;
       placeholderStateMachine.removeStateMachineTraceItem(this);
     }
+    if (state != null)
+    {
+      State placeholderState = state;
+      this.state = null;
+      placeholderState.removeStateMachineTraceItem(this);
+    }
     if (transition != null)
     {
       Transition placeholderTransition = transition;
@@ -300,8 +374,11 @@ public class StateMachineTraceItem implements TraceItem
 	  
     return super.toString() + "["+
             "tracerType" + ":" + getTracerType()+ "," +
+            "isIn" + ":" + getIsIn()+ "," +
+            "isOut" + ":" + getIsOut()+ "," +
             "entry" + ":" + getEntry()+ "," +
             "exit" + ":" + getExit()+ "," +
+            "level" + ":" + getLevel()+ "," +
             "traceStateMachineFlag" + ":" + getTraceStateMachineFlag()+ "," +
             "periodClause" + ":" + getPeriodClause()+ "," +
             "conditionallyWhere" + ":" + getConditionallyWhere()+ "," +
@@ -310,7 +387,8 @@ public class StateMachineTraceItem implements TraceItem
             "concatinator" + ":" + getConcatinator()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "traceDirective" + "=" + getConstraint() != null ? !getConstraint() .equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
             "  " + "transition" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "stateMachine" + "=" + getStateMachine() != null ? !getStateMachine() .equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "state" + "=" + getStateMachine() != null ? !getStateMachine() .equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
+            "  " + "stateMachine" + "=" + getState() != null ? !getState() .equals(this)  ? getState().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
             "  " + "constraint" + "=" + getTransition() != null ? !getTransition() .equals(this)  ? getTransition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
             "  " + "position" + "=" + getTraceDirective() != null ? !getTraceDirective() .equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null"
      + outputString;
@@ -318,12 +396,12 @@ public class StateMachineTraceItem implements TraceItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 233 ../../../../src/Trace_Code.ump
-  @umplesourcefile(line=233,file="Trace_Code.ump",javaline=323,length=3)
+  // line 315 ../../../../src/Trace_Code.ump
+  @umplesourcefile(line=315,file="Trace_Code.ump",javaline=401,length=3)
   public Boolean getIsPre(){
   	return conditionallyWhere;
   }
-  @umplesourcefile(line=236,file="Trace_Code.ump",javaline=327,length=3)
+  @umplesourcefile(line=318,file="Trace_Code.ump",javaline=405,length=3)
   public Boolean getIsPost(){
   	return !conditionallyWhere;
   }
@@ -335,7 +413,7 @@ public class StateMachineTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace 
    */
-  @umplesourcefile(line=247,file="Trace_Code.ump",javaline=339,length=45)
+  @umplesourcefile(line=329,file="Trace_Code.ump",javaline=417,length=60)
   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
   {
   	String name = "";
@@ -350,16 +428,31 @@ public class StateMachineTraceItem implements TraceItem
     {
       Transition aTransition = (Transition)o;
       name = aTransition.getEvent().getName();
-      obj = ","+aTransition.getFromState().getName();
-      extra = "," + aTransition.getNextState().getName();
+      obj = aTransition.getFromState().getName();
+      extra = "," + aTransition.getNextState().getName()+"\"";
     }
     else if(o instanceof State)
     {
       State state = (State)o;
-      name = getStateMachine().getName();
+      name = getStateMachine().getName()+"\"";
       obj = state.getName();
     }
-      	
+    if(getTraceDirective().getTraceRecord()!=null)
+    {
+      for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+      {
+        extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+      }
+      if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+      {
+        extra+= concatinator+"\"";
+        for(String record:getTraceDirective().getTraceRecord().getRecord())
+        {
+          extra+=","+record.replace("\"","");
+        }
+        extra+= "\"";
+      }
+    }
     for(String str: args){
       extra+=comma+str;
     }
@@ -384,7 +477,7 @@ public class StateMachineTraceItem implements TraceItem
   /* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line=295,file="Trace_Code.ump",javaline=388,length=4)
+  @umplesourcefile(line=392,file="Trace_Code.ump",javaline=481,length=4)
   public String getExtremities(CodeTranslator gen, String name)
   {
     return gen.translate("Closed",constraint);

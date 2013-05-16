@@ -18,7 +18,7 @@ namespace cruise.umple.compiler;
 class StateMachine
 {
   depend cruise.umple.util.*;
-
+  Integer recentSearchDepth = -1;
   name;
   * -- 0..1 UmpleClass;
   

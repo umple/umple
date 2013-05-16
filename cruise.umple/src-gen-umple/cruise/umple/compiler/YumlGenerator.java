@@ -76,7 +76,7 @@ public class YumlGenerator implements CodeGenerator
    * Allows independent code generation tools
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line=21,file="/home/geoff/programs/umple/debug/cruise.umple/src/Generator.ump",javaline=75,length=2)
+  @umplesourcefile(line=21,file="Generator.ump",javaline=75,length=2)
   @Override
   public boolean setOutput(String aString){
           return false;

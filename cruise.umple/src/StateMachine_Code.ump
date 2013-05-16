@@ -244,6 +244,7 @@ class StateMachine
     {
       if (aState.getName().equals(aName))
       {
+        root.recentSearchDepth=0;
         return aState;
       }
       
@@ -254,6 +255,7 @@ class StateMachine
           State potentialMatch = nestedSm.findState(aName,true,true);
           if (potentialMatch != null)
           {
+            recentSearchDepth=nestedSm.recentSearchDepth+1;
             return potentialMatch;
           } 
         }

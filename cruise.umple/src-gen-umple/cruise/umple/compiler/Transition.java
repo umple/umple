@@ -10,10 +10,10 @@ import java.util.*;
  * activities.
  * The guard is a boolean condition that may prevent triggering the transition
  * @umplesource StateMachine.ump 103
- * @umplesource StateMachine_Code.ump 433
+ * @umplesource StateMachine_Code.ump 435
  */
 // line 103 "../../../../src/StateMachine.ump"
-// line 433 "../../../../src/StateMachine_Code.ump"
+// line 435 "../../../../src/StateMachine_Code.ump"
 public class Transition
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -428,8 +428,8 @@ public class Transition
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 435 ../../../../src/StateMachine_Code.ump
-  @umplesourcefile(line=435,file="StateMachine_Code.ump",javaline=433,length=6)
+  // line 437 ../../../../src/StateMachine_Code.ump
+  @umplesourcefile(line=437,file="StateMachine_Code.ump",javaline=433,length=6)
   public static Transition createPlaceholder(State nextState)
   {
     StateMachine nullSm = new StateMachine("null");

@@ -212,6 +212,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parser" lowerBound="1" upperBound="1" eType="#//Parser" eOpposite="#//Parser/ruleInstances"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StateMachine">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="recentSearchDepth" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/stateMachines"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentState" lowerBound="0" upperBound="1" eType="#//State" eOpposite="#//State/nestedStateMachines"/>
@@ -234,6 +235,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="nestedStateMachines" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/parentState"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" lowerBound="0" upperBound="-1" eType="#//Transition" eOpposite="#//Transition/fromState"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="nextTransition" lowerBound="0" upperBound="-1" eType="#//Transition" eOpposite="#//Transition/nextState"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachineTraceItem" eOpposite="#//StateMachineTraceItem/state"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Activity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
@@ -627,8 +629,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="StateMachineTraceItem" eSuperTypes="#//TraceItem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" eType="#//Constraint"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracerType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isIn" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOut" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="entry" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="exit" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="level" eType="#//int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceStateMachineFlag" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="periodClause" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -637,6 +642,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="accessor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="concatinator" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" lowerBound="0" upperBound="1" eType="#//StateMachine" eOpposite="#//StateMachine/stateMachineTraceItems"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="state" lowerBound="0" upperBound="1" eType="#//State" eOpposite="#//State/stateMachineTraceItems"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transition" lowerBound="0" upperBound="1" eType="#//Transition" eOpposite="#//Transition/stateMachineTraceItems"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="1" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/stateMachineTraceItems"/>
   </eClassifiers>

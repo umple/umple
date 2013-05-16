@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 
 /**
  * @umplesource StateMachine.ump 160
- * @umplesource StateMachine_Code.ump 443
+ * @umplesource StateMachine_Code.ump 445
  */
 // line 160 "../../../../src/StateMachine.ump"
-// line 443 "../../../../src/StateMachine_Code.ump"
+// line 445 "../../../../src/StateMachine_Code.ump"
 public class Event
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -206,10 +206,10 @@ public class Event
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 445 ../../../../src/StateMachine_Code.ump
+  // line 447 ../../../../src/StateMachine_Code.ump
   private static int nextAutoTransitionId = 1;
 
-  @umplesourcefile(line=447,file="StateMachine_Code.ump",javaline=213,length=7)
+  @umplesourcefile(line=449,file="StateMachine_Code.ump",javaline=213,length=7)
   public static Event createAutoTransition()
   {
     Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
