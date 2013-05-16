@@ -76,7 +76,10 @@ public class DocumenterMain
     public void uncaughtException(Thread t, Throwable e)
     {
       translate(e);
-      translate(e.getCause());
+      if(e.getCause()!=null)
+      {
+        translate(e.getCause());
+      }
       e.printStackTrace();
     }
     public void translate(Throwable e)
