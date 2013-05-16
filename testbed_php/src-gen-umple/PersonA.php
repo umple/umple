@@ -28,7 +28,6 @@ class PersonA
   public function setName($aName)
   {
     $wasSet = false;
-    StringTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/hatch/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,9,PersonA,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
     $this->name = $aName;
     $wasSet = true;
     return $wasSet;
