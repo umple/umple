@@ -386,30 +386,33 @@ class UmpleInternalParser
   /*
    * Analyzes all associations that are part of the given token indicated to be related to an association.
    * 
-   * @param associationToken The token indicated to be an association where sub tokens will be analyzed from to further
+   * @param associationToken The token indicated to be an association or association Class where sub tokens will be analyzed from to further
    * analyze the individual associations.
    */
   private void analyzeAllAssociations(Token associationToken)
   {
     String name = associationToken.getValue("name");
-    
+
     // Go through every token that is a child of the current token (all associations part of this association).
-    for(Token token : associationToken.getSubTokens())
-    {
-      if (token.is("association"))
-      {
-        // Analyze the individual association.
-        Association association = analyzeAssociation(token, "");
-        if (!getParseResult().getWasSuccess()) 
-        {
-          return;
+    for(Token token : associationToken.getSubTokens()){
+      boolean isAssociationToken = token.is("association");
+
+      //Issue 213/131: [association] elements inside associationClasses generate 2 associations instead of one
+      if (isAssociationToken && associationToken.is("associationClassDefinition")) {
+        for (Token t : token.getSubTokens()) {
+          if (t.is("associationEnd")) {
+            analyzeAssociation(t, "");
+          }
         }
-        
-        association.setName(name);
-        unlinkedAssociations.add(association);
+      } else if (isAssociationToken || token.is("singleAssociationEnd")){
+        Association association = analyzeAssociation(token, "");
+        if(isAssociationToken && association != null){
+          association.setName(name);
+        }
       }
+      if (!getParseResult().getWasSuccess()) { return; }
     }
-  }  
+  }
 
   /*
    * Analyzes a class token to populate an Umple class.
@@ -430,8 +433,13 @@ class UmpleInternalParser
     else if ( className.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.
       setFailedPosition(classToken.getPosition(), 101, className);
     }
-    
-    UmpleClass aClass = model.addUmpleClass(classToken.getValue("name"));
+    UmpleClass aClass;
+    //Issue 213: UmpleClass can be an AssociationClass
+    if(classToken.is("associationClassDefinition")){
+        aClass = model.addAssociationClass(classToken.getValue("name"));
+    }else{
+        aClass = model.addUmpleClass(classToken.getValue("name"));
+    }
     if ( classToken.is("classDefinition") && "external".equals(aClass.getModifier()) )
       aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
 
@@ -674,90 +682,25 @@ class UmpleInternalParser
 
   private void analyzeAssociationClass(Token classToken)
   {
-    AssociationClass aClass = model.addAssociationClass(classToken.getValue("name"));
-    addExtendsTo(classToken, aClass, unlinkedExtends, unlinkedExtendsTokens);
-    analyzeAllTokens(classToken,aClass);
-
-	if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName()) && !packageNameUsed){
-    	setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
-    	aClass.setPackageName(currentPackageName);
-    }		
-    if("".equals(aClass.getPackageName())){
-    	aClass.setPackageName(currentPackageName);
-	}
-	packageNameUsed = true;
-    Token leftAssociationToken = null;
-    Token rightAssociationToken = null;
-
-    for(Token token : classToken.getSubTokens())
-    {
-      if (token.is("singleAssociationEnd"))
-      {
-        if (leftAssociationToken == null)
-        {
-          leftAssociationToken = token;
+    //test if Association class has at least 1 association or more than one singleEndAssociation
+    List<Token> subtokens = classToken.getSubTokens();
+    int singleAssocNumber = 0;
+    int assocNumber = 0;
+    for(Token t : subtokens){
+        if(t.is("singleAssociationEnd")){
+            singleAssocNumber++;
+        }else if (t.is("association")){
+            assocNumber++;
         }
-        else
-        {
-          rightAssociationToken = token;
-        }
-      }
     }
-
-    if (leftAssociationToken == null || rightAssociationToken == null)
-    {
-      setFailedPosition(classToken.getPosition(), 8, classToken.getValue("name"));
-      return;
+    if(singleAssocNumber == 1 || (assocNumber == 0 && singleAssocNumber == 0)){
+        setFailedPosition(classToken.getPosition(), 8, classToken.getValue("name"));
+        return;
     }
-
-    String innerName = null;
-    String innerType = aClass.getName();
-    String innerModifier = null;
-    Multiplicity innerMult = new Multiplicity();
-    innerMult.setRange("0","1"); 
-
-    String leftName = leftAssociationToken.getValue("roleName");
-    String leftType = leftAssociationToken.getValue("type");
-    String leftModifier = leftAssociationToken.getValue("modifier");
-    String leftBound = leftAssociationToken.getValue("bound");
-    String leftLowerBound = leftAssociationToken.getValue("lowerBound");
-    String leftUpperBound = leftAssociationToken.getValue("upperBound");
-    Multiplicity leftMult = new Multiplicity();
-    leftMult.setBound(leftBound);
-    leftMult.setRange(leftLowerBound,leftUpperBound);
-
-    String rightName = rightAssociationToken.getValue("roleName");
-    String rightType = rightAssociationToken.getValue("type");
-    String rightModifier = rightAssociationToken.getValue("modifier");
-    String rightBound = rightAssociationToken.getValue("bound");
-    String rightLowerBound = rightAssociationToken.getValue("lowerBound");
-    String rightUpperBound = rightAssociationToken.getValue("upperBound");
-    Multiplicity rightMult = new Multiplicity();
-    rightMult.setBound(rightBound);
-    rightMult.setRange(rightLowerBound,rightUpperBound);
-
-    AssociationEnd leftFirstEnd = new AssociationEnd(innerName,innerType,innerModifier,leftType,leftMult);
-    AssociationEnd leftSecondEnd = new AssociationEnd(leftName,leftType,leftModifier,innerType,innerMult);
-
-    AssociationEnd rightFirstEnd = new AssociationEnd(innerName,innerType,innerModifier,rightType,rightMult);
-    AssociationEnd rightSecondEnd = new AssociationEnd(rightName,rightType,rightModifier,innerType,innerMult);    
-
-    updateAssociationEnds(leftFirstEnd,leftSecondEnd);
-    updateAssociationEnds(rightFirstEnd,rightSecondEnd);
-
-    Association leftAssociation = new Association(true,true,leftFirstEnd,leftSecondEnd);
-    leftAssociation.setTokenPosition(leftAssociationToken.getPosition());
-
-    Association rightAssociation = new Association(true,true,rightFirstEnd,rightSecondEnd);
-    rightAssociation.setTokenPosition(rightAssociationToken.getPosition());
-
-    model.addAssociation(leftAssociation);
-    model.addAssociation(rightAssociation);
-
-    unlinkedAssociations.add(leftAssociation);
-    unlinkedAssociations.add(rightAssociation);
+    analyzeClass(classToken);
+    analyzeAllAssociations(classToken);
   }
-  
+
    private boolean verifyClassesInUse()
   {
     for(Map.Entry<Position, String> e : positionToClassNameReference.entrySet())
@@ -1594,108 +1537,163 @@ class UmpleInternalParser
 
   private Association createAssociation(String navigation, AssociationEnd firstEnd, AssociationEnd secondEnd)
   {
-    boolean isNavigable = "--".equals(navigation);
-    boolean isFirstNavigable = "<-".equals(navigation) || isNavigable;
-    boolean isSecondNavigable = "->".equals(navigation) || isNavigable;
-    return new Association(isFirstNavigable,isSecondNavigable,firstEnd,secondEnd);
+    Association association;
+    if(navigation != null){
+      boolean isNavigable = "--".equals(navigation);
+      boolean isFirstNavigable = "<-".equals(navigation) || isNavigable;
+      boolean isSecondNavigable = "->".equals(navigation) || isNavigable;
+      association = new Association(isFirstNavigable,isSecondNavigable,firstEnd,secondEnd);
+    }else{
+      association = new Association(true, true, firstEnd, secondEnd);
+    }
+    return association;
   }
 
   private Association analyzeAssociation(Token associationToken, String defaultMyType)
   {
-  
-    int myMultOffset = 0;
-    int yourMultOffset = 2;
-    Token associationModifier = associationToken.getSubToken("modifier");
-    if (associationModifier != null)
-    {
-      myMultOffset++;
-      yourMultOffset++;
+    Token parentToken = associationToken.getParentToken();
+    Token gParentToken = parentToken.getParentToken();
+    boolean isAssociationClass = parentToken.is("associationClassDefinition") || gParentToken.is("associationClassDefinition");
+    boolean isSingleAssociationEnd = associationToken.is("singleAssociationEnd");
+    boolean isInlineAssociation = associationToken.is("inlineAssociation");
+    Token myEndToken = null;
+    Token yourEndToken = null;
+    String navigation = null;
+    String associationModifier = null;
+    String name = null;
+
+    //Issue 213/131: associations can be inside AssociationClasses, but
+    //inline associations inside associationClasses are treated just like in regular classes
+    if(isAssociationClass && !isInlineAssociation){
+        if(isSingleAssociationEnd){
+            myEndToken = parentToken;
+            associationModifier = associationToken.getValue("modifier");
+            navigation = null;
+            name = parentToken.getValue("name");
+
+        }else{ //association inside associationClass
+            myEndToken = parentToken.getParentToken();
+            associationModifier = parentToken.getValue("modifier");
+            navigation = parentToken.getValue("arrow");
+            name = gParentToken.getValue("name");
+        }
+        yourEndToken = associationToken;
+    }else{//inline association or external "association{..}" block
+        name = parentToken.getValue("name");
+        int myMultOffset = 0;
+        int yourMultOffset = 2;
+        Token associationModifierToken = associationToken.getSubToken("modifier");
+        if (associationModifierToken != null){
+          associationModifier = associationModifierToken.getValue();
+          myMultOffset++;
+          yourMultOffset++;
+        }
+        myEndToken = associationToken.getSubToken(myMultOffset);
+        navigation = associationToken.getValue("arrow");
+        yourEndToken = associationToken.getSubToken(yourMultOffset);
     }
-  	
-    Token myMultToken = associationToken.getSubToken(myMultOffset);
-
-    String navigation = associationToken.getValue("arrow");
-    Token yourMultToken = associationToken.getSubToken(yourMultOffset);
-
-    String myName = myMultToken.getValue("roleName");
-    String myType = myMultToken.getValue("type") == null ? defaultMyType : myMultToken.getValue("type");
-
-    String myModifier = myMultToken.getValue("modifier");
-    String myBound = myMultToken.getValue("bound");
-    String myLowerBound = myMultToken.getValue("lowerBound");
-    String myUpperBound = myMultToken.getValue("upperBound");
-    String myPriority = myMultToken.getValue("priority");
-    
-    Multiplicity myMult = new Multiplicity(); 
-    myMult.setBound(myBound);
-    myMult.setRange(myLowerBound,myUpperBound);
-
-    // Report an error if the multiplicity is invalid
-    if (!myMult.isValid())
-    {    	    	
-      String invalidBound = myBound == null ? invalidBound = myLowerBound + ".." + myUpperBound : myBound;
-      setFailedPosition(myMultToken.getPosition(), 4, invalidBound);
-      return null;
+    AssociationEnd firstEnd = createPreliminaryAssociationEnd(myEndToken, defaultMyType);
+    AssociationEnd secondEnd = createPreliminaryAssociationEnd(yourEndToken, defaultMyType);
+    if(firstEnd == null || secondEnd == null){
+        setFailedPosition(associationToken.getPosition(), 8, name);
+        return null;
     }
+    String myType = firstEnd.getClassName();
+    String myRoleName = firstEnd.getRoleName();
+    String yourType = secondEnd.getClassName();
+    String yourRoleName = secondEnd.getRoleName();
+    Multiplicity myMult = firstEnd.getMultiplicity();
+    Multiplicity yourMult = secondEnd.getMultiplicity();
 
-    String yourName = yourMultToken.getValue("roleName");
-    String yourType = yourMultToken.getValue("type");
-    String yourModifier = yourMultToken.getValue("modifier");
-    String yourBound = yourMultToken.getValue("bound");
-    String yourLowerBound = yourMultToken.getValue("lowerBound");
-    String yourUpperBound = yourMultToken.getValue("upperBound");
-	String yourPriority = yourMultToken.getValue("priority");
-	
-    Multiplicity yourMult = new Multiplicity();
-    yourMult.setBound(yourBound);
-    yourMult.setRange(yourLowerBound,yourUpperBound);
-
-    // Report an error if the multiplicity is invalid
-    if (!yourMult.isValid())
-    {    	    	
-      String invalidBound = yourBound == null ? invalidBound = yourLowerBound + ".." + yourUpperBound : yourBound;
-      setFailedPosition(yourMultToken.getPosition(), 4, invalidBound);
-      return null;
+    if("".equals(firstEnd.getClassName())){
+        firstEnd.setClassName(defaultMyType);
     }
+    firstEnd.setReferenceToClassName(yourType);
+    secondEnd.setReferenceToClassName(myType);
+    //Association Classes have Mutiplicities switched between ends: an association
+    //between A and B in associationClass C becomes A -- C and B -- C
+    if(isAssociationClass){
+        firstEnd.setMultiplicity(secondEnd.getMultiplicity());
+        secondEnd.setMultiplicity(myMult);
+    }
+    updateAssociationEnds(firstEnd,secondEnd);
 
     // Trap cases where both ends are the same class (reflexive) and 
     // there is no or same role name and same multiplicity. Fixes issue 295
-    if(myType.equals(yourType) && ((myName == null && yourName == null) || (myName != null && yourName != null && myName.equals(yourName))) && myMult.toString().equals(yourMult.toString())) {
+    if(myType.equals(yourType) && ((myRoleName == null && yourRoleName == null) || (myRoleName != null && yourRoleName != null && myRoleName.equals(yourRoleName))) && myMult.toString().equals(yourMult.toString())) {
       setFailedPosition(associationToken.getPosition(), 21, myType);
       return null;
-    }    
-    /* DEBUG block
-    if(true) {
-      setFailedPosition(associationToken.getPosition(), 8005, "1"+myType+" 2"+yourType+" 3"+myName+" 4"+yourName+" 5"+myMult+"  6"+yourMult);
-    } */
-
-    AssociationEnd firstEnd = new AssociationEnd(myName,myType,myModifier,yourType,myMult);
-    AssociationEnd secondEnd = new AssociationEnd(yourName,yourType,yourModifier,myType,yourMult);
-    updateAssociationEnds(firstEnd,secondEnd);
-
-	if(myPriority != null)	{ firstEnd.setPriority(myPriority);	}
-	if(yourPriority != null) { secondEnd.setPriority(yourPriority); }
-
+    }
     Association association = createAssociation(navigation,firstEnd,secondEnd);
     
-    if (associationModifier != null && "immutable".equals(associationModifier.getValue()))
-    {
+    if (associationModifier != null && "immutable".equals(associationModifier)){
       association.setImmutable();
     }
-
     association.setTokenPosition(associationToken.getPosition());
-    if (!association.isValid())
-    {
-      Token atFaultToken = association.whoIsInvalid() == 0 ? myMultToken : yourMultToken;
+    if (!association.isValid()){
+      Token atFaultToken = association.whoIsInvalid() == 0 ? myEndToken : yourEndToken;
       String invalidBound = atFaultToken.getValue("bound") == null ? invalidBound = atFaultToken.getValue("lowerBound") + ".." + atFaultToken.getValue("upperBound") : atFaultToken.getValue("bound");
       setFailedPosition(atFaultToken.getPosition(), 9, invalidBound);
       return null;
     }
-
-    positionToClassNameReference.put(myMultToken.getPosition("type"),myType);
-    positionToClassNameReference.put(yourMultToken.getPosition("type"),yourType);
     model.addAssociation(association);
+    if(!isInlineAssociation){ unlinkedAssociations.add(association); }
     return association;
+  }
+
+  /*
+   * Given a [[associationEnd]], [[singleAssociationEnd]], [[inlineAssociationEnd]] or 
+   * a [[associationClassDefinition]] token, creates a
+   * preliminary AssociationEnd object to help in the creation of an Association object.
+   * The resulting object will have to be completed with setReferenceToClassName()depending on the type of association.
+   * @return an AssociationEnd object or null if an error occured
+  */
+  private AssociationEnd createPreliminaryAssociationEnd(Token associationEndToken, String defaultType){
+    if(associationEndToken != null){
+      String name, type, modifier, roleName, bound, lowerBound, upperBound, priority;
+      bound = lowerBound = upperBound = priority = roleName = null;
+      Multiplicity mult = new Multiplicity();
+      String typeIndex;
+
+      //special case when [[singleAssociationEnd]] is used in one end: the 
+      //parent associationClassDefinition is used as the other
+      if(associationEndToken.is("associationClassDefinition")){
+        name = null;
+        type = associationEndToken.getValue("name");
+        modifier = null;
+        mult.setRange("1","1");
+        typeIndex = "name";
+      }else{
+        type = associationEndToken.getValue("type");
+        modifier = associationEndToken.getValue("modifier");
+        roleName = associationEndToken.getValue("roleName");
+        bound = associationEndToken.getValue("bound");
+        lowerBound = associationEndToken.getValue("lowerBound");
+        upperBound = associationEndToken.getValue("upperBound");
+        priority = associationEndToken.getValue("priority");
+        mult.setRange(lowerBound, upperBound);
+        mult.setBound(bound);
+        typeIndex = "type";
+      }
+      // Report an error if the multiplicity is invalid
+      if (!mult.isValid()){
+        String invalidBound = bound == null ? lowerBound + ".." + upperBound : bound;
+        setFailedPosition(associationEndToken.getPosition(), 4, invalidBound);
+        return null;
+      }
+      if(type == null){
+          type = defaultType;
+      }
+      AssociationEnd assocEnd = new AssociationEnd(roleName,type,modifier,null,mult);
+
+      if(priority != null){
+          assocEnd.setPriority(priority);
+      }
+      positionToClassNameReference.put(associationEndToken.getPosition(typeIndex),type);
+      return assocEnd;
+    }else{
+        return null;
+    }
   }
 
   private void updateAssociationEnds(AssociationEnd firstEnd, AssociationEnd secondEnd)

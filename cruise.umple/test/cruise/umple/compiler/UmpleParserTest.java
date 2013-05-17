@@ -1317,7 +1317,7 @@ public class UmpleParserTest
     Assert.assertEquals("type",aClass.getAttribute("type").getName());
     
     AssociationVariable av1 = aClass.getAssociationVariable("event");
-    Assert.assertEquals(0,av1.getMultiplicity().getLowerBound());
+    Assert.assertEquals(1,av1.getMultiplicity().getLowerBound());
     Assert.assertEquals(1,av1.getMultiplicity().getUpperBound());
     Assert.assertEquals("event",av1.getName());
     Assert.assertEquals("Event", av1.getType());
@@ -1329,7 +1329,7 @@ public class UmpleParserTest
     Assert.assertEquals("Ticket", relatedAv1.getType());
     
     AssociationVariable av2 = aClass.getAssociationVariable("location");
-    Assert.assertEquals(0,av2.getMultiplicity().getLowerBound());
+    Assert.assertEquals(1,av2.getMultiplicity().getLowerBound());
     Assert.assertEquals(1,av2.getMultiplicity().getUpperBound());
     Assert.assertEquals("location",av2.getName());
     Assert.assertEquals("Location", av2.getType());
@@ -1342,6 +1342,12 @@ public class UmpleParserTest
     
     List<Association> iter = model.getAssociations();
     Assert.assertEquals(2,iter.size());
+  }
+
+  @Test
+  public void associationClassNewSyntax()
+  {
+    assertParse("010_associationClassNewSyntaxAssociation.ump");
   }
 
   @Test
