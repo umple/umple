@@ -1533,6 +1533,11 @@ class UmpleInternalParser
 
     myAs.setRelatedAssociation(yourAs);
     aClass.addAssociationVariable(yourAs);
+    
+    AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
+    AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
+    Association assoc = new Association(false, true, leftEnd, rightEnd);
+    aClass.addAssociation(assoc);
   }
 
   private Association createAssociation(String navigation, AssociationEnd firstEnd, AssociationEnd secondEnd)

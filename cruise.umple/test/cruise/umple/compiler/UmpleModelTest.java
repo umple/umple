@@ -47,7 +47,7 @@ public class UmpleModelTest
 
     SampleFileWriter.createFile("student.txt", "class Student {}");
 
-
+    SampleFileWriter.createFile("TestSymmetric.txt", "class Course { * self isMutuallyExclusiveWith;}");
 
     uFile = new UmpleFile("teacher.txt");
 
@@ -68,7 +68,8 @@ public class UmpleModelTest
     SampleFileWriter.destroy("teacher.txt");
 
     SampleFileWriter.destroy("student.txt");
-
+    
+    SampleFileWriter.destroy("TestSymmetric.txt");
   }
 
   
@@ -509,6 +510,12 @@ public class UmpleModelTest
 
   }
   
+  @Test 
+  public void SymmetricReflexiveTest (){
+	  UmpleModel inModel = new UmpleModel(new UmpleFile("TestSymmetric.txt"));
+	  inModel.run();
+	  Assert.assertEquals(1,inModel.getUmpleClass(0).getAssociations().length);
+  }
 
 }
 
