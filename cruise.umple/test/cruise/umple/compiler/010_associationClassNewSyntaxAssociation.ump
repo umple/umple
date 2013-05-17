@@ -1,0 +1,9 @@
+class Student {}
+
+class CourseSection {}
+
+associationClass Registration 
+{
+  * Student -- * CourseSection;
+  String grade;
+}
