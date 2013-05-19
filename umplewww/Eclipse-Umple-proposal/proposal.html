@@ -24,7 +24,7 @@
 	rendered webpage. Do not duplicate the title within the text of your page.
  -->
 
-<title>[NewProjectName]</title>
+<title>Umple Model-Oriented Programming</title>
 </head>
 
 <!-- 
@@ -46,8 +46,8 @@ margin-bottom:5px;
 </style>
 
 <body>
-<p>The [NewProjectName] project is a proposed open source project under the <a
-	href="http://www.eclipse.org/projects/project_summary.php?projectid=[ContainerProjectId]">[ContainerProjectName]
+<p>The Umple Model-Oriented Programming project is a proposed open source project under the <a
+	href="http://www.eclipse.org/projects/project_summary.php?projectid=Modeling">Modeling
 Container Project</a>.</p>
 
 <!-- 
@@ -67,6 +67,12 @@ Forum.</p>
 	Optionally provide the background that has lead you to creating this project.
  -->
 
+
+
+
+
+
+
 <h2>Scope</h2>
 
 <!-- 
@@ -74,6 +80,53 @@ Forum.</p>
 	is in-scope and (optionally) what is out-of-scope. An Eclipse project
 	cannot have an open-ended scope.
  -->
+
+The Umple project encompasses in short, a model compiler and related techology: Specifically:
+
+  The textual programming-language-like syntax called Umple, covering
+    UML constructs, including associations, attributes, state machines, components,  consraints, concurrency, etc.
+    Real-time profiles such as Marte and AutoSar
+    Patterns
+    Separation of concerns in the context of Umple including mixins, aspect-oriented code injections, and variability modeling constructs
+    A tracing sublanguage (MOTL) allowing injection of tracepoints into modeling constructs
+
+  Technology for embedding Umple in programming languages such as Java, PhP, Ruby and C++
+
+  Technology for embedding code in such programming languages, plus Alf, into Umple
+
+  A grammar DSL optimized for processing Umple and the embedding of languages, but also capable of being used in other contexts
+
+  A subsystem for analysing the syntactic and semantic validity of models in Umple
+
+  Code generation capabilities related to Umple
+    A generic code-generation architecture designed to work with Umple, but also capable of working with other modeling front-ends
+    Specific code generators for Java, PhP, Ruby, C++, covering all the syntactic elements described above
+    Generators for creating UML diagrams from Umple
+    Generators for exporting other UML representations (XMI, Yuml, etc.), SDL and SQL
+    Generators for metrics and other data about Umple systems
+    Generators for formal languages
+
+  An Eclipse plugin supporting all of the above
+
+  An XText-based plugin to give Umple improved syntax-directed editing, and a tool to convert the Umple grammar to XText
+
+  A website (UmpleOnline) for editing Umple and UML diagrams interchangeably and generating code and other artifacts
+
+  Metadata for the Umple user manual, and a tool to generate the user manual from this metadata
+
+  Tools to generate self-documenting elements of the Umple compiler
+
+  A User-Interface generation tool (UIGU) to generate usable default websites from any given Umple model for rapid prototyping
+
+  A tool to facilitate transformation of code to Umple models+code (umplification)
+
+  An extensive suite of testcases to test the syntax, Umple metamodel, and generated code
+
+  Example systems written in Umple to serve as additional tests
+
+  Plugins to various external editors to provide those editors with an Umple profile
+
+
 
 <h2>Description</h2>
 
@@ -93,6 +146,15 @@ Forum.</p>
 	of hosting at Eclipse Labs?
  -->
 
+Umple has been developed as a stand-alone project over the last five years, with the sponsorship of IBM and contributions to support the development of various components by other companies.
+
+Although rigorous quality has been built into the compiler using test-driven development and by writing the compiler in itself, we need the visibility and IP policies that an organization like Eclipse can provide, in order to help foster industrial uptake.
+
+Since Umple has been developed in Eclipse, and has an Eclipse plugin as one of its main artifacts, the Eclipse foundation seems the right home.
+
+Also according to XXXX Eclipse is one of the most open of open-source initiatives. Umple has always prided itself in being extremely open, and we want this to continue.
+
+
 <h2>Initial Contribution</h2>
 
 <!-- 
@@ -104,6 +166,10 @@ Forum.</p>
 	of community that exists around the code. Include a listing of third-party libraries 
 	and associated licenses.
  -->
+
+Umple has been an open source project under Google Code since 2011. It is licensed under the MIT license. Copyright is jointly held by the contributors, who, by virtue of agreeing to release their contributions under the MIT license have allowed their work to be freely used.
+
+
  
 <h2>Legal Issues</h2>
 
@@ -114,6 +180,12 @@ Forum.</p>
 	code available under some other license? Are there any LGPL/GPL bits that you
 	absolutely require?
  -->
+ 
+There should be no important legal issues that we are aware of. The project is under the MIT license. We have no objection to converting to the Eclipse Public License going forward. 
+
+The project does have dependencies on some other Eclipse projects (e.g. Jet). The website also uses CodeMirror and JQuery which are licensed under the MIT license.
+
+There is the issue of the generated code. When code is emitted it no license is injected, Our concept is that the original model can have whatever license users want, and the generated code would have the same license.
  
 <h2>Committers</h2>
 
@@ -155,8 +227,8 @@ Forum.</p>
 project:</p>
 
 <ul>
-	<li>Mentor 1</li>
-	<li>Mentor 2</li>
+	<li>Ian Bull</li>
+	<li>To be determined</li>
 </ul>
 
 <h2>Interested Parties</h2>
@@ -184,6 +256,9 @@ expressed interest in this project:</p>
 	should be expected, when your first build will be ready, etc. Exact
 	dates are not required.
  -->
+
+We would like to convert to Eclipse in midsummer (July). We will route all commits to Coogle Code and also to Eclipse until the Eclipse site is stable.
+
 
 <h2>Changes to this Document</h2>
 
