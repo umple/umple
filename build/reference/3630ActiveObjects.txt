@@ -18,7 +18,7 @@ class A {
   active {
     System.out.println("Object "+getName()+ is now active);
     for (int i = 1; i < 10; i++) {
-      System.out.println(" "+name+" was here";
+      System.out.println(" "+name+" was here");
       Thread.sleep(1000);
     }
   }
