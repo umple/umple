@@ -1629,6 +1629,12 @@ class UmpleInternalParser
       setFailedPosition(associationToken.getPosition(), 21, myType);
       return null;
     }
+	
+    if (firstEnd.getRoleName().equals(secondEnd.getRoleName()) && firstEnd.getClassName().equals(secondEnd.getClassName())){
+    	setFailedPosition(associationToken.getPosition(), 32, firstEnd.getRoleName());
+    	return null;
+    }	
+	
     Association association = createAssociation(navigation,firstEnd,secondEnd);
     
     if (associationModifier != null && "immutable".equals(associationModifier)){
