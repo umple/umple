@@ -69,7 +69,7 @@ public class Mentor
 	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "student" + "=" + getStudent() != null ? !getStudent() .equals(this)  ? getStudent().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "student" + "=" + (getStudent() != null ? !getStudent().equals(this)  ? getStudent().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

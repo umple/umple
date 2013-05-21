@@ -125,7 +125,7 @@ public class ClassThatWillHaveSortedAssociationTwo
 	  String outputString = "";
 	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "massPriority" + "=" + getMassPriority() != null ? !getMassPriority() .equals(this)  ? getMassPriority().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "massPriority" + "=" + (getMassPriority() != null ? !getMassPriority().equals(this)  ? getMassPriority().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

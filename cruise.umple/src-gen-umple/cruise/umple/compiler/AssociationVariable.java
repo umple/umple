@@ -315,10 +315,10 @@ public class AssociationVariable extends UmpleVariable
     return super.toString() + "["+
             "isNavigable" + ":" + getIsNavigable()+ "," +
             "priority" + ":" + getPriority()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "traceDirective" + "=" + getMultiplicity() != null ? !getMultiplicity() .equals(this)  ? getMultiplicity().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass" + "=" + getRelatedAssociation() != null ? !getRelatedAssociation() .equals(this)  ? getRelatedAssociation().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "relatedAssociation" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "multiplicity" + "=" + getTraceDirective() != null ? !getTraceDirective() .equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "traceDirective" + "=" + (getMultiplicity() != null ? !getMultiplicity().equals(this)  ? getMultiplicity().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass" + "=" + (getRelatedAssociation() != null ? !getRelatedAssociation().equals(this)  ? getRelatedAssociation().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "relatedAssociation" + "=" + (getUmpleClass() != null ? !getUmpleClass().equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "multiplicity" + "=" + (getTraceDirective() != null ? !getTraceDirective().equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

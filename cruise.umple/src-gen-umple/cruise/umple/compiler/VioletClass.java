@@ -105,7 +105,7 @@ public class VioletClass
             "name" + ":" + getName()+ "," +
             "x" + ":" + getX()+ "," +
             "y" + ":" + getY()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "parentClass" + "=" + getParentClass() != null ? !getParentClass() .equals(this)  ? getParentClass().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "parentClass" + "=" + (getParentClass() != null ? !getParentClass().equals(this)  ? getParentClass().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

@@ -75,7 +75,7 @@ public class WidgetImmutableA
 	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "widgetImmutableB" + "=" + getWidgetImmutableB() != null ? !getWidgetImmutableB() .equals(this)  ? getWidgetImmutableB().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "widgetImmutableB" + "=" + (getWidgetImmutableB() != null ? !getWidgetImmutableB().equals(this)  ? getWidgetImmutableB().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

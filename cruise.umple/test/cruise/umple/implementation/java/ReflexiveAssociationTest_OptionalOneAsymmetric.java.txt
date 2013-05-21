@@ -140,8 +140,8 @@ public class Student
 	  
     return super.toString() + "["+
             "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "ta" + "=" + getPupil() != null ? !getPupil() .equals(this)  ? getPupil().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "pupil" + "=" + getTa() != null ? !getTa() .equals(this)  ? getTa().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "ta" + "=" + (getPupil() != null ? !getPupil().equals(this)  ? getPupil().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "pupil" + "=" + (getTa() != null ? !getTa().equals(this)  ? getTa().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

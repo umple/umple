@@ -96,7 +96,7 @@ public class Application
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "version" + ":" + getVersion()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "id" + "=" + getId() != null ? !getId() .equals(this)  ? getId().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "id" + "=" + (getId() != null ? !getId().equals(this)  ? getId().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

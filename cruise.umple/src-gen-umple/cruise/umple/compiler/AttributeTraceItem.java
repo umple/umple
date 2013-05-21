@@ -399,9 +399,9 @@ public class AttributeTraceItem implements TraceItem
             "executeClause" + ":" + getExecuteClause()+ "," +
             "conditionallyWhere" + ":" + getConditionallyWhere()+ "," +
             "conditionType" + ":" + getConditionType()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "traceDirective" + "=" + getConstraint() != null ? !getConstraint() .equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "constraint" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + getTraceDirective() != null ? !getTraceDirective() .equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "traceDirective" + "=" + (getConstraint() != null ? !getConstraint().equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "constraint" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + (getTraceDirective() != null ? !getTraceDirective().equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

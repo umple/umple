@@ -57,7 +57,7 @@ public class Input
 	  String outputString = "";
 	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "stream" + "=" + getStream() != null ? !getStream() .equals(this)  ? getStream().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "stream" + "=" + (getStream() != null ? !getStream().equals(this)  ? getStream().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

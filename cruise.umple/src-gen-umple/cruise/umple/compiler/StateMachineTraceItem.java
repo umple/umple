@@ -385,12 +385,12 @@ public class StateMachineTraceItem implements TraceItem
             "conditionType" + ":" + getConditionType()+ "," +
             "accessor" + ":" + getAccessor()+ "," +
             "concatinator" + ":" + getConcatinator()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "traceDirective" + "=" + getConstraint() != null ? !getConstraint() .equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "transition" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "state" + "=" + getStateMachine() != null ? !getStateMachine() .equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "stateMachine" + "=" + getState() != null ? !getState() .equals(this)  ? getState().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "constraint" + "=" + getTransition() != null ? !getTransition() .equals(this)  ? getTransition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + getTraceDirective() != null ? !getTraceDirective() .equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "traceDirective" + "=" + (getConstraint() != null ? !getConstraint().equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "transition" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "state" + "=" + (getStateMachine() != null ? !getStateMachine().equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "stateMachine" + "=" + (getState() != null ? !getState().equals(this)  ? getState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "constraint" + "=" + (getTransition() != null ? !getTransition().equals(this)  ? getTransition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + (getTraceDirective() != null ? !getTraceDirective().equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

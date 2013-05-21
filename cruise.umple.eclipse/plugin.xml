@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
-
    <extension
          point="org.eclipse.ui.editors">
       <editor
@@ -45,6 +44,15 @@
                tooltip="Compile and Run Umple">
          </action>
       </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.console.consolePatternMatchListeners">
+      <consolePatternMatchListener
+            class="cruise.umple.ui.eclipse.UmplePatternMatcher"
+            id="cruise.umple.eclipse.UmplePatternMatcher"
+            regex="[a-zA-Z|_]+[.]ump[:][0|1|2|3|4|5|6|7|8|9]+">
+         <enablement></enablement>
+      </consolePatternMatchListener>
    </extension>
    <!--
   

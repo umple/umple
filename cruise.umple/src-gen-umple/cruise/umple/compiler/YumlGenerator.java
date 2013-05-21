@@ -89,7 +89,7 @@ public class YumlGenerator implements CodeGenerator
 	  
     return super.toString() + "["+
             "outputPath" + ":" + getOutputPath()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + getModel() != null ? !getModel() .equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

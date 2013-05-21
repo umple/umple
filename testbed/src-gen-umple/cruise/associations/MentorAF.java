@@ -78,7 +78,7 @@ public class MentorAF
 	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "friend" + "=" + getFriend() != null ? !getFriend() .equals(this)  ? getFriend().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "friend" + "=" + (getFriend() != null ? !getFriend().equals(this)  ? getFriend().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

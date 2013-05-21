@@ -208,7 +208,7 @@ public class RuleInstance
 	  String outputString = "";
 	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "parser" + "=" + getParser() != null ? !getParser() .equals(this)  ? getParser().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "parser" + "=" + (getParser() != null ? !getParser().equals(this)  ? getParser().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

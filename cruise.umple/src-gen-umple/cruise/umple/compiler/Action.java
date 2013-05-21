@@ -219,8 +219,8 @@ public class Action
             "actionCode" + ":" + getActionCode()+ "," +
             "actionType" + ":" + getActionType()+ "," +
             "isInternal" + ":" + getIsInternal()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "codeblock" + "=" + getCodeblock() != null ? !getCodeblock() .equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "codeblock" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

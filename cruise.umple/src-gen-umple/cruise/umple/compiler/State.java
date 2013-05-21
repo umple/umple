@@ -910,8 +910,8 @@ public class State
             "isHistoryState" + ":" + getIsHistoryState()+ "," +
             "isDeepHistoryState" + ":" + getIsDeepHistoryState()+ "," +
             "finalState" + ":" + getFinalState()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "stateMachine" + "=" + getActivity() != null ? !getActivity() .equals(this)  ? getActivity().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "activity" + "=" + getStateMachine() != null ? !getStateMachine() .equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "stateMachine" + "=" + (getActivity() != null ? !getActivity().equals(this)  ? getActivity().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "activity" + "=" + (getStateMachine() != null ? !getStateMachine().equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

@@ -1344,10 +1344,10 @@ public class UmpleClass extends UmpleClassifier
     return super.toString() + "["+
             "isAbstract" + ":" + getIsAbstract()+ "," +
             "isSingleton" + ":" + getIsSingleton()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "uniqueIdentifier" + "=" + getKey() != null ? !getKey() .equals(this)  ? getKey().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "extendsClass" + "=" + getSourceModel() != null ? !getSourceModel() .equals(this)  ? getSourceModel().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "key" + "=" + getExtendsClass() != null ? !getExtendsClass() .equals(this)  ? getExtendsClass().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "sourceModel" + "=" + getUniqueIdentifier() != null ? !getUniqueIdentifier() .equals(this)  ? getUniqueIdentifier().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "uniqueIdentifier" + "=" + (getKey() != null ? !getKey().equals(this)  ? getKey().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "extendsClass" + "=" + (getSourceModel() != null ? !getSourceModel().equals(this)  ? getSourceModel().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "key" + "=" + (getExtendsClass() != null ? !getExtendsClass().equals(this)  ? getExtendsClass().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "sourceModel" + "=" + (getUniqueIdentifier() != null ? !getUniqueIdentifier().equals(this)  ? getUniqueIdentifier().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

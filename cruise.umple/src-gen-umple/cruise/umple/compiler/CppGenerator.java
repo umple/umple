@@ -113,7 +113,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
             "output" + ":" + getOutput()+ "," +
             "callHeader" + ":" + getCallHeader()+ "," +
             "callLttng" + ":" + getCallLttng()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + getModel() != null ? !getModel() .equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

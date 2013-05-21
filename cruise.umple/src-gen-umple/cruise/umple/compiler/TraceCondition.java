@@ -133,7 +133,7 @@ public class TraceCondition
             "preCondition" + ":" + getPreCondition()+ "," +
             "postCondition" + ":" + getPostCondition()+ "," +
             "lhs" + ":" + getLhs()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "rhs" + "=" + getRhs() != null ? !getRhs() .equals(this)  ? getRhs().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "rhs" + "=" + (getRhs() != null ? !getRhs().equals(this)  ? getRhs().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }
