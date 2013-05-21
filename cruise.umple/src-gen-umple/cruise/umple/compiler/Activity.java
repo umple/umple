@@ -178,10 +178,10 @@ public class Activity
 	  
     return super.toString() + "["+
             "activityCode" + ":" + getActivityCode()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "state" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "onCompletionEvent" + "=" + getCodeblock() != null ? !getCodeblock() .equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + getOnCompletionEvent() != null ? !getOnCompletionEvent() .equals(this)  ? getOnCompletionEvent().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "codeblock" + "=" + getState() != null ? !getState() .equals(this)  ? getState().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "state" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "onCompletionEvent" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + (getOnCompletionEvent() != null ? !getOnCompletionEvent().equals(this)  ? getOnCompletionEvent().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "codeblock" + "=" + (getState() != null ? !getState().equals(this)  ? getState().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

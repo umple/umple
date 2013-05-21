@@ -80,7 +80,7 @@
 	  for(int m=0;m<displayedAttributes.size();m++)
 	  {          
 		  ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";      
-		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \"=\" + " + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + " .equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\"";
+		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \"=\" + (" + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + ".equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\")";
 
 	  }
 	  ret += "\n     + outputString";

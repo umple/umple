@@ -365,11 +365,11 @@ public class Mentor
             "q" + ":" + getQ()+ "," +
             "r" + ":" + getR()+ "," +
             "s" + ":" + getS()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "d" + "=" + getD() != null ? !getD() .equals(this)  ? getD().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "tt" + "=" + getTt() != null ? !getTt() .equals(this)  ? getTt().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "u" + "=" + getU() != null ? !getU() .equals(this)  ? getU().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "v" + "=" + getV() != null ? !getV() .equals(this)  ? getV().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "w" + "=" + getW() != null ? !getW() .equals(this)  ? getW().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "d" + "=" + (getD() != null ? !getD().equals(this)  ? getD().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "tt" + "=" + (getTt() != null ? !getTt().equals(this)  ? getTt().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "u" + "=" + (getU() != null ? !getU().equals(this)  ? getU().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "v" + "=" + (getV() != null ? !getV().equals(this)  ? getV().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "w" + "=" + (getW() != null ? !getW().equals(this)  ? getW().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

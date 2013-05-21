@@ -53,8 +53,10 @@
     <pathelement location="lib/eclipseplugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.text_3.5.0.v20090513-2000.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui_3.5.2.M20100120-0800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.ui.console_3.5.100.v20111007_r372.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.editors_3.5.0.v20090527-2000.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.ide_3.5.2.M20100113-0800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.debug.ui_3.7.102.v20111129-1423_r372.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.views_3.4.1.M20090826-0800.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench_3.5.2.M20100113-0800.jar" />
     <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench.texteditor_3.5.1.r352_v20100105.jar" />

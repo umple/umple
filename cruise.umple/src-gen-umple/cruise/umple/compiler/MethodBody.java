@@ -63,7 +63,7 @@ public class MethodBody
 	  
     return super.toString() + "["+
             "extraCode" + ":" + getExtraCode()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "codeblock" + "=" + getCodeblock() != null ? !getCodeblock() .equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "codeblock" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

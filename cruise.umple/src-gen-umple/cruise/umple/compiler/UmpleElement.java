@@ -324,7 +324,7 @@ public class UmpleElement
             "extraCode" + ":" + getExtraCode()+ "," +
             "isInternal" + ":" + getIsInternal()+ "," +
             "displayColor" + ":" + getDisplayColor()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "coordinates" + "=" + getCoordinates() != null ? !getCoordinates() .equals(this)  ? getCoordinates().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "coordinates" + "=" + (getCoordinates() != null ? !getCoordinates().equals(this)  ? getCoordinates().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

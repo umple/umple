@@ -160,7 +160,7 @@ public class PapyrusGenerator implements CodeGenerator
             "diagramID" + ":" + getDiagramID()+ "," +
             "smID" + ":" + getSmID()+ "," +
             "regionID" + ":" + getRegionID()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + getModel() != null ? !getModel() .equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

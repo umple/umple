@@ -89,7 +89,7 @@ public class RulePartValue
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "value" + ":" + getValue()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + getPosition() != null ? !getPosition() .equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

@@ -8514,7 +8514,7 @@ if (p != null) {
 	  for(int m=0;m<displayedAttributes.size();m++)
 	  {          
 		  ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";      
-		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \"=\" + " + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + " .equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\"";
+		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \"=\" + (" + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + ".equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\")";
 
 	  }
 	  ret += "\n     + outputString";
@@ -8556,7 +8556,7 @@ if (p != null) {
       setIsMainMethodToFalse=true;
       l+="\n    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());";
       l+="\n    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());";
-      javaline+=2;
+      
     }
     if(lineNumberMatcher.find())
     {
@@ -8614,6 +8614,7 @@ if (p != null) {
     if(setIsMainMethodToFalse){
       isMainMethod=false;
       setIsMainMethodToFalse=false;
+      javaline+=2;
     }
     linenumber++;
     javaline++;

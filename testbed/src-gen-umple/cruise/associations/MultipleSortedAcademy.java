@@ -253,7 +253,7 @@ public class MultipleSortedAcademy
 	  String outputString = "";
 	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "registrantsPriority" + "=" + getRegistrantsPriority() != null ? !getRegistrantsPriority() .equals(this)  ? getRegistrantsPriority().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "registrantsPriority" + "=" + (getRegistrantsPriority() != null ? !getRegistrantsPriority().equals(this)  ? getRegistrantsPriority().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

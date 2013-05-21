@@ -210,8 +210,8 @@ public class Command
 	  String outputString = "";
 	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "currentObject" + "=" + getCurrentObject() != null ? !getCurrentObject() .equals(this)  ? getCurrentObject().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "loader" + "=" + getLoader() != null ? !getLoader() .equals(this)  ? getLoader().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "currentObject" + "=" + (getCurrentObject() != null ? !getCurrentObject().equals(this)  ? getCurrentObject().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "loader" + "=" + (getLoader() != null ? !getLoader().equals(this)  ? getLoader().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

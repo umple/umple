@@ -391,7 +391,7 @@ public class TraceRecord
 	  
     return super.toString() + "["+
             "recordOnly" + ":" + getRecordOnly()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "traceDirective" + "=" + getTraceDirective() != null ? !getTraceDirective() .equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "traceDirective" + "=" + (getTraceDirective() != null ? !getTraceDirective().equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

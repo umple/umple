@@ -1,12 +1,20 @@
 package cruise.umple.ui.eclipse;
 
+import java.io.PrintStream;
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.console.*;
 
 import cruise.umple.compiler.*;
 //import cruise.umple.ui.violet.VioletSystem;
@@ -20,14 +28,15 @@ import cruise.umple.compiler.*;
  */
 public class UmpleAction implements IWorkbenchWindowActionDelegate
 {
-  private IWorkbenchWindow window;
+  public static IWorkbenchWindow window;
 
   /**
    * The constructor.
    */
   public UmpleAction()
-  {}
-
+  {  
+  }
+  
   /**
    * The action has been activated. The argument of the method represents the
    * 'real' action sitting in the workbench UI.
@@ -38,7 +47,9 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
   {
     try
     {
+    	
       // Save all current work
+    	    	//((MessageConsole)cons).addPatternMatchListener(new UmplePatternMatcher());
       window.getActivePage().saveAllEditors(false);
     
       IEditorPart editor = window.getActivePage().getActiveEditor();
@@ -67,11 +78,9 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
       
       // Update the project
       fName.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-
     }
     catch (Exception e)
     {
-      e.printStackTrace();
       MessageDialog.openError(window.getShell(), "UMPLE Plug-in", e.getMessage() + "\n");
     }
   }
@@ -104,5 +113,6 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
   public void init(IWorkbenchWindow window)
   {
     this.window = window;
+    
   }
 }

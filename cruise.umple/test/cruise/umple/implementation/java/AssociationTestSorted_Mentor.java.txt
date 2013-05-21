@@ -154,7 +154,7 @@ public class Mentor
 	  String outputString = "";
 	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "studentsPriority" + "=" + getStudentsPriority() != null ? !getStudentsPriority() .equals(this)  ? getStudentsPriority().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "studentsPriority" + "=" + (getStudentsPriority() != null ? !getStudentsPriority().equals(this)  ? getStudentsPriority().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

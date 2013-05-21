@@ -170,7 +170,7 @@ public class Mentor
 	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "myStudentsPriority" + "=" + getMyStudentsPriority() != null ? !getMyStudentsPriority() .equals(this)  ? getMyStudentsPriority().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "myStudentsPriority" + "=" + (getMyStudentsPriority() != null ? !getMyStudentsPriority().equals(this)  ? getMyStudentsPriority().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

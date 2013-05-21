@@ -143,7 +143,7 @@ public class Documenter
     return super.toString() + "["+
             "inputPath" + ":" + getInputPath()+ "," +
             "outputPath" + ":" + getOutputPath()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "parser" + "=" + getParser() != null ? !getParser() .equals(this)  ? getParser().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "parser" + "=" + (getParser() != null ? !getParser().equals(this)  ? getParser().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

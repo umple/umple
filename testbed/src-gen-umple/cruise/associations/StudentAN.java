@@ -88,7 +88,7 @@ public class StudentAN
 	  
     return super.toString() + "["+
             "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "mentor" + "=" + getMentor() != null ? !getMentor() .equals(this)  ? getMentor().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "mentor" + "=" + (getMentor() != null ? !getMentor().equals(this)  ? getMentor().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

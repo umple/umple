@@ -186,7 +186,7 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
       setIsMainMethodToFalse=true;
       l+="\n    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());";
       l+="\n    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());";
-      javaline+=2;
+      
     }
     if(lineNumberMatcher.find())
     {
@@ -244,6 +244,7 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
     if(setIsMainMethodToFalse){
       isMainMethod=false;
       setIsMainMethodToFalse=false;
+      javaline+=2;
     }
     linenumber++;
     javaline++;

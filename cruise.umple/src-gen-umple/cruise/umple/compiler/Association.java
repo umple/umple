@@ -287,7 +287,7 @@ public class Association
             "name" + ":" + getName()+ "," +
             "isLeftNavigable" + ":" + getIsLeftNavigable()+ "," +
             "isRightNavigable" + ":" + getIsRightNavigable()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "tokenPosition" + "=" + getTokenPosition() != null ? !getTokenPosition() .equals(this)  ? getTokenPosition().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "tokenPosition" + "=" + (getTokenPosition() != null ? !getTokenPosition().equals(this)  ? getTokenPosition().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

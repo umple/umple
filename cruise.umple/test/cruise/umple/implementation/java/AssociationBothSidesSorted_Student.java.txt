@@ -170,7 +170,7 @@ public class Student
 	  
     return super.toString() + "["+
             "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "mentorsPriority" + "=" + getMentorsPriority() != null ? !getMentorsPriority() .equals(this)  ? getMentorsPriority().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "mentorsPriority" + "=" + (getMentorsPriority() != null ? !getMentorsPriority().equals(this)  ? getMentorsPriority().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

@@ -215,7 +215,7 @@ public class Couple
     return super.toString() + "["+
             "open" + ":" + getOpen()+ "," +
             "close" + ":" + getClose()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "couple" + "=" + getCouple() != null ? !getCouple() .equals(this)  ? getCouple().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "couple" + "=" + (getCouple() != null ? !getCouple().equals(this)  ? getCouple().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

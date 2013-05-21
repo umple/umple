@@ -543,8 +543,8 @@ public class StateMachine
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "recentSearchDepth" + ":" + getRecentSearchDepth()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "parentState" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass" + "=" + getParentState() != null ? !getParentState() .equals(this)  ? getParentState().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "parentState" + "=" + (getUmpleClass() != null ? !getUmpleClass().equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass" + "=" + (getParentState() != null ? !getParentState().equals(this)  ? getParentState().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------

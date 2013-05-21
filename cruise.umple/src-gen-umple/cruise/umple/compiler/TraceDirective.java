@@ -748,10 +748,10 @@ public class TraceDirective
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
             "tracerType" + ":" + getTracerType()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass" + "=" + getTracer() != null ? !getTracer() .equals(this)  ? getTracer().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "traceRecord" + "=" + getAssociationVariable() != null ? !getAssociationVariable() .equals(this)  ? getAssociationVariable().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "associationVariable" + "=" + getTraceRecord() != null ? !getTraceRecord() .equals(this)  ? getTraceRecord().toString().replaceAll("  ","    ") : "this" : "null" + System.getProperties().getProperty("line.separator") +
-            "  " + "tracer" + "=" + getUmpleClass() != null ? !getUmpleClass() .equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "umpleClass" + "=" + (getTracer() != null ? !getTracer().equals(this)  ? getTracer().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "traceRecord" + "=" + (getAssociationVariable() != null ? !getAssociationVariable().equals(this)  ? getAssociationVariable().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "associationVariable" + "=" + (getTraceRecord() != null ? !getTraceRecord().equals(this)  ? getTraceRecord().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "tracer" + "=" + (getUmpleClass() != null ? !getUmpleClass().equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }
 }

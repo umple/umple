@@ -81,7 +81,7 @@ public class UmpleFile
 	  
     return super.toString() + "["+
             "fileName" + ":" + getFileName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "file" + "=" + getFile() != null ? !getFile() .equals(this)  ? getFile().toString().replaceAll("  ","    ") : "this" : "null"
+            "  " + "file" + "=" + (getFile() != null ? !getFile().equals(this)  ? getFile().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
   //------------------------
