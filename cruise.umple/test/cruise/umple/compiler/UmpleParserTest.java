@@ -1257,6 +1257,11 @@ public class UmpleParserTest
     assertFailedParse("009_ReflexiveNonDirectedZeroOneSeparateAssocError21.ump",21);
   }
   
+  @Test 
+  public void TestReservedRoleNameError32() {
+	  assertFailedParse("009_ReflexiveReservedRoleNameError32.ump",32);  
+  }
+    
   @Test
   public void associationClass2()
   {
