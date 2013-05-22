@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * One of the values in which a state machine can be at any given point in time
- * @umplesource StateMachine.ump 35
+ * @umplesource StateMachine.ump 37
  * @umplesource StateMachine_Code.ump 303
  * @umplesource Trace_Code.ump 62
  */
-// line 35 "../../../../src/StateMachine.ump"
+// line 37 "../../../../src/StateMachine.ump"
 // line 303 "../../../../src/StateMachine_Code.ump"
 // line 62 "../../../../src/Trace_Code.ump"
 public class State
@@ -180,7 +180,7 @@ public class State
 
   public boolean isFinalState()
   {
-    // line 50 "../../../../src/StateMachine.ump"
+    // line 52 "../../../../src/StateMachine.ump"
     if ("Final".equals(name)) { finalState = true; }
     return finalState;
   }

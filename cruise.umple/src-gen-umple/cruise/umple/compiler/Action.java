@@ -6,9 +6,9 @@ import cruise.umple.compiler.Position;
 
 /**
  * A quickly-executed block of code that is run upon entry or exit from a state
- * @umplesource StateMachine.ump 122
+ * @umplesource StateMachine.ump 124
  */
-// line 122 "../../../../src/StateMachine.ump"
+// line 124 "../../../../src/StateMachine.ump"
 public class Action
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -43,7 +43,7 @@ public class Action
     actionCode = aActionCode;
     isInternal = false;
     codeblock = null;
-    // line 132 "../../../../src/StateMachine.ump"
+    // line 134 "../../../../src/StateMachine.ump"
     codeblock = aActionCode!=null ? new CodeBlock(aActionCode) : new CodeBlock();
   }
 
@@ -71,7 +71,7 @@ public class Action
   public boolean setActionCode(String aActionCode)
   {
     boolean wasSet = false;
-    // line 133 "../../../../src/StateMachine.ump"
+    // line 135 "../../../../src/StateMachine.ump"
     codeblock.setCode(aActionCode);
     if (!canSetActionCode) { return false; }
     actionCode = aActionCode;
@@ -92,7 +92,7 @@ public class Action
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 140 "../../../../src/StateMachine.ump"
+    // line 142 "../../../../src/StateMachine.ump"
     if(actionCode!=null){
       	  actionCode+= aCodeblock.getCode();
       	}
@@ -114,7 +114,7 @@ public class Action
   public String getActionCode()
   {
     String aActionCode = actionCode;
-    // line 134 "../../../../src/StateMachine.ump"
+    // line 136 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else
@@ -200,7 +200,7 @@ public class Action
   public void delete()
   {}
 
-  @umplesourcefile(line=147,file="StateMachine.ump",javaline=204,length=6)
+  @umplesourcefile(line=149,file="StateMachine.ump",javaline=204,length=6)
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;

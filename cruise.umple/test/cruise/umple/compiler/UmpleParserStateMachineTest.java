@@ -881,10 +881,11 @@ public class UmpleParserStateMachineTest
     assertParse("108_queuedStateMachine.ump","[classDefinition][name:QueuedSM][stateMachine][inlineStateMachine][queued:queued][name:sm][state][stateName:State1][transition][event:e1][stateName:State2][state][stateName:State2][transition][event:e2][stateName:State1]");
     
     UmpleClass c = model.getUmpleClass("QueuedSM");
-    
     StateMachine sm = c.getStateMachine(0);
-    Assert.assertEquals("sm", sm.getName());
     
+    Assert.assertEquals(true,sm.isQueued());
+    Assert.assertEquals("sm", sm.getName());
+   
     Assert.assertEquals(2, sm.numberOfStates());
     State state1 = sm.getState(0);
     Assert.assertEquals("State1", state1.getName());
@@ -900,8 +901,7 @@ public class UmpleParserStateMachineTest
     Event event2 = t2.getEvent();
     Assert.assertEquals("e2", event2.getName());
   }
-
-  
+ 
   @Test
   public void malformedStateMachine(){
 	  assertHasWarning("107_badStateMachineSyntaxBrokenArrow.ump", 0, 1006, new Position("107_badStateMachineSyntaxBrokenArrow.ump", 4, 2, 45));
