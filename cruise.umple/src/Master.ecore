@@ -214,6 +214,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="StateMachine">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="recentSearchDepth" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="queued" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/stateMachines"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentState" lowerBound="0" upperBound="1" eType="#//State" eOpposite="#//State/nestedStateMachines"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="states" lowerBound="0" upperBound="-1" eType="#//State" eOpposite="#//State/stateMachine"/>

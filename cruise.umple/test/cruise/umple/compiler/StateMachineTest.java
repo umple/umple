@@ -566,4 +566,13 @@ public class StateMachineTest
     Assert.assertTrue(sm.setUmpleClass(clazz1));
   }
   
+  @Test
+  public void isQueued()
+  {
+    StateMachine sm = new StateMachine("sm");
+    Assert.assertEquals(false,sm.isQueued());
+    //System.err.println(sm.isQueued());
+    sm.setQueued(true);
+    Assert.assertEquals(true,sm.isQueued());
+  }
 }

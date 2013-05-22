@@ -4,10 +4,10 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource StateMachine.ump 160
+ * @umplesource StateMachine.ump 162
  * @umplesource StateMachine_Code.ump 445
  */
-// line 160 "../../../../src/StateMachine.ump"
+// line 162 "../../../../src/StateMachine.ump"
 // line 445 "../../../../src/StateMachine_Code.ump"
 public class Event
 {

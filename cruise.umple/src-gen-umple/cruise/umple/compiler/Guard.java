@@ -7,9 +7,9 @@ import cruise.umple.compiler.Position;
 /**
  * A boolean condition that is checked when an event method is called
  * If the result is true the transition may be taken
- * @umplesource StateMachine.ump 177
+ * @umplesource StateMachine.ump 179
  */
-// line 177 "../../../../src/StateMachine.ump"
+// line 179 "../../../../src/StateMachine.ump"
 public class Guard
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -38,7 +38,7 @@ public class Guard
     canSetCondition = true;
     condition = aCondition;
     codeblock = null;
-    // line 185 "../../../../src/StateMachine.ump"
+    // line 187 "../../../../src/StateMachine.ump"
     codeblock = aCondition!=null ? new CodeBlock(aCondition) : new CodeBlock();
   }
 
@@ -57,7 +57,7 @@ public class Guard
   public boolean setCondition(String aCondition)
   {
     boolean wasSet = false;
-    // line 186 "../../../../src/StateMachine.ump"
+    // line 188 "../../../../src/StateMachine.ump"
     codeblock.setCode(aCondition);
     if (!canSetCondition) { return false; }
     condition = aCondition;
@@ -70,7 +70,7 @@ public class Guard
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 193 "../../../../src/StateMachine.ump"
+    // line 195 "../../../../src/StateMachine.ump"
     if(condition!=null){
       	  condition+= aCodeblock.getCode();
       	}
@@ -87,7 +87,7 @@ public class Guard
   public String getCondition()
   {
     String aCondition = condition;
-    // line 187 "../../../../src/StateMachine.ump"
+    // line 189 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else

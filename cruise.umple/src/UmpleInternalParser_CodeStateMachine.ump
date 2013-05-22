@@ -337,7 +337,12 @@ class UmpleInternalParser
     	// Future-proofing: currently all paths cause wasSet to be true
     	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
     }
-    
+      
+    if(stateMachineToken.is("queued"))
+    {
+      sm.setQueued(true);
+    } 
+
     populateStateMachine(stateMachineToken, sm, aClass);
 
     while (placeholderStateMachine.numberOfStates() > 0)
@@ -443,6 +448,11 @@ class UmpleInternalParser
         changeType = null;
       }
     }
+    
+    if(true)
+    {
+      sm.setQueued(true);
+    } 
   }
 
   private void analyzeState(Token stateToken, State fromState)

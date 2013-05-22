@@ -9,10 +9,10 @@ import java.util.*;
  * Normally the state machine will go to a new state after executing various actions and
  * activities.
  * The guard is a boolean condition that may prevent triggering the transition
- * @umplesource StateMachine.ump 103
+ * @umplesource StateMachine.ump 105
  * @umplesource StateMachine_Code.ump 435
  */
-// line 103 "../../../../src/StateMachine.ump"
+// line 105 "../../../../src/StateMachine.ump"
 // line 435 "../../../../src/StateMachine_Code.ump"
 public class Transition
 {

@@ -10,9 +10,9 @@ import cruise.umple.compiler.Position;
  * The code is executed in a separate threat, and can be terminated by
  * an outgoing transition. Upon completion of the activity, any
  * autotransition will be taken
- * @umplesource StateMachine.ump 61
+ * @umplesource StateMachine.ump 63
  */
-// line 61 "../../../../src/StateMachine.ump"
+// line 63 "../../../../src/StateMachine.ump"
 public class Activity
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -44,7 +44,7 @@ public class Activity
     {
       throw new RuntimeException("Unable to create activity due to state");
     }
-    // line 72 "../../../../src/StateMachine.ump"
+    // line 74 "../../../../src/StateMachine.ump"
     codeblock = aActivityCode!=null ? new CodeBlock(aActivityCode) : new CodeBlock();
   }
 
@@ -63,7 +63,7 @@ public class Activity
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
-    // line 73 "../../../../src/StateMachine.ump"
+    // line 75 "../../../../src/StateMachine.ump"
     codeblock.setCode(aActivityCode);
     activityCode = aActivityCode;
     wasSet = true;
@@ -75,7 +75,7 @@ public class Activity
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 80 "../../../../src/StateMachine.ump"
+    // line 82 "../../../../src/StateMachine.ump"
     if(activityCode!=null){
       	  activityCode+= aCodeblock.getCode();
       	}
@@ -92,7 +92,7 @@ public class Activity
   public String getActivityCode()
   {
     String aActivityCode = activityCode;
-    // line 74 "../../../../src/StateMachine.ump"
+    // line 76 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else
@@ -161,7 +161,7 @@ public class Activity
     }
   }
 
-  @umplesourcefile(line=87,file="StateMachine.ump",javaline=165,length=6)
+  @umplesourcefile(line=89,file="StateMachine.ump",javaline=165,length=6)
   public void setActivityCode(String lang, String code){
     if(activityCode!=null){
   	  activityCode+= lang+code;
