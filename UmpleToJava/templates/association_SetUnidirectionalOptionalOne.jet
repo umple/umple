@@ -1,5 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
- <% String accessModifier = (av.isImmutable()) ? "private" : "public"; %>
+ <% String accessModifier = (av.isImmutable()) ? "private" : "public"; %><%= umpleSourceFile %>
   <%= accessModifier %> boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%>)
   {
     boolean wasSet = false;

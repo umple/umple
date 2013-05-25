@@ -11,7 +11,7 @@ package cruise.umple.compiler;
 public class GenerateTarget
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -86,6 +86,7 @@ public class GenerateTarget
     return language;
   }
 
+  @umplesourcefile(line={663},file={"Umple.ump"},javaline={92},length={1})
   public String getPath()
   {
     // line 663 "../../../../src/Umple.ump"

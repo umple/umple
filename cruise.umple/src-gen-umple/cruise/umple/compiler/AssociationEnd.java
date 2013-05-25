@@ -18,7 +18,7 @@ package cruise.umple.compiler;
 public class AssociationEnd
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -130,6 +130,7 @@ public class AssociationEnd
     return wasSet;
   }
 
+  @umplesourcefile(line={523},file={"Umple.ump"},javaline={136},length={1})
   public String getRoleName()
   {
     // line 523 "../../../../src/Umple.ump"
@@ -137,6 +138,7 @@ public class AssociationEnd
     return roleName;
   }
 
+  @umplesourcefile(line={524},file={"Umple.ump"},javaline={143},length={1})
   public String getClassName()
   {
     // line 524 "../../../../src/Umple.ump"
@@ -144,6 +146,7 @@ public class AssociationEnd
     return className;
   }
 
+  @umplesourcefile(line={525},file={"Umple.ump"},javaline={150},length={1})
   public String getModifier()
   {
     // line 525 "../../../../src/Umple.ump"
@@ -151,6 +154,7 @@ public class AssociationEnd
     return modifier;
   }
 
+  @umplesourcefile(line={526},file={"Umple.ump"},javaline={160},length={1})
   /**
    * potential enum 'internal'
    */
@@ -315,31 +319,31 @@ public class AssociationEnd
   // line 1226 ../../../../src/Umple_Code.ump
   private static int MULT_MANY = -1;
 
-  @umplesourcefile(line=1228,file="Umple_Code.ump",javaline=319,length=4)
+  @umplesourcefile(line={1228},file={"Umple_Code.ump"},javaline={323},length={4})
   public boolean isNavigable()
   {
     return !getModifier().toLowerCase().equals("nonnavigable");
   }  
 
-  @umplesourcefile(line=1233,file="Umple_Code.ump",javaline=325,length=4)
+  @umplesourcefile(line={1233},file={"Umple_Code.ump"},javaline={329},length={4})
   public String getLowerBoundString()
   {
     return getMultiplicity().getLowerBound() == -1 ? "*" : getMultiplicity().getLowerBound() + "";
   }
 
-  @umplesourcefile(line=1238,file="Umple_Code.ump",javaline=331,length=4)
+  @umplesourcefile(line={1238},file={"Umple_Code.ump"},javaline={335},length={4})
   public String getUpperBoundString()
   {
     return getMultiplicity().getUpperBound() == -1 ? "*" : getMultiplicity().getUpperBound() + "";
   }
 
-  @umplesourcefile(line=1243,file="Umple_Code.ump",javaline=337,length=4)
+  @umplesourcefile(line={1243},file={"Umple_Code.ump"},javaline={341},length={4})
   public String getDisplayRoleName()
   {
     return isDefaultRoleName ? "" : getRoleName();
   }
 
-  @umplesourcefile(line=1248,file="Umple_Code.ump",javaline=343,length=19)
+  @umplesourcefile(line={1248},file={"Umple_Code.ump"},javaline={347},length={19})
   public String toSimpleString()
   {
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
@@ -360,7 +364,7 @@ public class AssociationEnd
     }
   }
 
-  @umplesourcefile(line=1268,file="Umple_Code.ump",javaline=364,length=23)
+  @umplesourcefile(line={1268},file={"Umple_Code.ump"},javaline={368},length={23})
   public String toGenericString()
   {
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
@@ -385,7 +389,7 @@ public class AssociationEnd
     }
   }
 
-  @umplesourcefile(line=1292,file="Umple_Code.ump",javaline=389,length=27)
+  @umplesourcefile(line={1292},file={"Umple_Code.ump"},javaline={393},length={27})
   public String toString()
   {
     String asText = "";
@@ -414,13 +418,13 @@ public class AssociationEnd
     return asText;
   }
 
-  @umplesourcefile(line=1320,file="Umple_Code.ump",javaline=418,length=4)
+  @umplesourcefile(line={1320},file={"Umple_Code.ump"},javaline={422},length={4})
   private String formatEnd(int aValue)
   {
     return aValue == MULT_MANY ? "*" : aValue + "";
   }
 
-  @umplesourcefile(line=1325,file="Umple_Code.ump",javaline=424,length=16)
+  @umplesourcefile(line={1325},file={"Umple_Code.ump"},javaline={428},length={16})
   private String formatGenericEnd(int aValue, String defaultIfNotOneOrMany)
   {
 

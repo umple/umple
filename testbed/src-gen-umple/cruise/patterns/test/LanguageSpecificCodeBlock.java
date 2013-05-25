@@ -7,7 +7,7 @@ package cruise.patterns.test;
 public class LanguageSpecificCodeBlock
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -34,6 +34,7 @@ public class LanguageSpecificCodeBlock
   // INTERFACE
   //------------------------
 
+  @umplesourcefile(line={70, 71},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={41, 45},length={1, 1})
   public boolean setName(String aName)
   {
     boolean wasSet = false;
@@ -99,7 +100,7 @@ public class LanguageSpecificCodeBlock
   public void delete()
   {}
 
-  @umplesourcefile(line=72,file="TestHarnessPatterns.ump",javaline=103,length=1)
+  @umplesourcefile(line={72},file={"TestHarnessPatterns.ump"},javaline={104},length={1})
   public boolean isJava(){
     return true;
   }

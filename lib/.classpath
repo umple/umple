@@ -28,5 +28,6 @@
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.ui.shared_1.0.2.v201102150722.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.util_2.0.0.v201106070531.jar"/>
 	<classpathentry kind="lib" path="xtextplugins/org.eclipse.xtext.xtend_1.0.2.v201102150722.jar"/>
+	<classpathentry kind="lib" path="eclipseplugins/org.eclipse.jdt.launching_3.6.1.v20111006_r372.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -12,7 +12,7 @@ import cruise.umple.compiler.Position;
 public class Action
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -68,6 +68,7 @@ public class Action
     return wasSet;
   }
 
+  @umplesourcefile(line={135},file={"StateMachine.ump"},javaline={75},length={2})
   public boolean setActionCode(String aActionCode)
   {
     boolean wasSet = false;
@@ -87,6 +88,7 @@ public class Action
     return wasSet;
   }
 
+  @umplesourcefile(line={142},file={"StateMachine.ump"},javaline={96},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
@@ -111,6 +113,7 @@ public class Action
     return position;
   }
 
+  @umplesourcefile(line={136},file={"StateMachine.ump"},javaline={118},length={3})
   public String getActionCode()
   {
     String aActionCode = actionCode;
@@ -200,7 +203,7 @@ public class Action
   public void delete()
   {}
 
-  @umplesourcefile(line=149,file="StateMachine.ump",javaline=204,length=6)
+  @umplesourcefile(line={149},file={"StateMachine.ump"},javaline={207},length={6})
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;

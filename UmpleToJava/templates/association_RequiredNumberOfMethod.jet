@@ -3,7 +3,7 @@
     String customRequiredNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("requiredNumberOfMethod",av)));
     String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
 %>
-<% if (customRequiredNumberOfPrefixCode == null && customRequiredNumberOfPostfixCode == null) { %>
+<% if (customRequiredNumberOfPrefixCode == null && customRequiredNumberOfPostfixCode == null) { %><%= umpleSourceFile %>
   public static int <%=gen.translate("requiredNumberOfMethod",av)%>()
   {
     return <%=av.getMultiplicity().getLowerBound()%>;

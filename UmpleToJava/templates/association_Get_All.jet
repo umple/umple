@@ -31,6 +31,15 @@
 
     boolean hasCodeInjections = customGetPrefixCode != null || customGetPostfixCode != null;
   
+    String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customGetPrefixCode, customGetPostfixCode,
+      customGetDefaultPrefixCode, customGetDefaultPostfixCode,
+      customGetManyPrefixCode, customGetManyPostfixCode,
+      customNumberOfPrefixCode, customNumberOfPostfixCode,
+      customHasManyPrefixCode,customHasManyPostfixCode,
+      customIndexOfPrefixCode,customIndexOfPostfixCode},
+      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+  
     if (av.isOne())
     {
       %><%@ include file="association_GetOne.jet" %><%

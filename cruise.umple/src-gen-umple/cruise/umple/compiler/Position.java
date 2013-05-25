@@ -15,7 +15,7 @@ import java.nio.file.*;
 public class Position
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -192,31 +192,31 @@ public class Position
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-    @umplesourcefile(line=0,file="",javaline=196,length=3)
+    @umplesourcefile(line={0},file={""},javaline={196},length={3})
  public Position(int aLineNumber,int aCharacterOffset,int aOffset)  {
 this(null, aLineNumber, aCharacterOffset, aOffset);
   }
 // line 331 ../../../../src/Parser_Code.ump
-  @umplesourcefile(line=331,file="Parser_Code.ump",javaline=201,length=4)
+  @umplesourcefile(line={331},file={"Parser_Code.ump"},javaline={201},length={4})
   public Position copy()
   {
     return new Position(filename,lineNumber,characterOffset,offset);
   }
 
-  @umplesourcefile(line=336,file="Parser_Code.ump",javaline=207,length=5)
+  @umplesourcefile(line={336},file={"Parser_Code.ump"},javaline={207},length={5})
   public Position add(Position more)
   {
     String tfile = filename == null ? more.getFilename() : filename;
     return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
   }
 
-  @umplesourcefile(line=342,file="Parser_Code.ump",javaline=214,length=4)
+  @umplesourcefile(line={342},file={"Parser_Code.ump"},javaline={214},length={4})
   public String toString()
   {
     return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
   }
 
-  @umplesourcefile(line=347,file="Parser_Code.ump",javaline=220,length=12)
+  @umplesourcefile(line={347},file={"Parser_Code.ump"},javaline={220},length={12})
   private int countChars(String str, char c)
   {
     int count = 0;
@@ -230,7 +230,7 @@ this(null, aLineNumber, aCharacterOffset, aOffset);
     return count;
   }
   
-  @umplesourcefile(line=360,file="Parser_Code.ump",javaline=234,length=4)
+  @umplesourcefile(line={360},file={"Parser_Code.ump"},javaline={234},length={4})
   private String deWindowsify(String str)
   {
     return str.replace('\\','/');
@@ -239,7 +239,7 @@ this(null, aLineNumber, aCharacterOffset, aOffset);
   //This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
   //It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
   //As a result, it has been replaced by the placeholder above, that simply returns the full path.
-  @umplesourcefile(line=368,file="Parser_Code.ump",javaline=243,length=10)
+  @umplesourcefile(line={368},file={"Parser_Code.ump"},javaline={243},length={10})
   public String getRelativePath(UmpleClass parent, String language)
   {
     if (filename == null)

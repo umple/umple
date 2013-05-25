@@ -9,7 +9,12 @@
 %><% if (customAddPostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } 
 %>    return wasAdded;
   }
-
+<%= getUmpleSourceFile(baseJavaLine,new String[]{
+      customSetPrefixCode,customSetPostfixCode,
+      customResetPrefixCode,customResetPostfixCode,
+      customAddPrefixCode,customAddPostfixCode,
+      customRemovePrefixCode,customRemovePostfixCode},
+      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true))%>
   public boolean <%=gen.translate("removeMethod",av)%>(<%=gen.translate("typeMany",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasRemoved = false;

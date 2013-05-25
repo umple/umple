@@ -12,7 +12,7 @@ package cruise.umple.sync;
 public class SynchronizationAction
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -79,7 +79,7 @@ public class SynchronizationAction
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 17 ../../../../src/UmpleSync_Code.ump
-  @umplesourcefile(line=17,file="UmpleSync_Code.ump",javaline=83,length=4)
+  @umplesourcefile(line={17},file={"UmpleSync_Code.ump"},javaline={83},length={4})
   public void go()
   {
   

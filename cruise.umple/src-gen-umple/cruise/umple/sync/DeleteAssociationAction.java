@@ -14,7 +14,7 @@ import cruise.umple.util.*;
 public class DeleteAssociationAction extends SynchronizationAction
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -42,7 +42,7 @@ public class DeleteAssociationAction extends SynchronizationAction
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 1028 ../../../../src/UmpleSync_Code.ump
-  @umplesourcefile(line=1028,file="UmpleSync_Code.ump",javaline=46,length=130)
+  @umplesourcefile(line={1028},file={"UmpleSync_Code.ump"},javaline={46},length={130})
   public void go()
   {
     try

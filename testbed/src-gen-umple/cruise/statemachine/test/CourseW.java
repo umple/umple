@@ -8,7 +8,7 @@ import java.util.*;
 public class CourseW
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -185,7 +185,7 @@ public class CourseW
     }
   }
 
-  // line 221 "../../../../src/TestHarnessStateMachineJava.ump"
+  @umplesourcefile(line={221},file={"TestHarnessStateMachineJava.ump"},javaline={193},length={1})
   private void doActivityStatusOpenStatusOpen()
   {
     try

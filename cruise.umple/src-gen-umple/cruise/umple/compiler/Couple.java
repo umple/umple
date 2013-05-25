@@ -15,7 +15,7 @@ import java.util.*;
 public class Couple
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -222,7 +222,7 @@ public class Couple
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 15 ../../../../src/Parser_Code.ump
-  @umplesourcefile(line=15,file="Parser_Code.ump",javaline=226,length=28)
+  @umplesourcefile(line={15},file={"Parser_Code.ump"},javaline={226},length={28})
   public boolean isBalanced(String input)
   {
 
@@ -253,7 +253,7 @@ public class Couple
   }
 
 
-  @umplesourcefile(line=45,file="Parser_Code.ump",javaline=257,length=33)
+  @umplesourcefile(line={45},file={"Parser_Code.ump"},javaline={257},length={33})
   public String removeIgnoredText(String input)
   {
     String output = input;

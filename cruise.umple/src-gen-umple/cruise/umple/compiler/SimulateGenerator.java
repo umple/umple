@@ -16,7 +16,7 @@ import cruise.umple.compiler.exceptions.*;
 public class SimulateGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -87,7 +87,7 @@ public class SimulateGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 15 ../../../../src/Generator_CodeSimulate.ump
-  @umplesourcefile(line=15,file="Generator_CodeSimulate.ump",javaline=91,length=81)
+  @umplesourcefile(line={15},file={"Generator_CodeSimulate.ump"},javaline={91},length={81})
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -170,7 +170,7 @@ public class SimulateGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line=97,file="Generator_CodeSimulate.ump",javaline=174,length=18)
+  @umplesourcefile(line={97},file={"Generator_CodeSimulate.ump"},javaline={174},length={18})
   private void writeModel()
   {
     try

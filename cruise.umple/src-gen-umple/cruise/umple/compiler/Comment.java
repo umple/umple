@@ -14,7 +14,7 @@ import java.util.*;
 public class Comment
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -80,7 +80,7 @@ public class Comment
    * 
    * @return The processed/formatted comment appropriate for use in generated code output.
    */
-  @umplesourcefile(line=1872,file="Umple_Code.ump",javaline=84,length=116)
+  @umplesourcefile(line={1872},file={"Umple_Code.ump"},javaline={84},length={116})
   public static String format(String type,List<Comment> allComments)
   {
     //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";

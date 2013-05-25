@@ -14,7 +14,7 @@ package cruise.umple.docs;
 public class Template
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // STATIC VARIABLES
@@ -57,26 +57,26 @@ public class Template
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 415 ../../../../src/Documenter_Code.ump
-  @umplesourcefile(line=415,file="Documenter_Code.ump",javaline=61,length=5)
+  @umplesourcefile(line={415},file={"Documenter_Code.ump"},javaline={61},length={5})
   private static String navigationHeaderTemplate()
   {
     return "        <div class=\"level1\"><a href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
            "        <div id=\"@@NAVIGATION_HEADER_ID@@\">";
   }
   
-  @umplesourcefile(line=421,file="Documenter_Code.ump",javaline=68,length=4)
+  @umplesourcefile(line={421},file={"Documenter_Code.ump"},javaline={68},length={4})
   private static String navigationItemTemplate()
   {
     return "          <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
   }
  
-  @umplesourcefile(line=426,file="Documenter_Code.ump",javaline=74,length=4)
+  @umplesourcefile(line={426},file={"Documenter_Code.ump"},javaline={74},length={4})
   private static String navigationItemTemplateNoAnchor()
   {
     return "          <div class=\"level2\"><b>@@NAVIGATION_ITEM_NAME@@</b></div>" + "\n";
   }
     
-  @umplesourcefile(line=431,file="Documenter_Code.ump",javaline=80,length=13)
+  @umplesourcefile(line={431},file={"Documenter_Code.ump"},javaline={80},length={13})
   private static String exampleTemplate()
   {
     String template = "" + 
@@ -91,7 +91,7 @@ public class Template
     return template;
   }
   
-  @umplesourcefile(line=445,file="Documenter_Code.ump",javaline=95,length=10)
+  @umplesourcefile(line={445},file={"Documenter_Code.ump"},javaline={95},length={10})
   private static String syntaxTemplate()
   {
     String template = "" + 
@@ -103,7 +103,7 @@ public class Template
     return template;
   }
 
-  @umplesourcefile(line=456,file="Documenter_Code.ump",javaline=107,length=84)
+  @umplesourcefile(line={456},file={"Documenter_Code.ump"},javaline={107},length={84})
   private static String htmlTemplate()
   {
     String template = "" + 

@@ -16,7 +16,7 @@ import java.util.*;
 public class ParseResult
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -135,6 +135,7 @@ public class ParseResult
     return wasSet;
   }
 
+  @umplesourcefile(line={1588, 1594},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={149, 155},length={3, 16})
   public static int minimumNumberOfErrorMessages()
   {
     return 0;
@@ -169,6 +170,7 @@ public class ParseResult
     return wasAdded;
   }
 
+  @umplesourcefile(line={1588, 1594},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={149, 155},length={3, 16})
   public boolean removeErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasRemoved = false;
@@ -194,6 +196,7 @@ public class ParseResult
     return wasAdded;
   }
 
+  @umplesourcefile(line={1588, 1594},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={149, 155},length={3, 16})
   public boolean addOrMoveErrorMessageAt(ErrorMessage aErrorMessage, int index)
   {
     boolean wasAdded = false;
@@ -222,7 +225,7 @@ public class ParseResult
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 1614 ../../../../src/Parser_Code.ump
-  @umplesourcefile(line=1614,file="Parser_Code.ump",javaline=226,length=7)
+  @umplesourcefile(line={1614},file={"Parser_Code.ump"},javaline={229},length={7})
   public String toString()
   {
     String ret = "";
@@ -231,7 +234,7 @@ public class ParseResult
     return ret;
   }
 
-  @umplesourcefile(line=1622,file="Parser_Code.ump",javaline=235,length=29)
+  @umplesourcefile(line={1622},file={"Parser_Code.ump"},javaline={238},length={29})
   public String toJSON ()
   {
     String ret = "{ \"results\" : [ ";

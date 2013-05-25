@@ -8,7 +8,7 @@
       <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } %>
       return wasAdded;
     }
-
+<%= umpleSourceFile %>
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
     if (<%=gen.relatedTranslate("parameterExisting",av)%> == null)
     {
@@ -27,7 +27,7 @@
     <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;
   }
-
+<%= umpleSourceFile %>
   public boolean <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasRemoved = false;

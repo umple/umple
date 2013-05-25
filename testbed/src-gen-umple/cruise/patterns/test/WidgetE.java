@@ -8,7 +8,7 @@ import java.util.*;
 public class WidgetE
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -32,6 +32,7 @@ public class WidgetE
   // INTERFACE
   //------------------------
 
+  @umplesourcefile(line={44, 45, 46, 47},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={39, 42, 50, 53},length={1, 1, 1, 1})
   public boolean addId(String aId)
   {
     boolean wasAdded = false;
@@ -43,6 +44,7 @@ public class WidgetE
     return wasAdded;
   }
 
+  @umplesourcefile(line={44, 45, 46, 47},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={39, 42, 50, 53},length={1, 1, 1, 1})
   public boolean removeId(String aId)
   {
     boolean wasRemoved = false;
@@ -68,6 +70,7 @@ public class WidgetE
     return wasRemoved;
   }
 
+  @umplesourcefile(line={50, 51, 52, 53, 48, 49},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={74, 77, 84, 87, 106, 109},length={1, 1, 1, 1, 1, 1})
   public String getId(int index)
   {
     // line 50 "../../../../src/TestHarnessPatterns.ump"
@@ -78,6 +81,7 @@ public class WidgetE
     return aId;
   }
 
+  @umplesourcefile(line={50, 51, 52, 53, 48, 49},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={74, 77, 84, 87, 106, 109},length={1, 1, 1, 1, 1, 1})
   public String[] getIds()
   {
     // line 52 "../../../../src/TestHarnessPatterns.ump"
@@ -88,18 +92,21 @@ public class WidgetE
     return newIds;
   }
 
+  @umplesourcefile(line={50, 51, 52, 53, 48, 49},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={74, 77, 84, 87, 106, 109},length={1, 1, 1, 1, 1, 1})
   public int numberOfIds()
   {
     int number = ids.size();
     return number;
   }
 
+  @umplesourcefile(line={50, 51, 52, 53, 48, 49},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={74, 77, 84, 87, 106, 109},length={1, 1, 1, 1, 1, 1})
   public boolean hasIds()
   {
     boolean has = ids.size() > 0;
     return has;
   }
 
+  @umplesourcefile(line={50, 51, 52, 53, 48, 49},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={74, 77, 84, 87, 106, 109},length={1, 1, 1, 1, 1, 1})
   public int indexOfId(String aId)
   {
     // line 48 "../../../../src/TestHarnessPatterns.ump"

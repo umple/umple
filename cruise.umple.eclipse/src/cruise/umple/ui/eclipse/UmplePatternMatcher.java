@@ -41,14 +41,18 @@ public class UmplePatternMatcher implements IPatternMatchListenerDelegate{
     	{
     		if(f.isDirectory())
     	    {
-    		  return search(folder.getFolder(f.getName()),filename);
-    		  
+    		  IFile temp = search(folder.getFolder(f.getName()),filename);
+    		  if(temp!=null)
+    		  {
+    			return temp;
+    		  }    		  
     	    }
     		else
     		{
     		  if(f.getName().equals(filename))
     		  {
-    			return folder.getFile(filename);    			
+    			return folder.getFile(filename);
+    			
     		  }
     		}		    		
     	}

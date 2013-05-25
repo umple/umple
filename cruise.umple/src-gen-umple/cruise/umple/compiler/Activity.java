@@ -16,7 +16,7 @@ import cruise.umple.compiler.Position;
 public class Activity
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -60,6 +60,7 @@ public class Activity
     return wasSet;
   }
 
+  @umplesourcefile(line={75},file={"StateMachine.ump"},javaline={67},length={1})
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
@@ -70,6 +71,7 @@ public class Activity
     return wasSet;
   }
 
+  @umplesourcefile(line={82},file={"StateMachine.ump"},javaline={79},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
@@ -89,6 +91,7 @@ public class Activity
     return position;
   }
 
+  @umplesourcefile(line={76},file={"StateMachine.ump"},javaline={96},length={3})
   public String getActivityCode()
   {
     String aActivityCode = activityCode;
@@ -161,7 +164,7 @@ public class Activity
     }
   }
 
-  @umplesourcefile(line=89,file="StateMachine.ump",javaline=165,length=6)
+  @umplesourcefile(line={89},file={"StateMachine.ump"},javaline={168},length={6})
   public void setActivityCode(String lang, String code){
     if(activityCode!=null){
   	  activityCode+= lang+code;

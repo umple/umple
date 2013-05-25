@@ -6,7 +6,7 @@ package example;
 public class Registration
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -23,9 +23,19 @@ public class Registration
   // CONSTRUCTOR
   //------------------------
 
-  public Registration(String aGrade)
+  public Registration(String aGrade, Student aStudent, CourseSection aCourseSection)
   {
     grade = aGrade;
+    boolean didAddStudent = setStudent(aStudent);
+    if (!didAddStudent)
+    {
+      throw new RuntimeException("Unable to create registration due to student");
+    }
+    boolean didAddCourseSection = setCourseSection(aCourseSection);
+    if (!didAddCourseSection)
+    {
+      throw new RuntimeException("Unable to create registration due to courseSection");
+    }
   }
 
   //------------------------
@@ -58,16 +68,18 @@ public class Registration
   public boolean setStudent(Student aStudent)
   {
     boolean wasSet = false;
+    if (aStudent == null)
+    {
+      return wasSet;
+    }
+
     Student existingStudent = student;
     student = aStudent;
     if (existingStudent != null && !existingStudent.equals(aStudent))
     {
       existingStudent.removeRegistration(this);
     }
-    if (aStudent != null)
-    {
-      aStudent.addRegistration(this);
-    }
+    student.addRegistration(this);
     wasSet = true;
     return wasSet;
   }
@@ -75,34 +87,30 @@ public class Registration
   public boolean setCourseSection(CourseSection aCourseSection)
   {
     boolean wasSet = false;
+    if (aCourseSection == null)
+    {
+      return wasSet;
+    }
+
     CourseSection existingCourseSection = courseSection;
     courseSection = aCourseSection;
     if (existingCourseSection != null && !existingCourseSection.equals(aCourseSection))
     {
       existingCourseSection.removeRegistration(this);
     }
-    if (aCourseSection != null)
-    {
-      aCourseSection.addRegistration(this);
-    }
+    courseSection.addRegistration(this);
     wasSet = true;
     return wasSet;
   }
 
   public void delete()
   {
-    if (student != null)
-    {
-      Student placeholderStudent = student;
-      this.student = null;
-      placeholderStudent.removeRegistration(this);
-    }
-    if (courseSection != null)
-    {
-      CourseSection placeholderCourseSection = courseSection;
-      this.courseSection = null;
-      placeholderCourseSection.removeRegistration(this);
-    }
+    Student placeholderStudent = student;
+    this.student = null;
+    placeholderStudent.removeRegistration(this);
+    CourseSection placeholderCourseSection = courseSection;
+    this.courseSection = null;
+    placeholderCourseSection.removeRegistration(this);
   }
 
 

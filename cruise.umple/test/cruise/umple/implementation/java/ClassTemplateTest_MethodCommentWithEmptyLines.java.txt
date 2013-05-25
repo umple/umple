@@ -6,7 +6,7 @@
 public class Foo
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -41,7 +41,7 @@ public class Foo
    * These lines should come out as we see here.
    * Comments such as these are often used to improve readability through whitespace clarity.
    */
-  @umplesourcefile(line=17,file="MethodCommentWithEmptyLines.ump",javaline=31,length=1)
+  @umplesourcefile(line={17},file={"MethodCommentWithEmptyLines.ump"},javaline={31},length={1})
   public void testMethod(){
     // I am a test method.
   }

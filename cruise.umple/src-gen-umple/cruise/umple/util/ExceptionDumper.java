@@ -13,7 +13,7 @@ import java.io.*;
 public class ExceptionDumper
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -37,7 +37,7 @@ public class ExceptionDumper
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 1003 ../../../../src/Util_Code.ump
-  @umplesourcefile(line=1003,file="Util_Code.ump",javaline=41,length=21)
+  @umplesourcefile(line={1003},file={"Util_Code.ump"},javaline={41},length={21})
   public static void dumpCompilerError(Exception ex) {
      String generatedSourcePath = System.getenv("GeneratedSourcePath");
     if (generatedSourcePath == null) {
@@ -62,7 +62,7 @@ public class ExceptionDumper
   }
   
     // Translate the java stack trace line information into the corresponding Umple line
-  @umplesourcefile(line=1027,file="Util_Code.ump",javaline=66,length=73)
+  @umplesourcefile(line={1027},file={"Util_Code.ump"},javaline={66},length={83})
     public static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
       StackTraceElement newSt;
       String javaFileName = javaStack.getFileName();
@@ -116,7 +116,17 @@ public class ExceptionDumper
           umpleLineNumber = Integer.parseInt(m.group(1))-1;
         }
         else {
-          umpleLineNumber++;
+          if(foundLine.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String\\[\\](.*)"))
+          {
+            umpleLineNumber-=1;
+          }
+          else
+          {
+            if(!foundLine.matches(".*(@umplesourcefile).*"))
+            {
+              umpleLineNumber++;
+            }
+          }  
         }
 
         if(lineNum == javaLineNumber) {

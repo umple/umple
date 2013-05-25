@@ -10,7 +10,7 @@
       return new <%=gen.translate("type",av)%>(<%=gen.translate("callerArgumentsExcept",relatedAssociation)%>);
     }
   }
-
+<%= umpleSourceFile %>
   public boolean <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasAdded = false;
@@ -42,7 +42,7 @@
     <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;
   }
-
+<%= umpleSourceFile %>
   public boolean <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasRemoved = false;

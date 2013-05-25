@@ -15,7 +15,7 @@ import java.util.*;
 public class Key
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -117,13 +117,13 @@ public class Key
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 385 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line=385,file="Umple_Code.ump",javaline=121,length=4)
+  @umplesourcefile(line={385},file={"Umple_Code.ump"},javaline={121},length={4})
   public boolean isProvided()
   {
     return isDefault || members.size() > 0;
   }
 
-  @umplesourcefile(line=390,file="Umple_Code.ump",javaline=127,length=8)
+  @umplesourcefile(line={390},file={"Umple_Code.ump"},javaline={127},length={8})
   public boolean isMember(UmpleVariable av)
   {
     if (av == null)

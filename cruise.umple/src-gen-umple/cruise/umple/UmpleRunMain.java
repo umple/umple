@@ -17,7 +17,7 @@ import java.io.*;
 public class UmpleRunMain
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -44,7 +44,7 @@ public class UmpleRunMain
   public static String console;
     public static boolean displayOutput = true;
 
-  @umplesourcefile(line=203,file="Main_Code.ump",javaline=48,length=75)
+  @umplesourcefile(line={203},file={"Main_Code.ump"},javaline={48},length={75})
     public static void main(String[] args) 
     {
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -121,7 +121,7 @@ public class UmpleRunMain
         }
     }
 
-  @umplesourcefile(line=277,file="Main_Code.ump",javaline=125,length=9)
+  @umplesourcefile(line={277},file={"Main_Code.ump"},javaline={125},length={9})
     private static void print(String output)
     {
         console += output;
@@ -132,13 +132,13 @@ public class UmpleRunMain
 
     }
 
-  @umplesourcefile(line=287,file="Main_Code.ump",javaline=136,length=4)
+  @umplesourcefile(line={287},file={"Main_Code.ump"},javaline={136},length={4})
     private static void println(String output)
     {
         print(output + "\n");
     }
 
-  @umplesourcefile(line=292,file="Main_Code.ump",javaline=142,length=8)
+  @umplesourcefile(line={292},file={"Main_Code.ump"},javaline={142},length={8})
     private static void printerr(String err)
     {
         console += err;
@@ -174,26 +174,27 @@ public class UmpleRunMain
           {
             if(meth.getName().equals(methodName))
             {
-              int line = -1;
-              String file = "";
               for(java.lang.annotation.Annotation anno: meth.getAnnotations())
               {
                 if(anno.annotationType().getSimpleName().equals("umplesourcefile"))
                 {
-                  int methodlength = (Integer)anno.annotationType().getMethod("length", new Class[]{}).invoke(anno,new Object[]{});
-                  int distanceFromStart = (element.getLineNumber()-(Integer)anno.annotationType().getMethod("javaline", new Class[]{}).invoke(anno,new Object[]{}));
-                  distanceFromStart-=("main".equals(methodName))?2:0;
-                  line = (Integer)anno.annotationType().getMethod("line", new Class[]{}).invoke(anno,new Object[]{})+distanceFromStart;
-                  file = (String)anno.annotationType().getMethod("file", new Class[]{}).invoke(anno,new Object[]{});
-                  if(file == "")
+                  int[] methodlength = (int[])anno.annotationType().getMethod("length", new Class[]{}).invoke(anno,new Object[]{});
+                  int[] javaline = (int[])anno.annotationType().getMethod("javaline", new Class[]{}).invoke(anno,new Object[]{});
+                  int[] line = (int[])anno.annotationType().getMethod("line", new Class[]{}).invoke(anno,new Object[]{});
+                  String[] file = (String[])anno.annotationType().getMethod("file", new Class[]{}).invoke(anno,new Object[]{});
+                  for(int i=0;i<file.length;i++)
                   {
-                    break;
-                  }
-                  else if(distanceFromStart>=0&&distanceFromStart<=methodlength)
-                  {
-                    result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file,line));
-                    methodFound = true;
-                    break;
+                    int distanceFromStart = element.getLineNumber()-javaline[i]-(("main".equals(methodName))?2:0);
+                    if(file[i] == "")
+                    {
+                      break;
+                    }
+                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])
+                    {
+                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));
+                      methodFound = true;
+                      break;
+                    }
                   }
                 }
               }
