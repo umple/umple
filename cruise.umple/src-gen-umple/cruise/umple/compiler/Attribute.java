@@ -18,7 +18,7 @@ import java.util.*;
 public class Attribute extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -420,20 +420,20 @@ public class Attribute extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 1079 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line=1079,file="Umple_Code.ump",javaline=424,length=4)
+  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={424},length={4})
   public boolean isConstant()
   {
     return "const".equals(getModifier());
   }  
 
-  @umplesourcefile(line=1084,file="Umple_Code.ump",javaline=430,length=4)
+  @umplesourcefile(line={1084},file={"Umple_Code.ump"},javaline={430},length={4})
   public boolean isPrimitive()
   {
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
 
-  @umplesourcefile(line=1090,file="Umple_Code.ump",javaline=437,length=7)
+  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={437},length={7})
   public boolean isImmutable()
   {
     boolean varIsImmutable = super.isImmutable();
@@ -442,12 +442,12 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
   
-  @umplesourcefile(line=1098,file="Umple_Code.ump",javaline=446,length=4)
+  @umplesourcefile(line={1098},file={"Umple_Code.ump"},javaline={446},length={4})
   public String getValue()
   {
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
-  @umplesourcefile(line=1102,file="Umple_Code.ump",javaline=451,length=4)
+  @umplesourcefile(line={1102},file={"Umple_Code.ump"},javaline={451},length={4})
   public void setValue(String lang, String code)
   {
     codeblock.setCode(lang,code);

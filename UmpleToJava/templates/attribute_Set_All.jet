@@ -23,6 +23,12 @@
     String customRemovePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("removeMethod",av)));
     String customRemovePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("removeMethod",av)));
     
+    %><%= getUmpleSourceFile(baseJavaLine,new String[]{
+      customSetPrefixCode,customSetPostfixCode,
+      customResetPrefixCode,customResetPostfixCode,
+      customAddPrefixCode,customAddPostfixCode,
+      customRemovePrefixCode,customRemovePostfixCode},
+      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true))%><%
     if (av.isImmutable())
     {
       if (av.getIsLazy())

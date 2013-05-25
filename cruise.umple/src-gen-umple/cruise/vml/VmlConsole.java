@@ -12,7 +12,7 @@ import cruise.umple.util.*;
 public class VmlConsole
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -38,7 +38,7 @@ public class VmlConsole
   // line 19 ../../../src/Vml_Code.ump
   public static String console = "";
   
-  @umplesourcefile(line=21,file="Vml_Code.ump",javaline=42,length=40)
+  @umplesourcefile(line={21},file={"Vml_Code.ump"},javaline={42},length={40})
   public static void main(String[] args) 
   {
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -80,7 +80,7 @@ public class VmlConsole
     println("Successfully created ["+ outputFile +"]");
   }
    
-  @umplesourcefile(line=60,file="Vml_Code.ump",javaline=84,length=5)
+  @umplesourcefile(line={60},file={"Vml_Code.ump"},javaline={84},length={5})
   private static void println(String output)
   {
     console += output + "\n";
@@ -113,26 +113,27 @@ public class VmlConsole
           {
             if(meth.getName().equals(methodName))
             {
-              int line = -1;
-              String file = "";
               for(java.lang.annotation.Annotation anno: meth.getAnnotations())
               {
                 if(anno.annotationType().getSimpleName().equals("umplesourcefile"))
                 {
-                  int methodlength = (Integer)anno.annotationType().getMethod("length", new Class[]{}).invoke(anno,new Object[]{});
-                  int distanceFromStart = (element.getLineNumber()-(Integer)anno.annotationType().getMethod("javaline", new Class[]{}).invoke(anno,new Object[]{}));
-                  distanceFromStart-=("main".equals(methodName))?2:0;
-                  line = (Integer)anno.annotationType().getMethod("line", new Class[]{}).invoke(anno,new Object[]{})+distanceFromStart;
-                  file = (String)anno.annotationType().getMethod("file", new Class[]{}).invoke(anno,new Object[]{});
-                  if(file == "")
+                  int[] methodlength = (int[])anno.annotationType().getMethod("length", new Class[]{}).invoke(anno,new Object[]{});
+                  int[] javaline = (int[])anno.annotationType().getMethod("javaline", new Class[]{}).invoke(anno,new Object[]{});
+                  int[] line = (int[])anno.annotationType().getMethod("line", new Class[]{}).invoke(anno,new Object[]{});
+                  String[] file = (String[])anno.annotationType().getMethod("file", new Class[]{}).invoke(anno,new Object[]{});
+                  for(int i=0;i<file.length;i++)
                   {
-                    break;
-                  }
-                  else if(distanceFromStart>=0&&distanceFromStart<=methodlength)
-                  {
-                    result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file,line));
-                    methodFound = true;
-                    break;
+                    int distanceFromStart = element.getLineNumber()-javaline[i]-(("main".equals(methodName))?2:0);
+                    if(file[i] == "")
+                    {
+                      break;
+                    }
+                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])
+                    {
+                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));
+                      methodFound = true;
+                      break;
+                    }
                   }
                 }
               }

@@ -12,7 +12,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  org.eclipse.jface.text,
  org.eclipse.jdt.core,
- org.eclipse.debug.ui
+ org.eclipse.debug.ui,
+ org.eclipse.debug.core,
+ org.eclipse.jdt.launching
 Bundle-ClassPath: .
 Export-Package: cruise.umple.ui.eclipse;
   uses:="org.eclipse.jface.wizard,
@@ -20,7 +22,9 @@ Export-Package: cruise.umple.ui.eclipse;
    org.eclipse.jface.viewers,
    org.eclipse.swt.widgets,
    org.eclipse.ui.console,
-   org.eclipse.debug.ui",
+   org.eclipse.debug.ui,
+   org.eclipse.debug.core
+   org.eclipse.jdt.launching,",
  cruise.umple.ui.eclipse.editors;
   uses:="org.eclipse.jface.text,
    org.eclipse.jface.text.source,

@@ -7,7 +7,7 @@
 %><% if (customGetPostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
 %>    return <%=gen.translate("parameterOne",av)%>;
   }
-
+<%= umpleSourceFile %>
   public <%=gen.translate("typeMany",av)%>[] <%=gen.translate("getManyMethod",av)%>()
   {
     <% if (customGetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetManyPrefixCode, "    ")); } %>
@@ -16,7 +16,7 @@
 %><% if (customGetManyPostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customGetManyPostfixCode, "    ")); } 
 %>    return <%=gen.translate("parameterMany",av)%>;
   }
-
+<%= umpleSourceFile %>
   public int <%=gen.translate("numberOfMethod",av)%>()
   {
     <% if (customNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customNumberOfPrefixCode, "    ")); } %>
@@ -25,7 +25,7 @@
 %><% if (customNumberOfPostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customNumberOfPostfixCode, "    ")); } 
 %>    return number;
   }
-
+<%= umpleSourceFile %>
   public boolean <%=gen.translate("hasManyMethod",av)%>()
   {
     <% if (customHasManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasManyPrefixCode, "    ")); } %>
@@ -34,7 +34,7 @@
 %><% if (customHasManyPostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customHasManyPostfixCode, "    ")); }
 %>    return has;
   }
-
+<%= umpleSourceFile %>
   public int <%=gen.translate("indexOfMethod",av)%>(<%=gen.translate("typeMany",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     <% if (customIndexOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIndexOfPrefixCode, "    ")); } %>

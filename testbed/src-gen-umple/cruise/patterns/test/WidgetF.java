@@ -8,7 +8,7 @@ import java.util.*;
 public class WidgetF
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -60,18 +60,21 @@ public class WidgetF
     return wasRemoved;
   }
 
+  @umplesourcefile(line={62, 63},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={78, 81},length={1, 1})
   public String getId(int index)
   {
     String aId = ids.get(index);
     return aId;
   }
 
+  @umplesourcefile(line={62, 63},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={78, 81},length={1, 1})
   public String[] getIds()
   {
     String[] newIds = ids.toArray(new String[ids.size()]);
     return newIds;
   }
 
+  @umplesourcefile(line={62, 63},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={78, 81},length={1, 1})
   public int numberOfIds()
   {
     // line 62 "../../../../src/TestHarnessPatterns.ump"
@@ -82,12 +85,14 @@ public class WidgetF
     return number;
   }
 
+  @umplesourcefile(line={62, 63},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={78, 81},length={1, 1})
   public boolean hasIds()
   {
     boolean has = ids.size() > 0;
     return has;
   }
 
+  @umplesourcefile(line={62, 63},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={78, 81},length={1, 1})
   public int indexOfId(String aId)
   {
     int index = ids.indexOf(aId);

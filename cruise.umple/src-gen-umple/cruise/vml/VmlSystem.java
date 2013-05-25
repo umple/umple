@@ -23,7 +23,7 @@ import java.util.*;
 public class VmlSystem
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -59,6 +59,7 @@ public class VmlSystem
     return wasSet;
   }
 
+  @umplesourcefile(line={31},file={"Vml.ump"},javaline={65},length={6})
   public String getCode()
   {
     // line 31 "../../../src/Vml.ump"
@@ -281,7 +282,7 @@ public class VmlSystem
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 70 ../../../src/Vml_Code.ump
-  @umplesourcefile(line=70,file="Vml_Code.ump",javaline=285,length=15)
+  @umplesourcefile(line={70},file={"Vml_Code.ump"},javaline={286},length={15})
   public Concern getConcern(String concernName)
   {
     if (concernName == null)

@@ -13,7 +13,7 @@ import java.util.*;
 public class UmletDiagram
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -161,7 +161,7 @@ public class UmletDiagram
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 143 ../../../../src/Umlet_Code.ump
-  @umplesourcefile(line=143,file="Umlet_Code.ump",javaline=165,length=20)
+  @umplesourcefile(line={143},file={"Umlet_Code.ump"},javaline={165},length={20})
   public String toXml()
   {
     StringBuffer answer = new StringBuffer();

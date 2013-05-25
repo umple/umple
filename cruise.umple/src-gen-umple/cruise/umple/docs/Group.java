@@ -15,7 +15,7 @@ import java.util.*;
 public class Group
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -159,7 +159,7 @@ public class Group
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 341 ../../../../src/Documenter_Code.ump
-  @umplesourcefile(line=341,file="Documenter_Code.ump",javaline=163,length=4)
+  @umplesourcefile(line={341},file={"Documenter_Code.ump"},javaline={163},length={4})
   public String getGroupIdName()
   {
     return name.replace(" ","");

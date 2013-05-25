@@ -6,7 +6,7 @@ package example;
 public class Student
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -46,12 +46,14 @@ public class Student
     return wasSet;
   }
 
+  @umplesourcefile(line={8, 8, 8, 8, 8, 8},file={"CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump"},javaline={53, 60, 53, 60, 53, 60},length={1, 1, 1, 1, 1, 1})
   public String getFirstName()
   {
     print "before";
     return firstName;
   }
 
+  @umplesourcefile(line={8, 8, 8, 8, 8, 8},file={"CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump"},javaline={53, 60, 53, 60, 53, 60},length={1, 1, 1, 1, 1, 1})
   public String getLastName()
   {
     print "before";

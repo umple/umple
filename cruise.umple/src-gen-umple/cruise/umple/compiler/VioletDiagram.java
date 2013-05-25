@@ -13,7 +13,7 @@ import java.util.*;
 public class VioletDiagram
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -221,7 +221,7 @@ public class VioletDiagram
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 113 ../../../../src/Violet_Code.ump
-  @umplesourcefile(line=113,file="Violet_Code.ump",javaline=225,length=45)
+  @umplesourcefile(line={113},file={"Violet_Code.ump"},javaline={225},length={45})
   public String toXml()
   {
     StringBuffer answer = new StringBuffer();

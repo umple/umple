@@ -17,7 +17,7 @@ import java.util.*;
 public class Concern
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -244,13 +244,13 @@ public class Concern
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 89 ../../../src/Vml_Code.ump
-  @umplesourcefile(line=89,file="Vml_Code.ump",javaline=248,length=4)
+  @umplesourcefile(line={89},file={"Vml_Code.ump"},javaline={248},length={4})
   public String toString()
   {
     return name + ":" + numberOfVariationPoints() + " variation points";
   }
   
-  @umplesourcefile(line=94,file="Vml_Code.ump",javaline=254,length=16)
+  @umplesourcefile(line={94},file={"Vml_Code.ump"},javaline={254},length={16})
   public VariationPoint getVariationPoint(String name)
   {
     if (name == null)

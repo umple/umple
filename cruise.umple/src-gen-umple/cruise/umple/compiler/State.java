@@ -16,7 +16,7 @@ import java.util.*;
 public class State
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -773,7 +773,7 @@ public class State
    * @params uClass: the umple class to look within for the trace item
    * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute);
    */
-  @umplesourcefile(line=70,file="Trace_Code.ump",javaline=770,length=120)
+  @umplesourcefile(line={70},file={"Trace_Code.ump"},javaline={770},length={120})
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all the trace directives of uClass
     for(TraceDirective td: uClass.getTraceDirectives())
@@ -918,7 +918,7 @@ public class State
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 306 ../../../../src/StateMachine_Code.ump
-  @umplesourcefile(line=306,file="StateMachine_Code.ump",javaline=922,length=11)
+  @umplesourcefile(line={306},file={"StateMachine_Code.ump"},javaline={922},length={11})
   public boolean isSameState(State state, StateMachine relativeTo)
   {
     if (this.equals(state))
@@ -931,7 +931,7 @@ public class State
     return mySuper != null && mySuper.equals(yourSuper); 
   }
   
-  @umplesourcefile(line=318,file="StateMachine_Code.ump",javaline=935,length=15)
+  @umplesourcefile(line={318},file={"StateMachine_Code.ump"},javaline={935},length={15})
   private State findSuperState(State me, StateMachine lookFor)
   {
     if (me == null || lookFor == null)
@@ -948,7 +948,7 @@ public class State
     }
   } 
 
-  @umplesourcefile(line=334,file="StateMachine_Code.ump",javaline=952,length=7)
+  @umplesourcefile(line={334},file={"StateMachine_Code.ump"},javaline={952},length={7})
   public Transition addTransition(State nextState, int index)
   {
     Transition newTransition = new Transition(this,nextState);
@@ -957,7 +957,7 @@ public class State
     return newTransition;
   }
 
-  @umplesourcefile(line=342,file="StateMachine_Code.ump",javaline=961,length=6)
+  @umplesourcefile(line={342},file={"StateMachine_Code.ump"},javaline={961},length={6})
   public void addAction(Action newAction, int index)
   {
     addAction(newAction);
@@ -965,13 +965,13 @@ public class State
     actions.add(index,newAction);
   }
 
-  @umplesourcefile(line=349,file="StateMachine_Code.ump",javaline=969,length=4)
+  @umplesourcefile(line={349},file={"StateMachine_Code.ump"},javaline={969},length={4})
   public String getType()
   {
     return numberOfTransitions() == 0 && numberOfNestedStateMachines() == 0 ? "Simple" : "Complex";
   }
   
-  @umplesourcefile(line=354,file="StateMachine_Code.ump",javaline=975,length=21)
+  @umplesourcefile(line={354},file={"StateMachine_Code.ump"},javaline={975},length={21})
   public String newTimedEventName(State toState)
   {
     String templateName;
@@ -994,7 +994,7 @@ public class State
     return currentName;
   }
   
-  @umplesourcefile(line=376,file="StateMachine_Code.ump",javaline=998,length=12)
+  @umplesourcefile(line={376},file={"StateMachine_Code.ump"},javaline={998},length={12})
   public List<Transition> getTransitionsFor(Event e)
   {
     List<Transition> all = new ArrayList<Transition>();
@@ -1008,19 +1008,19 @@ public class State
     return all;
   }
   
-  @umplesourcefile(line=389,file="StateMachine_Code.ump",javaline=1012,length=4)
+  @umplesourcefile(line={389},file={"StateMachine_Code.ump"},javaline={1012},length={4})
   public boolean getHasExitAction()
   {
     return getHasAction("exit");
   }
   
-  @umplesourcefile(line=394,file="StateMachine_Code.ump",javaline=1018,length=4)
+  @umplesourcefile(line={394},file={"StateMachine_Code.ump"},javaline={1018},length={4})
   public boolean getHasEntryAction()
   {
     return getHasAction("entry");
   }
   
-  @umplesourcefile(line=399,file="StateMachine_Code.ump",javaline=1024,length=11)
+  @umplesourcefile(line={399},file={"StateMachine_Code.ump"},javaline={1024},length={11})
   private boolean getHasAction(String actionType)
   {
     for(Action action : getActions())
@@ -1033,7 +1033,7 @@ public class State
     return false;
   }
 
-  @umplesourcefile(line=411,file="StateMachine_Code.ump",javaline=1037,length=21)
+  @umplesourcefile(line={411},file={"StateMachine_Code.ump"},javaline={1037},length={21})
   public StateMachine exitableStateMachine(State nextState)
   {
     if (getHasExitAction() && !equals(nextState))

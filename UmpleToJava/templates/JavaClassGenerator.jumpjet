@@ -36,12 +36,12 @@
 public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract"); } %>class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
   <%getMemberCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst);
-  getAttributeCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getAttributeCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getStateMachine1Code(stringBuffer, model,uClass,gClass,gen,isFirst);
-  getAssociationCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getAssociationCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getEqualsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getStateMachine2Code(stringBuffer, model,uClass,gClass,gen,isFirst);
   getDeleteCode(stringBuffer, model,uClass,gClass,gen,isFirst);
@@ -69,8 +69,9 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   <%@ include file="constructor_Declare_All.jet" %>
   <%return stringBuffer.toString();
     } 
-    private String getAttributeCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
-  {%>
+    private String getAttributeCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  { 
+    Integer baseJavaLine = stringBuffer.toString().split("\\n").length;%>
 
   //------------------------
   // INTERFACE
@@ -88,8 +89,9 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   <%@ include file="state_machine_Set_All.jet" %><%
   return stringBuffer.toString();
     } 
-    private String getAssociationCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
-  {%>
+    private String getAssociationCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = stringBuffer.toString().split("\\n").length+3;%>
   <%@ include file="association_Get_All.jet" %>
   <%@ include file="association_Set_All.jet" %>
   <%return stringBuffer.toString();
@@ -176,7 +178,12 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
     java.util.regex.Matcher lineNumberMatcher = lineNumberPattern.matcher(l);
     java.util.regex.Matcher methodNameMatcher = methodNamePattern.matcher(l);
      
-    if(l.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String\\[\\](.*)"))
+    if(l.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String([ |\\t]*)\\[([ |\\t]*)\\]([ |\\t]+)([a-z|A-Z|0-9|_]+)([ |\\t]*)[)](.*)"))
+    {
+       isMainMethod = true;
+       isMainClass = true;
+    }
+    else if(l.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String[ |\\t]+[a-z|A-Z|0-9|_]+[ |\\t]*\\[[ |\\t]*\\][ |\\t]*[)](.*)"))
     {
        isMainMethod = true;
        isMainClass = true;
@@ -238,7 +245,7 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
         }
       }
       j+=isMainMethod?2:0;
-      l ="  @umplesourcefile(line="+linenumber+",file=\""+umplefilename.replaceAll("\\\\","/").replaceAll("(.*)/","")+"\",javaline="+javaline+",length="+(j-i)+")\n"+l;
+      l ="  @umplesourcefile(line={"+linenumber+"},file={\""+umplefilename.replaceAll("\\\\","/").replaceAll("(.*)/","")+"\"},javaline={"+javaline+"},length={"+(j-i)+"})\n"+l;
       javaline++;
     }
     if(setIsMainMethodToFalse){
@@ -254,4 +261,47 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   <%if(isMainClass){%><%@ include file="uncaught_exception.jet"%><%}%>
 <% } %>
   <%@ include file="trace.jet" %>
+}<%
+  return stringBuffer.toString();
 }
+private String getUmpleSourceFile(Integer baseJavaLine, String[] codes, String fakeCode)
+{
+  
+  String codeLength = "";
+    String codeLine = "";
+    String codeJavaLine = "";
+    String codeFile = "";
+    String comma = "";
+    java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");
+    
+    for(String code:(codes))
+    {
+      if(code!=null)
+      {
+        java.util.regex.Matcher matcher = lineNumberPattern.matcher(code.split("\\n")[0]);
+        if(matcher.matches())
+        {
+          Integer javaline = baseJavaLine+1;
+          for(String line:fakeCode.split("\\n"))
+          {
+            if(line.matches(".*line "+matcher.group(1)+" "+matcher.group(2)))
+            {
+              codeLength += comma+(code.split("\\n").length-1);
+              codeLine += comma+(Integer.parseInt(matcher.group(1)));
+              codeJavaLine += comma + javaline;
+              codeFile += comma + "\"" +matcher.group(2).replaceAll("\\\\","/").replaceAll("(.*)/","");
+              comma = ", ";
+            }
+            javaline++;
+          }
+        }
+      }
+    }
+    if(comma.equals(""))
+      return "";
+    else
+      return "\n  @umplesourcefile(line={"+codeLine+"},file={"+codeFile+ "},javaline={"+codeJavaLine+"},length={"+codeLength+"})";
+}
+public String endAll(String stringBuffer)
+{
+%>

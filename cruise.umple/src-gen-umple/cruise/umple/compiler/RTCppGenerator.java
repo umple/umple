@@ -18,7 +18,7 @@ import cruise.umple.cpp.core.ContentsDescriptor;
 public class RTCppGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -89,14 +89,14 @@ public class RTCppGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 15 ../../../../src/Generator_CodeRTCpp.ump
-  @umplesourcefile(line=15,file="Generator_CodeRTCpp.ump",javaline=93,length=22)
+  @umplesourcefile(line={15},file={"Generator_CodeRTCpp.ump"},javaline={93},length={22})
   public void generate()
   {
   	try {
   		final StringBuilder code = new StringBuilder();
   		new UmpleCppPoliciesProcessor() {
 			@Override
-  @umplesourcefile(line=21,file="Generator_CodeRTCpp.ump",javaline=100,length=10)
+  @umplesourcefile(line={21},file={"Generator_CodeRTCpp.ump"},javaline={100},length={10})
 			public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor) {
 				try {
 					for(ContentsDescriptor descriptor:contentsDescriptor){
@@ -114,7 +114,7 @@ public class RTCppGenerator implements CodeGenerator
 	}
   }
   
-  @umplesourcefile(line=38,file="Generator_CodeRTCpp.ump",javaline=118,length=24)
+  @umplesourcefile(line={38},file={"Generator_CodeRTCpp.ump"},javaline={118},length={24})
   protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
 		 String path = model.getUmpleFile().getPath() + "/";
 		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");

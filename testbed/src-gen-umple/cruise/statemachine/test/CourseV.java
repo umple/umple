@@ -7,7 +7,7 @@ package cruise.statemachine.test;
 public class CourseV
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -103,7 +103,7 @@ public class CourseV
     }
   }
 
-  // line 204 "../../../../src/TestHarnessStateMachineJava.ump"
+  @umplesourcefile(line={204},file={"TestHarnessStateMachineJava.ump"},javaline={111},length={1})
   private void doActivityStatusOff()
   {
     try
@@ -155,7 +155,7 @@ public class CourseV
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 209 ../../../../src/TestHarnessStateMachineJava.ump
-  @umplesourcefile(line=209,file="TestHarnessStateMachineJava.ump",javaline=159,length=3)
+  @umplesourcefile(line={209},file={"TestHarnessStateMachineJava.ump"},javaline={159},length={3})
   public void doX() { 
     count += 1;
   }

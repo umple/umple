@@ -16,7 +16,7 @@ import java.util.*;
 public class GeneratedElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -40,18 +40,18 @@ public class GeneratedElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 1667 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line=1667,file="Umple_Code.ump",javaline=44,length=7)
+  @umplesourcefile(line={1667},file={"Umple_Code.ump"},javaline={44},length={7})
   private Map<String, String> lookups = new HashMap<String, String>();
-  @umplesourcefile(line=1668,file="Umple_Code.ump",javaline=46,length=6)
+  @umplesourcefile(line={1668},file={"Umple_Code.ump"},javaline={46},length={6})
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
 
-  @umplesourcefile(line=1670,file="Umple_Code.ump",javaline=49,length=4)
+  @umplesourcefile(line={1670},file={"Umple_Code.ump"},javaline={49},length={4})
   public void setLookup(String aKey, String aValue)
   {
     lookups.put(aKey, aValue);
   }
 
-  @umplesourcefile(line=1675,file="Umple_Code.ump",javaline=55,length=11)
+  @umplesourcefile(line={1675},file={"Umple_Code.ump"},javaline={55},length={11})
   public String getLookup(String aKey)
   {
     if (aKey == null)
@@ -64,7 +64,7 @@ public class GeneratedElement
     }
   }
 
-  @umplesourcefile(line=1687,file="Umple_Code.ump",javaline=68,length=21)
+  @umplesourcefile(line={1687},file={"Umple_Code.ump"},javaline={68},length={21})
   public boolean addMultiLookup(String aKey, String aValue)
   {
     List<String> oldList = null;
@@ -87,7 +87,7 @@ public class GeneratedElement
     return true;
   }
 
-  @umplesourcefile(line=1709,file="Umple_Code.ump",javaline=91,length=13)
+  @umplesourcefile(line={1709},file={"Umple_Code.ump"},javaline={91},length={13})
   public String[] getMultiLookup(String aKey)
   {
     if (aKey == null || !multiLookups.containsKey(aKey))
@@ -102,7 +102,7 @@ public class GeneratedElement
     }
   }
 
-  @umplesourcefile(line=1723,file="Umple_Code.ump",javaline=106,length=10)
+  @umplesourcefile(line={1723},file={"Umple_Code.ump"},javaline={106},length={10})
   public String toString()
   {
     String answer = "<<";

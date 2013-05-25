@@ -16,7 +16,7 @@ import cruise.umple.compiler.exceptions.*;
 public class PapyrusGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -167,7 +167,7 @@ public class PapyrusGenerator implements CodeGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 22 ../../../../src/Generator_CodePapyrus.ump
-  @umplesourcefile(line=22,file="Generator_CodePapyrus.ump",javaline=171,length=254)
+  @umplesourcefile(line={22},file={"Generator_CodePapyrus.ump"},javaline={171},length={254})
   public void generate()
   {
     boolean hasClassDiagram = false; //true if the umple file has one or more class diagrams in it.
@@ -424,7 +424,7 @@ public class PapyrusGenerator implements CodeGenerator
   }
 
   //This method generates random ID's to be used in 'model.notation'
-  @umplesourcefile(line=278,file="Generator_CodePapyrus.ump",javaline=428,length=10)
+  @umplesourcefile(line={278},file={"Generator_CodePapyrus.ump"},javaline={428},length={10})
   private String generatePapyrusID(){
      final String ALPHA_NUM = "012345ABCDEFGHIJKLMNOPQRSTUWXYZavkilrms";
      final int ID_LENGTH = 22;
@@ -441,7 +441,7 @@ public class PapyrusGenerator implements CodeGenerator
   // As currently created, it is very bare bones. To increase Papyrus functionality, you will need to improve this function.
   // @param isClassDiagram determines if the file will contain the notation for a class diagram or a state machine
   */
-  @umplesourcefile(line=294,file="Generator_CodePapyrus.ump",javaline=445,length=62)
+  @umplesourcefile(line={294},file={"Generator_CodePapyrus.ump"},javaline={445},length={62})
   private void writeModNotation(boolean isClassDiagram)
   {
     try {
@@ -509,7 +509,7 @@ public class PapyrusGenerator implements CodeGenerator
   // Creates a "model.di" file. This file specifies what types of models are part of the Papyrus project.
   // @param isClassDiagram determines if the file's name will be model.di or the name of the state machine
   */
-  @umplesourcefile(line=361,file="Generator_CodePapyrus.ump",javaline=513,length=45)
+  @umplesourcefile(line={361},file={"Generator_CodePapyrus.ump"},javaline={513},length={45})
   private void writeModDI(boolean isClassDiagram)
   {
     try {
@@ -557,7 +557,7 @@ public class PapyrusGenerator implements CodeGenerator
   }
 
   // Creates a ".project" file for Eclipse. This allows the Papyrus output to be easily loaded into Eclipse for editing.
-  @umplesourcefile(line=408,file="Generator_CodePapyrus.ump",javaline=561,length=25)
+  @umplesourcefile(line={408},file={"Generator_CodePapyrus.ump"},javaline={561},length={25})
   private void writeModProject()
   {
     try {
@@ -589,7 +589,7 @@ public class PapyrusGenerator implements CodeGenerator
   // The code generation for this file is done above, in the 'generate()' function.
   // @param isClassDiagram determines if the file will be named model.uml or the name of the state machine.
   */
-  @umplesourcefile(line=439,file="Generator_CodePapyrus.ump",javaline=593,length=30)
+  @umplesourcefile(line={439},file={"Generator_CodePapyrus.ump"},javaline={593},length={30})
   private void writeModel(boolean isClassDiagram)
   {
     try

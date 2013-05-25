@@ -128,5 +128,24 @@ class CodeCompiler {
       return fileName.substring(lastIndex+1, fileName.length());
     }
   }
+  
+  public static List<UmpleClass> getMainClasses(UmpleModel model)
+  {
+    List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();
+    for(UmpleClass c:model.getUmpleClasses())
+    {
+      for(String line:c.getExtraCode().split("\\n"))
+      {
+        if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
+        {
+          mainClasses.add(c);
+          break;
+        }
+      }
+        
+      
+    }
+    return mainClasses;
+  }
 
 }

@@ -28,6 +28,17 @@
     String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
     String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
     
+    
+    
+    String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customGetPrefixCode,customGetPostfixCode,
+      customGetDefaultPrefixCode,customGetDefaultPostfixCode,
+      customGetManyPrefixCode,customGetManyPostfixCode,
+      customNumberOfPrefixCode,customNumberOfPostfixCode,
+      customHasManyPrefixCode,customHasManyPostfixCode,
+      customIndexOfPrefixCode,customIndexOfPostfixCode},
+      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+    %><%= umpleSourceFile %><%
     if (av.getIsList())
     {
       %><%@ include file="attribute_GetMany.jet" %><%

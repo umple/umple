@@ -17,7 +17,7 @@ import java.util.*;
 public class Transition
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -429,7 +429,7 @@ public class Transition
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 437 ../../../../src/StateMachine_Code.ump
-  @umplesourcefile(line=437,file="StateMachine_Code.ump",javaline=433,length=6)
+  @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={433},length={6})
   public static Transition createPlaceholder(State nextState)
   {
     StateMachine nullSm = new StateMachine("null");

@@ -4,7 +4,7 @@
 
     String customMaximumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("maximumNumberOfMethod",av)));
     String customMaximumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("maximumNumberOfMethod",av)));
-%>
+%><%= umpleSourceFile %>
 <% if (customMaximumNumberOfPrefixCode == null && customMaximumNumberOfPostfixCode == null) { %>
   public static int <%=gen.translate("maximumNumberOfMethod",av)%>()
   {

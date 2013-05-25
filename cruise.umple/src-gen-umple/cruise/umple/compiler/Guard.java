@@ -13,7 +13,7 @@ import cruise.umple.compiler.Position;
 public class Guard
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -54,6 +54,7 @@ public class Guard
     return wasSet;
   }
 
+  @umplesourcefile(line={188},file={"StateMachine.ump"},javaline={61},length={2})
   public boolean setCondition(String aCondition)
   {
     boolean wasSet = false;
@@ -65,6 +66,7 @@ public class Guard
     return wasSet;
   }
 
+  @umplesourcefile(line={195},file={"StateMachine.ump"},javaline={74},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
@@ -84,6 +86,7 @@ public class Guard
     return position;
   }
 
+  @umplesourcefile(line={189},file={"StateMachine.ump"},javaline={91},length={3})
   public String getCondition()
   {
     String aCondition = condition;

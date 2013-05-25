@@ -16,7 +16,7 @@ import java.util.*;
 public class CodeInjection
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -176,18 +176,18 @@ public class CodeInjection
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-    @umplesourcefile(line=0,file="",javaline=180,length=4)
+    @umplesourcefile(line={0},file={""},javaline={180},length={4})
  public CodeInjection(String a,String b,String c,UmpleClass d)  {
 this(a,b, d);
     setCode(c);
   }
 // line 540 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line=540,file="Umple_Code.ump",javaline=186,length=4)
+  @umplesourcefile(line={540},file={"Umple_Code.ump"},javaline={186},length={4})
   public void setCode(String str)
   {
     snippet.setCode(str);
   }
-  @umplesourcefile(line=544,file="Umple_Code.ump",javaline=191,length=35)
+  @umplesourcefile(line={544},file={"Umple_Code.ump"},javaline={191},length={35})
   public String getCode()
   {
   	if(constraint == null)
@@ -223,12 +223,12 @@ this(a,b, d);
   	  return snippet.getCode();
   	}
   }  
-  @umplesourcefile(line=579,file="Umple_Code.ump",javaline=227,length=4)
+  @umplesourcefile(line={579},file={"Umple_Code.ump"},javaline={227},length={4})
   public void setCode(String lang, String code)
   {
     snippet.setCode(lang, code);
   }
-  @umplesourcefile(line=583,file="Umple_Code.ump",javaline=232,length=4)
+  @umplesourcefile(line={583},file={"Umple_Code.ump"},javaline={232},length={4})
   public String getCode(String lang)
   {
     return snippet.getCode(lang);

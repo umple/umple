@@ -1,12 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 
 public class Lamp
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -97,6 +97,7 @@ public class Lamp
     }
   }
 
+  @umplesourcefile(line={26},file={"doActivity.ump"},javaline={106},length={1})
   private void doActivityStatusOn()
   {
     try
@@ -110,6 +111,7 @@ public class Lamp
     }
   }
 
+  @umplesourcefile(line={32},file={"doActivity.ump"},javaline={120},length={1})
   private void doActivityStatusOff()
   {
     try

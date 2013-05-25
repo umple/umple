@@ -16,7 +16,7 @@ import cruise.umple.compiler.*;
 public class ContentParser extends Parser
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -140,7 +140,7 @@ public class ContentParser extends Parser
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 351 ../../../../src/Documenter_Code.ump
-  @umplesourcefile(line=351,file="Documenter_Code.ump",javaline=144,length=8)
+  @umplesourcefile(line={351},file={"Documenter_Code.ump"},javaline={144},length={8})
   private int init()
   {
     addRule("groupOrder : ( [**group] ; )*");
@@ -150,7 +150,7 @@ public class ContentParser extends Parser
     return init;
   }
 
-  @umplesourcefile(line=360,file="Documenter_Code.ump",javaline=154,length=13)
+  @umplesourcefile(line={360},file={"Documenter_Code.ump"},javaline={154},length={13})
   public Group getGroup(String name)
   {
     for (Group g : getGroups())
@@ -165,7 +165,7 @@ public class ContentParser extends Parser
     return newGroup;
   }
   
-  @umplesourcefile(line=374,file="Documenter_Code.ump",javaline=169,length=36)
+  @umplesourcefile(line={374},file={"Documenter_Code.ump"},javaline={169},length={36})
   public ParseResult analyze()
   {
     for (Token t : getRootToken().getSubTokens())

@@ -5,8 +5,9 @@
   String postTransition = e != null ? gen.translate("eventMethod",e) : null; 
 %>
 <% Position p = state.getActivity().getPosition();
-if (p != null) { %>
-  // line <%= p.getLineNumber() %> "<%= p.getRelativePath(sm.getUmpleClass(), "Java") %>"<% } %>
+if (p != null) { 
+   int javaline = stringBuffer.toString().split("\\n").length;
+  %><%= "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+7)+"},length={"+(state.getActivity().getActivityCode().split("\\n").length)+"})"%><% } %>
   private void <%= gen.translate("doActivityMethod",state)%>()
   {
     try

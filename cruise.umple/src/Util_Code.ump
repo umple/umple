@@ -1077,7 +1077,17 @@ class ExceptionDumper {
           umpleLineNumber = Integer.parseInt(m.group(1))-1;
         }
         else {
-          umpleLineNumber++;
+          if(foundLine.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String\\[\\](.*)"))
+          {
+            umpleLineNumber-=1;
+          }
+          else
+          {
+            if(!foundLine.matches(".*(@umplesourcefile).*"))
+            {
+              umpleLineNumber++;
+            }
+          }  
         }
 
         if(lineNum == javaLineNumber) {

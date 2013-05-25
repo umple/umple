@@ -11,7 +11,7 @@ import java.io.*;
 public class FileManager
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -35,7 +35,7 @@ public class FileManager
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 115 ../../../../src/Util_Code.ump
-  @umplesourcefile(line=115,file="Util_Code.ump",javaline=39,length=11)
+  @umplesourcefile(line={115},file={"Util_Code.ump"},javaline={39},length={11})
   public static String loadFile(String filename)
   {
     try 
@@ -48,7 +48,7 @@ public class FileManager
     }  
   }   
   
-  @umplesourcefile(line=127,file="Util_Code.ump",javaline=52,length=11)
+  @umplesourcefile(line={127},file={"Util_Code.ump"},javaline={52},length={11})
   public static String loadFile(File file)
   {
     try 
@@ -61,7 +61,7 @@ public class FileManager
     } 
   }   
 
-  @umplesourcefile(line=139,file="Util_Code.ump",javaline=65,length=13)
+  @umplesourcefile(line={139},file={"Util_Code.ump"},javaline={65},length={13})
   public static File writeFileToDisk(String filename, String text)
   {
     try 
@@ -76,7 +76,7 @@ public class FileManager
     }
   }
   
-  @umplesourcefile(line=153,file="Util_Code.ump",javaline=80,length=12)
+  @umplesourcefile(line={153},file={"Util_Code.ump"},javaline={80},length={12})
   public static void writeFileToDisk(File file, String text)
   {
     try 
@@ -94,7 +94,7 @@ public class FileManager
   // INTERFACE
   //``````````````````````` 
   
-  @umplesourcefile(line=170,file="Util_Code.ump",javaline=98,length=9)
+  @umplesourcefile(line={170},file={"Util_Code.ump"},javaline={98},length={9})
   private static void writeFileToDisk(FileOutputStream fout, String text) throws IOException
   {
     OutputStream bout = new BufferedOutputStream(fout);
@@ -105,7 +105,7 @@ public class FileManager
     out.close();
   }
   
-  @umplesourcefile(line=180,file="Util_Code.ump",javaline=109,length=23)
+  @umplesourcefile(line={180},file={"Util_Code.ump"},javaline={109},length={23})
   private static String loadFile(FileReader reader)
   {
     try 

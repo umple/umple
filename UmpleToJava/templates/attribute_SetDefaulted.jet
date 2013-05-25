@@ -10,7 +10,12 @@
     <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
     return wasSet;
   }
-
+<%= getUmpleSourceFile(baseJavaLine,new String[]{
+      customSetPrefixCode,customSetPostfixCode,
+      customResetPrefixCode,customResetPostfixCode,
+      customAddPrefixCode,customAddPostfixCode,
+      customRemovePrefixCode,customRemovePostfixCode},
+      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true))%>
   public boolean <%=gen.translate("resetMethod",av)%>()
   {
     boolean wasReset = false;

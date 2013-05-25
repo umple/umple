@@ -54,6 +54,7 @@
          <enablement></enablement>
       </consolePatternMatchListener>
    </extension>
+   
    <!--
   
    The Wizard shows a "sample" Airline, but UmpleOnline provides a sufficient intro,

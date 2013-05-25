@@ -16,7 +16,7 @@ import java.util.*;
 public class UmpleElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int line();String file();int javaline();int length();}
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -86,6 +86,7 @@ public class UmpleElement
     return wasRemoved;
   }
 
+  @umplesourcefile(line={100},file={"Umple.ump"},javaline={93},length={1})
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
@@ -331,13 +332,13 @@ public class UmpleElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 624 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line=624,file="Umple_Code.ump",javaline=335,length=4)
+  @umplesourcefile(line={624},file={"Umple_Code.ump"},javaline={336},length={4})
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line=629,file="Umple_Code.ump",javaline=341,length=12)
+  @umplesourcefile(line={629},file={"Umple_Code.ump"},javaline={342},length={12})
   public void appendExtraCode(String newCode, boolean addNewline)
   {
     if (newCode == null) 
