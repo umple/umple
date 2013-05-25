@@ -67,9 +67,26 @@ Forum.</p>
 	Optionally provide the background that has lead you to creating this project.
  -->
 
+<p>In our research at the University of Ottawa, we made several observations:</p>
 
+<ul>
+	<li><p>Adoption of model-driven development, especially in the open source community, is taking place very slowly. Our surveys of practitioners showed several reasons:</p></li>
 
+	<li><p>Graphical modeling tools tended to be either very heavy-weight, very expensive or both. </p></li>
 
+	<li><p>A large number of developers like to work in a textual manner, in preference to graphically, for a variety of reasons, including a perception that they can create and edit text more rapidly, they can use it with other tools, version control environments, product-line environments, and inspection processes more readily</p></li>
+
+	<li><p>The code generation capabilities of existing open source modeling tools are weak. Many such tools only generate stubs. If they do generate functional code, it tends to miss much of the semantics specified in UML.</p></li>
+
+	<li><p>The tools for exchanging models (XMI format in particular) in fact tend not to be mutually compatible.</p></li>
+
+	<li><p>Students, and even industrial practitioners, are not learning modelling readily due to lack of easy-to-use pedagogical environments, lack of expertise among educators, lack of small and large examples to study and emulate, widely propagated misconceptions about modeling, inability to generate real systems from simple models to get a feedback loop, and complexity of modeling language specifications.</p></li>
+
+	<li><p>Programming languages don't have constructs such as state machines and associations, even though they could be enhanced to incorporate UML modeling constructs fairly easily.</p></li>
+</ul>
+
+<p>As a result we set out to construct Umple. The initial ideas were conceptualized in the mid 2000's. The first version of Umple was created in the Masters thesis of Dusan Brestovansky in 2007. Since then Umple has been developed as part of several PhD and Masters theses. A list of publications describing Umple can be found at
+http://publications.umple.org</p>
 
 
 
@@ -81,51 +98,70 @@ Forum.</p>
 	cannot have an open-ended scope.
  -->
 
-The Umple project encompasses in short, a model compiler and related techology: Specifically:
+<p>The Umple project encompasses a model compiler and related technology.
 
-  The textual programming-language-like syntax called Umple, covering
-    UML constructs, including associations, attributes, state machines, components,  consraints, concurrency, etc.
-    Real-time profiles such as Marte and AutoSar
-    Patterns
-    Separation of concerns in the context of Umple including mixins, aspect-oriented code injections, and variability modeling constructs
-    A tracing sublanguage (MOTL) allowing injection of tracepoints into modeling constructs
+The components of Umple are listed below. These are tagged as follows according to maturity: [M0] Widely deployed in industry, robust and stable (none so far in Umple); [M1] Deployed to key users and can be used for industrial development (thoroughly tested; stable); [M2] well developed, but in need of further development, quality assurance and/or stability improvement; [MD] Under development;  [MF] Future plans; [MM] Was developed but has not ben maintained, so needs bringing up to date. Combinations of numbers and letters mean that there are parts that are mature, and parts that are under development, future plans, etc.  </p>
 
-  Technology for embedding Umple in programming languages such as Java, PhP, Ruby and C++
+<ol>
+	<li><p>The textual programming-language-like syntax called Umple, covering</p>
 
-  Technology for embedding code in such programming languages, plus Alf, into Umple
+<ol type="a">
+	<li>    UML constructs including associations [M1], attributes [M1], state machines [M1], active objects and components components [MD],  consraints [MD], concurrency [M2F], etc.</li>
 
-  A grammar DSL optimized for processing Umple and the embedding of languages, but also capable of being used in other contexts
+	<li>    Real-time profiles such as Marte and AutoSar [MF]</li>
 
-  A subsystem for analysing the syntactic and semantic validity of models in Umple
+	<li>    Builtin patterns such as singleton [M1], and immutable [M1], as well as an ability to define other patterns [MF].</li>
 
-  Code generation capabilities related to Umple
-    A generic code-generation architecture designed to work with Umple, but also capable of working with other modeling front-ends
-    Specific code generators for Java, PhP, Ruby, C++, covering all the syntactic elements described above
-    Generators for creating UML diagrams from Umple
-    Generators for exporting other UML representations (XMI, Yuml, etc.), SDL and SQL
-    Generators for metrics and other data about Umple systems
-    Generators for formal languages
+	<li>    Separation of concerns in the context of Umple including mixins [M1], aspect-oriented code injections [M1F], and variability modeling constructs [M2F] </li>
 
-  An Eclipse plugin supporting all of the above
+	<li>    A tracing sublanguage (MOTL) allowing injection of tracepoints into modeling constructs [M2F]</li>
 
-  An XText-based plugin to give Umple improved syntax-directed editing, and a tool to convert the Umple grammar to XText
+</ol>
+</li>
 
-  A website (UmpleOnline) for editing Umple and UML diagrams interchangeably and generating code and other artifacts
+	<li>  <p>Technology for embedding programming languages such as Java [M1], PhP [M2], Ruby [M2], C++ [M2], and Alf [MF] into Umple, and vice-versa.</p></li>
 
-  Metadata for the Umple user manual, and a tool to generate the user manual from this metadata
+	<li>  <p>A grammar DSL optimized for processing Umple and the embedding of languages, but also capable of being used in other contexts [M1]</p></li>
 
-  Tools to generate self-documenting elements of the Umple compiler
+	<li>  <p>A subsystem for analysing the syntactic and semantic validity of models in Umple [M1F]</p></li>
 
-  A User-Interface generation tool (UIGU) to generate usable default websites from any given Umple model for rapid prototyping
+<li> <p>Generation and transformation capabilities related to Umple: </p>
+<ol  type="a">
+	<li>    A generic code-generation architecture designed to work with Umple, but also capable of working with other modeling front-ends [M1]</li>
+	<li>    Specific code generators for various languages including Java [M1], PhP [M2], Ruby [M2], C++ [M1D], covering all the syntactic elements described above</li>
+	<li>    Generators for creating UML and other diagrams from Umple [M1F]</li>
+	<li>    Generators for exporting Umple to formats such as other UML representations (XMI [M2F], Yuml [M2], etc.), SDL [MD] and SQL [M2]</li>
+	<li>    Generators for metrics and other data about Umple systems [MD]</li>
+	<li>    Generators for formal languages [MF]</li>
+	<li>    Generators for automatic testing of Umple-generated code [MD]</li>
+</ol>
+</li>
 
-  A tool to facilitate transformation of code to Umple models+code (umplification)
+	<li>  <p>Capabilities for importing into Umple various formats such as XMI, and for connecting Umple to other tools for import, export, diagram generation, etc. [MF]</p></li>
 
-  An extensive suite of testcases to test the syntax, Umple metamodel, and generated code
+	<li>  <p>An Eclipse plugin supporting all of the above.</p></li>
 
-  Example systems written in Umple to serve as additional tests
+	<li>  <p>An XText-based Eclipse plugin to give Umple improved syntax-directed editing, and a tool to convert the Umple grammar to XText.</p></li>
 
-  Plugins to various external editors to provide those editors with an Umple profile
+	<li>  <p>A website (UmpleOnline) for editing Umple and UML diagrams interchangeably and generating code and other artifacts</p></li>
 
+	<li>  <p>Metadata for the Umple user manual, and a tool to generate the user manual from this metadata<./p></li>
+
+	<li>  <p>Tools to generate self-documenting elements of the Umple compiler and other systems written in Umple.</p></li>
+
+	<li>  <p>A User-Interface generation tool (UIGU) to generate usable default websites from any given Umple model for rapid prototyping.</p></li>
+
+	<li>  <p>A tool to facilitate transformation of code to Umple models+code (umplification).</p></li>
+
+	<li>  <p>An extensive suite of testcases to test the syntax, Umple metamodel, and generated code.</p></li>
+
+	<li>  <p>Example systems and models (partial systems) written in Umple to serve as additional tests as well as for demonstration of Umple capabilities..</p></li>
+
+	<li>  <p>Libraries of reusable modeling components written in Umple.</p></li>
+
+	<li>  <p>Plugins to various external editors to provide those editors with an Umple profile for such capabilities as syntax-directed editing, generating of Umple from their tools, etc.</p></li>
+
+</ol>
 
 
 <h2>Description</h2>
@@ -135,6 +171,33 @@ The Umple project encompasses in short, a model compiler and related techology: 
 	somebody who doesn't already know very much about your project idea or domain
 	has at least a fighting chance of understanding its purpose.
  -->
+ 
+Umple, In short, is a compiler, written in itself that adds modeling abstractions to
+languages such as Java, PhP and C++ (targeting gcc and Microsoft visual studio). Its core
+tools are a standalone command-line compiler, an Eclipse plugin and a website for
+educational and demonstration use. To a programmer, Umple appears as a programming
+language with advanced features (state machines, associations, concurrency constructs,
+patterns) that are specified directly in the code, harmoniously with the other code. To a
+modeller, Umple appears as a textual way to write UML and embed Java, PhP and/or C++
+directly in the model.
+
+See http://try.umple.org for the demonstration website
+http://code.umple.org for the current open source site
+http://manual.umple.org for the full-featured generated user manual
+http://dl.umple.org for various ways to download Umple
+and http://metamodel.umple.org for the generated UML class diagram of the system with
+hot links to documentation and live code. 
+
+In Umple, we have followed a rigorous but agile development process. Some features of that process include:
+
+  - Test driven development: We have several thousand test cases, and we have zero tolerance for test failure in a commit or patch. New contributions must include executable tests that demonstrate the correct functioning of the feature.
+  
+  - Self-reflexive system: Umple is written in itself. The Umple compiler therefore is a very large test case.
+  
+  - Continuous integration: Every commit triggers a build (a committer is responsible for fixing the build if he doesn't follow proper process, resulting in a broken build). On every build the system is first built with the most recent version of the compiler, then rebuild with the version just built. Following every successful build, a new 'bleeding edge' version of the compiler is publicly available. UmpleOnline always uses this version.
+
+The research that has developed Umple has come through several grants. Sponsors of those grants have been IBM (from the very beginning), Ericsson, General Motors, Malina and the Governments of Canada (NSERC) and Ontario (ORF). Funding for the next three years is secure.
+
  
 <h2>Why Eclipse?</h2> 
 
@@ -146,13 +209,29 @@ The Umple project encompasses in short, a model compiler and related techology: 
 	of hosting at Eclipse Labs?
  -->
 
-Umple has been developed as a stand-alone project over the last five years, with the sponsorship of IBM and contributions to support the development of various components by other companies.
-
-Although rigorous quality has been built into the compiler using test-driven development and by writing the compiler in itself, we need the visibility and IP policies that an organization like Eclipse can provide, in order to help foster industrial uptake.
+Umple needs the visibility and IP policies that an organization like Eclipse can provide, in order to help foster industrial uptake.
 
 Since Umple has been developed in Eclipse, and has an Eclipse plugin as one of its main artifacts, the Eclipse foundation seems the right home.
 
+
+
 Also according to XXXX Eclipse is one of the most open of open-source initiatives. Umple has always prided itself in being extremely open, and we want this to continue.
+
+The main benefits Umple would bring to Eclipse would be:
+  - A flexible tool to allow integration of textual model constructs right into code in
+one or more languages. The textual form allows models and code to be seen as a unified
+artifact, facilitating version control, product-line development, bug tracking, etc. But
+the model can still be edited graphically.
+  - A new sophisticated code generation capability that we believe might be the best
+availale in open source. Two PhD theses have gone into our state machine generation and
+UML association generation. We handle infinte nesting and concurrency levels, plus
+referential integrity and many other issues.
+  - The only modeling tool written in itself, demonstrating the power of model-driven
+development and helping assure quality.
+  - A flexible architecture that allows interaction with many tools both inside and
+outside the Eclipse ecosystem (e.g. we can plug in code generators, diagram generators,
+export generators, fairly easily and can extend the language easily)
+
 
 
 <h2>Initial Contribution</h2>
@@ -186,6 +265,8 @@ There should be no important legal issues that we are aware of. The project is u
 The project does have dependencies on some other Eclipse projects (e.g. Jet). The website also uses CodeMirror and JQuery which are licensed under the MIT license.
 
 There is the issue of the generated code. When code is emitted it no license is injected, Our concept is that the original model can have whatever license users want, and the generated code would have the same license.
+
+There is also the issue of the example Umple code and models. In order to foster uptake of Umple, we would like to allow people to freely copy and paste from these examples. The MIT license seems ideal for that;
  
 <h2>Committers</h2>
 
@@ -257,7 +338,22 @@ expressed interest in this project:</p>
 	dates are not required.
  -->
 
-We would like to convert to Eclipse in midsummer (July). We will route all commits to Coogle Code and also to Eclipse until the Eclipse site is stable.
+<p>
+We would like to convert to Eclipse in mid-summer 2013 (July).
+</p>
+
+<p>
+This is a mature project with users and ongoing rapid development. There are also gradate students working on Umple as part of their thesis. We want to avoid disrupting their work. 
+</p>
+
+<p>
+As a result, during the proposal and initial Eclipse incubation pase, we  will route all commits to Coogle Code and also to Eclipse until the Eclipse-based environment is stable. At this point the plan would be to number the first non-incubation release as 2.0.
+</p>
+
+<p>
+Other mirrors would then become downstream to the Eclipse version.
+</p>
+
 
 
 <h2>Changes to this Document</h2>
