@@ -1,0 +1,25 @@
+class A{}
+
+class B{}
+
+class C{}
+
+class D{}
+
+class E{}
+
+class F{}
+
+associationClass G
+{
+ String att1;
+ Integer att2 = 1;
+ * A;
+ * B;
+ * C;
+ att3;
+ * D;
+ String att4;
+ * E -- * F;
+ Integer att5;
+}

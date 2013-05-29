@@ -1356,6 +1356,16 @@ public class UmpleParserTest
   }
 
   @Test
+  public void associationClassSeveralAssociationsAttributes()
+  {
+    assertParse("010_associationClassSeveralAssociationsAttributes.ump");
+    Assert.assertEquals(6,model.getAssociations().size());
+    UmpleClass aClass = model.getUmpleClass("G");
+    Assert.assertEquals(6,aClass.numberOfAssociationVariables());
+    Assert.assertEquals(5,aClass.numberOfAttributes());
+  }
+
+  @Test
   public void inlineComments()
   {
     assertParse("013_inlineComments.ump");
