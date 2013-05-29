@@ -439,6 +439,12 @@ class RulePart
       parser.nextAt("=");
       return parser.nextUntil(":");
     }
+    else if (isRegex())
+    {
+      TextParser parser = new TextParser(name);
+      parser.nextAt("!");
+      return parser.nextUntil(":");
+    }
     else if (isToEndOfLine())
     {
       return name.substring(1);
@@ -591,6 +597,26 @@ class RulePart
     return isVariable() && name != null && name.startsWith("="); 
   }
 
+  public boolean isRegex(){
+    return isVariable() && name != null && name.startsWith("!");
+  }
+
+  public String getRegex(){
+    if (name == null)
+    {
+      return null;
+    }
+
+    TextParser parser = new TextParser(name);
+    parser.nextAfter(":");
+
+    if (parser.peek() == null)
+    {
+      return null;
+    }
+    return parser.nextLine();
+  }
+
   public String[] getEnums()
   {
     if (name == null)
@@ -630,6 +656,15 @@ class RulePart
       }
     }
     return false;
+  }
+
+  public boolean regexMatches(String input){
+    String regex = getRegex();
+    if (regex == null || input == null || !isRegex())
+    {
+      return false;
+    }
+    return input.matches(regex);
   }
 
   public boolean isRule()
@@ -1158,6 +1193,11 @@ class Parser
             }
 
             if (part.isEnum() && !part.isEnumValue(value))
+            {
+              value = null;
+            }
+
+            if (part.isRegex() && !part.regexMatches(value))
             {
               value = null;
             }

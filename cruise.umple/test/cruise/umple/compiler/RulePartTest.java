@@ -149,6 +149,13 @@ public class RulePartTest
     Assert.assertEquals(false,part.isRule());
     Assert.assertEquals(true,part.isEnum());
     
+    part.setName("!option:[a-z]{3}");
+    part.setType(RulePart.Type.Variable);
+    Assert.assertEquals(false,part.isStatic());
+    Assert.assertEquals(true,part.isVariable());
+    Assert.assertEquals(false,part.isRule());
+    Assert.assertEquals(false,part.isEnum());
+    Assert.assertEquals(true,part.isRegex());
     
     
   }
@@ -161,6 +168,16 @@ public class RulePartTest
     Assert.assertEquals(false, part.isEnumValue(null));
     Assert.assertEquals(false, part.isEnumValue(""));
     Assert.assertEquals(false, part.isEnumValue("x"));
+  }
+
+  @Test
+  public void isRegex_notRegex()
+  {
+    RulePart part = new RulePart(null,null);
+
+    Assert.assertEquals(false, part.regexMatches(null));
+    Assert.assertEquals(false, part.regexMatches(""));
+    Assert.assertEquals(false, part.regexMatches("x"));
   }
 
   @Test
@@ -178,6 +195,16 @@ public class RulePartTest
   }
 
   @Test
+  public void getRegex()
+  {
+    RulePart part = new RulePart(null,null);
+    Assert.assertEquals(null, part.getRegex());
+
+    part.setName("!option:[a-z]{3}");
+    Assert.assertEquals("[a-z]{3}", part.getRegex());
+  }
+
+  @Test
   public void isEnumValue_enum()
   {
     RulePart part = new RulePart("=facade:on|off",null);
@@ -189,6 +216,22 @@ public class RulePartTest
     Assert.assertEquals(true, part.isEnumValue("on"));
     Assert.assertEquals(true, part.isEnumValue("off"));
   }
+
+  @Test
+  public void regexMatches()
+  {
+    RulePart part = new RulePart("!url:(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",null);
+    part.setType(RulePart.Type.Variable);
+    
+    Assert.assertEquals(false, part.regexMatches(null));
+    Assert.assertEquals(false, part.regexMatches(""));
+    Assert.assertEquals(true, part.regexMatches("https://www.google.com"));
+    Assert.assertEquals(true, part.regexMatches("file://home/root/file"));
+    Assert.assertEquals(false, part.regexMatches("www.google.com"));
+    Assert.assertEquals(false, part.regexMatches("http://www.google.com."));
+    Assert.assertEquals(false, part.regexMatches("http://"));
+  }
+
   
   @Test
   public void isEnumValue_simple()
@@ -202,8 +245,8 @@ public class RulePartTest
     Assert.assertEquals(false, part.isEnumValue(""));
     Assert.assertEquals(false, part.isEnumValue("x"));
     Assert.assertEquals(true, part.isEnumValue("unique"));
-  }  
-  
+  }
+
   
   @Test
   public void getInnerValues_complexOrder()

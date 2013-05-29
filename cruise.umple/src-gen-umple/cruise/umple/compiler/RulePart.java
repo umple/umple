@@ -170,13 +170,19 @@ public class RulePart
     return getMaximumPartsFound() == -1 || numberSoFar < getMaximumPartsFound();
   }
 
-  @umplesourcefile(line={434},file={"Parser_Code.ump"},javaline={174},length={24})
+  @umplesourcefile(line={434},file={"Parser_Code.ump"},javaline={174},length={30})
   public String getDisplayName()
   {
     if (isEnum())
     {
       TextParser parser = new TextParser(name);
       parser.nextAt("=");
+      return parser.nextUntil(":");
+    }
+    else if (isRegex())
+    {
+      TextParser parser = new TextParser(name);
+      parser.nextAt("!");
       return parser.nextUntil(":");
     }
     else if (isToEndOfLine())
@@ -196,13 +202,13 @@ public class RulePart
     }
   }
 
-  @umplesourcefile(line={459},file={"Parser_Code.ump"},javaline={200},length={4})
+  @umplesourcefile(line={465},file={"Parser_Code.ump"},javaline={206},length={4})
   public void removeNextIdentifiers()
   {
     nextIdentifiers.clear();
   }
 
-  @umplesourcefile(line={464},file={"Parser_Code.ump"},javaline={206},length={19})
+  @umplesourcefile(line={470},file={"Parser_Code.ump"},javaline={212},length={19})
   public String[] getInnerNames()
   {
     if (!hasInnerNames())
@@ -223,7 +229,7 @@ public class RulePart
     return allNames.toArray(new String[allNames.size()]);
   }
 
-  @umplesourcefile(line={484},file={"Parser_Code.ump"},javaline={227},length={14})
+  @umplesourcefile(line={490},file={"Parser_Code.ump"},javaline={233},length={14})
   public boolean isValidInnerValues(String value)
   {
     if (value == null)
@@ -239,7 +245,7 @@ public class RulePart
     return number > 0 && number <= getInnerNames().length;
   }
 
-  @umplesourcefile(line={499},file={"Parser_Code.ump"},javaline={243},length={59})
+  @umplesourcefile(line={505},file={"Parser_Code.ump"},javaline={249},length={59})
   public RulePartValue[] getInnerValues(String value)
   {
     if (!hasInnerNames())
@@ -300,49 +306,71 @@ public class RulePart
     return allRulePartValues;
   }
 
-  @umplesourcefile(line={559},file={"Parser_Code.ump"},javaline={304},length={4})
+  @umplesourcefile(line={565},file={"Parser_Code.ump"},javaline={310},length={4})
   public boolean hasInnerNames()
   {
     return getName() != null && getName().indexOf(",") != -1;
   }
 
-  @umplesourcefile(line={564},file={"Parser_Code.ump"},javaline={310},length={4})
+  @umplesourcefile(line={570},file={"Parser_Code.ump"},javaline={316},length={4})
   public boolean isStatic()
   {
     return Type.Static.equals(getType()); 
   }
 
-  @umplesourcefile(line={569},file={"Parser_Code.ump"},javaline={316},length={4})
+  @umplesourcefile(line={575},file={"Parser_Code.ump"},javaline={322},length={4})
   public boolean isMultiWord()
   {
     return getName().startsWith("**");
   }
 
-  @umplesourcefile(line={574},file={"Parser_Code.ump"},javaline={322},length={4})
+  @umplesourcefile(line={580},file={"Parser_Code.ump"},javaline={328},length={4})
   public boolean isToEndOfLine()
   {
     return !isMultiWord() && getName().startsWith("*");
   }
 
-  @umplesourcefile(line={579},file={"Parser_Code.ump"},javaline={328},length={3})
+  @umplesourcefile(line={585},file={"Parser_Code.ump"},javaline={334},length={3})
   public boolean isAlphanumeric() {
     return getName().startsWith("~");
   }
 
 
-  @umplesourcefile(line={584},file={"Parser_Code.ump"},javaline={334},length={4})
+  @umplesourcefile(line={590},file={"Parser_Code.ump"},javaline={340},length={4})
   public boolean isVariable()
   {
     return Type.Variable.equals(getType()); 
   }
 
-  @umplesourcefile(line={589},file={"Parser_Code.ump"},javaline={340},length={4})
+  @umplesourcefile(line={595},file={"Parser_Code.ump"},javaline={346},length={4})
   public boolean isEnum()
   {
     return isVariable() && name != null && name.startsWith("="); 
   }
 
-  @umplesourcefile(line={594},file={"Parser_Code.ump"},javaline={346},length={23})
+  @umplesourcefile(line={600},file={"Parser_Code.ump"},javaline={352},length={3})
+  public boolean isRegex(){
+    return isVariable() && name != null && name.startsWith("!");
+  }
+
+  @umplesourcefile(line={604},file={"Parser_Code.ump"},javaline={357},length={15})
+  public String getRegex(){
+    if (name == null)
+    {
+      return null;
+    }
+
+    TextParser parser = new TextParser(name);
+    parser.nextAfter(":");
+
+    if (parser.peek() == null)
+    {
+      return null;
+    }
+    return parser.nextLine();
+  }
+
+  @umplesourcefile(line={620},file={"Parser_Code.ump"},javaline={374},length={23})
   public String[] getEnums()
   {
     if (name == null)
@@ -367,7 +395,7 @@ public class RulePart
     return allEnums.toArray(new String[allEnums.size()]);
   }
 
-  @umplesourcefile(line={618},file={"Parser_Code.ump"},javaline={371},length={16})
+  @umplesourcefile(line={644},file={"Parser_Code.ump"},javaline={399},length={16})
   public boolean isEnumValue(String input)
   {
     if (!isEnum() || input == null)
@@ -385,38 +413,48 @@ public class RulePart
     return false;
   }
 
-  @umplesourcefile(line={635},file={"Parser_Code.ump"},javaline={389},length={4})
+  @umplesourcefile(line={661},file={"Parser_Code.ump"},javaline={417},length={8})
+  public boolean regexMatches(String input){
+    String regex = getRegex();
+    if (regex == null || input == null || !isRegex())
+    {
+      return false;
+    }
+    return input.matches(regex);
+  }
+
+  @umplesourcefile(line={670},file={"Parser_Code.ump"},javaline={427},length={4})
   public boolean isRule()
   {
     return Type.Rule.equals(getType()); 
   }  
 
 
-  @umplesourcefile(line={641},file={"Parser_Code.ump"},javaline={396},length={4})
+  @umplesourcefile(line={676},file={"Parser_Code.ump"},javaline={434},length={4})
   public boolean isOne()
   {
     return "1".equals(getMultiplicity());
   }
 
-  @umplesourcefile(line={646},file={"Parser_Code.ump"},javaline={402},length={4})
+  @umplesourcefile(line={681},file={"Parser_Code.ump"},javaline={440},length={4})
   public boolean isOptional()
   {
     return "?".equals(getMultiplicity());
   }
 
-  @umplesourcefile(line={651},file={"Parser_Code.ump"},javaline={408},length={4})
+  @umplesourcefile(line={686},file={"Parser_Code.ump"},javaline={446},length={4})
   public boolean isMany()
   {
     return "*".equals(getMultiplicity());
   }
 
-  @umplesourcefile(line={656},file={"Parser_Code.ump"},javaline={414},length={4})
+  @umplesourcefile(line={691},file={"Parser_Code.ump"},javaline={452},length={4})
   public boolean isAnonymous()
   {
     return getName().startsWith("anonymous::");
   }
 
-  @umplesourcefile(line={661},file={"Parser_Code.ump"},javaline={420},length={11})
+  @umplesourcefile(line={696},file={"Parser_Code.ump"},javaline={458},length={11})
   public String toString()
   {
     StringBuffer answer = new StringBuffer();
