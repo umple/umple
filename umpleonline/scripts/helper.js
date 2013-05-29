@@ -45,3 +45,15 @@ function format(rawInput)
   
   return formattedText;
 }
+
+// Simplified version of the above that doesn't recurse if the argument has the {0}
+function formatOnce(rawInput)
+{
+  var formattedText = rawInput;
+  for(var i=1; i<arguments.length; i++)
+  {
+    formattedText = formattedText.replace("{" + (i - 1) + "}", arguments[i]);
+  }
+  
+  return formattedText;
+}
