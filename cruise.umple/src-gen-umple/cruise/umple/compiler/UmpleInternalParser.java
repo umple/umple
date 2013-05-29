@@ -2004,7 +2004,7 @@ this("UmpleInternalParser", aModel);
     }
 
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
-    List<String> langs = new ArrayList();
+    List<String> langs = new ArrayList<String>();
     CodeBlock cb = new CodeBlock();
     for(Token token : method.getSubTokens())
     {
@@ -3305,8 +3305,8 @@ this("UmpleInternalParser", aModel);
     // state machines and attributes as well as state machines and association names
     checkStateMachineNameConflict();
 
-    for(Iterator i = possiblyUnknownStates.entrySet().iterator(); i.hasNext();){
-    	Map.Entry entry = (Map.Entry)i.next();
+    for(Iterator<Map.Entry<State, List<Token>>> i = possiblyUnknownStates.entrySet().iterator(); i.hasNext();){
+    	Map.Entry<State, List<Token>> entry = (Map.Entry<State, List<Token>>)i.next();
     	List<Token> tokens = (List<Token>)entry.getValue();
 		for(int j = 0; j < tokens.size(); j++){
 			setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue("stateName"));
@@ -3497,7 +3497,7 @@ this("UmpleInternalParser", aModel);
       if (nextState == null)
       {
         nextState = new State(name,placeholderStateMachine);
-        possiblyUnknownStates.put(nextState, new ArrayList());
+        possiblyUnknownStates.put(nextState, new ArrayList<Token>());
         possiblyUnknownStates.get(nextState).add(transitionToken);
       }
     }

@@ -41,9 +41,14 @@ public class CodeCompiler
   // line 22 ../../../../src/Compiler.ump
   public static String console;
 
-  @umplesourcefile(line={24},file={"Compiler.ump"},javaline={45},length={14})
-  public static boolean compile(UmpleModel model, String entryClass) {
+  @umplesourcefile(line={24},file={"Compiler.ump"},javaline={45},length={19})
+  public static boolean compile(UmpleModel model, String entryClass, String... extraArgs) {
     boolean error_flag = true;
+    String extra = "";
+    for(String arg:extraArgs)
+    {
+      extra+=arg;
+    }
     for (UmpleElement currentElement : model.getUmpleElements())
     {
       if ("external".equals(currentElement.getModifier()))
@@ -51,14 +56,14 @@ public class CodeCompiler
         continue;
       }
       if (entryClass.equals("-") || entryClass.equals(currentElement.getName())) {
-        error_flag = error_flag && compileJava(currentElement, model);
+        error_flag = error_flag && compileJava(currentElement, model,extra);
       }
     }
     return error_flag;
   }
 
-  @umplesourcefile(line={39},file={"Compiler.ump"},javaline={61},length={27})
-  private static boolean compileJava(UmpleElement aClass, UmpleModel model) {
+  @umplesourcefile(line={44},file={"Compiler.ump"},javaline={66},length={27})
+  private static boolean compileJava(UmpleElement aClass, UmpleModel model, String args) {
     String path="";
     for (GenerateTarget gt : model.getGenerates()) {
       if (gt.getLanguage().equals("Java")) {
@@ -68,26 +73,26 @@ public class CodeCompiler
       }
     }
     String filename = path + File.separator + aClass.getName() + ".java";
-    //System.out.println("filename: "+filename);
-    boolean error_exist = true;
+    //System.out.println("filename: "+filename+args);
+    boolean successful = true;
     try {
-      Process p = Runtime.getRuntime().exec("javac "+filename);
+      Process p = Runtime.getRuntime().exec("javac "+filename+args);
       BufferedReader reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
       String line=reader.readLine(); 
 
       while (line!=null) {
         System.err.println(translateLineToUmple(line, model));
         line = reader.readLine();
-        error_exist = false;
+        successful = false;
       }
     } catch (IOException e) {
       println(e.getMessage());
     }
-    return error_exist;
+    return successful;
   }
 
   // To do: Use model to determine generation path
-  @umplesourcefile(line={68},file={"Compiler.ump"},javaline={91},length={43})
+  @umplesourcefile(line={73},file={"Compiler.ump"},javaline={96},length={43})
   private static String translateLineToUmple(String line, UmpleModel model) {
     String modifiedLine = line;
     StackTraceElement ust;
@@ -132,14 +137,14 @@ public class CodeCompiler
     return(ust.getFileName()+":"+ust.getLineNumber()+":"+lineParts[2]);
   }
 
-  @umplesourcefile(line={112},file={"Compiler.ump"},javaline={136},length={5})
+  @umplesourcefile(line={117},file={"Compiler.ump"},javaline={141},length={5})
   private static void println(String output)
   {
     console += output + "\n";
     System.out.println(output);
   }
 
-  @umplesourcefile(line={118},file={"Compiler.ump"},javaline={143},length={13})
+  @umplesourcefile(line={123},file={"Compiler.ump"},javaline={148},length={13})
   public static String getSimpleFileName(String fileName)
   {
 
@@ -154,7 +159,7 @@ public class CodeCompiler
     }
   }
   
-  @umplesourcefile(line={132},file={"Compiler.ump"},javaline={158},length={18})
+  @umplesourcefile(line={137},file={"Compiler.ump"},javaline={163},length={18})
   public static List<UmpleClass> getMainClasses(UmpleModel model)
   {
     List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();

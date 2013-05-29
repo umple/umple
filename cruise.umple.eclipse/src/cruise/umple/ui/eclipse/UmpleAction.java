@@ -1,7 +1,13 @@
 package cruise.umple.ui.eclipse;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.debug.core.DebugPlugin;
@@ -32,14 +38,136 @@ import cruise.umple.compiler.*;
 public class UmpleAction implements IWorkbenchWindowActionDelegate
 {
   public static IWorkbenchWindow window;
-  public static UmpleClass mainClass;
-  public static UmpleModel model;
-  public static IResource recentRun;
   /**
    * The constructor.
    */
   public UmpleAction()
   {  
+  }
+  private class CompileThread extends Thread
+  {
+    public void run(){
+      MessageConsole umpleConsole = findConsole("Umple Compile");
+      umpleConsole.activate();
+      System.setErr(new PrintStream(umpleConsole.newOutputStream()));
+      System.setOut(new PrintStream(umpleConsole.newOutputStream()));
+      // Save all current work
+      window.getActivePage().saveAllEditors(false);
+
+      IEditorPart editor = window.getActivePage().getActiveEditor();
+      // Check 1. Verify that a FileEditor View is opened
+      if (editor == null)
+      {
+        MessageDialog.openWarning(window.getShell(), "UMPLE plugin error", "Please open an Umple file.");
+        return;
+      }
+      IResource fName = (IResource) editor.getEditorInput().getAdapter(IResource.class);
+
+      String name = fName.getFullPath().toOSString();
+      String wsLocation = fName.getWorkspace().getRoot().getLocation().toOSString();
+
+      String fileName = window.getActivePage().getActiveEditor().getTitle().toString();
+      // Check 2. Verify if it is an Umple file before processing it
+      if (!(fileName.endsWith(".ump")) || fileName.equals("")){
+        MessageDialog.openWarning(window.getShell(), "UMPLE plugin error", "Please open an Umple file.");
+        return;
+      }
+      String fullPath = wsLocation + name;
+
+      // Extract the file name from the path so the file name woudln't be
+      // duplicated
+      UmpleFile file = new UmpleFile(fullPath.substring(0, fullPath.lastIndexOf(fileName, fullPath.length() - 1)), fileName);
+      UmpleModel model = new UmpleModel(file);
+      try{
+        model.run();
+      //Update Project
+        fName.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+      }
+      catch (Exception e1)
+      {
+        System.err.println(e1.getMessage());
+      }
+      
+      
+
+    }
+  }
+  private class CompileAndRunThread extends Thread
+  {
+	  boolean successfulCompilation ;
+	  UmpleModel model;
+	  String pjName;
+    public void run(){
+      try{
+        MessageConsole umpleConsole = findConsole("Umple Compile");
+        umpleConsole.activate();
+        System.setErr(new PrintStream(umpleConsole.newOutputStream()));
+        System.setOut(new PrintStream(umpleConsole.newOutputStream()));
+        // Save all current work
+        window.getActivePage().saveAllEditors(false);
+
+        IEditorPart editor = window.getActivePage().getActiveEditor();
+        // Check 1. Verify that a FileEditor View is opened
+        if (editor == null)
+        {
+          throw new Exception("Please open an Umple file.");
+        }
+        IResource fName = (IResource) editor.getEditorInput().getAdapter(IResource.class);
+
+        String name = fName.getFullPath().toOSString();
+        String wsLocation = fName.getWorkspace().getRoot().getLocation().toOSString();
+
+        String fileName = window.getActivePage().getActiveEditor().getTitle().toString();
+        // Check 2. Verify if it is an Umple file before processing it
+        if (!(fileName.endsWith(".ump")) || fileName.equals("")){
+          throw new Exception("Please open an Umple file.");
+        }
+        String fullPath = wsLocation + name;
+
+        // Extract the file name from the path so the file name woudln't be
+        // duplicated
+        UmpleFile file = new UmpleFile(fullPath.substring(0, fullPath.lastIndexOf(fileName, fullPath.length() - 1)), fileName);
+        model = new UmpleModel(file);
+        try{
+          model.run();
+        }
+        catch (Exception e1)
+        {
+          System.err.println(e1.getMessage());
+        }
+        pjName = fName.getFullPath().toOSString().split("/")[1];
+        List<String> libList = new ArrayList<String>();
+        libList.add(" -d "+wsLocation+File.separator+pjName+File.separator+"bin");
+
+        libList.add(" -classpath "+wsLocation+File.separator+pjName+File.separator+"bin");
+        try
+        {
+          BufferedReader br = new BufferedReader(new FileReader(wsLocation+File.separator+pjName+File.separator+".classpath"));
+          String line = br.readLine();
+          Pattern pat = Pattern.compile(".*<classpathentry.*kind=\"lib\".*path=\"(.*)\".*/>.*");
+
+          while(line!=null)
+          {
+            Matcher mat = pat.matcher(line);
+            if(mat.matches())
+              libList.add(":"+wsLocation+mat.group(1));
+            line = br.readLine();
+          }
+          br.close();
+        }
+        catch(Exception e)
+        {
+          e.printStackTrace();
+        }
+        successfulCompilation = CodeCompiler.compile(model, "-",libList.toArray(new String[0]));
+
+        // Update the project
+        fName.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+      }
+      catch(Exception e){
+        e.printStackTrace();
+      }
+    }
   }
 
   /**
@@ -52,64 +180,29 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
   {
     try
     {
-      // Save all current work
-      //((MessageConsole)cons).addPatternMatchListener(new UmplePatternMatcher());
-      window.getActivePage().saveAllEditors(false);
-
-      IEditorPart editor = window.getActivePage().getActiveEditor();
-      // Check 1. Verify that a FileEditor View is opened
-      if (editor == null)
-      {
-        throw new Exception("Please open an Umple file.");
-      }
-      IResource fName = (IResource) editor.getEditorInput().getAdapter(IResource.class);
-      
-      recentRun = fName;
-      
-      String name = fName.getFullPath().toOSString();
-      String wsLocation = fName.getWorkspace().getRoot().getLocation().toOSString();
-
-      String fileName = window.getActivePage().getActiveEditor().getTitle().toString();
-      // Check 2. Verify if it is an Umple file before processing it
-      if (!(fileName.endsWith(".ump")) || fileName.equals("")){
-        throw new Exception("Please open an Umple file.");
-      }
-      String fullPath = wsLocation + name;
-
-      // Extract the file name from the path so the file name woudln't be
-      // duplicated
-      UmpleFile file = new UmpleFile(fullPath.substring(0, fullPath.lastIndexOf(fileName, fullPath.length() - 1)), fileName);
-      model = new UmpleModel(file);
-      model.run();
-
-      // Update the project
-      fName.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-
       //compile(to run)
       if("CompileAndRun".equals(action.getId()))
       {
-        MessageConsole umpleConsole = findConsole("Umple Compile");
-        umpleConsole.activate();
-        PrintStream previousErr = System.err;
-        PrintStream previousOut = System.out;
-        System.setErr(new PrintStream(umpleConsole.newOutputStream()));
-        System.setOut(new PrintStream(umpleConsole.newOutputStream()));
-        boolean successfulCompilation = CodeCompiler.compile(model, "-");
-        if(successfulCompilation)
+        CompileAndRunThread cart = new CompileAndRunThread();
+        cart.start();
+        cart.join();
+        if(cart.successfulCompilation)
         {
-          java.util.List<UmpleClass> classes = CodeCompiler.getMainClasses(model);
+          System.out.println("Was successfully compiled");
+          List<UmpleClass> classes = CodeCompiler.getMainClasses(cart.model);
           String[] possibilities = new String[classes.size()];
           for(int i=0;i<classes.size();i++)
           {
-        	possibilities[i]=classes.get(i).getName();
+            possibilities[i]=classes.get(i).getName();
           }
-          
-          
+
+          UmpleClass mainClass = null;
           if(possibilities.length==0)
           {
             throw new RuntimeException("No main classes found");
           }
           String mainClassName = null;
+          String wizardArguments = "";
           //ImageIcon icon = new ImageIcon("icons/umpleDocument2.gif","Class selection");
           if(possibilities.length==1)
           {
@@ -117,49 +210,56 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
           }
           else
           {
-           Shell shell = window.getShell();
-           UmpleMainClassWizard wizard = new UmpleMainClassWizard(possibilities);
-           WizardDialog dialog = new WizardDialog(shell, wizard);
-           int result = dialog.open();
-           mainClassName = wizard.getClassName();
+            Shell shell = window.getShell();
+            UmpleMainClassWizard wizard = new UmpleMainClassWizard(possibilities);
+            WizardDialog dialog = new WizardDialog(shell, wizard);
+            int result = dialog.open();
+            mainClassName = wizard.getClassName();
+            wizardArguments = wizard.getArguments();
+            
           }
           for(int i=0;i<classes.size();i++)
           {
-        	  if(mainClassName.equals(classes.get(i).getName()))
-        	  {
-        		mainClass = classes.get(i);
-        		break;
-        	  }
+            if(mainClassName.equals(classes.get(i).getName()))
+            {
+              mainClass = classes.get(i);
+              break;
+            }
           }
           ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
           ILaunchConfigurationType type =
-             manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
-       ILaunchConfiguration[] configurations =
-             manager.getLaunchConfigurations(type);
+              manager.getLaunchConfigurationType(IJavaLaunchConfigurationConstants.ID_JAVA_APPLICATION);
+          boolean hasRun=false;
+          ILaunchConfiguration[] configurations =
+              manager.getLaunchConfigurations(type);
           for (int i = 0; i < configurations.length; i++) {
-             ILaunchConfiguration configuration = configurations[i];
-             if (configuration.getName().equals(mainClass.getName()+" (umple)")) {
-                configuration.delete();
-                break;
-             }
+            ILaunchConfiguration configuration = configurations[i];
+            if (configuration.getName().equals(mainClass.getName()+" (umple)")) {
+              configuration.launch(ILaunchManager.RUN_MODE, null);
+              hasRun = true;
+              break;
+            }
           }
-       ILaunchConfigurationWorkingCopy wc =
-             type.newInstance(null, mainClass.getName()+" (umple)");
-       wc.setAttribute(
-    	        IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, 
-    	        recentRun.getFullPath().toOSString().split("/")[1]);
-    	      wc.setAttribute(
-    	        IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME, 
-    	        mainClass.getPackageName()+File.separator+mainClass.getName());
-    	      ILaunchConfiguration config = wc.doSave();   
-    	      config.launch(ILaunchManager.RUN_MODE, null);
+          if(!hasRun)
+          {
+            ILaunchConfigurationWorkingCopy wc = type.newInstance(null, mainClass.getName()+" (umple)");
+            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, cart.pjName);
+            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,mainClass.getPackageName()+File.separator+mainClass.getName());
+            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, wizardArguments);
+            ILaunchConfiguration config = wc.doSave();   
+            config.launch(ILaunchManager.RUN_MODE, null);
+          }
         }
-        
+
       }
+      else {
+        new CompileThread().start();
+      }
+
     }
     catch (Exception e)
     {
-      MessageDialog.openError(window.getShell(), "UMPLE Plug-in", e.getMessage() + "\n");
+      e.printStackTrace();
     }
   }
 
@@ -190,7 +290,7 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
    */
   public void init(IWorkbenchWindow window)
   {
-    this.window = window;
+    UmpleAction.window = window;
 
   }
 
