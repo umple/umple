@@ -679,7 +679,7 @@ Page.showGeneratedCode = function(code,language)
         zipurl = codeparts[0];
         bodycode = codeparts[1];
     }
-    jQuery("#generatedCodeRow").html(format(zipurl+'<pre class="brush: {1};">{0}</pre>',bodycode,language));
+    jQuery("#generatedCodeRow").html(formatOnce(zipurl+'<pre class="brush: {1};">{0}</pre>',bodycode,language));
     warningToggleLoc = zipurl.indexOf("Show/Hide errors and warnings");
     if(warningToggleLoc > 30 || warningToggleLoc == -1) {
       SyntaxHighlighter.highlight("code");
