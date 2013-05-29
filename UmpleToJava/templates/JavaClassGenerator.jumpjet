@@ -289,7 +289,7 @@ private String getUmpleSourceFile(Integer baseJavaLine, String[] codes, String f
               codeLength += comma+(code.split("\\n").length-1);
               codeLine += comma+(Integer.parseInt(matcher.group(1)));
               codeJavaLine += comma + javaline;
-              codeFile += comma + "\"" +matcher.group(2).replaceAll("\\\\","/").replaceAll("(.*)/","");
+              codeFile += comma + "\"" +matcher.group(2).replaceAll("\\\\","/").replaceAll("(.*)/","").replace("\"","") +"\"";
               comma = ", ";
             }
             javaline++;

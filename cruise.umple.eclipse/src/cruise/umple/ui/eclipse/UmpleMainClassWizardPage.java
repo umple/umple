@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
-public class UmpleMainClassWizardPage extends WizardPage implements IWizardPage, Listener {
+public class UmpleMainClassWizardPage extends WizardPage implements IWizardPage, Listener, ModifyListener {
 	private Text containerText;
 	private UmpleMainClassWizard parent;
 	private Text fileText;
@@ -39,7 +39,7 @@ public class UmpleMainClassWizardPage extends WizardPage implements IWizardPage,
 		Composite container = new Composite(parent, SWT.NULL);
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
-		layout.numColumns = 3;
+		layout.numColumns = 2;
 		layout.verticalSpacing = 9;
 		
 		new Label (container, SWT.NONE).setText("Main class:");
@@ -50,24 +50,24 @@ public class UmpleMainClassWizardPage extends WizardPage implements IWizardPage,
 		seatCombo.setText(possibilities[0]);
 		seatCombo.addListener(SWT.Selection, this);	
 		this.parent.setClassName(possibilities[0]);
-		/*
+		
 		Label label = new Label(container, SWT.NULL);
 		label.setText("&Arguments:");
 
 		containerText = new Text(container, SWT.BORDER | SWT.SINGLE);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
 		containerText.setLayoutData(gd);
-		containerText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				//dialogChanged();
-			}
-		});*/
+		containerText.addModifyListener(this);
 		setControl(container);
 	}
 
 	@Override
 	public void handleEvent(Event arg0) {
       parent.setClassName(((Combo)arg0.widget).getText());
+	}
+
+	@Override
+	public void modifyText(ModifyEvent e) {
+	  parent.setArguments(((Text)e.widget).getText());
 	}
 
 }

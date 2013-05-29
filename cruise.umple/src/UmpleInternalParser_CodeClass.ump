@@ -1234,7 +1234,7 @@ class UmpleInternalParser
     }
 
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
-    List<String> langs = new ArrayList();
+    List<String> langs = new ArrayList<String>();
     CodeBlock cb = new CodeBlock();
     for(Token token : method.getSubTokens())
     {

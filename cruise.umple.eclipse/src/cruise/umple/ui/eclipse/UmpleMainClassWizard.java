@@ -13,6 +13,7 @@ public class UmpleMainClassWizard extends Wizard implements IWizard {
 	private WizardPage page;
 	private ISelection selection;
 	private String classname;
+	private String arguments;
 	private String[] possibilities;
 
 	/**
@@ -23,6 +24,7 @@ public class UmpleMainClassWizard extends Wizard implements IWizard {
 		super();
 		setNeedsProgressMonitor(true);
 		this.possibilities = possibilities;
+		arguments = "";
 	}
 
 	/**
@@ -48,5 +50,12 @@ public class UmpleMainClassWizard extends Wizard implements IWizard {
 	}
 	public String getClassName(){
 		return classname;
+	}
+	public void setArguments(String s){
+		arguments = s;
+		
+	}
+	public String getArguments(){
+		return arguments;
 	}
 }

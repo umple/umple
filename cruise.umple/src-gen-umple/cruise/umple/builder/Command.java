@@ -299,7 +299,7 @@ public class Command
     currentObject = null;
     try 
     {
-      Class classDefinition = Class.forName(className,true,loader);
+      Class<? extends Object> classDefinition = Class.forName(className,true,loader);
       currentObject = classDefinition.newInstance();
     }
     catch (Throwable e) {
@@ -363,7 +363,7 @@ public class Command
   {
     try 
     {
-      Class c = currentObject.getClass();
+      Class<? extends Object> c = currentObject.getClass();
       Method m = c.getMethod(methodName);
       Object answer = m.invoke(currentObject);
 
