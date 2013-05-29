@@ -8,10 +8,10 @@ import java.util.*;
 /**
  * Represents an error message, typically used with parsing.
  * @umplesource Parser.ump 51
- * @umplesource Parser_Code.ump 1653
+ * @umplesource Parser_Code.ump 1693
  */
 // line 51 "../../../../src/Parser.ump"
-// line 1653 "../../../../src/Parser_Code.ump"
+// line 1693 "../../../../src/Parser_Code.ump"
 public class ErrorMessage
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -139,13 +139,13 @@ public class ErrorMessage
 this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
-// line 1660 ../../../../src/Parser_Code.ump
-  @umplesourcefile(line={1660},file={"Parser_Code.ump"},javaline={144},length={4})
+// line 1700 ../../../../src/Parser_Code.ump
+  @umplesourcefile(line={1700},file={"Parser_Code.ump"},javaline={144},length={4})
   public String getFormattedMessage()
   {
     return errorType.format(this.parameters);
   }
-  @umplesourcefile(line={1664},file={"Parser_Code.ump"},javaline={149},length={7})
+  @umplesourcefile(line={1704},file={"Parser_Code.ump"},javaline={149},length={7})
   public String toString()
   {
     String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
