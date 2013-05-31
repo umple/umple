@@ -62,6 +62,7 @@ public class LightFixture
     return wasEventProcessed;
   }
 
+  @umplesourcefile(line={15, 11}, file={"BeforeAndAfter_StateMachineSet.ump", "BeforeAndAfter_StateMachineSet.ump"}, javaline={69, 72}, length={1, 1})
   private void setLight(Light aLight)
   {
     System.out.println("About to flip");

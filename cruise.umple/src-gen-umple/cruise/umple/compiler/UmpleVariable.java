@@ -50,7 +50,7 @@ public class UmpleVariable
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={443},file={"Umple.ump"},javaline={57},length={1})
+  @umplesourcefile(line={443},file={"Umple.ump"},javaline={58},length={1})
   public boolean setName(String aName)
   {
     boolean wasSet = false;
@@ -101,7 +101,7 @@ public class UmpleVariable
     return type;
   }
 
-  @umplesourcefile(line={445},file={"Umple.ump"},javaline={109},length={1})
+  @umplesourcefile(line={445},file={"Umple.ump"},javaline={110},length={1})
   /**
    * The modifier associated with the Umple variable.
    */

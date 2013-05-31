@@ -722,7 +722,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={395},file={"Umple.ump"},javaline={731},length={1})
+  @umplesourcefile(line={395},file={"Umple.ump"},javaline={732},length={1})
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
@@ -879,7 +879,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={393},file={"Umple.ump"},javaline={892},length={2})
+  @umplesourcefile(line={393},file={"Umple.ump"},javaline={893},length={2})
   public static int minimumNumberOfAssociationVariables()
   {
     return 0;
@@ -909,7 +909,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={393},file={"Umple.ump"},javaline={892},length={2})
+  @umplesourcefile(line={393},file={"Umple.ump"},javaline={893},length={2})
   public boolean removeAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasRemoved = false;
@@ -936,7 +936,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={393},file={"Umple.ump"},javaline={892},length={2})
+  @umplesourcefile(line={393},file={"Umple.ump"},javaline={893},length={2})
   public boolean addOrMoveAssociationVariableAt(AssociationVariable aAssociationVariable, int index)
   {
     boolean wasAdded = false;
@@ -1154,7 +1154,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1164},length={2})
+  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1165},length={2})
   public static int minimumNumberOfStateMachines()
   {
     return 0;
@@ -1184,7 +1184,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1164},length={2})
+  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1165},length={2})
   public boolean removeStateMachine(StateMachine aStateMachine)
   {
     boolean wasRemoved = false;
@@ -1211,7 +1211,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1164},length={2})
+  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1165},length={2})
   public boolean addOrMoveStateMachineAt(StateMachine aStateMachine, int index)
   {
     boolean wasAdded = false;

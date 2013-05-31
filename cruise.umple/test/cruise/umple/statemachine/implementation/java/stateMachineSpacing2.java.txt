@@ -3,7 +3,7 @@
 
 package example;
 
-public class Course
+public class Garage
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -12,45 +12,45 @@ public class Course
   // MEMBER VARIABLES
   //------------------------
 
-  //Course State Machines
-  enum Status { Open }
-  private Status status;
+  //Garage State Machines
+  enum GarageDoor { Closed, Opening }
+  private GarageDoor GarageDoor;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Course()
+  public Garage()
   {
-    setStatus(Status.Open);
+    setGarageDoor(GarageDoor.Closed);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public String getStatusFullName()
+  public String getGarageDoorFullName()
   {
-    String answer = status.toString();
+    String answer = GarageDoor.toString();
     return answer;
   }
 
-  public Status getStatus()
+  public GarageDoor getGarageDoor()
   {
-    return status;
+    return GarageDoor;
   }
 
-  @umplesourcefile(line={8}, file={"transitionAction.ump"}, javaline={53}, length={1})
-  public boolean register()
+  @umplesourcefile(line={7}, file={"stateMachineSpacing2.ump"}, javaline={53}, length={1})
+  public boolean pressButton()
   {
     boolean wasEventProcessed = false;
     
-    Status aStatus = status;
-    switch (aStatus)
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
     {
-      case Open:
-        System.out.println("transition");
-        setStatus(Status.Open);
+      case Closed:
+        turnLightOn();
+        setGarageDoor(GarageDoor.Opening);
         wasEventProcessed = true;
         break;
       default:
@@ -60,9 +60,9 @@ public class Course
     return wasEventProcessed;
   }
 
-  private void setStatus(Status aStatus)
+  private void setGarageDoor(GarageDoor aGarageDoor)
   {
-    status = aStatus;
+    GarageDoor = aGarageDoor;
   }
 
   public void delete()

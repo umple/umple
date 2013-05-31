@@ -81,8 +81,8 @@ public class StateMachineTest extends StateMachineTemplateTest
   
   @Test //Test the spacing problems in issues 154
   public void stateMachineSpacing() {
-	  assertUmpleTemplateFor("stateMachineSpacing1.ump",languagePath + "/stateMachineSpacing."+ languagePath +".txt","Garage");
-	  assertUmpleTemplateFor("stateMachineSpacing2.ump",languagePath + "/stateMachineSpacing."+ languagePath +".txt","Garage");
+	  assertUmpleTemplateFor("stateMachineSpacing1.ump",languagePath + "/stateMachineSpacing1."+ languagePath +".txt","Garage");
+	  assertUmpleTemplateFor("stateMachineSpacing2.ump",languagePath + "/stateMachineSpacing2."+ languagePath +".txt","Garage");
   }
   
   @Test

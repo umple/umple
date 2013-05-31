@@ -63,7 +63,7 @@ public class RulePart
     return wasSet;
   }
 
-  @umplesourcefile(line={176},file={"Parser.ump"},javaline={70},length={1})
+  @umplesourcefile(line={176},file={"Parser.ump"},javaline={71},length={1})
   public boolean addNextIdentifier(String aNextIdentifier)
   {
     boolean wasAdded = false;
@@ -73,7 +73,7 @@ public class RulePart
     return wasAdded;
   }
 
-  @umplesourcefile(line={176},file={"Parser.ump"},javaline={70},length={1})
+  @umplesourcefile(line={176},file={"Parser.ump"},javaline={71},length={1})
   public boolean removeNextIdentifier(String aNextIdentifier)
   {
     boolean wasRemoved = false;
@@ -97,7 +97,7 @@ public class RulePart
     return name;
   }
 
-  @umplesourcefile(line={177},file={"Parser.ump"},javaline={101},length={1})
+  @umplesourcefile(line={177},file={"Parser.ump"},javaline={102},length={1})
   public String getMultiplicity()
   {
     // line 177 "../../../../src/Parser.ump"

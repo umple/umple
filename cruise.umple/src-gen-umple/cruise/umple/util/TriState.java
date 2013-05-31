@@ -42,7 +42,7 @@ public class TriState
     return wasSet;
   }
 
-  @umplesourcefile(line={17},file={"Util_Code.ump"},javaline={51},length={1})
+  @umplesourcefile(line={17},file={"Util_Code.ump"},javaline={52},length={1})
   public boolean setStatus(boolean aStatus)
   {
     boolean wasSet = false;

@@ -59,6 +59,7 @@ public class LightFixture
     return wasEventProcessed;
   }
 
+  @umplesourcefile(line={8}, file={"exitAction.ump"}, javaline={70}, length={1})
   private void exitBulb()
   {
     switch(bulb)

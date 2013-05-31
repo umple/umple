@@ -60,7 +60,7 @@ public class Activity
     return wasSet;
   }
 
-  @umplesourcefile(line={75},file={"StateMachine.ump"},javaline={67},length={1})
+  @umplesourcefile(line={75},file={"StateMachine.ump"},javaline={68},length={1})
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
@@ -71,7 +71,7 @@ public class Activity
     return wasSet;
   }
 
-  @umplesourcefile(line={82},file={"StateMachine.ump"},javaline={79},length={5})
+  @umplesourcefile(line={82},file={"StateMachine.ump"},javaline={80},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
@@ -91,7 +91,7 @@ public class Activity
     return position;
   }
 
-  @umplesourcefile(line={76},file={"StateMachine.ump"},javaline={96},length={3})
+  @umplesourcefile(line={76},file={"StateMachine.ump"},javaline={97},length={3})
   public String getActivityCode()
   {
     String aActivityCode = activityCode;

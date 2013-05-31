@@ -57,6 +57,7 @@ public class LightFixture
     return bulb;
   }
 
+  @umplesourcefile(line={9}, file={"oneGuard.ump"}, javaline={69}, length={1})
   public boolean push()
   {
     boolean wasEventProcessed = false;

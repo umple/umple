@@ -13,7 +13,42 @@
   
   StringBuilder entryActions = new StringBuilder();
   StringBuilder exitActions = new StringBuilder();
-  StringBuilder traceRecords = new StringBuilder();
+  
+  StringBuilder exitLineNumbers = new StringBuilder();
+  StringBuilder exitFileNames = new StringBuilder();
+  StringBuilder exitJavaLineNumbers = new StringBuilder();
+  StringBuilder exitLengths = new StringBuilder();
+  StringBuilder entryLineNumbers = new StringBuilder();
+  StringBuilder entryFileNames = new StringBuilder();
+  List<Integer> entryJavaLineNumbers = new ArrayList<Integer>();
+  StringBuilder entryJavaLineBuilder = new StringBuilder();
+  StringBuilder entryLengths = new StringBuilder();
+  int preJavaLine = stringBuffer.toString().split("\\n").length;
+  int entryJavaLine = stringBuffer.toString().split("\\n").length+(customSetPostfixCode != null?customSetPostfixCode.split("\\n").length:0)+(customSetPrefixCode != null?customSetPrefixCode.split("\\n").length:0)+10+(parentState != null?2:0);
+  int exitJavaLine = stringBuffer.toString().split("\\n").length+(customExitPrefixCode != null?customExitPrefixCode.split("\\n").length:0)+8;
+  String umpleSourceFileFormat = "\n  @umplesourcefile(line={{0}}, file={{1}}, javaline={{2}}, length={{3}})";
+  
+  java.util.regex.Pattern umpleSourcePattern = java.util.regex.Pattern.compile(".*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}.*");
+  String fakeGen = isFake?"FAKE":getStateMachine1Code(new StringBuffer(), model,uClass,gClass,gen,isFirst,true);
+  String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customSetPrefixCode,customSetPostfixCode},
+      fakeGen).replaceAll("\\n","");
+  java.util.regex.Matcher umpleSourceMatch = umpleSourcePattern.matcher(umpleSourceFile);
+  if(umpleSourceMatch.matches()&&!"".equals(umpleSourceFile)){
+    entryLineNumbers.append(","+umpleSourceMatch.group(1));
+    entryFileNames.append(","+umpleSourceMatch.group(2));
+    entryJavaLineBuilder.append(","+umpleSourceMatch.group(3));
+    entryLengths.append(","+umpleSourceMatch.group(4));
+  }
+  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customExitPrefixCode,customExitPostfixCode},
+      fakeGen).replaceAll("\\n","");
+  if(umpleSourceMatch.matches()&&!"".equals(umpleSourceFile)){
+    exitLineNumbers.append(","+umpleSourceMatch.group(1));
+    exitFileNames.append(","+umpleSourceMatch.group(2));
+    exitJavaLineNumbers.append(","+umpleSourceMatch.group(3));
+    exitLengths.append(","+umpleSourceMatch.group(4));
+  }
   
   for(State state : sm.getStates())
   {
@@ -29,20 +64,30 @@
           if (!isFirstEntry)
           {
             entryActions.append("\n      ");
+            entryJavaLine++;
           }
           entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
-          
+          entryJavaLine++;
         }
         hasEntry = true;
         hasThisEntry = true;
         isFirstEntry = false;
-        entryActions.append(
-        traceItem!=null/*&&traceItem.getIsPost()*/?traceItem.trace(gen, state,"sm_e", uClass)+"\n":"");
+        if(traceItem!=null)
+        {
+          entryActions.append(traceItem.trace(gen, state,"sm_e", uClass)+"\n");
+          entryJavaLine++;
+        }
         Position p = action.getPosition();
         if (p != null) {
           entryActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
+          entryLineNumbers.append(","+p.getLineNumber());
+          entryFileNames.append(",\""+p.getRelativePath(sm.getUmpleClass(), "Java").replace("\\","/").replaceAll(".*/","")+"\"");
+          entryJavaLineNumbers.add(entryJavaLine);
+          entryLengths.append(","+action.getActionCode().split("\\n").length);
+          entryJavaLine++;
         }
         entryActions.append("\n        " + action.getActionCode());
+        entryJavaLine+=action.getActionCode().split("\\n").length;
       }
       else if ("exit".equals(action.getActionType()))
       {
@@ -52,55 +97,33 @@
           if (!isFirstExit)
           {
             exitActions.append("\n      ");
+            exitJavaLine++;
           }
           isFirstExit = false;
           exitActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
-          
+          exitJavaLine++;
         }
         hasExit = true;
         hasThisExit = true;
         isFirstExit = false;
-        exitActions.append(
-        traceItem!=null/*&&traceItem.getIsPost()*/?traceItem.trace(gen, state,"sm_x", uClass)+"\n":"");        
+        if(traceItem!=null)
+        {
+          exitActions.append(traceItem.trace(gen, state,"sm_x", uClass)+"\n");
+          exitJavaLine++;
+        }
         Position p = action.getPosition();
         if (p != null) {
           exitActions.append("\n        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"");
+          exitLineNumbers.append(","+p.getLineNumber());
+          exitFileNames.append(",\""+p.getRelativePath(sm.getUmpleClass(), "Java").replace("\\","/").replaceAll(".*/","")+"\"");
+          exitJavaLineNumbers.append(","+exitJavaLine);
+          exitLengths.append(","+action.getActionCode().split("\\n").length);
+          exitJavaLine++;
         }
         exitActions.append("\n        " + action.getActionCode());
+        exitJavaLine+=action.getActionCode().split("\\n").length;
       }
     }
-  
-    for( TraceDirective tc : uClass.getTraceDirectives() )
-    {
-      TraceRecord traceRecord = tc.getTraceRecord();
-      for( int i = 0 ; i < tc.numberOfStateMachineTraceItems() ; ++ i )
-      {
-        StateMachineTraceItem tracedState = tc.getStateMachineTraceItem(i);
-        StateMachine stm = tracedState.getStateMachine();
-//        if( traceRecord != null )
-//        {
-//          for( int j = 0 ; j < stm.numberOfStates() ; ++j )
-//          {
-//            State stat = stm.getState(j);
-//
-//            if( stat == state )
-//            {
-//              traceRecords.append("\n    ");
-//              traceRecords.append("if( " + gen.translate("parameterOne",stm) + ".equals(" + gen.translate("type",stm) + "." + stat.getName() + ") )");
-//              traceRecords.append("\n      ");
-//              if( model.getTraceType().equals("Console"))
-//              {
-//                traceRecords.append(StringFormatter.format("System.out.println(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
-//               }
-//               else if( model.getTraceType().equals("File"))
-//              {
-//                traceRecords.append(StringFormatter.format("fileTracer(\"action={0}-entry, {1}=\" + {2});",stat.getName(),traceRecord.getRecord(),traceRecord.getRecord()));
-//              }
-//            }
-//           }
-//        }
-      }
-    }  
     if (state.getActivity() != null)
     {
       if (!hasThisEntry)
@@ -108,27 +131,42 @@
         if (!isFirstEntry)
         {
           entryActions.append("\n      ");
+          entryJavaLine++;
         }
         entryActions.append(StringFormatter.format("case {0}:",gen.translate("stateOne",state)));
+        entryJavaLine++;
       }
       hasEntry = true;
       hasThisEntry = true;
       isFirstEntry = false;
       entryActions.append(StringFormatter.format("\n        {1} = new DoActivityThread(this,\"{0}\");",gen.translate("doActivityMethod",state),gen.translate("doActivityThread",state)));
+      entryJavaLine++;
     }
     
     if (hasThisEntry)
     {
       entryActions.append("\n        break;");
+      entryJavaLine++;
     }
     
     if (hasThisExit)
     {
       exitActions.append("\n        break;");
+      exitJavaLine++;
     }
   }
 %>
-<% if (hasExit) { %>
+<% if (hasExit) {
+  if(exitLineNumbers.toString().length()>0){
+  %><%= 
+  StringFormatter.format(
+  umpleSourceFileFormat,
+  exitLineNumbers.toString().substring(1),
+  exitFileNames.toString().substring(1),
+  exitJavaLineNumbers.toString().substring(1),
+  exitLengths.toString().substring(1)
+  ) %><%
+  } %>
   private void <%=gen.translate("exitMethod",sm)%>()
   {
     <% if (customExitPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPrefixCode, "    ")); } %>
@@ -138,8 +176,28 @@
     }
     <% if (customExitPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customExitPostfixCode, "    ")); } %>
   }
-
-<% } %>
+<%= (isFake?"\nFAKE":"")%><% 
+    List<Integer> tempList = new ArrayList<Integer>();
+    tempList.addAll(entryJavaLineNumbers);
+    entryJavaLineNumbers.clear();
+    for(Integer i: tempList){
+      entryJavaLineNumbers.add(i+(stringBuffer.toString().split("\\n").length-preJavaLine));
+    }
+  }
+  if(entryJavaLineBuilder.toString().length()>0){
+    for(Integer i: entryJavaLineNumbers){
+      entryJavaLineBuilder.append(","+i);
+    }
+    
+  %><%= 
+  StringFormatter.format(
+  umpleSourceFileFormat,
+    entryLineNumbers.toString().substring(1),
+    entryFileNames.toString().substring(1),
+    entryJavaLineBuilder.toString().substring(1),
+    entryLengths.toString().substring(1)
+  ) %><%
+  } %>
   private void <%=gen.translate("setMethod",sm)%>(<%= gen.translate("type",sm) %> <%= gen.translate("parameterOne",sm) %>)
   {
     <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
@@ -154,7 +212,7 @@
     switch(<%= gen.translate("stateMachineOne",sm) %>)
     {
       <%= entryActions %>
-    }<%= traceRecords %>
+    }
 <% } %>
   }
 

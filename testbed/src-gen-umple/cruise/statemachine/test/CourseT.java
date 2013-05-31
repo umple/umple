@@ -58,6 +58,7 @@ public class CourseT
     return one;
   }
 
+  @umplesourcefile(line={169}, file={"TestHarnessStateMachineJava.ump"}, javaline={69}, length={1})
   private boolean __autotransition3__()
   {
     boolean wasEventProcessed = false;
@@ -80,6 +81,7 @@ public class CourseT
     return wasEventProcessed;
   }
 
+  @umplesourcefile(line={170}, file={"TestHarnessStateMachineJava.ump"}, javaline={92}, length={1})
   private boolean __autotransition4__()
   {
     boolean wasEventProcessed = false;

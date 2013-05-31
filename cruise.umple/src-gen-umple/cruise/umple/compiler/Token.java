@@ -64,7 +64,7 @@ public class Token
     return wasSet;
   }
 
-  @umplesourcefile(line={110},file={"Parser.ump"},javaline={73},length={1})
+  @umplesourcefile(line={110},file={"Parser.ump"},javaline={74},length={1})
   /**
    * The name of the token.
    */
@@ -75,7 +75,7 @@ public class Token
     return name;
   }
 
-  @umplesourcefile(line={111},file={"Parser.ump"},javaline={83},length={1})
+  @umplesourcefile(line={111},file={"Parser.ump"},javaline={84},length={1})
   /**
    * The value of the token.
    */
@@ -197,7 +197,7 @@ public class Token
     return wasAdded;
   }
 
-  @umplesourcefile(line={113, 114},file={"Parser.ump", "Parser.ump"},javaline={206, 210},length={1, 1})
+  @umplesourcefile(line={113, 114},file={"Parser.ump", "Parser.ump"},javaline={207, 211},length={1, 1})
   public boolean setPosition(Position aNewPosition)
   {
     boolean wasSet = false;

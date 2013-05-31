@@ -205,7 +205,7 @@ public class StateMachine
     return index;
   }
 
-  @umplesourcefile(line={29},file={"StateMachine.ump"},javaline={214},length={1})
+  @umplesourcefile(line={29},file={"StateMachine.ump"},javaline={215},length={1})
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;

@@ -86,7 +86,7 @@ public class UmpleElement
     return wasRemoved;
   }
 
-  @umplesourcefile(line={100},file={"Umple.ump"},javaline={93},length={1})
+  @umplesourcefile(line={100},file={"Umple.ump"},javaline={94},length={1})
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
