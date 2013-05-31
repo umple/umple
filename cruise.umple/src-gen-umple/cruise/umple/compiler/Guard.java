@@ -54,7 +54,7 @@ public class Guard
     return wasSet;
   }
 
-  @umplesourcefile(line={188},file={"StateMachine.ump"},javaline={61},length={2})
+  @umplesourcefile(line={188},file={"StateMachine.ump"},javaline={62},length={2})
   public boolean setCondition(String aCondition)
   {
     boolean wasSet = false;
@@ -66,7 +66,7 @@ public class Guard
     return wasSet;
   }
 
-  @umplesourcefile(line={195},file={"StateMachine.ump"},javaline={74},length={5})
+  @umplesourcefile(line={195},file={"StateMachine.ump"},javaline={75},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
@@ -86,7 +86,7 @@ public class Guard
     return position;
   }
 
-  @umplesourcefile(line={189},file={"StateMachine.ump"},javaline={91},length={3})
+  @umplesourcefile(line={189},file={"StateMachine.ump"},javaline={92},length={3})
   public String getCondition()
   {
     String aCondition = condition;

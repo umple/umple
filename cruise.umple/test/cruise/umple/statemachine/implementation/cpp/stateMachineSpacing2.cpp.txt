@@ -1,0 +1,83 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Garage.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Garage::Garage()
+  {
+    setGarageDoor(Closed);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Garage::Garage(const Garage & garage)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Garage Garage::operator=(const Garage & garage)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string Garage::getGarageDoorFullName()
+  {
+    string answer = getGarageDoorStringName(GarageDoor);
+    return answer;
+  }
+  
+  Garage::GarageDoor Garage::getGarageDoor()
+  {
+    return GarageDoor;
+  }
+
+  string Garage::getGarageDoorStringName (GarageDoor GarageDoor)
+  {
+    switch (GarageDoor)  {
+      case 0 : {return "Closed"; break;}
+      case 1 : {return "Opening"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool Garage::pressButton()
+  {
+    bool wasEventProcessed = false;
+
+    switch (GarageDoor)
+    {
+      case Closed:
+        turnLightOn();
+        setGarageDoor(Opening);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void Garage::setGarageDoor(GarageDoor aGarageDoor)
+  {
+    GarageDoor = aGarageDoor;
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Garage::~Garage()
+  {}

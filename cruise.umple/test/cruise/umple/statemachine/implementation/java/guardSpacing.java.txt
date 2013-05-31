@@ -62,6 +62,7 @@ public class Garage
     return GarageDoor;
   }
 
+  @umplesourcefile(line={7}, file={"guardSpacing.ump"}, javaline={74}, length={1})
   public boolean pressButton()
   {
     boolean wasEventProcessed = false;

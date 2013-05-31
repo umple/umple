@@ -1904,6 +1904,7 @@ class UmpleInternalParser
 
     if (derivedValue != null)
     {
+      attribute.setPosition(attributeToken.getPosition());
       attribute.setIsDerived(true);
       attribute.setCodeblock(languageSpecificCode);
     }

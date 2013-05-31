@@ -476,6 +476,9 @@ class Attribute
 
   // The comments associated with the attribute (such as the Javadoc above it).
   1 -> * Comment;
+  
+  // In case this attribute needs to have error handling preformed
+  1 -> 0..1 Position;
 }
 
 /*

@@ -57,6 +57,7 @@ public class LightFixture
     return bulb;
   }
 
+  @umplesourcefile(line={9,10}, file={"multipleGuardsSameEvent.ump","multipleGuardsSameEvent.ump"}, javaline={69,75}, length={1,1})
   public boolean push()
   {
     boolean wasEventProcessed = false;

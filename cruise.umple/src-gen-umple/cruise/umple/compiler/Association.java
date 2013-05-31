@@ -10,10 +10,10 @@ import java.util.*;
  * where instances of one class reference the other, and (if bidirectional) instance
  * of the other class reference the first cass.
  * The number of references is governed by the Multiplicity at each AssociationEnd
- * @umplesource Umple.ump 488
+ * @umplesource Umple.ump 491
  * @umplesource Umple_Code.ump 1110
  */
-// line 488 "../../../../src/Umple.ump"
+// line 491 "../../../../src/Umple.ump"
 // line 1110 "../../../../src/Umple_Code.ump"
 public class Association
 {
@@ -53,7 +53,7 @@ public class Association
     {
       throw new RuntimeException("Unable to create Association, must have 2 ends");
     }
-    // line 500 "../../../../src/Umple.ump"
+    // line 503 "../../../../src/Umple.ump"
     this.setLeftAndRight();
   }
 
@@ -107,13 +107,13 @@ public class Association
     return wasSet;
   }
 
-  @umplesourcefile(line={499},file={"Umple.ump"},javaline={116},length={1})
+  @umplesourcefile(line={502},file={"Umple.ump"},javaline={117},length={1})
   /**
    * The name of the association.
    */
   public String getName()
   {
-    // line 499 "../../../../src/Umple.ump"
+    // line 502 "../../../../src/Umple.ump"
     if (name == null || "".equals(name)) { return this.deriveName(); }
     return name;
   }

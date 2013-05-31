@@ -33,6 +33,7 @@ public class Attribute extends UmpleVariable
 
   //Attribute Associations
   private List<Comment> comments;
+  private Position position;
   private UmpleClass umpleClass;
   private List<TraceRecord> traceRecords;
 
@@ -194,6 +195,11 @@ public class Attribute extends UmpleVariable
     return index;
   }
 
+  public Position getPosition()
+  {
+    return position;
+  }
+
   public UmpleClass getUmpleClass()
   {
     return umpleClass;
@@ -284,6 +290,14 @@ public class Attribute extends UmpleVariable
       wasAdded = addCommentAt(aComment, index);
     }
     return wasAdded;
+  }
+
+  public boolean setPosition(Position aNewPosition)
+  {
+    boolean wasSet = false;
+    position = aNewPosition;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean setUmpleClass(UmpleClass aUmpleClass)
@@ -390,6 +404,7 @@ public class Attribute extends UmpleVariable
   public void delete()
   {
     comments.clear();
+    position = null;
     UmpleClass placeholderUmpleClass = umpleClass;
     this.umpleClass = null;
     placeholderUmpleClass.removeAttribute(this);
@@ -413,6 +428,7 @@ public class Attribute extends UmpleVariable
             "isDerived" + ":" + getIsDerived()+ "," +
             "isLazy" + ":" + getIsLazy()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "umpleClass" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "codeblock" + "=" + (getUmpleClass() != null ? !getUmpleClass().equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }  
@@ -420,20 +436,20 @@ public class Attribute extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 1079 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={424},length={4})
+  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={440},length={4})
   public boolean isConstant()
   {
     return "const".equals(getModifier());
   }  
 
-  @umplesourcefile(line={1084},file={"Umple_Code.ump"},javaline={430},length={4})
+  @umplesourcefile(line={1084},file={"Umple_Code.ump"},javaline={446},length={4})
   public boolean isPrimitive()
   {
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
 
-  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={437},length={7})
+  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={453},length={7})
   public boolean isImmutable()
   {
     boolean varIsImmutable = super.isImmutable();
@@ -442,12 +458,12 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
   
-  @umplesourcefile(line={1098},file={"Umple_Code.ump"},javaline={446},length={4})
+  @umplesourcefile(line={1098},file={"Umple_Code.ump"},javaline={462},length={4})
   public String getValue()
   {
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
-  @umplesourcefile(line={1102},file={"Umple_Code.ump"},javaline={451},length={4})
+  @umplesourcefile(line={1102},file={"Umple_Code.ump"},javaline={467},length={4})
   public void setValue(String lang, String code)
   {
     codeblock.setCode(lang,code);

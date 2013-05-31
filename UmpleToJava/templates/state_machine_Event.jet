@@ -1,14 +1,22 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
 <%
+  int javaLine = stringBuffer.toString().split("\\n").length+7;
+
   StringBuffer allCases = new StringBuffer();
   StringBuffer allDeclarations = new StringBuffer();
-
+  
+  StringBuilder actionLineNumbers = new StringBuilder();
+  StringBuilder actionFileNames = new StringBuilder();
+  StringBuilder actionJavaLineNumbers = new StringBuilder();
+  StringBuilder actionLengths = new StringBuilder();
+  String umpleSourceFileFormat = "\n  @umplesourcefile(line={{0}}, file={{1}}, javaline={{2}}, length={{3}})";
+  
   for(StateMachine sm : uClass.getStateMachines(e))
   {
     allDeclarations.append(StringFormatter.format("\n    {0} {1} = {2};",gen.translate("type",sm),gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
     allCases.append(StringFormatter.format("\n    switch ({0})\n",gen.translate("parameterOne",sm)));
     allCases.append(StringFormatter.format("    {\n"));
-
+    javaLine+=3;
     for(State state : sm.getStates())
     {
   	  TraceItem traceItem = state.getTraced("transition",uClass);
@@ -20,6 +28,7 @@
       }
 
       allCases.append(StringFormatter.format("      case {0}:\n",gen.translate("stateOne",state)));
+      javaLine++;
 
       boolean needsBreak = true;
       for (Transition t : allT)
@@ -31,21 +40,34 @@
         
         if (t.getGuard() != null)
         {
+          actionLineNumbers.append(","+t.getGuard().getPosition().getLineNumber());
+          actionFileNames.append("," + "\""+t.getGuard().getPosition().getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"","")+"\"");
+          actionJavaLineNumbers.append("," + (javaLine-1));
+          actionLengths.append("," + t.getGuard().getCondition().split("\\n").length);
           allCases.append(StringFormatter.format("        if ({0})\n",t.getGuard().getCondition()));
           allCases.append(StringFormatter.format("        {\n"));
+          javaLine+=1+t.getGuard().getCondition().split("\\n").length;
         }
         if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
         {
           allCases.append(StringFormatter.format("{0}{1}();\n",tabSpace,gen.translate("exitMethod",exitSm)));
+          javaLine++;
         }
         if (t.getAction() != null)
         {
           Action a1 = t.getAction();
           Position p = a1.getPosition();
-        if (p != null) {
-          allCases.append("        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"\n");
-        }
+          if (p != null) {
+            
+            actionLineNumbers.append(","+p.getLineNumber());
+            actionFileNames.append("," + "\""+p.getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"","")+"\"");
+            actionJavaLineNumbers.append("," + javaLine);
+            actionLengths.append("," + a1.getActionCode().split("\\n").length);
+            allCases.append("        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"\n");
+            javaLine++;
+          }
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
+          javaLine+=a1.getActionCode().split("\\n").length;
         }
         allCases.append(traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
         allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
@@ -53,10 +75,13 @@
         
         allCases.append(StringFormatter.format("{0}wasEventProcessed = true;\n",tabSpace));
         allCases.append(StringFormatter.format("{0}break;\n",tabSpace));
-
+        
+        javaLine+=traceItem!=null?4:3;
+        
         if (t.getGuard() != null)
         {
           allCases.append(StringFormatter.format("        }\n"));
+          javaLine++;
         }
         else
         {
@@ -69,36 +94,26 @@
       if (needsBreak)
       {
         allCases.append(StringFormatter.format("        break;\n"));
+        javaLine++;
       }
     } 
     allCases.append(StringFormatter.format("      default:\n"));
     allCases.append(StringFormatter.format("        // Other states do respond to this event\n"));
     allCases.append(StringFormatter.format("    }\n"));
-    /*
-    if(traceItem!=null)
-    {
-      //allCases.append("\n  "+traceItem.trace(gen, e, "  {0}Tracer.handle({1});","post"));
-    }*/
+    javaLine+=3;
   }
 
-  //for( TraceDirective tc : uClass.getTraceDirectives() )
-  //{
-  //  for( StateMachineTraceItem tracedStm : tc .getStateMachineTraceItems() )
-  //  {
-  //      if( tracedStm.getTransition() != null || tracedStm.getTraceStateMachineFlag() )
- //      {
-//        if( tc.getTraceRecord() != null )
-//          allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0}+\",{1}=\"+{2});",tracedStm.getStateMachine().getName(),tc.getTraceRecord().getAttribute(0).getName(),tc.getTraceRecord().getAttribute(0).getName()));
-//        else 
-//          allCases.append(StringFormatter.format("\n    System.err.println(\"state@post=\"+{0});",tracedStm.getStateMachine().getName()));
-//      }
-//    
-//    }
-  //}
   
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();
-%>
+  String umpleSourceFile = actionLineNumbers.toString().length()>0?StringFormatter.format(
+  umpleSourceFileFormat,
+    actionLineNumbers.toString().substring(1),
+    actionFileNames.toString().substring(1),
+    actionJavaLineNumbers.toString().substring(1),
+    actionLengths.toString().substring(1)):"";
+  
+%><%= umpleSourceFile %>
   <%= scope %> boolean <%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
   {
     boolean wasEventProcessed = false;

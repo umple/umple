@@ -32,7 +32,7 @@ public class WidgetD
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={32, 33},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={39, 43},length={1, 1})
+  @umplesourcefile(line={32, 33},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={40, 44},length={1, 1})
   public boolean setId(String aId)
   {
     boolean wasSet = false;
@@ -59,7 +59,7 @@ public class WidgetD
     return wasRemoved;
   }
 
-  @umplesourcefile(line={34, 35},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={64, 67},length={1, 1})
+  @umplesourcefile(line={34, 35},file={"TestHarnessPatterns.ump", "TestHarnessPatterns.ump"},javaline={65, 68},length={1, 1})
   public String getId()
   {
     // line 34 "../../../../src/TestHarnessPatterns.ump"

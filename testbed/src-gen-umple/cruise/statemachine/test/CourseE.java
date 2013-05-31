@@ -258,6 +258,7 @@ public class CourseE
     return wasEventProcessed;
   }
 
+  @umplesourcefile(line={51,58,64}, file={"TestHarnessStateMachineJava.ump","TestHarnessStateMachineJava.ump","TestHarnessStateMachineJava.ump"}, javaline={268,273,279}, length={1,1,1})
   private void exitStatus()
   {
     switch(status)
@@ -301,6 +302,7 @@ public class CourseE
     }
   }
 
+  @umplesourcefile(line={70,76}, file={"TestHarnessStateMachineJava.ump","TestHarnessStateMachineJava.ump"}, javaline={312,317}, length={1,1})
   private void exitStatusOn()
   {
     switch(statusOn)

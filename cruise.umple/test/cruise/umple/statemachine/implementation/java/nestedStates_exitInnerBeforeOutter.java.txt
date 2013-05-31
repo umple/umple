@@ -135,6 +135,7 @@ public class LightFixture
     return wasEventProcessed;
   }
 
+  @umplesourcefile(line={10}, file={"nestedStates_exitInnerBeforeOutter.ump"}, javaline={147}, length={1})
   private void exitBulb()
   {
     switch(bulb)

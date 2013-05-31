@@ -109,6 +109,7 @@ public class CourseR
     return wasEventProcessed;
   }
 
+  @umplesourcefile(line={135,140}, file={"TestHarnessStateMachineJava.ump","TestHarnessStateMachineJava.ump"}, javaline={119,124}, length={1,1})
   private void exitOne()
   {
     switch(one)

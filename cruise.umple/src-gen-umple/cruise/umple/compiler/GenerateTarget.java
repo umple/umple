@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * Represents the generation target, such as what the generated output language will be.
- * @umplesource Umple.ump 653
+ * @umplesource Umple.ump 656
  */
-// line 653 "../../../../src/Umple.ump"
+// line 656 "../../../../src/Umple.ump"
 public class GenerateTarget
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -86,10 +86,10 @@ public class GenerateTarget
     return language;
   }
 
-  @umplesourcefile(line={663},file={"Umple.ump"},javaline={92},length={1})
+  @umplesourcefile(line={666},file={"Umple.ump"},javaline={93},length={1})
   public String getPath()
   {
-    // line 663 "../../../../src/Umple.ump"
+    // line 666 "../../../../src/Umple.ump"
     if(path == null) path = "";
     return path;
   }

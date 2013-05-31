@@ -40,7 +40,7 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   <%getMemberCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getAttributeCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
-  getStateMachine1Code(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getStateMachine1Code(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getAssociationCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getEqualsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getStateMachine2Code(stringBuffer, model,uClass,gClass,gen,isFirst);
@@ -82,14 +82,15 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   <%@ include file="attribute_IsBoolean_All.jet" %>
   <%return stringBuffer.toString();
     } 
-    private String getStateMachine1Code(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
-  {%>
+    private String getStateMachine1Code(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = stringBuffer.toString().split("\\n").length;%>
   <%@ include file="state_machine_Get_All.jet" %>
   <%@ include file="state_machine_Events_All.jet" %>
   <%@ include file="state_machine_Set_All.jet" %><%
-  return stringBuffer.toString();
-    } 
-    private String getAssociationCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+    return stringBuffer.toString();
+  } 
+  private String getAssociationCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
     Integer baseJavaLine = stringBuffer.toString().split("\\n").length+3;%>
   <%@ include file="association_Get_All.jet" %>
@@ -278,17 +279,26 @@ private String getUmpleSourceFile(Integer baseJavaLine, String[] codes, String f
     {
       if(code!=null)
       {
-        java.util.regex.Matcher matcher = lineNumberPattern.matcher(code.split("\\n")[0]);
-        if(matcher.matches())
+        String[] codeLines = code.split("\\n");
+        java.util.regex.Matcher matcher = lineNumberPattern.matcher(codeLines[0]);
+        int offset = 0;
+        while(!matcher.matches()&&offset+1<codeLines.length)
+        {
+          offset++;
+          matcher = lineNumberPattern.matcher(codeLines[offset]);
+        }
+        String verification = codeLines[offset>0?offset-1:0];
+        Integer length = codeLines.length-1;
+        if(offset+1<codeLines.length)
         {
           Integer javaline = baseJavaLine+1;
           for(String line:fakeCode.split("\\n"))
           {
-            if(line.matches(".*line "+matcher.group(1)+" "+matcher.group(2)))
+            if(line.matches(".*\\Q"+verification+"\\E"))
             {
-              codeLength += comma+(code.split("\\n").length-1);
-              codeLine += comma+(Integer.parseInt(matcher.group(1)));
-              codeJavaLine += comma + javaline;
+              codeLength += comma+length;
+              codeLine += comma+matcher.group(1);
+              codeJavaLine += comma + (javaline + 1);
               codeFile += comma + "\"" +matcher.group(2).replaceAll("\\\\","/").replaceAll("(.*)/","").replace("\"","") +"\"";
               comma = ", ";
             }

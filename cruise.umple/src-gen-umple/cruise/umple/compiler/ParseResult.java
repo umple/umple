@@ -135,7 +135,7 @@ public class ParseResult
     return wasSet;
   }
 
-  @umplesourcefile(line={1628, 1634},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={149, 155},length={3, 16})
+  @umplesourcefile(line={1628, 1634},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public static int minimumNumberOfErrorMessages()
   {
     return 0;
@@ -170,7 +170,7 @@ public class ParseResult
     return wasAdded;
   }
 
-  @umplesourcefile(line={1628, 1634},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={149, 155},length={3, 16})
+  @umplesourcefile(line={1628, 1634},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean removeErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasRemoved = false;
@@ -196,7 +196,7 @@ public class ParseResult
     return wasAdded;
   }
 
-  @umplesourcefile(line={1628, 1634},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={149, 155},length={3, 16})
+  @umplesourcefile(line={1628, 1634},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean addOrMoveErrorMessageAt(ErrorMessage aErrorMessage, int index)
   {
     boolean wasAdded = false;

@@ -36,7 +36,8 @@
       customGetManyPrefixCode,customGetManyPostfixCode,
       customNumberOfPrefixCode,customNumberOfPostfixCode,
       customHasManyPrefixCode,customHasManyPostfixCode,
-      customIndexOfPrefixCode,customIndexOfPostfixCode},
+      customIndexOfPrefixCode,customIndexOfPostfixCode, 
+      av.getIsDerived()?"return "+gen.translate("parameterValue",av)+";\n// line "+av.getPosition().getLineNumber()+" "+av.getPosition().getRelativePath(av.getUmpleClass(),"Java")+"\n"+gen.translate("parameterValue",av):null},
       isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
     %><%= umpleSourceFile %><%
     if (av.getIsList())

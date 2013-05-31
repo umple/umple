@@ -57,6 +57,7 @@ public class LightFixture
     return bulb;
   }
 
+  @umplesourcefile(line={6,12,16}, file={"eventWithArguments.ump","eventWithArguments.ump","eventWithArguments.ump"}, javaline={70,76,82}, length={1,1,1})
   public boolean turnDimmer(Integer lightval)
   {
     boolean wasEventProcessed = false;
@@ -112,6 +113,7 @@ public class LightFixture
     return wasEventProcessed;
   }
 
+  @umplesourcefile(line={10}, file={"eventWithArguments.ump"}, javaline={128}, length={1})
   public boolean entry()
   {
     boolean wasEventProcessed = false;
