@@ -7,16 +7,9 @@ noreferences
 An association class defines an object-oriented pattern to manage * to * (many to many) associations when data needs to be stored about each link of that association.
 </p>
 
-<p>An association class is a class and can have all the items found in a class. However it
-always has two one-to-many associations to classes that otherwise would have had a many-to-many relationship.</p>
+<p>An association class is a class and can have most of the items found in an ordinary class. However it
+always has two or more 1..many associations to other classes. These are syntactually shown as just a multiplicity (usually *, but 1..* and similar cases are allowed) followed by the name of the participating class (and an optional role name). </p>
 
-<p>Association classes in Umple are under development still. Some changes will
-be forthcoming. At the current time, all attributes but one must have = followed by
-a value to initialize them. Also Association classes are supposed to end up being like
-two 1-* associations; currently in Umple they appear like two 0..1-* associations.</p>
-
-<p>
-Please note that an association class must define both star "*" ends; otherwise use a simple class instead.
 </p>
 
 @@syntax
@@ -105,5 +98,61 @@ class Ticket
 class Seminar
 {
   position 40 233 120 77;
+}
+@@endexample
+
+@@example
+// The following shows a 'quaternary' association, where the association
+// class represents data in an association that links four classes.
+class SportsPlayer {
+  name;
+}
+
+class Season {
+  year;
+}
+
+// e.g. goalie, forward etc.
+class PlayingPosition {
+  description;
+}
+
+class Team {
+  name;
+}
+
+// This gathers the number of points a player gained on a particular team
+// in a particular position while playing in a particular position
+// To get the total points in any one category, you would have to add the points several instances
+associationClass PlayerInPosition {
+  Integer points;
+  * SportsPlayer player;
+  * Season;
+  * Team;
+  * PlayingPosition position;
+}//$?[End_of_model]$?
+
+class PlayerInPosition
+{
+  position 135 161 109 58;
+  position.association PlayerInPosition__Season 72,0 37,61;
+  position.association PlayerInPosition__SportsPlayer:player 30,0 63,61;
+  position.association PlayerInPosition__PlayingPosition 118,40 0,37;
+  position.association PlayerInPosition__Team 109,0 0,26;
+}
+
+class Season
+{
+  position 221 50 109 58;
+}
+
+class PlayingPosition
+{
+  position 335 158 120 58;
+}
+
+class Team
+{
+  position 397 70 109 58;
 }
 @@endexample
