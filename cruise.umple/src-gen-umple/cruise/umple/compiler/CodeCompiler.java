@@ -113,7 +113,7 @@ public class CodeCompiler
     // We have a line that needs translating
     String javaFileParts[] =
       lineParts[0].split("\\"+System.getProperty("file.separator"),-1);
-    String javaFile = javaFileParts[javaFileParts.length-1];
+    String javaFile = lineParts[0];//javaFileParts[javaFileParts.length-1];
     
     String declaringClass = javaFile.substring(0,javaFile.length()-5);
     for(int i=javaFileParts.length-2; i>=0 ; i--) {
@@ -159,7 +159,7 @@ public class CodeCompiler
     }
   }
   
-  @umplesourcefile(line={137},file={"Compiler.ump"},javaline={163},length={18})
+  @umplesourcefile(line={137},file={"Compiler.ump"},javaline={163},length={23})
   public static List<UmpleClass> getMainClasses(UmpleModel model)
   {
     List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();
@@ -168,6 +168,11 @@ public class CodeCompiler
       for(String line:c.getExtraCode().split("\\n"))
       {
         if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
+        {
+          mainClasses.add(c);
+          break;
+        }
+        else if(line.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String[ |\\t]+[a-z|A-Z|0-9|_]+[ |\\t]*\\[[ |\\t]*\\][ |\\t]*[)](.*)"))
         {
           mainClasses.add(c);
           break;
