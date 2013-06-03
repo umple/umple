@@ -1029,82 +1029,89 @@ class ExceptionDumper {
       String javaFileName = javaStack.getFileName();
       String umpleFileName="Did not find line = information in Java code";
       int javaLineNumber = javaStack.getLineNumber();;
-      int umpleLineNumber=1000000; // Dummy so errors can be noticed
+      int umpleLineNumber=javaStack.getLineNumber(); // Dummy so errors can be noticed
       String fullClassPath = javaStack.getClassName();
       
       // TODO -- need to test on Windows
-      
-      // Walk up the class name packages to find the Java file
-      String fileToScan=generatedSourcePath;
-      String dirs[] = fullClassPath.split("\\.",-1);
-      int walks = 0; // Depth of tree we will walk
-      for (int d=0; d<dirs.length; d++) {
-        String trialFile = fileToScan+System.getProperty("file.separator")+dirs[d];
-        File f = new File(trialFile);
-        if(!f.isDirectory()) {
-          break; // We have gone too far
-        }
-        fileToScan = trialFile;
-        walks++;
-      }
-      
-      // At this point fileToScan is either invalid or contains the directory of the
-      // file we need 
-      fileToScan=fileToScan+System.getProperty("file.separator")+javaFileName;
-      
-      // System.err.println("!!"+fileToScan); //debug
-
       // We have hopefully found the file, now open it
       Scanner sc;
       try {
-        sc = new Scanner(new BufferedReader(new FileReader(fileToScan)));
+        sc = new Scanner(new BufferedReader(new FileReader(javaFileName)));
       }
       catch (FileNotFoundException fne) {
         return null;
       }
-
-      String foundLine;
-      Pattern linePattern = Pattern.compile(".*line ([0-9]+) (.*)");
-      MatchResult result;
       
-      for (int lineNum=1; sc.hasNextLine(); lineNum++) {
-        foundLine = sc.nextLine();
-        
-        // if foundLine is a line directive reset the line directive counter
-        Matcher m = linePattern.matcher(foundLine);
-        if(m.matches()) {
-          umpleFileName = m.group(2);
-          umpleLineNumber = Integer.parseInt(m.group(1))-1;
+      int lineNumber = 1;
+      Pattern umpleSourceFileFormat = Pattern.compile(".*@umplesourcefile[(].*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}[)].*");
+      String umpleSourceFiles = "";
+      String umpleSourceLines = "";
+      String umpleSourceJavaLines = "";
+      String umpleSourceLengths = "";
+      
+      boolean isInMain = false;
+      boolean firstBraceFound = false;
+      int braces = 0;
+      
+      while(lineNumber<=javaLineNumber)
+      {
+    	String line = sc.nextLine();
+    	Matcher umpleSourceFileMatcher = umpleSourceFileFormat.matcher(line);
+    	if(umpleSourceFileMatcher.matches())
+    	{
+    	  umpleSourceLines = umpleSourceFileMatcher.group(1);
+          umpleSourceFiles = umpleSourceFileMatcher.group(2);
+    	  umpleSourceJavaLines = umpleSourceFileMatcher.group(3);
+    	  umpleSourceLengths = umpleSourceFileMatcher.group(4);
+    	}
+    	else if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
+        {
+          isInMain=true;
         }
-        else {
-          if(foundLine.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String\\[\\](.*)"))
-          {
-            umpleLineNumber-=1;
-          }
-          else
-          {
-            if(!foundLine.matches(".*(@umplesourcefile).*"))
-            {
-              umpleLineNumber++;
-            }
-          }  
+        else if(line.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String[ |\\t]+[a-z|A-Z|0-9|_]+[ |\\t]*\\[[ |\\t]*\\][ |\\t]*[)](.*)"))
+        {
+          isInMain=true;        
         }
-
-        if(lineNum == javaLineNumber) {
-          break;         
-        }
+    	if(isInMain)
+    	{
+    	  braces += (line.length()-line.replace("{", "").length()) - (line.length()-line.replace("}", "").length());
+    	  if(!firstBraceFound && (line.length()-line.replace("{", "").length())>0)
+    	  {
+    	    firstBraceFound = true;
+    	  }
+    	  if(braces<=0 && firstBraceFound)
+    	  {
+    	    firstBraceFound=false;
+    		isInMain=false;
+    		braces=0;
+    	  }    	  
+    	}
+    	lineNumber++;
       }
       
-      // If umpleFileName has leading "../" remove as many of them as there were 
-      // levels that we walked up
-      String prefix = ".."+System.getProperty("file.separator");
-      for(int w=0; w<walks; w++) {
-        if(umpleFileName.startsWith(prefix)) {
-          umpleFileName = umpleFileName.substring(3,umpleFileName.length());
+      String[] umpleSourceJavaLinesSplit = umpleSourceJavaLines.split(",");
+      String[] umpleSourceLengthsSplit = umpleSourceLengths.split(",");
+      Integer javaLine;
+      Integer length;
+      
+      for(int i = 0; i < umpleSourceJavaLinesSplit.length; i++)
+      {
+        if(umpleSourceJavaLines.equals(""))
+        {
+          break;
         }
+    	javaLine = Integer.parseInt(umpleSourceJavaLinesSplit[i]);
+    	length = Integer.parseInt(umpleSourceLengthsSplit[i]);
+    	
+    	if(javaLineNumber-javaLine<length)
+    	{
+    	  umpleFileName = umpleSourceFiles.split(",")[i].replace(" ","");
+    	  umpleLineNumber = Integer.parseInt(umpleSourceLines.split(",")[i])+javaLineNumber-javaLine-(isInMain?2:0);
+          break;
+    	}
       }
             
-      return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName, umpleLineNumber);
-     
+      return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName.replace("\\","/").replaceAll(".*/", "").replace("\"",""), umpleLineNumber);
+      
     }  
 }
