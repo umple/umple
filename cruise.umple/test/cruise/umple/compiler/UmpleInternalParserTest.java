@@ -151,6 +151,9 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("007_isAMultipleInterfacesAndClassesV2.ump", expectedResult);
     fileToOutputs.put("007_isAGrouped.ump", "[classDefinition][name:Student][extendsName:Person][classDefinition][name:Student][classDefinition][name:Person]");
     fileToOutputs.put("007_singleton.ump", "[classDefinition][name:Airline][singleton:singleton]");
+    //This line of code describes the content of 007_isANonExistingSuperClass.ump (a test file for issue 268)
+    //Author : Opeyemi Adesina
+    fileToOutputs.put("007_isANonExistingSuperClass.ump","[classDefinition][name:Lecturer][extendsName:Person]");
     fileToOutputs.put("008_isABlahAttribute.ump", "[classDefinition][name:Student][attribute][type:Boolean][name:isActNow]");
     fileToOutputs.put("008_simpleAttribute.ump", "[classDefinition][name:Student][attribute][name:number]");
     fileToOutputs.put("008_listAttribute.ump", "[classDefinition][name:Token][attribute][list:[]][name:blah][attribute][type:String][list:[]][name:name][attribute][type:Position][list:[]][name:start][attribute][type:Integer][list:[]][name:number][classDefinition][name:Position][attribute][type:Integer][name:lineNumber][attribute][type:Integer][name:offset]");

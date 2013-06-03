@@ -763,6 +763,14 @@ public class UmpleParserTest
     Assert.assertEquals(true,aClass.getIsSingleton());
   }
 
+  //Test for issue 268 (Extends class not exist)
+  //Author : Opeyemi Adesina
+  @Test 
+  public void is_A_NonExistingExtendsClass(){
+	
+	assertHasWarningsParse("007_isANonExistingSuperClass.ump", 33);
+  }
+
   @Test
   public void singletonAttributeNotLazy()
   {

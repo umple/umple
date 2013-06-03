@@ -288,6 +288,9 @@ class UmpleInternalParser
       checkExtendsForCycles();
       checkSortedAssociations();
       checkClassInterfaceAssocations();
+      //This is a call to the method that checks the existence of a parent class being subclassed/inherited
+      //Author : Opeyemi Adesina
+      checkExtendsClass();
     }
   }
 
@@ -382,6 +385,21 @@ class UmpleInternalParser
     }
   }
 
+  //This method checks the existence of an extend class of umple class in an umple model
+  //Author : Opeyemi Adesina
+  private void checkExtendsClass(){
+
+	for( UmpleClass child : model.getUmpleClasses() ){
+		if(child.getExtendsToken() != null)
+			if( child.getExtendsClass() != null )
+				continue;
+			else{
+				Token t = child.getExtendsToken();
+				getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),"extend",
+					child.getName()));			
+			}
+	}
+  }
 
   /*
    * Analyzes all associations that are part of the given token indicated to be related to an association.
