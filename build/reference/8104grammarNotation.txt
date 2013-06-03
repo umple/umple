@@ -7,18 +7,27 @@ p {margin-bottom:1em;}
 pre.x {color:red;}
 </style>
 <p>
-The notation we present for the Umple grammar is derived directly
-from our parser.  The benefit is that we ensure our documentation
-is always up to date; but at a cost of using a slightly non-standard
-EBNF syntax.
+In Umple we use our own extended EBNF syntax for the grammar, with our own parsing tool. The reason for this is that we wanted several advanced features in the grammar and parser.
 </p>
+
 <p>
-We have strived to keep our notation in line with the EBNF format.
+Samples of syntax in this user manual are generated directly from the input grammar files
+used to parse Umple code.
+</p>
+
+<p>
 Our syntax offers a very simple mechanism to define a new language,
 as well as extend an existing one.  We will be using examples to 
 help explain our syntax.
 </p>
-<p>Let's start with a simple assignment rule:</p>
+
+
+
+
+&nbsp;<br/>
+<h2>Example of a simple rule</h2>
+
+<p>Let's start with a simple assignment rule (not part of Umple, just an example):</p>
 <pre class="x">assignment : [name] = [value] ;</pre>
 
 <p>
@@ -29,28 +38,27 @@ finally a semi-colon symbol (";").
 
 <p>
 A <b>non-terminal</b> by default as shown above is a sequence of <b>characters</b> that is a <b>non-whitespace</b> that is 
-delimited by the next <b>symbol</b> (based on your grammar). In our case above, the non-terminal "name"
+delimited by the next <b>symbol</b> (based on the specified grammar). In the above case, the non-terminal "name"
 will be defined by the characters leading up to either a space, newline,
 or an equals ("=").
-</p>
-
-<p>
-The syntax allows for rapid Domain-Specific-language (DSL) creation, as you need not worry about 
-complex (and repetitive, and error prone) regular expressions for defining common structures such as
-string sequences, decimal numbers, alphanumerics, etc. 
 </p>
 
 <p>
 Here are a few examples that satisfy the assignment rule above:
 </p>
 
+
 <ul>
-<li>key = "one";</li>
-<li>wasSet=true;</li>
-<li>numberOfItems =7;</li>
+<li><font color="green">key = "one";</font></li>
+<li><font color="green">wasSet=true;</font></li>
+<li><font color="green">numberOfItems =7;</font></li>
 </ul>
 
-<p>Let us now consider nesting sub-rules within a rule.</p>
+
+&nbsp;<br/>
+<h2>Rules that refer to other rules</h2>
+
+<p>Let us now consider nesting sub-rules within a rule. Sub-rules are words between [[ and ]]. Again, the following is illustrative, and is not Umple itself</p>
 
 <pre class="x">
 directive- : [[facadeStatement]] | [[useStatement]]<br />
@@ -61,53 +69,91 @@ useStatement : use [=type:file|url] [location] ;<br />
 <p>
 Above, we have three rules, "directive", "facadeStatement", and "useStatement".  A "directive"
 is either a "facadeStatement" or a "useStatement" (the "or" expression is defined by the vertical bar "|").
-To nest a rule within another rule, we use double square brackets ("[[" and "]]"). 
+As indicated earlier, to refer to a rule within another rule, we use double square brackets ("[[" and "]]"). 
 </p>
 
 <p>
-By default, rule names are added to the tokenization string.  But, some rules act more like placeholders to help modularize
+By default, rule names are added to the tokenization string (the result of parsing the input, shown in blue below).  But, some rules act more like placeholders to help modularize
 the grammar (and to promote reuse).  To exclude a rule name (and just the name, the rule itself will still be evaluated 
 and tokenized as required), simply add a minus ("-") at the end of its name.
 </p>
 
 <p>
-Above, we see that the rule names "directive", and "facadeStatement" are not added to the tokenization string.
+Above, we see that the rule names "directive", and "facadeStatement" are not added to the tokenization string because of the trailing minus signs..
 </p>
 
 <p>
-For example, the text "facade;" is tokenized as follows:<br />
+For example, the text
+<font color="green">
+"facade;"
+</font>
+ is tokenized as follows:<br />
+<font color="blue">
 [facade:facade]
+</font>
 </p>
 
 <p>
 Without the ability to exclude rule names, that same text would be tokenized with the following additional (and unnecessary)
 text:<br/>
+<font color="blue">
 [directive][facadeStatement][facade:facade]
+</font>
 </p>
 
-<p>Symbols (i.e.terminals), such as "=" and ";" are used in the analysis phase of the parsing (to decide which parsing rule to invoke), but they are not added to the resulting tokenziation string for later processing.  If we want to tokenize symbols, we
-can create a constant using the [=name] notation.  
+
+&nbsp;<br/>
+<h2>Terminal symbols and constants </h2>
+
+<p>Symbols (i.e.terminals), such as "=" and ";" are used in the analysis phase of the parsing (to decide which parsing rule to invoke), but they are not added to the resulting tokenziation string for later processing.
 </p>
 
 <p>
-Above, we see that a "facadeStatement" is represented
-by the sequence of characters "facade" (i.e. a constant).  To support lists of potential matches we use a 
-similar notation [=name:list|separated|by|bars].  Above, we see that the "type" non-terminal can be 
+If we want to tokenize symbols, we can create a constant using the notation
+</p>
+
+<pre class="x">
+[=name]  
+</pre>
+
+
+<p>
+In the earlier example we see that a "facadeStatement" is represented
+by the sequence of characters "facade" (i.e. a constant).
+</p>
+
+<p>
+To support <i>lists</i> of potential matches we use a 
+similar notation
+</p>
+
+<pre class="x">
+[=name:list|separated|by|bars].
+</pre>
+
+<p>
+In the earlier example, we see that the "type" non-terminal can be 
 the constant string sequence "file" or "url".
 </p> 
 
 <p>
-Here are a few examples that satisfy the assignment rule above:
+Hence, here are a few examples that satisfy the earlier example:
 </p>
 
 <ul>
-<li>facade;</li>
-<li>use file Parser.ump;</li>
-<li>use url http://cruise.site.uottawa.ca/Parser.ump;</li>
+<li><font color="green">facade;</font></li>
+<li><font color="green">use file Parser.ump;</font></li>
+<li><font color="green">use url http://cruise.site.uottawa.ca/Parser.ump;</font></li>
 </ul>
 
+
+
+
+&nbsp;<br>
+<h2>Comments and arbitrary input</h2>
+
 <p>
-Our grammar syntax supports a simple mechanism for non-terminals that can include whitespace (e.g. comments).
+The grammar syntax supports a simple mechanism for non-terminals that can include whitespace (e.g. comments).
 Let us consider the rules to define inline and multi-line comments.
 </p>
 
@@ -127,12 +173,37 @@ Here are a few examples that satisfy the assignment rule above:
 </p>
 
 <ul>
-<li>// remove all references to "x" once complete</li>
-<li>/* This class will help calculate<br/> your overdue library fees */</li>
+<li><font color="green">// remove all references to "x" once complete</font></li>
+<li><font color="green">/* This class will help calculate<br/> your overdue library fees */</font></li>
 </ul>
 
+&nbsp;<br/>
+<h2>Special matching cases</h2>
+
 <p>
-The grammar langauge provides additional internal features well suited for the creation of programming
-languages / extenstions. The above examples should be sufficient to allow you to review and
-understand the Umple language syntax.
+By default, <font color="red">[name]</font> matches identifiers that can include underscore and certain other symbols. To match alphanumeric identifiers only, then use
+</p>
+
+<pre class="x">
+[^name]
+</pre>
+
+To match based on a regular expression (such as a sequence of one or more digits in this case):
+
+<pre class="x">
+[!bound:\d+]
+</pre>
+
+<p>
+To match one or more identifiers, but with some being optionally omitted use this notation:
+</p>
+
+<pre class="x">
+[attr_qualifier,attr_type,attr_name>2,1,0]
+</pre>
+
+<p>
+This states that there will be one, two, or three identifiers.  The
+priority of inputs is
+attr_name,attr_type and attr_qualifier.
 </p>
