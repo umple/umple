@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * A block of code in an arbitrary language to be injected into generated code
- * @umplesource Umple.ump 269
+ * @umplesource Umple.ump 270
  * @umplesource Umple_Code.ump 483
  */
-// line 269 "../../../../src/Umple.ump"
+// line 270 "../../../../src/Umple.ump"
 // line 483 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
@@ -40,15 +40,15 @@ public class CodeBlock
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 273 ../../../../src/Umple.ump
+  // line 274 ../../../../src/Umple.ump
   public static String languageUsed = "";
   Hashtable<String,String> code;
-  @umplesourcefile(line={275},file={"Umple.ump"},javaline={47},length={4})
+  @umplesourcefile(line={276},file={"Umple.ump"},javaline={47},length={4})
  public CodeBlock(String add)  {
 this();
     code.put("",add);
   }
-  @umplesourcefile(line={279},file={"Umple.ump"},javaline={52},length={4})
+  @umplesourcefile(line={280},file={"Umple.ump"},javaline={52},length={4})
  public CodeBlock(String lang,String add)  {
 this();
     code.put(lang,add);

@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * Represents a parameter in a method and its various forms.
- * @umplesource Umple.ump 176
+ * @umplesource Umple.ump 177
  */
-// line 176 "../../../../src/Umple.ump"
+// line 177 "../../../../src/Umple.ump"
 public class MethodParameter extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

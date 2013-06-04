@@ -12,11 +12,11 @@ import java.util.*;
  * patterns, such as 'singleton', meaning that there can only be one instance,
  * and abstract, meaning it can't have any instances.
  * In Umple_Code.ump: Methods for computing complex properties
- * @umplesource Umple.ump 342
+ * @umplesource Umple.ump 343
  * @umplesource Trace.ump 159
  * @umplesource Umple_Code.ump 656
  */
-// line 342 "../../../../src/Umple.ump"
+// line 343 "../../../../src/Umple.ump"
 // line 159 "../../../../src/Trace.ump"
 // line 656 "../../../../src/Umple_Code.ump"
 public class UmpleClass extends UmpleClassifier
@@ -722,11 +722,11 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={395},file={"Umple.ump"},javaline={732},length={1})
+  @umplesourcefile(line={396},file={"Umple.ump"},javaline={732},length={1})
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    // line 395 "../../../../src/Umple.ump"
+    // line 396 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -879,7 +879,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={393},file={"Umple.ump"},javaline={893},length={2})
+  @umplesourcefile(line={394},file={"Umple.ump"},javaline={893},length={2})
   public static int minimumNumberOfAssociationVariables()
   {
     return 0;
@@ -888,7 +888,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
-    // line 393 "../../../../src/Umple.ump"
+    // line 394 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -909,7 +909,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={393},file={"Umple.ump"},javaline={893},length={2})
+  @umplesourcefile(line={394},file={"Umple.ump"},javaline={893},length={2})
   public boolean removeAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasRemoved = false;
@@ -936,7 +936,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={393},file={"Umple.ump"},javaline={893},length={2})
+  @umplesourcefile(line={394},file={"Umple.ump"},javaline={893},length={2})
   public boolean addOrMoveAssociationVariableAt(AssociationVariable aAssociationVariable, int index)
   {
     boolean wasAdded = false;
@@ -1154,7 +1154,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1165},length={2})
+  @umplesourcefile(line={398},file={"Umple.ump"},javaline={1165},length={2})
   public static int minimumNumberOfStateMachines()
   {
     return 0;
@@ -1163,7 +1163,7 @@ public class UmpleClass extends UmpleClassifier
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
-    // line 397 "../../../../src/Umple.ump"
+    // line 398 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();
@@ -1184,7 +1184,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1165},length={2})
+  @umplesourcefile(line={398},file={"Umple.ump"},javaline={1165},length={2})
   public boolean removeStateMachine(StateMachine aStateMachine)
   {
     boolean wasRemoved = false;
@@ -1211,7 +1211,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={397},file={"Umple.ump"},javaline={1165},length={2})
+  @umplesourcefile(line={398},file={"Umple.ump"},javaline={1165},length={2})
   public boolean addOrMoveStateMachineAt(StateMachine aStateMachine, int index)
   {
     boolean wasAdded = false;

@@ -7,7 +7,7 @@ package cruise.umple.compiler.exceptions;
  * @umplesource UmpleExceptions.ump 25
  */
 // line 25 "../../../../../src/UmpleExceptions.ump"
-public class SemanticException
+public class SemanticException extends RuntimeException
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -20,8 +20,10 @@ public class SemanticException
   // CONSTRUCTOR
   //------------------------
 
-  public SemanticException()
-  {}
+  public SemanticException(String aStr, Exception aParent)
+  {
+    super(aStr, aParent);
+  }
 
   //------------------------
   // INTERFACE

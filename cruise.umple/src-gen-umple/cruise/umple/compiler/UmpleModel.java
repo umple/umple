@@ -17,16 +17,16 @@ import java.util.*;
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
  * 
  * In Umple_Code.ump: Methods for manipulating the Model
- * @umplesource Umple.ump 24
+ * @umplesource Umple.ump 25
  * @umplesource Trace.ump 17
  * @umplesource UmpleVersion.ump 13
  * @umplesource Umple_Code.ump 18
  */
-// line 24 "../../../../src/Umple.ump"
+// line 25 "../../../../src/Umple.ump"
 // line 17 "../../../../src/Trace.ump"
 // line 13 "../../../../src/UmpleVersion.ump"
 // line 18 "../../../../src/Umple_Code.ump"
-public class UmpleModel
+public class UmpleModel implements Runnable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
