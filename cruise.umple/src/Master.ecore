@@ -309,7 +309,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="umletGenerators" lowerBound="0" upperBound="-1" eType="#//UmletGenerator" eOpposite="#//UmletGenerator/associationElements"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umletDiagrams" lowerBound="0" upperBound="-1" eType="#//UmletDiagram" eOpposite="#//UmletDiagram/umletElements"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UmpleModel">
+  <eClassifiers xsi:type="ecore:EClass" name="Runnable" interface="true" abstract="true">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleModel" eSuperTypes="#//Runnable">
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleFile" eType="#//UmpleFile"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="defaultPackage" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generates" eType="#//GenerateTarget" upperBound="-1"/>
@@ -663,7 +665,7 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Exception" instanceClassName="java.lang.Exception"/>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleCompilerException" eSuperTypes="#//RuntimeException">
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SemanticException">
+  <eClassifiers xsi:type="ecore:EClass" name="SemanticException" eSuperTypes="#//RuntimeException">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleFile">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" eType="#//File"/>

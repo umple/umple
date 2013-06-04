@@ -24,7 +24,7 @@ class UmpleCompilerException
 
 class SemanticException
 {
-  isA RuntimeExceptin;
+  isA RuntimeException;
   
   static final long serialVersionUID = 2;
 }

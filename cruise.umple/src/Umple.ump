@@ -10,6 +10,7 @@ The main Umple metamodel.
  */
 
 namespace cruise.umple.compiler;
+external interface Runnable {}
 
 /*
  * Class UmpleModel is the central class describing the system being compiled.

@@ -10,10 +10,10 @@ import java.util.*;
  * it can be derived, and have various other modifiers such as being
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
- * @umplesource Umple.ump 457
+ * @umplesource Umple.ump 458
  * @umplesource Umple_Code.ump 1077
  */
-// line 457 "../../../../src/Umple.ump"
+// line 458 "../../../../src/Umple.ump"
 // line 1077 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
@@ -56,7 +56,7 @@ public class Attribute extends UmpleVariable
       throw new RuntimeException("Unable to create attribute due to umpleClass");
     }
     traceRecords = new ArrayList<TraceRecord>();
-    // line 471 "../../../../src/Umple.ump"
+    // line 472 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 
