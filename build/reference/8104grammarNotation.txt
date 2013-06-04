@@ -185,7 +185,7 @@ By default, <font color="red">[name]</font> matches identifiers that can include
 </p>
 
 <pre class="x">
-[^name]
+[~name]
 </pre>
 
 To match based on a regular expression (such as a sequence of one or more digits in this case):
