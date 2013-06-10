@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.*;
@@ -182,6 +182,7 @@ public class StateMachineTraceItem implements TraceItem
     return constraint;
   }
 
+  @umplesourcefile(line={127},file={"Trace.ump"},javaline={189},length={2})
   public String getTracerType()
   {
     return getTraceDirective().getTracerType();
@@ -397,11 +398,11 @@ public class StateMachineTraceItem implements TraceItem
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 314 ../../../../src/Trace_Code.ump
-  @umplesourcefile(line={314},file={"Trace_Code.ump"},javaline={401},length={3})
+  @umplesourcefile(line={314},file={"Trace_Code.ump"},javaline={402},length={3})
   public Boolean getIsPre(){
   	return conditionallyWhere;
   }
-  @umplesourcefile(line={317},file={"Trace_Code.ump"},javaline={405},length={3})
+  @umplesourcefile(line={317},file={"Trace_Code.ump"},javaline={406},length={3})
   public Boolean getIsPost(){
   	return !conditionallyWhere;
   }
@@ -413,7 +414,7 @@ public class StateMachineTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace 
    */
-  @umplesourcefile(line={328},file={"Trace_Code.ump"},javaline={417},length={60})
+  @umplesourcefile(line={328},file={"Trace_Code.ump"},javaline={418},length={60})
   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
   {
   	String name = "";
@@ -477,7 +478,7 @@ public class StateMachineTraceItem implements TraceItem
   /* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line={391},file={"Trace_Code.ump"},javaline={481},length={4})
+  @umplesourcefile(line={391},file={"Trace_Code.ump"},javaline={482},length={4})
   public String getExtremities(CodeTranslator gen, String name)
   {
     return gen.translate("Closed",constraint);

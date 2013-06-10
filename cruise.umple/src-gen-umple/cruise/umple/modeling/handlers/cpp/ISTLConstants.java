@@ -79,9 +79,6 @@ public interface ISTLConstants {
 	public final static String GET_SET_ELEMENT_RETURN= "cpp.get.set.element.return"; //$NON-NLS-1$
 	
 	public final static String COPY_SET_ELEMENT_TEMPLATE_IMPLEMENTATION= "cpp.copy.set.element.template.implementation"; //$NON-NLS-1$
-	public final static String COPY_VECTOR_ELEMENT_TEMPLATE_IMPLEMENTATION= "cpp.copy.vector.element.template.implementation"; //$NON-NLS-1$
-	
-	public final static String STL_DEFINED_TEMPLATES_IMPLEMENTATION= "cpp.stl.defined.templates.implementation"; //$NON-NLS-1$
 	
 	public final static String COPY_VECTOR_ELEMENT= "cpp.copy.vector.element"; //$NON-NLS-1$
 	public final static String COPY_SET_ELEMENT= "cpp.copy.set.element"; //$NON-NLS-1$

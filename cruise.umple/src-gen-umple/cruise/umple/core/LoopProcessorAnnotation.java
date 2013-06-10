@@ -47,10 +47,8 @@ public @interface LoopProcessorAnnotation {
 	public interface LoopAspectConstants{
 		public static final int BEFORE= -1;
 		public static final int DEFAULT= 0;
-		public static final int PRE= 10;
-		public static final int POST= 20;
-		public static final int AFTER= 30;
-		public static final int FINALIZE= 40;
-		public static final int TERMINATE= 50;
+		public static final int PRE= 1;
+		public static final int AFTER= 2;
+		public static final int FINALIZE= 3;
 	}
 }

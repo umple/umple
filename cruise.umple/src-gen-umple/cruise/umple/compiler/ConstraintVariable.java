@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
 
@@ -101,11 +101,13 @@ public class ConstraintVariable
     return constrainedVariable;
   }
 
+  @umplesourcefile(line={224, 224},file={"Umple.ump", "Umple.ump"},javaline={103, 108},length={2, 2})
   public String getValue()
   {
     return constrainedVariable;
   }
 
+  @umplesourcefile(line={226},file={"Umple.ump"},javaline={113},length={2})
   public boolean getIsAttribute()
   {
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
@@ -126,6 +128,7 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
+  @umplesourcefile(line={230},file={"Umple.ump"},javaline={135},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
@@ -175,7 +178,7 @@ public class ConstraintVariable
   public void delete()
   {}
 
-  @umplesourcefile(line={234},file={"Umple.ump"},javaline={179},length={11})
+  @umplesourcefile(line={234},file={"Umple.ump"},javaline={182},length={11})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;

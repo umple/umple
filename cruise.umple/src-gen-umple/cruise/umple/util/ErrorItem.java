@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.util;
 import java.util.*;
@@ -107,7 +107,8 @@ public class ErrorItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-   public ErrorItem(String aId,String [] aParts)  {
+    @umplesourcefile(line={0},file={""},javaline={111},length={7})
+ public ErrorItem(String aId,String [] aParts)  {
 this(aId);
     for (String part : aParts)
     {

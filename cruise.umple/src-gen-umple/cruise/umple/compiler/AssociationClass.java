@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
 import java.util.*;
@@ -169,7 +169,8 @@ public class AssociationClass extends UmpleClass
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-   public AssociationClass(String name)  {
+    @umplesourcefile(line={0},file={""},javaline={173},length={3})
+ public AssociationClass(String name)  {
 super(name);
   }
 

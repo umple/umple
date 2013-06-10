@@ -24,8 +24,6 @@ public interface ICppStatemachinesDefinitions {
 	public final static String STATEMACHINE_FULL_PATH_IMPLEMENTATION= "statemachine.full.path.implementation"; //$NON-NLS-1$
 	public final static String STATEMACHINE_FULL_PATH_SEGMENT= "statemachine.full.path.segment"; //$NON-NLS-1$
 	
-	public final static String DO_ACTIVITY_BODY_WRAP= "statemachine.do.activity.body.wrap"; //$NON-NLS-1$
-	
 	public final static String THREAD= "Thread"; //$NON-NLS-1$
 	public final static String THREAD_INSTANCE= "statemachine.thread.instance"; //$NON-NLS-1$
 	public final static String VOID_POINTER_NAME= "statemachine.void.pointer.name"; //$NON-NLS-1$
@@ -102,7 +100,6 @@ public interface ICppStatemachinesDefinitions {
 	public final static String STATE_ENTRY_CODE_BODY= "stateEntry"; //$NON-NLS-1$
 	public final static String STATE_EXIT_CODE_BODY= "stateExit"; //$NON-NLS-1$
 	public final static String STATE_DO_ACTIVITY_CODE_BODY= "stateDoActivity"; //$NON-NLS-1$
-	public final static String STATE_DO_ACTIVITY_ON_COMPLETION_EVENT= "stateDoActivityOnCompletion"; //$NON-NLS-1$
 	
 	public final static String STATEMCHAINE_THREAD_USE_DECLARATION= "cpp.statemachine.thread.use.declaration"; //$NON-NLS-1$
 	public final static String STATEMCHAINE_THREAD_CONSTRUCTOR_DECLARATION= "cpp.statemachine.thread.constructor.declaration"; //$NON-NLS-1$
