@@ -36,7 +36,7 @@ public class UmpleCppTemplateHelper extends CppGenerationTemplate{
   protected final String TEXT_3 = "Please provide a valid ";
   protected final String TEXT_4 = "Singleton<";
   protected final String TEXT_5 = ">";
-  protected final String TEXT_6 = NL + NL + "//Helper template to be extended by the classes that need to be used as singelton design pattern" + NL + "template<class T> class Singleton {" + NL + "\tSingleton(const Singleton&);" + NL + "\tSingleton& operator=(const Singleton&);" + NL + "\tprotected:" + NL + "\t\tSingleton() {}" + NL + "\t\tvirtual ~Singleton() {}" + NL + "\tpublic:" + NL + "\t\tstatic T& instance() {" + NL + "\t\t\tstatic MutexLock lock;" + NL + "\t\t\tsynchronized(&lock) {" + NL + "\t\t\t\tstatic T theInstance;" + NL + "\t\t\t\treturn theInstance;" + NL + "\t\t\t}" + NL + "  \t\t}" + NL + "};";
+  protected final String TEXT_6 = NL + NL + "//Helper template to be extended by the classes that need to be used as singelton design pattern" + NL + "template<class T> class Singleton {" + NL + "\tSingleton(const Singleton&);" + NL + "\tSingleton& operator=(const Singleton&);" + NL + "\tprotected:" + NL + "\t\tSingleton() {}" + NL + "\t\tvirtual ~Singleton() {}" + NL + "\tpublic:" + NL + "\t\tstatic T& instance() {" + NL + "\t\t\tstatic MutexLock lock;" + NL + "\t\t\tsynchronized(lock) {" + NL + "\t\t\t\tstatic T theInstance;" + NL + "\t\t\t\treturn theInstance;" + NL + "\t\t\t}" + NL + "  \t\t}" + NL + "};";
   protected final String TEXT_7 = "next";
   protected final String TEXT_8 = "\tbool wasReset = false;" + NL + "\tthis->";
   protected final String TEXT_9 = "= ";

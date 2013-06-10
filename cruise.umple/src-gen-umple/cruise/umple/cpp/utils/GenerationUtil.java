@@ -18,6 +18,7 @@
 *******************************************************************************/
 package cruise.umple.cpp.utils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -106,34 +107,52 @@ public class GenerationUtil {
 	}
 
 	public static String listToGeneratedString(int seaprate, int indent, List<?> values) {
-		String results= CommonConstants.BLANK;
-		if(values!= null){
-			Iterator<?> iterator = values.iterator();
-			while(iterator.hasNext()){
-				Object next = iterator.next();
-				results= results+ next;
-				
-				if(iterator.hasNext()){
-					results= results+ CommonConstants.NEW_LINE;
-					
-					for(int index=0; index< seaprate; index++){
-						results= results+ CommonConstants.NEW_LINE;
-					}
-				}
-			}
+		if(values== null){
+			return CommonConstants.BLANK;
+		}
+		
+		int size=0;
+		
+		List<Object> appends= new ArrayList<Object>();
+		Iterator<?> iterator = values.iterator();
+		
+		int newLineSize = CommonConstants.NEW_LINE.length();
+		while(iterator.hasNext()){
+			Object next = iterator.next();
+			appends.add(next);
+			size+= next.toString().length();
 			
-			if(!results.isEmpty()){
-				if(values.size()>1&& seaprate>0){
-					results= CommonConstants.NEW_LINE+ results;
-				}
-				
-				if(indent>0){
-					results= StringUtil.indent(results, indent);
+			if(iterator.hasNext()){
+				appends.add(CommonConstants.NEW_LINE);
+				size+= newLineSize;
+				for(int index=0; index< seaprate; index++){
+					appends.add(CommonConstants.NEW_LINE);
+					size+= newLineSize;
 				}
 			}
 		}
 		
-		return results;
+		if(appends.isEmpty()){
+			return CommonConstants.BLANK;
+		}
+		
+		StringBuffer results= new StringBuffer(size);
+		if(values.size()>1&& seaprate>0){
+			results= new StringBuffer(size+1);
+			results.append(CommonConstants.BLANK);
+		}else{
+			results= new StringBuffer(size);
+		}
+		
+		for(Object object: appends){
+			results.append(object);
+		}
+		
+		if(indent>0){
+			results= new StringBuffer(StringUtil.indent(results.toString(), indent));
+		}
+		
+		return results.toString();
 	}
 	
 	public static String asStringParameters(List<?> list) {

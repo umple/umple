@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.StringFormatter;
@@ -134,18 +134,17 @@ public class ErrorMessage
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-    @umplesourcefile(line={0},file={""},javaline={138},length={4})
- public ErrorMessage(int errorCode,Position pos,String... parameters)  {
+   public ErrorMessage(int errorCode,Position pos,String... parameters)  {
 this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
 // line 1700 ../../../../src/Parser_Code.ump
-  @umplesourcefile(line={1700},file={"Parser_Code.ump"},javaline={144},length={4})
+  @umplesourcefile(line={1700},file={"Parser_Code.ump"},javaline={143},length={4})
   public String getFormattedMessage()
   {
     return errorType.format(this.parameters);
   }
-  @umplesourcefile(line={1704},file={"Parser_Code.ump"},javaline={149},length={7})
+  @umplesourcefile(line={1704},file={"Parser_Code.ump"},javaline={148},length={7})
   public String toString()
   {
     String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";

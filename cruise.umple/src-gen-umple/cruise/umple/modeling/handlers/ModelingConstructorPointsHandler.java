@@ -41,6 +41,7 @@ public class ModelingConstructorPointsHandler{
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
+			@GenerationBaseElement Object element,
 			@GenerationArgument boolean isAttribute,
 			@GenerationArgument String typeParameterName) {
 		SimpleEntry<String, String> simpleEntry = new SimpleEntry<String, String>(normalizedType, typeParameterName);
@@ -48,7 +49,10 @@ public class ModelingConstructorPointsHandler{
 		SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>> entry= new SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>(
 				simpleEntryKey, simpleEntry);
 		
-		generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, entry, parent, Boolean.valueOf(isAttribute));
+		SimpleEntry<Object, SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>> result= 
+				new SimpleEntry<Object, SimpleEntry<SimpleEntry<String,String>,SimpleEntry<String,String>>>(element, entry);
+		
+		generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, result, parent, Boolean.valueOf(isAttribute));
 	}
 	
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT)
@@ -67,6 +71,7 @@ public class ModelingConstructorPointsHandler{
 			@GenerationArgument Object constructorArguments) {
 		
 		String contents= constructorBody!= null? constructorBody: CommonConstants.BLANK;
+		String id= bodyFiltered|| constructId.isEmpty()|| parameterFiltered? IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN: constructId;
 		
 		if(isSettable){
 			//If no body is allowed, then just nullify the attribute, otherwise, we can get compiler error for undefined values. Then, the actual value will be set by
@@ -75,8 +80,6 @@ public class ModelingConstructorPointsHandler{
 			//Languages such as C++ require initliazing objects, and if we did not do that in the constructor, this will yield to an error. We have this flag, when we rely
 			//on the constructorBody segment to do that, but it will be the responsability for the caller to make sure that their body will initilaize the variable
 			if(!ignoreInitilization|| constructorBody== null|| constructorBody.isEmpty()){
-				String id= bodyFiltered|| constructId.isEmpty()|| parameterFiltered? IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN: constructId;
-				
 				if(!(filterDefaultAssign&& IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN.equals(id))){
 					contents= contents+ generationValueGetter.generate(id, element, typeParameterName, constructorArguments);
 					
@@ -97,7 +100,13 @@ public class ModelingConstructorPointsHandler{
 		}
 		
 		if(!contents.isEmpty()){
-			generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, contents, parent, Boolean.valueOf(isAttribute));
+			if(IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN.equals(id)){
+				generationValueGetter.addUniqueValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PRE_IMPLEMENTATION, 
+						new SimpleEntry<Object, String>(element, contents), parent);
+			}else{
+				generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, 
+						new SimpleEntry<Object, String>(element, contents), parent, Boolean.valueOf(isAttribute));
+			}
 		}
 	}
 	
