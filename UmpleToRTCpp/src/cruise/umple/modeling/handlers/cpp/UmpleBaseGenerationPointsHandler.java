@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.AbstractMap.SimpleEntry;
 
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
@@ -206,9 +207,11 @@ public class UmpleBaseGenerationPointsHandler{
 	}
 	
 	@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}, ifConditionIds= {IModelingElementDefinitions.IS_SINGLETON})
-	public static void classAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter){
+	public static void classAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationLoopElement Object modelPackage){
 		String singelton = generationValueGetter.use(ICppUmpleDefinitions.SINGLETON_TEMPLATE_DEFINITION);
 		generationValueGetter.addUniqueValue(ICppDefinitions.PREDEFINED_FUNCTIONS, singelton);
+		generationValueGetter.addUniqueValue(ICppDefinitions.TEMPLATES_DEFINITIONS, generationValueGetter.use(ICppDefinitions.THREAD_IMPLEMENTATION), modelPackage);
 	}
 	
 	@GenerationPoint(generationPoint = IModelingConstants.CLASS_DECLARATIONS_EXTENSION, ifConditionIds= {IModelingElementDefinitions.IS_SINGLETON})
@@ -326,7 +329,8 @@ public class UmpleBaseGenerationPointsHandler{
 			//Assign constructor value
 			String thisCanSet = generationValueGetter.use(ICppDefinitions.ATTRIBUTE_USE, CPPCommonConstants.THIS, canSet, Boolean.TRUE);
 			String constructorCall= generationValueGetter.use(ICppDefinitions.ASSIGN_STATEMENET, thisCanSet, Boolean.TRUE.toString());
-			generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, constructorCall, parent, Boolean.TRUE);
+			generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, 
+					new SimpleEntry<Object, String>(element, constructorCall), parent, Boolean.TRUE);
 			
 			//And, then update the setter method to have the lazy check code segment
 			return StringUtil.indent(generationValueGetter.use(ICppAssociationsDefinitionsConstants.SETTER_CAN_SET_CHECK, canSet), 1);
