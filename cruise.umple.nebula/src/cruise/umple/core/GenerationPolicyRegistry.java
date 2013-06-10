@@ -119,6 +119,10 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		return this.processDecisionPointsMethods(obj, registry, decisionPoint, arguments);
 	}
 	
+	public boolean decisionPoint(Object obj, String decisionPoint, Object... arguments){
+		return this.processDecisionPointsMethods(obj, this, decisionPoint, arguments);
+	}
+	
 	public void process(Object obj){
 		postRegister();
 		HashMap<String, Object> values = new HashMap<String, Object>();
@@ -236,6 +240,51 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			}
 		}
 		return true;
+	}
+	
+	public List<?> generationPoint(Object element, String generationPoint, Object... arguments){
+		List<Object> value = this.interceptedObjectsRetriever.getValue(generationPoint, element, arguments);
+		if(!value.isEmpty()){
+			Object object = value.get(0);
+			if(object instanceof List){
+				return (List<?>) object;
+			}
+			return new ArrayList<Object>();
+		}
+		
+		List<GenerationPointObject> list = _pointsInvocations.get(generationPoint);
+		if(list== null){
+			return new ArrayList<Object>();
+		}
+		
+		List<Object> responses= new ArrayList<Object>(list.size());
+		
+		for(GenerationPointObject generationPointObject: list){
+			try {
+				if(generationPointObject.fGenerationPoint.defaulted()){
+					continue;
+				}
+				
+				Object invoke= generationPointObject.invoke(element, this, null, null, arguments);
+				
+				if(generationPointObject.unique()&& invoke instanceof Boolean&& (((Boolean)invoke)).booleanValue()){
+					this.interceptedObjectsRetriever.setValue(generationPoint, responses, true, element, arguments);
+					return responses;
+				}
+				
+				responses.add(invoke);
+				
+				if(generationPointObject.unique()){
+					this.interceptedObjectsRetriever.setValue(generationPoint, invoke, true, element, arguments);
+					return Arrays.asList(new Object[]{invoke});
+				}
+				
+			} catch (Exception e) {
+				this.generationLogger.addError(e);
+			}
+		}
+		this.interceptedObjectsRetriever.setValue(generationPoint, responses, true, element, arguments);
+		return responses;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -465,89 +514,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		}
 		
 		for(String generationPoint: toBeSorted){
-			List<GenerationPointObject> list = _pointsInvocations.get(generationPoint);
-			final Map<String, List<String>> pathMap= new HashMap<String, List<String>>();
-			for(String group: groupDefnitions.keySet()){
-				List<String> path= new ArrayList<String>();
-				GenerationGroupDefinition generationGroupDefinition = groupDefnitions.get(group);
-				
-				String after= generationGroupDefinition.after();
-				while(!after.isEmpty()){
-					path.add(after);
-					after= groupDefnitions.get(after).after();
-				}
-				Collections.reverse(path);
-				pathMap.put(group, path);
-				
-				//orderGroups.addGroup(group, generationGroupDefinition);
-			}
-			
-			Collections.sort(list, new Comparator<GenerationPointObject>() {
-
-				@Override
-				public int compare(GenerationPointObject point1, GenerationPointObject point2) {
-					Map<String, List<String>> temp= pathMap;
-					GenerationPoint annotation1= point1.fGenerationPoint;
-					GenerationPoint annotation2 = point2.fGenerationPoint;
-					
-					String group1 = annotation1.group();
-					List<String> group1Path = temp.get(group1);
-					String group2 = annotation2.group();
-					List<String> group2Path = temp.get(group2);
-					
-					checkGroup: {
-						if(group1Path!=null&& group1Path.equals(group2Path)&& group1.equals(group2)){
-							break checkGroup; 
-						}
-						int group1Priority = GenerationPolicyRegistry.groupDefnitions.get(group1).priority();
-						int group2Priority = GenerationPolicyRegistry.groupDefnitions.get(group2).priority();
-						
-						for(String segment: group1Path){
-							int priority = GenerationPolicyRegistry.groupDefnitions.get(segment).priority();
-							if(priority<group1Priority){
-								group1Priority= priority;
-							}
-						}
-						
-						for(String segment: group2Path){
-							int priority = GenerationPolicyRegistry.groupDefnitions.get(segment).priority();
-							if(priority<group2Priority){
-								group2Priority= priority;
-							}
-						}
-						
-						int size1 = group1Path.size();
-						int size2 = group2Path.size();
-						if(group1Priority== group2Priority&& size1!= size2){
-							if(size1>size2){
-								return 1;
-							}
-							return -1;
-						}
-						
-						int comparePriorities = comparePriorities(group1Priority, group2Priority);
-						if(comparePriorities!=0){
-							return comparePriorities;
-						}
-					}
-					
-					
-					
-					int priority1 = annotation1.priority();
-					int priority2 = annotation2.priority();
-					
-					
-					return comparePriorities(priority1, priority2);
-				}
-
-				private int comparePriorities(int priority1, int priority2) {
-					if(priority1== priority2){
-						return 0;
-					}
-					
-					return priority1< priority2? 1:-1;
-				}
-			});
+			Collections.sort(_pointsInvocations.get(generationPoint), new GenerationPointObjectsComparator());
 		}
 	}
 
@@ -623,6 +590,10 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					return priority1> priority2? -1: 1;
 				}
 			});
+		}
+		
+		for(Object key: _watchingPointsInvocations.keySet()){
+			Collections.sort(_watchingPointsInvocations.get(key), new GenerationPointObjectsComparator());
 		}
 		
 		processed= true;
@@ -847,7 +818,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 
 	protected static void prepareArguments(Map<String, Object> descriptorMap,
 			Map<String, GenerationArgumentDescriptor> descriptors, List<Object> arguments, Object... args) {
-		for(Object object: args){
+		for(Object object: ArgumentsRetrieval.asListArguments(false, args)){
 			if(object instanceof GenerationArgumentDescriptor){
 				GenerationArgumentDescriptor descriptor= (GenerationArgumentDescriptor) object;
 				String id = descriptor.id();
@@ -1130,6 +1101,10 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	public void addValue(String id, Object values, Object... element){
 		this.addValue(id, values, false, element);
 	}
+	
+	public void removeValue(String id, Object values, Object... element) {
+		this.argumentRetriever.removeValue(id, values, element);
+	}
 
 	private void addValue(String id, Object values, boolean unique, Object... element) {
 		this.argumentRetriever.setValue(id, unique, values, element);
@@ -1382,5 +1357,91 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	public GenerationLogger getGenerationLogger() {
 		return this.generationLogger;
 	}
+	
+	private static class GenerationPointObjectsComparator implements Comparator<GenerationPointObject> {
+		
+		Map<String, List<String>> fPathMap= new HashMap<String, List<String>>();
+		
+		public GenerationPointObjectsComparator() {
+			for(String group: groupDefnitions.keySet()){
+				List<String> path= new ArrayList<String>();
+				GenerationGroupDefinition generationGroupDefinition = groupDefnitions.get(group);
+				
+				String after= generationGroupDefinition.after();
+				while(!after.isEmpty()){
+					path.add(after);
+					after= groupDefnitions.get(after).after();
+				}
+				Collections.reverse(path);
+				this.fPathMap.put(group, path);
+				//orderGroups.addGroup(group, generationGroupDefinition);
+			}
+		}
+
+		@Override
+		public int compare(GenerationPointObject point1, GenerationPointObject point2) {
+			Map<String, List<String>> temp= this.fPathMap;
+			GenerationPoint annotation1= point1.fGenerationPoint;
+			GenerationPoint annotation2 = point2.fGenerationPoint;
+			
+			String group1 = annotation1.group();
+			List<String> group1Path = temp.get(group1);
+			String group2 = annotation2.group();
+			List<String> group2Path = temp.get(group2);
+			
+			checkGroup: {
+				if(group1Path!=null&& group1Path.equals(group2Path)&& group1.equals(group2)){
+					break checkGroup; 
+				}
+				int group1Priority = GenerationPolicyRegistry.groupDefnitions.get(group1).priority();
+				int group2Priority = GenerationPolicyRegistry.groupDefnitions.get(group2).priority();
+				
+				for(String segment: group1Path){
+					int priority = GenerationPolicyRegistry.groupDefnitions.get(segment).priority();
+					if(priority<group1Priority){
+						group1Priority= priority;
+					}
+				}
+				
+				for(String segment: group2Path){
+					int priority = GenerationPolicyRegistry.groupDefnitions.get(segment).priority();
+					if(priority<group2Priority){
+						group2Priority= priority;
+					}
+				}
+				
+				int size1 = group1Path.size();
+				int size2 = group2Path.size();
+				if(group1Priority== group2Priority&& size1!= size2){
+					if(size1>size2){
+						return 1;
+					}
+					return -1;
+				}
+				
+				int comparePriorities = comparePriorities(group1Priority, group2Priority);
+				if(comparePriorities!=0){
+					return comparePriorities;
+				}
+			}
+			
+			
+			
+			int priority1 = annotation1.priority();
+			int priority2 = annotation2.priority();
+			
+			
+			return comparePriorities(priority1, priority2);
+		}
+
+		private int comparePriorities(int priority1, int priority2) {
+			if(priority1== priority2){
+				return 0;
+			}
+			
+			return priority1< priority2? 1:-1;
+		}
+	}
+
 	
 }

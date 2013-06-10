@@ -20,7 +20,11 @@ package cruise.umple.modeling.handlers.cpp;
 
 public interface ICppNameConstants {
 
+	public static final String INTERNAL_REFERENCE= "_intenralReferene"; //$NON-NLS-1$
+	
 	public static final String REMOVE= "remove.method.name"; //$NON-NLS-1$
+	public static final String ADD_INSTANCE= "add.instance.method.name"; //$NON-NLS-1$
+	public static final String DELEGATED_PARAMETER= "delegated.parameter.name"; //$NON-NLS-1$
 	public static final String CLEAR_VECTOR= "clear.method.name"; //$NON-NLS-1$
 	public static final String PLACE_HOLDER= "variable.place.holder"; //$NON-NLS-1$
 	public static final String NEW_INSTANCE= "variable.new.instance"; //$NON-NLS-1$

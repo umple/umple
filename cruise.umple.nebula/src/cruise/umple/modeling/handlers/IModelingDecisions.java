@@ -75,6 +75,7 @@ public interface IModelingDecisions {
 	
 	public static final String ADD_AT_FILTER_DECISION= "add.filter.decision"; //$NON-NLS-1$
 	public final static String ADD_GENERATION_POINT= "add.generation.point";  //$NON-NLS-1$
+	public final static String ADD_INSTANCE_GENERATION_POINT= "add.instance.generation.point";  //$NON-NLS-1$
 	public final static String ADD_AT_GENERATION_POINT= "add.at.generation.point";  //$NON-NLS-1$
 	public final static String ADD_OR_MOVE_GENERATION_POINT= "add.or.move.generation.point";  //$NON-NLS-1$
 	
