@@ -22,18 +22,13 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.GenerationArgumentDescriptor;
-import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
@@ -44,13 +39,11 @@ import cruise.umple.core.IGenerationPointPriorityConstants;
 import cruise.umple.core.LoopProcessorAnnotation;
 import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
-import cruise.umple.cpp.utils.CPPCommonConstants;
 import cruise.umple.cpp.utils.CPPTypesConstants;
 import cruise.umple.cpp.utils.GenerationUtil;
 import cruise.umple.cpp.utils.StringUtil;
 import cruise.umple.modeling.handlers.IModelingConstants;
 import cruise.umple.modeling.handlers.IModelingConstructorDefinitionsConstants;
-import cruise.umple.modeling.handlers.IModelingDecisions;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.IModelingPriorityHandler;
 import cruise.umple.modeling.handlers.VisibilityConstants;
@@ -67,73 +60,6 @@ public class CPPContentsPointsHandler{
 		generationValueGetter.generationPointString(element, ICppDefinitions.PRIVATE_CONTENTS);
 		generationValueGetter.generationPointString(element, ICppDefinitions.PACKAGE_CONTENTS);
 		generationValueGetter.generationPointString(element, ICppDefinitions.PROTECTED_CONTENTS);
-	}
-	
-	@LoopProcessorAnnotation(aspect= LoopAspectConstants.PRE)
-	public static void setCnstructors(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationLoopElement Object modelPackage){
-		Map<Integer, List<Object>> levelsObjectsMap= new HashMap<Integer, List<Object>>();
-		
-		List<Object> allValues = generationValueGetter.getAllValues(IModelingConstants.TYPES_TRACKER, modelPackage);
-		for(Object value: allValues){
-			int level=0;
-			Object parentClass= generationValueGetter.getObject(value, IModelingConstants.PARENT_CLASS);
-			while(parentClass!= null){
-				parentClass= generationValueGetter.getObject(parentClass, IModelingConstants.PARENT_CLASS);
-				level++;
-			}
-			Integer levelObject = Integer.valueOf(level);
-			
-			List<Object> list = levelsObjectsMap.get(levelObject);
-			if(list== null){
-				list= new ArrayList<Object>();
-				levelsObjectsMap.put(levelObject, list);
-			}
-			list.add(value);
-		}
-		
-		
-		Set<Integer> levelValues= new TreeSet<Integer>(new Comparator<Integer>(){
-			
-		    @Override
-			public int compare(Integer a, Integer b){
-		        return a.compareTo(b);
-		    }
-		});
-		levelValues.addAll(levelsObjectsMap.keySet());
-
-		for(Integer level: levelValues){
-			List<Object> objects = levelsObjectsMap.get(level);
-			for(Object object: objects){
-				List<List<?>> parameters= new ArrayList<List<?>>();
-				List<Object> defaultParametersObjects = getParametersObjects(generationValueGetter, object);
-				parameters.add(defaultParametersObjects);
-				List<Object> generationPointList = generationValueGetter.generationPointList(object, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_PROCESSOR, defaultParametersObjects);
-				if(!parameters.contains(generationPointList)){
-					parameters.add(generationPointList);
-				}
-				
-				Object parentClass = generationValueGetter.getObject(object, IModelingConstants.PARENT_CLASS);
-				List<?> objectParentParameters= generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, parentClass);
-				
-				for(List<?> objectParametersObjects: parameters){
-					if(objectParentParameters.isEmpty()){
-						generationValueGetter.addUniqueValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, 
-								new SimpleEntry<Object, Object>(objectParametersObjects, objectParentParameters), object);
-					}else{
-						for(Object obj: objectParentParameters){
-							Set<Object> parametersPaths= new LinkedHashSet<Object>();
-							if(obj instanceof SimpleEntry){
-								parametersPaths.addAll((List<?>)((SimpleEntry<?,?>)obj).getKey());
-							}
-							
-							parametersPaths.addAll(objectParametersObjects);
-							generationValueGetter.addUniqueValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, 
-									new SimpleEntry<Object, Object>(new ArrayList<Object>(parametersPaths), objectParentParameters), object);
-						}
-					}
-				}
-			}
-		}
 	}
 	
 	////////////////////////////////////////////////////////////////OPERATIONS REGISTRY////////////////////////////////////////////////////////
@@ -217,6 +143,7 @@ public class CPPContentsPointsHandler{
 	@GenerationPoint(generationPoint = ICppDefinitions.PUBLIC_CONTENTS, priority=IGenerationPointPriorityConstants.HIGHEST, 
 			group= IModelingPriorityHandler.CONSTRUCTOR_DETAILS, ifNotConditionIds= {IModelingConstructorDefinitionsConstants.CONSTRUCTOR_FILTER})
 	public static void getClassConstructorDeclaration(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object interfaceObject,
 			@GenerationBaseElement Object element){
 		
@@ -232,290 +159,55 @@ public class CPPContentsPointsHandler{
 		List<Object> parametersObjects = getParametersObjects(generationValueGetter, element);
 		List<Object> parentParameters = getParametersRecursively(generationValueGetter, generationValueGetter.getObject(element, IModelingConstants.PARENT_CLASS));
 		
+		
 		Set<Object> filtered= new LinkedHashSet<Object>(parentParameters);
 		filtered.addAll(parametersObjects);
 		
+		
 		List<Object> all= new ArrayList<Object>(filtered);
 		
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_CONTENTS, 
-				GenerationArgumentDescriptor.arg(ICppDefinitions.CONSTRUCTOR_ALL_PARAMETERS_LIST, parentParameters),
-				GenerationArgumentDescriptor.arg(ICppDefinitions.CONSTRUCTOR_PARENT_PARAMETERS_LIST, all));
-	}
-	
-	@SuppressWarnings("unchecked")
-	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_CONTENTS, priority= IGenerationPointPriorityConstants.HIGHEST)
-	public static void constrcuorHelperContents(@GenerationBaseElement Object element,
-			@GenerationLoopElement Object modelPackage,
-			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name){
+		String allParameters= generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION, all);
 		
-		List<Object> parameters = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, element);
+		String declaration = generationValueGetter.use(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_DECLARATION, name, allParameters);
 		
-		List<String> allDeclarations= new ArrayList<String>();
-		List<String> allImplementations= new ArrayList<String>();
+		String allContents = GenerationUtil.getImplementationAndIndentDetails(generationValueGetter, 
+				IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PRE_IMPLEMENTATION, 0, 0, element);
 		
-		SimpleEntry<Object, Object> params= (SimpleEntry<Object, Object>) parameters.get(0);
-		SimpleEntry<Object, Object> otherParams= (SimpleEntry<Object, Object>) parameters.get(parameters.size()-1);
-		
-		List<Object> allDefaultParameters = new ArrayList<Object>((List<Object>)params.getKey());
-		List<Object> allExtenededParameters = new ArrayList<Object>((List<Object>) otherParams.getKey());
-		
-		String parentParametersString= CommonConstants.BLANK;
-		String extendedParentParametersString= CommonConstants.BLANK;
+		String parentParametersString= GenerationUtil.asStringParameters(getParametersAsStringList(parentParameters));
 		String parentClassName= null;
 		Object parentClass = generationValueGetter.getObject(element, IModelingConstants.PARENT_CLASS);
 		if(parentClass!= null){
 			parentClassName= generationValueGetter.getString(parentClass, IModelingElementDefinitions.NAME);
-			List<Object> parentClassParameters = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, parentClass);
-			
-			SimpleEntry<?, ?> parentParams= (SimpleEntry<List<?>, ?>) parentClassParameters.get(0);
-			SimpleEntry<List<?>, ?> otherParentParams= (SimpleEntry<List<?>, ?>) parentClassParameters.get(parentClassParameters.size()-1);
-			
-			extendedParentParametersString= generationValueGetter.generationPointString(parentClass, 
-					IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION,otherParentParams.getKey(), 
-					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION_IS_CALL, Boolean.TRUE));
-			
-			parentParametersString= generationValueGetter.generationPointString(parentClass, 
-					IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION,parentParams.getKey(), 
-					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION_IS_CALL, Boolean.TRUE));
 		}
-		
-		String defaultParameters= generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION,	allDefaultParameters);
-		String expandedParameters= generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION, 
-				allExtenededParameters);
-		
-		String baseDeclaration = generationValueGetter.use(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_DECLARATION, name, defaultParameters);
-		String extenedDeclaration = generationValueGetter.use(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_DECLARATION, name, expandedParameters);
-		
-		List<Object> helperParameters= new ArrayList<Object>();
-		StringBuffer generic= new StringBuffer();
-		StringBuffer expanded= new StringBuffer();
-		StringBuffer normal= new StringBuffer();
-		
-		processConstructorContents(generationValueGetter, modelPackage, element, generic, expanded, normal,allDefaultParameters,
-				generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PRE_IMPLEMENTATION, element),
-				false, true, helperParameters);
-		
-		processConstructorContents(generationValueGetter, modelPackage, element, generic, expanded, normal,allDefaultParameters,
-				generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, element, Boolean.TRUE),
-				true, false, helperParameters);
-		
-		processConstructorContents(generationValueGetter, modelPackage, element, generic, expanded, normal,allDefaultParameters,
-				generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, element, Boolean.FALSE),
-				false, false, helperParameters);
-		
-		
-		if(expanded.length()>0&& normal.length()>0){
-			String helperMethodParameters = generationValueGetter.generationPointString(element, 
-					IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION,helperParameters);
-			
-			generationValueGetter.generationPointString(element, IModelingConstants.METHOD_REGISTER,
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_RETURN_TYPE, CPPTypesConstants.VOID),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_PARAMETERS_STRING, helperMethodParameters),
-					GenerationArgumentDescriptor.arg(IModelingConstants.CODY_BODY, StringUtil.indent(generic.toString(), 1)),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, ICppNameConstants.INTERNAL_REFERENCE),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_VISIBILITY_ARGUMENT, VisibilityConstants.PRIVATE),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID, ICppNameConstants.INTERNAL_REFERENCE),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_IDENTIFIER, ICppNameConstants.INTERNAL_REFERENCE),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_GROUP, IModelingConstants.METHOD_INCOMING_GROUP),
-					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_OBJECT, element));
-			
-			String helperMethodCallParameters = generationValueGetter.generationPointString(element, 
-					IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION,helperParameters, 
-					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_IMPLEMENTATION_IS_CALL, Boolean.TRUE));
-			
-			String internalCall = generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, ICppNameConstants.INTERNAL_REFERENCE, 
-					helperMethodCallParameters, Boolean.TRUE)+ CommonConstants.NEW_LINE;
-			
-			expanded.insert(0, internalCall);
-			normal.insert(0, internalCall);
-			
-			String constructor = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION,element, 
-					name, defaultParameters, StringUtil.indent(normal.toString(), 1), parentClassName, parentParametersString);
-			
-			String expandedConstructor = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION,element, 
-					name, expandedParameters, StringUtil.indent(expanded.toString(), 1), parentClassName, extendedParentParametersString);
-			
-			allDeclarations.add(baseDeclaration);
-			allImplementations.add(constructor);
-			
-			allDeclarations.add(extenedDeclaration);
-			allImplementations.add(expandedConstructor);
-		}else{
-			String constructor = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION,element, 
-					name, defaultParameters, StringUtil.indent(generic.toString(), 1), parentClassName, parentParametersString);
-			
-			allDeclarations.add(baseDeclaration);
-			allImplementations.add(constructor);
-			
-			if(!extendedParentParametersString.equals(parentParametersString)){
-				String expandedConstructor = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION,element, 
-						name, expandedParameters, StringUtil.indent(generic.toString(), 1), parentClassName, extendedParentParametersString);
-				
-				allDeclarations.add(extenedDeclaration);
-				allImplementations.add(expandedConstructor);
+		String attributesImplementation = GenerationUtil.getImplementationAndIndentDetails(generationValueGetter, 
+				IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, 0, 0, element, Boolean.TRUE);
+		if(!attributesImplementation.isEmpty()){
+			if(!allContents.isEmpty()){
+				allContents= allContents+ CommonConstants.NEW_LINE;
 			}
+			allContents = allContents+ attributesImplementation;
 		}
-		String declarations = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_DECLARATIONS,element, 
-				GenerationUtil.listToGeneratedString(0, 0, allDeclarations).trim(), Boolean.valueOf(allDeclarations.size()>1));
 		
-		String implementations = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATIONS,element, 
-				GenerationUtil.listToGeneratedString(0, 0, allImplementations).trim(), Boolean.valueOf(allImplementations.size()>1));
+		String associationsImplementation = GenerationUtil.getImplementationAndIndentDetails(generationValueGetter, 
+				IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, 0, 0, element, Boolean.FALSE);
+		if(!associationsImplementation.isEmpty()){
+			if(!allContents.isEmpty()){
+				allContents= allContents+ CommonConstants.NEW_LINE;
+			}
+			allContents = allContents+ associationsImplementation;
+		}
+		
+		if(!allContents.isEmpty()){
+			allContents= StringUtil.indent(allContents, 1);
+		}
+		
+		String constructor = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION,element, 
+				name, allParameters, allContents, parentClassName, parentParametersString);
 		
 		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC, 
-				declarations, implementations);
-	}
-	
-	private static void processConstructorContents(GenerationPolicyRegistry generationValueGetter, Object modelPackage, Object source,
-			StringBuffer generic, StringBuffer expanded, StringBuffer core, List<?> parameters, List<Object> entries, boolean isAttribute, boolean isPre, 
-			List<Object> helperParameters) {
-		for(Object entry: entries){
-			if(entry instanceof String){
-				if(generic.length()>0){
-					generic.append(CommonConstants.NEW_LINE);
-				}
-				generic.append(entry);
-				
-				continue;
-			}
-			
-			if(entry instanceof SimpleEntry== false){
-				continue;
-			}
-			
-			@SuppressWarnings("unchecked")
-			SimpleEntry<Object, String> current= (SimpleEntry<Object, String>) entry;
-			String currentContents = current.getValue();
-			Object key = current.getKey();
-			String negotiated= generationValueGetter.generationPointString(key, 
-					IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR, 
-					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_CONTENTS, currentContents),
-					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_SOURCE, source),
-					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_IS_ATTRIBUTE, Boolean.valueOf(isAttribute)),
-					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_PRE, Boolean.valueOf(isPre)));
-			
-			String typeName= generationValueGetter.getString(key, IModelingElementDefinitions.TYPE_NAME);
-			List<Object> allValues = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName);
-			if(!allValues.isEmpty()){
-				generationValueGetter.generationPointString(source, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
-						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, typeName));
-				
-				generationValueGetter.generationPointString(source, IModelingDecisions.DEPENDS_GENERATION_POINT, 
-						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, typeName),
-						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-			}else{
-				//TODO
-			}
-			
-			if(!negotiated.isEmpty()){
-				if(expanded.length()>0){
-					expanded.append(CommonConstants.NEW_LINE);
-				}
-				expanded.append(negotiated);
-				
-				if(core.length()>0){
-					core.append(CommonConstants.NEW_LINE);
-				}
-				core.append(currentContents);
-				
-				//C++ in some compilers (linux specifically) do not set the object values as "NULL" reference, so make sure to do that manuelly in the constructor.
-				String defaultAssign= generationValueGetter.generate(IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN, key);
-				generic.append(CommonConstants.NEW_LINE);
-				generic.append(defaultAssign);
-			}else{
-				if(generic.length()>0){
-					generic.append(CommonConstants.NEW_LINE);
-				}
-				generic.append(currentContents);
-				
-				putHelperParameter: {
-					for(Object object: parameters){
-						if(object instanceof SimpleEntry&& ((SimpleEntry<?,?>)object).getKey().equals(key)){
-							helperParameters.add(object);
-							break putHelperParameter;
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR)
-	public static String getClassComment(
-			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationArgument(id= IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_SOURCE) Object source,
-			@GenerationElementParameter(id = IModelingDecisions.ATTRIBUTE_IS_ONE) boolean isOne,
-			@GenerationElementParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE) boolean isOtherEndOne,
-			@GenerationBaseElement Object containingElement,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name){
-		if(isOne&& isOtherEndOne){
-			String typeName= generationValueGetter.getString(containingElement, IModelingElementDefinitions.TYPE_NAME);
-			List<Object> allValues = generationValueGetter.getAllValues(IModelingConstants.TYPES_TRACKER, typeName);
-			if(allValues.isEmpty()){
-				return null;
-			}
-			return ((SimpleEntry<?, String>)generationValueGetter.generationPoint(allValues.get(0), IModelingConstructorDefinitionsConstants.CONSTRUCT_OBJECT_INTERNALLY,
-					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_SOURCE, source),
-					GenerationArgumentDescriptor.arg(IModelingElementDefinitions.TYPE_NAME, typeName),
-					GenerationArgumentDescriptor.arg(IModelingElementDefinitions.NAME, name)).get(0)).getValue();
-		}
-		
-		return null;
+				declaration, constructor);
 	}
 
-	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCT_OBJECT_INTERNALLY)
-	public static SimpleEntry<List<String>, String> constructInstance(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationBaseElement Object containingElement,
-			@GenerationArgument(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
-			@GenerationArgument(id= IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_SOURCE) Object source,
-			@GenerationArgument(id = IModelingElementDefinitions.NAME) String name) {
-		
-		String sourceType= generationValueGetter.getString(source, IModelingElementDefinitions.NAME);
-		
-		Set<Object> filtered = getElementParameters(generationValueGetter, containingElement);
-
-		List<String> paramsList= new ArrayList<String>();
-		String parametersString = CommonConstants.BLANK;
-
-		Iterator<Object> iterator = filtered.iterator();
-		while (iterator.hasNext()) {
-			Object item = iterator.next();
-
-			@SuppressWarnings("unchecked")
-			SimpleEntry<Object, SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>> current = 
-				(SimpleEntry<Object, SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>>) item;
-
-			SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>> currentValue = current.getValue();
-			SimpleEntry<String, String> value = currentValue.getValue();
-			
-			String keyType = currentValue.getKey().getValue();
-			
-			generationValueGetter.generationPointString(source, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
-					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, keyType));
-			
-			generationValueGetter.generationPointString(source, IModelingDecisions.DEPENDS_GENERATION_POINT, 
-					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, keyType),
-					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-			
-			String parameter;
-			if(sourceType.equals(keyType)){
-				parameter= CPPCommonConstants.THIS;
-			}else{
-				parameter=	name.isEmpty()?value.getValue(): generationValueGetter.use(ICppNameConstants.DELEGATED_PARAMETER, value.getValue(), name);
-				paramsList.add(generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, value.getKey(), parameter));
-			}
-				
-			parametersString = parametersString + parameter;
-			if (iterator.hasNext()) {
-				parametersString = parametersString
-						+ CommonConstants.COMMA_SEPARATOR;
-			}
-		}
-		String value = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCT_CLASS, containingElement, parametersString, typeName, name);
-		return new SimpleEntry<List<String>, String>(paramsList, value);
-	}
-	
 	@GenerationPoint(generationPoint = ICppDefinitions.PUBLIC_CONTENTS, priority=IGenerationPointPriorityConstants.HIGH, 
 			group= IModelingPriorityHandler.CONSTRUCTOR_DETAILS, ifNotConditionIds= {IModelingConstructorDefinitionsConstants.COPY_CONSTRUCTOR_FILTER})
 	public static void getClassCopyConstructorDeclaration(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
@@ -586,7 +278,7 @@ public class CPPContentsPointsHandler{
 			all = values.isEmpty()? CommonConstants.BLANK: getValues(generationValueGetter, values, false);
 			
 			List<Object> properties = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_IMPLEMENTATION, element, Boolean.FALSE);
-			if(!properties.isEmpty()&& !all.isEmpty()){
+			if(!properties.isEmpty()){
 				all= all+ CommonConstants.NEW_LINE+ CommonConstants.NEW_LINE;
 			}
 			
@@ -594,7 +286,7 @@ public class CPPContentsPointsHandler{
 			while(iterator.hasNext()){
 				Object property = iterator.next();
 				all= all+ getValues(generationValueGetter, Arrays.asList(new Object[]{property}), true);
-				if(iterator.hasNext()&& !all.isEmpty()){
+				if(iterator.hasNext()){
 					all= all+ CommonConstants.NEW_LINE;
 				}
 			}
@@ -870,17 +562,6 @@ public class CPPContentsPointsHandler{
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.CONSTRUCTOR_ALL_PARAMETERS_LIST)
-	public static Set<Object> getElementParameters(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationBaseElement Object containingElement) {
-		List<Object> parametersObjects = generationValueGetter.generationPointList(containingElement, ICppDefinitions.CONSTRUCTOR_PARAMETERS_LIST);
-		List<Object> parentParameters = generationValueGetter.generationPointList(generationValueGetter.getObject(
-						containingElement, IModelingConstants.PARENT_CLASS),ICppDefinitions.CONSTRUCTOR_PARENT_PARAMETERS_LIST);
-		Set<Object> filtered = new LinkedHashSet<Object>(parentParameters);
-		filtered.addAll(parametersObjects);
-		return filtered;
-	}
-	
-	@GenerationPoint(generationPoint = ICppDefinitions.CONSTRUCTOR_PARENT_PARAMETERS_LIST)
 	public static List<Object> getParametersRecursively(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationBaseElement Object element) {
 		Object current= element;
@@ -908,7 +589,11 @@ public class CPPContentsPointsHandler{
 			@GenerationBaseElement Object element) {
 		List<Object> values = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, element, Boolean.TRUE);
 		List<Object> all = new ArrayList<Object>(values);
-		all.addAll(generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, element, Boolean.FALSE));
+		if(all.isEmpty()){
+			all= generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, element, Boolean.FALSE);
+		}else{
+			all.addAll(generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS, element, Boolean.FALSE));
+		}
 		return all;
 	}
 	
@@ -1050,14 +735,6 @@ public class CPPContentsPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_VISIBILITY_ARGUMENT, VisibilityConstants.PUBLIC));
 	}
 	
-	@GenerationPoint(generationPoint = ICppDefinitions.PUBLIC_CONTENTS, group= IModelingPriorityHandler.ADD_AT)
-	public static void addInternalConstructorDeclaraions(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationBaseElement Object element){
-		generationValueGetter.generationPointString(element, IModelingConstants.METHOD_CONTENTS_REGISTER, 
-				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID_ARGUMENT, IModelingConstructorDefinitionsConstants.CONSTRUCT_OBJECT_INTERNALLY),
-				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_VISIBILITY_ARGUMENT, VisibilityConstants.PUBLIC));
-	}
-	
 	@GenerationPoint(generationPoint = ICppDefinitions.PUBLIC_CONTENTS, group= IModelingPriorityHandler.SETTER)
 	public static void setterDeclaraions(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationBaseElement Object element){
@@ -1164,14 +841,6 @@ public class CPPContentsPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_VISIBILITY_ARGUMENT, VisibilityConstants.PRIVATE));
 	}
 	
-	@GenerationPoint(generationPoint = ICppDefinitions.PRIVATE_CONTENTS)
-	public static void internalReference(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationBaseElement Object element){
-		generationValueGetter.generationPointString(element, IModelingConstants.METHOD_CONTENTS_REGISTER, 
-				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID_ARGUMENT, ICppNameConstants.INTERNAL_REFERENCE),
-				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_VISIBILITY_ARGUMENT, VisibilityConstants.PRIVATE));
-	}
-	
 	private static String visibilityContents(final GenerationPolicyRegistry generationValueGetter, Object element,
 			String visibility, String attributesDeclarationdId, String inlineContentsId) {
 		
@@ -1216,6 +885,18 @@ public class CPPContentsPointsHandler{
 		}
 		
 		generationValueGetter.addUniqueValue(IModelingConstants.METHODS_GROUPS, group, element, visiblity);
+	}
+	
+	private static List<String> getParametersAsStringList(List<Object> items) {
+		List<String> parameterStrings= new ArrayList<String>();
+		
+		for(Object item: items){
+			@SuppressWarnings("unchecked")
+			SimpleEntry<String, SimpleEntry<String, String>> simpleEntry= (SimpleEntry<String, SimpleEntry<String, String>>) item;
+			SimpleEntry<String, String> value = simpleEntry.getValue();
+			parameterStrings.add(value.getValue());			
+		}
+		return parameterStrings;
 	}
 	
 }

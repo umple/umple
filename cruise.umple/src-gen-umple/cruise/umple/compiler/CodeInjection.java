@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.compiler.Position;
@@ -176,17 +176,18 @@ public class CodeInjection
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-   public CodeInjection(String a,String b,String c,UmpleClass d)  {
+    @umplesourcefile(line={0},file={""},javaline={180},length={4})
+ public CodeInjection(String a,String b,String c,UmpleClass d)  {
 this(a,b, d);
     setCode(c);
   }
 // line 540 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line={540},file={"Umple_Code.ump"},javaline={185},length={4})
+  @umplesourcefile(line={540},file={"Umple_Code.ump"},javaline={186},length={4})
   public void setCode(String str)
   {
     snippet.setCode(str);
   }
-  @umplesourcefile(line={544},file={"Umple_Code.ump"},javaline={190},length={35})
+  @umplesourcefile(line={544},file={"Umple_Code.ump"},javaline={191},length={35})
   public String getCode()
   {
   	if(constraint == null)
@@ -222,12 +223,12 @@ this(a,b, d);
   	  return snippet.getCode();
   	}
   }  
-  @umplesourcefile(line={579},file={"Umple_Code.ump"},javaline={226},length={4})
+  @umplesourcefile(line={579},file={"Umple_Code.ump"},javaline={227},length={4})
   public void setCode(String lang, String code)
   {
     snippet.setCode(lang, code);
   }
-  @umplesourcefile(line={583},file={"Umple_Code.ump"},javaline={231},length={4})
+  @umplesourcefile(line={583},file={"Umple_Code.ump"},javaline={232},length={4})
   public String getCode(String lang)
   {
     return snippet.getCode(lang);

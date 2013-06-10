@@ -20,12 +20,7 @@ package cruise.umple.modeling.handlers.cpp;
 
 public interface ICppTestsDefinitions {
 	
+	public final static String CONSTRUCT_CLASS= "cpp.tests.construct.class";	 //$NON-NLS-1$
 	public final static String ASSERT_GETTER= "cpp.tests.assert.getter";	 	//$NON-NLS-1$
 	public final static String METHOD_CALL= "cpp.tests.method.call";	 	//$NON-NLS-1$
-	
-	public final static String TEST_FILE_START= "cpp.tests.start";	 	//$NON-NLS-1$
-	public final static String TEST_FILE_END= "cpp.tests.end";	 	//$NON-NLS-1$
-	
-	public final static String TEST_STUBS= "TestsStubs";	 	//$NON-NLS-1$
-	
 }

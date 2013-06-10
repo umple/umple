@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
 import cruise.umple.util.*;
@@ -161,6 +161,7 @@ public class AttributeTraceItem implements TraceItem
     return constraint;
   }
 
+  @umplesourcefile(line={101},file={"Trace.ump"},javaline={168},length={2})
   public String getTracerType()
   {
     return getTraceDirective().getTracerType();
@@ -373,12 +374,12 @@ public class AttributeTraceItem implements TraceItem
     placeholderTraceDirective.removeAttributeTraceItem(this);
   }
 
-  @umplesourcefile(line={200},file={"Trace_Code.ump"},javaline={377},length={1})
+  @umplesourcefile(line={200},file={"Trace_Code.ump"},javaline={378},length={1})
   public Attribute getAttribute(int index){
     return (Attribute)getUmpleVariable(index);
   }
 
-  @umplesourcefile(line={203},file={"Trace_Code.ump"},javaline={382},length={1})
+  @umplesourcefile(line={203},file={"Trace_Code.ump"},javaline={383},length={1})
   public Boolean addAttribute(Attribute attr){
     return addUmpleVariable(attr);
   }
@@ -408,11 +409,11 @@ public class AttributeTraceItem implements TraceItem
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 206 ../../../../src/Trace_Code.ump
-  @umplesourcefile(line={206},file={"Trace_Code.ump"},javaline={412},length={3})
+  @umplesourcefile(line={206},file={"Trace_Code.ump"},javaline={413},length={3})
   public Boolean getIsPre(){
   	return conditionallyWhere;
   }
-  @umplesourcefile(line={209},file={"Trace_Code.ump"},javaline={416},length={3})
+  @umplesourcefile(line={209},file={"Trace_Code.ump"},javaline={417},length={3})
   public Boolean getIsPost(){
   	return !conditionallyWhere;
   }
@@ -425,7 +426,7 @@ public class AttributeTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace 
    */
-  @umplesourcefile(line={221},file={"Trace_Code.ump"},javaline={429},length={76})
+  @umplesourcefile(line={221},file={"Trace_Code.ump"},javaline={430},length={76})
   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass,String... args)
   {//find the object being traced
     for(UmpleVariable attr: umpleVariables)
@@ -506,7 +507,7 @@ public class AttributeTraceItem implements TraceItem
    * needs the name of the attribute
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line={301},file={"Trace_Code.ump"},javaline={510},length={4})
+  @umplesourcefile(line={301},file={"Trace_Code.ump"},javaline={511},length={4})
   public String getExtremities(CodeTranslator gen, String name)
   {
     return gen.translate(name+"Closed",constraint);

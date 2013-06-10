@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
 
@@ -43,6 +43,7 @@ public class MethodBody
     return wasSet;
   }
 
+  @umplesourcefile(line={150},file={"Umple.ump"},javaline={50},length={2})
   public String getExtraCode()
   {
     return codeblock.getCode() != null ? codeblock.getCode() : "";
@@ -69,21 +70,22 @@ public class MethodBody
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-   public MethodBody(String aValue)  {
+    @umplesourcefile(line={0},file={""},javaline={74},length={3})
+ public MethodBody(String aValue)  {
 this(new CodeBlock(aValue!=null ? aValue : ""));
   }
 // line 467 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line={467},file={"Umple_Code.ump"},javaline={77},length={4})
+  @umplesourcefile(line={467},file={"Umple_Code.ump"},javaline={79},length={4})
   public String getExtraCode(String lang)
   {
   return codeblock.getCode(lang);
   }
-  @umplesourcefile(line={471},file={"Umple_Code.ump"},javaline={82},length={4})
+  @umplesourcefile(line={471},file={"Umple_Code.ump"},javaline={84},length={4})
   public void setExtraCode(String code)
   {
     codeblock.setCode(code);
   }
-  @umplesourcefile(line={475},file={"Umple_Code.ump"},javaline={87},length={4})
+  @umplesourcefile(line={475},file={"Umple_Code.ump"},javaline={89},length={4})
   public void setExtraCode(String lang, String code)
   {
     codeblock.setCode(lang,code);

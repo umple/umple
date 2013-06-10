@@ -85,48 +85,6 @@ public class ModelingBaseGenerationPointsHandler {
 		}
 	}
 	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.ASSOCIATION_VARIABLES_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getAssociationVariables(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.ASSOCIATION_VARIABLES);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getNavigableAssociationVariables(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.ATTRIBUTES_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getAttributes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-									 @GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.ATTRIBUTES);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.OPERATIONS_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getOperations(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-									 @GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.OPERATIONS);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.DEPENDS_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getDepends(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-									 @GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.DEPENDS);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.OPERATIONS_PARAMETERS_PROCESSOR, 
-			processes= {IModelingElementDefinitions.OPERATIONS_PROCESSOR})
-	public static List<?> getOperationsParameters(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-									 @GenerationBaseElement Object operationObject){
-		return generationValueGetter.getList(operationObject, IModelingElementDefinitions.OPERATION_PARAMETERS);
-	}
-	
 	@LoopProcessorAnnotations(aspect= LoopAspectConstants.BEFORE, loopProcessorAnnotations ={ 
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
@@ -137,19 +95,6 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationLoopElement Object modelPackage){
 		generationValueGetter.addUniqueValue(IModelingConstants.TYPES_TRACKER, element, modelPackage, name);	//Enable Retrieving by name
 		generationValueGetter.addUniqueValue(IModelingConstants.TYPES_BY_NAMESPACES_TRACKER, element, modelPackage, namespace);	//Enable Retrieving by name
-	}
-	
-	@LoopProcessorAnnotations(aspect= LoopAspectConstants.BEFORE, loopProcessorAnnotations ={ 
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	})
-	public static void trackNamespaces(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAMESPACE) String namespace,
-			@GenerationLoopElement Object modelPackage){
-		
-		if(namespace!=null&& !namespace.isEmpty()){
-			generationValueGetter.addUniqueValue(IModelingConstants.NAMESPACES_TRACKER, namespace, modelPackage);	//Track all namespaces
-		}
 	}
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
@@ -272,23 +217,10 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
-		if(roleName== null||roleName.isEmpty()){
+		if(roleName.isEmpty()){
 			roleName= seekOtherEnd?otherEndName:name;
 		}
 		return generationValueGetter.use(ICppNameConstants.SET, roleName);
-	}
-	
-	@GenerationPoint(generationPoint = ICppNameConstants.ADD_INSTANCE)
-	public static String addInstanceMethodName(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
-			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
-			@GenerationBaseElement Object element){
-		String roleName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
-		if(roleName== null||roleName.isEmpty()){
-			roleName= seekOtherEnd?otherEndName:name;
-		}
-		return generationValueGetter.use(ICppNameConstants.ADD_INSTANCE, roleName);
 	}
 	
 	@GenerationPoint(generationPoint = ICppNameConstants.SET)
@@ -301,7 +233,7 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
-		if(roleName== null||roleName.isEmpty()){
+		if(roleName.isEmpty()){
 			roleName= seekOtherEnd?otherEndName:name;
 		}
 		return generationValueGetter.use(ICppNameConstants.SET, roleName);
@@ -345,7 +277,7 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
-		if(roleName== null||roleName.isEmpty()){
+		if(roleName.isEmpty()){
 			roleName= seekOtherEnd?otherEndName:name;
 		}
 		return generationValueGetter.use(ICppNameConstants.GET, roleName);
@@ -361,7 +293,7 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
-		if(roleName== null||roleName.isEmpty()){
+		if(roleName.isEmpty()){
 			roleName= seekOtherEnd?otherEndName:name;
 		}
 		return generationValueGetter.use(ICppNameConstants.GET, roleName);
@@ -518,7 +450,7 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationBaseElement Object element){
 		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
 				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
-		if(roleName== null||roleName.isEmpty()){
+		if(roleName.isEmpty()){
 			roleName= seekOtherEnd?otherEndName:name;
 		}
 		return generationValueGetter.use(ICppNameConstants.EXISTING, roleName);
@@ -599,15 +531,13 @@ public class ModelingBaseGenerationPointsHandler {
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT) boolean seekOtherEnd,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationBaseElement Object element,
-			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_MANY) boolean isOtherEndMany){
-		String roleName= generationValueGetter.getString(element, (seekOtherEnd?isOtherEndMany:isMany)?IModelingElementDefinitions.PLURAL_NAME
-				:IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
-		if(roleName== null||roleName.isEmpty()){
-			roleName= seekOtherEnd?otherEndName:name;
+			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_NAME) String otherEndName){
+		String singularName= generationValueGetter.getString(element, IModelingElementDefinitions.SINGULAR_NAME, seekOtherEnd?otherEndName:name);
+		if(singularName.isEmpty()){
+			singularName= seekOtherEnd?otherEndName:name;
 		}
-		return generationValueGetter.use(ICppNameConstants.COPY_OF, roleName);
+		
+		return generationValueGetter.use(ICppNameConstants.COPY_OF, singularName);
 	}
 	
 	@GenerationPoint(generationPoint = ICppNameConstants.INDEX_OF)

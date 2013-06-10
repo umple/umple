@@ -854,16 +854,13 @@ public class CPPDependsPointsHandler{
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationArgument List<Object> allParameters){
 		
-		if(allParameters== null|| allParameters.isEmpty()){
+		if(allParameters.isEmpty()){
 			return;
 		}
 		
 		for(Object item: allParameters){
 			@SuppressWarnings("unchecked")
-			SimpleEntry<Object, SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>> current= 
-					(SimpleEntry<Object, SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>>) item;
-			
-			SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>> simpleEntry= current.getValue();
+			SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>> simpleEntry= (SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>) item;
 			
 			String value = simpleEntry.getKey().getValue();
 			generationValueGetter.generationPointString(parent, IModelingDecisions.DEPENDS_GENERATION_POINT, 

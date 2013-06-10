@@ -31,39 +31,36 @@ public class CppNameHelper extends CppGenerationTemplate{
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "add";
-  protected final String TEXT_2 = "remove";
-  protected final String TEXT_3 = "remove";
-  protected final String TEXT_4 = "For";
-  protected final String TEXT_5 = "canSet";
-  protected final String TEXT_6 = "verified";
-  protected final String TEXT_7 = "remove";
-  protected final String TEXT_8 = "At";
-  protected final String TEXT_9 = "add";
-  protected final String TEXT_10 = "At";
-  protected final String TEXT_11 = "addOrMove";
-  protected final String TEXT_12 = "At";
-  protected final String TEXT_13 = "indexOf";
-  protected final String TEXT_14 = "placeholder";
-  protected final String TEXT_15 = "set";
-  protected final String TEXT_16 = "isNew";
-  protected final String TEXT_17 = "existing";
-  protected final String TEXT_18 = "old";
-  protected final String TEXT_19 = "new";
-  protected final String TEXT_20 = "all";
-  protected final String TEXT_21 = "a";
-  protected final String TEXT_22 = "get";
-  protected final String TEXT_23 = "is";
-  protected final String TEXT_24 = "numberOf";
-  protected final String TEXT_25 = "minimumNumberOf";
-  protected final String TEXT_26 = "has";
-  protected final String TEXT_27 = "maximumNumberOf";
-  protected final String TEXT_28 = "deleteAssociatedObjects";
-  protected final String TEXT_29 = "add";
-  protected final String TEXT_30 = "copyOf";
-  protected final String TEXT_31 = "set";
-  protected final String TEXT_32 = "_";
-  protected final String TEXT_33 = "clear";
+  protected final String TEXT_1 = "remove";
+  protected final String TEXT_2 = "canSet";
+  protected final String TEXT_3 = "verified";
+  protected final String TEXT_4 = "remove";
+  protected final String TEXT_5 = "At";
+  protected final String TEXT_6 = "add";
+  protected final String TEXT_7 = "At";
+  protected final String TEXT_8 = "addOrMove";
+  protected final String TEXT_9 = "At";
+  protected final String TEXT_10 = "indexOf";
+  protected final String TEXT_11 = "placeholder";
+  protected final String TEXT_12 = "set";
+  protected final String TEXT_13 = "isNew";
+  protected final String TEXT_14 = "existing";
+  protected final String TEXT_15 = "old";
+  protected final String TEXT_16 = "new";
+  protected final String TEXT_17 = "all";
+  protected final String TEXT_18 = "a";
+  protected final String TEXT_19 = "get";
+  protected final String TEXT_20 = "is";
+  protected final String TEXT_21 = "numberOf";
+  protected final String TEXT_22 = "minimumNumberOf";
+  protected final String TEXT_23 = "has";
+  protected final String TEXT_24 = "maximumNumberOf";
+  protected final String TEXT_25 = "deleteAssociatedObjects";
+  protected final String TEXT_26 = "add";
+  protected final String TEXT_27 = "copyOf";
+  protected final String TEXT_28 = "set";
+  protected final String TEXT_29 = "_";
+  protected final String TEXT_30 = "clear";
 
   /**
   * @param argument
@@ -76,7 +73,8 @@ public class CppNameHelper extends CppGenerationTemplate{
     final StringBuffer stringBuffer = new StringBuffer();
     
 
-getRegistry().define(ICppNameConstants.ADD_INSTANCE, new GenerationProcdure(this){
+
+getRegistry().define(ICppNameConstants.REMOVE, new GenerationProcdure(this){
 	
 @Override
 public StringBuffer execute(Object element, Object... arguments) {
@@ -91,71 +89,6 @@ public void execute() {
 
     stringBuffer.append(TEXT_1);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
-    
-
-}});
-
-}});
-
-getRegistry().define(ICppNameConstants.REMOVE, new GenerationProcdure(this){
-	
-@Override
-public StringBuffer execute(Object element, Object... arguments) {
-	
-return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
-
-	@GenerationArgument String name;
-	
-@Override
-public void execute() {
-
-
-    stringBuffer.append(TEXT_2);
-    stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
-    
-
-}});
-
-}});
-
-getRegistry().define(ICppNameConstants.REMOVE, new GenerationProcdure(this){
-	
-@Override
-public StringBuffer execute(Object element, Object... arguments) {
-	
-return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
-
-	@GenerationArgument String name;
-	
-@Override
-public void execute() {
-
-
-    stringBuffer.append(TEXT_3);
-    stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
-    
-
-}});
-
-}});
-
-getRegistry().define(ICppNameConstants.DELEGATED_PARAMETER, new GenerationProcdure(this){
-	
-@Override
-public StringBuffer execute(Object element, Object... arguments) {
-	
-return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
-
-	@GenerationArgument String parameter;
-	@GenerationArgument String type;
-	
-@Override
-public void execute() {
-
-
-    stringBuffer.append(parameter);
-    stringBuffer.append(TEXT_4);
-    stringBuffer.append(StringUtil.firstCharacterToUpperCase(type));
     
 
 }});
@@ -178,7 +111,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_5);
+    stringBuffer.append(TEXT_2);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -207,7 +140,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_6);
+    stringBuffer.append(TEXT_3);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -228,9 +161,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_7);
+    stringBuffer.append(TEXT_4);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
-    stringBuffer.append(TEXT_8);
+    stringBuffer.append(TEXT_5);
     
 
 }});
@@ -250,9 +183,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_9);
+    stringBuffer.append(TEXT_6);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_7);
     
 
 }});
@@ -272,9 +205,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_8);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
-    stringBuffer.append(TEXT_12);
+    stringBuffer.append(TEXT_9);
     
 
 }});
@@ -294,7 +227,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_10);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -315,7 +248,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_14);
+    stringBuffer.append(TEXT_11);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -336,7 +269,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_15);
+    stringBuffer.append(TEXT_12);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -357,7 +290,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_16);
+    stringBuffer.append(TEXT_13);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -378,7 +311,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_17);
+    stringBuffer.append(TEXT_14);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -399,7 +332,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_18);
+    stringBuffer.append(TEXT_15);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -420,7 +353,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_19);
+    stringBuffer.append(TEXT_16);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -451,11 +384,11 @@ public void execute() {
 private void prefix(){
 	if(isMany){
 		
-    stringBuffer.append(TEXT_20);
+    stringBuffer.append(TEXT_17);
     	
 	}else{
 		
-    stringBuffer.append(TEXT_21);
+    stringBuffer.append(TEXT_18);
     
 	}
 }
@@ -477,7 +410,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_22);
+    stringBuffer.append(TEXT_19);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -498,7 +431,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_23);
+    stringBuffer.append(TEXT_20);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -519,7 +452,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_24);
+    stringBuffer.append(TEXT_21);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -540,7 +473,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_25);
+    stringBuffer.append(TEXT_22);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -561,7 +494,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_26);
+    stringBuffer.append(TEXT_23);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -583,7 +516,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_27);
+    stringBuffer.append(TEXT_24);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -602,7 +535,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_28);
+    stringBuffer.append(TEXT_25);
     
 
 }});
@@ -622,7 +555,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_29);
+    stringBuffer.append(TEXT_26);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -643,7 +576,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_30);
+    stringBuffer.append(TEXT_27);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name));
     
 
@@ -665,9 +598,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_31);
+    stringBuffer.append(TEXT_28);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(typeName));
-    stringBuffer.append(TEXT_32);
+    stringBuffer.append(TEXT_29);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(otherEndTypeName));
     
 
@@ -686,7 +619,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_33);
+    stringBuffer.append(TEXT_30);
     
 
 }});

@@ -35,7 +35,6 @@ public interface CommonConstants {
 	public static final String UNDERSCORE= "_";			//$NON-NLS-1$
 	public static final String DOT= "."; 				//$NON-NLS-1$
 	public static final String STRICT_DOT= "\\."; 				//$NON-NLS-1$
-	public static final String NOT= "!"; 				//$NON-NLS-1$
 	
 	public static final String PLUS= "+"; 				//$NON-NLS-1$
 	public static final String MINUS= "-"; 				//$NON-NLS-1$
