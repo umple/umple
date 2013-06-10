@@ -27,9 +27,14 @@ public interface IModelingConstants {
 	public final static String PARENT_INTERFACES= "parentInterfaces"; //$NON-NLS-1$
 	public final static String PARENT_CLASS= "parentClass"; //$NON-NLS-1$
 	
+	public final static String IS_INSTANCE_OF= "is.instance.of"; //$NON-NLS-1$
+	public final static String IS_PARENT= "is.parent"; //$NON-NLS-1$
+	public static final String INSTANCE_OF_ELEMENT_ARGUMENT= "interna;.instance.of.element.argument"; //$NON-NLS-1$
+	
 	public final static String NORMALIZED_DEFAULT_VALUE= "normalized.defaultValue"; //$NON-NLS-1$
 	
 	public final static String TYPES_TRACKER= "cpp.types.tracker"; //$NON-NLS-1$
+	public final static String NAMESPACES_TRACKER= "cpp.namespaces.tracker"; //$NON-NLS-1$
 	public final static String TYPES_BY_NAMESPACES_TRACKER= "cpp.types.by.namespaces.tracker"; //$NON-NLS-1$
 
 	
@@ -80,6 +85,8 @@ public interface IModelingConstants {
 	public final static String MODELING_DEFAULT_SINGLE_PARAMETER_NAME= "modeling.setter.method.default.single.parameter.name";  //$NON-NLS-1$
 	
 	public final static String METHOD_CONTENTS_REGISTER= "method.contents.register"; //$NON-NLS-1$
+	
+	public final static String METHOD_REGISTER= "method.register"; //$NON-NLS-1$
 	public final static String METHOD_DETAILS= "method.details"; //$NON-NLS-1$
 	public final static String METHOD_CONTENTS= "method.contents"; //$NON-NLS-1$
 	public final static String METHOD_DECLARATION= "modeling.method.declaration"; //$NON-NLS-1$
@@ -91,6 +98,7 @@ public interface IModelingConstants {
 	public final static String METHOD_COMMENT= "method.comment"; //$NON-NLS-1$
 	public final static String METHOD_ID= "method.id"; //$NON-NLS-1$
 	public final static String METHOD_NAME= "method.name"; //$NON-NLS-1$
+	public final static String METHOD_IDENTIFIER= "method.identifier"; //$NON-NLS-1$
 	public final static String METHOD_RETURN_TYPE= "method.return.type"; //$NON-NLS-1$
 	public final static String METHOD_PARAMETERS_STRING= "parameters.string"; //$NON-NLS-1$
 	public final static String METHOD_DEFAULTED_IMPLEMENTATION= "method.defaulted.implementation"; //$NON-NLS-1$

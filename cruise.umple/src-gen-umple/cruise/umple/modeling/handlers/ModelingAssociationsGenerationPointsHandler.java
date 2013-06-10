@@ -1315,7 +1315,7 @@ public class ModelingAssociationsGenerationPointsHandler{
 				if(isOtherEndOptional){
 					//None
 				}else if(isOtherEndOne){
-					id= ICppAssociationsDefinitionsConstants.ADD_CHECK_NEW_OTHER_EXSITING;
+					id= ICppAssociationsDefinitionsConstants.ADD_SET_IF_NEW;
 				}else if(isOtherEndRangedUnbound|| isOtherEndRangedOptional|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
 					id= ICppAssociationsDefinitionsConstants.ADD_DIRECTLY;
 					check= true;
@@ -1347,6 +1347,16 @@ public class ModelingAssociationsGenerationPointsHandler{
 			generationValueGetter.generationPointString(element, IModelingDecisions.ADD_AT_GENERATION_POINT, id, valueOfCheck);
 			generationValueGetter.generationPointString(element, IModelingDecisions.ADD_OR_MOVE_GENERATION_POINT, id, valueOfCheck);
 		}
+	}
+	
+	@LoopProcessorAnnotations(aspect= LoopAspectConstants.POST, loopProcessorAnnotations ={ 
+			/*Associations variables paths*/
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
+	}, ifConditionIds= {IModelingDecisions.CAN_CONSTRUCT})
+	public static void associationsVairablesUnboundToFixedHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element){
+		generationValueGetter.generationPointString(element, IModelingDecisions.ADD_INSTANCE_GENERATION_POINT);
 	}
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
