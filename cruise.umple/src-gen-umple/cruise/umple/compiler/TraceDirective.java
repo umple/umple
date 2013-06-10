@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 package cruise.umple.compiler;
 import java.util.*;
@@ -68,7 +68,6 @@ public class TraceDirective
     return id;
   }
 
-  @umplesourcefile(line={74},file={"Trace.ump"},javaline={75},length={2})
   public String getTracerType()
   {
     return getTracer().getName();

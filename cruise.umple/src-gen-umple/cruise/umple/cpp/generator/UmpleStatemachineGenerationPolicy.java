@@ -224,6 +224,21 @@ public class UmpleStatemachineGenerationPolicy{
 		return activityCode;
 	}
 	
+	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT)
+	public static String getStateDoActivityOnCompletionEvent(@GenerationBaseElement State element){
+		Activity activity = element.getActivity();
+		if(activity== null){
+			return CommonConstants.BLANK;
+		}
+		
+		Event onCompletionEvent = activity.getOnCompletionEvent();
+		if(onCompletionEvent== null){
+			return null;
+		}
+		
+		return onCompletionEvent.getName();
+	}
+	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.STATE_ENTRY_CODE_BODY)
 	public static String getStateEntryCode(@GenerationBaseElement State element,
 			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, String language){

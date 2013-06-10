@@ -43,11 +43,11 @@ public class ArgumentsRetrieval{
 		}
 		
 		public List<Object> getAllValues(String id, Object... elements){
-			return getValue(id, true, asListArguments(elements));
+			return getValue(id, true, processArguments(elements));
 		}
 		
 		public List<Object> getValue(String id, Object... elements){
-			return getValue(id, false, asListArguments(elements));
+			return getValue(id, false, processArguments(elements));
 		}
 		
 		private List<Object> getValue(String id, boolean all, List<Object> elements) {
@@ -62,13 +62,13 @@ public class ArgumentsRetrieval{
 				list= new ArrayList<Object>();
 				
 				for(String key: map.keySet()){
-					int indexOf = identifier.indexOf(CommonConstants.UNDERSCORE);
+					int indexOf = identifier.indexOf(CommonConstants.MINUS);
 					String identifierValue = identifier.substring(0, indexOf);
 					String identifierType = identifier.substring(indexOf+1, identifier.length());
 					String[] identifierValues = identifierValue.split(CommonConstants.PLUS_SEPARATOR);
 					String[] identifierTypes = identifierType.split(CommonConstants.PLUS_SEPARATOR);
 					
-					int keyIndexOf = key.indexOf(CommonConstants.UNDERSCORE);
+					int keyIndexOf = key.indexOf(CommonConstants.MINUS);
 					String keyIdentifierValue = key.substring(0, keyIndexOf);
 					String keyIdentifierType = key.substring(keyIndexOf+1, key.length());
 					List<String> keyIdentifierValues = Arrays.asList(keyIdentifierValue.split(CommonConstants.PLUS_SEPARATOR));
@@ -99,14 +99,18 @@ public class ArgumentsRetrieval{
 			return list;
 		}
 		
-		private static List<Object> asListArguments(Object... elements) {
+		public static List<Object> processArguments(Object... elements) {
+			return asListArguments(true, elements);
+		}
+		
+		public static List<Object> asListArguments(boolean processDescriptors, Object... elements) {
 			List<Object> all= new ArrayList<Object>();
 			for(Object obj: elements){
 				if(obj!= null){
 					if(obj instanceof Collection){
 						List<Object> asList = Arrays.asList(obj);
 						for(Object sub: asList){
-							if(sub instanceof GenerationArgumentDescriptor){
+							if(processDescriptors&& sub instanceof GenerationArgumentDescriptor){
 								sub= sub.toString();
 							}
 							all.add(sub);
@@ -115,7 +119,7 @@ public class ArgumentsRetrieval{
 					}else if(obj.getClass().isArray()){
 						Object[] array = (Object[]) obj;
 						for(Object sub: array){
-							if(sub instanceof GenerationArgumentDescriptor){
+							if(processDescriptors&& sub instanceof GenerationArgumentDescriptor){
 								sub= sub.toString();
 							}
 							all.add(sub);
@@ -125,7 +129,7 @@ public class ArgumentsRetrieval{
 					
 				}
 				
-				if(obj instanceof GenerationArgumentDescriptor){
+				if(processDescriptors&& obj instanceof GenerationArgumentDescriptor){
 					obj= obj.toString();
 				}
 				
@@ -135,7 +139,7 @@ public class ArgumentsRetrieval{
 		}
 		
 		public void setValue(String id, Object value, boolean unique, Object... elements){
-			List<Object> all = asListArguments(elements);
+			List<Object> all = processArguments(elements);
 			setValue(id, unique, value, all);
 		}
 		
@@ -144,7 +148,7 @@ public class ArgumentsRetrieval{
 		}
 		
 		public void setValue(String id, boolean unique, Object value, Object... elements) {
-			setValue(id, unique, value, asListArguments(elements));
+			setValue(id, unique, value, processArguments(elements));
 		}
 		
 		public void setValue(String id, boolean unique, Object value, List<Object> elements) {
@@ -169,6 +173,23 @@ public class ArgumentsRetrieval{
 			}else{
 				list.add(value);
 			}
+		}
+		
+		public boolean removeValue(String id, Object value, Object... arguments) {
+			List<Object> elements= asListArguments(true, arguments);
+			Map<String, List<Object>> map = this.data.get(id);
+			if(map== null){
+				return false;
+			}
+			
+			String identifier = identifier(elements);
+			
+			List<Object> list = map.get(identifier);
+			if(list== null){
+				return false;
+			}
+			
+			return list.remove(value);
 		}
 
 		private static String identifier(List<Object> elements) {
@@ -201,7 +222,7 @@ public class ArgumentsRetrieval{
 				}
 			}
 			
-			String string = identifier+ CommonConstants.UNDERSCORE+ types;
+			String string = identifier+ CommonConstants.MINUS+ types;
 			return string;
 		}
 	}

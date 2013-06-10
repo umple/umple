@@ -99,7 +99,7 @@ public interface GenerationCallback {
 	}
 	
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.PARAMETER})
+	@Target({ ElementType.PARAMETER, ElementType.FIELD})
 	public @interface GenerationLoopElement {
 		String[] id() default {};	//Means that we are looking for the root object
 	}

@@ -18,26 +18,26 @@
 *******************************************************************************/
 package cruise.umple.modeling.handlers.cpp;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.AbstractMap.SimpleEntry;
 
+import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
-import cruise.umple.core.GenerationCallback.GenerationArguments;
-import cruise.umple.core.CommonConstants;
-import cruise.umple.core.GenerationPoint;
-import cruise.umple.core.GenerationPolicyRegistry;
-import cruise.umple.core.IGenerationPointPriorityConstants;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
+import cruise.umple.core.GenerationCallback.GenerationArguments;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationCallback.WatchedObjectValue;
+import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
+import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.IGenerationPointPriorityConstants;
 import cruise.umple.cpp.utils.CPPTypesConstants;
 import cruise.umple.cpp.utils.CommonTypesConstants;
 import cruise.umple.cpp.utils.GenerationUtil;
@@ -194,11 +194,13 @@ public class StlGenerationPointsHandler{
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT)
 	public static void constructorAutoUnique(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationElementParameter(id = IModelingElementDefinitions.IS_LAZY) boolean isLazy,
+			@GenerationBaseElement Object element,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		if(isLazy&& ISTLConstants.TIME.equals(typeName)){
+			String contents = generationValueGetter.use(ISTLConstants.CURRENT_TIME_REFERENCE);
 			generationValueGetter.addUniqueValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PRE_IMPLEMENTATION, 
-					generationValueGetter.use(ISTLConstants.CURRENT_TIME_REFERENCE), parent);
+					new SimpleEntry<Object, String>(element, contents), parent);
 		}
 	}
 	
@@ -362,11 +364,7 @@ public class StlGenerationPointsHandler{
 		//return generationValueGetter.generate(ISTLConstants.GET_VECTOR_ELEMENT, element, arguments);
 		String setTemplateGetByIndex = generationValueGetter.use(ISTLConstants.GET_SET_ELEMENT_TEMPLATE_IMPLEMENTATION);
 		generationValueGetter.addUniqueValue(ISTLConstants.GET_SET_ELEMENT_TEMPLATE_IMPLEMENTATION, setTemplateGetByIndex);
-		
-		String setTemplateCopy = generationValueGetter.use(ISTLConstants.COPY_SET_ELEMENT_TEMPLATE_IMPLEMENTATION);
-		generationValueGetter.addUniqueValue(ISTLConstants.COPY_SET_ELEMENT_TEMPLATE_IMPLEMENTATION, setTemplateCopy);
-		
-		
+
 		generationValueGetter.generationPointString(modelPackage, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.SET), 
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
@@ -464,8 +462,8 @@ public class StlGenerationPointsHandler{
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.PREDEFINED_PACKAGE_CONTENTS)
-	public static String copySetTemplate(@GenerationRegistry GenerationPolicyRegistry generationValueGetter){
-		return GenerationUtil.getImplementationDetails(generationValueGetter, ISTLConstants.COPY_SET_ELEMENT_TEMPLATE_IMPLEMENTATION);
+	public static String copyIteratorsTemplate(@GenerationRegistry GenerationPolicyRegistry generationValueGetter){
+		return GenerationUtil.getImplementationDetails(generationValueGetter, ISTLConstants.STL_DEFINED_TEMPLATES_IMPLEMENTATION);
 	}
 	
 	@GenerationPoint(intercept = IModelingElementDefinitions.TYPE_NAME)
@@ -476,6 +474,20 @@ public class StlGenerationPointsHandler{
 			return new InterceptorResponse(ISTLConstants.DATE);
 		}else if(CommonTypesConstants.STRING.equals(typeName)){
 			return new InterceptorResponse(ISTLConstants.STRING);
+		}
+		return null;
+	}
+	
+	@GenerationPoint(generationPoint= IModelingConstants.DEFAULT_VALUE_INTERCEPTOR, 
+			intercept = {IModelingElementDefinitions.DEFAULT_VALUE}, priority=IGenerationPointPriorityConstants.HIGHEST)
+	public static InterceptorResponse normalizedDateDefaultValue(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@WatchedObjectValue String defaultValue){
+		if(defaultValue!= null&& !defaultValue.isEmpty()){
+			return null;
+		}
+		if(ISTLConstants.STRING.equals(typeName)){
+			//In C++, type string cannot have a NULL value as it is a primitve type in contrast to Java. So, assign a value of empty string "" instead
+			return new InterceptorResponse(CommonConstants.QUOTATION+ CommonConstants.QUOTATION);
 		}
 		return null;
 	}

@@ -37,6 +37,7 @@ import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
+import cruise.umple.core.GenerationCallback.GenerationArguments;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
@@ -44,7 +45,6 @@ import cruise.umple.core.GenerationCallback.GenerationLoopPath;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationCallback.WatchedObjectValue;
-import cruise.umple.core.GenerationLoopAnnotation;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
 import cruise.umple.core.GenerationPolicyRegistry;
@@ -146,48 +146,6 @@ public class CPPBaseGenerationPointsHandler{
 			return path+ CommonConstants.FORWARD_SLASH+ generationValueGetter.generationPointString(element, CPPCommonConstants.PACKAGE_SUFFIX);
 		}
 		return path+ CommonConstants.FORWARD_SLASH+ name;
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.ASSOCIATION_VARIABLES_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getAssociationVariables(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.ASSOCIATION_VARIABLES);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getNavigableAssociationVariables(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.ATTRIBUTES_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getAttributes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-									 @GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.ATTRIBUTES);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.OPERATIONS_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getOperations(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-									 @GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.OPERATIONS);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.DEPENDS_PROCESSOR, 
-			processes= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
-	public static List<?> getDepends(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-									 @GenerationBaseElement Object classInterface){
-		return generationValueGetter.getList(classInterface, IModelingElementDefinitions.DEPENDS);
-	}
-	
-	@GenerationLoopAnnotation(id = IModelingElementDefinitions.OPERATIONS_PARAMETERS_PROCESSOR, 
-			processes= {IModelingElementDefinitions.OPERATIONS_PROCESSOR})
-	public static List<?> getOperationsParameters(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-									 @GenerationBaseElement Object operationObject){
-		return generationValueGetter.getList(operationObject, IModelingElementDefinitions.OPERATION_PARAMETERS);
 	}
 	
 	@GenerationPoint(generationPoint = IModelingConstants.SET_ATTRIBUTE_PREFIXES)
@@ -388,13 +346,34 @@ public class CPPBaseGenerationPointsHandler{
 	@LoopProcessorAnnotation(aspect= LoopAspectConstants.FINALIZE, priority= GenerationPolicyRegistryPriorities.LOWEST, aspectGroup= MAIN_ASPECT_GROUP_PRIORITY)
 	public static void modelPathsAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationElementParameter(id = IModelingElementDefinitions.FILE_PATH) String filePath,
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationBaseElement Object model){
 		
 		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH,
 				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE));
-		String fileName= "Main" +CommonConstants.DOT +CPPCommonConstants.BODY_FILE_EXTENSION; //$NON-NLS-1$
+		String fileName= name+"_Main" +CommonConstants.DOT +CPPCommonConstants.BODY_FILE_EXTENSION; //$NON-NLS-1$
+		
+		String useAllNamespaces= CommonConstants.BLANK;
+		Iterator<Object> namespacesIterator = generationValueGetter.getAllValues(IModelingConstants.NAMESPACES_TRACKER, model).iterator();
+		while(namespacesIterator.hasNext()){
+			String object = namespacesIterator.next().toString();
+			object= object.replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX).
+					replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+			useAllNamespaces= useAllNamespaces+ generationValueGetter.use(ICppDefinitions.USE_NAMESPACE, CPPCommonConstants.DECLARATION_COMMON_PREFIX+object);
+			
+			if(namespacesIterator.hasNext()){
+				useAllNamespaces= useAllNamespaces+ CommonConstants.NEW_LINE;
+			}
+		}
+		
 		
 		String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, CPPDependsPointsHandler.ALL_MODEL_INCLUDES_TRACKER, "Main"); //$NON-NLS-1$
+		if(!useAllNamespaces.isEmpty()){
+			if(!implementationDetails.isEmpty()){
+				implementationDetails= implementationDetails+ CommonConstants.NEW_LINE;
+			}
+			implementationDetails= implementationDetails+ useAllNamespaces;
+		}
 		
 		implementationDetails = bundleMain(filePath, modelPath, fileName, implementationDetails);
 		
@@ -696,7 +675,6 @@ public class CPPBaseGenerationPointsHandler{
 		if(implementationDetails.isEmpty()){
 			return implementationDetails;
 		}
-		
 		return implementationDetails+ CommonConstants.NEW_LINE;
 	}
 	
@@ -953,15 +931,17 @@ public class CPPBaseGenerationPointsHandler{
 	
 	@GenerationPoint(generationPoint = IModelingConstants.NORMALIZED_DEFAULT_VALUE)
 	public static String normalizedDefaultValue(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationBaseElement Object element) {
-		return generationValueGetter.getString(element,IModelingElementDefinitions.DEFAULT_VALUE, CPPCommonConstants.CPP_LANGUAGE);
+			@GenerationBaseElement Object element,
+			@GenerationArguments Object... arguments) {
+		return generationValueGetter.getString(element,IModelingElementDefinitions.DEFAULT_VALUE, CPPCommonConstants.CPP_LANGUAGE, arguments);
 	}
 	
 	@GenerationPoint(generationPoint = IModelingElementDefinitions.DEFAULT_VALUE)
 	public static String defaultValue(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationBaseElement Object element) {
+			@GenerationBaseElement Object element,
+			@GenerationArguments Object... arguments) {
 		return generationValueGetter.getString(element,true, IModelingElementDefinitions.DEFAULT_VALUE, 
-				CPPCommonConstants.CPP_LANGUAGE);
+				CPPCommonConstants.CPP_LANGUAGE, arguments);
 	}
 	
 	@GenerationPoint(generationPoint = CPPCommonConstants.PACKAGE_SUFFIX)
@@ -1040,11 +1020,30 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationBaseElement Object element,
 			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT) String crudType,
 			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT) boolean isConstruction,
-			@GenerationProcedureParameter(id = ICppDefinitions.IS_CONST_TYPE_PARAMETER) boolean isConstParameter,
+			@GenerationProcedureParameter(id = ICppDefinitions.IS_CONST_TYPE_PARAMETER) boolean _isConstParameter,
 			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_AS_PARAMETER_ARGUMENT) boolean asParameter,
-			@GenerationArgument boolean asType){
+			@GenerationArgument boolean asType,
+			@GenerationLoopElement Object modelPackage,
+			@GenerationArguments Object... arguments){
 		
-		String normalizedType= crudType!=null && !crudType.isEmpty()? crudType: typeName;
+		String normalizedType;
+		boolean isConstParameter;
+		
+		setParameters: {
+			if(crudType!=null && !crudType.isEmpty()){
+				normalizedType= crudType;
+				
+				List<Object> allValues = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, crudType);
+				if(!allValues.isEmpty()){
+					Object object = allValues.get(0);
+					isConstParameter= generationValueGetter.decisionPoint(object, ICppDefinitions.IS_CONST_TYPE_PARAMETER, arguments);
+					break setParameters;
+				}
+			}
+			
+			normalizedType= typeName;
+			isConstParameter= _isConstParameter;
+		}
 		
 		//For primitive types (string, int, etc), we do not have pointer, but if they are many, we wrap the type in a vector and this vector must be a pointer
 		//Therefore, enable pointer for the isMany case as well in order to handle that condition

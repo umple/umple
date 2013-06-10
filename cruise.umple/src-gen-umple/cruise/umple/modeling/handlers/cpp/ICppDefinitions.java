@@ -79,6 +79,7 @@ public interface ICppDefinitions {
 	public final static String PRIVATE_INLINE_CONTENTS= "cpp.private.inline.contents"; //$NON-NLS-1$
 	
 	public final static String MAIN= "cpp.main"; //$NON-NLS-1$
+	public final static String MAIN_PRE_CONTENTS= "cpp.main.extra.pre.contents"; //$NON-NLS-1$
 	public final static String ALIAS= "cpp.alias"; //$NON-NLS-1$
 	public final static String ROOT_ALIAS= "cpp.root.alias"; //$NON-NLS-1$
 	public final static String ALIASES= "cpp.aliases"; //$NON-NLS-1$
@@ -249,7 +250,10 @@ public interface ICppDefinitions {
 	public final static String FRIEND_SETTER_IMPLEMENTATION= "cpp.friend.setter.implementation";	 //$NON-NLS-1$
 	
 	public final static String CONSTRUCTOR_PARAMETERS_LIST= "cpp.constructor.parameters.list";	 //$NON-NLS-1$
+	public final static String CONSTRUCTOR_PARENT_PARAMETERS_LIST= "cpp.constructor.parent.parameters.list";	 //$NON-NLS-1$
 	public final static String CONSTRUCTOR_ALL_PARAMETERS_LIST= "cpp.constructor.all.parameters.list";	 //$NON-NLS-1$
+	
+	public final static String CONSTRUCTOR_EXTENDED_USED_PARAMETERS_LIST= "cpp.constructor.extended.used.all.parameters.list";	 //$NON-NLS-1$
 	
 	public final static String MAIN_CONTENTS= "cpp.main.contents";	 //$NON-NLS-1$
 }

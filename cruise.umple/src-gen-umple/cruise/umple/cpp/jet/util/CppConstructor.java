@@ -18,8 +18,7 @@ import cruise.umple.modeling.handlers.cpp.*;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.modeling.handlers.IModelingConstructorDefinitionsConstants;
 import cruise.umple.modeling.handlers.cpp.ICppNameConstants;
-import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
-import cruise.umple.core.GenerationCallback.GenerationElementParameter;
+import cruise.umple.core.GenerationCallback.*;
 
 @SuppressWarnings({ "nls", "unqualified-field-access" })
 public class CppConstructor extends CppGenerationTemplate{
@@ -34,130 +33,143 @@ public class CppConstructor extends CppGenerationTemplate{
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "//------------------------" + NL + "// CONSTRUCTOR" + NL + "//------------------------";
-  protected final String TEXT_2 = NL;
-  protected final String TEXT_3 = "(";
-  protected final String TEXT_4 = ");";
-  protected final String TEXT_5 = "//------------------------" + NL + "// CONSTRUCTORS ARE DISALLOWED " + NL + "// IN THIS CONTEXT" + NL + "//------------------------" + NL;
-  protected final String TEXT_6 = NL + "//------------------------" + NL + "// COPY CONSTRUCTOR" + NL + "//------------------------";
-  protected final String TEXT_7 = NL;
-  protected final String TEXT_8 = "(";
-  protected final String TEXT_9 = "& other);";
-  protected final String TEXT_10 = NL + "//------------------------" + NL + "// DESTRUCTOR" + NL + "//------------------------" + NL + "virtual ~";
-  protected final String TEXT_11 = "()";
-  protected final String TEXT_12 = ";";
-  protected final String TEXT_13 = " = 0";
-  protected final String TEXT_14 = NL + "//------------------------" + NL + "// CONSTRUCTOR IMPLEMENTATION" + NL + "//------------------------";
-  protected final String TEXT_15 = NL;
-  protected final String TEXT_16 = "::";
-  protected final String TEXT_17 = "(";
-  protected final String TEXT_18 = ")";
-  protected final String TEXT_19 = "{";
-  protected final String TEXT_20 = NL;
-  protected final String TEXT_21 = NL + "}";
-  protected final String TEXT_22 = NL + " : ";
-  protected final String TEXT_23 = "(";
-  protected final String TEXT_24 = ") ";
-  protected final String TEXT_25 = NL + "//------------------------" + NL + "// DESTRUCTOR IMPLEMENTATION" + NL + "//------------------------";
-  protected final String TEXT_26 = NL;
-  protected final String TEXT_27 = "::~";
-  protected final String TEXT_28 = "(){";
-  protected final String TEXT_29 = NL + "\t";
-  protected final String TEXT_30 = NL + "}" + NL;
-  protected final String TEXT_31 = "this->deleteAssociatedObjects();" + NL;
-  protected final String TEXT_32 = "\t" + NL + "\t//";
+  protected final String TEXT_1 = "";
+  protected final String TEXT_2 = "(";
+  protected final String TEXT_3 = ");";
+  protected final String TEXT_4 = NL + "//------------------------" + NL + "// CONSTRUCTOR";
+  protected final String TEXT_5 = NL + "//------------------------";
+  protected final String TEXT_6 = NL;
+  protected final String TEXT_7 = "S";
+  protected final String TEXT_8 = "//------------------------" + NL + "// CONSTRUCTORS ARE DISALLOWED " + NL + "// IN THIS CONTEXT" + NL + "//------------------------" + NL;
+  protected final String TEXT_9 = NL + "//------------------------" + NL + "// COPY CONSTRUCTOR" + NL + "//------------------------";
+  protected final String TEXT_10 = NL;
+  protected final String TEXT_11 = "(";
+  protected final String TEXT_12 = "& other);";
+  protected final String TEXT_13 = NL + "//------------------------" + NL + "// DESTRUCTOR" + NL + "//------------------------" + NL + "virtual ~";
+  protected final String TEXT_14 = "()";
+  protected final String TEXT_15 = ";";
+  protected final String TEXT_16 = " = 0";
+  protected final String TEXT_17 = NL;
+  protected final String TEXT_18 = "::";
+  protected final String TEXT_19 = "(";
+  protected final String TEXT_20 = ")";
+  protected final String TEXT_21 = "{";
+  protected final String TEXT_22 = NL;
+  protected final String TEXT_23 = NL + "}";
+  protected final String TEXT_24 = NL + " : ";
+  protected final String TEXT_25 = "(";
+  protected final String TEXT_26 = ") ";
+  protected final String TEXT_27 = NL + "//------------------------" + NL + "// CONSTRUCTOR IMPLEMENTATION";
+  protected final String TEXT_28 = NL + "//------------------------";
+  protected final String TEXT_29 = NL;
+  protected final String TEXT_30 = "S";
+  protected final String TEXT_31 = NL + "//------------------------" + NL + "// DESTRUCTOR IMPLEMENTATION" + NL + "//------------------------";
+  protected final String TEXT_32 = NL;
   protected final String TEXT_33 = "::~";
-  protected final String TEXT_34 = "();";
-  protected final String TEXT_35 = NL + "//------------------------" + NL + "// COPY CONSTRUCTOR" + NL + "//------------------------";
-  protected final String TEXT_36 = NL;
-  protected final String TEXT_37 = "::";
-  protected final String TEXT_38 = "(";
-  protected final String TEXT_39 = "& other)";
-  protected final String TEXT_40 = "{";
-  protected final String TEXT_41 = NL;
-  protected final String TEXT_42 = "\tinternalCopy(other);";
-  protected final String TEXT_43 = NL + "}";
-  protected final String TEXT_44 = NL + " : ";
-  protected final String TEXT_45 = "(other) ";
-  protected final String TEXT_46 = "//------------------------" + NL + "// STREAM DECLARATION" + NL + "//------------------------" + NL + "friend ostream& operator<<(ostream& os, const ";
-  protected final String TEXT_47 = " & dt);";
-  protected final String TEXT_48 = NL + "//------------------------" + NL + "// STREAM IMPLEMENTATION" + NL + "//------------------------" + NL + "ostream& operator<<(ostream& os, const ";
-  protected final String TEXT_49 = "& dt){" + NL + "\tdt.toOstream(os);" + NL + "    return os;" + NL + "}";
-  protected final String TEXT_50 = "toOstream";
-  protected final String TEXT_51 = "virtual void toOstream(ostream& os) const;";
-  protected final String TEXT_52 = NL + "//------------------------" + NL + "// STREAM HELPER IMPLEMENTATION" + NL + "//------------------------" + NL + "void ";
-  protected final String TEXT_53 = "::toOstream(ostream& os) const{";
-  protected final String TEXT_54 = NL;
-  protected final String TEXT_55 = NL + "}" + NL;
-  protected final String TEXT_56 = "\t//Empty Stream";
-  protected final String TEXT_57 = NL;
-  protected final String TEXT_58 = "os";
-  protected final String TEXT_59 = "\"";
-  protected final String TEXT_60 = "\"";
-  protected final String TEXT_61 = " << ";
-  protected final String TEXT_62 = " <<";
-  protected final String TEXT_63 = " << endl";
-  protected final String TEXT_64 = "\"";
-  protected final String TEXT_65 = ":\" << thisptr->";
-  protected final String TEXT_66 = "()";
-  protected final String TEXT_67 = "\"";
-  protected final String TEXT_68 = ":\" << this->";
-  protected final String TEXT_69 = "()";
+  protected final String TEXT_34 = "(){";
+  protected final String TEXT_35 = NL + "\t";
+  protected final String TEXT_36 = NL + "}" + NL;
+  protected final String TEXT_37 = "this->deleteAssociatedObjects();" + NL;
+  protected final String TEXT_38 = "\t" + NL + "\t//";
+  protected final String TEXT_39 = "::~";
+  protected final String TEXT_40 = "();";
+  protected final String TEXT_41 = NL + "//------------------------" + NL + "// COPY CONSTRUCTOR" + NL + "//------------------------";
+  protected final String TEXT_42 = NL;
+  protected final String TEXT_43 = "::";
+  protected final String TEXT_44 = "(";
+  protected final String TEXT_45 = "& other)";
+  protected final String TEXT_46 = "{";
+  protected final String TEXT_47 = NL;
+  protected final String TEXT_48 = "\tinternalCopy(other);";
+  protected final String TEXT_49 = NL + "}";
+  protected final String TEXT_50 = NL + " : ";
+  protected final String TEXT_51 = "(other) ";
+  protected final String TEXT_52 = "//------------------------" + NL + "// STREAM DECLARATION" + NL + "//------------------------" + NL + "friend ostream& operator<<(ostream& os, const ";
+  protected final String TEXT_53 = " & dt);";
+  protected final String TEXT_54 = NL + "//------------------------" + NL + "// STREAM IMPLEMENTATION" + NL + "//------------------------" + NL + "ostream& operator<<(ostream& os, const ";
+  protected final String TEXT_55 = "& dt){" + NL + "\tdt.toOstream(os);" + NL + "    return os;" + NL + "}";
+  protected final String TEXT_56 = "toOstream";
+  protected final String TEXT_57 = "virtual void toOstream(ostream& os) const;";
+  protected final String TEXT_58 = NL + "//------------------------" + NL + "// STREAM HELPER IMPLEMENTATION" + NL + "//------------------------" + NL + "void ";
+  protected final String TEXT_59 = "::toOstream(ostream& os) const{";
+  protected final String TEXT_60 = NL;
+  protected final String TEXT_61 = NL + "}" + NL;
+  protected final String TEXT_62 = "\t//Empty Stream";
+  protected final String TEXT_63 = NL;
+  protected final String TEXT_64 = "os";
+  protected final String TEXT_65 = "\"";
+  protected final String TEXT_66 = "\"";
+  protected final String TEXT_67 = " << ";
+  protected final String TEXT_68 = " <<";
+  protected final String TEXT_69 = " << endl";
   protected final String TEXT_70 = "\"";
-  protected final String TEXT_71 = ":\"; this->";
-  protected final String TEXT_72 = "!= NULL ?  os << this->";
-  protected final String TEXT_73 = " << endl " + NL + "\t\t\t\t\t\t: os << \"NULL\" << endl;";
-  protected final String TEXT_74 = "memcpy(&other.";
-  protected final String TEXT_75 = ",&this->";
-  protected final String TEXT_76 = ", sizeof other.";
-  protected final String TEXT_77 = ");";
-  protected final String TEXT_78 = "this->";
-  protected final String TEXT_79 = "= other.";
-  protected final String TEXT_80 = ";";
-  protected final String TEXT_81 = "copyObject(other.";
-  protected final String TEXT_82 = ", this->";
-  protected final String TEXT_83 = ", sizeof other.";
-  protected final String TEXT_84 = ");";
-  protected final String TEXT_85 = "this->";
-  protected final String TEXT_86 = " = ";
-  protected final String TEXT_87 = ";";
-  protected final String TEXT_88 = NL;
+  protected final String TEXT_71 = ":\" << thisptr->";
+  protected final String TEXT_72 = "()";
+  protected final String TEXT_73 = "(";
+  protected final String TEXT_74 = ");";
+  protected final String TEXT_75 = "new ";
+  protected final String TEXT_76 = "= new ";
+  protected final String TEXT_77 = "* ";
+  protected final String TEXT_78 = "\"";
+  protected final String TEXT_79 = ":\" << this->";
+  protected final String TEXT_80 = "()";
+  protected final String TEXT_81 = "\"";
+  protected final String TEXT_82 = ":\"; this->";
+  protected final String TEXT_83 = "!= NULL ?  os << this->";
+  protected final String TEXT_84 = " << endl " + NL + "\t\t\t\t\t\t: os << \"NULL\" << endl;";
+  protected final String TEXT_85 = "memcpy(&other.";
+  protected final String TEXT_86 = ",&this->";
+  protected final String TEXT_87 = ", sizeof other.";
+  protected final String TEXT_88 = ");";
   protected final String TEXT_89 = "this->";
-  protected final String TEXT_90 = " = ";
+  protected final String TEXT_90 = "= other.";
   protected final String TEXT_91 = ";";
-  protected final String TEXT_92 = "this->";
-  protected final String TEXT_93 = "= ";
-  protected final String TEXT_94 = ";";
-  protected final String TEXT_95 = NL + "if (!";
-  protected final String TEXT_96 = "(";
-  protected final String TEXT_97 = ")){" + NL + "  throw \"Unable to create ";
-  protected final String TEXT_98 = " due to ";
-  protected final String TEXT_99 = "\";" + NL + "}";
+  protected final String TEXT_92 = "copyObject(other.";
+  protected final String TEXT_93 = ", this->";
+  protected final String TEXT_94 = ", sizeof other.";
+  protected final String TEXT_95 = ");";
+  protected final String TEXT_96 = "this->";
+  protected final String TEXT_97 = " = ";
+  protected final String TEXT_98 = ";";
+  protected final String TEXT_99 = NL;
   protected final String TEXT_100 = "this->";
   protected final String TEXT_101 = " = ";
   protected final String TEXT_102 = ";";
-  protected final String TEXT_103 = NL + "if (!";
-  protected final String TEXT_104 = "(";
-  protected final String TEXT_105 = ")){" + NL + "\t";
-  protected final String TEXT_106 = NL + "}";
-  protected final String TEXT_107 = "throw \"Unable to create ";
-  protected final String TEXT_108 = ", must have at least ";
-  protected final String TEXT_109 = " ";
-  protected final String TEXT_110 = "\";";
-  protected final String TEXT_111 = "throw \"Unable to create ";
-  protected final String TEXT_112 = ", must have ";
-  protected final String TEXT_113 = " to ";
-  protected final String TEXT_114 = " ";
-  protected final String TEXT_115 = "\";";
-  protected final String TEXT_116 = NL + "if (";
-  protected final String TEXT_117 = " == NULL || ";
-  protected final String TEXT_118 = "->";
-  protected final String TEXT_119 = "() != NULL){" + NL + "  throw \"Unable to create ";
-  protected final String TEXT_120 = " due to ";
-  protected final String TEXT_121 = "\";" + NL + "}";
-  protected final String TEXT_122 = NL;
-  protected final String TEXT_123 = " = ";
-  protected final String TEXT_124 = ";";
+  protected final String TEXT_103 = "this->";
+  protected final String TEXT_104 = "= ";
+  protected final String TEXT_105 = ";";
+  protected final String TEXT_106 = NL + "if (!";
+  protected final String TEXT_107 = "(";
+  protected final String TEXT_108 = ")){" + NL + "  throw \"Unable to create ";
+  protected final String TEXT_109 = " due to ";
+  protected final String TEXT_110 = "\";" + NL + "}";
+  protected final String TEXT_111 = "this->";
+  protected final String TEXT_112 = "= NULL;";
+  protected final String TEXT_113 = NL + "if (!";
+  protected final String TEXT_114 = "(";
+  protected final String TEXT_115 = ")){" + NL + "\t";
+  protected final String TEXT_116 = NL + "}";
+  protected final String TEXT_117 = "throw \"Unable to create ";
+  protected final String TEXT_118 = ", must have at least ";
+  protected final String TEXT_119 = " ";
+  protected final String TEXT_120 = "\";";
+  protected final String TEXT_121 = "throw \"Unable to create ";
+  protected final String TEXT_122 = ", must have ";
+  protected final String TEXT_123 = " to ";
+  protected final String TEXT_124 = " ";
+  protected final String TEXT_125 = "\";";
+  protected final String TEXT_126 = "this->";
+  protected final String TEXT_127 = " = ";
+  protected final String TEXT_128 = ";";
+  protected final String TEXT_129 = NL + "if (";
+  protected final String TEXT_130 = " == NULL || ";
+  protected final String TEXT_131 = "->";
+  protected final String TEXT_132 = "() != NULL){" + NL + "  throw \"Unable to create ";
+  protected final String TEXT_133 = " due to ";
+  protected final String TEXT_134 = "\";" + NL + "}";
+  protected final String TEXT_135 = NL;
+  protected final String TEXT_136 = " = ";
+  protected final String TEXT_137 = ";";
 
   /**
   * @param argument
@@ -185,16 +197,51 @@ public void execute() {
 
 
     stringBuffer.append(TEXT_1);
-    stringBuffer.append(TEXT_2);
     stringBuffer.append(elementName);
-    stringBuffer.append(TEXT_3);
+    stringBuffer.append(TEXT_2);
     stringBuffer.append(parameters);
-    stringBuffer.append(TEXT_4);
+    stringBuffer.append(TEXT_3);
     
 
 }});
 }});
 
+getRegistry().define(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_DECLARATIONS, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+
+	@GenerationArgument String contents;
+	@GenerationArgument boolean isMany;
+	
+@Override
+public void execute() {
+
+
+    stringBuffer.append(TEXT_4);
+    setIsMany();
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append(contents);
+    
+
+}
+
+private void setIsMany(){
+if(!isMany){
+	return;
+}
+
+
+    stringBuffer.append(TEXT_7);
+    
+
+}
+
+});
+}});
 
 getRegistry().define(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_NO_IMPLEMENTATION, new GenerationProcdure(this){
 	
@@ -207,7 +254,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_5);
+    stringBuffer.append(TEXT_8);
     
 
 }});
@@ -226,12 +273,12 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_6);
-    stringBuffer.append(TEXT_7);
-    stringBuffer.append(elementName);
-    stringBuffer.append(TEXT_8);
-    stringBuffer.append(elementName);
     stringBuffer.append(TEXT_9);
+    stringBuffer.append(TEXT_10);
+    stringBuffer.append(elementName);
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(elementName);
+    stringBuffer.append(TEXT_12);
     
 
 }});
@@ -251,11 +298,11 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_10);
+    stringBuffer.append(TEXT_13);
     stringBuffer.append(elementName);
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_14);
     setPure();
-    stringBuffer.append(TEXT_12);
+    stringBuffer.append(TEXT_15);
     
 
 }
@@ -265,7 +312,7 @@ private void setPure(){
 		return;
 	}
 	
-    stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_16);
     
 }
 
@@ -293,21 +340,20 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_14);
-    stringBuffer.append(TEXT_15);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_16);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_17);
-    stringBuffer.append(parameters);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_18);
-    safeParentCall(parentClass, parentsParameters);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_19);
+    stringBuffer.append(parameters);
     stringBuffer.append(TEXT_20);
+    safeParentCall(parentClass, parentsParameters);
+    stringBuffer.append(TEXT_21);
+    stringBuffer.append(TEXT_22);
     stringBuffer.append(before);
     stringBuffer.append(body);
     stringBuffer.append(after);
-    stringBuffer.append(TEXT_21);
+    stringBuffer.append(TEXT_23);
     
 
 }
@@ -317,17 +363,54 @@ if(parentClassValue.isEmpty()){
 	return;
 }
 
-    stringBuffer.append(TEXT_22);
-    stringBuffer.append(parentClassValue);
-    stringBuffer.append(TEXT_23);
-    stringBuffer.append(val);
     stringBuffer.append(TEXT_24);
+    stringBuffer.append(parentClassValue);
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append(val);
+    stringBuffer.append(TEXT_26);
     
 
 }
 
 });
 
+}});
+
+getRegistry().define(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATIONS, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+
+	@GenerationArgument String contents;
+	@GenerationArgument boolean isMany;
+	
+@Override
+public void execute() {
+
+
+    stringBuffer.append(TEXT_27);
+    setIsMany();
+    stringBuffer.append(TEXT_28);
+    stringBuffer.append(TEXT_29);
+    stringBuffer.append(contents);
+    
+
+}
+
+private void setIsMany(){
+if(!isMany){
+	return;
+}
+
+
+    stringBuffer.append(TEXT_30);
+    
+
+}
+
+});
 }});
 
 getRegistry().define(IModelingConstructorDefinitionsConstants.DESTRUCTOR_IMPLEMENTATION, new GenerationProcdure(this){
@@ -346,17 +429,17 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_25);
-    stringBuffer.append(TEXT_26);
+    stringBuffer.append(TEXT_31);
+    stringBuffer.append(TEXT_32);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_27);
+    stringBuffer.append(TEXT_33);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_28);
+    stringBuffer.append(TEXT_34);
     safeParentCall(parentClass);
-    stringBuffer.append(TEXT_29);
+    stringBuffer.append(TEXT_35);
     removeAssociatedObjectsCall();
     setBody();
-    stringBuffer.append(TEXT_30);
+    stringBuffer.append(TEXT_36);
     
 
 }
@@ -367,7 +450,7 @@ private void removeAssociatedObjectsCall(){
 	}
 	
 
-    stringBuffer.append(TEXT_31);
+    stringBuffer.append(TEXT_37);
     
 }
 
@@ -386,11 +469,11 @@ if(val.isEmpty()){
 	return;
 }
 
-    stringBuffer.append(TEXT_32);
+    stringBuffer.append(TEXT_38);
     stringBuffer.append(val);
-    stringBuffer.append(TEXT_33);
+    stringBuffer.append(TEXT_39);
     stringBuffer.append(val);
-    stringBuffer.append(TEXT_34);
+    stringBuffer.append(TEXT_40);
     
 
 }
@@ -416,21 +499,21 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_35);
-    stringBuffer.append(TEXT_36);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_37);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_38);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_39);
-    safeParentCall(parentClass);
-    stringBuffer.append(TEXT_40);
     stringBuffer.append(TEXT_41);
-    stringBuffer.append(before);
     stringBuffer.append(TEXT_42);
-    stringBuffer.append(after);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_43);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_44);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_45);
+    safeParentCall(parentClass);
+    stringBuffer.append(TEXT_46);
+    stringBuffer.append(TEXT_47);
+    stringBuffer.append(before);
+    stringBuffer.append(TEXT_48);
+    stringBuffer.append(after);
+    stringBuffer.append(TEXT_49);
     
 }
 
@@ -439,9 +522,9 @@ if(val.isEmpty()){
 	return;
 }
 
-    stringBuffer.append(TEXT_44);
+    stringBuffer.append(TEXT_50);
     stringBuffer.append(val);
-    stringBuffer.append(TEXT_45);
+    stringBuffer.append(TEXT_51);
     
 
 }
@@ -463,9 +546,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_46);
+    stringBuffer.append(TEXT_52);
     stringBuffer.append(elementName);
-    stringBuffer.append(TEXT_47);
+    stringBuffer.append(TEXT_53);
     
 
 }});
@@ -484,9 +567,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_48);
+    stringBuffer.append(TEXT_54);
     stringBuffer.append(elementName);
-    stringBuffer.append(TEXT_49);
+    stringBuffer.append(TEXT_55);
     
 
 }});
@@ -503,7 +586,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_50);
+    stringBuffer.append(TEXT_56);
     
 
 }});
@@ -520,7 +603,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_51);
+    stringBuffer.append(TEXT_57);
     
 
 }});
@@ -540,13 +623,13 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_52);
+    stringBuffer.append(TEXT_58);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_53);
-    stringBuffer.append(TEXT_54);
+    stringBuffer.append(TEXT_59);
+    stringBuffer.append(TEXT_60);
     stringBuffer.append(before);
     content();
-    stringBuffer.append(TEXT_55);
+    stringBuffer.append(TEXT_61);
     
 
 }
@@ -554,13 +637,13 @@ public void execute() {
 private void content(){
 if(contents.isEmpty()){
 
-    stringBuffer.append(TEXT_56);
+    stringBuffer.append(TEXT_62);
     
 
 	return;
 }
 
-    stringBuffer.append(TEXT_57);
+    stringBuffer.append(TEXT_63);
     stringBuffer.append(indent(contents, 1));
     
 
@@ -581,7 +664,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_58);
+    stringBuffer.append(TEXT_64);
     
 
 }});
@@ -619,9 +702,9 @@ if(isVariable){
     	
 }else{
 	
-    stringBuffer.append(TEXT_59);
+    stringBuffer.append(TEXT_65);
     stringBuffer.append(value);
-    stringBuffer.append(TEXT_60);
+    stringBuffer.append(TEXT_66);
     
 }
 
@@ -633,7 +716,7 @@ if(!isStart){
 }
 
 
-    stringBuffer.append(TEXT_61);
+    stringBuffer.append(TEXT_67);
     
 
 }
@@ -644,7 +727,7 @@ if(!isEnd){
 }
 
 
-    stringBuffer.append(TEXT_62);
+    stringBuffer.append(TEXT_68);
     
 
 }
@@ -666,7 +749,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_63);
+    stringBuffer.append(TEXT_69);
     
 
 }});
@@ -686,16 +769,71 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_64);
+    stringBuffer.append(TEXT_70);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_65);
+    stringBuffer.append(TEXT_71);
     stringBuffer.append(getterMethod);
-    stringBuffer.append(TEXT_66);
+    stringBuffer.append(TEXT_72);
     
 
 }
 
 });
+}});
+
+getRegistry().define(IModelingConstructorDefinitionsConstants.CONSTRUCT_CLASS, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+
+	@GenerationArgument String constructArguments;
+	@GenerationArgument String type;
+	@GenerationArgument String name;
+	@GenerationArgument boolean define;
+
+@Override
+public void execute() {
+
+
+    setType();
+    setName();
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_73);
+    stringBuffer.append(constructArguments);
+    stringBuffer.append(TEXT_74);
+    
+
+}
+
+private void setName(){
+	if(name.isEmpty()){
+		
+    stringBuffer.append(TEXT_75);
+    
+		return;
+	}
+
+	
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_76);
+    	
+}
+
+private void setType(){
+	if(!define){
+		return;
+	}
+
+	
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_77);
+    	
+}
+
+});
+
 }});
 
 getRegistry().define(IModelingConstructorDefinitionsConstants.STREAM_PRIMITIVE_ATTRIBUTE, new GenerationProcdure(this){
@@ -711,9 +849,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_67);
+    stringBuffer.append(TEXT_78);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_68);
+    stringBuffer.append(TEXT_79);
     set();
     
 
@@ -723,7 +861,7 @@ private void set(){
 if(name.isEmpty()){
 	
     stringBuffer.append(getterMethodName);
-    stringBuffer.append(TEXT_69);
+    stringBuffer.append(TEXT_80);
     
 }else{
 	
@@ -759,13 +897,13 @@ public void execute() {
 
 private void set(){
 
-    stringBuffer.append(TEXT_70);
+    stringBuffer.append(TEXT_81);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_71);
+    stringBuffer.append(TEXT_82);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_72);
+    stringBuffer.append(TEXT_83);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_73);
+    stringBuffer.append(TEXT_84);
     
 }
 
@@ -785,13 +923,13 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_74);
+    stringBuffer.append(TEXT_85);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_75);
+    stringBuffer.append(TEXT_86);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_76);
+    stringBuffer.append(TEXT_87);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_77);
+    stringBuffer.append(TEXT_88);
     
 
 }});
@@ -810,11 +948,11 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_78);
+    stringBuffer.append(TEXT_89);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_79);
+    stringBuffer.append(TEXT_90);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_80);
+    stringBuffer.append(TEXT_91);
     
 
 }});
@@ -833,13 +971,13 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_81);
+    stringBuffer.append(TEXT_92);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_82);
+    stringBuffer.append(TEXT_93);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_83);
+    stringBuffer.append(TEXT_94);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_84);
+    stringBuffer.append(TEXT_95);
     
 
 }});
@@ -859,12 +997,12 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_85);
+    stringBuffer.append(TEXT_96);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_86);
+    stringBuffer.append(TEXT_97);
     stringBuffer.append(listDefinition);
-    stringBuffer.append(TEXT_87);
-    stringBuffer.append(TEXT_88);
+    stringBuffer.append(TEXT_98);
+    stringBuffer.append(TEXT_99);
     stringBuffer.append(copyCall);
     
 
@@ -899,11 +1037,11 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_89);
+    stringBuffer.append(TEXT_100);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_90);
+    stringBuffer.append(TEXT_101);
     stringBuffer.append(value);
-    stringBuffer.append(TEXT_91);
+    stringBuffer.append(TEXT_102);
     
 
 }
@@ -925,11 +1063,11 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_92);
+    stringBuffer.append(TEXT_103);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_93);
+    stringBuffer.append(TEXT_104);
     stringBuffer.append(nameAsVariable);
-    stringBuffer.append(TEXT_94);
+    stringBuffer.append(TEXT_105);
     
 
 }});
@@ -939,28 +1077,30 @@ public void execute() {
 getRegistry().define(IModelingConstructorDefinitionsConstants.SET_AND_CHECK, new GenerationProcdure(this){
 	
 @Override
-public StringBuffer execute(Object element, Object... arguments) {
+public StringBuffer execute(final Object element, final Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	
-	
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE_NAME) String otherTypeName;
 	@GenerationArgument String nameAsVariable;
+	
+	@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent;
 	
 	String setterMethodName;
 			
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_95);
+    stringBuffer.append(TEXT_106);
     stringBuffer.append(setterMethodName);
-    stringBuffer.append(TEXT_96);
+    stringBuffer.append(TEXT_107);
     stringBuffer.append(nameAsVariable);
-    stringBuffer.append(TEXT_97);
+    stringBuffer.append(TEXT_108);
     stringBuffer.append(otherTypeName);
-    stringBuffer.append(TEXT_98);
+    stringBuffer.append(TEXT_109);
     stringBuffer.append(nameAsVariable);
-    stringBuffer.append(TEXT_99);
+    stringBuffer.append(TEXT_110);
     
 
 }
@@ -971,14 +1111,36 @@ public void preExecute(){
 		GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.FALSE));
 }
 
-});
+@Override
+public void postExecute(){
+	getRegistry().addUniqueValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PRE_IMPLEMENTATION, 
+					nullifyCall().toString(), parent);
+}
 
+private StringBuffer nullifyCall(){
+
+return CodeProcedure.generate(new CodeProcedure(getGenerationProcedure(), element, arguments) {
+
+@Override
+public void execute() {
+
+
+    stringBuffer.append(TEXT_111);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_112);
+    
+
+}});
+
+}
+
+});
 }});
 
 getRegistry().define(IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, new GenerationProcdure(this){
 	
 @Override
-public StringBuffer execute(Object element, Object... arguments) {
+public StringBuffer execute(final Object element, final Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	
@@ -990,16 +1152,13 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	@GenerationArgument String nameAsVariable;
 	@GenerationArgument boolean set;
 	
+	@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent;
+	
 	String setterMethodName, listDefinition;
 			
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_100);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_101);
-    stringBuffer.append(listDefinition);
-    stringBuffer.append(TEXT_102);
     setAndCheck();
     
 }
@@ -1010,13 +1169,13 @@ private void setAndCheck() {
 	}
 
 
-    stringBuffer.append(TEXT_103);
+    stringBuffer.append(TEXT_113);
     stringBuffer.append(setterMethodName);
-    stringBuffer.append(TEXT_104);
+    stringBuffer.append(TEXT_114);
     stringBuffer.append(nameAsVariable);
-    stringBuffer.append(TEXT_105);
+    stringBuffer.append(TEXT_115);
     boundaries();
-    stringBuffer.append(TEXT_106);
+    stringBuffer.append(TEXT_116);
     	
 	
 }
@@ -1031,27 +1190,27 @@ private void boundaries() {
 
 private void lower() {
 	
-    stringBuffer.append(TEXT_107);
+    stringBuffer.append(TEXT_117);
     stringBuffer.append(otherTypeName);
-    stringBuffer.append(TEXT_108);
+    stringBuffer.append(TEXT_118);
     stringBuffer.append(lowerBound);
-    stringBuffer.append(TEXT_109);
+    stringBuffer.append(TEXT_119);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_110);
+    stringBuffer.append(TEXT_120);
     
 }
 
 private void lowerAndUpper() {
 	
-    stringBuffer.append(TEXT_111);
+    stringBuffer.append(TEXT_121);
     stringBuffer.append(otherTypeName);
-    stringBuffer.append(TEXT_112);
+    stringBuffer.append(TEXT_122);
     stringBuffer.append(lowerBound);
-    stringBuffer.append(TEXT_113);
+    stringBuffer.append(TEXT_123);
     stringBuffer.append(upperBound);
-    stringBuffer.append(TEXT_114);
+    stringBuffer.append(TEXT_124);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_115);
+    stringBuffer.append(TEXT_125);
     
 }
 
@@ -1061,6 +1220,31 @@ public void preExecute(){
 		GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.FALSE));
 		
 	this.listDefinition= getRegistry().generate(ISTLConstants.NEW_LIST_DEFINITION, element);
+}
+
+@Override
+public void postExecute(){
+	getRegistry().addUniqueValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PRE_IMPLEMENTATION, 
+					initList().toString(), parent);
+}
+
+private StringBuffer initList(){
+
+return CodeProcedure.generate(new CodeProcedure(getGenerationProcedure(), element, arguments) {
+
+@Override
+public void execute() {
+
+
+    stringBuffer.append(TEXT_126);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_127);
+    stringBuffer.append(listDefinition);
+    stringBuffer.append(TEXT_128);
+    
+
+}});
+
 }
 
 });
@@ -1085,22 +1269,22 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_116);
+    stringBuffer.append(TEXT_129);
     stringBuffer.append(nameAsVariable);
-    stringBuffer.append(TEXT_117);
+    stringBuffer.append(TEXT_130);
     stringBuffer.append(nameAsVariable);
-    stringBuffer.append(TEXT_118);
+    stringBuffer.append(TEXT_131);
     stringBuffer.append(getterMethodName);
-    stringBuffer.append(TEXT_119);
+    stringBuffer.append(TEXT_132);
     stringBuffer.append(otherTypeName);
-    stringBuffer.append(TEXT_120);
+    stringBuffer.append(TEXT_133);
     stringBuffer.append(nameAsVariable);
-    stringBuffer.append(TEXT_121);
-    stringBuffer.append(TEXT_122);
+    stringBuffer.append(TEXT_134);
+    stringBuffer.append(TEXT_135);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_123);
+    stringBuffer.append(TEXT_136);
     stringBuffer.append(nameAsVariable);
-    stringBuffer.append(TEXT_124);
+    stringBuffer.append(TEXT_137);
     
 
 }

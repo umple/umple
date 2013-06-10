@@ -33,10 +33,10 @@ public class CppAddHandler extends CppGenerationTemplate{
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "\t" + NL + "\tif(";
   protected final String TEXT_2 = "(";
-  protected final String TEXT_3 = ")){" + NL + "\t\tint newIndex= index;" + NL + "\t\tif(index < 0 ) { " + NL + "\t\t\tnewIndex = 0; " + NL + "\t\t}" + NL + "\t\tif(index > ";
-  protected final String TEXT_4 = "()) { " + NL + "\t\t\tnewIndex = ";
-  protected final String TEXT_5 = "() - 1; " + NL + "\t\t}" + NL + "\t\t";
-  protected final String TEXT_6 = NL + "\t\t";
+  protected final String TEXT_3 = ")){" + NL + "\t\tint newIndex= index;" + NL + "\t\tif(index < 0 ) { " + NL + "\t\t\tnewIndex = 0; " + NL + "\t\t}" + NL + "\t\t" + NL + "\t\tint size= this->";
+  protected final String TEXT_4 = "();" + NL + "\t\tif(size>0){" + NL + "\t\t\t";
+  protected final String TEXT_5 = "\t\t" + NL + "\t\t}" + NL + "\t\t" + NL + "\t\tsize= this->";
+  protected final String TEXT_6 = "();" + NL + "\t\tif(newIndex > size) { " + NL + "\t\t\tnewIndex = size; " + NL + "\t\t}" + NL + "\t\t" + NL + "\t\t";
   protected final String TEXT_7 = NL + "\t\twasAdded = true;" + NL + "    }";
   protected final String TEXT_8 = "IndexOf(this->";
   protected final String TEXT_9 = "->begin(), this->";
@@ -94,39 +94,42 @@ public class CppAddHandler extends CppGenerationTemplate{
   protected final String TEXT_61 = ");" + NL + "    }else{" + NL + "    \t";
   protected final String TEXT_62 = NL + "    }" + NL + "    wasAdded = true;";
   protected final String TEXT_63 = "\t" + NL + "\t";
-  protected final String TEXT_64 = NL + "\twasAdded = true;";
-  protected final String TEXT_65 = "\t" + NL + "\tif (";
-  protected final String TEXT_66 = "->";
-  protected final String TEXT_67 = "(this)!= -1) {" + NL + "\t\twasAdded = true;" + NL + "\t}else{" + NL + "\t\twasAdded = ";
-  protected final String TEXT_68 = "->";
-  protected final String TEXT_69 = "(this);" + NL + "\t\tif(!wasAdded){" + NL + "      \t\tthis->";
-  protected final String TEXT_70 = "(";
-  protected final String TEXT_71 = ");" + NL + "\t\t}" + NL + "\t}" + NL + "\t";
-  protected final String TEXT_72 = "\t" + NL + "\t";
-  protected final String TEXT_73 = NL + "\t" + NL + "\tif (";
-  protected final String TEXT_74 = "){" + NL + "\t\t";
-  protected final String TEXT_75 = "->";
-  protected final String TEXT_76 = "(this);" + NL + "    }else{" + NL + "    \t";
-  protected final String TEXT_77 = NL + "    }";
-  protected final String TEXT_78 = "\t" + NL + "\t";
-  protected final String TEXT_79 = NL + "\t" + NL + "\tif (";
-  protected final String TEXT_80 = "){" + NL + "\t\tif(";
-  protected final String TEXT_81 = "->";
-  protected final String TEXT_82 = "() <= ";
-  protected final String TEXT_83 = "()){" + NL + "\t\t\treturn wasAdded;" + NL + "\t\t}" + NL + "\t\t";
-  protected final String TEXT_84 = "->";
-  protected final String TEXT_85 = "(this);" + NL + "    }else{" + NL + "\t\t";
-  protected final String TEXT_86 = NL + "    }";
-  protected final String TEXT_87 = "\t" + NL + "    if (this->";
-  protected final String TEXT_88 = "() >= this->";
-  protected final String TEXT_89 = "()){" + NL + "\t\treturn wasAdded;" + NL + "\t}";
-  protected final String TEXT_90 = "* ";
-  protected final String TEXT_91 = " = ";
-  protected final String TEXT_92 = "->";
-  protected final String TEXT_93 = "();" + NL + "\tbool ";
+  protected final String TEXT_64 = "\t" + NL + "\tif (";
+  protected final String TEXT_65 = "->";
+  protected final String TEXT_66 = "(this)!= -1) {" + NL + "\t\twasAdded = true;" + NL + "\t}else{" + NL + "\t\twasAdded = ";
+  protected final String TEXT_67 = "->";
+  protected final String TEXT_68 = "(this);" + NL + "\t\tif(!wasAdded){" + NL + "      \t\tint currentIndex= this->";
+  protected final String TEXT_69 = ";" + NL + "      \t\t";
+  protected final String TEXT_70 = NL + "\t\t}" + NL + "\t}" + NL + "\t";
+  protected final String TEXT_71 = "\t" + NL + "\t";
+  protected final String TEXT_72 = NL + "\t" + NL + "\tif (";
+  protected final String TEXT_73 = "){" + NL + "\t\t";
+  protected final String TEXT_74 = "->";
+  protected final String TEXT_75 = "(this);" + NL + "    }else{" + NL + "    \t";
+  protected final String TEXT_76 = NL + "    }" + NL + "    wasAdded= true;";
+  protected final String TEXT_77 = "\t" + NL + "\t";
+  protected final String TEXT_78 = NL + "\t" + NL + "\tif (";
+  protected final String TEXT_79 = "){" + NL + "\t\tif(";
+  protected final String TEXT_80 = "->";
+  protected final String TEXT_81 = "() <= ";
+  protected final String TEXT_82 = "()){" + NL + "\t\t\treturn wasAdded;" + NL + "\t\t}" + NL + "\t\t";
+  protected final String TEXT_83 = "->";
+  protected final String TEXT_84 = "(this);" + NL + "    }else{" + NL + "\t\t";
+  protected final String TEXT_85 = NL + "    }" + NL + "    wasAdded= true;";
+  protected final String TEXT_86 = "\t" + NL + "    if (this->";
+  protected final String TEXT_87 = "() >= this->";
+  protected final String TEXT_88 = "()){" + NL + "\t\t";
+  protected final String TEXT_89 = NL + "\t}";
+  protected final String TEXT_90 = "return wasAdded;";
+  protected final String TEXT_91 = "return ";
+  protected final String TEXT_92 = ";";
+  protected final String TEXT_93 = "* ";
   protected final String TEXT_94 = " = ";
-  protected final String TEXT_95 = " != NULL && this!=";
-  protected final String TEXT_96 = ";";
+  protected final String TEXT_95 = "->";
+  protected final String TEXT_96 = "();" + NL + "\tbool ";
+  protected final String TEXT_97 = " = ";
+  protected final String TEXT_98 = " != NULL && this!=";
+  protected final String TEXT_99 = ";";
 
   /**
   * @param argument
@@ -164,9 +167,9 @@ public void execute() {
     stringBuffer.append(TEXT_3);
     stringBuffer.append(numberOfMethodName);
     stringBuffer.append(TEXT_4);
-    stringBuffer.append(numberOfMethodName);
-    stringBuffer.append(TEXT_5);
     stringBuffer.append(removeCall);
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append(numberOfMethodName);
     stringBuffer.append(TEXT_6);
     stringBuffer.append(addCall);
     stringBuffer.append(TEXT_7);
@@ -503,7 +506,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 	
 	@GenerationArgument boolean check;
 			
-	String instanceAsVariable, removeMethodName, indexOfMethod, addOtherEndMethodName;
+	String instanceAsVariable, otherEndIndexOfMethod, indexOfMethod, addOtherEndMethodName, asIndex, removeCall;
 	
 @Override
 public void execute() {
@@ -511,7 +514,6 @@ public void execute() {
     stringBuffer.append(TEXT_63);
     stringBuffer.append(getGenerationTemplate().generate("cpp.add.handler.add.item.internal", element, name, instanceAsVariable));
     check();
-    stringBuffer.append(TEXT_64);
     
 
 }
@@ -522,30 +524,30 @@ private void check(){
 	}
 	
 	
+    stringBuffer.append(TEXT_64);
+    stringBuffer.append(instanceAsVariable);
     stringBuffer.append(TEXT_65);
-    stringBuffer.append(instanceAsVariable);
+    stringBuffer.append(otherEndIndexOfMethod);
     stringBuffer.append(TEXT_66);
-    stringBuffer.append(indexOfMethod);
+    stringBuffer.append(instanceAsVariable);
     stringBuffer.append(TEXT_67);
-    stringBuffer.append(instanceAsVariable);
-    stringBuffer.append(TEXT_68);
     stringBuffer.append(addOtherEndMethodName);
+    stringBuffer.append(TEXT_68);
+    stringBuffer.append(asIndex);
     stringBuffer.append(TEXT_69);
-    stringBuffer.append(removeMethodName);
+    stringBuffer.append(removeCall);
     stringBuffer.append(TEXT_70);
-    stringBuffer.append(instanceAsVariable);
-    stringBuffer.append(TEXT_71);
     	
 }
 
 @Override
 public void preExecute(){
-	this.removeMethodName= getRegistry().generationPointString(element, ICppNameConstants.REMOVE, 
-		GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.FALSE));
-		
-	this.indexOfMethod= getRegistry().generationPointString(element, ICppNameConstants.INDEX_OF, 
+	this.otherEndIndexOfMethod= getRegistry().generationPointString(element, ICppNameConstants.INDEX_OF, 
 		GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.TRUE));
 		
+	this.indexOfMethod= getRegistry().generationPointString(element, ICppNameConstants.INDEX_OF, 
+		GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.FALSE));
+	
 	this.addOtherEndMethodName= getRegistry().generationPointString(element, ICppNameConstants.ADD_METHOD, 
 		GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.TRUE));
 	
@@ -554,6 +556,14 @@ public void preExecute(){
 	
 	this.instanceAsVariable= getRegistry().generationPointString(element, ICppNameConstants.NEW_INSTANCE, 
 		GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_SEEK_OTHER_END_ARGUMENT, Boolean.FALSE));
+	
+	this.asIndex= getRegistry().use(ICppDefinitions.METHOD_INVOCATION, indexOfMethod, this.instanceAsVariable);
+	
+	String thisCall= getRegistry().use(ICppDefinitions.ATTRIBUTE_USE, CPPCommonConstants.THIS, name, Boolean.TRUE);
+	this.removeCall= getRegistry().generationPointString(element, ICppDefinitions.REMOVE_INVOCATION, 
+		GenerationArgumentDescriptor.arg(ICppDefinitions.REMOVE_VARIABLE_ARGUMENT, thisCall),
+		GenerationArgumentDescriptor.arg(ICppDefinitions.REMOVE_INDEX_ARGUMENT, "currentIndex"));
+	
 }
 
 });
@@ -574,17 +584,17 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_72);
+    stringBuffer.append(TEXT_71);
     stringBuffer.append(preCode);
-    stringBuffer.append(TEXT_73);
+    stringBuffer.append(TEXT_72);
     stringBuffer.append(isNew);
-    stringBuffer.append(TEXT_74);
+    stringBuffer.append(TEXT_73);
     stringBuffer.append(instanceAsVariable );
-    stringBuffer.append(TEXT_75);
+    stringBuffer.append(TEXT_74);
     stringBuffer.append(setter);
-    stringBuffer.append(TEXT_76);
+    stringBuffer.append(TEXT_75);
     stringBuffer.append(getGenerationTemplate().generate("cpp.add.handler.add.item.internal", element, name, instanceAsVariable));
-    stringBuffer.append(TEXT_77);
+    stringBuffer.append(TEXT_76);
     	
 
 }
@@ -619,23 +629,23 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_78);
+    stringBuffer.append(TEXT_77);
     stringBuffer.append(preCode);
-    stringBuffer.append(TEXT_79);
+    stringBuffer.append(TEXT_78);
     stringBuffer.append(isNew );
-    stringBuffer.append(TEXT_80);
+    stringBuffer.append(TEXT_79);
     stringBuffer.append(existing);
-    stringBuffer.append(TEXT_81);
+    stringBuffer.append(TEXT_80);
     stringBuffer.append(numberOfMethodName);
-    stringBuffer.append(TEXT_82);
+    stringBuffer.append(TEXT_81);
     stringBuffer.append(minimumNumberMethodName);
-    stringBuffer.append(TEXT_83);
+    stringBuffer.append(TEXT_82);
     stringBuffer.append(instanceAsVariable );
-    stringBuffer.append(TEXT_84);
+    stringBuffer.append(TEXT_83);
     stringBuffer.append(setter);
-    stringBuffer.append(TEXT_85);
+    stringBuffer.append(TEXT_84);
     stringBuffer.append(getGenerationTemplate().generate("cpp.add.handler.add.item.internal", element, name, instanceAsVariable));
-    stringBuffer.append(TEXT_86);
+    stringBuffer.append(TEXT_85);
     	
 
 }
@@ -677,15 +687,35 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
 	String numberOfMethodName, maximumNumberMethodName;
 	
+	@GenerationArgument String returnValue;
+	
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_87);
+    stringBuffer.append(TEXT_86);
     stringBuffer.append(numberOfMethodName );
-    stringBuffer.append(TEXT_88);
+    stringBuffer.append(TEXT_87);
     stringBuffer.append( maximumNumberMethodName );
+    stringBuffer.append(TEXT_88);
+    setReturnFlag();
     stringBuffer.append(TEXT_89);
     	
+
+}
+
+private void setReturnFlag(){
+
+if(returnValue.isEmpty()){
+	
+    stringBuffer.append(TEXT_90);
+    
+	return;
+}
+
+    stringBuffer.append(TEXT_91);
+    stringBuffer.append(returnValue);
+    stringBuffer.append(TEXT_92);
+    
 
 }
 
@@ -717,19 +747,19 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
     stringBuffer.append(otherEndTypeName );
-    stringBuffer.append(TEXT_90);
-    stringBuffer.append(existing);
-    stringBuffer.append(TEXT_91);
-    stringBuffer.append(instanceAsVariable);
-    stringBuffer.append(TEXT_92);
-    stringBuffer.append(getter);
     stringBuffer.append(TEXT_93);
-    stringBuffer.append(isNew);
+    stringBuffer.append(existing);
     stringBuffer.append(TEXT_94);
-    stringBuffer.append(existing);
+    stringBuffer.append(instanceAsVariable);
     stringBuffer.append(TEXT_95);
-    stringBuffer.append(existing);
+    stringBuffer.append(getter);
     stringBuffer.append(TEXT_96);
+    stringBuffer.append(isNew);
+    stringBuffer.append(TEXT_97);
+    stringBuffer.append(existing);
+    stringBuffer.append(TEXT_98);
+    stringBuffer.append(existing);
+    stringBuffer.append(TEXT_99);
     
 
 }
