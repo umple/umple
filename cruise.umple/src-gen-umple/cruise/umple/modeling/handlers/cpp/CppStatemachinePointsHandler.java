@@ -72,7 +72,6 @@ public class CppStatemachinePointsHandler{
 	
 	private final static String TIMER_STATES= "cpp.timer.states.internal"; //$NON-NLS-1$
 	
-	
 	private final static String STATEMACHINE_VALUES= "cpp.statemachine.values"; //$NON-NLS-1$
 	private final static String STATEMACHINE_VARIABLE_VALUES= "cpp.statemachine.variables.values"; //$NON-NLS-1$
 	
@@ -912,7 +911,8 @@ public class CppStatemachinePointsHandler{
 			@GenerationBaseElement Object state,
 			@GenerationArgument Object element,
 			@GenerationProcedureParameter(id = ICppStatemachinesDefinitions.STATE_ENTRY_CODE_BODY) String entryCode,
-			@GenerationProcedureParameter(id = ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY) String doActivityCode){
+			@GenerationProcedureParameter(id = ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT) String onCompletionEvent,
+			@GenerationProcedureParameter(id = ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY) String doActivityCodeBody){
 		
 		String body= CommonConstants.BLANK;
 		
@@ -998,6 +998,15 @@ public class CppStatemachinePointsHandler{
 			}
 		}
 		
+		String doActivityCode= doActivityCodeBody;
+		if(onCompletionEvent!=null&& !onCompletionEvent.isEmpty()){
+			String invocation = generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, onCompletionEvent, CommonConstants.BLANK, Boolean.TRUE);
+			if(doActivityCodeBody!= null&& !doActivityCode.isEmpty()){
+				invocation= doActivityCode+ CommonConstants.NEW_LINE+ invocation;
+			}
+			doActivityCode= invocation;
+		}
+		
 		if(doActivityCode!= null&& !doActivityCode.isEmpty()){
 			String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
 			String threadInstance = generationValueGetter.use(ICppStatemachinesDefinitions.THREAD_INSTANCE, switchVariableType);
@@ -1030,9 +1039,11 @@ public class CppStatemachinePointsHandler{
 			map.put(IModelingConstants.METHOD_OBJECT, element);
 			generationValueGetter.addValue(ICppStatemachinesDefinitions.DO_ACTIVITY_IMPLEMENTATION, map, element, VisibilityConstants.PRIVATE);
 			
+			String nomralizedDoActivityCode= generationValueGetter.use(ICppStatemachinesDefinitions.DO_ACTIVITY_BODY_WRAP, doActivityCode);
+			
 			Map<String, Object> newMap= new HashMap<String, Object>();
 			newMap.put(IModelingConstants.METHOD_RETURN_TYPE, CPPTypesConstants.VOID);
-			newMap.put(IModelingConstants.CODY_BODY, StringUtil.indent(doActivityCode, 1));
+			newMap.put(IModelingConstants.CODY_BODY, StringUtil.indent(nomralizedDoActivityCode, 1));
 			newMap.put(IModelingConstants.METHOD_NAME, doActivityInstance);
 			newMap.put(IModelingConstants.METHOD_GROUP, IModelingConstants.METHOD_OPERATIONS_GROUP);
 			newMap.put(IModelingConstants.METHOD_OBJECT, element);
@@ -1137,7 +1148,8 @@ public class CppStatemachinePointsHandler{
 				String contents = generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, setter, 
 						qualifiedType+ CPPCommonConstants.DECLARATION_COMMON_PREFIX+ pseudoState, Boolean.TRUE);
 						
-				generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, contents, element, Boolean.FALSE);
+				generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, 
+						new SimpleEntry<Object, String>(element, contents), element, Boolean.FALSE);
 			}
 			 
 			
@@ -1477,6 +1489,11 @@ public class CppStatemachinePointsHandler{
 	@GenerationPoint(generationPoint= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY)
 	public static String doActivity(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object state){
 		return generationValueGetter.getString(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY, CPPCommonConstants.CPP_LANGUAGE);
+	}
+	
+	@GenerationPoint(generationPoint= ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT)
+	public static String doActivityOnCompletion(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object state){
+		return generationValueGetter.getString(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_ON_COMPLETION_EVENT/*, CPPCommonConstants.CPP_LANGUAGE*/);
 	}
 	
 }

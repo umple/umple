@@ -48,6 +48,7 @@ import cruise.umple.modeling.handlers.cpp.CPPContentsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CPPDependsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CppCustomGetterFunctionsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CppStatemachinePointsHandler;
+import cruise.umple.modeling.handlers.cpp.CppTestsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.ICppModelingPriorityHandler;
 import cruise.umple.modeling.handlers.cpp.StlGenerationPointsHandler;
 
@@ -110,7 +111,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		
 		this.getGenerationPolicyRegistry().register(new CppStatemachinePointsHandler());
 		
-		//this.getGenerationPolicyRegistry().register(new CppTestsPointsHandler());
+		this.getGenerationPolicyRegistry().register(new CppTestsPointsHandler());
 	}
 	
 	public List<ContentsDescriptor> getContentDescriptors(){

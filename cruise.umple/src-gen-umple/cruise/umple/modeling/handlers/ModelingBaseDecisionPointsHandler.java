@@ -18,9 +18,16 @@
 *******************************************************************************/
 package cruise.umple.modeling.handlers;
 
+import java.util.List;
+
 import cruise.umple.core.DecisionPoint;
+import cruise.umple.core.GenerationArgumentDescriptor;
+import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.GenerationCallback.GenerationArgument;
+import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
+import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.cpp.utils.CPPTypesConstants;
 
 public class ModelingBaseDecisionPointsHandler{
@@ -181,6 +188,39 @@ public class ModelingBaseDecisionPointsHandler{
 		}
 		
 		return otherEndUpperBound== otherEndLowerBound&& otherEndUpperBound==1;
+	}
+	
+	@DecisionPoint(decisionPoint = IModelingConstants.IS_INSTANCE_OF)
+	public static boolean isInstanceOf(
+			@GenerationArgument(id= IModelingConstants.INSTANCE_OF_ELEMENT_ARGUMENT) Object elementArgument,
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationElementParameter(id = IModelingConstants.PARENT_CLASS) Object parentClass,
+			@GenerationElementParameter(id = IModelingConstants.PARENT_INTERFACES) List<?> parentInterfaces,
+			@GenerationBaseElement Object element){
+		
+		if(element.equals(elementArgument)|| parentInterfaces.contains(element)){
+			return true;
+		}
+		
+		if(parentClass!= null&& 
+				generationValueGetter.getBoolean(parentClass, IModelingConstants.IS_INSTANCE_OF,
+						GenerationArgumentDescriptor.arg(IModelingConstants.INSTANCE_OF_ELEMENT_ARGUMENT, elementArgument))){
+			return true;
+		}
+		return false;
+	}
+	
+	@DecisionPoint(decisionPoint = IModelingConstants.IS_PARENT)
+	public static boolean isParent(
+			@GenerationArgument(id= IModelingConstants.INSTANCE_OF_ELEMENT_ARGUMENT) Object elementArgument,
+			@GenerationElementParameter(id = IModelingConstants.PARENT_CLASS) Object parentClass,
+			@GenerationElementParameter(id = IModelingConstants.PARENT_INTERFACES) List<?> parentInterfaces){
+		
+		if(parentClass== null){
+			return false;
+		}
+		
+		return parentClass.equals(elementArgument)|| parentInterfaces.contains(elementArgument);
 	}
 	
 	@DecisionPoint(decisionPoint = IModelingDecisions.ATTRIBUTE_IS_SETTABLE)
