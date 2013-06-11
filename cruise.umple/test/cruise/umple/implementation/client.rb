@@ -5,7 +5,6 @@
 
 
 
-# attributes on both sides of the constraint's boolean expression
 class Client
 
 
@@ -14,25 +13,16 @@ class Client
   #------------------------
 
   #Client Attributes - for documentation purposes
-  #attr_reader :minAge, :age
+  #attr_reader :minAge
 
   #------------------------
   # CONSTRUCTOR
   #------------------------
 
-  def initialize(a_minAge, a_age)
+  def initialize(a_minAge)
     @initialized = false
     @deleted = false
-    if !(a_age>a_minAge) then
-      raise RuntimeError, 'Please provide a valid age' 
-    end 
-    
-    if !(a_age>a_minAge) then
-      raise RuntimeError, 'Please provide a valid minAge' 
-    end 
-    
     @minAge = a_minAge
-    @age = a_age
     @initialized = true
   end
 
@@ -42,21 +32,8 @@ class Client
 
   def set_minAge(a_minAge)
     was_set = false
-    if @age>a_minAge then
-    
     @minAge = a_minAge
     was_set = true
-    end
-    was_set
-  end
-
-  def set_age(a_age)
-    was_set = false
-    if a_age>@minAge then
-    
-    @age = a_age
-    was_set = true
-    end
     was_set
   end
 
@@ -64,12 +41,26 @@ class Client
     @minAge
   end
 
-  def get_age
-    @age
-  end
-
   def delete
     @deleted = true
   end
+
+  def someMethod (arg)
+
+      if( !(@arg>5)) then
+        
+        raise RuntimeError, 'Please provide a valid arg' 
+    
+         end
+      if( !(@minAge<8)) then
+        
+        raise RuntimeError, 'Please provide a valid minAge' 
+    
+         end
+    // rest of stuff that we don't interpret
+ return 0;
+  end
+
+
 
 end
