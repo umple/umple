@@ -144,6 +144,7 @@ public class Student
     return aType;
   }
 
+  @umplesourcefile(line={39, 40, 41, 42},file={"CodeInjectionTest.ump", "CodeInjectionTest.ump", "CodeInjectionTest.ump", "CodeInjectionTest.ump"},javaline={153, 156, 163, 166},length={1, 1, 1, 1})
   public String getDefaultType()
   {
     print "start getDefaultType";
@@ -215,6 +216,7 @@ public class Student
     return 2/3;
   }
 
+  @umplesourcefile(line={14, 15},file={"CodeInjectionTest.ump", "CodeInjectionTest.ump"},javaline={239, 242},length={1, 1})
   public boolean isInjBool()
   {
     print "before injBool";
@@ -223,6 +225,7 @@ public class Student
     return aInjBool;
   }
 
+  @umplesourcefile(line={17, 18},file={"CodeInjectionTest.ump", "CodeInjectionTest.ump"},javaline={249, 252},length={1, 1})
   public boolean isDInjBool()
   {
     print "before dInjBool";

@@ -132,6 +132,7 @@ public class Student
     return aType;
   }
 
+  @umplesourcefile(line={23, 24, 25, 26},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={139, 142, 149, 152},length={1, 1, 1, 1})
   public String getDefaultType()
   {
     print "start getDefault_type";

@@ -3729,6 +3729,7 @@ public class JavaClassGenerator implements ILang
       if (av.getModifier().equals("defaulted") && customGetDefaultPostfixCode != null)
       {
         
+    stringBuffer.append( umpleSourceFile );
     stringBuffer.append(TEXT_308);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_309);
@@ -3755,6 +3756,7 @@ public class JavaClassGenerator implements ILang
       else if (av.getModifier().equals("defaulted"))
       {
         
+    stringBuffer.append( umpleSourceFile );
     stringBuffer.append(TEXT_318);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_319);
@@ -3843,6 +3845,12 @@ public class JavaClassGenerator implements ILang
 
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isMethod",av)));
+    
+    
+    stringBuffer.append( getUmpleSourceFile(baseJavaLine,new String[]{
+      customGetPrefixCode,customGetPostfixCode},
+      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true)));
+    
     
     if (av.getIsDerived() && customGetPostfixCode != null)
     {
