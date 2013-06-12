@@ -24,6 +24,7 @@ public class Glossary
   // CONSTRUCTOR
   //------------------------
 
+  @umplesourcefile(line={851},file={"Util_Code.ump"},javaline={32},length={1})
   public Glossary()
   {
     words = new ArrayList<Word>();
@@ -94,7 +95,7 @@ public class Glossary
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 855 ../../../../src/Util_Code.ump
-  @umplesourcefile(line={855},file={"Util_Code.ump"},javaline={98},length={31})
+  @umplesourcefile(line={855},file={"Util_Code.ump"},javaline={99},length={31})
   private void init()
   {
     addWord(new Word("fish","fish"));
@@ -128,7 +129,7 @@ public class Glossary
   }
   
   
-  @umplesourcefile(line={888},file={"Util_Code.ump"},javaline={132},length={53})
+  @umplesourcefile(line={888},file={"Util_Code.ump"},javaline={133},length={53})
   public String getSingular(String plural)
   {
     if (plural == null || plural.length() == 0)
@@ -183,7 +184,7 @@ public class Glossary
     }
   }
   
-  @umplesourcefile(line={942},file={"Util_Code.ump"},javaline={187},length={53})
+  @umplesourcefile(line={942},file={"Util_Code.ump"},javaline={188},length={53})
   public String getPlural(String singular)
   {
     if (singular == null || singular.length() == 0)

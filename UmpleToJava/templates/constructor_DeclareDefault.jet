@@ -4,7 +4,11 @@
   String customConstructorPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","constructor"));
   String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));
 
-  appendln(stringBuffer, "");
+  String umplesourcefile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customConstructorPrefixCode,customConstructorPostfixCode},
+      isFake?"FAKE":getConstructorCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+
+  appendln(stringBuffer,umplesourcefile);
 
   String accessibility = uClass.getIsSingleton() ? "private" : "public";
   append(stringBuffer,"  {0} {1}({2})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature")});

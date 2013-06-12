@@ -24,6 +24,7 @@ public class CodeBlock
   // CONSTRUCTOR
   //------------------------
 
+  @umplesourcefile(line={485},file={"Umple_Code.ump"},javaline={31},length={1})
   public CodeBlock()
   {
     // line 485 "../../../../src/Umple_Code.ump"
@@ -43,18 +44,18 @@ public class CodeBlock
   // line 274 ../../../../src/Umple.ump
   public static String languageUsed = "";
   Hashtable<String,String> code;
-  @umplesourcefile(line={276},file={"Umple.ump"},javaline={47},length={4})
+  @umplesourcefile(line={276},file={"Umple.ump"},javaline={48},length={4})
  public CodeBlock(String add)  {
 this();
     code.put("",add);
   }
-  @umplesourcefile(line={280},file={"Umple.ump"},javaline={52},length={4})
+  @umplesourcefile(line={280},file={"Umple.ump"},javaline={53},length={4})
  public CodeBlock(String lang,String add)  {
 this();
     code.put(lang,add);
   }
 // line 497 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line={497},file={"Umple_Code.ump"},javaline={58},length={7})
+  @umplesourcefile(line={497},file={"Umple_Code.ump"},javaline={59},length={7})
   public void setCode(String add)
   {
     if(add!=null)
@@ -62,7 +63,7 @@ this();
     else
       code.put("","");
   }
-  @umplesourcefile(line={504},file={"Umple_Code.ump"},javaline={66},length={7})
+  @umplesourcefile(line={504},file={"Umple_Code.ump"},javaline={67},length={7})
   public void setCode(String lang, String add)
   {
     if(add!=null)
@@ -70,17 +71,17 @@ this();
     else
       code.put(lang,"");
   }
-  @umplesourcefile(line={511},file={"Umple_Code.ump"},javaline={74},length={4})
+  @umplesourcefile(line={511},file={"Umple_Code.ump"},javaline={75},length={4})
   public String getCode()
   {
     return !code.containsKey(languageUsed) ? "".equals(languageUsed) ? null : code.get("") : code.get(languageUsed);
   }
-  @umplesourcefile(line={515},file={"Umple_Code.ump"},javaline={79},length={4})
+  @umplesourcefile(line={515},file={"Umple_Code.ump"},javaline={80},length={4})
   public String getCode(String lang)
   {
     return code.containsKey(lang)? code.get(lang) : code.get("");
   }
-  @umplesourcefile(line={519},file={"Umple_Code.ump"},javaline={84},length={10})
+  @umplesourcefile(line={519},file={"Umple_Code.ump"},javaline={85},length={10})
   public String toString()
   {
     Enumeration<String> enumer = code.elements();
