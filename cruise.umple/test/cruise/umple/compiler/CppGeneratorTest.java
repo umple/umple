@@ -9,7 +9,7 @@
 
 package cruise.umple.compiler;
 
-import cruise.umple.compiler.cpp.CppInterfaceGenerator;
+import cruise.umple.compiler.cpp.CppInterfaceHeaderGenerator;
 
 import org.junit.*;
 
@@ -887,7 +887,7 @@ public class CppGeneratorTest
   public void getLanguageFor()
   {
     UmpleInterface aInterface = new UmpleInterface("Student");
-    Assert.assertEquals(CppInterfaceGenerator.class,generator.getLanguageFor(aInterface).getClass());
+    Assert.assertEquals(CppInterfaceHeaderGenerator.class,generator.getLanguageFor(aInterface).getClass());
   }
 
   @Test
