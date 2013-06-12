@@ -32,6 +32,7 @@ public class Guard
   // CONSTRUCTOR
   //------------------------
 
+  @umplesourcefile(line={187},file={"StateMachine.ump"},javaline={43},length={1})
   public Guard(String aCondition)
   {
     cachedHashCode = -1;
@@ -54,7 +55,7 @@ public class Guard
     return wasSet;
   }
 
-  @umplesourcefile(line={188},file={"StateMachine.ump"},javaline={62},length={2})
+  @umplesourcefile(line={188},file={"StateMachine.ump"},javaline={63},length={2})
   public boolean setCondition(String aCondition)
   {
     boolean wasSet = false;
@@ -66,7 +67,7 @@ public class Guard
     return wasSet;
   }
 
-  @umplesourcefile(line={195},file={"StateMachine.ump"},javaline={75},length={5})
+  @umplesourcefile(line={195},file={"StateMachine.ump"},javaline={76},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
@@ -86,7 +87,7 @@ public class Guard
     return position;
   }
 
-  @umplesourcefile(line={189},file={"StateMachine.ump"},javaline={92},length={3})
+  @umplesourcefile(line={189},file={"StateMachine.ump"},javaline={93},length={3})
   public String getCondition()
   {
     String aCondition = condition;

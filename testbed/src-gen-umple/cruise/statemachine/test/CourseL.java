@@ -262,6 +262,7 @@ public class CourseL
     }
   }
 
+  @umplesourcefile(line={124},file={"TestHarnessStateMachineJava.ump"},javaline={269},length={1})
   public void delete()
   {
     // line 124 "../../../../src/TestHarnessStateMachineJava.ump"

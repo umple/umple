@@ -41,6 +41,7 @@ public class Attribute extends UmpleVariable
   // CONSTRUCTOR
   //------------------------
 
+  @umplesourcefile(line={472},file={"Umple.ump"},javaline={61},length={1})
   public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleClass aUmpleClass)
   {
     super(aName, aType, aModifier, aValue);
@@ -436,20 +437,20 @@ public class Attribute extends UmpleVariable
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   // line 1079 ../../../../src/Umple_Code.ump
-  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={440},length={4})
+  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={441},length={4})
   public boolean isConstant()
   {
     return "const".equals(getModifier());
   }  
 
-  @umplesourcefile(line={1084},file={"Umple_Code.ump"},javaline={446},length={4})
+  @umplesourcefile(line={1084},file={"Umple_Code.ump"},javaline={447},length={4})
   public boolean isPrimitive()
   {
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
 
-  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={453},length={7})
+  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={454},length={7})
   public boolean isImmutable()
   {
     boolean varIsImmutable = super.isImmutable();
@@ -458,12 +459,12 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
   
-  @umplesourcefile(line={1098},file={"Umple_Code.ump"},javaline={462},length={4})
+  @umplesourcefile(line={1098},file={"Umple_Code.ump"},javaline={463},length={4})
   public String getValue()
   {
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
-  @umplesourcefile(line={1102},file={"Umple_Code.ump"},javaline={467},length={4})
+  @umplesourcefile(line={1102},file={"Umple_Code.ump"},javaline={468},length={4})
   public void setValue(String lang, String code)
   {
     codeblock.setCode(lang,code);

@@ -1,14 +1,17 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
 <%
+  String customDeletePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","delete"));
+  String customDeletePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","delete"));
 
-  appendln(stringBuffer,"");
+  String umplesourcefile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customDeletePrefixCode,customDeletePostfixCode},
+      isFake?"FAKE":getDeleteCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+
+  appendln(stringBuffer,umplesourcefile);
   appendln(stringBuffer,"  public void delete()");
   append(stringBuffer,"  {");
 
-  boolean hasSomethingToDelete = false;
-
-  String customDeletePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","delete"));
-  String customDeletePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","delete"));
+  boolean hasSomethingToDelete = false;  
 
   if (customDeletePrefixCode != null) 
   {

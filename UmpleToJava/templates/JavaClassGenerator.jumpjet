@@ -38,13 +38,13 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
   <%getMemberCode(stringBuffer, model,uClass,gClass,gen,isFirst);
-  getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst, false);
   getAttributeCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getStateMachine1Code(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getAssociationCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getEqualsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getStateMachine2Code(stringBuffer, model,uClass,gClass,gen,isFirst);
-  getDeleteCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getDeleteCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getExtraMethodsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getAllExtraCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   return stringBuffer.toString();
@@ -59,8 +59,9 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   <%@ include file="members_AllHelpers.jet" %>
   <%return stringBuffer.toString();
     } 
-    private String getConstructorCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
-  {%>
+    private String getConstructorCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = stringBuffer.toString().split("\\n").length;%>
 
   //------------------------
   // CONSTRUCTOR
@@ -110,8 +111,9 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   <%@ include file="state_machine_timedEvent_All.jet" %>
   <%return stringBuffer.toString();
     } 
-    private String getDeleteCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
-  {%>
+    private String getDeleteCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
+  {
+    Integer baseJavaLine = stringBuffer.toString().split("\\n").length+1; %>
   <%@ include file="delete_All.jet" %>
   <%return stringBuffer.toString();
     } 

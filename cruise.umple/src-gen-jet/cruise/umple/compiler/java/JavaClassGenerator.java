@@ -2124,13 +2124,13 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append( gen.translate("isA",uClass) );
     stringBuffer.append(TEXT_10);
     getMemberCode(stringBuffer, model,uClass,gClass,gen,isFirst);
-  getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst, false);
   getAttributeCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getStateMachine1Code(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getAssociationCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getEqualsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getStateMachine2Code(stringBuffer, model,uClass,gClass,gen,isFirst);
-  getDeleteCode(stringBuffer, model,uClass,gClass,gen,isFirst);
+  getDeleteCode(stringBuffer, model,uClass,gClass,gen,isFirst,false);
   getExtraMethodsCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getAllExtraCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   return stringBuffer.toString();
@@ -2475,8 +2475,9 @@ public class JavaClassGenerator implements ILang
 
     return stringBuffer.toString();
     } 
-    private String getConstructorCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+    private String getConstructorCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
+    Integer baseJavaLine = stringBuffer.toString().split("\\n").length;
     stringBuffer.append(TEXT_11);
     
   boolean isOneToOne = false;
@@ -2495,7 +2496,11 @@ public class JavaClassGenerator implements ILang
   String customConstructorPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","constructor"));
   String customConstructorPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","constructor"));
 
-  appendln(stringBuffer, "");
+  String umplesourcefile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customConstructorPrefixCode,customConstructorPostfixCode},
+      isFake?"FAKE":getConstructorCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+
+  appendln(stringBuffer,umplesourcefile);
 
   String accessibility = uClass.getIsSingleton() ? "private" : "public";
   append(stringBuffer,"  {0} {1}({2})",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature")});
@@ -8268,18 +8273,22 @@ if (p != null) {
 
     return stringBuffer.toString();
     } 
-    private String getDeleteCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+    private String getDeleteCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   {
+    Integer baseJavaLine = stringBuffer.toString().split("\\n").length+1; 
     
+  String customDeletePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","delete"));
+  String customDeletePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","delete"));
 
-  appendln(stringBuffer,"");
+  String umplesourcefile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customDeletePrefixCode,customDeletePostfixCode},
+      isFake?"FAKE":getDeleteCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+
+  appendln(stringBuffer,umplesourcefile);
   appendln(stringBuffer,"  public void delete()");
   append(stringBuffer,"  {");
 
-  boolean hasSomethingToDelete = false;
-
-  String customDeletePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","delete"));
-  String customDeletePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","delete"));
+  boolean hasSomethingToDelete = false;  
 
   if (customDeletePrefixCode != null) 
   {
