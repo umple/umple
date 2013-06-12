@@ -253,7 +253,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
 	if (aElement instanceof UmpleInterface)
     {
       
-        return new CppInterfaceGenerator();
+        return new CppInterfaceHeaderGenerator();
         
       
     }
