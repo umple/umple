@@ -1,22 +1,93 @@
-/*
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
-Copyright: All contributers to the Umple Project
+package cruise.umple.compiler;
+import java.io.*;
+import java.util.*;
+import cruise.umple.util.*;
+import cruise.umple.compiler.exceptions.*;
 
-This file is made available subject to the open source license found at:
-http://umple.org/license
-
-This generates simple metrics from Umple
-  generate SimpleMetrics;
-in your umple file, or the command line option
-  -g SimpleMetrics
-
+/**
+ * @umplesource Generator.ump 112
+ * @umplesource Generator_CodeSimpleMetrics.ump 17
  */
-
-namespace cruise.umple.compiler;
-
-class SimpleMetricsGenerator
+// line 112 "../../../../src/Generator.ump"
+// line 17 "../../../../src/Generator_CodeSimpleMetrics.ump"
+public class SimpleMetricsGenerator implements CodeGenerator
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //SimpleMetricsGenerator Attributes
+  private UmpleModel model;
+  private String output;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public SimpleMetricsGenerator()
+  {
+    model = null;
+    output = "";
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setModel(UmpleModel aModel)
+  {
+    boolean wasSet = false;
+    model = aModel;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setOutput(String aOutput)
+  {
+    boolean wasSet = false;
+    output = aOutput;
+    wasSet = true;
+    return wasSet;
+  }
+
+  /**
+   * Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+   * off of what's contained in here.
+   */
+  public UmpleModel getModel()
+  {
+    return model;
+  }
+
+  public String getOutput()
+  {
+    return output;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+	  
+    return super.toString() + "["+
+            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  // line 20 ../../../../src/Generator_CodeSimpleMetrics.ump
+  @umplesourcefile(line={20},file={"Generator_CodeSimpleMetrics.ump"},javaline={91},length={61})
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -80,6 +151,7 @@ class SimpleMetricsGenerator
   }
 
   // Output the metrics to a file 
+  @umplesourcefile(line={83},file={"Generator_CodeSimpleMetrics.ump"},javaline={155},length={18})
   private void writeModel()
   {
     try
@@ -100,6 +172,7 @@ class SimpleMetricsGenerator
   } 
  
   // Code from http://stackoverflow.com/questions/453018/number-of-lines-in-a-file-in-java 
+  @umplesourcefile(line={103},file={"Generator_CodeSimpleMetrics.ump"},javaline={176},length={20})
   public int countLinesInFile(String filename) throws IOException {
     InputStream is = new BufferedInputStream(new FileInputStream(filename));
     try {
@@ -120,7 +193,5 @@ class SimpleMetricsGenerator
         is.close();
     }
 }
-  
-  
-}
 
+}
