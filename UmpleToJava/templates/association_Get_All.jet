@@ -39,7 +39,6 @@
       customHasManyPrefixCode,customHasManyPostfixCode,
       customIndexOfPrefixCode,customIndexOfPostfixCode},
       isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-  
     if (av.isOne())
     {
       %><%@ include file="association_GetOne.jet" %><%

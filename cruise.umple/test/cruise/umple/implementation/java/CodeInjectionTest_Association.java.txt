@@ -57,6 +57,7 @@ public class Student
   // INTERFACE
   //------------------------
 
+  @umplesourcefile(line={13, 57},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={67, 70},length={1, 1})
   public Mentor getM1()
   {
     print "getM1";
@@ -65,6 +66,7 @@ public class Student
     return aM1;
   }
 
+  @umplesourcefile(line={14, 58},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={77, 80},length={1, 1})
   public Mentor getM2()
   {
     print "getM2";
@@ -73,6 +75,7 @@ public class Student
     return aM2;
   }
 
+  @umplesourcefile(line={15, 59, 16, 60, 17, 61, 18, 62, 19, 63},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={87, 90, 97, 100, 107, 110, 117, 120, 127, 130},length={1, 1, 1, 1, 1, 1, 1, 1, 1, 1})
   public Mentor getM3(int index)
   {
     print "getM3";
@@ -117,6 +120,7 @@ public class Student
     return index;
   }
 
+  @umplesourcefile(line={20, 64, 21, 65, 22, 66, 23, 67, 24, 68},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={137, 140, 147, 150, 157, 160, 167, 170, 177, 180},length={1, 1, 1, 1, 1, 1, 1, 1, 1, 1})
   public Mentor getM4(int index)
   {
     print "getM4";
@@ -161,6 +165,7 @@ public class Student
     return index;
   }
 
+  @umplesourcefile(line={25, 69, 26, 70, 27, 71, 28, 72, 29, 73},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={187, 190, 197, 200, 207, 210, 217, 220, 227, 230},length={1, 1, 1, 1, 1, 1, 1, 1, 1, 1})
   public Mentor getM5(int index)
   {
     print "getM5";
@@ -205,6 +210,7 @@ public class Student
     return index;
   }
 
+  @umplesourcefile(line={30, 74, 31, 75, 32, 76, 33, 77, 34, 78},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={237, 240, 247, 250, 257, 260, 267, 270, 277, 280},length={1, 1, 1, 1, 1, 1, 1, 1, 1, 1})
   public Mentor getM6(int index)
   {
     print "getM6";
