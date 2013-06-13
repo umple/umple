@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.ruby.*;
 
 /**
- * @umplesource Generator.ump 233
+ * @umplesource Generator.ump 247
  * @umplesource Generator_CodeRuby.ump 12
  */
-// line 233 "../../../../src/Generator.ump"
+// line 247 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeRuby.ump"
 public class RubyGenerator implements CodeGenerator,CodeTranslator
 {

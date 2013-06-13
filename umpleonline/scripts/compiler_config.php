@@ -52,6 +52,7 @@ function generateMenu($buttonSuffix)
             <option value=\"stateDiagram:stateDiagram\">State Diagram</option>                        
             <option value=\"java:Json\">Json</option>
             <option value=\"sql:Sql\">Sql</option>
+            <option value=\"java:SimpleMetrics\">Simple metrics</option>
             <option value=\"uigu:uigu\">JSF GUI (under development)</option>
             <option value=\"cpp:Cpp\">C++ (under development)</option>
           </select>
