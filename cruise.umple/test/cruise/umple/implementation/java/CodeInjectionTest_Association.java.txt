@@ -325,6 +325,7 @@ public class Student
     return maximum;
   }
 
+  @umplesourcefile(line={42, 86, 86, 40, 84, 84, 41, 85, 85, 85, 37, 81},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={433, 447, 472, 364, 369, 387, 395, 399, 406, 425, 333, 336},length={1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1})
   public boolean addM3(Mentor aM3)
   {
     boolean wasAdded = false;
@@ -353,6 +354,7 @@ public class Student
     return wasAdded;
   }
 
+  @umplesourcefile(line={42, 86, 86, 40, 84, 84, 41, 85, 85, 85, 37, 81},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={433, 447, 472, 364, 369, 387, 395, 399, 406, 425, 333, 336},length={1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1})
   public boolean removeM3(Mentor aM3)
   {
     boolean wasRemoved = false;
@@ -492,6 +494,7 @@ public class Student
     return maximum;
   }
 
+  @umplesourcefile(line={48, 92, 92, 46, 90, 90, 47, 91, 91, 91, 43, 87},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={611, 625, 650, 542, 547, 565, 573, 577, 584, 603, 511, 514},length={1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1})
   public boolean addM4(Mentor aM4)
   {
     boolean wasAdded = false;
@@ -520,6 +523,7 @@ public class Student
     return wasAdded;
   }
 
+  @umplesourcefile(line={48, 92, 92, 46, 90, 90, 47, 91, 91, 91, 43, 87},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={611, 625, 650, 542, 547, 565, 573, 577, 584, 603, 511, 514},length={1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1})
   public boolean removeM4(Mentor aM4)
   {
     boolean wasRemoved = false;
@@ -650,6 +654,7 @@ public class Student
     return minimum;
   }
 
+  @umplesourcefile(line={53, 97, 97, 51, 95, 52, 96, 96, 96, 49, 93},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={772, 786, 811, 710, 726, 734, 738, 745, 764, 689, 692},length={1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1})
   public boolean addM5(Mentor aM5)
   {
     boolean wasAdded = false;
@@ -672,6 +677,7 @@ public class Student
     return wasAdded;
   }
 
+  @umplesourcefile(line={53, 97, 97, 51, 95, 52, 96, 96, 96, 49, 93},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={772, 786, 811, 710, 726, 734, 738, 745, 764, 689, 692},length={1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1})
   public boolean removeM5(Mentor aM5)
   {
     boolean wasRemoved = false;
@@ -790,6 +796,7 @@ public class Student
     return 0;
   }
 
+  @umplesourcefile(line={54, 98, 55, 99, 99},file={"CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump", "CodeInjectionAssociationTest.ump"},javaline={856, 872, 880, 884, 903},length={2, 1, 1, 1, 1})
   public boolean addM6(Mentor aM6)
   {
     boolean wasAdded = false;

@@ -3,7 +3,10 @@
 
 
 
-// line 1 "BasicPrecondition1.ump"
+/**
+ * attributes on both sides of the constraint's boolean expression
+ */
+// line 2 "BasicConstraint3.ump"
 public class Client
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -15,14 +18,20 @@ public class Client
 
   //Client Attributes
   private int minAge;
+  private int age;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Client(int aMinAge)
+  public Client(int aMinAge, int aAge)
   {
+    if ( !(aAge>aMinAge))
+    {
+      throw new RuntimeException("Please provide a valid age and minAge");
+    }
     minAge = aMinAge;
+    age = aAge;
   }
 
   //------------------------
@@ -32,8 +41,22 @@ public class Client
   public boolean setMinAge(int aMinAge)
   {
     boolean wasSet = false;
+    if (age>aMinAge)
+    {
     minAge = aMinAge;
     wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public boolean setAge(int aAge)
+  {
+    boolean wasSet = false;
+    if (aAge>minAge)
+    {
+    age = aAge;
+    wasSet = true;
+    }
     return wasSet;
   }
 
@@ -42,23 +65,13 @@ public class Client
     return minAge;
   }
 
+  public int getAge()
+  {
+    return age;
+  }
+
   public void delete()
   {}
-
-  @umplesourcefile(line={4},file={"BasicPrecondition1.ump"},javaline={49},length={2})
-  public int someMethod(Integer arg){
-
-    if ( !(arg>5))
-    {
-      throw new RuntimeException("Please provide a valid arg");
-    }
-    if ( !(minAge<8))
-    {
-      throw new RuntimeException("Please provide a valid minAge");
-    }
-    // rest of stuff that we don't interpret
- return 0;
-  }
 
 
   public String toString()
@@ -66,7 +79,8 @@ public class Client
 	  String outputString = "";
 	  
     return super.toString() + "["+
-            "minAge" + ":" + getMinAge()+ "]"
+            "minAge" + ":" + getMinAge()+ "," +
+            "age" + ":" + getAge()+ "]"
      + outputString;
   }
 }
