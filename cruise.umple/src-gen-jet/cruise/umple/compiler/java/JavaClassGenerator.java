@@ -4509,10 +4509,10 @@ public class JavaClassGenerator implements ILang
       customHasManyPrefixCode,customHasManyPostfixCode,
       customIndexOfPrefixCode,customIndexOfPostfixCode},
       isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-  
     if (av.isOne())
     {
       
+    stringBuffer.append( umpleSourceFile );
     stringBuffer.append(TEXT_424);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_425);
@@ -4562,6 +4562,7 @@ public class JavaClassGenerator implements ILang
     else if (av.isMany())
     {
       
+    stringBuffer.append( umpleSourceFile );
     stringBuffer.append(TEXT_436);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_437);
