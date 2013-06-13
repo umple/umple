@@ -310,6 +310,7 @@
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       %><%
+      %><%= umpleSourceFile 
       %><%@ include file="association_AddManyToManyMethod.jet" %><%
     }
     
