@@ -137,7 +137,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
     code.append("\n  // Class: "+className+"\n");
 
-    code.append("  "+className+" ["+classColor+"shape=record, label=\"{"+className);
+    code.append("  \""+className+"\" ["+classColor+"shape=record, label=\"{"+className);
 
     if(uClass.getIsAbstract()) {  // add abstract tag
       code.append("\n&laquo;abstract&raquo;");
@@ -178,7 +178,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
     // We know that parents have been output first
     UmpleClass parentClass = uClass.getExtendsClass();
     if(parentClass!= null) {
-      code.append("  "+className+" -> "+parentClass.getName());
+      code.append("  \""+className+"\" -> \""+parentClass.getName()+"\"");
       code.append(" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
     }
 
@@ -187,11 +187,11 @@ public class GvClassDiagramGenerator implements CodeGenerator
       String intColor = uInterface.getDisplayColor();
       // TO DO needs fixing - interface colour does not appear
       if (!intColor.equals("")) {
-        code.append("  "+uInterface.getName()
-          +" [style=filled, fillcolor="+intColor+"];\n\n ");
+        code.append("  \""+uInterface.getName()
+          +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
       } 
-      code.append("  "+className+" -> "+uInterface.getName());
-      code.append(" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
+      code.append("  \""+className+"\" -> \""+uInterface.getName());
+      code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
     }
 
     // Add any associations so they are output at the end
@@ -219,8 +219,8 @@ public class GvClassDiagramGenerator implements CodeGenerator
           arrows = "dir=\"none\"";
         }
 
-        associations.append("  "+leftEnd.getClassName()+" -> "+
-          rightEnd.getClassName()+" ["+arrows+
+        associations.append("  \""+leftEnd.getClassName()+"\" -> \""+
+          rightEnd.getClassName()+"\" ["+arrows+
           ", taillabel=\""+leftEnd.toSimpleString()+
           " "+leftEnd.getDisplayRoleName()+"\""+
           ", headlabel=\""+rightEnd.toSimpleString()+
