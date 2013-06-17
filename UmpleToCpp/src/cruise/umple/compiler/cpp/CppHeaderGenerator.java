@@ -2344,7 +2344,7 @@ public class CppHeaderGenerator implements ILang
     		String methodType = aMethod.getType();
     		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
     		String properMethodBody = "      " + methodBody; 
-    		String override =  aMethod.getIsImplemented() ? "  @Override" : "";
+    		String override =  aMethod.getIsImplemented() ? "":"";
     		String paramName="";
     		String paramType="";
     		String aSingleParameter="";
@@ -2362,7 +2362,6 @@ public class CppHeaderGenerator implements ILang
     			}
     			String finalParams = parameters.substring(0, parameters.length()-2);
     			appendln(stringBuffer, "");
-    			appendln(stringBuffer,override);
     			append(stringBuffer, "  {0} {1} {2}({3});", methodModifier, methodType, methodName, finalParams);	
     	
     			

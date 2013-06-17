@@ -45,3 +45,4 @@ Foo::~Foo()
    void Foo::testMethod(){
       // I am a comment inside a method.
   }
+

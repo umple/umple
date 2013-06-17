@@ -8015,7 +8015,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
     		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
     		String properMethodBody = "      " + methodBody; 
-    		String override =  aMethod.getIsImplemented() ? "  @Override" : "";
+    		String override =  aMethod.getIsImplemented() ? "" : "";
     		String paramName="";
     		String paramType="";
     		String aSingleParameter="";
@@ -8036,7 +8036,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     			
     			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
     			
-    			appendln(stringBuffer,override);
+    			//appendln(stringBuffer,override);
     			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);	
     			appendln(stringBuffer, "{");
     			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
@@ -8049,7 +8049,8 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.get
     			
     			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
     			
-    			appendln(stringBuffer,override);
+    			//appendln(stringBuffer,override);
+    			appendln(stringBuffer,"");
     			append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
     		    appendln(stringBuffer, "{");
     		    if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
