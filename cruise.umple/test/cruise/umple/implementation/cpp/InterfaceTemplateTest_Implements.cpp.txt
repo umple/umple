@@ -38,12 +38,12 @@
 Something::~Something()
   {}
 
-  @Override
    String Something::getCode(String [] aParam, Integer anotherParam){
             return "";
   }
 
-  @Override
+
    String Something::isValid(){
             return "";
   }
+
