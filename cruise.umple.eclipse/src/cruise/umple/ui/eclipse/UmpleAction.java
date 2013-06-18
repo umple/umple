@@ -80,23 +80,23 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
       UmpleModel model = new UmpleModel(file);
       try{
         model.run();
-      //Update Project
+        //Update Project
         fName.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
       }
       catch (Exception e1)
       {
         System.err.println(e1.getMessage());
       }
-      
-      
+
+
 
     }
   }
   private class CompileAndRunThread extends Thread
   {
-	  boolean successfulCompilation ;
-	  UmpleModel model;
-	  String pjName;
+    boolean successfulCompilation ;
+    UmpleModel model;
+    String pjName;
     public void run(){
       try{
         MessageConsole umpleConsole = findConsole("Umple Compile");
@@ -136,9 +136,12 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
           System.err.println(e1.getMessage());
         }
         pjName = fName.getFullPath().toOSString().split("/")[1];
+        File binFolder = new File(wsLocation+File.separator+pjName+File.separator+"bin");
+        if(!binFolder.exists()){
+          binFolder.mkdir();
+        }
         List<String> libList = new ArrayList<String>();
         libList.add(" -d "+wsLocation+File.separator+pjName+File.separator+"bin");
-
         libList.add(" -classpath "+wsLocation+File.separator+pjName+File.separator+"bin");
         try
         {
@@ -149,8 +152,9 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
           while(line!=null)
           {
             Matcher mat = pat.matcher(line);
-            if(mat.matches())
-              libList.add(":"+wsLocation+mat.group(1));
+            if(mat.matches()){
+            	libList.add(":"+wsLocation+mat.group(1));
+            }
             line = br.readLine();
           }
           br.close();
@@ -216,7 +220,7 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
             int result = dialog.open();
             mainClassName = wizard.getClassName();
             wizardArguments = wizard.getArguments();
-            
+
           }
           for(int i=0;i<classes.size();i++)
           {
@@ -244,7 +248,7 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
           {
             ILaunchConfigurationWorkingCopy wc = type.newInstance(null, mainClass.getName()+" (umple)");
             wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, cart.pjName);
-            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,mainClass.getPackageName()+File.separator+mainClass.getName());
+            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,mainClass.getPackageName().replaceFirst("/", "")+File.separator+mainClass.getName());
             wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, wizardArguments);
             ILaunchConfiguration config = wc.doSave();   
             config.launch(ILaunchManager.RUN_MODE, null);
