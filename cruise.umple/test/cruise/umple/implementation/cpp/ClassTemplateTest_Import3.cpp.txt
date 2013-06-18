@@ -5,17 +5,13 @@
 #include "Course.h"
 #include "Student.h"
 
-	int i;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------
   
  Course::Course()
   {
-    for (i=0; i<students.size(); i++)
-	{
-		students[i] = NULL;
-	}
   }
   
   //------------------------

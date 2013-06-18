@@ -6,7 +6,7 @@
 #include "Mentor.h"
 #include "Course.h"
 
-	int i;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -14,10 +14,6 @@
  Student::Student(const string & aNumber, vector<Mentor*> allMentors)
   {
     number = aNumber;
-    for (i=0; i<mentors.size(); i++)
-	{
-		mentors[i] = NULL;
-	}
     bool didAddMentors = setMentors(allMentors);
     try {
 		 throw  didAddMentors;
@@ -25,10 +21,6 @@
 	catch (exception& e)	
 	{
 	cout<<"Unable to create Student, must have at least 1 mentors";
-	}
-    for (i=0; i<courses.size(); i++)
-	{
-		courses[i] = NULL;
 	}
   }
   
