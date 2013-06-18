@@ -10,6 +10,12 @@
 
   if (!uClass.getIsSingleton())
 	  {
+		  %>
+  //------------------------
+  // Constructor
+  //------------------------
+  <%
+			  
 		  append(stringBuffer,"  {0} {1}({2});",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature")});
 	  }
 
@@ -31,6 +37,6 @@
   if (uClass.getIsSingleton())
   {
     appendln(stringBuffer, "");
-    %><%@ include file="header_constructor_Singleton.jet"%><%
+    %><%@ include file="header_constructor_SingletonMethod.jet"%><%
   }
 %>
