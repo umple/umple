@@ -57,7 +57,7 @@
 Client::~Client()
   {}
 
-   int Client::someMethod(Integer arg){
+   int Client::someMethod(int arg){
 
       if( !(arg>5))
         {

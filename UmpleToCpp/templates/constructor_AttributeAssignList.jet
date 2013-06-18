@@ -9,7 +9,4 @@
 		}
 		String cDec = (hasAvMany)? "" : "int";
 		%>
-		for (<%append(stringBuffer,"{0} ",cDec);%>i=0; i<<%=gen.translate("attributeMany",av)%>.size(); i++)
-	{
-		<%=gen.translate("attributeMany",av)%>[i] = NULL;
-	}
+		

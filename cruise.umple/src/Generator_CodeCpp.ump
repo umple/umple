@@ -422,17 +422,57 @@ class CppGenerator
   {
     if ("String".equals(methodType))
     {
+      return "string";
+    }
+    if ("Integer".equals(methodType))
+    {
+      return "int";
+    }
+    if ("Boolean".equals(methodType))
+    {
+      return "bool";
+    }       
+    
+    if ("Double".equals(methodType))
+    {
+    	return "double";
+    }
+    
+    if ("Float".equals(methodType))
+    {
+    	return "float";
+    }
+    
+    if (methodType.equals(""))
+    		{
+    	return"void";
+    		}
+    return methodType;
+  }
+  
+  public String translateReturnType(String methodType)
+  {
+    if ("String".equals(methodType))
+    {
       return "\"\"";
     }
-    if ("int".equals(methodType))
-    {
-      return "0";
-    }
-    if ("boolean".equals(methodType))
+   
+    if ("Boolean".equals(methodType))
     {
       return "false";
     }       
-    return "null";
+    
+    if ("Double".equals(methodType) || "Integer".equals(methodType) || "Float".equals(methodType))
+    {
+    	return "0";
+    }
+    
+    
+    if (methodType.equals(""))
+    		{
+    	return"NULL";
+    		}
+    return methodType;
   }
   
   public String translate(String name, UmpleClass aClass)

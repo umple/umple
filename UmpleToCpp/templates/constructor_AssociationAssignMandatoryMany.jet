@@ -15,10 +15,6 @@
   }
   
 %>
-    for (i=0; i<<%=gen.translate("associationMany",av)%>.size(); i++)
-	{
-		<%=gen.translate("associationMany",av)%>[i] = NULL;
-	}
     bool <%=gen.translate("didAddMany",av)%> = <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("parameterAll",av)%>);
     try {
 		 throw  <%=gen.translate("didAddMany",av)%>;

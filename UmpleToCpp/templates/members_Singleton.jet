@@ -1,4 +1,4 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
-appendln(stringBuffer, "  {0}* {0}::theInstance = NULL //singleton;", uClass.getName());
+appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.getName());
 %>

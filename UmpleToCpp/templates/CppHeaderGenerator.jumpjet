@@ -48,7 +48,13 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
   <%@ include file="members_AllStateMachines.jet" %>
   <%@ include file="members_AllDoActivities.jet" %>
   <%@ include file="members_AllAssociations.jet" %>
-  <%@ include file="members_AllHelpers.jet" %>
+  <%@ include file="members_AllHelpers.jet" %><%
+	
+	if (uClass.getIsSingleton()) 
+	{
+		%><%@ include file="header_constructor_Singleton.jet"%><%
+	 }%>
+  
 
   //------------------------
   // Constructor

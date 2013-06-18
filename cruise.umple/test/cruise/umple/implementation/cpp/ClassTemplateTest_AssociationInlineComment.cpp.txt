@@ -5,17 +5,13 @@
 #include "Foo.h"
 #include "Bar.h"
 
-	int i;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------
   
  Foo::Foo()
   {
-    for (i=0; i<bars.size(); i++)
-	{
-		bars[i] = NULL;
-	}
   }
   
   //------------------------

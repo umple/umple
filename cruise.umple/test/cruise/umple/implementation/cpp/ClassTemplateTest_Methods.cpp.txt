@@ -38,12 +38,10 @@
 CodeTranslator::~CodeTranslator()
   {}
 
-
-   String CodeTranslator::translate(String id, Attribute attribute){
+   string CodeTranslator::translate(string id, Attribute attribute){
       return "1";
   }
 
-
-   String CodeTranslator::translate(String id, AssociationVariable associationVariable){
+   string CodeTranslator::translate(string id, AssociationVariable associationVariable){
       return "1";
   }

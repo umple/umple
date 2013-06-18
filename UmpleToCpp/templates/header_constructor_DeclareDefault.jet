@@ -6,8 +6,12 @@
 
   appendln(stringBuffer, "");
 
-  String accessibility = uClass.getIsSingleton() ? "private" : "";
-  append(stringBuffer,"  {0} {1}({2});",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature")});
+  String accessibility = uClass.getIsSingleton() ? "" : "";
+
+  if (!uClass.getIsSingleton())
+	  {
+		  append(stringBuffer,"  {0} {1}({2});",new Object[] {accessibility, uClass.getName(), gClass.getLookup("constructorSignature")});
+	  }
 
   String extraNote = null;
   
@@ -27,6 +31,6 @@
   if (uClass.getIsSingleton())
   {
     appendln(stringBuffer, "");
-    %><%@ include file="constructor_Singleton.jet"%><%
+    %><%@ include file="header_constructor_Singleton.jet"%><%
   }
 %>

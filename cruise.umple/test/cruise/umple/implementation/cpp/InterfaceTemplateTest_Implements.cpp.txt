@@ -38,12 +38,12 @@
 Something::~Something()
   {}
 
-   String Something::getCode(String [] aParam, Integer anotherParam){
+   string Something::getCode(string [] aParam, int anotherParam){
             return "";
   }
 
 
-   String Something::isValid(){
+   string Something::isValid(){
             return "";
   }
 

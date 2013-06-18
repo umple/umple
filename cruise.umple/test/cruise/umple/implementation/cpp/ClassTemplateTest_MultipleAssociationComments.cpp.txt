@@ -8,29 +8,13 @@
 #include "Bar3.h"
 #include "Bar4.h"
 
-	int i;
+	
   //------------------------
   // CONSTRUCTOR
   //------------------------
   
  Foo::Foo()
   {
-    for (i=0; i<bar1s.size(); i++)
-	{
-		bar1s[i] = NULL;
-	}
-    for (i=0; i<bar2s.size(); i++)
-	{
-		bar2s[i] = NULL;
-	}
-    for (i=0; i<bar3s.size(); i++)
-	{
-		bar3s[i] = NULL;
-	}
-    for (i=0; i<bar4s.size(); i++)
-	{
-		bar4s[i] = NULL;
-	}
   }
   
   //------------------------

@@ -7,7 +7,7 @@
     		String methodModifier = aMethod.getModifier().equals("") ? "" : aMethod.getModifier();
     		String methodName = aMethod.getName();
     		String methodType = aMethod.getType();
-    		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translate(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
+    		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translateReturnType(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
     		String properMethodBody = "      " + methodBody; 
     		String override =  aMethod.getIsImplemented() ? "":"";
     		String paramName="";
@@ -27,14 +27,14 @@
     			}
     			String finalParams = parameters.substring(0, parameters.length()-2);
     			appendln(stringBuffer, "");
-    			append(stringBuffer, "  {0} {1} {2}({3});", methodModifier, methodType, methodName, finalParams);	
+    			append(stringBuffer, "  {0} {1} {2}({3});", methodModifier, gen.translate(methodType), methodName, finalParams);	
     	
     			
     		}
     		else{
     			appendln(stringBuffer, "");
     			appendln(stringBuffer,override);
-    			append(stringBuffer, "  {0} {1} {2}();", methodModifier, methodType, methodName);
+    			append(stringBuffer, "  {0} {1} {2}();", methodModifier, gen.translate(methodType), methodName);
     		 
     		}
     	}
