@@ -56,9 +56,7 @@ class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
 	 }%>
   
 
-  //------------------------
-  // Constructor
-  //------------------------
+
   public:
 
   <%@ include file="header_constructor_Declare_All.jet" %>

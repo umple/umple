@@ -1,8 +1,10 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
-
-  appendln(stringBuffer, "");
-
-  append(stringBuffer," {0}(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
+    appendln(stringBuffer, "");
+    appendln(stringBuffer, "  //------------------------");
+    appendln(stringBuffer, "  // Copy Constructor");
+    appendln(stringBuffer, "  //------------------------");
+    appendln(stringBuffer, "");
+	append(stringBuffer," {0}(const {0} & {1});",new Object[] {uClass.getName(),uClass.getName().toLowerCase()});
   
 %>

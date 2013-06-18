@@ -1,2 +1,8 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
-  <%appendln(stringBuffer,"  {0}({1});",new Object[] {uClass.getName(), gClass.getLookup("constructorSignature")});%>
+  
+  //------------------------
+  // Private Constructor
+  //------------------------
+  <%
+	  appendln(stringBuffer,"");
+	  append(stringBuffer,"  {0}({1});",new Object[] {uClass.getName(), gClass.getLookup("constructorSignature")});%>
