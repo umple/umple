@@ -52,11 +52,41 @@
     }
   }
 
-  bool Course::setStatus(Status aStatus)
+  bool Course::register()
+  {
+    bool wasEventProcessed = false;
+
+    switch (status)
+    {
+      case Open:
+        setStatus(Full);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool Course::reject()
+  {
+    bool wasEventProcessed = false;
+
+    switch (status)
+    {
+      case Full:
+        setStatus(Full);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void Course::setStatus(Status aStatus)
   {
     status = aStatus;
-    return true;
   }
+  
 
   
   //------------------------

@@ -40,22 +40,35 @@ class Course
     return null;
   }
 
-  public function setStatus($aStatus)
+  public function register()
   {
-    if ($aStatus == "StatusOpen" || $aStatus == self::$StatusOpen)
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOpen)
     {
-      $this->status = self::$StatusOpen;
-      return true;
+      $this->setStatus(self::$StatusFull);
+      $wasEventProcessed = true;
     }
-    elseif ($aStatus == "StatusFull" || $aStatus == self::$StatusFull)
+    return $wasEventProcessed;
+  }
+
+  public function reject()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusFull)
     {
-      $this->status = self::$StatusFull;
-      return true;
+      $this->setStatus(self::$StatusFull);
+      $wasEventProcessed = true;
     }
-    else
-    {
-      return false;
-    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
   }
 
   public function equals($compareTo)
