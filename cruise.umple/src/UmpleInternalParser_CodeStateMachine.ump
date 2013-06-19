@@ -412,6 +412,11 @@ class UmpleInternalParser
     
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
+      if(stateToken.is("queued"))
+      {
+        sm.setQueued(true);
+      }
+      
       // Concurrency is only allowed between nested state-machines
       if (stateToken.is("||"))
       {
@@ -448,11 +453,6 @@ class UmpleInternalParser
         changeType = null;
       }
     }
-    
-    if(true)
-    {
-      sm.setQueued(true);
-    } 
   }
 
   private void analyzeState(Token stateToken, State fromState)

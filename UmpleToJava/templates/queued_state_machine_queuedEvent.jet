@@ -1,0 +1,38 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%
+  append(stringBuffer,"\n");
+  append(stringBuffer,"\n  //------------------------------");
+  append(stringBuffer,"\n  //messages accepted ");
+  append(stringBuffer,"\n  //------------------------------");
+  append(stringBuffer,"\n");
+  
+  for (StateMachine sm : uClass.getStateMachines())
+  {
+    if (sm.isQueued())
+    {
+      for(Event event : sm.getEvents())
+      { 
+        append(stringBuffer,"\n");
+        append(stringBuffer,"  public void ");
+        append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
+        append(stringBuffer,"\n  {");
+        
+        if (!event.getArgs().equals(""))
+        {
+          append(stringBuffer,"\n    Vector v = new Vector();");
+          //Vector v = new Vector(1);
+	      //v.add(0, event.getArgs());
+	      append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
+	      append(stringBuffer,"_M, v)");
+        }
+        else
+        {
+          append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
+          append(stringBuffer,"_M, null)");
+        }
+        append(stringBuffer,"\n  }");
+        append(stringBuffer,"\n");
+      }
+    }
+  }
+%>

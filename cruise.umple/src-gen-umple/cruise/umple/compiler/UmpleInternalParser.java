@@ -3553,6 +3553,11 @@ this("UmpleInternalParser", aModel);
     
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
+      if(stateToken.is("queued"))
+      {
+        sm.setQueued(true);
+      }
+      
       // Concurrency is only allowed between nested state-machines
       if (stateToken.is("||"))
       {
@@ -3589,11 +3594,6 @@ this("UmpleInternalParser", aModel);
         changeType = null;
       }
     }
-    
-    if(true)
-    {
-      sm.setQueued(true);
-    } 
   }
 
   @umplesourcefile(line={458},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3600},length={71})

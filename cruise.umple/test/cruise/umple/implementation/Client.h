@@ -21,15 +21,21 @@ class Client
 
   //Client Attributes
   int minAge;
+  
+
+
+  public:
+
 
   //------------------------
   // Constructor
-  //------------------------
-  public:
-
-   Client(const int & aMinAge);
+  //------------------------   Client(const int & aMinAge);
 
   
+  //------------------------
+  // Copy Constructor
+  //------------------------
+
  Client(const Client & client);
   	
   //------------------------

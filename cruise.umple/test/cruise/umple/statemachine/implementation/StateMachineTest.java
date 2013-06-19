@@ -204,10 +204,22 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("AutoEventTransition.ump",languagePath + "/AutoEventTransition."+ languagePath +".txt","Light");
   }
 
-@Test
+  @Test
   public void queuedStateMachine()
   {
     assertUmpleTemplateFor("queuedStateMachine.ump",languagePath + "/queuedStateMachine."+ languagePath +".txt","Course");
+  }
+
+  @Test
+  public void queuedStateMachine_2()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_2.ump",languagePath + "/queuedStateMachine_2."+ languagePath +".txt","GarageDoor");
+  }
+
+  @Test
+  public void queuedStateMachine_withParameters()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_withParameters.ump",languagePath + "/queuedStateMachine_withParameters."+ languagePath +".txt","LightFixture");
   }
 
 }

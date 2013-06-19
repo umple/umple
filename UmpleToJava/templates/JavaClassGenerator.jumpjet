@@ -33,7 +33,17 @@
 <% for (Position p : uClass.getPositions()) { %>
 // line <%= p.getLineNumber() %> "<%= p.getRelativePath(uClass, "Java") %>"
 <% } %>
-public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract"); } %>class <%=uClass.getName()%><%= gen.translate("isA",uClass) %>
+public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract"); } %>class <%=uClass.getName()%><%= gen.translate("isA",uClass) %><%
+
+for (StateMachine smq : uClass.getStateMachines())
+  {
+    if (smq.isQueued())
+    {
+      append(stringBuffer," implements Runnable");
+    }
+  }
+
+%>
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -115,6 +125,15 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
   {
     Integer baseJavaLine = stringBuffer.toString().split("\\n").length+1; %>
   <%@ include file="delete_All.jet" %>
+    <% for (StateMachine smq : uClass.getStateMachines())
+     {
+       if (smq.isQueued())
+       {%>
+         <%@ include file="queued_state_machine_inner_class.jet" %>
+         <%@ include file="queued_state_machine_queuedEvent.jet" %>
+         <%@ include file="queued_state_machine_removalThread_run.jet" %>
+       <%}
+     }%>
   <%return stringBuffer.toString();
     } 
     private String getExtraMethodsCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
