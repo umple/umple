@@ -4,7 +4,11 @@ class Course
 {
   queued status
   {
-    Open { }
-    Full { }
+    Open {
+      register -> Full;
+    }
+    Full {
+      reject -> Full;
+    }
   }
 }

@@ -1,11 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2789 modeling language!*/
 
 package example;
 import java.util.*;
 import java.lang.Thread;
 
-public class Course implements Runnable
+public class GarageDoor implements Runnable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -14,12 +14,12 @@ public class Course implements Runnable
   // MEMBER VARIABLES
   //------------------------
 
-  //Course State Machines
-  enum Status { Open, Full }
+  //GarageDoor State Machines
+  enum Status { Open, Closing, Closed, Opening, HalfOpen }
   private Status status;
   
-  //enumeration type of messages accepted by Course
-  enum MessType { register_M, reject_M }
+  //enumeration type of messages accepted by GarageDoor
+  enum MessType { buttonOrObstacle_M, reachBottom_M, reachTop_M }
   
   MessPool pool;
   Thread removal;
@@ -28,12 +28,12 @@ public class Course implements Runnable
   // CONSTRUCTOR
   //------------------------
 
-  public Course()
+  public GarageDoor()
   {
     setStatus(Status.Open);
     pool = new MessPool();
     removal=new Thread(this);
-    //start the thread of Course
+    //start the thread of GarageDoor
     removal.start();
   }
 
@@ -52,7 +52,7 @@ public class Course implements Runnable
     return status;
   }
 
-  public boolean _register()
+  public boolean _buttonOrObstacle()
   {
     boolean wasEventProcessed = false;
     
@@ -60,7 +60,23 @@ public class Course implements Runnable
     switch (aStatus)
     {
       case Open:
-        setStatus(Status.Full);
+        setStatus(Status.Closing);
+        wasEventProcessed = true;
+        break;
+      case Closing:
+        setStatus(Status.Opening);
+        wasEventProcessed = true;
+        break;
+      case Closed:
+        setStatus(Status.Opening);
+        wasEventProcessed = true;
+        break;
+      case Opening:
+        setStatus(Status.HalfOpen);
+        wasEventProcessed = true;
+        break;
+      case HalfOpen:
+        setStatus(Status.Opening);
         wasEventProcessed = true;
         break;
       default:
@@ -70,15 +86,33 @@ public class Course implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean _reject()
+  public boolean _reachBottom()
   {
     boolean wasEventProcessed = false;
     
     Status aStatus = status;
     switch (aStatus)
     {
-      case Full:
-        setStatus(Status.Full);
+      case Closing:
+        setStatus(Status.Closed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _reachTop()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case Opening:
+        setStatus(Status.Open);
         wasEventProcessed = true;
         break;
       default:
@@ -142,14 +176,19 @@ public class Course implements Runnable
   //messages accepted 
   //------------------------------
 
-  public void register ()
+  public void buttonOrObstacle ()
   {
-    pool.put(new Message(MessType.register_M, null)
+    pool.put(new Message(MessType.buttonOrObstacle_M, null)
   }
 
-  public void reject ()
+  public void reachBottom ()
   {
-    pool.put(new Message(MessType.reject_M, null)
+    pool.put(new Message(MessType.reachBottom_M, null)
+  }
+
+  public void reachTop ()
+  {
+    pool.put(new Message(MessType.reachTop_M, null)
   }
 
   
@@ -163,11 +202,14 @@ public class Course implements Runnable
       
       switch (m.type)
       {
-        case register_M:
-          status = _register();
+        case buttonOrObstacle_M:
+          status = _buttonOrObstacle();
           break;
-        case reject_M:
-          status = _reject();
+        case reachBottom_M:
+          status = _reachBottom();
+          break;
+        case reachTop_M:
+          status = _reachTop();
           break;        
       }
     // and similar for other types of messages	

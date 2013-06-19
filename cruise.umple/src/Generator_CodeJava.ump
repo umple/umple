@@ -354,7 +354,21 @@ class JavaGenerator
       }
       return allEnums;
     }
-    
+    else if ("listEvents".equals(keyName))
+    {
+      String allEnums = "";
+      for(Event event : sm.getEvents())
+      {
+        if (allEnums.length() > 0)
+        {
+          allEnums += ", ";
+        }
+        allEnums += translate("eventMethod",event);
+        allEnums += "_M";
+      }
+      return allEnums;
+    }
+        
     return "UNKNOWN ID: " + keyName;
   }
   
@@ -1247,6 +1261,15 @@ class JavaGenerator
       if (!namespace.equals(aClass.getPackageName()))
       {
         genClass.addMultiLookup("import", namespace + ".*");
+      }
+    }
+
+    for (StateMachine sm : aClass.getStateMachines())
+    {
+      if (sm.isQueued())
+      {
+        genClass.addMultiLookup("import", "java.util.*");
+        genClass.addMultiLookup("import", "java.lang.Thread");
       }
     }
   }

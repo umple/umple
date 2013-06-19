@@ -2040,11 +2040,14 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_2020 = NL + "      ";
   protected final String TEXT_2021 = ".";
   protected final String TEXT_2022 = "(null);" + NL + "    }";
-  protected final String TEXT_2023 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";" + NL + "\t  ";
-  protected final String TEXT_2024 = NL + "  }";
-  protected final String TEXT_2025 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_2026 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      translate(e);" + NL + "      if(e.getCause()!=null)" + NL + "      {" + NL + "        translate(e.getCause());" + NL + "      }" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "    public void translate(Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int[] methodlength = (int[])anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] javaline = (int[])anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] line = (int[])anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  String[] file = (String[])anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  for(int i=0;i<file.length;i++)" + NL + "                  {" + NL + "                    int distanceFromStart = element.getLineNumber()-javaline[i]-((\"main\".equals(methodName))?2:0);" + NL + "                    if(file[i] == \"\")" + NL + "                    {" + NL + "                      break;" + NL + "                    }" + NL + "                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])" + NL + "                    {" + NL + "                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));" + NL + "                      methodFound = true;" + NL + "                      break;" + NL + "                    }" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2027 = NL + "}";
+  protected final String TEXT_2023 = NL + "  private class Message" + NL + "  {" + NL + "    MessType type;" + NL + "    " + NL + "    //Message parameters" + NL + "    Vector<Object> param;" + NL + "    " + NL + "    public Message(MessType t, Vector<Object> p)" + NL + "    {" + NL + "      type = t; " + NL + "      param = p;" + NL + "    }" + NL + "  }" + NL + "  " + NL + "  private class MessPool {" + NL + "    Queue<Message> messages = new LinkedList<Message>();" + NL + "    " + NL + "    public synchronized void put(Message m)" + NL + "    {" + NL + "      messages.add(m); " + NL + "      notify();" + NL + "    }" + NL + "" + NL + "    public synchronized Message getNext()" + NL + "    {" + NL + "      try {" + NL + "        while (messages.isEmpty()) " + NL + "        {" + NL + "          wait();" + NL + "        }" + NL + "      } catch (InterruptedException e) { e.printStackTrace(); } " + NL + "" + NL + "      //The element to be removed" + NL + "      Message m = messages.remove(); " + NL + "      return (m);" + NL + "    }" + NL + "" + NL + "    /* for the case of a message POOL:  " + NL + "     * public synchronized Message getOneOf(MessType[] messTypes ){ //***}" + NL + "     */" + NL + "  }";
+  protected final String TEXT_2024 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
+  protected final String TEXT_2025 = "        " + NL + "      }" + NL + "    // and similar for other types of messages\t" + NL + "    /* if urgenrQuestion has two parameters:" + NL + "     * status = _urgentQuestion((String) m.param.elementAt(0), (Teacher) m.param.elementAt(1));\t" + NL + "     */" + NL + "    //if(!status) { /* write error message or raise exception */ " + NL + "    }" + NL + "  }";
+  protected final String TEXT_2026 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";" + NL + "\t  ";
+  protected final String TEXT_2027 = NL + "  }";
+  protected final String TEXT_2028 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_2029 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      translate(e);" + NL + "      if(e.getCause()!=null)" + NL + "      {" + NL + "        translate(e.getCause());" + NL + "      }" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "    public void translate(Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int[] methodlength = (int[])anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] javaline = (int[])anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] line = (int[])anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  String[] file = (String[])anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  for(int i=0;i<file.length;i++)" + NL + "                  {" + NL + "                    int distanceFromStart = element.getLineNumber()-javaline[i]-((\"main\".equals(methodName))?2:0);" + NL + "                    if(file[i] == \"\")" + NL + "                    {" + NL + "                      break;" + NL + "                    }" + NL + "                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])" + NL + "                    {" + NL + "                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));" + NL + "                      methodFound = true;" + NL + "                      break;" + NL + "                    }" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2030 = NL + "}";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -2121,6 +2124,17 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_9);
     stringBuffer.append(uClass.getName());
     stringBuffer.append( gen.translate("isA",uClass) );
+    
+
+for (StateMachine smq : uClass.getStateMachines())
+  {
+    if (smq.isQueued())
+    {
+      append(stringBuffer," implements Runnable");
+    }
+  }
+
+
     stringBuffer.append(TEXT_10);
     getMemberCode(stringBuffer, model,uClass,gClass,gen,isFirst);
   getConstructorCode(stringBuffer, model,uClass,gClass,gen,isFirst, false);
@@ -2314,6 +2328,15 @@ public class JavaClassGenerator implements ILang
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
     }
 
+    if (sm.isQueued())
+    {
+      append(stringBuffer,"\n  ");
+      append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
+      append(stringBuffer, "\n  enum MessType { {0} }", gen.translate("listEvents",sm)); 
+      append(stringBuffer,"\n  ");
+      append(stringBuffer,"\n  MessPool pool;");
+      append(stringBuffer,"\n  Thread removal;");
+    }
   }
 }
 
@@ -3020,6 +3043,18 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_114);
     stringBuffer.append(gen.translate("stateOne",state));
     stringBuffer.append(TEXT_115);
+    
+    for (StateMachine smq : uClass.getStateMachines())
+    {
+      if (smq.isQueued())
+      {
+        append(stringBuffer,"\n    pool = new MessPool();");
+        append(stringBuffer,"\n    removal=new Thread(this);");
+        append(stringBuffer,"\n    //start the thread of {0}", uClass.getName());
+        append(stringBuffer,"\n    removal.start();");
+      }
+    }
+
     
   }
   
@@ -4126,6 +4161,7 @@ public class JavaClassGenerator implements ILang
     stringBuffer.append(TEXT_381);
     stringBuffer.append( scope );
     stringBuffer.append(TEXT_382);
+    for (StateMachine sm : uClass.getStateMachines()){if(sm.isQueued()) {append(stringBuffer,"_");}}
     stringBuffer.append(gen.translate("eventMethod",e));
     stringBuffer.append(TEXT_383);
     stringBuffer.append( (e.getArgs()==null?"":e.getArgs()));
@@ -8641,6 +8677,60 @@ if (p != null) {
   }
 
 
+     for (StateMachine smq : uClass.getStateMachines())
+     {
+       if (smq.isQueued())
+       {
+    stringBuffer.append(TEXT_2023);
+    
+  append(stringBuffer,"\n");
+  append(stringBuffer,"\n  //------------------------------");
+  append(stringBuffer,"\n  //messages accepted ");
+  append(stringBuffer,"\n  //------------------------------");
+  append(stringBuffer,"\n");
+  
+  for (StateMachine sm : uClass.getStateMachines())
+  {
+    if (sm.isQueued())
+    {
+      for(Event event : sm.getEvents())
+      { 
+        append(stringBuffer,"\n");
+        append(stringBuffer,"  public void ");
+        append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
+        append(stringBuffer,"\n  {");
+        
+        if (!event.getArgs().equals(""))
+        {
+          append(stringBuffer,"\n    Vector v = new Vector();");
+          //Vector v = new Vector(1);
+	      //v.add(0, event.getArgs());
+	      append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
+	      append(stringBuffer,"_M, v)");
+        }
+        else
+        {
+          append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
+          append(stringBuffer,"_M, null)");
+        }
+        append(stringBuffer,"\n  }");
+        append(stringBuffer,"\n");
+      }
+    }
+  }
+
+    stringBuffer.append(TEXT_2024);
+     for(Event event : smq.getEvents())
+           {
+             append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
+             append(stringBuffer,"_M:");
+             append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
+             append(stringBuffer,"();");
+             append(stringBuffer,"\n          break;");
+           }
+    stringBuffer.append(TEXT_2025);
+    }
+     }
     return stringBuffer.toString();
     } 
     private String getExtraMethodsCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
@@ -8751,7 +8841,7 @@ if (p != null) {
      }
    }
    if (uClass.getAttributes().size()>0 && !matchFound){ 
-    stringBuffer.append(TEXT_2023);
+    stringBuffer.append(TEXT_2026);
     
 	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
 	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
@@ -8835,14 +8925,14 @@ if (p != null) {
 	  ret += "\n     + outputString";
 	  append(stringBuffer,"\n    return {0};", ret);
 	  
-    stringBuffer.append(TEXT_2024);
+    stringBuffer.append(TEXT_2027);
      } 
     return stringBuffer.toString();
     } 
     private String getAllExtraCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_2025);
+    stringBuffer.append(TEXT_2028);
     
   java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");
   java.util.regex.Pattern methodNamePattern = java.util.regex.Pattern.compile("[ |\\t]*(public|private|protected)[ |\\t]+(.*)[(](.*)[)].*");
@@ -8943,10 +9033,10 @@ if (p != null) {
   
     stringBuffer.append(extraCode);
     if(isMainClass){
-    stringBuffer.append(TEXT_2026);
+    stringBuffer.append(TEXT_2029);
     }
      } 
-    stringBuffer.append(TEXT_2027);
+    stringBuffer.append(TEXT_2030);
     
   return stringBuffer.toString();
 }

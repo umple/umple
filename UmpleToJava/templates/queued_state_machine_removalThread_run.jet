@@ -1,0 +1,28 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        <% for(Event event : smq.getEvents())
+           {
+             append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
+             append(stringBuffer,"_M:");
+             append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
+             append(stringBuffer,"();");
+             append(stringBuffer,"\n          break;");
+           }%>        
+      }
+    // and similar for other types of messages	
+    /* if urgenrQuestion has two parameters:
+     * status = _urgentQuestion((String) m.param.elementAt(0), (Teacher) m.param.elementAt(1));	
+     */
+    //if(!status) { /* write error message or raise exception */ 
+    }
+  }
