@@ -178,7 +178,7 @@ public class ConstraintVariable
   public void delete()
   {}
 
-  @umplesourcefile(line={234},file={"Umple.ump"},javaline={182},length={11})
+  @umplesourcefile(line={234},file={"Umple.ump"},javaline={182},length={13})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;

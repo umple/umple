@@ -30,7 +30,7 @@ public class Foo
   /**
    * I am a comment above a method.
    */
-  @umplesourcefile(line={4},file={"MethodInlineComment.ump"},javaline={31},length={1})
+  @umplesourcefile(line={4},file={"MethodInlineComment.ump"},javaline={31},length={3})
   public void testMethod(){
     // I am a comment inside a method.
   }

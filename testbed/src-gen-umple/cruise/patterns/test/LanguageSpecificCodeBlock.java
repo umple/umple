@@ -102,7 +102,7 @@ public class LanguageSpecificCodeBlock
   public void delete()
   {}
 
-  @umplesourcefile(line={72},file={"TestHarnessPatterns.ump"},javaline={106},length={1})
+  @umplesourcefile(line={72},file={"TestHarnessPatterns.ump"},javaline={106},length={3})
   public boolean isJava(){
     return true;
   }

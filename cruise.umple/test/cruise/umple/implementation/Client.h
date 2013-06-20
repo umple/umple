@@ -7,6 +7,7 @@
 #include <string>
 using namespace std;
 
+// attributes on both sides of the constraint's boolean expression
 class Client
 {
    //------------------------
@@ -21,6 +22,7 @@ class Client
 
   //Client Attributes
   int minAge;
+  int age;
   
 
 
@@ -29,7 +31,7 @@ class Client
 
   //------------------------
   // Constructor
-  //------------------------   Client(const int & aMinAge);
+  //------------------------   Client(const int & aMinAge, const int & aAge);
 
   
   //------------------------
@@ -50,14 +52,16 @@ class Client
   //------------------------
 
   bool setMinAge(const int & aMinAge);
+  bool setAge(const int & aAge);
   int getMinAge() const;
+
+  int getAge() const;
 
   //------------------------
   // Destructor
   //------------------------
 virtual ~Client();
 
-   int someMethod(Integer arg);
 };
 
 #endif

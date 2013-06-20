@@ -204,7 +204,7 @@ public class Action
   public void delete()
   {}
 
-  @umplesourcefile(line={149},file={"StateMachine.ump"},javaline={208},length={6})
+  @umplesourcefile(line={149},file={"StateMachine.ump"},javaline={208},length={8})
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;
