@@ -775,7 +775,7 @@ public class State
    * @params uClass: the umple class to look within for the trace item
    * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute);
    */
-  @umplesourcefile(line={70},file={"Trace_Code.ump"},javaline={772},length={120})
+  @umplesourcefile(line={70},file={"Trace_Code.ump"},javaline={772},length={122})
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all the trace directives of uClass
     for(TraceDirective td: uClass.getTraceDirectives())

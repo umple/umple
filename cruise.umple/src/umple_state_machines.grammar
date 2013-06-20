@@ -19,7 +19,7 @@ extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
 // An enum is a state machine that has no events
 enum : [name] { } | [name] { [stateName] (, [stateName])* }
 
-state : [stateName] { ( [[stateInternal]]  )* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
+state : [stateName] { [[stateInternal]]* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
 stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]]
 

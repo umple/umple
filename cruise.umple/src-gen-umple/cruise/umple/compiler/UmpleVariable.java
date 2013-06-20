@@ -250,7 +250,7 @@ public class UmpleVariable
    * @params uClass: the umple class to look within for the trace item
    * @return Attribute_Traceitem for this UmpleVariable(either association or attribute);
    */
-  @umplesourcefile(line={24},file={"Trace_Code.ump"},javaline={247},length={32})
+  @umplesourcefile(line={24},file={"Trace_Code.ump"},javaline={247},length={34})
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all of the trace directives from the passed umple class
     for(TraceDirective td: uClass.getTraceDirectives())
