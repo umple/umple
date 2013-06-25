@@ -551,10 +551,40 @@ class UmpleInternalParser
         unlinkedExtendsTokens.put(aClassifier, extendsTokenList);
       }  
     }
-  }
+  	//Checks list of extends tokens to prevent multiple class inheritance
+		if(numberOfExtendsClass(extendsTokenList) > 1)
+		{
+			Token t = extendsTokenList.get(0);			
+			getParseResult().addErrorMessage(new ErrorMessage(34,t.getPosition(),aClassifier.getName(),t.getValue()));
+		}
+   }
+	
+	//Returns the number of umple class in extends list (extList)
+  private int numberOfExtendsClass(List<Token> extList)
+	{
+		int counter = 0;
+		for(Token t : extList)
+		{	
+			if(isAnUmpleClass(t.getValue("extendsName")))
+				counter++;
+		}
+		return counter;
+	}
 
-  
-
+	//This method checks if an umple element with name "name" is an umple class
+	private boolean isAnUmpleClass(String name)
+	{
+		for(UmpleClass aClass : model.getUmpleClasses())
+		{
+			if(aClass != null)
+			{
+				String nam = aClass.getName();
+				if(nam.equals(name))
+					return true;
+			}
+		}
+		return false;
+	}
   private UmpleClass analyzeExternal(Token externalToken)
   {
     // Check to see if there is an existing class

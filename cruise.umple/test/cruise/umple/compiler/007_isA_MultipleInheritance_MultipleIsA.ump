@@ -1,0 +1,11 @@
+class Father
+{}
+
+class Mother
+{}
+
+class Child
+{
+	isA Mother;
+	isA Father;
+}

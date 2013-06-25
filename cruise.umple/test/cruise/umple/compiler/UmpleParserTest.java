@@ -720,7 +720,25 @@ public class UmpleParserTest
     // Root?
     Assert.assertEquals(false,aClass.isRoot());
   }
+
+	@Test
+  public void multiple_Class_Inheritance()
+  {
+		assertFailedParse("007_isA_MultipleInher.ump", 34);
+  }
+
+	@Test
+  public void singleIsA_MultipleClass_Inheritance()
+  {
+		assertFailedParse("007_single_isA.ump", 34);
+  }
   
+	@Test
+  public void multipleIsA_MultipleClass_Inheritance()
+  {
+		assertFailedParse("007_isA_MultipleInheritance_MultipleIsA.ump", 34);
+  }
+
   @Test
   public void isA_SimpleCycle()
   {
@@ -763,12 +781,10 @@ public class UmpleParserTest
     Assert.assertEquals(true,aClass.getIsSingleton());
   }
 
-  //Test for issue 268 (Extends class not exist)
-  //Author : Opeyemi Adesina
   @Test 
   public void is_A_NonExistingExtendsClass(){
 	
-	assertHasWarningsParse("007_isANonExistingSuperClass.ump", 33);
+		assertHasWarningsParse("007_isANonExistingSuperClass.ump", 33);
   }
 
   @Test
