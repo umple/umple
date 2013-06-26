@@ -83,7 +83,7 @@ public class JsonGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeJson.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeJson.ump"},javaline={87},length={118})
   @umplesourcefile(line={15},file={"Generator_CodeJson.ump"},javaline={88},length={117})
   public void generate()
   {

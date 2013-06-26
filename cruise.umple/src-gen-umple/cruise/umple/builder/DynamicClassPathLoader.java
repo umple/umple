@@ -36,7 +36,7 @@ public class DynamicClassPathLoader
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 314 ../../../../src/Builder_Code.ump
+  //  @umplesourcefile(line={313},file={"Builder_Code.ump"},javaline={40},length={25})
   private static final Class<?>[] parameters = new Class[]{URL.class};
 
   @umplesourcefile(line={316},file={"Builder_Code.ump"},javaline={43},length={5})

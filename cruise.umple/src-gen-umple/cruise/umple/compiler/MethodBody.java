@@ -74,7 +74,7 @@ public class MethodBody
  public MethodBody(String aValue)  {
 this(new CodeBlock(aValue!=null ? aValue : ""));
   }
-// line 467 ../../../../src/Umple_Code.ump
+//  @umplesourcefile(line={466},file={"Umple_Code.ump"},javaline={78},length={13})
   @umplesourcefile(line={467},file={"Umple_Code.ump"},javaline={79},length={4})
   public String getExtraCode(String lang)
   {

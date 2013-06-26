@@ -38,7 +38,7 @@ public class CodeCompiler
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 22 ../../../../src/Compiler.ump
+  //  @umplesourcefile(line={21},file={"Compiler.ump"},javaline={42},length={139})
   public static String console;
 
   @umplesourcefile(line={24},file={"Compiler.ump"},javaline={45},length={19})

@@ -181,7 +181,7 @@ public class CodeInjection
 this(a,b, d);
     setCode(c);
   }
-// line 540 ../../../../src/Umple_Code.ump
+//  @umplesourcefile(line={539},file={"Umple_Code.ump"},javaline={185},length={48})
   @umplesourcefile(line={540},file={"Umple_Code.ump"},javaline={186},length={4})
   public void setCode(String str)
   {

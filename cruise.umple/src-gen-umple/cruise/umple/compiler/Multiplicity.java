@@ -193,7 +193,7 @@ public class Multiplicity
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1524 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1523},file={"Umple_Code.ump"},javaline={197},length={137})
   @umplesourcefile(line={1524},file={"Umple_Code.ump"},javaline={198},length={5})
   public void setRange(String lowerBound, String upperBound)
   {

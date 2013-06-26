@@ -275,7 +275,7 @@ public class UmletGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Umlet_Code.ump
+  //  @umplesourcefile(line={14},file={"Umlet_Code.ump"},javaline={279},length={124})
   @umplesourcefile(line={15},file={"Umlet_Code.ump"},javaline={280},length={7})
   public void generate()
   {

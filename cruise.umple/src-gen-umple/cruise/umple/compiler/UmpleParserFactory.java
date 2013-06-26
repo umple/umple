@@ -35,7 +35,7 @@ public class UmpleParserFactory
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 132 ../../../../src/UmpleHelper_Code.ump
+  //  @umplesourcefile(line={131},file={"UmpleHelper_Code.ump"},javaline={39},length={50})
   @umplesourcefile(line={132},file={"UmpleHelper_Code.ump"},javaline={40},length={25})
   public static UmpleParser create(String className) 
   {

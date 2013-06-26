@@ -40,7 +40,7 @@ public class UmpleRunMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 200 ../../../src/Main_Code.ump
+  //  @umplesourcefile(line={199},file={"Main_Code.ump"},javaline={44},length={101})
   public static String console;
     public static boolean displayOutput = true;
 

@@ -436,7 +436,7 @@ public class Attribute extends UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1079 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1078},file={"Umple_Code.ump"},javaline={440},length={28})
   @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={441},length={4})
   public boolean isConstant()
   {

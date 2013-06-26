@@ -152,7 +152,7 @@ public class ErrorTypeSingleton
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1729 ../../../../src/Parser_Code.ump
+  //  @umplesourcefile(line={1728},file={"Parser_Code.ump"},javaline={156},length={110})
   @umplesourcefile(line={1729},file={"Parser_Code.ump"},javaline={157},length={6})
   private void init()
   {

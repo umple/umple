@@ -78,7 +78,7 @@ public class SynchronizationAction
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 17 ../../../../src/UmpleSync_Code.ump
+  //  @umplesourcefile(line={16},file={"UmpleSync_Code.ump"},javaline={82},length={5})
   @umplesourcefile(line={17},file={"UmpleSync_Code.ump"},javaline={83},length={4})
   public void go()
   {

@@ -43,7 +43,7 @@ public class UmpleConsoleMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 30 ../../../src/Main_Code.ump
+  //  @umplesourcefile(line={29},file={"Main_Code.ump"},javaline={47},length={156})
   public static String console;
     private static OptionParser optparser;
 

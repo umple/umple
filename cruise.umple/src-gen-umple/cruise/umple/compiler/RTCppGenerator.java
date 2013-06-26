@@ -88,7 +88,7 @@ public class RTCppGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeRTCpp.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeRTCpp.ump"},javaline={92},length={48})
   @umplesourcefile(line={15},file={"Generator_CodeRTCpp.ump"},javaline={93},length={22})
   public void generate()
   {

@@ -86,7 +86,7 @@ public class SimpleMetricsGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 20 ../../../../src/Generator_CodeSimpleMetrics.ump
+  //  @umplesourcefile(line={19},file={"Generator_CodeSimpleMetrics.ump"},javaline={90},length={104})
   @umplesourcefile(line={20},file={"Generator_CodeSimpleMetrics.ump"},javaline={91},length={61})
   public void generate()
   {

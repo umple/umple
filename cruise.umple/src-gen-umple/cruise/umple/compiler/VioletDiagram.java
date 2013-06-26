@@ -220,7 +220,7 @@ public class VioletDiagram
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 113 ../../../../src/Violet_Code.ump
+  //  @umplesourcefile(line={112},file={"Violet_Code.ump"},javaline={224},length={46})
   @umplesourcefile(line={113},file={"Violet_Code.ump"},javaline={225},length={45})
   public String toXml()
   {

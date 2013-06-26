@@ -205,7 +205,7 @@ public class Coordinate
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1764 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1763},file={"Umple_Code.ump"},javaline={209},length={91})
   @umplesourcefile(line={1764},file={"Umple_Code.ump"},javaline={210},length={4})
   public Point getTopLeft()
   {

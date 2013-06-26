@@ -919,7 +919,7 @@ public class State
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 306 ../../../../src/StateMachine_Code.ump
+  //  @umplesourcefile(line={305},file={"StateMachine_Code.ump"},javaline={923},length={127})
   @umplesourcefile(line={306},file={"StateMachine_Code.ump"},javaline={924},length={11})
   public boolean isSameState(State state, StateMachine relativeTo)
   {

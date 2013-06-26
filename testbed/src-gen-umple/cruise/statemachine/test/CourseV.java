@@ -154,7 +154,7 @@ public class CourseV
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 209 ../../../../src/TestHarnessStateMachineJava.ump
+  //  @umplesourcefile(line={208},file={"TestHarnessStateMachineJava.ump"},javaline={158},length={4})
   @umplesourcefile(line={209},file={"TestHarnessStateMachineJava.ump"},javaline={159},length={3})
   public void doX() { 
     count += 1;

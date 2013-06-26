@@ -123,7 +123,7 @@ public class Point
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1740 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1739},file={"Umple_Code.ump"},javaline={127},length={18})
   @umplesourcefile(line={1740},file={"Umple_Code.ump"},javaline={128},length={12})
   public static Point create(int n)
   {

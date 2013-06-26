@@ -41,7 +41,7 @@ public class NewAction extends SynchronizationAction
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 233 ../../../../src/UmpleSync_Code.ump
+  //  @umplesourcefile(line={232},file={"UmpleSync_Code.ump"},javaline={45},length={103})
   @umplesourcefile(line={233},file={"UmpleSync_Code.ump"},javaline={46},length={102})
   public void go()
   {

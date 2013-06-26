@@ -86,7 +86,7 @@ public class XmiGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeXmi.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeXmi.ump"},javaline={90},length={152})
   @umplesourcefile(line={15},file={"Generator_CodeXmi.ump"},javaline={91},length={132})
   public void generate()
   {

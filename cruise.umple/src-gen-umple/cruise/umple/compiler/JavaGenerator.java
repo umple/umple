@@ -88,7 +88,7 @@ public class JavaGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 16 ../../../../src/Generator_CodeJava.ump
+  //  @umplesourcefile(line={15},file={"Generator_CodeJava.ump"},javaline={92},length={1305})
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;

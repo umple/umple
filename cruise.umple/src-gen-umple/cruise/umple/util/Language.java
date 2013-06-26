@@ -53,7 +53,7 @@ public class Language
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 31 ../../../../src/Util_Code.ump
+  //  @umplesourcefile(line={30},file={"Util_Code.ump"},javaline={57},length={45})
   private static final boolean default_strictness = false;
   private Hashtable<String, String> _allEnglish;
 

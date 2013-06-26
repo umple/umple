@@ -86,7 +86,7 @@ public class TextUmlGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeTextUml.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeTextUml.ump"},javaline={90},length={137})
   @umplesourcefile(line={15},file={"Generator_CodeTextUml.ump"},javaline={91},length={117})
   public void generate()
   {

@@ -316,7 +316,7 @@ public class AssociationEnd
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1226 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1225},file={"Umple_Code.ump"},javaline={320},length={116})
   private static int MULT_MANY = -1;
 
   @umplesourcefile(line={1228},file={"Umple_Code.ump"},javaline={323},length={4})

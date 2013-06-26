@@ -87,7 +87,7 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeSDL.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeSDL.ump"},javaline={91},length={266})
   private static List<String> SdlPrimitives;
 
   static

@@ -69,7 +69,7 @@ public class UmpleXtextParser implements UmpleParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 16 ../../../../src/UmpleXtextParser_Code.ump
+  //  @umplesourcefile(line={15},file={"UmpleXtextParser_Code.ump"},javaline={73},length={57})
   @umplesourcefile(line={16},file={"UmpleXtextParser_Code.ump"},javaline={74},length={4})
   public String toGrammar()
   {

@@ -250,7 +250,7 @@ public class Token
 this(aName,aValue);
     setPosition(aPosition);
   }
-// line 90 ../../../../src/Parser_Code.ump
+//  @umplesourcefile(line={89},file={"Parser_Code.ump"},javaline={254},length={230})
   @umplesourcefile(line={90},file={"Parser_Code.ump"},javaline={255},length={9})
   public static boolean isValidIdentifier(String identifier, String prefix){
     String _prefix = "^" + prefix;

@@ -572,7 +572,7 @@ public class StateMachine
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 17 ../../../../src/StateMachine_Code.ump
+  //  @umplesourcefile(line={16},file={"StateMachine_Code.ump"},javaline={576},length={284})
   @umplesourcefile(line={17},file={"StateMachine_Code.ump"},javaline={577},length={4})
   public boolean getHasExitAction()
   {

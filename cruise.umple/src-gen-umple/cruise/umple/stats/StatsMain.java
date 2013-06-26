@@ -34,7 +34,7 @@ public class StatsMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 18 ../../../../src/UmpleStats_Code.ump
+  //  @umplesourcefile(line={17},file={"UmpleStats_Code.ump"},javaline={38},length={40})
   public static String console;
   
   @umplesourcefile(line={20},file={"UmpleStats_Code.ump"},javaline={41},length={33})

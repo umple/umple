@@ -56,7 +56,7 @@ public class Template
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 415 ../../../../src/Documenter_Code.ump
+  //  @umplesourcefile(line={414},file={"Documenter_Code.ump"},javaline={60},length={126})
   @umplesourcefile(line={415},file={"Documenter_Code.ump"},javaline={61},length={5})
   private static String navigationHeaderTemplate()
   {

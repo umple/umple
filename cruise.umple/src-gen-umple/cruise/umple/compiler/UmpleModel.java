@@ -682,7 +682,7 @@ public class UmpleModel implements Runnable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 20 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={19},file={"Umple_Code.ump"},javaline={686},length={360})
   @umplesourcefile(line={20},file={"Umple_Code.ump"},javaline={687},length={7})
   public List<UmpleElement> getUmpleElements()
   {

@@ -95,7 +95,7 @@ this(new File(aPath,aFilename));
  public UmpleFile(String aFullFilename)  {
 this(new File(aFullFilename));
   }
-// line 25 ../../../../src/UmpleHelper_Code.ump
+//  @umplesourcefile(line={24},file={"UmpleHelper_Code.ump"},javaline={99},length={101})
   @umplesourcefile(line={25},file={"UmpleHelper_Code.ump"},javaline={100},length={12})
   private StringBuilder init()
   {

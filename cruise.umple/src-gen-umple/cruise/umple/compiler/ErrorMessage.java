@@ -139,7 +139,7 @@ public class ErrorMessage
 this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
-// line 1700 ../../../../src/Parser_Code.ump
+//  @umplesourcefile(line={1699},file={"Parser_Code.ump"},javaline={143},length={12})
   @umplesourcefile(line={1700},file={"Parser_Code.ump"},javaline={144},length={4})
   public String getFormattedMessage()
   {

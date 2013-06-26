@@ -130,7 +130,7 @@ public class Depend
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 404 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={403},file={"Umple_Code.ump"},javaline={134},length={10})
   @umplesourcefile(line={404},file={"Umple_Code.ump"},javaline={135},length={9})
   public String getPackageName()
   {

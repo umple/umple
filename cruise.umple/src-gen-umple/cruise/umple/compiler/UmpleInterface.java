@@ -134,7 +134,7 @@ public class UmpleInterface extends UmpleClassifier
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 593 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={592},file={"Umple_Code.ump"},javaline={138},length={25})
   @umplesourcefile(line={593},file={"Umple_Code.ump"},javaline={139},length={24})
   public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;

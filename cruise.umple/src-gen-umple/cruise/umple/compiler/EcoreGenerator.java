@@ -86,7 +86,7 @@ public class EcoreGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeEcore.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeEcore.ump"},javaline={90},length={218})
   @umplesourcefile(line={15},file={"Generator_CodeEcore.ump"},javaline={91},length={173})
   public void generate()
   {

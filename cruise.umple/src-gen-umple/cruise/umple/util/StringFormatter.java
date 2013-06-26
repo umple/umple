@@ -34,7 +34,7 @@ public class StringFormatter
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 309 ../../../../src/Util_Code.ump
+  //  @umplesourcefile(line={308},file={"Util_Code.ump"},javaline={38},length={257})
   @umplesourcefile(line={309},file={"Util_Code.ump"},javaline={39},length={32})
   public static String toCamelCase(String input)
   {

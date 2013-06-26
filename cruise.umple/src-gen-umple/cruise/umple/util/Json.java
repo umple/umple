@@ -171,7 +171,7 @@ public class Json
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 130 ../../../../src/Json_Code.ump
+  //  @umplesourcefile(line={129},file={"Json_Code.ump"},javaline={175},length={77})
   @umplesourcefile(line={130},file={"Json_Code.ump"},javaline={176},length={4})
   public boolean isComposite()
   {

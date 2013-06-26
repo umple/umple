@@ -43,7 +43,7 @@ public class GeneratorHelper
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 26 ../../../../src/GeneratorHelper_Code.ump
+  //  @umplesourcefile(line={25},file={"GeneratorHelper_Code.ump"},javaline={47},length={433})
   @umplesourcefile(line={26},file={"GeneratorHelper_Code.ump"},javaline={48},length={11})
   public static void postpare(UmpleModel model)
   {
@@ -65,7 +65,7 @@ public class GeneratorHelper
     postpareStateMachine(aClass);
     postpareTrace(aClass);
   }
-// line 20 ../../../../src/GeneratorHelper_CodeClass.ump
+//  @umplesourcefile(line={19},file={"GeneratorHelper_CodeClass.ump"},javaline={69},length={413})
   @umplesourcefile(line={20},file={"GeneratorHelper_CodeClass.ump"},javaline={70},length={12})
   public static void postpareClass(UmpleModel model)
   {
@@ -150,7 +150,7 @@ public class GeneratorHelper
     }
     return builder.toString();
   }
-// line 20 ../../../../src/GeneratorHelper_CodeStateMachine.ump
+//  @umplesourcefile(line={19},file={"GeneratorHelper_CodeStateMachine.ump"},javaline={154},length={332})
   @umplesourcefile(line={20},file={"GeneratorHelper_CodeStateMachine.ump"},javaline={155},length={4})
   private static void postpareStateMachine(UmpleModel aModel)
   {
@@ -320,7 +320,7 @@ public class GeneratorHelper
       }       
     }
   }
-// line 19 ../../../../src/GeneratorHelper_CodeTrace.ump
+//  @umplesourcefile(line={18},file={"GeneratorHelper_CodeTrace.ump"},javaline={324},length={170})
   @umplesourcefile(line={19},file={"GeneratorHelper_CodeTrace.ump"},javaline={325},length={2})
   private static void postpareTrace(UmpleModel aModel)
   {}

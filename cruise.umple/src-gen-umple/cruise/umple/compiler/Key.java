@@ -116,7 +116,7 @@ public class Key
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 385 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={384},file={"Umple_Code.ump"},javaline={120},length={14})
   @umplesourcefile(line={385},file={"Umple_Code.ump"},javaline={121},length={4})
   public boolean isProvided()
   {

@@ -158,7 +158,7 @@ public class Group
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 341 ../../../../src/Documenter_Code.ump
+  //  @umplesourcefile(line={340},file={"Documenter_Code.ump"},javaline={162},length={5})
   @umplesourcefile(line={341},file={"Documenter_Code.ump"},javaline={163},length={4})
   public String getGroupIdName()
   {
