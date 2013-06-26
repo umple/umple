@@ -166,7 +166,7 @@ public class PapyrusGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 22 ../../../../src/Generator_CodePapyrus.ump
+  //  @umplesourcefile(line={21},file={"Generator_CodePapyrus.ump"},javaline={170},length={448})
   @umplesourcefile(line={22},file={"Generator_CodePapyrus.ump"},javaline={171},length={254})
   public void generate()
   {

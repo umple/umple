@@ -171,7 +171,7 @@ public class Variant
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 161 ../../../src/Vml_Code.ump
+  //  @umplesourcefile(line={160},file={"Vml_Code.ump"},javaline={175},length={12})
   @umplesourcefile(line={161},file={"Vml_Code.ump"},javaline={176},length={11})
   public String toString()
   {

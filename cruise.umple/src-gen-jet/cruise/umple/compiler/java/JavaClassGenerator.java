@@ -8934,7 +8934,7 @@ if (p != null) {
      if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
     stringBuffer.append(TEXT_2028);
     
-  java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0|1|2|3|4|5|6|7|8|9]*) (.*)");
+  java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0-9]*) (.*)");
   java.util.regex.Pattern methodNamePattern = java.util.regex.Pattern.compile("[ |\\t]*(public|private|protected)[ |\\t]+(.*)[(](.*)[)].*");
   String extraCode = uClass.getExtraCode();
   String[] lines = extraCode.split("\\n");
@@ -8972,10 +8972,10 @@ if (p != null) {
     {
       umplefilename = lineNumberMatcher.group(2);
       linenumber = Integer.parseInt(lineNumberMatcher.group(1))-1;
+     l ="//  @umplesourcefile(line={"+linenumber+"},file={\""+umplefilename.replaceAll("\\\\","/").replaceAll("(.*)/","")+"\"},javaline={"+javaline+"},length={"+(lines.length-i)+"})";
     }
     if(methodNameMatcher.matches())
     {
-      
       int j=i;
       int braces = 1;
       boolean start=false;

@@ -160,7 +160,7 @@ public class UmletDiagram
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 143 ../../../../src/Umlet_Code.ump
+  //  @umplesourcefile(line={142},file={"Umlet_Code.ump"},javaline={164},length={21})
   @umplesourcefile(line={143},file={"Umlet_Code.ump"},javaline={165},length={20})
   public String toXml()
   {

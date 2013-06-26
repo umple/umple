@@ -331,7 +331,7 @@ public class UmpleElement
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 624 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={623},file={"Umple_Code.ump"},javaline={335},length={18})
   @umplesourcefile(line={624},file={"Umple_Code.ump"},javaline={336},length={4})
   public void appendExtraCode(String newCode)
   {

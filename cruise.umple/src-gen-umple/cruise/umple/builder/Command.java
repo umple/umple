@@ -217,7 +217,7 @@ public class Command
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 16 ../../../../src/Builder_Code.ump
+  //  @umplesourcefile(line={15},file={"Builder_Code.ump"},javaline={221},length={170})
   @umplesourcefile(line={16},file={"Builder_Code.ump"},javaline={222},length={17})
   public void addAttributes(String input)
   {

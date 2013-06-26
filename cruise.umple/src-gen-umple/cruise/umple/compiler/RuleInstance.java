@@ -214,7 +214,7 @@ public class RuleInstance
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1402 ../../../../src/Parser_Code.ump
+  //  @umplesourcefile(line={1401},file={"Parser_Code.ump"},javaline={218},length={222})
   @umplesourcefile(line={1402},file={"Parser_Code.ump"},javaline={219},length={16})
   public void configureDefinition(String definition, String... allStopAts)
   {

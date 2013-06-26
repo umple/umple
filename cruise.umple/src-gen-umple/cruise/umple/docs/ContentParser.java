@@ -139,7 +139,7 @@ public class ContentParser extends Parser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 351 ../../../../src/Documenter_Code.ump
+  //  @umplesourcefile(line={350},file={"Documenter_Code.ump"},javaline={143},length={60})
   @umplesourcefile(line={351},file={"Documenter_Code.ump"},javaline={144},length={8})
   private int init()
   {

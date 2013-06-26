@@ -397,7 +397,7 @@ public class StateMachineTraceItem implements TraceItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 314 ../../../../src/Trace_Code.ump
+  //  @umplesourcefile(line={313},file={"Trace_Code.ump"},javaline={401},length={82})
   @umplesourcefile(line={314},file={"Trace_Code.ump"},javaline={402},length={3})
   public Boolean getIsPre(){
   	return conditionallyWhere;

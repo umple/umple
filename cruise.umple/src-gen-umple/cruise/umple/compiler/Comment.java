@@ -67,7 +67,7 @@ public class Comment
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1860 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1859},file={"Umple_Code.ump"},javaline={71},length={129})
   public Boolean isInline = true;
 
   /**

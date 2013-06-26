@@ -86,7 +86,7 @@ public class SimulateGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeSimulate.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeSimulate.ump"},javaline={90},length={101})
   @umplesourcefile(line={15},file={"Generator_CodeSimulate.ump"},javaline={91},length={81})
   public void generate()
   {

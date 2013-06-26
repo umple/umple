@@ -88,7 +88,7 @@ public class MetricsCollector
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 70 ../../../../src/UmpleStats_Code.ump
+  //  @umplesourcefile(line={69},file={"UmpleStats_Code.ump"},javaline={92},length={114})
   private Hashtable<String, Hashtable<String, Integer>> _projectToMetricsMap;  
   private String _currentProject;
   private ArrayList<String> _allProjectIds;

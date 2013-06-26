@@ -1364,7 +1364,7 @@ public class UmpleClass extends UmpleClassifier
  public UmpleClass(String name)  {
 this(name, null);
   }
-// line 664 ../../../../src/Umple_Code.ump
+//  @umplesourcefile(line={663},file={"Umple_Code.ump"},javaline={1368},length={382})
   @umplesourcefile(line={664},file={"Umple_Code.ump"},javaline={1369},length={10})
   public List<StateMachine> getAllStateMachines()
   {

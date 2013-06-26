@@ -105,7 +105,7 @@ public class CodeSnippet
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 114 ../../../src/Vml_Code.ump
+  //  @umplesourcefile(line={113},file={"Vml_Code.ump"},javaline={109},length={12})
   @umplesourcefile(line={114},file={"Vml_Code.ump"},javaline={110},length={11})
   public String toString()
   {

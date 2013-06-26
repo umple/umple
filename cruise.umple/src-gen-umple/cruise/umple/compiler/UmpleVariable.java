@@ -301,7 +301,7 @@ public class UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1052 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1051},file={"Umple_Code.ump"},javaline={305},length={21})
   @umplesourcefile(line={1052},file={"Umple_Code.ump"},javaline={306},length={15})
   public String getUpperCaseName()
   {

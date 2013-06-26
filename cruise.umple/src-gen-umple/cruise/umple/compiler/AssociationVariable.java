@@ -326,7 +326,7 @@ public class AssociationVariable extends UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1349 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1348},file={"Umple_Code.ump"},javaline={330},length={167})
   @umplesourcefile(line={1349},file={"Umple_Code.ump"},javaline={331},length={4})
   public boolean isReflexive()
   {

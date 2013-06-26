@@ -95,7 +95,7 @@ public class YumlGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeYuml.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeYuml.ump"},javaline={99},length={64})
   @umplesourcefile(line={15},file={"Generator_CodeYuml.ump"},javaline={100},length={63})
   public void generate()
   {

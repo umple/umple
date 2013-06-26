@@ -998,6 +998,8 @@ class ExceptionDumper {
 
   depend java.util.Scanner;
   depend java.util.regex.*;
+  depend java.util.List;
+  depend java.util.ArrayList;
   depend java.io.*;
 
   public static void dumpCompilerError(Exception ex) {
@@ -1044,10 +1046,10 @@ class ExceptionDumper {
       
       int lineNumber = 1;
       Pattern umpleSourceFileFormat = Pattern.compile(".*@umplesourcefile[(].*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}.*\\{(.*)\\}[)].*");
-      String umpleSourceFiles = "";
-      String umpleSourceLines = "";
-      String umpleSourceJavaLines = "";
-      String umpleSourceLengths = "";
+      List<String> umpleSourceFiles = new ArrayList<String>();
+      List<String> umpleSourceLines = new ArrayList<String>();
+      List<String> umpleSourceJavaLines = new ArrayList<String>();
+      List<String> umpleSourceLengths = new ArrayList<String>();
       
       boolean isInMain = false;
       boolean firstBraceFound = false;
@@ -1057,12 +1059,13 @@ class ExceptionDumper {
       {
     	String line = sc.nextLine();
     	Matcher umpleSourceFileMatcher = umpleSourceFileFormat.matcher(line);
+    	//System.out.println(line);
     	if(umpleSourceFileMatcher.matches())
     	{
-    	  umpleSourceLines = umpleSourceFileMatcher.group(1);
-          umpleSourceFiles = umpleSourceFileMatcher.group(2);
-    	  umpleSourceJavaLines = umpleSourceFileMatcher.group(3);
-    	  umpleSourceLengths = umpleSourceFileMatcher.group(4);
+    	  umpleSourceLines.add(umpleSourceFileMatcher.group(1));
+          umpleSourceFiles.add(umpleSourceFileMatcher.group(2));
+    	  umpleSourceJavaLines.add(umpleSourceFileMatcher.group(3));
+    	  umpleSourceLengths.add(umpleSourceFileMatcher.group(4));
     	}
     	else if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
         {
@@ -1089,29 +1092,33 @@ class ExceptionDumper {
     	lineNumber++;
       }
       
-      String[] umpleSourceJavaLinesSplit = umpleSourceJavaLines.split(",");
-      String[] umpleSourceLengthsSplit = umpleSourceLengths.split(",");
+      
       Integer javaLine;
-      Integer length;
-      
-      for(int i = 0; i < umpleSourceJavaLinesSplit.length; i++)
+        Integer length;
+      for(int j = 0; j < umpleSourceJavaLines.size();j++)
       {
-        if(umpleSourceJavaLines.equals(""))
+        String[] umpleSourceJavaLinesSplit = umpleSourceJavaLines.get(j).split(",");
+        String[] umpleSourceLengthsSplit = umpleSourceLengths.get(j).split(",");
+         
+        for(int i = 0; i < umpleSourceJavaLinesSplit.length; i++)
         {
-          break;
-        }
-    	javaLine = Integer.parseInt(umpleSourceJavaLinesSplit[i]);
-    	length = Integer.parseInt(umpleSourceLengthsSplit[i]);
+          if(umpleSourceJavaLines.equals(""))
+          {
+            break;
+          }
+    	  javaLine = Integer.parseInt(umpleSourceJavaLinesSplit[i]);
+    	  length = Integer.parseInt(umpleSourceLengthsSplit[i]);
     	
-    	if(javaLineNumber-javaLine<length)
-    	{
-    	  umpleFileName = umpleSourceFiles.split(",")[i].replace(" ","");
-    	  umpleLineNumber = Integer.parseInt(umpleSourceLines.split(",")[i])+javaLineNumber-javaLine-(isInMain?2:0);
-          break;
-    	}
-      }
+    	  if(javaLineNumber-javaLine<length)
+    	  {
+    	    umpleFileName = umpleSourceFiles.get(j).split(",")[i].replace(" ","");
+    	    umpleLineNumber = Integer.parseInt(umpleSourceLines.get(j).split(",")[i])+javaLineNumber-javaLine-(isInMain?2:0);
+    	    return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName.replace("\\","/").replaceAll(".*/", "").replace("\"",""), umpleLineNumber);
+    	  }
+        }
             
-      return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName.replace("\\","/").replaceAll(".*/", "").replace("\"",""), umpleLineNumber);
-      
+        
+      }
+      return javaStack;
     }  
 }

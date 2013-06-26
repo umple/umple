@@ -55,7 +55,7 @@ public class TextParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 14 ../../../../src/TextParser_Code.ump
+  //  @umplesourcefile(line={13},file={"TextParser_Code.ump"},javaline={59},length={713})
   private char[] _textCharacters;
 
   @umplesourcefile(line={16},file={"TextParser_Code.ump"},javaline={62},length={5})

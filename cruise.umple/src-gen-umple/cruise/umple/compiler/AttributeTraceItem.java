@@ -408,7 +408,7 @@ public class AttributeTraceItem implements TraceItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 206 ../../../../src/Trace_Code.ump
+  //  @umplesourcefile(line={205},file={"Trace_Code.ump"},javaline={412},length={100})
   @umplesourcefile(line={206},file={"Trace_Code.ump"},javaline={413},length={3})
   public Boolean getIsPre(){
   	return conditionallyWhere;

@@ -35,7 +35,7 @@ public class VmlConsole
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 19 ../../../src/Vml_Code.ump
+  //  @umplesourcefile(line={18},file={"Vml_Code.ump"},javaline={39},length={47})
   public static String console = "";
   
   @umplesourcefile(line={21},file={"Vml_Code.ump"},javaline={42},length={40})

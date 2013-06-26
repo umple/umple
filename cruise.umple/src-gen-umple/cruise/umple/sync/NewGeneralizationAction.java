@@ -41,7 +41,7 @@ public class NewGeneralizationAction extends SynchronizationAction
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1245 ../../../../src/UmpleSync_Code.ump
+  //  @umplesourcefile(line={1244},file={"UmpleSync_Code.ump"},javaline={45},length={71})
   @umplesourcefile(line={1245},file={"UmpleSync_Code.ump"},javaline={46},length={70})
   public void go()
   {

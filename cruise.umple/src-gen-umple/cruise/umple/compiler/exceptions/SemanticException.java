@@ -35,7 +35,7 @@ public class SemanticException extends RuntimeException
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 29 ../../../../../src/UmpleExceptions.ump
+  //  @umplesourcefile(line={28},file={"UmpleExceptions.ump"},javaline={39},length={2})
   static final long serialVersionUID = 2;
 
 }

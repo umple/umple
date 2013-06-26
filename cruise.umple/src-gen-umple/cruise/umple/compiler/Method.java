@@ -337,7 +337,7 @@ public class Method
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 419 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={418},file={"Umple_Code.ump"},javaline={341},length={39})
   @umplesourcefile(line={419},file={"Umple_Code.ump"},javaline={342},length={7})
   public boolean getExistsInLanguage(String lang) 
   {

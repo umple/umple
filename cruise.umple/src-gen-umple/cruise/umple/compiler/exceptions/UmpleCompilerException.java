@@ -35,7 +35,7 @@ public class UmpleCompilerException extends RuntimeException
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 22 ../../../../../src/UmpleExceptions.ump
+  //  @umplesourcefile(line={21},file={"UmpleExceptions.ump"},javaline={39},length={2})
   static final long serialVersionUID = 1;
 
 }

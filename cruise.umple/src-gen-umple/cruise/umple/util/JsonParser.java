@@ -44,7 +44,7 @@ public class JsonParser extends Parser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 16 ../../../../src/Json_Code.ump
+  //  @umplesourcefile(line={15},file={"Json_Code.ump"},javaline={48},length={109})
   @umplesourcefile(line={16},file={"Json_Code.ump"},javaline={49},length={12})
   private void init()
   {

@@ -41,7 +41,7 @@ public class CodeBlock
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 274 ../../../../src/Umple.ump
+  //  @umplesourcefile(line={273},file={"Umple.ump"},javaline={45},length={44})
   public static String languageUsed = "";
   Hashtable<String,String> code;
   @umplesourcefile(line={276},file={"Umple.ump"},javaline={48},length={4})
@@ -54,7 +54,7 @@ this();
 this();
     code.put(lang,add);
   }
-// line 497 ../../../../src/Umple_Code.ump
+//  @umplesourcefile(line={496},file={"Umple_Code.ump"},javaline={58},length={33})
   @umplesourcefile(line={497},file={"Umple_Code.ump"},javaline={59},length={7})
   public void setCode(String add)
   {

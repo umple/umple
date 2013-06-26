@@ -87,7 +87,7 @@ public class PhpGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodePhp.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodePhp.ump"},javaline={91},length={1049})
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;

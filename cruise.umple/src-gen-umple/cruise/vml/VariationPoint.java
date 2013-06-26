@@ -413,7 +413,7 @@ public class VariationPoint
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 129 ../../../src/Vml_Code.ump
+  //  @umplesourcefile(line={128},file={"Vml_Code.ump"},javaline={417},length={28})
   @umplesourcefile(line={129},file={"Vml_Code.ump"},javaline={418},length={11})
   public String toString()
   {

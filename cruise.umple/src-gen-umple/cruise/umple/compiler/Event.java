@@ -206,7 +206,7 @@ public class Event
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 447 ../../../../src/StateMachine_Code.ump
+  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={210},length={10})
   private static int nextAutoTransitionId = 1;
 
   @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={213},length={7})

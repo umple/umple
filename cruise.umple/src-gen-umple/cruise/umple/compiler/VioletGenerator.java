@@ -275,7 +275,7 @@ public class VioletGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 14 ../../../../src/Violet_Code.ump
+  //  @umplesourcefile(line={13},file={"Violet_Code.ump"},javaline={279},length={92})
   @umplesourcefile(line={14},file={"Violet_Code.ump"},javaline={280},length={7})
   public void generate()
   {

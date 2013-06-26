@@ -94,7 +94,7 @@ public class Glossary
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 855 ../../../../src/Util_Code.ump
+  //  @umplesourcefile(line={854},file={"Util_Code.ump"},javaline={98},length={141})
   @umplesourcefile(line={855},file={"Util_Code.ump"},javaline={99},length={31})
   private void init()
   {

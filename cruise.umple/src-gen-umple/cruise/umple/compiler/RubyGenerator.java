@@ -87,7 +87,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Generator_CodeRuby.ump
+  //  @umplesourcefile(line={14},file={"Generator_CodeRuby.ump"},javaline={91},length={972})
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;

@@ -86,7 +86,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 20 ../../../../src/Generator_CodeGvClassDiagram.ump
+  //  @umplesourcefile(line={19},file={"Generator_CodeGvClassDiagram.ump"},javaline={90},length={179})
   @umplesourcefile(line={20},file={"Generator_CodeGvClassDiagram.ump"},javaline={91},length={151})
   public void generate()
   {

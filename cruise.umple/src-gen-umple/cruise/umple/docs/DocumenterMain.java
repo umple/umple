@@ -33,7 +33,7 @@ public class DocumenterMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 15 ../../../../src/Documenter_Code.ump
+  //  @umplesourcefile(line={14},file={"Documenter_Code.ump"},javaline={37},length={33})
   private static String console = "";
   
   @umplesourcefile(line={17},file={"Documenter_Code.ump"},javaline={40},length={26})

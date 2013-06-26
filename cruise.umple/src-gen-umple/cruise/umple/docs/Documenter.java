@@ -149,7 +149,7 @@ public class Documenter
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 53 ../../../../src/Documenter_Code.ump
+  //  @umplesourcefile(line={52},file={"Documenter_Code.ump"},javaline={153},length={276})
   @umplesourcefile(line={53},file={"Documenter_Code.ump"},javaline={154},length={31})
   public boolean generate()
   {

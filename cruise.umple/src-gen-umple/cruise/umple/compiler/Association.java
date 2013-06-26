@@ -295,7 +295,7 @@ public class Association
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1113 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1112},file={"Umple_Code.ump"},javaline={299},length={106})
   @umplesourcefile(line={1113},file={"Umple_Code.ump"},javaline={300},length={14})
   public void setLeftAndRight()
   {

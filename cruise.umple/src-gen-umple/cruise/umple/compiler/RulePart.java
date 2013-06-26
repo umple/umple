@@ -163,7 +163,7 @@ public class RulePart
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 429 ../../../../src/Parser_Code.ump
+  //  @umplesourcefile(line={428},file={"Parser_Code.ump"},javaline={167},length={279})
   @umplesourcefile(line={429},file={"Parser_Code.ump"},javaline={168},length={4})
   public boolean isWithinLimits(int numberSoFar)
   {

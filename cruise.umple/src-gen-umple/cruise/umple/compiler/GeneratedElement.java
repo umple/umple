@@ -39,7 +39,7 @@ public class GeneratedElement
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1667 ../../../../src/Umple_Code.ump
+  //  @umplesourcefile(line={1666},file={"Umple_Code.ump"},javaline={43},length={67})
   @umplesourcefile(line={1667},file={"Umple_Code.ump"},javaline={44},length={7})
   private Map<String, String> lookups = new HashMap<String, String>();
   @umplesourcefile(line={1668},file={"Umple_Code.ump"},javaline={46},length={6})

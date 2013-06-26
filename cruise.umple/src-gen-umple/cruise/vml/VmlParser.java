@@ -70,7 +70,7 @@ public class VmlParser extends Parser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 180 ../../../src/Vml_Code.ump
+  //  @umplesourcefile(line={179},file={"Vml_Code.ump"},javaline={74},length={186})
   @umplesourcefile(line={180},file={"Vml_Code.ump"},javaline={75},length={23})
   private void init()
   {

@@ -155,7 +155,7 @@ public class ErrorType
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1719 ../../../../src/Parser_Code.ump
+  //  @umplesourcefile(line={1718},file={"Parser_Code.ump"},javaline={159},length={5})
   @umplesourcefile(line={1719},file={"Parser_Code.ump"},javaline={160},length={4})
   public String format(List<String> arguments)
   {

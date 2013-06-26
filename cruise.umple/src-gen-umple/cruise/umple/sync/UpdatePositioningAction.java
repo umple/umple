@@ -62,7 +62,7 @@ public class UpdatePositioningAction extends SynchronizationAction
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 26 ../../../../src/UmpleSync_Code.ump
+  //  @umplesourcefile(line={25},file={"UmpleSync_Code.ump"},javaline={66},length={203})
   @umplesourcefile(line={26},file={"UmpleSync_Code.ump"},javaline={67},length={202})
   public void go()
   {

@@ -36,7 +36,7 @@ public class SampleFileWriter
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 574 ../../../../src/Util_Code.ump
+  //  @umplesourcefile(line={573},file={"Util_Code.ump"},javaline={40},length={261})
   @umplesourcefile(line={574},file={"Util_Code.ump"},javaline={41},length={11})
   public static File[] getAllFiles(File inputDirectory)
   {

@@ -428,7 +428,7 @@ public class Transition
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 437 ../../../../src/StateMachine_Code.ump
+  //  @umplesourcefile(line={436},file={"StateMachine_Code.ump"},javaline={432},length={7})
   @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={433},length={6})
   public static Transition createPlaceholder(State nextState)
   {

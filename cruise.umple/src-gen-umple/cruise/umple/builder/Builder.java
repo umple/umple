@@ -36,7 +36,7 @@ public class Builder
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 194 ../../../../src/Builder_Code.ump
+  //  @umplesourcefile(line={193},file={"Builder_Code.ump"},javaline={40},length={110})
   @umplesourcefile(line={194},file={"Builder_Code.ump"},javaline={41},length={23})
   public URL compile(String directory, String jarname, String projectName, String javaTarget)
   {

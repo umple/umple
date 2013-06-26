@@ -196,7 +196,7 @@ public class Position
  public Position(int aLineNumber,int aCharacterOffset,int aOffset)  {
 this(null, aLineNumber, aCharacterOffset, aOffset);
   }
-// line 331 ../../../../src/Parser_Code.ump
+//  @umplesourcefile(line={330},file={"Parser_Code.ump"},javaline={200},length={94})
   @umplesourcefile(line={331},file={"Parser_Code.ump"},javaline={201},length={4})
   public Position copy()
   {

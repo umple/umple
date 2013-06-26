@@ -358,7 +358,7 @@ filename = aFilename;
     rules = new ArrayList<Rule>();
     couples = new ArrayList<Couple>();
   }
-// line 730 ../../../../src/Parser_Code.ump
+//  @umplesourcefile(line={729},file={"Parser_Code.ump"},javaline={362},length={666})
   @umplesourcefile(line={730},file={"Parser_Code.ump"},javaline={363},length={5})
   public Token reset()
   {

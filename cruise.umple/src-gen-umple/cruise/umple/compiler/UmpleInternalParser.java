@@ -419,7 +419,7 @@ this("UmpleInternalParser", new UmpleModel(null));
  public UmpleInternalParser(UmpleModel aModel)  {
 this("UmpleInternalParser", aModel);
   }
-// line 53 ../../../../src/UmpleInternalParser_Code.ump
+//  @umplesourcefile(line={52},file={"UmpleInternalParser_Code.ump"},javaline={423},length={3940})
   @umplesourcefile(line={53},file={"UmpleInternalParser_Code.ump"},javaline={424},length={18})
   private void init()
   {
@@ -649,7 +649,7 @@ this("UmpleInternalParser", aModel);
       addNecessaryFiles();
     }    
   }
-// line 21 ../../../../src/UmpleInternalParser_CodeCore.ump
+//  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeCore.ump"},javaline={653},length={3721})
   @umplesourcefile(line={21},file={"UmpleInternalParser_CodeCore.ump"},javaline={654},length={20})
   private void analyzeCoreToken(Token t, int analyzeCoreToken)
   {
@@ -772,7 +772,7 @@ this("UmpleInternalParser", aModel);
       model.addGenerate(genToken.getValue());
   	}
   }
-// line 38 ../../../../src/UmpleInternalParser_CodeClass.ump
+//  @umplesourcefile(line={37},file={"UmpleInternalParser_CodeClass.ump"},javaline={776},length={3603})
   @umplesourcefile(line={38},file={"UmpleInternalParser_CodeClass.ump"},javaline={777},length={74})
   private void analyzeClassToken(Token t, int analysisStep)
   {
@@ -2753,7 +2753,7 @@ this("UmpleInternalParser", aModel);
   {
     return (isLazy && value != null);
   }
-// line 20 ../../../../src/UmpleInternalParser_CodeConstraints.ump
+//  @umplesourcefile(line={19},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={2725},length={1701})
   @umplesourcefile(line={20},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={2758},length={11})
   private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Method method) 
   {
@@ -3175,7 +3175,7 @@ this("UmpleInternalParser", aModel);
     } 
   	   
   }
-// line 25 ../../../../src/UmpleInternalParser_CodeStateMachine.ump
+//  @umplesourcefile(line={24},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3147},length={1291})
   private static int numberOfActiveObjects = 1;
   
   //Check if "extra code" is likely a malformed state machine
@@ -3858,7 +3858,7 @@ this("UmpleInternalParser", aModel);
     }
 
   }
-// line 26 ../../../../src/UmpleInternalParser_CodeTrace.ump
+//  @umplesourcefile(line={25},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3830},length={632})
   @umplesourcefile(line={26},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3863},length={30})
   private void analyzeTraceToken(Token token, int analysisStep)
   {
@@ -4393,7 +4393,7 @@ this("UmpleInternalParser", aModel);
   //****************************************
   //********* End of Trace Glue Code   *****
   //****************************************
-// line 21 ../../../../src/UmpleInternalParser_CodeLayout.ump
+//  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4365},length={108})
   @umplesourcefile(line={21},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4398},length={3})
   private void analyzeLayoutToken(Token token, int analysisStep)
   {

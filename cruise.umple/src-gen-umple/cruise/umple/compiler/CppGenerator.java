@@ -119,7 +119,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 16 ../../../../src/Generator_CodeCpp.ump
+  //  @umplesourcefile(line={15},file={"Generator_CodeCpp.ump"},javaline={123},length={1347})
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;

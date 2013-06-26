@@ -224,7 +224,7 @@ public class ParseResult
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  // line 1654 ../../../../src/Parser_Code.ump
+  //  @umplesourcefile(line={1653},file={"Parser_Code.ump"},javaline={228},length={38})
   @umplesourcefile(line={1654},file={"Parser_Code.ump"},javaline={229},length={7})
   public String toString()
   {
