@@ -2,15 +2,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
-// tracer String;
-class PersonA
+class PersonB
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //PersonA Attributes
+  //PersonB Attributes
   private $name;
 
   //------------------------
@@ -29,7 +28,7 @@ class PersonA
   public function setName($aName)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,9,PersonA,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,17,PersonB,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
     $this->name = $aName;
     $wasSet = true;
     return $wasSet;
