@@ -58,6 +58,7 @@ public class CPPDependsPointsHandler{
 	private final static String PARENT_OBJECTS_TRACKER= "cpp.object.parent.objects.tracker.internal"; //$NON-NLS-1$
 	
 	private final static String DEPEND_TYPES_TRACKER= "cpp.types.tracker"; //$NON-NLS-1$
+	private final static String DEPEND_DIRECT_INCLUDES= "cpp.depends.direct.includes"; //$NON-NLS-1$
 	
 	
 	/**
@@ -231,6 +232,14 @@ public class CPPDependsPointsHandler{
 					librariesIncludes= librariesIncludes+ CommonConstants.NEW_LINE;
 				}
 			}
+		}
+		
+		String directDepends = GenerationUtil.getImplementationDetails(generationValueGetter, DEPEND_DIRECT_INCLUDES, element);
+		if(!directDepends.isEmpty()){
+			if(!librariesIncludes.isEmpty()){
+				librariesIncludes= librariesIncludes+ CommonConstants.NEW_LINE;
+			}
+			librariesIncludes+= directDepends;
 		}
 		
 		return generationValueGetter.use(ICppDefinitions.INCLUDES_DECLARATIONS, out?CommonConstants.BLANK:includes, librariesUses, librariesIncludes);
@@ -699,63 +708,102 @@ public class CPPDependsPointsHandler{
 		
 		String headerExtension = CommonConstants.DOT+ CPPCommonConstants.HEADER_FILE_EXTENSION;
 		
-		String normalized = use.replace(CommonConstants.DOT, CommonConstants.FORWARD_SLASH).replace(CommonConstants.STRICT_DOT, CommonConstants.FORWARD_SLASH);
-		
-		String namespace= normalized.substring(0, normalized.lastIndexOf(CommonConstants.FORWARD_SLASH)).replace(CommonConstants.FORWARD_SLASH, CommonConstants.DOT);
-		List<Object> values = generationValueGetter.getValues(IModelingConstants.TYPES_BY_NAMESPACES_TRACKER, modelPackage, 
-				namespace);
-		if(values.isEmpty() /*external library */){
-			String library= namespace.replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+		//Check for "Or" instead of "and" in order to avoid buggy includes
+		//depend "stdio.h"
+		//depend <stdio.h>
+		//Error i.e: <stdio.h
+		if(use.startsWith(CommonConstants.LESS_THAN)|| use.endsWith(CommonConstants.LESS_THAN)|| use.endsWith(CommonConstants.QUOTATION)||use.startsWith(CommonConstants.QUOTATION)){
+			String normalized = use;
 			
-			String[] trackers = new String[]{ICppDefinitions.BODY_INCLUDES_TRACKER, ICppDefinitions.HEADER_INCLUDES_TRACKER};
-			
-			for(String trackerId: trackers){
-				generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
-						GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, library), 
-						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, trackerId));
-			}
-			
-			String include= normalized.substring(normalized.lastIndexOf(CommonConstants.FORWARD_SLASH)+1, use.length());
-			
-			if(CommonConstants.ASTERISK.equals(include)){
-				//Means that the user decided to go with using qualified names. i.e "using std", and then std::string
-				//instead of "using std", "include <string>, and then use string directly
+			if(normalized.startsWith(CommonConstants.LESS_THAN)){
+				normalized= normalized.substring(0, normalized.length()-1)+ CommonConstants.MORE_THAN;
+			}else if(normalized.endsWith(CommonConstants.MORE_THAN)){
+				normalized= CommonConstants.LESS_THAN+ normalized.substring(1, normalized.length());
+			}else if(normalized.startsWith(CommonConstants.QUOTATION)){
+				normalized= normalized.substring(0, normalized.length()-1)+ CommonConstants.QUOTATION;
+			}else if(normalized.endsWith(CommonConstants.QUOTATION)){
+				normalized= CommonConstants.QUOTATION+ normalized.substring(1, normalized.length());
+			}else{
+				//Buggy include
+				//We make sure to detect bad includes as C++ return a lot of errors hard that make it hard to determine that
+				//the bad include was the reason
 				return;
 			}
 			
-			for(String trackerId: trackers){
-				generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
-						GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, include),
-						GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, library),
-						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, trackerId));
-			}
-			
+			String includeStatement = generationValueGetter.use(ICppDefinitions.INCLUDE_DIRECT_STATEMENT, normalized);
+			generationValueGetter.addUniqueValue(DEPEND_DIRECT_INCLUDES, includeStatement, parent);
 			return;
 		}
 		
-		if(CommonConstants.ASTERISK.equals(use.substring(use.length()-1, use.length()))){
-			namespace= use.substring(0, use.lastIndexOf(CommonConstants.ASTERISK)-1);
-			values = generationValueGetter.getValues(IModelingConstants.TYPES_BY_NAMESPACES_TRACKER, modelPackage, namespace);
+		String normalized = use.replace(CommonConstants.DOT, CommonConstants.FORWARD_SLASH).replace(CommonConstants.STRICT_DOT, CommonConstants.FORWARD_SLASH);
+		
+		int lastIndexOf = normalized.lastIndexOf(CommonConstants.FORWARD_SLASH);
+		
+		if(lastIndexOf>-1){
+			String namespace= normalized.substring(0, lastIndexOf).replace(CommonConstants.FORWARD_SLASH, CommonConstants.DOT);
 			
-			String modelPath = generationValueGetter.generationPointString(modelPackage, IModelingDecisions.MODEL_PATH);
-			for(Object value: values){
-				String typeName= generationValueGetter.getString(value, IModelingElementDefinitions.NAME);
-				String typeString= modelPath+ CommonConstants.FORWARD_SLASH+ typeName;
-				typeString= typeString.replace(CommonConstants.DOT, CommonConstants.FORWARD_SLASH);
+			List<Object> values = generationValueGetter.getValues(IModelingConstants.TYPES_BY_NAMESPACES_TRACKER, modelPackage, 
+					namespace);
+			if(values.isEmpty() /*external library */){
+				String library= namespace.replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
 				
-				normalized = typeString+ headerExtension;
+				String[] trackers = new String[]{ICppDefinitions.BODY_INCLUDES_TRACKER, ICppDefinitions.HEADER_INCLUDES_TRACKER};
 				
-				addDepend(generationValueGetter, parent, typeName);
+				for(String trackerId: trackers){
+					generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+							GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, library), 
+							GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, trackerId));
+				}
+				
+				String include= normalized.substring(lastIndexOf+1, use.length());
+				
+				if(CommonConstants.ASTERISK.equals(include)){
+					//Means that the user decided to go with using qualified names. i.e "using std", and then std::string
+					//instead of "using std", "include <string>, and then use string directly
+					return;
+				}
+				
+				for(String trackerId: trackers){
+					generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, include),
+							GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, library),
+							GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, trackerId));
+				}
+				
+				return;
+			}
+			
+			if(CommonConstants.ASTERISK.equals(use.substring(use.length()-1, use.length()))){
+				namespace= use.substring(0, use.lastIndexOf(CommonConstants.ASTERISK)-1);
+				values = generationValueGetter.getValues(IModelingConstants.TYPES_BY_NAMESPACES_TRACKER, modelPackage, namespace);
+				
+				String modelPath = generationValueGetter.generationPointString(modelPackage, IModelingDecisions.MODEL_PATH);
+				for(Object value: values){
+					String typeName= generationValueGetter.getString(value, IModelingElementDefinitions.NAME);
+					String typeString= modelPath+ CommonConstants.FORWARD_SLASH+ typeName;
+					typeString= typeString.replace(CommonConstants.DOT, CommonConstants.FORWARD_SLASH);
+					
+					normalized = typeString+ headerExtension;
+					
+					addDepend(generationValueGetter, parent, typeName);
+				}
+			}else{
+				if(!normalized.endsWith(headerExtension)){
+					normalized= normalized+ headerExtension;
+				}
+				
+				String typeString = normalized.substring(lastIndexOf+1, normalized.lastIndexOf(headerExtension));
+				addDepend(generationValueGetter, parent, typeString);
 			}
 		}else{
-			if(!normalized.endsWith(headerExtension)){
-				normalized= normalized+ headerExtension;
+			if(generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, normalized).isEmpty()){
+				//No namespace was found. No type tracked, then it must be added as an arbitrary include statement
+				String includeStatement = generationValueGetter.use(ICppDefinitions.INCLUDE_DIRECT_STATEMENT, normalized, Boolean.TRUE);
+				generationValueGetter.addUniqueValue(DEPEND_DIRECT_INCLUDES, includeStatement, parent);
+			}else{
+				addDepend(generationValueGetter, parent, normalized);
 			}
-			
-			String typeString = normalized.substring(normalized.lastIndexOf(CommonConstants.FORWARD_SLASH)+1, normalized.lastIndexOf(headerExtension));
-			addDepend(generationValueGetter, parent, typeString);
 		}
-		
 	}
 
 	private static void addDepend(GenerationPolicyRegistry generationValueGetter, Object parent, Object typeString) {
