@@ -5,11 +5,8 @@ package cruise.tracer.test;
 import cruise.util.ConsoleTracer;
 import java.util.Date;
 
-/**
- * tracer String;
- */
-// line 6 "../../../../src/TestHarnessTracer.ump"
-public class PersonA
+// line 14 "../../../../src/TestHarnessTracer.ump"
+public class PersonB
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -18,14 +15,14 @@ public class PersonA
   // MEMBER VARIABLES
   //------------------------
 
-  //PersonA Attributes
+  //PersonB Attributes
   private String name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public PersonA(String aName)
+  public PersonB(String aName)
   {
     name = aName;
   }
@@ -37,7 +34,7 @@ public class PersonA
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,9,PersonA,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,17,PersonB,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
     name = aName;
     wasSet = true;
     return wasSet;
