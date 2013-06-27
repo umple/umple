@@ -478,6 +478,7 @@ public class CPPContentsPointsHandler{
 		List<String> paramsList= new ArrayList<String>();
 		String parametersString = CommonConstants.BLANK;
 
+		List<Object> constructionParameters= new ArrayList<Object>();
 		Iterator<Object> iterator = filtered.iterator();
 		while (iterator.hasNext()) {
 			Object item = iterator.next();
@@ -485,7 +486,7 @@ public class CPPContentsPointsHandler{
 			@SuppressWarnings("unchecked")
 			SimpleEntry<Object, SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>> current = 
 				(SimpleEntry<Object, SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>>>) item;
-
+			
 			SimpleEntry<SimpleEntry<String, String>, SimpleEntry<String, String>> currentValue = current.getValue();
 			SimpleEntry<String, String> value = currentValue.getValue();
 			
@@ -504,6 +505,7 @@ public class CPPContentsPointsHandler{
 			}else{
 				parameter=	name.isEmpty()?value.getValue(): generationValueGetter.use(ICppNameConstants.DELEGATED_PARAMETER, value.getValue(), name);
 				paramsList.add(generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, value.getKey(), parameter));
+				constructionParameters.add(item);
 			}
 				
 			parametersString = parametersString + parameter;
@@ -512,6 +514,10 @@ public class CPPContentsPointsHandler{
 						+ CommonConstants.COMMA_SEPARATOR;
 			}
 		}
+		
+		generationValueGetter.addUniqueValue(ICppDefinitions.CONSTRUCTOR_INTERNAL_CONSTRUCTION_PARAMETERS_LIST, constructionParameters,
+				typeName, source);
+		
 		String value = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCT_CLASS, containingElement, parametersString, typeName, name);
 		return new SimpleEntry<List<String>, String>(paramsList, value);
 	}

@@ -66,7 +66,7 @@ public class CppTestsPointsHandler{
 	
 	private final static String TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER= "cpp.test.class.instance.associations.tracker"; //$NON-NLS-1$
 	
-	private final static String TEST_FILE= "cpp.test.file"; //$NON-NLS-1$
+	private final static String TEST_FILES_INCLUDES= "cpp.test.file"; //$NON-NLS-1$
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.MAIN_PRE_CONTENTS)
 	public static String preContents(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
@@ -74,10 +74,7 @@ public class CppTestsPointsHandler{
 		if(!GENERATE_TESTS){
 			return null;
 		}
-		String modelPath = generationValueGetter.generationPointString(modelPackage, IModelingConstants.ROOT_PATH,
-				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE));
-		
-		return CommonConstants.NEW_LINE+ generationValueGetter.use(ICppDefinitions.INCLUDE_STATEMENT, ICppTestsDefinitions.TEST_STUBS, modelPath)+ CommonConstants.NEW_LINE;
+		return CommonConstants.NEW_LINE+ GenerationUtil.getImplementationDetails(generationValueGetter, TEST_FILES_INCLUDES, modelPackage);
 	}
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
@@ -92,23 +89,23 @@ public class CppTestsPointsHandler{
 		generateTests(generationValueGetter, element, name, modelPackage);
 	}
 	
-	@LoopProcessorAnnotation(aspect= LoopAspectConstants.TERMINATE)
-	public static void terminate(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationLoopElement Object modelPackage) throws IOException{
-		if(!GENERATE_TESTS){
-			return;
-		}
-		List<Object> files = generationValueGetter.getValues(TEST_FILE, modelPackage);
-		if(!files.isEmpty()){
-			BufferedWriter output = (BufferedWriter) files.get(0);
-			
-			String endContents= generationValueGetter.generate(ICppTestsDefinitions.TEST_FILE_END, modelPackage);
-			output.write(endContents);
-			
-			output.close();
-			generationValueGetter.removeValue(TEST_FILE, output, modelPackage);
-		}
-	}
+//	@LoopProcessorAnnotation(aspect= LoopAspectConstants.TERMINATE)
+//	public static void terminate(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+//			@GenerationLoopElement Object modelPackage) throws IOException{
+//		if(!GENERATE_TESTS){
+//			return;
+//		}
+//		List<Object> files = generationValueGetter.getValues(TEST_FILE, modelPackage);
+//		if(!files.isEmpty()){
+//			BufferedWriter output = (BufferedWriter) files.get(0);
+//			
+//			String endContents= generationValueGetter.generate(ICppTestsDefinitions.TEST_FILE_END, modelPackage);
+//			output.write(endContents);
+//			
+//			output.close();
+//			generationValueGetter.removeValue(TEST_FILE, output, modelPackage);
+//		}
+//	}
 
 	private static void generateTests(GenerationPolicyRegistry generationValueGetter,
 			Object element, String name, Object modelPackage) throws IOException {
@@ -159,54 +156,66 @@ public class CppTestsPointsHandler{
 		
 		//generationValueGetter.addUniqueValue(ICppDefinitions.MAIN_CONTENTS, assertStatements+ CommonConstants.NEW_LINE);
 		
-		BufferedWriter output;
-		List<Object> files = generationValueGetter.getValues(TEST_FILE, modelPackage);
-		if(files.isEmpty()){
-			String modelPath = generationValueGetter.getString(modelPackage, IModelingElementDefinitions.FILE_PATH);
-			File folderFile = new File( modelPath+ "/TestsStubs.h"); 	 //$NON-NLS-1$
-			 
-			 if (!folderFile.exists()) {
-			 	folderFile.createNewFile();
-			 }
-			
-			output = new BufferedWriter(new FileWriter(folderFile));
-			
-			String useAllNamespaces= CommonConstants.BLANK;
-			Iterator<Object> namespacesIterator = generationValueGetter.getAllValues(IModelingConstants.NAMESPACES_TRACKER, modelPackage).iterator();
-			while(namespacesIterator.hasNext()){
-				String object = namespacesIterator.next().toString();
-				object= object.replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX).
-						replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
-				useAllNamespaces= useAllNamespaces+ generationValueGetter.use(ICppDefinitions.USE_NAMESPACE, CPPCommonConstants.DECLARATION_COMMON_PREFIX+object);
-				
-				if(namespacesIterator.hasNext()){
-					useAllNamespaces= useAllNamespaces+ CommonConstants.NEW_LINE;
-				}
-			}
-			
-			String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, CPPDependsPointsHandler.ALL_MODEL_INCLUDES_TRACKER, "Main"); //$NON-NLS-1$
-			if(!useAllNamespaces.isEmpty()){
-				if(!implementationDetails.isEmpty()){
-					implementationDetails= implementationDetails+ CommonConstants.NEW_LINE;
-				}
-				implementationDetails= implementationDetails+ useAllNamespaces;
-			}
-			String startContents= generationValueGetter.generate(ICppTestsDefinitions.TEST_FILE_START, modelPackage, implementationDetails);
-			output.write(startContents);
-			generationValueGetter.addUniqueValue(TEST_FILE, output, modelPackage);
-		}else{
-			output= (BufferedWriter) files.get(0);
+		String modelPath = generationValueGetter.getString(modelPackage, IModelingElementDefinitions.FILE_PATH);
+		
+		String methodTestName = "test"+StringUtil.firstCharacterToUpperCase(name); //$NON-NLS-1$
+		
+		List<Object> namesValues = generationValueGetter.getValues(TEST_CLASS_INSTANCE_NAMES_TRACKER, ICppTestsDefinitions.TEST_STUBS);
+		String testStubNextName = ICppTestsDefinitions.TEST_STUBS;
+		if(!namesValues.isEmpty()){
+			testStubNextName= testStubNextName+ namesValues.size();
 		}
+		generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_NAMES_TRACKER, testStubNextName, ICppTestsDefinitions.TEST_STUBS);
+		
+		File folderFile = new File(modelPath+ CommonConstants.BACK_SLASH+ testStubNextName+ ".h"); 	 //$NON-NLS-1$
+		 
+		 if (!folderFile.exists()) {
+		 	folderFile.createNewFile();
+		 }
+		
+		 BufferedWriter output = new BufferedWriter(new FileWriter(folderFile));
+		
+		String useAllNamespaces= CommonConstants.BLANK;
+		Iterator<Object> namespacesIterator = generationValueGetter.getAllValues(IModelingConstants.NAMESPACES_TRACKER, modelPackage).iterator();
+		while(namespacesIterator.hasNext()){
+			String object = namespacesIterator.next().toString();
+			object= object.replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX).
+					replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+			useAllNamespaces= useAllNamespaces+ generationValueGetter.use(ICppDefinitions.USE_NAMESPACE, CPPCommonConstants.DECLARATION_COMMON_PREFIX+object);
+			
+			if(namespacesIterator.hasNext()){
+				useAllNamespaces= useAllNamespaces+ CommonConstants.NEW_LINE;
+			}
+		}
+		
+		String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, CPPDependsPointsHandler.ALL_MODEL_INCLUDES_TRACKER, "Main"); //$NON-NLS-1$
+		if(!useAllNamespaces.isEmpty()){
+			if(!implementationDetails.isEmpty()){
+				implementationDetails= implementationDetails+ CommonConstants.NEW_LINE;
+			}
+			implementationDetails= implementationDetails+ useAllNamespaces;
+		}
+		
+		String startContents= generationValueGetter.generate(ICppTestsDefinitions.TEST_FILE_START, modelPackage, implementationDetails, testStubNextName, methodTestName);
+		output.write(startContents);
 		output.write(StringUtil.indent(assertStatements+ CommonConstants.NEW_LINE, 1));
 		
-		String testStubCall= generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, "test", CommonConstants.BLANK, Boolean.TRUE); //$NON-NLS-1$
+		String testStubCall= generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, methodTestName, CommonConstants.BLANK, Boolean.TRUE);
+		String endContents= generationValueGetter.generate(ICppTestsDefinitions.TEST_FILE_END, modelPackage);
+		output.write(endContents);
+		output.close();
 		generationValueGetter.addUniqueValue(ICppDefinitions.MAIN_CONTENTS, testStubCall);
+		
+		String rootPath = generationValueGetter.generationPointString(modelPackage, IModelingConstants.ROOT_PATH);
+		String include = generationValueGetter.use(ICppDefinitions.INCLUDE_STATEMENT, testStubNextName, rootPath);
+		generationValueGetter.addUniqueValue(TEST_FILES_INCLUDES, include, modelPackage);
 	}
 
 	private static void assertInternalConstruct(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, Object element, Object modelPackage,
 			String instanceName, String identifier) {
 		List<Object> internalConstructors = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCT_OBJECT_INTERNALLY, identifier, element, 
 				VisibilityConstants.PUBLIC);
+		
 		
 		if(internalConstructors.isEmpty()){
 			//TODO: Do not forget JUnit assertion here
@@ -227,6 +236,8 @@ public class CppTestsPointsHandler{
 			return;
 		}
 		
+		generationValueGetter.generationPoint(values.get(0), ICppDefinitions.CONSTRUCTOR_INTERNAL_CONSTRUCTION_PARAMETERS_LIST,typeName, element);
+				
 		int numberOfLoops= !canAdd(generationValueGetter, instanceName, null, methodObject)? 1:
 				generationValueGetter.getInt(methodObject, IModelingElementDefinitions.UPPER_BOUND);
 		if(numberOfLoops==-1){
@@ -241,7 +252,7 @@ public class CppTestsPointsHandler{
 		
 		for(int index=0; index<numberOfLoops; index++){
 			List<String> randomValues= new ArrayList<String>();
-			setConstrctorValues(generationValueGetter, contents, modelPackage, containingObject, element, instanceName, randomValues, false);
+			setConstrctorValues(generationValueGetter, contents, modelPackage, containingObject, element, instanceName, randomValues, false, true);
 			
 			String parametersString= CommonConstants.BLANK;
 			
@@ -267,6 +278,7 @@ public class CppTestsPointsHandler{
 			increaseSize(generationValueGetter, instanceName, typeName);
 			//generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, callee, instanceName);
 		}
+		contents.append(CommonConstants.NEW_LINE);
 	}
 
 	private static void assertSetter(GenerationPolicyRegistry generationValueGetter,StringBuffer assertStatements, 
@@ -350,7 +362,8 @@ public class CppTestsPointsHandler{
 		//Expected to be NULL for most case
 		String normalizedValue= generationValueGetter.generationPointString(methodObject, IModelingConstants.NORMALIZED_DEFAULT_VALUE);
 		
-		if(generationValueGetter.getPathMap(methodObject).get(IModelingElementDefinitions.ATTRIBUTES_PROCESSOR)!= null||
+		if(generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_DIRECTED)||
+				generationValueGetter.getPathMap(methodObject).get(IModelingElementDefinitions.ATTRIBUTES_PROCESSOR)!= null||
 				(generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OPTIONAL)&&
 						generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND)||
 						generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE)||
@@ -359,9 +372,8 @@ public class CppTestsPointsHandler{
 						generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL))/*||
 				(generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_ONE)&&
 				generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND))*/){
-			
-					assertStatements.append(generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element,
-							instanceName, getterMethodNameObject, newParamaeterInstanceValue)+ CommonConstants.NEW_LINE);
+			assertStatements.append(generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element, 
+					instanceName, getterMethodNameObject, newParamaeterInstanceValue)+ CommonConstants.NEW_LINE);
 		}else{
 			assertStatements.append(CommonConstants.NEW_LINE);
 			assertStatements.append("//Checking to see that the previous setter did not work due to the minimum restriction contraints"); //$NON-NLS-1$
@@ -446,7 +458,7 @@ public class CppTestsPointsHandler{
 		
 		String operator= null;
 		List<Object> trackedTypes = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName);
-		if(!trackedTypes.isEmpty()&& generationValueGetter.getValues(TEST_CLASS_PARAMETERS_DEFINED_INTERNALLY_TRACKER, element).contains(trackedTypes.get(0))){
+		if(!trackedTypes.isEmpty()&& generationValueGetter.getValues(TEST_CLASS_PARAMETERS_DEFINED_INTERNALLY_TRACKER, element).contains(identifier)){
 			operator= CommonConstants.NOT+ CommonConstants.EQUAL;
 		}
 		
@@ -721,6 +733,11 @@ public class CppTestsPointsHandler{
 		
 		boolean canDecreae= false;
 		decrease: {
+			if(generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_DIRECTED)){
+				canDecreae= otherCurrentSize>lowerBound;
+				break decrease;
+			}
+			
 			if(!generationValueGetter.getValues(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, instanceName).contains(typeInstanceName)){
 				canDecreae= false;
 				break decrease;
@@ -738,6 +755,12 @@ public class CppTestsPointsHandler{
 				break decrease;
 			}
 			
+			if(generationValueGetter.decisionPoint(methodObject, IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL)&&
+					generationValueGetter.decisionPoint(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED)){
+				canDecreae= currentSize>otherLowerBound;
+				break decrease;
+			}
+			
 			if(generationValueGetter.decisionPoint(methodObject, IModelingDecisions.ATTRIBUTE_IS_UNBOUND)&&
 					generationValueGetter.decisionPoint(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND)){
 				canDecreae= currentSize>lowerBound /*&& otherCurrentSize>otherLowerBound*/;
@@ -747,6 +770,12 @@ public class CppTestsPointsHandler{
 			if(generationValueGetter.decisionPoint(methodObject, IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY)&&
 					generationValueGetter.decisionPoint(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED)){
 				canDecreae= otherCurrentSize>lowerBound;
+				break decrease;
+			}
+			
+			if(generationValueGetter.decisionPoint(methodObject, IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND)&&
+					generationValueGetter.decisionPoint(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED)){
+				canDecreae= expectedNewLength>=lowerBound && currentSize>otherLowerBound;
 				break decrease;
 			}
 			
@@ -984,6 +1013,7 @@ public class CppTestsPointsHandler{
 	
 	private static void constructInstance(GenerationPolicyRegistry generationValueGetter,StringBuffer contents, Object modelPackage, 
 			Object containingElement, String type, String instanceName, boolean isRecursive) {
+		
 		List<String> randomValues= new ArrayList<String>();
 		setConstrctorValues(generationValueGetter, contents, modelPackage, containingElement, containingElement, instanceName, randomValues, false);
 		
@@ -1039,16 +1069,19 @@ public class CppTestsPointsHandler{
 							contents.append(generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, containingElement,instanceName, setterMethodNameObject, 
 									newParamaeterInstanceValue));
 							
-							if(generationValueGetter.decisionPoint(associationVariable, IModelingDecisions.ATTRIBUTE_IS_ONE)){
-								//String defaultValue= generationValueGetter.generationPointString(associationVariable, IModelingConstants.NORMALIZED_DEFAULT_VALUE);
-								List<Object> ids = generationValueGetter.getValues(IModelingConstants.METHOD_IDS, ICppAssociationsDefinitionsConstants.GETTER_IMPLEMENTATION, methodObject, 
-										containingElement);
-								
-								if(!ids.isEmpty()){
-									//generationValueGetter.addValue(TEST_CLASS_PARAMETERS_VALUES_IN_CONSTRUCTOR_TRACKER,defaultValue , 
-									//		instanceName, typeName, ids.get(0).toString(), containingElement);
-									contents.append(CommonConstants.NEW_LINE+ "//Previous set must not have worked due to rsstrictions"); //$NON-NLS-1$
-									assertGetter(generationValueGetter, modelPackage, contents, containingElement, instanceName, ids.get(0).toString());
+							List<Object> ids = generationValueGetter.getValues(IModelingConstants.METHOD_IDS, ICppAssociationsDefinitionsConstants.GETTER_IMPLEMENTATION, methodObject, 
+									containingElement);
+							
+							if(!ids.isEmpty()){
+								if(generationValueGetter.decisionPoint(associationVariable, IModelingDecisions.ATTRIBUTE_IS_ONE)){
+									//String defaultValue= generationValueGetter.generationPointString(associationVariable, IModelingConstants.NORMALIZED_DEFAULT_VALUE);
+										//generationValueGetter.addValue(TEST_CLASS_PARAMETERS_VALUES_IN_CONSTRUCTOR_TRACKER,defaultValue , 
+										//		instanceName, typeName, ids.get(0).toString(), containingElement);
+										contents.append(CommonConstants.NEW_LINE+ "//Previous set must not have worked due to rsstrictions"); //$NON-NLS-1$
+										assertGetter(generationValueGetter, modelPackage, contents, containingElement, instanceName, ids.get(0).toString());
+								}else{
+									generationValueGetter.addValue(TEST_CLASS_PARAMETERS_VALUES_IN_CONSTRUCTOR_TRACKER,newParamaeterInstanceValue , 
+											instanceName, typeName, ids.get(0).toString(), containingElement);
 								}
 							}
 						}else{
@@ -1107,8 +1140,17 @@ public class CppTestsPointsHandler{
 
 	private static void setConstrctorValues(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, Object modelPackage,
 			Object containingElement, Object root, String instanceName, List<String> randomValues, boolean isRecursive) {
-		List<Object> list = generationValueGetter.generationPointList(containingElement, ICppDefinitions.CONSTRUCTOR_ALL_PARAMETERS_LIST);
-		for(Object obj: list){
+		setConstrctorValues(generationValueGetter, contents, modelPackage, containingElement, root, instanceName, randomValues, isRecursive, false);
+	}
+	
+	private static void setConstrctorValues(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, Object modelPackage,
+			Object containingElement, Object root, String instanceName, List<String> randomValues, boolean isRecursive, boolean isInternal) {
+		List<Object> parameters = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, containingElement);
+		
+		@SuppressWarnings("unchecked")
+		SimpleEntry<List<?>, Object> otherParams= (SimpleEntry<List<?>, Object>) parameters.get(isRecursive?0:parameters.size()-1);
+		
+		for(Object obj: otherParams.getKey()){
 			if(obj instanceof SimpleEntry== false){
 				continue;
 			}
@@ -1120,30 +1162,8 @@ public class CppTestsPointsHandler{
 			String typeName = generationValueGetter.getString(key, IModelingElementDefinitions.TYPE_NAME);
 			List<Object> values = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, 
 					typeName);
-			
-			if(!values.isEmpty()){
-				String otherTypeName = generationValueGetter.getString(key, IModelingElementDefinitions.OTHER_END_TYPE_NAME);
-				Object value = values.get(0);
-				
-				if(!otherTypeName.equals(typeName)|| isRecursive){ //ignore this check for self associations
-					if(root.equals(value)){
-						continue;
-					}
-					boolean isInstanceOF= generationValueGetter.decisionPoint(containingElement, IModelingConstants.IS_INSTANCE_OF, 
-							GenerationArgumentDescriptor.arg(IModelingConstants.INSTANCE_OF_ELEMENT_ARGUMENT, value));
-					
-					if(isInstanceOF){
-						continue;
-					}
-				}
-				
-				int lowerBound= generationValueGetter.getInt(key, IModelingElementDefinitions.OTHER_END_LOWER_BOUND);
-				int upperBound= generationValueGetter.getInt(key, IModelingElementDefinitions.OTHER_END_UPPER_BOUND);
-				if(lowerBound==1&& upperBound!=-1){
-					generationValueGetter.addUniqueValue(TEST_CLASS_PARAMETERS_DEFINED_INTERNALLY_TRACKER, value, containingElement);
-					setConstrctorValues(generationValueGetter, contents, modelPackage, value, containingElement, instanceName, randomValues, true);
-					continue;
-				}
+			if(isInternal&& values.contains(root)){
+				continue;
 			}
 			
 			SimpleEntry<?, ?> simpleEntryValue = (SimpleEntry<?, ?>)simpleEntry.getValue();
@@ -1167,7 +1187,7 @@ public class CppTestsPointsHandler{
 	
 	private static String getNextAvailableName(GenerationPolicyRegistry generationValueGetter, Object contaningElement, String typeName){
 		List<Object> namesValues = generationValueGetter.getValues(TEST_CLASS_INSTANCE_NAMES_TRACKER, contaningElement);
-		String typeInstanceName = StringUtil.firstCharacterToLowerCase(typeName)+ namesValues.size();
+		String typeInstanceName = StringUtil.firstCharacterToLowerCase(typeName)+ CommonConstants.UNDERSCORE+ namesValues.size();
 		generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_NAMES_TRACKER, typeInstanceName, contaningElement);
 		return typeInstanceName;
 	}
@@ -1328,6 +1348,7 @@ public class CppTestsPointsHandler{
 		if(generationValueGetter.getValues(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, caller).contains(callee)){
 			return false;
 		}
+		
 		String typeName= generationValueGetter.getString(methodObject, IModelingElementDefinitions.TYPE_NAME);
 		if(typeName== null){
 			typeName= generationValueGetter.getString(methodObject, IModelingElementDefinitions.NAME);
@@ -1348,9 +1369,19 @@ public class CppTestsPointsHandler{
 			int otherSize= getSize(generationValueGetter, callee, otherTypeName);
 			
 			int otherUpperBound = generationValueGetter.getInt(methodObject, IModelingElementDefinitions.OTHER_END_UPPER_BOUND);
+			int otherLowerBound = generationValueGetter.getInt(methodObject, IModelingElementDefinitions.OTHER_END_LOWER_BOUND);
 			
 			if(generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND)&&
 					generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE)){
+				
+				if(generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_DIRECTED)){
+					//No resitrctions if directed
+					return true;
+				}
+				
+				if(otherSize<=otherLowerBound){
+					return false;
+				}
 				//Adding ranged/unbound requires removing the other end one relation, so ensure that this relation is removed. This is why we check for the lower bound
 				//here
 				//Checking for zero is required for the intenral constructed objects
