@@ -87,14 +87,16 @@ public class UmpleFile
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-   public UmpleFile(String aPath,String aFilename)  {
+    @umplesourcefile(line={0},file={""},javaline={91},length={3})
+ public UmpleFile(String aPath,String aFilename)  {
 this(new File(aPath,aFilename));
   }
+  @umplesourcefile(line={3},file={""},javaline={95},length={3})
  public UmpleFile(String aFullFilename)  {
 this(new File(aFullFilename));
   }
-//  @umplesourcefile(line={24},file={"UmpleHelper_Code.ump"},javaline={97},length={101})
-  @umplesourcefile(line={25},file={"UmpleHelper_Code.ump"},javaline={98},length={12})
+//  @umplesourcefile(line={24},file={"UmpleHelper_Code.ump"},javaline={99},length={101})
+  @umplesourcefile(line={25},file={"UmpleHelper_Code.ump"},javaline={100},length={12})
   private StringBuilder init()
   {
     String fullFilename = file.getAbsolutePath();
@@ -108,7 +110,7 @@ this(new File(aFullFilename));
     return fileContent;
   }
   
-  @umplesourcefile(line={38},file={"UmpleHelper_Code.ump"},javaline={112},length={13})
+  @umplesourcefile(line={38},file={"UmpleHelper_Code.ump"},javaline={114},length={13})
   public String getSimpleFileName()
   {
 
@@ -123,45 +125,45 @@ this(new File(aFullFilename));
     }
   }
 
-  @umplesourcefile(line={52},file={"UmpleHelper_Code.ump"},javaline={127},length={4})
+  @umplesourcefile(line={52},file={"UmpleHelper_Code.ump"},javaline={129},length={4})
   public String getFileContent()
   {
     return fileContent.toString();
   }
 
-  @umplesourcefile(line={57},file={"UmpleHelper_Code.ump"},javaline={133},length={4})
+  @umplesourcefile(line={57},file={"UmpleHelper_Code.ump"},javaline={135},length={4})
   public InputStream getFileStream() throws FileNotFoundException
   {
     return new FileInputStream(file);
   }
 
-  @umplesourcefile(line={62},file={"UmpleHelper_Code.ump"},javaline={139},length={5})
+  @umplesourcefile(line={62},file={"UmpleHelper_Code.ump"},javaline={141},length={5})
   private boolean doesFileExist(String aFileName)
   {
     File file = new File(aFileName);
     return file.exists();
   }
 
-  @umplesourcefile(line={68},file={"UmpleHelper_Code.ump"},javaline={146},length={5})
+  @umplesourcefile(line={68},file={"UmpleHelper_Code.ump"},javaline={148},length={5})
   public boolean doesFileExist()
   {
     File file = new File(path,fileName);
     return file.exists();
   }
 
-  @umplesourcefile(line={74},file={"UmpleHelper_Code.ump"},javaline={153},length={4})
+  @umplesourcefile(line={74},file={"UmpleHelper_Code.ump"},javaline={155},length={4})
   public String getPath()
   {
     return path;
   }
   
-  @umplesourcefile(line={79},file={"UmpleHelper_Code.ump"},javaline={159},length={4})
+  @umplesourcefile(line={79},file={"UmpleHelper_Code.ump"},javaline={161},length={4})
   public String getParent()
   {
     return ((new File(path)).getParent().toString());
   }
 
-  @umplesourcefile(line={84},file={"UmpleHelper_Code.ump"},javaline={165},length={26})
+  @umplesourcefile(line={84},file={"UmpleHelper_Code.ump"},javaline={167},length={26})
   public void append(String aFilename)
   {
     try
@@ -195,13 +197,13 @@ this(new File(aFullFilename));
   }
   
   // this is used to add command-based linked Umple files to the proper list.
-  @umplesourcefile(line={117},file={"UmpleHelper_Code.ump"},javaline={199},length={3})
+  @umplesourcefile(line={117},file={"UmpleHelper_Code.ump"},javaline={201},length={3})
   public void addLinkedFiles(String filename) {
   	linkedFiles = linkedFiles+"use "+filename+";\n";
   }
   
   // this is used to get list of command-based linked Umple files.
-  @umplesourcefile(line={122},file={"UmpleHelper_Code.ump"},javaline={205},length={3})
+  @umplesourcefile(line={122},file={"UmpleHelper_Code.ump"},javaline={207},length={3})
   public String getLinkedFiles() {
  	 return "\n"+linkedFiles;
   }

@@ -107,7 +107,8 @@ public class ErrorItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-   public ErrorItem(String aId,String [] aParts)  {
+    @umplesourcefile(line={0},file={""},javaline={111},length={7})
+ public ErrorItem(String aId,String [] aParts)  {
 this(aId);
     for (String part : aParts)
     {
