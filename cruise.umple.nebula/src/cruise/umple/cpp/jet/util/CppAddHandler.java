@@ -94,42 +94,43 @@ public class CppAddHandler extends CppGenerationTemplate{
   protected final String TEXT_61 = ");" + NL + "    }else{" + NL + "    \t";
   protected final String TEXT_62 = NL + "    }" + NL + "    wasAdded = true;";
   protected final String TEXT_63 = "\t" + NL + "\t";
-  protected final String TEXT_64 = "\t" + NL + "\tif (";
-  protected final String TEXT_65 = "->";
-  protected final String TEXT_66 = "(this)!= -1) {" + NL + "\t\twasAdded = true;" + NL + "\t}else{" + NL + "\t\twasAdded = ";
-  protected final String TEXT_67 = "->";
-  protected final String TEXT_68 = "(this);" + NL + "\t\tif(!wasAdded){" + NL + "      \t\tint currentIndex= this->";
-  protected final String TEXT_69 = ";" + NL + "      \t\t";
-  protected final String TEXT_70 = NL + "\t\t}" + NL + "\t}" + NL + "\t";
-  protected final String TEXT_71 = "\t" + NL + "\t";
-  protected final String TEXT_72 = NL + "\t" + NL + "\tif (";
-  protected final String TEXT_73 = "){" + NL + "\t\t";
-  protected final String TEXT_74 = "->";
-  protected final String TEXT_75 = "(this);" + NL + "    }else{" + NL + "    \t";
-  protected final String TEXT_76 = NL + "    }" + NL + "    wasAdded= true;";
-  protected final String TEXT_77 = "\t" + NL + "\t";
-  protected final String TEXT_78 = NL + "\t" + NL + "\tif (";
-  protected final String TEXT_79 = "){" + NL + "\t\tif(";
-  protected final String TEXT_80 = "->";
-  protected final String TEXT_81 = "() <= ";
-  protected final String TEXT_82 = "()){" + NL + "\t\t\treturn wasAdded;" + NL + "\t\t}" + NL + "\t\t";
-  protected final String TEXT_83 = "->";
-  protected final String TEXT_84 = "(this);" + NL + "    }else{" + NL + "\t\t";
-  protected final String TEXT_85 = NL + "    }" + NL + "    wasAdded= true;";
-  protected final String TEXT_86 = "\t" + NL + "    if (this->";
-  protected final String TEXT_87 = "() >= this->";
-  protected final String TEXT_88 = "()){" + NL + "\t\t";
-  protected final String TEXT_89 = NL + "\t}";
-  protected final String TEXT_90 = "return wasAdded;";
-  protected final String TEXT_91 = "return ";
-  protected final String TEXT_92 = ";";
-  protected final String TEXT_93 = "* ";
-  protected final String TEXT_94 = " = ";
-  protected final String TEXT_95 = "->";
-  protected final String TEXT_96 = "();" + NL + "\tbool ";
-  protected final String TEXT_97 = " = ";
-  protected final String TEXT_98 = " != NULL && this!=";
-  protected final String TEXT_99 = ";";
+  protected final String TEXT_64 = NL + "\twasAdded = true;" + NL + "\t";
+  protected final String TEXT_65 = "\t" + NL + "\tif (";
+  protected final String TEXT_66 = "->";
+  protected final String TEXT_67 = "(this)!= -1) {" + NL + "\t\twasAdded = true;" + NL + "\t}else{" + NL + "\t\twasAdded = ";
+  protected final String TEXT_68 = "->";
+  protected final String TEXT_69 = "(this);" + NL + "\t\tif(!wasAdded){" + NL + "      \t\tint currentIndex= this->";
+  protected final String TEXT_70 = ";" + NL + "      \t\t";
+  protected final String TEXT_71 = NL + "\t\t}" + NL + "\t}" + NL + "\t";
+  protected final String TEXT_72 = "\t" + NL + "\t";
+  protected final String TEXT_73 = NL + "\t" + NL + "\tif (";
+  protected final String TEXT_74 = "){" + NL + "\t\t";
+  protected final String TEXT_75 = "->";
+  protected final String TEXT_76 = "(this);" + NL + "    }else{" + NL + "    \t";
+  protected final String TEXT_77 = NL + "    }" + NL + "    wasAdded= true;";
+  protected final String TEXT_78 = "\t" + NL + "\t";
+  protected final String TEXT_79 = NL + "\t" + NL + "\tif (";
+  protected final String TEXT_80 = "){" + NL + "\t\tif(";
+  protected final String TEXT_81 = "->";
+  protected final String TEXT_82 = "() <= ";
+  protected final String TEXT_83 = "()){" + NL + "\t\t\treturn wasAdded;" + NL + "\t\t}" + NL + "\t\t";
+  protected final String TEXT_84 = "->";
+  protected final String TEXT_85 = "(this);" + NL + "    }else{" + NL + "\t\t";
+  protected final String TEXT_86 = NL + "    }" + NL + "    wasAdded= true;";
+  protected final String TEXT_87 = "\t" + NL + "    if (this->";
+  protected final String TEXT_88 = "() >= this->";
+  protected final String TEXT_89 = "()){" + NL + "\t\t";
+  protected final String TEXT_90 = NL + "\t}";
+  protected final String TEXT_91 = "return wasAdded;";
+  protected final String TEXT_92 = "return ";
+  protected final String TEXT_93 = ";";
+  protected final String TEXT_94 = "* ";
+  protected final String TEXT_95 = " = ";
+  protected final String TEXT_96 = "->";
+  protected final String TEXT_97 = "();" + NL + "\tbool ";
+  protected final String TEXT_98 = " = ";
+  protected final String TEXT_99 = " != NULL && this!=";
+  protected final String TEXT_100 = ";";
 
   /**
   * @param argument
@@ -519,24 +520,28 @@ public void execute() {
 }
 
 private void check(){
-	if(!check){
-		return;
-	}
-	
-	
+
+if(!check){
+
     stringBuffer.append(TEXT_64);
-    stringBuffer.append(instanceAsVariable);
+    
+return;
+}
+	
+	
     stringBuffer.append(TEXT_65);
-    stringBuffer.append(otherEndIndexOfMethod);
-    stringBuffer.append(TEXT_66);
     stringBuffer.append(instanceAsVariable);
+    stringBuffer.append(TEXT_66);
+    stringBuffer.append(otherEndIndexOfMethod);
     stringBuffer.append(TEXT_67);
-    stringBuffer.append(addOtherEndMethodName);
+    stringBuffer.append(instanceAsVariable);
     stringBuffer.append(TEXT_68);
-    stringBuffer.append(asIndex);
+    stringBuffer.append(addOtherEndMethodName);
     stringBuffer.append(TEXT_69);
-    stringBuffer.append(removeCall);
+    stringBuffer.append(asIndex);
     stringBuffer.append(TEXT_70);
+    stringBuffer.append(removeCall);
+    stringBuffer.append(TEXT_71);
     	
 }
 
@@ -584,17 +589,17 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_71);
-    stringBuffer.append(preCode);
     stringBuffer.append(TEXT_72);
-    stringBuffer.append(isNew);
+    stringBuffer.append(preCode);
     stringBuffer.append(TEXT_73);
-    stringBuffer.append(instanceAsVariable );
+    stringBuffer.append(isNew);
     stringBuffer.append(TEXT_74);
-    stringBuffer.append(setter);
+    stringBuffer.append(instanceAsVariable );
     stringBuffer.append(TEXT_75);
-    stringBuffer.append(getGenerationTemplate().generate("cpp.add.handler.add.item.internal", element, name, instanceAsVariable));
+    stringBuffer.append(setter);
     stringBuffer.append(TEXT_76);
+    stringBuffer.append(getGenerationTemplate().generate("cpp.add.handler.add.item.internal", element, name, instanceAsVariable));
+    stringBuffer.append(TEXT_77);
     	
 
 }
@@ -629,23 +634,23 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_77);
-    stringBuffer.append(preCode);
     stringBuffer.append(TEXT_78);
-    stringBuffer.append(isNew );
+    stringBuffer.append(preCode);
     stringBuffer.append(TEXT_79);
-    stringBuffer.append(existing);
+    stringBuffer.append(isNew );
     stringBuffer.append(TEXT_80);
-    stringBuffer.append(numberOfMethodName);
+    stringBuffer.append(existing);
     stringBuffer.append(TEXT_81);
-    stringBuffer.append(minimumNumberMethodName);
+    stringBuffer.append(numberOfMethodName);
     stringBuffer.append(TEXT_82);
-    stringBuffer.append(instanceAsVariable );
+    stringBuffer.append(minimumNumberMethodName);
     stringBuffer.append(TEXT_83);
-    stringBuffer.append(setter);
+    stringBuffer.append(instanceAsVariable );
     stringBuffer.append(TEXT_84);
-    stringBuffer.append(getGenerationTemplate().generate("cpp.add.handler.add.item.internal", element, name, instanceAsVariable));
+    stringBuffer.append(setter);
     stringBuffer.append(TEXT_85);
+    stringBuffer.append(getGenerationTemplate().generate("cpp.add.handler.add.item.internal", element, name, instanceAsVariable));
+    stringBuffer.append(TEXT_86);
     	
 
 }
@@ -692,13 +697,13 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_86);
-    stringBuffer.append(numberOfMethodName );
     stringBuffer.append(TEXT_87);
-    stringBuffer.append( maximumNumberMethodName );
+    stringBuffer.append(numberOfMethodName );
     stringBuffer.append(TEXT_88);
-    setReturnFlag();
+    stringBuffer.append( maximumNumberMethodName );
     stringBuffer.append(TEXT_89);
+    setReturnFlag();
+    stringBuffer.append(TEXT_90);
     	
 
 }
@@ -707,14 +712,14 @@ private void setReturnFlag(){
 
 if(returnValue.isEmpty()){
 	
-    stringBuffer.append(TEXT_90);
+    stringBuffer.append(TEXT_91);
     
 	return;
 }
 
-    stringBuffer.append(TEXT_91);
-    stringBuffer.append(returnValue);
     stringBuffer.append(TEXT_92);
+    stringBuffer.append(returnValue);
+    stringBuffer.append(TEXT_93);
     
 
 }
@@ -747,19 +752,19 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
     stringBuffer.append(otherEndTypeName );
-    stringBuffer.append(TEXT_93);
-    stringBuffer.append(existing);
     stringBuffer.append(TEXT_94);
-    stringBuffer.append(instanceAsVariable);
-    stringBuffer.append(TEXT_95);
-    stringBuffer.append(getter);
-    stringBuffer.append(TEXT_96);
-    stringBuffer.append(isNew);
-    stringBuffer.append(TEXT_97);
     stringBuffer.append(existing);
+    stringBuffer.append(TEXT_95);
+    stringBuffer.append(instanceAsVariable);
+    stringBuffer.append(TEXT_96);
+    stringBuffer.append(getter);
+    stringBuffer.append(TEXT_97);
+    stringBuffer.append(isNew);
     stringBuffer.append(TEXT_98);
     stringBuffer.append(existing);
     stringBuffer.append(TEXT_99);
+    stringBuffer.append(existing);
+    stringBuffer.append(TEXT_100);
     
 
 }

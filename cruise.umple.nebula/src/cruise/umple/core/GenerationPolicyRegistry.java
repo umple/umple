@@ -207,6 +207,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			if(!checkConditions(obj, loopProcessorObject)){
 				continue;
 			}
+			
 			loopProcessorObject.fMethod.invoke(loopProcessorObject.fInstance,
 					getParameters(obj, this, loopProcessorObject.fMethod));
 		}

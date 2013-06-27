@@ -30,21 +30,25 @@ public class CppTestsHelper extends CppGenerationTemplate{
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "#ifndef TEST_STUBS_H" + NL + "#define TEST_STUBS_H" + NL + "" + NL + "#ifdef PRAGMA" + NL + "#pragma once" + NL + "#ifndef _MSC_VER" + NL + "#pragma interface \"TestStubs.h\"" + NL + "#endif" + NL + "#endif";
-  protected final String TEXT_2 = NL;
-  protected final String TEXT_3 = NL + NL + "void test(){" + NL;
-  protected final String TEXT_4 = NL + "}" + NL + "" + NL + "#endif";
-  protected final String TEXT_5 = "assert(";
-  protected final String TEXT_6 = "->";
-  protected final String TEXT_7 = "(";
-  protected final String TEXT_8 = ")";
-  protected final String TEXT_9 = " ";
-  protected final String TEXT_10 = ");";
-  protected final String TEXT_11 = "==";
-  protected final String TEXT_12 = "->";
-  protected final String TEXT_13 = "(";
-  protected final String TEXT_14 = ")";
-  protected final String TEXT_15 = ";";
+  protected final String TEXT_1 = "#ifndef ";
+  protected final String TEXT_2 = "_H" + NL + "#define ";
+  protected final String TEXT_3 = "_H" + NL + "" + NL + "#ifdef PRAGMA" + NL + "#pragma once" + NL + "#ifndef _MSC_VER" + NL + "#pragma interface \"";
+  protected final String TEXT_4 = ".h\"" + NL + "#endif" + NL + "#endif";
+  protected final String TEXT_5 = NL;
+  protected final String TEXT_6 = NL + NL + "void ";
+  protected final String TEXT_7 = "(){" + NL;
+  protected final String TEXT_8 = NL + "}" + NL + "" + NL + "#endif";
+  protected final String TEXT_9 = "assert(";
+  protected final String TEXT_10 = "->";
+  protected final String TEXT_11 = "(";
+  protected final String TEXT_12 = ")";
+  protected final String TEXT_13 = " ";
+  protected final String TEXT_14 = ");";
+  protected final String TEXT_15 = "==";
+  protected final String TEXT_16 = "->";
+  protected final String TEXT_17 = "(";
+  protected final String TEXT_18 = ")";
+  protected final String TEXT_19 = ";";
 
   /**
   * @param argument
@@ -66,6 +70,10 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
 	@GenerationProcedureParameter(id = IModelingConstants.COPY_RIGHT) String copyRight;
 	@GenerationArgument String startContents;
+	@GenerationArgument String testFile;
+	@GenerationArgument String testMethod;
+	
+	String fullName;
 
 @Override
 public void execute() {
@@ -73,11 +81,24 @@ public void execute() {
 
     stringBuffer.append(copyRight);
     stringBuffer.append(TEXT_1);
+    stringBuffer.append(fullName);
     stringBuffer.append(TEXT_2);
-    stringBuffer.append(startContents);
+    stringBuffer.append(fullName);
     stringBuffer.append(TEXT_3);
+    stringBuffer.append(testFile);
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append(TEXT_5);
+    stringBuffer.append(startContents);
+    stringBuffer.append(TEXT_6);
+    stringBuffer.append(testMethod);
+    stringBuffer.append(TEXT_7);
     
 
+}
+
+@Override
+public void preExecute(){
+	this.fullName= testFile.toUpperCase();
 }
 
 });
@@ -95,7 +116,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_4);
+    stringBuffer.append(TEXT_8);
     
 
 }
@@ -121,17 +142,17 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_5);
-    stringBuffer.append(instance);
-    stringBuffer.append(TEXT_6);
-    stringBuffer.append(getterMethod);
-    stringBuffer.append(TEXT_7);
-    stringBuffer.append(parameters);
-    stringBuffer.append(TEXT_8);
-    setOperator();
     stringBuffer.append(TEXT_9);
-    stringBuffer.append(value);
+    stringBuffer.append(instance);
     stringBuffer.append(TEXT_10);
+    stringBuffer.append(getterMethod);
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(parameters);
+    stringBuffer.append(TEXT_12);
+    setOperator();
+    stringBuffer.append(TEXT_13);
+    stringBuffer.append(value);
+    stringBuffer.append(TEXT_14);
     
 
 }
@@ -139,7 +160,7 @@ public void execute() {
 private void setOperator(){
 if(operator.isEmpty()){
 
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_15);
     
 return;
 }
@@ -170,11 +191,11 @@ public void execute() {
 
 
     stringBuffer.append(instance);
-    stringBuffer.append(TEXT_12);
+    stringBuffer.append(TEXT_16);
     stringBuffer.append(method);
-    stringBuffer.append(TEXT_13);
+    stringBuffer.append(TEXT_17);
     stringBuffer.append(value);
-    stringBuffer.append(TEXT_14);
+    stringBuffer.append(TEXT_18);
     setEnd();
     
 
@@ -183,7 +204,7 @@ public void execute() {
 private void setEnd(){
 	if(!notStatement){
 		
-    stringBuffer.append(TEXT_15);
+    stringBuffer.append(TEXT_19);
     	
 	}
 }

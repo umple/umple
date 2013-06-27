@@ -210,10 +210,12 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_PREFIXES_ARGUMENT) List<String> prefixes,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_VALUE_ARGUMENT) String attributeValue,
 			@GenerationArgument(id= IModelingConstants.ATTRIBUTE_TYPE_ARGUMENT) String type,
+			@GenerationElementParameter(id = IModelingElementDefinitions.IS_STATIC) boolean isConst,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		if(prefixes!= null&& prefixes.contains(CPPCommonConstants.STATIC_MODIFIER)){
 			String parentName= generationValueGetter.getString(parent, IModelingElementDefinitions.NAME);
-			String implementation = generationValueGetter.generate(ICppDefinitions.DECLARE_IMPLEMENTATION, element,type, parentName, name, attributeValue);
+			String implementation = generationValueGetter.generate(ICppDefinitions.DECLARE_IMPLEMENTATION, element,type, parentName, name, attributeValue,
+					GenerationArgumentDescriptor.arg(IModelingElementDefinitions.IS_CONSTANT, Boolean.valueOf(isConst)));
 			generationValueGetter.addValue(ICppDefinitions.DECLARE_IMPLEMENTATION, implementation, normalizedVisibility, parent);
 		}
 	}
@@ -343,7 +345,7 @@ public class CPPBaseGenerationPointsHandler{
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, contentsDescriptor);
 	}
 	
-	@LoopProcessorAnnotation(aspect= LoopAspectConstants.FINALIZE, priority= GenerationPolicyRegistryPriorities.LOWEST, aspectGroup= MAIN_ASPECT_GROUP_PRIORITY)
+	@LoopProcessorAnnotation(aspect= LoopAspectConstants.TERMINATE, priority= GenerationPolicyRegistryPriorities.LOWEST, aspectGroup= MAIN_ASPECT_GROUP_PRIORITY)
 	public static void modelPathsAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationElementParameter(id = IModelingElementDefinitions.FILE_PATH) String filePath,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
@@ -923,7 +925,8 @@ public class CPPBaseGenerationPointsHandler{
 		}
 		if(CPPTypesConstants.BOOL.equals(typeName)){
 			return new InterceptorResponse(CPPTypesConstants.FALSE);
-		}else if(CPPTypesConstants.INTEGER.equals(typeName)){
+		}else if(CPPTypesConstants.INTEGER.equals(typeName)||CPPTypesConstants.LONG.equals(typeName)||CPPTypesConstants.FLOAT.equals(typeName)||
+				CPPTypesConstants.DOUBLE.equals(typeName)){
 			return new InterceptorResponse(String.valueOf(0));
 		}
 		return new InterceptorResponse(CPPCommonConstants.NULL);
@@ -992,9 +995,11 @@ public class CPPBaseGenerationPointsHandler{
 	
 	@DecisionPoint(decisionPoint = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE)
 	public static boolean isPrimitiveType(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
-			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object type){
+			@GenerationArgument(id= IModelingConstants.NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT) Object type,
+			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object dependType){
 		
-		if((type!= null&& CPPTypesConstants.BASE_TYPES.contains(type))|| CPPTypesConstants.BASE_TYPES.contains(typeName)){
+		if((CPPTypesConstants.BASE_TYPES.contains(type)|| CPPTypesConstants.BASE_TYPES.contains(dependType)||
+				CPPTypesConstants.BASE_TYPES.contains(typeName))){
 			return true;
 		}
 		return false;
@@ -1002,13 +1007,26 @@ public class CPPBaseGenerationPointsHandler{
 	
 	@DecisionPoint(decisionPoint = ICppDefinitions.IS_CONST_TYPE_PARAMETER)
 	public static boolean isConstParameter(@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
-			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object type){
-		return isPrimitiveType(typeName, type);
+			@GenerationArgument(id= IModelingConstants.NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT) Object type,
+			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object dependType){
+		return isPrimitiveType(typeName, type, dependType);
 	}
 	
 	@DecisionPoint(decisionPoint = ICppDefinitions.IS_POINTER_TYPE)
-	public static boolean isPointer(@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType){
+	public static boolean isPointer(@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType,
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationArgument(id= IModelingConstants.NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT) Object type,
+			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object dependType,
+			@GenerationLoopElement Object modelPackage){
+		
 		//To be extended by clients for more cases
+		if(!isPrimitiveType){
+			//Only set pointers for the defined classes; otherwise, it will be the user's responsability to add custom primitive types or so to get it defined as pointers
+			return !generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName).isEmpty()||
+					!generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, type).isEmpty()||
+					!generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, dependType).isEmpty();
+		}
 		return !isPrimitiveType;
 	}
 	
@@ -1022,26 +1040,28 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT) boolean isConstruction,
 			@GenerationProcedureParameter(id = ICppDefinitions.IS_CONST_TYPE_PARAMETER) boolean _isConstParameter,
 			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_AS_PARAMETER_ARGUMENT) boolean asParameter,
+			@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType,
 			@GenerationArgument boolean asType,
 			@GenerationLoopElement Object modelPackage,
 			@GenerationArguments Object... arguments){
 		
-		String normalizedType;
-		boolean isConstParameter;
+		String normalizedType= typeName;
+		boolean isConstParameter= false;
 		
 		setParameters: {
 			if(crudType!=null && !crudType.isEmpty()){
-				normalizedType= crudType;
-				
+				if(isPrimitiveType){
+					normalizedType= crudType;
+					break setParameters;
+				}
 				List<Object> allValues = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, crudType);
 				if(!allValues.isEmpty()){
 					Object object = allValues.get(0);
 					isConstParameter= generationValueGetter.decisionPoint(object, ICppDefinitions.IS_CONST_TYPE_PARAMETER, arguments);
 					break setParameters;
 				}
+				normalizedType= crudType;
 			}
-			
-			normalizedType= typeName;
 			isConstParameter= _isConstParameter;
 		}
 		

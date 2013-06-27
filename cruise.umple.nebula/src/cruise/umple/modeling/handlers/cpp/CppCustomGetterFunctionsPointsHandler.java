@@ -386,7 +386,8 @@ public class CppCustomGetterFunctionsPointsHandler{
 		
 		SimpleEntry<?, ?> response= (SimpleEntry<?, ?>) list.get(0);
 		
-		String parameters = GenerationUtil.asStringParameters((List<?>) response.getKey());
+		List<?> paramtrersValues = (List<?>) response.getKey();
+		String parameters = GenerationUtil.asStringParameters(paramtrersValues);
 		
 		if(!body.isEmpty()){
 			body= body+ CommonConstants.NEW_LINE+ CommonConstants.NEW_LINE;

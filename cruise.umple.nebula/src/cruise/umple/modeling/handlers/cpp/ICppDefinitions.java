@@ -101,6 +101,7 @@ public interface ICppDefinitions {
 	public final static String CLASS_DECLARATION= "cpp.class.declaration"; //$NON-NLS-1$
 	public final static String CLASS_PREFIX= "method.method.caller.prefix"; //$NON-NLS-1$
 	public final static String INCLUDE_STATEMENT= "class.include"; //$NON-NLS-1$
+	public final static String INCLUDE_DIRECT_STATEMENT= "class.direct.include"; //$NON-NLS-1$
 	public final static String BUILTIN_INCLUDE_STATEMENT= "class.builtin.include"; //$NON-NLS-1$
 	
 	public final static String INCLUDES_DECLARATIONS= "cpp.includes.declartions"; //$NON-NLS-1$
@@ -252,6 +253,7 @@ public interface ICppDefinitions {
 	public final static String CONSTRUCTOR_PARAMETERS_LIST= "cpp.constructor.parameters.list";	 //$NON-NLS-1$
 	public final static String CONSTRUCTOR_PARENT_PARAMETERS_LIST= "cpp.constructor.parent.parameters.list";	 //$NON-NLS-1$
 	public final static String CONSTRUCTOR_ALL_PARAMETERS_LIST= "cpp.constructor.all.parameters.list";	 //$NON-NLS-1$
+	public final static String CONSTRUCTOR_INTERNAL_CONSTRUCTION_PARAMETERS_LIST= "cpp.constructor.internal.construction.parameters.list";	 //$NON-NLS-1$
 	
 	public final static String CONSTRUCTOR_EXTENDED_USED_PARAMETERS_LIST= "cpp.constructor.extended.used.all.parameters.list";	 //$NON-NLS-1$
 	
