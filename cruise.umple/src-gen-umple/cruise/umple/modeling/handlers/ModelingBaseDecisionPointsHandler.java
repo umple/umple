@@ -22,12 +22,13 @@ import java.util.List;
 
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
-import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
+import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
+import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.cpp.utils.CPPTypesConstants;
 
 public class ModelingBaseDecisionPointsHandler{
@@ -177,13 +178,23 @@ public class ModelingBaseDecisionPointsHandler{
 	}
 	
 	@DecisionPoint(decisionPoint = IModelingDecisions.CAN_CONSTRUCT)
-	public static boolean canConstruct(@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_UPPER_BOUND) int otherEndUpperBound, 
+	public static boolean canConstruct(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			  @GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_UPPER_BOUND) int otherEndUpperBound, 
 			  @GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_LOWER_BOUND) int otherEndLowerBound,
-			  @GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany){
+			  @GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			  @GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			  @GenerationLoopElement Object modelPackage){
 		//Only accepted if from many (different kinds, even optional many) to one and only one.
 		//Examples:   1 -- 2 M; 1 -- 2..4 H; 1 -- 1..3 Y;  1 -- 2..* X;  1 -- 0..* U;  1 -- 1..* W; 1 -- 5..5 F; 1 -- 2..4 H;
 		//  		 1 -- 1..3 Y; 1 -- 2..* X; 1 -- 1..* W; 1 -- 5 Q;1 -- * T;
 		if(!isMany){
+			return false;
+		}
+		
+		Object rootType = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName).get(0);
+		
+		List<Object> parameters = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, rootType);
+		if(parameters.size()<2){
 			return false;
 		}
 		
@@ -193,7 +204,7 @@ public class ModelingBaseDecisionPointsHandler{
 	@DecisionPoint(decisionPoint = IModelingConstants.IS_INSTANCE_OF)
 	public static boolean isInstanceOf(
 			@GenerationArgument(id= IModelingConstants.INSTANCE_OF_ELEMENT_ARGUMENT) Object elementArgument,
-			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingConstants.PARENT_CLASS) Object parentClass,
 			@GenerationElementParameter(id = IModelingConstants.PARENT_INTERFACES) List<?> parentInterfaces,
 			@GenerationBaseElement Object element){

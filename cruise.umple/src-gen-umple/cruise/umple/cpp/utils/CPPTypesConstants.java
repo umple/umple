@@ -26,12 +26,13 @@ import java.util.List;
  */
 public interface CPPTypesConstants {
 	
-	public static final List<String> BASE_TYPES= Arrays.asList(new String[]{CPPTypesConstants.DOUBLE, CPPTypesConstants.FLOAT, 
+	public static final List<String> BASE_TYPES= Arrays.asList(new String[]{CPPTypesConstants.DOUBLE, CPPTypesConstants.FLOAT,CPPTypesConstants.LONG, 
 			CPPTypesConstants.INTEGER, CPPTypesConstants.BOOL, CPPTypesConstants.CHAR});
 			
 	public static final String VOID= "void"; //$NON-NLS-1$
 	public static final String SIZE_T= "size_t"; //$NON-NLS-1$
 	public static final String INTEGER= "int"; //$NON-NLS-1$
+	public static final String LONG= "long"; //$NON-NLS-1$
 	public static final String UNSIGNED_INTEGER= "unsigned int"; //$NON-NLS-1$
 	public static final String DOUBLE= "double"; //$NON-NLS-1$
 	public static final String FLOAT= "float"; //$NON-NLS-1$

@@ -134,18 +134,17 @@ public class ErrorMessage
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-    @umplesourcefile(line={0},file={""},javaline={138},length={4})
- public ErrorMessage(int errorCode,Position pos,String... parameters)  {
+   public ErrorMessage(int errorCode,Position pos,String... parameters)  {
 this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
-//  @umplesourcefile(line={1699},file={"Parser_Code.ump"},javaline={143},length={12})
-  @umplesourcefile(line={1700},file={"Parser_Code.ump"},javaline={144},length={4})
+//  @umplesourcefile(line={1699},file={"Parser_Code.ump"},javaline={142},length={12})
+  @umplesourcefile(line={1700},file={"Parser_Code.ump"},javaline={143},length={4})
   public String getFormattedMessage()
   {
     return errorType.format(this.parameters);
   }
-  @umplesourcefile(line={1704},file={"Parser_Code.ump"},javaline={149},length={7})
+  @umplesourcefile(line={1704},file={"Parser_Code.ump"},javaline={148},length={7})
   public String toString()
   {
     String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";

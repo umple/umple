@@ -158,7 +158,7 @@ public class ExceptionDumper
             
         
       }
-      return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), javaFileName, javaLineNumber);
+      return javaStack;
     }
 
 }
