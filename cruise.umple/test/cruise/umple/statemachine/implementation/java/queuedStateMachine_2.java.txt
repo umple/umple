@@ -166,10 +166,6 @@ public class GarageDoor implements Runnable
       Message m = messages.remove(); 
       return (m);
     }
-
-    /* for the case of a message POOL:  
-     * public synchronized Message getOneOf(MessType[] messTypes ){ //***}
-     */
   }
 
   //------------------------------
@@ -212,11 +208,6 @@ public class GarageDoor implements Runnable
           status = _reachTop();
           break;        
       }
-    // and similar for other types of messages	
-    /* if urgenrQuestion has two parameters:
-     * status = _urgentQuestion((String) m.param.elementAt(0), (Teacher) m.param.elementAt(1));	
-     */
-    //if(!status) { /* write error message or raise exception */ 
     }
   }
 }

@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.17.0.2798 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 import java.util.*;
@@ -69,8 +69,8 @@ public class LightFixture implements Runnable
     return bulb;
   }
 
-  @umplesourcefile(line={8,14,18}, file={"queuedStateMachine_withParameters.ump","queuedStateMachine_withParameters.ump","queuedStateMachine_withParameters.ump"}, javaline={82,88,94}, length={1,1,1})
-  public boolean _turnDimmer(Integer lightval)
+  @umplesourcefile(line={8,14,18}, file={"queuedStateMachine_withParameters_1.ump","queuedStateMachine_withParameters_1.ump","queuedStateMachine_withParameters_1.ump"}, javaline={82,88,94}, length={1,1,1})
+  public boolean _turnDimmer(Integer lightval,Double grade)
   {
     boolean wasEventProcessed = false;
     
@@ -125,7 +125,7 @@ public class LightFixture implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={12}, file={"queuedStateMachine_withParameters.ump"}, javaline={140}, length={1})
+  @umplesourcefile(line={12}, file={"queuedStateMachine_withParameters_1.ump"}, javaline={140}, length={1})
   public boolean _entry()
   {
     boolean wasEventProcessed = false;
@@ -198,10 +198,11 @@ public class LightFixture implements Runnable
   //messages accepted 
   //------------------------------
 
-  public void turnDimmer (Integer lightval)
+  public void turnDimmer (Integer lightval,Double grade)
   {
-    Vector v = new Vector(1);
+    Vector v = new Vector(2);
     v.add(0, lightval);
+    v.add(1, grade);
     pool.put(new Message(MessType.turnDimmer_M, v)
   }
 

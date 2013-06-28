@@ -19,10 +19,5 @@
              append(stringBuffer,"\n          break;");
            }%>        
       }
-    // and similar for other types of messages	
-    /* if urgenrQuestion has two parameters:
-     * status = _urgentQuestion((String) m.param.elementAt(0), (Teacher) m.param.elementAt(1));	
-     */
-    //if(!status) { /* write error message or raise exception */ 
     }
   }

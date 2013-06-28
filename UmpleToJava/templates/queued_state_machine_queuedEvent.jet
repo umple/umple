@@ -19,9 +19,11 @@
         
         if (!event.getArgs().equals(""))
         {
-          append(stringBuffer,"\n    Vector v = new Vector();");
-          //Vector v = new Vector(1);
-	      //v.add(0, event.getArgs());
+          append(stringBuffer,"\n    Vector v = new Vector({0});", event.getParams().size());
+          for ( int i=0; i < event.getParams().size(); i++)
+          {
+            append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
+          }
 	      append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
 	      append(stringBuffer,"_M, v)");
         }

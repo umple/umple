@@ -453,4 +453,30 @@ class Event
     Event.nextAutoTransitionId += 1;
     return e;
   }
+  
+  public String getArgs()
+  {
+  	String args="";
+    String paramName="";
+    String paramType="";
+    String aSingleParameter="";
+    String isList="";
+    String parameters = "";
+    String finalParams= "";
+
+     if(this.hasParams() == true)
+     {
+       for (MethodParameter aEventParam : this.getParams())
+       {
+         paramName = aEventParam.getName();
+         paramType = aEventParam.getType();
+         isList = aEventParam.getIsList() ? " [] " : " ";
+         aSingleParameter = paramType + isList + paramName;
+         parameters += aSingleParameter + ",";
+       }
+       finalParams = parameters.substring(0, parameters.length()-1);
+       args=finalParams;
+     }
+     return args;
+  }
 }

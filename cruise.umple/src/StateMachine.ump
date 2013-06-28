@@ -162,13 +162,16 @@ class Action
 class Event
 {
   name;
-  String args = null;
+  //String args = null;
   Boolean isTimer = false;
   Boolean autoTransition = false;
   timerInSeconds = "0";  // TODO: how do you specify milliseconds etc.
 
   Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
-  
+
+  // The event parameters.
+  1 -> 0..* MethodParameter params;
+    
   key { name }
 }
 

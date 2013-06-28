@@ -1,0 +1,12 @@
+namespace example;
+
+class Course
+{
+  status
+  {
+    Open { 
+    	register (String name, Integer age, Double grades)-> Open;
+    }
+  }
+
+}

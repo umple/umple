@@ -1,0 +1,21 @@
+namespace example;
+
+class LightFixture
+{
+  Integer brightness = 0;
+  queued bulb{
+	Off{
+	    turnDimmer(Integer lightval, Double grade) /{setBrightness(lightval)} -> Off;
+	    flipSwitch -> Dimmed;
+	}
+	Dimmed{
+		entry[dimmer > 99] -> On;
+		flipSwitch -> Off;
+        turnDimmer(Integer lightval, Double grade) /{setBrightness(lightval)} -> Dimmed;
+	}
+	On{
+		flipSwitch -> Off;
+        turnDimmer(Integer lightval, Double grade) /{setBrightness(lightval)} -> Dimmed;
+	}
+  }
+}
