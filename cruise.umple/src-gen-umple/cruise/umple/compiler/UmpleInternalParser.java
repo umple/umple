@@ -419,7 +419,7 @@ this("UmpleInternalParser", new UmpleModel(null));
  public UmpleInternalParser(UmpleModel aModel)  {
 this("UmpleInternalParser", aModel);
   }
-//  @umplesourcefile(line={52},file={"UmpleInternalParser_Code.ump"},javaline={423},length={4051})
+//  @umplesourcefile(line={52},file={"UmpleInternalParser_Code.ump"},javaline={423},length={4036})
   @umplesourcefile(line={53},file={"UmpleInternalParser_Code.ump"},javaline={424},length={18})
   private void init()
   {
@@ -649,7 +649,7 @@ this("UmpleInternalParser", aModel);
       addNecessaryFiles();
     }    
   }
-//  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeCore.ump"},javaline={653},length={3832})
+//  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeCore.ump"},javaline={653},length={3817})
   @umplesourcefile(line={21},file={"UmpleInternalParser_CodeCore.ump"},javaline={654},length={20})
   private void analyzeCoreToken(Token t, int analyzeCoreToken)
   {
@@ -772,7 +772,7 @@ this("UmpleInternalParser", aModel);
       model.addGenerate(genToken.getValue());
   	}
   }
-//  @umplesourcefile(line={37},file={"UmpleInternalParser_CodeClass.ump"},javaline={776},length={3714})
+//  @umplesourcefile(line={37},file={"UmpleInternalParser_CodeClass.ump"},javaline={776},length={3699})
   @umplesourcefile(line={38},file={"UmpleInternalParser_CodeClass.ump"},javaline={777},length={74})
   private void analyzeClassToken(Token t, int analysisStep)
   {
@@ -2753,7 +2753,7 @@ this("UmpleInternalParser", aModel);
   {
     return (isLazy && value != null);
   }
-//  @umplesourcefile(line={19},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={2757},length={1782})
+//  @umplesourcefile(line={19},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={2757},length={1767})
   @umplesourcefile(line={20},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={2758},length={11})
   private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Method method) 
   {
@@ -3175,11 +3175,11 @@ this("UmpleInternalParser", aModel);
     } 
   	   
   }
-//  @umplesourcefile(line={24},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3179},length={1372})
+//  @umplesourcefile(line={24},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3179},length={1357})
   private static int numberOfActiveObjects = 1;
   
   //Check if "extra code" is likely a malformed state machine
-  @umplesourcefile(line={28},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3183},length={1368})
+  @umplesourcefile(line={28},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3183},length={1353})
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     String code = extraCodeToken.getValue();
     String[] parts = code.split("\\{");
@@ -3786,7 +3786,7 @@ this("UmpleInternalParser", aModel);
     return guard;
   }
 
-  @umplesourcefile(line={612},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3790},length={152})
+  @umplesourcefile(line={612},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3790},length={137})
   private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
   {
     State nextState = createStateFromTransition(transitionToken,fromState.getStateMachine());
@@ -3870,9 +3870,8 @@ this("UmpleInternalParser", aModel);
       					aParameter.setIsList(isList);
       					if (event.getParams().contains(aParameter))
       					{
-      						System.out.println("stop");
       						break;
-      						}
+      					}
       					else
       					{
       						event.addParam(aParameter);
@@ -3902,22 +3901,8 @@ this("UmpleInternalParser", aModel);
       		
       			for (int i=1; i <= event.getParams().size(); i++)
       			{
-      				if (event.getParam((event.getParams().size()-i)) != null)
-      				{
-      					//System.out.println("Test [type] :   "+ event.getParam((event.getParams().size()-i)).getType());
-      			        //System.out.println("Test [namee] :   "+ event.getParam((event.getParams().size()-i)).getName());
-
-      			        if(!event.getParam((event.getParams().size()-i)).getType().equals(type) || !event.getParam((event.getParams().size()-i)).getName().equals(name))
-      			        {
-      			        	System.out.println("Give me a result");
-      			        }
-      				}
-      				//System.out.println("Name  [name] :   "+ name);
-      			    //System.out.println("Type  [type] :   "+ type);
-
       			    if (!event.getArgs().contains(type) || !event.getArgs().contains(name))
       			    {
-      			    	System.out.println("Test sucess");
       			    	setFailedPosition(transitionToken.getPosition(), 51, event.getArgs());
       			    	
       			    }
@@ -3939,8 +3924,8 @@ this("UmpleInternalParser", aModel);
     }
 
   }
-//  @umplesourcefile(line={25},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3943},length={632})
-  @umplesourcefile(line={26},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3944},length={30})
+//  @umplesourcefile(line={25},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3928},length={632})
+  @umplesourcefile(line={26},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3929},length={30})
   private void analyzeTraceToken(Token token, int analysisStep)
   {
     
@@ -3973,7 +3958,7 @@ this("UmpleInternalParser", aModel);
   }
   
   // Process trace related tokens within the context of a class
-  @umplesourcefile(line={58},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3977},length={18})
+  @umplesourcefile(line={58},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3962},length={18})
   private void analyzeTraceToken(Token token, UmpleClass aClass, int analysisStep)
   {
     // Only process trace tokens once all other entities have been analyzed
@@ -3994,7 +3979,7 @@ this("UmpleInternalParser", aModel);
   }
   
   // Process Trace statement subtokens. Token could be trace directive or trace case
-  @umplesourcefile(line={78},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3998},length={152})
+  @umplesourcefile(line={78},file={"UmpleInternalParser_CodeTrace.ump"},javaline={3983},length={152})
   private void analyzeTraceStatement( UmpleClass aClass, Token token)
   {
   
@@ -4149,7 +4134,7 @@ this("UmpleInternalParser", aModel);
   }
   
   // Analyze trace record in a trace directive
-  @umplesourcefile(line={232},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4153},length={15})
+  @umplesourcefile(line={232},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4138},length={15})
   private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord) 
   {
     String record = token.getValue("trace_record");
@@ -4167,7 +4152,7 @@ this("UmpleInternalParser", aModel);
   }
 
   // Analyze Trace Item Token whether trace item is an attribute or a method ... etc
-  @umplesourcefile(line={249},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4171},length={61})
+  @umplesourcefile(line={249},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4156},length={61})
   private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, AttributeTraceItem traceAttr)
   {
     UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
@@ -4230,7 +4215,7 @@ this("UmpleInternalParser", aModel);
     }
   }
   
-  @umplesourcefile(line={311},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4234},length={120})
+  @umplesourcefile(line={311},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4219},length={120})
   private void analyzeStateMachineTraceItem( Token traceToken, TraceDirective traceDirective)
   {
     List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
@@ -4352,7 +4337,7 @@ this("UmpleInternalParser", aModel);
     }
   }
 
-  @umplesourcefile(line={432},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4356},length={13})
+  @umplesourcefile(line={432},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4341},length={13})
   private void analyzeAssociationTraceItem( Token traceToken, TraceDirective traceDirective)
   {
     if( traceToken.getParentToken().getSubToken(1).getName().equals("cardinality") )  
@@ -4369,7 +4354,7 @@ this("UmpleInternalParser", aModel);
   
   // Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
   // Returns a trace condition filled with left and right hands operands, with comparison operator used
-  @umplesourcefile(line={448},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4373},length={17})
+  @umplesourcefile(line={448},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4358},length={17})
   private TraceCondition analyzeTraceCondition( Token traceConditionToken , String conditionType)
   {
     ConditionRhs rhs = new ConditionRhs();
@@ -4389,7 +4374,7 @@ this("UmpleInternalParser", aModel);
   }
   
   // Analyzes trace case token and its subtokens (i.e. trace directive tokens)
-  @umplesourcefile(line={467},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4393},length={26})
+  @umplesourcefile(line={467},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4378},length={26})
   public void analyzeTraceCaseToken( UmpleClass aClass , Token token )
   {
     TraceCase tca = new TraceCase();
@@ -4419,7 +4404,7 @@ this("UmpleInternalParser", aModel);
   
   // Modified version of method "analyzeTraceDirective"
   // This method analyzes trace directive fragments inside a trace case
-  @umplesourcefile(line={496},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4423},length={44})
+  @umplesourcefile(line={496},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4408},length={44})
   private void analyzeTraceDirectiveFragments( TraceDirective traceDirective , UmpleClass aClass , Token traceToken , Token token )
   {
     AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
@@ -4466,7 +4451,7 @@ this("UmpleInternalParser", aModel);
   }
   
   // Perform post token analysis on trace related elements of the Umple language
-  @umplesourcefile(line={542},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4470},length={3})
+  @umplesourcefile(line={542},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4455},length={3})
   private void postTokenTraceAnalysis()
   {
   }
@@ -4474,15 +4459,15 @@ this("UmpleInternalParser", aModel);
   //****************************************
   //********* End of Trace Glue Code   *****
   //****************************************
-//  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4478},length={108})
-  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4479},length={3})
+//  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4463},length={108})
+  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4464},length={3})
   private void analyzeLayoutToken(Token token, int analysisStep)
   {
   }
 
   // There are currently no core tokens of concern in the context of an UmpleClass
   // This method is available if needed
-  @umplesourcefile(line={27},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4486},length={21})
+  @umplesourcefile(line={27},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4471},length={21})
   private void analyzeLayoutToken(Token token, UmpleClass aClass, int analysisStep)
   {
     // Only process layout tokens once all other entities have been analyzed
@@ -4524,14 +4509,14 @@ this("UmpleInternalParser", aModel);
   }
 
   // Perform post token analysis on core elements of the Umple language
-  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4528},length={4})
+  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4513},length={4})
   private void postTokenLayoutAnalysis()
   {
     layoutNewElements();
   }  
 
   // Look for any new elements and give them positions if undefined
-  @umplesourcefile(line={74},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4535},length={54})
+  @umplesourcefile(line={74},file={"UmpleInternalParser_CodeLayout.ump"},javaline={4520},length={54})
   private void layoutNewElements()
   {
     // layout classes

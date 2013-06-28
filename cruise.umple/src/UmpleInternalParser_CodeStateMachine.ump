@@ -692,9 +692,8 @@ class UmpleInternalParser
       					aParameter.setIsList(isList);
       					if (event.getParams().contains(aParameter))
       					{
-      						System.out.println("stop");
       						break;
-      						}
+      					}
       					else
       					{
       						event.addParam(aParameter);
@@ -724,22 +723,8 @@ class UmpleInternalParser
       		
       			for (int i=1; i <= event.getParams().size(); i++)
       			{
-      				if (event.getParam((event.getParams().size()-i)) != null)
-      				{
-      					//System.out.println("Test [type] :   "+ event.getParam((event.getParams().size()-i)).getType());
-      			        //System.out.println("Test [namee] :   "+ event.getParam((event.getParams().size()-i)).getName());
-
-      			        if(!event.getParam((event.getParams().size()-i)).getType().equals(type) || !event.getParam((event.getParams().size()-i)).getName().equals(name))
-      			        {
-      			        	System.out.println("Give me a result");
-      			        }
-      				}
-      				//System.out.println("Name  [name] :   "+ name);
-      			    //System.out.println("Type  [type] :   "+ type);
-
       			    if (!event.getArgs().contains(type) || !event.getArgs().contains(name))
       			    {
-      			    	System.out.println("Test sucess");
       			    	setFailedPosition(transitionToken.getPosition(), 51, event.getArgs());
       			    	
       			    }
