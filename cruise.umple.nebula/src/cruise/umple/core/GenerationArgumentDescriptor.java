@@ -41,6 +41,6 @@ public class GenerationArgumentDescriptor{
 	
 	@Override
 	public String toString() {
-		return this.id()+ CommonConstants.UNDERSCORE+ this.value();
+		return this.id()+ CommonConstants.UNDERSCORE+ System.identityHashCode(this.value());
 	}
 }
