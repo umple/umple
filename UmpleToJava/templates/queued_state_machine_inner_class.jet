@@ -35,8 +35,4 @@
       Message m = messages.remove(); 
       return (m);
     }
-
-    /* for the case of a message POOL:  
-     * public synchronized Message getOneOf(MessType[] messTypes ){ //***}
-     */
   }

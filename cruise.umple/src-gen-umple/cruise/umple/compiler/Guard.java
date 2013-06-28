@@ -7,9 +7,9 @@ import cruise.umple.compiler.Position;
 /**
  * A boolean condition that is checked when an event method is called
  * If the result is true the transition may be taken
- * @umplesource StateMachine.ump 179
+ * @umplesource StateMachine.ump 182
  */
-// line 179 "../../../../src/StateMachine.ump"
+// line 182 "../../../../src/StateMachine.ump"
 public class Guard
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -32,14 +32,14 @@ public class Guard
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={187},file={"StateMachine.ump"},javaline={43},length={1})
+  @umplesourcefile(line={190},file={"StateMachine.ump"},javaline={43},length={1})
   public Guard(String aCondition)
   {
     cachedHashCode = -1;
     canSetCondition = true;
     condition = aCondition;
     codeblock = null;
-    // line 187 "../../../../src/StateMachine.ump"
+    // line 190 "../../../../src/StateMachine.ump"
     codeblock = aCondition!=null ? new CodeBlock(aCondition) : new CodeBlock();
   }
 
@@ -55,11 +55,11 @@ public class Guard
     return wasSet;
   }
 
-  @umplesourcefile(line={188},file={"StateMachine.ump"},javaline={63},length={2})
+  @umplesourcefile(line={191},file={"StateMachine.ump"},javaline={63},length={2})
   public boolean setCondition(String aCondition)
   {
     boolean wasSet = false;
-    // line 188 "../../../../src/StateMachine.ump"
+    // line 191 "../../../../src/StateMachine.ump"
     codeblock.setCode(aCondition);
     if (!canSetCondition) { return false; }
     condition = aCondition;
@@ -67,13 +67,13 @@ public class Guard
     return wasSet;
   }
 
-  @umplesourcefile(line={195},file={"StateMachine.ump"},javaline={76},length={5})
+  @umplesourcefile(line={198},file={"StateMachine.ump"},javaline={76},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 195 "../../../../src/StateMachine.ump"
+    // line 198 "../../../../src/StateMachine.ump"
     if(condition!=null){
       	  condition+= aCodeblock.getCode();
       	}
@@ -87,11 +87,11 @@ public class Guard
     return position;
   }
 
-  @umplesourcefile(line={189},file={"StateMachine.ump"},javaline={93},length={3})
+  @umplesourcefile(line={192},file={"StateMachine.ump"},javaline={93},length={3})
   public String getCondition()
   {
     String aCondition = condition;
-    // line 189 "../../../../src/StateMachine.ump"
+    // line 192 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else

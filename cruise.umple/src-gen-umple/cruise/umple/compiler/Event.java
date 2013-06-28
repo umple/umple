@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 /**
  * @umplesource StateMachine.ump 162
@@ -20,11 +21,13 @@ public class Event
 
   //Event Attributes
   private String name;
-  private String args;
   private boolean isTimer;
   private boolean autoTransition;
   private String timerInSeconds;
   private boolean isInternal;
+
+  //Event Associations
+  private List<MethodParameter> params;
 
   //Helper Variables
   private int cachedHashCode;
@@ -39,11 +42,11 @@ public class Event
     cachedHashCode = -1;
     canSetName = true;
     name = aName;
-    args = null;
     isTimer = false;
     autoTransition = false;
     timerInSeconds = "0";
     isInternal = false;
+    params = new ArrayList<MethodParameter>();
   }
 
   //------------------------
@@ -55,14 +58,6 @@ public class Event
     boolean wasSet = false;
     if (!canSetName) { return false; }
     name = aName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setArgs(String aArgs)
-  {
-    boolean wasSet = false;
-    args = aArgs;
     wasSet = true;
     return wasSet;
   }
@@ -104,11 +99,9 @@ public class Event
     return name;
   }
 
-  public String getArgs()
-  {
-    return args;
-  }
-
+  /**
+   * String args = null;
+   */
   public boolean getIsTimer()
   {
     return isTimer;
@@ -145,6 +138,97 @@ public class Event
   public boolean isIsInternal()
   {
     return isInternal;
+  }
+
+  public MethodParameter getParam(int index)
+  {
+    MethodParameter aParam = params.get(index);
+    return aParam;
+  }
+
+  /**
+   * for code generation only e.g. ouside scope of nested state
+   * The event parameters.
+   */
+  public List<MethodParameter> getParams()
+  {
+    List<MethodParameter> newParams = Collections.unmodifiableList(params);
+    return newParams;
+  }
+
+  public int numberOfParams()
+  {
+    int number = params.size();
+    return number;
+  }
+
+  public boolean hasParams()
+  {
+    boolean has = params.size() > 0;
+    return has;
+  }
+
+  public int indexOfParam(MethodParameter aParam)
+  {
+    int index = params.indexOf(aParam);
+    return index;
+  }
+
+  public static int minimumNumberOfParams()
+  {
+    return 0;
+  }
+
+  public boolean addParam(MethodParameter aParam)
+  {
+    boolean wasAdded = false;
+    if (params.contains(aParam)) { return false; }
+    params.add(aParam);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeParam(MethodParameter aParam)
+  {
+    boolean wasRemoved = false;
+    if (params.contains(aParam))
+    {
+      params.remove(aParam);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addParamAt(MethodParameter aParam, int index)
+  {  
+    boolean wasAdded = false;
+    if(addParam(aParam))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfParams()) { index = numberOfParams() - 1; }
+      params.remove(aParam);
+      params.add(index, aParam);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveParamAt(MethodParameter aParam, int index)
+  {
+    boolean wasAdded = false;
+    if(params.contains(aParam))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfParams()) { index = numberOfParams() - 1; }
+      params.remove(aParam);
+      params.add(index, aParam);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addParamAt(aParam, index);
+    }
+    return wasAdded;
   }
 
   public boolean equals(Object obj)
@@ -187,7 +271,9 @@ public class Event
   }
 
   public void delete()
-  {}
+  {
+    params.clear();
+  }
 
 
   public String toString()
@@ -196,7 +282,6 @@ public class Event
 	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
-            "args" + ":" + getArgs()+ "," +
             "isTimer" + ":" + getIsTimer()+ "," +
             "autoTransition" + ":" + getAutoTransition()+ "," +
             "timerInSeconds" + ":" + getTimerInSeconds()+ "," +
@@ -206,16 +291,43 @@ public class Event
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={210},length={10})
+  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={295},length={36})
   private static int nextAutoTransitionId = 1;
 
-  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={213},length={7})
+  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={298},length={7})
   public static Event createAutoTransition()
   {
     Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
     e.setAutoTransition(true);
     Event.nextAutoTransitionId += 1;
     return e;
+  }
+  
+  @umplesourcefile(line={457},file={"StateMachine_Code.ump"},javaline={307},length={25})
+  public String getArgs()
+  {
+  	String args="";
+    String paramName="";
+    String paramType="";
+    String aSingleParameter="";
+    String isList="";
+    String parameters = "";
+    String finalParams= "";
+
+     if(this.hasParams() == true)
+     {
+       for (MethodParameter aEventParam : this.getParams())
+       {
+         paramName = aEventParam.getName();
+         paramType = aEventParam.getType();
+         isList = aEventParam.getIsList() ? " [] " : " ";
+         aSingleParameter = paramType + isList + paramName;
+         parameters += aSingleParameter + ",";
+       }
+       finalParams = parameters.substring(0, parameters.length()-1);
+       args=finalParams;
+     }
+     return args;
   }
 
 }

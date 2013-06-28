@@ -271,11 +271,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Event">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="arg" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTimer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="autoTransition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timerInSecond" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="params" lowerBound="0" upperBound="-1" eType="#//MethodParameter" eOpposite="#//MethodParameter/event"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="activities" lowerBound="0" upperBound="-1" eType="#//Activity" eOpposite="#//Activity/onCompletionEvent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" lowerBound="0" upperBound="-1" eType="#//Transition" eOpposite="#//Transition/event"/>
   </eClassifiers>
@@ -389,6 +389,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isList" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDerived" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLazy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="event" lowerBound="1" upperBound="1" eType="#//Event" eOpposite="#//Event/params"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/methodParameters"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Type">

@@ -195,6 +195,21 @@ public class StateMachineTest extends StateMachineTemplateTest
   
   
   @Test
+  public void eventWithArguments_1(){
+	  assertUmpleTemplateFor("eventWithArguments_1.ump",languagePath + "/eventWithArguments_1."+ languagePath +".txt","LightFixture");
+  }
+  
+  @Test
+  public void eventWithArguments_2(){
+	  assertUmpleTemplateFor("eventWithArguments_2.ump",languagePath + "/eventWithArguments_2."+ languagePath +".txt","Course");
+  }
+  
+  @Test
+  public void twoEventsWithArguments(){
+	  assertUmpleTemplateFor("twoEventsWithArguments.ump",languagePath + "/twoEventsWithArguments."+ languagePath +".txt","Course");
+  }
+  
+  @Test
   public void autoEventTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
     Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
@@ -222,4 +237,9 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("queuedStateMachine_withParameters.ump",languagePath + "/queuedStateMachine_withParameters."+ languagePath +".txt","LightFixture");
   }
 
+  @Test
+  public void queuedStateMachine_withParameters_1()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_withParameters_1.ump",languagePath + "/queuedStateMachine_withParameters_1."+ languagePath +".txt","LightFixture");
+  }  
 }

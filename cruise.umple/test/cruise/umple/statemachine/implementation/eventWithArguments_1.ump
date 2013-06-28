@@ -1,0 +1,19 @@
+class LightFixture
+{
+  Integer brightness = 0;
+  bulb{
+	Off{
+	    turnDimmer(Integer lightval, Double lightval_1) /{setBrightness(lightval)} -> Off;
+	    flipSwitch -> Dimmed;
+	}
+	Dimmed{
+		entry[dimmer > 99] -> On;
+		flipSwitch -> Off;
+        turnDimmer(Integer lightval, Double lightval_1) /{setBrightness(lightval)} -> Dimmed;
+	}
+	On{
+		flipSwitch -> Off;
+        turnDimmer(Integer lightval, Double lightval_1) /{setBrightness(lightval)} -> Dimmed;
+	}
+  }
+}

@@ -2040,9 +2040,9 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_2020 = NL + "      ";
   protected final String TEXT_2021 = ".";
   protected final String TEXT_2022 = "(null);" + NL + "    }";
-  protected final String TEXT_2023 = NL + "  private class Message" + NL + "  {" + NL + "    MessType type;" + NL + "    " + NL + "    //Message parameters" + NL + "    Vector<Object> param;" + NL + "    " + NL + "    public Message(MessType t, Vector<Object> p)" + NL + "    {" + NL + "      type = t; " + NL + "      param = p;" + NL + "    }" + NL + "  }" + NL + "  " + NL + "  private class MessPool {" + NL + "    Queue<Message> messages = new LinkedList<Message>();" + NL + "    " + NL + "    public synchronized void put(Message m)" + NL + "    {" + NL + "      messages.add(m); " + NL + "      notify();" + NL + "    }" + NL + "" + NL + "    public synchronized Message getNext()" + NL + "    {" + NL + "      try {" + NL + "        while (messages.isEmpty()) " + NL + "        {" + NL + "          wait();" + NL + "        }" + NL + "      } catch (InterruptedException e) { e.printStackTrace(); } " + NL + "" + NL + "      //The element to be removed" + NL + "      Message m = messages.remove(); " + NL + "      return (m);" + NL + "    }" + NL + "" + NL + "    /* for the case of a message POOL:  " + NL + "     * public synchronized Message getOneOf(MessType[] messTypes ){ //***}" + NL + "     */" + NL + "  }";
+  protected final String TEXT_2023 = NL + "  private class Message" + NL + "  {" + NL + "    MessType type;" + NL + "    " + NL + "    //Message parameters" + NL + "    Vector<Object> param;" + NL + "    " + NL + "    public Message(MessType t, Vector<Object> p)" + NL + "    {" + NL + "      type = t; " + NL + "      param = p;" + NL + "    }" + NL + "  }" + NL + "  " + NL + "  private class MessPool {" + NL + "    Queue<Message> messages = new LinkedList<Message>();" + NL + "    " + NL + "    public synchronized void put(Message m)" + NL + "    {" + NL + "      messages.add(m); " + NL + "      notify();" + NL + "    }" + NL + "" + NL + "    public synchronized Message getNext()" + NL + "    {" + NL + "      try {" + NL + "        while (messages.isEmpty()) " + NL + "        {" + NL + "          wait();" + NL + "        }" + NL + "      } catch (InterruptedException e) { e.printStackTrace(); } " + NL + "" + NL + "      //The element to be removed" + NL + "      Message m = messages.remove(); " + NL + "      return (m);" + NL + "    }" + NL + "  }";
   protected final String TEXT_2024 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
-  protected final String TEXT_2025 = "        " + NL + "      }" + NL + "    // and similar for other types of messages\t" + NL + "    /* if urgenrQuestion has two parameters:" + NL + "     * status = _urgentQuestion((String) m.param.elementAt(0), (Teacher) m.param.elementAt(1));\t" + NL + "     */" + NL + "    //if(!status) { /* write error message or raise exception */ " + NL + "    }" + NL + "  }";
+  protected final String TEXT_2025 = "        " + NL + "      }" + NL + "    }" + NL + "  }";
   protected final String TEXT_2026 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";" + NL + "\t  ";
   protected final String TEXT_2027 = NL + "  }";
   protected final String TEXT_2028 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
@@ -8702,9 +8702,11 @@ if (p != null) {
         
         if (!event.getArgs().equals(""))
         {
-          append(stringBuffer,"\n    Vector v = new Vector();");
-          //Vector v = new Vector(1);
-	      //v.add(0, event.getArgs());
+          append(stringBuffer,"\n    Vector v = new Vector({0});", event.getParams().size());
+          for ( int i=0; i < event.getParams().size(); i++)
+          {
+            append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
+          }
 	      append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
 	      append(stringBuffer,"_M, v)");
         }
