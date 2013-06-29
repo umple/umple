@@ -135,7 +135,6 @@ public class MethodParameter extends UmpleVariable
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "isAutounique" + ":" + getIsAutounique()+ "," +
             "isList" + ":" + getIsList()+ "," +

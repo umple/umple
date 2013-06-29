@@ -67,7 +67,6 @@ public class Word
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "singular" + ":" + getSingular()+ "," +
             "plural" + ":" + getPlural()+ "]"

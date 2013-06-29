@@ -372,7 +372,6 @@ public class StateMachineTraceItem implements TraceItem
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "tracerType" + ":" + getTracerType()+ "," +
             "isIn" + ":" + getIsIn()+ "," +
@@ -386,23 +385,23 @@ public class StateMachineTraceItem implements TraceItem
             "conditionType" + ":" + getConditionType()+ "," +
             "accessor" + ":" + getAccessor()+ "," +
             "concatinator" + ":" + getConcatinator()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "traceDirective" + "=" + (getConstraint() != null ? !getConstraint().equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "transition" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "state" + "=" + (getStateMachine() != null ? !getStateMachine().equals(this)  ? getStateMachine().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "stateMachine" + "=" + (getState() != null ? !getState().equals(this)  ? getState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "constraint" + "=" + (getTransition() != null ? !getTransition().equals(this)  ? getTransition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + (getTraceDirective() != null ? !getTraceDirective().equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "constraint" + "=" + (getConstraint() != null ? !getConstraint().equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "stateMachine = "+(getStateMachine()!=null?Integer.toHexString(System.identityHashCode(getStateMachine())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "state = "+(getState()!=null?Integer.toHexString(System.identityHashCode(getState())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "transition = "+(getTransition()!=null?Integer.toHexString(System.identityHashCode(getTransition())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "traceDirective = "+(getTraceDirective()!=null?Integer.toHexString(System.identityHashCode(getTraceDirective())):"null")
      + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={313},file={"Trace_Code.ump"},javaline={401},length={82})
-  @umplesourcefile(line={314},file={"Trace_Code.ump"},javaline={402},length={3})
+  //  @umplesourcefile(line={313},file={"Trace_Code.ump"},javaline={400},length={82})
+  @umplesourcefile(line={314},file={"Trace_Code.ump"},javaline={401},length={3})
   public Boolean getIsPre(){
   	return conditionallyWhere;
   }
-  @umplesourcefile(line={317},file={"Trace_Code.ump"},javaline={406},length={3})
+  @umplesourcefile(line={317},file={"Trace_Code.ump"},javaline={405},length={3})
   public Boolean getIsPost(){
   	return !conditionallyWhere;
   }
@@ -414,7 +413,7 @@ public class StateMachineTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace 
    */
-  @umplesourcefile(line={328},file={"Trace_Code.ump"},javaline={418},length={60})
+  @umplesourcefile(line={328},file={"Trace_Code.ump"},javaline={417},length={60})
   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
   {
   	String name = "";
@@ -478,7 +477,7 @@ public class StateMachineTraceItem implements TraceItem
   /* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line={391},file={"Trace_Code.ump"},javaline={482},length={4})
+  @umplesourcefile(line={391},file={"Trace_Code.ump"},javaline={481},length={4})
   public String getExtremities(CodeTranslator gen, String name)
   {
     return gen.translate("Closed",constraint);

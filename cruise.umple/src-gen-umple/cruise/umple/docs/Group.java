@@ -150,7 +150,6 @@ public class Group
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]"
      + outputString;
@@ -158,8 +157,8 @@ public class Group
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={340},file={"Documenter_Code.ump"},javaline={162},length={5})
-  @umplesourcefile(line={341},file={"Documenter_Code.ump"},javaline={163},length={4})
+  //  @umplesourcefile(line={340},file={"Documenter_Code.ump"},javaline={161},length={5})
+  @umplesourcefile(line={341},file={"Documenter_Code.ump"},javaline={162},length={4})
   public String getGroupIdName()
   {
     return name.replace(" ","");

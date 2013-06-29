@@ -77,7 +77,6 @@ public class Client
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "minAge" + ":" + getMinAge()+ "," +
             "age" + ":" + getAge()+ "]"

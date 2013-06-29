@@ -251,7 +251,6 @@ public class MultipleSortedAcademy
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "registrantsPriority" + "=" + (getRegistrantsPriority() != null ? !getRegistrantsPriority().equals(this)  ? getRegistrantsPriority().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;

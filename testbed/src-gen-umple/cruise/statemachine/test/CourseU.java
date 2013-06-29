@@ -145,7 +145,6 @@ public class CourseU
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "count" + ":" + getCount()+ "]"
      + outputString;
@@ -153,8 +152,8 @@ public class CourseU
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={190},file={"TestHarnessStateMachineJava.ump"},javaline={157},length={5})
-  @umplesourcefile(line={191},file={"TestHarnessStateMachineJava.ump"},javaline={158},length={4})
+  //  @umplesourcefile(line={190},file={"TestHarnessStateMachineJava.ump"},javaline={156},length={5})
+  @umplesourcefile(line={191},file={"TestHarnessStateMachineJava.ump"},javaline={157},length={4})
   public void incr() 
   { 
     count += 1;

@@ -110,7 +110,6 @@ public class Constant
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "type" + ":" + getType()+ "," +

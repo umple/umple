@@ -77,7 +77,6 @@ public class XmiGenerator implements CodeGenerator
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
@@ -86,8 +85,8 @@ public class XmiGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeXmi.ump"},javaline={90},length={152})
-  @umplesourcefile(line={15},file={"Generator_CodeXmi.ump"},javaline={91},length={132})
+  //  @umplesourcefile(line={14},file={"Generator_CodeXmi.ump"},javaline={89},length={152})
+  @umplesourcefile(line={15},file={"Generator_CodeXmi.ump"},javaline={90},length={132})
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -221,7 +220,7 @@ public class XmiGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={148},file={"Generator_CodeXmi.ump"},javaline={225},length={18})
+  @umplesourcefile(line={148},file={"Generator_CodeXmi.ump"},javaline={224},length={18})
   private void writeModel()
   {
     try

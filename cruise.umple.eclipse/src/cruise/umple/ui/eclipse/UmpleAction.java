@@ -44,62 +44,21 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
   public UmpleAction()
   {  
   }
-  private class CompileThread extends Thread
+
+  /**
+   * The action has been activated. The argument of the method represents the
+   * 'real' action sitting in the workbench UI.
+   * 
+   * @see IWorkbenchWindowActionDelegate#run
+   */
+  public void run(IAction action)
   {
-    public void run(){
-      MessageConsole umpleConsole = findConsole("Umple Compile");
-      umpleConsole.activate();
-      System.setErr(new PrintStream(umpleConsole.newOutputStream()));
-      System.setOut(new PrintStream(umpleConsole.newOutputStream()));
-      // Save all current work
-      window.getActivePage().saveAllEditors(false);
-
-      IEditorPart editor = window.getActivePage().getActiveEditor();
-      // Check 1. Verify that a FileEditor View is opened
-      if (editor == null)
-      {
-        MessageDialog.openWarning(window.getShell(), "UMPLE plugin error", "Please open an Umple file.");
-        return;
-      }
-      IResource fName = (IResource) editor.getEditorInput().getAdapter(IResource.class);
-
-      String name = fName.getFullPath().toOSString();
-      String wsLocation = fName.getWorkspace().getRoot().getLocation().toOSString();
-
-      String fileName = window.getActivePage().getActiveEditor().getTitle().toString();
-      // Check 2. Verify if it is an Umple file before processing it
-      if (!(fileName.endsWith(".ump")) || fileName.equals("")){
-        MessageDialog.openWarning(window.getShell(), "UMPLE plugin error", "Please open an Umple file.");
-        return;
-      }
-      String fullPath = wsLocation + name;
-
-      // Extract the file name from the path so the file name woudln't be
-      // duplicated
-      UmpleFile file = new UmpleFile(fullPath.substring(0, fullPath.lastIndexOf(fileName, fullPath.length() - 1)), fileName);
-      UmpleModel model = new UmpleModel(file);
-      try{
-        model.run();
-        //Update Project
-        fName.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-      }
-      catch (Exception e1)
-      {
-        System.err.println(e1.getMessage());
-      }
-
-
-
-    }
-  }
-  private class CompileAndRunThread extends Thread
-  {
-    boolean successfulCompilation ;
-    UmpleModel model;
-    String pjName;
-    public void run(){
-      try{
-        MessageConsole umpleConsole = findConsole("Umple Compile");
+	  boolean successfulCompilation;
+	    UmpleModel model;
+	    String pjName ;
+    try
+    {
+    	MessageConsole umpleConsole = findConsole("Umple Compile");
         umpleConsole.activate();
         System.setErr(new PrintStream(umpleConsole.newOutputStream()));
         System.setOut(new PrintStream(umpleConsole.newOutputStream()));
@@ -135,65 +94,46 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
         {
           System.err.println(e1.getMessage());
         }
-        pjName = fName.getFullPath().toOSString().split("/")[1];
-        File binFolder = new File(wsLocation+File.separator+pjName+File.separator+"bin");
-        if(!binFolder.exists()){
-          binFolder.mkdir();
-        }
-        List<String> libList = new ArrayList<String>();
-        libList.add(" -d "+wsLocation+File.separator+pjName+File.separator+"bin");
-        libList.add(" -classpath "+wsLocation+File.separator+pjName+File.separator+"bin");
-        try
-        {
-          BufferedReader br = new BufferedReader(new FileReader(wsLocation+File.separator+pjName+File.separator+".classpath"));
-          String line = br.readLine();
-          Pattern pat = Pattern.compile(".*<classpathentry.*kind=\"lib\".*path=\"(.*)\".*/>.*");
-
-          while(line!=null)
-          {
-            Matcher mat = pat.matcher(line);
-            if(mat.matches()){
-            	libList.add(":"+wsLocation+mat.group(1));
-            }
-            line = br.readLine();
-          }
-          br.close();
-        }
-        catch(Exception e)
-        {
-          e.printStackTrace();
-        }
-        successfulCompilation = CodeCompiler.compile(model, "-",libList.toArray(new String[0]));
-
-        // Update the project
-        fName.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
-      }
-      catch(Exception e){
-        e.printStackTrace();
-      }
-    }
-  }
-
-  /**
-   * The action has been activated. The argument of the method represents the
-   * 'real' action sitting in the workbench UI.
-   * 
-   * @see IWorkbenchWindowActionDelegate#run
-   */
-  public void run(IAction action)
-  {
-    try
-    {
-      //compile(to run)
       if("CompileAndRun".equals(action.getId()))
       {
-        CompileAndRunThread cart = new CompileAndRunThread();
-        cart.start();
-        cart.join();
-        if(cart.successfulCompilation)
+    	        
+    	        pjName = fName.getFullPath().toOSString().split("/")[1];
+    	        File binFolder = new File(wsLocation+File.separator+pjName+File.separator+"bin");
+    	        if(!binFolder.exists()){
+    	          binFolder.mkdir();
+    	        }
+    	        List<String> libList = new ArrayList<String>();
+    	        libList.add(" -d "+wsLocation+File.separator+pjName+File.separator+"bin");
+    	        libList.add(" -classpath "+wsLocation+File.separator+pjName+File.separator+"bin");
+    	        try
+    	        {
+    	          BufferedReader br = new BufferedReader(new FileReader(wsLocation+File.separator+pjName+File.separator+".classpath"));
+    	          String line = br.readLine();
+    	          Pattern pat = Pattern.compile(".*<classpathentry.*kind=\"lib\".*path=\"(.*)\".*/>.*");
+
+    	          while(line!=null)
+    	          {
+    	            Matcher mat = pat.matcher(line);
+    	            if(mat.matches()){
+    	            	libList.add(":"+wsLocation+mat.group(1));
+    	            }
+    	            line = br.readLine();
+    	          }
+    	          br.close();
+    	        }
+    	        catch(Exception e)
+    	        {
+    	          e.printStackTrace();
+    	        }
+    	        successfulCompilation = CodeCompiler.compile(model, "-",libList.toArray(new String[0]));
+
+    	        // Update the project
+    	        fName.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, null);
+    	      
+        if(successfulCompilation)
         {
           System.out.println("Was successfully compiled");
-          List<UmpleClass> classes = CodeCompiler.getMainClasses(cart.model);
+          List<UmpleClass> classes = CodeCompiler.getMainClasses(model);
           String[] possibilities = new String[classes.size()];
           for(int i=0;i<classes.size();i++)
           {
@@ -247,7 +187,7 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
           if(!hasRun)
           {
             ILaunchConfigurationWorkingCopy wc = type.newInstance(null, mainClass.getName()+" (umple)");
-            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, cart.pjName);
+            wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME, pjName);
             wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_MAIN_TYPE_NAME,mainClass.getPackageName().replaceFirst("/", "")+File.separator+mainClass.getName());
             wc.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, wizardArguments);
             ILaunchConfiguration config = wc.doSave();   
@@ -255,9 +195,6 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
           }
         }
 
-      }
-      else {
-        new CompileThread().start();
       }
 
     }

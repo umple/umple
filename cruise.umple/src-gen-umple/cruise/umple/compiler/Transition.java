@@ -414,22 +414,21 @@ public class Transition
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "isInternal" + ":" + getIsInternal()+ "," +
             "autoTransition" + ":" + getAutoTransition()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "action" + "=" + (getEvent() != null ? !getEvent().equals(this)  ? getEvent().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "guard" + "=" + (getFromState() != null ? !getFromState().equals(this)  ? getFromState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "nextState" + "=" + (getNextState() != null ? !getNextState().equals(this)  ? getNextState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "fromState" + "=" + (getGuard() != null ? !getGuard().equals(this)  ? getGuard().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "event" + "=" + (getAction() != null ? !getAction().equals(this)  ? getAction().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "event = "+(getEvent()!=null?Integer.toHexString(System.identityHashCode(getEvent())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "fromState = "+(getFromState()!=null?Integer.toHexString(System.identityHashCode(getFromState())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "nextState = "+(getNextState()!=null?Integer.toHexString(System.identityHashCode(getNextState())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "guard = "+(getGuard()!=null?Integer.toHexString(System.identityHashCode(getGuard())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "action = "+(getAction()!=null?Integer.toHexString(System.identityHashCode(getAction())):"null")
      + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={436},file={"StateMachine_Code.ump"},javaline={432},length={7})
-  @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={433},length={6})
+  //  @umplesourcefile(line={436},file={"StateMachine_Code.ump"},javaline={431},length={7})
+  @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={432},length={6})
   public static Transition createPlaceholder(State nextState)
   {
     StateMachine nullSm = new StateMachine("null");

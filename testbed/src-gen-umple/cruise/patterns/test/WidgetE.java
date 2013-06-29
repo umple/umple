@@ -154,7 +154,6 @@ public class WidgetE
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

@@ -207,10 +207,9 @@ public class TraceCase
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass" + "=" + (getUmpleClass() != null ? !getUmpleClass().equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "umpleClass = "+(getUmpleClass()!=null?Integer.toHexString(System.identityHashCode(getUmpleClass())):"null")
      + outputString;
   }
 }

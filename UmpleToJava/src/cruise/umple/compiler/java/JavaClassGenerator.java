@@ -2043,7 +2043,7 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_2023 = NL + "  private class Message" + NL + "  {" + NL + "    MessType type;" + NL + "    " + NL + "    //Message parameters" + NL + "    Vector<Object> param;" + NL + "    " + NL + "    public Message(MessType t, Vector<Object> p)" + NL + "    {" + NL + "      type = t; " + NL + "      param = p;" + NL + "    }" + NL + "  }" + NL + "  " + NL + "  private class MessPool {" + NL + "    Queue<Message> messages = new LinkedList<Message>();" + NL + "    " + NL + "    public synchronized void put(Message m)" + NL + "    {" + NL + "      messages.add(m); " + NL + "      notify();" + NL + "    }" + NL + "" + NL + "    public synchronized Message getNext()" + NL + "    {" + NL + "      try {" + NL + "        while (messages.isEmpty()) " + NL + "        {" + NL + "          wait();" + NL + "        }" + NL + "      } catch (InterruptedException e) { e.printStackTrace(); } " + NL + "" + NL + "      //The element to be removed" + NL + "      Message m = messages.remove(); " + NL + "      return (m);" + NL + "    }" + NL + "  }";
   protected final String TEXT_2024 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
   protected final String TEXT_2025 = "        " + NL + "      }" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2026 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";" + NL + "\t  ";
+  protected final String TEXT_2026 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";";
   protected final String TEXT_2027 = NL + "  }";
   protected final String TEXT_2028 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
   protected final String TEXT_2029 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      translate(e);" + NL + "      if(e.getCause()!=null)" + NL + "      {" + NL + "        translate(e.getCause());" + NL + "      }" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "    public void translate(Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int[] methodlength = (int[])anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] javaline = (int[])anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] line = (int[])anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  String[] file = (String[])anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  for(int i=0;i<file.length;i++)" + NL + "                  {" + NL + "                    int distanceFromStart = element.getLineNumber()-javaline[i]-((\"main\".equals(methodName))?2:0);" + NL + "                    if(file[i] == \"\")" + NL + "                    {" + NL + "                      break;" + NL + "                    }" + NL + "                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])" + NL + "                    {" + NL + "                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));" + NL + "                      methodFound = true;" + NL + "                      break;" + NL + "                    }" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "    }" + NL + "  }";
@@ -8862,6 +8862,8 @@ if (p != null) {
 	  LinkedList<String> displayedPrimitives = new LinkedList<String>();
 	  LinkedList<String> nameOfPrimitives = new LinkedList<String>();
 	  List<String> keys = new ArrayList<String>();
+	  List<String> reflexiveNames = new ArrayList<String>();
+	  List<String> reflexive = new ArrayList<String>();
 	  for(String k: uClass.getKey().getMembers())
 		  keys.add(k);
 	  for(Attribute av: uClass.getAttributes())
@@ -8892,19 +8894,17 @@ if (p != null) {
 	  }
 	  for(AssociationVariable av: uClass.getAssociationVariables())
 	  {
-	    if(av.isIsNavigable()){
-		  
-			  if("1".equals(av.getMultiplicity().getMinimum())||"0".equals(av.getMultiplicity().getMinimum())||"1".equals(av.getMultiplicity().getBound()))
-				  if("1".equals(av.getMultiplicity().getMaximum())||"1".equals(av.getMultiplicity().getBound()))
-					  if(keys.contains(av.getName())){
-						  nameOfAttributes.addFirst(av.getName());
-						  displayedAttributes.addLast(gen.translate("getMethod",av)+"()");
-					  }
-					  else{
-						  nameOfAttributes.addFirst(av.getName());
-						  displayedAttributes.addLast(gen.translate("getMethod",av)+"()");
-					  }
-					  }
+	    if(av.isIsNavigable()&&av.getUmpleClass()!=av.getRelatedAssociation().getUmpleClass())
+	    {
+	      if("1".equals(av.getMultiplicity().getMinimum())||"0".equals(av.getMultiplicity().getMinimum())||"1".equals(av.getMultiplicity().getBound()))
+	      {
+	        if("1".equals(av.getMultiplicity().getMaximum())||"1".equals(av.getMultiplicity().getBound()))
+	        {
+	          reflexiveNames.add(av.getName());
+	          reflexive.add(gen.translate("getMethod",av)+"()");
+		    }
+		  }
+		}
 		  
 	  }
 	  ret += "super.toString() + \"[\"";
@@ -8923,6 +8923,10 @@ if (p != null) {
 		  ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";      
 		  ret += "\"  \" + " + "\"" + nameOfAttributes.get(m) + "\" + \"=\" + (" + displayedAttributes.get(m) + " != null ? !" + displayedAttributes.get(m) + ".equals(this)  ? " + displayedAttributes.get(m) + ".toString().replaceAll(\"  \",\"    \") : \"this\" : \"null\")";
 
+	  }
+	  for(int m=0;m<reflexive.size();m++){
+	      ret += " + System.getProperties().getProperty(\"line.separator\") +\n            ";
+	      ret += "\"  \" + " +  "\""+reflexiveNames.get(m)+" = \"+("+reflexive.get(m)+"!=null?Integer.toHexString(System.identityHashCode("+reflexive.get(m)+")):\"null\")";
 	  }
 	  ret += "\n     + outputString";
 	  append(stringBuffer,"\n    return {0};", ret);

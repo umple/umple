@@ -77,7 +77,6 @@ public class TextUmlGenerator implements CodeGenerator
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
@@ -86,8 +85,8 @@ public class TextUmlGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeTextUml.ump"},javaline={90},length={137})
-  @umplesourcefile(line={15},file={"Generator_CodeTextUml.ump"},javaline={91},length={117})
+  //  @umplesourcefile(line={14},file={"Generator_CodeTextUml.ump"},javaline={89},length={137})
+  @umplesourcefile(line={15},file={"Generator_CodeTextUml.ump"},javaline={90},length={117})
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -206,7 +205,7 @@ public class TextUmlGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={133},file={"Generator_CodeTextUml.ump"},javaline={210},length={18})
+  @umplesourcefile(line={133},file={"Generator_CodeTextUml.ump"},javaline={209},length={18})
   private void writeModel()
   {
     try

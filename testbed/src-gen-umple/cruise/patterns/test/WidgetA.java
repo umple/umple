@@ -268,7 +268,6 @@ public class WidgetA
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "boolId" + ":" + getBoolId()+ "," +
             "doubleId" + ":" + getDoubleId()+ "," +

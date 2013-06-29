@@ -105,7 +105,6 @@ public class DoorE
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "d1" + "=" + (getD1() != null ? !getD1().equals(this)  ? getD1().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "d2" + "=" + (getD2() != null ? !getD2().equals(this)  ? getD2().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +

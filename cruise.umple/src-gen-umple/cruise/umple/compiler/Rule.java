@@ -125,7 +125,6 @@ public class Rule
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "shouldHide" + ":" + getShouldHide()+ "]"

@@ -90,10 +90,9 @@ public class MyDriver
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "mySubordinate" + "=" + (getMySubordinate() != null ? !getMySubordinate().equals(this)  ? getMySubordinate().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "mySubordinate = "+(getMySubordinate()!=null?Integer.toHexString(System.identityHashCode(getMySubordinate())):"null")
      + outputString;
   }
 }

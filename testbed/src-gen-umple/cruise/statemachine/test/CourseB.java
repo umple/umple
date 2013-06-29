@@ -114,7 +114,6 @@ public class CourseB
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "log" + ":" + getLog()+ "]"
      + outputString;

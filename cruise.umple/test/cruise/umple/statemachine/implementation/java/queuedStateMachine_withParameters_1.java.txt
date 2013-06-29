@@ -243,7 +243,6 @@ public class LightFixture implements Runnable
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "brightness" + ":" + getBrightness()+ "]"
      + outputString;

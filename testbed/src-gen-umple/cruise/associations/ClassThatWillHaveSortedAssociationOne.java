@@ -49,7 +49,6 @@ public class ClassThatWillHaveSortedAssociationOne
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]"
      + outputString;

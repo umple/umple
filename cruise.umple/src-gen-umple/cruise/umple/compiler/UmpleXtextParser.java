@@ -61,7 +61,6 @@ public class UmpleXtextParser implements UmpleParser
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "temp" + "=" + (getTemp() != null ? !getTemp().equals(this)  ? getTemp().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
@@ -69,14 +68,14 @@ public class UmpleXtextParser implements UmpleParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={15},file={"UmpleXtextParser_Code.ump"},javaline={73},length={57})
-  @umplesourcefile(line={16},file={"UmpleXtextParser_Code.ump"},javaline={74},length={4})
+  //  @umplesourcefile(line={15},file={"UmpleXtextParser_Code.ump"},javaline={72},length={57})
+  @umplesourcefile(line={16},file={"UmpleXtextParser_Code.ump"},javaline={73},length={4})
   public String toGrammar()
   {
     return temp.toGrammar();
   }
   
-  @umplesourcefile(line={21},file={"UmpleXtextParser_Code.ump"},javaline={80},length={19})
+  @umplesourcefile(line={21},file={"UmpleXtextParser_Code.ump"},javaline={79},length={19})
   public ParseResult parse(String ruleName, String codeToParse)
   {
     ParseResult tempResult = temp.parse(ruleName,codeToParse);
@@ -99,37 +98,37 @@ public class UmpleXtextParser implements UmpleParser
       
   }
   
-  @umplesourcefile(line={43},file={"UmpleXtextParser_Code.ump"},javaline={103},length={4})
+  @umplesourcefile(line={43},file={"UmpleXtextParser_Code.ump"},javaline={102},length={4})
   public ParseResult analyze(boolean shouldGenerateCode)
   {
     return temp.analyze(shouldGenerateCode);  
   }
 
-  @umplesourcefile(line={48},file={"UmpleXtextParser_Code.ump"},javaline={109},length={4})
+  @umplesourcefile(line={48},file={"UmpleXtextParser_Code.ump"},javaline={108},length={4})
   public Token getRootToken()
   {
     return temp.getRootToken();
   }
   
-  @umplesourcefile(line={53},file={"UmpleXtextParser_Code.ump"},javaline={115},length={4})
+  @umplesourcefile(line={53},file={"UmpleXtextParser_Code.ump"},javaline={114},length={4})
   public UmpleModel getModel()
   {
     return temp.getModel();
   }
   
-  @umplesourcefile(line={58},file={"UmpleXtextParser_Code.ump"},javaline={121},length={4})
+  @umplesourcefile(line={58},file={"UmpleXtextParser_Code.ump"},javaline={120},length={4})
   public boolean setModel(UmpleModel model)
   {
     return temp.setModel(model);
   }
   
-  @umplesourcefile(line={63},file={"UmpleXtextParser_Code.ump"},javaline={127},length={4})
+  @umplesourcefile(line={63},file={"UmpleXtextParser_Code.ump"},javaline={126},length={4})
   public ParseResult getParseResult()
   {
     return temp.getParseResult();
   }
   
-  @umplesourcefile(line={68},file={"UmpleXtextParser_Code.ump"},javaline={133},length={4})
+  @umplesourcefile(line={68},file={"UmpleXtextParser_Code.ump"},javaline={132},length={4})
   public boolean setFilename(String filename)
   {
     return temp.setFilename(filename);

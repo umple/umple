@@ -56,7 +56,6 @@ public class Student
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "age" + ":" + getAge()+ "]"
      + outputString;

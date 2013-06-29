@@ -127,13 +127,12 @@ public class TraceCondition
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "conditionType" + ":" + getConditionType()+ "," +
             "preCondition" + ":" + getPreCondition()+ "," +
             "postCondition" + ":" + getPostCondition()+ "," +
             "lhs" + ":" + getLhs()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "rhs" + "=" + (getRhs() != null ? !getRhs().equals(this)  ? getRhs().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "rhs = "+(getRhs()!=null?Integer.toHexString(System.identityHashCode(getRhs())):"null")
      + outputString;
   }
 }

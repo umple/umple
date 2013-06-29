@@ -67,7 +67,6 @@ public class ConditionRhs
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "rhs" + ":" + getRhs()+ "," +
             "comparisonOperator" + ":" + getComparisonOperator()+ "]"

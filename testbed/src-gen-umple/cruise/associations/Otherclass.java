@@ -45,7 +45,6 @@ public class Otherclass
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]"
      + outputString;

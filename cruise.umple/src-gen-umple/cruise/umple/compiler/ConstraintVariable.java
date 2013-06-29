@@ -197,7 +197,6 @@ public class ConstraintVariable
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "constrainedVariable" + ":" + getConstrainedVariable()+ "," +
             "type" + ":" + getType()+ "," +

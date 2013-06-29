@@ -388,7 +388,6 @@ public class AttributeTraceItem implements TraceItem
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "tracerType" + ":" + getTracerType()+ "," +
             "traceSet" + ":" + getTraceSet()+ "," +
@@ -400,20 +399,20 @@ public class AttributeTraceItem implements TraceItem
             "executeClause" + ":" + getExecuteClause()+ "," +
             "conditionallyWhere" + ":" + getConditionallyWhere()+ "," +
             "conditionType" + ":" + getConditionType()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "traceDirective" + "=" + (getConstraint() != null ? !getConstraint().equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "constraint" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + (getTraceDirective() != null ? !getTraceDirective().equals(this)  ? getTraceDirective().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "constraint" + "=" + (getConstraint() != null ? !getConstraint().equals(this)  ? getConstraint().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "traceDirective = "+(getTraceDirective()!=null?Integer.toHexString(System.identityHashCode(getTraceDirective())):"null")
      + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={205},file={"Trace_Code.ump"},javaline={412},length={100})
-  @umplesourcefile(line={206},file={"Trace_Code.ump"},javaline={413},length={3})
+  //  @umplesourcefile(line={205},file={"Trace_Code.ump"},javaline={411},length={100})
+  @umplesourcefile(line={206},file={"Trace_Code.ump"},javaline={412},length={3})
   public Boolean getIsPre(){
   	return conditionallyWhere;
   }
-  @umplesourcefile(line={209},file={"Trace_Code.ump"},javaline={417},length={3})
+  @umplesourcefile(line={209},file={"Trace_Code.ump"},javaline={416},length={3})
   public Boolean getIsPost(){
   	return !conditionallyWhere;
   }
@@ -426,7 +425,7 @@ public class AttributeTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace 
    */
-  @umplesourcefile(line={221},file={"Trace_Code.ump"},javaline={430},length={76})
+  @umplesourcefile(line={221},file={"Trace_Code.ump"},javaline={429},length={76})
   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass,String... args)
   {//find the object being traced
     for(UmpleVariable attr: umpleVariables)
@@ -507,7 +506,7 @@ public class AttributeTraceItem implements TraceItem
    * needs the name of the attribute
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line={301},file={"Trace_Code.ump"},javaline={511},length={4})
+  @umplesourcefile(line={301},file={"Trace_Code.ump"},javaline={510},length={4})
   public String getExtremities(CodeTranslator gen, String name)
   {
     return gen.translate(name+"Closed",constraint);

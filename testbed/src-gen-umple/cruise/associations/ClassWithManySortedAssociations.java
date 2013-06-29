@@ -207,7 +207,6 @@ public class ClassWithManySortedAssociations
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "studentCsPriority" + "=" + (getStudentCsPriority() != null ? !getStudentCsPriority().equals(this)  ? getStudentCsPriority().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "studentALsPriority" + "=" + (getStudentALsPriority() != null ? !getStudentALsPriority().equals(this)  ? getStudentALsPriority().toString().replaceAll("  ","    ") : "this" : "null")

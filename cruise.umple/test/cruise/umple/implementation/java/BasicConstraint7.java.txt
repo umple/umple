@@ -70,7 +70,6 @@ public class student
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "age" + ":" + getAge()+ "," +
             "weight" + ":" + getWeight()+ "]"

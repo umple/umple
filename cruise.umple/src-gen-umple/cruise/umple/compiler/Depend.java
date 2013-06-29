@@ -121,7 +121,6 @@ public class Depend
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "isInternal" + ":" + getIsInternal()+ "]"
@@ -130,8 +129,8 @@ public class Depend
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={403},file={"Umple_Code.ump"},javaline={134},length={10})
-  @umplesourcefile(line={404},file={"Umple_Code.ump"},javaline={135},length={9})
+  //  @umplesourcefile(line={403},file={"Umple_Code.ump"},javaline={133},length={10})
+  @umplesourcefile(line={404},file={"Umple_Code.ump"},javaline={134},length={9})
   public String getPackageName()
   {
     if (name == null || "".equals(name))

@@ -290,7 +290,6 @@ public class UmpleVariable
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "type" + ":" + getType()+ "," +
@@ -301,8 +300,8 @@ public class UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1051},file={"Umple_Code.ump"},javaline={305},length={21})
-  @umplesourcefile(line={1052},file={"Umple_Code.ump"},javaline={306},length={15})
+  //  @umplesourcefile(line={1051},file={"Umple_Code.ump"},javaline={304},length={21})
+  @umplesourcefile(line={1052},file={"Umple_Code.ump"},javaline={305},length={15})
   public String getUpperCaseName()
   {
     if (name == null || name.length() == 0)
@@ -319,7 +318,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1068},file={"Umple_Code.ump"},javaline={323},length={4})
+  @umplesourcefile(line={1068},file={"Umple_Code.ump"},javaline={322},length={4})
   public boolean isImmutable()
   {
     return "immutable".equals(modifier);

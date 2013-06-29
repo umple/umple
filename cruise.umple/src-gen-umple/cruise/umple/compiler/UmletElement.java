@@ -228,12 +228,11 @@ public class UmletElement
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "type" + ":" + getType()+ "," +
             "panelAttributes" + ":" + getPanelAttributes()+ "," +
             "additionalAttributes" + ":" + getAdditionalAttributes()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "coordinate" + "=" + (getCoordinate() != null ? !getCoordinate().equals(this)  ? getCoordinate().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "coordinate = "+(getCoordinate()!=null?Integer.toHexString(System.identityHashCode(getCoordinate())):"null")
      + outputString;
   }
 }

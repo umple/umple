@@ -112,11 +112,10 @@ public class StudentE
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "x" + ":" + getX()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "mentor" + "=" + (getProgram() != null ? !getProgram().equals(this)  ? getProgram().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "program" + "=" + (getMentor() != null ? !getMentor().equals(this)  ? getMentor().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "program = "+(getProgram()!=null?Integer.toHexString(System.identityHashCode(getProgram())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "mentor = "+(getMentor()!=null?Integer.toHexString(System.identityHashCode(getMentor())):"null")
      + outputString;
   }
 }

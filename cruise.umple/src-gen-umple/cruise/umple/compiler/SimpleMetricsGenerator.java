@@ -77,7 +77,6 @@ public class SimpleMetricsGenerator implements CodeGenerator
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
@@ -86,8 +85,8 @@ public class SimpleMetricsGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={19},file={"Generator_CodeSimpleMetrics.ump"},javaline={90},length={104})
-  @umplesourcefile(line={20},file={"Generator_CodeSimpleMetrics.ump"},javaline={91},length={61})
+  //  @umplesourcefile(line={19},file={"Generator_CodeSimpleMetrics.ump"},javaline={89},length={104})
+  @umplesourcefile(line={20},file={"Generator_CodeSimpleMetrics.ump"},javaline={90},length={61})
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -151,7 +150,7 @@ public class SimpleMetricsGenerator implements CodeGenerator
   }
 
   // Output the metrics to a file 
-  @umplesourcefile(line={83},file={"Generator_CodeSimpleMetrics.ump"},javaline={155},length={18})
+  @umplesourcefile(line={83},file={"Generator_CodeSimpleMetrics.ump"},javaline={154},length={18})
   private void writeModel()
   {
     try
@@ -172,7 +171,7 @@ public class SimpleMetricsGenerator implements CodeGenerator
   } 
  
   // Code from http://stackoverflow.com/questions/453018/number-of-lines-in-a-file-in-java 
-  @umplesourcefile(line={103},file={"Generator_CodeSimpleMetrics.ump"},javaline={176},length={20})
+  @umplesourcefile(line={103},file={"Generator_CodeSimpleMetrics.ump"},javaline={175},length={20})
   public int countLinesInFile(String filename) throws IOException {
     InputStream is = new BufferedInputStream(new FileInputStream(filename));
     try {

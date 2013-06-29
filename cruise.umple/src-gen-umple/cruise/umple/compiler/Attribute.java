@@ -422,35 +422,34 @@ public class Attribute extends UmpleVariable
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "isAutounique" + ":" + getIsAutounique()+ "," +
             "isList" + ":" + getIsList()+ "," +
             "isDerived" + ":" + getIsDerived()+ "," +
             "isLazy" + ":" + getIsLazy()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "codeblock" + "=" + (getUmpleClass() != null ? !getUmpleClass().equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "codeblock" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "position = "+(getPosition()!=null?Integer.toHexString(System.identityHashCode(getPosition())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass = "+(getUmpleClass()!=null?Integer.toHexString(System.identityHashCode(getUmpleClass())):"null")
      + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1078},file={"Umple_Code.ump"},javaline={440},length={28})
-  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={441},length={4})
+  //  @umplesourcefile(line={1078},file={"Umple_Code.ump"},javaline={439},length={28})
+  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={440},length={4})
   public boolean isConstant()
   {
     return "const".equals(getModifier());
   }  
 
-  @umplesourcefile(line={1084},file={"Umple_Code.ump"},javaline={447},length={4})
+  @umplesourcefile(line={1084},file={"Umple_Code.ump"},javaline={446},length={4})
   public boolean isPrimitive()
   {
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
 
-  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={454},length={7})
+  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={453},length={7})
   public boolean isImmutable()
   {
     boolean varIsImmutable = super.isImmutable();
@@ -459,12 +458,12 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
   
-  @umplesourcefile(line={1098},file={"Umple_Code.ump"},javaline={463},length={4})
+  @umplesourcefile(line={1098},file={"Umple_Code.ump"},javaline={462},length={4})
   public String getValue()
   {
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
-  @umplesourcefile(line={1102},file={"Umple_Code.ump"},javaline={468},length={4})
+  @umplesourcefile(line={1102},file={"Umple_Code.ump"},javaline={467},length={4})
   public void setValue(String lang, String code)
   {
     codeblock.setCode(lang,code);

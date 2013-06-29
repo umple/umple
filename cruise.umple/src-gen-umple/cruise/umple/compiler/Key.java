@@ -108,7 +108,6 @@ public class Key
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "isDefault" + ":" + getIsDefault()+ "]"
      + outputString;
@@ -116,14 +115,14 @@ public class Key
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={384},file={"Umple_Code.ump"},javaline={120},length={14})
-  @umplesourcefile(line={385},file={"Umple_Code.ump"},javaline={121},length={4})
+  //  @umplesourcefile(line={384},file={"Umple_Code.ump"},javaline={119},length={14})
+  @umplesourcefile(line={385},file={"Umple_Code.ump"},javaline={120},length={4})
   public boolean isProvided()
   {
     return isDefault || members.size() > 0;
   }
 
-  @umplesourcefile(line={390},file={"Umple_Code.ump"},javaline={127},length={8})
+  @umplesourcefile(line={390},file={"Umple_Code.ump"},javaline={126},length={8})
   public boolean isMember(UmpleVariable av)
   {
     if (av == null)

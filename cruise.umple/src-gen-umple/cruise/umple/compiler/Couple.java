@@ -211,18 +211,16 @@ public class Couple
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "open" + ":" + getOpen()+ "," +
-            "close" + ":" + getClose()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "couple" + "=" + (getCouple() != null ? !getCouple().equals(this)  ? getCouple().toString().replaceAll("  ","    ") : "this" : "null")
+            "close" + ":" + getClose()+ "]"
      + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Parser_Code.ump"},javaline={225},length={64})
-  @umplesourcefile(line={15},file={"Parser_Code.ump"},javaline={226},length={28})
+  //  @umplesourcefile(line={14},file={"Parser_Code.ump"},javaline={223},length={64})
+  @umplesourcefile(line={15},file={"Parser_Code.ump"},javaline={224},length={28})
   public boolean isBalanced(String input)
   {
 
@@ -253,7 +251,7 @@ public class Couple
   }
 
 
-  @umplesourcefile(line={45},file={"Parser_Code.ump"},javaline={257},length={33})
+  @umplesourcefile(line={45},file={"Parser_Code.ump"},javaline={255},length={33})
   public String removeIgnoredText(String input)
   {
     String output = input;

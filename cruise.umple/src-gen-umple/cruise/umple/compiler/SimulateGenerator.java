@@ -77,7 +77,6 @@ public class SimulateGenerator implements CodeGenerator
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
@@ -86,8 +85,8 @@ public class SimulateGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeSimulate.ump"},javaline={90},length={101})
-  @umplesourcefile(line={15},file={"Generator_CodeSimulate.ump"},javaline={91},length={81})
+  //  @umplesourcefile(line={14},file={"Generator_CodeSimulate.ump"},javaline={89},length={101})
+  @umplesourcefile(line={15},file={"Generator_CodeSimulate.ump"},javaline={90},length={81})
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -170,7 +169,7 @@ public class SimulateGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={97},file={"Generator_CodeSimulate.ump"},javaline={174},length={18})
+  @umplesourcefile(line={97},file={"Generator_CodeSimulate.ump"},javaline={173},length={18})
   private void writeModel()
   {
     try

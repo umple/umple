@@ -81,7 +81,6 @@ public class ManyAttribute
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

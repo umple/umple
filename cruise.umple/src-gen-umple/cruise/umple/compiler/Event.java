@@ -279,7 +279,6 @@ public class Event
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "isTimer" + ":" + getIsTimer()+ "," +
@@ -291,10 +290,10 @@ public class Event
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={295},length={36})
+  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={294},length={36})
   private static int nextAutoTransitionId = 1;
 
-  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={298},length={7})
+  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={297},length={7})
   public static Event createAutoTransition()
   {
     Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
@@ -303,7 +302,7 @@ public class Event
     return e;
   }
   
-  @umplesourcefile(line={457},file={"StateMachine_Code.ump"},javaline={307},length={25})
+  @umplesourcefile(line={457},file={"StateMachine_Code.ump"},javaline={306},length={25})
   public String getArgs()
   {
   	String args="";

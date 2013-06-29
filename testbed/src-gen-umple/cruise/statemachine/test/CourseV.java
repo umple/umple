@@ -146,7 +146,6 @@ public class CourseV
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "count" + ":" + getCount()+ "]"
      + outputString;
@@ -154,8 +153,8 @@ public class CourseV
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={208},file={"TestHarnessStateMachineJava.ump"},javaline={158},length={4})
-  @umplesourcefile(line={209},file={"TestHarnessStateMachineJava.ump"},javaline={159},length={3})
+  //  @umplesourcefile(line={208},file={"TestHarnessStateMachineJava.ump"},javaline={157},length={4})
+  @umplesourcefile(line={209},file={"TestHarnessStateMachineJava.ump"},javaline={158},length={3})
   public void doX() { 
     count += 1;
   }
