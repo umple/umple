@@ -99,7 +99,6 @@ public class ErrorItem
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "id" + ":" + getId()+ "]"
      + outputString;
@@ -107,7 +106,7 @@ public class ErrorItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-    @umplesourcefile(line={0},file={""},javaline={111},length={7})
+    @umplesourcefile(line={0},file={""},javaline={110},length={7})
  public ErrorItem(String aId,String [] aParts)  {
 this(aId);
     for (String part : aParts)

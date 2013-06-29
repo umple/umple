@@ -74,7 +74,6 @@ public class JsonGenerator implements CodeGenerator
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
@@ -83,8 +82,8 @@ public class JsonGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeJson.ump"},javaline={87},length={118})
-  @umplesourcefile(line={15},file={"Generator_CodeJson.ump"},javaline={88},length={117})
+  //  @umplesourcefile(line={14},file={"Generator_CodeJson.ump"},javaline={86},length={118})
+  @umplesourcefile(line={15},file={"Generator_CodeJson.ump"},javaline={87},length={117})
   public void generate()
   {
     String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");

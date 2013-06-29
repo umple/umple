@@ -152,7 +152,6 @@ public class Guard
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "condition" + ":" + getCondition()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +

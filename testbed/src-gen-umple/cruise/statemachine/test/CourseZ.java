@@ -319,7 +319,6 @@ public class CourseZ
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "logFirstActive" + ":" + getLogFirstActive()+ "," +
             "logSecondActive" + ":" + getLogSecondActive()+ "]"

@@ -55,15 +55,14 @@ public class UpdatePositioningAction extends SynchronizationAction
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={25},file={"UmpleSync_Code.ump"},javaline={66},length={203})
-  @umplesourcefile(line={26},file={"UmpleSync_Code.ump"},javaline={67},length={202})
+  //  @umplesourcefile(line={25},file={"UmpleSync_Code.ump"},javaline={65},length={203})
+  @umplesourcefile(line={26},file={"UmpleSync_Code.ump"},javaline={66},length={202})
   public void go()
   {
     try
@@ -98,7 +97,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     }
   }
   
-  @umplesourcefile(line={60},file={"UmpleSync_Code.ump"},javaline={102},length={32})
+  @umplesourcefile(line={60},file={"UmpleSync_Code.ump"},javaline={101},length={32})
   private void verifySubClasses(Token root)
   {
     try
@@ -132,7 +131,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     }    
   }
   
-  @umplesourcefile(line={93},file={"UmpleSync_Code.ump"},javaline={136},length={36})
+  @umplesourcefile(line={93},file={"UmpleSync_Code.ump"},javaline={135},length={36})
   private boolean classHasPositioning(Token root, Token t)
   {
     boolean hasPositioning = false;
@@ -171,7 +170,7 @@ public class UpdatePositioningAction extends SynchronizationAction
   }
   
   
-  @umplesourcefile(line={131},file={"UmpleSync_Code.ump"},javaline={175},length={39})
+  @umplesourcefile(line={131},file={"UmpleSync_Code.ump"},javaline={174},length={39})
   private boolean classHasDefinition(Token root, Token t)
   {
     try
@@ -212,7 +211,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     return false;
   }
   
-  @umplesourcefile(line={171},file={"UmpleSync_Code.ump"},javaline={216},length={47})
+  @umplesourcefile(line={171},file={"UmpleSync_Code.ump"},javaline={215},length={47})
   private void addPositioning(Token classT)
   {
     try
@@ -261,7 +260,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     }
   }
   
-  @umplesourcefile(line={219},file={"UmpleSync_Code.ump"},javaline={265},length={9})
+  @umplesourcefile(line={219},file={"UmpleSync_Code.ump"},javaline={264},length={9})
   private void handleException(Exception e, String message)
   {
     String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";

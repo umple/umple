@@ -206,7 +206,6 @@ public class MethodTraceEntity
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "entry" + ":" + getEntry()+ "," +

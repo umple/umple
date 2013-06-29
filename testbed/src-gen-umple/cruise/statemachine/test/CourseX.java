@@ -359,7 +359,6 @@ public class CourseX
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

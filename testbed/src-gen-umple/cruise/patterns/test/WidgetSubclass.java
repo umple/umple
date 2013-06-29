@@ -126,7 +126,6 @@ public class WidgetSubclass extends WidgetImmutableB
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "type" + ":" + getType()+ "]"
      + outputString;

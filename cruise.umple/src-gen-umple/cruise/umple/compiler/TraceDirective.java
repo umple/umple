@@ -745,14 +745,13 @@ public class TraceDirective
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
             "tracerType" + ":" + getTracerType()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass" + "=" + (getTracer() != null ? !getTracer().equals(this)  ? getTracer().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "traceRecord" + "=" + (getAssociationVariable() != null ? !getAssociationVariable().equals(this)  ? getAssociationVariable().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "associationVariable" + "=" + (getTraceRecord() != null ? !getTraceRecord().equals(this)  ? getTraceRecord().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "tracer" + "=" + (getUmpleClass() != null ? !getUmpleClass().equals(this)  ? getUmpleClass().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "tracer = "+(getTracer()!=null?Integer.toHexString(System.identityHashCode(getTracer())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "associationVariable = "+(getAssociationVariable()!=null?Integer.toHexString(System.identityHashCode(getAssociationVariable())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "traceRecord = "+(getTraceRecord()!=null?Integer.toHexString(System.identityHashCode(getTraceRecord())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass = "+(getUmpleClass()!=null?Integer.toHexString(System.identityHashCode(getUmpleClass())):"null")
      + outputString;
   }
 }

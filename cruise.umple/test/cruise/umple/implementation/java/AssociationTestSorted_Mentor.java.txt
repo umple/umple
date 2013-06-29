@@ -152,7 +152,6 @@ public class Mentor
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "studentsPriority" + "=" + (getStudentsPriority() != null ? !getStudentsPriority().equals(this)  ? getStudentsPriority().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;

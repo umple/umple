@@ -160,7 +160,6 @@ public class GenerateTarget
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "language" + ":" + getLanguage()+ "," +
             "path" + ":" + getPath()+ "," +

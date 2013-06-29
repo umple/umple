@@ -87,15 +87,14 @@ public class Glossary
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={854},file={"Util_Code.ump"},javaline={98},length={141})
-  @umplesourcefile(line={855},file={"Util_Code.ump"},javaline={99},length={31})
+  //  @umplesourcefile(line={854},file={"Util_Code.ump"},javaline={97},length={141})
+  @umplesourcefile(line={855},file={"Util_Code.ump"},javaline={98},length={31})
   private void init()
   {
     addWord(new Word("fish","fish"));
@@ -129,7 +128,7 @@ public class Glossary
   }
   
   
-  @umplesourcefile(line={888},file={"Util_Code.ump"},javaline={133},length={53})
+  @umplesourcefile(line={888},file={"Util_Code.ump"},javaline={132},length={53})
   public String getSingular(String plural)
   {
     if (plural == null || plural.length() == 0)
@@ -184,7 +183,7 @@ public class Glossary
     }
   }
   
-  @umplesourcefile(line={942},file={"Util_Code.ump"},javaline={188},length={53})
+  @umplesourcefile(line={942},file={"Util_Code.ump"},javaline={187},length={53})
   public String getPlural(String singular)
   {
     if (singular == null || singular.length() == 0)

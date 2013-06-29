@@ -97,7 +97,6 @@ public class Garage
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "entranceClear" + ":" + getEntranceClear()+ "]"
      + outputString;

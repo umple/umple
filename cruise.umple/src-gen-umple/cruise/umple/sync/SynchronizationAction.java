@@ -69,7 +69,6 @@ public class SynchronizationAction
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "deltaCode" + ":" + getDeltaCode()+ "," +
             "umpleCode" + ":" + getUmpleCode()+ "]"
@@ -78,8 +77,8 @@ public class SynchronizationAction
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={16},file={"UmpleSync_Code.ump"},javaline={82},length={5})
-  @umplesourcefile(line={17},file={"UmpleSync_Code.ump"},javaline={83},length={4})
+  //  @umplesourcefile(line={16},file={"UmpleSync_Code.ump"},javaline={81},length={5})
+  @umplesourcefile(line={17},file={"UmpleSync_Code.ump"},javaline={82},length={4})
   public void go()
   {
   

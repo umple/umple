@@ -227,7 +227,6 @@ public class CourseW
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

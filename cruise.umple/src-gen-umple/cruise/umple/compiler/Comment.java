@@ -59,7 +59,6 @@ public class Comment
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "text" + ":" + getText()+ "]"
      + outputString;
@@ -67,7 +66,7 @@ public class Comment
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1859},file={"Umple_Code.ump"},javaline={71},length={129})
+  //  @umplesourcefile(line={1859},file={"Umple_Code.ump"},javaline={70},length={129})
   public Boolean isInline = true;
 
   /**
@@ -80,7 +79,7 @@ public class Comment
    * 
    * @return The processed/formatted comment appropriate for use in generated code output.
    */
-  @umplesourcefile(line={1872},file={"Umple_Code.ump"},javaline={84},length={116})
+  @umplesourcefile(line={1872},file={"Umple_Code.ump"},javaline={83},length={116})
   public static String format(String type,List<Comment> allComments)
   {
     //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";

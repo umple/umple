@@ -72,10 +72,9 @@ public class WidgetImmutableA
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "widgetImmutableB" + "=" + (getWidgetImmutableB() != null ? !getWidgetImmutableB().equals(this)  ? getWidgetImmutableB().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "widgetImmutableB = "+(getWidgetImmutableB()!=null?Integer.toHexString(System.identityHashCode(getWidgetImmutableB())):"null")
      + outputString;
   }
 }

@@ -86,7 +86,6 @@ public class YumlGenerator implements CodeGenerator
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "outputPath" + ":" + getOutputPath()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
@@ -95,8 +94,8 @@ public class YumlGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeYuml.ump"},javaline={99},length={64})
-  @umplesourcefile(line={15},file={"Generator_CodeYuml.ump"},javaline={100},length={63})
+  //  @umplesourcefile(line={14},file={"Generator_CodeYuml.ump"},javaline={98},length={64})
+  @umplesourcefile(line={15},file={"Generator_CodeYuml.ump"},javaline={99},length={63})
   public void generate()
   {
     StringBuilder yuml = new StringBuilder();

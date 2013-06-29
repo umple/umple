@@ -111,7 +111,6 @@ public class LanguageSpecificCodeBlock
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "languageImplementedIn" + ":" + getLanguageImplementedIn()+ "]"

@@ -132,7 +132,6 @@ public class CourseK
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

@@ -273,7 +273,6 @@ public class CourseL
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

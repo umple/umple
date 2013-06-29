@@ -92,7 +92,6 @@ public class Application
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "version" + ":" + getVersion()+ "]" + System.getProperties().getProperty("line.separator") +

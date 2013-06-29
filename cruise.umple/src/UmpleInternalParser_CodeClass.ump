@@ -1159,88 +1159,88 @@ class UmpleInternalParser
 
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-      
+
       String value;
-      
+
       if(!"".equals(yourEnd.getPriority())){
         Attribute temp = yourClass.getAttribute(yourEnd.getPriority());
         if(temp != null)
-    {
-          if(Pattern.matches("Integer|Short|Float|Double|String", temp.getType())) 
-      {
-        String attributeType = yourClass.getName();
-        String priorityType = temp.getType();
-        String sortedName = yourEnd.getPriority().substring(0,1).toUpperCase() + yourEnd.getPriority().substring(1);
-          String php_codeblock = 
-             "\n      function($x, $y)\n"+
-                "      {\n"+
-                "        return $x->get"+ sortedName +"() -\n"+ 
-                "               $y->get"+ sortedName +"();\n"+
-                "      }";  
-             String java_codeblock = 
-          "\n      new Comparator<" + attributeType +">(){\n"+
-             "        @Override\n"+
-                 "        public int compare("+attributeType+" arg0, "+attributeType+" arg1)\n"+ 
-                 "        {\n"+
-                 "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
-                 "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
-                 "        }\n"+
-                 "      }";    
-             
-             Attribute priority = new Attribute(yourEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, yourClass);
-             CodeBlock cb = new CodeBlock();
-             cb.setCode("Php", php_codeblock);
-             cb.setCode("Java", java_codeblock);
-             cb.setCode("Ruby", "\"\"");
-             priority.setCodeblock(cb); 
-           myClass.addAttribute(priority);
-           
-      } 
+        {
+          if(Pattern.matches("Integer|Short|Long|Float|Double|String", temp.getType())) 
+          {
+            String attributeType = yourClass.getName();
+            String priorityType = temp.getType();
+            String sortedName = yourEnd.getPriority().substring(0,1).toUpperCase() + yourEnd.getPriority().substring(1);
+            String php_codeblock = 
+                "\n      function($x, $y)\n"+
+                    "      {\n"+
+                    "        return $x->get"+ sortedName +"() -\n"+ 
+                    "               $y->get"+ sortedName +"();\n"+
+                    "      }";  
+            String java_codeblock = 
+                "\n      new Comparator<" + attributeType +">(){\n"+
+                    "        @Override\n"+
+                    "        public int compare("+attributeType+" arg0, "+attributeType+" arg1)\n"+ 
+                    "        {\n"+
+                    "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
+                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
+                    "        }\n"+
+                    "      }";    
+
+            Attribute priority = new Attribute(yourEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, yourClass);
+            CodeBlock cb = new CodeBlock();
+            cb.setCode("Php", php_codeblock);
+            cb.setCode("Java", java_codeblock);
+            cb.setCode("Ruby", "\"\"");
+            priority.setCodeblock(cb); 
+            myClass.addAttribute(priority);
+
+          } 
           else
-          setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());
+            setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());
         }
-    else
-      setFailedPosition(association.getTokenPosition(), 25, yourClass.getName(), yourEnd.getPriority());
+        else
+          setFailedPosition(association.getTokenPosition(), 25, yourClass.getName(), yourEnd.getPriority());
       }
-      
+
       if(!"".equals(myEnd.getPriority())){
         Attribute temp = myClass.getAttribute(myEnd.getPriority());
         if(temp != null)
-    {
-          if(Pattern.matches("Integer|Short|Float|Double|String", temp.getType()))
+        {
+          if(Pattern.matches("Integer|Short|Long|Float|Double|String", temp.getType()))
           {
             String attributeType = myClass.getName() ;
             String priorityType = temp.getType();
             String sortedName = myEnd.getPriority().substring(0,1).toUpperCase() + myEnd.getPriority().substring(1);
-          String php_codeblock = 
-             "\n      function($x, $y)\n"+
-                "      {\n"+
-                "        return $x->get"+ sortedName +"() -\n"+ 
-                "               $y->get"+ sortedName +"();\n"+
-                "      }";  
-             String java_codeblock = 
-          "\n      new Comparator<" + attributeType +">(){\n"+
-             "        @Override\n"+
-                 "        public int compare("+attributeType+" arg0, "+attributeType +" arg1)\n"+ 
-                 "        {\n"+
-                 "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
-                 "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
-                 "        }\n"+
-                 "      }";    
-             
-             Attribute priority = new Attribute(myEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, myClass);
-             CodeBlock cb = new CodeBlock();
-             cb.setCode("Php", php_codeblock);
-             cb.setCode("Java", java_codeblock);
-             cb.setCode("Ruby", "\"\"");
-             priority.setCodeblock(cb); 
-           yourClass.addAttribute(priority);
-      }  
+            String php_codeblock = 
+                "\n      function($x, $y)\n"+
+                    "      {\n"+
+                    "        return $x->get"+ sortedName +"() -\n"+ 
+                    "               $y->get"+ sortedName +"();\n"+
+                    "      }";  
+            String java_codeblock = 
+                "\n      new Comparator<" + attributeType +">(){\n"+
+                    "        @Override\n"+
+                    "        public int compare("+attributeType+" arg0, "+attributeType +" arg1)\n"+ 
+                    "        {\n"+
+                    "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
+                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
+                    "        }\n"+
+                    "      }";    
+
+            Attribute priority = new Attribute(myEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, myClass);
+            CodeBlock cb = new CodeBlock();
+            cb.setCode("Php", php_codeblock);
+            cb.setCode("Java", java_codeblock);
+            cb.setCode("Ruby", "\"\"");
+            priority.setCodeblock(cb); 
+            yourClass.addAttribute(priority);
+          }  
           else
-          setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());
-    }
-    else
-      setFailedPosition(association.getTokenPosition(), 25, myClass.getName(), myEnd.getPriority());
+            setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());
+        }
+        else
+          setFailedPosition(association.getTokenPosition(), 25, myClass.getName(), myEnd.getPriority());
       }
     }
   }

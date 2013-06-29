@@ -77,7 +77,6 @@ public class GvStateDiagramGenerator implements CodeGenerator
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
@@ -86,8 +85,8 @@ public class GvStateDiagramGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={28},file={"Generator_CodeGvStateDiagram.ump"},javaline={90},length={299})
-  @umplesourcefile(line={29},file={"Generator_CodeGvStateDiagram.ump"},javaline={91},length={298})
+  //  @umplesourcefile(line={28},file={"Generator_CodeGvStateDiagram.ump"},javaline={89},length={299})
+  @umplesourcefile(line={29},file={"Generator_CodeGvStateDiagram.ump"},javaline={90},length={298})
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -135,7 +134,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
     terminateCode(code, transitions);
   }
   
-  @umplesourcefile(line={76},file={"Generator_CodeGvStateDiagram.ump"},javaline={139},length={4})
+  @umplesourcefile(line={76},file={"Generator_CodeGvStateDiagram.ump"},javaline={138},length={4})
   private void terminateCode(StringBuilder code, StringBuilder transitions) {
     code.append("\n  // All transitions\n");
     code.append(transitions);
@@ -146,7 +145,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
   } 
 
   // Append the standard format for a start state into the current graph context
-  @umplesourcefile(line={86},file={"Generator_CodeGvStateDiagram.ump"},javaline={150},length={8})
+  @umplesourcefile(line={86},file={"Generator_CodeGvStateDiagram.ump"},javaline={149},length={8})
   private void appendStartState(StringBuilder code, int numSpaces, String clSmName) {
     appendSpaces(code, numSpaces);
     code.append("// Start state black circle\n");
@@ -157,7 +156,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
   }
 
   // Append the format for normal nodes.
-  @umplesourcefile(line={96},file={"Generator_CodeGvStateDiagram.ump"},javaline={161},length={6})
+  @umplesourcefile(line={96},file={"Generator_CodeGvStateDiagram.ump"},javaline={160},length={6})
   private void appendNormalStateFormat(StringBuilder code, int numSpaces) {
     appendSpaces(code, numSpaces); 
     code.append("// Format for normal states\n");
@@ -166,7 +165,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
   }
 
   // Used to indent code
-  @umplesourcefile(line={104},file={"Generator_CodeGvStateDiagram.ump"},javaline={170},length={5})
+  @umplesourcefile(line={104},file={"Generator_CodeGvStateDiagram.ump"},javaline={169},length={5})
   private void appendSpaces(StringBuilder code, int numSpaces) {
     for(int i=0; i<numSpaces; i++) {
       code.append(" ");
@@ -176,7 +175,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
   // The state qualified name incorporates the classname, the state machine name
   // and the hierarchy of state names
   // This is used as the internal graphviz label, and is not displayed.  
-  @umplesourcefile(line={113},file={"Generator_CodeGvStateDiagram.ump"},javaline={180},length={5})
+  @umplesourcefile(line={113},file={"Generator_CodeGvStateDiagram.ump"},javaline={179},length={5})
   private String getStateQualifiedName(State s, UmpleClass c) {
     StateMachine sm = s.getStateMachine();
     String prepend = s.hasNestedStateMachines() ? "cluster" : "";
@@ -184,7 +183,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
   }
 
   // Return the name for the state to be used in transitions
-  @umplesourcefile(line={120},file={"Generator_CodeGvStateDiagram.ump"},javaline={188},length={4})
+  @umplesourcefile(line={120},file={"Generator_CodeGvStateDiagram.ump"},javaline={187},length={4})
   private String getTransitionNameForState(State s, UmpleClass c, boolean isOrigin) {
     State firstNonSuperstate = getFirstNestedNonClusterState(s);
     return getStateQualifiedName(firstNonSuperstate, c);
@@ -192,7 +191,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
   
   // return self if it does not have nested state, otherwise the first
   // nested state that does not itself have a nested state
-  @umplesourcefile(line={127},file={"Generator_CodeGvStateDiagram.ump"},javaline={196},length={8})
+  @umplesourcefile(line={127},file={"Generator_CodeGvStateDiagram.ump"},javaline={195},length={8})
   private State getFirstNestedNonClusterState(State s) {
     if(!s.hasNestedStateMachines()) {
       return s;
@@ -202,7 +201,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={136},file={"Generator_CodeGvStateDiagram.ump"},javaline={206},length={9})
+  @umplesourcefile(line={136},file={"Generator_CodeGvStateDiagram.ump"},javaline={205},length={9})
   private String getTransitionHeadOrTailForState(State s, UmpleClass c, boolean isOrigin) {
     if(s.hasNestedStateMachines()) {
       // Use lhead or ltail
@@ -376,7 +375,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
 
 
   // Output the graphviz file to a file with the .gv suffix
-  @umplesourcefile(line={309},file={"Generator_CodeGvStateDiagram.ump"},javaline={380},length={18})
+  @umplesourcefile(line={309},file={"Generator_CodeGvStateDiagram.ump"},javaline={379},length={18})
   private void writeModel()
   {
     try

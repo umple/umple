@@ -144,7 +144,6 @@ public class ErrorType
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "errorCode" + ":" + getErrorCode()+ "," +
             "severity" + ":" + getSeverity()+ "," +
@@ -155,8 +154,8 @@ public class ErrorType
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1718},file={"Parser_Code.ump"},javaline={159},length={5})
-  @umplesourcefile(line={1719},file={"Parser_Code.ump"},javaline={160},length={4})
+  //  @umplesourcefile(line={1718},file={"Parser_Code.ump"},javaline={158},length={5})
+  @umplesourcefile(line={1719},file={"Parser_Code.ump"},javaline={159},length={4})
   public String format(List<String> arguments)
   {
     return StringFormatter.format(errorFormat, arguments.toArray());

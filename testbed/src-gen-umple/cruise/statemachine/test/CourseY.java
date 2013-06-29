@@ -226,7 +226,6 @@ public class CourseY
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

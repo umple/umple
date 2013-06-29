@@ -205,7 +205,6 @@ public class VioletAssociation
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "startLabel" + ":" + getStartLabel()+ "," +
             "endLabel" + ":" + getEndLabel()+ "]"

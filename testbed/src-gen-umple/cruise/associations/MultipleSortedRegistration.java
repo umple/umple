@@ -117,12 +117,11 @@ public class MultipleSortedRegistration
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "code" + ":" + getCode()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "multipleSortedStudent" + "=" + (getMultipleSortedCourse() != null ? !getMultipleSortedCourse().equals(this)  ? getMultipleSortedCourse().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "multipleSortedCourse" + "=" + (getMultipleSortedStudent() != null ? !getMultipleSortedStudent().equals(this)  ? getMultipleSortedStudent().toString().replaceAll("  ","    ") : "this" : "null")
+            "  " + "multipleSortedCourse = "+(getMultipleSortedCourse()!=null?Integer.toHexString(System.identityHashCode(getMultipleSortedCourse())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "multipleSortedStudent = "+(getMultipleSortedStudent()!=null?Integer.toHexString(System.identityHashCode(getMultipleSortedStudent())):"null")
      + outputString;
   }
 }

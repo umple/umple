@@ -218,7 +218,6 @@ public class Action
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "actionCode" + ":" + getActionCode()+ "," +
             "actionType" + ":" + getActionType()+ "," +

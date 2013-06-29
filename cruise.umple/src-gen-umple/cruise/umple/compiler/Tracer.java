@@ -119,7 +119,6 @@ public class Tracer
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "verbosity" + ":" + getVerbosity()+ "]"

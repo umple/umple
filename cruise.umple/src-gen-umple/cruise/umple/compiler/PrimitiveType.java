@@ -56,7 +56,6 @@ public class PrimitiveType extends Type
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "typeName" + ":" + getTypeName()+ "]"
      + outputString;

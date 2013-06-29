@@ -146,7 +146,6 @@ public class CourseS
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

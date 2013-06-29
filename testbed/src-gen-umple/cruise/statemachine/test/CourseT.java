@@ -125,7 +125,6 @@ public class CourseT
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "count" + ":" + getCount()+ "]"
      + outputString;

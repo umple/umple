@@ -85,7 +85,6 @@ public class Modifier
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]"
      + outputString;
   }

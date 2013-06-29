@@ -77,7 +77,6 @@ public class EcoreGenerator implements CodeGenerator
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
@@ -86,8 +85,8 @@ public class EcoreGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeEcore.ump"},javaline={90},length={218})
-  @umplesourcefile(line={15},file={"Generator_CodeEcore.ump"},javaline={91},length={173})
+  //  @umplesourcefile(line={14},file={"Generator_CodeEcore.ump"},javaline={89},length={218})
+  @umplesourcefile(line={15},file={"Generator_CodeEcore.ump"},javaline={90},length={173})
   public void generate()
   {
     StringBuilder code = new StringBuilder();
@@ -262,7 +261,7 @@ public class EcoreGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={189},file={"Generator_CodeEcore.ump"},javaline={266},length={13})
+  @umplesourcefile(line={189},file={"Generator_CodeEcore.ump"},javaline={265},length={13})
   private String getFullyQualifiedName(String packageName, String className)
   {
     try
@@ -277,7 +276,7 @@ public class EcoreGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={203},file={"Generator_CodeEcore.ump"},javaline={281},length={10})
+  @umplesourcefile(line={203},file={"Generator_CodeEcore.ump"},javaline={280},length={10})
   private String getTargetNamespaceName(){ 
     if (model.getDefaultNamespace() != null){
       if (model.getDefaultNamespace().length() > 0 )
@@ -289,7 +288,7 @@ public class EcoreGenerator implements CodeGenerator
     return model.getUmpleFile().getSimpleFileName();
   }
 
-  @umplesourcefile(line={214},file={"Generator_CodeEcore.ump"},javaline={293},length={18})
+  @umplesourcefile(line={214},file={"Generator_CodeEcore.ump"},javaline={292},length={18})
   private void writeModel()
   {
     try

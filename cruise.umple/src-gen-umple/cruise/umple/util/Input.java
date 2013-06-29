@@ -55,7 +55,6 @@ public class Input
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "stream" + "=" + (getStream() != null ? !getStream().equals(this)  ? getStream().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
@@ -63,8 +62,8 @@ public class Input
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={83},file={"Util_Code.ump"},javaline={67},length={22})
-  @umplesourcefile(line={84},file={"Util_Code.ump"},javaline={68},length={12})
+  //  @umplesourcefile(line={83},file={"Util_Code.ump"},javaline={66},length={22})
+  @umplesourcefile(line={84},file={"Util_Code.ump"},javaline={67},length={12})
   public String readUmpleFile(String[] args, PrintStream writer)
   {
     if (args.length > 0)
@@ -78,7 +77,7 @@ public class Input
     }
   }
   
-  @umplesourcefile(line={97},file={"Util_Code.ump"},javaline={82},length={8})
+  @umplesourcefile(line={97},file={"Util_Code.ump"},javaline={81},length={8})
   public String readLine()
   {
     try {

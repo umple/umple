@@ -238,7 +238,6 @@ public class DoorD
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
             "intId" + ":" + getIntId()+ "," +

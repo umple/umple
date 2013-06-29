@@ -273,7 +273,6 @@ public class VmlSystem
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "code" + ":" + getCode()+ "]"
      + outputString;
@@ -281,8 +280,8 @@ public class VmlSystem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={69},file={"Vml_Code.ump"},javaline={285},length={16})
-  @umplesourcefile(line={70},file={"Vml_Code.ump"},javaline={286},length={15})
+  //  @umplesourcefile(line={69},file={"Vml_Code.ump"},javaline={284},length={16})
+  @umplesourcefile(line={70},file={"Vml_Code.ump"},javaline={285},length={15})
   public Concern getConcern(String concernName)
   {
     if (concernName == null)

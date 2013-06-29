@@ -166,7 +166,6 @@ public class Content
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "title" + ":" + getTitle()+ "," +
             "shouldIncludeReferences" + ":" + getShouldIncludeReferences()+ "," +
@@ -177,8 +176,8 @@ public class Content
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={332},file={"Documenter_Code.ump"},javaline={181},length={5})
-  @umplesourcefile(line={333},file={"Documenter_Code.ump"},javaline={182},length={4})
+  //  @umplesourcefile(line={332},file={"Documenter_Code.ump"},javaline={180},length={5})
+  @umplesourcefile(line={333},file={"Documenter_Code.ump"},javaline={181},length={4})
   public String getTitleFilename()
   {
     return title.replace(" ","") + ".html";

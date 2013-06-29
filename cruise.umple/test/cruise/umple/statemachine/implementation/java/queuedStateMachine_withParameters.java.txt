@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.17.0.2798 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
 import java.util.*;
@@ -242,7 +242,6 @@ public class LightFixture implements Runnable
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "brightness" + ":" + getBrightness()+ "]"
      + outputString;

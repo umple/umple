@@ -317,7 +317,6 @@ public class UmpleElement
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "modifier" + ":" + getModifier()+ "," +
@@ -331,14 +330,14 @@ public class UmpleElement
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={623},file={"Umple_Code.ump"},javaline={335},length={18})
-  @umplesourcefile(line={624},file={"Umple_Code.ump"},javaline={336},length={4})
+  //  @umplesourcefile(line={623},file={"Umple_Code.ump"},javaline={334},length={18})
+  @umplesourcefile(line={624},file={"Umple_Code.ump"},javaline={335},length={4})
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={629},file={"Umple_Code.ump"},javaline={342},length={12})
+  @umplesourcefile(line={629},file={"Umple_Code.ump"},javaline={341},length={12})
   public void appendExtraCode(String newCode, boolean addNewline)
   {
     if (newCode == null) 
