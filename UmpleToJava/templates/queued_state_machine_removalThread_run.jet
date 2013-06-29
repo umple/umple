@@ -14,10 +14,32 @@
            {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
              append(stringBuffer,"_M:");
-             append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
-             append(stringBuffer,"();");
+             if (!event.getArgs().equals(""))
+             {
+               append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",event));
+               String allParameters="";
+               for ( int i=0; i < event.getParams().size(); i++)
+               {
+                 if (allParameters.length() > 0)
+                 {
+                   allParameters += ", ";
+                 }
+                 allParameters += "("+event.getParam(i).getType()+") m.param.elementAt("+i+")";
+               }
+               append(stringBuffer,"{0});",allParameters);
+             }
+             else
+             {
+               append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
+               append(stringBuffer,"();");
+             }
              append(stringBuffer,"\n          break;");
-           }%>        
+           }%> 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
       }
     }
   }

@@ -31,9 +31,9 @@
     {
       append(stringBuffer,"\n  ");
       append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-      append(stringBuffer, "\n  enum MessType { {0} }", gen.translate("listEvents",sm)); 
+      append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm)); 
       append(stringBuffer,"\n  ");
-      append(stringBuffer,"\n  MessPool pool;");
+      append(stringBuffer,"\n  MessagePool pool;");
       append(stringBuffer,"\n  Thread removal;");
     }
   }

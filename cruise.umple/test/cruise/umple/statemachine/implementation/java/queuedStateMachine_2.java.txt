@@ -19,9 +19,9 @@ public class GarageDoor implements Runnable
   private Status status;
   
   //enumeration type of messages accepted by GarageDoor
-  enum MessType { buttonOrObstacle_M, reachBottom_M, reachTop_M }
+  enum MessageType { buttonOrObstacle_M, reachBottom_M, reachTop_M }
   
-  MessPool pool;
+  MessagePool pool;
   Thread removal;
 
   //------------------------
@@ -31,7 +31,7 @@ public class GarageDoor implements Runnable
   public GarageDoor()
   {
     setStatus(Status.Open);
-    pool = new MessPool();
+    pool = new MessagePool();
     removal=new Thread(this);
     //start the thread of GarageDoor
     removal.start();
@@ -132,19 +132,19 @@ public class GarageDoor implements Runnable
 
   private class Message
   {
-    MessType type;
+    MessageType type;
     
     //Message parameters
     Vector<Object> param;
     
-    public Message(MessType t, Vector<Object> p)
+    public Message(MessageType t, Vector<Object> p)
     {
       type = t; 
       param = p;
     }
   }
   
-  private class MessPool {
+  protected class MessagePool {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -174,17 +174,17 @@ public class GarageDoor implements Runnable
 
   public void buttonOrObstacle ()
   {
-    pool.put(new Message(MessType.buttonOrObstacle_M, null)
+    pool.put(new Message(MessageType.buttonOrObstacle_M, null));
   }
 
   public void reachBottom ()
   {
-    pool.put(new Message(MessType.reachBottom_M, null)
+    pool.put(new Message(MessageType.reachBottom_M, null));
   }
 
   public void reachTop ()
   {
-    pool.put(new Message(MessType.reachTop_M, null)
+    pool.put(new Message(MessageType.reachTop_M, null));
   }
 
   
@@ -206,7 +206,12 @@ public class GarageDoor implements Runnable
           break;
         case reachTop_M:
           status = _reachTop();
-          break;        
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
       }
     }
   }

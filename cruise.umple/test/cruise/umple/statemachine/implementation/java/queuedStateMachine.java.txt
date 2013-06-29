@@ -19,9 +19,9 @@ public class Course implements Runnable
   private Status status;
   
   //enumeration type of messages accepted by Course
-  enum MessType { register_M, reject_M }
+  enum MessageType { register_M, reject_M }
   
-  MessPool pool;
+  MessagePool pool;
   Thread removal;
 
   //------------------------
@@ -31,7 +31,7 @@ public class Course implements Runnable
   public Course()
   {
     setStatus(Status.Open);
-    pool = new MessPool();
+    pool = new MessagePool();
     removal=new Thread(this);
     //start the thread of Course
     removal.start();
@@ -98,19 +98,19 @@ public class Course implements Runnable
 
   private class Message
   {
-    MessType type;
+    MessageType type;
     
     //Message parameters
     Vector<Object> param;
     
-    public Message(MessType t, Vector<Object> p)
+    public Message(MessageType t, Vector<Object> p)
     {
       type = t; 
       param = p;
     }
   }
   
-  private class MessPool {
+  protected class MessagePool {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -140,12 +140,12 @@ public class Course implements Runnable
 
   public void register ()
   {
-    pool.put(new Message(MessType.register_M, null)
+    pool.put(new Message(MessageType.register_M, null));
   }
 
   public void reject ()
   {
-    pool.put(new Message(MessType.reject_M, null)
+    pool.put(new Message(MessageType.reject_M, null));
   }
 
   
@@ -164,7 +164,12 @@ public class Course implements Runnable
           break;
         case reject_M:
           status = _reject();
-          break;        
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
       }
     }
   }

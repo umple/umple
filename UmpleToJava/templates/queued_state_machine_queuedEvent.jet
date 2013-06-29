@@ -24,13 +24,13 @@
           {
             append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
           }
-	      append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
-	      append(stringBuffer,"_M, v)");
+	      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+	      append(stringBuffer,"_M, v));");
         }
         else
         {
-          append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
-          append(stringBuffer,"_M, null)");
+          append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+          append(stringBuffer,"_M, null));");
         }
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");

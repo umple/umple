@@ -5,7 +5,7 @@
     {
       if (smq.isQueued())
       {
-        append(stringBuffer,"\n    pool = new MessPool();");
+        append(stringBuffer,"\n    pool = new MessagePool();");
         append(stringBuffer,"\n    removal=new Thread(this);");
         append(stringBuffer,"\n    //start the thread of {0}", uClass.getName());
         append(stringBuffer,"\n    removal.start();");

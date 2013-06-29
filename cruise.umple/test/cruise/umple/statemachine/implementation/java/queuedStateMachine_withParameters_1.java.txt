@@ -22,9 +22,9 @@ public class LightFixture implements Runnable
   private Bulb bulb;
   
   //enumeration type of messages accepted by LightFixture
-  enum MessType { turnDimmer_M, flipSwitch_M, entry_M }
+  enum MessageType { turnDimmer_M, flipSwitch_M, entry_M }
   
-  MessPool pool;
+  MessagePool pool;
   Thread removal;
 
   //------------------------
@@ -35,7 +35,7 @@ public class LightFixture implements Runnable
   {
     brightness = 0;
     setBulb(Bulb.Off);
-    pool = new MessPool();
+    pool = new MessagePool();
     removal=new Thread(this);
     //start the thread of LightFixture
     removal.start();
@@ -158,19 +158,19 @@ public class LightFixture implements Runnable
 
   private class Message
   {
-    MessType type;
+    MessageType type;
     
     //Message parameters
     Vector<Object> param;
     
-    public Message(MessType t, Vector<Object> p)
+    public Message(MessageType t, Vector<Object> p)
     {
       type = t; 
       param = p;
     }
   }
   
-  private class MessPool {
+  protected class MessagePool {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -203,17 +203,17 @@ public class LightFixture implements Runnable
     Vector v = new Vector(2);
     v.add(0, lightval);
     v.add(1, grade);
-    pool.put(new Message(MessType.turnDimmer_M, v)
+    pool.put(new Message(MessageType.turnDimmer_M, v));
   }
 
   public void flipSwitch ()
   {
-    pool.put(new Message(MessType.flipSwitch_M, null)
+    pool.put(new Message(MessageType.flipSwitch_M, null));
   }
 
   public void entry ()
   {
-    pool.put(new Message(MessType.entry_M, null)
+    pool.put(new Message(MessageType.entry_M, null));
   }
 
   
@@ -228,14 +228,19 @@ public class LightFixture implements Runnable
       switch (m.type)
       {
         case turnDimmer_M:
-          status = _turnDimmer();
+          status = _turnDimmer((Integer) m.param.elementAt(0), (Double) m.param.elementAt(1));
           break;
         case flipSwitch_M:
           status = _flipSwitch();
           break;
         case entry_M:
           status = _entry();
-          break;        
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
       }
     }
   }
