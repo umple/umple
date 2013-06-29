@@ -2040,9 +2040,9 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_2020 = NL + "      ";
   protected final String TEXT_2021 = ".";
   protected final String TEXT_2022 = "(null);" + NL + "    }";
-  protected final String TEXT_2023 = NL + "  private class Message" + NL + "  {" + NL + "    MessType type;" + NL + "    " + NL + "    //Message parameters" + NL + "    Vector<Object> param;" + NL + "    " + NL + "    public Message(MessType t, Vector<Object> p)" + NL + "    {" + NL + "      type = t; " + NL + "      param = p;" + NL + "    }" + NL + "  }" + NL + "  " + NL + "  private class MessPool {" + NL + "    Queue<Message> messages = new LinkedList<Message>();" + NL + "    " + NL + "    public synchronized void put(Message m)" + NL + "    {" + NL + "      messages.add(m); " + NL + "      notify();" + NL + "    }" + NL + "" + NL + "    public synchronized Message getNext()" + NL + "    {" + NL + "      try {" + NL + "        while (messages.isEmpty()) " + NL + "        {" + NL + "          wait();" + NL + "        }" + NL + "      } catch (InterruptedException e) { e.printStackTrace(); } " + NL + "" + NL + "      //The element to be removed" + NL + "      Message m = messages.remove(); " + NL + "      return (m);" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2023 = NL + "  private class Message" + NL + "  {" + NL + "    MessageType type;" + NL + "    " + NL + "    //Message parameters" + NL + "    Vector<Object> param;" + NL + "    " + NL + "    public Message(MessageType t, Vector<Object> p)" + NL + "    {" + NL + "      type = t; " + NL + "      param = p;" + NL + "    }" + NL + "  }" + NL + "  " + NL + "  protected class MessagePool {" + NL + "    Queue<Message> messages = new LinkedList<Message>();" + NL + "    " + NL + "    public synchronized void put(Message m)" + NL + "    {" + NL + "      messages.add(m); " + NL + "      notify();" + NL + "    }" + NL + "" + NL + "    public synchronized Message getNext()" + NL + "    {" + NL + "      try {" + NL + "        while (messages.isEmpty()) " + NL + "        {" + NL + "          wait();" + NL + "        }" + NL + "      } catch (InterruptedException e) { e.printStackTrace(); } " + NL + "" + NL + "      //The element to be removed" + NL + "      Message m = messages.remove(); " + NL + "      return (m);" + NL + "    }" + NL + "  }";
   protected final String TEXT_2024 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
-  protected final String TEXT_2025 = "        " + NL + "      }" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2025 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
   protected final String TEXT_2026 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";";
   protected final String TEXT_2027 = NL + "  }";
   protected final String TEXT_2028 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
@@ -2332,9 +2332,9 @@ for (StateMachine smq : uClass.getStateMachines())
     {
       append(stringBuffer,"\n  ");
       append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-      append(stringBuffer, "\n  enum MessType { {0} }", gen.translate("listEvents",sm)); 
+      append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm)); 
       append(stringBuffer,"\n  ");
-      append(stringBuffer,"\n  MessPool pool;");
+      append(stringBuffer,"\n  MessagePool pool;");
       append(stringBuffer,"\n  Thread removal;");
     }
   }
@@ -3048,7 +3048,7 @@ for (StateMachine smq : uClass.getStateMachines())
     {
       if (smq.isQueued())
       {
-        append(stringBuffer,"\n    pool = new MessPool();");
+        append(stringBuffer,"\n    pool = new MessagePool();");
         append(stringBuffer,"\n    removal=new Thread(this);");
         append(stringBuffer,"\n    //start the thread of {0}", uClass.getName());
         append(stringBuffer,"\n    removal.start();");
@@ -8707,13 +8707,13 @@ if (p != null) {
           {
             append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
           }
-	      append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
-	      append(stringBuffer,"_M, v)");
+	      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+	      append(stringBuffer,"_M, v));");
         }
         else
         {
-          append(stringBuffer,"\n    pool.put(new Message(MessType.{0}",gen.translate("eventMethod",event));
-          append(stringBuffer,"_M, null)");
+          append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+          append(stringBuffer,"_M, null));");
         }
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
@@ -8726,8 +8726,25 @@ if (p != null) {
            {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
              append(stringBuffer,"_M:");
-             append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
-             append(stringBuffer,"();");
+             if (!event.getArgs().equals(""))
+             {
+               append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",event));
+               String allParameters="";
+               for ( int i=0; i < event.getParams().size(); i++)
+               {
+                 if (allParameters.length() > 0)
+                 {
+                   allParameters += ", ";
+                 }
+                 allParameters += "("+event.getParam(i).getType()+") m.param.elementAt("+i+")";
+               }
+               append(stringBuffer,"{0});",allParameters);
+             }
+             else
+             {
+               append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
+               append(stringBuffer,"();");
+             }
              append(stringBuffer,"\n          break;");
            }
     stringBuffer.append(TEXT_2025);
