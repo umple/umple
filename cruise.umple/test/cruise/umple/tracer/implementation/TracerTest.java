@@ -37,25 +37,25 @@ public class TracerTest extends TracerTemplateTest
 		
 
 	//====== Console tracer
-	@Test @Ignore
+	@Test 
 	public void ConsoleTracer_SingleAttribute()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttribute.ump",languagePath + "/ConsoleTracer_TraceSingleAttribute."+ languagePath +".txt","Tracer");
 	}
 	  
-	@Test @Ignore
+	@Test
 	public void ConsoleTracer_SingleAttributeWhereCondition()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeWhere.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeWhere."+ languagePath +".txt","Tracer");
 	}
 	  
-	@Test @Ignore
+	@Test
 	public void ConsoleTracer_SingleAttributeUntilCondition()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeUntil.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeUntil."+ languagePath +".txt","Tracer");
 	}
 	  
-	@Test @Ignore
+	@Test
 	public void ConsoleTracer_SingleAttributeAfterCondition()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributeAfter.ump",languagePath + "/ConsoleTracer_TraceSingleAttributeAfter."+ languagePath +".txt","Tracer");
@@ -67,7 +67,7 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributePostCondition1.ump",languagePath + "/ConsoleTracer_TraceSingleAttributePostCondition1."+ languagePath +".txt","Tracer");
 	}
 	
-	@Test @Ignore
+	@Test 
 	public void ConsoleTracer_SingleAttributePostCondition2()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttributePostCondition2.ump",languagePath + "/ConsoleTracer_TraceSingleAttributePostCondition2."+ languagePath +".txt","Tracer");

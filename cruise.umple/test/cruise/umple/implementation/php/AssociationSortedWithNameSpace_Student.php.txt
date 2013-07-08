@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 class Student
 {
@@ -23,7 +23,12 @@ class Student
   public function __construct($aId)
   {
     $this->id = $aId;
-    $this->ProfsPriority = "name";
+    $this->ProfsPriority = 
+      function($x, $y)
+      {
+        return $x->getName() -
+               $y->getName();
+      };
     $this->Profs = array();
   }
 
@@ -120,7 +125,8 @@ class Student
         array_pop($this->Profs);
       }
     }
-      $this->sort($this->Profs, $this->ProfsPriority);
+      if(wasAdded)
+          usort($this->Profs, $this->ProfsPriority);
       
     return $wasAdded;
   }
@@ -130,8 +136,6 @@ class Student
     $wasRemoved = false;
     if ($this->indexOfProf($aProf) == -1)
     {
-      $this->sort($this->Profs, $this->ProfsPriority);
-      
       return $wasRemoved;
     }
 
@@ -151,23 +155,7 @@ class Student
       }
     }
     $this->Profs = array_values($this->Profs);
-    $this->sort($this->Profs, $this->ProfsPriority);
-    
     return $wasRemoved;
-  }
-
-  public function sort(&$toSort, $thePriority)
-  {
-    if(count($toSort) > 0)
-    {
-      $methodName = "get".ucfirst($thePriority);
-      usort($toSort, function($x, $y) use ($methodName)
-      {
-        $var1 = call_user_func(array($x, $methodName));
-        $var2 = call_user_func(array($y, $methodName));
-        return $var1 - $var2;
-      });
-    }
   }
 
   public function equals($compareTo)

@@ -4,5 +4,5 @@ class Tracer
 {
 	Integer a;
 	Integer b;
-	trace giving a < b;
+	trace giving [a < b];
 }

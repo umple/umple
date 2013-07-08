@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 class Tracer
 {
@@ -12,6 +12,8 @@ class Tracer
   //Tracer Attributes
   private $id;
   private $name;
+  private $traceFlag1;
+  private $traceFlag2;
 
   //------------------------
   // CONSTRUCTOR
@@ -21,6 +23,8 @@ class Tracer
   {
     $this->id = $aId;
     $this->name = $aName;
+    $this->traceFlag1 = false;
+    $this->traceFlag2 = false;
   }
 
   //------------------------
@@ -31,11 +35,15 @@ class Tracer
   {
     $wasSet = false;
     $this->id = $aId;
+      if($traceFlag2)
+        {
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeAfter.ump,8,Tracer,".spl_object_hash( $this ).",at_s,id,".$this->id );
+        }
     $wasSet = true;
-    if( $id > 232100 )
-    {
-      print("id={$aId}");
-    }
+      if(@id>232100) then
+        
+        traceFlag2=true;
+         end
     return $wasSet;
   }
 
@@ -43,11 +51,15 @@ class Tracer
   {
     $wasSet = false;
     $this->name = $aName;
+      if($traceFlag1)
+        {
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeAfter.ump,7,Tracer,".spl_object_hash( $this ).",at_s,name,".$this->name );
+        }
     $wasSet = true;
-    if( $name == "tim" )
-    {
-      print("name={$aName}");
-    }
+      if(@name==""tim"") then
+        
+        traceFlag1=true;
+         end
     return $wasSet;
   }
 

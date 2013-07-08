@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 class Tracer
 {
@@ -30,18 +30,18 @@ class Tracer
   public function setX($aX)
   {
     $wasSet = false;
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttribute.ump,7,Tracer,".spl_object_hash( $this ).",at_s,x,".$this->x.",".$aX );
     $this->x = $aX;
     $wasSet = true;
-    print("x={$aX}");
     return $wasSet;
   }
 
   public function setY($aY)
   {
     $wasSet = false;
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttribute.ump,8,Tracer,".spl_object_hash( $this ).",at_s,y,".$this->y.",".$aY );
     $this->y = $aY;
     $wasSet = true;
-    print("y={$aY}");
     return $wasSet;
   }
 

@@ -19,7 +19,7 @@ public class ConsoleTracerTest
   {
     //tracer = StringTracer.getInstance();
     //tracer.reset();
-	   defaultPS = System.err;
+	  defaultPS = System.err;
   }
   
   @Test 
@@ -27,15 +27,22 @@ public class ConsoleTracerTest
   {
 	  PrintStream ps = new PrintStream(System.err){
 			int index=0;
-			String[] expectedOutput = {"Time",
-					"Geoff",
-					"Hamoud"};
+			String[] expected = {"Time",
+					"at_s,name,null,Geoff",
+					"at_s,name,Geoff,Hamoud"};
 			Integer[] testField = {0,9,9};
 			@Override
 			public void println(String x){
-				if(index<expectedOutput.length){
-					//System.out.println("test = "+x.split(",")[2]);
-					Assert.assertEquals(expectedOutput[index],x.split(",")[testField[index]]);
+				if(index<expected.length){
+									
+					String[] actualOutput = x.split(",");
+					String[] expectedOutput = expected[index].split(",");
+					
+					// header skip
+					if( index != 0 )
+						for( int i = 0 ; i < expectedOutput.length ; ++i )
+							Assert.assertEquals(expectedOutput[i],actualOutput[i+6]);
+					
 					index++;
 				}
 				else {
@@ -44,11 +51,11 @@ public class ConsoleTracerTest
 			}
 		};
 	  System.setErr(ps);
-	  PersonA person = new PersonA(null);
 	  
-	  person.setName("Geoff");
-	  person.setName("Hamoud");
+	  ConsoleTracerTester cTest = new ConsoleTracerTester(null);
 	  
+	  cTest.setName("Geoff");
+	  cTest.setName("Hamoud");
 	  
   }
   
