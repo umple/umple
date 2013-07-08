@@ -2,17 +2,11 @@
 namespace cruise.tracer.test;
 
 //tracer String;
-
-class PersonA
-{
-  name;
-  trace name;
-}
-
 tracer Console;
 
-class PersonB
+class ConsoleTracerTester
 {
   name;
   trace name;
 }
+

@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 class Tracer
 {
@@ -49,11 +49,11 @@ class Tracer
   {
     $wasSet = false;
     $this->c = $aC;
+      if($a<$b)
+        {
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributePostCondition2.ump,8,Tracer,".spl_object_hash( $this ).",at_s,c,".$this->c );
+        }
     $wasSet = true;
-    if( $a < b )
-    {
-      print("c={$aC}");
-    }
     return $wasSet;
   }
 

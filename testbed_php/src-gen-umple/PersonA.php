@@ -29,7 +29,7 @@ class PersonA
   public function setName($aName)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/tcl/nobackup-tmp/CheckoutForUmplePatchTest3/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,9,PersonA,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,9,PersonA,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
     $this->name = $aName;
     $wasSet = true;
     return $wasSet;

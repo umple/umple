@@ -1,10 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package example;
+import cruise.util.ConsoleTracer;
+import java.util.Date;
 
 public class Tracer
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -50,11 +54,11 @@ public class Tracer
   {
     boolean wasSet = false;
     c = aC;
-    wasSet = true;
-    if( a < b )
+    if (a<b)
     {
-      System.err.println("c=" + aC + ",a=" + a + ",b=" + b);
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttributePostCondition2.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,c,"+c );
     }
+    wasSet = true;
     return wasSet;
   }
 
@@ -80,7 +84,6 @@ public class Tracer
   public String toString()
   {
 	  String outputString = "";
-	  
     return super.toString() + "["+
             "a" + ":" + getA()+ "," +
             "b" + ":" + getB()+ "," +

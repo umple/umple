@@ -2,44 +2,41 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
-class Tracer
+class ConsoleTracerTester
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Tracer Attributes
-  private $x;
+  //ConsoleTracerTester Attributes
+  private $name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aX)
+  public function __construct($aName)
   {
-    $this->x = $aX;
+    $this->name = $aName;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public function setX($aX)
+  public function setName($aName)
   {
     $wasSet = false;
-      if($aX==100)
-        {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeWhere.ump,6,Tracer,".spl_object_hash( $this ).",at_s,x,".$this->x.",".$aX );
-        }
-    $this->x = $aX;
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,10,ConsoleTracerTester,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
+    $this->name = $aName;
     $wasSet = true;
     return $wasSet;
   }
 
-  public function getX()
+  public function getName()
   {
-    return $this->x;
+    return $this->name;
   }
 
   public function equals($compareTo)
