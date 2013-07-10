@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sdl.*;
 
 /**
- * @umplesource Generator.ump 281
+ * @umplesource Generator.ump 298
  * @umplesource Generator_CodeSDL.ump 12
  */
-// line 281 "../../../../src/Generator.ump"
+// line 298 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeSDL.ump"
 public class SDLGenerator implements CodeGenerator,CodeTranslator
 {

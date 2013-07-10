@@ -1,319 +1,536 @@
-grammar org.xtext.example.mydsl.Umple with org.eclipse.xtext.common.Terminals
+grammar cruise.umple.Umple with org.eclipse.xtext.common.Terminals
 
 generate umple "http://www.umple.cruise/Umple"
 
-/*Current restrictions:
-	namespace followed by classes followed by statemachines (classes can contain states in any order)
-
-*/
-
-Model :
-	(entities+=entity |glosseries+=glossary | generates+=generate_ | uses+=useStatement | namespaces+=namespace )*;
-
-glossary:
-	"glossary" "{" (word )* "}";
-	
-word:
-	ID ":" ID ";";
-	
-generate_:	//generate is a key word in xtext so generate_ is used instead
-	"generate" ("Java")";" | "generate" "Cpp" | "generate" "Php" | "generate" ID ;
-	
-useStatement:
-	"use" (fileID)";";
-
-namespace:
-	"namespace" (fileID) ";";
-	
-entity:
-	(classes+=classDefinition) | (association+=associationDefinition) | (interfaces+=interfaceDefinition) |(externals+=externalDefinition) |
-	(associationClasses+=associationClassDefinition) | (statemachines+=stateMachineDefinition);
-
-
-classDefinition: "class" (name=ID) "{" (contents+=classContent)* "}";
-
-externalDefinition: "external" (name=ID) "{" (classContents+=classContent)* "}";
-
-//Interface can not have native code right now
-interfaceDefinition: "interface" name=ID "{" (depends+=depend)* (nativeCode=functionDeclaration ";")* "}";
-
-associationDefinition: "association" (name=ID)? "{" (associations+=association)* "}";	
-
-associationClassDefinition: "associationClass" name=ID "{" (associationClassContents+=associationClassContent)* "}";
-
-//CONTENT SECTION
-classContent: 
-	functionDefinition | classDefinition | position | attribute | softwarePattern | depend | 
-	symmetricReflexiveAssociation | stateMachine | 
-	inlineAssociation;
-
-associationClassContent: 
-	functionDefinition | classDefinition| softwarePattern | depend | (singleAssociationEnd) |
-	stateMachine | attribute | inlineAssociation;
-	
-//ASSOCIATIONS/
-association:  multiplicity (type1=ID) (rolename1=ID)?  ("->"|"--"|"<-"|"><") multiplicity (type2=ID) (rolename2=ID)? ";";
-symmetricReflexiveAssociation: multiplicity "self" (rolename=ID) ";";
-inlineAssociation: multiplicity (rolename1=ID)? ("->"|"--"|"<-"|"><") (multiplicity) (type=ID) (rolename2=ID)? ";";
-singleAssociationEnd: multiplicity (type=extendedID) (rolename=ID)? ";";
-multiplicity: bound | (bound ".." bound);
-bound: INT | "*";
-
-//ATTRIBUTES AND SMALLER BITS
-softwarePattern:
-	isA | singleton | keyDefinition | codeInjection;
-
-isA: "isA" (super=extendedID) ";" | "IsA" ID | "Isa" ID","ID;
-singleton: "singleton" ";";
-codeInjection: beforeCode | afterCode;
-
-attribute:
-	"autounique" name=extendedID ";"|
-	("unique")? modifier? ((type=attributeType (isList="[]")?)|(object=[classDefinition] (isList="[]")?))?  name=extendedID (it=initialization)? ";";
-	
-modifier: ("immutable"|"settable"|"internal"|"defaulted"|"const");
-
-//condictionalExpression covers all expressions except "="
-//See Expression section for details
-
-initialization:  "=" conditionalExpression;
-
-attributeType
-	: 	"Date"
-	|	"Time"
-	|	"double"
-	|	"Integer"|"integer"|"int"
-	|	"Constant"|"constant"
-	|	"Boolean"|"boolean"
-	|	"String"|"string"
-	;
-
-//This section can contain native Java code
-beforeCode: "before" (name=extendedID) code=block;
-
-afterCode: "after" (name=extendedID) code=block;
-
-keyDefinition: "key" "{" (firstKey=key ("," keys+=key)*)? "}";
-key: name=ID;
-
-depend: "depend" name = extendedID (".*")? ";";
-
-
-//STATEMACHINES
-
-stateMachineDefinition: "statemachine" name=extendedID "{" (states+=state)* "}";
-stateMachine: ENUM | inlineStateMachine | referencedStateMachine;
-inlineStateMachine: name=extendedID "{" (states+=state)* "}";
-referencedStateMachine: name = extendedID "as" (machine=[stateMachineDefinition]) ";";
-ENUM: name=extendedID "{" state1=extendedID ("," states+=extendedID)* "}";
-
-state: ("conc")? ("concurrent")? ("|")? stateName=extendedID  "{" (("*")? states+=stateEntity)* "}";
-
-stateEntity: transition | entryOrExitAction | (activity ("->" extendedID ";")?) | state | (expression ";");	
-//This covers just activities and activities that cause a state transition
-
-	
-transition: 
-	(guard (events+=eventDefinition)? "->" a=action? stateName=extendedID ";") |
-	(eventDefinition g=guard? "->" a=action? stateName=extendedID ";") |
-	("->" a=action? stateName=extendedID ";") ;
-	
-eventDefinition: timedEvent | waitEvent | eventID=ID;
-timedEvent: "afterEvery" "(" (INT|ID) ")";
-waitEvent: "wait" "(" (INT|ID) ")";
-action: "/" code=block;
-entryOrExitAction: (type="entry" |type="exit") "/" code=block;
-activity: "do" code=block ";";
-guard: "[" guardCode "]";
-
-//This does allow for additions and modifications as well as boolean expressions
-//but it is the most comprehensive
-guardCode: expression;
-
-position: (a=associationPosition | c=classPosition);
-classPosition: "position" (x=INT) (y=INT) (width=INT) (height=INT) ";";
-associationPosition: "position.association" (index=INT) (c1=coordinate) (c2=coordinate) ";"; //ERROR: UNSURE AS TO WHAT INDEX IS
-coordinate: (x=INT) "," (y=INT);
-extendedID: ID ("." ID)*;
-fileID: CHARS CHARS*;
-CHARS: (extendedID|INT);
-DOUBLE: INT "." INT;
-
-
-
-/** EXPRESSIONS (JAVA and UMPLE)
- *	START
- *	Based on http://www.antlr.org/grammar/1152141644268/Java.g
- *  The following section is based on the above grammar because, like any ANTLR grammar, Xtext must
- *	have no left-side recursion.
- **/
- parExpression
-	:	'(' expression ')'
-	;
-
-assignmentOperator
-	:	'='
-	|	'+='
-	|	'-='
-	;
-
-
-expressionList
-	:	expressions+=expression (',' expressions+=expression)*
-	;
-
- 
- expression
-	: 	expression1=conditionalExpression (assignmentOperator expression2=expression)?
-	;
-	
-conditionalExpression
-    :   expression1=conditionalOrExpression ( '?' expression2=expression ':' expression3=expression )?
-    ;
-
-conditionalOrExpression
-    :   expression1=conditionalAndExpression ( '||' expressionRest+=conditionalAndExpression )*
-    ;
-
-conditionalAndExpression
-    :   expression1=equalityExpression ( '&&' expressionRest+=equalityExpression )*
-    ;
-    
-equalityExpression
-    :   expression1=relationalExpression ( ('==' | '!=')  expressionRest+=relationalExpression)*
-    ;
-
-relationalExpression
-	:	expression1=additiveExpression  (relationalOp expressionRest+=additiveExpression)*
-	;
-
-relationalOp
-	:	"<="
-	|	"<"
-	|	">="
-	|	">"
-	;
-	
-additiveExpression
-    :   expression1=multiplicativeExpression ( ('+' | '-') expressionRest+=multiplicativeExpression )*
-    ;
-
-multiplicativeExpression
-    :   expression1=unaryExpression ( ( '*' | '/' | '%' ) expressionRest+=unaryExpression )*
-    ;
-    
-unaryExpression
-    :   '+' exp1=unaryExpression
-    |   '-' exp1=unaryExpression
-    |   '++' exp1=unaryExpression
-    |   '--' exp1=unaryExpression
-    |   exp2=unaryExpressionNotPlusMinus
-    ;
-
-unaryExpressionNotPlusMinus
-    :   '~' unaryExpression
-    |   '!' unaryExpression
-    |	primary ('++'|'--')?
-    ;
-
-primary
-	:	parExpression
-	|	literal
-	;
-
-literal
-	:	INT
-	|	DOUBLE
-	|	STRING
-	|	extendedID
-	|	javaFunctionCall
-	|	"true"	| "TRUE"
-	|	"false"	| "FALSE"
-	;
-	
-/** EXPRESSIONS
- *	END
- **/
-
-//LANGUAGE DEPENDENT
-functionCall: javaFunctionCall;	//Expand list with more options
-
-functionDeclaration: java=javaFunctionDeclaration;
-
-functionDefinition: java=javaFunctionDefinition;
-
-//This handles bare code
-block:	javaBlock;
-
-/** JAVA NATIVE CODE
- *	START
- *	Based on http://www.antlr.org/grammar/1152141644268/Java.g
- *  The following section is based on the above grammar because, like any ANTLR grammar, Xtext must
- *	have no left-side recursion.
-**/
-
-//Methods
-javaFunctionDeclaration:
-("static")? ("public"|"private"|"protected") (returnType=attributeType|"void") name=ID "(" (argList+=attributeType argListID+=extendedID ("," argList+=attributeType argListID+=extendedID)*)? ")";
-
-javaFunctionDefinition: 
-decl=javaFunctionDeclaration code=javaBlock
-;
-
-javaFunctionCall: name=extendedID "(" args=expressionList? ")";
-
-
-
-javaBlock
-    :   '{' blocks+=blockStatement* '}'
-    ;
-    
-blockStatement
-    :	statement
-    |	localVariableDeclarationStatement
-    ;
-
-localVariableDeclarationStatement
-    :    localVariableDeclaration ';'
-    ;
-
-localVariableDeclaration
-    :   type=attributeType dec=variableDeclarators
-    ;
-   
-variableDeclarators
-    :   vd+=variableDeclarator (',' vd+=variableDeclarator)*
-    ;
-
-variableDeclarator
-    :   name=extendedID ('=' exp=expression)?
-    ;
-
-statement
-	:	javaBlock
-	|	'if' condition=parExpression state1=statement ('else' state2=statement)?
-	|	'for' '(' control=forControl ')' state=statement
-	|	 'while' condition=parExpression state=statement
-	|   'return' retVal=expression? ';'
-	|	';'
-	|	"break" ";"
-	|	expression ';'
-	;
-	
-forControl
-	:	init=forInit? ';' condition=expression? ';' update=forUpdate?
-	;
-
-forInit
-	:	(expressions+=expression (',' expressions+=expression)*)
-	|	localVariableDeclaration
-	;
-
-forUpdate
-	:	expressionList;
-
-
-/** JAVA NATIVE CODE
- *	END
-**/
-	
+Model:
+	model=Program_;
+
+Program_:
+	(Anonymous_program_1_1+=Anonymous_program_1_)*;
+Anonymous_program_1_:
+	(Comment_1+=Comment_)|
+	(Directive_1+=Directive_)|
+	';';
+Directive_:
+	(Glossary_1+=Glossary_)|
+	(Generate_1+=Generate_)|
+	(Generate_path_1+=Generate_path_)|
+	(UseStatement_1+=UseStatement_)|
+	(Namespace_1+=Namespace_)|
+	(TraceType_1+=TraceType_)|
+	(Entity_1+=Entity_)|
+	(Debug_1+=Debug_)|
+	(Strictness_1+=Strictness_);
+Glossary_:
+	'glossary''{'(Word_1+=Word_)*'}';
+Word_:
+	(singular_1=ID)':'(plural_1=ID)';';
+Strictness_:
+	'strictness'(Anonymous_strictness_1_1+=Anonymous_strictness_1_)';';
+Anonymous_strictness_1_:
+	(strictnessLevel_1=('modelOnly'|'noExtraCode'|'none'))|
+	(message_1=('allow'|'expect'|'disallow'))(messageNumber_1=ID);
+Generate_:
+	'generate'(generate_1=('Java'|'Php'|'RTCpp'|'Ruby'|'Cpp'|'Json'|'Yuml'|'Violet'|'Umlet'|'Simulate'|'TextUml'|'GvStateDiagram'|'GvClassDiagram'|'Papyrus'|'Ecore'|'Xmi'|'Xtext'|'Sql'))';';
+Generate_path_:
+	'generate'(language_1=('Java'|'Php'|'RTCpp'|'Ruby'|'Cpp'|'Json'|'Yuml'|'Violet'|'Umlet'|'Simulate'|'TextUml'|'GvStateDiagram'|'GvClassDiagram'|'Papyrus'|'Ecore'|'Xmi'|'Xtext'|'Sql'))'"'(output_1=block)'"'(override_1=('--override'|'--override-all'))?';';
+UseStatement_:
+	'use'(use_1=ID)';';
+Namespace_:
+	'namespace'(namespace_1=ID)';';
+Entity_:
+	(ClassDefinition_1+=ClassDefinition_)|
+	(InterfaceDefinition_1+=InterfaceDefinition_)|
+	(ExternalDefinition_1+=ExternalDefinition_)|
+	(AssociationDefinition_1+=AssociationDefinition_)|
+	(AssociationClassDefinition_1+=AssociationClassDefinition_)|
+	(StateMachineDefinition_1+=StateMachineDefinition_);
+Comment_:
+	(InlineComment_1+=InlineComment_)|
+	(MultilineComment_1+=MultilineComment_);
+InlineComment_:
+	'//'(inlineComment_1=block);
+MultilineComment_:
+	'/*'(multilineComment_1=block)'*/';
+Debug_:
+	(debug_1?='debug')';';
+Abstract_:
+	(abstract_1?='abstract')';';
+ClassDefinition_:
+	'class'(name_1=ID)'{'(ClassContent_1+=ClassContent_)*'}';
+ExternalDefinition_:
+	'external'(interface_1?='interface')?(name_1=ID)'{'(ClassContent_1+=ClassContent_)*'}';
+InterfaceDefinition_:
+	'interface'(name_1=ID)'{'(Depend_1+=Depend_)*(InterfaceBody_1+=InterfaceBody_)'}';
+AssociationDefinition_:
+	'association'(name_1=ID)?'{'(Association_1+=Association_)*'}';
+AssociationClassDefinition_:
+	'associationClass'(name_1=ID)'{'(AssociationClassContent_1+=AssociationClassContent_)*'}';
+ClassContent_:
+	(Comment_1+=Comment_)|
+	(ClassDefinition_1+=ClassDefinition_)|
+	(Trace_1+=Trace_)|
+	(Position_1+=Position_)|
+	(DisplayColor_1+=DisplayColor_)|
+	(Abstract_1+=Abstract_)|
+	(Invariant_1+=Invariant_)|
+	(SoftwarePattern_1+=SoftwarePattern_)|
+	(Depend_1+=Depend_)|
+	(SymmetricReflexiveAssociation_1+=SymmetricReflexiveAssociation_)|
+	(Attribute_1+=Attribute_)|
+	(StateMachine_1+=StateMachine_)|
+	(InlineAssociation_1+=InlineAssociation_)|
+	(ConcreteMethodDeclaration_1+=ConcreteMethodDeclaration_)|
+	(ConstantDeclaration_1+=ConstantDeclaration_)|
+	';'|
+	(ExtraCode_1+=ExtraCode_);
+AssociationClassContent_:
+	(Comment_1+=Comment_)|
+	(ClassDefinition_1+=ClassDefinition_)|
+	(Position_1+=Position_)|
+	(DisplayColor_1+=DisplayColor_)|
+	(Invariant_1+=Invariant_)|
+	(SoftwarePattern_1+=SoftwarePattern_)|
+	(Depend_1+=Depend_)|
+	(SingleAssociationEnd_1+=SingleAssociationEnd_)|
+	(StateMachine_1+=StateMachine_)|
+	(Attribute_1+=Attribute_)|
+	(Association_1+=Association_)|
+	(InlineAssociation_1+=InlineAssociation_)|
+	';'|
+	(ExtraCode_1+=ExtraCode_);
+InterfaceBody_:
+	(InterfaceMemberDeclaration_1+=InterfaceMemberDeclaration_)*;
+InterfaceMemberDeclaration_:
+	(ConstantDeclaration_1+=ConstantDeclaration_)|
+	(AbstractMethodDeclaration_1+=AbstractMethodDeclaration_)|
+	(Position_1+=Position_)|
+	(DisplayColor_1+=DisplayColor_)|
+	(IsA_1+=IsA_)|
+	(ExtraCode_1+=ExtraCode_);
+ConstantDeclaration_:
+	'constant'(Anonymous_constantDeclaration_1_1+=Anonymous_constantDeclaration_1_)(Anonymous_constantDeclaration_2_1+=Anonymous_constantDeclaration_2_)';';
+Anonymous_constantDeclaration_1_:
+	(list_1?='[]')(name_1=ID)|
+	(type_1=ID)(list_1?='[]')(name_1=ID)|
+	((type_1=ID)?(name_1=ID));
+Anonymous_constantDeclaration_2_:
+	'='(value_1=block);
+MoreCode_:
+	(Anonymous_moreCode_1_1+=Anonymous_moreCode_1_)?'{'(code_1=block)'}';
+Anonymous_moreCode_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+CodeLangs_:
+	(Anonymous_codeLangs_1_1+=Anonymous_codeLangs_1_)*;
+Anonymous_codeLangs_1_:
+	','(CodeLang_1+=CodeLang_);
+CodeLang_:
+	(codeLang_1=('Java'|'RTCpp'|'Cpp'|'Php'|'Ruby'));
+MethodBody_:
+	(Anonymous_methodBody_1_1+=Anonymous_methodBody_1_)*(code_1=block)(Anonymous_methodBody_2_1+=Anonymous_methodBody_2_)*;
+Anonymous_methodBody_1_:
+	(Precondition_1+=Precondition_);
+Anonymous_methodBody_2_:
+	(Postcondition_1+=Postcondition_);
+ConcreteMethodDeclaration_:
+	(type_1=ID)(MethodDeclarator_1+=MethodDeclarator_)(Anonymous_concreteMethodDeclaration_1_1+=Anonymous_concreteMethodDeclaration_1_)?'{'(MethodBody_1+=MethodBody_)'}'(Anonymous_concreteMethodDeclaration_2_1+=Anonymous_concreteMethodDeclaration_2_)*;
+Anonymous_concreteMethodDeclaration_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Anonymous_concreteMethodDeclaration_2_:
+	(MoreCode_1+=MoreCode_);
+AbstractMethodDeclaration_:
+	(type_1=ID)(MethodDeclarator_1+=MethodDeclarator_)';';
+MethodDeclarator_:
+	(methodName_1=ID)(ParameterList_1+=ParameterList_)|
+	(methodName_1=ID)'('')';
+ParameterList_:
+	'('(Parameter_1+=Parameter_)(Anonymous_parameterList_1_1+=Anonymous_parameterList_1_)*')';
+Anonymous_parameterList_1_:
+	','(Parameter_1+=Parameter_);
+Parameter_:
+	(Anonymous_parameter_1_1+=Anonymous_parameter_1_);
+Anonymous_parameter_1_:
+	(list_1?='[]')(name_1=ID)|
+	(type_1=ID)(list_1?='[]')(name_1=ID)|
+	((type_1=ID)?(name_1=ID));
+Association_:
+	(modifier_1=('immutable'))?(AssociationEnd_1+=AssociationEnd_)(arrow_1=('--'|'->'|'<-'|'><'))(AssociationEnd_2+=AssociationEnd_)';';
+SymmetricReflexiveAssociation_:
+	(Multiplicity_1+=Multiplicity_)'self'(roleName_1=ID)';';
+InlineAssociation_:
+	(modifier_1=('immutable'))?(InlineAssociationEnd_1+=InlineAssociationEnd_)(arrow_1=('--'|'->'|'<-'|'><'))(AssociationEnd_1+=AssociationEnd_)';';
+InlineAssociationEnd_:
+	(Multiplicity_1+=Multiplicity_)(IsSorted_1+=IsSorted_)|
+	(Multiplicity_1+=Multiplicity_)(roleName_1=ID)(IsSorted_1+=IsSorted_)|
+	(Multiplicity_1+=Multiplicity_)(roleName_1=ID)?;
+SingleAssociationEnd_:
+	(Multiplicity_1+=Multiplicity_)((type_1=ID)(roleName_1=ID))';';
+AssociationEnd_:
+	(Multiplicity_1+=Multiplicity_)((type_1=ID)(roleName_1=ID))|
+	(Multiplicity_1+=Multiplicity_)((type_1=ID)(roleName_1=ID))(IsSorted_1+=IsSorted_);
+Multiplicity_:
+	(bound_1=('*'))|
+	(lowerBound_1=ID)'..'(upperBound_1=ID)|
+	(bound_int=INT);
+IsSorted_:
+	'sorted''{'(priority_1=ID)'}';
+Attribute_:
+	(SimpleAttribute_1+=SimpleAttribute_)|
+	(AutouniqueAttribute_1+=AutouniqueAttribute_)|
+	(DerivedAttribute_1+=DerivedAttribute_)|
+	(ComplexAttribute_1+=ComplexAttribute_);
+SimpleAttribute_:
+	(name_1=nameID)';';
+AutouniqueAttribute_:
+	(autounique_1?='autounique')(name_1=ID)';';
+DerivedAttribute_:
+	(modifier_1=('immutable'|'settable'|'internal'|'defaulted'|'const'))?(Anonymous_derivedAttribute_1_1+=Anonymous_derivedAttribute_1_)'='(Anonymous_derivedAttribute_2_1+=Anonymous_derivedAttribute_2_)?'{'(code_1=block)'}'(Anonymous_derivedAttribute_3_1+=Anonymous_derivedAttribute_3_)*;
+Anonymous_derivedAttribute_1_:
+	(list_1?='[]')(name_1=ID)|
+	(type_1=ID)(list_1?='[]')(name_1=ID)|
+	((type_1=ID)?(name_1=ID));
+Anonymous_derivedAttribute_2_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Anonymous_derivedAttribute_3_:
+	(MoreCode_1+=MoreCode_);
+ComplexAttribute_:
+	(unique_1?='unique')?(lazy_1?='lazy')?(modifier_1=('immutable'|'settable'|'internal'|'defaulted'|'const'))?(Anonymous_complexAttribute_1_1+=Anonymous_complexAttribute_1_)(Anonymous_complexAttribute_2_1+=Anonymous_complexAttribute_2_)?';';
+Anonymous_complexAttribute_1_:
+	(list_1?='[]')(name_1=ID)|
+	(type_1=ID)(list_1?='[]')(name_1=ID)|
+	((type_1=ID)?(name_1=ID));
+Anonymous_complexAttribute_2_:
+	'='(value_1=block);
+DefaultKey_:
+	'key''{''}';
+Key_:
+	'key''{'(keyId_1=ID)(Anonymous_key_1_1+=Anonymous_key_1_)*'}';
+Anonymous_key_1_:
+	','(keyId_1=ID);
+Depend_:
+	'depend'(depend_1=ID)';';
+ExtraCode_:
+	(extraCode_1=block);
+SoftwarePattern_:
+	(IsA_1+=IsA_)|
+	(Singleton_1+=Singleton_)|
+	(Immutable_1+=Immutable_)|
+	(KeyDefinition_1+=KeyDefinition_)|
+	(CodeInjection_1+=CodeInjection_);
+IsA_:
+	(SingleIsA_1+=SingleIsA_)|
+	(MultipleIsA_1+=MultipleIsA_);
+SingleIsA_:
+	'isA'(extendsName_1=ID)(Anonymous_singleIsA_1_1+=Anonymous_singleIsA_1_)*';';
+Anonymous_singleIsA_1_:
+	',''isA'(extendsName_1=ID);
+MultipleIsA_:
+	'isA'(extendsName_1=ID)(Anonymous_multipleIsA_1_1+=Anonymous_multipleIsA_1_)*';';
+Anonymous_multipleIsA_1_:
+	','(extendsName_1=ID);
+Singleton_:
+	(singleton_1?='singleton')';';
+Immutable_:
+	(immutable_1?='immutable')';';
+KeyDefinition_:
+	(DefaultKey_1+=DefaultKey_)|
+	(Key_1+=Key_);
+CodeInjection_:
+	(BeforeCode_1+=BeforeCode_)|
+	(AfterCode_1+=AfterCode_);
+BeforeCode_:
+	'before'(operationName_1=ID)(Anonymous_beforeCode_1_1+=Anonymous_beforeCode_1_)?'{'(code_1=block)'}'(Anonymous_beforeCode_2_1+=Anonymous_beforeCode_2_)*;
+Anonymous_beforeCode_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Anonymous_beforeCode_2_:
+	(MoreCode_1+=MoreCode_);
+AfterCode_:
+	'after'(operationName_1=ID)(Anonymous_afterCode_1_1+=Anonymous_afterCode_1_)?'{'(code_1=block)'}'(Anonymous_afterCode_2_1+=Anonymous_afterCode_2_)*;
+Anonymous_afterCode_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Anonymous_afterCode_2_:
+	(MoreCode_1+=MoreCode_);
+StateMachineDefinition_:
+	'statemachine'(queued_1?='queued')?(name_1=ID)'{'(State_1+=State_)*'}';
+StateMachine_:
+	(Enum_1+=Enum_)|
+	(InlineStateMachine_1+=InlineStateMachine_)|
+	(ReferencedStateMachine_1+=ReferencedStateMachine_)|
+	(ActiveDefinition_1+=ActiveDefinition_);
+ActiveDefinition_:
+	(active_1?='active')(name_1=ID)?'{'(code_1=block)'}';
+InlineStateMachine_:
+	(queued_1?='queued')?(name_1=ID)'{'(Anonymous_inlineStateMachine_1_1+=Anonymous_inlineStateMachine_1_)*'}';
+Anonymous_inlineStateMachine_1_:
+	(Comment_1+=Comment_)|
+	(State_1+=State_)|
+	(Trace_1+=Trace_)|
+	('||');
+ReferencedStateMachine_:
+	(name_1=ID)'as'(definitionName_1=ID)';'|
+	(name_1=ID)'as'(definitionName_1=ID)'{'(ExtendedStateMachine_1+=ExtendedStateMachine_)'}';
+ExtendedStateMachine_:
+	(Anonymous_extendedStateMachine_1_1+=Anonymous_extendedStateMachine_1_)*;
+Anonymous_extendedStateMachine_1_:
+	(Comment_1+=Comment_)|
+	(changeType_1=('+'|'-'|'*'))?(State_1+=State_);
+Enum_:
+	(name_1=ID)'{''}'|
+	(name_1=ID)'{'(stateName_1=ID)(Anonymous_enum_1_1+=Anonymous_enum_1_)*'}';
+Anonymous_enum_1_:
+	','(stateName_1=ID);
+State_:
+	(stateName_1=ID)'{'(StateInternal_1+=StateInternal_)*'}'|
+	(final_1?='final')(stateName_1=ID)'{'(Anonymous_state_1_1+=Anonymous_state_1_)*'}';
+Anonymous_state_1_:
+	(StateInternal_1+=StateInternal_);
+StateInternal_:
+	(Comment_1+=Comment_)|
+	(changeType_1=('+'|'-'|'*'))?(StateEntity_1+=StateEntity_);
+StateEntity_:
+	('||')|
+	(EntryOrExitAction_1+=EntryOrExitAction_)|
+	(AutoTransition_1+=AutoTransition_)|
+	(Transition_1+=Transition_)|
+	(Activity_1+=Activity_)|
+	(State_1+=State_)|
+	(Trace_1+=Trace_);
+AutoTransition_:
+	(AutoTransitionBlock_1+=AutoTransitionBlock_)|
+	(Activity_1+=Activity_)(AutoTransitionBlock_1+=AutoTransitionBlock_);
+AutoTransitionBlock_:
+	(Guard_1+=Guard_)?'->'(Action_1+=Action_)?(stateName_1=ID)';'|
+	(Guard_1+=Guard_)?(Action_1+=Action_)?'->'(stateName_1=ID)';';
+Transition_:
+	(Guard_1+=Guard_)?(EventDefinition_1+=EventDefinition_)?'->'(Action_1+=Action_)?(stateName_1=ID)';'|
+	(Guard_1+=Guard_)?(EventDefinition_1+=EventDefinition_)?(Action_1+=Action_)?'->'(stateName_1=ID)';'|
+	(EventDefinition_1+=EventDefinition_)?(Guard_1+=Guard_)?'->'(Action_1+=Action_)?(stateName_1=ID)';'|
+	(EventDefinition_1+=EventDefinition_)?(Guard_1+=Guard_)?(Action_1+=Action_)?'->'(stateName_1=ID)';';
+EventDefinition_:
+	(AfterEveryEvent_1+=AfterEveryEvent_)|
+	(AfterEvent_1+=AfterEvent_)|
+	(event_1=nameID)(Anonymous_eventDefinition_1_1+=Anonymous_eventDefinition_1_)?;
+Anonymous_eventDefinition_1_:
+	(ParameterList_1+=ParameterList_);
+AfterEveryEvent_:
+	'afterEvery''('(timer_1=ID)')';
+AfterEvent_:
+	'after''('(timer_1=ID)')';
+Action_:
+	'/'(Anonymous_action_1_1+=Anonymous_action_1_)?'{'(code_1=block)'}'(Anonymous_action_2_1+=Anonymous_action_2_)*;
+Anonymous_action_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Anonymous_action_2_:
+	(MoreCode_1+=MoreCode_);
+EntryOrExitAction_:
+	(type_1=('entry'|'exit'))'/'(Anonymous_entryOrExitAction_1_1+=Anonymous_entryOrExitAction_1_)?'{'(code_1=block)'}'(Anonymous_entryOrExitAction_2_1+=Anonymous_entryOrExitAction_2_)*;
+Anonymous_entryOrExitAction_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Anonymous_entryOrExitAction_2_:
+	(MoreCode_1+=MoreCode_);
+Activity_:
+	'do'(Anonymous_activity_1_1+=Anonymous_activity_1_)?'{'(code_1=block)'}'(Anonymous_activity_2_1+=Anonymous_activity_2_)*;
+Anonymous_activity_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Anonymous_activity_2_:
+	(MoreCode_1+=MoreCode_);
+MoreGuards_:
+	(Anonymous_moreGuards_1_1+=Anonymous_moreGuards_1_)?'['(code_1=block)']';
+Anonymous_moreGuards_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Guard_:
+	(Anonymous_guard_1_1+=Anonymous_guard_1_)?'['(code_1=block)']'(Anonymous_guard_2_1+=Anonymous_guard_2_)*;
+Anonymous_guard_1_:
+	(CodeLang_1+=CodeLang_)(CodeLangs_1+=CodeLangs_);
+Anonymous_guard_2_:
+	(MoreGuards_1+=MoreGuards_);
+TraceType_:
+	'tracer'(tracerType_1=ID)(Anonymous_traceType_1_1+=Anonymous_traceType_1_)?(Anonymous_traceType_2_1+=Anonymous_traceType_2_)*';';
+Anonymous_traceType_1_:
+	(verbisty_1=('verbose'));
+Anonymous_traceType_2_:
+	(tracerArgument_1=ID);
+Trace_:
+	(TraceDirective_1+=TraceDirective_)|
+	(TraceCase_1+=TraceCase_);
+TraceDirective_:
+	'trace'(TraceItem_1+=TraceItem_)(Anonymous_traceDirective_1_1+=Anonymous_traceDirective_1_)*';';
+Anonymous_traceDirective_1_:
+	(ExecuteClause_1+=ExecuteClause_)|
+	(TraceWhen_1+=TraceWhen_)|
+	(TraceFor_1+=TraceFor_)|
+	(TracePeriod_1+=TracePeriod_)|
+	(TraceDuring_1+=TraceDuring_)|
+	(TraceCaseActivation_1+=TraceCaseActivation_)|
+	(TraceRecord_1+=TraceRecord_)|
+	(TraceLevel_1+=TraceLevel_);
+TraceItem_:
+	(TraceEntity_1+=TraceEntity_)|
+	(PreOrPostCondition_1+=PreOrPostCondition_);
+TraceEntity_:
+	(TraceOptions_1+=TraceOptions_)(trace_entity_1=ID)(Anonymous_traceEntity_1_1+=Anonymous_traceEntity_1_)*;
+Anonymous_traceEntity_1_:
+	','(trace_entity_1=ID);
+TraceOptions_:
+	(TraceOption_1+=TraceOption_)(Anonymous_traceOptions_1_1+=Anonymous_traceOptions_1_)*;
+Anonymous_traceOptions_1_:
+	','(TraceOption_1+=TraceOption_);
+TraceOption_:
+	(option_1=('set'|'get'|'in'|'out'|'entry'|'exit'|'cardinality'|'transition'));
+PreOrPostCondition_:
+	(Anonymous_PreOrPostCondition_1_1+=Anonymous_PreOrPostCondition_1_)?(TraceCondition_1+=TraceCondition_);
+Anonymous_PreOrPostCondition_1_:
+	'giving'|
+	'where';
+ExecuteClause_:
+	'execute''{'(trace_execute_1=block)'}';
+TraceWhen_:
+	(conditionType_1=('where'|'until'|'after'|'giving'))?'['(ConstraintToken_1+=ConstraintToken_)']';
+TraceFor_:
+	'for'(trace_for_1=ID);
+TraceLevel_:
+	'level'(trace_level_1=ID);
+TracePeriod_:
+	'period'(trace_period_1=ID);
+TraceDuring_:
+	'during'(trace_duration_1=ID);
+TraceRecord_:
+	'record'(RecordEntity_1+=RecordEntity_);
+RecordEntity_:
+	(Anonymous_recordEntity_1_1+=Anonymous_recordEntity_1_)?(trace_record_1=ID)(Anonymous_recordEntity_2_1+=Anonymous_recordEntity_2_)*;
+Anonymous_recordEntity_1_:
+	'only';
+Anonymous_recordEntity_2_:
+	','(trace_record_1=ID);
+TraceCondition_:
+	(LHS_1=ID)(ConditionRHS_1+=ConditionRHS_);
+ConditionRHS_:
+	(comparison_operator_1=ID)(RHS_1=ID);
+TraceCase_:
+	(TraceCaseDef_1+=TraceCaseDef_)|
+	(TraceCaseActivation_1+=TraceCaseActivation_)|
+	(TraceCaseDeactivation_1+=TraceCaseDeactivation_);
+TraceCaseDef_:
+	'tracecase'(tracecase_name_1=ID)'{'(TraceDirective_1+=TraceDirective_)*'}';
+TraceCaseActivation_:
+	'activate'(tracecase_act_name_1=ID)(Anonymous_traceCaseActivation_1_1+=Anonymous_traceCaseActivation_1_)?';';
+Anonymous_traceCaseActivation_1_:
+	'onAllObjects'|
+	'onThisThreadOnly';
+TraceCaseDeactivation_:
+	'deactivate'(tracecase_deact_name_1=ID)'onThisObject'(DeActivateFor_1+=DeActivateFor_)?';';
+DeActivateFor_:
+	'for'(deactivate_for_1=ID);
+Precondition_:
+	'['(name_1=ID)?'pre:'(Constraint_1+=Constraint_)']';
+Postcondition_:
+	'['(name_1=ID)?'post:'(Constraint_1+=Constraint_)']';
+Invariant_:
+	'['(Anonymous_invariant_1_1+=Anonymous_invariant_1_)?(Anonymous_invariant_2_1+=Anonymous_invariant_2_)']';
+Anonymous_invariant_1_:
+	(name_1=ID)':';
+Anonymous_invariant_2_:
+	(Constraint_1+=Constraint_);
+ConstraintToken_:
+	(Constraint_1+=Constraint_);
+Constraint_:
+	'('(Anonymous_constraint_1_1+=Anonymous_constraint_1_)')'|
+	(ConstraintBody_1+=ConstraintBody_);
+Anonymous_constraint_1_:
+	(ConstraintBody_1+=ConstraintBody_);
+NegativeConstraint_:
+	'!'(Constraint_1+=Constraint_)|
+	'not'(Constraint_1+=Constraint_)|
+	'~'(Constraint_1+=Constraint_);
+ConstraintBody_:
+	(ConstraintExpr_1+=ConstraintExpr_)(Anonymous_constraintBody_1_1+=Anonymous_constraintBody_1_)*;
+Anonymous_constraintBody_1_:
+	(LinkingOp_1+=LinkingOp_);
+LinkingOp_:
+	(Anonymous_linkingOp_1_1+=Anonymous_linkingOp_1_)|
+	(Anonymous_linkingOp_2_1+=Anonymous_linkingOp_2_)|
+	(Anonymous_linkingOp_3_1+=Anonymous_linkingOp_3_);
+Anonymous_linkingOp_1_:
+	('||')(ConstraintExpr_1+=ConstraintExpr_);
+Anonymous_linkingOp_2_:
+	(andOp_1=('and'|'&&'|'&'))(ConstraintExpr_1+=ConstraintExpr_);
+Anonymous_linkingOp_3_:
+	(orOp_1=('or'))(ConstraintExpr_1+=ConstraintExpr_);
+ConstraintExpr_:
+	(NegativeConstraint_1+=NegativeConstraint_)|
+	(StringExpr_1+=StringExpr_)|
+	(BoolExpr_1+=BoolExpr_)|
+	(GenExpr_1+=GenExpr_)|
+	(NumExpr_1+=NumExpr_)|
+	(loneBoolean_1=ID)(Anonymous_constraintExpr_1_1+=Anonymous_constraintExpr_1_)?;
+Anonymous_constraintExpr_1_:
+	'['(index_1=ID)']';
+CompoundExpr_:
+	(StringExpr_1+=StringExpr_)|
+	(BoolExpr_1+=BoolExpr_)|
+	(NumExpr_1+=NumExpr_)|
+	(GenExpr_1+=GenExpr_);
+BoolExpr_:
+	(literal_1=('true'|'false'))|
+	(name_1=nameID)(EqualityOp_1+=EqualityOp_)(literal_1=('true'|'false'))|
+	(literal_1=('true'|'false'))(EqualityOp_1+=EqualityOp_)(name_1=nameID)|
+	(name_1=nameID)'['(index_1=nameID)']'(EqualityOp_1+=EqualityOp_)(literal_1=('true'|'false'));
+StringExpr_:
+	(name_1=nameID)(EqualityOp_1+=EqualityOp_)(StringLit_1+=StringLit_)|
+	(StringLit_1+=StringLit_)(EqualityOp_1+=EqualityOp_)(name_1=nameID)|
+	(name_1=nameID)'['(index_1=nameID)']'(EqualityOp_1+=EqualityOp_)(StringLit_1+=StringLit_);
+StringLit_:
+	'"'(quote_1=block)'"'|
+	"'"(quote_1=block)"'";
+GenExpr_:
+	(name_1=nameID)(Anonymous_genExpr_1_1+=Anonymous_genExpr_1_)?(EqualityOp_1+=EqualityOp_)(name_2=nameID)(Anonymous_genExpr_2_1+=Anonymous_genExpr_2_)?;
+Anonymous_genExpr_1_:
+	'['(index_1=ID)']';
+Anonymous_genExpr_2_:
+	'['(index_1=ID)']';
+NumExpr_:
+	(name_1=nameID)(Anonymous_numExpr_1_1+=Anonymous_numExpr_1_)?(Anonymous_numExpr_2_1+=Anonymous_numExpr_2_)?(OrdinalOp_1+=OrdinalOp_)(name_2=nameID)(Anonymous_numExpr_3_1+=Anonymous_numExpr_3_)?(Anonymous_numExpr_4_1+=Anonymous_numExpr_4_)?;
+Anonymous_numExpr_1_:
+	'.'(tail_1=nameID);
+Anonymous_numExpr_2_:
+	'['(index_1=ID)']';
+Anonymous_numExpr_3_:
+	'.'(tail_1=nameID);
+Anonymous_numExpr_4_:
+	'['(index_1=ID)']';
+EqualityOp_:
+	(EqualsOp_1+=EqualsOp_)|
+	(NotequalsOp_1+=NotequalsOp_);
+EqualsOp_:
+	(equalsOp_1=('=='|'='|'equals'));
+NotequalsOp_:
+	(notequalsOp_1=('!='|'/='|'=!'|'=/='));
+OrdinalOp_:
+	(GreaterOp_1+=GreaterOp_)|
+	(LessOp_1+=LessOp_)|
+	(MoreOp_1+=MoreOp_)|
+	(SmallerOp_1+=SmallerOp_);
+GreaterOp_:
+	(greaterOp_1=('greater'|'>='|'=>'));
+LessOp_:
+	(lessOp_1=('less'|'<='|'=<'));
+MoreOp_:
+	(moreOp_1=('larger'|'>'));
+SmallerOp_:
+	(smallerOp_1=('smaller'|'<'));
+Position_:
+	(AssociationPosition_1+=AssociationPosition_)|
+	(ElementPosition_1+=ElementPosition_);
+ElementPosition_:
+	'position'(x_1=ID)(y_1=ID)(width_1=ID)(height_1=ID)';';
+AssociationPosition_:
+	'position.association'(name_1=ID)(Coordinate_1+=Coordinate_)(Coordinate_2+=Coordinate_)';';
+Coordinate_:
+	(x_1=ID)','(y_1=ID);
+DisplayColor_:
+	(Anonymous_displayColor_1_1+=Anonymous_displayColor_1_)(colorValue_1=block)';';
+Anonymous_displayColor_1_:
+	'displayColor'|
+	'displayColour';
+terminal block:'begin'(.*)'end';
+terminal nameID:('a'..'z'|'A'..'Z'|'_')('a'..'z'|'A'..'Z'|'0'..'9'|'-'|'_')*;

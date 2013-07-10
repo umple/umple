@@ -3,369 +3,1382 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="umple"
     nsURI="http://www.umple.cruise/Umple" nsPrefix="umple">
-  <eClassifiers xsi:type="ecore:EClass" name="UmpleModel">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractElement"
+  <eClassifiers xsi:type="ecore:EClass" name="Model">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Program_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AbstractElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Glossary" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="words" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Word"
+  <eClassifiers xsi:type="ecore:EClass" name="Program_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_program_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_program_1_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Word">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="singular" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="plural" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Generate" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="java" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Php" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Ruby" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UseStatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="file" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Namespace" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Entity" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractElement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ClassDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UmpleElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="classContent" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_program_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Comment_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Directive_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ExternalDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="classContent" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent"
+  <eClassifiers xsi:type="ecore:EClass" name="Directive_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Glossary_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Glossary_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Generate_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Generate_path_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate_path_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="UseStatement_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UseStatement_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Namespace_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Namespace_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceType_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceType_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Entity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Debug_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Debug_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Strictness_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Strictness_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InterfaceDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UmpleElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="depend" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Depend"
+  <eClassifiers xsi:type="ecore:EClass" name="Glossary_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Word_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Word_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AssociationDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="association" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association"
+  <eClassifiers xsi:type="ecore:EClass" name="Word_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="singular_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="plural_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Strictness_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_strictness_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_strictness_1_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ClassContent"/>
-  <eClassifiers xsi:type="ecore:EClass" name="AssociationClassContent"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Depend" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_strictness_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="strictnessLevel_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="message_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="messageNumber_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Association">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rolename1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rolename2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Generate_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="generate_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SymmetricReflexiveAssociation" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rolename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Generate_path_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="language_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="output_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="override_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InlineAssociation" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rolename1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rolename2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UseStatement_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="use_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SingleAssociationEnd">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rolename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Namespace_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespace_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AssociationClassDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="associationClassContent"
-        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent"
+  <eClassifiers xsi:type="ecore:EClass" name="Entity_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ClassDefinition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="InterfaceDefinition_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ExternalDefinition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AssociationDefinition_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AssociationClassDefinition_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StateMachineDefinition_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SoftwarePattern" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent"/>
-  <eClassifiers xsi:type="ecore:EClass" name="isA" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsClass" unique="false"
-        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UmpleElement"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Singleton" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="singleton" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="KeyDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern"/>
-  <eClassifiers xsi:type="ecore:EClass" name="CodeInjection" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Attribute" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="autounique" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unique" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EEnum platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Modifier"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="list" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="object" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StateMachineDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="states" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State"
+  <eClassifiers xsi:type="ecore:EClass" name="Comment_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="InlineComment_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineComment_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MultilineComment_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MultilineComment_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StateMachine" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineComment_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inlineComment_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InlineStateMachine" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="states" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State"
+  <eClassifiers xsi:type="ecore:EClass" name="MultilineComment_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multilineComment_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Debug_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="debug_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Abstract_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="abstract_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ClassContent_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ReferencedStateMachine" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="machine" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ExternalDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="interface_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ClassContent_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_"
+        containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Enum" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="states" unique="false"
+  <eClassifiers xsi:type="ecore:EClass" name="InterfaceDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Depend_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Depend_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="InterfaceBody_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceBody_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Association_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationClassDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AssociationClassContent_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassContent_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Comment_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ClassDefinition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Trace_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Trace_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Position_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DisplayColor_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DisplayColor_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Abstract_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Abstract_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Invariant_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Invariant_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SoftwarePattern_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Depend_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Depend_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SymmetricReflexiveAssociation_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SymmetricReflexiveAssociation_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Attribute_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StateMachine_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="InlineAssociation_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConcreteMethodDeclaration_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConcreteMethodDeclaration_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstantDeclaration_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstantDeclaration_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ExtraCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExtraCode_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationClassContent_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Comment_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ClassDefinition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Position_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DisplayColor_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DisplayColor_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Invariant_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Invariant_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SoftwarePattern_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Depend_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Depend_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SingleAssociationEnd_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StateMachine_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Attribute_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Association_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="InlineAssociation_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ExtraCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExtraCode_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InterfaceBody_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="InterfaceMemberDeclaration_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceMemberDeclaration_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InterfaceMemberDeclaration_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstantDeclaration_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstantDeclaration_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AbstractMethodDeclaration_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractMethodDeclaration_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Position_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DisplayColor_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DisplayColor_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="IsA_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsA_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ExtraCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExtraCode_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstantDeclaration_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_constantDeclaration_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constantDeclaration_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_constantDeclaration_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constantDeclaration_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_constantDeclaration_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="list_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_constantDeclaration_2_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MoreCode_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_moreCode_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_moreCode_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_moreCode_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeLangs_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_codeLangs_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_codeLangs_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_codeLangs_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeLang_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="codeLang_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MethodBody_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_methodBody_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_methodBody_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_methodBody_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_methodBody_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_methodBody_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Precondition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Precondition_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_methodBody_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Postcondition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Postcondition_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConcreteMethodDeclaration_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MethodDeclarator_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodDeclarator_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_concreteMethodDeclaration_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_concreteMethodDeclaration_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MethodBody_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodBody_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_concreteMethodDeclaration_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_concreteMethodDeclaration_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_concreteMethodDeclaration_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_concreteMethodDeclaration_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AbstractMethodDeclaration_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MethodDeclarator_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodDeclarator_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MethodDeclarator_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="methodName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ParameterList_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ParameterList_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParameterList_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Parameter_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Parameter_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_parameterList_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_parameterList_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_parameterList_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Parameter_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Parameter_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Parameter_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_parameter_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_parameter_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_parameter_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="list_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Association_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AssociationEnd_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationEnd_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="arrow_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AssociationEnd_2" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationEnd_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SymmetricReflexiveAssociation_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Multiplicity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roleName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineAssociation_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="InlineAssociationEnd_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociationEnd_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="arrow_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AssociationEnd_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationEnd_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineAssociationEnd_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Multiplicity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="IsSorted_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsSorted_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roleName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SingleAssociationEnd_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Multiplicity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roleName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationEnd_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Multiplicity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="roleName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="IsSorted_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsSorted_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Multiplicity_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bound_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bound_int" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IsSorted_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Attribute_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SimpleAttribute_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SimpleAttribute_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AutouniqueAttribute_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutouniqueAttribute_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DerivedAttribute_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DerivedAttribute_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ComplexAttribute_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ComplexAttribute_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SimpleAttribute_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AutouniqueAttribute_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="autounique_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DerivedAttribute_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_derivedAttribute_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_derivedAttribute_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_2_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_derivedAttribute_3_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_3_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_derivedAttribute_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="list_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_derivedAttribute_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_derivedAttribute_3_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ComplexAttribute_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="unique_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lazy_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_complexAttribute_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_complexAttribute_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_complexAttribute_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_complexAttribute_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_complexAttribute_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="list_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_complexAttribute_2_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Key_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyId_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_key_1_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_key_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_key_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="keyId_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Depend_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="depend_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtraCode_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extraCode_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SoftwarePattern_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="IsA_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsA_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Singleton_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Singleton_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Immutable_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Immutable_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="KeyDefinition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//KeyDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeInjection_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeInjection_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IsA_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SingleIsA_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleIsA_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MultipleIsA_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MultipleIsA_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SingleIsA_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extendsName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_singleIsA_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_singleIsA_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_singleIsA_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extendsName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MultipleIsA_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extendsName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_multipleIsA_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_multipleIsA_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_multipleIsA_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extendsName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Singleton_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="singleton_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Immutable_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="immutable_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="KeyDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="DefaultKey_1" unique="false"
         upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="State" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="states" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Key_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Key_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="StateEntity"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="a" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action"
+  <eClassifiers xsi:type="ecore:EClass" name="CodeInjection_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="BeforeCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BeforeCode_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EventDefinition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="g" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Event" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="AfterEveryEvent" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="AfterEvent" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Action">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="code" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AfterCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterCode_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="EntryOrExitAction" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="actionCode" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+  <eClassifiers xsi:type="ecore:EClass" name="BeforeCode_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operationName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_beforeCode_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_beforeCode_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_beforeCode_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_beforeCode_2_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="code" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_beforeCode_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Guard" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="events" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_beforeCode_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="GuardCode" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Position" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ElementPosition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="width" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="AssociationPosition" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="c1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate"
+  <eClassifiers xsi:type="ecore:EClass" name="AfterCode_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="operationName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_afterCode_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_afterCode_1_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="c2" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_afterCode_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_afterCode_2_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Coordinate">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="Modifier">
-    <eLiterals name="IMMUTABLE" literal="immutable"/>
-    <eLiterals name="SETTABLE" value="1" literal="settable"/>
-    <eLiterals name="INTERNAL" value="2" literal="internal"/>
-    <eLiterals name="DEFAULTED" value="3" literal="defaulted"/>
-    <eLiterals name="CONST" value="4" literal="const"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="UmpleElement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="block" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="blocks" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//blockStatement"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_afterCode_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="parExpression" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//primary"/>
-  <eClassifiers xsi:type="ecore:EClass" name="expressionList" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forUpdate">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_afterCode_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="expression" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GuardCode platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//parExpression platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expressionstatement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalExpression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression2" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="conditionalExpression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalOrExpression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression2" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression3" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachineDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="queued_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="State_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="conditionalOrExpression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalAndExpression"
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachine_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Enum_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Enum_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expressionRest" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalAndExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="InlineStateMachine_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineStateMachine_"
         containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="conditionalAndExpression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//equalityExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ReferencedStateMachine_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ReferencedStateMachine_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expressionRest" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//equalityExpression"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="equalityExpression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//relationalExpression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expressionRest" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//relationalExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ActiveDefinition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ActiveDefinition_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="relationalExpression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//additiveExpression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expressionRest" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//additiveExpression"
+  <eClassifiers xsi:type="ecore:EClass" name="ActiveDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="active_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InlineStateMachine_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="queued_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_inlineStateMachine_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_inlineStateMachine_1_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="additiveExpression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//multiplicativeExpression"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_inlineStateMachine_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Comment_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expressionRest" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//multiplicativeExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="State_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_"
         containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="multiplicativeExpression">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expression1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expressionRest" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpression"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Trace_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Trace_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="unaryExpression" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpressionNotPlusMinus">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="exp1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="exp2" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpressionNotPlusMinus"
-        containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="unaryExpressionNotPlusMinus"/>
-  <eClassifiers xsi:type="ecore:EClass" name="primary" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpressionNotPlusMinus"/>
-  <eClassifiers xsi:type="ecore:EClass" name="literal" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//primary"/>
-  <eClassifiers xsi:type="ecore:EClass" name="functionCall"/>
-  <eClassifiers xsi:type="ecore:EClass" name="functionDeclaration">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="java" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration"
+  <eClassifiers xsi:type="ecore:EClass" name="ReferencedStateMachine_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="definitionName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ExtendedStateMachine_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExtendedStateMachine_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="functionDefinition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="java" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDefinition"
+  <eClassifiers xsi:type="ecore:EClass" name="ExtendedStateMachine_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_extendedStateMachine_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_extendedStateMachine_1_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="javaFunctionDeclaration">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="returnType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="referenceType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="argList" unique="false"
-        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="argListID" unique="false"
-        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="javaFunctionDefinition">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="decl" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_extendedStateMachine_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Comment_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="code" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeType_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="State_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="javaFunctionCall" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//literal platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//functionCall">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="args" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expressionList"
+  <eClassifiers xsi:type="ecore:EClass" name="Enum_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_enum_1_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_enum_1_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="blockStatement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="localVariableDeclarationStatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//blockStatement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="localVariableDeclaration" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//localVariableDeclarationStatement platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forInit">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="dec" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//variableDeclarators"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_enum_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="State_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StateInternal_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateInternal_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="final_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_state_1_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_state_1_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="variableDeclarators">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="vd" upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//variableDeclarator"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_state_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StateInternal_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateInternal_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="variableDeclarator">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="exp" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
+  <eClassifiers xsi:type="ecore:EClass" name="StateInternal_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Comment_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="changeType_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StateEntity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="statement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//blockStatement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="endstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="breakstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ifstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//parExpression"
+  <eClassifiers xsi:type="ecore:EClass" name="StateEntity_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EntryOrExitAction_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="state1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AutoTransition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransition_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="state2" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Transition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition_"
         containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="forstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="control" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forControl"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Activity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Activity_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="state" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="State_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_"
         containment="true"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="whilestatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//parExpression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="state" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Trace_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Trace_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="returnstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="retVal" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
+  <eClassifiers xsi:type="ecore:EClass" name="AutoTransition_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AutoTransitionBlock_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransitionBlock_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Activity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Activity_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="expressionstatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="trystatement" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tryBlock" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+  <eClassifiers xsi:type="ecore:EClass" name="AutoTransitionBlock_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Guard_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard_"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="catchBlock" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Action_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Transition_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Guard_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EventDefinition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Action_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateName_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EventDefinition_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AfterEveryEvent_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterEveryEvent_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AfterEvent_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterEvent_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="event_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_eventDefinition_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_eventDefinition_1_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="forControl">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="init" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forInit"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
-        containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="update" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forUpdate"
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_eventDefinition_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ParameterList_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ParameterList_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="forInit">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" upperBound="-1"
-        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression"
+  <eClassifiers xsi:type="ecore:EClass" name="AfterEveryEvent_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timer_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AfterEvent_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timer_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Action_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_action_1_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_action_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_action_2_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_action_2_"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="forUpdate"/>
-  <eClassifiers xsi:type="ecore:EClass" name="phpFunction">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="codeblock" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//phpBlock"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_action_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
+        containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="phpBlock">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_action_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_"
+        containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Key" eSuperTypes="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//KeyDefinition">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="keys" unique="false" upperBound="-1"
+  <eClassifiers xsi:type="ecore:EClass" name="EntryOrExitAction_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_entryOrExitAction_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_entryOrExitAction_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_entryOrExitAction_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_entryOrExitAction_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_entryOrExitAction_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_entryOrExitAction_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Activity_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_activity_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_activity_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_activity_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_activity_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_activity_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_activity_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreCode_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MoreGuards_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_moreGuards_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_moreGuards_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_moreGuards_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Guard_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_guard_1_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_guard_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_guard_2_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_guard_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_guard_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLang_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="CodeLangs_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_guard_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreGuards_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreGuards_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceType_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracerType_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_traceType_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceType_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_traceType_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceType_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_traceType_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="verbisty_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_traceType_2_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracerArgument_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Trace_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceDirective_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceDirective_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceCase_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCase_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceDirective_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceItem_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceItem_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_traceDirective_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_traceDirective_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ExecuteClause_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExecuteClause_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceWhen_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceWhen_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceFor_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceFor_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TracePeriod_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TracePeriod_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceDuring_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceDuring_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceCaseActivation_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseActivation_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceRecord_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceRecord_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceLevel_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceLevel_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceItem_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceEntity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceEntity_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="PreOrPostCondition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//PreOrPostCondition_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceEntity_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceOptions_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceOptions_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_entity_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_traceEntity_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceEntity_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_traceEntity_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_entity_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceOptions_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceOption_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceOption_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_traceOptions_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceOptions_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_traceOptions_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceOption_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceOption_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceOption_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="option_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PreOrPostCondition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Anonymous_PreOrPostCondition_1_1"
+        unique="false" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceCondition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCondition_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExecuteClause_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_execute_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceWhen_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="conditionType_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintToken_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintToken_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceFor_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_for_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceLevel_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_level_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TracePeriod_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_period_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceDuring_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_duration_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceRecord_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="RecordEntity_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//RecordEntity_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RecordEntity_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Anonymous_recordEntity_1_1"
+        unique="false" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_record_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_recordEntity_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_recordEntity_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_recordEntity_2_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="trace_record_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceCondition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="LHS_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConditionRHS_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConditionRHS_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConditionRHS_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comparison_operator_1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="RHS_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceCase_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceCaseDef_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseDef_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceCaseActivation_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseActivation_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceCaseDeactivation_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseDeactivation_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceCaseDef_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracecase_name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="TraceDirective_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceDirective_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceCaseActivation_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracecase_act_name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Anonymous_traceCaseActivation_1_1"
+        unique="false" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TraceCaseDeactivation_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracecase_deact_name_1"
+        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="DeActivateFor_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DeActivateFor_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DeActivateFor_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="deactivate_for_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Precondition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Constraint_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Constraint_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Postcondition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Constraint_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Constraint_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Invariant_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_invariant_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_invariant_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_invariant_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_invariant_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_invariant_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_invariant_2_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Constraint_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Constraint_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstraintToken_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Constraint_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Constraint_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Constraint_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_constraint_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraint_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintBody_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintBody_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_constraint_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintBody_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintBody_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NegativeConstraint_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Constraint_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Constraint_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstraintBody_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_constraintBody_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraintBody_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_constraintBody_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="LinkingOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//LinkingOp_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LinkingOp_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_linkingOp_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_linkingOp_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_2_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_linkingOp_3_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_3_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_linkingOp_1_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_linkingOp_2_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="andOp_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_linkingOp_3_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="orOp_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ConstraintExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstraintExpr_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="NegativeConstraint_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NegativeConstraint_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StringExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringExpr_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="BoolExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BoolExpr_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="GenExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GenExpr_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="NumExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="loneBoolean_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_constraintExpr_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraintExpr_1_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_constraintExpr_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CompoundExpr_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StringExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringExpr_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="BoolExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BoolExpr_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="NumExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="GenExpr_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GenExpr_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="BoolExpr_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="literal_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EqualityOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualityOp_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StringExpr_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EqualityOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualityOp_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="StringLit_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringLit_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StringLit_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="quote_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GenExpr_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_genExpr_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_genExpr_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EqualityOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualityOp_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_genExpr_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_genExpr_2_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_genExpr_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_genExpr_2_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NumExpr_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_numExpr_1_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_1_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_numExpr_2_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_2_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="OrdinalOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//OrdinalOp_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_numExpr_3_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_3_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Anonymous_numExpr_4_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_4_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_numExpr_1_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tail_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_numExpr_2_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_numExpr_3_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tail_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Anonymous_numExpr_4_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EqualityOp_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="EqualsOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualsOp_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="NotequalsOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NotequalsOp_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EqualsOp_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="equalsOp_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NotequalsOp_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="notequalsOp_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrdinalOp_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="GreaterOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GreaterOp_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="LessOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//LessOp_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="MoreOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreOp_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="SmallerOp_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SmallerOp_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GreaterOp_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="greaterOp_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LessOp_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lessOp_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MoreOp_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="moreOp_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SmallerOp_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="smallerOp_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Position_">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="AssociationPosition_1"
+        upperBound="-1" eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ElementPosition_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ElementPosition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="x_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="y_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="width_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="height_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationPosition_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Coordinate_1" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate_"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="Coordinate_2" upperBound="-1"
+        eType="ecore:EClass platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate_"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Coordinate_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="x_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="y_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DisplayColor_">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="Anonymous_displayColor_1_1"
+        unique="false" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="colorValue_1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

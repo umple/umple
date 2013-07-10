@@ -2,109 +2,30 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package cruise.umple.umple.impl;
 
-import cruise.umple.umple.AbstractElement;
-import cruise.umple.umple.Action;
-import cruise.umple.umple.Activity;
-import cruise.umple.umple.AfterEvent;
-import cruise.umple.umple.AfterEveryEvent;
-import cruise.umple.umple.Association;
-import cruise.umple.umple.AssociationClassContent;
-import cruise.umple.umple.AssociationClassDefinition;
-import cruise.umple.umple.AssociationDefinition;
-import cruise.umple.umple.AssociationPosition;
-import cruise.umple.umple.Attribute;
-import cruise.umple.umple.ClassContent;
-import cruise.umple.umple.ClassDefinition;
-import cruise.umple.umple.CodeInjection;
-import cruise.umple.umple.Coordinate;
-import cruise.umple.umple.Depend;
-import cruise.umple.umple.ElementPosition;
-import cruise.umple.umple.Entity;
-import cruise.umple.umple.EntryOrExitAction;
-import cruise.umple.umple.Event;
-import cruise.umple.umple.EventDefinition;
-import cruise.umple.umple.ExternalDefinition;
-import cruise.umple.umple.Generate;
-import cruise.umple.umple.Glossary;
-import cruise.umple.umple.Guard;
-import cruise.umple.umple.GuardCode;
-import cruise.umple.umple.InlineAssociation;
-import cruise.umple.umple.InlineStateMachine;
-import cruise.umple.umple.InterfaceDefinition;
-import cruise.umple.umple.Key;
-import cruise.umple.umple.KeyDefinition;
-import cruise.umple.umple.Modifier;
-import cruise.umple.umple.Namespace;
-import cruise.umple.umple.Position;
-import cruise.umple.umple.ReferencedStateMachine;
-import cruise.umple.umple.SingleAssociationEnd;
-import cruise.umple.umple.Singleton;
-import cruise.umple.umple.SoftwarePattern;
-import cruise.umple.umple.State;
-import cruise.umple.umple.StateEntity;
-import cruise.umple.umple.StateMachine;
-import cruise.umple.umple.StateMachineDefinition;
-import cruise.umple.umple.SymmetricReflexiveAssociation;
-import cruise.umple.umple.Transition;
-import cruise.umple.umple.UmpleElement;
 import cruise.umple.umple.UmpleFactory;
-import cruise.umple.umple.UmpleModel;
 import cruise.umple.umple.UmplePackage;
-import cruise.umple.umple.UseStatement;
-import cruise.umple.umple.Word;
-import cruise.umple.umple.additiveExpression;
-import cruise.umple.umple.block;
-import cruise.umple.umple.blockStatement;
-import cruise.umple.umple.breakstatement;
-import cruise.umple.umple.conditionalAndExpression;
-import cruise.umple.umple.conditionalExpression;
-import cruise.umple.umple.conditionalOrExpression;
-import cruise.umple.umple.endstatement;
-import cruise.umple.umple.equalityExpression;
-import cruise.umple.umple.expression;
-import cruise.umple.umple.expressionList;
-import cruise.umple.umple.expressionstatement;
-import cruise.umple.umple.forControl;
-import cruise.umple.umple.forInit;
-import cruise.umple.umple.forUpdate;
-import cruise.umple.umple.forstatement;
-import cruise.umple.umple.functionCall;
-import cruise.umple.umple.functionDeclaration;
-import cruise.umple.umple.functionDefinition;
-import cruise.umple.umple.ifstatement;
-import cruise.umple.umple.isA;
-import cruise.umple.umple.javaFunctionCall;
-import cruise.umple.umple.javaFunctionDeclaration;
-import cruise.umple.umple.javaFunctionDefinition;
-import cruise.umple.umple.literal;
-import cruise.umple.umple.localVariableDeclaration;
-import cruise.umple.umple.localVariableDeclarationStatement;
-import cruise.umple.umple.multiplicativeExpression;
-import cruise.umple.umple.parExpression;
-import cruise.umple.umple.phpBlock;
-import cruise.umple.umple.phpFunction;
-import cruise.umple.umple.primary;
-import cruise.umple.umple.relationalExpression;
-import cruise.umple.umple.returnstatement;
-import cruise.umple.umple.statement;
-import cruise.umple.umple.trystatement;
-import cruise.umple.umple.unaryExpression;
-import cruise.umple.umple.unaryExpressionNotPlusMinus;
-import cruise.umple.umple.variableDeclarator;
-import cruise.umple.umple.variableDeclarators;
-import cruise.umple.umple.whilestatement;
+
+import java.io.IOException;
+
+import java.net.URL;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.common.util.WrappedException;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EEnum;
+import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
+import org.eclipse.emf.ecore.resource.Resource;
+
+import org.eclipse.emf.ecore.xmi.impl.EcoreResourceFactoryImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -119,630 +40,1344 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass umpleModelEClass = null;
+  protected String packageFilename = "umple.ecore";
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass abstractElementEClass = null;
+  private EClass modelEClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass glossaryEClass = null;
+  private EClass program_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass wordEClass = null;
+  private EClass anonymous_program_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass generateEClass = null;
+  private EClass directive_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass useStatementEClass = null;
+  private EClass glossary_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass namespaceEClass = null;
+  private EClass word_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass entityEClass = null;
+  private EClass strictness_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass classDefinitionEClass = null;
+  private EClass anonymous_strictness_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass externalDefinitionEClass = null;
+  private EClass generate_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass interfaceDefinitionEClass = null;
+  private EClass generate_path_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass associationDefinitionEClass = null;
+  private EClass useStatement_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass classContentEClass = null;
+  private EClass namespace_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass associationClassContentEClass = null;
+  private EClass entity_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass dependEClass = null;
+  private EClass comment_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass associationEClass = null;
+  private EClass inlineComment_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass symmetricReflexiveAssociationEClass = null;
+  private EClass multilineComment_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass inlineAssociationEClass = null;
+  private EClass debug_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass singleAssociationEndEClass = null;
+  private EClass abstract_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass associationClassDefinitionEClass = null;
+  private EClass classDefinition_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass softwarePatternEClass = null;
+  private EClass externalDefinition_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass isAEClass = null;
+  private EClass interfaceDefinition_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass singletonEClass = null;
+  private EClass associationDefinition_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass keyDefinitionEClass = null;
+  private EClass associationClassDefinition_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass codeInjectionEClass = null;
+  private EClass classContent_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass attributeEClass = null;
+  private EClass associationClassContent_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass stateMachineDefinitionEClass = null;
+  private EClass interfaceBody_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass stateMachineEClass = null;
+  private EClass interfaceMemberDeclaration_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass inlineStateMachineEClass = null;
+  private EClass constantDeclaration_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass referencedStateMachineEClass = null;
+  private EClass anonymous_constantDeclaration_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass enumEClass = null;
+  private EClass anonymous_constantDeclaration_2_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass stateEClass = null;
+  private EClass moreCode_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass stateEntityEClass = null;
+  private EClass anonymous_moreCode_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass transitionEClass = null;
+  private EClass codeLangs_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass eventDefinitionEClass = null;
+  private EClass anonymous_codeLangs_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass eventEClass = null;
+  private EClass codeLang_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass afterEveryEventEClass = null;
+  private EClass methodBody_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass afterEventEClass = null;
+  private EClass anonymous_methodBody_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass actionEClass = null;
+  private EClass anonymous_methodBody_2_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass entryOrExitActionEClass = null;
+  private EClass concreteMethodDeclaration_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass activityEClass = null;
+  private EClass anonymous_concreteMethodDeclaration_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass guardEClass = null;
+  private EClass anonymous_concreteMethodDeclaration_2_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass guardCodeEClass = null;
+  private EClass abstractMethodDeclaration_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass positionEClass = null;
+  private EClass methodDeclarator_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass elementPositionEClass = null;
+  private EClass parameterList_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass associationPositionEClass = null;
+  private EClass anonymous_parameterList_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass coordinateEClass = null;
+  private EClass parameter_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass umpleElementEClass = null;
+  private EClass anonymous_parameter_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass blockEClass = null;
+  private EClass association_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass parExpressionEClass = null;
+  private EClass symmetricReflexiveAssociation_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass expressionListEClass = null;
+  private EClass inlineAssociation_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass expressionEClass = null;
+  private EClass inlineAssociationEnd_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass conditionalExpressionEClass = null;
+  private EClass singleAssociationEnd_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass conditionalOrExpressionEClass = null;
+  private EClass associationEnd_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass conditionalAndExpressionEClass = null;
+  private EClass multiplicity_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass equalityExpressionEClass = null;
+  private EClass isSorted_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass relationalExpressionEClass = null;
+  private EClass attribute_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass additiveExpressionEClass = null;
+  private EClass simpleAttribute_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass multiplicativeExpressionEClass = null;
+  private EClass autouniqueAttribute_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass unaryExpressionEClass = null;
+  private EClass derivedAttribute_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass unaryExpressionNotPlusMinusEClass = null;
+  private EClass anonymous_derivedAttribute_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass primaryEClass = null;
+  private EClass anonymous_derivedAttribute_2_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass literalEClass = null;
+  private EClass anonymous_derivedAttribute_3_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass functionCallEClass = null;
+  private EClass complexAttribute_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass functionDeclarationEClass = null;
+  private EClass anonymous_complexAttribute_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass functionDefinitionEClass = null;
+  private EClass anonymous_complexAttribute_2_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass javaFunctionDeclarationEClass = null;
+  private EClass key_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass javaFunctionDefinitionEClass = null;
+  private EClass anonymous_key_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass javaFunctionCallEClass = null;
+  private EClass depend_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass blockStatementEClass = null;
+  private EClass extraCode_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass localVariableDeclarationStatementEClass = null;
+  private EClass softwarePattern_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass localVariableDeclarationEClass = null;
+  private EClass isA_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass variableDeclaratorsEClass = null;
+  private EClass singleIsA_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass variableDeclaratorEClass = null;
+  private EClass anonymous_singleIsA_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass statementEClass = null;
+  private EClass multipleIsA_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass endstatementEClass = null;
+  private EClass anonymous_multipleIsA_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass breakstatementEClass = null;
+  private EClass singleton_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass ifstatementEClass = null;
+  private EClass immutable_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass forstatementEClass = null;
+  private EClass keyDefinition_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass whilestatementEClass = null;
+  private EClass codeInjection_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass returnstatementEClass = null;
+  private EClass beforeCode_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass expressionstatementEClass = null;
+  private EClass anonymous_beforeCode_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass trystatementEClass = null;
+  private EClass anonymous_beforeCode_2_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass forControlEClass = null;
+  private EClass afterCode_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass forInitEClass = null;
+  private EClass anonymous_afterCode_1_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass forUpdateEClass = null;
+  private EClass anonymous_afterCode_2_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass phpFunctionEClass = null;
+  private EClass stateMachineDefinition_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass phpBlockEClass = null;
+  private EClass stateMachine_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EClass keyEClass = null;
+  private EClass activeDefinition_EClass = null;
 
   /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private EEnum modifierEEnum = null;
+  private EClass inlineStateMachine_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_inlineStateMachine_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass referencedStateMachine_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass extendedStateMachine_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_extendedStateMachine_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass enum_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_enum_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass state_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_state_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass stateInternal_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass stateEntity_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass autoTransition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass autoTransitionBlock_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass transition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass eventDefinition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_eventDefinition_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass afterEveryEvent_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass afterEvent_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass action_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_action_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_action_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass entryOrExitAction_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_entryOrExitAction_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_entryOrExitAction_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass activity_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_activity_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_activity_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass moreGuards_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_moreGuards_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass guard_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_guard_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_guard_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceType_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_traceType_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_traceType_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass trace_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceDirective_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_traceDirective_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceItem_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceEntity_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_traceEntity_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceOptions_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_traceOptions_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceOption_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass preOrPostCondition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass executeClause_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceWhen_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceFor_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceLevel_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass tracePeriod_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceDuring_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceRecord_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass recordEntity_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_recordEntity_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceCondition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass conditionRHS_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceCase_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceCaseDef_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceCaseActivation_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass traceCaseDeactivation_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass deActivateFor_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass precondition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass postcondition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass invariant_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_invariant_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_invariant_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass constraintToken_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass constraint_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_constraint_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass negativeConstraint_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass constraintBody_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_constraintBody_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass linkingOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_linkingOp_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_linkingOp_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_linkingOp_3_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass constraintExpr_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_constraintExpr_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass compoundExpr_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass boolExpr_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass stringExpr_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass stringLit_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass genExpr_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_genExpr_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_genExpr_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass numExpr_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_numExpr_1_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_numExpr_2_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_numExpr_3_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass anonymous_numExpr_4_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass equalityOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass equalsOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass notequalsOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass ordinalOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass greaterOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass lessOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass moreOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass smallerOp_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass position_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass elementPosition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass associationPosition_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass coordinate_EClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass displayColor_EClass = null;
 
   /**
    * Creates an instance of the model <b>Package</b>, registered with
@@ -779,8 +1414,6 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @see #eNS_URI
-   * @see #createPackageContents()
-   * @see #initializePackageContents()
    * @generated
    */
   public static UmplePackage init()
@@ -792,11 +1425,11 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
 
     isInited = true;
 
-    // Create package meta-data objects
-    theUmplePackage.createPackageContents();
+    // Load packages
+    theUmplePackage.loadPackage();
 
-    // Initialize created meta-data
-    theUmplePackage.initializePackageContents();
+    // Fix loaded packages
+    theUmplePackage.fixPackageContents();
 
     // Mark meta-data to indicate it can't be changed
     theUmplePackage.freeze();
@@ -812,9 +1445,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getUmpleModel()
+  public EClass getModel()
   {
-    return umpleModelEClass;
+    if (modelEClass == null)
+    {
+      modelEClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(0);
+    }
+    return modelEClass;
   }
 
   /**
@@ -822,9 +1459,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getUmpleModel_Elements()
+  public EReference getModel_Model()
   {
-    return (EReference)umpleModelEClass.getEStructuralFeatures().get(0);
+        return (EReference)getModel().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -832,9 +1469,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAbstractElement()
+  public EClass getProgram_()
   {
-    return abstractElementEClass;
+    if (program_EClass == null)
+    {
+      program_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(1);
+    }
+    return program_EClass;
   }
 
   /**
@@ -842,9 +1483,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getGlossary()
+  public EReference getProgram__Anonymous_program_1_1()
   {
-    return glossaryEClass;
+        return (EReference)getProgram_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -852,9 +1493,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getGlossary_Words()
+  public EClass getAnonymous_program_1_()
   {
-    return (EReference)glossaryEClass.getEStructuralFeatures().get(0);
+    if (anonymous_program_1_EClass == null)
+    {
+      anonymous_program_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(2);
+    }
+    return anonymous_program_1_EClass;
   }
 
   /**
@@ -862,9 +1507,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getWord()
+  public EReference getAnonymous_program_1__Comment_1()
   {
-    return wordEClass;
+        return (EReference)getAnonymous_program_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -872,9 +1517,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getWord_Singular()
+  public EReference getAnonymous_program_1__Directive_1()
   {
-    return (EAttribute)wordEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAnonymous_program_1_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -882,9 +1527,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getWord_Plural()
+  public EClass getDirective_()
   {
-    return (EAttribute)wordEClass.getEStructuralFeatures().get(1);
+    if (directive_EClass == null)
+    {
+      directive_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(3);
+    }
+    return directive_EClass;
   }
 
   /**
@@ -892,9 +1541,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getGenerate()
+  public EReference getDirective__Glossary_1()
   {
-    return generateEClass;
+        return (EReference)getDirective_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -902,9 +1551,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getGenerate_Java()
+  public EReference getDirective__Generate_1()
   {
-    return (EAttribute)generateEClass.getEStructuralFeatures().get(0);
+        return (EReference)getDirective_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -912,9 +1561,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getGenerate_Php()
+  public EReference getDirective__Generate_path_1()
   {
-    return (EAttribute)generateEClass.getEStructuralFeatures().get(1);
+        return (EReference)getDirective_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -922,9 +1571,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getGenerate_Ruby()
+  public EReference getDirective__UseStatement_1()
   {
-    return (EAttribute)generateEClass.getEStructuralFeatures().get(2);
+        return (EReference)getDirective_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -932,9 +1581,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getUseStatement()
+  public EReference getDirective__Namespace_1()
   {
-    return useStatementEClass;
+        return (EReference)getDirective_().getEStructuralFeatures().get(4);
   }
 
   /**
@@ -942,9 +1591,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getUseStatement_File()
+  public EReference getDirective__TraceType_1()
   {
-    return (EAttribute)useStatementEClass.getEStructuralFeatures().get(0);
+        return (EReference)getDirective_().getEStructuralFeatures().get(5);
   }
 
   /**
@@ -952,9 +1601,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getNamespace()
+  public EReference getDirective__Entity_1()
   {
-    return namespaceEClass;
+        return (EReference)getDirective_().getEStructuralFeatures().get(6);
   }
 
   /**
@@ -962,9 +1611,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getNamespace_Value()
+  public EReference getDirective__Debug_1()
   {
-    return (EAttribute)namespaceEClass.getEStructuralFeatures().get(0);
+        return (EReference)getDirective_().getEStructuralFeatures().get(7);
   }
 
   /**
@@ -972,9 +1621,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getEntity()
+  public EReference getDirective__Strictness_1()
   {
-    return entityEClass;
+        return (EReference)getDirective_().getEStructuralFeatures().get(8);
   }
 
   /**
@@ -982,9 +1631,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getEntity_Name()
+  public EClass getGlossary_()
   {
-    return (EAttribute)entityEClass.getEStructuralFeatures().get(0);
+    if (glossary_EClass == null)
+    {
+      glossary_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(4);
+    }
+    return glossary_EClass;
   }
 
   /**
@@ -992,9 +1645,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getClassDefinition()
+  public EReference getGlossary__Word_1()
   {
-    return classDefinitionEClass;
+        return (EReference)getGlossary_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1002,9 +1655,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getClassDefinition_ClassContent()
+  public EClass getWord_()
   {
-    return (EReference)classDefinitionEClass.getEStructuralFeatures().get(0);
+    if (word_EClass == null)
+    {
+      word_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(5);
+    }
+    return word_EClass;
   }
 
   /**
@@ -1012,9 +1669,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getExternalDefinition()
+  public EAttribute getWord__Singular_1()
   {
-    return externalDefinitionEClass;
+        return (EAttribute)getWord_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1022,9 +1679,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getExternalDefinition_ClassContent()
+  public EAttribute getWord__Plural_1()
   {
-    return (EReference)externalDefinitionEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getWord_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1032,9 +1689,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getInterfaceDefinition()
+  public EClass getStrictness_()
   {
-    return interfaceDefinitionEClass;
+    if (strictness_EClass == null)
+    {
+      strictness_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(6);
+    }
+    return strictness_EClass;
   }
 
   /**
@@ -1042,9 +1703,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getInterfaceDefinition_Depend()
+  public EReference getStrictness__Anonymous_strictness_1_1()
   {
-    return (EReference)interfaceDefinitionEClass.getEStructuralFeatures().get(0);
+        return (EReference)getStrictness_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1052,9 +1713,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAssociationDefinition()
+  public EClass getAnonymous_strictness_1_()
   {
-    return associationDefinitionEClass;
+    if (anonymous_strictness_1_EClass == null)
+    {
+      anonymous_strictness_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(7);
+    }
+    return anonymous_strictness_1_EClass;
   }
 
   /**
@@ -1062,9 +1727,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getAssociationDefinition_Association()
+  public EAttribute getAnonymous_strictness_1__StrictnessLevel_1()
   {
-    return (EReference)associationDefinitionEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getAnonymous_strictness_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1072,9 +1737,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getClassContent()
+  public EAttribute getAnonymous_strictness_1__Message_1()
   {
-    return classContentEClass;
+        return (EAttribute)getAnonymous_strictness_1_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1082,9 +1747,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAssociationClassContent()
+  public EAttribute getAnonymous_strictness_1__MessageNumber_1()
   {
-    return associationClassContentEClass;
+        return (EAttribute)getAnonymous_strictness_1_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1092,9 +1757,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getDepend()
+  public EClass getGenerate_()
   {
-    return dependEClass;
+    if (generate_EClass == null)
+    {
+      generate_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(8);
+    }
+    return generate_EClass;
   }
 
   /**
@@ -1102,9 +1771,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getDepend_Name()
+  public EAttribute getGenerate__Generate_1()
   {
-    return (EAttribute)dependEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getGenerate_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1112,9 +1781,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAssociation()
+  public EClass getGenerate_path_()
   {
-    return associationEClass;
+    if (generate_path_EClass == null)
+    {
+      generate_path_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(9);
+    }
+    return generate_path_EClass;
   }
 
   /**
@@ -1122,9 +1795,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAssociation_Type1()
+  public EAttribute getGenerate_path__Language_1()
   {
-    return (EAttribute)associationEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getGenerate_path_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1132,9 +1805,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAssociation_Rolename1()
+  public EAttribute getGenerate_path__Output_1()
   {
-    return (EAttribute)associationEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getGenerate_path_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1142,9 +1815,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAssociation_Type2()
+  public EAttribute getGenerate_path__Override_1()
   {
-    return (EAttribute)associationEClass.getEStructuralFeatures().get(2);
+        return (EAttribute)getGenerate_path_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1152,9 +1825,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAssociation_Rolename2()
+  public EClass getUseStatement_()
   {
-    return (EAttribute)associationEClass.getEStructuralFeatures().get(3);
+    if (useStatement_EClass == null)
+    {
+      useStatement_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(10);
+    }
+    return useStatement_EClass;
   }
 
   /**
@@ -1162,9 +1839,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getSymmetricReflexiveAssociation()
+  public EAttribute getUseStatement__Use_1()
   {
-    return symmetricReflexiveAssociationEClass;
+        return (EAttribute)getUseStatement_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1172,9 +1849,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getSymmetricReflexiveAssociation_Rolename()
+  public EClass getNamespace_()
   {
-    return (EAttribute)symmetricReflexiveAssociationEClass.getEStructuralFeatures().get(0);
+    if (namespace_EClass == null)
+    {
+      namespace_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(11);
+    }
+    return namespace_EClass;
   }
 
   /**
@@ -1182,9 +1863,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getInlineAssociation()
+  public EAttribute getNamespace__Namespace_1()
   {
-    return inlineAssociationEClass;
+        return (EAttribute)getNamespace_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1192,9 +1873,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getInlineAssociation_Rolename1()
+  public EClass getEntity_()
   {
-    return (EAttribute)inlineAssociationEClass.getEStructuralFeatures().get(0);
+    if (entity_EClass == null)
+    {
+      entity_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(12);
+    }
+    return entity_EClass;
   }
 
   /**
@@ -1202,9 +1887,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getInlineAssociation_Type()
+  public EReference getEntity__ClassDefinition_1()
   {
-    return (EAttribute)inlineAssociationEClass.getEStructuralFeatures().get(1);
+        return (EReference)getEntity_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1212,9 +1897,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getInlineAssociation_Rolename2()
+  public EReference getEntity__InterfaceDefinition_1()
   {
-    return (EAttribute)inlineAssociationEClass.getEStructuralFeatures().get(2);
+        return (EReference)getEntity_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1222,9 +1907,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getSingleAssociationEnd()
+  public EReference getEntity__ExternalDefinition_1()
   {
-    return singleAssociationEndEClass;
+        return (EReference)getEntity_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1232,9 +1917,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getSingleAssociationEnd_Type()
+  public EReference getEntity__AssociationDefinition_1()
   {
-    return (EAttribute)singleAssociationEndEClass.getEStructuralFeatures().get(0);
+        return (EReference)getEntity_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1242,9 +1927,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getSingleAssociationEnd_Rolename()
+  public EReference getEntity__AssociationClassDefinition_1()
   {
-    return (EAttribute)singleAssociationEndEClass.getEStructuralFeatures().get(1);
+        return (EReference)getEntity_().getEStructuralFeatures().get(4);
   }
 
   /**
@@ -1252,9 +1937,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAssociationClassDefinition()
+  public EReference getEntity__StateMachineDefinition_1()
   {
-    return associationClassDefinitionEClass;
+        return (EReference)getEntity_().getEStructuralFeatures().get(5);
   }
 
   /**
@@ -1262,9 +1947,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getAssociationClassDefinition_AssociationClassContent()
+  public EClass getComment_()
   {
-    return (EReference)associationClassDefinitionEClass.getEStructuralFeatures().get(0);
+    if (comment_EClass == null)
+    {
+      comment_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(13);
+    }
+    return comment_EClass;
   }
 
   /**
@@ -1272,9 +1961,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getSoftwarePattern()
+  public EReference getComment__InlineComment_1()
   {
-    return softwarePatternEClass;
+        return (EReference)getComment_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1282,9 +1971,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getisA()
+  public EReference getComment__MultilineComment_1()
   {
-    return isAEClass;
+        return (EReference)getComment_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1292,9 +1981,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getisA_ExtendsClass()
+  public EClass getInlineComment_()
   {
-    return (EReference)isAEClass.getEStructuralFeatures().get(0);
+    if (inlineComment_EClass == null)
+    {
+      inlineComment_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(14);
+    }
+    return inlineComment_EClass;
   }
 
   /**
@@ -1302,9 +1995,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getSingleton()
+  public EAttribute getInlineComment__InlineComment_1()
   {
-    return singletonEClass;
+        return (EAttribute)getInlineComment_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1312,9 +2005,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getSingleton_Singleton()
+  public EClass getMultilineComment_()
   {
-    return (EAttribute)singletonEClass.getEStructuralFeatures().get(0);
+    if (multilineComment_EClass == null)
+    {
+      multilineComment_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(15);
+    }
+    return multilineComment_EClass;
   }
 
   /**
@@ -1322,9 +2019,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getKeyDefinition()
+  public EAttribute getMultilineComment__MultilineComment_1()
   {
-    return keyDefinitionEClass;
+        return (EAttribute)getMultilineComment_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1332,9 +2029,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getCodeInjection()
+  public EClass getDebug_()
   {
-    return codeInjectionEClass;
+    if (debug_EClass == null)
+    {
+      debug_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(16);
+    }
+    return debug_EClass;
   }
 
   /**
@@ -1342,9 +2043,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getCodeInjection_Name()
+  public EAttribute getDebug__Debug_1()
   {
-    return (EAttribute)codeInjectionEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getDebug_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1352,9 +2053,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getCodeInjection_Code()
+  public EClass getAbstract_()
   {
-    return (EAttribute)codeInjectionEClass.getEStructuralFeatures().get(1);
+    if (abstract_EClass == null)
+    {
+      abstract_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(17);
+    }
+    return abstract_EClass;
   }
 
   /**
@@ -1362,9 +2067,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAttribute()
+  public EAttribute getAbstract__Abstract_1()
   {
-    return attributeEClass;
+        return (EAttribute)getAbstract_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1372,9 +2077,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAttribute_Autounique()
+  public EClass getClassDefinition_()
   {
-    return (EAttribute)attributeEClass.getEStructuralFeatures().get(0);
+    if (classDefinition_EClass == null)
+    {
+      classDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(18);
+    }
+    return classDefinition_EClass;
   }
 
   /**
@@ -1382,9 +2091,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAttribute_Name()
+  public EAttribute getClassDefinition__Name_1()
   {
-    return (EAttribute)attributeEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getClassDefinition_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1392,9 +2101,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAttribute_Unique()
+  public EReference getClassDefinition__ClassContent_1()
   {
-    return (EAttribute)attributeEClass.getEStructuralFeatures().get(2);
+        return (EReference)getClassDefinition_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1402,9 +2111,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAttribute_Modifier()
+  public EClass getExternalDefinition_()
   {
-    return (EAttribute)attributeEClass.getEStructuralFeatures().get(3);
+    if (externalDefinition_EClass == null)
+    {
+      externalDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(19);
+    }
+    return externalDefinition_EClass;
   }
 
   /**
@@ -1412,9 +2125,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAttribute_Type()
+  public EAttribute getExternalDefinition__Interface_1()
   {
-    return (EAttribute)attributeEClass.getEStructuralFeatures().get(4);
+        return (EAttribute)getExternalDefinition_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1422,9 +2135,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAttribute_List()
+  public EAttribute getExternalDefinition__Name_1()
   {
-    return (EAttribute)attributeEClass.getEStructuralFeatures().get(5);
+        return (EAttribute)getExternalDefinition_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1432,9 +2145,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getAttribute_Object()
+  public EReference getExternalDefinition__ClassContent_1()
   {
-    return (EReference)attributeEClass.getEStructuralFeatures().get(6);
+        return (EReference)getExternalDefinition_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1442,9 +2155,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAttribute_Value()
+  public EClass getInterfaceDefinition_()
   {
-    return (EAttribute)attributeEClass.getEStructuralFeatures().get(7);
+    if (interfaceDefinition_EClass == null)
+    {
+      interfaceDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(20);
+    }
+    return interfaceDefinition_EClass;
   }
 
   /**
@@ -1452,9 +2169,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getStateMachineDefinition()
+  public EAttribute getInterfaceDefinition__Name_1()
   {
-    return stateMachineDefinitionEClass;
+        return (EAttribute)getInterfaceDefinition_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1462,9 +2179,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getStateMachineDefinition_States()
+  public EReference getInterfaceDefinition__Depend_1()
   {
-    return (EReference)stateMachineDefinitionEClass.getEStructuralFeatures().get(0);
+        return (EReference)getInterfaceDefinition_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1472,9 +2189,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getStateMachine()
+  public EReference getInterfaceDefinition__InterfaceBody_1()
   {
-    return stateMachineEClass;
+        return (EReference)getInterfaceDefinition_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1482,9 +2199,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getStateMachine_Name()
+  public EClass getAssociationDefinition_()
   {
-    return (EAttribute)stateMachineEClass.getEStructuralFeatures().get(0);
+    if (associationDefinition_EClass == null)
+    {
+      associationDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(21);
+    }
+    return associationDefinition_EClass;
   }
 
   /**
@@ -1492,9 +2213,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getInlineStateMachine()
+  public EAttribute getAssociationDefinition__Name_1()
   {
-    return inlineStateMachineEClass;
+        return (EAttribute)getAssociationDefinition_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1502,9 +2223,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getInlineStateMachine_States()
+  public EReference getAssociationDefinition__Association_1()
   {
-    return (EReference)inlineStateMachineEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAssociationDefinition_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1512,9 +2233,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getReferencedStateMachine()
+  public EClass getAssociationClassDefinition_()
   {
-    return referencedStateMachineEClass;
+    if (associationClassDefinition_EClass == null)
+    {
+      associationClassDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(22);
+    }
+    return associationClassDefinition_EClass;
   }
 
   /**
@@ -1522,9 +2247,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getReferencedStateMachine_Machine()
+  public EAttribute getAssociationClassDefinition__Name_1()
   {
-    return (EReference)referencedStateMachineEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getAssociationClassDefinition_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1532,9 +2257,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getEnum()
+  public EReference getAssociationClassDefinition__AssociationClassContent_1()
   {
-    return enumEClass;
+        return (EReference)getAssociationClassDefinition_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1542,9 +2267,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getEnum_States()
+  public EClass getClassContent_()
   {
-    return (EAttribute)enumEClass.getEStructuralFeatures().get(0);
+    if (classContent_EClass == null)
+    {
+      classContent_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(23);
+    }
+    return classContent_EClass;
   }
 
   /**
@@ -1552,9 +2281,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getState()
+  public EReference getClassContent__Comment_1()
   {
-    return stateEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1562,9 +2291,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getState_Name()
+  public EReference getClassContent__ClassDefinition_1()
   {
-    return (EAttribute)stateEClass.getEStructuralFeatures().get(0);
+        return (EReference)getClassContent_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1572,9 +2301,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getState_States()
+  public EReference getClassContent__Trace_1()
   {
-    return (EReference)stateEClass.getEStructuralFeatures().get(1);
+        return (EReference)getClassContent_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1582,9 +2311,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getStateEntity()
+  public EReference getClassContent__Position_1()
   {
-    return stateEntityEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1592,9 +2321,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getTransition()
+  public EReference getClassContent__DisplayColor_1()
   {
-    return transitionEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(4);
   }
 
   /**
@@ -1602,9 +2331,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getTransition_A()
+  public EReference getClassContent__Abstract_1()
   {
-    return (EReference)transitionEClass.getEStructuralFeatures().get(0);
+        return (EReference)getClassContent_().getEStructuralFeatures().get(5);
   }
 
   /**
@@ -1612,9 +2341,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getTransition_StateName()
+  public EReference getClassContent__Invariant_1()
   {
-    return (EAttribute)transitionEClass.getEStructuralFeatures().get(1);
+        return (EReference)getClassContent_().getEStructuralFeatures().get(6);
   }
 
   /**
@@ -1622,9 +2351,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getEventDefinition()
+  public EReference getClassContent__SoftwarePattern_1()
   {
-    return eventDefinitionEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(7);
   }
 
   /**
@@ -1632,9 +2361,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getEventDefinition_G()
+  public EReference getClassContent__Depend_1()
   {
-    return (EReference)eventDefinitionEClass.getEStructuralFeatures().get(0);
+        return (EReference)getClassContent_().getEStructuralFeatures().get(8);
   }
 
   /**
@@ -1642,9 +2371,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getEventDefinition_Name()
+  public EReference getClassContent__SymmetricReflexiveAssociation_1()
   {
-    return (EAttribute)eventDefinitionEClass.getEStructuralFeatures().get(1);
+        return (EReference)getClassContent_().getEStructuralFeatures().get(9);
   }
 
   /**
@@ -1652,9 +2381,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getEvent()
+  public EReference getClassContent__Attribute_1()
   {
-    return eventEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(10);
   }
 
   /**
@@ -1662,9 +2391,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAfterEveryEvent()
+  public EReference getClassContent__StateMachine_1()
   {
-    return afterEveryEventEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(11);
   }
 
   /**
@@ -1672,9 +2401,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAfterEvent()
+  public EReference getClassContent__InlineAssociation_1()
   {
-    return afterEventEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(12);
   }
 
   /**
@@ -1682,9 +2411,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAction()
+  public EReference getClassContent__ConcreteMethodDeclaration_1()
   {
-    return actionEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(13);
   }
 
   /**
@@ -1692,9 +2421,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getAction_Code()
+  public EReference getClassContent__ConstantDeclaration_1()
   {
-    return (EReference)actionEClass.getEStructuralFeatures().get(0);
+        return (EReference)getClassContent_().getEStructuralFeatures().get(14);
   }
 
   /**
@@ -1702,9 +2431,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getEntryOrExitAction()
+  public EReference getClassContent__ExtraCode_1()
   {
-    return entryOrExitActionEClass;
+        return (EReference)getClassContent_().getEStructuralFeatures().get(15);
   }
 
   /**
@@ -1712,9 +2441,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getEntryOrExitAction_Type()
+  public EClass getAssociationClassContent_()
   {
-    return (EAttribute)entryOrExitActionEClass.getEStructuralFeatures().get(0);
+    if (associationClassContent_EClass == null)
+    {
+      associationClassContent_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(24);
+    }
+    return associationClassContent_EClass;
   }
 
   /**
@@ -1722,9 +2455,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getEntryOrExitAction_ActionCode()
+  public EReference getAssociationClassContent__Comment_1()
   {
-    return (EReference)entryOrExitActionEClass.getEStructuralFeatures().get(1);
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1732,9 +2465,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getActivity()
+  public EReference getAssociationClassContent__ClassDefinition_1()
   {
-    return activityEClass;
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1742,9 +2475,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getActivity_Code()
+  public EReference getAssociationClassContent__Position_1()
   {
-    return (EReference)activityEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1752,9 +2485,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getGuard()
+  public EReference getAssociationClassContent__DisplayColor_1()
   {
-    return guardEClass;
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1762,9 +2495,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getGuard_Events()
+  public EReference getAssociationClassContent__Invariant_1()
   {
-    return (EReference)guardEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(4);
   }
 
   /**
@@ -1772,9 +2505,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getGuardCode()
+  public EReference getAssociationClassContent__SoftwarePattern_1()
   {
-    return guardCodeEClass;
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(5);
   }
 
   /**
@@ -1782,9 +2515,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getPosition()
+  public EReference getAssociationClassContent__Depend_1()
   {
-    return positionEClass;
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(6);
   }
 
   /**
@@ -1792,9 +2525,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getElementPosition()
+  public EReference getAssociationClassContent__SingleAssociationEnd_1()
   {
-    return elementPositionEClass;
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(7);
   }
 
   /**
@@ -1802,9 +2535,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getElementPosition_X()
+  public EReference getAssociationClassContent__StateMachine_1()
   {
-    return (EAttribute)elementPositionEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(8);
   }
 
   /**
@@ -1812,9 +2545,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getElementPosition_Y()
+  public EReference getAssociationClassContent__Attribute_1()
   {
-    return (EAttribute)elementPositionEClass.getEStructuralFeatures().get(1);
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(9);
   }
 
   /**
@@ -1822,9 +2555,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getElementPosition_Width()
+  public EReference getAssociationClassContent__Association_1()
   {
-    return (EAttribute)elementPositionEClass.getEStructuralFeatures().get(2);
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(10);
   }
 
   /**
@@ -1832,9 +2565,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getElementPosition_Height()
+  public EReference getAssociationClassContent__InlineAssociation_1()
   {
-    return (EAttribute)elementPositionEClass.getEStructuralFeatures().get(3);
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(11);
   }
 
   /**
@@ -1842,9 +2575,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getAssociationPosition()
+  public EReference getAssociationClassContent__ExtraCode_1()
   {
-    return associationPositionEClass;
+        return (EReference)getAssociationClassContent_().getEStructuralFeatures().get(12);
   }
 
   /**
@@ -1852,9 +2585,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAssociationPosition_Name()
+  public EClass getInterfaceBody_()
   {
-    return (EAttribute)associationPositionEClass.getEStructuralFeatures().get(0);
+    if (interfaceBody_EClass == null)
+    {
+      interfaceBody_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(25);
+    }
+    return interfaceBody_EClass;
   }
 
   /**
@@ -1862,9 +2599,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getAssociationPosition_C1()
+  public EReference getInterfaceBody__InterfaceMemberDeclaration_1()
   {
-    return (EReference)associationPositionEClass.getEStructuralFeatures().get(1);
+        return (EReference)getInterfaceBody_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1872,9 +2609,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getAssociationPosition_C2()
+  public EClass getInterfaceMemberDeclaration_()
   {
-    return (EReference)associationPositionEClass.getEStructuralFeatures().get(2);
+    if (interfaceMemberDeclaration_EClass == null)
+    {
+      interfaceMemberDeclaration_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(26);
+    }
+    return interfaceMemberDeclaration_EClass;
   }
 
   /**
@@ -1882,9 +2623,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getCoordinate()
+  public EReference getInterfaceMemberDeclaration__ConstantDeclaration_1()
   {
-    return coordinateEClass;
+        return (EReference)getInterfaceMemberDeclaration_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1892,9 +2633,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getCoordinate_X()
+  public EReference getInterfaceMemberDeclaration__AbstractMethodDeclaration_1()
   {
-    return (EAttribute)coordinateEClass.getEStructuralFeatures().get(0);
+        return (EReference)getInterfaceMemberDeclaration_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1902,9 +2643,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getCoordinate_Y()
+  public EReference getInterfaceMemberDeclaration__Position_1()
   {
-    return (EAttribute)coordinateEClass.getEStructuralFeatures().get(1);
+        return (EReference)getInterfaceMemberDeclaration_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -1912,9 +2653,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getUmpleElement()
+  public EReference getInterfaceMemberDeclaration__DisplayColor_1()
   {
-    return umpleElementEClass;
+        return (EReference)getInterfaceMemberDeclaration_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -1922,9 +2663,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getblock()
+  public EReference getInterfaceMemberDeclaration__IsA_1()
   {
-    return blockEClass;
+        return (EReference)getInterfaceMemberDeclaration_().getEStructuralFeatures().get(4);
   }
 
   /**
@@ -1932,9 +2673,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getblock_Blocks()
+  public EReference getInterfaceMemberDeclaration__ExtraCode_1()
   {
-    return (EReference)blockEClass.getEStructuralFeatures().get(0);
+        return (EReference)getInterfaceMemberDeclaration_().getEStructuralFeatures().get(5);
   }
 
   /**
@@ -1942,9 +2683,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getparExpression()
+  public EClass getConstantDeclaration_()
   {
-    return parExpressionEClass;
+    if (constantDeclaration_EClass == null)
+    {
+      constantDeclaration_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(27);
+    }
+    return constantDeclaration_EClass;
   }
 
   /**
@@ -1952,9 +2697,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getexpressionList()
+  public EReference getConstantDeclaration__Anonymous_constantDeclaration_1_1()
   {
-    return expressionListEClass;
+        return (EReference)getConstantDeclaration_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1962,9 +2707,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getexpressionList_Expressions()
+  public EReference getConstantDeclaration__Anonymous_constantDeclaration_2_1()
   {
-    return (EReference)expressionListEClass.getEStructuralFeatures().get(0);
+        return (EReference)getConstantDeclaration_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -1972,9 +2717,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getexpression()
+  public EClass getAnonymous_constantDeclaration_1_()
   {
-    return expressionEClass;
+    if (anonymous_constantDeclaration_1_EClass == null)
+    {
+      anonymous_constantDeclaration_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(28);
+    }
+    return anonymous_constantDeclaration_1_EClass;
   }
 
   /**
@@ -1982,9 +2731,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getexpression_Expression1()
+  public EAttribute getAnonymous_constantDeclaration_1__List_1()
   {
-    return (EReference)expressionEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getAnonymous_constantDeclaration_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -1992,9 +2741,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getexpression_Expression2()
+  public EAttribute getAnonymous_constantDeclaration_1__Name_1()
   {
-    return (EReference)expressionEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getAnonymous_constantDeclaration_1_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2002,9 +2751,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getconditionalExpression()
+  public EAttribute getAnonymous_constantDeclaration_1__Type_1()
   {
-    return conditionalExpressionEClass;
+        return (EAttribute)getAnonymous_constantDeclaration_1_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2012,9 +2761,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getconditionalExpression_Expression1()
+  public EClass getAnonymous_constantDeclaration_2_()
   {
-    return (EReference)conditionalExpressionEClass.getEStructuralFeatures().get(0);
+    if (anonymous_constantDeclaration_2_EClass == null)
+    {
+      anonymous_constantDeclaration_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(29);
+    }
+    return anonymous_constantDeclaration_2_EClass;
   }
 
   /**
@@ -2022,9 +2775,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getconditionalExpression_Expression2()
+  public EAttribute getAnonymous_constantDeclaration_2__Value_1()
   {
-    return (EReference)conditionalExpressionEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getAnonymous_constantDeclaration_2_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2032,9 +2785,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getconditionalExpression_Expression3()
+  public EClass getMoreCode_()
   {
-    return (EReference)conditionalExpressionEClass.getEStructuralFeatures().get(2);
+    if (moreCode_EClass == null)
+    {
+      moreCode_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(30);
+    }
+    return moreCode_EClass;
   }
 
   /**
@@ -2042,9 +2799,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getconditionalOrExpression()
+  public EReference getMoreCode__Anonymous_moreCode_1_1()
   {
-    return conditionalOrExpressionEClass;
+        return (EReference)getMoreCode_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2052,9 +2809,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getconditionalOrExpression_Expression1()
+  public EAttribute getMoreCode__Code_1()
   {
-    return (EReference)conditionalOrExpressionEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getMoreCode_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2062,9 +2819,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getconditionalOrExpression_ExpressionRest()
+  public EClass getAnonymous_moreCode_1_()
   {
-    return (EReference)conditionalOrExpressionEClass.getEStructuralFeatures().get(1);
+    if (anonymous_moreCode_1_EClass == null)
+    {
+      anonymous_moreCode_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(31);
+    }
+    return anonymous_moreCode_1_EClass;
   }
 
   /**
@@ -2072,9 +2833,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getconditionalAndExpression()
+  public EReference getAnonymous_moreCode_1__CodeLang_1()
   {
-    return conditionalAndExpressionEClass;
+        return (EReference)getAnonymous_moreCode_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2082,9 +2843,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getconditionalAndExpression_Expression1()
+  public EReference getAnonymous_moreCode_1__CodeLangs_1()
   {
-    return (EReference)conditionalAndExpressionEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAnonymous_moreCode_1_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2092,9 +2853,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getconditionalAndExpression_ExpressionRest()
+  public EClass getCodeLangs_()
   {
-    return (EReference)conditionalAndExpressionEClass.getEStructuralFeatures().get(1);
+    if (codeLangs_EClass == null)
+    {
+      codeLangs_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(32);
+    }
+    return codeLangs_EClass;
   }
 
   /**
@@ -2102,9 +2867,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getequalityExpression()
+  public EReference getCodeLangs__Anonymous_codeLangs_1_1()
   {
-    return equalityExpressionEClass;
+        return (EReference)getCodeLangs_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2112,9 +2877,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getequalityExpression_Expression1()
+  public EClass getAnonymous_codeLangs_1_()
   {
-    return (EReference)equalityExpressionEClass.getEStructuralFeatures().get(0);
+    if (anonymous_codeLangs_1_EClass == null)
+    {
+      anonymous_codeLangs_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(33);
+    }
+    return anonymous_codeLangs_1_EClass;
   }
 
   /**
@@ -2122,9 +2891,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getequalityExpression_ExpressionRest()
+  public EReference getAnonymous_codeLangs_1__CodeLang_1()
   {
-    return (EReference)equalityExpressionEClass.getEStructuralFeatures().get(1);
+        return (EReference)getAnonymous_codeLangs_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2132,9 +2901,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getrelationalExpression()
+  public EClass getCodeLang_()
   {
-    return relationalExpressionEClass;
+    if (codeLang_EClass == null)
+    {
+      codeLang_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(34);
+    }
+    return codeLang_EClass;
   }
 
   /**
@@ -2142,9 +2915,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getrelationalExpression_Expression1()
+  public EAttribute getCodeLang__CodeLang_1()
   {
-    return (EReference)relationalExpressionEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getCodeLang_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2152,9 +2925,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getrelationalExpression_ExpressionRest()
+  public EClass getMethodBody_()
   {
-    return (EReference)relationalExpressionEClass.getEStructuralFeatures().get(1);
+    if (methodBody_EClass == null)
+    {
+      methodBody_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(35);
+    }
+    return methodBody_EClass;
   }
 
   /**
@@ -2162,9 +2939,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getadditiveExpression()
+  public EReference getMethodBody__Anonymous_methodBody_1_1()
   {
-    return additiveExpressionEClass;
+        return (EReference)getMethodBody_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2172,9 +2949,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getadditiveExpression_Expression1()
+  public EAttribute getMethodBody__Code_1()
   {
-    return (EReference)additiveExpressionEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getMethodBody_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2182,9 +2959,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getadditiveExpression_ExpressionRest()
+  public EReference getMethodBody__Anonymous_methodBody_2_1()
   {
-    return (EReference)additiveExpressionEClass.getEStructuralFeatures().get(1);
+        return (EReference)getMethodBody_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2192,9 +2969,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getmultiplicativeExpression()
+  public EClass getAnonymous_methodBody_1_()
   {
-    return multiplicativeExpressionEClass;
+    if (anonymous_methodBody_1_EClass == null)
+    {
+      anonymous_methodBody_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(36);
+    }
+    return anonymous_methodBody_1_EClass;
   }
 
   /**
@@ -2202,9 +2983,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getmultiplicativeExpression_Expression1()
+  public EReference getAnonymous_methodBody_1__Precondition_1()
   {
-    return (EReference)multiplicativeExpressionEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAnonymous_methodBody_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2212,9 +2993,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getmultiplicativeExpression_ExpressionRest()
+  public EClass getAnonymous_methodBody_2_()
   {
-    return (EReference)multiplicativeExpressionEClass.getEStructuralFeatures().get(1);
+    if (anonymous_methodBody_2_EClass == null)
+    {
+      anonymous_methodBody_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(37);
+    }
+    return anonymous_methodBody_2_EClass;
   }
 
   /**
@@ -2222,9 +3007,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getunaryExpression()
+  public EReference getAnonymous_methodBody_2__Postcondition_1()
   {
-    return unaryExpressionEClass;
+        return (EReference)getAnonymous_methodBody_2_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2232,9 +3017,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getunaryExpression_Exp1()
+  public EClass getConcreteMethodDeclaration_()
   {
-    return (EReference)unaryExpressionEClass.getEStructuralFeatures().get(0);
+    if (concreteMethodDeclaration_EClass == null)
+    {
+      concreteMethodDeclaration_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(38);
+    }
+    return concreteMethodDeclaration_EClass;
   }
 
   /**
@@ -2242,9 +3031,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getunaryExpression_Exp2()
+  public EAttribute getConcreteMethodDeclaration__Type_1()
   {
-    return (EReference)unaryExpressionEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getConcreteMethodDeclaration_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2252,9 +3041,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getunaryExpressionNotPlusMinus()
+  public EReference getConcreteMethodDeclaration__MethodDeclarator_1()
   {
-    return unaryExpressionNotPlusMinusEClass;
+        return (EReference)getConcreteMethodDeclaration_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2262,9 +3051,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getprimary()
+  public EReference getConcreteMethodDeclaration__Anonymous_concreteMethodDeclaration_1_1()
   {
-    return primaryEClass;
+        return (EReference)getConcreteMethodDeclaration_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2272,9 +3061,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getliteral()
+  public EReference getConcreteMethodDeclaration__MethodBody_1()
   {
-    return literalEClass;
+        return (EReference)getConcreteMethodDeclaration_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -2282,9 +3071,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getfunctionCall()
+  public EReference getConcreteMethodDeclaration__Anonymous_concreteMethodDeclaration_2_1()
   {
-    return functionCallEClass;
+        return (EReference)getConcreteMethodDeclaration_().getEStructuralFeatures().get(4);
   }
 
   /**
@@ -2292,9 +3081,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getfunctionDeclaration()
+  public EClass getAnonymous_concreteMethodDeclaration_1_()
   {
-    return functionDeclarationEClass;
+    if (anonymous_concreteMethodDeclaration_1_EClass == null)
+    {
+      anonymous_concreteMethodDeclaration_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(39);
+    }
+    return anonymous_concreteMethodDeclaration_1_EClass;
   }
 
   /**
@@ -2302,9 +3095,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getfunctionDeclaration_Java()
+  public EReference getAnonymous_concreteMethodDeclaration_1__CodeLang_1()
   {
-    return (EReference)functionDeclarationEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAnonymous_concreteMethodDeclaration_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2312,9 +3105,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getfunctionDefinition()
+  public EReference getAnonymous_concreteMethodDeclaration_1__CodeLangs_1()
   {
-    return functionDefinitionEClass;
+        return (EReference)getAnonymous_concreteMethodDeclaration_1_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2322,9 +3115,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getfunctionDefinition_Java()
+  public EClass getAnonymous_concreteMethodDeclaration_2_()
   {
-    return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(0);
+    if (anonymous_concreteMethodDeclaration_2_EClass == null)
+    {
+      anonymous_concreteMethodDeclaration_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(40);
+    }
+    return anonymous_concreteMethodDeclaration_2_EClass;
   }
 
   /**
@@ -2332,9 +3129,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getjavaFunctionDeclaration()
+  public EReference getAnonymous_concreteMethodDeclaration_2__MoreCode_1()
   {
-    return javaFunctionDeclarationEClass;
+        return (EReference)getAnonymous_concreteMethodDeclaration_2_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2342,9 +3139,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getjavaFunctionDeclaration_ReturnType()
+  public EClass getAbstractMethodDeclaration_()
   {
-    return (EAttribute)javaFunctionDeclarationEClass.getEStructuralFeatures().get(0);
+    if (abstractMethodDeclaration_EClass == null)
+    {
+      abstractMethodDeclaration_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(41);
+    }
+    return abstractMethodDeclaration_EClass;
   }
 
   /**
@@ -2352,9 +3153,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getjavaFunctionDeclaration_ReferenceType()
+  public EAttribute getAbstractMethodDeclaration__Type_1()
   {
-    return (EAttribute)javaFunctionDeclarationEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getAbstractMethodDeclaration_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2362,9 +3163,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getjavaFunctionDeclaration_Name()
+  public EReference getAbstractMethodDeclaration__MethodDeclarator_1()
   {
-    return (EAttribute)javaFunctionDeclarationEClass.getEStructuralFeatures().get(2);
+        return (EReference)getAbstractMethodDeclaration_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2372,9 +3173,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getjavaFunctionDeclaration_ArgList()
+  public EClass getMethodDeclarator_()
   {
-    return (EAttribute)javaFunctionDeclarationEClass.getEStructuralFeatures().get(3);
+    if (methodDeclarator_EClass == null)
+    {
+      methodDeclarator_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(42);
+    }
+    return methodDeclarator_EClass;
   }
 
   /**
@@ -2382,9 +3187,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getjavaFunctionDeclaration_ArgListID()
+  public EAttribute getMethodDeclarator__MethodName_1()
   {
-    return (EAttribute)javaFunctionDeclarationEClass.getEStructuralFeatures().get(4);
+        return (EAttribute)getMethodDeclarator_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2392,9 +3197,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getjavaFunctionDefinition()
+  public EReference getMethodDeclarator__ParameterList_1()
   {
-    return javaFunctionDefinitionEClass;
+        return (EReference)getMethodDeclarator_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2402,9 +3207,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getjavaFunctionDefinition_Decl()
+  public EClass getParameterList_()
   {
-    return (EReference)javaFunctionDefinitionEClass.getEStructuralFeatures().get(0);
+    if (parameterList_EClass == null)
+    {
+      parameterList_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(43);
+    }
+    return parameterList_EClass;
   }
 
   /**
@@ -2412,9 +3221,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getjavaFunctionDefinition_Code()
+  public EReference getParameterList__Parameter_1()
   {
-    return (EReference)javaFunctionDefinitionEClass.getEStructuralFeatures().get(1);
+        return (EReference)getParameterList_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2422,9 +3231,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getjavaFunctionCall()
+  public EReference getParameterList__Anonymous_parameterList_1_1()
   {
-    return javaFunctionCallEClass;
+        return (EReference)getParameterList_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2432,9 +3241,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getjavaFunctionCall_Name()
+  public EClass getAnonymous_parameterList_1_()
   {
-    return (EAttribute)javaFunctionCallEClass.getEStructuralFeatures().get(0);
+    if (anonymous_parameterList_1_EClass == null)
+    {
+      anonymous_parameterList_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(44);
+    }
+    return anonymous_parameterList_1_EClass;
   }
 
   /**
@@ -2442,9 +3255,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getjavaFunctionCall_Args()
+  public EReference getAnonymous_parameterList_1__Parameter_1()
   {
-    return (EReference)javaFunctionCallEClass.getEStructuralFeatures().get(1);
+        return (EReference)getAnonymous_parameterList_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2452,9 +3265,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getblockStatement()
+  public EClass getParameter_()
   {
-    return blockStatementEClass;
+    if (parameter_EClass == null)
+    {
+      parameter_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(45);
+    }
+    return parameter_EClass;
   }
 
   /**
@@ -2462,9 +3279,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getlocalVariableDeclarationStatement()
+  public EReference getParameter__Anonymous_parameter_1_1()
   {
-    return localVariableDeclarationStatementEClass;
+        return (EReference)getParameter_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2472,9 +3289,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getlocalVariableDeclaration()
+  public EClass getAnonymous_parameter_1_()
   {
-    return localVariableDeclarationEClass;
+    if (anonymous_parameter_1_EClass == null)
+    {
+      anonymous_parameter_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(46);
+    }
+    return anonymous_parameter_1_EClass;
   }
 
   /**
@@ -2482,9 +3303,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getlocalVariableDeclaration_Type()
+  public EAttribute getAnonymous_parameter_1__List_1()
   {
-    return (EAttribute)localVariableDeclarationEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getAnonymous_parameter_1_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2492,9 +3313,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getlocalVariableDeclaration_Dec()
+  public EAttribute getAnonymous_parameter_1__Name_1()
   {
-    return (EReference)localVariableDeclarationEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getAnonymous_parameter_1_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2502,9 +3323,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getvariableDeclarators()
+  public EAttribute getAnonymous_parameter_1__Type_1()
   {
-    return variableDeclaratorsEClass;
+        return (EAttribute)getAnonymous_parameter_1_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2512,9 +3333,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getvariableDeclarators_Vd()
+  public EClass getAssociation_()
   {
-    return (EReference)variableDeclaratorsEClass.getEStructuralFeatures().get(0);
+    if (association_EClass == null)
+    {
+      association_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(47);
+    }
+    return association_EClass;
   }
 
   /**
@@ -2522,9 +3347,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getvariableDeclarator()
+  public EAttribute getAssociation__Modifier_1()
   {
-    return variableDeclaratorEClass;
+        return (EAttribute)getAssociation_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2532,9 +3357,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getvariableDeclarator_Name()
+  public EReference getAssociation__AssociationEnd_1()
   {
-    return (EAttribute)variableDeclaratorEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAssociation_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2542,9 +3367,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getvariableDeclarator_Exp()
+  public EAttribute getAssociation__Arrow_1()
   {
-    return (EReference)variableDeclaratorEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getAssociation_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2552,9 +3377,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getstatement()
+  public EReference getAssociation__AssociationEnd_2()
   {
-    return statementEClass;
+        return (EReference)getAssociation_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -2562,9 +3387,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getendstatement()
+  public EClass getSymmetricReflexiveAssociation_()
   {
-    return endstatementEClass;
+    if (symmetricReflexiveAssociation_EClass == null)
+    {
+      symmetricReflexiveAssociation_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(48);
+    }
+    return symmetricReflexiveAssociation_EClass;
   }
 
   /**
@@ -2572,9 +3401,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getbreakstatement()
+  public EReference getSymmetricReflexiveAssociation__Multiplicity_1()
   {
-    return breakstatementEClass;
+        return (EReference)getSymmetricReflexiveAssociation_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2582,9 +3411,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getifstatement()
+  public EAttribute getSymmetricReflexiveAssociation__RoleName_1()
   {
-    return ifstatementEClass;
+        return (EAttribute)getSymmetricReflexiveAssociation_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2592,9 +3421,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getifstatement_Condition()
+  public EClass getInlineAssociation_()
   {
-    return (EReference)ifstatementEClass.getEStructuralFeatures().get(0);
+    if (inlineAssociation_EClass == null)
+    {
+      inlineAssociation_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(49);
+    }
+    return inlineAssociation_EClass;
   }
 
   /**
@@ -2602,9 +3435,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getifstatement_State1()
+  public EAttribute getInlineAssociation__Modifier_1()
   {
-    return (EReference)ifstatementEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getInlineAssociation_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2612,9 +3445,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getifstatement_State2()
+  public EReference getInlineAssociation__InlineAssociationEnd_1()
   {
-    return (EReference)ifstatementEClass.getEStructuralFeatures().get(2);
+        return (EReference)getInlineAssociation_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2622,9 +3455,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getforstatement()
+  public EAttribute getInlineAssociation__Arrow_1()
   {
-    return forstatementEClass;
+        return (EAttribute)getInlineAssociation_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2632,9 +3465,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getforstatement_Control()
+  public EReference getInlineAssociation__AssociationEnd_1()
   {
-    return (EReference)forstatementEClass.getEStructuralFeatures().get(0);
+        return (EReference)getInlineAssociation_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -2642,9 +3475,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getforstatement_State()
+  public EClass getInlineAssociationEnd_()
   {
-    return (EReference)forstatementEClass.getEStructuralFeatures().get(1);
+    if (inlineAssociationEnd_EClass == null)
+    {
+      inlineAssociationEnd_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(50);
+    }
+    return inlineAssociationEnd_EClass;
   }
 
   /**
@@ -2652,9 +3489,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getwhilestatement()
+  public EReference getInlineAssociationEnd__Multiplicity_1()
   {
-    return whilestatementEClass;
+        return (EReference)getInlineAssociationEnd_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2662,9 +3499,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getwhilestatement_Condition()
+  public EReference getInlineAssociationEnd__IsSorted_1()
   {
-    return (EReference)whilestatementEClass.getEStructuralFeatures().get(0);
+        return (EReference)getInlineAssociationEnd_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2672,9 +3509,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getwhilestatement_State()
+  public EAttribute getInlineAssociationEnd__RoleName_1()
   {
-    return (EReference)whilestatementEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getInlineAssociationEnd_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2682,9 +3519,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getreturnstatement()
+  public EClass getSingleAssociationEnd_()
   {
-    return returnstatementEClass;
+    if (singleAssociationEnd_EClass == null)
+    {
+      singleAssociationEnd_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(51);
+    }
+    return singleAssociationEnd_EClass;
   }
 
   /**
@@ -2692,9 +3533,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getreturnstatement_RetVal()
+  public EReference getSingleAssociationEnd__Multiplicity_1()
   {
-    return (EReference)returnstatementEClass.getEStructuralFeatures().get(0);
+        return (EReference)getSingleAssociationEnd_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2702,9 +3543,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getexpressionstatement()
+  public EAttribute getSingleAssociationEnd__Type_1()
   {
-    return expressionstatementEClass;
+        return (EAttribute)getSingleAssociationEnd_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2712,9 +3553,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass gettrystatement()
+  public EAttribute getSingleAssociationEnd__RoleName_1()
   {
-    return trystatementEClass;
+        return (EAttribute)getSingleAssociationEnd_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2722,9 +3563,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference gettrystatement_TryBlock()
+  public EClass getAssociationEnd_()
   {
-    return (EReference)trystatementEClass.getEStructuralFeatures().get(0);
+    if (associationEnd_EClass == null)
+    {
+      associationEnd_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(52);
+    }
+    return associationEnd_EClass;
   }
 
   /**
@@ -2732,9 +3577,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference gettrystatement_CatchBlock()
+  public EReference getAssociationEnd__Multiplicity_1()
   {
-    return (EReference)trystatementEClass.getEStructuralFeatures().get(1);
+        return (EReference)getAssociationEnd_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2742,9 +3587,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getforControl()
+  public EAttribute getAssociationEnd__Type_1()
   {
-    return forControlEClass;
+        return (EAttribute)getAssociationEnd_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2752,9 +3597,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getforControl_Init()
+  public EAttribute getAssociationEnd__RoleName_1()
   {
-    return (EReference)forControlEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getAssociationEnd_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2762,9 +3607,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getforControl_Condition()
+  public EReference getAssociationEnd__IsSorted_1()
   {
-    return (EReference)forControlEClass.getEStructuralFeatures().get(1);
+        return (EReference)getAssociationEnd_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -2772,9 +3617,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getforControl_Update()
+  public EClass getMultiplicity_()
   {
-    return (EReference)forControlEClass.getEStructuralFeatures().get(2);
+    if (multiplicity_EClass == null)
+    {
+      multiplicity_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(53);
+    }
+    return multiplicity_EClass;
   }
 
   /**
@@ -2782,9 +3631,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getforInit()
+  public EAttribute getMultiplicity__Bound_1()
   {
-    return forInitEClass;
+        return (EAttribute)getMultiplicity_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2792,9 +3641,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getforInit_Expressions()
+  public EAttribute getMultiplicity__LowerBound_1()
   {
-    return (EReference)forInitEClass.getEStructuralFeatures().get(0);
+        return (EAttribute)getMultiplicity_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2802,9 +3651,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getforUpdate()
+  public EAttribute getMultiplicity__UpperBound_1()
   {
-    return forUpdateEClass;
+        return (EAttribute)getMultiplicity_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2812,9 +3661,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getphpFunction()
+  public EAttribute getMultiplicity__Bound_int()
   {
-    return phpFunctionEClass;
+        return (EAttribute)getMultiplicity_().getEStructuralFeatures().get(3);
   }
 
   /**
@@ -2822,9 +3671,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getphpFunction_Name()
+  public EClass getIsSorted_()
   {
-    return (EAttribute)phpFunctionEClass.getEStructuralFeatures().get(0);
+    if (isSorted_EClass == null)
+    {
+      isSorted_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(54);
+    }
+    return isSorted_EClass;
   }
 
   /**
@@ -2832,9 +3685,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EReference getphpFunction_Codeblock()
+  public EAttribute getIsSorted__Priority_1()
   {
-    return (EReference)phpFunctionEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)getIsSorted_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2842,9 +3695,13 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getphpBlock()
+  public EClass getAttribute_()
   {
-    return phpBlockEClass;
+    if (attribute_EClass == null)
+    {
+      attribute_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(55);
+    }
+    return attribute_EClass;
   }
 
   /**
@@ -2852,9 +3709,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getphpBlock_Code()
+  public EReference getAttribute__SimpleAttribute_1()
   {
-    return (EAttribute)phpBlockEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAttribute_().getEStructuralFeatures().get(0);
   }
 
   /**
@@ -2862,9 +3719,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EClass getKey()
+  public EReference getAttribute__AutouniqueAttribute_1()
   {
-    return keyEClass;
+        return (EReference)getAttribute_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2872,9 +3729,9 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getKey_Keys()
+  public EReference getAttribute__DerivedAttribute_1()
   {
-    return (EAttribute)keyEClass.getEStructuralFeatures().get(0);
+        return (EReference)getAttribute_().getEStructuralFeatures().get(2);
   }
 
   /**
@@ -2882,9 +3739,4799 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EEnum getModifier()
+  public EReference getAttribute__ComplexAttribute_1()
   {
-    return modifierEEnum;
+        return (EReference)getAttribute_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getSimpleAttribute_()
+  {
+    if (simpleAttribute_EClass == null)
+    {
+      simpleAttribute_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(56);
+    }
+    return simpleAttribute_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getSimpleAttribute__Name_1()
+  {
+        return (EAttribute)getSimpleAttribute_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAutouniqueAttribute_()
+  {
+    if (autouniqueAttribute_EClass == null)
+    {
+      autouniqueAttribute_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(57);
+    }
+    return autouniqueAttribute_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAutouniqueAttribute__Autounique_1()
+  {
+        return (EAttribute)getAutouniqueAttribute_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAutouniqueAttribute__Name_1()
+  {
+        return (EAttribute)getAutouniqueAttribute_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getDerivedAttribute_()
+  {
+    if (derivedAttribute_EClass == null)
+    {
+      derivedAttribute_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(58);
+    }
+    return derivedAttribute_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getDerivedAttribute__Modifier_1()
+  {
+        return (EAttribute)getDerivedAttribute_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getDerivedAttribute__Anonymous_derivedAttribute_1_1()
+  {
+        return (EReference)getDerivedAttribute_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getDerivedAttribute__Anonymous_derivedAttribute_2_1()
+  {
+        return (EReference)getDerivedAttribute_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getDerivedAttribute__Code_1()
+  {
+        return (EAttribute)getDerivedAttribute_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getDerivedAttribute__Anonymous_derivedAttribute_3_1()
+  {
+        return (EReference)getDerivedAttribute_().getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_derivedAttribute_1_()
+  {
+    if (anonymous_derivedAttribute_1_EClass == null)
+    {
+      anonymous_derivedAttribute_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(59);
+    }
+    return anonymous_derivedAttribute_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_derivedAttribute_1__List_1()
+  {
+        return (EAttribute)getAnonymous_derivedAttribute_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_derivedAttribute_1__Name_1()
+  {
+        return (EAttribute)getAnonymous_derivedAttribute_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_derivedAttribute_1__Type_1()
+  {
+        return (EAttribute)getAnonymous_derivedAttribute_1_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_derivedAttribute_2_()
+  {
+    if (anonymous_derivedAttribute_2_EClass == null)
+    {
+      anonymous_derivedAttribute_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(60);
+    }
+    return anonymous_derivedAttribute_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_derivedAttribute_2__CodeLang_1()
+  {
+        return (EReference)getAnonymous_derivedAttribute_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_derivedAttribute_2__CodeLangs_1()
+  {
+        return (EReference)getAnonymous_derivedAttribute_2_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_derivedAttribute_3_()
+  {
+    if (anonymous_derivedAttribute_3_EClass == null)
+    {
+      anonymous_derivedAttribute_3_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(61);
+    }
+    return anonymous_derivedAttribute_3_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_derivedAttribute_3__MoreCode_1()
+  {
+        return (EReference)getAnonymous_derivedAttribute_3_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getComplexAttribute_()
+  {
+    if (complexAttribute_EClass == null)
+    {
+      complexAttribute_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(62);
+    }
+    return complexAttribute_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getComplexAttribute__Unique_1()
+  {
+        return (EAttribute)getComplexAttribute_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getComplexAttribute__Lazy_1()
+  {
+        return (EAttribute)getComplexAttribute_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getComplexAttribute__Modifier_1()
+  {
+        return (EAttribute)getComplexAttribute_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getComplexAttribute__Anonymous_complexAttribute_1_1()
+  {
+        return (EReference)getComplexAttribute_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getComplexAttribute__Anonymous_complexAttribute_2_1()
+  {
+        return (EReference)getComplexAttribute_().getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_complexAttribute_1_()
+  {
+    if (anonymous_complexAttribute_1_EClass == null)
+    {
+      anonymous_complexAttribute_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(63);
+    }
+    return anonymous_complexAttribute_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_complexAttribute_1__List_1()
+  {
+        return (EAttribute)getAnonymous_complexAttribute_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_complexAttribute_1__Name_1()
+  {
+        return (EAttribute)getAnonymous_complexAttribute_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_complexAttribute_1__Type_1()
+  {
+        return (EAttribute)getAnonymous_complexAttribute_1_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_complexAttribute_2_()
+  {
+    if (anonymous_complexAttribute_2_EClass == null)
+    {
+      anonymous_complexAttribute_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(64);
+    }
+    return anonymous_complexAttribute_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_complexAttribute_2__Value_1()
+  {
+        return (EAttribute)getAnonymous_complexAttribute_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getKey_()
+  {
+    if (key_EClass == null)
+    {
+      key_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(65);
+    }
+    return key_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getKey__KeyId_1()
+  {
+        return (EAttribute)getKey_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getKey__Anonymous_key_1_1()
+  {
+        return (EReference)getKey_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_key_1_()
+  {
+    if (anonymous_key_1_EClass == null)
+    {
+      anonymous_key_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(66);
+    }
+    return anonymous_key_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_key_1__KeyId_1()
+  {
+        return (EAttribute)getAnonymous_key_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getDepend_()
+  {
+    if (depend_EClass == null)
+    {
+      depend_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(67);
+    }
+    return depend_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getDepend__Depend_1()
+  {
+        return (EAttribute)getDepend_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getExtraCode_()
+  {
+    if (extraCode_EClass == null)
+    {
+      extraCode_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(68);
+    }
+    return extraCode_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getExtraCode__ExtraCode_1()
+  {
+        return (EAttribute)getExtraCode_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getSoftwarePattern_()
+  {
+    if (softwarePattern_EClass == null)
+    {
+      softwarePattern_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(69);
+    }
+    return softwarePattern_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSoftwarePattern__IsA_1()
+  {
+        return (EReference)getSoftwarePattern_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSoftwarePattern__Singleton_1()
+  {
+        return (EReference)getSoftwarePattern_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSoftwarePattern__Immutable_1()
+  {
+        return (EReference)getSoftwarePattern_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSoftwarePattern__KeyDefinition_1()
+  {
+        return (EReference)getSoftwarePattern_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSoftwarePattern__CodeInjection_1()
+  {
+        return (EReference)getSoftwarePattern_().getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getIsA_()
+  {
+    if (isA_EClass == null)
+    {
+      isA_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(70);
+    }
+    return isA_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getIsA__SingleIsA_1()
+  {
+        return (EReference)getIsA_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getIsA__MultipleIsA_1()
+  {
+        return (EReference)getIsA_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getSingleIsA_()
+  {
+    if (singleIsA_EClass == null)
+    {
+      singleIsA_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(71);
+    }
+    return singleIsA_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getSingleIsA__ExtendsName_1()
+  {
+        return (EAttribute)getSingleIsA_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getSingleIsA__Anonymous_singleIsA_1_1()
+  {
+        return (EReference)getSingleIsA_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_singleIsA_1_()
+  {
+    if (anonymous_singleIsA_1_EClass == null)
+    {
+      anonymous_singleIsA_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(72);
+    }
+    return anonymous_singleIsA_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_singleIsA_1__ExtendsName_1()
+  {
+        return (EAttribute)getAnonymous_singleIsA_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getMultipleIsA_()
+  {
+    if (multipleIsA_EClass == null)
+    {
+      multipleIsA_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(73);
+    }
+    return multipleIsA_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getMultipleIsA__ExtendsName_1()
+  {
+        return (EAttribute)getMultipleIsA_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getMultipleIsA__Anonymous_multipleIsA_1_1()
+  {
+        return (EReference)getMultipleIsA_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_multipleIsA_1_()
+  {
+    if (anonymous_multipleIsA_1_EClass == null)
+    {
+      anonymous_multipleIsA_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(74);
+    }
+    return anonymous_multipleIsA_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_multipleIsA_1__ExtendsName_1()
+  {
+        return (EAttribute)getAnonymous_multipleIsA_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getSingleton_()
+  {
+    if (singleton_EClass == null)
+    {
+      singleton_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(75);
+    }
+    return singleton_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getSingleton__Singleton_1()
+  {
+        return (EAttribute)getSingleton_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getImmutable_()
+  {
+    if (immutable_EClass == null)
+    {
+      immutable_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(76);
+    }
+    return immutable_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getImmutable__Immutable_1()
+  {
+        return (EAttribute)getImmutable_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getKeyDefinition_()
+  {
+    if (keyDefinition_EClass == null)
+    {
+      keyDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(77);
+    }
+    return keyDefinition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getKeyDefinition__DefaultKey_1()
+  {
+        return (EAttribute)getKeyDefinition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getKeyDefinition__Key_1()
+  {
+        return (EReference)getKeyDefinition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getCodeInjection_()
+  {
+    if (codeInjection_EClass == null)
+    {
+      codeInjection_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(78);
+    }
+    return codeInjection_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCodeInjection__BeforeCode_1()
+  {
+        return (EReference)getCodeInjection_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCodeInjection__AfterCode_1()
+  {
+        return (EReference)getCodeInjection_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getBeforeCode_()
+  {
+    if (beforeCode_EClass == null)
+    {
+      beforeCode_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(79);
+    }
+    return beforeCode_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getBeforeCode__OperationName_1()
+  {
+        return (EAttribute)getBeforeCode_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getBeforeCode__Anonymous_beforeCode_1_1()
+  {
+        return (EReference)getBeforeCode_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getBeforeCode__Code_1()
+  {
+        return (EAttribute)getBeforeCode_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getBeforeCode__Anonymous_beforeCode_2_1()
+  {
+        return (EReference)getBeforeCode_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_beforeCode_1_()
+  {
+    if (anonymous_beforeCode_1_EClass == null)
+    {
+      anonymous_beforeCode_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(80);
+    }
+    return anonymous_beforeCode_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_beforeCode_1__CodeLang_1()
+  {
+        return (EReference)getAnonymous_beforeCode_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_beforeCode_1__CodeLangs_1()
+  {
+        return (EReference)getAnonymous_beforeCode_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_beforeCode_2_()
+  {
+    if (anonymous_beforeCode_2_EClass == null)
+    {
+      anonymous_beforeCode_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(81);
+    }
+    return anonymous_beforeCode_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_beforeCode_2__MoreCode_1()
+  {
+        return (EReference)getAnonymous_beforeCode_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAfterCode_()
+  {
+    if (afterCode_EClass == null)
+    {
+      afterCode_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(82);
+    }
+    return afterCode_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAfterCode__OperationName_1()
+  {
+        return (EAttribute)getAfterCode_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAfterCode__Anonymous_afterCode_1_1()
+  {
+        return (EReference)getAfterCode_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAfterCode__Code_1()
+  {
+        return (EAttribute)getAfterCode_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAfterCode__Anonymous_afterCode_2_1()
+  {
+        return (EReference)getAfterCode_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_afterCode_1_()
+  {
+    if (anonymous_afterCode_1_EClass == null)
+    {
+      anonymous_afterCode_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(83);
+    }
+    return anonymous_afterCode_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_afterCode_1__CodeLang_1()
+  {
+        return (EReference)getAnonymous_afterCode_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_afterCode_1__CodeLangs_1()
+  {
+        return (EReference)getAnonymous_afterCode_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_afterCode_2_()
+  {
+    if (anonymous_afterCode_2_EClass == null)
+    {
+      anonymous_afterCode_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(84);
+    }
+    return anonymous_afterCode_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_afterCode_2__MoreCode_1()
+  {
+        return (EReference)getAnonymous_afterCode_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStateMachineDefinition_()
+  {
+    if (stateMachineDefinition_EClass == null)
+    {
+      stateMachineDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(85);
+    }
+    return stateMachineDefinition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStateMachineDefinition__Queued_1()
+  {
+        return (EAttribute)getStateMachineDefinition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStateMachineDefinition__Name_1()
+  {
+        return (EAttribute)getStateMachineDefinition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateMachineDefinition__State_1()
+  {
+        return (EReference)getStateMachineDefinition_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStateMachine_()
+  {
+    if (stateMachine_EClass == null)
+    {
+      stateMachine_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(86);
+    }
+    return stateMachine_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateMachine__Enum_1()
+  {
+        return (EReference)getStateMachine_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateMachine__InlineStateMachine_1()
+  {
+        return (EReference)getStateMachine_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateMachine__ReferencedStateMachine_1()
+  {
+        return (EReference)getStateMachine_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateMachine__ActiveDefinition_1()
+  {
+        return (EReference)getStateMachine_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getActiveDefinition_()
+  {
+    if (activeDefinition_EClass == null)
+    {
+      activeDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(87);
+    }
+    return activeDefinition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getActiveDefinition__Active_1()
+  {
+        return (EAttribute)getActiveDefinition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getActiveDefinition__Name_1()
+  {
+        return (EAttribute)getActiveDefinition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getActiveDefinition__Code_1()
+  {
+        return (EAttribute)getActiveDefinition_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getInlineStateMachine_()
+  {
+    if (inlineStateMachine_EClass == null)
+    {
+      inlineStateMachine_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(88);
+    }
+    return inlineStateMachine_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getInlineStateMachine__Queued_1()
+  {
+        return (EAttribute)getInlineStateMachine_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getInlineStateMachine__Name_1()
+  {
+        return (EAttribute)getInlineStateMachine_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInlineStateMachine__Anonymous_inlineStateMachine_1_1()
+  {
+        return (EReference)getInlineStateMachine_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_inlineStateMachine_1_()
+  {
+    if (anonymous_inlineStateMachine_1_EClass == null)
+    {
+      anonymous_inlineStateMachine_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(89);
+    }
+    return anonymous_inlineStateMachine_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_inlineStateMachine_1__Comment_1()
+  {
+        return (EReference)getAnonymous_inlineStateMachine_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_inlineStateMachine_1__State_1()
+  {
+        return (EReference)getAnonymous_inlineStateMachine_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_inlineStateMachine_1__Trace_1()
+  {
+        return (EReference)getAnonymous_inlineStateMachine_1_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getReferencedStateMachine_()
+  {
+    if (referencedStateMachine_EClass == null)
+    {
+      referencedStateMachine_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(90);
+    }
+    return referencedStateMachine_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getReferencedStateMachine__Name_1()
+  {
+        return (EAttribute)getReferencedStateMachine_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getReferencedStateMachine__DefinitionName_1()
+  {
+        return (EAttribute)getReferencedStateMachine_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getReferencedStateMachine__ExtendedStateMachine_1()
+  {
+        return (EReference)getReferencedStateMachine_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getExtendedStateMachine_()
+  {
+    if (extendedStateMachine_EClass == null)
+    {
+      extendedStateMachine_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(91);
+    }
+    return extendedStateMachine_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getExtendedStateMachine__Anonymous_extendedStateMachine_1_1()
+  {
+        return (EReference)getExtendedStateMachine_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_extendedStateMachine_1_()
+  {
+    if (anonymous_extendedStateMachine_1_EClass == null)
+    {
+      anonymous_extendedStateMachine_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(92);
+    }
+    return anonymous_extendedStateMachine_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_extendedStateMachine_1__Comment_1()
+  {
+        return (EReference)getAnonymous_extendedStateMachine_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_extendedStateMachine_1__ChangeType_1()
+  {
+        return (EAttribute)getAnonymous_extendedStateMachine_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_extendedStateMachine_1__State_1()
+  {
+        return (EReference)getAnonymous_extendedStateMachine_1_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getEnum_()
+  {
+    if (enum_EClass == null)
+    {
+      enum_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(93);
+    }
+    return enum_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getEnum__Name_1()
+  {
+        return (EAttribute)getEnum_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getEnum__StateName_1()
+  {
+        return (EAttribute)getEnum_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEnum__Anonymous_enum_1_1()
+  {
+        return (EReference)getEnum_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_enum_1_()
+  {
+    if (anonymous_enum_1_EClass == null)
+    {
+      anonymous_enum_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(94);
+    }
+    return anonymous_enum_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_enum_1__StateName_1()
+  {
+        return (EAttribute)getAnonymous_enum_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getState_()
+  {
+    if (state_EClass == null)
+    {
+      state_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(95);
+    }
+    return state_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getState__StateName_1()
+  {
+        return (EAttribute)getState_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getState__StateInternal_1()
+  {
+        return (EReference)getState_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getState__Final_1()
+  {
+        return (EAttribute)getState_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getState__Anonymous_state_1_1()
+  {
+        return (EReference)getState_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_state_1_()
+  {
+    if (anonymous_state_1_EClass == null)
+    {
+      anonymous_state_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(96);
+    }
+    return anonymous_state_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_state_1__StateInternal_1()
+  {
+        return (EReference)getAnonymous_state_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStateInternal_()
+  {
+    if (stateInternal_EClass == null)
+    {
+      stateInternal_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(97);
+    }
+    return stateInternal_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateInternal__Comment_1()
+  {
+        return (EReference)getStateInternal_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStateInternal__ChangeType_1()
+  {
+        return (EAttribute)getStateInternal_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateInternal__StateEntity_1()
+  {
+        return (EReference)getStateInternal_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStateEntity_()
+  {
+    if (stateEntity_EClass == null)
+    {
+      stateEntity_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(98);
+    }
+    return stateEntity_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateEntity__EntryOrExitAction_1()
+  {
+        return (EReference)getStateEntity_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateEntity__AutoTransition_1()
+  {
+        return (EReference)getStateEntity_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateEntity__Transition_1()
+  {
+        return (EReference)getStateEntity_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateEntity__Activity_1()
+  {
+        return (EReference)getStateEntity_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateEntity__State_1()
+  {
+        return (EReference)getStateEntity_().getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStateEntity__Trace_1()
+  {
+        return (EReference)getStateEntity_().getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAutoTransition_()
+  {
+    if (autoTransition_EClass == null)
+    {
+      autoTransition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(99);
+    }
+    return autoTransition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAutoTransition__AutoTransitionBlock_1()
+  {
+        return (EReference)getAutoTransition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAutoTransition__Activity_1()
+  {
+        return (EReference)getAutoTransition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAutoTransitionBlock_()
+  {
+    if (autoTransitionBlock_EClass == null)
+    {
+      autoTransitionBlock_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(100);
+    }
+    return autoTransitionBlock_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAutoTransitionBlock__Guard_1()
+  {
+        return (EReference)getAutoTransitionBlock_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAutoTransitionBlock__Action_1()
+  {
+        return (EReference)getAutoTransitionBlock_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAutoTransitionBlock__StateName_1()
+  {
+        return (EAttribute)getAutoTransitionBlock_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTransition_()
+  {
+    if (transition_EClass == null)
+    {
+      transition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(101);
+    }
+    return transition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTransition__Guard_1()
+  {
+        return (EReference)getTransition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTransition__EventDefinition_1()
+  {
+        return (EReference)getTransition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTransition__Action_1()
+  {
+        return (EReference)getTransition_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTransition__StateName_1()
+  {
+        return (EAttribute)getTransition_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getEventDefinition_()
+  {
+    if (eventDefinition_EClass == null)
+    {
+      eventDefinition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(102);
+    }
+    return eventDefinition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEventDefinition__AfterEveryEvent_1()
+  {
+        return (EReference)getEventDefinition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEventDefinition__AfterEvent_1()
+  {
+        return (EReference)getEventDefinition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getEventDefinition__Event_1()
+  {
+        return (EAttribute)getEventDefinition_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEventDefinition__Anonymous_eventDefinition_1_1()
+  {
+        return (EReference)getEventDefinition_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_eventDefinition_1_()
+  {
+    if (anonymous_eventDefinition_1_EClass == null)
+    {
+      anonymous_eventDefinition_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(103);
+    }
+    return anonymous_eventDefinition_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_eventDefinition_1__ParameterList_1()
+  {
+        return (EReference)getAnonymous_eventDefinition_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAfterEveryEvent_()
+  {
+    if (afterEveryEvent_EClass == null)
+    {
+      afterEveryEvent_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(104);
+    }
+    return afterEveryEvent_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAfterEveryEvent__Timer_1()
+  {
+        return (EAttribute)getAfterEveryEvent_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAfterEvent_()
+  {
+    if (afterEvent_EClass == null)
+    {
+      afterEvent_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(105);
+    }
+    return afterEvent_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAfterEvent__Timer_1()
+  {
+        return (EAttribute)getAfterEvent_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAction_()
+  {
+    if (action_EClass == null)
+    {
+      action_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(106);
+    }
+    return action_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAction__Anonymous_action_1_1()
+  {
+        return (EReference)getAction_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAction__Code_1()
+  {
+        return (EAttribute)getAction_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAction__Anonymous_action_2_1()
+  {
+        return (EReference)getAction_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_action_1_()
+  {
+    if (anonymous_action_1_EClass == null)
+    {
+      anonymous_action_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(107);
+    }
+    return anonymous_action_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_action_1__CodeLang_1()
+  {
+        return (EReference)getAnonymous_action_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_action_1__CodeLangs_1()
+  {
+        return (EReference)getAnonymous_action_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_action_2_()
+  {
+    if (anonymous_action_2_EClass == null)
+    {
+      anonymous_action_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(108);
+    }
+    return anonymous_action_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_action_2__MoreCode_1()
+  {
+        return (EReference)getAnonymous_action_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getEntryOrExitAction_()
+  {
+    if (entryOrExitAction_EClass == null)
+    {
+      entryOrExitAction_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(109);
+    }
+    return entryOrExitAction_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getEntryOrExitAction__Type_1()
+  {
+        return (EAttribute)getEntryOrExitAction_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEntryOrExitAction__Anonymous_entryOrExitAction_1_1()
+  {
+        return (EReference)getEntryOrExitAction_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getEntryOrExitAction__Code_1()
+  {
+        return (EAttribute)getEntryOrExitAction_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEntryOrExitAction__Anonymous_entryOrExitAction_2_1()
+  {
+        return (EReference)getEntryOrExitAction_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_entryOrExitAction_1_()
+  {
+    if (anonymous_entryOrExitAction_1_EClass == null)
+    {
+      anonymous_entryOrExitAction_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(110);
+    }
+    return anonymous_entryOrExitAction_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_entryOrExitAction_1__CodeLang_1()
+  {
+        return (EReference)getAnonymous_entryOrExitAction_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_entryOrExitAction_1__CodeLangs_1()
+  {
+        return (EReference)getAnonymous_entryOrExitAction_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_entryOrExitAction_2_()
+  {
+    if (anonymous_entryOrExitAction_2_EClass == null)
+    {
+      anonymous_entryOrExitAction_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(111);
+    }
+    return anonymous_entryOrExitAction_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_entryOrExitAction_2__MoreCode_1()
+  {
+        return (EReference)getAnonymous_entryOrExitAction_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getActivity_()
+  {
+    if (activity_EClass == null)
+    {
+      activity_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(112);
+    }
+    return activity_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getActivity__Anonymous_activity_1_1()
+  {
+        return (EReference)getActivity_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getActivity__Code_1()
+  {
+        return (EAttribute)getActivity_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getActivity__Anonymous_activity_2_1()
+  {
+        return (EReference)getActivity_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_activity_1_()
+  {
+    if (anonymous_activity_1_EClass == null)
+    {
+      anonymous_activity_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(113);
+    }
+    return anonymous_activity_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_activity_1__CodeLang_1()
+  {
+        return (EReference)getAnonymous_activity_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_activity_1__CodeLangs_1()
+  {
+        return (EReference)getAnonymous_activity_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_activity_2_()
+  {
+    if (anonymous_activity_2_EClass == null)
+    {
+      anonymous_activity_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(114);
+    }
+    return anonymous_activity_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_activity_2__MoreCode_1()
+  {
+        return (EReference)getAnonymous_activity_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getMoreGuards_()
+  {
+    if (moreGuards_EClass == null)
+    {
+      moreGuards_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(115);
+    }
+    return moreGuards_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getMoreGuards__Anonymous_moreGuards_1_1()
+  {
+        return (EReference)getMoreGuards_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getMoreGuards__Code_1()
+  {
+        return (EAttribute)getMoreGuards_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_moreGuards_1_()
+  {
+    if (anonymous_moreGuards_1_EClass == null)
+    {
+      anonymous_moreGuards_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(116);
+    }
+    return anonymous_moreGuards_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_moreGuards_1__CodeLang_1()
+  {
+        return (EReference)getAnonymous_moreGuards_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_moreGuards_1__CodeLangs_1()
+  {
+        return (EReference)getAnonymous_moreGuards_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getGuard_()
+  {
+    if (guard_EClass == null)
+    {
+      guard_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(117);
+    }
+    return guard_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGuard__Anonymous_guard_1_1()
+  {
+        return (EReference)getGuard_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getGuard__Code_1()
+  {
+        return (EAttribute)getGuard_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGuard__Anonymous_guard_2_1()
+  {
+        return (EReference)getGuard_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_guard_1_()
+  {
+    if (anonymous_guard_1_EClass == null)
+    {
+      anonymous_guard_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(118);
+    }
+    return anonymous_guard_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_guard_1__CodeLang_1()
+  {
+        return (EReference)getAnonymous_guard_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_guard_1__CodeLangs_1()
+  {
+        return (EReference)getAnonymous_guard_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_guard_2_()
+  {
+    if (anonymous_guard_2_EClass == null)
+    {
+      anonymous_guard_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(119);
+    }
+    return anonymous_guard_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_guard_2__MoreGuards_1()
+  {
+        return (EReference)getAnonymous_guard_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceType_()
+  {
+    if (traceType_EClass == null)
+    {
+      traceType_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(120);
+    }
+    return traceType_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceType__TracerType_1()
+  {
+        return (EAttribute)getTraceType_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceType__Anonymous_traceType_1_1()
+  {
+        return (EReference)getTraceType_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceType__Anonymous_traceType_2_1()
+  {
+        return (EReference)getTraceType_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_traceType_1_()
+  {
+    if (anonymous_traceType_1_EClass == null)
+    {
+      anonymous_traceType_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(121);
+    }
+    return anonymous_traceType_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_traceType_1__Verbisty_1()
+  {
+        return (EAttribute)getAnonymous_traceType_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_traceType_2_()
+  {
+    if (anonymous_traceType_2_EClass == null)
+    {
+      anonymous_traceType_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(122);
+    }
+    return anonymous_traceType_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_traceType_2__TracerArgument_1()
+  {
+        return (EAttribute)getAnonymous_traceType_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTrace_()
+  {
+    if (trace_EClass == null)
+    {
+      trace_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(123);
+    }
+    return trace_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTrace__TraceDirective_1()
+  {
+        return (EReference)getTrace_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTrace__TraceCase_1()
+  {
+        return (EReference)getTrace_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceDirective_()
+  {
+    if (traceDirective_EClass == null)
+    {
+      traceDirective_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(124);
+    }
+    return traceDirective_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceDirective__TraceItem_1()
+  {
+        return (EReference)getTraceDirective_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceDirective__Anonymous_traceDirective_1_1()
+  {
+        return (EReference)getTraceDirective_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_traceDirective_1_()
+  {
+    if (anonymous_traceDirective_1_EClass == null)
+    {
+      anonymous_traceDirective_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(125);
+    }
+    return anonymous_traceDirective_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceDirective_1__ExecuteClause_1()
+  {
+        return (EReference)getAnonymous_traceDirective_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceDirective_1__TraceWhen_1()
+  {
+        return (EReference)getAnonymous_traceDirective_1_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceDirective_1__TraceFor_1()
+  {
+        return (EReference)getAnonymous_traceDirective_1_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceDirective_1__TracePeriod_1()
+  {
+        return (EReference)getAnonymous_traceDirective_1_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceDirective_1__TraceDuring_1()
+  {
+        return (EReference)getAnonymous_traceDirective_1_().getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceDirective_1__TraceCaseActivation_1()
+  {
+        return (EReference)getAnonymous_traceDirective_1_().getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceDirective_1__TraceRecord_1()
+  {
+        return (EReference)getAnonymous_traceDirective_1_().getEStructuralFeatures().get(6);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceDirective_1__TraceLevel_1()
+  {
+        return (EReference)getAnonymous_traceDirective_1_().getEStructuralFeatures().get(7);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceItem_()
+  {
+    if (traceItem_EClass == null)
+    {
+      traceItem_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(126);
+    }
+    return traceItem_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceItem__TraceEntity_1()
+  {
+        return (EReference)getTraceItem_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceItem__PreOrPostCondition_1()
+  {
+        return (EReference)getTraceItem_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceEntity_()
+  {
+    if (traceEntity_EClass == null)
+    {
+      traceEntity_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(127);
+    }
+    return traceEntity_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceEntity__TraceOptions_1()
+  {
+        return (EReference)getTraceEntity_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceEntity__Trace_entity_1()
+  {
+        return (EAttribute)getTraceEntity_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceEntity__Anonymous_traceEntity_1_1()
+  {
+        return (EReference)getTraceEntity_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_traceEntity_1_()
+  {
+    if (anonymous_traceEntity_1_EClass == null)
+    {
+      anonymous_traceEntity_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(128);
+    }
+    return anonymous_traceEntity_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_traceEntity_1__Trace_entity_1()
+  {
+        return (EAttribute)getAnonymous_traceEntity_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceOptions_()
+  {
+    if (traceOptions_EClass == null)
+    {
+      traceOptions_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(129);
+    }
+    return traceOptions_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceOptions__TraceOption_1()
+  {
+        return (EReference)getTraceOptions_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceOptions__Anonymous_traceOptions_1_1()
+  {
+        return (EReference)getTraceOptions_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_traceOptions_1_()
+  {
+    if (anonymous_traceOptions_1_EClass == null)
+    {
+      anonymous_traceOptions_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(130);
+    }
+    return anonymous_traceOptions_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_traceOptions_1__TraceOption_1()
+  {
+        return (EReference)getAnonymous_traceOptions_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceOption_()
+  {
+    if (traceOption_EClass == null)
+    {
+      traceOption_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(131);
+    }
+    return traceOption_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceOption__Option_1()
+  {
+        return (EAttribute)getTraceOption_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getPreOrPostCondition_()
+  {
+    if (preOrPostCondition_EClass == null)
+    {
+      preOrPostCondition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(132);
+    }
+    return preOrPostCondition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getPreOrPostCondition__Anonymous_PreOrPostCondition_1_1()
+  {
+        return (EAttribute)getPreOrPostCondition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPreOrPostCondition__TraceCondition_1()
+  {
+        return (EReference)getPreOrPostCondition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getExecuteClause_()
+  {
+    if (executeClause_EClass == null)
+    {
+      executeClause_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(133);
+    }
+    return executeClause_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getExecuteClause__Trace_execute_1()
+  {
+        return (EAttribute)getExecuteClause_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceWhen_()
+  {
+    if (traceWhen_EClass == null)
+    {
+      traceWhen_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(134);
+    }
+    return traceWhen_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceWhen__ConditionType_1()
+  {
+        return (EAttribute)getTraceWhen_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceWhen__ConstraintToken_1()
+  {
+        return (EReference)getTraceWhen_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceFor_()
+  {
+    if (traceFor_EClass == null)
+    {
+      traceFor_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(135);
+    }
+    return traceFor_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceFor__Trace_for_1()
+  {
+        return (EAttribute)getTraceFor_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceLevel_()
+  {
+    if (traceLevel_EClass == null)
+    {
+      traceLevel_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(136);
+    }
+    return traceLevel_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceLevel__Trace_level_1()
+  {
+        return (EAttribute)getTraceLevel_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTracePeriod_()
+  {
+    if (tracePeriod_EClass == null)
+    {
+      tracePeriod_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(137);
+    }
+    return tracePeriod_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTracePeriod__Trace_period_1()
+  {
+        return (EAttribute)getTracePeriod_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceDuring_()
+  {
+    if (traceDuring_EClass == null)
+    {
+      traceDuring_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(138);
+    }
+    return traceDuring_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceDuring__Trace_duration_1()
+  {
+        return (EAttribute)getTraceDuring_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceRecord_()
+  {
+    if (traceRecord_EClass == null)
+    {
+      traceRecord_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(139);
+    }
+    return traceRecord_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceRecord__RecordEntity_1()
+  {
+        return (EReference)getTraceRecord_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getRecordEntity_()
+  {
+    if (recordEntity_EClass == null)
+    {
+      recordEntity_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(140);
+    }
+    return recordEntity_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getRecordEntity__Anonymous_recordEntity_1_1()
+  {
+        return (EAttribute)getRecordEntity_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getRecordEntity__Trace_record_1()
+  {
+        return (EAttribute)getRecordEntity_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getRecordEntity__Anonymous_recordEntity_2_1()
+  {
+        return (EReference)getRecordEntity_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_recordEntity_2_()
+  {
+    if (anonymous_recordEntity_2_EClass == null)
+    {
+      anonymous_recordEntity_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(141);
+    }
+    return anonymous_recordEntity_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_recordEntity_2__Trace_record_1()
+  {
+        return (EAttribute)getAnonymous_recordEntity_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceCondition_()
+  {
+    if (traceCondition_EClass == null)
+    {
+      traceCondition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(142);
+    }
+    return traceCondition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceCondition__LHS_1()
+  {
+        return (EAttribute)getTraceCondition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceCondition__ConditionRHS_1()
+  {
+        return (EReference)getTraceCondition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getConditionRHS_()
+  {
+    if (conditionRHS_EClass == null)
+    {
+      conditionRHS_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(143);
+    }
+    return conditionRHS_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getConditionRHS__Comparison_operator_1()
+  {
+        return (EAttribute)getConditionRHS_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getConditionRHS__RHS_1()
+  {
+        return (EAttribute)getConditionRHS_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceCase_()
+  {
+    if (traceCase_EClass == null)
+    {
+      traceCase_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(144);
+    }
+    return traceCase_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceCase__TraceCaseDef_1()
+  {
+        return (EReference)getTraceCase_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceCase__TraceCaseActivation_1()
+  {
+        return (EReference)getTraceCase_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceCase__TraceCaseDeactivation_1()
+  {
+        return (EReference)getTraceCase_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceCaseDef_()
+  {
+    if (traceCaseDef_EClass == null)
+    {
+      traceCaseDef_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(145);
+    }
+    return traceCaseDef_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceCaseDef__Tracecase_name_1()
+  {
+        return (EAttribute)getTraceCaseDef_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceCaseDef__TraceDirective_1()
+  {
+        return (EReference)getTraceCaseDef_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceCaseActivation_()
+  {
+    if (traceCaseActivation_EClass == null)
+    {
+      traceCaseActivation_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(146);
+    }
+    return traceCaseActivation_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceCaseActivation__Tracecase_act_name_1()
+  {
+        return (EAttribute)getTraceCaseActivation_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceCaseActivation__Anonymous_traceCaseActivation_1_1()
+  {
+        return (EAttribute)getTraceCaseActivation_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getTraceCaseDeactivation_()
+  {
+    if (traceCaseDeactivation_EClass == null)
+    {
+      traceCaseDeactivation_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(147);
+    }
+    return traceCaseDeactivation_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getTraceCaseDeactivation__Tracecase_deact_name_1()
+  {
+        return (EAttribute)getTraceCaseDeactivation_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getTraceCaseDeactivation__DeActivateFor_1()
+  {
+        return (EReference)getTraceCaseDeactivation_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getDeActivateFor_()
+  {
+    if (deActivateFor_EClass == null)
+    {
+      deActivateFor_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(148);
+    }
+    return deActivateFor_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getDeActivateFor__Deactivate_for_1()
+  {
+        return (EAttribute)getDeActivateFor_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getPrecondition_()
+  {
+    if (precondition_EClass == null)
+    {
+      precondition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(149);
+    }
+    return precondition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getPrecondition__Name_1()
+  {
+        return (EAttribute)getPrecondition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPrecondition__Constraint_1()
+  {
+        return (EReference)getPrecondition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getPostcondition_()
+  {
+    if (postcondition_EClass == null)
+    {
+      postcondition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(150);
+    }
+    return postcondition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getPostcondition__Name_1()
+  {
+        return (EAttribute)getPostcondition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPostcondition__Constraint_1()
+  {
+        return (EReference)getPostcondition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getInvariant_()
+  {
+    if (invariant_EClass == null)
+    {
+      invariant_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(151);
+    }
+    return invariant_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInvariant__Anonymous_invariant_1_1()
+  {
+        return (EReference)getInvariant_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getInvariant__Anonymous_invariant_2_1()
+  {
+        return (EReference)getInvariant_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_invariant_1_()
+  {
+    if (anonymous_invariant_1_EClass == null)
+    {
+      anonymous_invariant_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(152);
+    }
+    return anonymous_invariant_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_invariant_1__Name_1()
+  {
+        return (EAttribute)getAnonymous_invariant_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_invariant_2_()
+  {
+    if (anonymous_invariant_2_EClass == null)
+    {
+      anonymous_invariant_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(153);
+    }
+    return anonymous_invariant_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_invariant_2__Constraint_1()
+  {
+        return (EReference)getAnonymous_invariant_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getConstraintToken_()
+  {
+    if (constraintToken_EClass == null)
+    {
+      constraintToken_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(154);
+    }
+    return constraintToken_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintToken__Constraint_1()
+  {
+        return (EReference)getConstraintToken_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getConstraint_()
+  {
+    if (constraint_EClass == null)
+    {
+      constraint_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(155);
+    }
+    return constraint_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraint__Anonymous_constraint_1_1()
+  {
+        return (EReference)getConstraint_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraint__ConstraintBody_1()
+  {
+        return (EReference)getConstraint_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_constraint_1_()
+  {
+    if (anonymous_constraint_1_EClass == null)
+    {
+      anonymous_constraint_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(156);
+    }
+    return anonymous_constraint_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_constraint_1__ConstraintBody_1()
+  {
+        return (EReference)getAnonymous_constraint_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNegativeConstraint_()
+  {
+    if (negativeConstraint_EClass == null)
+    {
+      negativeConstraint_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(157);
+    }
+    return negativeConstraint_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNegativeConstraint__Constraint_1()
+  {
+        return (EReference)getNegativeConstraint_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getConstraintBody_()
+  {
+    if (constraintBody_EClass == null)
+    {
+      constraintBody_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(158);
+    }
+    return constraintBody_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintBody__ConstraintExpr_1()
+  {
+        return (EReference)getConstraintBody_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintBody__Anonymous_constraintBody_1_1()
+  {
+        return (EReference)getConstraintBody_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_constraintBody_1_()
+  {
+    if (anonymous_constraintBody_1_EClass == null)
+    {
+      anonymous_constraintBody_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(159);
+    }
+    return anonymous_constraintBody_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_constraintBody_1__LinkingOp_1()
+  {
+        return (EReference)getAnonymous_constraintBody_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLinkingOp_()
+  {
+    if (linkingOp_EClass == null)
+    {
+      linkingOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(160);
+    }
+    return linkingOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLinkingOp__Anonymous_linkingOp_1_1()
+  {
+        return (EReference)getLinkingOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLinkingOp__Anonymous_linkingOp_2_1()
+  {
+        return (EReference)getLinkingOp_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getLinkingOp__Anonymous_linkingOp_3_1()
+  {
+        return (EReference)getLinkingOp_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_linkingOp_1_()
+  {
+    if (anonymous_linkingOp_1_EClass == null)
+    {
+      anonymous_linkingOp_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(161);
+    }
+    return anonymous_linkingOp_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_linkingOp_1__ConstraintExpr_1()
+  {
+        return (EReference)getAnonymous_linkingOp_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_linkingOp_2_()
+  {
+    if (anonymous_linkingOp_2_EClass == null)
+    {
+      anonymous_linkingOp_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(162);
+    }
+    return anonymous_linkingOp_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_linkingOp_2__AndOp_1()
+  {
+        return (EAttribute)getAnonymous_linkingOp_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_linkingOp_2__ConstraintExpr_1()
+  {
+        return (EReference)getAnonymous_linkingOp_2_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_linkingOp_3_()
+  {
+    if (anonymous_linkingOp_3_EClass == null)
+    {
+      anonymous_linkingOp_3_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(163);
+    }
+    return anonymous_linkingOp_3_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_linkingOp_3__OrOp_1()
+  {
+        return (EAttribute)getAnonymous_linkingOp_3_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAnonymous_linkingOp_3__ConstraintExpr_1()
+  {
+        return (EReference)getAnonymous_linkingOp_3_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getConstraintExpr_()
+  {
+    if (constraintExpr_EClass == null)
+    {
+      constraintExpr_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(164);
+    }
+    return constraintExpr_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintExpr__NegativeConstraint_1()
+  {
+        return (EReference)getConstraintExpr_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintExpr__StringExpr_1()
+  {
+        return (EReference)getConstraintExpr_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintExpr__BoolExpr_1()
+  {
+        return (EReference)getConstraintExpr_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintExpr__GenExpr_1()
+  {
+        return (EReference)getConstraintExpr_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintExpr__NumExpr_1()
+  {
+        return (EReference)getConstraintExpr_().getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getConstraintExpr__LoneBoolean_1()
+  {
+        return (EAttribute)getConstraintExpr_().getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getConstraintExpr__Anonymous_constraintExpr_1_1()
+  {
+        return (EReference)getConstraintExpr_().getEStructuralFeatures().get(6);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_constraintExpr_1_()
+  {
+    if (anonymous_constraintExpr_1_EClass == null)
+    {
+      anonymous_constraintExpr_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(165);
+    }
+    return anonymous_constraintExpr_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_constraintExpr_1__Index_1()
+  {
+        return (EAttribute)getAnonymous_constraintExpr_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getCompoundExpr_()
+  {
+    if (compoundExpr_EClass == null)
+    {
+      compoundExpr_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(166);
+    }
+    return compoundExpr_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCompoundExpr__StringExpr_1()
+  {
+        return (EReference)getCompoundExpr_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCompoundExpr__BoolExpr_1()
+  {
+        return (EReference)getCompoundExpr_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCompoundExpr__NumExpr_1()
+  {
+        return (EReference)getCompoundExpr_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCompoundExpr__GenExpr_1()
+  {
+        return (EReference)getCompoundExpr_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getBoolExpr_()
+  {
+    if (boolExpr_EClass == null)
+    {
+      boolExpr_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(167);
+    }
+    return boolExpr_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getBoolExpr__Literal_1()
+  {
+        return (EAttribute)getBoolExpr_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getBoolExpr__Name_1()
+  {
+        return (EAttribute)getBoolExpr_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getBoolExpr__EqualityOp_1()
+  {
+        return (EReference)getBoolExpr_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getBoolExpr__Index_1()
+  {
+        return (EAttribute)getBoolExpr_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStringExpr_()
+  {
+    if (stringExpr_EClass == null)
+    {
+      stringExpr_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(168);
+    }
+    return stringExpr_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStringExpr__Name_1()
+  {
+        return (EAttribute)getStringExpr_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStringExpr__EqualityOp_1()
+  {
+        return (EReference)getStringExpr_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getStringExpr__StringLit_1()
+  {
+        return (EReference)getStringExpr_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStringExpr__Index_1()
+  {
+        return (EAttribute)getStringExpr_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getStringLit_()
+  {
+    if (stringLit_EClass == null)
+    {
+      stringLit_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(169);
+    }
+    return stringLit_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getStringLit__Quote_1()
+  {
+        return (EAttribute)getStringLit_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getGenExpr_()
+  {
+    if (genExpr_EClass == null)
+    {
+      genExpr_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(170);
+    }
+    return genExpr_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getGenExpr__Name_1()
+  {
+        return (EAttribute)getGenExpr_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGenExpr__Anonymous_genExpr_1_1()
+  {
+        return (EReference)getGenExpr_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGenExpr__EqualityOp_1()
+  {
+        return (EReference)getGenExpr_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getGenExpr__Name_2()
+  {
+        return (EAttribute)getGenExpr_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getGenExpr__Anonymous_genExpr_2_1()
+  {
+        return (EReference)getGenExpr_().getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_genExpr_1_()
+  {
+    if (anonymous_genExpr_1_EClass == null)
+    {
+      anonymous_genExpr_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(171);
+    }
+    return anonymous_genExpr_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_genExpr_1__Index_1()
+  {
+        return (EAttribute)getAnonymous_genExpr_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_genExpr_2_()
+  {
+    if (anonymous_genExpr_2_EClass == null)
+    {
+      anonymous_genExpr_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(172);
+    }
+    return anonymous_genExpr_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_genExpr_2__Index_1()
+  {
+        return (EAttribute)getAnonymous_genExpr_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNumExpr_()
+  {
+    if (numExpr_EClass == null)
+    {
+      numExpr_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(173);
+    }
+    return numExpr_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getNumExpr__Name_1()
+  {
+        return (EAttribute)getNumExpr_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNumExpr__Anonymous_numExpr_1_1()
+  {
+        return (EReference)getNumExpr_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNumExpr__Anonymous_numExpr_2_1()
+  {
+        return (EReference)getNumExpr_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNumExpr__OrdinalOp_1()
+  {
+        return (EReference)getNumExpr_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getNumExpr__Name_2()
+  {
+        return (EAttribute)getNumExpr_().getEStructuralFeatures().get(4);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNumExpr__Anonymous_numExpr_3_1()
+  {
+        return (EReference)getNumExpr_().getEStructuralFeatures().get(5);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getNumExpr__Anonymous_numExpr_4_1()
+  {
+        return (EReference)getNumExpr_().getEStructuralFeatures().get(6);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_numExpr_1_()
+  {
+    if (anonymous_numExpr_1_EClass == null)
+    {
+      anonymous_numExpr_1_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(174);
+    }
+    return anonymous_numExpr_1_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_numExpr_1__Tail_1()
+  {
+        return (EAttribute)getAnonymous_numExpr_1_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_numExpr_2_()
+  {
+    if (anonymous_numExpr_2_EClass == null)
+    {
+      anonymous_numExpr_2_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(175);
+    }
+    return anonymous_numExpr_2_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_numExpr_2__Index_1()
+  {
+        return (EAttribute)getAnonymous_numExpr_2_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_numExpr_3_()
+  {
+    if (anonymous_numExpr_3_EClass == null)
+    {
+      anonymous_numExpr_3_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(176);
+    }
+    return anonymous_numExpr_3_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_numExpr_3__Tail_1()
+  {
+        return (EAttribute)getAnonymous_numExpr_3_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAnonymous_numExpr_4_()
+  {
+    if (anonymous_numExpr_4_EClass == null)
+    {
+      anonymous_numExpr_4_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(177);
+    }
+    return anonymous_numExpr_4_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAnonymous_numExpr_4__Index_1()
+  {
+        return (EAttribute)getAnonymous_numExpr_4_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getEqualityOp_()
+  {
+    if (equalityOp_EClass == null)
+    {
+      equalityOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(178);
+    }
+    return equalityOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEqualityOp__EqualsOp_1()
+  {
+        return (EReference)getEqualityOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getEqualityOp__NotequalsOp_1()
+  {
+        return (EReference)getEqualityOp_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getEqualsOp_()
+  {
+    if (equalsOp_EClass == null)
+    {
+      equalsOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(179);
+    }
+    return equalsOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getEqualsOp__EqualsOp_1()
+  {
+        return (EAttribute)getEqualsOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getNotequalsOp_()
+  {
+    if (notequalsOp_EClass == null)
+    {
+      notequalsOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(180);
+    }
+    return notequalsOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getNotequalsOp__NotequalsOp_1()
+  {
+        return (EAttribute)getNotequalsOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getOrdinalOp_()
+  {
+    if (ordinalOp_EClass == null)
+    {
+      ordinalOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(181);
+    }
+    return ordinalOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOrdinalOp__GreaterOp_1()
+  {
+        return (EReference)getOrdinalOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOrdinalOp__LessOp_1()
+  {
+        return (EReference)getOrdinalOp_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOrdinalOp__MoreOp_1()
+  {
+        return (EReference)getOrdinalOp_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getOrdinalOp__SmallerOp_1()
+  {
+        return (EReference)getOrdinalOp_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getGreaterOp_()
+  {
+    if (greaterOp_EClass == null)
+    {
+      greaterOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(182);
+    }
+    return greaterOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getGreaterOp__GreaterOp_1()
+  {
+        return (EAttribute)getGreaterOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getLessOp_()
+  {
+    if (lessOp_EClass == null)
+    {
+      lessOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(183);
+    }
+    return lessOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getLessOp__LessOp_1()
+  {
+        return (EAttribute)getLessOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getMoreOp_()
+  {
+    if (moreOp_EClass == null)
+    {
+      moreOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(184);
+    }
+    return moreOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getMoreOp__MoreOp_1()
+  {
+        return (EAttribute)getMoreOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getSmallerOp_()
+  {
+    if (smallerOp_EClass == null)
+    {
+      smallerOp_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(185);
+    }
+    return smallerOp_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getSmallerOp__SmallerOp_1()
+  {
+        return (EAttribute)getSmallerOp_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getPosition_()
+  {
+    if (position_EClass == null)
+    {
+      position_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(186);
+    }
+    return position_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPosition__AssociationPosition_1()
+  {
+        return (EReference)getPosition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getPosition__ElementPosition_1()
+  {
+        return (EReference)getPosition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getElementPosition_()
+  {
+    if (elementPosition_EClass == null)
+    {
+      elementPosition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(187);
+    }
+    return elementPosition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getElementPosition__X_1()
+  {
+        return (EAttribute)getElementPosition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getElementPosition__Y_1()
+  {
+        return (EAttribute)getElementPosition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getElementPosition__Width_1()
+  {
+        return (EAttribute)getElementPosition_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getElementPosition__Height_1()
+  {
+        return (EAttribute)getElementPosition_().getEStructuralFeatures().get(3);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getAssociationPosition_()
+  {
+    if (associationPosition_EClass == null)
+    {
+      associationPosition_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(188);
+    }
+    return associationPosition_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getAssociationPosition__Name_1()
+  {
+        return (EAttribute)getAssociationPosition_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAssociationPosition__Coordinate_1()
+  {
+        return (EReference)getAssociationPosition_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getAssociationPosition__Coordinate_2()
+  {
+        return (EReference)getAssociationPosition_().getEStructuralFeatures().get(2);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getCoordinate_()
+  {
+    if (coordinate_EClass == null)
+    {
+      coordinate_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(189);
+    }
+    return coordinate_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getCoordinate__X_1()
+  {
+        return (EAttribute)getCoordinate_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getCoordinate__Y_1()
+  {
+        return (EAttribute)getCoordinate_().getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EClass getDisplayColor_()
+  {
+    if (displayColor_EClass == null)
+    {
+      displayColor_EClass = (EClass)EPackage.Registry.INSTANCE.getEPackage(UmplePackage.eNS_URI).getEClassifiers().get(190);
+    }
+    return displayColor_EClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getDisplayColor__Anonymous_displayColor_1_1()
+  {
+        return (EAttribute)getDisplayColor_().getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getDisplayColor__ColorValue_1()
+  {
+        return (EAttribute)getDisplayColor_().getEStructuralFeatures().get(1);
   }
 
   /**
@@ -2902,729 +8549,73 @@ public class UmplePackageImpl extends EPackageImpl implements UmplePackage
    * <!-- end-user-doc -->
    * @generated
    */
-  private boolean isCreated = false;
+  private boolean isLoaded = false;
 
   /**
-   * Creates the meta-model objects for the package.  This method is
-   * guarded to have no affect on any invocation but its first.
+   * Laods the package and any sub-packages from their serialized form.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  public void createPackageContents()
+  public void loadPackage()
   {
-    if (isCreated) return;
-    isCreated = true;
-
-    // Create classes and their features
-    umpleModelEClass = createEClass(UMPLE_MODEL);
-    createEReference(umpleModelEClass, UMPLE_MODEL__ELEMENTS);
-
-    abstractElementEClass = createEClass(ABSTRACT_ELEMENT);
-
-    glossaryEClass = createEClass(GLOSSARY);
-    createEReference(glossaryEClass, GLOSSARY__WORDS);
-
-    wordEClass = createEClass(WORD);
-    createEAttribute(wordEClass, WORD__SINGULAR);
-    createEAttribute(wordEClass, WORD__PLURAL);
-
-    generateEClass = createEClass(GENERATE);
-    createEAttribute(generateEClass, GENERATE__JAVA);
-    createEAttribute(generateEClass, GENERATE__PHP);
-    createEAttribute(generateEClass, GENERATE__RUBY);
-
-    useStatementEClass = createEClass(USE_STATEMENT);
-    createEAttribute(useStatementEClass, USE_STATEMENT__FILE);
-
-    namespaceEClass = createEClass(NAMESPACE);
-    createEAttribute(namespaceEClass, NAMESPACE__VALUE);
-
-    entityEClass = createEClass(ENTITY);
-    createEAttribute(entityEClass, ENTITY__NAME);
-
-    classDefinitionEClass = createEClass(CLASS_DEFINITION);
-    createEReference(classDefinitionEClass, CLASS_DEFINITION__CLASS_CONTENT);
-
-    externalDefinitionEClass = createEClass(EXTERNAL_DEFINITION);
-    createEReference(externalDefinitionEClass, EXTERNAL_DEFINITION__CLASS_CONTENT);
-
-    interfaceDefinitionEClass = createEClass(INTERFACE_DEFINITION);
-    createEReference(interfaceDefinitionEClass, INTERFACE_DEFINITION__DEPEND);
-
-    associationDefinitionEClass = createEClass(ASSOCIATION_DEFINITION);
-    createEReference(associationDefinitionEClass, ASSOCIATION_DEFINITION__ASSOCIATION);
-
-    classContentEClass = createEClass(CLASS_CONTENT);
-
-    associationClassContentEClass = createEClass(ASSOCIATION_CLASS_CONTENT);
-
-    dependEClass = createEClass(DEPEND);
-    createEAttribute(dependEClass, DEPEND__NAME);
-
-    associationEClass = createEClass(ASSOCIATION);
-    createEAttribute(associationEClass, ASSOCIATION__TYPE1);
-    createEAttribute(associationEClass, ASSOCIATION__ROLENAME1);
-    createEAttribute(associationEClass, ASSOCIATION__TYPE2);
-    createEAttribute(associationEClass, ASSOCIATION__ROLENAME2);
-
-    symmetricReflexiveAssociationEClass = createEClass(SYMMETRIC_REFLEXIVE_ASSOCIATION);
-    createEAttribute(symmetricReflexiveAssociationEClass, SYMMETRIC_REFLEXIVE_ASSOCIATION__ROLENAME);
-
-    inlineAssociationEClass = createEClass(INLINE_ASSOCIATION);
-    createEAttribute(inlineAssociationEClass, INLINE_ASSOCIATION__ROLENAME1);
-    createEAttribute(inlineAssociationEClass, INLINE_ASSOCIATION__TYPE);
-    createEAttribute(inlineAssociationEClass, INLINE_ASSOCIATION__ROLENAME2);
-
-    singleAssociationEndEClass = createEClass(SINGLE_ASSOCIATION_END);
-    createEAttribute(singleAssociationEndEClass, SINGLE_ASSOCIATION_END__TYPE);
-    createEAttribute(singleAssociationEndEClass, SINGLE_ASSOCIATION_END__ROLENAME);
-
-    associationClassDefinitionEClass = createEClass(ASSOCIATION_CLASS_DEFINITION);
-    createEReference(associationClassDefinitionEClass, ASSOCIATION_CLASS_DEFINITION__ASSOCIATION_CLASS_CONTENT);
-
-    softwarePatternEClass = createEClass(SOFTWARE_PATTERN);
-
-    isAEClass = createEClass(IS_A);
-    createEReference(isAEClass, IS_A__EXTENDS_CLASS);
-
-    singletonEClass = createEClass(SINGLETON);
-    createEAttribute(singletonEClass, SINGLETON__SINGLETON);
-
-    keyDefinitionEClass = createEClass(KEY_DEFINITION);
-
-    codeInjectionEClass = createEClass(CODE_INJECTION);
-    createEAttribute(codeInjectionEClass, CODE_INJECTION__NAME);
-    createEAttribute(codeInjectionEClass, CODE_INJECTION__CODE);
-
-    attributeEClass = createEClass(ATTRIBUTE);
-    createEAttribute(attributeEClass, ATTRIBUTE__AUTOUNIQUE);
-    createEAttribute(attributeEClass, ATTRIBUTE__NAME);
-    createEAttribute(attributeEClass, ATTRIBUTE__UNIQUE);
-    createEAttribute(attributeEClass, ATTRIBUTE__MODIFIER);
-    createEAttribute(attributeEClass, ATTRIBUTE__TYPE);
-    createEAttribute(attributeEClass, ATTRIBUTE__LIST);
-    createEReference(attributeEClass, ATTRIBUTE__OBJECT);
-    createEAttribute(attributeEClass, ATTRIBUTE__VALUE);
-
-    stateMachineDefinitionEClass = createEClass(STATE_MACHINE_DEFINITION);
-    createEReference(stateMachineDefinitionEClass, STATE_MACHINE_DEFINITION__STATES);
-
-    stateMachineEClass = createEClass(STATE_MACHINE);
-    createEAttribute(stateMachineEClass, STATE_MACHINE__NAME);
-
-    inlineStateMachineEClass = createEClass(INLINE_STATE_MACHINE);
-    createEReference(inlineStateMachineEClass, INLINE_STATE_MACHINE__STATES);
-
-    referencedStateMachineEClass = createEClass(REFERENCED_STATE_MACHINE);
-    createEReference(referencedStateMachineEClass, REFERENCED_STATE_MACHINE__MACHINE);
-
-    enumEClass = createEClass(ENUM);
-    createEAttribute(enumEClass, ENUM__STATES);
-
-    stateEClass = createEClass(STATE);
-    createEAttribute(stateEClass, STATE__NAME);
-    createEReference(stateEClass, STATE__STATES);
-
-    stateEntityEClass = createEClass(STATE_ENTITY);
-
-    transitionEClass = createEClass(TRANSITION);
-    createEReference(transitionEClass, TRANSITION__A);
-    createEAttribute(transitionEClass, TRANSITION__STATE_NAME);
-
-    eventDefinitionEClass = createEClass(EVENT_DEFINITION);
-    createEReference(eventDefinitionEClass, EVENT_DEFINITION__G);
-    createEAttribute(eventDefinitionEClass, EVENT_DEFINITION__NAME);
-
-    eventEClass = createEClass(EVENT);
-
-    afterEveryEventEClass = createEClass(AFTER_EVERY_EVENT);
-
-    afterEventEClass = createEClass(AFTER_EVENT);
-
-    actionEClass = createEClass(ACTION);
-    createEReference(actionEClass, ACTION__CODE);
-
-    entryOrExitActionEClass = createEClass(ENTRY_OR_EXIT_ACTION);
-    createEAttribute(entryOrExitActionEClass, ENTRY_OR_EXIT_ACTION__TYPE);
-    createEReference(entryOrExitActionEClass, ENTRY_OR_EXIT_ACTION__ACTION_CODE);
-
-    activityEClass = createEClass(ACTIVITY);
-    createEReference(activityEClass, ACTIVITY__CODE);
-
-    guardEClass = createEClass(GUARD);
-    createEReference(guardEClass, GUARD__EVENTS);
-
-    guardCodeEClass = createEClass(GUARD_CODE);
-
-    positionEClass = createEClass(POSITION);
-
-    elementPositionEClass = createEClass(ELEMENT_POSITION);
-    createEAttribute(elementPositionEClass, ELEMENT_POSITION__X);
-    createEAttribute(elementPositionEClass, ELEMENT_POSITION__Y);
-    createEAttribute(elementPositionEClass, ELEMENT_POSITION__WIDTH);
-    createEAttribute(elementPositionEClass, ELEMENT_POSITION__HEIGHT);
-
-    associationPositionEClass = createEClass(ASSOCIATION_POSITION);
-    createEAttribute(associationPositionEClass, ASSOCIATION_POSITION__NAME);
-    createEReference(associationPositionEClass, ASSOCIATION_POSITION__C1);
-    createEReference(associationPositionEClass, ASSOCIATION_POSITION__C2);
-
-    coordinateEClass = createEClass(COORDINATE);
-    createEAttribute(coordinateEClass, COORDINATE__X);
-    createEAttribute(coordinateEClass, COORDINATE__Y);
-
-    umpleElementEClass = createEClass(UMPLE_ELEMENT);
-
-    blockEClass = createEClass(BLOCK);
-    createEReference(blockEClass, BLOCK__BLOCKS);
-
-    parExpressionEClass = createEClass(PAR_EXPRESSION);
-
-    expressionListEClass = createEClass(EXPRESSION_LIST);
-    createEReference(expressionListEClass, EXPRESSION_LIST__EXPRESSIONS);
-
-    expressionEClass = createEClass(EXPRESSION);
-    createEReference(expressionEClass, EXPRESSION__EXPRESSION1);
-    createEReference(expressionEClass, EXPRESSION__EXPRESSION2);
-
-    conditionalExpressionEClass = createEClass(CONDITIONAL_EXPRESSION);
-    createEReference(conditionalExpressionEClass, CONDITIONAL_EXPRESSION__EXPRESSION1);
-    createEReference(conditionalExpressionEClass, CONDITIONAL_EXPRESSION__EXPRESSION2);
-    createEReference(conditionalExpressionEClass, CONDITIONAL_EXPRESSION__EXPRESSION3);
-
-    conditionalOrExpressionEClass = createEClass(CONDITIONAL_OR_EXPRESSION);
-    createEReference(conditionalOrExpressionEClass, CONDITIONAL_OR_EXPRESSION__EXPRESSION1);
-    createEReference(conditionalOrExpressionEClass, CONDITIONAL_OR_EXPRESSION__EXPRESSION_REST);
-
-    conditionalAndExpressionEClass = createEClass(CONDITIONAL_AND_EXPRESSION);
-    createEReference(conditionalAndExpressionEClass, CONDITIONAL_AND_EXPRESSION__EXPRESSION1);
-    createEReference(conditionalAndExpressionEClass, CONDITIONAL_AND_EXPRESSION__EXPRESSION_REST);
-
-    equalityExpressionEClass = createEClass(EQUALITY_EXPRESSION);
-    createEReference(equalityExpressionEClass, EQUALITY_EXPRESSION__EXPRESSION1);
-    createEReference(equalityExpressionEClass, EQUALITY_EXPRESSION__EXPRESSION_REST);
-
-    relationalExpressionEClass = createEClass(RELATIONAL_EXPRESSION);
-    createEReference(relationalExpressionEClass, RELATIONAL_EXPRESSION__EXPRESSION1);
-    createEReference(relationalExpressionEClass, RELATIONAL_EXPRESSION__EXPRESSION_REST);
-
-    additiveExpressionEClass = createEClass(ADDITIVE_EXPRESSION);
-    createEReference(additiveExpressionEClass, ADDITIVE_EXPRESSION__EXPRESSION1);
-    createEReference(additiveExpressionEClass, ADDITIVE_EXPRESSION__EXPRESSION_REST);
-
-    multiplicativeExpressionEClass = createEClass(MULTIPLICATIVE_EXPRESSION);
-    createEReference(multiplicativeExpressionEClass, MULTIPLICATIVE_EXPRESSION__EXPRESSION1);
-    createEReference(multiplicativeExpressionEClass, MULTIPLICATIVE_EXPRESSION__EXPRESSION_REST);
-
-    unaryExpressionEClass = createEClass(UNARY_EXPRESSION);
-    createEReference(unaryExpressionEClass, UNARY_EXPRESSION__EXP1);
-    createEReference(unaryExpressionEClass, UNARY_EXPRESSION__EXP2);
-
-    unaryExpressionNotPlusMinusEClass = createEClass(UNARY_EXPRESSION_NOT_PLUS_MINUS);
-
-    primaryEClass = createEClass(PRIMARY);
-
-    literalEClass = createEClass(LITERAL);
-
-    functionCallEClass = createEClass(FUNCTION_CALL);
-
-    functionDeclarationEClass = createEClass(FUNCTION_DECLARATION);
-    createEReference(functionDeclarationEClass, FUNCTION_DECLARATION__JAVA);
-
-    functionDefinitionEClass = createEClass(FUNCTION_DEFINITION);
-    createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__JAVA);
-
-    javaFunctionDeclarationEClass = createEClass(JAVA_FUNCTION_DECLARATION);
-    createEAttribute(javaFunctionDeclarationEClass, JAVA_FUNCTION_DECLARATION__RETURN_TYPE);
-    createEAttribute(javaFunctionDeclarationEClass, JAVA_FUNCTION_DECLARATION__REFERENCE_TYPE);
-    createEAttribute(javaFunctionDeclarationEClass, JAVA_FUNCTION_DECLARATION__NAME);
-    createEAttribute(javaFunctionDeclarationEClass, JAVA_FUNCTION_DECLARATION__ARG_LIST);
-    createEAttribute(javaFunctionDeclarationEClass, JAVA_FUNCTION_DECLARATION__ARG_LIST_ID);
-
-    javaFunctionDefinitionEClass = createEClass(JAVA_FUNCTION_DEFINITION);
-    createEReference(javaFunctionDefinitionEClass, JAVA_FUNCTION_DEFINITION__DECL);
-    createEReference(javaFunctionDefinitionEClass, JAVA_FUNCTION_DEFINITION__CODE);
-
-    javaFunctionCallEClass = createEClass(JAVA_FUNCTION_CALL);
-    createEAttribute(javaFunctionCallEClass, JAVA_FUNCTION_CALL__NAME);
-    createEReference(javaFunctionCallEClass, JAVA_FUNCTION_CALL__ARGS);
-
-    blockStatementEClass = createEClass(BLOCK_STATEMENT);
-
-    localVariableDeclarationStatementEClass = createEClass(LOCAL_VARIABLE_DECLARATION_STATEMENT);
-
-    localVariableDeclarationEClass = createEClass(LOCAL_VARIABLE_DECLARATION);
-    createEAttribute(localVariableDeclarationEClass, LOCAL_VARIABLE_DECLARATION__TYPE);
-    createEReference(localVariableDeclarationEClass, LOCAL_VARIABLE_DECLARATION__DEC);
-
-    variableDeclaratorsEClass = createEClass(VARIABLE_DECLARATORS);
-    createEReference(variableDeclaratorsEClass, VARIABLE_DECLARATORS__VD);
-
-    variableDeclaratorEClass = createEClass(VARIABLE_DECLARATOR);
-    createEAttribute(variableDeclaratorEClass, VARIABLE_DECLARATOR__NAME);
-    createEReference(variableDeclaratorEClass, VARIABLE_DECLARATOR__EXP);
-
-    statementEClass = createEClass(STATEMENT);
-
-    endstatementEClass = createEClass(ENDSTATEMENT);
-
-    breakstatementEClass = createEClass(BREAKSTATEMENT);
-
-    ifstatementEClass = createEClass(IFSTATEMENT);
-    createEReference(ifstatementEClass, IFSTATEMENT__CONDITION);
-    createEReference(ifstatementEClass, IFSTATEMENT__STATE1);
-    createEReference(ifstatementEClass, IFSTATEMENT__STATE2);
-
-    forstatementEClass = createEClass(FORSTATEMENT);
-    createEReference(forstatementEClass, FORSTATEMENT__CONTROL);
-    createEReference(forstatementEClass, FORSTATEMENT__STATE);
-
-    whilestatementEClass = createEClass(WHILESTATEMENT);
-    createEReference(whilestatementEClass, WHILESTATEMENT__CONDITION);
-    createEReference(whilestatementEClass, WHILESTATEMENT__STATE);
-
-    returnstatementEClass = createEClass(RETURNSTATEMENT);
-    createEReference(returnstatementEClass, RETURNSTATEMENT__RET_VAL);
-
-    expressionstatementEClass = createEClass(EXPRESSIONSTATEMENT);
-
-    trystatementEClass = createEClass(TRYSTATEMENT);
-    createEReference(trystatementEClass, TRYSTATEMENT__TRY_BLOCK);
-    createEReference(trystatementEClass, TRYSTATEMENT__CATCH_BLOCK);
-
-    forControlEClass = createEClass(FOR_CONTROL);
-    createEReference(forControlEClass, FOR_CONTROL__INIT);
-    createEReference(forControlEClass, FOR_CONTROL__CONDITION);
-    createEReference(forControlEClass, FOR_CONTROL__UPDATE);
-
-    forInitEClass = createEClass(FOR_INIT);
-    createEReference(forInitEClass, FOR_INIT__EXPRESSIONS);
-
-    forUpdateEClass = createEClass(FOR_UPDATE);
-
-    phpFunctionEClass = createEClass(PHP_FUNCTION);
-    createEAttribute(phpFunctionEClass, PHP_FUNCTION__NAME);
-    createEReference(phpFunctionEClass, PHP_FUNCTION__CODEBLOCK);
-
-    phpBlockEClass = createEClass(PHP_BLOCK);
-    createEAttribute(phpBlockEClass, PHP_BLOCK__CODE);
-
-    keyEClass = createEClass(KEY);
-    createEAttribute(keyEClass, KEY__KEYS);
-
-    // Create enums
-    modifierEEnum = createEEnum(MODIFIER);
+    if (isLoaded) return;
+    isLoaded = true;
+
+    URL url = getClass().getResource(packageFilename);
+    if (url == null)
+    {
+      throw new RuntimeException("Missing serialized package: " + packageFilename);
+    }
+    URI uri = URI.createURI(url.toString());
+    Resource resource = new EcoreResourceFactoryImpl().createResource(uri);
+    try
+    {
+      resource.load(null);
+    }
+    catch (IOException exception)
+    {
+      throw new WrappedException(exception);
+    }
+    initializeFromLoadedEPackage(this, (EPackage)resource.getContents().get(0));
+    createResource(eNS_URI);
+  }
+
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private boolean isFixed = false;
+
+  /**
+   * Fixes up the loaded package, to make it appear as if it had been programmatically built.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void fixPackageContents()
+  {
+    if (isFixed) return;
+    isFixed = true;
+    fixEClassifiers();
   }
 
   /**
+   * Sets the instance class on the given classifier.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    */
-  private boolean isInitialized = false;
-
-  /**
-   * Complete the initialization of the package and its meta-model.  This
-   * method is guarded to have no affect on any invocation but its first.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void initializePackageContents()
+  @Override
+  protected void fixInstanceClass(EClassifier eClassifier)
   {
-    if (isInitialized) return;
-    isInitialized = true;
-
-    // Initialize package
-    setName(eNAME);
-    setNsPrefix(eNS_PREFIX);
-    setNsURI(eNS_URI);
-
-    // Create type parameters
-
-    // Set bounds for type parameters
-
-    // Add supertypes to classes
-    glossaryEClass.getESuperTypes().add(this.getAbstractElement());
-    generateEClass.getESuperTypes().add(this.getAbstractElement());
-    useStatementEClass.getESuperTypes().add(this.getAbstractElement());
-    namespaceEClass.getESuperTypes().add(this.getAbstractElement());
-    entityEClass.getESuperTypes().add(this.getAbstractElement());
-    classDefinitionEClass.getESuperTypes().add(this.getEntity());
-    classDefinitionEClass.getESuperTypes().add(this.getUmpleElement());
-    externalDefinitionEClass.getESuperTypes().add(this.getEntity());
-    interfaceDefinitionEClass.getESuperTypes().add(this.getEntity());
-    interfaceDefinitionEClass.getESuperTypes().add(this.getUmpleElement());
-    associationDefinitionEClass.getESuperTypes().add(this.getEntity());
-    dependEClass.getESuperTypes().add(this.getClassContent());
-    dependEClass.getESuperTypes().add(this.getAssociationClassContent());
-    symmetricReflexiveAssociationEClass.getESuperTypes().add(this.getClassContent());
-    symmetricReflexiveAssociationEClass.getESuperTypes().add(this.getAssociationClassContent());
-    inlineAssociationEClass.getESuperTypes().add(this.getClassContent());
-    inlineAssociationEClass.getESuperTypes().add(this.getAssociationClassContent());
-    associationClassDefinitionEClass.getESuperTypes().add(this.getEntity());
-    softwarePatternEClass.getESuperTypes().add(this.getClassContent());
-    softwarePatternEClass.getESuperTypes().add(this.getAssociationClassContent());
-    isAEClass.getESuperTypes().add(this.getSoftwarePattern());
-    singletonEClass.getESuperTypes().add(this.getSoftwarePattern());
-    keyDefinitionEClass.getESuperTypes().add(this.getSoftwarePattern());
-    codeInjectionEClass.getESuperTypes().add(this.getSoftwarePattern());
-    attributeEClass.getESuperTypes().add(this.getClassContent());
-    attributeEClass.getESuperTypes().add(this.getAssociationClassContent());
-    stateMachineDefinitionEClass.getESuperTypes().add(this.getEntity());
-    stateMachineEClass.getESuperTypes().add(this.getClassContent());
-    stateMachineEClass.getESuperTypes().add(this.getAssociationClassContent());
-    inlineStateMachineEClass.getESuperTypes().add(this.getStateMachine());
-    referencedStateMachineEClass.getESuperTypes().add(this.getStateMachine());
-    enumEClass.getESuperTypes().add(this.getStateMachine());
-    stateEClass.getESuperTypes().add(this.getStateEntity());
-    transitionEClass.getESuperTypes().add(this.getStateEntity());
-    eventDefinitionEClass.getESuperTypes().add(this.getTransition());
-    eventEClass.getESuperTypes().add(this.getEventDefinition());
-    afterEveryEventEClass.getESuperTypes().add(this.getEventDefinition());
-    afterEventEClass.getESuperTypes().add(this.getEventDefinition());
-    entryOrExitActionEClass.getESuperTypes().add(this.getStateEntity());
-    activityEClass.getESuperTypes().add(this.getStateEntity());
-    guardEClass.getESuperTypes().add(this.getTransition());
-    guardCodeEClass.getESuperTypes().add(this.getGuard());
-    positionEClass.getESuperTypes().add(this.getClassContent());
-    positionEClass.getESuperTypes().add(this.getAssociationClassContent());
-    elementPositionEClass.getESuperTypes().add(this.getPosition());
-    associationPositionEClass.getESuperTypes().add(this.getPosition());
-    blockEClass.getESuperTypes().add(this.getstatement());
-    parExpressionEClass.getESuperTypes().add(this.getprimary());
-    expressionListEClass.getESuperTypes().add(this.getforUpdate());
-    expressionEClass.getESuperTypes().add(this.getStateEntity());
-    expressionEClass.getESuperTypes().add(this.getGuardCode());
-    expressionEClass.getESuperTypes().add(this.getparExpression());
-    expressionEClass.getESuperTypes().add(this.getexpressionstatement());
-    unaryExpressionEClass.getESuperTypes().add(this.getunaryExpressionNotPlusMinus());
-    primaryEClass.getESuperTypes().add(this.getunaryExpressionNotPlusMinus());
-    literalEClass.getESuperTypes().add(this.getprimary());
-    javaFunctionCallEClass.getESuperTypes().add(this.getliteral());
-    javaFunctionCallEClass.getESuperTypes().add(this.getfunctionCall());
-    localVariableDeclarationStatementEClass.getESuperTypes().add(this.getblockStatement());
-    localVariableDeclarationEClass.getESuperTypes().add(this.getlocalVariableDeclarationStatement());
-    localVariableDeclarationEClass.getESuperTypes().add(this.getforInit());
-    statementEClass.getESuperTypes().add(this.getblockStatement());
-    endstatementEClass.getESuperTypes().add(this.getstatement());
-    breakstatementEClass.getESuperTypes().add(this.getstatement());
-    ifstatementEClass.getESuperTypes().add(this.getstatement());
-    forstatementEClass.getESuperTypes().add(this.getstatement());
-    whilestatementEClass.getESuperTypes().add(this.getstatement());
-    returnstatementEClass.getESuperTypes().add(this.getstatement());
-    expressionstatementEClass.getESuperTypes().add(this.getstatement());
-    trystatementEClass.getESuperTypes().add(this.getstatement());
-    keyEClass.getESuperTypes().add(this.getKeyDefinition());
-
-    // Initialize classes and features; add operations and parameters
-    initEClass(umpleModelEClass, UmpleModel.class, "UmpleModel", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getUmpleModel_Elements(), this.getAbstractElement(), null, "elements", null, 0, -1, UmpleModel.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(abstractElementEClass, AbstractElement.class, "AbstractElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(glossaryEClass, Glossary.class, "Glossary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getGlossary_Words(), this.getWord(), null, "words", null, 0, -1, Glossary.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(wordEClass, Word.class, "Word", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getWord_Singular(), ecorePackage.getEString(), "singular", null, 0, 1, Word.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getWord_Plural(), ecorePackage.getEString(), "plural", null, 0, 1, Word.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(generateEClass, Generate.class, "Generate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getGenerate_Java(), ecorePackage.getEBoolean(), "java", null, 0, 1, Generate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getGenerate_Php(), ecorePackage.getEBoolean(), "Php", null, 0, 1, Generate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getGenerate_Ruby(), ecorePackage.getEString(), "Ruby", null, 0, 1, Generate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(useStatementEClass, UseStatement.class, "UseStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getUseStatement_File(), ecorePackage.getEString(), "file", null, 0, 1, UseStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(namespaceEClass, Namespace.class, "Namespace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getNamespace_Value(), ecorePackage.getEString(), "value", null, 0, 1, Namespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(entityEClass, Entity.class, "Entity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getEntity_Name(), ecorePackage.getEString(), "name", null, 0, 1, Entity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(classDefinitionEClass, ClassDefinition.class, "ClassDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getClassDefinition_ClassContent(), this.getClassContent(), null, "classContent", null, 0, -1, ClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(externalDefinitionEClass, ExternalDefinition.class, "ExternalDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getExternalDefinition_ClassContent(), this.getClassContent(), null, "classContent", null, 0, -1, ExternalDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(interfaceDefinitionEClass, InterfaceDefinition.class, "InterfaceDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getInterfaceDefinition_Depend(), this.getDepend(), null, "depend", null, 0, -1, InterfaceDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(associationDefinitionEClass, AssociationDefinition.class, "AssociationDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAssociationDefinition_Association(), this.getAssociation(), null, "association", null, 0, -1, AssociationDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(classContentEClass, ClassContent.class, "ClassContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(associationClassContentEClass, AssociationClassContent.class, "AssociationClassContent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(dependEClass, Depend.class, "Depend", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getDepend_Name(), ecorePackage.getEString(), "name", null, 0, 1, Depend.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(associationEClass, Association.class, "Association", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getAssociation_Type1(), ecorePackage.getEString(), "type1", null, 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAssociation_Rolename1(), ecorePackage.getEString(), "rolename1", null, 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAssociation_Type2(), ecorePackage.getEString(), "type2", null, 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAssociation_Rolename2(), ecorePackage.getEString(), "rolename2", null, 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(symmetricReflexiveAssociationEClass, SymmetricReflexiveAssociation.class, "SymmetricReflexiveAssociation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getSymmetricReflexiveAssociation_Rolename(), ecorePackage.getEString(), "rolename", null, 0, 1, SymmetricReflexiveAssociation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(inlineAssociationEClass, InlineAssociation.class, "InlineAssociation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getInlineAssociation_Rolename1(), ecorePackage.getEString(), "rolename1", null, 0, 1, InlineAssociation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getInlineAssociation_Type(), ecorePackage.getEString(), "type", null, 0, 1, InlineAssociation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getInlineAssociation_Rolename2(), ecorePackage.getEString(), "rolename2", null, 0, 1, InlineAssociation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(singleAssociationEndEClass, SingleAssociationEnd.class, "SingleAssociationEnd", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getSingleAssociationEnd_Type(), ecorePackage.getEString(), "type", null, 0, 1, SingleAssociationEnd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getSingleAssociationEnd_Rolename(), ecorePackage.getEString(), "rolename", null, 0, 1, SingleAssociationEnd.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(associationClassDefinitionEClass, AssociationClassDefinition.class, "AssociationClassDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAssociationClassDefinition_AssociationClassContent(), this.getAssociationClassContent(), null, "associationClassContent", null, 0, -1, AssociationClassDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(softwarePatternEClass, SoftwarePattern.class, "SoftwarePattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(isAEClass, isA.class, "isA", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getisA_ExtendsClass(), this.getUmpleElement(), null, "extendsClass", null, 0, -1, isA.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(singletonEClass, Singleton.class, "Singleton", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getSingleton_Singleton(), ecorePackage.getEBoolean(), "singleton", null, 0, 1, Singleton.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(keyDefinitionEClass, KeyDefinition.class, "KeyDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(codeInjectionEClass, CodeInjection.class, "CodeInjection", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getCodeInjection_Name(), ecorePackage.getEString(), "name", null, 0, 1, CodeInjection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getCodeInjection_Code(), ecorePackage.getEString(), "code", null, 0, 1, CodeInjection.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(attributeEClass, Attribute.class, "Attribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getAttribute_Autounique(), ecorePackage.getEBoolean(), "autounique", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAttribute_Name(), ecorePackage.getEString(), "name", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAttribute_Unique(), ecorePackage.getEBoolean(), "unique", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAttribute_Modifier(), this.getModifier(), "modifier", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAttribute_Type(), ecorePackage.getEString(), "type", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAttribute_List(), ecorePackage.getEBoolean(), "list", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getAttribute_Object(), this.getClassDefinition(), null, "object", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAttribute_Value(), ecorePackage.getEString(), "value", null, 0, 1, Attribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(stateMachineDefinitionEClass, StateMachineDefinition.class, "StateMachineDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getStateMachineDefinition_States(), this.getState(), null, "states", null, 0, -1, StateMachineDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(stateMachineEClass, StateMachine.class, "StateMachine", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getStateMachine_Name(), ecorePackage.getEString(), "name", null, 0, 1, StateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(inlineStateMachineEClass, InlineStateMachine.class, "InlineStateMachine", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getInlineStateMachine_States(), this.getState(), null, "states", null, 0, -1, InlineStateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(referencedStateMachineEClass, ReferencedStateMachine.class, "ReferencedStateMachine", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getReferencedStateMachine_Machine(), this.getStateMachineDefinition(), null, "machine", null, 0, 1, ReferencedStateMachine.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(enumEClass, cruise.umple.umple.Enum.class, "Enum", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getEnum_States(), ecorePackage.getEString(), "states", null, 0, -1, cruise.umple.umple.Enum.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(stateEClass, State.class, "State", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getState_Name(), ecorePackage.getEString(), "name", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getState_States(), this.getStateEntity(), null, "states", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(stateEntityEClass, StateEntity.class, "StateEntity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(transitionEClass, Transition.class, "Transition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTransition_A(), this.getAction(), null, "a", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getTransition_StateName(), ecorePackage.getEString(), "stateName", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(eventDefinitionEClass, EventDefinition.class, "EventDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getEventDefinition_G(), this.getGuard(), null, "g", null, 0, 1, EventDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getEventDefinition_Name(), ecorePackage.getEString(), "name", null, 0, 1, EventDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(eventEClass, Event.class, "Event", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(afterEveryEventEClass, AfterEveryEvent.class, "AfterEveryEvent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(afterEventEClass, AfterEvent.class, "AfterEvent", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(actionEClass, Action.class, "Action", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAction_Code(), this.getblock(), null, "code", null, 0, 1, Action.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(entryOrExitActionEClass, EntryOrExitAction.class, "EntryOrExitAction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getEntryOrExitAction_Type(), ecorePackage.getEString(), "type", null, 0, 1, EntryOrExitAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getEntryOrExitAction_ActionCode(), this.getblock(), null, "actionCode", null, 0, 1, EntryOrExitAction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(activityEClass, Activity.class, "Activity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getActivity_Code(), this.getblock(), null, "code", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(guardEClass, Guard.class, "Guard", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getGuard_Events(), this.getEventDefinition(), null, "events", null, 0, -1, Guard.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(guardCodeEClass, GuardCode.class, "GuardCode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(positionEClass, Position.class, "Position", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(elementPositionEClass, ElementPosition.class, "ElementPosition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getElementPosition_X(), ecorePackage.getEInt(), "x", null, 0, 1, ElementPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getElementPosition_Y(), ecorePackage.getEInt(), "y", null, 0, 1, ElementPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getElementPosition_Width(), ecorePackage.getEInt(), "width", null, 0, 1, ElementPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getElementPosition_Height(), ecorePackage.getEInt(), "height", null, 0, 1, ElementPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(associationPositionEClass, AssociationPosition.class, "AssociationPosition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getAssociationPosition_Name(), ecorePackage.getEString(), "name", null, 0, 1, AssociationPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getAssociationPosition_C1(), this.getCoordinate(), null, "c1", null, 0, 1, AssociationPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getAssociationPosition_C2(), this.getCoordinate(), null, "c2", null, 0, 1, AssociationPosition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(coordinateEClass, Coordinate.class, "Coordinate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getCoordinate_X(), ecorePackage.getEInt(), "x", null, 0, 1, Coordinate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getCoordinate_Y(), ecorePackage.getEInt(), "y", null, 0, 1, Coordinate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(umpleElementEClass, UmpleElement.class, "UmpleElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(blockEClass, block.class, "block", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getblock_Blocks(), this.getblockStatement(), null, "blocks", null, 0, -1, block.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(parExpressionEClass, parExpression.class, "parExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(expressionListEClass, expressionList.class, "expressionList", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getexpressionList_Expressions(), this.getexpression(), null, "expressions", null, 0, -1, expressionList.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(expressionEClass, expression.class, "expression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getexpression_Expression1(), this.getconditionalExpression(), null, "expression1", null, 0, 1, expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getexpression_Expression2(), this.getexpression(), null, "expression2", null, 0, 1, expression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(conditionalExpressionEClass, conditionalExpression.class, "conditionalExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getconditionalExpression_Expression1(), this.getconditionalOrExpression(), null, "expression1", null, 0, 1, conditionalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getconditionalExpression_Expression2(), this.getexpression(), null, "expression2", null, 0, 1, conditionalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getconditionalExpression_Expression3(), this.getexpression(), null, "expression3", null, 0, 1, conditionalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(conditionalOrExpressionEClass, conditionalOrExpression.class, "conditionalOrExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getconditionalOrExpression_Expression1(), this.getconditionalAndExpression(), null, "expression1", null, 0, 1, conditionalOrExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getconditionalOrExpression_ExpressionRest(), this.getconditionalAndExpression(), null, "expressionRest", null, 0, -1, conditionalOrExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(conditionalAndExpressionEClass, conditionalAndExpression.class, "conditionalAndExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getconditionalAndExpression_Expression1(), this.getequalityExpression(), null, "expression1", null, 0, 1, conditionalAndExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getconditionalAndExpression_ExpressionRest(), this.getequalityExpression(), null, "expressionRest", null, 0, -1, conditionalAndExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(equalityExpressionEClass, equalityExpression.class, "equalityExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getequalityExpression_Expression1(), this.getrelationalExpression(), null, "expression1", null, 0, 1, equalityExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getequalityExpression_ExpressionRest(), this.getrelationalExpression(), null, "expressionRest", null, 0, -1, equalityExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(relationalExpressionEClass, relationalExpression.class, "relationalExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getrelationalExpression_Expression1(), this.getadditiveExpression(), null, "expression1", null, 0, 1, relationalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getrelationalExpression_ExpressionRest(), this.getadditiveExpression(), null, "expressionRest", null, 0, -1, relationalExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(additiveExpressionEClass, additiveExpression.class, "additiveExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getadditiveExpression_Expression1(), this.getmultiplicativeExpression(), null, "expression1", null, 0, 1, additiveExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getadditiveExpression_ExpressionRest(), this.getmultiplicativeExpression(), null, "expressionRest", null, 0, -1, additiveExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(multiplicativeExpressionEClass, multiplicativeExpression.class, "multiplicativeExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getmultiplicativeExpression_Expression1(), this.getunaryExpression(), null, "expression1", null, 0, 1, multiplicativeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getmultiplicativeExpression_ExpressionRest(), this.getunaryExpression(), null, "expressionRest", null, 0, -1, multiplicativeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(unaryExpressionEClass, unaryExpression.class, "unaryExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getunaryExpression_Exp1(), this.getunaryExpression(), null, "exp1", null, 0, 1, unaryExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getunaryExpression_Exp2(), this.getunaryExpressionNotPlusMinus(), null, "exp2", null, 0, 1, unaryExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(unaryExpressionNotPlusMinusEClass, unaryExpressionNotPlusMinus.class, "unaryExpressionNotPlusMinus", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(primaryEClass, primary.class, "primary", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(literalEClass, literal.class, "literal", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(functionCallEClass, functionCall.class, "functionCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(functionDeclarationEClass, functionDeclaration.class, "functionDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getfunctionDeclaration_Java(), this.getjavaFunctionDeclaration(), null, "java", null, 0, 1, functionDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(functionDefinitionEClass, functionDefinition.class, "functionDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getfunctionDefinition_Java(), this.getjavaFunctionDefinition(), null, "java", null, 0, 1, functionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(javaFunctionDeclarationEClass, javaFunctionDeclaration.class, "javaFunctionDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getjavaFunctionDeclaration_ReturnType(), ecorePackage.getEString(), "returnType", null, 0, 1, javaFunctionDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getjavaFunctionDeclaration_ReferenceType(), ecorePackage.getEString(), "referenceType", null, 0, 1, javaFunctionDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getjavaFunctionDeclaration_Name(), ecorePackage.getEString(), "name", null, 0, 1, javaFunctionDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getjavaFunctionDeclaration_ArgList(), ecorePackage.getEString(), "argList", null, 0, -1, javaFunctionDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getjavaFunctionDeclaration_ArgListID(), ecorePackage.getEString(), "argListID", null, 0, -1, javaFunctionDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(javaFunctionDefinitionEClass, javaFunctionDefinition.class, "javaFunctionDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getjavaFunctionDefinition_Decl(), this.getjavaFunctionDeclaration(), null, "decl", null, 0, 1, javaFunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getjavaFunctionDefinition_Code(), this.getblock(), null, "code", null, 0, 1, javaFunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(javaFunctionCallEClass, javaFunctionCall.class, "javaFunctionCall", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getjavaFunctionCall_Name(), ecorePackage.getEString(), "name", null, 0, 1, javaFunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getjavaFunctionCall_Args(), this.getexpressionList(), null, "args", null, 0, 1, javaFunctionCall.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(blockStatementEClass, blockStatement.class, "blockStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(localVariableDeclarationStatementEClass, localVariableDeclarationStatement.class, "localVariableDeclarationStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(localVariableDeclarationEClass, localVariableDeclaration.class, "localVariableDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getlocalVariableDeclaration_Type(), ecorePackage.getEString(), "type", null, 0, 1, localVariableDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getlocalVariableDeclaration_Dec(), this.getvariableDeclarators(), null, "dec", null, 0, 1, localVariableDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(variableDeclaratorsEClass, variableDeclarators.class, "variableDeclarators", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getvariableDeclarators_Vd(), this.getvariableDeclarator(), null, "vd", null, 0, -1, variableDeclarators.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(variableDeclaratorEClass, variableDeclarator.class, "variableDeclarator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getvariableDeclarator_Name(), ecorePackage.getEString(), "name", null, 0, 1, variableDeclarator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getvariableDeclarator_Exp(), this.getexpression(), null, "exp", null, 0, 1, variableDeclarator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(statementEClass, statement.class, "statement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(endstatementEClass, endstatement.class, "endstatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(breakstatementEClass, breakstatement.class, "breakstatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(ifstatementEClass, ifstatement.class, "ifstatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getifstatement_Condition(), this.getparExpression(), null, "condition", null, 0, 1, ifstatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getifstatement_State1(), this.getstatement(), null, "state1", null, 0, 1, ifstatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getifstatement_State2(), this.getstatement(), null, "state2", null, 0, 1, ifstatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(forstatementEClass, forstatement.class, "forstatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getforstatement_Control(), this.getforControl(), null, "control", null, 0, 1, forstatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getforstatement_State(), this.getstatement(), null, "state", null, 0, 1, forstatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(whilestatementEClass, whilestatement.class, "whilestatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getwhilestatement_Condition(), this.getparExpression(), null, "condition", null, 0, 1, whilestatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getwhilestatement_State(), this.getstatement(), null, "state", null, 0, 1, whilestatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(returnstatementEClass, returnstatement.class, "returnstatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getreturnstatement_RetVal(), this.getexpression(), null, "retVal", null, 0, 1, returnstatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(expressionstatementEClass, expressionstatement.class, "expressionstatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(trystatementEClass, trystatement.class, "trystatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(gettrystatement_TryBlock(), this.getblock(), null, "tryBlock", null, 0, 1, trystatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(gettrystatement_CatchBlock(), this.getblock(), null, "catchBlock", null, 0, 1, trystatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(forControlEClass, forControl.class, "forControl", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getforControl_Init(), this.getforInit(), null, "init", null, 0, 1, forControl.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getforControl_Condition(), this.getexpression(), null, "condition", null, 0, 1, forControl.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getforControl_Update(), this.getforUpdate(), null, "update", null, 0, 1, forControl.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(forInitEClass, forInit.class, "forInit", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getforInit_Expressions(), this.getexpression(), null, "expressions", null, 0, -1, forInit.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(forUpdateEClass, forUpdate.class, "forUpdate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(phpFunctionEClass, phpFunction.class, "phpFunction", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getphpFunction_Name(), ecorePackage.getEString(), "name", null, 0, 1, phpFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getphpFunction_Codeblock(), this.getphpBlock(), null, "codeblock", null, 0, 1, phpFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(phpBlockEClass, phpBlock.class, "phpBlock", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getphpBlock_Code(), ecorePackage.getEString(), "code", null, 0, 1, phpBlock.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(keyEClass, Key.class, "Key", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getKey_Keys(), ecorePackage.getEString(), "keys", null, 0, -1, Key.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    // Initialize enums and add enum literals
-    initEEnum(modifierEEnum, Modifier.class, "Modifier");
-    addEEnumLiteral(modifierEEnum, Modifier.IMMUTABLE);
-    addEEnumLiteral(modifierEEnum, Modifier.SETTABLE);
-    addEEnumLiteral(modifierEEnum, Modifier.INTERNAL);
-    addEEnumLiteral(modifierEEnum, Modifier.DEFAULTED);
-    addEEnumLiteral(modifierEEnum, Modifier.CONST);
-
-    // Create resource
-    createResource(eNS_URI);
+    if (eClassifier.getInstanceClassName() == null)
+    {
+      eClassifier.setInstanceClassName("cruise.umple.umple." + eClassifier.getName());
+      setGeneratedClassName(eClassifier);
+    }
   }
 
 } //UmplePackageImpl

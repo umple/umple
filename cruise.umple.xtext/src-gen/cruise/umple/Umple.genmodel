@@ -7,285 +7,830 @@
     rootExtendsClass="org.eclipse.emf.ecore.impl.MinimalEObjectImpl$Container" complianceLevel="5.0"
     copyrightFields="false" editPluginID="cruise.umple.xtext.edit" editorPluginID="cruise.umple.xtext.editor">
   <genPackages prefix="Umple" basePackage="cruise.umple" disposableProviderFactory="true"
-      ecorePackage="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#/">
-    <genEnums typeSafeEnumCompatible="false" ecoreEnum="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Modifier">
-      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Modifier/IMMUTABLE"/>
-      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Modifier/SETTABLE"/>
-      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Modifier/INTERNAL"/>
-      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Modifier/DEFAULTED"/>
-      <genEnumLiterals ecoreEnumLiteral="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Modifier/CONST"/>
-    </genEnums>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UmpleModel">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UmpleModel/elements"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractElement"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Glossary">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Glossary/words"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Word">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Word/singular"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Word/plural"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate/java"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate/Php"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate/Ruby"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UseStatement">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UseStatement/file"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Namespace">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Namespace/value"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity/name"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition/classContent"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition/classContent"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition/depend"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationDefinition/association"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Depend">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Depend/name"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association/type1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association/rolename1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association/type2"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association/rolename2"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SymmetricReflexiveAssociation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SymmetricReflexiveAssociation/rolename"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation/rolename1"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation/rolename2"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd/rolename"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassDefinition/associationClassContent"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//isA">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//isA/extendsClass"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Singleton">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Singleton/singleton"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//KeyDefinition"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeInjection">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeInjection/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeInjection/code"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute/autounique"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute/unique"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute/modifier"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute/type"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute/list"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute/object"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute/value"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition/states"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine/name"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineStateMachine">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineStateMachine/states"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ReferencedStateMachine">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ReferencedStateMachine/machine"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Enum">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Enum/states"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State/states"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition/a"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition/stateName"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition/g"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition/name"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Event"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterEveryEvent"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterEvent"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action/code"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction/type"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction/actionCode"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Activity">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Activity/code"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard/events"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GuardCode"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition/x"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition/y"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition/width"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition/height"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition/c1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition/c2"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate/x"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate/y"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UmpleElement"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//block/blocks"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//parExpression"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expressionList">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expressionList/expressions"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expression/expression2"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalExpression/expression2"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalExpression/expression3"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalOrExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalOrExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalOrExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalAndExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalAndExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//conditionalAndExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//equalityExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//equalityExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//equalityExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//relationalExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//relationalExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//relationalExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//additiveExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//additiveExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//additiveExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//multiplicativeExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//multiplicativeExpression/expression1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//multiplicativeExpression/expressionRest"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpression">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpression/exp1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpression/exp2"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//unaryExpressionNotPlusMinus"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//primary"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//literal"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//functionCall"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//functionDeclaration">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//functionDeclaration/java"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//functionDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//functionDefinition/java"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/returnType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/referenceType"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/name"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/argList"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDeclaration/argListID"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDefinition">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDefinition/decl"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionDefinition/code"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionCall">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionCall/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//javaFunctionCall/args"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//blockStatement"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//localVariableDeclarationStatement"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//localVariableDeclaration">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//localVariableDeclaration/type"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//localVariableDeclaration/dec"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//variableDeclarators">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//variableDeclarators/vd"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//variableDeclarator">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//variableDeclarator/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//variableDeclarator/exp"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//statement"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//endstatement"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//breakstatement"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ifstatement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ifstatement/condition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ifstatement/state1"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ifstatement/state2"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forstatement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forstatement/control"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forstatement/state"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//whilestatement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//whilestatement/condition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//whilestatement/state"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//returnstatement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//returnstatement/retVal"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//expressionstatement"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//trystatement">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//trystatement/tryBlock"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//trystatement/catchBlock"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forControl">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forControl/init"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forControl/condition"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forControl/update"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forInit">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forInit/expressions"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//forUpdate"/>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//phpFunction">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//phpFunction/name"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//phpFunction/codeblock"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//phpBlock">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//phpBlock/code"/>
-    </genClasses>
-    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Key">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Key/keys"/>
+      loadInitialization="true" literalsInterface="false" ecorePackage="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#/">
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Model">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Model/model"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Program_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Program_/Anonymous_program_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_program_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_program_1_/Comment_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_program_1_/Directive_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/Glossary_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/Generate_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/Generate_path_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/UseStatement_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/Namespace_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/TraceType_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/Entity_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/Debug_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Directive_/Strictness_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Glossary_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Glossary_/Word_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Word_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Word_/singular_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Word_/plural_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Strictness_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Strictness_/Anonymous_strictness_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_strictness_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_strictness_1_/strictnessLevel_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_strictness_1_/message_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_strictness_1_/messageNumber_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate_/generate_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate_path_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate_path_/language_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate_path_/output_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Generate_path_/override_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UseStatement_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//UseStatement_/use_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Namespace_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Namespace_/namespace_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity_/ClassDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity_/InterfaceDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity_/ExternalDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity_/AssociationDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity_/AssociationClassDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Entity_/StateMachineDefinition_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_/InlineComment_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Comment_/MultilineComment_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineComment_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineComment_/inlineComment_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MultilineComment_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MultilineComment_/multilineComment_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Debug_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Debug_/debug_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Abstract_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Abstract_/abstract_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassDefinition_/ClassContent_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition_/interface_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExternalDefinition_/ClassContent_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition_/Depend_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceDefinition_/InterfaceBody_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationDefinition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationDefinition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationDefinition_/Association_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassDefinition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassDefinition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassDefinition_/AssociationClassContent_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/Comment_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/ClassDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/Trace_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/Position_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/DisplayColor_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/Abstract_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/Invariant_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/SoftwarePattern_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/Depend_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/SymmetricReflexiveAssociation_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/Attribute_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/StateMachine_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/InlineAssociation_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/ConcreteMethodDeclaration_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/ConstantDeclaration_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ClassContent_/ExtraCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/Comment_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/ClassDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/Position_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/DisplayColor_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/Invariant_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/SoftwarePattern_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/Depend_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/SingleAssociationEnd_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/StateMachine_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/Attribute_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/Association_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/InlineAssociation_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationClassContent_/ExtraCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceBody_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceBody_/InterfaceMemberDeclaration_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceMemberDeclaration_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceMemberDeclaration_/ConstantDeclaration_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceMemberDeclaration_/AbstractMethodDeclaration_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceMemberDeclaration_/Position_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceMemberDeclaration_/DisplayColor_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceMemberDeclaration_/IsA_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InterfaceMemberDeclaration_/ExtraCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstantDeclaration_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstantDeclaration_/Anonymous_constantDeclaration_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstantDeclaration_/Anonymous_constantDeclaration_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constantDeclaration_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constantDeclaration_1_/list_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constantDeclaration_1_/name_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constantDeclaration_1_/type_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constantDeclaration_2_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constantDeclaration_2_/value_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_/Anonymous_moreCode_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreCode_/code_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_moreCode_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_moreCode_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_moreCode_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLangs_/Anonymous_codeLangs_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_codeLangs_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_codeLangs_1_/CodeLang_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeLang_/codeLang_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodBody_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodBody_/Anonymous_methodBody_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodBody_/code_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodBody_/Anonymous_methodBody_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_methodBody_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_methodBody_1_/Precondition_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_methodBody_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_methodBody_2_/Postcondition_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConcreteMethodDeclaration_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConcreteMethodDeclaration_/type_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConcreteMethodDeclaration_/MethodDeclarator_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConcreteMethodDeclaration_/Anonymous_concreteMethodDeclaration_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConcreteMethodDeclaration_/MethodBody_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConcreteMethodDeclaration_/Anonymous_concreteMethodDeclaration_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_concreteMethodDeclaration_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_concreteMethodDeclaration_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_concreteMethodDeclaration_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_concreteMethodDeclaration_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_concreteMethodDeclaration_2_/MoreCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractMethodDeclaration_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractMethodDeclaration_/type_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AbstractMethodDeclaration_/MethodDeclarator_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodDeclarator_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodDeclarator_/methodName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MethodDeclarator_/ParameterList_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ParameterList_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ParameterList_/Parameter_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ParameterList_/Anonymous_parameterList_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_parameterList_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_parameterList_1_/Parameter_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Parameter_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Parameter_/Anonymous_parameter_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_parameter_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_parameter_1_/list_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_parameter_1_/name_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_parameter_1_/type_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association_/modifier_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association_/AssociationEnd_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association_/arrow_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Association_/AssociationEnd_2"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SymmetricReflexiveAssociation_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SymmetricReflexiveAssociation_/Multiplicity_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SymmetricReflexiveAssociation_/roleName_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation_/modifier_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation_/InlineAssociationEnd_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation_/arrow_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociation_/AssociationEnd_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociationEnd_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociationEnd_/Multiplicity_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociationEnd_/IsSorted_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineAssociationEnd_/roleName_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd_/Multiplicity_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd_/type_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleAssociationEnd_/roleName_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationEnd_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationEnd_/Multiplicity_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationEnd_/type_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationEnd_/roleName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationEnd_/IsSorted_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_/bound_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_/lowerBound_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_/upperBound_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Multiplicity_/bound_int"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsSorted_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsSorted_/priority_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute_/SimpleAttribute_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute_/AutouniqueAttribute_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute_/DerivedAttribute_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Attribute_/ComplexAttribute_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SimpleAttribute_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SimpleAttribute_/name_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutouniqueAttribute_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutouniqueAttribute_/autounique_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutouniqueAttribute_/name_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DerivedAttribute_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DerivedAttribute_/modifier_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DerivedAttribute_/Anonymous_derivedAttribute_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DerivedAttribute_/Anonymous_derivedAttribute_2_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DerivedAttribute_/code_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DerivedAttribute_/Anonymous_derivedAttribute_3_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_1_/list_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_1_/name_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_1_/type_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_2_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_2_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_3_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_derivedAttribute_3_/MoreCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ComplexAttribute_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ComplexAttribute_/unique_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ComplexAttribute_/lazy_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ComplexAttribute_/modifier_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ComplexAttribute_/Anonymous_complexAttribute_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ComplexAttribute_/Anonymous_complexAttribute_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_complexAttribute_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_complexAttribute_1_/list_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_complexAttribute_1_/name_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_complexAttribute_1_/type_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_complexAttribute_2_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_complexAttribute_2_/value_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Key_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Key_/keyId_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Key_/Anonymous_key_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_key_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_key_1_/keyId_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Depend_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Depend_/depend_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExtraCode_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExtraCode_/extraCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern_/IsA_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern_/Singleton_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern_/Immutable_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern_/KeyDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SoftwarePattern_/CodeInjection_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsA_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsA_/SingleIsA_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//IsA_/MultipleIsA_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleIsA_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleIsA_/extendsName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SingleIsA_/Anonymous_singleIsA_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_singleIsA_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_singleIsA_1_/extendsName_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MultipleIsA_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MultipleIsA_/extendsName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MultipleIsA_/Anonymous_multipleIsA_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_multipleIsA_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_multipleIsA_1_/extendsName_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Singleton_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Singleton_/singleton_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Immutable_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Immutable_/immutable_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//KeyDefinition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//KeyDefinition_/DefaultKey_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//KeyDefinition_/Key_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeInjection_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeInjection_/BeforeCode_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CodeInjection_/AfterCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BeforeCode_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BeforeCode_/operationName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BeforeCode_/Anonymous_beforeCode_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BeforeCode_/code_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BeforeCode_/Anonymous_beforeCode_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_beforeCode_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_beforeCode_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_beforeCode_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_beforeCode_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_beforeCode_2_/MoreCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterCode_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterCode_/operationName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterCode_/Anonymous_afterCode_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterCode_/code_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterCode_/Anonymous_afterCode_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_afterCode_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_afterCode_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_afterCode_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_afterCode_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_afterCode_2_/MoreCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition_/queued_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachineDefinition_/State_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine_/Enum_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine_/InlineStateMachine_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine_/ReferencedStateMachine_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateMachine_/ActiveDefinition_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ActiveDefinition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ActiveDefinition_/active_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ActiveDefinition_/name_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ActiveDefinition_/code_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineStateMachine_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineStateMachine_/queued_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineStateMachine_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//InlineStateMachine_/Anonymous_inlineStateMachine_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_inlineStateMachine_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_inlineStateMachine_1_/Comment_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_inlineStateMachine_1_/State_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_inlineStateMachine_1_/Trace_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ReferencedStateMachine_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ReferencedStateMachine_/name_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ReferencedStateMachine_/definitionName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ReferencedStateMachine_/ExtendedStateMachine_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExtendedStateMachine_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExtendedStateMachine_/Anonymous_extendedStateMachine_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_extendedStateMachine_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_extendedStateMachine_1_/Comment_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_extendedStateMachine_1_/changeType_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_extendedStateMachine_1_/State_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Enum_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Enum_/name_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Enum_/stateName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Enum_/Anonymous_enum_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_enum_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_enum_1_/stateName_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_/stateName_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_/StateInternal_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_/final_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//State_/Anonymous_state_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_state_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_state_1_/StateInternal_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateInternal_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateInternal_/Comment_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateInternal_/changeType_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateInternal_/StateEntity_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity_/EntryOrExitAction_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity_/AutoTransition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity_/Transition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity_/Activity_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity_/State_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StateEntity_/Trace_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransition_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransition_/AutoTransitionBlock_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransition_/Activity_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransitionBlock_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransitionBlock_/Guard_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransitionBlock_/Action_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AutoTransitionBlock_/stateName_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition_/Guard_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition_/EventDefinition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition_/Action_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Transition_/stateName_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition_/AfterEveryEvent_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition_/AfterEvent_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition_/event_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EventDefinition_/Anonymous_eventDefinition_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_eventDefinition_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_eventDefinition_1_/ParameterList_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterEveryEvent_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterEveryEvent_/timer_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterEvent_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AfterEvent_/timer_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action_/Anonymous_action_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action_/code_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Action_/Anonymous_action_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_action_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_action_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_action_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_action_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_action_2_/MoreCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction_/type_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction_/Anonymous_entryOrExitAction_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction_/code_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EntryOrExitAction_/Anonymous_entryOrExitAction_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_entryOrExitAction_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_entryOrExitAction_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_entryOrExitAction_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_entryOrExitAction_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_entryOrExitAction_2_/MoreCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Activity_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Activity_/Anonymous_activity_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Activity_/code_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Activity_/Anonymous_activity_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_activity_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_activity_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_activity_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_activity_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_activity_2_/MoreCode_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreGuards_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreGuards_/Anonymous_moreGuards_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreGuards_/code_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_moreGuards_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_moreGuards_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_moreGuards_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard_/Anonymous_guard_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard_/code_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Guard_/Anonymous_guard_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_guard_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_guard_1_/CodeLang_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_guard_1_/CodeLangs_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_guard_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_guard_2_/MoreGuards_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceType_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceType_/tracerType_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceType_/Anonymous_traceType_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceType_/Anonymous_traceType_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceType_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceType_1_/verbisty_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceType_2_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceType_2_/tracerArgument_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Trace_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Trace_/TraceDirective_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Trace_/TraceCase_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceDirective_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceDirective_/TraceItem_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceDirective_/Anonymous_traceDirective_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_/ExecuteClause_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_/TraceWhen_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_/TraceFor_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_/TracePeriod_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_/TraceDuring_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_/TraceCaseActivation_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_/TraceRecord_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceDirective_1_/TraceLevel_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceItem_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceItem_/TraceEntity_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceItem_/PreOrPostCondition_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceEntity_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceEntity_/TraceOptions_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceEntity_/trace_entity_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceEntity_/Anonymous_traceEntity_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceEntity_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceEntity_1_/trace_entity_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceOptions_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceOptions_/TraceOption_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceOptions_/Anonymous_traceOptions_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceOptions_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_traceOptions_1_/TraceOption_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceOption_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceOption_/option_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//PreOrPostCondition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//PreOrPostCondition_/Anonymous_PreOrPostCondition_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//PreOrPostCondition_/TraceCondition_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExecuteClause_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ExecuteClause_/trace_execute_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceWhen_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceWhen_/conditionType_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceWhen_/ConstraintToken_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceFor_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceFor_/trace_for_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceLevel_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceLevel_/trace_level_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TracePeriod_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TracePeriod_/trace_period_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceDuring_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceDuring_/trace_duration_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceRecord_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceRecord_/RecordEntity_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//RecordEntity_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//RecordEntity_/Anonymous_recordEntity_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//RecordEntity_/trace_record_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//RecordEntity_/Anonymous_recordEntity_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_recordEntity_2_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_recordEntity_2_/trace_record_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCondition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCondition_/LHS_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCondition_/ConditionRHS_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConditionRHS_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConditionRHS_/comparison_operator_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConditionRHS_/RHS_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCase_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCase_/TraceCaseDef_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCase_/TraceCaseActivation_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCase_/TraceCaseDeactivation_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseDef_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseDef_/tracecase_name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseDef_/TraceDirective_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseActivation_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseActivation_/tracecase_act_name_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseActivation_/Anonymous_traceCaseActivation_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseDeactivation_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseDeactivation_/tracecase_deact_name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//TraceCaseDeactivation_/DeActivateFor_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DeActivateFor_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DeActivateFor_/deactivate_for_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Precondition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Precondition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Precondition_/Constraint_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Postcondition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Postcondition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Postcondition_/Constraint_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Invariant_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Invariant_/Anonymous_invariant_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Invariant_/Anonymous_invariant_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_invariant_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_invariant_1_/name_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_invariant_2_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_invariant_2_/Constraint_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintToken_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintToken_/Constraint_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Constraint_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Constraint_/Anonymous_constraint_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Constraint_/ConstraintBody_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraint_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraint_1_/ConstraintBody_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NegativeConstraint_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NegativeConstraint_/Constraint_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintBody_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintBody_/ConstraintExpr_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintBody_/Anonymous_constraintBody_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraintBody_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraintBody_1_/LinkingOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//LinkingOp_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//LinkingOp_/Anonymous_linkingOp_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//LinkingOp_/Anonymous_linkingOp_2_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//LinkingOp_/Anonymous_linkingOp_3_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_1_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_1_/ConstraintExpr_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_2_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_2_/andOp_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_2_/ConstraintExpr_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_3_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_3_/orOp_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_linkingOp_3_/ConstraintExpr_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_/NegativeConstraint_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_/StringExpr_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_/BoolExpr_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_/GenExpr_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_/NumExpr_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_/loneBoolean_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ConstraintExpr_/Anonymous_constraintExpr_1_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraintExpr_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_constraintExpr_1_/index_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CompoundExpr_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CompoundExpr_/StringExpr_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CompoundExpr_/BoolExpr_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CompoundExpr_/NumExpr_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//CompoundExpr_/GenExpr_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BoolExpr_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BoolExpr_/literal_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BoolExpr_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BoolExpr_/EqualityOp_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//BoolExpr_/index_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringExpr_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringExpr_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringExpr_/EqualityOp_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringExpr_/StringLit_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringExpr_/index_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringLit_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//StringLit_/quote_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GenExpr_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GenExpr_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GenExpr_/Anonymous_genExpr_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GenExpr_/EqualityOp_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GenExpr_/name_2"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GenExpr_/Anonymous_genExpr_2_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_genExpr_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_genExpr_1_/index_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_genExpr_2_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_genExpr_2_/index_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_/Anonymous_numExpr_1_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_/Anonymous_numExpr_2_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_/OrdinalOp_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_/name_2"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_/Anonymous_numExpr_3_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NumExpr_/Anonymous_numExpr_4_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_1_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_1_/tail_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_2_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_2_/index_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_3_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_3_/tail_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_4_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Anonymous_numExpr_4_/index_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualityOp_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualityOp_/EqualsOp_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualityOp_/NotequalsOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualsOp_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//EqualsOp_/equalsOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NotequalsOp_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//NotequalsOp_/notequalsOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//OrdinalOp_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//OrdinalOp_/GreaterOp_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//OrdinalOp_/LessOp_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//OrdinalOp_/MoreOp_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//OrdinalOp_/SmallerOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GreaterOp_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//GreaterOp_/greaterOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//LessOp_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//LessOp_/lessOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreOp_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//MoreOp_/moreOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SmallerOp_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//SmallerOp_/smallerOp_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position_">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position_/AssociationPosition_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Position_/ElementPosition_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition_/x_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition_/y_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition_/width_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//ElementPosition_/height_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition_/name_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition_/Coordinate_1"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//AssociationPosition_/Coordinate_2"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate_/x_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//Coordinate_/y_1"/>
+    </genClasses>
+    <genClasses ecoreClass="platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DisplayColor_">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DisplayColor_/Anonymous_displayColor_1_1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute platform:/resource/cruise.umple.xtext/src-gen/cruise/umple/Umple.ecore#//DisplayColor_/colorValue_1"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
