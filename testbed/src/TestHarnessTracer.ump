@@ -4,13 +4,43 @@ namespace cruise.tracer.test;
 //tracer String;
 tracer Console;
 
-class ConsoleTracerTesterA
+class TraceStm
+{
+
+  log = "initial value";
+  status {
+    Open {
+      entry / { log = "entry called"; }
+      exit / { log = "exit called"; }
+      anEvent -> Close;
+    }
+    Close {
+      anEvent -> Open;
+    }
+    
+    HalfOpen{
+      ev2 -> HalfClose;
+    }
+    HalfClose{
+      ev2 -> HalfOpen;
+    }
+    
+    // trace a state
+    trace Open;
+    
+    // trace a transition
+    trace ev2;
+  }
+  
+}
+
+class TraceAttr
 {
   name;
   trace name;
   
-  //address;
-  //trace get address;
+  address;
+  trace get address;
   
   
   // Trace attributes with conditions
@@ -30,4 +60,3 @@ class ConsoleTracerTesterA
   trace number5 for 3;
   
 }
-

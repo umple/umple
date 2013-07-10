@@ -292,6 +292,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
             {
               wasSet = true;
               traceAttr.setTraceGet(true);
+              traceAttr.setTraceSet(false);
             }
             if( "set".equals(sub2.getValue("option")) )
             {

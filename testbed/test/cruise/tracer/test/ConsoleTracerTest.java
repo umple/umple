@@ -30,6 +30,7 @@ public class ConsoleTracerTest
 			String[] expected = {"Time",
 					"at_s,name,null,Geoff",
 					"at_s,name,Geoff,Hamoud",
+					"at_g,address,800 king Edward",
 					"at_s,number1,7,8",
 					"at_s,number2,22",
 					"at_s,number2,33",
@@ -39,7 +40,13 @@ public class ConsoleTracerTest
 					"at_s,number4,66",
 					"at_s,number5,0,1",
 					"at_s,number5,1,2",
-					"at_s,number5,2,3"
+					"at_s,number5,2,3",
+					"sm_e,Open,status",
+					"sm_x,Open,status",
+					"sm_t,Open,anEvent,Close",
+					"sm_t,Close,anEvent,Open",
+					"sm_e,Open,status",
+					
 					};
 			Integer[] testField = {0,9,9};
 			@Override
@@ -64,37 +71,43 @@ public class ConsoleTracerTest
 		};
 	  System.setErr(ps);
 	  
-	  ConsoleTracerTesterA cTest = new ConsoleTracerTesterA(null, 0, null, 0, 0, 0, 0, 0);
+	  TraceAttr aTest = new TraceAttr(null,null, 0, null, 0, 0, 0, 0, 0);
 	  
-	  cTest.setName("Geoff");
-	  cTest.setName("Hamoud");
-	  cTest.getName();
+	  aTest.setName("Geoff");
+	  aTest.setName("Hamoud");
+	  aTest.getName();
 	  
-	  cTest.setNumber1(7);
-	  cTest.setNumCond(110);
-	  cTest.setNumber1(8);
+	  aTest.setAddress("800 king Edward");
+	  aTest.getAddress();
 	  
-	  cTest.setNumber2(11);
-	  cTest.setNumCond(20);
-	  cTest.setNumber2(22);
-	  cTest.setNumber2(33);
+	  aTest.setNumber1(7);
+	  aTest.setNumCond(110);
+	  aTest.setNumber1(8);
 	  
-	  cTest.setNumber3(44);
-	  cTest.setNumCond(1);
-	  cTest.setNumber3(45);
-	  cTest.setNumber3(46);
+	  aTest.setNumber2(11);
+	  aTest.setNumCond(20);
+	  aTest.setNumber2(22);
+	  aTest.setNumber2(33);
+	  
+	  aTest.setNumber3(44);
+	  aTest.setNumCond(1);
+	  aTest.setNumber3(45);
+	  aTest.setNumber3(46);
 
-	  cTest.setNumber4(55);
-	  cTest.setNumber4(66);
-	  cTest.setNumCond(-99);
-	  cTest.setNumber4(77);
+	  aTest.setNumber4(55);
+	  aTest.setNumber4(66);
+	  aTest.setNumCond(-99);
+	  aTest.setNumber4(77);
 	  
-	  cTest.setNumber5(1);
-	  cTest.setNumber5(2);
-	  cTest.setNumber5(3);
-	  cTest.setNumber5(4);
+	  aTest.setNumber5(1);
+	  aTest.setNumber5(2);
+	  aTest.setNumber5(3);
+	  aTest.setNumber5(4);
 	  
-  }
+	  TraceStm sTrace = new TraceStm();
+	  sTrace.anEvent();
+	  sTrace.anEvent();
+ }
   
   @After
   public void cleanUp()
