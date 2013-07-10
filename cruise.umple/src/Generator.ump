@@ -163,6 +163,23 @@ class YumlGenerator
   String outputPath = "";
 }
 
+class XtextGenerator
+{
+  isA CodeGenerator;
+  depend java.util.regex.*;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  PatternHandler[] patterns;
+  UmpleModel model = null;
+  String outputPath = "";
+  String output = "";
+  
+  HashSet<String> terminals = new HashSet<String>();
+}
 
 class JsonGenerator
 {
@@ -316,4 +333,5 @@ use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
 use Generator_CodeSimulate.ump;
 use Generator_CodeYuml.ump;
+use Generator_CodeXtext.ump;
 use Generator_CodeJson.ump;

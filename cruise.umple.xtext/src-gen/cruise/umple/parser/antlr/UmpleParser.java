@@ -25,7 +25,7 @@ public class UmpleParser extends org.eclipse.xtext.parser.antlr.AbstractAntlrPar
 	
 	@Override 
 	protected String getDefaultRuleName() {
-		return "UmpleModel";
+		return "Model";
 	}
 	
 	public UmpleGrammarAccess getGrammarAccess() {

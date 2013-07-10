@@ -54,7 +54,7 @@ public class ConsoleTracerTesterA
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,10,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,10,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
     name = aName;
     wasSet = true;
     return wasSet;
@@ -89,7 +89,7 @@ public class ConsoleTracerTesterA
     boolean wasSet = false;
     if (numCond>100)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,26,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number1,"+number1+","+aNumber1 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,26,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number1,"+number1+","+aNumber1 );
     }
     number1 = aNumber1;
     wasSet = true;
@@ -102,7 +102,7 @@ public class ConsoleTracerTesterA
     number2 = aNumber2;
     if (numCond==20)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,27,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number2,"+number2 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,27,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number2,"+number2 );
     }
     wasSet = true;
     return wasSet;
@@ -114,7 +114,7 @@ public class ConsoleTracerTesterA
     number3 = aNumber3;
     if (traceFlag1)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,28,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number3,"+number3 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,28,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number3,"+number3 );
     }
     wasSet = true;
     return wasSet;
@@ -126,7 +126,7 @@ public class ConsoleTracerTesterA
     number4 = aNumber4;
     if (traceFlag2)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,29,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number4,"+number4 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,29,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number4,"+number4 );
     }
     wasSet = true;
     return wasSet;
@@ -137,7 +137,7 @@ public class ConsoleTracerTesterA
     boolean wasSet = false;
     if (traceFlag3<3)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,30,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number5,"+number5+","+aNumber5 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,30,ConsoleTracerTesterA,"+System.identityHashCode(this)+",at_s,number5,"+number5+","+aNumber5 );
       traceFlag3++;
     }
     number5 = aNumber5;

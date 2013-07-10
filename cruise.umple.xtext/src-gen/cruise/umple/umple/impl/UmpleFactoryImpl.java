@@ -2,104 +2,12 @@
  * <copyright>
  * </copyright>
  *
-
  */
 package cruise.umple.umple.impl;
 
-import cruise.umple.umple.AbstractElement;
-import cruise.umple.umple.Action;
-import cruise.umple.umple.Activity;
-import cruise.umple.umple.AfterEvent;
-import cruise.umple.umple.AfterEveryEvent;
-import cruise.umple.umple.Association;
-import cruise.umple.umple.AssociationClassContent;
-import cruise.umple.umple.AssociationClassDefinition;
-import cruise.umple.umple.AssociationDefinition;
-import cruise.umple.umple.AssociationPosition;
-import cruise.umple.umple.Attribute;
-import cruise.umple.umple.ClassContent;
-import cruise.umple.umple.ClassDefinition;
-import cruise.umple.umple.CodeInjection;
-import cruise.umple.umple.Coordinate;
-import cruise.umple.umple.Depend;
-import cruise.umple.umple.ElementPosition;
-import cruise.umple.umple.Entity;
-import cruise.umple.umple.EntryOrExitAction;
-import cruise.umple.umple.Event;
-import cruise.umple.umple.EventDefinition;
-import cruise.umple.umple.ExternalDefinition;
-import cruise.umple.umple.Generate;
-import cruise.umple.umple.Glossary;
-import cruise.umple.umple.Guard;
-import cruise.umple.umple.GuardCode;
-import cruise.umple.umple.InlineAssociation;
-import cruise.umple.umple.InlineStateMachine;
-import cruise.umple.umple.InterfaceDefinition;
-import cruise.umple.umple.Key;
-import cruise.umple.umple.KeyDefinition;
-import cruise.umple.umple.Modifier;
-import cruise.umple.umple.Namespace;
-import cruise.umple.umple.Position;
-import cruise.umple.umple.ReferencedStateMachine;
-import cruise.umple.umple.SingleAssociationEnd;
-import cruise.umple.umple.Singleton;
-import cruise.umple.umple.SoftwarePattern;
-import cruise.umple.umple.State;
-import cruise.umple.umple.StateEntity;
-import cruise.umple.umple.StateMachine;
-import cruise.umple.umple.StateMachineDefinition;
-import cruise.umple.umple.SymmetricReflexiveAssociation;
-import cruise.umple.umple.Transition;
-import cruise.umple.umple.UmpleElement;
-import cruise.umple.umple.UmpleFactory;
-import cruise.umple.umple.UmpleModel;
-import cruise.umple.umple.UmplePackage;
-import cruise.umple.umple.UseStatement;
-import cruise.umple.umple.Word;
-import cruise.umple.umple.additiveExpression;
-import cruise.umple.umple.block;
-import cruise.umple.umple.blockStatement;
-import cruise.umple.umple.breakstatement;
-import cruise.umple.umple.conditionalAndExpression;
-import cruise.umple.umple.conditionalExpression;
-import cruise.umple.umple.conditionalOrExpression;
-import cruise.umple.umple.endstatement;
-import cruise.umple.umple.equalityExpression;
-import cruise.umple.umple.expression;
-import cruise.umple.umple.expressionList;
-import cruise.umple.umple.expressionstatement;
-import cruise.umple.umple.forControl;
-import cruise.umple.umple.forInit;
-import cruise.umple.umple.forUpdate;
-import cruise.umple.umple.forstatement;
-import cruise.umple.umple.functionCall;
-import cruise.umple.umple.functionDeclaration;
-import cruise.umple.umple.functionDefinition;
-import cruise.umple.umple.ifstatement;
-import cruise.umple.umple.isA;
-import cruise.umple.umple.javaFunctionCall;
-import cruise.umple.umple.javaFunctionDeclaration;
-import cruise.umple.umple.javaFunctionDefinition;
-import cruise.umple.umple.literal;
-import cruise.umple.umple.localVariableDeclaration;
-import cruise.umple.umple.localVariableDeclarationStatement;
-import cruise.umple.umple.multiplicativeExpression;
-import cruise.umple.umple.parExpression;
-import cruise.umple.umple.phpBlock;
-import cruise.umple.umple.phpFunction;
-import cruise.umple.umple.primary;
-import cruise.umple.umple.relationalExpression;
-import cruise.umple.umple.returnstatement;
-import cruise.umple.umple.statement;
-import cruise.umple.umple.trystatement;
-import cruise.umple.umple.unaryExpression;
-import cruise.umple.umple.unaryExpressionNotPlusMinus;
-import cruise.umple.umple.variableDeclarator;
-import cruise.umple.umple.variableDeclarators;
-import cruise.umple.umple.whilestatement;
+import cruise.umple.umple.*;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -159,95 +67,197 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
   {
     switch (eClass.getClassifierID())
     {
-      case UmplePackage.UMPLE_MODEL: return createUmpleModel();
-      case UmplePackage.ABSTRACT_ELEMENT: return createAbstractElement();
-      case UmplePackage.GLOSSARY: return createGlossary();
-      case UmplePackage.WORD: return createWord();
-      case UmplePackage.GENERATE: return createGenerate();
-      case UmplePackage.USE_STATEMENT: return createUseStatement();
-      case UmplePackage.NAMESPACE: return createNamespace();
-      case UmplePackage.ENTITY: return createEntity();
-      case UmplePackage.CLASS_DEFINITION: return createClassDefinition();
-      case UmplePackage.EXTERNAL_DEFINITION: return createExternalDefinition();
-      case UmplePackage.INTERFACE_DEFINITION: return createInterfaceDefinition();
-      case UmplePackage.ASSOCIATION_DEFINITION: return createAssociationDefinition();
-      case UmplePackage.CLASS_CONTENT: return createClassContent();
-      case UmplePackage.ASSOCIATION_CLASS_CONTENT: return createAssociationClassContent();
-      case UmplePackage.DEPEND: return createDepend();
-      case UmplePackage.ASSOCIATION: return createAssociation();
-      case UmplePackage.SYMMETRIC_REFLEXIVE_ASSOCIATION: return createSymmetricReflexiveAssociation();
-      case UmplePackage.INLINE_ASSOCIATION: return createInlineAssociation();
-      case UmplePackage.SINGLE_ASSOCIATION_END: return createSingleAssociationEnd();
-      case UmplePackage.ASSOCIATION_CLASS_DEFINITION: return createAssociationClassDefinition();
-      case UmplePackage.SOFTWARE_PATTERN: return createSoftwarePattern();
-      case UmplePackage.IS_A: return createisA();
-      case UmplePackage.SINGLETON: return createSingleton();
-      case UmplePackage.KEY_DEFINITION: return createKeyDefinition();
-      case UmplePackage.CODE_INJECTION: return createCodeInjection();
-      case UmplePackage.ATTRIBUTE: return createAttribute();
-      case UmplePackage.STATE_MACHINE_DEFINITION: return createStateMachineDefinition();
-      case UmplePackage.STATE_MACHINE: return createStateMachine();
-      case UmplePackage.INLINE_STATE_MACHINE: return createInlineStateMachine();
-      case UmplePackage.REFERENCED_STATE_MACHINE: return createReferencedStateMachine();
-      case UmplePackage.ENUM: return createEnum();
-      case UmplePackage.STATE: return createState();
-      case UmplePackage.STATE_ENTITY: return createStateEntity();
-      case UmplePackage.TRANSITION: return createTransition();
-      case UmplePackage.EVENT_DEFINITION: return createEventDefinition();
-      case UmplePackage.EVENT: return createEvent();
-      case UmplePackage.AFTER_EVERY_EVENT: return createAfterEveryEvent();
-      case UmplePackage.AFTER_EVENT: return createAfterEvent();
-      case UmplePackage.ACTION: return createAction();
-      case UmplePackage.ENTRY_OR_EXIT_ACTION: return createEntryOrExitAction();
-      case UmplePackage.ACTIVITY: return createActivity();
-      case UmplePackage.GUARD: return createGuard();
-      case UmplePackage.GUARD_CODE: return createGuardCode();
-      case UmplePackage.POSITION: return createPosition();
-      case UmplePackage.ELEMENT_POSITION: return createElementPosition();
-      case UmplePackage.ASSOCIATION_POSITION: return createAssociationPosition();
-      case UmplePackage.COORDINATE: return createCoordinate();
-      case UmplePackage.UMPLE_ELEMENT: return createUmpleElement();
-      case UmplePackage.BLOCK: return createblock();
-      case UmplePackage.PAR_EXPRESSION: return createparExpression();
-      case UmplePackage.EXPRESSION_LIST: return createexpressionList();
-      case UmplePackage.EXPRESSION: return createexpression();
-      case UmplePackage.CONDITIONAL_EXPRESSION: return createconditionalExpression();
-      case UmplePackage.CONDITIONAL_OR_EXPRESSION: return createconditionalOrExpression();
-      case UmplePackage.CONDITIONAL_AND_EXPRESSION: return createconditionalAndExpression();
-      case UmplePackage.EQUALITY_EXPRESSION: return createequalityExpression();
-      case UmplePackage.RELATIONAL_EXPRESSION: return createrelationalExpression();
-      case UmplePackage.ADDITIVE_EXPRESSION: return createadditiveExpression();
-      case UmplePackage.MULTIPLICATIVE_EXPRESSION: return createmultiplicativeExpression();
-      case UmplePackage.UNARY_EXPRESSION: return createunaryExpression();
-      case UmplePackage.UNARY_EXPRESSION_NOT_PLUS_MINUS: return createunaryExpressionNotPlusMinus();
-      case UmplePackage.PRIMARY: return createprimary();
-      case UmplePackage.LITERAL: return createliteral();
-      case UmplePackage.FUNCTION_CALL: return createfunctionCall();
-      case UmplePackage.FUNCTION_DECLARATION: return createfunctionDeclaration();
-      case UmplePackage.FUNCTION_DEFINITION: return createfunctionDefinition();
-      case UmplePackage.JAVA_FUNCTION_DECLARATION: return createjavaFunctionDeclaration();
-      case UmplePackage.JAVA_FUNCTION_DEFINITION: return createjavaFunctionDefinition();
-      case UmplePackage.JAVA_FUNCTION_CALL: return createjavaFunctionCall();
-      case UmplePackage.BLOCK_STATEMENT: return createblockStatement();
-      case UmplePackage.LOCAL_VARIABLE_DECLARATION_STATEMENT: return createlocalVariableDeclarationStatement();
-      case UmplePackage.LOCAL_VARIABLE_DECLARATION: return createlocalVariableDeclaration();
-      case UmplePackage.VARIABLE_DECLARATORS: return createvariableDeclarators();
-      case UmplePackage.VARIABLE_DECLARATOR: return createvariableDeclarator();
-      case UmplePackage.STATEMENT: return createstatement();
-      case UmplePackage.ENDSTATEMENT: return createendstatement();
-      case UmplePackage.BREAKSTATEMENT: return createbreakstatement();
-      case UmplePackage.IFSTATEMENT: return createifstatement();
-      case UmplePackage.FORSTATEMENT: return createforstatement();
-      case UmplePackage.WHILESTATEMENT: return createwhilestatement();
-      case UmplePackage.RETURNSTATEMENT: return createreturnstatement();
-      case UmplePackage.EXPRESSIONSTATEMENT: return createexpressionstatement();
-      case UmplePackage.TRYSTATEMENT: return createtrystatement();
-      case UmplePackage.FOR_CONTROL: return createforControl();
-      case UmplePackage.FOR_INIT: return createforInit();
-      case UmplePackage.FOR_UPDATE: return createforUpdate();
-      case UmplePackage.PHP_FUNCTION: return createphpFunction();
-      case UmplePackage.PHP_BLOCK: return createphpBlock();
-      case UmplePackage.KEY: return createKey();
+      case UmplePackage.MODEL: return createModel();
+      case UmplePackage.PROGRAM_: return createProgram_();
+      case UmplePackage.ANONYMOUS_PROGRAM_1: return createAnonymous_program_1_();
+      case UmplePackage.DIRECTIVE_: return createDirective_();
+      case UmplePackage.GLOSSARY_: return createGlossary_();
+      case UmplePackage.WORD_: return createWord_();
+      case UmplePackage.STRICTNESS_: return createStrictness_();
+      case UmplePackage.ANONYMOUS_STRICTNESS_1: return createAnonymous_strictness_1_();
+      case UmplePackage.GENERATE_: return createGenerate_();
+      case UmplePackage.GENERATE_PATH_: return createGenerate_path_();
+      case UmplePackage.USE_STATEMENT_: return createUseStatement_();
+      case UmplePackage.NAMESPACE_: return createNamespace_();
+      case UmplePackage.ENTITY_: return createEntity_();
+      case UmplePackage.COMMENT_: return createComment_();
+      case UmplePackage.INLINE_COMMENT_: return createInlineComment_();
+      case UmplePackage.MULTILINE_COMMENT_: return createMultilineComment_();
+      case UmplePackage.DEBUG_: return createDebug_();
+      case UmplePackage.ABSTRACT_: return createAbstract_();
+      case UmplePackage.CLASS_DEFINITION_: return createClassDefinition_();
+      case UmplePackage.EXTERNAL_DEFINITION_: return createExternalDefinition_();
+      case UmplePackage.INTERFACE_DEFINITION_: return createInterfaceDefinition_();
+      case UmplePackage.ASSOCIATION_DEFINITION_: return createAssociationDefinition_();
+      case UmplePackage.ASSOCIATION_CLASS_DEFINITION_: return createAssociationClassDefinition_();
+      case UmplePackage.CLASS_CONTENT_: return createClassContent_();
+      case UmplePackage.ASSOCIATION_CLASS_CONTENT_: return createAssociationClassContent_();
+      case UmplePackage.INTERFACE_BODY_: return createInterfaceBody_();
+      case UmplePackage.INTERFACE_MEMBER_DECLARATION_: return createInterfaceMemberDeclaration_();
+      case UmplePackage.CONSTANT_DECLARATION_: return createConstantDeclaration_();
+      case UmplePackage.ANONYMOUS_CONSTANT_DECLARATION_1: return createAnonymous_constantDeclaration_1_();
+      case UmplePackage.ANONYMOUS_CONSTANT_DECLARATION_2: return createAnonymous_constantDeclaration_2_();
+      case UmplePackage.MORE_CODE_: return createMoreCode_();
+      case UmplePackage.ANONYMOUS_MORE_CODE_1: return createAnonymous_moreCode_1_();
+      case UmplePackage.CODE_LANGS_: return createCodeLangs_();
+      case UmplePackage.ANONYMOUS_CODE_LANGS_1: return createAnonymous_codeLangs_1_();
+      case UmplePackage.CODE_LANG_: return createCodeLang_();
+      case UmplePackage.METHOD_BODY_: return createMethodBody_();
+      case UmplePackage.ANONYMOUS_METHOD_BODY_1: return createAnonymous_methodBody_1_();
+      case UmplePackage.ANONYMOUS_METHOD_BODY_2: return createAnonymous_methodBody_2_();
+      case UmplePackage.CONCRETE_METHOD_DECLARATION_: return createConcreteMethodDeclaration_();
+      case UmplePackage.ANONYMOUS_CONCRETE_METHOD_DECLARATION_1: return createAnonymous_concreteMethodDeclaration_1_();
+      case UmplePackage.ANONYMOUS_CONCRETE_METHOD_DECLARATION_2: return createAnonymous_concreteMethodDeclaration_2_();
+      case UmplePackage.ABSTRACT_METHOD_DECLARATION_: return createAbstractMethodDeclaration_();
+      case UmplePackage.METHOD_DECLARATOR_: return createMethodDeclarator_();
+      case UmplePackage.PARAMETER_LIST_: return createParameterList_();
+      case UmplePackage.ANONYMOUS_PARAMETER_LIST_1: return createAnonymous_parameterList_1_();
+      case UmplePackage.PARAMETER_: return createParameter_();
+      case UmplePackage.ANONYMOUS_PARAMETER_1: return createAnonymous_parameter_1_();
+      case UmplePackage.ASSOCIATION_: return createAssociation_();
+      case UmplePackage.SYMMETRIC_REFLEXIVE_ASSOCIATION_: return createSymmetricReflexiveAssociation_();
+      case UmplePackage.INLINE_ASSOCIATION_: return createInlineAssociation_();
+      case UmplePackage.INLINE_ASSOCIATION_END_: return createInlineAssociationEnd_();
+      case UmplePackage.SINGLE_ASSOCIATION_END_: return createSingleAssociationEnd_();
+      case UmplePackage.ASSOCIATION_END_: return createAssociationEnd_();
+      case UmplePackage.MULTIPLICITY_: return createMultiplicity_();
+      case UmplePackage.IS_SORTED_: return createIsSorted_();
+      case UmplePackage.ATTRIBUTE_: return createAttribute_();
+      case UmplePackage.SIMPLE_ATTRIBUTE_: return createSimpleAttribute_();
+      case UmplePackage.AUTOUNIQUE_ATTRIBUTE_: return createAutouniqueAttribute_();
+      case UmplePackage.DERIVED_ATTRIBUTE_: return createDerivedAttribute_();
+      case UmplePackage.ANONYMOUS_DERIVED_ATTRIBUTE_1: return createAnonymous_derivedAttribute_1_();
+      case UmplePackage.ANONYMOUS_DERIVED_ATTRIBUTE_2: return createAnonymous_derivedAttribute_2_();
+      case UmplePackage.ANONYMOUS_DERIVED_ATTRIBUTE_3: return createAnonymous_derivedAttribute_3_();
+      case UmplePackage.COMPLEX_ATTRIBUTE_: return createComplexAttribute_();
+      case UmplePackage.ANONYMOUS_COMPLEX_ATTRIBUTE_1: return createAnonymous_complexAttribute_1_();
+      case UmplePackage.ANONYMOUS_COMPLEX_ATTRIBUTE_2: return createAnonymous_complexAttribute_2_();
+      case UmplePackage.KEY_: return createKey_();
+      case UmplePackage.ANONYMOUS_KEY_1: return createAnonymous_key_1_();
+      case UmplePackage.DEPEND_: return createDepend_();
+      case UmplePackage.EXTRA_CODE_: return createExtraCode_();
+      case UmplePackage.SOFTWARE_PATTERN_: return createSoftwarePattern_();
+      case UmplePackage.IS_A: return createIsA_();
+      case UmplePackage.SINGLE_IS_A: return createSingleIsA_();
+      case UmplePackage.ANONYMOUS_SINGLE_IS_A1: return createAnonymous_singleIsA_1_();
+      case UmplePackage.MULTIPLE_IS_A: return createMultipleIsA_();
+      case UmplePackage.ANONYMOUS_MULTIPLE_IS_A1: return createAnonymous_multipleIsA_1_();
+      case UmplePackage.SINGLETON_: return createSingleton_();
+      case UmplePackage.IMMUTABLE_: return createImmutable_();
+      case UmplePackage.KEY_DEFINITION_: return createKeyDefinition_();
+      case UmplePackage.CODE_INJECTION_: return createCodeInjection_();
+      case UmplePackage.BEFORE_CODE_: return createBeforeCode_();
+      case UmplePackage.ANONYMOUS_BEFORE_CODE_1: return createAnonymous_beforeCode_1_();
+      case UmplePackage.ANONYMOUS_BEFORE_CODE_2: return createAnonymous_beforeCode_2_();
+      case UmplePackage.AFTER_CODE_: return createAfterCode_();
+      case UmplePackage.ANONYMOUS_AFTER_CODE_1: return createAnonymous_afterCode_1_();
+      case UmplePackage.ANONYMOUS_AFTER_CODE_2: return createAnonymous_afterCode_2_();
+      case UmplePackage.STATE_MACHINE_DEFINITION_: return createStateMachineDefinition_();
+      case UmplePackage.STATE_MACHINE_: return createStateMachine_();
+      case UmplePackage.ACTIVE_DEFINITION_: return createActiveDefinition_();
+      case UmplePackage.INLINE_STATE_MACHINE_: return createInlineStateMachine_();
+      case UmplePackage.ANONYMOUS_INLINE_STATE_MACHINE_1: return createAnonymous_inlineStateMachine_1_();
+      case UmplePackage.REFERENCED_STATE_MACHINE_: return createReferencedStateMachine_();
+      case UmplePackage.EXTENDED_STATE_MACHINE_: return createExtendedStateMachine_();
+      case UmplePackage.ANONYMOUS_EXTENDED_STATE_MACHINE_1: return createAnonymous_extendedStateMachine_1_();
+      case UmplePackage.ENUM_: return createEnum_();
+      case UmplePackage.ANONYMOUS_ENUM_1: return createAnonymous_enum_1_();
+      case UmplePackage.STATE_: return createState_();
+      case UmplePackage.ANONYMOUS_STATE_1: return createAnonymous_state_1_();
+      case UmplePackage.STATE_INTERNAL_: return createStateInternal_();
+      case UmplePackage.STATE_ENTITY_: return createStateEntity_();
+      case UmplePackage.AUTO_TRANSITION_: return createAutoTransition_();
+      case UmplePackage.AUTO_TRANSITION_BLOCK_: return createAutoTransitionBlock_();
+      case UmplePackage.TRANSITION_: return createTransition_();
+      case UmplePackage.EVENT_DEFINITION_: return createEventDefinition_();
+      case UmplePackage.ANONYMOUS_EVENT_DEFINITION_1: return createAnonymous_eventDefinition_1_();
+      case UmplePackage.AFTER_EVERY_EVENT_: return createAfterEveryEvent_();
+      case UmplePackage.AFTER_EVENT_: return createAfterEvent_();
+      case UmplePackage.ACTION_: return createAction_();
+      case UmplePackage.ANONYMOUS_ACTION_1: return createAnonymous_action_1_();
+      case UmplePackage.ANONYMOUS_ACTION_2: return createAnonymous_action_2_();
+      case UmplePackage.ENTRY_OR_EXIT_ACTION_: return createEntryOrExitAction_();
+      case UmplePackage.ANONYMOUS_ENTRY_OR_EXIT_ACTION_1: return createAnonymous_entryOrExitAction_1_();
+      case UmplePackage.ANONYMOUS_ENTRY_OR_EXIT_ACTION_2: return createAnonymous_entryOrExitAction_2_();
+      case UmplePackage.ACTIVITY_: return createActivity_();
+      case UmplePackage.ANONYMOUS_ACTIVITY_1: return createAnonymous_activity_1_();
+      case UmplePackage.ANONYMOUS_ACTIVITY_2: return createAnonymous_activity_2_();
+      case UmplePackage.MORE_GUARDS_: return createMoreGuards_();
+      case UmplePackage.ANONYMOUS_MORE_GUARDS_1: return createAnonymous_moreGuards_1_();
+      case UmplePackage.GUARD_: return createGuard_();
+      case UmplePackage.ANONYMOUS_GUARD_1: return createAnonymous_guard_1_();
+      case UmplePackage.ANONYMOUS_GUARD_2: return createAnonymous_guard_2_();
+      case UmplePackage.TRACE_TYPE_: return createTraceType_();
+      case UmplePackage.ANONYMOUS_TRACE_TYPE_1: return createAnonymous_traceType_1_();
+      case UmplePackage.ANONYMOUS_TRACE_TYPE_2: return createAnonymous_traceType_2_();
+      case UmplePackage.TRACE_: return createTrace_();
+      case UmplePackage.TRACE_DIRECTIVE_: return createTraceDirective_();
+      case UmplePackage.ANONYMOUS_TRACE_DIRECTIVE_1: return createAnonymous_traceDirective_1_();
+      case UmplePackage.TRACE_ITEM_: return createTraceItem_();
+      case UmplePackage.TRACE_ENTITY_: return createTraceEntity_();
+      case UmplePackage.ANONYMOUS_TRACE_ENTITY_1: return createAnonymous_traceEntity_1_();
+      case UmplePackage.TRACE_OPTIONS_: return createTraceOptions_();
+      case UmplePackage.ANONYMOUS_TRACE_OPTIONS_1: return createAnonymous_traceOptions_1_();
+      case UmplePackage.TRACE_OPTION_: return createTraceOption_();
+      case UmplePackage.PRE_OR_POST_CONDITION_: return createPreOrPostCondition_();
+      case UmplePackage.EXECUTE_CLAUSE_: return createExecuteClause_();
+      case UmplePackage.TRACE_WHEN_: return createTraceWhen_();
+      case UmplePackage.TRACE_FOR_: return createTraceFor_();
+      case UmplePackage.TRACE_LEVEL_: return createTraceLevel_();
+      case UmplePackage.TRACE_PERIOD_: return createTracePeriod_();
+      case UmplePackage.TRACE_DURING_: return createTraceDuring_();
+      case UmplePackage.TRACE_RECORD_: return createTraceRecord_();
+      case UmplePackage.RECORD_ENTITY_: return createRecordEntity_();
+      case UmplePackage.ANONYMOUS_RECORD_ENTITY_2: return createAnonymous_recordEntity_2_();
+      case UmplePackage.TRACE_CONDITION_: return createTraceCondition_();
+      case UmplePackage.CONDITION_RHS_: return createConditionRHS_();
+      case UmplePackage.TRACE_CASE_: return createTraceCase_();
+      case UmplePackage.TRACE_CASE_DEF_: return createTraceCaseDef_();
+      case UmplePackage.TRACE_CASE_ACTIVATION_: return createTraceCaseActivation_();
+      case UmplePackage.TRACE_CASE_DEACTIVATION_: return createTraceCaseDeactivation_();
+      case UmplePackage.DE_ACTIVATE_FOR_: return createDeActivateFor_();
+      case UmplePackage.PRECONDITION_: return createPrecondition_();
+      case UmplePackage.POSTCONDITION_: return createPostcondition_();
+      case UmplePackage.INVARIANT_: return createInvariant_();
+      case UmplePackage.ANONYMOUS_INVARIANT_1: return createAnonymous_invariant_1_();
+      case UmplePackage.ANONYMOUS_INVARIANT_2: return createAnonymous_invariant_2_();
+      case UmplePackage.CONSTRAINT_TOKEN_: return createConstraintToken_();
+      case UmplePackage.CONSTRAINT_: return createConstraint_();
+      case UmplePackage.ANONYMOUS_CONSTRAINT_1: return createAnonymous_constraint_1_();
+      case UmplePackage.NEGATIVE_CONSTRAINT_: return createNegativeConstraint_();
+      case UmplePackage.CONSTRAINT_BODY_: return createConstraintBody_();
+      case UmplePackage.ANONYMOUS_CONSTRAINT_BODY_1: return createAnonymous_constraintBody_1_();
+      case UmplePackage.LINKING_OP_: return createLinkingOp_();
+      case UmplePackage.ANONYMOUS_LINKING_OP_1: return createAnonymous_linkingOp_1_();
+      case UmplePackage.ANONYMOUS_LINKING_OP_2: return createAnonymous_linkingOp_2_();
+      case UmplePackage.ANONYMOUS_LINKING_OP_3: return createAnonymous_linkingOp_3_();
+      case UmplePackage.CONSTRAINT_EXPR_: return createConstraintExpr_();
+      case UmplePackage.ANONYMOUS_CONSTRAINT_EXPR_1: return createAnonymous_constraintExpr_1_();
+      case UmplePackage.COMPOUND_EXPR_: return createCompoundExpr_();
+      case UmplePackage.BOOL_EXPR_: return createBoolExpr_();
+      case UmplePackage.STRING_EXPR_: return createStringExpr_();
+      case UmplePackage.STRING_LIT_: return createStringLit_();
+      case UmplePackage.GEN_EXPR_: return createGenExpr_();
+      case UmplePackage.ANONYMOUS_GEN_EXPR_1: return createAnonymous_genExpr_1_();
+      case UmplePackage.ANONYMOUS_GEN_EXPR_2: return createAnonymous_genExpr_2_();
+      case UmplePackage.NUM_EXPR_: return createNumExpr_();
+      case UmplePackage.ANONYMOUS_NUM_EXPR_1: return createAnonymous_numExpr_1_();
+      case UmplePackage.ANONYMOUS_NUM_EXPR_2: return createAnonymous_numExpr_2_();
+      case UmplePackage.ANONYMOUS_NUM_EXPR_3: return createAnonymous_numExpr_3_();
+      case UmplePackage.ANONYMOUS_NUM_EXPR_4: return createAnonymous_numExpr_4_();
+      case UmplePackage.EQUALITY_OP_: return createEqualityOp_();
+      case UmplePackage.EQUALS_OP_: return createEqualsOp_();
+      case UmplePackage.NOTEQUALS_OP_: return createNotequalsOp_();
+      case UmplePackage.ORDINAL_OP_: return createOrdinalOp_();
+      case UmplePackage.GREATER_OP_: return createGreaterOp_();
+      case UmplePackage.LESS_OP_: return createLessOp_();
+      case UmplePackage.MORE_OP_: return createMoreOp_();
+      case UmplePackage.SMALLER_OP_: return createSmallerOp_();
+      case UmplePackage.POSITION_: return createPosition_();
+      case UmplePackage.ELEMENT_POSITION_: return createElementPosition_();
+      case UmplePackage.ASSOCIATION_POSITION_: return createAssociationPosition_();
+      case UmplePackage.COORDINATE_: return createCoordinate_();
+      case UmplePackage.DISPLAY_COLOR_: return createDisplayColor_();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -258,16 +268,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  @Override
-  public Object createFromString(EDataType eDataType, String initialValue)
+  public Model createModel()
   {
-    switch (eDataType.getClassifierID())
-    {
-      case UmplePackage.MODIFIER:
-        return createModifierFromString(eDataType, initialValue);
-      default:
-        throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-    }
+    ModelImpl model = new ModelImpl();
+    return model;
   }
 
   /**
@@ -275,16 +279,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  @Override
-  public String convertToString(EDataType eDataType, Object instanceValue)
+  public Program_ createProgram_()
   {
-    switch (eDataType.getClassifierID())
-    {
-      case UmplePackage.MODIFIER:
-        return convertModifierToString(eDataType, instanceValue);
-      default:
-        throw new IllegalArgumentException("The datatype '" + eDataType.getName() + "' is not a valid classifier");
-    }
+    Program_Impl program_ = new Program_Impl();
+    return program_;
   }
 
   /**
@@ -292,10 +290,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UmpleModel createUmpleModel()
+  public Anonymous_program_1_ createAnonymous_program_1_()
   {
-    UmpleModelImpl umpleModel = new UmpleModelImpl();
-    return umpleModel;
+    Anonymous_program_1_Impl anonymous_program_1_ = new Anonymous_program_1_Impl();
+    return anonymous_program_1_;
   }
 
   /**
@@ -303,10 +301,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AbstractElement createAbstractElement()
+  public Directive_ createDirective_()
   {
-    AbstractElementImpl abstractElement = new AbstractElementImpl();
-    return abstractElement;
+    Directive_Impl directive_ = new Directive_Impl();
+    return directive_;
   }
 
   /**
@@ -314,10 +312,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Glossary createGlossary()
+  public Glossary_ createGlossary_()
   {
-    GlossaryImpl glossary = new GlossaryImpl();
-    return glossary;
+    Glossary_Impl glossary_ = new Glossary_Impl();
+    return glossary_;
   }
 
   /**
@@ -325,10 +323,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Word createWord()
+  public Word_ createWord_()
   {
-    WordImpl word = new WordImpl();
-    return word;
+    Word_Impl word_ = new Word_Impl();
+    return word_;
   }
 
   /**
@@ -336,10 +334,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Generate createGenerate()
+  public Strictness_ createStrictness_()
   {
-    GenerateImpl generate = new GenerateImpl();
-    return generate;
+    Strictness_Impl strictness_ = new Strictness_Impl();
+    return strictness_;
   }
 
   /**
@@ -347,10 +345,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UseStatement createUseStatement()
+  public Anonymous_strictness_1_ createAnonymous_strictness_1_()
   {
-    UseStatementImpl useStatement = new UseStatementImpl();
-    return useStatement;
+    Anonymous_strictness_1_Impl anonymous_strictness_1_ = new Anonymous_strictness_1_Impl();
+    return anonymous_strictness_1_;
   }
 
   /**
@@ -358,10 +356,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Namespace createNamespace()
+  public Generate_ createGenerate_()
   {
-    NamespaceImpl namespace = new NamespaceImpl();
-    return namespace;
+    Generate_Impl generate_ = new Generate_Impl();
+    return generate_;
   }
 
   /**
@@ -369,10 +367,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Entity createEntity()
+  public Generate_path_ createGenerate_path_()
   {
-    EntityImpl entity = new EntityImpl();
-    return entity;
+    Generate_path_Impl generate_path_ = new Generate_path_Impl();
+    return generate_path_;
   }
 
   /**
@@ -380,10 +378,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ClassDefinition createClassDefinition()
+  public UseStatement_ createUseStatement_()
   {
-    ClassDefinitionImpl classDefinition = new ClassDefinitionImpl();
-    return classDefinition;
+    UseStatement_Impl useStatement_ = new UseStatement_Impl();
+    return useStatement_;
   }
 
   /**
@@ -391,10 +389,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ExternalDefinition createExternalDefinition()
+  public Namespace_ createNamespace_()
   {
-    ExternalDefinitionImpl externalDefinition = new ExternalDefinitionImpl();
-    return externalDefinition;
+    Namespace_Impl namespace_ = new Namespace_Impl();
+    return namespace_;
   }
 
   /**
@@ -402,10 +400,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public InterfaceDefinition createInterfaceDefinition()
+  public Entity_ createEntity_()
   {
-    InterfaceDefinitionImpl interfaceDefinition = new InterfaceDefinitionImpl();
-    return interfaceDefinition;
+    Entity_Impl entity_ = new Entity_Impl();
+    return entity_;
   }
 
   /**
@@ -413,10 +411,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AssociationDefinition createAssociationDefinition()
+  public Comment_ createComment_()
   {
-    AssociationDefinitionImpl associationDefinition = new AssociationDefinitionImpl();
-    return associationDefinition;
+    Comment_Impl comment_ = new Comment_Impl();
+    return comment_;
   }
 
   /**
@@ -424,10 +422,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ClassContent createClassContent()
+  public InlineComment_ createInlineComment_()
   {
-    ClassContentImpl classContent = new ClassContentImpl();
-    return classContent;
+    InlineComment_Impl inlineComment_ = new InlineComment_Impl();
+    return inlineComment_;
   }
 
   /**
@@ -435,10 +433,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AssociationClassContent createAssociationClassContent()
+  public MultilineComment_ createMultilineComment_()
   {
-    AssociationClassContentImpl associationClassContent = new AssociationClassContentImpl();
-    return associationClassContent;
+    MultilineComment_Impl multilineComment_ = new MultilineComment_Impl();
+    return multilineComment_;
   }
 
   /**
@@ -446,10 +444,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Depend createDepend()
+  public Debug_ createDebug_()
   {
-    DependImpl depend = new DependImpl();
-    return depend;
+    Debug_Impl debug_ = new Debug_Impl();
+    return debug_;
   }
 
   /**
@@ -457,10 +455,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Association createAssociation()
+  public Abstract_ createAbstract_()
   {
-    AssociationImpl association = new AssociationImpl();
-    return association;
+    Abstract_Impl abstract_ = new Abstract_Impl();
+    return abstract_;
   }
 
   /**
@@ -468,10 +466,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public SymmetricReflexiveAssociation createSymmetricReflexiveAssociation()
+  public ClassDefinition_ createClassDefinition_()
   {
-    SymmetricReflexiveAssociationImpl symmetricReflexiveAssociation = new SymmetricReflexiveAssociationImpl();
-    return symmetricReflexiveAssociation;
+    ClassDefinition_Impl classDefinition_ = new ClassDefinition_Impl();
+    return classDefinition_;
   }
 
   /**
@@ -479,10 +477,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public InlineAssociation createInlineAssociation()
+  public ExternalDefinition_ createExternalDefinition_()
   {
-    InlineAssociationImpl inlineAssociation = new InlineAssociationImpl();
-    return inlineAssociation;
+    ExternalDefinition_Impl externalDefinition_ = new ExternalDefinition_Impl();
+    return externalDefinition_;
   }
 
   /**
@@ -490,10 +488,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public SingleAssociationEnd createSingleAssociationEnd()
+  public InterfaceDefinition_ createInterfaceDefinition_()
   {
-    SingleAssociationEndImpl singleAssociationEnd = new SingleAssociationEndImpl();
-    return singleAssociationEnd;
+    InterfaceDefinition_Impl interfaceDefinition_ = new InterfaceDefinition_Impl();
+    return interfaceDefinition_;
   }
 
   /**
@@ -501,10 +499,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AssociationClassDefinition createAssociationClassDefinition()
+  public AssociationDefinition_ createAssociationDefinition_()
   {
-    AssociationClassDefinitionImpl associationClassDefinition = new AssociationClassDefinitionImpl();
-    return associationClassDefinition;
+    AssociationDefinition_Impl associationDefinition_ = new AssociationDefinition_Impl();
+    return associationDefinition_;
   }
 
   /**
@@ -512,10 +510,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public SoftwarePattern createSoftwarePattern()
+  public AssociationClassDefinition_ createAssociationClassDefinition_()
   {
-    SoftwarePatternImpl softwarePattern = new SoftwarePatternImpl();
-    return softwarePattern;
+    AssociationClassDefinition_Impl associationClassDefinition_ = new AssociationClassDefinition_Impl();
+    return associationClassDefinition_;
   }
 
   /**
@@ -523,10 +521,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public isA createisA()
+  public ClassContent_ createClassContent_()
   {
-    isAImpl isA = new isAImpl();
-    return isA;
+    ClassContent_Impl classContent_ = new ClassContent_Impl();
+    return classContent_;
   }
 
   /**
@@ -534,10 +532,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Singleton createSingleton()
+  public AssociationClassContent_ createAssociationClassContent_()
   {
-    SingletonImpl singleton = new SingletonImpl();
-    return singleton;
+    AssociationClassContent_Impl associationClassContent_ = new AssociationClassContent_Impl();
+    return associationClassContent_;
   }
 
   /**
@@ -545,10 +543,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public KeyDefinition createKeyDefinition()
+  public InterfaceBody_ createInterfaceBody_()
   {
-    KeyDefinitionImpl keyDefinition = new KeyDefinitionImpl();
-    return keyDefinition;
+    InterfaceBody_Impl interfaceBody_ = new InterfaceBody_Impl();
+    return interfaceBody_;
   }
 
   /**
@@ -556,10 +554,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public CodeInjection createCodeInjection()
+  public InterfaceMemberDeclaration_ createInterfaceMemberDeclaration_()
   {
-    CodeInjectionImpl codeInjection = new CodeInjectionImpl();
-    return codeInjection;
+    InterfaceMemberDeclaration_Impl interfaceMemberDeclaration_ = new InterfaceMemberDeclaration_Impl();
+    return interfaceMemberDeclaration_;
   }
 
   /**
@@ -567,10 +565,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Attribute createAttribute()
+  public ConstantDeclaration_ createConstantDeclaration_()
   {
-    AttributeImpl attribute = new AttributeImpl();
-    return attribute;
+    ConstantDeclaration_Impl constantDeclaration_ = new ConstantDeclaration_Impl();
+    return constantDeclaration_;
   }
 
   /**
@@ -578,10 +576,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public StateMachineDefinition createStateMachineDefinition()
+  public Anonymous_constantDeclaration_1_ createAnonymous_constantDeclaration_1_()
   {
-    StateMachineDefinitionImpl stateMachineDefinition = new StateMachineDefinitionImpl();
-    return stateMachineDefinition;
+    Anonymous_constantDeclaration_1_Impl anonymous_constantDeclaration_1_ = new Anonymous_constantDeclaration_1_Impl();
+    return anonymous_constantDeclaration_1_;
   }
 
   /**
@@ -589,10 +587,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public StateMachine createStateMachine()
+  public Anonymous_constantDeclaration_2_ createAnonymous_constantDeclaration_2_()
   {
-    StateMachineImpl stateMachine = new StateMachineImpl();
-    return stateMachine;
+    Anonymous_constantDeclaration_2_Impl anonymous_constantDeclaration_2_ = new Anonymous_constantDeclaration_2_Impl();
+    return anonymous_constantDeclaration_2_;
   }
 
   /**
@@ -600,10 +598,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public InlineStateMachine createInlineStateMachine()
+  public MoreCode_ createMoreCode_()
   {
-    InlineStateMachineImpl inlineStateMachine = new InlineStateMachineImpl();
-    return inlineStateMachine;
+    MoreCode_Impl moreCode_ = new MoreCode_Impl();
+    return moreCode_;
   }
 
   /**
@@ -611,10 +609,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ReferencedStateMachine createReferencedStateMachine()
+  public Anonymous_moreCode_1_ createAnonymous_moreCode_1_()
   {
-    ReferencedStateMachineImpl referencedStateMachine = new ReferencedStateMachineImpl();
-    return referencedStateMachine;
+    Anonymous_moreCode_1_Impl anonymous_moreCode_1_ = new Anonymous_moreCode_1_Impl();
+    return anonymous_moreCode_1_;
   }
 
   /**
@@ -622,9 +620,680 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public cruise.umple.umple.Enum createEnum()
+  public CodeLangs_ createCodeLangs_()
   {
-    EnumImpl enum_ = new EnumImpl();
+    CodeLangs_Impl codeLangs_ = new CodeLangs_Impl();
+    return codeLangs_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_codeLangs_1_ createAnonymous_codeLangs_1_()
+  {
+    Anonymous_codeLangs_1_Impl anonymous_codeLangs_1_ = new Anonymous_codeLangs_1_Impl();
+    return anonymous_codeLangs_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CodeLang_ createCodeLang_()
+  {
+    CodeLang_Impl codeLang_ = new CodeLang_Impl();
+    return codeLang_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public MethodBody_ createMethodBody_()
+  {
+    MethodBody_Impl methodBody_ = new MethodBody_Impl();
+    return methodBody_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_methodBody_1_ createAnonymous_methodBody_1_()
+  {
+    Anonymous_methodBody_1_Impl anonymous_methodBody_1_ = new Anonymous_methodBody_1_Impl();
+    return anonymous_methodBody_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_methodBody_2_ createAnonymous_methodBody_2_()
+  {
+    Anonymous_methodBody_2_Impl anonymous_methodBody_2_ = new Anonymous_methodBody_2_Impl();
+    return anonymous_methodBody_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ConcreteMethodDeclaration_ createConcreteMethodDeclaration_()
+  {
+    ConcreteMethodDeclaration_Impl concreteMethodDeclaration_ = new ConcreteMethodDeclaration_Impl();
+    return concreteMethodDeclaration_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_concreteMethodDeclaration_1_ createAnonymous_concreteMethodDeclaration_1_()
+  {
+    Anonymous_concreteMethodDeclaration_1_Impl anonymous_concreteMethodDeclaration_1_ = new Anonymous_concreteMethodDeclaration_1_Impl();
+    return anonymous_concreteMethodDeclaration_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_concreteMethodDeclaration_2_ createAnonymous_concreteMethodDeclaration_2_()
+  {
+    Anonymous_concreteMethodDeclaration_2_Impl anonymous_concreteMethodDeclaration_2_ = new Anonymous_concreteMethodDeclaration_2_Impl();
+    return anonymous_concreteMethodDeclaration_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AbstractMethodDeclaration_ createAbstractMethodDeclaration_()
+  {
+    AbstractMethodDeclaration_Impl abstractMethodDeclaration_ = new AbstractMethodDeclaration_Impl();
+    return abstractMethodDeclaration_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public MethodDeclarator_ createMethodDeclarator_()
+  {
+    MethodDeclarator_Impl methodDeclarator_ = new MethodDeclarator_Impl();
+    return methodDeclarator_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ParameterList_ createParameterList_()
+  {
+    ParameterList_Impl parameterList_ = new ParameterList_Impl();
+    return parameterList_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_parameterList_1_ createAnonymous_parameterList_1_()
+  {
+    Anonymous_parameterList_1_Impl anonymous_parameterList_1_ = new Anonymous_parameterList_1_Impl();
+    return anonymous_parameterList_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Parameter_ createParameter_()
+  {
+    Parameter_Impl parameter_ = new Parameter_Impl();
+    return parameter_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_parameter_1_ createAnonymous_parameter_1_()
+  {
+    Anonymous_parameter_1_Impl anonymous_parameter_1_ = new Anonymous_parameter_1_Impl();
+    return anonymous_parameter_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Association_ createAssociation_()
+  {
+    Association_Impl association_ = new Association_Impl();
+    return association_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SymmetricReflexiveAssociation_ createSymmetricReflexiveAssociation_()
+  {
+    SymmetricReflexiveAssociation_Impl symmetricReflexiveAssociation_ = new SymmetricReflexiveAssociation_Impl();
+    return symmetricReflexiveAssociation_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public InlineAssociation_ createInlineAssociation_()
+  {
+    InlineAssociation_Impl inlineAssociation_ = new InlineAssociation_Impl();
+    return inlineAssociation_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public InlineAssociationEnd_ createInlineAssociationEnd_()
+  {
+    InlineAssociationEnd_Impl inlineAssociationEnd_ = new InlineAssociationEnd_Impl();
+    return inlineAssociationEnd_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SingleAssociationEnd_ createSingleAssociationEnd_()
+  {
+    SingleAssociationEnd_Impl singleAssociationEnd_ = new SingleAssociationEnd_Impl();
+    return singleAssociationEnd_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AssociationEnd_ createAssociationEnd_()
+  {
+    AssociationEnd_Impl associationEnd_ = new AssociationEnd_Impl();
+    return associationEnd_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Multiplicity_ createMultiplicity_()
+  {
+    Multiplicity_Impl multiplicity_ = new Multiplicity_Impl();
+    return multiplicity_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public IsSorted_ createIsSorted_()
+  {
+    IsSorted_Impl isSorted_ = new IsSorted_Impl();
+    return isSorted_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Attribute_ createAttribute_()
+  {
+    Attribute_Impl attribute_ = new Attribute_Impl();
+    return attribute_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SimpleAttribute_ createSimpleAttribute_()
+  {
+    SimpleAttribute_Impl simpleAttribute_ = new SimpleAttribute_Impl();
+    return simpleAttribute_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AutouniqueAttribute_ createAutouniqueAttribute_()
+  {
+    AutouniqueAttribute_Impl autouniqueAttribute_ = new AutouniqueAttribute_Impl();
+    return autouniqueAttribute_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public DerivedAttribute_ createDerivedAttribute_()
+  {
+    DerivedAttribute_Impl derivedAttribute_ = new DerivedAttribute_Impl();
+    return derivedAttribute_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_derivedAttribute_1_ createAnonymous_derivedAttribute_1_()
+  {
+    Anonymous_derivedAttribute_1_Impl anonymous_derivedAttribute_1_ = new Anonymous_derivedAttribute_1_Impl();
+    return anonymous_derivedAttribute_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_derivedAttribute_2_ createAnonymous_derivedAttribute_2_()
+  {
+    Anonymous_derivedAttribute_2_Impl anonymous_derivedAttribute_2_ = new Anonymous_derivedAttribute_2_Impl();
+    return anonymous_derivedAttribute_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_derivedAttribute_3_ createAnonymous_derivedAttribute_3_()
+  {
+    Anonymous_derivedAttribute_3_Impl anonymous_derivedAttribute_3_ = new Anonymous_derivedAttribute_3_Impl();
+    return anonymous_derivedAttribute_3_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ComplexAttribute_ createComplexAttribute_()
+  {
+    ComplexAttribute_Impl complexAttribute_ = new ComplexAttribute_Impl();
+    return complexAttribute_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_complexAttribute_1_ createAnonymous_complexAttribute_1_()
+  {
+    Anonymous_complexAttribute_1_Impl anonymous_complexAttribute_1_ = new Anonymous_complexAttribute_1_Impl();
+    return anonymous_complexAttribute_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_complexAttribute_2_ createAnonymous_complexAttribute_2_()
+  {
+    Anonymous_complexAttribute_2_Impl anonymous_complexAttribute_2_ = new Anonymous_complexAttribute_2_Impl();
+    return anonymous_complexAttribute_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Key_ createKey_()
+  {
+    Key_Impl key_ = new Key_Impl();
+    return key_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_key_1_ createAnonymous_key_1_()
+  {
+    Anonymous_key_1_Impl anonymous_key_1_ = new Anonymous_key_1_Impl();
+    return anonymous_key_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Depend_ createDepend_()
+  {
+    Depend_Impl depend_ = new Depend_Impl();
+    return depend_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ExtraCode_ createExtraCode_()
+  {
+    ExtraCode_Impl extraCode_ = new ExtraCode_Impl();
+    return extraCode_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SoftwarePattern_ createSoftwarePattern_()
+  {
+    SoftwarePattern_Impl softwarePattern_ = new SoftwarePattern_Impl();
+    return softwarePattern_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public IsA_ createIsA_()
+  {
+    IsA_Impl isA_ = new IsA_Impl();
+    return isA_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SingleIsA_ createSingleIsA_()
+  {
+    SingleIsA_Impl singleIsA_ = new SingleIsA_Impl();
+    return singleIsA_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_singleIsA_1_ createAnonymous_singleIsA_1_()
+  {
+    Anonymous_singleIsA_1_Impl anonymous_singleIsA_1_ = new Anonymous_singleIsA_1_Impl();
+    return anonymous_singleIsA_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public MultipleIsA_ createMultipleIsA_()
+  {
+    MultipleIsA_Impl multipleIsA_ = new MultipleIsA_Impl();
+    return multipleIsA_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_multipleIsA_1_ createAnonymous_multipleIsA_1_()
+  {
+    Anonymous_multipleIsA_1_Impl anonymous_multipleIsA_1_ = new Anonymous_multipleIsA_1_Impl();
+    return anonymous_multipleIsA_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Singleton_ createSingleton_()
+  {
+    Singleton_Impl singleton_ = new Singleton_Impl();
+    return singleton_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Immutable_ createImmutable_()
+  {
+    Immutable_Impl immutable_ = new Immutable_Impl();
+    return immutable_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public KeyDefinition_ createKeyDefinition_()
+  {
+    KeyDefinition_Impl keyDefinition_ = new KeyDefinition_Impl();
+    return keyDefinition_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CodeInjection_ createCodeInjection_()
+  {
+    CodeInjection_Impl codeInjection_ = new CodeInjection_Impl();
+    return codeInjection_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public BeforeCode_ createBeforeCode_()
+  {
+    BeforeCode_Impl beforeCode_ = new BeforeCode_Impl();
+    return beforeCode_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_beforeCode_1_ createAnonymous_beforeCode_1_()
+  {
+    Anonymous_beforeCode_1_Impl anonymous_beforeCode_1_ = new Anonymous_beforeCode_1_Impl();
+    return anonymous_beforeCode_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_beforeCode_2_ createAnonymous_beforeCode_2_()
+  {
+    Anonymous_beforeCode_2_Impl anonymous_beforeCode_2_ = new Anonymous_beforeCode_2_Impl();
+    return anonymous_beforeCode_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AfterCode_ createAfterCode_()
+  {
+    AfterCode_Impl afterCode_ = new AfterCode_Impl();
+    return afterCode_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_afterCode_1_ createAnonymous_afterCode_1_()
+  {
+    Anonymous_afterCode_1_Impl anonymous_afterCode_1_ = new Anonymous_afterCode_1_Impl();
+    return anonymous_afterCode_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_afterCode_2_ createAnonymous_afterCode_2_()
+  {
+    Anonymous_afterCode_2_Impl anonymous_afterCode_2_ = new Anonymous_afterCode_2_Impl();
+    return anonymous_afterCode_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StateMachineDefinition_ createStateMachineDefinition_()
+  {
+    StateMachineDefinition_Impl stateMachineDefinition_ = new StateMachineDefinition_Impl();
+    return stateMachineDefinition_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StateMachine_ createStateMachine_()
+  {
+    StateMachine_Impl stateMachine_ = new StateMachine_Impl();
+    return stateMachine_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ActiveDefinition_ createActiveDefinition_()
+  {
+    ActiveDefinition_Impl activeDefinition_ = new ActiveDefinition_Impl();
+    return activeDefinition_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public InlineStateMachine_ createInlineStateMachine_()
+  {
+    InlineStateMachine_Impl inlineStateMachine_ = new InlineStateMachine_Impl();
+    return inlineStateMachine_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_inlineStateMachine_1_ createAnonymous_inlineStateMachine_1_()
+  {
+    Anonymous_inlineStateMachine_1_Impl anonymous_inlineStateMachine_1_ = new Anonymous_inlineStateMachine_1_Impl();
+    return anonymous_inlineStateMachine_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ReferencedStateMachine_ createReferencedStateMachine_()
+  {
+    ReferencedStateMachine_Impl referencedStateMachine_ = new ReferencedStateMachine_Impl();
+    return referencedStateMachine_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ExtendedStateMachine_ createExtendedStateMachine_()
+  {
+    ExtendedStateMachine_Impl extendedStateMachine_ = new ExtendedStateMachine_Impl();
+    return extendedStateMachine_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_extendedStateMachine_1_ createAnonymous_extendedStateMachine_1_()
+  {
+    Anonymous_extendedStateMachine_1_Impl anonymous_extendedStateMachine_1_ = new Anonymous_extendedStateMachine_1_Impl();
+    return anonymous_extendedStateMachine_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Enum_ createEnum_()
+  {
+    Enum_Impl enum_ = new Enum_Impl();
     return enum_;
   }
 
@@ -633,10 +1302,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public State createState()
+  public Anonymous_enum_1_ createAnonymous_enum_1_()
   {
-    StateImpl state = new StateImpl();
-    return state;
+    Anonymous_enum_1_Impl anonymous_enum_1_ = new Anonymous_enum_1_Impl();
+    return anonymous_enum_1_;
   }
 
   /**
@@ -644,10 +1313,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public StateEntity createStateEntity()
+  public State_ createState_()
   {
-    StateEntityImpl stateEntity = new StateEntityImpl();
-    return stateEntity;
+    State_Impl state_ = new State_Impl();
+    return state_;
   }
 
   /**
@@ -655,10 +1324,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Transition createTransition()
+  public Anonymous_state_1_ createAnonymous_state_1_()
   {
-    TransitionImpl transition = new TransitionImpl();
-    return transition;
+    Anonymous_state_1_Impl anonymous_state_1_ = new Anonymous_state_1_Impl();
+    return anonymous_state_1_;
   }
 
   /**
@@ -666,10 +1335,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public EventDefinition createEventDefinition()
+  public StateInternal_ createStateInternal_()
   {
-    EventDefinitionImpl eventDefinition = new EventDefinitionImpl();
-    return eventDefinition;
+    StateInternal_Impl stateInternal_ = new StateInternal_Impl();
+    return stateInternal_;
   }
 
   /**
@@ -677,10 +1346,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Event createEvent()
+  public StateEntity_ createStateEntity_()
   {
-    EventImpl event = new EventImpl();
-    return event;
+    StateEntity_Impl stateEntity_ = new StateEntity_Impl();
+    return stateEntity_;
   }
 
   /**
@@ -688,10 +1357,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AfterEveryEvent createAfterEveryEvent()
+  public AutoTransition_ createAutoTransition_()
   {
-    AfterEveryEventImpl afterEveryEvent = new AfterEveryEventImpl();
-    return afterEveryEvent;
+    AutoTransition_Impl autoTransition_ = new AutoTransition_Impl();
+    return autoTransition_;
   }
 
   /**
@@ -699,10 +1368,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AfterEvent createAfterEvent()
+  public AutoTransitionBlock_ createAutoTransitionBlock_()
   {
-    AfterEventImpl afterEvent = new AfterEventImpl();
-    return afterEvent;
+    AutoTransitionBlock_Impl autoTransitionBlock_ = new AutoTransitionBlock_Impl();
+    return autoTransitionBlock_;
   }
 
   /**
@@ -710,10 +1379,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Action createAction()
+  public Transition_ createTransition_()
   {
-    ActionImpl action = new ActionImpl();
-    return action;
+    Transition_Impl transition_ = new Transition_Impl();
+    return transition_;
   }
 
   /**
@@ -721,10 +1390,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public EntryOrExitAction createEntryOrExitAction()
+  public EventDefinition_ createEventDefinition_()
   {
-    EntryOrExitActionImpl entryOrExitAction = new EntryOrExitActionImpl();
-    return entryOrExitAction;
+    EventDefinition_Impl eventDefinition_ = new EventDefinition_Impl();
+    return eventDefinition_;
   }
 
   /**
@@ -732,10 +1401,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Activity createActivity()
+  public Anonymous_eventDefinition_1_ createAnonymous_eventDefinition_1_()
   {
-    ActivityImpl activity = new ActivityImpl();
-    return activity;
+    Anonymous_eventDefinition_1_Impl anonymous_eventDefinition_1_ = new Anonymous_eventDefinition_1_Impl();
+    return anonymous_eventDefinition_1_;
   }
 
   /**
@@ -743,10 +1412,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Guard createGuard()
+  public AfterEveryEvent_ createAfterEveryEvent_()
   {
-    GuardImpl guard = new GuardImpl();
-    return guard;
+    AfterEveryEvent_Impl afterEveryEvent_ = new AfterEveryEvent_Impl();
+    return afterEveryEvent_;
   }
 
   /**
@@ -754,10 +1423,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public GuardCode createGuardCode()
+  public AfterEvent_ createAfterEvent_()
   {
-    GuardCodeImpl guardCode = new GuardCodeImpl();
-    return guardCode;
+    AfterEvent_Impl afterEvent_ = new AfterEvent_Impl();
+    return afterEvent_;
   }
 
   /**
@@ -765,10 +1434,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Position createPosition()
+  public Action_ createAction_()
   {
-    PositionImpl position = new PositionImpl();
-    return position;
+    Action_Impl action_ = new Action_Impl();
+    return action_;
   }
 
   /**
@@ -776,10 +1445,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ElementPosition createElementPosition()
+  public Anonymous_action_1_ createAnonymous_action_1_()
   {
-    ElementPositionImpl elementPosition = new ElementPositionImpl();
-    return elementPosition;
+    Anonymous_action_1_Impl anonymous_action_1_ = new Anonymous_action_1_Impl();
+    return anonymous_action_1_;
   }
 
   /**
@@ -787,10 +1456,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public AssociationPosition createAssociationPosition()
+  public Anonymous_action_2_ createAnonymous_action_2_()
   {
-    AssociationPositionImpl associationPosition = new AssociationPositionImpl();
-    return associationPosition;
+    Anonymous_action_2_Impl anonymous_action_2_ = new Anonymous_action_2_Impl();
+    return anonymous_action_2_;
   }
 
   /**
@@ -798,10 +1467,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Coordinate createCoordinate()
+  public EntryOrExitAction_ createEntryOrExitAction_()
   {
-    CoordinateImpl coordinate = new CoordinateImpl();
-    return coordinate;
+    EntryOrExitAction_Impl entryOrExitAction_ = new EntryOrExitAction_Impl();
+    return entryOrExitAction_;
   }
 
   /**
@@ -809,10 +1478,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public UmpleElement createUmpleElement()
+  public Anonymous_entryOrExitAction_1_ createAnonymous_entryOrExitAction_1_()
   {
-    UmpleElementImpl umpleElement = new UmpleElementImpl();
-    return umpleElement;
+    Anonymous_entryOrExitAction_1_Impl anonymous_entryOrExitAction_1_ = new Anonymous_entryOrExitAction_1_Impl();
+    return anonymous_entryOrExitAction_1_;
   }
 
   /**
@@ -820,10 +1489,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public block createblock()
+  public Anonymous_entryOrExitAction_2_ createAnonymous_entryOrExitAction_2_()
   {
-    blockImpl block = new blockImpl();
-    return block;
+    Anonymous_entryOrExitAction_2_Impl anonymous_entryOrExitAction_2_ = new Anonymous_entryOrExitAction_2_Impl();
+    return anonymous_entryOrExitAction_2_;
   }
 
   /**
@@ -831,10 +1500,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public parExpression createparExpression()
+  public Activity_ createActivity_()
   {
-    parExpressionImpl parExpression = new parExpressionImpl();
-    return parExpression;
+    Activity_Impl activity_ = new Activity_Impl();
+    return activity_;
   }
 
   /**
@@ -842,10 +1511,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public expressionList createexpressionList()
+  public Anonymous_activity_1_ createAnonymous_activity_1_()
   {
-    expressionListImpl expressionList = new expressionListImpl();
-    return expressionList;
+    Anonymous_activity_1_Impl anonymous_activity_1_ = new Anonymous_activity_1_Impl();
+    return anonymous_activity_1_;
   }
 
   /**
@@ -853,10 +1522,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public expression createexpression()
+  public Anonymous_activity_2_ createAnonymous_activity_2_()
   {
-    expressionImpl expression = new expressionImpl();
-    return expression;
+    Anonymous_activity_2_Impl anonymous_activity_2_ = new Anonymous_activity_2_Impl();
+    return anonymous_activity_2_;
   }
 
   /**
@@ -864,10 +1533,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public conditionalExpression createconditionalExpression()
+  public MoreGuards_ createMoreGuards_()
   {
-    conditionalExpressionImpl conditionalExpression = new conditionalExpressionImpl();
-    return conditionalExpression;
+    MoreGuards_Impl moreGuards_ = new MoreGuards_Impl();
+    return moreGuards_;
   }
 
   /**
@@ -875,10 +1544,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public conditionalOrExpression createconditionalOrExpression()
+  public Anonymous_moreGuards_1_ createAnonymous_moreGuards_1_()
   {
-    conditionalOrExpressionImpl conditionalOrExpression = new conditionalOrExpressionImpl();
-    return conditionalOrExpression;
+    Anonymous_moreGuards_1_Impl anonymous_moreGuards_1_ = new Anonymous_moreGuards_1_Impl();
+    return anonymous_moreGuards_1_;
   }
 
   /**
@@ -886,10 +1555,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public conditionalAndExpression createconditionalAndExpression()
+  public Guard_ createGuard_()
   {
-    conditionalAndExpressionImpl conditionalAndExpression = new conditionalAndExpressionImpl();
-    return conditionalAndExpression;
+    Guard_Impl guard_ = new Guard_Impl();
+    return guard_;
   }
 
   /**
@@ -897,10 +1566,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public equalityExpression createequalityExpression()
+  public Anonymous_guard_1_ createAnonymous_guard_1_()
   {
-    equalityExpressionImpl equalityExpression = new equalityExpressionImpl();
-    return equalityExpression;
+    Anonymous_guard_1_Impl anonymous_guard_1_ = new Anonymous_guard_1_Impl();
+    return anonymous_guard_1_;
   }
 
   /**
@@ -908,10 +1577,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public relationalExpression createrelationalExpression()
+  public Anonymous_guard_2_ createAnonymous_guard_2_()
   {
-    relationalExpressionImpl relationalExpression = new relationalExpressionImpl();
-    return relationalExpression;
+    Anonymous_guard_2_Impl anonymous_guard_2_ = new Anonymous_guard_2_Impl();
+    return anonymous_guard_2_;
   }
 
   /**
@@ -919,10 +1588,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public additiveExpression createadditiveExpression()
+  public TraceType_ createTraceType_()
   {
-    additiveExpressionImpl additiveExpression = new additiveExpressionImpl();
-    return additiveExpression;
+    TraceType_Impl traceType_ = new TraceType_Impl();
+    return traceType_;
   }
 
   /**
@@ -930,10 +1599,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public multiplicativeExpression createmultiplicativeExpression()
+  public Anonymous_traceType_1_ createAnonymous_traceType_1_()
   {
-    multiplicativeExpressionImpl multiplicativeExpression = new multiplicativeExpressionImpl();
-    return multiplicativeExpression;
+    Anonymous_traceType_1_Impl anonymous_traceType_1_ = new Anonymous_traceType_1_Impl();
+    return anonymous_traceType_1_;
   }
 
   /**
@@ -941,10 +1610,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public unaryExpression createunaryExpression()
+  public Anonymous_traceType_2_ createAnonymous_traceType_2_()
   {
-    unaryExpressionImpl unaryExpression = new unaryExpressionImpl();
-    return unaryExpression;
+    Anonymous_traceType_2_Impl anonymous_traceType_2_ = new Anonymous_traceType_2_Impl();
+    return anonymous_traceType_2_;
   }
 
   /**
@@ -952,10 +1621,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public unaryExpressionNotPlusMinus createunaryExpressionNotPlusMinus()
+  public Trace_ createTrace_()
   {
-    unaryExpressionNotPlusMinusImpl unaryExpressionNotPlusMinus = new unaryExpressionNotPlusMinusImpl();
-    return unaryExpressionNotPlusMinus;
+    Trace_Impl trace_ = new Trace_Impl();
+    return trace_;
   }
 
   /**
@@ -963,10 +1632,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public primary createprimary()
+  public TraceDirective_ createTraceDirective_()
   {
-    primaryImpl primary = new primaryImpl();
-    return primary;
+    TraceDirective_Impl traceDirective_ = new TraceDirective_Impl();
+    return traceDirective_;
   }
 
   /**
@@ -974,10 +1643,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public literal createliteral()
+  public Anonymous_traceDirective_1_ createAnonymous_traceDirective_1_()
   {
-    literalImpl literal = new literalImpl();
-    return literal;
+    Anonymous_traceDirective_1_Impl anonymous_traceDirective_1_ = new Anonymous_traceDirective_1_Impl();
+    return anonymous_traceDirective_1_;
   }
 
   /**
@@ -985,10 +1654,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public functionCall createfunctionCall()
+  public TraceItem_ createTraceItem_()
   {
-    functionCallImpl functionCall = new functionCallImpl();
-    return functionCall;
+    TraceItem_Impl traceItem_ = new TraceItem_Impl();
+    return traceItem_;
   }
 
   /**
@@ -996,10 +1665,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public functionDeclaration createfunctionDeclaration()
+  public TraceEntity_ createTraceEntity_()
   {
-    functionDeclarationImpl functionDeclaration = new functionDeclarationImpl();
-    return functionDeclaration;
+    TraceEntity_Impl traceEntity_ = new TraceEntity_Impl();
+    return traceEntity_;
   }
 
   /**
@@ -1007,10 +1676,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public functionDefinition createfunctionDefinition()
+  public Anonymous_traceEntity_1_ createAnonymous_traceEntity_1_()
   {
-    functionDefinitionImpl functionDefinition = new functionDefinitionImpl();
-    return functionDefinition;
+    Anonymous_traceEntity_1_Impl anonymous_traceEntity_1_ = new Anonymous_traceEntity_1_Impl();
+    return anonymous_traceEntity_1_;
   }
 
   /**
@@ -1018,10 +1687,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public javaFunctionDeclaration createjavaFunctionDeclaration()
+  public TraceOptions_ createTraceOptions_()
   {
-    javaFunctionDeclarationImpl javaFunctionDeclaration = new javaFunctionDeclarationImpl();
-    return javaFunctionDeclaration;
+    TraceOptions_Impl traceOptions_ = new TraceOptions_Impl();
+    return traceOptions_;
   }
 
   /**
@@ -1029,10 +1698,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public javaFunctionDefinition createjavaFunctionDefinition()
+  public Anonymous_traceOptions_1_ createAnonymous_traceOptions_1_()
   {
-    javaFunctionDefinitionImpl javaFunctionDefinition = new javaFunctionDefinitionImpl();
-    return javaFunctionDefinition;
+    Anonymous_traceOptions_1_Impl anonymous_traceOptions_1_ = new Anonymous_traceOptions_1_Impl();
+    return anonymous_traceOptions_1_;
   }
 
   /**
@@ -1040,10 +1709,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public javaFunctionCall createjavaFunctionCall()
+  public TraceOption_ createTraceOption_()
   {
-    javaFunctionCallImpl javaFunctionCall = new javaFunctionCallImpl();
-    return javaFunctionCall;
+    TraceOption_Impl traceOption_ = new TraceOption_Impl();
+    return traceOption_;
   }
 
   /**
@@ -1051,10 +1720,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public blockStatement createblockStatement()
+  public PreOrPostCondition_ createPreOrPostCondition_()
   {
-    blockStatementImpl blockStatement = new blockStatementImpl();
-    return blockStatement;
+    PreOrPostCondition_Impl preOrPostCondition_ = new PreOrPostCondition_Impl();
+    return preOrPostCondition_;
   }
 
   /**
@@ -1062,10 +1731,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public localVariableDeclarationStatement createlocalVariableDeclarationStatement()
+  public ExecuteClause_ createExecuteClause_()
   {
-    localVariableDeclarationStatementImpl localVariableDeclarationStatement = new localVariableDeclarationStatementImpl();
-    return localVariableDeclarationStatement;
+    ExecuteClause_Impl executeClause_ = new ExecuteClause_Impl();
+    return executeClause_;
   }
 
   /**
@@ -1073,10 +1742,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public localVariableDeclaration createlocalVariableDeclaration()
+  public TraceWhen_ createTraceWhen_()
   {
-    localVariableDeclarationImpl localVariableDeclaration = new localVariableDeclarationImpl();
-    return localVariableDeclaration;
+    TraceWhen_Impl traceWhen_ = new TraceWhen_Impl();
+    return traceWhen_;
   }
 
   /**
@@ -1084,10 +1753,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public variableDeclarators createvariableDeclarators()
+  public TraceFor_ createTraceFor_()
   {
-    variableDeclaratorsImpl variableDeclarators = new variableDeclaratorsImpl();
-    return variableDeclarators;
+    TraceFor_Impl traceFor_ = new TraceFor_Impl();
+    return traceFor_;
   }
 
   /**
@@ -1095,10 +1764,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public variableDeclarator createvariableDeclarator()
+  public TraceLevel_ createTraceLevel_()
   {
-    variableDeclaratorImpl variableDeclarator = new variableDeclaratorImpl();
-    return variableDeclarator;
+    TraceLevel_Impl traceLevel_ = new TraceLevel_Impl();
+    return traceLevel_;
   }
 
   /**
@@ -1106,10 +1775,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public statement createstatement()
+  public TracePeriod_ createTracePeriod_()
   {
-    statementImpl statement = new statementImpl();
-    return statement;
+    TracePeriod_Impl tracePeriod_ = new TracePeriod_Impl();
+    return tracePeriod_;
   }
 
   /**
@@ -1117,10 +1786,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public endstatement createendstatement()
+  public TraceDuring_ createTraceDuring_()
   {
-    endstatementImpl endstatement = new endstatementImpl();
-    return endstatement;
+    TraceDuring_Impl traceDuring_ = new TraceDuring_Impl();
+    return traceDuring_;
   }
 
   /**
@@ -1128,10 +1797,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public breakstatement createbreakstatement()
+  public TraceRecord_ createTraceRecord_()
   {
-    breakstatementImpl breakstatement = new breakstatementImpl();
-    return breakstatement;
+    TraceRecord_Impl traceRecord_ = new TraceRecord_Impl();
+    return traceRecord_;
   }
 
   /**
@@ -1139,10 +1808,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public ifstatement createifstatement()
+  public RecordEntity_ createRecordEntity_()
   {
-    ifstatementImpl ifstatement = new ifstatementImpl();
-    return ifstatement;
+    RecordEntity_Impl recordEntity_ = new RecordEntity_Impl();
+    return recordEntity_;
   }
 
   /**
@@ -1150,10 +1819,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public forstatement createforstatement()
+  public Anonymous_recordEntity_2_ createAnonymous_recordEntity_2_()
   {
-    forstatementImpl forstatement = new forstatementImpl();
-    return forstatement;
+    Anonymous_recordEntity_2_Impl anonymous_recordEntity_2_ = new Anonymous_recordEntity_2_Impl();
+    return anonymous_recordEntity_2_;
   }
 
   /**
@@ -1161,10 +1830,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public whilestatement createwhilestatement()
+  public TraceCondition_ createTraceCondition_()
   {
-    whilestatementImpl whilestatement = new whilestatementImpl();
-    return whilestatement;
+    TraceCondition_Impl traceCondition_ = new TraceCondition_Impl();
+    return traceCondition_;
   }
 
   /**
@@ -1172,10 +1841,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public returnstatement createreturnstatement()
+  public ConditionRHS_ createConditionRHS_()
   {
-    returnstatementImpl returnstatement = new returnstatementImpl();
-    return returnstatement;
+    ConditionRHS_Impl conditionRHS_ = new ConditionRHS_Impl();
+    return conditionRHS_;
   }
 
   /**
@@ -1183,10 +1852,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public expressionstatement createexpressionstatement()
+  public TraceCase_ createTraceCase_()
   {
-    expressionstatementImpl expressionstatement = new expressionstatementImpl();
-    return expressionstatement;
+    TraceCase_Impl traceCase_ = new TraceCase_Impl();
+    return traceCase_;
   }
 
   /**
@@ -1194,10 +1863,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public trystatement createtrystatement()
+  public TraceCaseDef_ createTraceCaseDef_()
   {
-    trystatementImpl trystatement = new trystatementImpl();
-    return trystatement;
+    TraceCaseDef_Impl traceCaseDef_ = new TraceCaseDef_Impl();
+    return traceCaseDef_;
   }
 
   /**
@@ -1205,10 +1874,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public forControl createforControl()
+  public TraceCaseActivation_ createTraceCaseActivation_()
   {
-    forControlImpl forControl = new forControlImpl();
-    return forControl;
+    TraceCaseActivation_Impl traceCaseActivation_ = new TraceCaseActivation_Impl();
+    return traceCaseActivation_;
   }
 
   /**
@@ -1216,10 +1885,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public forInit createforInit()
+  public TraceCaseDeactivation_ createTraceCaseDeactivation_()
   {
-    forInitImpl forInit = new forInitImpl();
-    return forInit;
+    TraceCaseDeactivation_Impl traceCaseDeactivation_ = new TraceCaseDeactivation_Impl();
+    return traceCaseDeactivation_;
   }
 
   /**
@@ -1227,10 +1896,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public forUpdate createforUpdate()
+  public DeActivateFor_ createDeActivateFor_()
   {
-    forUpdateImpl forUpdate = new forUpdateImpl();
-    return forUpdate;
+    DeActivateFor_Impl deActivateFor_ = new DeActivateFor_Impl();
+    return deActivateFor_;
   }
 
   /**
@@ -1238,10 +1907,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public phpFunction createphpFunction()
+  public Precondition_ createPrecondition_()
   {
-    phpFunctionImpl phpFunction = new phpFunctionImpl();
-    return phpFunction;
+    Precondition_Impl precondition_ = new Precondition_Impl();
+    return precondition_;
   }
 
   /**
@@ -1249,10 +1918,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public phpBlock createphpBlock()
+  public Postcondition_ createPostcondition_()
   {
-    phpBlockImpl phpBlock = new phpBlockImpl();
-    return phpBlock;
+    Postcondition_Impl postcondition_ = new Postcondition_Impl();
+    return postcondition_;
   }
 
   /**
@@ -1260,10 +1929,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Key createKey()
+  public Invariant_ createInvariant_()
   {
-    KeyImpl key = new KeyImpl();
-    return key;
+    Invariant_Impl invariant_ = new Invariant_Impl();
+    return invariant_;
   }
 
   /**
@@ -1271,11 +1940,10 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public Modifier createModifierFromString(EDataType eDataType, String initialValue)
+  public Anonymous_invariant_1_ createAnonymous_invariant_1_()
   {
-    Modifier result = Modifier.get(initialValue);
-    if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
-    return result;
+    Anonymous_invariant_1_Impl anonymous_invariant_1_ = new Anonymous_invariant_1_Impl();
+    return anonymous_invariant_1_;
   }
 
   /**
@@ -1283,9 +1951,417 @@ public class UmpleFactoryImpl extends EFactoryImpl implements UmpleFactory
    * <!-- end-user-doc -->
    * @generated
    */
-  public String convertModifierToString(EDataType eDataType, Object instanceValue)
+  public Anonymous_invariant_2_ createAnonymous_invariant_2_()
   {
-    return instanceValue == null ? null : instanceValue.toString();
+    Anonymous_invariant_2_Impl anonymous_invariant_2_ = new Anonymous_invariant_2_Impl();
+    return anonymous_invariant_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ConstraintToken_ createConstraintToken_()
+  {
+    ConstraintToken_Impl constraintToken_ = new ConstraintToken_Impl();
+    return constraintToken_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Constraint_ createConstraint_()
+  {
+    Constraint_Impl constraint_ = new Constraint_Impl();
+    return constraint_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_constraint_1_ createAnonymous_constraint_1_()
+  {
+    Anonymous_constraint_1_Impl anonymous_constraint_1_ = new Anonymous_constraint_1_Impl();
+    return anonymous_constraint_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NegativeConstraint_ createNegativeConstraint_()
+  {
+    NegativeConstraint_Impl negativeConstraint_ = new NegativeConstraint_Impl();
+    return negativeConstraint_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ConstraintBody_ createConstraintBody_()
+  {
+    ConstraintBody_Impl constraintBody_ = new ConstraintBody_Impl();
+    return constraintBody_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_constraintBody_1_ createAnonymous_constraintBody_1_()
+  {
+    Anonymous_constraintBody_1_Impl anonymous_constraintBody_1_ = new Anonymous_constraintBody_1_Impl();
+    return anonymous_constraintBody_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LinkingOp_ createLinkingOp_()
+  {
+    LinkingOp_Impl linkingOp_ = new LinkingOp_Impl();
+    return linkingOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_linkingOp_1_ createAnonymous_linkingOp_1_()
+  {
+    Anonymous_linkingOp_1_Impl anonymous_linkingOp_1_ = new Anonymous_linkingOp_1_Impl();
+    return anonymous_linkingOp_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_linkingOp_2_ createAnonymous_linkingOp_2_()
+  {
+    Anonymous_linkingOp_2_Impl anonymous_linkingOp_2_ = new Anonymous_linkingOp_2_Impl();
+    return anonymous_linkingOp_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_linkingOp_3_ createAnonymous_linkingOp_3_()
+  {
+    Anonymous_linkingOp_3_Impl anonymous_linkingOp_3_ = new Anonymous_linkingOp_3_Impl();
+    return anonymous_linkingOp_3_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ConstraintExpr_ createConstraintExpr_()
+  {
+    ConstraintExpr_Impl constraintExpr_ = new ConstraintExpr_Impl();
+    return constraintExpr_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_constraintExpr_1_ createAnonymous_constraintExpr_1_()
+  {
+    Anonymous_constraintExpr_1_Impl anonymous_constraintExpr_1_ = new Anonymous_constraintExpr_1_Impl();
+    return anonymous_constraintExpr_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CompoundExpr_ createCompoundExpr_()
+  {
+    CompoundExpr_Impl compoundExpr_ = new CompoundExpr_Impl();
+    return compoundExpr_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public BoolExpr_ createBoolExpr_()
+  {
+    BoolExpr_Impl boolExpr_ = new BoolExpr_Impl();
+    return boolExpr_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StringExpr_ createStringExpr_()
+  {
+    StringExpr_Impl stringExpr_ = new StringExpr_Impl();
+    return stringExpr_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public StringLit_ createStringLit_()
+  {
+    StringLit_Impl stringLit_ = new StringLit_Impl();
+    return stringLit_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public GenExpr_ createGenExpr_()
+  {
+    GenExpr_Impl genExpr_ = new GenExpr_Impl();
+    return genExpr_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_genExpr_1_ createAnonymous_genExpr_1_()
+  {
+    Anonymous_genExpr_1_Impl anonymous_genExpr_1_ = new Anonymous_genExpr_1_Impl();
+    return anonymous_genExpr_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_genExpr_2_ createAnonymous_genExpr_2_()
+  {
+    Anonymous_genExpr_2_Impl anonymous_genExpr_2_ = new Anonymous_genExpr_2_Impl();
+    return anonymous_genExpr_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NumExpr_ createNumExpr_()
+  {
+    NumExpr_Impl numExpr_ = new NumExpr_Impl();
+    return numExpr_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_numExpr_1_ createAnonymous_numExpr_1_()
+  {
+    Anonymous_numExpr_1_Impl anonymous_numExpr_1_ = new Anonymous_numExpr_1_Impl();
+    return anonymous_numExpr_1_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_numExpr_2_ createAnonymous_numExpr_2_()
+  {
+    Anonymous_numExpr_2_Impl anonymous_numExpr_2_ = new Anonymous_numExpr_2_Impl();
+    return anonymous_numExpr_2_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_numExpr_3_ createAnonymous_numExpr_3_()
+  {
+    Anonymous_numExpr_3_Impl anonymous_numExpr_3_ = new Anonymous_numExpr_3_Impl();
+    return anonymous_numExpr_3_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Anonymous_numExpr_4_ createAnonymous_numExpr_4_()
+  {
+    Anonymous_numExpr_4_Impl anonymous_numExpr_4_ = new Anonymous_numExpr_4_Impl();
+    return anonymous_numExpr_4_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EqualityOp_ createEqualityOp_()
+  {
+    EqualityOp_Impl equalityOp_ = new EqualityOp_Impl();
+    return equalityOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EqualsOp_ createEqualsOp_()
+  {
+    EqualsOp_Impl equalsOp_ = new EqualsOp_Impl();
+    return equalsOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public NotequalsOp_ createNotequalsOp_()
+  {
+    NotequalsOp_Impl notequalsOp_ = new NotequalsOp_Impl();
+    return notequalsOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public OrdinalOp_ createOrdinalOp_()
+  {
+    OrdinalOp_Impl ordinalOp_ = new OrdinalOp_Impl();
+    return ordinalOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public GreaterOp_ createGreaterOp_()
+  {
+    GreaterOp_Impl greaterOp_ = new GreaterOp_Impl();
+    return greaterOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public LessOp_ createLessOp_()
+  {
+    LessOp_Impl lessOp_ = new LessOp_Impl();
+    return lessOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public MoreOp_ createMoreOp_()
+  {
+    MoreOp_Impl moreOp_ = new MoreOp_Impl();
+    return moreOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public SmallerOp_ createSmallerOp_()
+  {
+    SmallerOp_Impl smallerOp_ = new SmallerOp_Impl();
+    return smallerOp_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Position_ createPosition_()
+  {
+    Position_Impl position_ = new Position_Impl();
+    return position_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public ElementPosition_ createElementPosition_()
+  {
+    ElementPosition_Impl elementPosition_ = new ElementPosition_Impl();
+    return elementPosition_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public AssociationPosition_ createAssociationPosition_()
+  {
+    AssociationPosition_Impl associationPosition_ = new AssociationPosition_Impl();
+    return associationPosition_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public Coordinate_ createCoordinate_()
+  {
+    Coordinate_Impl coordinate_ = new Coordinate_Impl();
+    return coordinate_;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public DisplayColor_ createDisplayColor_()
+  {
+    DisplayColor_Impl displayColor_ = new DisplayColor_Impl();
+    return displayColor_;
   }
 
   /**

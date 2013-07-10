@@ -58,7 +58,7 @@ class ConsoleTracerTesterA
   public function setName($aName)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,10,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,10,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
     $this->name = $aName;
     $wasSet = true;
     return $wasSet;
@@ -93,7 +93,7 @@ class ConsoleTracerTesterA
     $wasSet = false;
       if($numCond>100)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,26,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number1,".$this->number1.",".$aNumber1 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,26,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number1,".$this->number1.",".$aNumber1 );
         }
     $this->number1 = $aNumber1;
     $wasSet = true;
@@ -106,7 +106,7 @@ class ConsoleTracerTesterA
     $this->number2 = $aNumber2;
       if($numCond==20)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,27,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number2,".$this->number2 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,27,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number2,".$this->number2 );
         }
     $wasSet = true;
     return $wasSet;
@@ -118,7 +118,7 @@ class ConsoleTracerTesterA
     $this->number3 = $aNumber3;
       if($traceFlag1)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,28,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number3,".$this->number3 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,28,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number3,".$this->number3 );
         }
     $wasSet = true;
     return $wasSet;
@@ -130,7 +130,7 @@ class ConsoleTracerTesterA
     $this->number4 = $aNumber4;
       if($traceFlag2)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,29,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number4,".$this->number4 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,29,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number4,".$this->number4 );
         }
     $wasSet = true;
     return $wasSet;
@@ -141,7 +141,7 @@ class ConsoleTracerTesterA
     $wasSet = false;
       if($traceFlag3<3)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,30,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number5,".$this->number5.",".$aNumber5 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,30,ConsoleTracerTesterA,".spl_object_hash( $this ).",at_s,number5,".$this->number5.",".$aNumber5 );
       traceFlag3++;
         }
     $this->number5 = $aNumber5;
