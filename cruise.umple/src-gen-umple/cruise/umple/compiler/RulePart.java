@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * Part of a grammar rule
- * @umplesource Parser.ump 164
+ * @umplesource Parser.ump 165
  * @umplesource Parser_Code.ump 426
  */
-// line 164 "../../../../src/Parser.ump"
+// line 165 "../../../../src/Parser.ump"
 // line 426 "../../../../src/Parser_Code.ump"
 public class RulePart
 {
@@ -63,17 +63,17 @@ public class RulePart
     return wasSet;
   }
 
-  @umplesourcefile(line={176},file={"Parser.ump"},javaline={71},length={1})
+  @umplesourcefile(line={177},file={"Parser.ump"},javaline={71},length={1})
   public boolean addNextIdentifier(String aNextIdentifier)
   {
     boolean wasAdded = false;
-    // line 176 "../../../../src/Parser.ump"
+    // line 177 "../../../../src/Parser.ump"
     if (aNextIdentifier == null) { return false; }
     wasAdded = nextIdentifiers.add(aNextIdentifier);
     return wasAdded;
   }
 
-  @umplesourcefile(line={176},file={"Parser.ump"},javaline={71},length={1})
+  @umplesourcefile(line={177},file={"Parser.ump"},javaline={71},length={1})
   public boolean removeNextIdentifier(String aNextIdentifier)
   {
     boolean wasRemoved = false;
@@ -97,10 +97,10 @@ public class RulePart
     return name;
   }
 
-  @umplesourcefile(line={177},file={"Parser.ump"},javaline={102},length={1})
+  @umplesourcefile(line={178},file={"Parser.ump"},javaline={102},length={1})
   public String getMultiplicity()
   {
-    // line 177 "../../../../src/Parser.ump"
+    // line 178 "../../../../src/Parser.ump"
     if (multiplicity == null) { return "1"; }
     return multiplicity;
   }

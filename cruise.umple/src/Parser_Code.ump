@@ -1330,7 +1330,13 @@ class Parser
           if (!r.getShouldHide())
           {
             // Update the token tree, add the current token to the parent.
+            // but first, record the end position of the token for later analysis
+            inputParser.backUpWhitespace();
+            currentToken.setEndPosition(inputParser.currentPosition(false).copy());
+            inputParser.skipWhitespace();
+            
             parentToken.addSubToken(currentToken);
+
           }
           return true;
         }

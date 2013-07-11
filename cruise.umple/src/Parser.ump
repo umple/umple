@@ -106,6 +106,7 @@ class Token
   value;
   0..1 parentToken -- * Token subTokens;
   * -> 0..1 Position;
+  * -> 0..1 Position endPosition;
 
   before getName { if (name == null) { return ""; } }
   before getValue { if (value == null) { return ""; } }
