@@ -100,7 +100,7 @@ class AttributeTraceItem
   Constraint constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
   
-  boolean traceSet = true;   // default case is to trace setters
+  boolean traceSet = false;
   boolean traceGet = false;
   boolean traceConstructor = false;
   
