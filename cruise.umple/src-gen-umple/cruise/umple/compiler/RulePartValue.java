@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Parser.ump 154
+ * @umplesource Parser.ump 155
  */
-// line 154 "../../../../src/Parser.ump"
+// line 155 "../../../../src/Parser.ump"
 public class RulePartValue
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -169,6 +169,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/subTokens"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subTokens" lowerBound="0" upperBound="-1" eType="#//Token" eOpposite="#//Token/parentToken"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClassifiers" lowerBound="0" upperBound="-1" eType="#//UmpleClassifier" eOpposite="#//UmpleClassifier/extendsToken"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Position">
@@ -179,6 +180,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parseResults" lowerBound="0" upperBound="-1" eType="#//ParseResult" eOpposite="#//ParseResult/position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="errorMessages" lowerBound="0" upperBound="-1" eType="#//ErrorMessage" eOpposite="#//ErrorMessage/position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tokens" lowerBound="0" upperBound="-1" eType="#//Token" eOpposite="#//Token/position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tokens" lowerBound="0" upperBound="-1" eType="#//Token" eOpposite="#//Token/endPosition"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rulePartValues" lowerBound="0" upperBound="-1" eType="#//RulePartValue" eOpposite="#//RulePartValue/position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleElement" lowerBound="1" upperBound="1" eType="#//UmpleElement" eOpposite="#//UmpleElement/positions"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" lowerBound="1" upperBound="1" eType="#//Attribute" eOpposite="#//Attribute/position"/>

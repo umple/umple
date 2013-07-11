@@ -265,6 +265,22 @@ class TextParser
     }
   }
 
+  // undoes parsing back to the last non-whitespace
+  // useful when we want to determine the real end of a token
+  public void backUpWhitespace()
+  {
+    boolean done=false;
+    while (_currentCharacterIndex > 0 && !done)
+    {
+      increment(-1);
+      if (!isSpace())
+      {
+        done=true;
+      }
+    }
+    increment(1);
+  }
+
   public String next()
   {
     _lastCharacterIndex = _currentCharacterIndex;
@@ -459,9 +475,11 @@ class TextParser
    * @return A Position object based off the filename the parser is based on, along with the line number and character index its sitting
    * at.
    */
-  public Position currentPosition()
-  {
-    skipWhitespace();
+  public Position currentPosition() {
+    return currentPosition(true);
+  }
+  public Position currentPosition(boolean doSkipWhitespace) {
+    if(doSkipWhitespace) skipWhitespace();
     int lineNumber = 1;
     int currentLineOffset = -1;
     int nextLineOffset = 0;

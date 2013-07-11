@@ -55,7 +55,7 @@ public class TextParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={13},file={"TextParser_Code.ump"},javaline={59},length={713})
+  //  @umplesourcefile(line={13},file={"TextParser_Code.ump"},javaline={59},length={731})
   private char[] _textCharacters;
 
   @umplesourcefile(line={16},file={"TextParser_Code.ump"},javaline={62},length={5})
@@ -324,7 +324,24 @@ public class TextParser
     }
   }
 
-  @umplesourcefile(line={268},file={"TextParser_Code.ump"},javaline={328},length={9})
+  // undoes parsing back to the last non-whitespace
+  // useful when we want to determine the real end of a token
+  @umplesourcefile(line={270},file={"TextParser_Code.ump"},javaline={330},length={13})
+  public void backUpWhitespace()
+  {
+    boolean done=false;
+    while (_currentCharacterIndex > 0 && !done)
+    {
+      increment(-1);
+      if (!isSpace())
+      {
+        done=true;
+      }
+    }
+    increment(1);
+  }
+
+  @umplesourcefile(line={284},file={"TextParser_Code.ump"},javaline={345},length={9})
   public String next()
   {
     _lastCharacterIndex = _currentCharacterIndex;
@@ -335,7 +352,7 @@ public class TextParser
     return name();
   }
 
-  @umplesourcefile(line={278},file={"TextParser_Code.ump"},javaline={339},length={44})
+  @umplesourcefile(line={294},file={"TextParser_Code.ump"},javaline={356},length={44})
   public String nextVariable()
   {
     String name = next();
@@ -381,7 +398,7 @@ public class TextParser
     return name();
   }
 
-  @umplesourcefile(line={323},file={"TextParser_Code.ump"},javaline={385},length={6})
+  @umplesourcefile(line={339},file={"TextParser_Code.ump"},javaline={402},length={6})
   public String extractFrom(int startIndex)
   {
     int endIndex = _currentCharacterIndex;
@@ -389,13 +406,13 @@ public class TextParser
     return "".equals(answer) ? null : answer;
   }
 
-  @umplesourcefile(line={330},file={"TextParser_Code.ump"},javaline={393},length={4})
+  @umplesourcefile(line={346},file={"TextParser_Code.ump"},javaline={410},length={4})
   public String peek()
   {
     return peekAt();
   }
 
-  @umplesourcefile(line={335},file={"TextParser_Code.ump"},javaline={399},length={9})
+  @umplesourcefile(line={351},file={"TextParser_Code.ump"},javaline={416},length={9})
   public String peekAt(String... stopAt)
   {
     int backupLastCharacterIndex = _lastCharacterIndex;
@@ -406,7 +423,7 @@ public class TextParser
     return peekName;
   }
 
-  @umplesourcefile(line={345},file={"TextParser_Code.ump"},javaline={410},length={10})
+  @umplesourcefile(line={361},file={"TextParser_Code.ump"},javaline={427},length={10})
   public String nextAt(String... stopAt)
   {
     _lastCharacterIndex = _currentCharacterIndex;
@@ -418,13 +435,13 @@ public class TextParser
 
   }
 
-  @umplesourcefile(line={356},file={"TextParser_Code.ump"},javaline={422},length={4})
+  @umplesourcefile(line={372},file={"TextParser_Code.ump"},javaline={439},length={4})
   public String nextUntil(String... stopBefore)
   {
     return nextUntil(true, stopBefore);
   }
 
-  @umplesourcefile(line={361},file={"TextParser_Code.ump"},javaline={428},length={34})
+  @umplesourcefile(line={377},file={"TextParser_Code.ump"},javaline={445},length={34})
   public String nextLine()
   {
     _lastCharacterIndex = _currentCharacterIndex;
@@ -460,13 +477,13 @@ public class TextParser
     return name();
   }
 
-  @umplesourcefile(line={396},file={"TextParser_Code.ump"},javaline={464},length={4})
+  @umplesourcefile(line={412},file={"TextParser_Code.ump"},javaline={481},length={4})
   public String nextUntil(boolean stopAtSpace, String... stopBefore)
   {    
     return nextUntil(stopAtSpace, false, stopBefore);
   }
 
-  @umplesourcefile(line={401},file={"TextParser_Code.ump"},javaline={470},length={9})
+  @umplesourcefile(line={417},file={"TextParser_Code.ump"},javaline={487},length={9})
   public String nextUntil(boolean stopAtSpace, boolean alphanumeric, String... stopBefore)
   {
     _lastCharacterIndex = _currentCharacterIndex;
@@ -478,7 +495,7 @@ public class TextParser
   }
 
 
-  @umplesourcefile(line={412},file={"TextParser_Code.ump"},javaline={482},length={9})
+  @umplesourcefile(line={428},file={"TextParser_Code.ump"},javaline={499},length={9})
   public String nextAfter(boolean stopAtSpace, String... stopAfter)
   {
     int savedIndex = _currentCharacterIndex;
@@ -489,7 +506,7 @@ public class TextParser
     return name();
   }
 
-  @umplesourcefile(line={422},file={"TextParser_Code.ump"},javaline={493},length={23})
+  @umplesourcefile(line={438},file={"TextParser_Code.ump"},javaline={510},length={23})
   public String nextAfter(String... stopAfter)
   {
     int savedLastCharacterIndex = _currentCharacterIndex;
@@ -514,13 +531,13 @@ public class TextParser
     return name();
   }
 
-  @umplesourcefile(line={446},file={"TextParser_Code.ump"},javaline={518},length={4})
+  @umplesourcefile(line={462},file={"TextParser_Code.ump"},javaline={535},length={4})
   public int previousIndex()
   {
     return _lastCharacterIndex;
   }
 
-  @umplesourcefile(line={451},file={"TextParser_Code.ump"},javaline={524},length={4})
+  @umplesourcefile(line={467},file={"TextParser_Code.ump"},javaline={541},length={4})
   public int currentIndex()
   {
     return _currentCharacterIndex;
@@ -532,10 +549,13 @@ public class TextParser
    * @return A Position object based off the filename the parser is based on, along with the line number and character index its sitting
    * at.
    */
-  @umplesourcefile(line={462},file={"TextParser_Code.ump"},javaline={536},length={19})
-  public Position currentPosition()
-  {
-    skipWhitespace();
+  @umplesourcefile(line={478},file={"TextParser_Code.ump"},javaline={553},length={3})
+  public Position currentPosition() {
+    return currentPosition(true);
+  }
+  @umplesourcefile(line={481},file={"TextParser_Code.ump"},javaline={557},length={18})
+  public Position currentPosition(boolean doSkipWhitespace) {
+    if(doSkipWhitespace) skipWhitespace();
     int lineNumber = 1;
     int currentLineOffset = -1;
     int nextLineOffset = 0;
@@ -553,7 +573,7 @@ public class TextParser
     return p;
   }
 
-  @umplesourcefile(line={482},file={"TextParser_Code.ump"},javaline={557},length={11})
+  @umplesourcefile(line={500},file={"TextParser_Code.ump"},javaline={577},length={11})
   public String section(int startIndex)
   {
     if (startIndex < 0 || startIndex > _text.length())
@@ -566,7 +586,7 @@ public class TextParser
     }
   }
 
-  @umplesourcefile(line={494},file={"TextParser_Code.ump"},javaline={570},length={4})
+  @umplesourcefile(line={512},file={"TextParser_Code.ump"},javaline={590},length={4})
   public String name()
   {
     return _currentName;
@@ -576,7 +596,7 @@ public class TextParser
   // OBJECT INTERFACE
   // ```````````````````````
 
-  @umplesourcefile(line={503},file={"TextParser_Code.ump"},javaline={580},length={28})
+  @umplesourcefile(line={521},file={"TextParser_Code.ump"},javaline={600},length={28})
   public String toString()
   {
     String text = "";
@@ -610,12 +630,12 @@ public class TextParser
   // PRIVATE METHODS
   // ```````````````````````
 
-  @umplesourcefile(line={536},file={"TextParser_Code.ump"},javaline={614},length={3})
+  @umplesourcefile(line={554},file={"TextParser_Code.ump"},javaline={634},length={3})
   private String loadName(boolean stopAtSpace, boolean stopAtMatch, String... lookups) {
     return loadName(stopAtSpace, stopAtMatch, false, lookups);
   }
 
-  @umplesourcefile(line={540},file={"TextParser_Code.ump"},javaline={619},length={62})
+  @umplesourcefile(line={558},file={"TextParser_Code.ump"},javaline={639},length={62})
   private String loadName(boolean stopAtSpace, boolean stopAtMatch, boolean isAlphanum, String... lookups)
   {
 
@@ -679,7 +699,7 @@ public class TextParser
     return _currentName;
   }
 
-  @umplesourcefile(line={603},file={"TextParser_Code.ump"},javaline={683},length={16})
+  @umplesourcefile(line={621},file={"TextParser_Code.ump"},javaline={703},length={16})
   private boolean hasLookups(String... lookups)
   {
     if (lookups == null)
@@ -697,7 +717,7 @@ public class TextParser
     return false;
   }
 
-  @umplesourcefile(line={620},file={"TextParser_Code.ump"},javaline={701},length={12})
+  @umplesourcefile(line={638},file={"TextParser_Code.ump"},javaline={721},length={12})
   private boolean isMatch(String name, String... lookups)
   {
     for (int i = 0; i < lookups.length; i++)
@@ -711,13 +731,13 @@ public class TextParser
     return false;
   }
 
-  @umplesourcefile(line={633},file={"TextParser_Code.ump"},javaline={715},length={4})
+  @umplesourcefile(line={651},file={"TextParser_Code.ump"},javaline={735},length={4})
   private boolean isEndsWith(String name, String... lookups)
   {
     return whichEndsWith(name, lookups) != null;
   }
 
-  @umplesourcefile(line={638},file={"TextParser_Code.ump"},javaline={721},length={16})
+  @umplesourcefile(line={656},file={"TextParser_Code.ump"},javaline={741},length={16})
   private String whichEndsWith(String name, String... lookups)
   {
     if (lookups == null)
@@ -740,7 +760,7 @@ public class TextParser
    * 
    * @return The character at the parsers new character index in the textual input data.
    */
-  @umplesourcefile(line={660},file={"TextParser_Code.ump"},javaline={744},length={4})
+  @umplesourcefile(line={678},file={"TextParser_Code.ump"},javaline={764},length={4})
   private char increment()
   {
     return increment(1);
@@ -753,7 +773,7 @@ public class TextParser
    * 
    * @return The character that the parser is sitting on at its character index (in relation to the textual input data).
    */
-  @umplesourcefile(line={672},file={"TextParser_Code.ump"},javaline={757},length={5})
+  @umplesourcefile(line={690},file={"TextParser_Code.ump"},javaline={777},length={5})
   private char increment(int howMuch)
   {
     _currentCharacterIndex += howMuch;
@@ -765,43 +785,43 @@ public class TextParser
    * 
    * @return The character that the parser's character index is at in the textual input data.
    */
-  @umplesourcefile(line={683},file={"TextParser_Code.ump"},javaline={769},length={4})
+  @umplesourcefile(line={701},file={"TextParser_Code.ump"},javaline={789},length={4})
   private char c()
   {
     return charAt(_currentCharacterIndex);
   }
 
-  @umplesourcefile(line={688},file={"TextParser_Code.ump"},javaline={775},length={4})
+  @umplesourcefile(line={706},file={"TextParser_Code.ump"},javaline={795},length={4})
   private char charAt(int index)
   {
     return index > _maxCharacterIndex ? ' ' : _textCharacters[index];
   }
 
-  @umplesourcefile(line={693},file={"TextParser_Code.ump"},javaline={781},length={4})
+  @umplesourcefile(line={711},file={"TextParser_Code.ump"},javaline={801},length={4})
   private boolean isSpace()
   {
     return isSpace(c());  
   }
 
-  @umplesourcefile(line={698},file={"TextParser_Code.ump"},javaline={787},length={4})
+  @umplesourcefile(line={716},file={"TextParser_Code.ump"},javaline={807},length={4})
   private boolean isSpace(char c)
   {
     return c == ' ' || c == '\n' || c == '\t' || c == '\r';
   }
 
-  @umplesourcefile(line={703},file={"TextParser_Code.ump"},javaline={793},length={4})
+  @umplesourcefile(line={721},file={"TextParser_Code.ump"},javaline={813},length={4})
   private boolean isAlpha(char c)
   {
     return (c >= 'a' && c < 'z') || (c >= 'A' && c < 'Z');
   }
 
-  @umplesourcefile(line={708},file={"TextParser_Code.ump"},javaline={799},length={4})
+  @umplesourcefile(line={726},file={"TextParser_Code.ump"},javaline={819},length={4})
   private boolean isNumeric(char c)
   {
     return c >= '0' && c < '9';
   }
 
-  @umplesourcefile(line={713},file={"TextParser_Code.ump"},javaline={805},length={13})
+  @umplesourcefile(line={731},file={"TextParser_Code.ump"},javaline={825},length={13})
   private int calculateStartIndex(int originalStartIndex)
   {                    
     int startIndex = originalStartIndex;
