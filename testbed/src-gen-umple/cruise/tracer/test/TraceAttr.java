@@ -4,8 +4,9 @@
 package cruise.tracer.test;
 import cruise.util.ConsoleTracer;
 import java.util.Date;
+import java.util.*;
 
-// line 37 "../../../../src/TestHarnessTracer.ump"
+// line 7 "../../../../src/TestHarnessTracer.ump"
 public class TraceAttr
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -18,13 +19,15 @@ public class TraceAttr
   //TraceAttr Attributes
   private String name;
   private String address;
+  private double salary;
+  private List<Integer> id;
   private int numCond;
   private String strCond;
   private int number1;
   private int number2;
   private int number3;
-  private int number4;
-  private int number5;
+  private double number4;
+  private String str;
   private boolean traceFlag1;
   private boolean traceFlag2;
   private int traceFlag3;
@@ -33,17 +36,19 @@ public class TraceAttr
   // CONSTRUCTOR
   //------------------------
 
-  public TraceAttr(String aName, String aAddress, int aNumCond, String aStrCond, int aNumber1, int aNumber2, int aNumber3, int aNumber4, int aNumber5)
+  public TraceAttr(String aName, String aAddress, double aSalary, int aNumCond, String aStrCond, int aNumber1, int aNumber2, int aNumber3, double aNumber4, String aStr)
   {
     name = aName;
     address = aAddress;
+    salary = aSalary;
+    id = new ArrayList<Integer>();
     numCond = aNumCond;
     strCond = aStrCond;
     number1 = aNumber1;
     number2 = aNumber2;
     number3 = aNumber3;
     number4 = aNumber4;
-    number5 = aNumber5;
+    str = aStr;
     traceFlag1 = false;
     traceFlag2 = true;
     traceFlag3 = 0;
@@ -56,7 +61,7 @@ public class TraceAttr
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,40,TraceAttr,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,15,TraceAttr,"+System.identityHashCode(this)+",at_s,name,"+name+","+aName );
     name = aName;
     wasSet = true;
     return wasSet;
@@ -68,6 +73,31 @@ public class TraceAttr
     address = aAddress;
     wasSet = true;
     return wasSet;
+  }
+
+  public boolean setSalary(double aSalary)
+  {
+    boolean wasSet = false;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,18,TraceAttr,"+System.identityHashCode(this)+",at_s,salary,"+salary+","+aSalary );
+    salary = aSalary;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean addId(Integer aId)
+  {
+    boolean wasAdded = false;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,16,TraceAttr,"+System.identityHashCode(this)+",at_a,id,"+id+","+aId );
+    wasAdded = id.add(aId);
+    return wasAdded;
+  }
+
+  public boolean removeId(Integer aId)
+  {
+    boolean wasRemoved = false;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,16,TraceAttr,"+System.identityHashCode(this)+",at_r,id,"+id+","+aId );
+    wasRemoved = id.remove(aId);
+    return wasRemoved;
   }
 
   public boolean setNumCond(int aNumCond)
@@ -99,7 +129,7 @@ public class TraceAttr
     boolean wasSet = false;
     if (numCond>100)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,56,TraceAttr,"+System.identityHashCode(this)+",at_s,number1,"+number1+","+aNumber1 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,31,TraceAttr,"+System.identityHashCode(this)+",at_s,number1,"+number1+","+aNumber1 );
     }
     number1 = aNumber1;
     wasSet = true;
@@ -112,7 +142,7 @@ public class TraceAttr
     number2 = aNumber2;
     if (numCond==20)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,57,TraceAttr,"+System.identityHashCode(this)+",at_s,number2,"+number2 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,32,TraceAttr,"+System.identityHashCode(this)+",at_s,number2,"+number2 );
     }
     wasSet = true;
     return wasSet;
@@ -124,33 +154,33 @@ public class TraceAttr
     number3 = aNumber3;
     if (traceFlag1)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,58,TraceAttr,"+System.identityHashCode(this)+",at_s,number3,"+number3 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,33,TraceAttr,"+System.identityHashCode(this)+",at_s,number3,"+number3 );
     }
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setNumber4(int aNumber4)
+  public boolean setNumber4(double aNumber4)
   {
     boolean wasSet = false;
     number4 = aNumber4;
     if (traceFlag2)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,59,TraceAttr,"+System.identityHashCode(this)+",at_s,number4,"+number4 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,34,TraceAttr,"+System.identityHashCode(this)+",at_s,number4,"+number4 );
     }
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setNumber5(int aNumber5)
+  public boolean setStr(String aStr)
   {
     boolean wasSet = false;
     if (traceFlag3<3)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,60,TraceAttr,"+System.identityHashCode(this)+",at_s,number5,"+number5+","+aNumber5 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,35,TraceAttr,"+System.identityHashCode(this)+",at_s,str,"+str+","+aStr );
       traceFlag3++;
     }
-    number5 = aNumber5;
+    str = aStr;
     wasSet = true;
     return wasSet;
   }
@@ -162,8 +192,44 @@ public class TraceAttr
 
   public String getAddress()
   {
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,43,TraceAttr,"+System.identityHashCode(this)+",at_g,address,"+address );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,17,TraceAttr,"+System.identityHashCode(this)+",at_g,address,"+address );
     return address;
+  }
+
+  public double getSalary()
+  {
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,18,TraceAttr,"+System.identityHashCode(this)+",at_g,salary,"+salary );
+    return salary;
+  }
+
+  public Integer getId(int index)
+  {
+    Integer aId = id.get(index);
+    return aId;
+  }
+
+  public Integer[] getId()
+  {
+    Integer[] newId = id.toArray(new Integer[id.size()]);
+    return newId;
+  }
+
+  public int numberOfId()
+  {
+    int number = id.size();
+    return number;
+  }
+
+  public boolean hasId()
+  {
+    boolean has = id.size() > 0;
+    return has;
+  }
+
+  public int indexOfId(Integer aId)
+  {
+    int index = id.indexOf(aId);
+    return index;
   }
 
   /**
@@ -197,14 +263,14 @@ public class TraceAttr
     return number3;
   }
 
-  public int getNumber4()
+  public double getNumber4()
   {
     return number4;
   }
 
-  public int getNumber5()
+  public String getStr()
   {
-    return number5;
+    return str;
   }
 
   public void delete()
@@ -217,13 +283,14 @@ public class TraceAttr
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "address" + ":" + getAddress()+ "," +
+            "salary" + ":" + getSalary()+ "," +
             "numCond" + ":" + getNumCond()+ "," +
             "strCond" + ":" + getStrCond()+ "," +
             "number1" + ":" + getNumber1()+ "," +
             "number2" + ":" + getNumber2()+ "," +
             "number3" + ":" + getNumber3()+ "," +
             "number4" + ":" + getNumber4()+ "," +
-            "number5" + ":" + getNumber5()+ "]"
+            "str" + ":" + getStr()+ "]"
      + outputString;
   }
 }

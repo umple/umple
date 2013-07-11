@@ -11,10 +11,11 @@ class TraceAttr
 
   //TraceAttr Attributes
   private $name;
+  private $address;
+  private $salary;
+  private $id;
 
   /**
-   * address;
-   * trace get address;
    * Trace attributes with conditions
    */
   private $numCond;
@@ -27,7 +28,7 @@ class TraceAttr
   private $number2;
   private $number3;
   private $number4;
-  private $number5;
+  private $str;
   private $traceFlag1;
   private $traceFlag2;
   private $traceFlag3;
@@ -36,16 +37,19 @@ class TraceAttr
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aName, $aNumCond, $aStrCond, $aNumber1, $aNumber2, $aNumber3, $aNumber4, $aNumber5)
+  public function __construct($aName, $aAddress, $aSalary, $aNumCond, $aStrCond, $aNumber1, $aNumber2, $aNumber3, $aNumber4, $aStr)
   {
     $this->name = $aName;
+    $this->address = $aAddress;
+    $this->salary = $aSalary;
+    $this->id = array();
     $this->numCond = $aNumCond;
     $this->strCond = $aStrCond;
     $this->number1 = $aNumber1;
     $this->number2 = $aNumber2;
     $this->number3 = $aNumber3;
     $this->number4 = $aNumber4;
-    $this->number5 = $aNumber5;
+    $this->str = $aStr;
     $this->traceFlag1 = false;
     $this->traceFlag2 = true;
     $this->traceFlag3 = 0;
@@ -58,10 +62,44 @@ class TraceAttr
   public function setName($aName)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,40,TraceAttr,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,15,TraceAttr,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
     $this->name = $aName;
     $wasSet = true;
     return $wasSet;
+  }
+
+  public function setAddress($aAddress)
+  {
+    $wasSet = false;
+    $this->address = $aAddress;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setSalary($aSalary)
+  {
+    $wasSet = false;
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,18,TraceAttr,".spl_object_hash( $this ).",at_s,salary,".$this->salary.",".$aSalary );
+    $this->salary = $aSalary;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function addId($aId)
+  {
+    $wasAdded = false;
+    $this->id[] = $aId;
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeId($aId)
+  {
+    $wasRemoved = false;
+    unset($this->id[$this->indexOfId($aId)]);
+    $this->id = array_values($this->id);
+    $wasRemoved = true;
+    return $wasRemoved;
   }
 
   public function setNumCond($aNumCond)
@@ -93,7 +131,7 @@ class TraceAttr
     $wasSet = false;
       if($numCond>100)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,56,TraceAttr,".spl_object_hash( $this ).",at_s,number1,".$this->number1.",".$aNumber1 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,31,TraceAttr,".spl_object_hash( $this ).",at_s,number1,".$this->number1.",".$aNumber1 );
         }
     $this->number1 = $aNumber1;
     $wasSet = true;
@@ -106,7 +144,7 @@ class TraceAttr
     $this->number2 = $aNumber2;
       if($numCond==20)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,57,TraceAttr,".spl_object_hash( $this ).",at_s,number2,".$this->number2 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,32,TraceAttr,".spl_object_hash( $this ).",at_s,number2,".$this->number2 );
         }
     $wasSet = true;
     return $wasSet;
@@ -118,7 +156,7 @@ class TraceAttr
     $this->number3 = $aNumber3;
       if($traceFlag1)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,58,TraceAttr,".spl_object_hash( $this ).",at_s,number3,".$this->number3 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,33,TraceAttr,".spl_object_hash( $this ).",at_s,number3,".$this->number3 );
         }
     $wasSet = true;
     return $wasSet;
@@ -130,21 +168,21 @@ class TraceAttr
     $this->number4 = $aNumber4;
       if($traceFlag2)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,59,TraceAttr,".spl_object_hash( $this ).",at_s,number4,".$this->number4 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,34,TraceAttr,".spl_object_hash( $this ).",at_s,number4,".$this->number4 );
         }
     $wasSet = true;
     return $wasSet;
   }
 
-  public function setNumber5($aNumber5)
+  public function setStr($aStr)
   {
     $wasSet = false;
       if($traceFlag3<3)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,60,TraceAttr,".spl_object_hash( $this ).",at_s,number5,".$this->number5.",".$aNumber5 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,35,TraceAttr,".spl_object_hash( $this ).",at_s,str,".$this->str.",".$aStr );
       traceFlag3++;
         }
-    $this->number5 = $aNumber5;
+    $this->str = $aStr;
     $wasSet = true;
     return $wasSet;
   }
@@ -152,6 +190,47 @@ class TraceAttr
   public function getName()
   {
     return $this->name;
+  }
+
+  public function getAddress()
+  {
+    return $this->address;
+  }
+
+  public function getSalary()
+  {
+    return $this->salary;
+  }
+
+  public function getId($index)
+  {
+    $aId = $this->id[$index];
+    return $aId;
+  }
+
+  public function getId()
+  {
+    $newId = $this->id;
+    return $newId;
+  }
+
+  public function numberOfId()
+  {
+    $number = count($this->id);
+    return $number;
+  }
+
+  public function hasId()
+  {
+    $has = id.size() > 0;
+    return $has;
+  }
+
+  public function indexOfId($aId)
+  {
+    $rawAnswer = array_search($aId,$this->id);
+    $index = $rawAnswer == null && $rawAnswer !== 0 ? -1 : $rawAnswer;
+    return $index;
   }
 
   public function getNumCond()
@@ -184,9 +263,9 @@ class TraceAttr
     return $this->number4;
   }
 
-  public function getNumber5()
+  public function getStr()
   {
-    return $this->number5;
+    return $this->str;
   }
 
   public function equals($compareTo)
