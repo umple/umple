@@ -34,6 +34,7 @@ public class UmpleElement
 
   //UmpleElement Associations
   private List<Position> positions;
+  private List<Position> endPositions;
 
   //------------------------
   // CONSTRUCTOR
@@ -50,6 +51,7 @@ public class UmpleElement
     coordinates = new Coordinate(-1,-1,-1,-1);
     displayColor = "";
     positions = new ArrayList<Position>();
+    endPositions = new ArrayList<Position>();
   }
 
   //------------------------
@@ -86,11 +88,11 @@ public class UmpleElement
     return wasRemoved;
   }
 
-  @umplesourcefile(line={101},file={"Umple.ump"},javaline={94},length={1})
+  @umplesourcefile(line={102},file={"Umple.ump"},javaline={96},length={1})
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
-    // line 101 "../../../../src/Umple.ump"
+    // line 102 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;
@@ -138,6 +140,7 @@ public class UmpleElement
   }
 
   /**
+   * Kept aligned with positions
    * The modifier associated with the Umple element.
    */
   public String getModifier()
@@ -251,6 +254,36 @@ public class UmpleElement
     return index;
   }
 
+  public Position getEndPosition(int index)
+  {
+    Position aEndPosition = endPositions.get(index);
+    return aEndPosition;
+  }
+
+  public List<Position> getEndPositions()
+  {
+    List<Position> newEndPositions = Collections.unmodifiableList(endPositions);
+    return newEndPositions;
+  }
+
+  public int numberOfEndPositions()
+  {
+    int number = endPositions.size();
+    return number;
+  }
+
+  public boolean hasEndPositions()
+  {
+    boolean has = endPositions.size() > 0;
+    return has;
+  }
+
+  public int indexOfEndPosition(Position aEndPosition)
+  {
+    int index = endPositions.indexOf(aEndPosition);
+    return index;
+  }
+
   public static int minimumNumberOfPositions()
   {
     return 0;
@@ -308,9 +341,67 @@ public class UmpleElement
     return wasAdded;
   }
 
+  public static int minimumNumberOfEndPositions()
+  {
+    return 0;
+  }
+
+  public boolean addEndPosition(Position aEndPosition)
+  {
+    boolean wasAdded = false;
+    if (endPositions.contains(aEndPosition)) { return false; }
+    endPositions.add(aEndPosition);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeEndPosition(Position aEndPosition)
+  {
+    boolean wasRemoved = false;
+    if (endPositions.contains(aEndPosition))
+    {
+      endPositions.remove(aEndPosition);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addEndPositionAt(Position aEndPosition, int index)
+  {  
+    boolean wasAdded = false;
+    if(addEndPosition(aEndPosition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfEndPositions()) { index = numberOfEndPositions() - 1; }
+      endPositions.remove(aEndPosition);
+      endPositions.add(index, aEndPosition);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveEndPositionAt(Position aEndPosition, int index)
+  {
+    boolean wasAdded = false;
+    if(endPositions.contains(aEndPosition))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfEndPositions()) { index = numberOfEndPositions() - 1; }
+      endPositions.remove(aEndPosition);
+      endPositions.add(index, aEndPosition);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addEndPositionAt(aEndPosition, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     positions.clear();
+    endPositions.clear();
   }
 
 
@@ -330,14 +421,14 @@ public class UmpleElement
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={623},file={"Umple_Code.ump"},javaline={334},length={18})
-  @umplesourcefile(line={624},file={"Umple_Code.ump"},javaline={335},length={4})
+  //  @umplesourcefile(line={623},file={"Umple_Code.ump"},javaline={425},length={18})
+  @umplesourcefile(line={624},file={"Umple_Code.ump"},javaline={426},length={4})
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={629},file={"Umple_Code.ump"},javaline={341},length={12})
+  @umplesourcefile(line={629},file={"Umple_Code.ump"},javaline={432},length={12})
   public void appendExtraCode(String newCode, boolean addNewline)
   {
     if (newCode == null) 

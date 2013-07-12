@@ -24,6 +24,7 @@ public class Activity
 
   //Activity Attributes
   private Position position;
+  private Position endPosition;
   private String activityCode;
   private CodeBlock codeblock;
 
@@ -35,7 +36,7 @@ public class Activity
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={74},file={"StateMachine.ump"},javaline={49},length={1})
+  @umplesourcefile(line={75},file={"StateMachine.ump"},javaline={50},length={1})
   public Activity(String aActivityCode, State aState)
   {
     activityCode = aActivityCode;
@@ -45,7 +46,7 @@ public class Activity
     {
       throw new RuntimeException("Unable to create activity due to state");
     }
-    // line 74 "../../../../src/StateMachine.ump"
+    // line 75 "../../../../src/StateMachine.ump"
     codeblock = aActivityCode!=null ? new CodeBlock(aActivityCode) : new CodeBlock();
   }
 
@@ -61,24 +62,32 @@ public class Activity
     return wasSet;
   }
 
-  @umplesourcefile(line={75},file={"StateMachine.ump"},javaline={69},length={1})
+  public boolean setEndPosition(Position aEndPosition)
+  {
+    boolean wasSet = false;
+    endPosition = aEndPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
+  @umplesourcefile(line={76},file={"StateMachine.ump"},javaline={78},length={1})
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
-    // line 75 "../../../../src/StateMachine.ump"
+    // line 76 "../../../../src/StateMachine.ump"
     codeblock.setCode(aActivityCode);
     activityCode = aActivityCode;
     wasSet = true;
     return wasSet;
   }
 
-  @umplesourcefile(line={82},file={"StateMachine.ump"},javaline={81},length={5})
+  @umplesourcefile(line={83},file={"StateMachine.ump"},javaline={90},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 82 "../../../../src/StateMachine.ump"
+    // line 83 "../../../../src/StateMachine.ump"
     if(activityCode!=null){
       	  activityCode+= aCodeblock.getCode();
       	}
@@ -92,11 +101,16 @@ public class Activity
     return position;
   }
 
-  @umplesourcefile(line={76},file={"StateMachine.ump"},javaline={98},length={3})
+  public Position getEndPosition()
+  {
+    return endPosition;
+  }
+
+  @umplesourcefile(line={77},file={"StateMachine.ump"},javaline={112},length={3})
   public String getActivityCode()
   {
     String aActivityCode = activityCode;
-    // line 76 "../../../../src/StateMachine.ump"
+    // line 77 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else
@@ -165,7 +179,7 @@ public class Activity
     }
   }
 
-  @umplesourcefile(line={89},file={"StateMachine.ump"},javaline={169},length={8})
+  @umplesourcefile(line={90},file={"StateMachine.ump"},javaline={183},length={8})
   public void setActivityCode(String lang, String code){
     if(activityCode!=null){
   	  activityCode+= lang+code;
@@ -182,6 +196,7 @@ public class Activity
     return super.toString() + "["+
             "activityCode" + ":" + getActivityCode()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "endPosition" + "=" + (getEndPosition() != null ? !getEndPosition().equals(this)  ? getEndPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "codeblock" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "onCompletionEvent = "+(getOnCompletionEvent()!=null?Integer.toHexString(System.identityHashCode(getOnCompletionEvent())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "state = "+(getState()!=null?Integer.toHexString(System.identityHashCode(getState())):"null")

@@ -6,9 +6,9 @@ import cruise.umple.compiler.Position;
 
 /**
  * A quickly-executed block of code that is run upon entry or exit from a state
- * @umplesource StateMachine.ump 124
+ * @umplesource StateMachine.ump 125
  */
-// line 124 "../../../../src/StateMachine.ump"
+// line 125 "../../../../src/StateMachine.ump"
 public class Action
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -21,6 +21,7 @@ public class Action
   //Action Attributes
   private String actionType;
   private Position position;
+  private Position endPosition;
   private String actionCode;
   private boolean isInternal;
   private CodeBlock codeblock;
@@ -34,7 +35,7 @@ public class Action
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={134},file={"StateMachine.ump"},javaline={48},length={1})
+  @umplesourcefile(line={136},file={"StateMachine.ump"},javaline={49},length={1})
   public Action(String aActionCode)
   {
     cachedHashCode = -1;
@@ -44,7 +45,7 @@ public class Action
     actionCode = aActionCode;
     isInternal = false;
     codeblock = null;
-    // line 134 "../../../../src/StateMachine.ump"
+    // line 136 "../../../../src/StateMachine.ump"
     codeblock = aActionCode!=null ? new CodeBlock(aActionCode) : new CodeBlock();
   }
 
@@ -69,11 +70,19 @@ public class Action
     return wasSet;
   }
 
-  @umplesourcefile(line={135},file={"StateMachine.ump"},javaline={77},length={2})
+  public boolean setEndPosition(Position aEndPosition)
+  {
+    boolean wasSet = false;
+    endPosition = aEndPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
+  @umplesourcefile(line={137},file={"StateMachine.ump"},javaline={86},length={2})
   public boolean setActionCode(String aActionCode)
   {
     boolean wasSet = false;
-    // line 135 "../../../../src/StateMachine.ump"
+    // line 137 "../../../../src/StateMachine.ump"
     codeblock.setCode(aActionCode);
     if (!canSetActionCode) { return false; }
     actionCode = aActionCode;
@@ -89,13 +98,13 @@ public class Action
     return wasSet;
   }
 
-  @umplesourcefile(line={142},file={"StateMachine.ump"},javaline={98},length={5})
+  @umplesourcefile(line={144},file={"StateMachine.ump"},javaline={107},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 142 "../../../../src/StateMachine.ump"
+    // line 144 "../../../../src/StateMachine.ump"
     if(actionCode!=null){
       	  actionCode+= aCodeblock.getCode();
       	}
@@ -114,11 +123,16 @@ public class Action
     return position;
   }
 
-  @umplesourcefile(line={136},file={"StateMachine.ump"},javaline={120},length={3})
+  public Position getEndPosition()
+  {
+    return endPosition;
+  }
+
+  @umplesourcefile(line={138},file={"StateMachine.ump"},javaline={134},length={3})
   public String getActionCode()
   {
     String aActionCode = actionCode;
-    // line 136 "../../../../src/StateMachine.ump"
+    // line 138 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else
@@ -204,7 +218,7 @@ public class Action
   public void delete()
   {}
 
-  @umplesourcefile(line={149},file={"StateMachine.ump"},javaline={208},length={8})
+  @umplesourcefile(line={151},file={"StateMachine.ump"},javaline={222},length={8})
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;
@@ -223,6 +237,7 @@ public class Action
             "actionType" + ":" + getActionType()+ "," +
             "isInternal" + ":" + getIsInternal()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "endPosition" + "=" + (getEndPosition() != null ? !getEndPosition().equals(this)  ? getEndPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "codeblock" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
   }

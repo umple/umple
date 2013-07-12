@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * The Precondition object (special Constraint) related to Umple Classes
- * @umplesource Umple.ump 260
+ * @umplesource Umple.ump 262
  */
-// line 260 "../../../../src/Umple.ump"
+// line 262 "../../../../src/Umple.ump"
 public class Precondition extends Constraint
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
