@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * The Constraint object related to Umple Classes
- * @umplesource Umple.ump 253
+ * @umplesource Umple.ump 255
  */
-// line 253 "../../../../src/Umple.ump"
+// line 255 "../../../../src/Umple.ump"
 public class Constraint
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

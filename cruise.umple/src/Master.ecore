@@ -183,7 +183,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="tokens" lowerBound="0" upperBound="-1" eType="#//Token" eOpposite="#//Token/endPosition"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rulePartValues" lowerBound="0" upperBound="-1" eType="#//RulePartValue" eOpposite="#//RulePartValue/position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleElement" lowerBound="1" upperBound="1" eType="#//UmpleElement" eOpposite="#//UmpleElement/positions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleElement" lowerBound="1" upperBound="1" eType="#//UmpleElement" eOpposite="#//UmpleElement/endPositions"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" lowerBound="1" upperBound="1" eType="#//Attribute" eOpposite="#//Attribute/position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attribute" lowerBound="1" upperBound="1" eType="#//Attribute" eOpposite="#//Attribute/endPosition"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Rule">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -256,6 +258,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Activity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="activityCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeblock" eType="#//CodeBlock"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="onCompletionEvent" lowerBound="0" upperBound="1" eType="#//Event" eOpposite="#//Event/activities"/>
@@ -274,6 +277,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="Action">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="actionCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeblock" eType="#//CodeBlock"/>
@@ -292,6 +296,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guard">
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeblock" eType="#//CodeBlock"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" lowerBound="0" upperBound="-1" eType="#//Transition" eOpposite="#//Transition/guard"/>
@@ -364,11 +369,13 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="coordinate" eType="#//Coordinate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayColor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="positions" lowerBound="0" upperBound="-1" eType="#//Position" eOpposite="#//Position/umpleElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPositions" lowerBound="0" upperBound="-1" eType="#//Position" eOpposite="#//Position/umpleElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Method">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isImplemented" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="methodParameters" lowerBound="0" upperBound="-1" eType="#//MethodParameter" eOpposite="#//MethodParameter/method"/>
@@ -509,6 +516,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLazy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/attributes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceRecords" lowerBound="0" upperBound="-1" eType="#//TraceRecord" eOpposite="#//TraceRecord/attributes"/>
   </eClassifiers>
@@ -518,6 +526,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRightNavigable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="positions" eType="#//Coordinate" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tokenPosition" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tokenEndPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="immutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ends" lowerBound="2" upperBound="2" eType="#//AssociationEnd" eOpposite="#//AssociationEnd/association"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/associations"/>

@@ -8,10 +8,10 @@ import java.util.*;
 /**
  * A method in an Umple class or interface
  * Umple Methods are coded by the programmer in the language(s) of their choice
- * @umplesource Umple.ump 108
+ * @umplesource Umple.ump 109
  * @umplesource Umple_Code.ump 417
  */
-// line 108 "../../../../src/Umple.ump"
+// line 109 "../../../../src/Umple.ump"
 // line 417 "../../../../src/Umple_Code.ump"
 public class Method
 {
@@ -26,6 +26,7 @@ public class Method
   private String modifier;
   private String name;
   private Position position;
+  private Position endPosition;
   private String type;
   private boolean isImplemented;
 
@@ -76,6 +77,14 @@ public class Method
     return wasSet;
   }
 
+  public boolean setEndPosition(Position aEndPosition)
+  {
+    boolean wasSet = false;
+    endPosition = aEndPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setType(String aType)
   {
     boolean wasSet = false;
@@ -111,6 +120,11 @@ public class Method
   public Position getPosition()
   {
     return position;
+  }
+
+  public Position getEndPosition()
+  {
+    return endPosition;
   }
 
   /**
@@ -337,8 +351,8 @@ public class Method
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={418},file={"Umple_Code.ump"},javaline={341},length={39})
-  @umplesourcefile(line={419},file={"Umple_Code.ump"},javaline={342},length={7})
+  //  @umplesourcefile(line={418},file={"Umple_Code.ump"},javaline={355},length={39})
+  @umplesourcefile(line={419},file={"Umple_Code.ump"},javaline={356},length={7})
   public boolean getExistsInLanguage(String lang) 
   {
     if(getMethodBody().getExtraCode(lang)==null)
@@ -346,7 +360,7 @@ public class Method
     else 
       return true;
   }
-  @umplesourcefile(line={426},file={"Umple_Code.ump"},javaline={350},length={31})
+  @umplesourcefile(line={426},file={"Umple_Code.ump"},javaline={364},length={31})
   public String toString()
   {    
     StringBuffer methodBuffer = new StringBuffer();

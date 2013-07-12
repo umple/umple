@@ -65,6 +65,7 @@ class Activity
   depend cruise.umple.compiler.Position;
 
   lazy Position position;
+  lazy Position endPosition;
   activityCode;  // target language code
   
     
@@ -127,6 +128,7 @@ class Action
   
   actionType = null;
   lazy Position position;
+  lazy Position endPosition;
   actionCode;  // target language code
   Boolean isInternal = false;
   
@@ -184,6 +186,7 @@ class Guard
   depend cruise.umple.compiler.Position;
   
   lazy Position position;
+  lazy Position endPosition;
   condition; // target language code
   
   CodeBlock codeblock = null;

@@ -458,9 +458,11 @@ class UmpleInternalParser
       aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
 
     Position thePosition = classToken.getPosition();
+    Position endPosition = classToken.getEndPosition();
 
     // Set the original .ump file and line number
     aClass.addPosition(thePosition);
+    aClass.addEndPosition(endPosition);
 
     // Add all the comments in the comment list to the Umple class.
     // But add them before any umplesource special comments
@@ -1270,7 +1272,8 @@ class UmpleInternalParser
 
   // Set method position
   aMethod.setPosition(method.getPosition());
-
+  aMethod.setEndPosition(method.getEndPosition());
+  
     // Add comments above the method to the method.
     for (Comment c : lastComments)
     {
@@ -1685,6 +1688,8 @@ class UmpleInternalParser
       association.setImmutable();
     }
     association.setTokenPosition(associationToken.getPosition());
+    association.setTokenEndPosition(associationToken.getEndPosition());
+    
     if (!association.isValid()){
       Token atFaultToken = association.whoIsInvalid() == 0 ? myEndToken : yourEndToken;
       String invalidBound = atFaultToken.getValue("bound") == null ? invalidBound = atFaultToken.getValue("lowerBound") + ".." + atFaultToken.getValue("upperBound") : atFaultToken.getValue("bound");
@@ -1949,6 +1954,7 @@ class UmpleInternalParser
     if (derivedValue != null)
     {
       attribute.setPosition(attributeToken.getPosition());
+      attribute.setEndPosition(attributeToken.getEndPosition());
       attribute.setIsDerived(true);
       attribute.setCodeblock(languageSpecificCode);
     }

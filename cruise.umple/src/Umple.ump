@@ -79,6 +79,7 @@ class UmpleElement
   // The position(s) of the element in the source code, used in debugging
   //  may have multiple positions in the case of mixins
   1 -> 0..* Position positions;
+  1 -> 0..* Position endPositions; // Kept aligned with positions
 
   // The modifier associated with the Umple element.
   modifier = null;
@@ -116,6 +117,7 @@ class Method
   name;
   
   lazy Position position;
+  lazy Position endPosition;
 
   // The type of the method.
   type;
@@ -480,6 +482,7 @@ class Attribute
   
   // In case this attribute needs to have error handling preformed
   1 -> 0..1 Position;
+  1 -> 0..1 Position endPosition;
 }
 
 /*
@@ -498,6 +501,7 @@ class Association
   Coordinate[] positions;
   0..1 -- 2 AssociationEnd ends;
   Position tokenPosition = null;
+  Position tokenEndPosition = null;
   internal Boolean immutable = false;
 
   before getName { if (name == null || "".equals(name)) { return this.deriveName(); } }

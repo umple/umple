@@ -552,6 +552,7 @@ class UmpleInternalParser
     act.setCodeblock(cb);
     
     act.setPosition(activityToken.getPosition());
+    act.setEndPosition(activityToken.getEndPosition());
     return act;
   }
   
@@ -578,6 +579,7 @@ class UmpleInternalParser
     action.setCodeblock(cb);
     	
     action.setPosition(actionToken.getPosition());
+    action.setEndPosition(actionToken.getEndPosition());
     action.setActionType(actionToken.getValue("type"));
         
     return action;
@@ -605,6 +607,7 @@ class UmpleInternalParser
     guard.setCodeblock(cb);
     
     guard.setPosition(guardToken.getPosition());
+    guard.setEndPosition(guardToken.getEndPosition());
     
     return guard;
   }
