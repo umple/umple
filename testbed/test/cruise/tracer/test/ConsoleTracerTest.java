@@ -47,6 +47,13 @@ public class ConsoleTracerTest
 					"at_s,str,String 2,String 3"
 			};
 			
+			String[] attrTraceCondExpected = {
+					"at_s,n1,50,110",
+					"at_s,n1,110,120",
+					"at_s,n2,70",
+					"at_s,n2,80"
+			};
+			
 			String[] stmTraceExpected = {
 					"sm_e,Open,status",
 					"sm_x,Open,status",
@@ -55,7 +62,7 @@ public class ConsoleTracerTest
 					"sm_e,Open,status"	
 			};
 			
-			String[] expected = concatAll(attrTraceExpected, stmTraceExpected);
+			String[] expected = concatAll(attrTraceExpected, attrTraceCondExpected, stmTraceExpected);
 			
 			Integer[] testField = {0,9,9};
 			@Override
@@ -80,7 +87,7 @@ public class ConsoleTracerTest
 		};
 	  System.setErr(ps);
 	  
-	  // invoke attributes tracing
+	  //==== invoke attributes tracing
 	  TraceAttr aTest = new TraceAttr(null, null, 0, 0, null, 0, 0, 0, 0, null);
 	  
 	  aTest.setName("Geoff");
@@ -117,7 +124,19 @@ public class ConsoleTracerTest
 	  aTest.setStr("String 3");
 	  aTest.setStr("String 4");
 	  
-	  // invoke state machine tracing
+	  TraceAttrCond acTest = new TraceAttrCond(0, 0, 0, 0, 0);
+	  
+	  acTest.setN1(50);
+	  acTest.setN1(110);
+	  acTest.setN1(120);
+	  acTest.setN1(130);
+	  
+	  acTest.setN2(-2);
+	  acTest.setN2(70);
+	  acTest.setN2(80);
+	  acTest.setN2(90);
+	  
+	  //==== invoke state machine tracing
 	  TraceStm sTrace = new TraceStm();
 	  sTrace.anEvent();
 	  sTrace.anEvent();

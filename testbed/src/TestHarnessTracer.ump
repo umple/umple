@@ -4,37 +4,7 @@ namespace cruise.tracer.test;
 //tracer String;
 tracer Console;
 
-class TraceAttr
-{
 
-  String name;
-  String address;
-  Double salary;
-  Integer[] id;
-  
-  trace name;
-  trace id;
-  trace get address;
-  trace set,get salary;
-  
-  // Trace attributes with conditions
-  Integer numCond;
-  // ToBe added string constrints
-  String strCond;
-  
-  Integer number1;
-  Integer number2;
-  Integer number3;
-  Double  number4;
-  String  str;
-  
-  trace number1 where [ numCond > 100 ];
-  trace number2 giving [ numCond == 20 ];
-  trace number3 after [ numCond == 1 ];
-  trace number4 until [ numCond <= 0 ];
-  trace str for 3;
-
-}
 
 class TraceStm
 {
@@ -65,3 +35,50 @@ class TraceStm
   }
   
 }
+
+class TraceAttr
+{
+
+  String name;
+  String address;
+  Double salary;
+  Integer[] id;
+  
+  trace name;
+  trace id;
+  trace get address;
+  trace set,get salary;
+  
+  // Trace attributes with conditions
+  Integer numCond;
+  // ToBe added string constrints
+  String strCond;
+  
+  Integer number1;
+  Integer number2;
+  Integer number3;
+  Double  number4;
+  String  str;
+  
+  trace number1 where [ numCond > 100 ];
+  trace number2 giving [ numCond == 20 ];
+  trace number3 after [ numCond == 1 ];
+  trace number4 until [ numCond <= 0 ];
+  trace str for 3;
+}
+
+class TraceAttrCond
+{
+  Integer n1;
+  Integer n2;
+  Integer n3;
+  Double  n4;
+  
+  Integer numCond;
+  
+  // Combination of where - for
+  trace n1 where  [ n1 > 100 ] for 2;
+  trace n2 giving [ n2 > 50 ]  for 2;
+  
+}
+
