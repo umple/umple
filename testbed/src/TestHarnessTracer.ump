@@ -73,12 +73,28 @@ class TraceAttrCond
   Integer n2;
   Integer n3;
   Double  n4;
+  Integer n5;
+  Integer n6;
+  Integer n7;
+  Integer n8;
+  Integer n9;
+  Integer n10;
   
   Integer numCond;
   
-  // Combination of where - for
+  // Combinations of 'for'
   trace n1 where  [ n1 > 100 ] for 2;
   trace n2 giving [ n2 > 50 ]  for 2;
+  trace n3 after  [ n3 > 20 ]  for 2; 
+  trace n4 until  [ n4 > 10 ]  for 2;
   
+  // Combinations of 'until'
+  //trace n5 until [ n5 < 0  ] where  [ n5 > 20 ];
+  //trace n6 until [ n6 == 0 ] giving [ n6 > 50 ];
+  //trace n7 until [ n7 == 0 ] after  [ n7 > 10 ];
+  
+  // Combinations of 'after'
+  //trace n8 after [ n8 < 0  ] where  [ n8 > 20 ];
+  //trace n9 after [ n9 == 0 ] giving [ n9 > 50 ];
+  //trace n10 after [ n10 == 0 ] until  [ n10 > 10 ];
 }
-

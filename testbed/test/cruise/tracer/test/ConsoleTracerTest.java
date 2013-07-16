@@ -51,7 +51,10 @@ public class ConsoleTracerTest
 					"at_s,n1,50,110",
 					"at_s,n1,110,120",
 					"at_s,n2,70",
-					"at_s,n2,80"
+					"at_s,n2,80",
+					"at_s,n3,33",
+					"at_s,n3,44",
+					"at_s,n4,99.0"
 			};
 			
 			String[] stmTraceExpected = {
@@ -124,7 +127,7 @@ public class ConsoleTracerTest
 	  aTest.setStr("String 3");
 	  aTest.setStr("String 4");
 	  
-	  TraceAttrCond acTest = new TraceAttrCond(0, 0, 0, 0, 0);
+	  TraceAttrCond acTest = new TraceAttrCond(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 	  
 	  acTest.setN1(50);
 	  acTest.setN1(110);
@@ -135,6 +138,20 @@ public class ConsoleTracerTest
 	  acTest.setN2(70);
 	  acTest.setN2(80);
 	  acTest.setN2(90);
+	  
+	  acTest.setN3(0);
+	  acTest.setN3(22);
+	  acTest.setN3(33);
+	  acTest.setN3(44);
+	  
+	  acTest.setN4(99);
+	  acTest.setN4(0.5);
+	  acTest.setN4(-8);
+	  
+//	  acTest.setN5(35);
+//	  acTest.setN5(15);
+//	  acTest.setN5(55);
+//	  acTest.setN5(-1);
 	  
 	  //==== invoke state machine tracing
 	  TraceStm sTrace = new TraceStm();
