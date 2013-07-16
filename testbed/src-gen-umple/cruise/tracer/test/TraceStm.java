@@ -69,12 +69,11 @@ public class TraceStm
     {
       case Open:
         exitStatus();
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_t,Open,anEvent,Close" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_t,Open,anEvent,Close" );
         setStatus(Status.Close);
         wasEventProcessed = true;
         break;
       case Close:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_t,Close,anEvent,Open" );
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;
@@ -93,12 +92,10 @@ public class TraceStm
     switch (aStatus)
     {
       case HalfOpen:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_t,HalfOpen,ev2,HalfClose" );
         setStatus(Status.HalfClose);
         wasEventProcessed = true;
         break;
       case HalfClose:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_t,HalfClose,ev2,HalfOpen" );
         setStatus(Status.HalfOpen);
         wasEventProcessed = true;
         break;
@@ -109,13 +106,12 @@ public class TraceStm
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={16}, file={"TestHarnessTracer.ump"}, javaline={120}, length={1})
+  @umplesourcefile(line={16}, file={"TestHarnessTracer.ump"}, javaline={116}, length={1})
   private void exitStatus()
   {
     switch(status)
     {
-      case Open:    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_x,Open,status" );
-
+      case Open:
         // line 16 "../../../../src/TestHarnessTracer.ump"
         log = "exit called";
         break;
@@ -129,8 +125,7 @@ public class TraceStm
     // entry actions and do activities
     switch(status)
     {
-      case Open:    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_e,Open,status" );
-
+      case Open:
         // line 15 "../../../../src/TestHarnessTracer.ump"
         log = "entry called";
         break;

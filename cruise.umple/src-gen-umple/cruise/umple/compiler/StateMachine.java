@@ -833,7 +833,7 @@ public class StateMachine
           State potentialMatch = nestedSm.findState(aName,true,true);
           if (potentialMatch != null)
           {
-            recentSearchDepth=nestedSm.recentSearchDepth+1;
+            recentSearchDepth=nestedSm.recentSearchDepth+2;
             return potentialMatch;
           } 
         }

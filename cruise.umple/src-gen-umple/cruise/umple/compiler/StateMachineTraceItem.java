@@ -9,10 +9,10 @@ import java.util.*;
  * An element of a trace directive that indicates to trace one or more state machines
  * or transitions
  * @umplesource Trace.ump 122
- * @umplesource Trace_Code.ump 306
+ * @umplesource Trace_Code.ump 278
  */
 // line 122 "../../../../src/Trace.ump"
-// line 306 "../../../../src/Trace_Code.ump"
+// line 278 "../../../../src/Trace_Code.ump"
 public class StateMachineTraceItem implements TraceItem
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -396,12 +396,12 @@ public class StateMachineTraceItem implements TraceItem
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={313},file={"Trace_Code.ump"},javaline={400},length={82})
-  @umplesourcefile(line={314},file={"Trace_Code.ump"},javaline={401},length={3})
+  //  @umplesourcefile(line={285},file={"Trace_Code.ump"},javaline={400},length={82})
+  @umplesourcefile(line={286},file={"Trace_Code.ump"},javaline={401},length={3})
   public Boolean getIsPre(){
   	return conditionallyWhere;
   }
-  @umplesourcefile(line={317},file={"Trace_Code.ump"},javaline={405},length={3})
+  @umplesourcefile(line={289},file={"Trace_Code.ump"},javaline={405},length={3})
   public Boolean getIsPost(){
   	return !conditionallyWhere;
   }
@@ -413,7 +413,7 @@ public class StateMachineTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace 
    */
-  @umplesourcefile(line={328},file={"Trace_Code.ump"},javaline={417},length={60})
+  @umplesourcefile(line={300},file={"Trace_Code.ump"},javaline={417},length={60})
   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args)
   {
   	String name = "";
@@ -477,7 +477,7 @@ public class StateMachineTraceItem implements TraceItem
   /* Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line={391},file={"Trace_Code.ump"},javaline={481},length={4})
+  @umplesourcefile(line={363},file={"Trace_Code.ump"},javaline={481},length={4})
   public String getExtremities(CodeTranslator gen, String name)
   {
     return gen.translate("Closed",constraint);

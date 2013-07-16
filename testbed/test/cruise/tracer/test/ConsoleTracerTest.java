@@ -58,11 +58,11 @@ public class ConsoleTracerTest
 			};
 			
 			String[] stmTraceExpected = {
-					"sm_e,Open,status",
-					"sm_x,Open,status",
 					"sm_t,Open,anEvent,Close",
-					"sm_t,Close,anEvent,Open",
-					"sm_e,Open,status"	
+					"sm_t,Open,anEvent,Close",
+					"sm_t,Open,anEvent,Close",
+					"sm_t,Open,anEvent,Close",
+					"sm_t,Open,anEvent,Close"	
 			};
 			
 			String[] expected = concatAll(attrTraceExpected, attrTraceCondExpected, stmTraceExpected);

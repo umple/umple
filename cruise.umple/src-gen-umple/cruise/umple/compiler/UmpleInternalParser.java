@@ -4220,8 +4220,8 @@ this("UmpleInternalParser", aModel);
     StateMachine stm = null;
     State state = null;
     String stmTraceItem = traceToken.getValue("trace_entity");
-    
-    if( "transition".equals(traceToken.getParentToken().getSubToken(1).getValue("option")))
+    if( traceToken.getParentToken().getSubToken(1).numberOfSubTokens()>0&&
+        "transition".equals(traceToken.getParentToken().getSubToken(1).getSubToken(0).getValue("option")))
     {
       StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
       tracedStm.setPosition(traceToken.getPosition());
@@ -4304,7 +4304,7 @@ this("UmpleInternalParser", aModel);
             if( "exit".equals(sub2.getValue("option")) )
             {
               wasSet = true;
-              tracedStm.setEntry(false);
+              tracedStm.setExit(true);
             }
             if( "in".equals(sub2.getValue("option")) )
             {

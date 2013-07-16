@@ -4316,7 +4316,7 @@ for (StateMachine smq : uClass.getStateMachines())
         isFirstEntry = false;
         if(traceItem!=null)
         {
-          entryActions.append(traceItem.trace(gen, state,"sm_e", uClass)+"\n");
+          entryActions.append("\n"+traceItem.trace(gen, state,"sm_e", uClass));
           entryJavaLine++;
         }
         Position p = action.getPosition();
@@ -4350,7 +4350,7 @@ for (StateMachine smq : uClass.getStateMachines())
         isFirstExit = false;
         if(traceItem!=null)
         {
-          exitActions.append(traceItem.trace(gen, state,"sm_x", uClass)+"\n");
+          exitActions.append("\n"+traceItem.trace(gen, state,"sm_x", uClass));
           exitJavaLine++;
         }
         Position p = action.getPosition();
