@@ -26,7 +26,7 @@ associationDefinition : association [name]? { [[association]]* }
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | ; | [[extraCode]]
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[extraCode]]
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[association]] | [[inlineAssociation]] | ; | [[extraCode]]
 
 

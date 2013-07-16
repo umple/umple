@@ -78,7 +78,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
         }
         else if(t.is("loneBoolean"))
         {
-          rawLine.add(analyzeConstraintName(t,aClass,false,true,"boolean"));
+          rawLine.add(analyzeConstraintName(t,aClass,true,"boolean"));
         }
         else if (t.is("linkingOp")){
         	rawLine.addAll(analyzeLinkingOpExpression(t,aClass));
@@ -157,11 +157,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       } 
       else if(sub.is("name"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,true));
-      } 
-      else if(sub.is("tail"))
-      {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,false));
+        rawLine.add(analyzeConstraintName(sub,aClass,true));
       } 
       else if(sub.is("index"))
       {
@@ -169,11 +165,15 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       }
       else if(sub.is("equalsOp"))
       {
-        rawLine.add(new ConstraintVariable("OPERATOR","=="));
+		ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv); 
       }
       else if(sub.is("notequalsOp"))
       {
-        rawLine.add(new ConstraintVariable("OPERATOR","!="));
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv); 
       }
     }
     return rawLine;
@@ -200,7 +200,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       }
       else if(sub.is("name"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,false,true,"boolean"));
+        rawLine.add(analyzeConstraintName(sub,aClass,true,"boolean"));
       }
       else if(sub.is("index"))
       {
@@ -226,7 +226,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
     {
       if (sub.getValue().equals("STATIC"))
       {
-        if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
           rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
       }
       else if (sub.is("quote"))
@@ -235,7 +235,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       }
       else if(sub.is("name"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,false,true,"string"));
+        rawLine.add(analyzeConstraintName(sub,aClass,true,"string"));
       }
       else if(sub.is("index"))
       {
@@ -243,11 +243,15 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       }
       else if(sub.is("equalsOp"))
       {
-        rawLine.add(new ConstraintVariable("OPERATOR","=="));
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv);        
       }
       else if(sub.is("notequalsOp"))
       {
-        rawLine.add(new ConstraintVariable("OPERATOR","!="));
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv); 
       }           
     }
     return rawLine;
@@ -266,11 +270,11 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       } 
       else if(sub.is("name"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,true,"integer","float","double"));
+        rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double"));
       } 
-      else if(sub.is("tail"))
+      else if(sub.is("number"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,false));
+        rawLine.add(analyzeConstraintNumber(sub));
       } 
       else if(sub.is("index"))
       {
@@ -292,11 +296,21 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       {
         rawLine.add(new ConstraintVariable("OPERATOR","<="));
       }
+      else if(sub.is("equalsOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+        rawLine.add(cv);        
+      }
+      else if(sub.is("notequalsOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
+        rawLine.add(cv); 
+      } 
     }
     return rawLine;
   }
   
-   private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean canBeInteger, boolean mustBeInClass, String... type)
+  private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean mustBeInClass, String... type)
   {
   	Token sub = nameToken;
   	Token grandparentToken = sub.getParentToken().getParentToken();
@@ -305,6 +319,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
     if(mustBeInClass)
     {
       attribute = cv.getAttribute(aClass);
+      
       if(attribute!=null)
       {
       	if(type!=null&&type.length!=0)
@@ -327,10 +342,12 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
           	setFailedPosition(sub.getPosition(), 29, sub.getValue(), typesFailed);
           }
         }
+        
         cv.setType(attribute.getType());
       }
       
-      else if (grandparentToken.getName().equals("precondition")){ //if it was a precondition, check if it matches any of the method arguments
+      else if (grandparentToken.getName().equals("precondition"))
+      { //if it was a precondition, check if it matches any of the method arguments
     	  Token concreteMethod = grandparentToken.getParentToken();
     	  ArrayList <MethodParameter> methodparams = new ArrayList <MethodParameter>();
     	  for (Token t : concreteMethod.getSubTokens()){
@@ -364,49 +381,17 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
     			  cv.setType(mp.getType());
     		  }
     	  }
-
-    	  if (!matchesAnyMethodParams){
-    		  analyzeConstraintName_CanBeInteger(canBeInteger, sub, cv);
-    	  } 
       }
-      
-      else
-      {
-    	analyzeConstraintName_CanBeInteger(canBeInteger, sub, cv);
+      else if(attribute==null){
+        System.out.println(grandparentToken);
+        setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());      
       }
     }
-    else
-    {
-      if(canBeInteger)
-      {
-        try {
-      	  Integer.parseInt(sub.getValue());
-            cv.setType("OPERATOR");
-          } catch (NumberFormatException e) {
-            setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
-          } 
-      }
-      else
-      {
-      	cv.setType("OPERATOR");      
-      }      
-    }    
     return cv;
   }
-  private void analyzeConstraintName_CanBeInteger(boolean canBeInteger, Token sub, ConstraintVariable cv){
-	  if(canBeInteger)
-      {
-        try {
-    	    Integer.parseInt(sub.getValue());
-            cv.setType("OPERATOR");
-          } catch (NumberFormatException e) {
-            setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
-          } 
-      }
-      else
-      {
-  	  setFailedPosition(sub.getPosition(), 28, sub.getValue(), sub.getName());
-  	}
+  private ConstraintVariable analyzeConstraintNumber(Token numberToken)
+  {
+    return new ConstraintVariable("OPERATOR",numberToken.getValue());
   }
   private void analyzeConstraintIndex(Token indexToken, ConstraintVariable cv)
   {

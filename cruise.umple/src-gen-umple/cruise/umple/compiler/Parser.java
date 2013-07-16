@@ -358,7 +358,7 @@ filename = aFilename;
     rules = new ArrayList<Rule>();
     couples = new ArrayList<Couple>();
   }
-//  @umplesourcefile(line={729},file={"Parser_Code.ump"},javaline={362},length={672})
+//  @umplesourcefile(line={729},file={"Parser_Code.ump"},javaline={362},length={671})
   @umplesourcefile(line={730},file={"Parser_Code.ump"},javaline={363},length={5})
   public Token reset()
   {
@@ -414,7 +414,7 @@ filename = aFilename;
     return toGrammarParts("");
   }
   
-  @umplesourcefile(line={780},file={"Parser_Code.ump"},javaline={418},length={621})
+  @umplesourcefile(line={780},file={"Parser_Code.ump"},javaline={418},length={620})
   public String toGrammarParts(String rulesToOutput)
   {
     StringBuilder answer = new StringBuilder();
@@ -685,7 +685,7 @@ filename = aFilename;
    * 
    * @return True if the input was successfully parsed, false otherwise.
    */
-  @umplesourcefile(line={1046},file={"Parser_Code.ump"},javaline={689},length={302})
+  @umplesourcefile(line={1046},file={"Parser_Code.ump"},javaline={689},length={301})
   private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts)
   {
     // Go through each rule.
@@ -834,17 +834,16 @@ filename = aFilename;
             {
               value = inputParser.next();
             }
-
+            
             if (part.isEnum() && !part.isEnumValue(value))
             {
               value = null;
             }
-
+            
             if (part.isRegex() && !part.regexMatches(value))
             {
               value = null;
             }
-
             if (part.hasInnerNames() && !part.isValidInnerValues(value))
             {
               value = null;
@@ -989,7 +988,7 @@ filename = aFilename;
     return false;
   }
 
-  @umplesourcefile(line={1349},file={"Parser_Code.ump"},javaline={993},length={8})
+  @umplesourcefile(line={1348},file={"Parser_Code.ump"},javaline={992},length={8})
   private void restorePrevious(TextParser inputParser, int savedIndex, Token currentToken, int size)
   {
     inputParser.reset(savedIndex);
@@ -999,7 +998,7 @@ filename = aFilename;
     }
   }
 
-  @umplesourcefile(line={1358},file={"Parser_Code.ump"},javaline={1003},length={6})
+  @umplesourcefile(line={1357},file={"Parser_Code.ump"},javaline={1002},length={6})
   private boolean isWithinVariable(String definition)
   {
     int openBracket = definition.lastIndexOf("[");
@@ -1007,7 +1006,7 @@ filename = aFilename;
     return openBracket > closeBracket;
   }
 
-  @umplesourcefile(line={1365},file={"Parser_Code.ump"},javaline={1011},length={11})
+  @umplesourcefile(line={1364},file={"Parser_Code.ump"},javaline={1010},length={11})
   private boolean isBalanced(String input)
   {
     for (Couple couple : couples)
@@ -1020,31 +1019,31 @@ filename = aFilename;
     return true;
   }
 
-  @umplesourcefile(line={1377},file={"Parser_Code.ump"},javaline={1024},length={4})
+  @umplesourcefile(line={1376},file={"Parser_Code.ump"},javaline={1023},length={4})
   public Token getToken(int index)
   {
     return rootToken.getSubToken(index);
   }
 
-  @umplesourcefile(line={1382},file={"Parser_Code.ump"},javaline={1030},length={4})
+  @umplesourcefile(line={1381},file={"Parser_Code.ump"},javaline={1029},length={4})
   public List<Token> getTokens()
   {
     return rootToken.getSubTokens();
   }
 
-  @umplesourcefile(line={1387},file={"Parser_Code.ump"},javaline={1036},length={4})
+  @umplesourcefile(line={1386},file={"Parser_Code.ump"},javaline={1035},length={4})
   public int numberOfTokens()
   {
     return rootToken.numberOfSubTokens();
   }
 
-  @umplesourcefile(line={1392},file={"Parser_Code.ump"},javaline={1042},length={4})
+  @umplesourcefile(line={1391},file={"Parser_Code.ump"},javaline={1041},length={4})
   public boolean hasTokens()
   {
     return numberOfTokens() > 0;
   }
 
-  @umplesourcefile(line={1397},file={"Parser_Code.ump"},javaline={1048},length={4})
+  @umplesourcefile(line={1396},file={"Parser_Code.ump"},javaline={1047},length={4})
   public int indexOf(Token aToken)
   {
     return rootToken.indexOfSubToken(aToken);

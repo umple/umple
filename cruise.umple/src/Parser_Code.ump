@@ -1191,17 +1191,16 @@ class Parser
             {
               value = inputParser.next();
             }
-
+            
             if (part.isEnum() && !part.isEnumValue(value))
             {
               value = null;
             }
-
+            
             if (part.isRegex() && !part.regexMatches(value))
             {
               value = null;
             }
-
             if (part.hasInnerNames() && !part.isValidInnerValues(value))
             {
               value = null;

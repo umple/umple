@@ -48,7 +48,7 @@ public class TraceAttrCond
     boolean wasSet = false;
     if (aN1>100&&traceFlag4<2)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,80,TraceAttrCond,"+System.identityHashCode(this)+",at_s,n1,"+n1+","+aN1 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,80,TraceAttrCond,"+System.identityHashCode(this)+",at_s,n1,"+n1+","+aN1 );
       traceFlag4++;
     }
     n1 = aN1;
@@ -62,7 +62,7 @@ public class TraceAttrCond
     n2 = aN2;
     if (aN2>50&&traceFlag5<2)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed/src/TestHarnessTracer.ump,81,TraceAttrCond,"+System.identityHashCode(this)+",at_s,n2,"+n2 );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,81,TraceAttrCond,"+System.identityHashCode(this)+",at_s,n2,"+n2 );
       traceFlag5++;
     }
     wasSet = true;

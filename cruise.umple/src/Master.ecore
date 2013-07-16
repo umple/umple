@@ -424,6 +424,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="constrainedVariable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAttribute" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOperator" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAssociation" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="index" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPrimitive" eType="#//boolean"/>

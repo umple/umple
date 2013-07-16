@@ -61,7 +61,7 @@ public class Tracer
       ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttributeAfter.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name );
     }
     wasSet = true;
-    if (name==""tim"")
+    if (name.equals("tim"))
     {
       traceFlag1=true;
     }
