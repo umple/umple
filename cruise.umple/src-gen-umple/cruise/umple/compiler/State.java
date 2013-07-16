@@ -775,7 +775,7 @@ public class State
    * @params uClass: the umple class to look within for the trace item
    * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute);
    */
-  @umplesourcefile(line={70},file={"Trace_Code.ump"},javaline={772},length={122})
+  @umplesourcefile(line={70},file={"Trace_Code.ump"},javaline={772},length={93})
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all the trace directives of uClass
     for(TraceDirective td: uClass.getTraceDirectives())
@@ -786,116 +786,87 @@ public class State
       	StateMachine sm = smti.getStateMachine();
       	Transition  tsn = smti.getTransition();
       	State st = smti.getState();
-        if(tsn!=null)
+        if(tsn!=null&&method.equals("transition"))
         {
-          return smti;
+          st = smti.getIsOut()?tsn.getFromState():tsn.getNextState();
+		  if(this.equals(st)){
+		  
+            System.out.println("trans0");
+            return smti;
+          }
+          for(StateMachine statemachine:getNestedStateMachines())
+          {
+            State found = statemachine.findState(st.getName());
+            if(st.getName().equals(statemachine.getName()))
+            {
+              return smti;
+            }
+            if(found!=null)
+            {            
+              return smti;
+            }
+          }
         }
         else if(sm==null)
         {
           //if the trace item is not for a transition, and does not contain a state machine, return null
           return null;
         }
-      	else if(smti.getTraceStateMachineFlag())
-      	{
-      	  //if the method matches the method specified for this statemachine return the state machine item
-      	  if((smti.getExit()==smti.getEntry())||("entry".equals(method)&&smti.getEntry())||("exit".equals(method)&&smti.getExit()))
-          {
-      	    return smti;
-      	  }
-      	}
-      	//for the case that you are tracing a specific state 
-      	else if(method.equals("transition")&&smti.getIsOut())
+        else if(sm!=null&&smti.getTraceStateMachineFlag())
+        { 
+          return smti;
+        }
+        else if(method.equals("transition"))
         {
-          State state = this;
-          if(sm.findState(this.getName(),true)!=null)
-            { 
-              if(smti.getLevel()==-1)
-              {
-                return smti;
-              }
-              else if((sm.getRecentSearchDepth()-1)<=smti.getLevel())
-              {
-                if((sm.getRecentSearchDepth()-1)==0)
-                {
-                  if(st==null)
-                  {
-                    return smti;
-                  }
-                  else if(st.equals(this))
-                  {
-                    System.out.println(getName()+"=Success1");
-                    return smti;
-                  }
-                }
-                else
-                {
-                  System.out.println(getName()+"=Success2");
-                  return smti;
-                }
-              }
-            }           
-          
-      	  System.out.println(getName()+"=Failure");
-      	  return null;
-      	}
-      	else if(method.equals("transition")&&smti.getIsIn())
-        {
-          if(st!=null)
-          {
-            for(Transition t:st.getNextTransition())
+          if(smti.getIsOut()){
+            if(this.equals(st))
             {
-              //System.out.println("\t\t"+t.getFromState().getName()+"\t"+t.getNextState().getName());
-              if(!t.getFromState().getName().equals(this.getName()))
+              return smti;
+            }
+            if(smti.getLevel()>0||smti.getLevel()==-1)
+            {
+              StateMachine root = this.getStateMachine();
+              State parent = this;
+              int level = -1;
+              //System.out.println("start");
+              while (parent != null)
               {
-                continue;
-              }
-              if(sm.findState(this.getName(),true)!=null)
-              { 
-                if(smti.getLevel()==-1)
+                level+=parent.getName().equals("Null")?0:1;
+                if(st.getName().equals(parent.getName())&&(level<=smti.getLevel()||smti.getLevel()==-1))
                 {
+                  //System.out.println(this.getName()+" "+level);
                   return smti;
                 }
-                else if((sm.getRecentSearchDepth())<=smti.getLevel())
-                {
-                  if((sm.getRecentSearchDepth())==0)
-                  {
-                    if(st==null)
-                    {
-                      return smti;
-                    }
-                    else if(t.getFromState().equals(this))
-                    {
-                      System.out.println(getName()+"=Success1");
-                      return smti;
-                    }
-                  }
-                  else
-                  {
-                    System.out.println(getName()+"=Success2");
-                    return smti;
-                  }
-                }
-              }           
+                //System.out.println(parent.getName());
+                root = parent.getStateMachine();
+                parent = root.getParentState();
+              }
+              //System.out.println("end");
             }
           }
-      	  System.out.println(getName()+"=Failure");
-      	  return null;
-      	}
-        else 
-        {
-          for(int i=0;i<sm.numberOfStates();i++)
-          {
-            if(getName().equals(sm.getState(i).getName()))
+          
+          if(smti.getIsIn())
+		  {            
+            for(Transition t:getTransitions())
             {
-              if((smti.getExit()==smti.getEntry())||("entry".equals(method)&&smti.getEntry())||("exit".equals(method)&&smti.getExit()))
+              if(t.getNextState().equals(st))
               {
-          	    return smti;
-              }
+                return smti;
+              }              
             }
           }
         }
+        else if((method.equals("exit")&&smti.getExit())||(method.equals("entry")&&smti.getEntry()))
+        {
+          if(this.equals(st))
+          {
+            return smti;
+          }
+        }
+        
       }
     }
+    
     return null;
   }
 
@@ -918,8 +889,8 @@ public class State
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={305},file={"StateMachine_Code.ump"},javaline={922},length={127})
-  @umplesourcefile(line={306},file={"StateMachine_Code.ump"},javaline={923},length={11})
+  //  @umplesourcefile(line={305},file={"StateMachine_Code.ump"},javaline={893},length={127})
+  @umplesourcefile(line={306},file={"StateMachine_Code.ump"},javaline={894},length={11})
   public boolean isSameState(State state, StateMachine relativeTo)
   {
     if (this.equals(state))
@@ -932,7 +903,7 @@ public class State
     return mySuper != null && mySuper.equals(yourSuper); 
   }
   
-  @umplesourcefile(line={318},file={"StateMachine_Code.ump"},javaline={936},length={15})
+  @umplesourcefile(line={318},file={"StateMachine_Code.ump"},javaline={907},length={15})
   private State findSuperState(State me, StateMachine lookFor)
   {
     if (me == null || lookFor == null)
@@ -949,7 +920,7 @@ public class State
     }
   } 
 
-  @umplesourcefile(line={334},file={"StateMachine_Code.ump"},javaline={953},length={7})
+  @umplesourcefile(line={334},file={"StateMachine_Code.ump"},javaline={924},length={7})
   public Transition addTransition(State nextState, int index)
   {
     Transition newTransition = new Transition(this,nextState);
@@ -958,7 +929,7 @@ public class State
     return newTransition;
   }
 
-  @umplesourcefile(line={342},file={"StateMachine_Code.ump"},javaline={962},length={6})
+  @umplesourcefile(line={342},file={"StateMachine_Code.ump"},javaline={933},length={6})
   public void addAction(Action newAction, int index)
   {
     addAction(newAction);
@@ -966,13 +937,13 @@ public class State
     actions.add(index,newAction);
   }
 
-  @umplesourcefile(line={349},file={"StateMachine_Code.ump"},javaline={970},length={4})
+  @umplesourcefile(line={349},file={"StateMachine_Code.ump"},javaline={941},length={4})
   public String getType()
   {
     return numberOfTransitions() == 0 && numberOfNestedStateMachines() == 0 ? "Simple" : "Complex";
   }
   
-  @umplesourcefile(line={354},file={"StateMachine_Code.ump"},javaline={976},length={21})
+  @umplesourcefile(line={354},file={"StateMachine_Code.ump"},javaline={947},length={21})
   public String newTimedEventName(State toState)
   {
     String templateName;
@@ -995,7 +966,7 @@ public class State
     return currentName;
   }
   
-  @umplesourcefile(line={376},file={"StateMachine_Code.ump"},javaline={999},length={12})
+  @umplesourcefile(line={376},file={"StateMachine_Code.ump"},javaline={970},length={12})
   public List<Transition> getTransitionsFor(Event e)
   {
     List<Transition> all = new ArrayList<Transition>();
@@ -1009,19 +980,19 @@ public class State
     return all;
   }
   
-  @umplesourcefile(line={389},file={"StateMachine_Code.ump"},javaline={1013},length={4})
+  @umplesourcefile(line={389},file={"StateMachine_Code.ump"},javaline={984},length={4})
   public boolean getHasExitAction()
   {
     return getHasAction("exit");
   }
   
-  @umplesourcefile(line={394},file={"StateMachine_Code.ump"},javaline={1019},length={4})
+  @umplesourcefile(line={394},file={"StateMachine_Code.ump"},javaline={990},length={4})
   public boolean getHasEntryAction()
   {
     return getHasAction("entry");
   }
   
-  @umplesourcefile(line={399},file={"StateMachine_Code.ump"},javaline={1025},length={11})
+  @umplesourcefile(line={399},file={"StateMachine_Code.ump"},javaline={996},length={11})
   private boolean getHasAction(String actionType)
   {
     for(Action action : getActions())
@@ -1034,7 +1005,7 @@ public class State
     return false;
   }
 
-  @umplesourcefile(line={411},file={"StateMachine_Code.ump"},javaline={1038},length={21})
+  @umplesourcefile(line={411},file={"StateMachine_Code.ump"},javaline={1009},length={21})
   public StateMachine exitableStateMachine(State nextState)
   {
     if (getHasExitAction() && !equals(nextState))
