@@ -42,7 +42,7 @@ class TraceAttrCond
     $wasSet = false;
       if($aN1>100&&$traceFlag4<2)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,80,TraceAttrCond,".spl_object_hash( $this ).",at_s,n1,".$this->n1.",".$aN1 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,80,TraceAttrCond,".spl_object_hash( $this ).",at_s,n1,".$this->n1.",".$aN1 );
       traceFlag4++;
         }
     $this->n1 = $aN1;
@@ -56,7 +56,7 @@ class TraceAttrCond
     $this->n2 = $aN2;
       if($aN2>50&&$traceFlag5<2)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/Users/hjamaan/Documents/uOttawa/GoogleUmple/trunk/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,81,TraceAttrCond,".spl_object_hash( $this ).",at_s,n2,".$this->n2 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,81,TraceAttrCond,".spl_object_hash( $this ).",at_s,n2,".$this->n2 );
       traceFlag5++;
         }
     $wasSet = true;

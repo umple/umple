@@ -185,9 +185,9 @@ private void analyzeTraceToken(Token token, int analysisStep)
           constraint = traceAttr.getConstraint();
           constraint.addExpression(new ConstraintVariable("OPERATOR","&&"));
         }
-        constraint.addExpression(new ConstraintVariable("",flag));
+        constraint.addExpression(new ConstraintVariable("integer",flag));
         constraint.addExpression(new ConstraintVariable("OPERATOR","<"));
-        constraint.addExpression(analyzeConstraintName(traceToken,aClass,true,true));
+        constraint.addExpression(new ConstraintVariable("SYNTAX",traceToken.getValue()));
         traceAttr.setConstraint(constraint);
         
         new Attribute(flag,"Integer","internal","0",false,aClass);
@@ -281,11 +281,15 @@ private void analyzeTraceToken(Token token, int analysisStep)
     {
       traceAttr.setPosition(traceToken.getPosition());
       traceAttr.addUmpleVariable(attr);
+      
       for(Token sub: traceToken.getParentToken().getSubTokens())
       {
+        
         if(sub.is("traceOptions"))
         {
+       
           boolean wasSet = false;
+          traceAttr.setTraceSet(false);
           for(Token sub2: sub.getSubTokens())
           {
             if( "get".equals(sub2.getValue("option")) )

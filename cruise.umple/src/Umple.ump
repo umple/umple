@@ -221,18 +221,19 @@ class ReferenceType{
  * Under Development
  */
 class ConstraintVariable{
-  type;//NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
+  type;//NOT USED: One order of parsing list each type of Umple Variable (Including the Constrained Variable).
   constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
   value = {constrainedVariable};
 
   boolean isAttribute = {!"SYNTAX".equals(type)&&!"OPERATOR".equals(type)};
+  boolean isOperator = {"OPERATOR".equals(type)};
   boolean isAssociation = false;
   Integer index = -1;
-  boolean isPrimitive = false;
+  boolean isPrimitive = true;
   boolean isNumeric = {"integer".equals(type.toLowerCase())||
     "float".equals(type.toLowerCase())||
      "double".equals(type.toLowerCase())};
-
+  
   UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;

@@ -40,7 +40,7 @@ public class ConstraintVariable
     constrainedVariable = aConstrainedVariable;
     isAssociation = false;
     index = -1;
-    isPrimitive = false;
+    isPrimitive = true;
   }
 
   //------------------------
@@ -94,7 +94,7 @@ public class ConstraintVariable
   }
 
   /**
-   * NOT USED: One order of parsing list each type of Umple Variable (Inlcuding the Constrained Variable).
+   * NOT USED: One order of parsing list each type of Umple Variable (Including the Constrained Variable).
    */
   public String getConstrainedVariable()
   {
@@ -113,6 +113,12 @@ public class ConstraintVariable
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
   }
 
+  @umplesourcefile(line={229},file={"Umple.ump"},javaline={118},length={2})
+  public boolean getIsOperator()
+  {
+    return "OPERATOR".equals(type);
+  }
+
   public boolean getIsAssociation()
   {
     return isAssociation;
@@ -128,7 +134,7 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
-  @umplesourcefile(line={232},file={"Umple.ump"},javaline={135},length={6})
+  @umplesourcefile(line={233},file={"Umple.ump"},javaline={140},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
@@ -178,7 +184,7 @@ public class ConstraintVariable
   public void delete()
   {}
 
-  @umplesourcefile(line={236},file={"Umple.ump"},javaline={182},length={13})
+  @umplesourcefile(line={237},file={"Umple.ump"},javaline={188},length={13})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
@@ -202,6 +208,7 @@ public class ConstraintVariable
             "type" + ":" + getType()+ "," +
             "value" + ":" + getValue()+ "," +
             "isAttribute" + ":" + getIsAttribute()+ "," +
+            "isOperator" + ":" + getIsOperator()+ "," +
             "isAssociation" + ":" + getIsAssociation()+ "," +
             "index" + ":" + getIndex()+ "," +
             "isPrimitive" + ":" + getIsPrimitive()+ "," +

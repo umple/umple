@@ -19,6 +19,7 @@ class JavaGenerator
   private static Map<String,String> AsIsPluralLookupMap;
   private static Map<String,String> UmpleToJavaPrimitiveMap;
   private static Map<String,String> TraceLookupMap;
+  private static Map<String,String> ConstraintOperatorMap;
   private static List<String> OneOrManyLookup;
   
   
@@ -113,6 +114,9 @@ class JavaGenerator
     TraceLookupMap.put("thread","Thread.currentThread().getId()");
     TraceLookupMap.put("self","this");
     TraceLookupMap.put("increment","{0}++;");
+    
+    ConstraintOperatorMap = new HashMap<String,String>();
+    ConstraintOperatorMap.put("==false",".equals({0})");
 
   }
   
@@ -238,27 +242,63 @@ class JavaGenerator
       return out;
     }
     String expression = "";
+    boolean insertNext = false;
+    boolean strictNext = false;
     for(ConstraintVariable expr: constraint.getExpressions())
     {
       if( expr.getIsAttribute() )
+      {
+        String value;
+        if(format.contains("allParameterOne")&&!strictNext)
         {
-          if(format.contains("allParameterOne"))
+          value = "a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
+        }
+        else if(format.contains(expr.getValue())&&!strictNext)
+        {
+          value = "a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
+        }
+        else 
+        { 
+          value = expr.getValue();
+          strictNext=false;
+        }
+        if(insertNext){
+          expression = StringFormatter.format(expression,value);
+          insertNext = false;
+        }
+        else {
+          expression += value;
+        }
+      } 
+      else
+      { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
+        
+        if(expr.getIsOperator())
+        {          
+          if(ConstraintOperatorMap.containsKey(expr.getValue()+expr.getIsPrimitive()))
           {
-            expression += "a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
-          }
-            else if(format.contains(expr.getValue()))
-            {
-             expression += "a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
+            if(insertNext){
+              expression = StringFormatter.format(expression,expr.getValue());
             }
-            else 
-            { 
-            expression += expr.getValue();
+            else {
+              expression += ConstraintOperatorMap.get(expr.getValue()+expr.getIsPrimitive());
+              insertNext = true;
             }
-          } 
-          else
-          { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
-            expression += expr.getValue();
+            continue;
           }
+        }
+        if(expr.getValue().equals("."))
+        {
+          strictNext=true;
+        }
+        if(insertNext){
+          expression = StringFormatter.format(expression,expr.getValue());
+          insertNext = false;
+        }
+        else {
+          expression += expr.getValue();
+        }
+      }
     }
     if(format.contains("Not"))
     {

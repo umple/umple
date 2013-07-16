@@ -56,7 +56,7 @@ class Tracer
         ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeUntil.ump,5,Tracer,".spl_object_hash( $this ).",at_s,name,".$this->name );
         }
     $wasSet = true;
-      if(@name==""tim"") then
+      if(@name=="tim") then
         
         traceFlag1=false;
          end

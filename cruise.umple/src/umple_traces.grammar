@@ -16,9 +16,9 @@ trace : [[traceDirective]] | [[traceCase]]
 traceDirective- : trace [[traceItem]] ( [[executeClause]]|[[traceWhen]]|[[traceFor]]|[[tracePeriod]]|[[traceDuring]]|[[traceCaseActivation]]|[[traceRecord]]|[[traceLevel]] )* ;
 
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]
-traceEntity- : [[traceOptions]] [trace_entity] ( , [trace_entity] )* 
+traceEntity- : ( [[traceOptions]] )? [trace_entity] ( , [trace_entity] )* 
 traceOptions : [[traceOption]] ( , [[traceOption]] )*
-traceOption- : [=option:set|get|in|out|entry|exit|cardinality|transition]
+traceOption : [=option:set|get|in|out|entry|exit|cardinality|transition]
 PreOrPostCondition- : (giving | where)? [[traceCondition]]
 
 executeClause- : execute { [**trace_execute] }

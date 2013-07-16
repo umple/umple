@@ -22,28 +22,31 @@ constraint- : OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET |  [[c
 negativeConstraint : ! [[constraint]] | not [[constraint]] | ~ [[constraint]]
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
-constraintBody- : [[constraintExpr]] ([[linkingOp]])*
+constraintBody- : ( [[constraintExpr]] ) ([[linkingOp]])*
 linkingOp : ( [=||] [[constraintExpr]]) | ( [=andOp:and|&&|&] [[constraintExpr]]) | ( [=orOp:or] [[constraintExpr]])  
-constraintExpr- :  [[negativeConstraint]] | [[stringExpr]] | [[boolExpr]] | [[genExpr]] | [[numExpr]] | [loneBoolean] ( [ [index] ] )? 
+constraintExpr- :  [[negativeConstraint]] | [[stringExpr]]|[[boolExpr]]|[[numExpr]]|[[genExpr]]| [[loneBoolean]] 
 
-compoundExpr- : [[stringExpr]]|[[boolExpr]]|[[numExpr]]|[[genExpr]] 
+compoundExpr- : [[stringExpr]]|[[numExpr]]|[[boolExpr]]|[[genExpr]]
+
+loneBoolean : [[constrainValue]]
 
 //must be a boolean
-boolExpr : [=literal:true|false] | [~name] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]] [~name] | [~name] [ [~index] ] [[equalityOp]] [=literal:true|false]
+boolExpr :  [[constraintValue]] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]]  [[constraintValue]]
 
 //must be string
-stringExpr : [~name] [[equalityOp]] [[stringLit]] | [[stringLit]] [[equalityOp]] [~name] | [~name] [ [~index] ] [[equalityOp]] [[stringLit]]
-stringLit- : " [**quote] " | ' [**quote] '
+stringExpr : [[constraintValue]] [[equalityOp]] [[stringLit]]
+stringLit- : " [!quote:[^"]*] " | ' [!quote:[^']*] '
 
 //basically the "other" catagory, contains everything that can be equal to something else
-genExpr : [~name] ( [ [index] ] )? [[equalityOp]] [~name] ( [ [index] ] )?
+genExpr : [[constraintValue]] [[equalityOp]] [[constraintValue]]
 
 //for floats, doubles and ints
-numExpr :[~name] ( . [~tail] )? ( [ [index] ] )? [[ordinalOp]] [~name] ( . [~tail] )? ( [ [index] ] )?
+numExpr : ( [[numLit]] | [[constraintValue]] )  [[ordinalOp]] ( [[numLit]] | [[constraintValue]] ) | [[constraintValue]] [[equalityOp]] [[numLit]]
+numLit- : [!number:[0-9]+OPEN_ROUND_BRACKET[\\.][0-9]+CLOSE_ROUND_BRACKET?]
 
 equalityOp- :  [[equalsOp]] | [[notequalsOp]] 
 
-equalsOp- : [=equalsOp:==|=|equals]
+equalsOp- : [=equalsOp:==|equals]
 notequalsOp- : [=notequalsOp:!=|/=|=!|=/=]
 
 ordinalOp- : [[greaterOp]]|[[lessOp]]|[[moreOp]]|[[smallerOp]]
@@ -53,9 +56,11 @@ lessOp- :[=lessOp:less|<=|=<]
 moreOp- :[=moreOp:larger|>]
 smallerOp- :[=smallerOp:smaller|<]
 
-// assOps- : [=associationOp : larger | smaller | exact | hasAll]
+// assOps- : [=associationOp : larger | smaller | exact | has | hasAll]
 
-//  constraintVal : [name]
+constraintValue- : [~name] ( [ [!index:[0-9]+] ] )* ( . [[constraintValue]] )* ( [[constraintParameterList]] )?
+constraintParameterList- : OPEN_ROUND_BRACKET [[constraintParameter]] ( , [[constraintParameter]] )* CLOSE_ROUND_BRACKET
+constraintParameter- : [[stringLit]] | [[constraintValue]] | [!number:[0-9]+OPEN_ROUND_BRACKET[\\.][0-9]+CLOSE_ROUND_BRACKET?]
 
 //  constraintBody : [name]
 
