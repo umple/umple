@@ -110,6 +110,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Uigu2Generator" eSuperTypes="#//PhpGenerator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageFilesPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="charset" eType="#//Charset"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generator" eType="#//Uigu2ElementGenerator"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="element" eType="#//List%3CUmpleElement%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputPathname" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filesToCopy" eType="#//Map%3CString%2CString%3E"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Charset" instanceClassName="java.nio.charset.Charset"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="List&lt;UmpleElement>" instanceClassName="java.util.List"/>
+  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,String>" instanceClassName="java.util.Map"/>
   <eClassifiers xsi:type="ecore:EClass" name="RubyGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -357,7 +368,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/umpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedClasses" lowerBound="0" upperBound="-1" eType="#//GeneratedClass" eOpposite="#//GeneratedClass/model"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,String>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="int"/>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -911,6 +921,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="DynamicClassPathLoader">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DocumenterMain">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Uigu2ElementGenerator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
   </eClassifiers>

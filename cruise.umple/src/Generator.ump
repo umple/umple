@@ -261,6 +261,16 @@ class PhpGenerator
   String output = "";
 }
 
+class Uigu2Generator
+{
+  isA PhpGenerator;
+  depend cruise.umple.compiler.exceptions.*;
+  depend java.io.*;
+  depend java.nio.charset.*;
+  depend java.nio.file.*;
+  depend java.util.*;
+}
+
 class RubyGenerator
 {
   isA CodeGenerator;
@@ -321,6 +331,7 @@ use Generator_CodeRuby.ump;
 use Generator_CodeJava.ump;
 use Generator_CodeRTCpp.ump;
 use Generator_CodePhp.ump;
+use Generator_CodeUigu2.ump;
 use Generator_CodeCpp.ump;
 use Generator_CodeSql.ump;
 use Generator_CodeSDL.ump;

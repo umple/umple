@@ -69,7 +69,7 @@ public class TraceStm
     {
       case Open:
         exitStatus();
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/geoff/programs/umple/umple/build/umple/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_t,Open,anEvent,Close" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/tejota/Documents/Umple/umple-read-only/testbed/src/TestHarnessTracer.ump,31,TraceStm,"+System.identityHashCode(this)+",sm_t,Open,anEvent,Close" );
         setStatus(Status.Close);
         wasEventProcessed = true;
         break;
