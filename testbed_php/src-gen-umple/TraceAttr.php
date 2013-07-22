@@ -62,7 +62,7 @@ class TraceAttr
   public function setName($aName)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,47,TraceAttr,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/tejota/Documents/Umple/umple-read-only/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,47,TraceAttr,".spl_object_hash( $this ).",at_s,name,".$this->name.",".$aName );
     $this->name = $aName;
     $wasSet = true;
     return $wasSet;
@@ -79,7 +79,7 @@ class TraceAttr
   public function setSalary($aSalary)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,50,TraceAttr,".spl_object_hash( $this ).",at_s,salary,".$this->salary.",".$aSalary );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/tejota/Documents/Umple/umple-read-only/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,50,TraceAttr,".spl_object_hash( $this ).",at_s,salary,".$this->salary.",".$aSalary );
     $this->salary = $aSalary;
     $wasSet = true;
     return $wasSet;
@@ -131,7 +131,7 @@ class TraceAttr
     $wasSet = false;
       if($numCond>100)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,63,TraceAttr,".spl_object_hash( $this ).",at_s,number1,".$this->number1.",".$aNumber1 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/tejota/Documents/Umple/umple-read-only/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,63,TraceAttr,".spl_object_hash( $this ).",at_s,number1,".$this->number1.",".$aNumber1 );
         }
     $this->number1 = $aNumber1;
     $wasSet = true;
@@ -144,7 +144,7 @@ class TraceAttr
     $this->number2 = $aNumber2;
       if($numCond==20)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,64,TraceAttr,".spl_object_hash( $this ).",at_s,number2,".$this->number2 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/tejota/Documents/Umple/umple-read-only/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,64,TraceAttr,".spl_object_hash( $this ).",at_s,number2,".$this->number2 );
         }
     $wasSet = true;
     return $wasSet;
@@ -156,7 +156,7 @@ class TraceAttr
     $this->number3 = $aNumber3;
       if($traceFlag1)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,65,TraceAttr,".spl_object_hash( $this ).",at_s,number3,".$this->number3 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/tejota/Documents/Umple/umple-read-only/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,65,TraceAttr,".spl_object_hash( $this ).",at_s,number3,".$this->number3 );
         }
     $wasSet = true;
     return $wasSet;
@@ -168,7 +168,7 @@ class TraceAttr
     $this->number4 = $aNumber4;
       if($traceFlag2)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,66,TraceAttr,".spl_object_hash( $this ).",at_s,number4,".$this->number4 );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/tejota/Documents/Umple/umple-read-only/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,66,TraceAttr,".spl_object_hash( $this ).",at_s,number4,".$this->number4 );
         }
     $wasSet = true;
     return $wasSet;
@@ -179,7 +179,7 @@ class TraceAttr
     $wasSet = false;
       if($traceFlag3<3)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/geoff/programs/umple/umple/build/umple/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,67,TraceAttr,".spl_object_hash( $this ).",at_s,str,".$this->str.",".$aStr );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",/home/tejota/Documents/Umple/umple-read-only/testbed_php/src/../../testbed/src/TestHarnessTracer.ump,67,TraceAttr,".spl_object_hash( $this ).",at_s,str,".$this->str.",".$aStr );
       traceFlag3++;
         }
     $this->str = $aStr;

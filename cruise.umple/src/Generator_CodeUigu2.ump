@@ -1,0 +1,168 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler.uigu2;
+
+//This was not compiled with Jet, but compatibility was maintained
+class Uigu2ElementGenerator
+{
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+
+  const String nl = System.getProperty("line.separator");
+
+  /**
+   * Returns the generated code specific to an UmpleElement.
+   */
+  public String getCode(UmpleModel model, UmpleElement uElement) {
+    StringBuilder code = new StringBuilder();
+    String name = uElement.getName();
+    String elementKind = null;
+
+    code.append("$ELEMENTS['").append(name).append("']['name'] = '");
+    code.append(name).append("';").append(nl);
+
+    if(uElement instanceof UmpleClass){
+      elementKind = "Class";
+      this.appendAttributesCode(code, (UmpleClass)uElement);
+    }else if(uElement instanceof UmpleInterface){
+      elementKind = "Interface";
+    }
+    
+    code.append("$ELEMENTS['").append(name).append("']['element_kind'] = '");
+    code.append(elementKind).append("';").append(nl);
+    code.append(nl);
+    return code.toString();
+  }
+
+  /**
+   * Adds to the StringBuilder being built php code that deals with attributes.
+   */
+  private void appendAttributesCode(StringBuilder code, UmpleClass uClass) {
+    List<Attribute> attributes = uClass.getAttributes();
+    Attribute att;
+    code.append("$attributes = array();").append(nl);    
+    for (int i = 0, size = attributes.size(); i < size; i++) {
+      att = attributes.get(i);
+      //deal with default value "null" and double quotes inside String
+      String value = att.getValue() == null? "" : att.getValue();
+      if(value.indexOf("\"") == 0){
+        value = value.replaceAll("\"", "");
+      }
+      code.append("$attributes[" + i +"]['name'] = '" + att.getName() + "';").append(nl);
+      code.append("$attributes[" + i +"]['type'] = '" + att.getType() + "';").append(nl);
+      code.append("$attributes[" + i +"]['value'] = '" + value + "';").append(nl);
+    }
+    code.append("$ELEMENTS['").append(uClass.getName()).append("']['attributes'] = $attributes;");
+    code.append(nl);
+  }
+}
+
+namespace cruise.umple.compiler;
+
+class Uigu2Generator
+{
+  depend cruise.umple.compiler.uigu2.Uigu2ElementGenerator;
+
+  const String packageFilesPath = "/cruise/umple/compiler/uigu2/files/";
+  const Charset charset = StandardCharsets.UTF_8;
+  internal Uigu2ElementGenerator generator = new Uigu2ElementGenerator();
+  lazy internal List<UmpleElement> elements;
+  lazy String outputPathname;
+
+  /* maps filename of files to be copied (from "cruise.umple.compiler.uigu2.files" package) 
+   * to each destination pathname (relative to outputPath) + new filename
+   */
+  Map<String,String> filesToCopy = new HashMap<String,String>();
+
+  after constructor{
+    this.filesToCopy.put("index.php", "/index.php");
+    this.filesToCopy.put("kissmvc_core.php", "/uigu2/kissmvc_core.php");
+    this.filesToCopy.put("kissmvc_uigu2.php", "/uigu2/kissmvc_uigu2.php");
+    this.filesToCopy.put("layout.php", "/uigu2/views/layout.php");
+    this.filesToCopy.put("views_main_index.php", "/uigu2/views/main/index.php");
+    this.filesToCopy.put("views_main_show_element.php", "/uigu2/views/main/show_element.php");
+    this.filesToCopy.put("controllers_main_index.php", "/uigu2/controllers/main/index.php");
+    this.filesToCopy.put("controllers_main_show_element.php", "/uigu2/controllers/main/show_element.php");
+    //this.filesToCopy.put("controllers_main_new_instance.php", "/uigu2/controllers/main/new_instance.php");
+    this.filesToCopy.put("css_layout.css", "/uigu2/css/layout.css");
+  }
+
+  @Override
+  public void generate() {
+    //use default PHP generator to create the domain classes
+    super.generate();
+    
+    this.outputPathname = super.getModel().getUmpleFile().getPath();
+    this.elements = super.getModel().getUmpleElements();
+
+    try {
+      this.copyDefaultFiles();
+      this.generateInitializationFile();
+      
+    } catch (Exception e) {
+      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
+    }
+  }
+
+  /**
+   * Copies default libraries and other necessary files - that are not meant to be
+   * modified - to the destination folder, as indicated by the attribute Map filesToCopy.
+   */
+  private void copyDefaultFiles() throws IOException{
+    Iterator iterator = this.filesToCopy.entrySet().iterator();
+    while (iterator.hasNext()) {
+      Map.Entry<String, String> entry = (Map.Entry) iterator.next();
+      //File is obtained as a Resource from the Classpath, not as Path or File
+      InputStream from = this.getClass().getResourceAsStream(packageFilesPath + entry.getKey());
+      Path to = Paths.get(this.outputPathname + entry.getValue());
+      Files.createDirectories(to.getParent());
+      Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+    }
+  }
+
+  /*
+   * Generates init.php file with UmpleModel information accessible to all controllers.
+   */
+  private void generateInitializationFile() throws IOException{
+    final String nl = System.getProperty("line.separator");
+    StringBuilder initFile = new StringBuilder("<?php" + nl
+            + "function init(){" + nl
+            + "$UMPLE_MODEL = array();" + nl);
+    String path = this.outputPathname + "/uigu2/controllers/init.php";
+
+    if (this.elements.size() > 0) { //$ELEMENTS associative array with info from each UmpleElement
+      for (UmpleElement e : this.elements) {
+        initFile.append(this.generator.getCode(super.getModel(), e));
+      }
+      initFile.append("$UMPLE_MODEL['ELEMENTS'] = $ELEMENTS;").append(nl);
+    }
+    
+    initFile.append("return $UMPLE_MODEL; }");
+    writeStringToFile(initFile.toString(), path);
+  }
+
+  /**
+   * @param text content of text file to be written
+   * @param filePathname Absolute path in the FileSystem to file to be written
+   */
+  private void writeStringToFile(String text, String filePathname) throws IOException {
+    Path path = Paths.get(filePathname);
+    Files.createDirectories(path.getParent());
+    BufferedWriter bw = null;
+    try {
+      bw = Files.newBufferedWriter(path, charset);
+      bw.write(text);
+    }finally{
+      if(bw != null){
+        bw.close();
+      }
+    }
+  }
+}
