@@ -61,12 +61,16 @@ class TraceStm
     return null;
   }
 
-  public function anEvent()
+  public function ev1()
   {
     $wasEventProcessed = false;
     
     $aStatus = $this->status;
-    print("Event=anEvent");
+    print("Event=ev1");
+    
+    print("Event=ev1");
+    
+    print("Event=ev1");
     
     if ($aStatus == self::$StatusOpen)
     {
@@ -76,6 +80,7 @@ class TraceStm
     }
     elseif ($aStatus == self::$StatusClose)
     {
+      $this->exitStatus();
       $this->setStatus(self::$StatusOpen);
       $wasEventProcessed = true;
     }
@@ -87,6 +92,10 @@ class TraceStm
     $wasEventProcessed = false;
     
     $aStatus = $this->status;
+    print("Event=ev2");
+    
+    print("Event=ev2");
+    
     print("Event=ev2");
     
     if ($aStatus == self::$StatusHalfOpen)
@@ -108,6 +117,10 @@ class TraceStm
     {
       log = "exit called";
     }
+    elseif ($this->status == self::$StatusClose)
+    {
+      log = "exit called";
+    }
   }
 
   private function setStatus($aStatus)
@@ -117,7 +130,12 @@ class TraceStm
     // entry actions and do activities
     if ($this->status == self::$StatusOpen)
     {
+      print("Tracing state StatusOpen entry action(s)");
       log = "entry called";
+    }
+    elseif ($this->status == self::$StatusClose)
+    {
+      log = "Close entry called";
     }
   }
 
