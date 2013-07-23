@@ -181,24 +181,35 @@ class UmpleModel
  */
   public void generate()
   {
+    boolean foundGenerator;
+    Class<?> classDefinition = null;
     try
     {
       for (GenerateTarget target : getGenerates())
       {
+        foundGenerator = false;
         // Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
         String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
     
-        Class<?> classDefinition = Class.forName(className);
-        CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
+        try {
+          classDefinition = Class.forName(className);
+          foundGenerator = true;
+        }
+        catch (ClassNotFoundException cnf) {
+          System.err.println("Code generator "+target.getLanguage()+ " not found. Check spelling.");
+        }
+        if (foundGenerator) {
+          CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
 
-        // Since the model contains everything that needs to be translated into generated code (such as Java or Cpp) set the model to use.
-        generator.setModel(this);
+          // Since the model contains everything that needs to be translated into generated code (such as Java or Cpp) set the model to use.
+          generator.setModel(this);
 
-        generator.setOutput(target.getPath());
-    CodeBlock.languageUsed = target.getLanguage();
-        generator.generate();
-    
-    }}
+          generator.setOutput(target.getPath());
+          CodeBlock.languageUsed = target.getLanguage();
+          generator.generate();
+        }
+      }
+    }
     catch (Exception ex)
     {
       System.err.println("Code Generator error. Unable to generate code: Stack Trace Follows.");

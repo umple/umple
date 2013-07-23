@@ -83,7 +83,6 @@ class State
           st = smti.getIsOut()?tsn.getFromState():tsn.getNextState();
 		  if(this.equals(st)){
 		  
-            System.out.println("trans0");
             return smti;
           }
           for(StateMachine statemachine:getNestedStateMachines())

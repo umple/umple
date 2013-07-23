@@ -14,10 +14,10 @@ import java.util.*;
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
  * In Umple_Code.ump: Methods for testing various complex properties
  * @umplesource Umple.ump 547
- * @umplesource Umple_Code.ump 1347
+ * @umplesource Umple_Code.ump 1358
  */
 // line 547 "../../../../src/Umple.ump"
-// line 1347 "../../../../src/Umple_Code.ump"
+// line 1358 "../../../../src/Umple_Code.ump"
 public class AssociationVariable extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -325,20 +325,20 @@ public class AssociationVariable extends UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1348},file={"Umple_Code.ump"},javaline={329},length={167})
-  @umplesourcefile(line={1349},file={"Umple_Code.ump"},javaline={330},length={4})
+  //  @umplesourcefile(line={1359},file={"Umple_Code.ump"},javaline={329},length={167})
+  @umplesourcefile(line={1360},file={"Umple_Code.ump"},javaline={330},length={4})
   public boolean isReflexive()
   {
     return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());
   }
 
-  @umplesourcefile(line={1354},file={"Umple_Code.ump"},javaline={336},length={4})
+  @umplesourcefile(line={1365},file={"Umple_Code.ump"},javaline={336},length={4})
   public boolean isSymmetricReflexive()
   {
     return getRelatedAssociation() != null && "symmetricreflexive".equals(getModifier());
   }
 
-  @umplesourcefile(line={1359},file={"Umple_Code.ump"},javaline={342},length={12})
+  @umplesourcefile(line={1370},file={"Umple_Code.ump"},javaline={342},length={12})
   public void configureRelatedAssociation(AssociationVariable newRelatedAssociation)
   {
     if (newRelatedAssociation == null || !getType().equals(newRelatedAssociation.getType()))
@@ -352,103 +352,103 @@ public class AssociationVariable extends UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1372},file={"Umple_Code.ump"},javaline={356},length={4})
+  @umplesourcefile(line={1383},file={"Umple_Code.ump"},javaline={356},length={4})
   public static int min(int first, int second)
   {
     return first == -1 ? second : second == -1 ? first : Math.min(first, second);
   }
 
-  @umplesourcefile(line={1377},file={"Umple_Code.ump"},javaline={362},length={4})
+  @umplesourcefile(line={1388},file={"Umple_Code.ump"},javaline={362},length={4})
   public static int max(int first, int second)
   {
     return first == -1 ? first : second == -1 ? second : Math.max(first, second);
   }
 
-  @umplesourcefile(line={1382},file={"Umple_Code.ump"},javaline={368},length={4})
+  @umplesourcefile(line={1393},file={"Umple_Code.ump"},javaline={368},length={4})
   public boolean isMany()
   {
     return multiplicity.getUpperBound() == -1 || multiplicity.getUpperBound() > 1;
   }
 
-  @umplesourcefile(line={1387},file={"Umple_Code.ump"},javaline={374},length={4})
+  @umplesourcefile(line={1398},file={"Umple_Code.ump"},javaline={374},length={4})
   public boolean isOptionalN()
   {
     return multiplicity.getLowerBound() == 0 && multiplicity.getUpperBound() > 1;
   }
 
-  @umplesourcefile(line={1392},file={"Umple_Code.ump"},javaline={380},length={4})
+  @umplesourcefile(line={1403},file={"Umple_Code.ump"},javaline={380},length={4})
   public boolean isOne()
   {
     return multiplicity.getUpperBound() == 1;
   }
 
-  @umplesourcefile(line={1397},file={"Umple_Code.ump"},javaline={386},length={4})
+  @umplesourcefile(line={1408},file={"Umple_Code.ump"},javaline={386},length={4})
   public boolean isOnlyOne()
   {
     return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 1;
   }
 
-  @umplesourcefile(line={1402},file={"Umple_Code.ump"},javaline={392},length={4})
+  @umplesourcefile(line={1413},file={"Umple_Code.ump"},javaline={392},length={4})
   public boolean isOptionalOne()
   {
     return multiplicity.getUpperBound() == 1 && multiplicity.getLowerBound() == 0;
   }
 
-  @umplesourcefile(line={1407},file={"Umple_Code.ump"},javaline={398},length={4})
+  @umplesourcefile(line={1418},file={"Umple_Code.ump"},javaline={398},length={4})
   public boolean isOptionalMany()
   {
     return multiplicity.getLowerBound() == 0 && isMany();
   }
   
-  @umplesourcefile(line={1412},file={"Umple_Code.ump"},javaline={404},length={4})
+  @umplesourcefile(line={1423},file={"Umple_Code.ump"},javaline={404},length={4})
   public boolean isUpperBounded()
   {
     return multiplicity.getUpperBound() >= 0;
   }
 
-  @umplesourcefile(line={1417},file={"Umple_Code.ump"},javaline={410},length={4})
+  @umplesourcefile(line={1428},file={"Umple_Code.ump"},javaline={410},length={4})
   public boolean isN()
   {
     return multiplicity.getLowerBound() > 1 && multiplicity.getLowerBound() == multiplicity.getUpperBound();
   }
 
-  @umplesourcefile(line={1422},file={"Umple_Code.ump"},javaline={416},length={4})
+  @umplesourcefile(line={1433},file={"Umple_Code.ump"},javaline={416},length={4})
   public boolean isMN()
   {
     return multiplicity.getLowerBound() > 0 && (multiplicity.getUpperBound() > multiplicity.getLowerBound() || multiplicity.getUpperBound() == -1);
   }
 
-  @umplesourcefile(line={1427},file={"Umple_Code.ump"},javaline={422},length={4})
+  @umplesourcefile(line={1438},file={"Umple_Code.ump"},javaline={422},length={4})
   public boolean isMStar()
   {
     return multiplicity.getLowerBound() > 0 && multiplicity.getUpperBound() == -1;
   }
 
-  @umplesourcefile(line={1432},file={"Umple_Code.ump"},javaline={428},length={4})
+  @umplesourcefile(line={1443},file={"Umple_Code.ump"},javaline={428},length={4})
   public boolean isStar()
   {
     return multiplicity.getUpperBound() == -1;
   }
 
-  @umplesourcefile(line={1437},file={"Umple_Code.ump"},javaline={434},length={4})
+  @umplesourcefile(line={1448},file={"Umple_Code.ump"},javaline={434},length={4})
   public boolean isMandatory()
   {
     return multiplicity.getLowerBound() > 0;
   }
 
-  @umplesourcefile(line={1442},file={"Umple_Code.ump"},javaline={440},length={4})
+  @umplesourcefile(line={1453},file={"Umple_Code.ump"},javaline={440},length={4})
   public boolean isMandatoryOne()
   {
     return multiplicity.getLowerBound() == 1 && multiplicity.getUpperBound() == 1;
   }
 
-  @umplesourcefile(line={1447},file={"Umple_Code.ump"},javaline={446},length={4})
+  @umplesourcefile(line={1458},file={"Umple_Code.ump"},javaline={446},length={4})
   public boolean isMandatoryMany()
   {
     return multiplicity.getLowerBound() > 0 && isMany();
   }
 
-  @umplesourcefile(line={1452},file={"Umple_Code.ump"},javaline={452},length={13})
+  @umplesourcefile(line={1463},file={"Umple_Code.ump"},javaline={452},length={13})
   public boolean isImmutable()
   {
     AssociationVariable related = getRelatedAssociation();
@@ -463,7 +463,7 @@ public class AssociationVariable extends UmpleVariable
         || myUmpleClassIsImmutable || yourUmpleClassIsImmutable);
   }
 
-  @umplesourcefile(line={1466},file={"Umple_Code.ump"},javaline={467},length={10})
+  @umplesourcefile(line={1477},file={"Umple_Code.ump"},javaline={467},length={10})
   public boolean setImmutable()
   {
     boolean wasSet = false;
@@ -475,13 +475,13 @@ public class AssociationVariable extends UmpleVariable
     return wasSet;
   }
 
-  @umplesourcefile(line={1477},file={"Umple_Code.ump"},javaline={479},length={4})
+  @umplesourcefile(line={1488},file={"Umple_Code.ump"},javaline={479},length={4})
   public boolean isSorted()
   {
     return !priority.equals("");
   }
 
-  @umplesourcefile(line={1482},file={"Umple_Code.ump"},javaline={485},length={20})
+  @umplesourcefile(line={1493},file={"Umple_Code.ump"},javaline={485},length={20})
   private boolean canBeImmutable()
   {
     AssociationVariable related = getRelatedAssociation();
@@ -503,7 +503,7 @@ public class AssociationVariable extends UmpleVariable
     return canBe;
   }
 
-  @umplesourcefile(line={1503},file={"Umple_Code.ump"},javaline={507},length={12})
+  @umplesourcefile(line={1514},file={"Umple_Code.ump"},javaline={507},length={12})
   private boolean canBeRelatedAssociation(AssociationVariable related)
   {
     if (related == null)

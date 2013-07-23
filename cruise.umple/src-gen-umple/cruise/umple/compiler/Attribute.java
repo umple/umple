@@ -11,10 +11,10 @@ import java.util.*;
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
  * @umplesource Umple.ump 461
- * @umplesource Umple_Code.ump 1077
+ * @umplesource Umple_Code.ump 1088
  */
 // line 461 "../../../../src/Umple.ump"
-// line 1077 "../../../../src/Umple_Code.ump"
+// line 1088 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -451,21 +451,21 @@ public class Attribute extends UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1078},file={"Umple_Code.ump"},javaline={455},length={28})
-  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={456},length={4})
+  //  @umplesourcefile(line={1089},file={"Umple_Code.ump"},javaline={455},length={28})
+  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={456},length={4})
   public boolean isConstant()
   {
     return "const".equals(getModifier());
   }  
 
-  @umplesourcefile(line={1084},file={"Umple_Code.ump"},javaline={462},length={4})
+  @umplesourcefile(line={1095},file={"Umple_Code.ump"},javaline={462},length={4})
   public boolean isPrimitive()
   {
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
 
-  @umplesourcefile(line={1090},file={"Umple_Code.ump"},javaline={469},length={7})
+  @umplesourcefile(line={1101},file={"Umple_Code.ump"},javaline={469},length={7})
   public boolean isImmutable()
   {
     boolean varIsImmutable = super.isImmutable();
@@ -474,12 +474,12 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
   
-  @umplesourcefile(line={1098},file={"Umple_Code.ump"},javaline={478},length={4})
+  @umplesourcefile(line={1109},file={"Umple_Code.ump"},javaline={478},length={4})
   public String getValue()
   {
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
-  @umplesourcefile(line={1102},file={"Umple_Code.ump"},javaline={483},length={4})
+  @umplesourcefile(line={1113},file={"Umple_Code.ump"},javaline={483},length={4})
   public void setValue(String lang, String code)
   {
     codeblock.setCode(lang,code);
