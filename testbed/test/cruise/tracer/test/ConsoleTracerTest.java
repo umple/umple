@@ -58,14 +58,17 @@ public class ConsoleTracerTest
 			};
 			
 			String[] stmTraceExpected = {
-					"sm_t,Open,anEvent,Close",
-					"sm_t,Open,anEvent,Close",
-					"sm_t,Open,anEvent,Close",
-					"sm_t,Open,anEvent,Close",
-					"sm_t,Open,anEvent,Close"	
+					"sm_t,Open,ev1,Close",
+					"sm_e,Close,status",
+					"sm_t,Close,ev1,Open"
 			};
 			
-			String[] expected = concatAll(attrTraceExpected, attrTraceCondExpected, stmTraceExpected);
+			String[] recordTraceExpected = {
+					"at_s,number1,0,100,TracingNumber1",
+					"at_s,number2,0,200,Tracing Number2"
+			};
+			
+			String[] expected = concatAll(attrTraceExpected, attrTraceCondExpected, stmTraceExpected, recordTraceExpected);
 			
 			Integer[] testField = {0,9,9};
 			@Override
@@ -91,11 +94,13 @@ public class ConsoleTracerTest
 	  System.setErr(ps);
 	  
 	  //==== invoke attributes tracing
-	  TraceAttr aTest = new TraceAttr(null, null, 0, 0, null, 0, 0, 0, 0, null);
+	  TraceAttr aTest = new TraceAttr(null, null, 0, false, 0, null, 0, 0, 0, 0, null);
 	  
 	  aTest.setName("Geoff");
 	  aTest.setName("Hamoud");
 	  aTest.getName();
+	  
+	  aTest.setFlag(false);
 	  
 	  aTest.setAddress("800 king Edward");
 	  aTest.getAddress();
@@ -155,8 +160,17 @@ public class ConsoleTracerTest
 	  
 	  //==== invoke state machine tracing
 	  TraceStm sTrace = new TraceStm();
-	  sTrace.anEvent();
-	  sTrace.anEvent();
+	  sTrace.ev1();
+	  sTrace.ev1();
+	  
+	  //==== invoke record trace
+	  TraceRecord rTrace = new TraceRecord(0, 0, null);
+	  
+	  rTrace.setNumber1(100);
+	  
+	  rTrace.setStr("Tracing Number2");
+	  rTrace.setNumber2(200);
+	  
  }
   
  public static <String> String[] concatAll(String[] first, String[]... rest) {

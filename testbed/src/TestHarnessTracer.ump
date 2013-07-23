@@ -1,48 +1,15 @@
 
 namespace cruise.tracer.test;
 
-//tracer String;
 tracer Console;
-
-
-
-class TraceStm
-{
-
-  log = "initial value";
-  status {
-    Open {
-      entry / { log = "entry called"; }
-      exit / { log = "exit called"; }
-      anEvent -> Close;
-    }
-    Close {
-      anEvent -> Open;
-    }
-    
-    HalfOpen{
-      ev2 -> HalfClose;
-    }
-    HalfClose{
-      ev2 -> HalfOpen;
-    }
-    
-    // trace a state
-    trace Open;
-    
-    // trace a transition
-    trace ev2;
-  }
-  
-}
 
 class TraceAttr
 {
-
   String name;
   String address;
   Double salary;
   Integer[] id;
+  Boolean flag;
   
   trace name;
   trace id;
@@ -97,4 +64,49 @@ class TraceAttrCond
   //trace n8 after [ n8 < 0  ] where  [ n8 > 20 ];
   //trace n9 after [ n9 == 0 ] giving [ n9 > 50 ];
   //trace n10 after [ n10 == 0 ] until  [ n10 > 10 ];
+}
+
+class TraceStm
+{
+
+  log = "initial value";
+  status {
+    Open {
+      entry / { log = "entry called"; }
+      exit / { log = "exit called"; }
+      ev1 -> Close;
+    }
+    Close {
+      entry / { log = "Close entry called"; }
+      exit / { log = "exit called"; }
+      ev1 -> Open;
+    }
+    HalfOpen{
+      ev2 -> HalfClose;
+    }
+    HalfClose{
+      ev2 -> HalfOpen;
+    }
+    
+    // trace a state - not working (doesn't trace transition entering this state -> )
+    trace Open;
+    
+    trace entry Close;
+    
+    // trace a transition - not working (doesn't trace all cases)
+    trace transition ev2;
+    
+  }
+  
+  class TraceRecord
+  {
+    Integer number1;
+    Integer number2;
+    String  str;
+    
+    trace number1 record "TracingNumber1";
+    trace number2 record str;
+    
+  }
+  
 }
