@@ -169,27 +169,43 @@ $output = readTemporaryFile("ump/" . $filename);
             <option name = "optionExample" value="AirlineExample.ump">AirlineExample</option>
             <option name = "optionExample" value="BankingSystemA.ump">BankingSystemA</option>
             <option name = "optionExample" value="BankingSystemB.ump">BankingSystemB</option>
-                        <option name = "optionExample" value="CanalSystem.ump">Canal</option>
-                        <option name = "optionExample" value="CanalLockStateMachine.ump">CanalLockStateMachine</option>
-                        <option name = "optionExample" value="OhHellWhist.ump">CardGames</option>
+
+           <option name = "optionExample" value="CanalSystem.ump">Canal</option>
+
+            <option name = "optionExample" value="OhHellWhist.ump">CardGames</option>
+
             <option name = "optionExample" value="Claim.ump">Claim</option>
-                        <option name = "optionExample" value="CommunityAssociation.ump">CommunityAssociation</option>
-                        <option name = "optionExample" value="CoOpSystem.ump">Co-OpSystem</option>
+
+            <option name = "optionExample" value="CommunityAssociation.ump">CommunityAssociation</option>
+
+            <option name = "optionExample" value="CoOpSystem.ump">Co-OpSystem</option>
+
             <option name = "optionExample" value="DMMOverview.ump">DMMOverview</option>
+
             <!-- <option name = "optionExample" value="DMMModelElementHierarchy.ump">DMMModelElementHierarchy</option> -->
+
             <option name = "optionExample" value="DMMSourceObjectHierarchy.ump">DMMSourceObjectHierarchy</option>
+
             <option name = "optionExample" value="DMMRelationshipHierarchy.ump">DMMRelationshipHierarchy</option>
             <option name = "optionExample" value="DMMExtensionCTF.ump">DMMExtensionCTF</option>
             <option name = "optionExample" value="ElectionSystem.ump">ElectionSystem</option>
             <option name = "optionExample" value="ElevatorSystemA.ump">ElevatorSystemA</option>
             <option name = "optionExample" value="ElevatorSystemB.ump">ElevatorSystemB</option>
+
             <option name = "optionExample" value="GenealogyA.ump">GenealogyA</option>
+
             <option name = "optionExample" value="GenealogyB.ump">GenealogyB</option>
+
             <option name = "optionExample" value="GenealogyC.ump">GenealogyC</option>
+
             <option name = "optionExample" value="GeographicalInformationSystem.ump">GeographicalInformationSystem</option>
+
             <option name = "optionExample" value="Hospital.ump">Hospital</option>
+
             <option name = "optionExample" value="Hotel.ump">Hotel</option>
+
             <option name = "optionExample" value="Insurance.ump">Insurance</option>
+
             <option name = "optionExample" value="InventoryManagement.ump">InventoryManagement</option>
             <option name = "optionExample" value="Library.ump">Library</option>
             <option name = "optionExample" value="MailOrderSystemClientOrder.ump">MailOrderSystemClientOrder</option>
@@ -205,6 +221,12 @@ $output = readTemporaryFile("ump/" . $filename);
             <option name = "optionExample" value="UniversitySystem.ump">UniversitySystem</option>
                         <option name = "optionExample" value="VendingMachineClassDiagram.ump">VendingMachineClassDiagram</option>
             <option name = "optionExample" value="WarehouseSystem.ump">WarehouseSystem</option>
+
+            <optgroup label="State machine examples">
+              <option name = "optionExample"
+ value="CanalLockStateMachine.ump">CanalLockStateMachine</option>
+
+            </optgroup>
           </select>
         </li>
         </ul>

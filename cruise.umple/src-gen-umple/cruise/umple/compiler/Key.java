@@ -8,10 +8,10 @@ import java.util.*;
  * 
  * A key in a class is a set of attributes associations used to uniquely identify an object
  * @umplesource Umple.ump 302
- * @umplesource Umple_Code.ump 383
+ * @umplesource Umple_Code.ump 394
  */
 // line 302 "../../../../src/Umple.ump"
-// line 383 "../../../../src/Umple_Code.ump"
+// line 394 "../../../../src/Umple_Code.ump"
 public class Key
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -115,14 +115,14 @@ public class Key
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={384},file={"Umple_Code.ump"},javaline={119},length={14})
-  @umplesourcefile(line={385},file={"Umple_Code.ump"},javaline={120},length={4})
+  //  @umplesourcefile(line={395},file={"Umple_Code.ump"},javaline={119},length={14})
+  @umplesourcefile(line={396},file={"Umple_Code.ump"},javaline={120},length={4})
   public boolean isProvided()
   {
     return isDefault || members.size() > 0;
   }
 
-  @umplesourcefile(line={390},file={"Umple_Code.ump"},javaline={126},length={8})
+  @umplesourcefile(line={401},file={"Umple_Code.ump"},javaline={126},length={8})
   public boolean isMember(UmpleVariable av)
   {
     if (av == null)
