@@ -65,7 +65,9 @@
   <eClassifiers xsi:type="ecore:EClass" name="SimpleMetricsGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="StringBuilder" instanceClassName="java.lang.StringBuilder"/>
   <eClassifiers xsi:type="ecore:EClass" name="GvClassDiagramGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -711,7 +713,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="linkedFile" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="File" instanceClassName="java.io.File"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="StringBuilder" instanceClassName="java.lang.StringBuilder"/>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleParserFactory">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleInternalParser" eSuperTypes="#//Parser">
@@ -924,6 +925,49 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Uigu2ElementGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeMetrics" eSuperTypes="#//SimpleMetricsGenerator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassMetrics" eSuperTypes="#//SimpleMetricsGenerator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachineMetrics" eSuperTypes="#//SimpleMetricsGenerator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="countsm" eType="#//CountSM"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CountSM">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalStateMachine" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalStateMachinesPerClass" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalStatesPerClass" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalState" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalEvent" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalTransition" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="avgTransitionsPerEvent" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="avgTransitionsPerClass" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalAction" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalNestedStateMachine" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxNestingDepth" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="avgNestingDepth" eType="#//int"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CountClass">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countStateMachine" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countAssociation" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countSubclass" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countAttribute" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countMethod" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countParameter" eType="#//int"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CountLines">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countLine" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countComment" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countBlank" eType="#//int"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="countCode" eType="#//int"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Format">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
   </eClassifiers>

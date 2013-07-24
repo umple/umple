@@ -39,7 +39,7 @@ public class TraceRecord extends TraceStm
   public boolean setNumber1(int aNumber1)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/tejota/Documents/Umple/umple-read-only/testbed/src/TestHarnessTracer.ump,107,TraceRecord,"+System.identityHashCode(this)+",at_s,number1,"+number1+","+aNumber1+",TracingNumber1" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/tcl/nobackup-tmp/CheckoutForUmplePatchTest3/umple/testbed/src/TestHarnessTracer.ump,107,TraceRecord,"+System.identityHashCode(this)+",at_s,number1,"+number1+","+aNumber1+",TracingNumber1" );
     number1 = aNumber1;
     wasSet = true;
     return wasSet;
@@ -48,7 +48,7 @@ public class TraceRecord extends TraceStm
   public boolean setNumber2(int aNumber2)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/tejota/Documents/Umple/umple-read-only/testbed/src/TestHarnessTracer.ump,108,TraceRecord,"+System.identityHashCode(this)+",at_s,number2,"+number2+","+aNumber2+","+str );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/tcl/nobackup-tmp/CheckoutForUmplePatchTest3/umple/testbed/src/TestHarnessTracer.ump,108,TraceRecord,"+System.identityHashCode(this)+",at_s,number2,"+number2+","+aNumber2+","+str );
     number2 = aNumber2;
     wasSet = true;
     return wasSet;
