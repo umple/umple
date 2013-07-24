@@ -34,6 +34,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
     if (token.is("traceType"))
     {
       Tracer tracer = model.getTracer();
+      System.out.println(token);
       for(Token subToken: token.getSubTokens())
       {
       	if(subToken.is("tracerType"))
@@ -47,6 +48,14 @@ private void analyzeTraceToken(Token token, int analysisStep)
       	else if(subToken.is("verbosity"))
       	{
       	  tracer.setVerbosity(true);
+      	}
+      	else if(subToken.is("tracerOn"))
+      	{
+      	  System.out.println(subToken.getName());
+      	}
+      	else if(subToken.is("option"))
+      	{
+      	  System.out.println(subToken.getValue());
       	}
       }
       model.setTracer(tracer);
@@ -318,33 +327,48 @@ private void analyzeTraceToken(Token token, int analysisStep)
     StateMachine stm = null;
     State state = null;
     String stmTraceItem = traceToken.getValue("trace_entity");
-    if( traceToken.getParentToken().getSubToken(1).numberOfSubTokens()>0&&
-        "transition".equals(traceToken.getParentToken().getSubToken(1).getSubToken(0).getValue("option")))
-    {
-      StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
-      tracedStm.setPosition(traceToken.getPosition());
-      if( traceToken.getParentToken().getValue("trace_level")!=null )
-      {
-        tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("trace_level")));
+    if( traceToken.getParentToken().getSubToken(1).numberOfSubTokens()>0){
+      boolean isTransition = false;
+      boolean isIn = false;
+      boolean isOut = false;
+      for(Token token:traceToken.getParentToken().getSubToken(1).getSubTokens()){
+        if("transition".equals(token.getValue("option"))){
+          isTransition = true;
+        }
+        if("in".equals(token.getValue("option"))){
+          isIn = true;
+        }
+        if("out".equals(token.getValue("option"))){
+          isOut = true;
+        }
       }
-      for( StateMachine sm:stms  )
+      if(isTransition)
       {
-        for( State nestedState:sm.getStates())
+        StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
+        tracedStm.setIsOut(isOut);
+        tracedStm.setIsIn(isIn);
+        tracedStm.setPosition(traceToken.getPosition());
+        if( traceToken.getParentToken().getValue("trace_level")!=null )
         {
-          for( Transition tsn:nestedState.getTransitions())
+          tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("trace_level")));
+        }
+        for( StateMachine sm:stms  )
+        {
+          for( State nestedState:sm.getStates())
           {
-            if( tsn.getEvent().getName().equals(traceToken.getValue()) )
+            for( Transition tsn:nestedState.getTransitions())
             {
-              tracedStm.setTransition(tsn);
-              tracedStm.setStateMachine(sm);
-              traceDirective.addStateMachineTraceItem(tracedStm);
+              if( tsn.getEvent().getName().equals(traceToken.getValue()) )
+              {
+                tracedStm.setTransition(tsn);
+                tracedStm.setStateMachine(sm);
+                traceDirective.addStateMachineTraceItem(tracedStm);
+              }
             }
           }
         }
       }
-      
     }
-    
     if( stmTraceItem != null && stmTraceItem.contains("."))
     {
       String delimiter = "\\.";

@@ -4,8 +4,12 @@
     boolean wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
     if (<%=gen.translate("numberOfMethod",av)%>() < <%=gen.translate("maximumNumberOfMethod",av)%>())
-    {
-      <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+    {<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
+      <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);<%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
       wasAdded = true;
     }
     <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
@@ -17,8 +21,12 @@
     boolean wasRemoved = false;
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     if (<%=gen.translate("associationMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
-    {
-      <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+    {<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+%>
+      <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+%>
       wasRemoved = true;
     }
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>

@@ -31,17 +31,17 @@ compoundExpr- : [[stringExpr]]|[[numExpr]]|[[boolExpr]]|[[genExpr]]
 loneBoolean : [[constrainValue]]
 
 //must be a boolean
-boolExpr :  [[constraintValue]] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]]  [[constraintValue]]
+boolExpr :  [[constraintName]] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]]  [[constraintName]]
 
 //must be string
-stringExpr : [[constraintValue]] [[equalityOp]] [[stringLit]]
-stringLit- : " [!quote:[^"]*] " | ' [!quote:[^']*] '
+stringExpr : [[constraintName]] [[equalityOp]] [[stringLit]]
+stringLit- : " [**quote] " | ' [**quote] '
 
 //basically the "other" catagory, contains everything that can be equal to something else
-genExpr : [[constraintValue]] [[equalityOp]] [[constraintValue]]
+genExpr : [[constraintName]] [[equalityOp]] [[constraintName]]
 
 //for floats, doubles and ints
-numExpr : ( [[numLit]] | [[constraintValue]] )  [[ordinalOp]] ( [[numLit]] | [[constraintValue]] ) | [[constraintValue]] [[equalityOp]] [[numLit]]
+numExpr : ( [[numLit]] | [[constraintName]] )  [[ordinalOp]] ( [[numLit]] | [[constraintName]] ) | [[constraintName]] [[equalityOp]] [[numLit]]
 numLit- : [!number:[0-9]+OPEN_ROUND_BRACKET[\\.][0-9]+CLOSE_ROUND_BRACKET?]
 
 equalityOp- :  [[equalsOp]] | [[notequalsOp]] 
@@ -58,11 +58,10 @@ smallerOp- :[=smallerOp:smaller|<]
 
 // assOps- : [=associationOp : larger | smaller | exact | has | hasAll]
 
-constraintValue- : [~name] ( [ [!index:[0-9]+] ] )* ( . [[constraintValue]] )* ( [[constraintParameterList]] )?
+constraintName- : [~name] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
+constraintIndexOperator- : [ [!index:[0-9]+] ]
+constraintScopeOperator- :  . [[constraintName]] 
 constraintParameterList- : OPEN_ROUND_BRACKET [[constraintParameter]] ( , [[constraintParameter]] )* CLOSE_ROUND_BRACKET
-constraintParameter- : [[stringLit]] | [[constraintValue]] | [!number:[0-9]+OPEN_ROUND_BRACKET[\\.][0-9]+CLOSE_ROUND_BRACKET?]
-
-//  constraintBody : [name]
-
+constraintParameter- : [[stringLit]] | [[constraintName]] | [!number:[0-9]+OPEN_ROUND_BRACKET[\\.][0-9]+CLOSE_ROUND_BRACKET?]
 
 // NOTE: Additional grammar parts deleted while testing is ongoing.

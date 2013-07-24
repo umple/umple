@@ -11,16 +11,11 @@
     }
 
 <% } %><%= 
-    (traceItem!=null?
-  "\n"+GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"add", uClass, gen.translate("parameterOne",av))))
-   ,"    "):
-   "")%>
-    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
+    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);<%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
     if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) != -1)
     {
       wasAdded = true;

@@ -35,7 +35,7 @@ public class Tracer
   public boolean setX(String aX)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttribute.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+aX );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttribute.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
     x = aX;
     wasSet = true;
     return wasSet;
@@ -44,7 +44,7 @@ public class Tracer
   public boolean setY(int aY)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttribute.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,y,"+y+","+aY );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttribute.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,y,"+y+","+(""+aY).toString().replace("\n","").replace(",",";") );
     y = aY;
     wasSet = true;
     return wasSet;

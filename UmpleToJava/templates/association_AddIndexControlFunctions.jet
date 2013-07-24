@@ -5,18 +5,13 @@
     if(<%=gen.translate("addMethod",av)%>(<%=gen.translate("parameterOne",av)%>))
     {
       if(index < 0 ) { index = 0; }
-      if(index > <%=gen.translate("numberOfMethod",av)%>()) { index = <%=gen.translate("numberOfMethod",av)%>() - 1; }
+      if(index > <%=gen.translate("numberOfMethod",av)%>()) { index = <%=gen.translate("numberOfMethod",av)%>() - 1; }<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
       <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
       <%=gen.translate("associationMany",av)%>.add(index, <%=gen.translate("parameterOne",av)%>);<%= 
-    (traceItem!=null?
-  "\n"+GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"add", uClass, gen.translate("parameterOne",av), "index")))
-   ,"      "):
-   "")%>
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
       wasAdded = true;
     }
     return wasAdded;
@@ -28,32 +23,22 @@
     if(<%=gen.translate("associationMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
     {
       if(index < 0 ) { index = 0; }
-      if(index > <%=gen.translate("numberOfMethod",av)%>()) { index = <%=gen.translate("numberOfMethod",av)%>() - 1; }
+      if(index > <%=gen.translate("numberOfMethod",av)%>()) { index = <%=gen.translate("numberOfMethod",av)%>() - 1; }<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
       <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
       <%=gen.translate("associationMany",av)%>.add(index, <%=gen.translate("parameterOne",av)%>);<%= 
-    (traceItem!=null?
-  "\n"+GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"add", uClass, gen.translate("parameterOne",av), "index")))
-   ,"      "):
-   "")%>
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
       wasAdded = true;
     } 
     else 
-    {
+    {<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
       wasAdded = <%=gen.translate("addAtMethod",av)%>(<%=gen.translate("parameterOne",av)%>, index);<%= 
-    (traceItem!=null?
-  "\n"+GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"add", uClass, gen.translate("parameterOne",av), "index")))
-   ,"      "):
-   "")%>
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
     }
     return wasAdded;
   }

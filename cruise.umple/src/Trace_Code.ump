@@ -35,10 +35,12 @@ class UmpleVariable
           //go through all the variables
           for(UmpleVariable variable: ati.getUmpleVariables())
           {
-          	//and try to find one that is the same as the one variable calling this method 
-            if(variable.equals(this))
+          	//and try to find one that is the same as the one variable calling this method
+          	if(variable.getName().equals(this.getName()))
+            {
             //return the trace item containing this umple variable
               return ati;
+            }
           }
         }
         else if("constructor".equals(method)&&ati.getTraceConstructor())
@@ -78,22 +80,26 @@ class State
       	StateMachine sm = smti.getStateMachine();
       	Transition  tsn = smti.getTransition();
       	State st = smti.getState();
+      	if(!(smti.getExit()||smti.getEntry())){
         if(tsn!=null&&method.equals("transition"))
         {
-          st = smti.getIsOut()?tsn.getFromState():tsn.getNextState();
-		  if(this.equals(st)){
-		  
-            return smti;
-          }
-          for(StateMachine statemachine:getNestedStateMachines())
-          {
-            State found = statemachine.findState(st.getName());
-            if(st.getName().equals(statemachine.getName()))
-            {
+          if(smti.getIsOut()&&smti.getIsIn()){
+            if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
               return smti;
             }
-            if(found!=null)
-            {            
+          }
+          else if(smti.getIsOut()){
+            if(tsn.getNextState().equals(this)){
+              return smti;
+            }
+          }
+          else if(smti.getIsIn()){
+            if(tsn.getFromState().equals(this)){
+              return smti;
+            }
+          }
+          else {
+            if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
               return smti;
             }
           }
@@ -147,7 +153,8 @@ class State
             }
           }
         }
-        else if((method.equals("exit")&&smti.getExit())||(method.equals("entry")&&smti.getEntry()))
+        }
+        if((method.equals("exit")&&smti.getExit())||(method.equals("entry")&&smti.getEntry()))
         {
           if(this.equals(st))
           {
@@ -213,17 +220,18 @@ class AttributeTraceItem
       		name = gen.translate("associationMany",(AssociationVariable)o);
       	}
       	
-      	if(type==null||"".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
+      	if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
       	{
       		obj = name;
       	}
       	else
       	{
-      		obj = StringFormatter.format(gen.translate("traceIdentifier",this),name);
+      		obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
+      		name += gen.translate("traceFormatNonPrimitive",this);
       	}
       	
       	for(String str: args){
-      		extra+=comma+str;
+      		extra+=comma+"(\"\"+"+str+")"+gen.translate("traceFormatNonPrimitive",this);
       	}
       	if(getTraceDirective().getTraceRecord()!=null)
       	{
@@ -245,7 +253,7 @@ class AttributeTraceItem
       	message = StringFormatter.format(
       		message,gen.translate("traceTimestamp",this),
       		gen.translate("traceThread",this),
-      		getPosition().getFilename(),
+      		getPosition().getFilename().replace("\\","\\\\"),
       		getPosition().getLineNumber(),
       		uClass.getName(),
       		StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
@@ -343,7 +351,7 @@ class StateMachineTraceItem
     message = StringFormatter.format(
       		message,gen.translate("traceTimestamp",this),
       		gen.translate("traceThread",this),
-      		getPosition().getFilename(),
+      		getPosition().getFilename().replace("\\","\\\\"),
       		getPosition().getLineNumber(),
       		uClass.getName(),
       		StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),

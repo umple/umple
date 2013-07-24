@@ -4,17 +4,11 @@
     boolean wasAdded = false;
     <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
     <%= gen.translate("attributeCanSet",av) %> = false;
-<%= (traceItem!=null?
-  GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"add", uClass, "")))
-   ,"    ")+"\n":
-   "")%>    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
+<%= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av))+"\n":"")
+%>    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
     wasAdded = true;
-    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
+<%= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av))+"\n":"")
+%>    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;
   }
   

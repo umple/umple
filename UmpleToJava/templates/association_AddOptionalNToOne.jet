@@ -22,7 +22,9 @@
     }
 
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
-    boolean <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);
+    boolean <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
     if (<%=gen.relatedTranslate("parameterIsNew",av)%>)
     {
       <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
@@ -30,7 +32,9 @@
     else
     {
       <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
-    }
+    }<%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
     wasAdded = true;
     <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;

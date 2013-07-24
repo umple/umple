@@ -9,7 +9,9 @@
       return wasAdded;
     }
 
-    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
+    <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
     if (<%=gen.relatedTranslate("parameterExisting",av)%> == null)
     {
       <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
@@ -22,7 +24,9 @@
     else
     {
       <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
-    }
+    }<%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
     wasAdded = true;
     <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;
@@ -33,8 +37,12 @@
     boolean wasRemoved = false;
     <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     if (<%=gen.translate("associationMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
-    {
-      <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+    {<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+%>
+      <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);<%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+%>
       <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(null);
       wasRemoved = true;
     }

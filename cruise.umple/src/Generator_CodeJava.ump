@@ -114,6 +114,7 @@ class JavaGenerator
     TraceLookupMap.put("thread","Thread.currentThread().getId()");
     TraceLookupMap.put("self","this");
     TraceLookupMap.put("increment","{0}++;");
+    TraceLookupMap.put("formatnonprimitive",".toString().replace(\"\\n\",\"\").replace(\",\",\";\")");
     
     ConstraintOperatorMap = new HashMap<String,String>();
     ConstraintOperatorMap.put("==false",".equals({0})");
