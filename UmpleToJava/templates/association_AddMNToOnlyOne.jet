@@ -28,7 +28,9 @@
     {
       <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } %>
       return wasAdded;
-    }
+    }<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
 
     if (<%=gen.relatedTranslate("parameterIsNew",av)%>)
     {
@@ -37,7 +39,9 @@
     else
     {
       <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
-    }
+    }<%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+%>
     wasAdded = true;
     <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;
@@ -60,8 +64,12 @@
       <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
       return wasRemoved;
     }
-
-    <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);
+<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+%>
+    <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);<%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+%>
     wasRemoved = true;
     <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
     return wasRemoved;

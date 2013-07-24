@@ -60,7 +60,6 @@ public class ConsoleTracerTest
 			String[] stmTraceExpected = {
 					"sm_t,Open,ev1,Close",
 					"sm_e,Close,status",
-					"sm_t,Close,ev1,Open"
 			};
 			
 			String[] recordTraceExpected = {

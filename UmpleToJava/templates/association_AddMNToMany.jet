@@ -15,8 +15,12 @@
       return wasRemoved;
     }
 
-    int oldIndex = <%=gen.translate("associationMany",av)%>.indexOf(<%=gen.translate("parameterOne",av)%>);
-    <%=gen.translate("associationMany",av)%>.remove(oldIndex);
+    int oldIndex = <%=gen.translate("associationMany",av)%>.indexOf(<%=gen.translate("parameterOne",av)%>);<%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+%>
+    <%=gen.translate("associationMany",av)%>.remove(oldIndex);<%= 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+%>
     if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) == -1)
     {
       wasRemoved = true;

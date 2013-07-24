@@ -30,7 +30,7 @@ class Tracer
   public function setX($aX)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttribute.ump,7,Tracer,".spl_object_hash( $this ).",at_s,x,".$this->x.",".$aX );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttribute.ump,7,Tracer,".spl_object_hash( $this ).",at_s,x,".$this->x.",".(""+$aX)null );
     $this->x = $aX;
     $wasSet = true;
     return $wasSet;
@@ -39,7 +39,7 @@ class Tracer
   public function setY($aY)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttribute.ump,8,Tracer,".spl_object_hash( $this ).",at_s,y,".$this->y.",".$aY );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttribute.ump,8,Tracer,".spl_object_hash( $this ).",at_s,y,".$this->y.",".(""+$aY)null );
     $this->y = $aY;
     $wasSet = true;
     return $wasSet;

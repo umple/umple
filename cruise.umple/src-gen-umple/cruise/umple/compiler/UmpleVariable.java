@@ -250,7 +250,7 @@ public class UmpleVariable
    * @params uClass: the umple class to look within for the trace item
    * @return Attribute_Traceitem for this UmpleVariable(either association or attribute);
    */
-  @umplesourcefile(line={24},file={"Trace_Code.ump"},javaline={247},length={34})
+  @umplesourcefile(line={24},file={"Trace_Code.ump"},javaline={247},length={36})
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all of the trace directives from the passed umple class
     for(TraceDirective td: uClass.getTraceDirectives())
@@ -264,10 +264,12 @@ public class UmpleVariable
           //go through all the variables
           for(UmpleVariable variable: ati.getUmpleVariables())
           {
-          	//and try to find one that is the same as the one variable calling this method 
-            if(variable.equals(this))
+          	//and try to find one that is the same as the one variable calling this method
+          	if(variable.getName().equals(this.getName()))
+            {
             //return the trace item containing this umple variable
               return ati;
+            }
           }
         }
         else if("constructor".equals(method)&&ati.getTraceConstructor())
@@ -300,8 +302,8 @@ public class UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1062},file={"Umple_Code.ump"},javaline={304},length={21})
-  @umplesourcefile(line={1063},file={"Umple_Code.ump"},javaline={305},length={15})
+  //  @umplesourcefile(line={1062},file={"Umple_Code.ump"},javaline={306},length={21})
+  @umplesourcefile(line={1063},file={"Umple_Code.ump"},javaline={307},length={15})
   public String getUpperCaseName()
   {
     if (name == null || name.length() == 0)
@@ -318,7 +320,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={322},length={4})
+  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={324},length={4})
   public boolean isImmutable()
   {
     return "immutable".equals(modifier);

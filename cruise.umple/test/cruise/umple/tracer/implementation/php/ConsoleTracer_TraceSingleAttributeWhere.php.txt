@@ -30,7 +30,7 @@ class Tracer
     $wasSet = false;
       if($aX==100)
         {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeWhere.ump,6,Tracer,".spl_object_hash( $this ).",at_s,x,".$this->x.",".$aX );
+        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeWhere.ump,6,Tracer,".spl_object_hash( $this ).",at_s,x,".$this->x.",".(""+$aX)null );
         }
     $this->x = $aX;
     $wasSet = true;
