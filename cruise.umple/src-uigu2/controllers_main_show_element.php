@@ -9,12 +9,14 @@ function _show_element($params) {
     $element_name = $_POST['element_name'];
   }else{
     //TODO: redirect and show error message
+    //return false;
   }
   if(isset($params['UMPLE_MODEL']['ELEMENTS'][$element_name])){
     $element = $params['UMPLE_MODEL']['ELEMENTS'][$element_name];
     $element['name'] = $element_name;
   }else{
     //TODO: redirect and show error message
+    //return false;
   }
 
   $data['body'][]=Uigu2_View::do_fetch(VIEW_PATH.'main/show_element.php', $element);

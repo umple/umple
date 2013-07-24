@@ -11,10 +11,10 @@ import cruise.umple.compiler.uigu2.Uigu2ElementGenerator;
 
 /**
  * @umplesource Generator.ump 264
- * @umplesource Generator_CodeUigu2.ump 69
+ * @umplesource Generator_CodeUigu2.ump 98
  */
 // line 264 "../../../../src/Generator.ump"
-// line 69 "../../../../src/Generator_CodeUigu2.ump"
+// line 98 "../../../../src/Generator_CodeUigu2.ump"
 public class Uigu2Generator extends PhpGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -41,14 +41,14 @@ public class Uigu2Generator extends PhpGenerator
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={84},file={"Generator_CodeUigu2.ump"},javaline={52},length={10})
+  @umplesourcefile(line={113},file={"Generator_CodeUigu2.ump"},javaline={52},length={11})
   public Uigu2Generator()
   {
     super();
     generator = new Uigu2ElementGenerator();
     outputPathname = null;
     filesToCopy = new HashMap<String,String>();
-    // line 84 "../../../../src/Generator_CodeUigu2.ump"
+    // line 113 "../../../../src/Generator_CodeUigu2.ump"
     this.filesToCopy.put("index.php", "/index.php");
         this.filesToCopy.put("kissmvc_core.php", "/uigu2/kissmvc_core.php");
         this.filesToCopy.put("kissmvc_uigu2.php", "/uigu2/kissmvc_uigu2.php");
@@ -56,8 +56,9 @@ public class Uigu2Generator extends PhpGenerator
         this.filesToCopy.put("views_main_index.php", "/uigu2/views/main/index.php");
         this.filesToCopy.put("views_main_show_element.php", "/uigu2/views/main/show_element.php");
         this.filesToCopy.put("controllers_main_index.php", "/uigu2/controllers/main/index.php");
+        this.filesToCopy.put("controllers_main_clear.php", "/uigu2/controllers/main/clear.php");
         this.filesToCopy.put("controllers_main_show_element.php", "/uigu2/controllers/main/show_element.php");
-        //this.filesToCopy.put("controllers_main_new_instance.php", "/uigu2/controllers/main/new_instance.php");
+        this.filesToCopy.put("controllers_main_new_instance.php", "/uigu2/controllers/main/new_instance.php");
         this.filesToCopy.put("css_layout.css", "/uigu2/css/layout.css");
   }
 
@@ -112,9 +113,9 @@ public class Uigu2Generator extends PhpGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={96},file={"Generator_CodeUigu2.ump"},javaline={116},length={72})
+  //  @umplesourcefile(line={126},file={"Generator_CodeUigu2.ump"},javaline={117},length={72})
   @Override
-  @umplesourcefile(line={98},file={"Generator_CodeUigu2.ump"},javaline={118},length={15})
+  @umplesourcefile(line={128},file={"Generator_CodeUigu2.ump"},javaline={119},length={15})
   public void generate() {
     //use default PHP generator to create the domain classes
     super.generate();
@@ -135,7 +136,7 @@ public class Uigu2Generator extends PhpGenerator
    * Copies default libraries and other necessary files - that are not meant to be
    * modified - to the destination folder, as indicated by the attribute Map filesToCopy.
    */
-  @umplesourcefile(line={118},file={"Generator_CodeUigu2.ump"},javaline={139},length={11})
+  @umplesourcefile(line={148},file={"Generator_CodeUigu2.ump"},javaline={140},length={11})
   private void copyDefaultFiles() throws IOException{
     Iterator iterator = this.filesToCopy.entrySet().iterator();
     while (iterator.hasNext()) {
@@ -151,7 +152,7 @@ public class Uigu2Generator extends PhpGenerator
   /*
    * Generates init.php file with UmpleModel information accessible to all controllers.
    */
-  @umplesourcefile(line={133},file={"Generator_CodeUigu2.ump"},javaline={155},length={15})
+  @umplesourcefile(line={163},file={"Generator_CodeUigu2.ump"},javaline={156},length={15})
   private void generateInitializationFile() throws IOException{
     final String nl = System.getProperty("line.separator");
     StringBuilder initFile = new StringBuilder("<?php" + nl
@@ -174,7 +175,7 @@ public class Uigu2Generator extends PhpGenerator
    * @param text content of text file to be written
    * @param filePathname Absolute path in the FileSystem to file to be written
    */
-  @umplesourcefile(line={155},file={"Generator_CodeUigu2.ump"},javaline={178},length={13})
+  @umplesourcefile(line={185},file={"Generator_CodeUigu2.ump"},javaline={179},length={13})
   private void writeStringToFile(String text, String filePathname) throws IOException {
     Path path = Paths.get(filePathname);
     Files.createDirectories(path.getParent());
