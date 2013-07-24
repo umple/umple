@@ -34,7 +34,6 @@ private void analyzeTraceToken(Token token, int analysisStep)
     if (token.is("traceType"))
     {
       Tracer tracer = model.getTracer();
-      System.out.println(token);
       for(Token subToken: token.getSubTokens())
       {
       	if(subToken.is("tracerType"))
@@ -48,14 +47,6 @@ private void analyzeTraceToken(Token token, int analysisStep)
       	else if(subToken.is("verbosity"))
       	{
       	  tracer.setVerbosity(true);
-      	}
-      	else if(subToken.is("tracerOn"))
-      	{
-      	  System.out.println(subToken.getName());
-      	}
-      	else if(subToken.is("option"))
-      	{
-      	  System.out.println(subToken.getValue());
       	}
       }
       model.setTracer(tracer);
