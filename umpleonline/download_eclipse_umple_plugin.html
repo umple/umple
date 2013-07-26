@@ -5,6 +5,43 @@
   <link href="scripts/styles_download.css" rel="stylesheet" type="text/css" />
   <title>Downloading and Installing Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
+  
+<style>
+
+.button {
+   border-top: 1px solid #d3bc8f;
+   background: #bf5f3f;
+   background: -webkit-gradient(linear, left top, left bottom, from(#9a4d34), to(#bf5f3f));
+   background: -webkit-linear-gradient(top, #9a4d34, #bf5f3f);
+   background: -moz-linear-gradient(top, #9a4d34, #bf5f3f);
+   background: -ms-linear-gradient(top, #9a4d34, #bf5f3f);
+   background: -o-linear-gradient(top, #9a4d34, #bf5f3f);
+   padding: 6.5px 13px;
+   -webkit-border-radius: 9px;
+   -moz-border-radius: 9px;
+   border-radius: 9px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 16px;
+   font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.button:hover {
+   border-top-color: #810b09;
+   background: #810b09;
+   color: #ccc;
+   }
+.button:active {
+   border-top-color: #810b09;
+   background: #810b09;
+   }
+   
+</style>  
+  
 </head>
 <body>
 
@@ -39,12 +76,13 @@
   
  <ul>
 
-    <li><a href="http://code.google.com/p/umple/downloads/list"><b>
-    The latest official releases of Umple jars can be obtained by clicking here.</b></a>
+    <li><a class="button" href="http://code.google.com/p/umple/downloads/list">
+    The latest official releases of Umple jars</a><br/>&nbsp;<br/>
     Both the command-line compiler and the Eclipse plugin are available.<br />&nbsp;<br />
     
-    <li><a href="http://try.umple.org/scripts/umple.jar"><b>The latest build of the command-line
-     compiler from our continuous build process can be obtained by clicking here</b></a>.
+    <li><a class="button" href="http://try.umple.org/scripts/umple.jar">The latest build of the command-line
+     compiler</a><br/> &nbsp;<br/>
+     This is build after every commit from our continuous build process.
     This is also the version of the compiler used by UmpleOnline. This version will contain experimental
     features so should not be used in production.<br />&nbsp;<br />
   
@@ -84,10 +122,10 @@
 
      <li>Specify your umple file as an argument.&nbsp;<br />
 
-     <li>You can use --help as an option to obtain the full set of command-line options. Options available in the <a href="http://try.umple.org/scripts/umple.jar">continuous-build version of the command-line compiler</a> include:
+     <li>You can use --help as an option to obtain the full set of command-line options. Options available include:
      <ul>
      <li>-g, --generate :                          Specify the output language: Java,RTCpp, 
-                                          Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,
+                                          Php,RTCpp,Ruby,SQL,Json,Ecore,TextUml,
                                           Yuml,Cpp etc.                                 
       <li> --help :                                  Display the help message               
       <li> --override :                              If a output language <lang> is         

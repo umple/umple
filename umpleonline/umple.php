@@ -59,7 +59,7 @@ $output = readTemporaryFile("ump/" . $filename);
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
-  <title>UmpleOnline: Generate Java, PHP, or Ruby code from Umple</title>
+  <title>UmpleOnline: Generate Java, C++, PHP, or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
 </head>
 <body>
@@ -74,8 +74,8 @@ $output = readTemporaryFile("ump/" . $filename);
       </td>
       <td>
         <p class="pagedescription">
-        Draw on the right, write (Umple) model code on the left. Generate Java, PHP or Ruby code from your models. <br/>
-        Visit <a href="http://cruise.site.uottawa.ca/umple/UsingUmpleOnline.html" target=helppage">the User Manual</a> or <a href="http://cruise.site.uottawa.ca/umple/">the Umple Home Page</a> for help.
+        Draw on the right, write (Umple) model code on the left. Generate Java, C++, PHP or Ruby code from your models. <br/>
+        Visit <a href="http://manual.umple.org" target=helppage">the User Manual</a> or <a href="http://www.umple.org">the Umple Home Page</a> for help.
         &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple</a>
         &nbsp;&nbsp;&nbsp;<a href="http://code.google.com/p/umple/issues/entry" target="newissue">Report an Issue</a>
 
@@ -169,63 +169,45 @@ $output = readTemporaryFile("ump/" . $filename);
             <option name = "optionExample" value="AirlineExample.ump">AirlineExample</option>
             <option name = "optionExample" value="BankingSystemA.ump">BankingSystemA</option>
             <option name = "optionExample" value="BankingSystemB.ump">BankingSystemB</option>
-
-           <option name = "optionExample" value="CanalSystem.ump">Canal</option>
-
+            <option name = "optionExample" value="CanalSystem.ump">Canal</option>
             <option name = "optionExample" value="OhHellWhist.ump">CardGames</option>
-
             <option name = "optionExample" value="Claim.ump">Claim</option>
-
             <option name = "optionExample" value="CommunityAssociation.ump">CommunityAssociation</option>
-
             <option name = "optionExample" value="CoOpSystem.ump">Co-OpSystem</option>
-
             <option name = "optionExample" value="DMMOverview.ump">DMMOverview</option>
 
             <!-- <option name = "optionExample" value="DMMModelElementHierarchy.ump">DMMModelElementHierarchy</option> -->
-
             <option name = "optionExample" value="DMMSourceObjectHierarchy.ump">DMMSourceObjectHierarchy</option>
-
             <option name = "optionExample" value="DMMRelationshipHierarchy.ump">DMMRelationshipHierarchy</option>
             <option name = "optionExample" value="DMMExtensionCTF.ump">DMMExtensionCTF</option>
             <option name = "optionExample" value="ElectionSystem.ump">ElectionSystem</option>
             <option name = "optionExample" value="ElevatorSystemA.ump">ElevatorSystemA</option>
             <option name = "optionExample" value="ElevatorSystemB.ump">ElevatorSystemB</option>
-
             <option name = "optionExample" value="GenealogyA.ump">GenealogyA</option>
-
             <option name = "optionExample" value="GenealogyB.ump">GenealogyB</option>
-
             <option name = "optionExample" value="GenealogyC.ump">GenealogyC</option>
-
             <option name = "optionExample" value="GeographicalInformationSystem.ump">GeographicalInformationSystem</option>
-
             <option name = "optionExample" value="Hospital.ump">Hospital</option>
-
             <option name = "optionExample" value="Hotel.ump">Hotel</option>
-
             <option name = "optionExample" value="Insurance.ump">Insurance</option>
-
             <option name = "optionExample" value="InventoryManagement.ump">InventoryManagement</option>
             <option name = "optionExample" value="Library.ump">Library</option>
             <option name = "optionExample" value="MailOrderSystemClientOrder.ump">MailOrderSystemClientOrder</option>
             <option name = "optionExample" value="ManufactoringPlantController.ump">ManufactoringPlantController</option>   
-                        <option name = "optionExample" value="Pizza.ump">PizzaSystem</option>  
+            <option name = "optionExample" value="Pizza.ump">PizzaSystem</option>  
             <option name = "optionExample" value="PoliceSystem.ump">PoliceSystem</option>
             <option name = "optionExample" value="PoliticalEntities.ump">PoliticalEntities</option>
             <option name = "optionExample" value="realestate.ump">RealEstate</option>
-                        <option name = "optionExample" value="RoutesAndLocations.ump">RoutesAndLocations</option>
+            <option name = "optionExample" value="RoutesAndLocations.ump">RoutesAndLocations</option>
             <option name = "optionExample" value="School.ump">School</option>
             <option name = "optionExample" value="TelephoneSystem.ump">TelephoneSystem</option>
-            <option name = "optionExample" value="TrafficLightsA.ump">TrafficLights</option>
             <option name = "optionExample" value="UniversitySystem.ump">UniversitySystem</option>
-                        <option name = "optionExample" value="VendingMachineClassDiagram.ump">VendingMachineClassDiagram</option>
+            <option name = "optionExample" value="VendingMachineClassDiagram.ump">VendingMachineClassDiagram</option>
             <option name = "optionExample" value="WarehouseSystem.ump">WarehouseSystem</option>
 
             <optgroup label="State machine examples">
-              <option name = "optionExample"
- value="CanalLockStateMachine.ump">CanalLockStateMachine</option>
-
+              <option name = "optionExample" value="TrafficLightsA.ump">TrafficLights</option>
+              <option name = "optionExample" value="CanalLockStateMachine.ump">CanalLockStateMachine</option>
             </optgroup>
           </select>
         </li>
