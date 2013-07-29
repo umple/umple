@@ -1,3 +1,6 @@
+// State machine for an airline flight
+// Avoids the use of nested states.
+
 class SpecificFlight {
   state {
     planned {

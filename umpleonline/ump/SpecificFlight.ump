@@ -1,5 +1,4 @@
-// State machine for a state machine
-// Avoids the use of nested states.
+// State machine for an airline flight with nested state
 
 class SpecificFlight {
   state {
