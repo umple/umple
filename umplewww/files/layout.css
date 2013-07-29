@@ -11,13 +11,13 @@ p, b, ol, ul, li {line-height: 12pt;}
 
 /* HEADER STYLE */
 span.header {white-space:pre-line; margin:0; padding:0;}
-span.header img.uOttawaAbbr {border:0;height:53px;width:130px;}
-span.header img.uOttawa {border:10;height:53px;width:650px;}
+span.header img.uOttawaAbbr {border:0;height:2px;width:130px;}
+span.header img.uOttawa {border:1;height:2px;width:650px;}
 
 /* BODY STYLE */
 table.body {width:780px; border-collapse:collapse; }
 td.indicatorBlocks {vertical-align:top;}
-td.indicatorBlocks img {border:0;height:10px;width:34;padding:20px 1px 0 0;}
+td.indicatorBlocks img {border:0;height:30px;width:30;padding:15px 1px 0 0;}
 td.dotSeparator { vertical-align:top;padding:0 10px 0 1px;}
 
 td.menu {vertical-align: top; width:100px; padding: 13px 0 0 0; white-space: nowrap;}
