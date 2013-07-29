@@ -1,0 +1,22 @@
+class GarageDoor
+{
+   status {
+      	Open { buttonOrObstacle -> Closing;  }
+      
+	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed { buttonOrObstacle -> Opening; }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
+  }
+
+
+}

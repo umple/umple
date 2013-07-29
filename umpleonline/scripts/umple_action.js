@@ -1117,6 +1117,22 @@ Action.updateUmpleTextCallback = function(response)
   //Action.updateUmpleDiagram();
 }
 
+Action.setExampleType = function setExampleType()
+{
+  // Hide them all first
+  jQuery("#itemLoadExamples").hide();
+  jQuery("#itemLoadExamples2").hide();
+     
+  if(Page.getExampleType() == "cdModels") {
+     jQuery("#itemLoadExamples").show();
+     jQuery("#defaultExampleOption").attr("selected",true);
+   }
+   else {
+     jQuery("#itemLoadExamples2").show();
+     jQuery("#defaultExampleOption2").attr("selected",true);
+   }
+}
+
 Action.loadExample = function loadExample()
 {
   UmpleSystem.merge(null);
