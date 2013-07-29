@@ -158,6 +158,13 @@ $output = readTemporaryFile("ump/" . $filename);
 
       <ul id="mainLoadMenu" class="first">
         <li class="subtitle"> Load </li>
+        <li id="exampleType">
+          <select id="inputExampleType" name="inputExampleType" class="button" size = "1">
+            <option name = "optionExampleType" id = "cdModels" value="cdModels">Class Diagrams</option>
+            <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
+          </select>
+        </li>
+        
         <li id="itemLoadExamples">
           <select id="inputExample" name="inputExample" class="button" size = "1">
             <option name = "optionExample" id = "defaultExampleOption" value="">Select Example</option>
@@ -205,12 +212,27 @@ $output = readTemporaryFile("ump/" . $filename);
             <option name = "optionExample" value="VendingMachineClassDiagram.ump">VendingMachineClassDiagram</option>
             <option name = "optionExample" value="WarehouseSystem.ump">WarehouseSystem</option>
 
-            <optgroup label="State machine examples">
-              <option name = "optionExample" value="TrafficLightsA.ump">TrafficLights</option>
-              <option name = "optionExample" value="CanalLockStateMachine.ump">CanalLockStateMachine</option>
-            </optgroup>
           </select>
         </li>
+       
+        <li id="itemLoadExamples2">
+          <select id="inputExample2" name="inputExample2" class="button" size = "1">
+            <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
+            <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights</option>
+            <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
+
+
+            <option name = "optionExample" value="GarageDoor.ump">Garage Door</option>
+            <option name = "optionExample" value="Phone.ump">Phone and Lines</option>
+            <option name = "optionExample" value="CarTransmission.ump">Car Transmission</option>
+            <option name = "optionExample" value="Elevator_State_Machine.ump">Elevator</option>
+            <option name = "optionExample" value="SpecificFlight.ump">Airline Specific Flight</option>
+            <option name = "optionExample" value="SpecificFlightFlat.ump">Airline Specific Flight (Flat)</option>
+            <option name = "optionExample" value="Booking.ump">Airline Booking</option>            
+            <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic</option>
+          </select>
+        </li>
+        
         </ul>
       
       <ul id="mainDrawMenu" class = "second toggle">

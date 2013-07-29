@@ -1,0 +1,39 @@
+// State machine for a state machine
+// Avoids the use of nested states.
+
+class SpecificFlight {
+  state {
+    planned {
+      assignPlane -> planeAssigned;
+      cancel -> cancelled;
+    }
+    planeAssigned {
+      readyForPassengers -> boarding;
+      changePlane -> planned;
+      cancel -> cancelled;
+    }
+    activeWithPassengers {
+      evacuate -> disembarking;
+      waitingForNextLeg {
+        readyForPassengers -> boarding;
+      }
+      boarding {
+        boardingComplete -> closedAtGate;
+      }
+      closedAtGate {
+        permissionToDepart -> underway;     
+      }
+      underway {
+        arriveAtGate -> disembarking;
+      }
+      disembarking {
+        passengersOut [!empty] -> waitingForNextLeg;
+        passengersOut [finished && empty] -> completed;
+        passengersOut [!finished && empty] -> planeAssigned;
+      }
+    }
+    completed {}
+    cancelled {}
+  }
+}
+    

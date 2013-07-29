@@ -370,6 +370,15 @@ Page.initExamples = function()
 {
   jQuery("#inputExample").change(Action.loadExample);
   jQuery("#defaultExampleOption").attr("selected",true);
+ 
+  jQuery("#inputExampleType").change(Action.setExampleType);
+  jQuery("#cdModels").attr("selected",true);
+  
+  jQuery("#inputExample2").change(Action.loadExample);
+  jQuery("#defaultExampleOption2").attr("selected",true);
+  jQuery("#itemLoadExamples2").hide();
+
+  
 }
 
 Page.highlightItem = function(id)
@@ -645,8 +654,30 @@ Page.setUmpleCanvasSize = function(width, height)
 
 Page.getSelectedExample = function()
 {
-  var inputExample = jQuery("#inputExample option:selected").val();
+  var inputExample = "";
+  if(Page.getExampleType() == "cdModels") {
+    inputExample = jQuery("#inputExample option:selected").val();
+    // if diagram type is state machine, set it to class
+    if(Page.useGvStateDiagram) {
+     jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
+      Action.changeDiagramType(1);
+    }
+  }
+  else {
+    inputExample = jQuery("#inputExample2 option:selected").val();
+    // set diagramtype if not already state machine.
+    if( !Page.useGvStateDiagram) {
+       jQuery("#buttonShowGvStateDiagram").attr('checked', true); 
+      Action.changeDiagramType(3);
+    }
+  }
   return inputExample;
+}
+
+Page.getExampleType = function()
+{
+  var exampleType = jQuery("#exampleType option:selected").val();
+  return exampleType;
 }
 
 Page.showCodeDone = function()

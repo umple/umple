@@ -1,0 +1,142 @@
+
+
+// The class representing the telephone system
+class PhoneSystemSimulation {
+  singleton;
+  // lazy PhoneLine[] lines;
+  1 -- * PhoneLine lines;
+  after constructor {
+    addLine(new PhoneLine("line1","Bruce",this));
+    addLine(new PhoneLine("line2","Ralph",this));
+    addLine(new PhoneLine("line3","Victoria",this));
+    addLine(new PhoneLine("line4","Vicki",this));
+    addLine(new PhoneLine("line5","Agnes",this));
+  }
+
+  static PhoneSystemSimulation s;
+  
+  public static void main(String [ ] args) {
+    s = getInstance();
+    PhoneLine lineA;
+    PhoneLine lineB;
+    int choiceA, choiceB;
+    
+    while(true) {
+    
+      // Randomly choose who initiates
+      choiceA = (int)Math.floor(Math.random()*5);
+      choiceB = (choiceA + 1 + (int)Math.floor(Math.random()*4)) % 5;
+      lineA = s.getLine(choiceA);
+      lineB = s.getLine(choiceB);
+
+    
+      // Initate a call
+      lineA.startDialing();
+      lineA.pause(200);
+      lineA.setOtherParty(lineB);
+      lineA.completeNumber();
+        lineA.p(); lineB.p(); // Will be done by tracing associations
+
+      // The other party can choose whether to pick up or not.
+      if(Math.random() > 0.5) {
+        lineB.pickUp();
+      
+        // While talking either party can hang up
+        if(Math.random() > 0.5) {
+          lineA.hangUp();
+          lineB.hangUp(); // assuming it doesn't forget
+        }
+        else {
+          lineB.hangUp();
+          lineA.hangUp(); // assuming it doesn't forget
+        }
+      }
+      else {
+        // Hang up while waiting and the other will too
+        lineA.hangUp();
+      }
+    }
+  }
+}  
+
+class PhoneLine {
+  depend java.io.IOException;
+
+  id;
+  voice;
+  0..1 self otherParty;
+  
+  trace waitForHook, ringing record id;
+  const String click="click";
+  const String dial="dial";
+  const String beep="beep";
+  const String hello="hello";
+  state {
+    onHook {
+      entry / {
+        if(getOtherParty() != null) {
+          getOtherParty().otherPartyHangUp();
+        } 
+        setOtherParty(null); p();
+      }
+      startDialing -> dialing;
+      incomingCall -> ringing;
+    }
+    ringing {
+      entry / {say(ring);} 
+      pickUp -> / {getOtherParty().otherPartyPickUp();} communicating;
+      otherPartyHangUp -> onHook;
+      autoPickup -> / {getOtherParty().otherPartyPickUp();} communicating;
+    }
+    communicating {
+      entry / {say(hello+getOtherParty().getId());}
+      hangUp -> / {say(click);} onHook;
+      otherPartyHangUp -> waitForHook;
+      putOnHold -> onHold;
+    }
+    onHold {
+      hangUp -> / {say(click);} onHook;
+      otherPartyHangUp -> waitForHook;
+      takeOffHold -> communicating;
+    }
+    dialing {
+      entry / {say(dial);} 
+      completeNumber -> waitingForConnection;
+      hangUp -> / {say(click);} onHook;
+    }
+    waitingForConnection {
+      entry / {getOtherParty().incomingCall();}
+      otherPartyPickUp -> communicating;
+      hangUp -> / {say(click);} onHook;
+      timeOut -> onHook;
+    }
+    waitForHook {
+      entry / {say(beep);}
+      hangUp -> / {say(click);} onHook;
+    }
+  }
+  
+  String toString() {
+    return getId();
+  }
+  
+  void p() {
+    // System.out.println("  other party of "+getId()+"="+getOtherParty());
+  }
+  
+  void say(String s) {
+    try {
+      Runtime.getRuntime().exec("say "+getId()+" "+s+" -v "+getVoice());
+    }
+    catch (IOException e) {}
+    pause(2000);
+  }
+  
+  void pause(long ms) {
+    try {
+      Thread.currentThread().sleep(ms);//sleep for 1000 ms
+    }
+    catch(InterruptedException ie){
+    }
+  }
+}
