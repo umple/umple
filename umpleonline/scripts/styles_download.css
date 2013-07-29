@@ -3,8 +3,8 @@ body { }
 
 /* HEADER STYLE */
 span.header {white-space:pre-line; margin:0 0 0 0.3em; padding:0;}
-span.header img.uOttawaAbbr {border:0;height:53px;width:130px;}
-span.header img.uOttawa {border:10;height:53px;width:650px;}
+span.header img.UmpleLogo {border:0;height:30px;width:30px;}
+span.header img.uOttawa {border:0;height:2px;width:650px;}
 
 img.li { margin: 0 0 0 40px; }
 
