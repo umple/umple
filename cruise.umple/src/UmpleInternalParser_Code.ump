@@ -239,14 +239,16 @@ class UmpleInternalParser
           }
           else {
             getParseResult().addErrorMessage(new ErrorMessage(1510, t.getPosition(), t.getValue()));
-
+            
+            if(!getParseResult().getWasSuccess()) break;
           }
         }  
-        
+                
         // To do: If file doesn't exist, then t.getValue may be referring to a
         // library file in ../ump or on the web. Try these before raising error
         
       }
+
     }
   }
   
@@ -254,7 +256,7 @@ class UmpleInternalParser
   private void parseAllFiles()
   {
     addNecessaryFiles();
-    while (!unparsedUmpleFiles.isEmpty())
+    while (!unparsedUmpleFiles.isEmpty() && getParseResult().getWasSuccess())
     {
       String nextFile = unparsedUmpleFiles.get(0);
       unparsedUmpleFiles.remove(0);
