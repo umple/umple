@@ -45,7 +45,13 @@ else if (isset($_REQUEST["umpleCode"]))
   $language = $_REQUEST["language"];
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
   $uigu = False;
-  
+
+  $javadoc = false;
+  $stateDiagram = false;
+  $classDiagram = false;
+  $yumlDiagram = false;
+  $uigu = false;
+
   if ($language == "javadoc")
   {
      $language = "Java";
@@ -70,14 +76,6 @@ else if (isset($_REQUEST["umpleCode"]))
   {
      $language = "Uigu";
      $uigu = True;
-  }
-  else
-  {
-    $javadoc = False;
-    $stateDiagram = False;
-    $classDiagram = False;
-    $yumlDiagram = False;
-    $uigu = False;
   }
   
   if ($language == "Simulate")
