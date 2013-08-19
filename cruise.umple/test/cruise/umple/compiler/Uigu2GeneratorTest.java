@@ -30,7 +30,7 @@ public class Uigu2GeneratorTest
   @Test
   public void filesToCopyPresent()throws IOException
   {
-    Map<String,String> files = generator.getFilesToCopy();
+    Map<String,String> files = generator.getSharedFilesToCopy();
     Iterator iterator = files.entrySet().iterator();
     while (iterator.hasNext()) {
       Map.Entry<String, String> entry = (Map.Entry) iterator.next();

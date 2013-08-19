@@ -14,10 +14,10 @@ package cruise.umple.compiler;
  * A point in cartesian coordinates, used in representing the layout of a
  * diagram in Umple
  * @umplesource Umple.ump 619
- * @umplesource Umple_Code.ump 1748
+ * @umplesource Umple_Code.ump 1747
  */
 // line 619 "../../../../src/Umple.ump"
-// line 1748 "../../../../src/Umple_Code.ump"
+// line 1747 "../../../../src/Umple_Code.ump"
 public class Point
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -123,8 +123,8 @@ public class Point
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1750},file={"Umple_Code.ump"},javaline={127},length={18})
-  @umplesourcefile(line={1751},file={"Umple_Code.ump"},javaline={128},length={12})
+  //  @umplesourcefile(line={1749},file={"Umple_Code.ump"},javaline={127},length={18})
+  @umplesourcefile(line={1750},file={"Umple_Code.ump"},javaline={128},length={12})
   public static Point create(int n)
   {
     int p = (int)Math.sqrt(n) + 1;
@@ -138,7 +138,7 @@ public class Point
     }
   }
 
-  @umplesourcefile(line={1764},file={"Umple_Code.ump"},javaline={142},length={4})
+  @umplesourcefile(line={1763},file={"Umple_Code.ump"},javaline={142},length={4})
   public String toString()
   {
     return "(" + getX() + "," + getY() + ")";

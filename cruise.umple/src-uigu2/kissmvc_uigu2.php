@@ -5,7 +5,7 @@ class Uigu2_Controller extends KISS_Controller {
   protected $init_file;
   
   function __construct($controller_path,$web_folder,$default_controller,$default_action)  {
-    $this->init_file = $controller_path.'init.php';
+    $this->init_file = 'initialize_model.php';
     parent::__construct($controller_path,$web_folder,$default_controller,$default_action);
   }
   
