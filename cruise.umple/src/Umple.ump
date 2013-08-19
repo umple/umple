@@ -661,6 +661,7 @@ class Comment
  */
 class GenerateTarget
 {
+  depend java.util.*;
   // The target language, such as Java, Cpp, Php or Ruby.
   language;
 
@@ -668,6 +669,9 @@ class GenerateTarget
 
   Boolean override = false;
   Boolean overrideAll = false;
+  
+  //optional parameters that may differ by instance, and not significant enough to warrant a Subclass (used in Uigu2Generator)
+  internal Map<String,String> options = new HashMap<String,String>();
 
   before getPath{if(path == null) path = ""; }
   key{language}

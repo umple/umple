@@ -117,8 +117,7 @@
 	<fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
     </copy>
     <copy todir="${bin.path}/cruise/umple/compiler/uigu2/files" overwrite="true">
-	<fileset dir="${project.path}/src-uigu2"><include name="**/*.php"/></fileset>
-	<fileset dir="${project.path}/src-uigu2"><include name="**/*.css"/></fileset>
+	<fileset dir="${project.path}/src-uigu2"></fileset>
     </copy>
   </target>
 

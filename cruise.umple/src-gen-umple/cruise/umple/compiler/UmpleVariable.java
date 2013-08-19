@@ -9,11 +9,11 @@ import java.util.*;
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
  * @umplesource Umple.ump 433
- * @umplesource Umple_Code.ump 1061
+ * @umplesource Umple_Code.ump 1060
  * @umplesource Trace_Code.ump 16
  */
 // line 433 "../../../../src/Umple.ump"
-// line 1061 "../../../../src/Umple_Code.ump"
+// line 1060 "../../../../src/Umple_Code.ump"
 // line 16 "../../../../src/Trace_Code.ump"
 public class UmpleVariable
 {
@@ -302,8 +302,8 @@ public class UmpleVariable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1062},file={"Umple_Code.ump"},javaline={306},length={21})
-  @umplesourcefile(line={1063},file={"Umple_Code.ump"},javaline={307},length={15})
+  //  @umplesourcefile(line={1061},file={"Umple_Code.ump"},javaline={306},length={21})
+  @umplesourcefile(line={1062},file={"Umple_Code.ump"},javaline={307},length={15})
   public String getUpperCaseName()
   {
     if (name == null || name.length() == 0)
@@ -320,7 +320,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1079},file={"Umple_Code.ump"},javaline={324},length={4})
+  @umplesourcefile(line={1078},file={"Umple_Code.ump"},javaline={324},length={4})
   public boolean isImmutable()
   {
     return "immutable".equals(modifier);

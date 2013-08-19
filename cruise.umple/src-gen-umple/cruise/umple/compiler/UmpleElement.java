@@ -9,10 +9,10 @@ import java.util.*;
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
  * @umplesource Umple.ump 72
- * @umplesource Umple_Code.ump 633
+ * @umplesource Umple_Code.ump 632
  */
 // line 72 "../../../../src/Umple.ump"
-// line 633 "../../../../src/Umple_Code.ump"
+// line 632 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -421,14 +421,14 @@ public class UmpleElement
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={634},file={"Umple_Code.ump"},javaline={425},length={18})
-  @umplesourcefile(line={635},file={"Umple_Code.ump"},javaline={426},length={4})
+  //  @umplesourcefile(line={633},file={"Umple_Code.ump"},javaline={425},length={18})
+  @umplesourcefile(line={634},file={"Umple_Code.ump"},javaline={426},length={4})
   public void appendExtraCode(String newCode)
   {
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={640},file={"Umple_Code.ump"},javaline={432},length={12})
+  @umplesourcefile(line={639},file={"Umple_Code.ump"},javaline={432},length={12})
   public void appendExtraCode(String newCode, boolean addNewline)
   {
     if (newCode == null) 

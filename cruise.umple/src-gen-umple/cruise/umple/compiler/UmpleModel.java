@@ -681,7 +681,7 @@ public class UmpleModel implements Runnable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={19},file={"Umple_Code.ump"},javaline={685},length={371})
+  //  @umplesourcefile(line={19},file={"Umple_Code.ump"},javaline={685},length={370})
   @umplesourcefile(line={20},file={"Umple_Code.ump"},javaline={686},length={7})
   public List<UmpleElement> getUmpleElements()
   {
@@ -858,7 +858,7 @@ public class UmpleModel implements Runnable
 /*
  * Generates the actual code for each generation target
  */
-  @umplesourcefile(line={182},file={"Umple_Code.ump"},javaline={862},length={38})
+  @umplesourcefile(line={182},file={"Umple_Code.ump"},javaline={862},length={37})
   public void generate()
   {
     boolean foundGenerator;
@@ -867,26 +867,25 @@ public class UmpleModel implements Runnable
     {
       for (GenerateTarget target : getGenerates())
       {
-        foundGenerator = false;
         // Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
         String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
     
         try {
           classDefinition = Class.forName(className);
-          foundGenerator = true;
-        }
-        catch (ClassNotFoundException cnf) {
-          System.err.println("Code generator "+target.getLanguage()+ " not found. Check spelling.");
-        }
-        if (foundGenerator) {
           CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
 
           // Since the model contains everything that needs to be translated into generated code (such as Java or Cpp) set the model to use.
           generator.setModel(this);
 
           generator.setOutput(target.getPath());
+          if(generator instanceof Uigu2Generator){
+            ((Uigu2Generator)generator).setSharedFilesPath(target.getOption("sharedFilesPathname"));
+          }
           CodeBlock.languageUsed = target.getLanguage();
           generator.generate();
+        }
+        catch (ClassNotFoundException cnf) {
+          System.err.println("Code generator "+target.getLanguage()+ " not found. Check spelling.");
         }
       }
     }
@@ -899,7 +898,7 @@ public class UmpleModel implements Runnable
    }
    
 
-  @umplesourcefile(line={222},file={"Umple_Code.ump"},javaline={903},length={14})
+  @umplesourcefile(line={221},file={"Umple_Code.ump"},javaline={902},length={14})
   public Coordinate getDefaultClassPosition(int numDefaults)
   {
     int xIndex  = 0;
@@ -915,7 +914,7 @@ public class UmpleModel implements Runnable
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
 
-  @umplesourcefile(line={237},file={"Umple_Code.ump"},javaline={919},length={92})
+  @umplesourcefile(line={236},file={"Umple_Code.ump"},javaline={918},length={92})
   public Coordinate[] getDefaultAssociationPosition(Association a)
   {
     Coordinate[] defaults = new Coordinate[2];
@@ -1009,7 +1008,7 @@ public class UmpleModel implements Runnable
     return defaults;
   }
 
-  @umplesourcefile(line={330},file={"Umple_Code.ump"},javaline={1013},length={60})
+  @umplesourcefile(line={329},file={"Umple_Code.ump"},javaline={1012},length={60})
   private Coordinate[] getDefaultReflexiveAssociationPosition(Association a)
   {
     Coordinate[] defaults = new Coordinate[2];

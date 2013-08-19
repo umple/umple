@@ -9,10 +9,10 @@ import java.util.*;
  * A method in an Umple class or interface
  * Umple Methods are coded by the programmer in the language(s) of their choice
  * @umplesource Umple.ump 109
- * @umplesource Umple_Code.ump 428
+ * @umplesource Umple_Code.ump 427
  */
 // line 109 "../../../../src/Umple.ump"
-// line 428 "../../../../src/Umple_Code.ump"
+// line 427 "../../../../src/Umple_Code.ump"
 public class Method
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -351,8 +351,8 @@ public class Method
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={429},file={"Umple_Code.ump"},javaline={355},length={39})
-  @umplesourcefile(line={430},file={"Umple_Code.ump"},javaline={356},length={7})
+  //  @umplesourcefile(line={428},file={"Umple_Code.ump"},javaline={355},length={39})
+  @umplesourcefile(line={429},file={"Umple_Code.ump"},javaline={356},length={7})
   public boolean getExistsInLanguage(String lang) 
   {
     if(getMethodBody().getExtraCode(lang)==null)
@@ -360,7 +360,7 @@ public class Method
     else 
       return true;
   }
-  @umplesourcefile(line={437},file={"Umple_Code.ump"},javaline={364},length={31})
+  @umplesourcefile(line={436},file={"Umple_Code.ump"},javaline={364},length={31})
   public String toString()
   {    
     StringBuffer methodBuffer = new StringBuffer();

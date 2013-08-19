@@ -2,12 +2,15 @@
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 /**
  * Represents the generation target, such as what the generated output language will be.
  * @umplesource Umple.ump 662
+ * @umplesource Umple_Code.ump 2000
  */
 // line 662 "../../../../src/Umple.ump"
+// line 2000 "../../../../src/Umple_Code.ump"
 public class GenerateTarget
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -22,6 +25,7 @@ public class GenerateTarget
   private String path;
   private boolean override;
   private boolean overrideAll;
+  private Map<String,String> options;
 
   //Helper Variables
   private int cachedHashCode;
@@ -39,6 +43,7 @@ public class GenerateTarget
     path = aPath;
     override = false;
     overrideAll = false;
+    options = new HashMap<String,String>();
   }
 
   //------------------------
@@ -86,10 +91,10 @@ public class GenerateTarget
     return language;
   }
 
-  @umplesourcefile(line={672},file={"Umple.ump"},javaline={93},length={1})
+  @umplesourcefile(line={676},file={"Umple.ump"},javaline={98},length={1})
   public String getPath()
   {
-    // line 672 "../../../../src/Umple.ump"
+    // line 676 "../../../../src/Umple.ump"
     if(path == null) path = "";
     return path;
   }
@@ -166,5 +171,19 @@ public class GenerateTarget
             "override" + ":" + getOverride()+ "," +
             "overrideAll" + ":" + getOverrideAll()+ "]"
      + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={2000},file={"Umple_Code.ump"},javaline={179},length={8})
+  @umplesourcefile(line={2001},file={"Umple_Code.ump"},javaline={180},length={3})
+  public void setOption (String key, String value){
+    this.options.put(key, value);
   }
+
+  @umplesourcefile(line={2005},file={"Umple_Code.ump"},javaline={185},length={3})
+  public String getOption (String key){
+    return this.options.get(key);
+  }
+
 }
