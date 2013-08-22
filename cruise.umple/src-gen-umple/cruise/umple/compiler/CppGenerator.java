@@ -221,7 +221,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     UmpleElement lastElement = null;
     try
     {
-      for (UmpleElement currentElement : model.getUmpleElements())
+      for (UmpleElement currentElement : getModel().getUmpleElements())
       {
         if ("external".equals(currentElement.getModifier()))
         {
@@ -242,7 +242,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       message += "Check the first line statement for probable cause.";
       throw new UmpleCompilerException(message,null);
     }
-    GeneratorHelper.postpare(model);
+    GeneratorHelper.postpare(getModel());
   }
   
   
@@ -407,7 +407,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   public String translate(String keyName, State state)
   {
     String singularName = state.getName();
-    String pluralName = model.getGlossary().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -445,7 +445,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   public String translate(String keyName, StateMachine sm)
   {
     String singularName = sm.getFullName();
-    String pluralName = model.getGlossary().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -492,7 +492,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   public String translate(String keyName, Event event)
   {
     String singularName = event.getName();
-    String pluralName = model.getGlossary().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
 
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -705,8 +705,8 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       return translate(realKeyName,av,isMany);
     }
     
-    String singularName = isMany ? model.getGlossary().getSingular(av.getName()) : av.getName();
-    String pluralName = isMany ? av.getName() : model.getGlossary().getPlural(av.getName());
+    String singularName = isMany ? getModel().getGlossary().getSingular(av.getName()) : av.getName();
+    String pluralName = isMany ? av.getName() : getModel().getGlossary().getPlural(av.getName());
 
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -759,21 +759,21 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       AssociationVariable assVar = (AssociationVariable)av;
       if ("callerArgumentsExcept".equals(keyName))
       {
-        UmpleClass classToRemove = model.getUmpleClass(getType(assVar.getRelatedAssociation()));
+        UmpleClass classToRemove = getModel().getUmpleClass(getType(assVar.getRelatedAssociation()));
         GeneratedClass generatedClassToRemove = classToRemove.getGeneratedClass();
         String   callerNameToRemove = translate("parameterOne",assVar);
         return StringFormatter.replaceParameter(generatedClassToRemove.getLookup("constructorSignature_caller"), callerNameToRemove, "this");
       }
       else if ("methodArgumentsExcept".equals(keyName))
       {
-        UmpleClass classToRemove = model.getUmpleClass(getType(assVar.getRelatedAssociation()));
+        UmpleClass classToRemove = getModel().getUmpleClass(getType(assVar.getRelatedAssociation()));
         GeneratedClass generatedClassToRemove = classToRemove.getGeneratedClass();
         String parameterNameToRemove = StringFormatter.format("{0} {1}", translate("type",assVar), translate("parameterOne",assVar));
         return StringFormatter.replaceParameter(generatedClassToRemove.getLookup("constructorSignature"), parameterNameToRemove, ""); 
       }
       else if ("callerArgumentsForMandatory".equals(keyName))
       {
-        UmpleClass classToLookup = model.getUmpleClass(getType(av));
+        UmpleClass classToLookup = getModel().getUmpleClass(getType(av));
         String lookup = "constructorSignature_mandatory_" + assVar.getRelatedAssociation().getName();
         String parameters = classToLookup.getGeneratedClass().getLookup(lookup);
         return parameters;
@@ -800,13 +800,13 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   @umplesourcefile(line={673},file={"Generator_CodeCpp.ump"},javaline={801},length={17})
   public void prepare()
   {
-    List<UmpleClass> allClasses = new ArrayList<UmpleClass>(model.getUmpleClasses());
+    List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
     for (UmpleClass aClass : allClasses)
     {
       prepare(aClass);
     }
     
-    for (UmpleClass aClass : model.getUmpleClasses())
+    for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
       generateSecondaryConstructorSignatures(genClass);
@@ -850,12 +850,12 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     }
     else if (hasMultiple)
     {
-      //String pluralName = model.getGlossary().getPlural(name);
+      //String pluralName = getModel().getGlossary().getPlural(name);
       return "all" + StringFormatter.toPascalCase(name);
     }
     else
     {
-      //String singularName = model.getGlossary().getSingular(name);
+      //String singularName = getModel().getGlossary().getSingular(name);
       return "a" + StringFormatter.toPascalCase(name);
     }
   }
@@ -880,14 +880,14 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     }
     else if (aClass.isRoot())
     {
-      GeneratedClass genClass = aClass.createGeneratedClass(model);
+      GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       generateConstructorSignature(genClass);
     }
     else
     {
-      UmpleClass parent = model.getUmpleClass(aClass.getExtendsClass().getName());
+      UmpleClass parent = getModel().getUmpleClass(aClass.getExtendsClass().getName());
       prepare(parent);
-      GeneratedClass genClass = aClass.createGeneratedClass(model);
+      GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       genClass.setParentClass(parent.getGeneratedClass());
       generateConstructorSignature(genClass);
     }
@@ -998,8 +998,8 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     lookups.put("lttngTemplate","tracepoint({0}_tracepoint,\"message\",{0});");
     lookups.put("dependPackage","1");
     lookups.put("extraCode",executeMethods);
-    //GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
-    GeneratorHelper.prepareAllTracers(this,model,aClass,lookups);
+    //GeneratorHelper.prepareAllStringTracers(this,getModel(),aClass,lookups);
+    GeneratorHelper.prepareAllTracers(this,getModel(),aClass,lookups);
 
     //Add  entry / exit methods to start and stop the timed events in Java
     boolean hasTimedEvents = false;
@@ -1157,7 +1157,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
       AssociationVariable relatedAv = av.getRelatedAssociation();
       if (av.isOnlyOne() && relatedAv.isOnlyOne() && av.getIsNavigable() && relatedAv.getIsNavigable())
       {
-        UmpleClass relatedClass = model.getUmpleClass(av.getType());
+        UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
         GeneratedClass relatedGen = relatedClass.getGeneratedClass();
         
         String selfParameter = StringFormatter.format("const {0}& {1}",typeOf(relatedAv),nameOf(relatedAv));
@@ -1187,7 +1187,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   @umplesourcefile(line={1051},file={"Generator_CodeCpp.ump"},javaline={1188},length={35})
   private void addRelatedImports()
   {
-    for (UmpleClass aClass : model.getUmpleClasses())
+    for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
       
@@ -1210,7 +1210,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
         AssociationVariable relatedAssociation = av.getRelatedAssociation();
         if (relatedAssociation.isOnlyOne())
         { 
-          UmpleClass relatedClass = model.getUmpleClass(av.getType());
+          UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
           while (relatedClass != null)
           {
             addAttributeImports(relatedClass,genClass);
@@ -1419,7 +1419,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
 		BufferedWriter lttngBw = new BufferedWriter(new FileWriter(lttngFileName));
 		String lttngContent = tp_code.toString();
 		//System.out.println(tp_code);
-		model.getGeneratedCode().put(name +"_tp",lttngContent);
+		getModel().getGeneratedCode().put(name +"_tp",lttngContent);
 		try {
 			lttngBw.write(lttngContent);
 			lttngBw.flush();
@@ -1436,7 +1436,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     ILang headerlanguage = getLanguageFor(aClass);
 
     String path = StringFormatter.addPathOrAbsolute( 
-    						  model.getUmpleFile().getPath(), 
+    						  getModel().getUmpleFile().getPath(), 
         	                  getOutput()) + 
         	                  aClass.getPackageName().replace(".", File.separator);
    File file = new File(path);
@@ -1444,16 +1444,16 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
   
     String filename = (aClass instanceof UmpleClass) ? (path + File.separator + aClass.getName() + ".cpp"):(path + File.separator + aClass.getName() + ".h");
     BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-    String contents = language.getCode(model, aClass);
-    model.getGeneratedCode().put(aClass.getName(),contents);
+    String contents = language.getCode(getModel(), aClass);
+    getModel().getGeneratedCode().put(aClass.getName(),contents);
   
     
     
     //creating a header file for each class created. #header
     String hfilename = path + File.separator + aClass.getName() + ".h";
     BufferedWriter hbw = new BufferedWriter(new FileWriter(hfilename));
-    String headerContent = headerlanguage.getCode(model, aClass);
-    model.getGeneratedCode().put(aClass.getName()+"_header",headerContent);
+    String headerContent = headerlanguage.getCode(getModel(), aClass);
+    getModel().getGeneratedCode().put(aClass.getName()+"_header",headerContent);
     
     //creating and writing tracepoint files for LTTng #lttng
     if (aClass instanceof UmpleClass)
@@ -1462,10 +1462,10 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     	
       	if( callLttng = true)
 		{
-      	if (model.getTraceType().equals("Lttng") && uClass.hasTraceDirectives() && callHeader == false)
+      	if (getModel().getTraceType().equals("Lttng") && uClass.hasTraceDirectives() && callHeader == false)
     	{     		 
       		//ILang lttngLang = new CppLttngGenerator();
-    		//lttngLang.getCode(model, aClass);    	
+    		//lttngLang.getCode(getModel(), aClass);    	
     	   	//ILang lttngLang = new CppLttngGenerator();    			
     		
 	    	for (TraceDirective td : uClass.getTraceDirectives())
@@ -1492,7 +1492,7 @@ public class CppGenerator implements CodeGenerator,CodeTranslator
     	
     	}
    }
-    /*if (aClass instanceof UmpleInterface && model.getTraceType().equals("Lttng"))
+    /*if (aClass instanceof UmpleInterface && getModel().getTraceType().equals("Lttng"))
     {
 	   //Edit Later to support tracing for interface	   
     }*/

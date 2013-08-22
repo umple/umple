@@ -43,7 +43,6 @@ public class MethodBody
     return wasSet;
   }
 
-  @umplesourcefile(line={152},file={"Umple.ump"},javaline={50},length={2})
   public String getExtraCode()
   {
     return codeblock.getCode() != null ? codeblock.getCode() : "";
@@ -69,22 +68,21 @@ public class MethodBody
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-    @umplesourcefile(line={0},file={""},javaline={73},length={3})
- public MethodBody(String aValue)  {
+   public MethodBody(String aValue)  {
 this(new CodeBlock(aValue!=null ? aValue : ""));
   }
-//  @umplesourcefile(line={476},file={"Umple_Code.ump"},javaline={77},length={13})
-  @umplesourcefile(line={477},file={"Umple_Code.ump"},javaline={78},length={4})
+//  @umplesourcefile(line={476},file={"Umple_Code.ump"},javaline={75},length={13})
+  @umplesourcefile(line={477},file={"Umple_Code.ump"},javaline={76},length={4})
   public String getExtraCode(String lang)
   {
   return codeblock.getCode(lang);
   }
-  @umplesourcefile(line={481},file={"Umple_Code.ump"},javaline={83},length={4})
+  @umplesourcefile(line={481},file={"Umple_Code.ump"},javaline={81},length={4})
   public void setExtraCode(String code)
   {
     codeblock.setCode(code);
   }
-  @umplesourcefile(line={485},file={"Umple_Code.ump"},javaline={88},length={4})
+  @umplesourcefile(line={485},file={"Umple_Code.ump"},javaline={86},length={4})
   public void setExtraCode(String lang, String code)
   {
     codeblock.setCode(lang,code);
