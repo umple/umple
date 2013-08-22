@@ -181,13 +181,13 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   @umplesourcefile(line={106},file={"Generator_CodeRuby.ump"},javaline={182},length={18})
   public void prepare()
   {
-    List<UmpleClass> allClasses = new ArrayList<UmpleClass>(model.getUmpleClasses());
+    List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
     for (UmpleClass aClass : allClasses)
     {
       prepare(aClass);
     }
     
-    for (UmpleClass aClass : model.getUmpleClasses())
+    for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
       generateSecondaryConstructorSignatures(genClass);
@@ -438,8 +438,8 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
       return translate(realKeyName,av,isMany);
     }
   
-    String singularName = isMany ? model.getGlossary().getSingular(av.getName()) : av.getName();
-    String pluralName = isMany ? av.getName() : model.getGlossary().getPlural(av.getName());
+    String singularName = isMany ? getModel().getGlossary().getSingular(av.getName()) : av.getName();
+    String pluralName = isMany ? av.getName() : getModel().getGlossary().getPlural(av.getName());
 
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -492,14 +492,14 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
       AssociationVariable assVar = (AssociationVariable)av;
       if ("callerArgumentsExcept".equals(keyName))
       {
-        UmpleClass classToRemove = model.getUmpleClass(getType(assVar.getRelatedAssociation()));
+        UmpleClass classToRemove = getModel().getUmpleClass(getType(assVar.getRelatedAssociation()));
         GeneratedClass generatedClassToRemove = classToRemove.getGeneratedClass();
         String   callerNameToRemove = StringFormatter.format("{0}",translate("parameterOne",assVar));
         return StringFormatter.replaceParameter(generatedClassToRemove.getLookup("constructorSignature_caller"), callerNameToRemove, "self");
       }
       else if ("methodArgumentsExcept".equals(keyName))
       {
-        UmpleClass classToRemove = model.getUmpleClass(getType(assVar.getRelatedAssociation()));
+        UmpleClass classToRemove = getModel().getUmpleClass(getType(assVar.getRelatedAssociation()));
         GeneratedClass generatedClassToRemove = classToRemove.getGeneratedClass();
         String parameterNameToRemove = StringFormatter.format("{0}", translate("parameterOne",assVar));
         return StringFormatter.replaceParameter(generatedClassToRemove.getLookup("constructorSignature"), parameterNameToRemove, ""); 
@@ -511,7 +511,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
       }
       else if ("callerArgumentsForMandatory".equals(keyName))
       {
-        UmpleClass classToLookup = model.getUmpleClass(getType(av));
+        UmpleClass classToLookup = getModel().getUmpleClass(getType(av));
         String lookup = "constructorSignature_mandatory_" + assVar.getRelatedAssociation().getName();
         String parameters = classToLookup.getGeneratedClass().getLookup(lookup);
         return parameters;
@@ -533,7 +533,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   public String translate(String keyName, State state)
   {
     String singularName = state.getName();
-    String pluralName = model.getGlossary().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
     String stateMachinePlusState = StringFormatter.format("{0}{1}",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(singularName));
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
@@ -572,7 +572,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   public String translate(String keyName, StateMachine sm)
   {
     String singularName = sm.getFullName();
-    String pluralName = model.getGlossary().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -597,7 +597,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   public String translate(String keyName, Event event)
   {
     String singularName = event.getName();
-    String pluralName = model.getGlossary().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
 
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -623,7 +623,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   public void generate()
   {
     prepare();
-    for (UmpleElement currentElement : model.getUmpleElements())
+    for (UmpleElement currentElement : getModel().getUmpleElements())
     {
       if ("external".equals(currentElement.getModifier()))
       {
@@ -631,7 +631,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
       }
       writeFile(currentElement);
     }
-    GeneratorHelper.postpare(model);
+    GeneratorHelper.postpare(getModel());
   }
 
   @umplesourcefile(line={543},file={"Generator_CodeRuby.ump"},javaline={638},length={17})
@@ -643,12 +643,12 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     }
     else if (hasMultiple)
     {
-      //String pluralName = model.getGlossary().getPlural(name);
+      //String pluralName = getModel().getGlossary().getPlural(name);
       return "all_" + name;
     }
     else
     {
-      //String singularName = model.getGlossary().getSingular(name);
+      //String singularName = getModel().getGlossary().getSingular(name);
       return "a_" + name;
     }
   }
@@ -686,7 +686,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
       ILang language = getLanguageFor(aElement);
       
       String path = StringFormatter.addPathOrAbsolute( 
-    						  model.getUmpleFile().getPath(), 
+    						  getModel().getUmpleFile().getPath(), 
         	                  getOutput());
       
       File file = new File(path);
@@ -695,8 +695,8 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
       String rubyName = StringFormatter.toUnderscore(aElement.getName()) + ".rb";
       String filename = path + File.separator + rubyName;
       BufferedWriter bw = new BufferedWriter(new FileWriter(filename));
-      String contents = language.getCode(model, aElement);
-      model.getGeneratedCode().put(aElement.getName(),contents);
+      String contents = language.getCode(getModel(), aElement);
+      getModel().getGeneratedCode().put(aElement.getName(),contents);
       bw.write(contents);
       bw.flush();
       bw.close();
@@ -733,14 +733,14 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     }
     else if (aClass.isRoot())
     {
-      GeneratedClass genClass = aClass.createGeneratedClass(model);
+      GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       generateConstructorSignature(genClass);
     }
     else
     {
-      UmpleClass parent = model.getUmpleClass(aClass.getExtendsClass().getName());
+      UmpleClass parent = getModel().getUmpleClass(aClass.getExtendsClass().getName());
       prepare(parent);
-      GeneratedClass genClass = aClass.createGeneratedClass(model);
+      GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       genClass.setParentClass(parent.getGeneratedClass());
       generateConstructorSignature(genClass);
     }
@@ -891,7 +891,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
     lookups.put("consoleTemplate","puts \"{0}=#{{1}}\"");
     lookups.put("stringTemplate","StringTracer::execute(\"{0}=#{{1}}\")");
     lookups.put("executeMethods",executeMethods);
-    //GeneratorHelper.prepareAllStringTracers(this,model,aClass,lookups);
+    //GeneratorHelper.prepareAllStringTracers(this,getModel(),aClass,lookups);
 
   }
   
@@ -988,7 +988,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
       AssociationVariable relatedAv = av.getRelatedAssociation();
       if (av.isOnlyOne() && relatedAv.isOnlyOne() && av.getIsNavigable() && relatedAv.getIsNavigable())
       {
-        UmpleClass relatedClass = model.getUmpleClass(av.getType());
+        UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
         GeneratedClass relatedGen = relatedClass.getGeneratedClass();
         
         String selfParameter = StringFormatter.format("{0}",nameOf(relatedAv));
@@ -1059,7 +1059,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
   @umplesourcefile(line={952},file={"Generator_CodeRuby.ump"},javaline={1060},length={34})
   private void addRelatedImports()
   {
-    for (UmpleClass aClass : model.getUmpleClasses())
+    for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
       
@@ -1082,7 +1082,7 @@ public class RubyGenerator implements CodeGenerator,CodeTranslator
         AssociationVariable relatedAssociation = av.getRelatedAssociation();
         if (relatedAssociation.isOnlyOne())
         { 
-          UmpleClass relatedClass = model.getUmpleClass(av.getType());
+          UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
           while (relatedClass != null)
           {
             relatedClass = relatedClass.getExtendsClass();

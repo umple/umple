@@ -169,8 +169,7 @@ public class AssociationClass extends UmpleClass
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-    @umplesourcefile(line={0},file={""},javaline={173},length={3})
- public AssociationClass(String name)  {
+   public AssociationClass(String name)  {
 super(name);
   }
 

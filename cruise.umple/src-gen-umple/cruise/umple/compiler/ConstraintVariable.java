@@ -101,19 +101,16 @@ public class ConstraintVariable
     return constrainedVariable;
   }
 
-  @umplesourcefile(line={226, 226},file={"Umple.ump", "Umple.ump"},javaline={103, 108},length={2, 2})
   public String getValue()
   {
     return constrainedVariable;
   }
 
-  @umplesourcefile(line={228},file={"Umple.ump"},javaline={113},length={2})
   public boolean getIsAttribute()
   {
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
   }
 
-  @umplesourcefile(line={229},file={"Umple.ump"},javaline={118},length={2})
   public boolean getIsOperator()
   {
     return "OPERATOR".equals(type);
@@ -134,7 +131,6 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
-  @umplesourcefile(line={233},file={"Umple.ump"},javaline={140},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
@@ -184,7 +180,7 @@ public class ConstraintVariable
   public void delete()
   {}
 
-  @umplesourcefile(line={237},file={"Umple.ump"},javaline={188},length={13})
+  @umplesourcefile(line={237},file={"Umple.ump"},javaline={184},length={13})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;

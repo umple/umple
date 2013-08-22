@@ -175,18 +175,17 @@ public class CodeInjection
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-    @umplesourcefile(line={0},file={""},javaline={179},length={4})
- public CodeInjection(String a,String b,String c,UmpleClass d)  {
+   public CodeInjection(String a,String b,String c,UmpleClass d)  {
 this(a,b, d);
     setCode(c);
   }
-//  @umplesourcefile(line={549},file={"Umple_Code.ump"},javaline={184},length={48})
-  @umplesourcefile(line={550},file={"Umple_Code.ump"},javaline={185},length={4})
+//  @umplesourcefile(line={549},file={"Umple_Code.ump"},javaline={183},length={48})
+  @umplesourcefile(line={550},file={"Umple_Code.ump"},javaline={184},length={4})
   public void setCode(String str)
   {
     snippet.setCode(str);
   }
-  @umplesourcefile(line={554},file={"Umple_Code.ump"},javaline={190},length={35})
+  @umplesourcefile(line={554},file={"Umple_Code.ump"},javaline={189},length={35})
   public String getCode()
   {
   	if(constraint == null)
@@ -222,12 +221,12 @@ this(a,b, d);
   	  return snippet.getCode();
   	}
   }  
-  @umplesourcefile(line={589},file={"Umple_Code.ump"},javaline={226},length={4})
+  @umplesourcefile(line={589},file={"Umple_Code.ump"},javaline={225},length={4})
   public void setCode(String lang, String code)
   {
     snippet.setCode(lang, code);
   }
-  @umplesourcefile(line={593},file={"Umple_Code.ump"},javaline={231},length={4})
+  @umplesourcefile(line={593},file={"Umple_Code.ump"},javaline={230},length={4})
   public String getCode(String lang)
   {
     return snippet.getCode(lang);

@@ -44,18 +44,16 @@ public class CodeBlock
   //  @umplesourcefile(line={276},file={"Umple.ump"},javaline={45},length={44})
   public static String languageUsed = "";
   Hashtable<String,String> code;
-  @umplesourcefile(line={279},file={"Umple.ump"},javaline={48},length={4})
  public CodeBlock(String add)  {
 this();
     code.put("",add);
   }
-  @umplesourcefile(line={283},file={"Umple.ump"},javaline={53},length={4})
  public CodeBlock(String lang,String add)  {
 this();
     code.put(lang,add);
   }
-//  @umplesourcefile(line={506},file={"Umple_Code.ump"},javaline={58},length={33})
-  @umplesourcefile(line={507},file={"Umple_Code.ump"},javaline={59},length={7})
+//  @umplesourcefile(line={506},file={"Umple_Code.ump"},javaline={56},length={33})
+  @umplesourcefile(line={507},file={"Umple_Code.ump"},javaline={57},length={7})
   public void setCode(String add)
   {
     if(add!=null)
@@ -63,7 +61,7 @@ this();
     else
       code.put("","");
   }
-  @umplesourcefile(line={514},file={"Umple_Code.ump"},javaline={67},length={7})
+  @umplesourcefile(line={514},file={"Umple_Code.ump"},javaline={65},length={7})
   public void setCode(String lang, String add)
   {
     if(add!=null)
@@ -71,17 +69,17 @@ this();
     else
       code.put(lang,"");
   }
-  @umplesourcefile(line={521},file={"Umple_Code.ump"},javaline={75},length={4})
+  @umplesourcefile(line={521},file={"Umple_Code.ump"},javaline={73},length={4})
   public String getCode()
   {
     return !code.containsKey(languageUsed) ? "".equals(languageUsed) ? null : code.get("") : code.get(languageUsed);
   }
-  @umplesourcefile(line={525},file={"Umple_Code.ump"},javaline={80},length={4})
+  @umplesourcefile(line={525},file={"Umple_Code.ump"},javaline={78},length={4})
   public String getCode(String lang)
   {
     return code.containsKey(lang)? code.get(lang) : code.get("");
   }
-  @umplesourcefile(line={529},file={"Umple_Code.ump"},javaline={85},length={10})
+  @umplesourcefile(line={529},file={"Umple_Code.ump"},javaline={83},length={10})
   public String toString()
   {
     Enumeration<String> enumer = code.elements();
