@@ -10,10 +10,10 @@ import cruise.umple.cpp.generator.UmpleCppPoliciesProcessor;
 import cruise.umple.cpp.core.ContentsDescriptor;
 
 /**
- * @umplesource Generator.ump 212
+ * @umplesource Generator.ump 217
  * @umplesource Generator_CodeRTCpp.ump 12
  */
-// line 212 "../../../../src/Generator.ump"
+// line 217 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeRTCpp.ump"
 public class RTCppGenerator implements CodeGenerator
 {

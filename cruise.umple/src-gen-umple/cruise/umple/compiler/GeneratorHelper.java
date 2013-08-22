@@ -6,13 +6,13 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource Generator.ump 37
+ * @umplesource Generator.ump 47
  * @umplesource GeneratorHelper_Code.ump 20
  * @umplesource GeneratorHelper_CodeClass.ump 16
  * @umplesource GeneratorHelper_CodeStateMachine.ump 16
  * @umplesource GeneratorHelper_CodeTrace.ump 16
  */
-// line 37 "../../../../src/Generator.ump"
+// line 47 "../../../../src/Generator.ump"
 // line 20 "../../../../src/GeneratorHelper_Code.ump"
 // line 16 "../../../../src/GeneratorHelper_CodeClass.ump"
 // line 16 "../../../../src/GeneratorHelper_CodeStateMachine.ump"

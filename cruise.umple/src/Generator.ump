@@ -34,6 +34,16 @@ interface CodeTranslator
   //String translate(String id, AssociationVariable associationVariable);
 }
 
+class SuperCodeGenerator {
+	//The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
+	isA CodeGenerator;
+	UmpleModel model = null;
+	String output = "";
+	//This method is because of issue number 373;
+	public void generate() {
+	
+	}
+}
 class GeneratorHelper
 {
 
@@ -194,7 +204,7 @@ class JsonGenerator
 
 class JavaGenerator
 {
-  isA CodeGenerator;
+  isA SuperCodeGenerator;
   isA CodeTranslator;
   depend java.util.*;
   depend java.io.*;
@@ -202,11 +212,6 @@ class JavaGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.java.*;  
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
 }
 
 class RTCppGenerator
@@ -228,7 +233,7 @@ class RTCppGenerator
 
 class CppGenerator
 {
-  isA CodeGenerator;
+  isA SuperCodeGenerator;
   isA CodeTranslator;
   depend java.util.*;
   depend java.io.*;
@@ -236,17 +241,12 @@ class CppGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.cpp.*;  
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
 }
 
 
 class PhpGenerator
 {
-  isA CodeGenerator;
+  isA SuperCodeGenerator;
   isA CodeTranslator;
   depend java.util.*;
   depend java.io.*;
@@ -254,11 +254,6 @@ class PhpGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.php.*;  
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
 }
 
 class Uigu2Generator
@@ -273,7 +268,7 @@ class Uigu2Generator
 
 class RubyGenerator
 {
-  isA CodeGenerator;
+  isA SuperCodeGenerator;
   isA CodeTranslator;
   depend java.util.*;
   depend java.io.*;
@@ -281,16 +276,11 @@ class RubyGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.ruby.*;  
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
 }
 
 class SqlGenerator
 {
-  isA CodeGenerator;
+  isA SuperCodeGenerator;
   isA CodeTranslator;
   depend java.util.*;
   depend java.io.*;
@@ -298,11 +288,6 @@ class SqlGenerator
 
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.sql.*;  
-
-  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
-  // off of what's contained in here.
-  UmpleModel model = null;
-  String output = "";
 }
 
 class SDLGenerator

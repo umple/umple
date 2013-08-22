@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 70
+ * @umplesource Generator.ump 80
  * @umplesource Generator_CodeXmi.ump 12
  */
-// line 70 "../../../../src/Generator.ump"
+// line 80 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeXmi.ump"
 public class XmiGenerator implements CodeGenerator
 {

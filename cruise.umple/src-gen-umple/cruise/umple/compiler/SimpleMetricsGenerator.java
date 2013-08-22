@@ -13,10 +13,10 @@ import cruise.umple.compiler.exceptions.*;
  * import java.io.IOException;
  * import java.util.HashMap;
  * import java.util.Map;
- * @umplesource Generator.ump 112
+ * @umplesource Generator.ump 122
  * @umplesource Generator_CodeSimpleMetrics.ump 20
  */
-// line 112 "../../../../src/Generator.ump"
+// line 122 "../../../../src/Generator.ump"
 // line 20 "../../../../src/Generator_CodeSimpleMetrics.ump"
 public class SimpleMetricsGenerator implements CodeGenerator
 {
