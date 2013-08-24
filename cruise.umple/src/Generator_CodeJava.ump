@@ -17,7 +17,6 @@ class JavaGenerator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
-  private static Map<String,String> TraceLookupMap;
   private static Map<String,String> ConstraintOperatorMap;
   private static List<String> OneOrManyLookup;
   
@@ -96,19 +95,7 @@ class JavaGenerator
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
-    
-    TraceLookupMap = new HashMap<String,String>();
-    TraceLookupMap.put("concatinator","+");
-    TraceLookupMap.put("accessor","");
-    TraceLookupMap.put("indent","    ");
-    TraceLookupMap.put("template","{0}Tracer.handle( {1} );");
-    TraceLookupMap.put("timestamp","System.currentTimeMillis()");
-    TraceLookupMap.put("identifier","System.identityHashCode({0})");
-    TraceLookupMap.put("thread","Thread.currentThread().getId()");
-    TraceLookupMap.put("self","this");
-    TraceLookupMap.put("increment","{0}++;");
-    TraceLookupMap.put("formatnonprimitive",".toString().replace(\"\\n\",\"\").replace(\",\",\";\")");
-    
+        
     ConstraintOperatorMap = new HashMap<String,String>();
     ConstraintOperatorMap.put("==false",".equals({0})");
 
@@ -442,16 +429,6 @@ class JavaGenerator
       return "false";
     }       
     return "null";
-  }
-  
-  public String translate(String keyName, TraceItem ti)
-  {
-  	if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
-    	return TraceLookupMap.get(keyName.substring(5).toLowerCase());
-    }
-    else {
-    	return "INVALID KEYNAME IN TRANSLATE";
-    }
   }
   
   public String translate(String keyName, UmpleClass aClass)
@@ -1340,7 +1317,17 @@ class JavaGenerator
 		UmpleToPrimitiveMap.put("Boolean","boolean");
 		UmpleToPrimitiveMap.put("Double","double");
 		UmpleToPrimitiveMap.put("Float","float");
-		UmpleToPrimitiveMap.put("String","String");	
-		
+		UmpleToPrimitiveMap.put("String","String");
+		//
+		TraceLookupMap.put("concatinator","+");
+	    TraceLookupMap.put("accessor","");
+	    TraceLookupMap.put("indent","    ");
+	    TraceLookupMap.put("template","{0}Tracer.handle( {1} );");
+	    TraceLookupMap.put("timestamp","System.currentTimeMillis()");
+	    TraceLookupMap.put("identifier","System.identityHashCode({0})");
+	    TraceLookupMap.put("thread","Thread.currentThread().getId()");
+	    TraceLookupMap.put("self","this");
+	    TraceLookupMap.put("increment","{0}++;");
+	    TraceLookupMap.put("formatnonprimitive",".toString().replace(\"\\n\",\"\").replace(\",\",\";\")");		
 	}
 }

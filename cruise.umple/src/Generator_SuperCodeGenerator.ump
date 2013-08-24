@@ -1,10 +1,12 @@
 class SuperCodeGenerator {
 	after constructor {
 	UmpleToPrimitiveMap = new HashMap<String, String>();
+	TraceLookupMap = new HashMap<String,String>();
 	initializeLangaugeBasedVariables();
 	}
 	
 	Map <String,String> UmpleToPrimitiveMap;
+	Map <String,String> TraceLookupMap;
 	
 	//This method is because of issue number 373;
 	public void generate() {
@@ -27,5 +29,15 @@ class SuperCodeGenerator {
     	{
       		return myType;
    		 }
+  	}
+  	
+	public String translate(String keyName, TraceItem ti)
+	{
+		if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
+			return TraceLookupMap.get(keyName.substring(5).toLowerCase());
+    	}
+    	else {
+    		return "INVALID KEYNAME IN TRANSLATE";
+    	}
   	}
 }
