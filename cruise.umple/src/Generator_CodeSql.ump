@@ -16,7 +16,6 @@ class SqlGenerator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
-  private static Map<String,String> UmpleToSqlPrimitiveMap;
   private static List<String> OneOrManyLookup;
   private static List<String> SqlPrimitives;
   private static String beforeCode;
@@ -40,15 +39,6 @@ class SqlGenerator
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
-    
-    UmpleToSqlPrimitiveMap = new HashMap<String, String>();
-    UmpleToSqlPrimitiveMap.put("Integer","INT");
-    UmpleToSqlPrimitiveMap.put("Float","FLOAT");
-    UmpleToSqlPrimitiveMap.put("Double","DOUBLE");
-    UmpleToSqlPrimitiveMap.put("String","VARCHAR(255)");
-    UmpleToSqlPrimitiveMap.put("Boolean","BIT");
-    UmpleToSqlPrimitiveMap.put("Date","DATE");
-    UmpleToSqlPrimitiveMap.put("Time","TIME");
     
     SqlPrimitives = new ArrayList<String>();
     //MySQL types
@@ -277,9 +267,9 @@ class SqlGenerator
     {
       return "BLOB";
     }
-    else if (UmpleToSqlPrimitiveMap.containsKey(myType)) //Type is an Umple Primitive.
+    else if (UmpleToPrimitiveMap.containsKey(myType)) //Type is an Umple Primitive.
     {
-      return UmpleToSqlPrimitiveMap.get(myType);
+      return UmpleToPrimitiveMap.get(myType);
     }
     //Check if type is an Sql primitive
     for (String primitiveType : SqlPrimitives)
@@ -1086,5 +1076,13 @@ class SqlGenerator
     }
   }
 
-  
+	public void initializeLangaugeBasedVariables() {
+	    UmpleToPrimitiveMap.put("Integer","INT");
+	    UmpleToPrimitiveMap.put("Float","FLOAT");
+	    UmpleToPrimitiveMap.put("Double","DOUBLE");
+	    UmpleToPrimitiveMap.put("String","VARCHAR(255)");
+	    UmpleToPrimitiveMap.put("Boolean","BIT");
+	    UmpleToPrimitiveMap.put("Date","DATE");
+	    UmpleToPrimitiveMap.put("Time","TIME");
+	} 
 }
