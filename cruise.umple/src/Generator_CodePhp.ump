@@ -16,7 +16,6 @@ class PhpGenerator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
-  private static Map<String,String> TraceLookupMap;
   private static List<String> OneOrManyLookup;
   static
   {
@@ -92,17 +91,6 @@ class PhpGenerator
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
-    
-    TraceLookupMap = new HashMap<String,String>();
-    TraceLookupMap.put("concatinator",".");
-    TraceLookupMap.put("accessor","$this->");
-    TraceLookupMap.put("indent","    ");
-    TraceLookupMap.put("template","{0}Tracer::handle( {1} );");
-    TraceLookupMap.put("timestamp","gettimeofday(true)");
-    TraceLookupMap.put("identifier","spl_object_hash( {0} )");
-    TraceLookupMap.put("thread","uniqid()");
-    TraceLookupMap.put("self","$this");
-    TraceLookupMap.put("increment","{0}++;");
     
   }
 
@@ -216,16 +204,6 @@ class PhpGenerator
   		return StringFormatter.format("  if({0})\n    {\n    {1}\n",expression, "{0}");
   	}
   	return StringFormatter.format("  if({0})\n    {\n    {1}\n    }",expression, "{0}");
-  }
-  
-  public String translate(String keyName, TraceItem ti)
-  {
-  	if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
-    	return TraceLookupMap.get(keyName.substring(5).toLowerCase());
-    }
-    else {
-    	return "INVALID KEYNAME IN TRANSLATE";
-    }
   }
   
   public String relatedTranslate(String name, AssociationVariable av)
@@ -1050,5 +1028,15 @@ class PhpGenerator
 
 	public void initializeLangaugeBasedVariables() {
 		UmpleToPrimitiveMap.put("String","String");
+		//
+		TraceLookupMap.put("concatinator",".");
+    	TraceLookupMap.put("accessor","$this->");
+    	TraceLookupMap.put("indent","    ");
+    	TraceLookupMap.put("template","{0}Tracer::handle( {1} );");
+    	TraceLookupMap.put("timestamp","gettimeofday(true)");
+    	TraceLookupMap.put("identifier","spl_object_hash( {0} )");
+    	TraceLookupMap.put("thread","uniqid()");
+    	TraceLookupMap.put("self","$this");
+    	TraceLookupMap.put("increment","{0}++;");
 	} 
 }

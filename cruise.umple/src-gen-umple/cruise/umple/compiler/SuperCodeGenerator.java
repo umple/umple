@@ -27,13 +27,14 @@ public abstract class SuperCodeGenerator implements CodeGenerator
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={2},file={"Generator_SuperCodeGenerator.ump"},javaline={36},length={2})
+  @umplesourcefile(line={2},file={"Generator_SuperCodeGenerator.ump"},javaline={36},length={3})
   public SuperCodeGenerator()
   {
     model = null;
     output = "";
     // line 2 "../../../../src/Generator_SuperCodeGenerator.ump"
     UmpleToPrimitiveMap = new HashMap<String, String>();
+    	TraceLookupMap = new HashMap<String,String>();
     	initializeLangaugeBasedVariables();
   }
 
@@ -82,19 +83,20 @@ public abstract class SuperCodeGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={6},file={"Generator_SuperCodeGenerator.ump"},javaline={86},length={25})
+  //  @umplesourcefile(line={7},file={"Generator_SuperCodeGenerator.ump"},javaline={87},length={36})
   Map <String,String> UmpleToPrimitiveMap;
+	Map <String,String> TraceLookupMap;
 	
 	//This method is because of issue number 373;
-  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={90},length={3})
+  @umplesourcefile(line={12},file={"Generator_SuperCodeGenerator.ump"},javaline={92},length={3})
 	public void generate() {
 	
 	}
 	
-  @umplesourcefile(line={14},file={"Generator_SuperCodeGenerator.ump"},javaline={95},length={17})
+  @umplesourcefile(line={16},file={"Generator_SuperCodeGenerator.ump"},javaline={97},length={17})
 	public abstract void initializeLangaugeBasedVariables();
 	
-  @umplesourcefile(line={16},file={"Generator_SuperCodeGenerator.ump"},javaline={98},length={15})
+  @umplesourcefile(line={18},file={"Generator_SuperCodeGenerator.ump"},javaline={100},length={15})
  	public String getType(UmpleVariable av)	{
     	String myType = av.getType();
     	if (myType == null || myType.length() == 0)
@@ -109,6 +111,17 @@ public abstract class SuperCodeGenerator implements CodeGenerator
     	{
       		return myType;
    		 }
+  	}
+  	
+  @umplesourcefile(line={34},file={"Generator_SuperCodeGenerator.ump"},javaline={117},length={9})
+	public String translate(String keyName, TraceItem ti)
+	{
+		if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
+			return TraceLookupMap.get(keyName.substring(5).toLowerCase());
+    	}
+    	else {
+    		return "INVALID KEYNAME IN TRANSLATE";
+    	}
   	}
 
 }

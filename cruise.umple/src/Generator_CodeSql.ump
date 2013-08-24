@@ -430,8 +430,7 @@ class SqlGenerator
   {
   	return "";
   }
-  
-  
+   
   public String translate(String keyName, AssociationVariable av)
   {
     boolean isMany = av.isMany();
