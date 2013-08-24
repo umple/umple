@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 66
+ * @umplesource Generator.ump 64
  * @umplesource Generator_CodePapyrus.ump 12
  */
-// line 66 "../../../../src/Generator.ump"
+// line 64 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodePapyrus.ump"
 public class PapyrusGenerator implements CodeGenerator
 {

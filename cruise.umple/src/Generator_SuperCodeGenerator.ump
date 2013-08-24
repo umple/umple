@@ -1,0 +1,31 @@
+class SuperCodeGenerator {
+	after constructor {
+	UmpleToPrimitiveMap = new HashMap<String, String>();
+	initializeLangaugeBasedVariables();
+	}
+	
+	Map <String,String> UmpleToPrimitiveMap;
+	
+	//This method is because of issue number 373;
+	public void generate() {
+	
+	}
+	
+	public abstract void initializeLangaugeBasedVariables();
+	
+ 	public String getType(UmpleVariable av)	{
+    	String myType = av.getType();
+    	if (myType == null || myType.length() == 0)
+    	{
+      		return UmpleToPrimitiveMap.get("String");
+    	}
+    	else if (UmpleToPrimitiveMap.containsKey(myType))
+    	{
+      		return UmpleToPrimitiveMap.get(myType);
+    	}
+    	else
+    	{
+      		return myType;
+   		 }
+  	}
+}

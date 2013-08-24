@@ -122,19 +122,6 @@ class RubyGenerator
     addRelatedImports();
   }
   
-  public String getType(UmpleVariable av)
-  {
-    String myType = av.getType();
-    if (myType == null || myType.length() == 0)
-    {
-      return "String";
-    }
-    else
-    {
-      return myType;
-    }
-  }
-  
   public boolean isNullable(UmpleVariable av)
   {
     return true;
@@ -984,5 +971,7 @@ class RubyGenerator
     }
   }
 
-  
+	public void initializeLangaugeBasedVariables() {
+		UmpleToPrimitiveMap.put("String","String");
+	}  
 }

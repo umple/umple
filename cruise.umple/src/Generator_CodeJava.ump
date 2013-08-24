@@ -17,7 +17,6 @@ class JavaGenerator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
-  private static Map<String,String> UmpleToJavaPrimitiveMap;
   private static Map<String,String> TraceLookupMap;
   private static Map<String,String> ConstraintOperatorMap;
   private static List<String> OneOrManyLookup;
@@ -98,12 +97,6 @@ class JavaGenerator
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
     
-    UmpleToJavaPrimitiveMap = new HashMap<String, String>();
-    UmpleToJavaPrimitiveMap.put("Integer","int");
-    UmpleToJavaPrimitiveMap.put("Boolean","boolean");
-    UmpleToJavaPrimitiveMap.put("Double","double");
-    UmpleToJavaPrimitiveMap.put("Float","float");
-    
     TraceLookupMap = new HashMap<String,String>();
     TraceLookupMap.put("concatinator","+");
     TraceLookupMap.put("accessor","");
@@ -167,26 +160,9 @@ class JavaGenerator
     }
   }
   
-  public String getType(UmpleVariable av)
-  {
-    String myType = av.getType();
-    if (myType == null || myType.length() == 0)
-    {
-      return "String";
-    }
-    else if (UmpleToJavaPrimitiveMap.containsKey(myType))
-    {
-      return UmpleToJavaPrimitiveMap.get(myType);
-    }
-    else
-    {
-      return myType;
-    }
-  }
-  
   public boolean isNullable(UmpleVariable av)
   {
-    return !UmpleToJavaPrimitiveMap.containsKey(av.getType());
+    return !UmpleToPrimitiveMap.containsKey(av.getType());
   }
   
   public String relatedTranslate(String name, AssociationVariable av)
@@ -1358,4 +1334,13 @@ class JavaGenerator
       bw.close();
     }
   }
+
+	public void initializeLangaugeBasedVariables() {
+		UmpleToPrimitiveMap.put("Integer","int");
+		UmpleToPrimitiveMap.put("Boolean","boolean");
+		UmpleToPrimitiveMap.put("Double","double");
+		UmpleToPrimitiveMap.put("Float","float");
+		UmpleToPrimitiveMap.put("String","String");	
+		
+	}
 }

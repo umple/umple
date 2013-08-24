@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 52
+ * @umplesource Generator.ump 50
  * @umplesource Generator_CodeEcore.ump 12
  */
-// line 52 "../../../../src/Generator.ump"
+// line 50 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeEcore.ump"
 public class EcoreGenerator implements CodeGenerator
 {

@@ -35,14 +35,12 @@ interface CodeTranslator
 }
 
 class SuperCodeGenerator {
+	depend java.util.*;
+	abstract;
 	//The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
 	isA CodeGenerator;
 	UmpleModel model = null;
 	String output = "";
-	//This method is because of issue number 373;
-	public void generate() {
-	
-	}
 }
 class GeneratorHelper
 {
@@ -331,3 +329,4 @@ use Generator_CodeSimulate.ump;
 use Generator_CodeYuml.ump;
 use Generator_CodeXtext.ump;
 use Generator_CodeJson.ump;
+use Generator_SuperCodeGenerator.ump;

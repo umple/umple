@@ -6,10 +6,10 @@ import java.util.*;
 import cruise.umple.util.*;
 
 /**
- * @umplesource Generator.ump 164
+ * @umplesource Generator.ump 162
  * @umplesource Generator_CodeYuml.ump 12
  */
-// line 164 "../../../../src/Generator.ump"
+// line 162 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeYuml.ump"
 public class YumlGenerator implements CodeGenerator
 {
