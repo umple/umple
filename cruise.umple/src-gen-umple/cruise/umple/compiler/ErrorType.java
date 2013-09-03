@@ -9,10 +9,10 @@ import java.util.List;
  * Represents an error type, which contains an error code, the severity of the error, etc.
  * Error data is read from the en.error file
  * @umplesource Parser.ump 67
- * @umplesource Parser_Code.ump 1719
+ * @umplesource Parser_Code.ump 1775
  */
 // line 67 "../../../../src/Parser.ump"
-// line 1719 "../../../../src/Parser_Code.ump"
+// line 1775 "../../../../src/Parser_Code.ump"
 public class ErrorType
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -140,6 +140,11 @@ public class ErrorType
   public void delete()
   {}
 
+  @umplesourcefile(line={1780},file={"Parser_Code.ump"},javaline={144},length={3})
+   public String format(List<String> arguments){
+    return StringFormatter.format(errorFormat, arguments.toArray());
+  }
+
 
   public String toString()
   {
@@ -150,15 +155,5 @@ public class ErrorType
             "errorFormat" + ":" + getErrorFormat()+ "," +
             "errorUrl" + ":" + getErrorUrl()+ "]"
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1723},file={"Parser_Code.ump"},javaline={158},length={5})
-  @umplesourcefile(line={1724},file={"Parser_Code.ump"},javaline={159},length={4})
-  public String format(List<String> arguments)
-  {
-    return StringFormatter.format(errorFormat, arguments.toArray());
   }
-
 }

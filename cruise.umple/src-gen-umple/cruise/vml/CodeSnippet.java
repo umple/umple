@@ -101,14 +101,9 @@ public class CodeSnippet
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={113},file={"Vml_Code.ump"},javaline={109},length={12})
-  @umplesourcefile(line={114},file={"Vml_Code.ump"},javaline={110},length={11})
-  public String toString()
-  {
+
+  @umplesourcefile(line={114},file={"Vml_Code.ump"},javaline={106},length={10})
+   public String toString(){
     if (code == null)
     {
       return "";

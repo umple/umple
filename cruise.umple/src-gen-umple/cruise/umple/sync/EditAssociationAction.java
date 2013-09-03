@@ -37,14 +37,9 @@ public class EditAssociationAction extends SynchronizationAction
   {
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={838},file={"UmpleSync_Code.ump"},javaline={45},length={185})
-  @umplesourcefile(line={839},file={"UmpleSync_Code.ump"},javaline={46},length={172})
-  public void go()
-  {
+
+  @umplesourcefile(line={839},file={"UmpleSync_Code.ump"},javaline={42},length={171})
+   public void go(){
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
@@ -215,10 +210,9 @@ public class EditAssociationAction extends SynchronizationAction
       handleException(e);
     }
   }
-  
-  @umplesourcefile(line={1012},file={"UmpleSync_Code.ump"},javaline={220},length={11})
-  private boolean handleException(Exception e)
-  {
+
+  @umplesourcefile(line={1012},file={"UmpleSync_Code.ump"},javaline={215},length={10})
+   private boolean handleException(Exception e){
     String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
     
     for (StackTraceElement trace : e.getStackTrace())

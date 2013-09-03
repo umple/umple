@@ -45,39 +45,24 @@ public class Template
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={414},file={"Documenter_Code.ump"},javaline={59},length={126})
-  @umplesourcefile(line={415},file={"Documenter_Code.ump"},javaline={60},length={5})
-  private static String navigationHeaderTemplate()
-  {
+  @umplesourcefile(line={415},file={"Documenter_Code.ump"},javaline={49},length={4})
+   private static  String navigationHeaderTemplate(){
     return "        <div class=\"level1\"><a href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
            "        <div id=\"@@NAVIGATION_HEADER_ID@@\">";
   }
-  
-  @umplesourcefile(line={421},file={"Documenter_Code.ump"},javaline={67},length={4})
-  private static String navigationItemTemplate()
-  {
+
+  @umplesourcefile(line={421},file={"Documenter_Code.ump"},javaline={55},length={3})
+   private static  String navigationItemTemplate(){
     return "          <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
   }
- 
-  @umplesourcefile(line={426},file={"Documenter_Code.ump"},javaline={73},length={4})
-  private static String navigationItemTemplateNoAnchor()
-  {
+
+  @umplesourcefile(line={426},file={"Documenter_Code.ump"},javaline={60},length={3})
+   private static  String navigationItemTemplateNoAnchor(){
     return "          <div class=\"level2\"><b>@@NAVIGATION_ITEM_NAME@@</b></div>" + "\n";
   }
-    
-  @umplesourcefile(line={431},file={"Documenter_Code.ump"},javaline={79},length={13})
-  private static String exampleTemplate()
-  {
+
+  @umplesourcefile(line={431},file={"Documenter_Code.ump"},javaline={65},length={12})
+   private static  String exampleTemplate(){
     String template = "" + 
       "      <h3>@@EXAMPLE_NUMBER@@</h3>" + "\n" +
       "      <pre name=\"code\" class=\"c-sharp\">" + "\n" +
@@ -89,10 +74,9 @@ public class Template
       "&nbsp; <br/>" + "\n";
     return template;
   }
-  
-  @umplesourcefile(line={445},file={"Documenter_Code.ump"},javaline={94},length={10})
-  private static String syntaxTemplate()
-  {
+
+  @umplesourcefile(line={445},file={"Documenter_Code.ump"},javaline={79},length={9})
+   private static  String syntaxTemplate(){
     String template = "" + 
       "      <h3>Syntax</h3>" + "\n" +
       "      \n" +
@@ -102,9 +86,8 @@ public class Template
     return template;
   }
 
-  @umplesourcefile(line={456},file={"Documenter_Code.ump"},javaline={106},length={84})
-  private static String htmlTemplate()
-  {
+  @umplesourcefile(line={456},file={"Documenter_Code.ump"},javaline={90},length={83})
+   private static  String htmlTemplate(){
     String template = "" + 
         "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
         "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
@@ -185,7 +168,14 @@ public class Template
         "</script>" + "\n" +
         "</body>" + "\n" +
         "</html>";
-    return template; 
+    return template;
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]"
+     + outputString;
+  }
 }

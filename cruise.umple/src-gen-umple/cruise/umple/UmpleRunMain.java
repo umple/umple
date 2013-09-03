@@ -11,9 +11,9 @@ import java.io.*;
 
 /**
  * Main program for a jar that can inject calls to Umple at runtime
- * @umplesource Main_Code.ump 196
+ * @umplesource Main_Code.ump 197
  */
-// line 196 "../../../src/Main_Code.ump"
+// line 197 "../../../src/Main_Code.ump"
 public class UmpleRunMain
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -40,12 +40,9 @@ public class UmpleRunMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={205},file={"Main_Code.ump"},javaline={44},length={101})
-  public static String console;
-    public static boolean displayOutput = true;
-
-  @umplesourcefile(line={209},file={"Main_Code.ump"},javaline={48},length={75})
-    public static void main(String[] args) 
+  //  @umplesourcefile(line={206},file={"Main_Code.ump"},javaline={44},length={101})
+  @umplesourcefile(line={207},file={"Main_Code.ump"},javaline={45},length={75})
+  public static void main(String[] args) 
     {
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -121,7 +118,7 @@ public class UmpleRunMain
         }
     }
 
-  @umplesourcefile(line={283},file={"Main_Code.ump"},javaline={125},length={9})
+  @umplesourcefile(line={281},file={"Main_Code.ump"},javaline={122},length={9})
     private static void print(String output)
     {
         console += output;
@@ -132,13 +129,13 @@ public class UmpleRunMain
 
     }
 
-  @umplesourcefile(line={293},file={"Main_Code.ump"},javaline={136},length={4})
+  @umplesourcefile(line={291},file={"Main_Code.ump"},javaline={133},length={4})
     private static void println(String output)
     {
         print(output + "\n");
     }
 
-  @umplesourcefile(line={298},file={"Main_Code.ump"},javaline={142},length={8})
+  @umplesourcefile(line={296},file={"Main_Code.ump"},javaline={139},length={8})
     private static void printerr(String err)
     {
         console += err;
@@ -147,6 +144,9 @@ public class UmpleRunMain
             System.err.print(err);
         }
     }
+
+    public static String console;
+    public static boolean displayOutput = true;
 
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

@@ -135,14 +135,9 @@ public class ContentParser extends Parser
     groups.clear();
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={350},file={"Documenter_Code.ump"},javaline={143},length={60})
-  @umplesourcefile(line={351},file={"Documenter_Code.ump"},javaline={144},length={8})
-  private int init()
-  {
+
+  @umplesourcefile(line={351},file={"Documenter_Code.ump"},javaline={140},length={7})
+   private int init(){
     addRule("groupOrder : ( [**group] ; )*");
     addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@syntax [**syntax])? [[example]]*");
     addRule("example- : @@example [**example] @@endexample");
@@ -150,9 +145,8 @@ public class ContentParser extends Parser
     return init;
   }
 
-  @umplesourcefile(line={360},file={"Documenter_Code.ump"},javaline={154},length={13})
-  public Group getGroup(String name)
-  {
+  @umplesourcefile(line={360},file={"Documenter_Code.ump"},javaline={149},length={12})
+   public Group getGroup(String name){
     for (Group g : getGroups())
     {
       if (g.getName().equals(name))
@@ -164,10 +158,9 @@ public class ContentParser extends Parser
     addGroup(newGroup);
     return newGroup;
   }
-  
-  @umplesourcefile(line={374},file={"Documenter_Code.ump"},javaline={169},length={36})
-  public ParseResult analyze()
-  {
+
+  @umplesourcefile(line={374},file={"Documenter_Code.ump"},javaline={163},length={35})
+   public ParseResult analyze(){
     for (Token t : getRootToken().getSubTokens())
     {
       if (t.is("content"))

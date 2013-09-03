@@ -204,22 +204,8 @@ public class Command
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "currentObject" + "=" + (getCurrentObject() != null ? !getCurrentObject().equals(this)  ? getCurrentObject().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "loader" + "=" + (getLoader() != null ? !getLoader().equals(this)  ? getLoader().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={15},file={"Builder_Code.ump"},javaline={220},length={170})
-  @umplesourcefile(line={16},file={"Builder_Code.ump"},javaline={221},length={17})
-  public void addAttributes(String input)
-  {
+  @umplesourcefile(line={16},file={"Builder_Code.ump"},javaline={208},length={16})
+   public void addAttributes(String input){
     if (input == null)
     {
       return;
@@ -233,10 +219,23 @@ public class Command
         continue;
       }
       addAttribute(d.trim());
-    }    
+    }
   }
 
-  @umplesourcefile(line={34},file={"Builder_Code.ump"},javaline={240},length={6})
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "currentObject" + "=" + (getCurrentObject() != null ? !getCurrentObject().equals(this)  ? getCurrentObject().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "loader" + "=" + (getLoader() != null ? !getLoader().equals(this)  ? getLoader().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={33},file={"Builder_Code.ump"},javaline={238},length={152})
+  @umplesourcefile(line={34},file={"Builder_Code.ump"},javaline={239},length={6})
   public String[] popMessages()
   {
     String[] local = getMessages();
@@ -244,7 +243,7 @@ public class Command
     return local;
   }
 
-  @umplesourcefile(line={41},file={"Builder_Code.ump"},javaline={248},length={46})
+  @umplesourcefile(line={41},file={"Builder_Code.ump"},javaline={247},length={46})
   public Object exec(String rawInput)
   {
     addHistory(rawInput);
@@ -292,7 +291,7 @@ public class Command
     return answer;
   }
 
-  @umplesourcefile(line={88},file={"Builder_Code.ump"},javaline={296},length={22})
+  @umplesourcefile(line={88},file={"Builder_Code.ump"},javaline={295},length={22})
   public Object newObject(String className)
   {
     currentObject = null;
@@ -316,19 +315,19 @@ public class Command
     return currentObject;
   }
   
-  @umplesourcefile(line={111},file={"Builder_Code.ump"},javaline={320},length={4})
+  @umplesourcefile(line={111},file={"Builder_Code.ump"},javaline={319},length={4})
   public void runMethod(String methodName)
   {
     callMethod(methodName,false,true);
   }
   
-  @umplesourcefile(line={116},file={"Builder_Code.ump"},javaline={326},length={4})
+  @umplesourcefile(line={116},file={"Builder_Code.ump"},javaline={325},length={4})
   public Object showResults(String methodName)
   {
     return callMethod(methodName,true,false);
   }
   
-  @umplesourcefile(line={121},file={"Builder_Code.ump"},javaline={332},length={27})
+  @umplesourcefile(line={121},file={"Builder_Code.ump"},javaline={331},length={27})
   public boolean assertMethod(String methodName, String rawExpectedValue)
   {
     String expectedValue = rawExpectedValue.trim();
@@ -357,7 +356,7 @@ public class Command
     }
   }
   
-  @umplesourcefile(line={149},file={"Builder_Code.ump"},javaline={361},length={24})
+  @umplesourcefile(line={149},file={"Builder_Code.ump"},javaline={360},length={24})
   private Object callMethod(String methodName, boolean showValue, boolean showExecuted)
   {
     try 
@@ -383,7 +382,7 @@ public class Command
     }
   }
   
-  @umplesourcefile(line={174},file={"Builder_Code.ump"},javaline={387},length={11})
+  @umplesourcefile(line={174},file={"Builder_Code.ump"},javaline={386},length={11})
   private void showValue(String methodName, Object answer)
   {
     if (answer == null)

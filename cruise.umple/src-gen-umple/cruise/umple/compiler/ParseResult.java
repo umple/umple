@@ -9,10 +9,10 @@ import java.util.*;
  * Represents the results of parsing, such as if it was successful,
  * whether it had warnings, etc.
  * @umplesource Parser.ump 29
- * @umplesource Parser_Code.ump 1631
+ * @umplesource Parser_Code.ump 1687
  */
 // line 29 "../../../../src/Parser.ump"
-// line 1631 "../../../../src/Parser_Code.ump"
+// line 1687 "../../../../src/Parser_Code.ump"
 public class ParseResult
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -135,7 +135,7 @@ public class ParseResult
     return wasSet;
   }
 
-  @umplesourcefile(line={1633, 1639},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
+  @umplesourcefile(line={1689, 1695},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public static int minimumNumberOfErrorMessages()
   {
     return 0;
@@ -144,13 +144,13 @@ public class ParseResult
   public boolean addErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasAdded = false;
-    // line 1633 "../../../../src/Parser_Code.ump"
+    // line 1689 "../../../../src/Parser_Code.ump"
     if(!_acceptsErrors)
           return true; // This should technically return false
     if (errorMessages.contains(aErrorMessage)) { return false; }
     errorMessages.add(aErrorMessage);
     wasAdded = true;
-    // line 1639 "../../../../src/Parser_Code.ump"
+    // line 1695 "../../../../src/Parser_Code.ump"
     // If the severity level is 1 then it's the most severe error
         // And we stop accepting errors (The parser may continue to parse,
         // as but we won't report any further errors, as they may be non-sensical)
@@ -170,7 +170,7 @@ public class ParseResult
     return wasAdded;
   }
 
-  @umplesourcefile(line={1633, 1639},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
+  @umplesourcefile(line={1689, 1695},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean removeErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasRemoved = false;
@@ -196,7 +196,7 @@ public class ParseResult
     return wasAdded;
   }
 
-  @umplesourcefile(line={1633, 1639},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
+  @umplesourcefile(line={1689, 1695},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean addOrMoveErrorMessageAt(ErrorMessage aErrorMessage, int index)
   {
     boolean wasAdded = false;
@@ -220,23 +220,17 @@ public class ParseResult
     position = null;
     errorMessages.clear();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1658},file={"Parser_Code.ump"},javaline={228},length={38})
-  @umplesourcefile(line={1659},file={"Parser_Code.ump"},javaline={229},length={7})
-  public String toString()
-  {
+
+  @umplesourcefile(line={1715},file={"Parser_Code.ump"},javaline={225},length={6})
+   public String toString(){
     String ret = "";
     for(ErrorMessage em : errorMessages)
       ret += em.toString() + "\n";
     return ret;
   }
 
-  @umplesourcefile(line={1667},file={"Parser_Code.ump"},javaline={238},length={29})
-  public String toJSON ()
-  {
+  @umplesourcefile(line={1723},file={"Parser_Code.ump"},javaline={233},length={28})
+   public String toJSON(){
     String ret = "{ \"results\" : [ ";
     boolean hasOne = false;
     for(ErrorMessage em : errorMessages)

@@ -14,9 +14,9 @@ import java.io.*;
  * the text and vice versa
  * 
  * TODO: Code smell - rename?
- * @umplesource Main_Code.ump 315
+ * @umplesource Main_Code.ump 316
  */
-// line 315 "../../../src/Main_Code.ump"
+// line 316 "../../../src/Main_Code.ump"
 public class PlaygroundMain
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -43,11 +43,9 @@ public class PlaygroundMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={322},file={"Main_Code.ump"},javaline={47},length={167})
-  public static String console = "";
-
-  @umplesourcefile(line={325},file={"Main_Code.ump"},javaline={50},length={104})
-    public static void main(String[] args)
+  //  @umplesourcefile(line={323},file={"Main_Code.ump"},javaline={47},length={167})
+  @umplesourcefile(line={324},file={"Main_Code.ump"},javaline={48},length={104})
+  public static void main(String[] args)
     {
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -152,14 +150,14 @@ public class PlaygroundMain
         print(answer);
     }
 
-  @umplesourcefile(line={428},file={"Main_Code.ump"},javaline={156},length={5})
+  @umplesourcefile(line={427},file={"Main_Code.ump"},javaline={154},length={5})
     private static void print(String output)
     {
         console += output;
         System.out.print(output);
     }
 
-  @umplesourcefile(line={434},file={"Main_Code.ump"},javaline={163},length={55})
+  @umplesourcefile(line={433},file={"Main_Code.ump"},javaline={161},length={55})
     private static SynchronizationAction action(String type, String deltaCode, String umpleCode)
     {
         if ("-addClass".equals(type))
@@ -215,6 +213,8 @@ public class PlaygroundMain
             return null;
         }
     }
+
+    public static String console = "";
 
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

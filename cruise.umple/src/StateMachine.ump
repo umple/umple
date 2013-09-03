@@ -205,9 +205,10 @@ class Guard
   	else
   	  condition = aCodeblock.getCode();
   }
+  
   void setCondition(String lang, String code)
   {
-  	if(actionCode!=null){
+  	if(condition!=null){
   	  condition+= lang+code;
   	}
   	else 

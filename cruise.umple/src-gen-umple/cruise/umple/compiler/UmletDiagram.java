@@ -156,14 +156,9 @@ public class UmletDiagram
       aUmletElement.removeUmletDiagram(this);
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={142},file={"Umlet_Code.ump"},javaline={164},length={21})
-  @umplesourcefile(line={143},file={"Umlet_Code.ump"},javaline={165},length={20})
-  public String toXml()
-  {
+
+  @umplesourcefile(line={143},file={"Umlet_Code.ump"},javaline={161},length={19})
+   public String toXml(){
     StringBuffer answer = new StringBuffer();
     answer.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");
     answer.append("<umlet_diagram>");

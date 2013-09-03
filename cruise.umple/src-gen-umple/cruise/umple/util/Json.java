@@ -158,46 +158,28 @@ public class Json
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "name" + ":" + getName()+ "," +
-            "value" + ":" + getValue()+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={129},file={"Json_Code.ump"},javaline={174},length={77})
-  @umplesourcefile(line={130},file={"Json_Code.ump"},javaline={175},length={4})
-  public boolean isComposite()
-  {
+  @umplesourcefile(line={130},file={"Json_Code.ump"},javaline={162},length={3})
+   public boolean isComposite(){
     return value == null;
   }
-  
-  @umplesourcefile(line={135},file={"Json_Code.ump"},javaline={181},length={4})
-  public void addComposite(String name, String value)
-  {
+
+  @umplesourcefile(line={135},file={"Json_Code.ump"},javaline={167},length={3})
+   public void addComposite(String name, String value){
     addComposite(new Json(name,value));
   }
-  
-  @umplesourcefile(line={140},file={"Json_Code.ump"},javaline={187},length={4})
-  public void addArrayEntity(String value)
-  {
+
+  @umplesourcefile(line={140},file={"Json_Code.ump"},javaline={172},length={3})
+   public void addArrayEntity(String value){
     addComposite(new Json(null,value));
   }
-  
-  @umplesourcefile(line={145},file={"Json_Code.ump"},javaline={193},length={4})
-  public int getIntValue(String name)
-  {
+
+  @umplesourcefile(line={145},file={"Json_Code.ump"},javaline={177},length={3})
+   public int getIntValue(String name){
     return convertToInt(getValue(name));
   }
-  
-  @umplesourcefile(line={150},file={"Json_Code.ump"},javaline={199},length={11})
-  public Json[] getArray(String name)
-  {
+
+  @umplesourcefile(line={150},file={"Json_Code.ump"},javaline={182},length={10})
+   public Json[] getArray(String name){
     for (Json anArray : arrays)
     {
       if (name.equals(anArray.getName()))
@@ -207,10 +189,9 @@ public class Json
     }
     return null;
   }
-  
-  @umplesourcefile(line={162},file={"Json_Code.ump"},javaline={212},length={16})
-  public Json getAttribute(String name)
-  {
+
+  @umplesourcefile(line={162},file={"Json_Code.ump"},javaline={194},length={15})
+   public Json getAttribute(String name){
     if (name == null)
     {
       return null;
@@ -225,23 +206,20 @@ public class Json
     }
     return null;
   }
-  
-  @umplesourcefile(line={179},file={"Json_Code.ump"},javaline={230},length={5})
-  public String getValue(String name)
-  {
+
+  @umplesourcefile(line={179},file={"Json_Code.ump"},javaline={211},length={4})
+   public String getValue(String name){
     Json attr = getAttribute(name);
     return attr == null ? null : attr.getValue();
   }
-  
-  @umplesourcefile(line={185},file={"Json_Code.ump"},javaline={237},length={4})
-  public int getIntValue()
-  {
+
+  @umplesourcefile(line={185},file={"Json_Code.ump"},javaline={217},length={3})
+   public int getIntValue(){
     return convertToInt(value);
   }
-  
-  @umplesourcefile(line={190},file={"Json_Code.ump"},javaline={243},length={16})
-  private int convertToInt(String input)
-  {
+
+  @umplesourcefile(line={190},file={"Json_Code.ump"},javaline={222},length={15})
+   private int convertToInt(String input){
     if (input == null)
     {
       return -1;
@@ -257,4 +235,13 @@ public class Json
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "value" + ":" + getValue()+ "]"
+     + outputString;
+  }
 }

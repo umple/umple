@@ -564,6 +564,13 @@ class TextParser
 
     String name = "";
     boolean wasSpace = false;
+    boolean quote = lookups!=null?new ArrayList<String>(Arrays.asList(lookups)).contains("\""):false;
+    boolean backslash = false;
+    boolean single = false;
+    boolean forwardslash = false;
+    boolean comment = false;
+    boolean multicomment = false;
+    boolean star = false;
     while (_currentCharacterIndex <= _maxCharacterIndex)
     {
       if(isAlphanum && !(""+c()).matches("[a-z|A-Z]")&&name.length()==0){
@@ -586,10 +593,60 @@ class TextParser
       else
       {
         wasSpace = false;
+        if(c()=='\"')
+        {
+          if(!backslash&&!single&&!comment&&!multicomment){
+            quote =  !quote;
+          }                
+          backslash = false;
+        }
+        else if(c()=='\\')
+        {
+          backslash = !backslash;
+        }
+        else if(c()=='\'')
+        {
+          if(!backslash&&!quote&&!comment&&!multicomment){
+            single = !single;
+          }           
+          backslash = false;
+        }
+        else if(!quote&&!single&&!comment&&c()=='/')
+        {
+          if (star)
+          {
+            multicomment = false;
+          }
+          else if(forwardslash)
+          {
+            comment = true;
+          }
+          else
+          {
+            forwardslash = true;  
+          }
+        }
+        else if(!quote&&!single&&forwardslash&&c()=='*')
+        {
+          multicomment = true;
+        }
+        else if(!quote&&!single&&multicomment&&c()=='*')
+        {
+          star = true;
+        }
+        else if(comment && c()=='\n')
+        {
+          comment = false;
+        }
+        else 
+        {
+          backslash = false;
+          forwardslash = false;
+          star = false;
+        }
         name += c();
         increment();
       }
-
       if (!hasLookup)
       {
         continue;
@@ -599,7 +656,7 @@ class TextParser
       {
         break;
       }
-      else if (!stopAtMatch && isEndsWith(name, lookups))
+      else if (!stopAtMatch && !quote && !comment && !multicomment && isEndsWith(name, lookups))
       {
         String lookup = whichEndsWith(name, lookups);
         _currentCharacterIndex -= lookup.length();

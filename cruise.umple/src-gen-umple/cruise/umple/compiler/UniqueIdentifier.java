@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 173
- * @umplesource Umple.ump 451
+ * @umplesource Umple.ump 174
+ * @umplesource Umple.ump 452
  */
-// line 173 "../../../../src/Umple.ump"
-// line 451 "../../../../src/Umple.ump"
+// line 174 "../../../../src/Umple.ump"
+// line 452 "../../../../src/Umple.ump"
 public class UniqueIdentifier extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

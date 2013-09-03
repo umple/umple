@@ -40,14 +40,9 @@ public class JsonParser extends Parser
   {
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={15},file={"Json_Code.ump"},javaline={48},length={109})
-  @umplesourcefile(line={16},file={"Json_Code.ump"},javaline={49},length={12})
-  private void init()
-  {
+
+  @umplesourcefile(line={16},file={"Json_Code.ump"},javaline={45},length={11})
+   private void init(){
     addCouple(new Couple("{", "}"));
     addRule("json : { } |  { [[json_entity]] ( , [[json_entity]] )* }");
     addRule("json_entity : [[name_json_array]] | [[name_array]] | [[name_json]] | [[name_value]] ");
@@ -58,16 +53,14 @@ public class JsonParser extends Parser
     addRule("name- : \" [**name] \" | [name] ");
     addRule("value- : \" [**value] \" | [value] ");
   }
-  
-  @umplesourcefile(line={29},file={"Json_Code.ump"},javaline={63},length={4})
-  public Json analyze()
-  {
+
+  @umplesourcefile(line={29},file={"Json_Code.ump"},javaline={58},length={3})
+   public Json analyze(){
     return handleJson(null,getRootToken());
   }
-  
-  @umplesourcefile(line={34},file={"Json_Code.ump"},javaline={69},length={61})
-  private Json handleJsonEntity(Json json, Token t)
-  {
+
+  @umplesourcefile(line={34},file={"Json_Code.ump"},javaline={63},length={60})
+   private Json handleJsonEntity(Json json, Token t){
     for(Token subT : t.getSubTokens())
     {
       if (subT.is("json") && json == null)
@@ -127,10 +120,9 @@ public class JsonParser extends Parser
     }    
     return json;
   }
-  
-  @umplesourcefile(line={96},file={"Json_Code.ump"},javaline={132},length={16})
-  private Json handleJson(Json json, Token t)
-  {
+
+  @umplesourcefile(line={96},file={"Json_Code.ump"},javaline={125},length={15})
+   private Json handleJson(Json json, Token t){
     for(Token subT : t.getSubTokens())
     {
       if (subT.is("json") && json == null)
@@ -145,10 +137,9 @@ public class JsonParser extends Parser
     }   
     return json;
   }
-  
-  @umplesourcefile(line={113},file={"Json_Code.ump"},javaline={150},length={11})
-  private String stripQuotes(String input)
-  {
+
+  @umplesourcefile(line={113},file={"Json_Code.ump"},javaline={142},length={10})
+   private String stripQuotes(String input){
     if (input == null)
     {
       return null;

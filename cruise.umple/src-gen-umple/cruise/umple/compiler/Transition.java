@@ -410,6 +410,13 @@ public class Transition
     }
   }
 
+  @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={414},length={5})
+   public static  Transition createPlaceholder(State nextState){
+    StateMachine nullSm = new StateMachine("null");
+    State nullState = new State("null",nullSm);
+    return new Transition(nullState, nextState);
+  }
+
 
   public String toString()
   {
@@ -423,17 +430,5 @@ public class Transition
             "  " + "guard = "+(getGuard()!=null?Integer.toHexString(System.identityHashCode(getGuard())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "action = "+(getAction()!=null?Integer.toHexString(System.identityHashCode(getAction())):"null")
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={436},file={"StateMachine_Code.ump"},javaline={431},length={7})
-  @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={432},length={6})
-  public static Transition createPlaceholder(State nextState)
-  {
-    StateMachine nullSm = new StateMachine("null");
-    State nullState = new State("null",nullSm);
-    return new Transition(nullState, nextState);
   }
-
 }

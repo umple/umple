@@ -347,22 +347,17 @@ public class Method
     methodBody = null;
     comments.clear();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={428},file={"Umple_Code.ump"},javaline={355},length={39})
-  @umplesourcefile(line={429},file={"Umple_Code.ump"},javaline={356},length={7})
-  public boolean getExistsInLanguage(String lang) 
-  {
+
+  @umplesourcefile(line={429},file={"Umple_Code.ump"},javaline={352},length={6})
+   public boolean getExistsInLanguage(String lang){
     if(getMethodBody().getExtraCode(lang)==null)
       return isImplemented;
     else 
       return true;
   }
-  @umplesourcefile(line={436},file={"Umple_Code.ump"},javaline={364},length={31})
-  public String toString()
-  {    
+
+  @umplesourcefile(line={436},file={"Umple_Code.ump"},javaline={360},length={30})
+   public String toString(){
     StringBuffer methodBuffer = new StringBuffer();
     methodBuffer.append(" " + this.getType()+ " " + this.getName());
     methodBuffer.append("(");

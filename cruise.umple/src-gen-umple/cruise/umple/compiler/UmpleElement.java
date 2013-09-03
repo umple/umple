@@ -404,6 +404,24 @@ public class UmpleElement
     endPositions.clear();
   }
 
+  @umplesourcefile(line={634},file={"Umple_Code.ump"},javaline={408},length={3})
+   public void appendExtraCode(String newCode){
+    appendExtraCode(newCode,true);
+  }
+
+  @umplesourcefile(line={639},file={"Umple_Code.ump"},javaline={413},length={11})
+   public void appendExtraCode(String newCode, boolean addNewline){
+    if (newCode == null) 
+    { 
+      return;
+    }
+    if (!"".equals(extraCode) && addNewline)
+    {
+      extraCode += System.getProperty("line.separator");
+    } 
+    extraCode += newCode;
+  }
+
 
   public String toString()
   {
@@ -417,29 +435,5 @@ public class UmpleElement
             "displayColor" + ":" + getDisplayColor()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "coordinates" + "=" + (getCoordinates() != null ? !getCoordinates().equals(this)  ? getCoordinates().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={633},file={"Umple_Code.ump"},javaline={425},length={18})
-  @umplesourcefile(line={634},file={"Umple_Code.ump"},javaline={426},length={4})
-  public void appendExtraCode(String newCode)
-  {
-    appendExtraCode(newCode,true);
   }
-
-  @umplesourcefile(line={639},file={"Umple_Code.ump"},javaline={432},length={12})
-  public void appendExtraCode(String newCode, boolean addNewline)
-  {
-    if (newCode == null) 
-    { 
-      return;
-    }
-    if (!"".equals(extraCode) && addNewline)
-    {
-      extraCode += System.getProperty("line.separator");
-    } 
-    extraCode += newCode;
-  }
-
 }

@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * TO DO: Determine if this can be deleted
- * @umplesource Umple.ump 141
+ * @umplesource Umple.ump 142
  */
-// line 141 "../../../../src/Umple.ump"
+// line 142 "../../../../src/Umple.ump"
 public class Modifier
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

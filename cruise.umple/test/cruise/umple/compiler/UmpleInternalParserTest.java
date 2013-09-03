@@ -115,7 +115,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("002_namespace.ump", "[namespace:cruise][namespace:cruise.umple][namespace:example]");
     fileToOutputs.put("003_emptyClass.ump", "[classDefinition][name:Student]");
     fileToOutputs.put("003_multipleExtraCode.ump","[classDefinition][name:Student][extraCode:blahblah][classDefinition][name:Student][extraCode:moreblah]");
-    fileToOutputs.put("003_constructorExtraCode.ump","[classDefinition][name:Student][concreteMethodDeclaration][type:public][methodDeclarator][methodName:Student][parameterList][parameter][type:String][name:x][code:blah();]");  
+    fileToOutputs.put("003_constructorExtraCode.ump","[classDefinition][name:Student][concreteMethodDeclaration][modifier:public][methodDeclarator][methodName:Student][parameterList][parameter][type:String][name:x][code:blah();]");  
     fileToOutputs.put("003_innerClass.ump", "[classDefinition][name:Person][attribute][name:name][classDefinition][name:Student][attribute][name:Integer]");
     fileToOutputs.put("003_commentsInClass.ump", "[classDefinition][name:Student][inlineComment:A name][attribute][name:name][inlineComment:the time][attribute][type:Time][name:t]");
     fileToOutputs.put("004_depend.ump", "[classDefinition][name:Student][depend:java.util.Map]");

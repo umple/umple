@@ -8,12 +8,12 @@ import java.util.*;
  * Superclass for tracking member variables in all target languages
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
- * @umplesource Umple.ump 433
- * @umplesource Umple_Code.ump 1060
+ * @umplesource Umple.ump 434
+ * @umplesource Umple_Code.ump 1063
  * @umplesource Trace_Code.ump 16
  */
-// line 433 "../../../../src/Umple.ump"
-// line 1060 "../../../../src/Umple_Code.ump"
+// line 434 "../../../../src/Umple.ump"
+// line 1063 "../../../../src/Umple_Code.ump"
 // line 16 "../../../../src/Trace_Code.ump"
 public class UmpleVariable
 {
@@ -50,11 +50,11 @@ public class UmpleVariable
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={447},file={"Umple.ump"},javaline={58},length={1})
+  @umplesourcefile(line={448},file={"Umple.ump"},javaline={58},length={1})
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    // line 447 "../../../../src/Umple.ump"
+    // line 448 "../../../../src/Umple.ump"
     if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); }
     name = aName;
     wasSet = true;
@@ -101,13 +101,13 @@ public class UmpleVariable
     return type;
   }
 
-  @umplesourcefile(line={449},file={"Umple.ump"},javaline={110},length={1})
+  @umplesourcefile(line={450},file={"Umple.ump"},javaline={110},length={1})
   /**
    * The modifier associated with the Umple variable.
    */
   public String getModifier()
   {
-    // line 449 "../../../../src/Umple.ump"
+    // line 450 "../../../../src/Umple.ump"
     if (modifier == null) { return "settable"; }
     return modifier;
   }
@@ -243,6 +243,27 @@ public class UmpleVariable
     }
   }
 
+  @umplesourcefile(line={1065},file={"Umple_Code.ump"},javaline={247},length={14})
+   public String getUpperCaseName(){
+    if (name == null || name.length() == 0)
+    {
+      return name;
+    }
+    else if (name.length() == 1)
+    {
+      return name.toUpperCase();
+    }
+    else
+    {
+      return name.toUpperCase().charAt(0) + name.substring(1);
+    }
+  }
+
+  @umplesourcefile(line={1081},file={"Umple_Code.ump"},javaline={263},length={3})
+   public boolean isImmutable(){
+    return "immutable".equals(modifier);
+  }
+
 
   /**
    * Retrieve the AttributeTraceItem associated with this UmpleVariable
@@ -250,7 +271,7 @@ public class UmpleVariable
    * @params uClass: the umple class to look within for the trace item
    * @return Attribute_Traceitem for this UmpleVariable(either association or attribute);
    */
-  @umplesourcefile(line={24},file={"Trace_Code.ump"},javaline={247},length={36})
+  @umplesourcefile(line={24},file={"Trace_Code.ump"},javaline={268},length={36})
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all of the trace directives from the passed umple class
     for(TraceDirective td: uClass.getTraceDirectives())
@@ -298,32 +319,5 @@ public class UmpleVariable
             "modifier" + ":" + getModifier()+ "," +
             "value" + ":" + getValue()+ "]"
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1061},file={"Umple_Code.ump"},javaline={306},length={21})
-  @umplesourcefile(line={1062},file={"Umple_Code.ump"},javaline={307},length={15})
-  public String getUpperCaseName()
-  {
-    if (name == null || name.length() == 0)
-    {
-      return name;
-    }
-    else if (name.length() == 1)
-    {
-      return name.toUpperCase();
-    }
-    else
-    {
-      return name.toUpperCase().charAt(0) + name.substring(1);
-    }
   }
-
-  @umplesourcefile(line={1078},file={"Umple_Code.ump"},javaline={324},length={4})
-  public boolean isImmutable()
-  {
-    return "immutable".equals(modifier);
-  }
-
 }

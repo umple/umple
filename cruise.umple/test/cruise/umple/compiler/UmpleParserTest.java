@@ -465,9 +465,10 @@ public class UmpleParserTest
         System.getProperty("line.separator") + "  moreblah",aClass.getExtraCode());
   }
   
-  @Test
+  @Test @Ignore
   public void constructorExtraCode()
   {
+	//This test no longer makes sense, because the method is parsed as an umple method
     assertParse("003_constructorExtraCode.ump");  
     UmpleClass aClass = model.getUmpleClass("Student");
      Assert.assertEquals(" public Student(String x)  {"+ 

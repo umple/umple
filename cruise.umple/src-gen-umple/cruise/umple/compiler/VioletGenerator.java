@@ -251,43 +251,16 @@ public class VioletGenerator implements CodeGenerator
     violetAssociations.clear();
   }
 
-
-  /**
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
-   */
-  @umplesourcefile(line={21},file={"Generator.ump"},javaline={255},length={2})
-  @Override
-  public boolean setOutput(String aString){
-          return false;
-  }
-
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "filename" + ":" + getFilename()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={13},file={"Violet_Code.ump"},javaline={278},length={92})
-  @umplesourcefile(line={14},file={"Violet_Code.ump"},javaline={279},length={7})
-  public void generate()
-  {
+  @umplesourcefile(line={14},file={"Violet_Code.ump"},javaline={255},length={6})
+   public void generate(){
     UmpleFile umpleFile = model.getUmpleFile();
     String filename = umpleFile.getPath() + File.separator + umpleFile.getFileName() + ".violet";
     draw(model);
     SampleFileWriter.createFile(filename, toXml());
   }
-  
-  @umplesourcefile(line={22},file={"Violet_Code.ump"},javaline={288},length={21})
-  public VioletClass newClass(String name)
-  {
-  
+
+  @umplesourcefile(line={22},file={"Violet_Code.ump"},javaline={263},length={19})
+   public VioletClass newClass(String name){
     int elementOffset = numberOfVioletClasses();
   
     double width = 100.0;
@@ -306,18 +279,16 @@ public class VioletGenerator implements CodeGenerator
     addVioletClass(vClass);
     return vClass;
   }
-  
-  @umplesourcefile(line={44},file={"Violet_Code.ump"},javaline={311},length={6})
-  public VioletAssociation newAssociation(String startLabel, String endLabel, VioletClass startClass, VioletClass endClass)
-  {
+
+  @umplesourcefile(line={44},file={"Violet_Code.ump"},javaline={284},length={5})
+   public VioletAssociation newAssociation(String startLabel, String endLabel, VioletClass startClass, VioletClass endClass){
     VioletAssociation vAss = new VioletAssociation(startLabel,endLabel,startClass,endClass);
     addVioletAssociation(vAss);
     return vAss;
   }
 
-  @umplesourcefile(line={51},file={"Violet_Code.ump"},javaline={319},length={37})
-  public void draw(UmpleModel model)
-  {
+  @umplesourcefile(line={51},file={"Violet_Code.ump"},javaline={291},length={36})
+   public void draw(UmpleModel model){
     Map<UmpleClass,VioletClass> classToVioletMap = new HashMap<UmpleClass,VioletClass>();
     
     for (UmpleClass aClass : model.getUmpleClasses())
@@ -354,10 +325,8 @@ public class VioletGenerator implements CodeGenerator
     }
   }
 
-
-  @umplesourcefile(line={90},file={"Violet_Code.ump"},javaline={359},length={15})
-  public String toXml()
-  {
+  @umplesourcefile(line={90},file={"Violet_Code.ump"},javaline={329},length={14})
+   public String toXml(){
     VioletDiagram diagram = new VioletDiagram();
     
     for(VioletClass v : violetClasses)
@@ -372,4 +341,24 @@ public class VioletGenerator implements CodeGenerator
     return diagram.toXml();
   }
 
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={21},file={"Generator.ump"},javaline={345},length={2})
+  @Override
+  public boolean setOutput(String aString){
+          return false;
+  }
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "filename" + ":" + getFilename()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

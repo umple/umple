@@ -26,11 +26,10 @@ class Mentor
     @deleted = true
   end
 
-  #------------------------
-  # DEVELOPER CODE - PROVIDED AS-IS
-  #------------------------
-  
-  public static main()
-  {}
-end
+  def main()
+    
+  end
+
+
+
 end

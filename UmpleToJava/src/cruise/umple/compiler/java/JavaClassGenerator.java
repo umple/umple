@@ -8867,6 +8867,7 @@ if (p != null) {
       {
         if(!aMethod.getExistsInLanguage("Java"))
           continue;
+          
         Position p = aMethod.getPosition();
         String positionHeader = "";
         if (p != null) {

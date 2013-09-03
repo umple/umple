@@ -38,9 +38,7 @@
 Mentor::~Mentor()
   {}
 
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-   
-  public static main()
-  {}
+
+   public static  void Mentor::main(){
+      
+  }

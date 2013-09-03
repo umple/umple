@@ -58,8 +58,15 @@ class UmpleInternalParser
       setRootToken(reset()); // Makes sure the root token position has the filename
     }
     
-    addCouple(new Couple("\"","\""));
-    addCouple(new Couple("{","}"));
+    Couple quotes = new Couple("\"","\"");
+    Couple braces = new Couple("{","}");
+    
+    addCouple(quotes);    
+    
+    braces.addIgnore(quotes);
+    braces.addIgnore(new Couple("//","\n"));
+    
+    addCouple(braces);
     addRulesInFile("/umple_core.grammar");
     addRulesInFile("/umple_classes.grammar");
     addRulesInFile("/umple_patterns.grammar");

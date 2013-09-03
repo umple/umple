@@ -65,6 +65,11 @@ public class SynchronizationAction
   public void delete()
   {}
 
+  @umplesourcefile(line={17},file={"UmpleSync_Code.ump"},javaline={69},length={3})
+   public void go(){
+    
+  }
+
 
   public String toString()
   {
@@ -73,15 +78,5 @@ public class SynchronizationAction
             "deltaCode" + ":" + getDeltaCode()+ "," +
             "umpleCode" + ":" + getUmpleCode()+ "]"
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={16},file={"UmpleSync_Code.ump"},javaline={81},length={5})
-  @umplesourcefile(line={17},file={"UmpleSync_Code.ump"},javaline={82},length={4})
-  public void go()
-  {
-  
   }
-
 }

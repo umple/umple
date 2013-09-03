@@ -73,22 +73,8 @@ public class SimulateGenerator implements CodeGenerator
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeSimulate.ump"},javaline={89},length={101})
-  @umplesourcefile(line={15},file={"Generator_CodeSimulate.ump"},javaline={90},length={81})
-  public void generate()
-  {
+  @umplesourcefile(line={15},file={"Generator_CodeSimulate.ump"},javaline={77},length={80})
+   public void generate(){
     StringBuilder code = new StringBuilder();
 
     code.append("<?php\n");
@@ -169,9 +155,8 @@ public class SimulateGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={97},file={"Generator_CodeSimulate.ump"},javaline={173},length={18})
-  private void writeModel()
-  {
+  @umplesourcefile(line={97},file={"Generator_CodeSimulate.ump"},javaline={159},length={17})
+   private void writeModel(){
     try
     {
       String path = model.getUmpleFile().getPath();
@@ -189,4 +174,13 @@ public class SimulateGenerator implements CodeGenerator
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

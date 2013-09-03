@@ -25,13 +25,10 @@ public class Mentor
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={4},file={"ClassTemplateTest_Generated.ump"},javaline={34},length={3})
-  @umplesourcefile(line={5},file={"ClassTemplateTest_Generated.ump"},javaline={35},length={2})
-  public static main()
-  {}
+
+  @umplesourcefile(line={5},file={"ClassTemplateTest_Generated.ump"},javaline={31},length={3})
+   public static   main(){
+    
+  }
 
 }

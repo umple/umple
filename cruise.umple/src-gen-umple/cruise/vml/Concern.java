@@ -239,20 +239,14 @@ public class Concern
       placeholderVmlSystem.removeConcern(this);
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={88},file={"Vml_Code.ump"},javaline={247},length={22})
-  @umplesourcefile(line={89},file={"Vml_Code.ump"},javaline={248},length={4})
-  public String toString()
-  {
+
+  @umplesourcefile(line={89},file={"Vml_Code.ump"},javaline={244},length={3})
+   public String toString(){
     return name + ":" + numberOfVariationPoints() + " variation points";
   }
-  
-  @umplesourcefile(line={94},file={"Vml_Code.ump"},javaline={254},length={16})
-  public VariationPoint getVariationPoint(String name)
-  {
+
+  @umplesourcefile(line={94},file={"Vml_Code.ump"},javaline={249},length={15})
+   public VariationPoint getVariationPoint(String name){
     if (name == null)
     {
       return null;

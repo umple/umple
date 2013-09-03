@@ -162,6 +162,11 @@ public class Content
   public void delete()
   {}
 
+  @umplesourcefile(line={333},file={"Documenter_Code.ump"},javaline={166},length={3})
+   public String getTitleFilename(){
+    return title.replace(" ","") + ".html";
+  }
+
 
   public String toString()
   {
@@ -172,15 +177,5 @@ public class Content
             "description" + ":" + getDescription()+ "," +
             "syntax" + ":" + getSyntax()+ "]"
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={332},file={"Documenter_Code.ump"},javaline={180},length={5})
-  @umplesourcefile(line={333},file={"Documenter_Code.ump"},javaline={181},length={4})
-  public String getTitleFilename()
-  {
-    return title.replace(" ","") + ".html";
   }
-
 }

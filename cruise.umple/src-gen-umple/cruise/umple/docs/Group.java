@@ -146,6 +146,11 @@ public class Group
     contents.clear();
   }
 
+  @umplesourcefile(line={341},file={"Documenter_Code.ump"},javaline={150},length={3})
+   public String getGroupIdName(){
+    return name.replace(" ","");
+  }
+
 
   public String toString()
   {
@@ -153,15 +158,5 @@ public class Group
     return super.toString() + "["+
             "name" + ":" + getName()+ "]"
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={340},file={"Documenter_Code.ump"},javaline={161},length={5})
-  @umplesourcefile(line={341},file={"Documenter_Code.ump"},javaline={162},length={4})
-  public String getGroupIdName()
-  {
-    return name.replace(" ","");
   }
-
 }

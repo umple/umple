@@ -439,7 +439,7 @@ class UmpleInternalParser
    */
   private UmpleClass analyzeClass(Token classToken)
   {
-    String className = classToken.getValue("name");
+    String className = classToken.getValue("name").split(" ")[classToken.getValue("name").split(" ").length-1];
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(className, "[A-Za-z]") != true) {
       setFailedPosition(classToken.getPosition(), 100, className);
@@ -914,7 +914,7 @@ class UmpleInternalParser
     {
       //1. Verify if method to be added is a setter or a getter
       String accessorName = methodName.substring(0,3);
-      if ((accessorName.equals("get")) || (accessorName.equals("set")))
+      if ((accessorName.equals("get") && aMethod.numberOfMethodParameters()==0) || (accessorName.equals("set")&& aMethod.numberOfMethodParameters()==1))
       {
         String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
         Attribute attr = uClass.getAttribute(possibleAttributeName);
@@ -1282,12 +1282,18 @@ class UmpleInternalParser
 
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     List<String> langs = new ArrayList<String>();
-    CodeBlock cb = new CodeBlock();
+    CodeBlock cb = new CodeBlock("");
+    boolean canClear = false;
     for(Token token : method.getSubTokens())
     {
       if (token.is("modifier"))
       {
         modifier += " " + (token.getValue());
+        aMethod.setModifier(modifier);
+      }
+      else if(token.is("static"))
+      {
+        modifier += " static ";
         aMethod.setModifier(modifier);
       }
       else if (token.is("type"))
@@ -1299,7 +1305,7 @@ class UmpleInternalParser
         analyzeMethodDeclarator(token, aMethod);
       }
       else if (token.is("code"))
-      {
+      {        
         if(langs.isEmpty())
         {
           cb.setCode(token.getValue());
@@ -1308,13 +1314,18 @@ class UmpleInternalParser
         {
           for(String str: langs)
           {
-            cb.setCode(str,token.getValue());
+            cb.setCode(str,(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+token.getValue());
           }
-          langs.clear();
         }
+        canClear = true;
       }
       else if (token.is("codeLang"))
       {
+        if(canClear)
+        {
+          langs.clear();
+          canClear = false;
+        }
         langs.add(token.getValue());
       }
       else if (token.is("precondition")){ 
@@ -1324,12 +1335,13 @@ class UmpleInternalParser
       }
     }
     MethodBody meth = new MethodBody(cb);
-    aMethod.setMethodBody(meth);  
+    aMethod.setMethodBody(meth);
 
     // Add method to Class or Interface
     if (uElement instanceof UmpleClass)
     {
       UmpleClass uClass = (UmpleClass) uElement;
+      
       boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
       if (!uClass.hasMethod(aMethod) && shouldAddMethod )
       {

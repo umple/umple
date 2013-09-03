@@ -98,7 +98,8 @@ class LanguageSpecificCodeBlock
 
   public function isJava()
   {
-    return false;
+    
+return false;
   }
 
 }

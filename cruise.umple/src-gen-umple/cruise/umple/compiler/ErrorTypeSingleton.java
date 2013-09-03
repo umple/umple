@@ -10,10 +10,10 @@ import java.util.*;
 /**
  * Lists all the errors in the system
  * @umplesource Parser.ump 84
- * @umplesource Parser_Code.ump 1730
+ * @umplesource Parser_Code.ump 1786
  */
 // line 84 "../../../../src/Parser.ump"
-// line 1730 "../../../../src/Parser_Code.ump"
+// line 1786 "../../../../src/Parser_Code.ump"
 public class ErrorTypeSingleton
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -36,11 +36,11 @@ public class ErrorTypeSingleton
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={1732},file={"Parser_Code.ump"},javaline={44},length={1})
+  @umplesourcefile(line={1788},file={"Parser_Code.ump"},javaline={44},length={1})
   private ErrorTypeSingleton()
   {
     errorTypes = new ArrayList<ErrorType>();
-    // line 1732 "../../../../src/Parser_Code.ump"
+    // line 1788 "../../../../src/Parser_Code.ump"
     init();
   }
 
@@ -148,22 +148,16 @@ public class ErrorTypeSingleton
   {
     errorTypes.clear();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1733},file={"Parser_Code.ump"},javaline={156},length={110})
-  @umplesourcefile(line={1734},file={"Parser_Code.ump"},javaline={157},length={6})
-  private void init()
-  {
+
+  @umplesourcefile(line={1790},file={"Parser_Code.ump"},javaline={153},length={5})
+   private void init(){
     String filename = "/en.error";
     String input = readFile(filename);
     parse(new TextParser(filename, input));
   }
 
-  @umplesourcefile(line={1741},file={"Parser_Code.ump"},javaline={165},length={31})
-  public String readFile(String filenameOrResourcePath)
-  {
+  @umplesourcefile(line={1797},file={"Parser_Code.ump"},javaline={160},length={30})
+   public String readFile(String filenameOrResourcePath){
     InputStream resourceStream = null;
     BufferedReader reader = null;
     String str = "";
@@ -194,10 +188,12 @@ public class ErrorTypeSingleton
     return str;
   }
 
-  // Parse the error messages file (en.error etc.)
-  @umplesourcefile(line={1774},file={"Parser_Code.ump"},javaline={199},length={49})
-  private boolean parse(TextParser textParser)
-  { 
+
+  /**
+   * Parse the error messages file (en.error etc.)
+   */
+  @umplesourcefile(line={1830},file={"Parser_Code.ump"},javaline={192},length={49})
+   private boolean parse(TextParser textParser){
     while(textParser.peek() != null)
     {
       Position p = textParser.currentPosition();
@@ -209,6 +205,7 @@ public class ErrorTypeSingleton
       textParser.nextAfter(false,",");
 
       String url = textParser.nextUntil(false, ",");
+      url = url.substring(1,url.length()-1);
       textParser.nextAfter(false,",");
 
       String formatString = textParser.nextUntil(false, ";");
@@ -246,22 +243,19 @@ public class ErrorTypeSingleton
     return true;
   }
 
-  @umplesourcefile(line={1824},file={"Parser_Code.ump"},javaline={250},length={4})
-  public void clear()
-  {
+  @umplesourcefile(line={1881},file={"Parser_Code.ump"},javaline={247},length={3})
+   public void clear(){
     this.errorTypes = new ArrayList<ErrorType>();
   }
 
-  @umplesourcefile(line={1829},file={"Parser_Code.ump"},javaline={256},length={5})
-  public void reset()
-  {
+  @umplesourcefile(line={1886},file={"Parser_Code.ump"},javaline={252},length={4})
+   public void reset(){
     clear();
     init();
   }
 
-  @umplesourcefile(line={1835},file={"Parser_Code.ump"},javaline={263},length={8})
-  public ErrorType getErrorTypeForCode(int code)
-  {
+  @umplesourcefile(line={1892},file={"Parser_Code.ump"},javaline={258},length={7})
+   public ErrorType getErrorTypeForCode(int code){
     for(ErrorType et : this.errorTypes)
       if(et.getErrorCode() == code)
         return et;

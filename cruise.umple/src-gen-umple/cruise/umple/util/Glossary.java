@@ -83,20 +83,8 @@ public class Glossary
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={854},file={"Util_Code.ump"},javaline={97},length={141})
-  @umplesourcefile(line={855},file={"Util_Code.ump"},javaline={98},length={31})
-  private void init()
-  {
+  @umplesourcefile(line={855},file={"Util_Code.ump"},javaline={87},length={30})
+   private void init(){
     addWord(new Word("fish","fish"));
     addWord(new Word("sheep","sheep"));
     addWord(new Word("equipment","equipment"));
@@ -126,11 +114,9 @@ public class Glossary
 	addWord(new Word("matrix","matrices"));
 	addWord(new Word("radius","radii"));
   }
-  
-  
-  @umplesourcefile(line={888},file={"Util_Code.ump"},javaline={132},length={53})
-  public String getSingular(String plural)
-  {
+
+  @umplesourcefile(line={888},file={"Util_Code.ump"},javaline={119},length={52})
+   public String getSingular(String plural){
     if (plural == null || plural.length() == 0)
     {
       return "";
@@ -182,10 +168,9 @@ public class Glossary
       }
     }
   }
-  
-  @umplesourcefile(line={942},file={"Util_Code.ump"},javaline={187},length={53})
-  public String getPlural(String singular)
-  {
+
+  @umplesourcefile(line={942},file={"Util_Code.ump"},javaline={173},length={52})
+   public String getPlural(String singular){
     if (singular == null || singular.length() == 0)
     {
       return "s";
@@ -238,4 +223,11 @@ public class Glossary
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]"
+     + outputString;
+  }
 }

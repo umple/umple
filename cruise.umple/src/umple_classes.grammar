@@ -26,7 +26,7 @@ associationDefinition : association [name]? { [[association]]* }
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[extraCode]]
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[extraCode]]
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[association]] | [[inlineAssociation]] | ; | [[extraCode]]
 
 
@@ -49,10 +49,11 @@ codeLang- : [=codeLang:Java|RTCpp|Cpp|Php|Ruby]
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
 methodBody- : ( [[precondition]] )* [**code] ( [[postcondition]] )*
-concreteMethodDeclaration :  [type] [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )*
+concreteMethodDeclaration : [=modifier:public|protected|private] [=static]? [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )* | [=modifier:public|protected|private]? [=static]? [type] [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )* 
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ;   
-methodDeclarator : [methodName] [[parameterList]] | [methodName] OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET 
-parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUND_BRACKET 
+methodDeclarator : [methodName] [[parameterList]]
+parameterList : OPEN_ROUND_BRACKET [[parameters]]? CLOSE_ROUND_BRACKET
+parameters- : [[parameter]] ( , [[parameter]] )*
 parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) 
 
 // Details of associations: See manual page [*AssociationDefinition*]

@@ -162,6 +162,16 @@ public class Guard
   public void delete()
   {}
 
+  @umplesourcefile(line={209},file={"StateMachine.ump"},javaline={166},length={8})
+  public void setCondition(String lang, String code){
+    if(condition!=null){
+  	  condition+= lang+code;
+  	}
+  	else 
+  	  condition = lang+code;
+  	codeblock.setCode(lang,code);
+  }
+
 
   public String toString()
   {

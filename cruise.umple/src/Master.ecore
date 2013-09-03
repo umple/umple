@@ -903,6 +903,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="words" eType="#//Word" upperBound="-1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExceptionDumper">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="openBrace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="closeBrace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Object">
   </eClassifiers>

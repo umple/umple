@@ -73,22 +73,8 @@ public class GvStateDiagramGenerator implements CodeGenerator
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={28},file={"Generator_CodeGvStateDiagram.ump"},javaline={89},length={299})
-  @umplesourcefile(line={29},file={"Generator_CodeGvStateDiagram.ump"},javaline={90},length={298})
-  public void generate()
-  {
+  @umplesourcefile(line={29},file={"Generator_CodeGvStateDiagram.ump"},javaline={77},length={45})
+   public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder transitions = new StringBuilder();
     String className;
@@ -133,20 +119,23 @@ public class GvStateDiagramGenerator implements CodeGenerator
     } // End iteration through classes
     terminateCode(code, transitions);
   }
-  
-  @umplesourcefile(line={76},file={"Generator_CodeGvStateDiagram.ump"},javaline={138},length={4})
-  private void terminateCode(StringBuilder code, StringBuilder transitions) {
+
+  @umplesourcefile(line={76},file={"Generator_CodeGvStateDiagram.ump"},javaline={124},length={8})
+   private void terminateCode(StringBuilder code, StringBuilder transitions){
     code.append("\n  // All transitions\n");
     code.append(transitions);
     code.append("}\n");
 
     model.setCode(code.toString());
     writeModel();
-  } 
+  }
 
-  // Append the standard format for a start state into the current graph context
-  @umplesourcefile(line={86},file={"Generator_CodeGvStateDiagram.ump"},javaline={149},length={8})
-  private void appendStartState(StringBuilder code, int numSpaces, String clSmName) {
+
+  /**
+   * Append the standard format for a start state into the current graph context
+   */
+  @umplesourcefile(line={86},file={"Generator_CodeGvStateDiagram.ump"},javaline={134},length={8})
+   private void appendStartState(StringBuilder code, int numSpaces, String clSmName){
     appendSpaces(code, numSpaces);
     code.append("// Start state black circle\n");
     appendSpaces(code, numSpaces);
@@ -155,44 +144,59 @@ public class GvStateDiagramGenerator implements CodeGenerator
     code.append("start_"+clSmName+";\n\n");
   }
 
-  // Append the format for normal nodes.
-  @umplesourcefile(line={96},file={"Generator_CodeGvStateDiagram.ump"},javaline={160},length={6})
-  private void appendNormalStateFormat(StringBuilder code, int numSpaces) {
+
+  /**
+   * Append the format for normal nodes.
+   */
+  @umplesourcefile(line={96},file={"Generator_CodeGvStateDiagram.ump"},javaline={148},length={6})
+   private void appendNormalStateFormat(StringBuilder code, int numSpaces){
     appendSpaces(code, numSpaces); 
     code.append("// Format for normal states\n");
     appendSpaces(code, numSpaces);
     code.append("node [shape = rectangle, width=1,style=rounded];\n");
   }
 
-  // Used to indent code
-  @umplesourcefile(line={104},file={"Generator_CodeGvStateDiagram.ump"},javaline={169},length={5})
-  private void appendSpaces(StringBuilder code, int numSpaces) {
+
+  /**
+   * Used to indent code
+   */
+  @umplesourcefile(line={104},file={"Generator_CodeGvStateDiagram.ump"},javaline={160},length={5})
+   private void appendSpaces(StringBuilder code, int numSpaces){
     for(int i=0; i<numSpaces; i++) {
       code.append(" ");
     }
   }
 
-  // The state qualified name incorporates the classname, the state machine name
-  // and the hierarchy of state names
-  // This is used as the internal graphviz label, and is not displayed.  
-  @umplesourcefile(line={113},file={"Generator_CodeGvStateDiagram.ump"},javaline={179},length={5})
-  private String getStateQualifiedName(State s, UmpleClass c) {
+
+  /**
+   * The state qualified name incorporates the classname, the state machine name
+   * and the hierarchy of state names
+   * This is used as the internal graphviz label, and is not displayed.
+   */
+  @umplesourcefile(line={113},file={"Generator_CodeGvStateDiagram.ump"},javaline={171},length={5})
+   private String getStateQualifiedName(State s, UmpleClass c){
     StateMachine sm = s.getStateMachine();
     String prepend = s.hasNestedStateMachines() ? "cluster" : "";
     return prepend+c.getName()+"_"+sm.getFullName()+"_"+s.getName();
   }
 
-  // Return the name for the state to be used in transitions
-  @umplesourcefile(line={120},file={"Generator_CodeGvStateDiagram.ump"},javaline={187},length={4})
-  private String getTransitionNameForState(State s, UmpleClass c, boolean isOrigin) {
+
+  /**
+   * Return the name for the state to be used in transitions
+   */
+  @umplesourcefile(line={120},file={"Generator_CodeGvStateDiagram.ump"},javaline={184},length={4})
+   private String getTransitionNameForState(State s, UmpleClass c, boolean isOrigin){
     State firstNonSuperstate = getFirstNestedNonClusterState(s);
     return getStateQualifiedName(firstNonSuperstate, c);
   }
-  
-  // return self if it does not have nested state, otherwise the first
-  // nested state that does not itself have a nested state
-  @umplesourcefile(line={127},file={"Generator_CodeGvStateDiagram.ump"},javaline={195},length={8})
-  private State getFirstNestedNonClusterState(State s) {
+
+
+  /**
+   * return self if it does not have nested state, otherwise the first
+   * nested state that does not itself have a nested state
+   */
+  @umplesourcefile(line={127},file={"Generator_CodeGvStateDiagram.ump"},javaline={194},length={8})
+   private State getFirstNestedNonClusterState(State s){
     if(!s.hasNestedStateMachines()) {
       return s;
     }
@@ -201,8 +205,8 @@ public class GvStateDiagramGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={136},file={"Generator_CodeGvStateDiagram.ump"},javaline={205},length={9})
-  private String getTransitionHeadOrTailForState(State s, UmpleClass c, boolean isOrigin) {
+  @umplesourcefile(line={136},file={"Generator_CodeGvStateDiagram.ump"},javaline={209},length={9})
+   private String getTransitionHeadOrTailForState(State s, UmpleClass c, boolean isOrigin){
     if(s.hasNestedStateMachines()) {
       // Use lhead or ltail
       return (isOrigin? "ltail" : "lhead")+"="+getStateQualifiedName(s, c)+",";
@@ -210,12 +214,10 @@ public class GvStateDiagramGenerator implements CodeGenerator
     else {
       return "";
     }
-  }  
+  }
 
-  private void appendStateMachineRecursively(StringBuilder code, StringBuilder transitions, StateMachine sm,
-      UmpleClass uClass, String className, boolean isTopLevel,
-      int smCount, int indentLevel) {
-
+  @umplesourcefile(line={146},file={"Generator_CodeGvStateDiagram.ump"},javaline={220},length={157})
+   private void appendStateMachineRecursively(StringBuilder code, StringBuilder transitions, StateMachine sm, UmpleClass uClass, String className, boolean isTopLevel, int smCount, int indentLevel){
     String smName, clSmName, sLabel, sName;
     Event event;
     Action action;
@@ -374,10 +376,11 @@ public class GvStateDiagramGenerator implements CodeGenerator
   }
 
 
-  // Output the graphviz file to a file with the .gv suffix
-  @umplesourcefile(line={309},file={"Generator_CodeGvStateDiagram.ump"},javaline={379},length={18})
-  private void writeModel()
-  {
+  /**
+   * Output the graphviz file to a file with the .gv suffix
+   */
+  @umplesourcefile(line={309},file={"Generator_CodeGvStateDiagram.ump"},javaline={379},length={17})
+   private void writeModel(){
     try
     {
       String path = model.getUmpleFile().getPath();
@@ -395,4 +398,13 @@ public class GvStateDiagramGenerator implements CodeGenerator
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

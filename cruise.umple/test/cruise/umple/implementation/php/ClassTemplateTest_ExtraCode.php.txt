@@ -28,10 +28,10 @@ class Mentor
   public function delete()
   {}
 
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
-  public function showMe() {}
+   public function showMe()
+  {
+    
+  }
+
 }
 ?>

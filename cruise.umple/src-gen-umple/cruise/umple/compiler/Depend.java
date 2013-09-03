@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 
 /**
  * A depend relationship indicates a package on which this class depends
- * @umplesource Umple.ump 407
+ * @umplesource Umple.ump 408
  * @umplesource Umple_Code.ump 412
  */
-// line 407 "../../../../src/Umple.ump"
+// line 408 "../../../../src/Umple.ump"
 // line 412 "../../../../src/Umple_Code.ump"
 public class Depend
 {
@@ -117,22 +117,8 @@ public class Depend
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "name" + ":" + getName()+ "," +
-            "isInternal" + ":" + getIsInternal()+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={413},file={"Umple_Code.ump"},javaline={133},length={10})
-  @umplesourcefile(line={414},file={"Umple_Code.ump"},javaline={134},length={9})
-  public String getPackageName()
-  {
+  @umplesourcefile(line={414},file={"Umple_Code.ump"},javaline={121},length={8})
+   public String getPackageName(){
     if (name == null || "".equals(name))
     {
       return "";
@@ -141,4 +127,13 @@ public class Depend
     return dotIndex >= 0 ? name.substring(0,dotIndex) : name;
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "isInternal" + ":" + getIsInternal()+ "]"
+     + outputString;
+  }
 }

@@ -37,14 +37,9 @@ public class DeleteAssociationAction extends SynchronizationAction
   {
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1027},file={"UmpleSync_Code.ump"},javaline={45},length={131})
-  @umplesourcefile(line={1028},file={"UmpleSync_Code.ump"},javaline={46},length={130})
-  public void go()
-  {
+
+  @umplesourcefile(line={1028},file={"UmpleSync_Code.ump"},javaline={42},length={129})
+   public void go(){
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
