@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * Represents a constant.
- * @umplesource Umple.ump 159
+ * @umplesource Umple.ump 160
  */
-// line 159 "../../../../src/Umple.ump"
+// line 160 "../../../../src/Umple.ump"
 public class Constant
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

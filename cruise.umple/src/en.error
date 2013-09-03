@@ -3,89 +3,89 @@
 # 1,2: Error; 3: Warning, code likely incorrect. 4 Warning: Code may be incorrect. 5. Umple compiled, but embedded code had problems.: 
 # Use PageBeingDeveloped.html for new messages before manual pages are created
 
-0: 1, http://umple.org/PageBeingDeveloped.html, Generic Umple Error '{0}' ; 
-1: 4, http://umple.org/W001SingletonWithNon-LazyAttribute.html, Lazy keyword missing from singleton class attribute '{0}' ; 
-2: 4, http://umple.org/W002SingletonWithRequiredObject.html, Association is referencing a singleton class with multiplicity 1 '{0}' ; 
-3: 4, http://umple.org/W003RedundantLazyWithInitialization.html, The lazy keyword is redundant when the attribute is being initialized - in class '{0}' ;
-4: 1, http://umple.org/E004InvalidMultiplicity.html, Invalid multiplicity '{0}' ; 
-5: 1, http://umple.org/E005UndefinedClassinAssociation.html, Association end '{0}' is not a class or interface; 
-6: 2, http://umple.org/E006MissingDefault.html, No default value is specified for a defaulted attribute '{0}' ; 
-7: 3, http://umple.org/W007KeyAlreadySpecified.html, Key already specified in class '{0}' ; 
-8: 1, http://umple.org/E008AssociationClassMissingEnd.html, Association class '{0}' is missing an end ; 
-9: 2, http://umple.org/E009ReflexiveLowerBound.html, Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
-10: 3, http://umple.org/W010SingletonMultiplicityOver1.html, Singleton class '{0}' cannot have multiplicity greater than 1 ; 
-11: 1, http://umple.org/E011ClassisSubclassOfSelf.html, {0} '{1}' cannot cyclically extend itself ; 
-12: 1, http://umple.org/E012ClassIndirectlySubclassofSelf.html, {0} '{1}' cannot cyclically extend {0} '{2}'  ; 
-13: 2, http://umple.org/E013NonImmutableAssociation.html, Class at directed end of immutable association must be an immutable class ;
-14: 3, http://umple.org/E014ImmutableSubclassofMutable.html, Existing associations, state machines, or superclass for class '{0}' prevents class-level immutability ;
-15: 3, http://umple.org/W015ImmutableClassStateMachine.html, Immutable class '{0}' may not contain state machines ;
-16: 1, http://umple.org/E016NonImmutableSuperclass.html, Immutability rules prevent class '{0}' from subclassing '{1}' ;
-17: 2, http://umple.org/E017NonImmutableBidirectionality.html, Two-way associations may not be immutable ;
-18: 2, http://umple.org/E018ReflexiveImmutable.html, Reflexive immutable associations may not be mandatory ;
-19: 2, http://umple.org/E019DuplicateAssociation.html, Class '{0}' may not have multiple associations with the same name '{1}' ;
-20: 1, http://umple.org/E020InterfaceAssociationNotOneWay.html, The class-interface association declared in '{0}' must have the '->' arrow;
+0: 1, "http://umple.org/PageBeingDeveloped.html", Generic Umple Error '{0}' ; 
+1: 4, "http://umple.org/W001SingletonWithNon-LazyAttribute.html", Lazy keyword missing from singleton class attribute '{0}' ; 
+2: 4, "http://umple.org/W002SingletonWithRequiredObject.html", Association is referencing a singleton class with multiplicity 1 '{0}' ; 
+3: 4, "http://umple.org/W003RedundantLazyWithInitialization.html", The lazy keyword is redundant when the attribute is being initialized - in class '{0}' ;
+4: 1, "http://umple.org/E004InvalidMultiplicity.html", Invalid multiplicity '{0}' ; 
+5: 1, "http://umple.org/E005UndefinedClassinAssociation.html", Association end '{0}' is not a class or interface; 
+6: 2, "http://umple.org/E006MissingDefault.html", No default value is specified for a defaulted attribute '{0}' ; 
+7: 3, "http://umple.org/W007KeyAlreadySpecified.html", Key already specified in class '{0}' ; 
+8: 1, "http://umple.org/E008AssociationClassMissingEnd.html", Association class '{0}' is missing an end ; 
+9: 2, "http://umple.org/E009ReflexiveLowerBound.html", Reflexive association with multiplicity '{0}' has lower bound > 0 ; 
+10: 3, "http://umple.org/W010SingletonMultiplicityOver1.html", Singleton class '{0}' cannot have multiplicity greater than 1 ; 
+11: 1, "http://umple.org/E011ClassisSubclassOfSelf.html", {0} '{1}' cannot cyclically extend itself ; 
+12: 1, "http://umple.org/E012ClassIndirectlySubclassofSelf.html", {0} '{1}' cannot cyclically extend {0} '{2}'  ; 
+13: 2, "http://umple.org/E013NonImmutableAssociation.html", Class at directed end of immutable association must be an immutable class ;
+14: 3, "http://umple.org/E014ImmutableSubclassofMutable.html", Existing associations, state machines, or superclass for class '{0}' prevents class-level immutability ;
+15: 3, "http://umple.org/W015ImmutableClassStateMachine.html", Immutable class '{0}' may not contain state machines ;
+16: 1, "http://umple.org/E016NonImmutableSuperclass.html", Immutability rules prevent class '{0}' from subclassing '{1}' ;
+17: 2, "http://umple.org/E017NonImmutableBidirectionality.html", Two-way associations may not be immutable ;
+18: 2, "http://umple.org/E018ReflexiveImmutable.html", Reflexive immutable associations may not be mandatory ;
+19: 2, "http://umple.org/E019DuplicateAssociation.html", Class '{0}' may not have multiple associations with the same name '{1}' ;
+20: 1, "http://umple.org/E020InterfaceAssociationNotOneWay.html", The class-interface association declared in '{0}' must have the '->' arrow;
 
-21: 2, http://umple.org/E021InvalidReflexiveAssociation.html, Reflexive association to class '{0}' must use a role name or else self ;
-22: 2, http://umple.org/E022DuplicateAttribute.html, Class '{0}' has duplicate attribute name {1} ;
-23: 2, http://umple.org/E023AttributeAssociationNameClash.html, Class '{0}' has attribute name {1} that duplicates an association name, or vice-versa ;
-24: 2, http://umple.org/E024SortKeyNotofUmpleType.html, Sort key attribute '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
-25: 2, http://umple.org/E025SortKeyNotFound.html, Class '{0}' does not contain attribute {1} that is used as sort key ;
-26: 2, http://umple.org/E026DuplicateKeyItem.html, Duplicate item '{0}' in key statement(s) in class '{1}' ;
-27: 3, http://umple.org/W027KeyIdentifierIncorrect.html, Item '{0}' in key statement is not defined in class '{1}';
-28: 2, http://umple.org/E028ConstraintIdentifierIncorrect.html, Attribute '{0}' in constraint is not defined in class '{1}';
-29: 2, http://umple.org/E029ConstraintTypeMismatch.html, Attribute '{0}' in constraint must be of type '{1}';
+21: 2, "http://umple.org/E021InvalidReflexiveAssociation.html", Reflexive association to class '{0}' must use a role name or else self ;
+22: 2, "http://umple.org/E022DuplicateAttribute.html", Class '{0}' has duplicate attribute name {1} ;
+23: 2, "http://umple.org/E023AttributeAssociationNameClash.html", Class '{0}' has attribute name {1} that duplicates an association name, or vice-versa ;
+24: 2, "http://umple.org/E024SortKeyNotofUmpleType.html", Sort key attribute '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
+25: 2, "http://umple.org/E025SortKeyNotFound.html", Class '{0}' does not contain attribute {1} that is used as sort key ;
+26: 2, "http://umple.org/E026DuplicateKeyItem.html", Duplicate item '{0}' in key statement(s) in class '{1}' ;
+27: 3, "http://umple.org/W027KeyIdentifierIncorrect.html", Item '{0}' in key statement is not defined in class '{1}';
+28: 2, "http://umple.org/E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}';
+29: 2, "http://umple.org/E029ConstraintTypeMismatch.html", Attribute '{0}' in constraint must be of type '{1}';
 
-30: 4, http://umple.org/W030RedefinedNamespace.html, Redefining the namespace of class {0} to {1};
-31: 4, http://umple.org/W031NamespaceNotUsed.html, Declared namespace {0} was not used before declaring {1};
-32: 1, http://umple.org/E032ReservedRoleName.html, The role name '{0}' has a conflict. Please don't use plural form of class name as a role name.;
-33: 3, http://umple.org/PageBeingDeveloped.html, The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system. ;
-34: 2, http://umple.org/PageBeingDeveloped.html, Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface. ;
+30: 4, "http://umple.org/W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1};
+31: 4, "http://umple.org/W031NamespaceNotUsed.html", Declared namespace {0} was not used before declaring {1};
+32: 1, "http://umple.org/E032ReservedRoleName.html", The role name '{0}' has a conflict. Please don't use plural form of class name as a role name.;
+33: 3, "http://umple.org/PageBeingDeveloped.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system. ;
+34: 2, "http://umple.org/PageBeingDeveloped.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface. ;
 
 # State-Machine related messages
-50: 4, http://umple.org/W050TargetStateNotFound.html, State '{0}' has not been declared, it is being treated as an end state ;
-51: 2, http://umple.org/E051EventParametersMustMatch.html, Event parameter(s) '{0}' inconsistent with previous declaration of the same event ; 
-52: 2, http://umple.org/E052StateMachineNameClash.html, Association or attribute can not have same name as state machine '{0}' ;
-53: 2, http://umple.org/E053NoConcurrencyAtTopLevel.html, State machine {0} has concurrent states, but concurrency is only allowed in nested substates or in 'active' blocks ;
+50: 4, "http://umple.org/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an end state ;
+51: 2, "http://umple.org/E051EventParametersMustMatch.html", Event parameter(s) '{0}' inconsistent with previous declaration of the same event ; 
+52: 2, "http://umple.org/E052StateMachineNameClash.html", Association or attribute can not have same name as state machine '{0}' ;
+53: 2, "http://umple.org/E053NoConcurrencyAtTopLevel.html", State machine {0} has concurrent states, but concurrency is only allowed in nested substates or in 'active' blocks ;
 
 
 # Messages relating to format of identifiers.
-100: 2, http://umple.org/WE1xxIdentifierInvalid.html, Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;
-101: 4, http://umple.org/WE1xxIdentifierInvalid.html, Class name '{0}' should start with a capital letter ;
+100: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;
+101: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Class name '{0}' should start with a capital letter ;
 
-110: 2, http://umple.org/WE1xxIdentifierInvalid.html, Interface name '{0}' must be alphanumeric and start with an alpha character or _ ;
-111: 4, http://umple.org/WE1xxIdentifierInvalid.html, Interface name '{0}' should start with a capital letter ;
+110: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Interface name '{0}' must be alphanumeric and start with an alpha character or _ ;
+111: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;
 
-# [TODO - issue 337] 120: 2, http://umple.org/WE1xxIdentifierInvalid.html, Association role name '{0}' must be alphanumeric and start with a letter ;
-# [TODO - issue 337] 121: 4, http://umple.org/WE1xxIdentifierInvalid.html, Association role name '{0}' should start with a lower-case letter ;
+# [TODO - issue 337] 120: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Association role name '{0}' must be alphanumeric and start with a letter ;
+# [TODO - issue 337] 121: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Association role name '{0}' should start with a lower-case letter ;
 
-130: 2, http://umple.org/WE1xxIdentifierInvalid.html, Attribute name '{0}' must be alphanumeric, starting with a lower-case letter ;
-131: 4, http://umple.org/WE1xxIdentifierInvalid.html, Attribute name '{0}' should start with a lower-case letter ;
-132: 2, http://umple.org/WE1xxIdentifierInvalid.html, Attribute name '{0}' contains special characters. Association declaration must be separated by spaces ;
+130: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute name '{0}' must be alphanumeric, starting with a lower-case letter ;
+131: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute name '{0}' should start with a lower-case letter ;
+132: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute name '{0}' contains special characters. Association declaration must be separated by spaces ;
 
-140: 2, http://umple.org/WE1xxIdentifierInvalid.html, Attribute type name '{0}' must be alphanumeric, starting with a letter ;
+140: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute type name '{0}' must be alphanumeric, starting with a letter ;
 
-150: 2, http://umple.org/WE1xxIdentifierInvalid.html, State machine name '{0}' must be alphanumeric and start with a letter ;
-152: 2, http://umple.org/WE1xxIdentifierInvalid.html, State name '{0}' must be alphanumeric and start with a letter ;
+150: 2, "http://umple.org/WE1xxIdentifierInvalid.html", State machine name '{0}' must be alphanumeric and start with a letter ;
+152: 2, "http://umple.org/WE1xxIdentifierInvalid.html", State name '{0}' must be alphanumeric and start with a letter ;
 
 # Messages relating to general parsing issues
-1002: 5, http://umple.org/W1002-3UnexpectedEmbeddedCode.html, Embedded method with code or unparsed code found when strictness is 'modelOnly' ;
-1003: 5, http://umple.org/W1002-3UnexpectedEmbeddedCode.html, Unparsed extra code found when strictness is 'noExtraCode' ;
-1004: 2, http://umple.org/E1004-5MessagesnotasExpected.html, Expected message '{0}' not found ;
-1005: 2, http://umple.org/E1004-5MessagesnotasExpected.html, Disallowed warning message '{0}' encountered ;
-1006: 3, http://umple.org/W1006StateMachineNotParsed.html, State machine syntax could not be processed. It has been considered as Extra Code ;
+1002: 5, "http://umple.org/W1002-3UnexpectedEmbeddedCode.html", Embedded method with code or unparsed code found when strictness is 'modelOnly' ;
+1003: 5, "http://umple.org/W1002-3UnexpectedEmbeddedCode.html", Unparsed extra code found when strictness is 'noExtraCode' ;
+1004: 2, "http://umple.org/E1004-5MessagesnotasExpected.html", Expected message '{0}' not found ;
+1005: 2, "http://umple.org/E1004-5MessagesnotasExpected.html", Disallowed warning message '{0}' encountered ;
+1006: 3, "http://umple.org/W1006StateMachineNotParsed.html", State machine syntax could not be processed. It has been considered as Extra Code ;
 
-1500 : 1, http://umple.org/E15xxParsingError.html, Parsing error: '{0}' not understood ; 
-1501 : 1, http://umple.org/E15xxParsingError.html, Parsing error: Arguments to '{0}' not understood ; 
-1502 : 1, http://umple.org/E15xxParsingError.html, Parsing error: Structure of '{0}' invalid ; 
-1510 : 1, http://umple.org/E1510UseFileMissing.html, File '{0}' referred to in use statement was not found ; 
+1500 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
+1501 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
+1502 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ; 
+1510 : 1, "http://umple.org/E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error
-2001: 5, http://umple.org/W20xxErrorinEmbeddedCode.html, Error in Java embedded in Umple: '{0}' ;
-2002: 5, http://umple.org/W20xxErrorinEmbeddedCode.html, Error in C++ embedded in Umple: '{0}' ;
+2001: 5, "http://umple.org/W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;
+2002: 5, "http://umple.org/W20xxErrorinEmbeddedCode.html", Error in C++ embedded in Umple: '{0}' ;
 
 # Special testing messages for debugging
-8001: 1, http://umple.org/PageBeingDeveloped.html, Debug error : '{0}' ;
-8005: 5, http://umple.org/PageBeingDeveloped.html, Debug warning : '{0}' ;
+8001: 1, "http://umple.org/PageBeingDeveloped.html", Debug error : '{0}' ;
+8005: 5, "http://umple.org/PageBeingDeveloped.html", Debug warning : '{0}' ;
 
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
-9999: 5, http://umple.org/W9999FeatureUnderDevelopment.html, Feature under development. '{0}' found and ignored. processed as: '{1}' ;
+9999: 5, "http://umple.org/W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;

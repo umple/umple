@@ -74,6 +74,47 @@ public class UmpleFile
   public void delete()
   {}
 
+  @umplesourcefile(line={15},file={"UmpleHelper_Code.ump"},javaline={78},length={3})
+   public  UmpleFile(String aPath, String aFilename){
+    this(new File(aPath,aFilename));
+  }
+
+  @umplesourcefile(line={20},file={"UmpleHelper_Code.ump"},javaline={83},length={3})
+   public  UmpleFile(String aFullFilename){
+    this(new File(aFullFilename));
+  }
+
+  @umplesourcefile(line={25},file={"UmpleHelper_Code.ump"},javaline={88},length={11})
+   private StringBuilder init(){
+    String fullFilename = file.getAbsolutePath();
+    fileName = file.getName();
+    path = file.getAbsoluteFile().getParentFile().getAbsolutePath();
+    fileContent = new StringBuilder();
+    if (doesFileExist(fullFilename))
+    {
+      append(fullFilename);
+    }
+    return fileContent;
+  }
+
+  @umplesourcefile(line={38},file={"UmpleHelper_Code.ump"},javaline={101},length={11})
+   public String getSimpleFileName(){
+    int lastIndex = fileName.lastIndexOf(".");
+    if (lastIndex == -1)
+    {
+      return fileName;
+    }
+    else
+    {
+      return fileName.substring(0, lastIndex);
+    }
+  }
+
+  @umplesourcefile(line={52},file={"UmpleHelper_Code.ump"},javaline={114},length={3})
+   public String getFileContent(){
+    return fileContent.toString();
+  }
+
 
   public String toString()
   {
@@ -86,48 +127,7 @@ public class UmpleFile
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-   public UmpleFile(String aPath,String aFilename)  {
-this(new File(aPath,aFilename));
-  }
- public UmpleFile(String aFullFilename)  {
-this(new File(aFullFilename));
-  }
-//  @umplesourcefile(line={24},file={"UmpleHelper_Code.ump"},javaline={96},length={101})
-  @umplesourcefile(line={25},file={"UmpleHelper_Code.ump"},javaline={97},length={12})
-  private StringBuilder init()
-  {
-    String fullFilename = file.getAbsolutePath();
-    fileName = file.getName();
-    path = file.getAbsoluteFile().getParentFile().getAbsolutePath();
-    fileContent = new StringBuilder();
-    if (doesFileExist(fullFilename))
-    {
-      append(fullFilename);
-    }
-    return fileContent;
-  }
-  
-  @umplesourcefile(line={38},file={"UmpleHelper_Code.ump"},javaline={111},length={13})
-  public String getSimpleFileName()
-  {
-
-    int lastIndex = fileName.lastIndexOf(".");
-    if (lastIndex == -1)
-    {
-      return fileName;
-    }
-    else
-    {
-      return fileName.substring(0, lastIndex);
-    }
-  }
-
-  @umplesourcefile(line={52},file={"UmpleHelper_Code.ump"},javaline={126},length={4})
-  public String getFileContent()
-  {
-    return fileContent.toString();
-  }
-
+  //  @umplesourcefile(line={56},file={"UmpleHelper_Code.ump"},javaline={131},length={69})
   @umplesourcefile(line={57},file={"UmpleHelper_Code.ump"},javaline={132},length={4})
   public InputStream getFileStream() throws FileNotFoundException
   {

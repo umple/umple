@@ -31,15 +31,9 @@ public class UmpleParserFactory
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={131},file={"UmpleHelper_Code.ump"},javaline={39},length={50})
-  @umplesourcefile(line={132},file={"UmpleHelper_Code.ump"},javaline={40},length={25})
-  public static UmpleParser create(String className) 
-  {
-    
+
+  @umplesourcefile(line={132},file={"UmpleHelper_Code.ump"},javaline={36},length={23})
+   public static  UmpleParser create(String className){
     //FAST THAN REFLECTION, LOAD THE KNOWN IMPLEMENTORS
     if ("cruise.umple.compiler.UmpleInternalParser".equals(className) || "UmpleInternalParser".equals(className))
     {
@@ -62,22 +56,19 @@ public class UmpleParserFactory
       return null;
     }
   }
-  
-  @umplesourcefile(line={158},file={"UmpleHelper_Code.ump"},javaline={67},length={4})
-  public static UmpleParser create(String umpleParserName, UmpleModel model)
-  {
+
+  @umplesourcefile(line={158},file={"UmpleHelper_Code.ump"},javaline={61},length={3})
+   public static  UmpleParser create(String umpleParserName, UmpleModel model){
     return create(umpleParserName,model,false);
   }
-  
-  @umplesourcefile(line={163},file={"UmpleHelper_Code.ump"},javaline={73},length={4})
-  public static UmpleParser create(String umpleParserName, boolean failHardIfInvalid)
-  {
+
+  @umplesourcefile(line={163},file={"UmpleHelper_Code.ump"},javaline={66},length={3})
+   public static  UmpleParser create(String umpleParserName, boolean failHardIfInvalid){
     return create(umpleParserName,null,failHardIfInvalid);
   }
-  
-  @umplesourcefile(line={168},file={"UmpleHelper_Code.ump"},javaline={79},length={13})
-  public static UmpleParser create(String umpleParserName, UmpleModel model, boolean failHardIfInvalid)
-  {
+
+  @umplesourcefile(line={168},file={"UmpleHelper_Code.ump"},javaline={71},length={12})
+   public static  UmpleParser create(String umpleParserName, UmpleModel model, boolean failHardIfInvalid){
     UmpleParser p = create(umpleParserName);
     if (p == null && failHardIfInvalid)
     {

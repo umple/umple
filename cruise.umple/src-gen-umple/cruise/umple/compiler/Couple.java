@@ -8,10 +8,10 @@ import java.util.*;
  * An open-close pair, such as open curly brackets and close curly brackets
  * Used to identify block start and end while parsing
  * @umplesource Parser.ump 18
- * @umplesource Parser_Code.ump 12
+ * @umplesource Parser_Code.ump 11
  */
 // line 18 "../../../../src/Parser.ump"
-// line 12 "../../../../src/Parser_Code.ump"
+// line 11 "../../../../src/Parser_Code.ump"
 public class Couple
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -207,23 +207,8 @@ public class Couple
     }
   }
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "open" + ":" + getOpen()+ "," +
-            "close" + ":" + getClose()+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={14},file={"Parser_Code.ump"},javaline={223},length={64})
-  @umplesourcefile(line={15},file={"Parser_Code.ump"},javaline={224},length={28})
-  public boolean isBalanced(String input)
-  {
-
+  @umplesourcefile(line={14},file={"Parser_Code.ump"},javaline={211},length={26})
+   public boolean isBalanced(String input){
     if (input == null)
     {
       return true;
@@ -250,10 +235,8 @@ public class Couple
     return numberOfOpen <= numberOfClosed;
   }
 
-
-  @umplesourcefile(line={45},file={"Parser_Code.ump"},javaline={255},length={33})
-  public String removeIgnoredText(String input)
-  {
+  @umplesourcefile(line={44},file={"Parser_Code.ump"},javaline={239},length={32})
+   public String removeIgnoredText(String input){
     String output = input;
 
     for (Couple ignore : ignores)
@@ -286,4 +269,13 @@ public class Couple
     return output;
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "open" + ":" + getOpen()+ "," +
+            "close" + ":" + getClose()+ "]"
+     + outputString;
+  }
 }

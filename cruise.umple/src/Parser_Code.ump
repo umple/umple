@@ -8,7 +8,6 @@ http://umple.org/license
  */
 
 namespace cruise.umple.compiler;
-
 class Couple
 {
 
@@ -1164,6 +1163,7 @@ class Parser
               boolean isAlphaNumeric = part.isAlphanumeric();
               value = inputParser.nextUntil(stopAtSpace, isAlphaNumeric, part.getNextIdentifiers());
 
+
               while (part.isMultiWord() && !isBalanced(value))
               {
                 int internalIndex = inputParser.currentIndex();
@@ -1361,16 +1361,72 @@ class Parser
     return openBracket > closeBracket;
   }
 
+  private float average = 0.0f;
+  private int times = 1;
   private boolean isBalanced(String input)
   {
-    for (Couple couple : couples)
-    {
-      if (!couple.isBalanced(input))
+    if(input == null){
+      return true;
+    }
+    int braces = 0;
+    boolean isQuote = false;
+    boolean isSingleQuote = false;
+    boolean isComment = false;
+    boolean isMultiComment = false;
+    boolean escaping = false;
+    char[] chars = input.toCharArray();
+    int size = input.length();
+    for(int i=0;i<size;i++){
+      if(!escaping)
       {
-        return false;
+        if(isQuote&&chars[i]=='\"'){
+          isQuote = false;
+        }
+        else if(isSingleQuote&&chars[i]=='\''){
+          isSingleQuote = false;
+        }
+        else if(!isComment&&!isMultiComment&&!isQuote&&!isSingleQuote){
+          if(chars[i]=='{'){
+            braces++;
+          }
+          else if(chars[i]=='}'){
+            braces--;
+          }
+          else if(chars[i]=='\"'){
+            isQuote = true;
+          }
+          else if(chars[i]=='\''){
+             isSingleQuote = true;
+          }
+          else if(i<size-1&&chars[i]=='/'){
+            if(chars[i+1]=='/'){
+              isComment = true;
+              i++;
+            }
+            else if(chars[i+1]=='*'){
+              isMultiComment = true;
+              i++;
+            }
+          }          
+        }
+        else if(isComment&&chars[i]=='\n'){
+          isComment = false;
+        }
+        else if(isMultiComment&&i<size-1&&chars[i]=='*'&&chars[i+1]=='/'){
+          isMultiComment = false;
+        }
+        else if(chars[i]=='\\'){
+          escaping = true;
+        }
+        else {
+          escaping = false;
+        }      
+      }
+      else {
+        escaping = false;
       }
     }
-    return true;
+    return braces == 0;
   }
 
   public Token getToken(int index)
@@ -1784,6 +1840,7 @@ class ErrorTypeSingleton
       textParser.nextAfter(false,",");
 
       String url = textParser.nextUntil(false, ",");
+      url = url.substring(1,url.length()-1);
       textParser.nextAfter(false,",");
 
       String formatString = textParser.nextUntil(false, ";");

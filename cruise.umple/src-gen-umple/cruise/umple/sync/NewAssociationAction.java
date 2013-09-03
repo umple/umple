@@ -37,14 +37,9 @@ public class NewAssociationAction extends SynchronizationAction
   {
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={659},file={"UmpleSync_Code.ump"},javaline={45},length={174})
-  @umplesourcefile(line={660},file={"UmpleSync_Code.ump"},javaline={46},length={14})
-  public void go()
-  {
+
+  @umplesourcefile(line={660},file={"UmpleSync_Code.ump"},javaline={42},length={13})
+   public void go(){
     boolean shouldContinue = true;
     
     if (shouldContinue)
@@ -57,10 +52,9 @@ public class NewAssociationAction extends SynchronizationAction
       shouldContinue = addAssociationDescription();  
     }
   }
-  
-  @umplesourcefile(line={675},file={"UmpleSync_Code.ump"},javaline={62},length={91})
-  private boolean addAssociationPosition()
-  {
+
+  @umplesourcefile(line={675},file={"UmpleSync_Code.ump"},javaline={57},length={90})
+   private boolean addAssociationPosition(){
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
@@ -150,10 +144,9 @@ public class NewAssociationAction extends SynchronizationAction
       return handleException(e);
     }
   }
-  
-  @umplesourcefile(line={767},file={"UmpleSync_Code.ump"},javaline={155},length={54})
-  private boolean addAssociationDescription()
-  {
+
+  @umplesourcefile(line={767},file={"UmpleSync_Code.ump"},javaline={149},length={53})
+   private boolean addAssociationDescription(){
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
@@ -206,10 +199,9 @@ public class NewAssociationAction extends SynchronizationAction
       return handleException(e);
     }
   }
-  
-  @umplesourcefile(line={822},file={"UmpleSync_Code.ump"},javaline={211},length={11})
-  private boolean handleException(Exception e)
-  {
+
+  @umplesourcefile(line={822},file={"UmpleSync_Code.ump"},javaline={204},length={10})
+   private boolean handleException(Exception e){
     String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
     
     for (StackTraceElement trace : e.getStackTrace())

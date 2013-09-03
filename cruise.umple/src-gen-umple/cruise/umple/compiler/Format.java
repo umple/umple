@@ -29,18 +29,14 @@ public class Format
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={680},file={"Generator_CodeSimpleMetrics.ump"},javaline={37},length={8})
-  @umplesourcefile(line={681},file={"Generator_CodeSimpleMetrics.ump"},javaline={38},length={7})
-  public static String repeat(String string, int quantidade) {   
+
+  @umplesourcefile(line={681},file={"Generator_CodeSimpleMetrics.ump"},javaline={34},length={7})
+   public static  String repeat(String string, int quantidade){
     StringBuffer retorno = new StringBuffer();   
     for (int j=0; j<quantidade; j++){   
       retorno.append(string);   
     }   
-    return retorno.toString();   
+    return retorno.toString();
   }
 
 }

@@ -8,10 +8,10 @@ import java.nio.file.*;
  * Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
  * filename, the line number and the corresponding offset on that line number.
  * @umplesource Parser.ump 122
- * @umplesource Parser_Code.ump 322
+ * @umplesource Parser_Code.ump 321
  */
 // line 122 "../../../../src/Parser.ump"
-// line 322 "../../../../src/Parser_Code.ump"
+// line 321 "../../../../src/Parser_Code.ump"
 public class Position
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -188,36 +188,30 @@ public class Position
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-   public Position(int aLineNumber,int aCharacterOffset,int aOffset)  {
-this(null, aLineNumber, aCharacterOffset, aOffset);
+
+  @umplesourcefile(line={325},file={"Parser_Code.ump"},javaline={193},length={3})
+   public  Position(int aLineNumber, int aCharacterOffset, int aOffset){
+    this(null, aLineNumber, aCharacterOffset, aOffset);
   }
-//  @umplesourcefile(line={330},file={"Parser_Code.ump"},javaline={199},length={94})
-  @umplesourcefile(line={331},file={"Parser_Code.ump"},javaline={200},length={4})
-  public Position copy()
-  {
+
+  @umplesourcefile(line={330},file={"Parser_Code.ump"},javaline={198},length={3})
+   public Position copy(){
     return new Position(filename,lineNumber,characterOffset,offset);
   }
 
-  @umplesourcefile(line={336},file={"Parser_Code.ump"},javaline={206},length={5})
-  public Position add(Position more)
-  {
+  @umplesourcefile(line={335},file={"Parser_Code.ump"},javaline={203},length={4})
+   public Position add(Position more){
     String tfile = filename == null ? more.getFilename() : filename;
     return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
   }
 
-  @umplesourcefile(line={342},file={"Parser_Code.ump"},javaline={213},length={4})
-  public String toString()
-  {
+  @umplesourcefile(line={341},file={"Parser_Code.ump"},javaline={209},length={3})
+   public String toString(){
     return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
   }
 
-  @umplesourcefile(line={347},file={"Parser_Code.ump"},javaline={219},length={12})
-  private int countChars(String str, char c)
-  {
+  @umplesourcefile(line={346},file={"Parser_Code.ump"},javaline={214},length={11})
+   private int countChars(String str, char c){
     int count = 0;
     for (int i = 0; i < str.length(); i++)
     {
@@ -228,19 +222,20 @@ this(null, aLineNumber, aCharacterOffset, aOffset);
     }
     return count;
   }
-  
-  @umplesourcefile(line={360},file={"Parser_Code.ump"},javaline={233},length={4})
-  private String deWindowsify(String str)
-  {
+
+  @umplesourcefile(line={359},file={"Parser_Code.ump"},javaline={227},length={3})
+   private String deWindowsify(String str){
     return str.replace('\\','/');
   }
 
-  //This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
-  //It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
-  //As a result, it has been replaced by the placeholder above, that simply returns the full path.
-  @umplesourcefile(line={368},file={"Parser_Code.ump"},javaline={242},length={10})
-  public String getRelativePath(UmpleClass parent, String language)
-  {
+
+  /**
+   * This version of getRelativePath is complete, but uses the java.nio library, requiring Java 7.
+   * It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
+   * As a result, it has been replaced by the placeholder above, that simply returns the full path.
+   */
+  @umplesourcefile(line={367},file={"Parser_Code.ump"},javaline={232},length={55})
+   public String getRelativePath(UmpleClass parent, String language){
     if (filename == null)
     {
       return "";

@@ -141,6 +141,11 @@ public class CourseU
   public void delete()
   {}
 
+  @umplesourcefile(line={191},file={"TestHarnessStateMachineJava.ump"},javaline={145},length={3})
+   public void incr(){
+    count += 1;
+  }
+
 
   public String toString()
   {
@@ -148,15 +153,5 @@ public class CourseU
     return super.toString() + "["+
             "count" + ":" + getCount()+ "]"
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={190},file={"TestHarnessStateMachineJava.ump"},javaline={156},length={5})
-  @umplesourcefile(line={191},file={"TestHarnessStateMachineJava.ump"},javaline={157},length={4})
-  public void incr() 
-  { 
-    count += 1;
   }
-
 }

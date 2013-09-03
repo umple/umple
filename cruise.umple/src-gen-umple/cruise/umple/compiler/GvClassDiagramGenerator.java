@@ -73,22 +73,8 @@ public class GvClassDiagramGenerator implements CodeGenerator
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={19},file={"Generator_CodeGvClassDiagram.ump"},javaline={89},length={179})
-  @umplesourcefile(line={20},file={"Generator_CodeGvClassDiagram.ump"},javaline={90},length={151})
-  public void generate()
-  {
+  @umplesourcefile(line={20},file={"Generator_CodeGvClassDiagram.ump"},javaline={77},length={25})
+   public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder associations = new StringBuilder();
     String className;
@@ -114,11 +100,12 @@ public class GvClassDiagramGenerator implements CodeGenerator
     terminateCode(code, associations);
   }
 
-  // Actually output the class contents  
-  @SuppressWarnings({ "rawtypes", "unchecked" })
-  @umplesourcefile(line={49},file={"Generator_CodeGvClassDiagram.ump"},javaline={120},length={37})
-  private void visitClass(UmpleClass uClass, Set visitedClasses, StringBuilder code, StringBuilder associations)
-  {
+
+  /**
+   * Actually output the class contents
+   */
+  @umplesourcefile(line={48},file={"Generator_CodeGvClassDiagram.ump"},javaline={104},length={110})
+   private void visitClass(UmpleClass uClass, Set visitedClasses, StringBuilder code, StringBuilder associations){
     // Ensure we only visit once
     if(visitedClasses.contains(uClass)) {
       return;
@@ -228,10 +215,9 @@ public class GvClassDiagramGenerator implements CodeGenerator
       }
     }
   }
-  
-  @umplesourcefile(line={161},file={"Generator_CodeGvClassDiagram.ump"},javaline={233},length={6})
-  private void terminateCode(StringBuilder code, StringBuilder associations) {
 
+  @umplesourcefile(line={160},file={"Generator_CodeGvClassDiagram.ump"},javaline={220},length={9})
+   private void terminateCode(StringBuilder code, StringBuilder associations){
     code.append("\n  // All associations\n");
     code.append(associations);
 
@@ -239,20 +225,25 @@ public class GvClassDiagramGenerator implements CodeGenerator
 
     model.setCode(code.toString());
     writeModel();
-  } 
+  }
 
-  // Used to indent code
-  @umplesourcefile(line={173},file={"Generator_CodeGvClassDiagram.ump"},javaline={246},length={5})
-  private void appendSpaces(StringBuilder code, int numSpaces) {
+
+  /**
+   * Used to indent code
+   */
+  @umplesourcefile(line={172},file={"Generator_CodeGvClassDiagram.ump"},javaline={231},length={5})
+   private void appendSpaces(StringBuilder code, int numSpaces){
     for(int i=0; i<numSpaces; i++) {
       code.append(" ");
     }
   }
 
-  // Output the graphviz file to a file with the .gv suffix
-  @umplesourcefile(line={180},file={"Generator_CodeGvClassDiagram.ump"},javaline={254},length={18})
-  private void writeModel()
-  {
+
+  /**
+   * Output the graphviz file to a file with the .gv suffix
+   */
+  @umplesourcefile(line={179},file={"Generator_CodeGvClassDiagram.ump"},javaline={242},length={17})
+   private void writeModel(){
     try
     {
       String path = model.getUmpleFile().getPath();
@@ -270,4 +261,13 @@ public class GvClassDiagramGenerator implements CodeGenerator
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

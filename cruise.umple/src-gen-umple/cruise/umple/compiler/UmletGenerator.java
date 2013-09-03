@@ -251,42 +251,16 @@ public class UmletGenerator implements CodeGenerator
     associationElements.clear();
   }
 
-
-  /**
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
-   */
-  @umplesourcefile(line={21},file={"Generator.ump"},javaline={255},length={2})
-  @Override
-  public boolean setOutput(String aString){
-          return false;
-  }
-
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "filename" + ":" + getFilename()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={14},file={"Umlet_Code.ump"},javaline={278},length={124})
-  @umplesourcefile(line={15},file={"Umlet_Code.ump"},javaline={279},length={7})
-  public void generate()
-  {
+  @umplesourcefile(line={15},file={"Umlet_Code.ump"},javaline={255},length={6})
+   public void generate(){
     UmpleFile umpleFile = model.getUmpleFile();
     String filename = umpleFile.getPath() + File.separator + umpleFile.getFileName() + ".uxf";
     draw(model);
     SampleFileWriter.createFile(filename, toXml());
   }
- 
-  @umplesourcefile(line={23},file={"Umlet_Code.ump"},javaline={288},length={25})
-  public void draw(UmpleModel model)
-  {
+
+  @umplesourcefile(line={23},file={"Umlet_Code.ump"},javaline={263},length={24})
+   public void draw(UmpleModel model){
     Map<UmpleClass,UmletElement> classToElementMap = new HashMap<UmpleClass,UmletElement>();
     
     for (UmpleClass aClass : model.getUmpleClasses())
@@ -311,9 +285,8 @@ public class UmletGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={49},file={"Umlet_Code.ump"},javaline={315},length={20})
-  public UmletElement newClass(String name)
-  {
+  @umplesourcefile(line={49},file={"Umlet_Code.ump"},javaline={289},length={19})
+   public UmletElement newClass(String name){
     int elementOffset = numberOfClassElements();
   
     int width = 100;
@@ -333,9 +306,8 @@ public class UmletGenerator implements CodeGenerator
     return e;
   }
 
-  @umplesourcefile(line={70},file={"Umlet_Code.ump"},javaline={337},length={20})
-  public UmletElement newAssociation(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole)
-  {
+  @umplesourcefile(line={70},file={"Umlet_Code.ump"},javaline={310},length={19})
+   public UmletElement newAssociation(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole){
     String whereIs = firstClass.getCoordinate().whereIs(secondClass.getCoordinate());
     if ("top".equals(whereIs))
     {
@@ -354,10 +326,9 @@ public class UmletGenerator implements CodeGenerator
       return newAssociationTopToBottom(firstClass, secondClass, firstMultiplicity, secondMultiplicity, firstRole, secondRole);
     }
   }
-  
-  @umplesourcefile(line={91},file={"Umlet_Code.ump"},javaline={359},length={15})
-  private UmletElement newAssociationLeftToRight(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole)
-  {
+
+  @umplesourcefile(line={91},file={"Umlet_Code.ump"},javaline={331},length={14})
+   private UmletElement newAssociationLeftToRight(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole){
     Coordinate firstCoordinate = firstClass.getCoordinate();
     Coordinate secondCoordinate = secondClass.getCoordinate();
     
@@ -369,12 +340,11 @@ public class UmletGenerator implements CodeGenerator
     String additional = xOffset + ";" + yOffset + ";0;0";
     UmletElement e = new UmletElement("com.umlet.element.base.Relation",panel,additional,c);
     addAssociationElement(e);
-    return e;  
+    return e;
   }
-  
-  @umplesourcefile(line={107},file={"Umlet_Code.ump"},javaline={376},length={15})
-  private UmletElement newAssociationTopToBottom(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole)
-  {
+
+  @umplesourcefile(line={107},file={"Umlet_Code.ump"},javaline={347},length={14})
+   private UmletElement newAssociationTopToBottom(UmletElement firstClass, UmletElement secondClass, String firstMultiplicity, String secondMultiplicity, String firstRole, String secondRole){
     Coordinate firstCoordinate = firstClass.getCoordinate();
     Coordinate secondCoordinate = secondClass.getCoordinate();
     
@@ -386,12 +356,11 @@ public class UmletGenerator implements CodeGenerator
     Coordinate c = new Coordinate(firstCoordinate.getX() + firstCoordinate.getWidth()/2,firstCoordinate.getY()+firstCoordinate.getHeight(),1,1);
     UmletElement e = new UmletElement("com.umlet.element.base.Relation",panel,additional,c);
     addAssociationElement(e);
-    return e;  
+    return e;
   }
-  
-  @umplesourcefile(line={123},file={"Umlet_Code.ump"},javaline={393},length={15})
-  public String toXml()
-  {
+
+  @umplesourcefile(line={123},file={"Umlet_Code.ump"},javaline={363},length={14})
+   public String toXml(){
     UmletDiagram diagram = new UmletDiagram();
     
     for(UmletElement e : classElements)
@@ -406,4 +375,24 @@ public class UmletGenerator implements CodeGenerator
     return diagram.toXml();
   }
 
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={21},file={"Generator.ump"},javaline={379},length={2})
+  @Override
+  public boolean setOutput(String aString){
+          return false;
+  }
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "filename" + ":" + getFilename()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

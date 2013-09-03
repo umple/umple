@@ -51,21 +51,8 @@ public class Input
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "stream" + "=" + (getStream() != null ? !getStream().equals(this)  ? getStream().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={83},file={"Util_Code.ump"},javaline={66},length={22})
-  @umplesourcefile(line={84},file={"Util_Code.ump"},javaline={67},length={12})
-  public String readUmpleFile(String[] args, PrintStream writer)
-  {
+  @umplesourcefile(line={84},file={"Util_Code.ump"},javaline={55},length={11})
+   public String readUmpleFile(String [] args, PrintStream writer){
     if (args.length > 0)
     {
       return args[0];
@@ -76,10 +63,9 @@ public class Input
       return readLine();
     }
   }
-  
-  @umplesourcefile(line={97},file={"Util_Code.ump"},javaline={81},length={8})
-  public String readLine()
-  {
+
+  @umplesourcefile(line={97},file={"Util_Code.ump"},javaline={68},length={7})
+   public String readLine(){
     try {
       return reader.readLine();
     } catch (IOException e) {
@@ -87,4 +73,12 @@ public class Input
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "stream" + "=" + (getStream() != null ? !getStream().equals(this)  ? getStream().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

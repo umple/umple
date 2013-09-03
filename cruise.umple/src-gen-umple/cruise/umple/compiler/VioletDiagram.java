@@ -216,14 +216,9 @@ public class VioletDiagram
     violetClasses.clear();
     violetAssociations.clear();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={112},file={"Violet_Code.ump"},javaline={224},length={46})
-  @umplesourcefile(line={113},file={"Violet_Code.ump"},javaline={225},length={45})
-  public String toXml()
-  {
+
+  @umplesourcefile(line={113},file={"Violet_Code.ump"},javaline={221},length={44})
+   public String toXml(){
     StringBuffer answer = new StringBuffer();
     answer.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
     answer.append("<java version=\"1.6.0_04\" class=\"java.beans.XMLDecoder\">");

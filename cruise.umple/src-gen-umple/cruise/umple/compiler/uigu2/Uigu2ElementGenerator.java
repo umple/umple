@@ -41,18 +41,12 @@ public class Uigu2ElementGenerator
   {}
 
 
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={23},file={"Generator_CodeUigu2.ump"},javaline={54},length={71})
-  @umplesourcefile(line={24},file={"Generator_CodeUigu2.ump"},javaline={55},length={35})
-  public String getCode(UmpleModel model, UmpleElement uElement) {
+  /**
+   * 
+   * Returns the generated code specific to an UmpleElement.
+   */
+  @umplesourcefile(line={24},file={"Generator_CodeUigu2.ump"},javaline={44},length={35})
+   public String getCode(UmpleModel model, UmpleElement uElement){
     StringBuilder code = new StringBuilder();
     String name = uElement.getName();
     String elementKind = null;
@@ -88,21 +82,25 @@ public class Uigu2ElementGenerator
     return code.toString();
   }
 
+
   /**
+   * 
    * Adds to the $ELEMENTS php array (where information about UmpleElements are passed to
    * UIGU) the specified key and value, ie. "$ELEMENTS[name][key] = value;"
    */
-  @umplesourcefile(line={64},file={"Generator_CodeUigu2.ump"},javaline={96},length={4})
-  private void appendToElementsArray(StringBuilder code, String elementName, String key, String value) {
+  @umplesourcefile(line={64},file={"Generator_CodeUigu2.ump"},javaline={86},length={4})
+   private void appendToElementsArray(StringBuilder code, String elementName, String key, String value){
     code.append("$ELEMENTS['").append(elementName).append("']['").append(key).append("']");
     code.append(" = ").append(value).append(";").append(nl);
   }
 
+
   /**
+   * 
    * Adds to the StringBuilder being built php code that deals with attributes.
    */
-  @umplesourcefile(line={72},file={"Generator_CodeUigu2.ump"},javaline={105},length={22})
-  private void appendAttributesCode(StringBuilder code, UmpleClass uClass) {
+  @umplesourcefile(line={72},file={"Generator_CodeUigu2.ump"},javaline={98},length={22})
+   private void appendAttributesCode(StringBuilder code, UmpleClass uClass){
     List<Attribute> attributes = uClass.getAttributes();
     Attribute att;
     code.append("$attributes = array();").append(nl);    
@@ -125,4 +123,11 @@ public class Uigu2ElementGenerator
     this.appendToElementsArray(code,uClass.getName(),"attributes","$attributes");
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]"
+     + outputString;
+  }
 }

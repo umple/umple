@@ -11,10 +11,10 @@ import java.util.*;
  * (such as a class definition or attribute) and helps to keep
  * track of the positions that the input parser parsed things at.
  * @umplesource Parser.ump 100
- * @umplesource Parser_Code.ump 81
+ * @umplesource Parser_Code.ump 80
  */
 // line 100 "../../../../src/Parser.ump"
-// line 81 "../../../../src/Parser_Code.ump"
+// line 80 "../../../../src/Parser_Code.ump"
 public class Token
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -256,17 +256,15 @@ public class Token
       placeholderParentToken.removeSubToken(this);
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-   public Token(String aName,String aValue,Position aPosition)  {
-this(aName,aValue);
+
+  @umplesourcefile(line={83},file={"Parser_Code.ump"},javaline={261},length={4})
+   public  Token(String aName, String aValue, Position aPosition){
+    this(aName,aValue);
     setPosition(aPosition);
   }
-//  @umplesourcefile(line={89},file={"Parser_Code.ump"},javaline={268},length={230})
-  @umplesourcefile(line={90},file={"Parser_Code.ump"},javaline={269},length={9})
-  public static boolean isValidIdentifier(String identifier, String prefix){
+
+  @umplesourcefile(line={89},file={"Parser_Code.ump"},javaline={267},length={9})
+   public static  boolean isValidIdentifier(String identifier, String prefix){
     String _prefix = "^" + prefix;
     String body = "[a-zA-Z0-9_]*$";
     String expression = _prefix + body;
@@ -275,21 +273,19 @@ this(aName,aValue);
     }
     return false;
   }
-  
-  @umplesourcefile(line={100},file={"Parser_Code.ump"},javaline={280},length={3})
-  public static boolean isValidIdentifier(String identifier){
-  	return isValidIdentifier(identifier, "[a-zA-Z_]");
+
+  @umplesourcefile(line={99},file={"Parser_Code.ump"},javaline={278},length={3})
+   public static  boolean isValidIdentifier(String identifier){
+    return isValidIdentifier(identifier, "[a-zA-Z_]");
   }
-	
-  @umplesourcefile(line={104},file={"Parser_Code.ump"},javaline={285},length={4})
-  public void addSubToken(int index, Token aSubToken)
-  {
+
+  @umplesourcefile(line={103},file={"Parser_Code.ump"},javaline={283},length={3})
+   public void addSubToken(int index, Token aSubToken){
     subTokens.add(index,aSubToken);
   }
 
-  @umplesourcefile(line={109},file={"Parser_Code.ump"},javaline={291},length={12})
-  public Position getPosition(String tokenName)
-  {
+  @umplesourcefile(line={108},file={"Parser_Code.ump"},javaline={288},length={11})
+   public Position getPosition(String tokenName){
     Token t = getSubToken(tokenName);
     if (t != null)
     {
@@ -301,9 +297,8 @@ this(aName,aValue);
     }
   }
 
-  @umplesourcefile(line={122},file={"Parser_Code.ump"},javaline={305},length={15})
-  public int getInnerLength()
-  {
+  @umplesourcefile(line={121},file={"Parser_Code.ump"},javaline={301},length={14})
+   public int getInnerLength(){
     if ("START_TOKEN".equals(getValue()))
     {
       return getLength(); 
@@ -318,9 +313,8 @@ this(aName,aValue);
     }
   }
 
-  @umplesourcefile(line={138},file={"Parser_Code.ump"},javaline={322},length={54})
-  public int getLength()
-  {
+  @umplesourcefile(line={137},file={"Parser_Code.ump"},javaline={317},length={53})
+   public int getLength(){
     if (getParentToken() != null)
     {
       Token parent = getParentToken();
@@ -374,15 +368,13 @@ this(aName,aValue);
     }
   }
 
-  @umplesourcefile(line={193},file={"Parser_Code.ump"},javaline={378},length={4})
-  public int getIntValue(String tokenName)
-  {
+  @umplesourcefile(line={192},file={"Parser_Code.ump"},javaline={372},length={3})
+   public int getIntValue(String tokenName){
     return getIntValue(tokenName,0);
   }
 
-  @umplesourcefile(line={198},file={"Parser_Code.ump"},javaline={384},length={19})
-  public int getIntValue(String tokenName, int defaultIfInvalid)
-  {
+  @umplesourcefile(line={197},file={"Parser_Code.ump"},javaline={377},length={18})
+   public int getIntValue(String tokenName, int defaultIfInvalid){
     String value = getValue(tokenName);
     if (value == null)
     {
@@ -401,9 +393,8 @@ this(aName,aValue);
     }
   }
 
-  @umplesourcefile(line={218},file={"Parser_Code.ump"},javaline={405},length={23})
-  public Token getSubToken(String tokenName, int offset)
-  {
+  @umplesourcefile(line={217},file={"Parser_Code.ump"},javaline={397},length={22})
+   public Token getSubToken(String tokenName, int offset){
     if (is(tokenName))
     {
       return this;
@@ -426,15 +417,13 @@ this(aName,aValue);
     return null;
   }
 
-  @umplesourcefile(line={242},file={"Parser_Code.ump"},javaline={430},length={4})
-  public Token getSubToken(String tokenName)
-  {
+  @umplesourcefile(line={241},file={"Parser_Code.ump"},javaline={421},length={3})
+   public Token getSubToken(String tokenName){
     return getSubToken(tokenName,0);
   }
 
-  @umplesourcefile(line={247},file={"Parser_Code.ump"},javaline={436},length={13})
-  public String getValue(String tokenName)
-  {
+  @umplesourcefile(line={246},file={"Parser_Code.ump"},javaline={426},length={12})
+   public String getValue(String tokenName){
     Token t = getSubToken(tokenName);
     if (t != null)
     {
@@ -447,33 +436,28 @@ this(aName,aValue);
     }
   }
 
-  @umplesourcefile(line={261},file={"Parser_Code.ump"},javaline={451},length={4})
-  public boolean is(String aName)
-  {
+  @umplesourcefile(line={260},file={"Parser_Code.ump"},javaline={440},length={3})
+   public boolean is(String aName){
     return getName().equals(aName) && !isStatic();
   }
 
-  @umplesourcefile(line={266},file={"Parser_Code.ump"},javaline={457},length={4})
-  public boolean isStatic(String aName)
-  {
+  @umplesourcefile(line={265},file={"Parser_Code.ump"},javaline={445},length={3})
+   public boolean isStatic(String aName){
     return getName().equals(aName) && isStatic();
   }
 
-  @umplesourcefile(line={271},file={"Parser_Code.ump"},javaline={463},length={4})
-  public boolean isStatic()
-  {
+  @umplesourcefile(line={270},file={"Parser_Code.ump"},javaline={450},length={3})
+   public boolean isStatic(){
     return "STATIC".equals(getValue());
   }
 
-  @umplesourcefile(line={276},file={"Parser_Code.ump"},javaline={469},length={4})
-  public boolean isValue(String compareTo)
-  {
+  @umplesourcefile(line={275},file={"Parser_Code.ump"},javaline={455},length={3})
+   public boolean isValue(String compareTo){
     return getValue().equals(compareTo);
   }
 
-  @umplesourcefile(line={281},file={"Parser_Code.ump"},javaline={475},length={8})
-  public void remove(int index)
-  {
+  @umplesourcefile(line={280},file={"Parser_Code.ump"},javaline={460},length={7})
+   public void remove(int index){
     if (index < 0 || index >= subTokens.size())
     {
       return;
@@ -481,18 +465,19 @@ this(aName,aValue);
     subTokens.remove(index);
   }
 
-  @umplesourcefile(line={290},file={"Parser_Code.ump"},javaline={485},length={6})
-  public String toString()
-  {
+  @umplesourcefile(line={289},file={"Parser_Code.ump"},javaline={469},length={5})
+   public String toString(){
     StringBuffer answer = new StringBuffer();
     toString(answer,null);
     return answer.toString();
   }
 
-  // Code refactored from Parser class to Token class
-  @umplesourcefile(line={298},file={"Parser_Code.ump"},javaline={494},length={21})
-  public StringBuffer toString(StringBuffer stringSoFar, Token parserRoot)
-  {
+
+  /**
+   * Code refactored from Parser class to Token class
+   */
+  @umplesourcefile(line={297},file={"Parser_Code.ump"},javaline={476},length={20})
+   public StringBuffer toString(StringBuffer stringSoFar, Token parserRoot){
     if ("START_TOKEN".equals(getValue()))
     {
       stringSoFar.append("[" + getName() + "]");

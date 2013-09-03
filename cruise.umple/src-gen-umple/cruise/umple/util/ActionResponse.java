@@ -101,27 +101,13 @@ public class ActionResponse
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "successMessage" + ":" + getSuccessMessage()+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={212},file={"Util_Code.ump"},javaline={116},length={75})
-  @umplesourcefile(line={213},file={"Util_Code.ump"},javaline={117},length={4})
-  public void merge(ActionResponse other)
-  {
+  @umplesourcefile(line={213},file={"Util_Code.ump"},javaline={105},length={3})
+   public void merge(ActionResponse other){
     errors.addAll(other.errors);
-  }  
+  }
 
-  @umplesourcefile(line={218},file={"Util_Code.ump"},javaline={123},length={11})
-  public boolean isError(String errorId)
-  {
+  @umplesourcefile(line={218},file={"Util_Code.ump"},javaline={110},length={10})
+   public boolean isError(String errorId){
     for (ErrorItem error : errors)
     {
       if (error.getId().equals(errorId))
@@ -131,10 +117,9 @@ public class ActionResponse
     }
     return false;
   }
-  
-  @umplesourcefile(line={230},file={"Util_Code.ump"},javaline={136},length={25})
-  public boolean isError(String errorId, String[] allErrorData)
-  {
+
+  @umplesourcefile(line={230},file={"Util_Code.ump"},javaline={122},length={24})
+   public boolean isError(String errorId, String [] allErrorData){
     for (ErrorItem error : errors)
     {
       if (!error.getId().equals(errorId))
@@ -158,18 +143,14 @@ public class ActionResponse
     }
     return false;
   }
-  
-  
-  @umplesourcefile(line={257},file={"Util_Code.ump"},javaline={164},length={4})
-  public boolean isValid()
-  {
+
+  @umplesourcefile(line={257},file={"Util_Code.ump"},javaline={148},length={3})
+   public boolean isValid(){
     return numberOfErrors() == 0;
   }
-  
-  @umplesourcefile(line={262},file={"Util_Code.ump"},javaline={170},length={25})
-  public String getMessage()
-  {
-    
+
+  @umplesourcefile(line={262},file={"Util_Code.ump"},javaline={153},length={23})
+   public String getMessage(){
     if (isValid())
     {
       String messageId = getSuccessMessage();
@@ -193,4 +174,12 @@ public class ActionResponse
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "successMessage" + ":" + getSuccessMessage()+ "]"
+     + outputString;
+  }
 }

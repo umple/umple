@@ -95,6 +95,15 @@ public class ErrorItem
   public void delete()
   {}
 
+  @umplesourcefile(line={294},file={"Util_Code.ump"},javaline={99},length={7})
+   public  ErrorItem(String aId, String [] aParts){
+    this(aId);
+    for (String part : aParts)
+    {
+      addPart(part);
+    }
+  }
+
 
   public String toString()
   {
@@ -102,16 +111,5 @@ public class ErrorItem
     return super.toString() + "["+
             "id" + ":" + getId()+ "]"
      + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-   public ErrorItem(String aId,String [] aParts)  {
-this(aId);
-    for (String part : aParts)
-    {
-      addPart(part);
-    }
   }
-
 }

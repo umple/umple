@@ -27,9 +27,6 @@ class UmpleConsoleMain
     depend java.io.IOException;
     depend java.io.*;
 
-    public static String console;
-    private static OptionParser optparser;
-
     public static void main(String[] args) 
     {
 
@@ -113,6 +110,7 @@ class UmpleConsoleMain
         console += err;
         System.err.print(err);
     }
+    
     private static void printUsage() {
         println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
         try{
@@ -163,31 +161,34 @@ class UmpleConsoleMain
         return false;
     }
 
-    private static OptionSet optParse(String[] args)
+  private static OptionSet optParse(String[] args)
+  {
+    optparser = new OptionParser();
+    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
+    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+    optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,RTCpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,GvStateDiagram,GvClassDiagram,Yuml,SimpleMetrics,Uigu2").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
+    optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("uigu2files"), "If '-g Uigu2' is used, this option indicates where shared files for UIGU2 are placed (optional)").withRequiredArg().ofType(String.class);
+    optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
+
+    OptionSet optSet = null;
+
+    try 
     {
-        optparser = new OptionParser();
-        optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
-        optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
-        optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,RTCpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,GvStateDiagram,GvClassDiagram,Yuml,SimpleMetrics,Uigu2").withRequiredArg().ofType(String.class);
-        optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
-        optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
-        optparser.acceptsAll(Arrays.asList("uigu2files"), "If '-g Uigu2' is used, this option indicates where shared files for UIGU2 are placed (optional)").withRequiredArg().ofType(String.class);
-        optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
-
-        OptionSet optSet = null;
-
-        try 
-        {
-            optSet = optparser.parse(args);
-        } 
-        catch (joptsimple.OptionException e) 
-        {
-            println("Option:" + e.getMessage());
-            printUsage();
-        }
-
-        return optSet;
+      optSet = optparser.parse(args);
+    } 
+    catch (joptsimple.OptionException e) 
+    {
+       println("Option:" + e.getMessage());
+       printUsage();
     }
+
+    return optSet;
+  }
+    
+  public static String console;
+  private static OptionParser optparser;
 }
 
 /*
@@ -202,9 +203,6 @@ class UmpleRunMain
     depend cruise.umple.util.*;
     depend java.net.*;
     depend java.io.*;
-
-    public static String console;
-    public static boolean displayOutput = true;
 
     public static void main(String[] args) 
     {
@@ -303,6 +301,9 @@ class UmpleRunMain
             System.err.print(err);
         }
     }
+
+    public static String console;
+    public static boolean displayOutput = true;
 }
 
 /*
@@ -319,8 +320,6 @@ class PlaygroundMain
     depend cruise.umple.compiler.exceptions.*;
     depend cruise.umple.util.*;
     depend java.io.*;
-
-    public static String console = "";
 
     public static void main(String[] args)
     {
@@ -487,6 +486,7 @@ class PlaygroundMain
         }
     }
 
+    public static String console = "";
 }
 
 use Compiler.ump;

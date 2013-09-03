@@ -10,10 +10,10 @@ import java.util.*;
  * It associates two other classes that would otherwise have a many-many
  * relationship. Instances of the AssociationClass represent data 
  * held by the links between those two classes.
- * @umplesource Umple.ump 422
+ * @umplesource Umple.ump 423
  * @umplesource Umple_Code.ump 655
  */
-// line 422 "../../../../src/Umple.ump"
+// line 423 "../../../../src/Umple.ump"
 // line 655 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {
@@ -165,12 +165,10 @@ public class AssociationClass extends UmpleClass
     associatedTo.clear();
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-   public AssociationClass(String name)  {
-super(name);
+
+  @umplesourcefile(line={657},file={"Umple_Code.ump"},javaline={170},length={3})
+   public  AssociationClass(String name){
+    super(name);
   }
 
 }

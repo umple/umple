@@ -37,14 +37,9 @@ public class NewAction extends SynchronizationAction
   {
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={232},file={"UmpleSync_Code.ump"},javaline={45},length={103})
-  @umplesourcefile(line={233},file={"UmpleSync_Code.ump"},javaline={46},length={102})
-  public void go()
-  {
+
+  @umplesourcefile(line={233},file={"UmpleSync_Code.ump"},javaline={42},length={101})
+   public void go(){
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());

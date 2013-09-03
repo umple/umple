@@ -73,22 +73,8 @@ public class XmiGenerator implements CodeGenerator
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeXmi.ump"},javaline={89},length={152})
-  @umplesourcefile(line={15},file={"Generator_CodeXmi.ump"},javaline={90},length={132})
-  public void generate()
-  {
+  @umplesourcefile(line={15},file={"Generator_CodeXmi.ump"},javaline={77},length={131})
+   public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
     ArrayList<Association> allAssociations = new ArrayList<Association>();
@@ -220,9 +206,8 @@ public class XmiGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={148},file={"Generator_CodeXmi.ump"},javaline={224},length={18})
-  private void writeModel()
-  {
+  @umplesourcefile(line={148},file={"Generator_CodeXmi.ump"},javaline={210},length={17})
+   private void writeModel(){
     try
     {
       String path = model.getUmpleFile().getPath();
@@ -240,4 +225,13 @@ public class XmiGenerator implements CodeGenerator
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

@@ -10,11 +10,11 @@ import java.util.*;
  * where instances of one class reference the other, and (if bidirectional) instance
  * of the other class reference the first cass.
  * The number of references is governed by the Multiplicity at each AssociationEnd
- * @umplesource Umple.ump 496
- * @umplesource Umple_Code.ump 1120
+ * @umplesource Umple.ump 497
+ * @umplesource Umple_Code.ump 1123
  */
-// line 496 "../../../../src/Umple.ump"
-// line 1120 "../../../../src/Umple_Code.ump"
+// line 497 "../../../../src/Umple.ump"
+// line 1123 "../../../../src/Umple_Code.ump"
 public class Association
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -40,7 +40,7 @@ public class Association
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={509},file={"Umple.ump"},javaline={60},length={1})
+  @umplesourcefile(line={510},file={"Umple.ump"},javaline={60},length={1})
   public Association(boolean aIsLeftNavigable, boolean aIsRightNavigable, AssociationEnd... allEnds)
   {
     name = null;
@@ -56,7 +56,7 @@ public class Association
     {
       throw new RuntimeException("Unable to create Association, must have 2 ends");
     }
-    // line 509 "../../../../src/Umple.ump"
+    // line 510 "../../../../src/Umple.ump"
     this.setLeftAndRight();
   }
 
@@ -118,13 +118,13 @@ public class Association
     return wasSet;
   }
 
-  @umplesourcefile(line={508},file={"Umple.ump"},javaline={128},length={1})
+  @umplesourcefile(line={509},file={"Umple.ump"},javaline={128},length={1})
   /**
    * The name of the association.
    */
   public String getName()
   {
-    // line 508 "../../../../src/Umple.ump"
+    // line 509 "../../../../src/Umple.ump"
     if (name == null || "".equals(name)) { return this.deriveName(); }
     return name;
   }
@@ -295,25 +295,8 @@ public class Association
     ends.clear();
   }
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "name" + ":" + getName()+ "," +
-            "isLeftNavigable" + ":" + getIsLeftNavigable()+ "," +
-            "isRightNavigable" + ":" + getIsRightNavigable()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "tokenPosition" + "=" + (getTokenPosition() != null ? !getTokenPosition().equals(this)  ? getTokenPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "tokenEndPosition" + "=" + (getTokenEndPosition() != null ? !getTokenEndPosition().equals(this)  ? getTokenEndPosition().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1122},file={"Umple_Code.ump"},javaline={314},length={106})
-  @umplesourcefile(line={1123},file={"Umple_Code.ump"},javaline={315},length={14})
-  public void setLeftAndRight()
-  {
+  @umplesourcefile(line={1126},file={"Umple_Code.ump"},javaline={299},length={12})
+   public void setLeftAndRight(){
     String name = this.getName();
 
     int underscore = name.indexOf("__");
@@ -324,12 +307,10 @@ public class Association
     {
 
     }
-
   }
 
-  @umplesourcefile(line={1138},file={"Umple_Code.ump"},javaline={331},length={20})
-  public int whoIsInvalid()
-  {
+  @umplesourcefile(line={1141},file={"Umple_Code.ump"},javaline={313},length={19})
+   public int whoIsInvalid(){
     if (!getIsLeftNavigable() || !getIsRightNavigable())
     {
       return -1;
@@ -349,15 +330,13 @@ public class Association
     return -1;
   }
 
-  @umplesourcefile(line={1159},file={"Umple_Code.ump"},javaline={353},length={4})
-  public boolean isValid()
-  {
+  @umplesourcefile(line={1162},file={"Umple_Code.ump"},javaline={334},length={3})
+   public boolean isValid(){
     return whoIsInvalid() == -1;
   }
 
-  @umplesourcefile(line={1164},file={"Umple_Code.ump"},javaline={359},length={17})
-  public String getArrowString()
-  {
+  @umplesourcefile(line={1167},file={"Umple_Code.ump"},javaline={339},length={16})
+   public String getArrowString(){
     String arrow = "--";
     if (getIsLeftNavigable() && !getIsRightNavigable())
     {
@@ -374,9 +353,8 @@ public class Association
     return arrow;
   }
 
-  @umplesourcefile(line={1182},file={"Umple_Code.ump"},javaline={378},length={15})
-  public String toGenericString()
-  {
+  @umplesourcefile(line={1185},file={"Umple_Code.ump"},javaline={357},length={14})
+   public String toGenericString(){
     String leftSide = getEnd(0).toGenericString();
     String rightSide = getEnd(1).toGenericString();
 
@@ -391,9 +369,8 @@ public class Association
     }
   }
 
-  @umplesourcefile(line={1198},file={"Umple_Code.ump"},javaline={395},length={20})
-  public String deriveName()
-  {
+  @umplesourcefile(line={1201},file={"Umple_Code.ump"},javaline={373},length={19})
+   public String deriveName(){
     AssociationEnd firstEnd = this.getEnd(0);
     AssociationEnd secondEnd = this.getEnd(1);
 
@@ -412,17 +389,27 @@ public class Association
       return secondClassName + secondRole + "__" + firstClassName + firstRole;
     }
   }
-  
-  @umplesourcefile(line={1219},file={"Umple_Code.ump"},javaline={417},length={4})
-  public void setImmutable()
-  {
+
+  @umplesourcefile(line={1222},file={"Umple_Code.ump"},javaline={394},length={3})
+   public void setImmutable(){
     this.immutable = true;
   }
-  
-  @umplesourcefile(line={1224},file={"Umple_Code.ump"},javaline={423},length={4})
-  public boolean isImmutable()
-  {
+
+  @umplesourcefile(line={1227},file={"Umple_Code.ump"},javaline={399},length={3})
+   public boolean isImmutable(){
     return this.immutable;
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "isLeftNavigable" + ":" + getIsLeftNavigable()+ "," +
+            "isRightNavigable" + ":" + getIsRightNavigable()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "tokenPosition" + "=" + (getTokenPosition() != null ? !getTokenPosition().equals(this)  ? getTokenPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "tokenEndPosition" + "=" + (getTokenEndPosition() != null ? !getTokenEndPosition().equals(this)  ? getTokenEndPosition().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

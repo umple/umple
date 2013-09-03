@@ -45,7 +45,6 @@ class GvClassDiagramGenerator
   }
 
   // Actually output the class contents  
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   private void visitClass(UmpleClass uClass, Set visitedClasses, StringBuilder code, StringBuilder associations)
   {
     // Ensure we only visit once

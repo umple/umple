@@ -18,6 +18,13 @@ public class ExceptionDumper
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final String openBrace = (""+(char)123);
+  public static final String closeBrace = (""+(char)125);
+
+  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
@@ -34,14 +41,10 @@ public class ExceptionDumper
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1004},file={"Util_Code.ump"},javaline={42},length={120})
-  @umplesourcefile(line={1005},file={"Util_Code.ump"},javaline={43},length={21})
-  public static void dumpCompilerError(Exception ex) {
-     String generatedSourcePath = System.getenv("GeneratedSourcePath");
+
+  @umplesourcefile(line={1010},file={"Util_Code.ump"},javaline={46},length={22})
+   public static  void dumpCompilerError(Exception ex){
+    String generatedSourcePath = System.getenv("GeneratedSourcePath");
     if (generatedSourcePath == null) {
       System.err.println("To locate the error in the original Umple source, set GeneratedSourcePath to where the generated Java is located:\ne.g. setenv GeneratedSourcePath ~/umple/cruise.umple/src-gen-umple");
     }
@@ -62,14 +65,17 @@ public class ExceptionDumper
       }
     }*/
   }
-  
-    // Translate the java stack trace line information into the corresponding Umple line
-  @umplesourcefile(line={1029},file={"Util_Code.ump"},javaline={68},length={95})
-    public static StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath) {
-      StackTraceElement newSt;
+
+
+  /**
+   * Translate the java stack trace line information into the corresponding Umple line
+   */
+  @umplesourcefile(line={1034},file={"Util_Code.ump"},javaline={70},length={93})
+   public static  StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath){
+    StackTraceElement newSt;
       String javaFileName = javaStack.getFileName();
       String umpleFileName="Did not find line = information in Java code";
-      int javaLineNumber = javaStack.getLineNumber();;
+      int javaLineNumber = javaStack.getLineNumber();
       int umpleLineNumber=javaStack.getLineNumber(); // Dummy so errors can be noticed
       String fullClassPath = javaStack.getClassName();
       
@@ -116,8 +122,8 @@ public class ExceptionDumper
         }
     	if(isInMain)
     	{
-    	  braces += (line.length()-line.replace("{", "").length()) - (line.length()-line.replace("}", "").length());
-    	  if(!firstBraceFound && (line.length()-line.replace("{", "").length())>0)
+    	  braces += (line.length()-line.replace(openBrace, "").length()) - (line.length()-line.replace(closeBrace, "").length());
+    	  if(!firstBraceFound && (line.length()-line.replace(openBrace, "").length())>0)
     	  {
     	    firstBraceFound = true;
     	  }
@@ -145,20 +151,25 @@ public class ExceptionDumper
           {
             break;
           }
-    	  javaLine = Integer.parseInt(umpleSourceJavaLinesSplit[i]);
-    	  length = Integer.parseInt(umpleSourceLengthsSplit[i]);
+    	    javaLine = Integer.parseInt(umpleSourceJavaLinesSplit[i]);
+    	    length = Integer.parseInt(umpleSourceLengthsSplit[i]);
     	
-    	  if(javaLineNumber-javaLine<length)
-    	  {
-    	    umpleFileName = umpleSourceFiles.get(j).split(",")[i].replace(" ","");
-    	    umpleLineNumber = Integer.parseInt(umpleSourceLines.get(j).split(",")[i])+javaLineNumber-javaLine-(isInMain?2:0);
-    	    return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName.replace("\\","/").replaceAll(".*/", "").replace("\"",""), umpleLineNumber);
-    	  }
-        }
-            
-        
+    	    if(javaLineNumber-javaLine<length)
+    	    {
+    	      umpleFileName = umpleSourceFiles.get(j).split(",")[i].replace(" ","");
+    	      umpleLineNumber = Integer.parseInt(umpleSourceLines.get(j).split(",")[i])+javaLineNumber-javaLine-(isInMain?2:0);
+    	      return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFileName.replace("\\","/").replaceAll(".*/", "").replace("\"",""), umpleLineNumber);
+    	    }
+        }       
       }
       return javaStack;
-    }
+  }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]"
+     + outputString;
+  }
 }

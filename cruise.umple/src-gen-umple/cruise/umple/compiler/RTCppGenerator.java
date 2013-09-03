@@ -75,27 +75,12 @@ public class RTCppGenerator implements CodeGenerator
   public void delete()
   {}
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeRTCpp.ump"},javaline={91},length={48})
-  @umplesourcefile(line={15},file={"Generator_CodeRTCpp.ump"},javaline={92},length={22})
-  public void generate()
-  {
-  	try {
+  @umplesourcefile(line={15},file={"Generator_CodeRTCpp.ump"},javaline={79},length={21})
+   public void generate(){
+    try {
   		final StringBuilder code = new StringBuilder();
   		new UmpleCppPoliciesProcessor() {
 			@Override
-  @umplesourcefile(line={21},file={"Generator_CodeRTCpp.ump"},javaline={99},length={10})
 			public void handleGeneratedContents(List<ContentsDescriptor> contentsDescriptor) {
 				try {
 					for(ContentsDescriptor descriptor:contentsDescriptor){
@@ -112,8 +97,21 @@ public class RTCppGenerator implements CodeGenerator
 		throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
 	}
   }
-  
-  @umplesourcefile(line={38},file={"Generator_CodeRTCpp.ump"},javaline={117},length={24})
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={37},file={"Generator_CodeRTCpp.ump"},javaline={114},length={25})
+  @umplesourcefile(line={38},file={"Generator_CodeRTCpp.ump"},javaline={115},length={24})
   protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
 		 String path = model.getUmpleFile().getPath() + "/";
 		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");

@@ -167,14 +167,9 @@ public class Variant
       placeholderVariationPoint.removeVariant(this);
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={160},file={"Vml_Code.ump"},javaline={175},length={12})
-  @umplesourcefile(line={161},file={"Vml_Code.ump"},javaline={176},length={11})
-  public String toString()
-  {
+
+  @umplesourcefile(line={161},file={"Vml_Code.ump"},javaline={172},length={10})
+   public String toString(){
     if (name == null)
     {
       return "";

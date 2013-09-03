@@ -409,14 +409,9 @@ public class VariationPoint
       placeholderConcern.removeVariationPoint(this);
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={128},file={"Vml_Code.ump"},javaline={417},length={28})
-  @umplesourcefile(line={129},file={"Vml_Code.ump"},javaline={418},length={11})
-  public String toString()
-  {
+
+  @umplesourcefile(line={129},file={"Vml_Code.ump"},javaline={414},length={10})
+   public String toString(){
     if (codeSnippet == null)
     {
       return name + ":" + kind + ":";
@@ -426,10 +421,9 @@ public class VariationPoint
       return name + ":" + kind + ":" + codeSnippet;
     }
   }
-  
-  @umplesourcefile(line={141},file={"Vml_Code.ump"},javaline={431},length={15})
-  public Variant getVariant(String name)
-  {
+
+  @umplesourcefile(line={141},file={"Vml_Code.ump"},javaline={426},length={14})
+   public Variant getVariant(String name){
     if (name == null)
     {
       return null;

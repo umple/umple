@@ -32,15 +32,9 @@ public class Builder
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={193},file={"Builder_Code.ump"},javaline={40},length={110})
-  @umplesourcefile(line={194},file={"Builder_Code.ump"},javaline={41},length={23})
-  public URL compile(String directory, String jarname, String projectName, String javaTarget)
-  {
 
+  @umplesourcefile(line={194},file={"Builder_Code.ump"},javaline={37},length={21})
+   public URL compile(String directory, String jarname, String projectName, String javaTarget){
     String buildfile = createAntFile(directory, "build-"+ projectName +".xml", jarname, javaTarget);
     if (buildfile == null)
     {
@@ -61,10 +55,9 @@ public class Builder
       return null;
     }
   }
-  
-  @umplesourcefile(line={218},file={"Builder_Code.ump"},javaline={66},length={11})
-  public void load(String directory, String jarname) 
-  {
+
+  @umplesourcefile(line={218},file={"Builder_Code.ump"},javaline={60},length={10})
+   public void load(String directory, String jarname){
     try {
       //String jarfile = "jar:file:///" + new File(directory).getAbsolutePath() + "/"+ jarname +"!/";
       DynamicClassPathLoader.addJar(directory, jarname);
@@ -74,10 +67,9 @@ public class Builder
       throw new RuntimeException("Unable to load application jar",e);
     }
   }
-  
-  @umplesourcefile(line={230},file={"Builder_Code.ump"},javaline={79},length={26})
-  public boolean runAnt(String buildFilename)
-  {
+
+  @umplesourcefile(line={230},file={"Builder_Code.ump"},javaline={72},length={25})
+   public boolean runAnt(String buildFilename){
     try
     {
       Process p;
@@ -102,10 +94,9 @@ public class Builder
       return false;
     }
   }
-  
-  @umplesourcefile(line={257},file={"Builder_Code.ump"},javaline={107},length={11})
-  public void runAntOLD(String buildFilename)
-  {
+
+  @umplesourcefile(line={257},file={"Builder_Code.ump"},javaline={99},length={10})
+   public void runAntOLD(String buildFilename){
     File buildFile = new File(buildFilename);
     Project p = new Project();
     p.setUserProperty("ant.file", buildFile.getAbsolutePath());
@@ -113,13 +104,11 @@ public class Builder
     ProjectHelper helper = ProjectHelper.getProjectHelper();
     p.addReference("ant.projectHelper", helper);
     helper.parse(p, buildFile);
-    p.executeTarget(p.getDefaultTarget());    
+    p.executeTarget(p.getDefaultTarget());
   }
-  
-  @umplesourcefile(line={269},file={"Builder_Code.ump"},javaline={120},length={34})
-  private String createAntFile(String baseDirectory, String buildname, String jarname, String javaTarget)
-  {
-    
+
+  @umplesourcefile(line={269},file={"Builder_Code.ump"},javaline={111},length={32})
+   private String createAntFile(String baseDirectory, String buildname, String jarname, String javaTarget){
     String antScript = "" +
       "<project name=\"runtime-compiler\" default=\"go\" basedir=\".\">\n" +
       "  <target name=\"clean\">\n" +

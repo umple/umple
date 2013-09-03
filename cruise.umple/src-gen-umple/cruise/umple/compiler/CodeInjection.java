@@ -8,10 +8,10 @@ import java.util.*;
 
 /**
  * A block of code that can be injected into one or more methods, constructor, etc.
- * @umplesource Umple.ump 284
+ * @umplesource Umple.ump 285
  * @umplesource Umple_Code.ump 543
  */
-// line 284 "../../../../src/Umple.ump"
+// line 285 "../../../../src/Umple.ump"
 // line 543 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {
@@ -158,37 +158,20 @@ public class CodeInjection
     constraint = null;
   }
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "type" + ":" + getType()+ "," +
-            "operation" + ":" + getOperation()+ "," +
-            "isInternal" + ":" + getIsInternal()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "snippet" + "=" + (getSnippet() != null ? !getSnippet().equals(this)  ? getSnippet().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass = "+(getUmpleClass()!=null?Integer.toHexString(System.identityHashCode(getUmpleClass())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "constraint = "+(getConstraint()!=null?Integer.toHexString(System.identityHashCode(getConstraint())):"null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-   public CodeInjection(String a,String b,String c,UmpleClass d)  {
-this(a,b, d);
+  @umplesourcefile(line={545},file={"Umple_Code.ump"},javaline={162},length={4})
+   public  CodeInjection(String a, String b, String c, UmpleClass d){
+    this(a,b, d);
     setCode(c);
   }
-//  @umplesourcefile(line={549},file={"Umple_Code.ump"},javaline={183},length={48})
-  @umplesourcefile(line={550},file={"Umple_Code.ump"},javaline={184},length={4})
-  public void setCode(String str)
-  {
+
+  @umplesourcefile(line={550},file={"Umple_Code.ump"},javaline={168},length={3})
+   public void setCode(String str){
     snippet.setCode(str);
   }
-  @umplesourcefile(line={554},file={"Umple_Code.ump"},javaline={189},length={35})
-  public String getCode()
-  {
-  	if(constraint == null)
+
+  @umplesourcefile(line={554},file={"Umple_Code.ump"},javaline={173},length={34})
+   public String getCode(){
+    if(constraint == null)
   	{
   	  return snippet.getCode();
   	}
@@ -220,16 +203,30 @@ this(a,b, d);
   	  }
   	  return snippet.getCode();
   	}
-  }  
-  @umplesourcefile(line={589},file={"Umple_Code.ump"},javaline={225},length={4})
-  public void setCode(String lang, String code)
-  {
+  }
+
+  @umplesourcefile(line={589},file={"Umple_Code.ump"},javaline={209},length={3})
+   public void setCode(String lang, String code){
     snippet.setCode(lang, code);
   }
-  @umplesourcefile(line={593},file={"Umple_Code.ump"},javaline={230},length={4})
-  public String getCode(String lang)
-  {
+
+  @umplesourcefile(line={593},file={"Umple_Code.ump"},javaline={214},length={3})
+   public String getCode(String lang){
     return snippet.getCode(lang);
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "type" + ":" + getType()+ "," +
+            "operation" + ":" + getOperation()+ "," +
+            "isInternal" + ":" + getIsInternal()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "snippet" + "=" + (getSnippet() != null ? !getSnippet().equals(this)  ? getSnippet().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "position" + "=" + (getPosition() != null ? !getPosition().equals(this)  ? getPosition().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleClass = "+(getUmpleClass()!=null?Integer.toHexString(System.identityHashCode(getUmpleClass())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "constraint = "+(getConstraint()!=null?Integer.toHexString(System.identityHashCode(getConstraint())):"null")
+     + outputString;
+  }
 }

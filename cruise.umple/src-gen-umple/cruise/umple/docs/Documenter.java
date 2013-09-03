@@ -135,23 +135,8 @@ public class Documenter
     parser = null;
   }
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "inputPath" + ":" + getInputPath()+ "," +
-            "outputPath" + ":" + getOutputPath()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "parser = "+(getParser()!=null?Integer.toHexString(System.identityHashCode(getParser())):"null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={52},file={"Documenter_Code.ump"},javaline={152},length={276})
-  @umplesourcefile(line={53},file={"Documenter_Code.ump"},javaline={153},length={31})
-  public boolean generate()
-  {
+  @umplesourcefile(line={53},file={"Documenter_Code.ump"},javaline={139},length={30})
+   public boolean generate(){
     File inputDirectory = new File(getInputPath());
     if (!inputDirectory.exists())
     {
@@ -182,9 +167,8 @@ public class Documenter
     }
   }
 
-  @umplesourcefile(line={85},file={"Documenter_Code.ump"},javaline={186},length={60})
-  public boolean publish(String path)
-  {
+  @umplesourcefile(line={85},file={"Documenter_Code.ump"},javaline={171},length={59})
+   public boolean publish(String path){
     File file = new File(path);
     file.mkdirs();
     String navigationOutput = "";
@@ -243,10 +227,9 @@ public class Documenter
     }
     return true;
   }
-  
-  @umplesourcefile(line={146},file={"Documenter_Code.ump"},javaline={248},length={20})
-  public String toHtml(String title)
-  {
+
+  @umplesourcefile(line={146},file={"Documenter_Code.ump"},javaline={232},length={19})
+   public String toHtml(String title){
     Content selectedContent = null;
     Group selectedGroup = null;
     
@@ -266,7 +249,21 @@ public class Documenter
     return toHtml(selectedContent, toNavigationHtml(selectedGroup, selectedContent),  toSectionsToHideHtml(selectedGroup), "");
   }
 
-  @umplesourcefile(line={167},file={"Documenter_Code.ump"},javaline={270},length={12})
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "inputPath" + ":" + getInputPath()+ "," +
+            "outputPath" + ":" + getOutputPath()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "parser = "+(getParser()!=null?Integer.toHexString(System.identityHashCode(getParser())):"null")
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={166},file={"Documenter_Code.ump"},javaline={266},length={162})
+  @umplesourcefile(line={167},file={"Documenter_Code.ump"},javaline={267},length={12})
   private Hashtable<String, String> createReferenceLookup()
   {
     Hashtable<String, String> referenceLookup = new Hashtable<String, String>();
@@ -280,7 +277,7 @@ public class Documenter
     return referenceLookup;
   }
 
-  @umplesourcefile(line={180},file={"Documenter_Code.ump"},javaline={284},length={26})
+  @umplesourcefile(line={180},file={"Documenter_Code.ump"},javaline={281},length={26})
   private void updateReferences(Content content, Hashtable<String,String> referenceLookup)
   {
     String newSyntax = content.getSyntax();
@@ -308,7 +305,7 @@ public class Documenter
     content.setDescription(newDescription);
   }
 
-  @umplesourcefile(line={207},file={"Documenter_Code.ump"},javaline={312},length={14})
+  @umplesourcefile(line={207},file={"Documenter_Code.ump"},javaline={309},length={14})
   private void parseContent(File inputDirectory)
   {
     File[] allFiles = SampleFileWriter.getAllFiles(inputDirectory);
@@ -324,7 +321,7 @@ public class Documenter
     }
   }
   
-  @umplesourcefile(line={222},file={"Documenter_Code.ump"},javaline={328},length={11})
+  @umplesourcefile(line={222},file={"Documenter_Code.ump"},javaline={325},length={11})
   private void parseGroupOrder(File inputDirectory)
   {
     File[] allFiles = SampleFileWriter.getAllFiles(inputDirectory);
@@ -337,7 +334,7 @@ public class Documenter
     }
   }
   
-  @umplesourcefile(line={234},file={"Documenter_Code.ump"},javaline={341},length={49})
+  @umplesourcefile(line={234},file={"Documenter_Code.ump"},javaline={338},length={49})
   private String toHtml(Content selectedContent, String navigationOutput, String toHideOutput, String prevNextOutput)
   {
     int endOfExampleBeforePosition=0;
@@ -388,7 +385,7 @@ public class Documenter
     return htmlOutput;
   }
   
-  @umplesourcefile(line={284},file={"Documenter_Code.ump"},javaline={392},length={32})
+  @umplesourcefile(line={284},file={"Documenter_Code.ump"},javaline={389},length={32})
   private String toNavigationHtml(Group groupToAlwaysShow, Content contentToNotHighlight)
   {
     String navigationOutput = "";
@@ -422,7 +419,7 @@ public class Documenter
     return navigationOutput;
   }
   
-  @umplesourcefile(line={317},file={"Documenter_Code.ump"},javaline={426},length={11})
+  @umplesourcefile(line={317},file={"Documenter_Code.ump"},javaline={423},length={11})
   private String toSectionsToHideHtml(Group groupToAlwaysShow)
   {
     String sectionsToHideOutput = "";
