@@ -1943,10 +1943,30 @@ class UmpleInternalParser
       type = "Integer";
     }
 
-    if (type == null)
+    if (type == null && value != null)
+    {
+      if(value.matches("-?[0-9]+\\.[0-9]+"))
+      {
+        type = "Double";
+      }
+      else if(value.matches("-?[0-9]+"))
+      {
+        type = "Integer";
+      }
+      else if(value.matches("(true|false)"))
+      {
+        type = "Boolean";
+      }
+      else
+      {
+        type = "String";
+      }
+    }
+    else if(type == null)
     {
       type = "String";
-    } else {      
+    } 
+    else {      
       if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type)) {
         setFailedPosition(attributeToken.getPosition(), 140, type);
           return;
