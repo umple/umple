@@ -52,3 +52,26 @@ class ManyAttribute
 {
   Integer[] works;
 }
+
+class TypeInference
+{
+  a = 2;
+  b = 3.0;
+  c = false;
+  d = "hello world!";
+  e;
+  Integer f;
+  Integer g = 42;
+  String h = "hello";
+  String i;
+  j = -1;
+  k = -3.33333;
+  l = "-6";
+  m = "-3.1415926";
+  n = "99";
+  Boolean o = false;
+  Boolean p;
+  Double q;
+  Double r = 3;
+}
+
