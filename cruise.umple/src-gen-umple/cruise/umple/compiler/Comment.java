@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * Represents a comment, such as those found around classes, methods, attributes and associations.
- * @umplesource Umple.ump 652
- * @umplesource Umple_Code.ump 1871
+ * @umplesource Umple.ump 693
+ * @umplesource Umple_Code.ump 1867
  */
-// line 652 "../../../../src/Umple.ump"
-// line 1871 "../../../../src/Umple_Code.ump"
+// line 693 "../../../../src/Umple.ump"
+// line 1867 "../../../../src/Umple_Code.ump"
 public class Comment
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -66,7 +66,7 @@ public class Comment
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1872},file={"Umple_Code.ump"},javaline={70},length={129})
+  //  @umplesourcefile(line={1868},file={"Umple_Code.ump"},javaline={70},length={129})
   public Boolean isInline = true;
 
   /**
@@ -79,7 +79,7 @@ public class Comment
    * 
    * @return The processed/formatted comment appropriate for use in generated code output.
    */
-  @umplesourcefile(line={1885},file={"Umple_Code.ump"},javaline={83},length={116})
+  @umplesourcefile(line={1881},file={"Umple_Code.ump"},javaline={83},length={116})
   public static String format(String type,List<Comment> allComments)
   {
     //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";

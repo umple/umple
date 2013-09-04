@@ -8,11 +8,11 @@ import java.util.*;
 
 /**
  * A block of code that can be injected into one or more methods, constructor, etc.
- * @umplesource Umple.ump 285
- * @umplesource Umple_Code.ump 543
+ * @umplesource Umple.ump 326
+ * @umplesource Umple_Code.ump 540
  */
-// line 285 "../../../../src/Umple.ump"
-// line 543 "../../../../src/Umple_Code.ump"
+// line 326 "../../../../src/Umple.ump"
+// line 540 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -37,11 +37,11 @@ public class CodeInjection
   // CONSTRUCTOR
   //------------------------
 
-  public CodeInjection(String aType, String aOperation, UmpleClass aUmpleClass)
+  public CodeInjection(String aType, String aOperation, CodeBlock aSnippet, UmpleClass aUmpleClass)
   {
     type = aType;
     operation = aOperation;
-    snippet = new CodeBlock();
+    snippet = aSnippet;
     isInternal = false;
     if (!setUmpleClass(aUmpleClass))
     {
@@ -158,18 +158,17 @@ public class CodeInjection
     constraint = null;
   }
 
-  @umplesourcefile(line={545},file={"Umple_Code.ump"},javaline={162},length={4})
+  @umplesourcefile(line={542},file={"Umple_Code.ump"},javaline={162},length={3})
    public  CodeInjection(String a, String b, String c, UmpleClass d){
-    this(a,b, d);
-    setCode(c);
+    this(a,b,new CodeBlock(c), d);
   }
 
-  @umplesourcefile(line={550},file={"Umple_Code.ump"},javaline={168},length={3})
+  @umplesourcefile(line={546},file={"Umple_Code.ump"},javaline={167},length={3})
    public void setCode(String str){
     snippet.setCode(str);
   }
 
-  @umplesourcefile(line={554},file={"Umple_Code.ump"},javaline={173},length={34})
+  @umplesourcefile(line={550},file={"Umple_Code.ump"},javaline={172},length={34})
    public String getCode(){
     if(constraint == null)
   	{
@@ -205,12 +204,12 @@ public class CodeInjection
   	}
   }
 
-  @umplesourcefile(line={589},file={"Umple_Code.ump"},javaline={209},length={3})
+  @umplesourcefile(line={585},file={"Umple_Code.ump"},javaline={208},length={3})
    public void setCode(String lang, String code){
     snippet.setCode(lang, code);
   }
 
-  @umplesourcefile(line={593},file={"Umple_Code.ump"},javaline={214},length={3})
+  @umplesourcefile(line={589},file={"Umple_Code.ump"},javaline={213},length={3})
    public String getCode(String lang){
     return snippet.getCode(lang);
   }

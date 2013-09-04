@@ -2,5 +2,5 @@ class student
 {
   Integer age;
   Integer weight;
- [! (18 > age)]
+ [! (age > 18)]
  }

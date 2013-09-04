@@ -161,7 +161,6 @@ class UmpleInternalParser
     {
       analyzeAttribute(token,aClass);
     }
-    
     else if (token.is("invariant"))
     {
       analyzeInvariant(token,aClass);
@@ -212,6 +211,10 @@ class UmpleInternalParser
     else if (token.is("symmetricReflexiveAssociation"))
     {
       analyzeSymmetricReflexiveAssociation(token,aClass);
+    }    
+    else if (token.is("exception"))
+    {
+      analyzeException(token,aClass);
     }
 
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
@@ -2005,4 +2008,38 @@ class UmpleInternalParser
     return (isLazy && value != null);
   }
   
+  private void analyzeException(Token exception, UmpleClass aClass)
+  {
+    Token sub = exception.getSubToken(0);
+    if(sub.is("misnamedAttribute"))
+    {
+      if(!Token.isValidIdentifier(sub.getValue("name")))
+      {
+        boolean looksLikeAssociation = sub.getValue("name").contains("--") || sub.getValue("name").contains("->");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
+        if(looksLikeAssociation)
+        {
+          setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));
+        }
+        else 
+        {
+          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+        }
+        return;
+      }
+      if(Token.isValidIdentifier(sub.getValue("name"), "[A-Z]"))
+      {
+        setFailedPosition(sub.getPosition(), 131, sub.getValue("name"));
+      }
+      String type = sub.getValue("type");
+      if(type!=null)
+      {
+        if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
+        {
+          setFailedPosition(sub.getPosition(), 140, type);
+        }
+      }
+    }
+  }
 } 

@@ -25,12 +25,12 @@ public class Client
 
   public Client(int aMinAge, int aAge)
   {
-    if ( !(aAge>aMinAge))
+    minAge = aMinAge;
+    age = aAge;
+    if ( !((aAge>aMinAge)))
     {
       throw new RuntimeException("Please provide a valid age and minAge");
     }
-    minAge = aMinAge;
-    age = aAge;
   }
 
   //------------------------

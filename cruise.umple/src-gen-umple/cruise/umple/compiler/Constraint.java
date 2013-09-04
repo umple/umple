@@ -2,14 +2,15 @@
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.util.*;
 import java.util.*;
 
 /**
  * The Constraint object related to Umple Classes
- * @umplesource Umple.ump 257
+ * @umplesource Umple.ump 264
  */
-// line 257 "../../../../src/Umple.ump"
-public class Constraint
+// line 264 "../../../../src/Umple.ump"
+public class Constraint extends CodeBlock
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -19,6 +20,10 @@ public class Constraint
   //------------------------
 
   //Constraint Attributes
+  private String format;
+  private String inject;
+  private CodeTranslator gen;
+  private boolean negated;
   private List<ConstraintVariable> expressions;
 
   //------------------------
@@ -27,12 +32,49 @@ public class Constraint
 
   public Constraint()
   {
+    super();
+    format = "allParameterClosed";
+    inject = "";
+    gen = null;
+    negated = false;
     expressions = new ArrayList<ConstraintVariable>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setFormat(String aFormat)
+  {
+    boolean wasSet = false;
+    format = aFormat;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setInject(String aInject)
+  {
+    boolean wasSet = false;
+    inject = aInject;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setGen(CodeTranslator aGen)
+  {
+    boolean wasSet = false;
+    gen = aGen;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setNegated(boolean aNegated)
+  {
+    boolean wasSet = false;
+    negated = aNegated;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean addExpression(ConstraintVariable aExpression)
   {
@@ -46,6 +88,26 @@ public class Constraint
     boolean wasRemoved = false;
     wasRemoved = expressions.remove(aExpression);
     return wasRemoved;
+  }
+
+  public String getFormat()
+  {
+    return format;
+  }
+
+  public String getInject()
+  {
+    return inject;
+  }
+
+  public CodeTranslator getGen()
+  {
+    return gen;
+  }
+
+  public boolean getNegated()
+  {
+    return negated;
   }
 
   public ConstraintVariable getExpression(int index)
@@ -79,13 +141,38 @@ public class Constraint
   }
 
   public void delete()
-  {}
-
-
-  public String toString()
   {
-	  String outputString = "";
-    return super.toString() + "["+ "]"
-     + outputString;
+    super.delete();
   }
+
+  @umplesourcefile(line={273},file={"Umple.ump"},javaline={149},length={23})
+  public void mergeWith(Constraint constraint){
+    if(numberOfExpressions()>0)
+    {
+      if(getNegated()&&!constraint.getNegated())
+      {
+        addExpression(new ConstraintVariable("OPERATOR","||"));
+      }
+      else 
+      {
+        addExpression(new ConstraintVariable("OPERATOR","&&"));
+      }
+    }
+    if(constraint.getNegated())
+    {
+      addExpression(new ConstraintVariable("OPERATOR","!"));
+    }  
+    addExpression(new ConstraintVariable("SYNTAX","("));
+    for(ConstraintVariable cv: constraint.getExpressions())
+    {
+      addExpression(cv);
+    }
+    addExpression(new ConstraintVariable("SYNTAX",")"));
+  }
+
+  @umplesourcefile(line={297},file={"Umple.ump"},javaline={174},length={3})
+  public String getCode(){
+    return StringFormatter.format(gen.translate((getNegated()?"Not":"")+format,this),inject);
+  }
+
 }

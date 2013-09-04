@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
 package cruise.umple.compiler;
+import java.util.*;
 
 /**
  * Under Development
@@ -19,28 +20,33 @@ public class ConstraintVariable
 
   //ConstraintVariable Attributes
   private String type;
-  private String constrainedVariable;
+  private String value;
   private boolean isAssociation;
   private int index;
   private boolean isPrimitive;
+  private UmpleVariable foundAttribute;
+
+  //ConstraintVariable Associations
+  private Constraint subConstraint;
 
   //Helper Variables
   private int cachedHashCode;
-  private boolean canSetConstrainedVariable;
+  private boolean canSetValue;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public ConstraintVariable(String aType, String aConstrainedVariable)
+  public ConstraintVariable(String aType, String aValue)
   {
     cachedHashCode = -1;
-    canSetConstrainedVariable = true;
+    canSetValue = true;
     type = aType;
-    constrainedVariable = aConstrainedVariable;
+    value = aValue;
     isAssociation = false;
     index = -1;
     isPrimitive = true;
+    foundAttribute = null;
   }
 
   //------------------------
@@ -55,11 +61,11 @@ public class ConstraintVariable
     return wasSet;
   }
 
-  public boolean setConstrainedVariable(String aConstrainedVariable)
+  public boolean setValue(String aValue)
   {
     boolean wasSet = false;
-    if (!canSetConstrainedVariable) { return false; }
-    constrainedVariable = aConstrainedVariable;
+    if (!canSetValue) { return false; }
+    value = aValue;
     wasSet = true;
     return wasSet;
   }
@@ -88,6 +94,14 @@ public class ConstraintVariable
     return wasSet;
   }
 
+  public boolean setFoundAttribute(UmpleVariable aFoundAttribute)
+  {
+    boolean wasSet = false;
+    foundAttribute = aFoundAttribute;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getType()
   {
     return type;
@@ -96,24 +110,18 @@ public class ConstraintVariable
   /**
    * NOT USED: One order of parsing list each type of Umple Variable (Including the Constrained Variable).
    */
-  public String getConstrainedVariable()
-  {
-    return constrainedVariable;
-  }
-
-  @umplesourcefile(line={227, 227},file={"Umple.ump", "Umple.ump"},javaline={103, 108},length={2, 2})
   public String getValue()
   {
-    return constrainedVariable;
+    return value;
   }
 
-  @umplesourcefile(line={229},file={"Umple.ump"},javaline={113},length={2})
+  @umplesourcefile(line={229},file={"Umple.ump"},javaline={122},length={2})
   public boolean getIsAttribute()
   {
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
   }
 
-  @umplesourcefile(line={230},file={"Umple.ump"},javaline={118},length={2})
+  @umplesourcefile(line={230},file={"Umple.ump"},javaline={127},length={2})
   public boolean getIsOperator()
   {
     return "OPERATOR".equals(type);
@@ -134,12 +142,30 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
-  @umplesourcefile(line={234},file={"Umple.ump"},javaline={140},length={6})
+  @umplesourcefile(line={234},file={"Umple.ump"},javaline={149},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
     "float".equals(type.toLowerCase())||
      "double".equals(type.toLowerCase());
+  }
+
+  public UmpleVariable getFoundAttribute()
+  {
+    return foundAttribute;
+  }
+
+  public Constraint getSubConstraint()
+  {
+    return subConstraint;
+  }
+
+  public boolean setSubConstraint(Constraint aNewSubConstraint)
+  {
+    boolean wasSet = false;
+    subConstraint = aNewSubConstraint;
+    wasSet = true;
+    return wasSet;
   }
 
   public boolean equals(Object obj)
@@ -149,11 +175,11 @@ public class ConstraintVariable
 
     ConstraintVariable compareTo = (ConstraintVariable)obj;
   
-    if (constrainedVariable == null && compareTo.constrainedVariable != null)
+    if (value == null && compareTo.value != null)
     {
       return false;
     }
-    else if (constrainedVariable != null && !constrainedVariable.equals(compareTo.constrainedVariable))
+    else if (value != null && !value.equals(compareTo.value))
     {
       return false;
     }
@@ -168,33 +194,44 @@ public class ConstraintVariable
       return cachedHashCode;
     }
     cachedHashCode = 17;
-    if (constrainedVariable != null)
+    if (value != null)
     {
-      cachedHashCode = cachedHashCode * 23 + constrainedVariable.hashCode();
+      cachedHashCode = cachedHashCode * 23 + value.hashCode();
     }
     else
     {
       cachedHashCode = cachedHashCode * 23;
     }
 
-    canSetConstrainedVariable = false;
+    canSetValue = false;
     return cachedHashCode;
   }
 
   public void delete()
-  {}
+  {
+    subConstraint = null;
+  }
 
-  @umplesourcefile(line={238},file={"Umple.ump"},javaline={188},length={13})
+  @umplesourcefile(line={238},file={"Umple.ump"},javaline={216},length={4})
+  public ConstraintVariable isNotPrimitive(){
+    isPrimitive = false;
+    return this;
+  }
+
+  @umplesourcefile(line={242},file={"Umple.ump"},javaline={222},length={16})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
     }
-    UmpleVariable uv = aClass.getAttribute(this.getConstrainedVariable());
+    UmpleVariable uv = aClass.getAttribute(this.getValue());
+    
     if(uv!=null){
+      setFoundAttribute(uv);
       isAssociation = ((Attribute)uv).getIsList();
       return uv;
     }
-    uv = aClass.getAssociationVariable(this.getConstrainedVariable());
+    uv = aClass.getAssociationVariable(this.getValue());
+    setFoundAttribute(uv);
     isAssociation = uv!=null;
     return uv;
   }
@@ -204,15 +241,16 @@ public class ConstraintVariable
   {
 	  String outputString = "";
     return super.toString() + "["+
-            "constrainedVariable" + ":" + getConstrainedVariable()+ "," +
-            "type" + ":" + getType()+ "," +
             "value" + ":" + getValue()+ "," +
+            "type" + ":" + getType()+ "," +
             "isAttribute" + ":" + getIsAttribute()+ "," +
             "isOperator" + ":" + getIsOperator()+ "," +
             "isAssociation" + ":" + getIsAssociation()+ "," +
             "index" + ":" + getIndex()+ "," +
             "isPrimitive" + ":" + getIsPrimitive()+ "," +
-            "isNumeric" + ":" + getIsNumeric()+ "]"
+            "isNumeric" + ":" + getIsNumeric()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "foundAttribute" + "=" + (getFoundAttribute() != null ? !getFoundAttribute().equals(this)  ? getFoundAttribute().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "subConstraint = "+(getSubConstraint()!=null?Integer.toHexString(System.identityHashCode(getSubConstraint())):"null")
      + outputString;
   }
 }

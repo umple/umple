@@ -20,9 +20,7 @@ class ConsoleTracer
   //------------------------
 
   private function __construct()
-  {
-    
-  }
+  {}
 
   public static function getInstance()
   {

@@ -12,12 +12,13 @@ namespace cruise.umple.compiler;
 class JavaGenerator
 {
   depend cruise.umple.util.StringFormatter;
+  brace = "}";
   
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
-  private static Map<String,String> ConstraintOperatorMap;
+  private static Map<String,String> ConstraintOperatorNonPrimitiveMap;
   private static List<String> OneOrManyLookup;
   
   
@@ -96,8 +97,18 @@ class JavaGenerator
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
         
-    ConstraintOperatorMap = new HashMap<String,String>();
-    ConstraintOperatorMap.put("==false",".equals({0})");
+    ConstraintOperatorNonPrimitiveMap = new HashMap<String,String>();
+    ConstraintOperatorNonPrimitiveMap.put("==",".equals({0})");
+    ConstraintOperatorNonPrimitiveMap.put("[]",".get({0})");
+    ConstraintOperatorNonPrimitiveMap.put("initialise","new {0}");
+    ConstraintOperatorNonPrimitiveMap.put("has",".contains({0})");
+    ConstraintOperatorNonPrimitiveMap.put("hasAll",".contains({0})");
+    ConstraintOperatorNonPrimitiveMap.put("cardinality==",".size()=={0}");
+    ConstraintOperatorNonPrimitiveMap.put("cardinality!=",".size()!={0}");
+    ConstraintOperatorNonPrimitiveMap.put("cardinality>=",".size()>={0}");
+    ConstraintOperatorNonPrimitiveMap.put("cardinality<=",".size()<={0}");
+    ConstraintOperatorNonPrimitiveMap.put("cardinality>",".size()>{0}");
+    ConstraintOperatorNonPrimitiveMap.put("cardinality<",".size()<{0}");
 
   }
   
@@ -208,18 +219,58 @@ class JavaGenerator
     String expression = "";
     boolean insertNext = false;
     boolean strictNext = false;
-    for(ConstraintVariable expr: constraint.getExpressions())
-    {
-      if( expr.getIsAttribute() )
+    for(int i=0;i<constraint.numberOfExpressions();i++)
+    {      
+      ConstraintVariable expr = constraint.getExpression(i);
+      // Debug statement: System.out.println(""+i + ">>" + expr.getType()+":"+expr.getValue() +">>"+expression);
+      if( expr.getType().equals("NAME"))
+      {
+        if(insertNext)
+        {
+          expression = StringFormatter.format(expression,translate("Plain"+format,expr.getSubConstraint()));
+          insertNext = false;
+        }
+        else
+        {
+          expression+=translate(format+":Plain",expr.getSubConstraint());
+        }
+      }
+      else if( expr.getIsAttribute() )
       {
         String value;
         if(format.contains("allParameterOne")&&!strictNext)
         {
-          value = "a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
+          if(!expr.getIsAssociation())
+          {
+             value = expr.getFoundAttribute()==null?expr.getValue():translate("parameterOne",expr.getFoundAttribute(),expr.getIsAssociation());
+          }
+          else 
+          {
+            if(expr.getIndex()==-1)
+            {
+              value = expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",expr.getFoundAttribute(),expr.getIsAssociation());
+            }
+            else {
+              value = expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",expr.getFoundAttribute(),expr.getIsAssociation()) + StringFormatter.format(ConstraintOperatorNonPrimitiveMap.get("[]"),""+expr.getIndex());
+            }
+          }
         }
-        else if(format.contains(expr.getValue())&&!strictNext)
+        else if(format.split(":")[0].equals(expr.getValue())&&!strictNext)
         {
-          value = "a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
+          if(!expr.getIsAssociation())
+          {
+             value = expr.getFoundAttribute()==null?expr.getValue():translate("parameterOne",expr.getFoundAttribute(),expr.getIsAssociation());
+          }
+          else 
+          {
+            if(expr.getIndex()==-1)
+            {
+              value = expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",expr.getFoundAttribute(),expr.getIsAssociation());
+            }
+            else {
+              value = expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",expr.getFoundAttribute(),expr.getIsAssociation()) + StringFormatter.format(ConstraintOperatorNonPrimitiveMap.get("[]"),""+expr.getIndex());
+            }
+          }
         }
         else 
         { 
@@ -237,25 +288,40 @@ class JavaGenerator
       else
       { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
         
-        if(expr.getIsOperator())
-        {          
-          if(ConstraintOperatorMap.containsKey(expr.getValue()+expr.getIsPrimitive()))
-          {
-            if(insertNext){
-              expression = StringFormatter.format(expression,expr.getValue());
-            }
-            else {
-              expression += ConstraintOperatorMap.get(expr.getValue()+expr.getIsPrimitive());
-              insertNext = true;
-            }
-            continue;
-          }
-        }
         if(expr.getValue().equals("."))
         {
           strictNext=true;
         }
-        if(insertNext){
+        if(expr.getIsOperator())
+        { 
+          String opValue = expr.getValue();
+          if(!expr.getIsPrimitive()&&ConstraintOperatorNonPrimitiveMap.containsKey(opValue))
+          {
+            if(insertNext)
+            {
+              expression = StringFormatter.format(expression,ConstraintOperatorNonPrimitiveMap.get(opValue));
+              insertNext = true;
+            }
+            else 
+            {
+              expression += ConstraintOperatorNonPrimitiveMap.get(opValue);
+              insertNext = true;
+            }
+          }
+          else
+          {
+			if(insertNext)
+            {
+              expression = StringFormatter.format(expression,opValue);
+              insertNext = false;
+            }
+            else 
+            {
+              expression += opValue;
+            }
+          }
+        }
+        else if(insertNext){
           expression = StringFormatter.format(expression,expr.getValue());
           insertNext = false;
         }
@@ -264,7 +330,11 @@ class JavaGenerator
         }
       }
     }
-    if(format.contains("Not"))
+    if(format.contains("Plain"))
+    {
+      return expression;
+    }
+    else if(format.contains("Not"))
     {
       expression = " !("+expression+")";
     }
@@ -781,29 +851,55 @@ class JavaGenerator
         aClass.addCodeInjection(set);
       }
     }
+    
+    Constraint constraint = new Constraint();
+    constraint.setNegated(true);
+    constraint.setFormat("allParameterOneClosed");
+    constraint.setInject("throw new RuntimeException(\"Please provide a valid");
+    constraint.setGen(this);
     for (Constraint ac : aClass.getConstraints())
     {      
       List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
-      String constructor_code = StringFormatter.format(translate("NotallParameterOneClosed",ac),"throw new RuntimeException(\"Please provide a valid "+ translate("allAttributesValues",ac) +"\");");
-      CodeInjection before = new CodeInjection("before",  "constructor", constructor_code, aClass);  
-      before.setIsInternal(true);
-      aClass.addCodeInjection(before);
-      
+      boolean isAssociation = false;
+      CodeInjection before;
       for (ConstraintVariable cur : ac.getExpressions())
       {
-        if(!cur.getIsAttribute() || alreadyDone.contains(cur))
+        if(cur.getIsAssociation())
+          isAssociation = true;
+        if(!cur.getIsAttribute()  || alreadyDone.contains(cur))
+          continue;
+        if(cur.getSubConstraint()!=null&&cur.getSubConstraint().getExpression(0).getValue().equals("initialise"))
           continue;
         alreadyDone.add(cur);
-        String setMethod_code = StringFormatter.format(translate(cur.getValue()+"Open",ac),"");
         
+        String setMethod_code = StringFormatter.format(translate(cur.getValue()+":Open",ac),"");
         
-        before = new CodeInjection("before", translate("setMethod", aClass.getAttribute(cur.getValue())), setMethod_code, aClass);         
-        CodeInjection after = new CodeInjection("after", translate("setMethod", aClass.getAttribute(cur.getValue())), "}", aClass);
+        before = new CodeInjection("before", cur.getFoundAttribute()==null?cur.getValue():translate("setMethod", cur.getAttribute(aClass), cur.getIsAssociation()), setMethod_code, aClass);         
+        CodeInjection after = new CodeInjection("after", cur.getFoundAttribute()==null?cur.getValue():translate("setMethod", cur.getAttribute(aClass), cur.getIsAssociation()), "}", aClass);
         before.setIsInternal(true);
         after.setIsInternal(true);
         aClass.addCodeInjection(before);
-        aClass.addCodeInjection(after);     
+        aClass.addCodeInjection(after);
+        
+        if(cur.getIsAssociation())
+        {
+          before = new CodeInjection("before", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), setMethod_code, aClass);         
+          after = new CodeInjection("after", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), getBrace(), aClass);
+          before.setIsInternal(true);
+          after.setIsInternal(true);
+          aClass.addCodeInjection(before);
+          aClass.addCodeInjection(after);
+        }
       }
+      constraint.mergeWith(ac);
+      constraint.setInject(constraint.getInject()+" "+translate("allAttributesValues",ac));
+    }
+    if(constraint.numberOfExpressions()>0)
+    {
+      constraint.setInject(constraint.getInject()+"\");");
+      CodeInjection constructor = new CodeInjection("after",  "constructor", constraint, aClass);  
+      constructor.setIsInternal(true);
+      aClass.addCodeInjection(constructor);
     }
     
     for (Precondition pc : aClass.getPreconditions()){ 
