@@ -98,6 +98,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="JavaGenerator" eSuperTypes="#//SuperCodeGenerator">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="brace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RTCppGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -430,7 +431,6 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConstraintVariable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="constrainedVariable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAttribute" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isOperator" eType="#//boolean"/>
@@ -438,18 +438,28 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="index" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPrimitive" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNumeric" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="foundAttribute" eType="#//UmpleVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subConstraint" lowerBound="0" upperBound="1" eType="#//Constraint" eOpposite="#//Constraint/constraintVariable"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Constraint">
+  <eClassifiers xsi:type="ecore:EClass" name="Constraint" eSuperTypes="#//CodeBlock">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="format" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="inject" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="gen" eType="#//CodeTranslator"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="negated" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="expressions" eType="#//ConstraintVariable" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraintVariable" lowerBound="1" upperBound="1" eType="#//ConstraintVariable" eOpposite="#//ConstraintVariable/subConstraint"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjection" lowerBound="1" upperBound="1" eType="#//CodeInjection" eOpposite="#//CodeInjection/constraint"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/constraints"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="CodeTranslator"/>
   <eClassifiers xsi:type="ecore:EClass" name="Precondition" eSuperTypes="#//Constraint">
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/preconditions"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/preconditions"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeBlock">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//HashMap%3CString%2CString%3E"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="HashMap&lt;String,String>" instanceClassName="java.util.HashMap"/>
   <eClassifiers xsi:type="ecore:EClass" name="CodeInjection">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="operation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

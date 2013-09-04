@@ -279,7 +279,7 @@ class AttributeTraceItem
    */
   public String getExtremities(CodeTranslator gen, String name)
   {
-    return gen.translate(name+"Closed",constraint);
+    return gen.translate(name+":Closed",constraint);
   }
 }
 class StateMachineTraceItem

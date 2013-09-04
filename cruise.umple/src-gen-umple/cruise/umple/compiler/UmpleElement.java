@@ -9,10 +9,10 @@ import java.util.*;
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
  * @umplesource Umple.ump 72
- * @umplesource Umple_Code.ump 632
+ * @umplesource Umple_Code.ump 628
  */
 // line 72 "../../../../src/Umple.ump"
-// line 632 "../../../../src/Umple_Code.ump"
+// line 628 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -404,12 +404,12 @@ public class UmpleElement
     endPositions.clear();
   }
 
-  @umplesourcefile(line={634},file={"Umple_Code.ump"},javaline={408},length={3})
+  @umplesourcefile(line={630},file={"Umple_Code.ump"},javaline={408},length={3})
    public void appendExtraCode(String newCode){
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={639},file={"Umple_Code.ump"},javaline={413},length={11})
+  @umplesourcefile(line={635},file={"Umple_Code.ump"},javaline={413},length={11})
    public void appendExtraCode(String newCode, boolean addNewline){
     if (newCode == null) 
     { 

@@ -22,12 +22,12 @@ class student
   def initialize(a_age, a_weight)
     @initialized = false
     @deleted = false
-    if !(18>a_age&&3<a_weight) then
-      raise RuntimeError, 'Please provide a valid age' 
+    if !(a_weight<3&&a_age>18) then
+      raise RuntimeError, 'Please provide a valid weight' 
     end 
     
-    if !(18>a_age&&3<a_weight) then
-      raise RuntimeError, 'Please provide a valid weight' 
+    if !(a_weight<3&&a_age>18) then
+      raise RuntimeError, 'Please provide a valid age' 
     end 
     
     @age = a_age
@@ -41,7 +41,7 @@ class student
 
   def set_age(a_age)
     was_set = false
-    if 18>a_age&&3<@weight then
+    if @weight<3&&a_age>18 then
     
     @age = a_age
     was_set = true
@@ -51,7 +51,7 @@ class student
 
   def set_weight(a_weight)
     was_set = false
-    if 18>@age&&3<a_weight then
+    if a_weight<3&&@age>18 then
     
     @weight = a_weight
     was_set = true

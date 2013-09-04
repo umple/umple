@@ -492,47 +492,44 @@ class MethodBody
  */
 class CodeBlock
 {
-  after constructor {code = new Hashtable<String,String>();}
   
   public CodeBlock(String add)
   {
     this();
-    code.put("",add);
+    codes.put("",add);
   }
   public CodeBlock(String lang, String add)
   {
     this();
-    code.put(lang,add);
+    codes.put(lang,add);
   }
   public void setCode(String add)
   {
     if(add!=null)
-      code.put("",add);
+      codes.put("",add);
     else
-      code.put("","");
+      codes.put("","");
   }
   public void setCode(String lang, String add)
   {
     if(add!=null)
-      code.put(lang,add);
+      codes.put(lang,add);
     else
-      code.put(lang,"");
+      codes.put(lang,"");
   }
   public String getCode()
   {
-    return !code.containsKey(languageUsed) ? "".equals(languageUsed) ? null : code.get("") : code.get(languageUsed);
+    return !codes.containsKey(languageUsed) ? "".equals(languageUsed) ? null : codes.get("") : codes.get(languageUsed);
   }
   public String getCode(String lang)
   {
-    return code.containsKey(lang)? code.get(lang) : code.get("");
+    return codes.containsKey(lang)? codes.get(lang) : codes.get("");
   }
-  public String toString()
-  {
-    Enumeration<String> enumer = code.elements();
+  public String toString(){
     String out = "";
-    while(enumer.hasMoreElements())
+    for(String next:codes.values())
     {
-      out += enumer.nextElement();
+      out += next;
     }
     return out;
   }
@@ -544,8 +541,7 @@ class CodeInjection
 {
   public CodeInjection(String a, String b, String c, UmpleClass d)
   {
-    this(a,b, d);
-    setCode(c);
+    this(a,b,new CodeBlock(c), d);
   }
   public void setCode(String str)
   {

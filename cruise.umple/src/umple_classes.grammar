@@ -26,7 +26,7 @@ associationDefinition : association [name]? { [[association]]* }
 associationClassDefinition : associationClass [name] { [[associationClassContent]]* }
 
 // The following items can be found inside the body of classes or association classes
-classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[extraCode]]
+classContent- : [[comment]] | [[classDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | [[exception]] | ; | [[extraCode]]
 associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [[displayColor]] | [[invariant]] | [[softwarePattern]] | [[depend]] | [[singleAssociationEnd]] | [[stateMachine]] | [[attribute]] | [[association]] | [[inlineAssociation]] | ; | [[extraCode]]
 
 
@@ -69,9 +69,9 @@ isSorted- : sorted { [priority] }
 // Details of attributes. See user manual page [*AttributeDefinition*]
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
 simpleAttribute- : [~name] ;
-autouniqueAttribute- : [=autounique] [name] ;
-derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) = ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+autouniqueAttribute- : [=autounique] [~name] ;
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [~name] | [~type] [=list:[]] [~name] | [~type] [~name] | [~name] ) = ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([~type]? [=list:[]]? [~name] ) (= [**value])? ;
 
 
 // Keys are used to define quality and hash codes, plus Sql keys.

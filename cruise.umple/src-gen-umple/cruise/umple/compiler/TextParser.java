@@ -654,11 +654,11 @@ public class TextParser
     boolean star = false;
     while (_currentCharacterIndex <= _maxCharacterIndex)
     {
-      if(isAlphanum && !(""+c()).matches("[a-z|A-Z]")&&name.length()==0){
+      if(isAlphanum && !(""+c()).matches("[a-z|A-Z|_]")&&name.length()==0){
         break;
       }
       //If the rule is alphanumeric only & we've reached a character that is not alphanumeric or an underscore, we haven't matched anything.
-      if(isAlphanum && !(isAlpha(c()) || isNumeric(c())) && !(c() == '_') && name.length() > 0) {
+      if(isAlphanum && !((""+c()).matches("[a-z|A-Z|_|-|0-9|<|>|,]")) && name.length() > 0) {
         break;
       }
 
@@ -753,7 +753,7 @@ public class TextParser
     }
     else if (name.length() > 0)
     {
-      if(isAlphanum&&!name.equals("true")&&!name.equals("false"))
+      if(isAlphanum&&!name.equals("true")&&!name.equals("false")&&!name.equals("["))
       {
          _currentName = name;
       }

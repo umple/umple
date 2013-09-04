@@ -763,7 +763,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
       	String con_expression = "";
       	String set_code = "if {0} then\n";
       	String con_code = "if !({0}) then\n" +
-      	                         "  raise RuntimeError, \'Please provide a valid "+ cur.getConstrainedVariable() +"\' \n"+
+      	                         "  raise RuntimeError, \'Please provide a valid "+ cur.getValue() +"\' \n"+
       						     "end \n";
       	for (ConstraintVariable  expr: ac.getExpressions())
         {

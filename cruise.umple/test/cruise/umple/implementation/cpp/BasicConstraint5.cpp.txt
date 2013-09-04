@@ -11,13 +11,13 @@
   
  student::student(const int & aAge, const int & aWeight)
   {
-    if ( !(18>aAge&&3<aWeight))
-    {
-      throw "Please provide a valid age";
-    }
-    if ( !(18>aAge&&3<aWeight))
+    if ( !(aWeight<3&&aAge>18))
     {
       throw "Please provide a valid weight";
+    }
+    if ( !(aWeight<3&&aAge>18))
+    {
+      throw "Please provide a valid age";
     }
     age = aAge;
     weight = aWeight;
@@ -50,7 +50,7 @@
   bool student::setAge(const int & aAge)
   {
     bool wasSet = false;
-    if (18>aAge&&3<weight)
+    if (weight<3&&aAge>18)
     {
     age = aAge;
     wasSet = true;
@@ -61,7 +61,7 @@
   bool student::setWeight(const int & aWeight)
   {
     bool wasSet = false;
-    if (18>age&&3<aWeight)
+    if (aWeight<3&&age>18)
     {
     weight = aWeight;
     wasSet = true;

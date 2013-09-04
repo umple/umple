@@ -292,8 +292,8 @@ public class UmpleModelGenerationPolicy{
 			boolean contains= false;
 			List<String> strings= new ArrayList<String>();
 			for(ConstraintVariable variable: expressionsList){
-				strings.add(variable.getConstrainedVariable());
-				if(name.equals(variable.getConstrainedVariable())){
+				strings.add(variable.getValue());
+				if(name.equals(variable.getValue())){
 					contains= true;
 				}
 			}

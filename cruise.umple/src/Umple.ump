@@ -223,8 +223,8 @@ class ReferenceType{
  */
 class ConstraintVariable{
   type;//NOT USED: One order of parsing list each type of Umple Variable (Including the Constrained Variable).
-  constrainedVariable; //This is left as a String representing the name of the Constrained Umple Variable
-  value = {constrainedVariable};
+  value;
+  1 -> 0..1 Constraint subConstraint;
 
   boolean isAttribute = {!"SYNTAX".equals(type)&&!"OPERATOR".equals(type)};
   boolean isOperator = {"OPERATOR".equals(type)};
@@ -234,28 +234,69 @@ class ConstraintVariable{
   boolean isNumeric = {"integer".equals(type.toLowerCase())||
     "float".equals(type.toLowerCase())||
      "double".equals(type.toLowerCase())};
-  
+  UmpleVariable foundAttribute = null;
+  ConstraintVariable isNotPrimitive(){
+    isPrimitive = false;
+    return this;
+  }
   UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
     }
-    UmpleVariable uv = aClass.getAttribute(this.getConstrainedVariable());
+    UmpleVariable uv = aClass.getAttribute(this.getValue());
+    
     if(uv!=null){
+      setFoundAttribute(uv);
       isAssociation = ((Attribute)uv).getIsList();
       return uv;
     }
-    uv = aClass.getAssociationVariable(this.getConstrainedVariable());
+    uv = aClass.getAssociationVariable(this.getValue());
+    setFoundAttribute(uv);
     isAssociation = uv!=null;
     return uv;
   }
-  key {constrainedVariable};
+  key {value};
 }
 
 /*
  * The Constraint object related to Umple Classes
  */
-class Constraint{  
+class Constraint{
+  depend cruise.umple.util.*;
+  isA CodeBlock;
+  format = "allParameterClosed";
+  String inject = "";
+  CodeTranslator gen = null;
+  boolean negated = false;
   ConstraintVariable[] expressions; 
+  
+  void mergeWith(Constraint constraint){
+    if(numberOfExpressions()>0)
+    {
+      if(getNegated()&&!constraint.getNegated())
+      {
+        addExpression(new ConstraintVariable("OPERATOR","||"));
+      }
+      else 
+      {
+        addExpression(new ConstraintVariable("OPERATOR","&&"));
+      }
+    }
+    if(constraint.getNegated())
+    {
+      addExpression(new ConstraintVariable("OPERATOR","!"));
+    }  
+    addExpression(new ConstraintVariable("SYNTAX","("));
+    for(ConstraintVariable cv: constraint.getExpressions())
+    {
+      addExpression(cv);
+    }
+    addExpression(new ConstraintVariable("SYNTAX",")"));
+  }
+  
+  String getCode(){
+    return StringFormatter.format(gen.translate((getNegated()?"Not":"")+format,this),inject);
+  }
 }
 
 /*
@@ -275,8 +316,8 @@ class CodeBlock
 {
   depend java.util.*;
 
+  internal HashMap<String,String> codes = new HashMap<String,String>();
   public static String languageUsed = "";
-  Hashtable<String,String> code;
 }
 
 /*
@@ -289,7 +330,7 @@ class CodeInjection
   
   type;
   operation;
-  CodeBlock snippet = new CodeBlock();
+  CodeBlock snippet;
   * -> 1 UmpleClass;
   1 -> 0..1 Constraint;
   lazy Position position;

@@ -32,7 +32,7 @@
 25: 2, "http://umple.org/E025SortKeyNotFound.html", Class '{0}' does not contain attribute {1} that is used as sort key ;
 26: 2, "http://umple.org/E026DuplicateKeyItem.html", Duplicate item '{0}' in key statement(s) in class '{1}' ;
 27: 3, "http://umple.org/W027KeyIdentifierIncorrect.html", Item '{0}' in key statement is not defined in class '{1}';
-28: 2, "http://umple.org/E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}';
+28: 3, "http://umple.org/E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}';
 29: 2, "http://umple.org/E029ConstraintTypeMismatch.html", Attribute '{0}' in constraint must be of type '{1}';
 
 30: 4, "http://umple.org/W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1};

@@ -487,7 +487,7 @@ public class AttributeTraceItem implements TraceItem
    */
   @umplesourcefile(line={280},file={"Trace_Code.ump"},javaline={483},length={3})
    public String getExtremities(CodeTranslator gen, String name){
-    return gen.translate(name+"Closed",constraint);
+    return gen.translate(name+":Closed",constraint);
   }
 
 

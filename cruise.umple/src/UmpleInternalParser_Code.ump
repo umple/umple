@@ -74,6 +74,7 @@ class UmpleInternalParser
     addRulesInFile("/umple_traces.grammar");
     addRulesInFile("/umple_constraints.grammar");  // TODO Under development
     addRulesInFile("/umple_layout.grammar");
+    addRulesInFile("/umple_exceptions.grammar");
   }
 
   public ParseResult parse(String ruleName, String input)

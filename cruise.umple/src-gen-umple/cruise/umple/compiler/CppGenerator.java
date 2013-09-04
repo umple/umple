@@ -865,7 +865,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
       	String con_expression = "";
       	String set_code = "if ({0})\n{";
       	String con_code = "if ( !({0}))\n{\n" +
-      						     "  throw \"Please provide a valid "+ cur.getConstrainedVariable() +"\";\n"+
+      						     "  throw \"Please provide a valid "+ cur.getValue() +"\";\n"+
                                  "}";
       	for (ConstraintVariable  expr: ac.getExpressions())
         {

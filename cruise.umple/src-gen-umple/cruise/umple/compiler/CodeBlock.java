@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * A block of code in an arbitrary language to be injected into generated code
- * @umplesource Umple.ump 274
+ * @umplesource Umple.ump 315
  * @umplesource Umple_Code.ump 493
  */
-// line 274 "../../../../src/Umple.ump"
+// line 315 "../../../../src/Umple.ump"
 // line 493 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
@@ -20,15 +20,16 @@ public class CodeBlock
   // MEMBER VARIABLES
   //------------------------
 
+  //CodeBlock Attributes
+  private HashMap<String,String> codes;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={495},file={"Umple_Code.ump"},javaline={31},length={1})
   public CodeBlock()
   {
-    // line 495 "../../../../src/Umple_Code.ump"
-    code = new Hashtable<String,String>();
+    codes = new HashMap<String,String>();
   }
 
   //------------------------
@@ -38,51 +39,50 @@ public class CodeBlock
   public void delete()
   {}
 
-  @umplesourcefile(line={497},file={"Umple_Code.ump"},javaline={42},length={4})
+  @umplesourcefile(line={496},file={"Umple_Code.ump"},javaline={43},length={4})
    public  CodeBlock(String add){
     this();
-    code.put("",add);
+    codes.put("",add);
   }
 
-  @umplesourcefile(line={502},file={"Umple_Code.ump"},javaline={48},length={4})
+  @umplesourcefile(line={501},file={"Umple_Code.ump"},javaline={49},length={4})
    public  CodeBlock(String lang, String add){
     this();
-    code.put(lang,add);
+    codes.put(lang,add);
   }
 
-  @umplesourcefile(line={507},file={"Umple_Code.ump"},javaline={54},length={6})
+  @umplesourcefile(line={506},file={"Umple_Code.ump"},javaline={55},length={6})
    public void setCode(String add){
     if(add!=null)
-      code.put("",add);
+      codes.put("",add);
     else
-      code.put("","");
+      codes.put("","");
   }
 
-  @umplesourcefile(line={514},file={"Umple_Code.ump"},javaline={62},length={6})
+  @umplesourcefile(line={513},file={"Umple_Code.ump"},javaline={63},length={6})
    public void setCode(String lang, String add){
     if(add!=null)
-      code.put(lang,add);
+      codes.put(lang,add);
     else
-      code.put(lang,"");
+      codes.put(lang,"");
   }
 
-  @umplesourcefile(line={521},file={"Umple_Code.ump"},javaline={70},length={3})
+  @umplesourcefile(line={520},file={"Umple_Code.ump"},javaline={71},length={3})
    public String getCode(){
-    return !code.containsKey(languageUsed) ? "".equals(languageUsed) ? null : code.get("") : code.get(languageUsed);
+    return !codes.containsKey(languageUsed) ? "".equals(languageUsed) ? null : codes.get("") : codes.get(languageUsed);
   }
 
-  @umplesourcefile(line={525},file={"Umple_Code.ump"},javaline={75},length={3})
+  @umplesourcefile(line={524},file={"Umple_Code.ump"},javaline={76},length={3})
    public String getCode(String lang){
-    return code.containsKey(lang)? code.get(lang) : code.get("");
+    return codes.containsKey(lang)? codes.get(lang) : codes.get("");
   }
 
-  @umplesourcefile(line={529},file={"Umple_Code.ump"},javaline={80},length={9})
+  @umplesourcefile(line={528},file={"Umple_Code.ump"},javaline={81},length={8})
    public String toString(){
-    Enumeration<String> enumer = code.elements();
     String out = "";
-    while(enumer.hasMoreElements())
+    for(String next:codes.values())
     {
-      out += enumer.nextElement();
+      out += next;
     }
     return out;
   }
@@ -90,8 +90,7 @@ public class CodeBlock
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={277},file={"Umple.ump"},javaline={94},length={3})
+  //  @umplesourcefile(line={319},file={"Umple.ump"},javaline={94},length={2})
   public static String languageUsed = "";
-  Hashtable<String,String> code;
 
 }

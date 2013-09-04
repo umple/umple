@@ -52,43 +52,51 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
   {
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
     List<Token> subs = invariantToken.getSubTokens();
-    for (Token t : subs)
+    for (Token sub : subs)
     {
-      if (t.is(")") || t.is("("))
+      if (sub.is(")") || sub.is("("))
       {
-        rawLine.add(new ConstraintVariable("SYNTAX",t.getName()));
+        rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
       }
-      if (!t.getValue().equals("STATIC"))
+      if (!sub.getValue().equals("STATIC"))
       { 
-        if (t.is("genExpr"))
+        if (sub.is("genExpr"))
         {
-          rawLine.addAll(analyzeGeneralConstraintExpression(t,aClass));  
+          rawLine.addAll(analyzeGeneralConstraintExpression(sub,aClass));  
         }        
-        else if (t.is("boolExpr"))
+        else if (sub.is("boolExpr"))
         {
-          rawLine.addAll(analyzeBooleanConstraintExpression(t,aClass));
+          rawLine.addAll(analyzeBooleanConstraintExpression(sub,aClass));
         } 
-        else if (t.is("stringExpr"))
+        else if (sub.is("stringExpr"))
         {
-          rawLine.addAll(analyzeStringConstraintExpression(t,aClass));
+          rawLine.addAll(analyzeStringConstraintExpression(sub,aClass));
         }
-        else if (t.is("numExpr"))
+        else if (sub.is("numExpr"))
         {
-          rawLine.addAll(analyzeNumberConstraintExpression(t,aClass));
+          rawLine.addAll(analyzeNumberConstraintExpression(sub,aClass));
         }
-        else if(t.is("loneBoolean"))
+        else if (sub.is("numExpr2"))
         {
-          rawLine.add(analyzeConstraintName(t,aClass,true,"boolean"));
+          rawLine.addAll(analyzeNumberConstraintExpression(sub,aClass));
         }
-        else if (t.is("linkingOp")){
-        	rawLine.addAll(analyzeLinkingOpExpression(t,aClass));
+        else if (sub.is("associationExpr"))
+        {
+          rawLine.addAll(analyzeAssociationConstraintExpression(sub,aClass));
         }
-        else if (t.is("negativeConstraint")){
-        	rawLine.addAll(analyzeNegativeConstraint(t, aClass));
+        else if(sub.is("loneBoolean"))
+        {
+          rawLine.add(analyzeConstraintName(sub,aClass,true,"boolean"));
+        }
+        else if (sub.is("linkingOp")){
+        	rawLine.addAll(analyzeLinkingOpExpression(sub,aClass));
+        }
+        else if (sub.is("negativeConstraint")){
+        	rawLine.addAll(analyzeNegativeConstraint(sub, aClass));
         }
         else
         {
-          rawLine.addAll(analyzeConstraint(t,aClass));
+          rawLine.addAll(analyzeConstraint(sub,aClass));
         }
       } 
     }
@@ -136,7 +144,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
 		  rawLine.add(new ConstraintVariable("OPERATOR","&&"));
 	  }
 	  
-	  Token subExpr = LinkingOpExpressionSubtokens.get(1); //the constraintExpr token
+	  Token subExpr = LinkingOpExpressionSubtokens.get(LinkingOpExpressionSubtokens.size()>1?1:0); //the constraintExpr token
 	  Token dummyToken = new Token ("dummyToken", null); //need to encapsulate constrainExpr in dummy token
 	  dummyToken.addSubToken(subExpr);
 	  rawLine.addAll(analyzeConstraint(dummyToken, aClass)); 
@@ -152,16 +160,12 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
     {
       if (sub.getValue().equals("STATIC"))
       {
-        if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
           rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
       } 
-      else if(sub.is("name"))
+      else if(sub.is("constraintName"))
       {
         rawLine.add(analyzeConstraintName(sub,aClass,true));
-      } 
-      else if(sub.is("index"))
-      {
-        analyzeConstraintIndex(sub,rawLine.get(rawLine.size()-2));
       }
       else if(sub.is("equalsOp"))
       {
@@ -187,7 +191,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
     {
       if (sub.getValue().equals("STATIC"))
       {
-        if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
           rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
       }
       else if (sub.getValue().equals("true"))
@@ -198,13 +202,9 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       {
         rawLine.add(new ConstraintVariable("OPERATOR","false"));
       }
-      else if(sub.is("name"))
+      else if(sub.is("constraintName"))
       {
         rawLine.add(analyzeConstraintName(sub,aClass,true,"boolean"));
-      }
-      else if(sub.is("index"))
-      {
-        analyzeConstraintIndex(sub,rawLine.get(rawLine.size()-2));
       }
       else if(sub.is("equalsOp"))
       {
@@ -214,6 +214,159 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       {
         rawLine.add(new ConstraintVariable("OPERATOR","!="));
       }           
+    }
+    return rawLine;
+  }
+  
+  /*
+  cardinal && all : not doable
+  cardinal && !all : for each number in the list, size == that number ||, if assLit/name then size == number of elements in the list
+  !cardinal && all : for each number or name have a contains() &&, not currently implemented for a list of lists
+  !cardinal && !all : for each number or name have a contains() ||, not currently implemented for a list of lists
+  */
+  private List<ConstraintVariable> analyzeAssociationLiteralConstraintExpression(Token literalToken, UmpleClass aClass, boolean cardinal, boolean all, boolean firstName, List<ConstraintVariable> subject, ConstraintVariable operator)
+  {
+    List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+    for(Token sub:literalToken.getSubTokens())
+    {
+      if(sub.is("associationLit"))
+      {
+        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub, aClass, cardinal, all, firstName, subject, operator));
+        firstName = false;
+      }
+      else if(sub.is("constraintName"))
+      {
+        if(!firstName)
+        {
+          if(all&&!cardinal)
+          {
+            rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+          }
+          else 
+          {
+            rawLine.add(new ConstraintVariable("OPERATOR","||"));
+          }          
+        }
+        else
+        {
+          firstName = false;
+        }
+        rawLine.addAll(subject);
+        rawLine.add(operator);
+        rawLine.add(analyzeConstraintName(sub,aClass,true));
+      }
+      else if(sub.is("elements"))
+      {
+        if(!cardinal)
+        {
+          operator.setValue("cardinality==");
+        }
+      }
+      else if(sub.is("number"))
+      {
+        if(!firstName)
+        {
+          if(all&&!cardinal)
+          {
+            rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+          }
+          else 
+          {
+            rawLine.add(new ConstraintVariable("OPERATOR","||"));
+          }          
+        }
+        else
+        {
+          firstName = false;
+        }
+        rawLine.addAll(subject);
+        rawLine.add(operator);
+        rawLine.add(analyzeConstraintNumber(sub));
+        firstName = false;
+      }
+    }
+    return rawLine;
+  }
+  
+  private List<ConstraintVariable> analyzeAssociationConstraintExpression(Token associationExpressionToken , UmpleClass aClass)
+  {
+  	List<Token> associationExpressionSubtokens = associationExpressionToken.getSubTokens();
+  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  	List<ConstraintVariable> subject = new ArrayList<ConstraintVariable>();
+  	boolean card = associationExpressionToken.getValue("firstOp").equals("cardinality");
+  	boolean all = false;
+  	ConstraintVariable operator = new ConstraintVariable("OPERATOR",associationExpressionToken.getValue("firstOp"));
+  	operator.setIsPrimitive(false);
+  	for(Token sub : associationExpressionSubtokens)
+    {
+      if(sub.is("constraintName"))
+      {
+        subject.add(analyzeConstraintName(sub,aClass,true));
+      }
+      else if(sub.is("associationLit"))
+      {
+        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub,aClass,card,all,true,subject,operator));
+      }
+      else if(sub.is("all"))
+      {
+        if(!card)
+        {
+          operator.setValue("hasAll");
+          all = true;
+        }
+        else
+        {
+          //warning that cardinality all is not supported
+        }
+      }
+      else if(sub.is("moreOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality>");
+      }
+      else if(sub.is("smallerOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality<");
+      }
+      else if(sub.is("greaterOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality>=");
+      }
+      else if(sub.is("lessOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality<=");
+      }
+      else if(sub.is("equalsOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality==");
+      }
+      else if(sub.is("notequalsOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality!=");
+      }
     }
     return rawLine;
   }
@@ -233,13 +386,9 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       {
         rawLine.add(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
       }
-      else if(sub.is("name"))
+      else if(sub.is("constraintName"))
       {
         rawLine.add(analyzeConstraintName(sub,aClass,true,"string"));
-      }
-      else if(sub.is("index"))
-      {
-        analyzeConstraintIndex(sub,rawLine.get(rawLine.size()-2));
       }
       else if(sub.is("equalsOp"))
       {
@@ -268,17 +417,13 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
       	if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
           rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
       } 
-      else if(sub.is("name"))
+      else if(sub.is("constraintName"))
       {
         rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double"));
-      } 
+      }
       else if(sub.is("number"))
       {
         rawLine.add(analyzeConstraintNumber(sub));
-      } 
-      else if(sub.is("index"))
-      {
-        analyzeConstraintIndex(sub,rawLine.get(rawLine.size()-2));
       }
       else if(sub.is("moreOp"))
       {
@@ -312,79 +457,145 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
   
   private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean mustBeInClass, String... type)
   {
-  	Token sub = nameToken;
-  	Token grandparentToken = sub.getParentToken().getParentToken();
-  	ConstraintVariable cv = new ConstraintVariable("",sub.getValue());
-  	UmpleVariable attribute;
-    if(mustBeInClass)
-    {
-      attribute = cv.getAttribute(aClass);
-      
-      if(attribute!=null)
-      {
-      	if(type!=null&&type.length!=0)
-      	{
-      	  boolean isType = false;
-      	  String typesFailed = "";
-      	  for(String t: type)
-      	  {
-      	    if(attribute.getType().toLowerCase().equals(t))
-            {
-              isType = true;
-            }          
-            else
-            {
-            	typesFailed += t+",";
+  	Token grandparentToken = nameToken.getParentToken().getParentToken();
+  	ConstraintVariable cv = new ConstraintVariable("NAME","");
+  	cv.setSubConstraint(new Constraint());
+  	boolean isNew = false;
+  	for(Token sub:nameToken.getSubTokens())
+  	{
+  	  if(sub.is("constraintParameterList"))
+  	  {
+  	    for(Token param: sub.getSubTokens())
+  	    {
+  	      if(param.is("constraintParameter"))
+  	      {
+  	        Token value = param.getSubToken(0);
+  	        if(value.is("quote"))
+  	        {
+  	          cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
+  	        }
+  	        else if(value.is("number"))
+  	        {
+  	          cv.getSubConstraint().addExpression(analyzeConstraintNumber(value));
+  	        }
+  	        else if(value.is("constraintName")){
+  	          cv.getSubConstraint().addExpression(analyzeConstraintName(value,aClass,true));
+  	        }
+  	      }
+  	      else
+  	      {
+  	        cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",param.getName()));
+  	      }
+  	    }
+  	  }
+  	  else if(sub.is("index"))
+  	  {  	    
+        analyzeConstraintIndex(sub,cv);
+  	  }
+  	  else if(sub.is("new"))
+  	  {  	    
+  	    isNew = true;
+        cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","initialise").isNotPrimitive());
+  	  }
+  	  else if(sub.is("constraintScopeOperator"))
+  	  {
+  	    cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","."));
+  	    for(Token subsub:sub.getSubTokens()){
+  	      if(subsub.is("constraintName"))
+  	      {
+  	        cv.getSubConstraint().addExpression(analyzeConstraintName(subsub,aClass,true));
+  	      }
+  	    }
+  	  }
+  	  else if(sub.is("name"))
+  	  {
+  	    cv.setValue(sub.getValue());
+  	    cv.getAttribute(aClass);
+  	    ConstraintVariable name = new ConstraintVariable("",sub.getValue());
+  	    cv.getSubConstraint().addExpression(name);
+  	    UmpleVariable attribute;
+        if(mustBeInClass)
+        {
+          attribute = name.getAttribute(aClass);
+          if(attribute!=null||isNew)
+          {
+      	    if(type!=null&&type.length!=0)
+      	    {
+      	      boolean isType = false;
+      	      String typesFailed = "";
+      	      for(String t: type)
+      	      {
+      	        if((isNew?sub.getValue():attribute.getType()).toLowerCase().equals(t))
+                {
+                  isType = true;
+                }          
+                else
+                {
+                  typesFailed += t+",";
+                }
+              }
+              if(!isType)
+              {
+          	    setFailedPosition(sub.getPosition(), 29, sub.getValue(), typesFailed);
+              }
+            }
+            name.setType(isNew?sub.getValue():attribute.getType());
+          }
+          else if (grandparentToken.getName().equals("precondition"))
+          { //if it was a precondition, check if it matches any of the method arguments
+    	    Token concreteMethod = grandparentToken.getParentToken();
+    	    ArrayList <MethodParameter> methodparams = new ArrayList <MethodParameter>();
+    	    for (Token t : concreteMethod.getSubTokens())
+    	    {
+              if (t.getName().equals("methodDeclarator"))
+              {
+    		    for (Token st : t.getSubTokens())
+    		    {
+    	          if (st.getName().equals("parameterList"))
+    	          {
+    			    for (Token sst : st.getSubTokens())
+    		        {
+    			      if(sst.getName().equals("parameter"))
+    			      {
+    				    String paramName = null;
+    				    String paramType = null;
+    				    for (Token ssst: sst.getSubTokens())
+    				    {
+    				      if (ssst.getName().equals("type"))
+    				      {
+    					    paramType = ssst.getValue();
+    				      }
+    				      if (ssst.getName().equals("name"))
+    				      {
+    				        paramName = ssst.getValue();
+    				      }
+    				    }
+    				    MethodParameter mp = new MethodParameter(paramName, paramType, null, null, false);
+    			        methodparams.add(mp);
+    			      }
+    			    }
+    	          }
+    		    }
+    	      }
+    	      boolean matchesAnyMethodParams = false;
+    	      for (MethodParameter mp : methodparams)
+    	      { 
+    	 	    if (mp.getName().equals(sub.getValue()))
+    		    {
+    	          matchesAnyMethodParams = true; 
+    		      cv.setType(mp.getType());
+    		    }
+    	      }
             }
           }
-          if(!isType)
+          else if(attribute==null)
           {
-          	setFailedPosition(sub.getPosition(), 29, sub.getValue(), typesFailed);
+            cv.setType("SYNTAX");
+            cv.setValue(sub.getValue());
+            setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());      
           }
+          
         }
-        
-        cv.setType(attribute.getType());
-      }
-      
-      else if (grandparentToken.getName().equals("precondition"))
-      { //if it was a precondition, check if it matches any of the method arguments
-    	  Token concreteMethod = grandparentToken.getParentToken();
-    	  ArrayList <MethodParameter> methodparams = new ArrayList <MethodParameter>();
-    	  for (Token t : concreteMethod.getSubTokens()){
-    		  if (t.getName().equals("methodDeclarator")){
-    			  for (Token st : t.getSubTokens()){
-    				  if (st.getName().equals("parameterList")){
-    					  for (Token sst : st.getSubTokens()){
-    						   if(sst.getName().equals("parameter")){
-    							   String paramName = null;
-    							   String paramType = null;
-    							   for (Token ssst: sst.getSubTokens()){
-    								   if (ssst.getName().equals("type")){
-    									   paramType = ssst.getValue();
-    								   }
-    								   if (ssst.getName().equals("name")){
-    									   paramName = ssst.getValue();
-    								   }
-    							   }
-    							   MethodParameter mp = new MethodParameter(paramName, paramType, null, null, false);
-    							   methodparams.add(mp);
-    						   }
-    					  }
-    				  }
-    			  }
-    		  }
-    	  }
-    	  boolean matchesAnyMethodParams = false;
-    	  for (MethodParameter mp : methodparams){ 
-    		  if (mp.getName().equals(sub.getValue())){
-    			  matchesAnyMethodParams = true; 
-    			  cv.setType(mp.getType());
-    		  }
-    	  }
-      }
-      else if(attribute==null){
-        System.out.println(grandparentToken);
-        setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());      
       }
     }
     return cv;
