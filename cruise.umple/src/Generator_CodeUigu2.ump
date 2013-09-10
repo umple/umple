@@ -59,7 +59,7 @@ class Uigu2ElementGenerator
 
   /**
    * Adds to the $ELEMENTS php array (where information about UmpleElements are passed to
-   * UIGU) the specified key and value, ie. "$ELEMENTS[name][key] = value;"
+   * UIGU) the specified key and value, ie. "$ELEMENTS[elementName][key] = value;"
    */
   private void appendToElementsArray(StringBuilder code, String elementName, String key, String value) {
     code.append("$ELEMENTS['").append(elementName).append("']['").append(key).append("']");
@@ -101,6 +101,8 @@ class Uigu2Generator
 
   const String packageFilesPath = "/cruise/umple/compiler/uigu2/files/";
   const Charset charset = StandardCharsets.UTF_8;
+  const String nl = System.getProperty("line.separator");
+
   internal Uigu2ElementGenerator generator = new Uigu2ElementGenerator();
   lazy internal List<UmpleElement> elements;
 
@@ -121,12 +123,6 @@ class Uigu2Generator
   */
   Map<String,String> sharedFilesToCopy = new HashMap<String,String>();
 
-  /* Maps filename of files to be dynamically generated
-   * to destination pathname and new filename (always relative to outputPath).
-   * Different than sharedFilesToCopy, this is used only to facilitate the change of the final output path / filename
-   */
-  Map<String,String> filesToGenerate = new HashMap<String,String>();
-
   after constructor{
     this.sharedFilesToCopy.put("kissmvc_core.php", "app/kissmvc_core.php");
     this.sharedFilesToCopy.put("kissmvc_uigu2.php", "app/kissmvc_uigu2.php");
@@ -138,9 +134,6 @@ class Uigu2Generator
     this.sharedFilesToCopy.put("controllers_main_show_element.php", "app/controllers/main/show_element.php");
     this.sharedFilesToCopy.put("controllers_main_new_instance.php", "app/controllers/main/new_instance.php");
     this.sharedFilesToCopy.put("css_layout.css", "app/css/layout.css");
-    this.filesToGenerate.put("index.php", "index.php");
-    this.filesToGenerate.put("setup.php", "setup.php");
-    this.filesToGenerate.put("initialize_model.php", "initialize_model.php");
   }
 
   @Override
@@ -163,26 +156,6 @@ class Uigu2Generator
     }
   }
 
-  /*
-  * Returns the appropriate path for shared files - the sharedFilesPath when
-  * available, or the outputPath when not
-  */
-  public Path getPreferredSharedFilesPath(){
-    return this.sharedFilesPath == null ?
-      this.outputPath : this.sharedFilesPath;
-  }
-
-  public void setSharedFilesPath(String pathname){
-    if(pathname != null){
-      this.sharedFilesPath = Paths.get(pathname).toAbsolutePath();
-    }
-  }
-
-  public void setOutputPath(String pathname){
-    if(pathname != null){
-      this.outputPath = Paths.get(pathname).toAbsolutePath();
-    }
-  }
 
   /**
    * Copies default libraries and other necessary files - that are not meant to be
@@ -224,62 +197,73 @@ class Uigu2Generator
   * Generates index.php to outputPath
   */
   private void generateIndexFile() throws IOException{
-    String nl = System.getProperty("line.separator");
-    Path writePath = this.outputPath.resolve(Paths.get(this.filesToGenerate.get("index.php")));
-    Path setupFilePath = getPreferredSharedFilesPath().resolve(Paths.get(this.filesToGenerate.get("setup.php"))); 
+    Path writePath = this.outputPath.resolve(Paths.get("index.php"));
+    Path setupFilePath = getPreferredSharedFilesPath().resolve(Paths.get("setup.php")); 
 
-    StringBuilder indexFile = new StringBuilder();
-    indexFile.append("<?php").append(nl);
-    indexFile.append("ini_set('display_errors','On');").append(nl);
-    indexFile.append("error_reporting(E_ALL);").append(nl);
-    indexFile.append("require_once('").append(setupFilePath).append("');").append(nl);
-    indexFile.append("define('WEB_DOMAIN', WEB_DOMAIN_ROOT . basename(__DIR__));").append(nl);
-    indexFile.append("define('WEB_FOLDER', WEB_FOLDER_ROOT . basename(__DIR__) . '/');").append(nl);
-    indexFile.append("require_once(APP_PATH.'kissmvc_uigu2.php');").append(nl);
-    indexFile.append("session_start();").append(nl);
-    indexFile.append("function __autoload($classname) {").append(nl);
-    indexFile.append("$filename = $classname.'.php';").append(nl);
-    indexFile.append("if(file_exists($filename)){").append(nl);
-    indexFile.append("require_once($classname.'.php');}}").append(nl);
-    indexFile.append("new Uigu2_Controller(CONTROLLER_PATH,WEB_FOLDER,'main','index');").append(nl);
-    writeStringToFile(indexFile.toString(), writePath);
+    String indexFile = "<?php" + nl + nl
+        + "ini_set('display_errors','On');" + nl
+        + "error_reporting(E_ALL);" + nl
+        + "require_once('" + setupFilePath + "');" + nl
+        + "define('WEB_DOMAIN', WEB_DOMAIN_ROOT . basename(__DIR__));" + nl
+        + "define('WEB_FOLDER', WEB_FOLDER_ROOT . basename(__DIR__) . '/');" + nl
+        + "require_once(APP_PATH.'kissmvc_uigu2.php');" + nl
+        + "session_start();" + nl + nl
+        + "function __autoload($classname) {" + nl
+        + "\t$filename = $classname.'.php';" + nl
+        + "\tif(file_exists($filename)){" + nl
+        + "\t\trequire_once($classname.'.php');" + nl
+        + "\t}" + nl
+        + "}" + nl
+        + "new Uigu2_Controller(CONTROLLER_PATH,WEB_FOLDER,'main','index');";
+    writeStringToFile(indexFile, writePath);
   }
 
+  /*
+  * Generates setup.php to the sharedFilesPath (if set), or outputPath.
+  */
   private void generateSetupFile() throws IOException{
     String nl = System.getProperty("line.separator");
     Path sharedFilesPath = getPreferredSharedFilesPath(); 
-    Path writePath = sharedFilesPath.resolve(Paths.get(this.filesToGenerate.get("setup.php")));
+    Path writePath = sharedFilesPath.resolve(Paths.get("setup.php"));
     Path appPath = sharedFilesPath.resolve(Paths.get("app/"));
-    StringBuilder setupFile = new StringBuilder("<?php").append(nl);
 
-    setupFile.append("define('WEB_DOMAIN_ROOT','http://cruise.local');").append(nl);
-    setupFile.append("define('WEB_FOLDER_ROOT','/');").append(nl);
-    setupFile.append("define('APP_PATH','").append(appPath.toString()).append("/").append("');").append(nl);
-    setupFile.append("define('VIEW_PATH',APP_PATH.'views/');").append(nl);
-    setupFile.append("define('CONTROLLER_PATH',APP_PATH.'controllers/');").append(nl);
-    writeStringToFile(setupFile.toString(), writePath);
+    String setupFile = "<?php" + nl + nl
+        + "/*EDIT BELOW: parent URL of the folder where index.php is located" + nl
+        + " *eg. to access 'http://a/b/c/index.php', use 'http://a/b/' (with trailing slash) */" + nl
+        + "define('WEB_DOMAIN_ROOT','http://default/');" + nl + nl
+        + "/*EDIT BELOW: parent path of the folder where index.php is located," + nl
+        + " *relative to the <DocumentRoot> element of the apache config file " + nl
+        + " *eg.  if <DocumentRoot> is '/var/www/' and the full path is '/var/www/a/b/index.php'" + nl
+        + " *use '/a/' (with trailing slash) */" + nl 
+        + "define('WEB_FOLDER_ROOT','/');" + nl + nl
+        + "define('APP_PATH','" + appPath.toString() + "/');" + nl
+        + "define('VIEW_PATH',APP_PATH.'views/');" + nl
+        + "define('CONTROLLER_PATH',APP_PATH.'controllers/');" + nl;
+
+    writeStringToFile(setupFile, writePath);
   }
 
   /*
    * Generates initialize_model.php file with UmpleModel information accessible to all controllers.
    */
-  private void generateInitializationFile() throws IOException{
-    String nl = System.getProperty("line.separator");
-    StringBuilder initFile = new StringBuilder("<?php" + nl
+  private void generateInitializationFile() throws IOException{    
+    //this file is never shared
+    Path path = this.outputPath.resolve(Paths.get("initialize_model.php"));
+
+    StringBuilder initFile = new StringBuilder("<?php" + nl + nl
             + "function initialize_model(){" + nl
             + "$UMPLE_MODEL = array();" + nl
             + "$UMPLE_MODEL['execution_id'] = basename(__DIR__);" + nl);
-    //this file is never shared
-    Path path = this.outputPath.resolve(Paths.get(this.filesToGenerate.get("initialize_model.php")));
 
-    if (this.elements.size() > 0) { //$ELEMENTS associative array with info from each UmpleElement
+    //$ELEMENTS associative array with info from each UmpleElement
+    if (this.elements.size() > 0) {       
       for (UmpleElement e : this.elements) {
         initFile.append(this.generator.getCode(super.getModel(), e));
       }
       initFile.append("$UMPLE_MODEL['ELEMENTS'] = $ELEMENTS;").append(nl);
     }
     
-    initFile.append("return $UMPLE_MODEL; }");
+    initFile.append("return $UMPLE_MODEL;").append(nl).append("}");
     writeStringToFile(initFile.toString(), path);
   }
 
@@ -299,4 +283,26 @@ class Uigu2Generator
       }
     }
   }
+
+  /*
+  * Returns the appropriate path for shared files - the sharedFilesPath when
+  * available, or the outputPath when not
+  */
+  public Path getPreferredSharedFilesPath(){
+    return this.sharedFilesPath == null ?
+      this.outputPath : this.sharedFilesPath;
+  }
+
+  public void setSharedFilesPath(String pathname){
+    if(pathname != null){
+      this.sharedFilesPath = Paths.get(pathname).toAbsolutePath();
+    }
+  }
+
+  public void setOutputPath(String pathname){
+    if(pathname != null){
+      this.outputPath = Paths.get(pathname).toAbsolutePath();
+    }
+  }
+
 }

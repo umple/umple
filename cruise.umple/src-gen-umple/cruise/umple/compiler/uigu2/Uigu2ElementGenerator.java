@@ -86,7 +86,7 @@ public class Uigu2ElementGenerator
   /**
    * 
    * Adds to the $ELEMENTS php array (where information about UmpleElements are passed to
-   * UIGU) the specified key and value, ie. "$ELEMENTS[name][key] = value;"
+   * UIGU) the specified key and value, ie. "$ELEMENTS[elementName][key] = value;"
    */
   @umplesourcefile(line={64},file={"Generator_CodeUigu2.ump"},javaline={86},length={4})
    private void appendToElementsArray(StringBuilder code, String elementName, String key, String value){
