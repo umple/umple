@@ -13,7 +13,7 @@
       <table id="menu">
         <tr>
           <td>
-            <a href="/">Main Page</a> 
+            <a href="<?php echo WEB_FOLDER ?>">Main Page</a> 
           </td>
           <td> | Show element:
             <form action="<?php echo WEB_FOLDER.'main/show_element'?>" method="POST">

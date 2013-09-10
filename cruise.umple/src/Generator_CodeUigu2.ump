@@ -266,8 +266,9 @@ class Uigu2Generator
   private void generateInitializationFile() throws IOException{
     String nl = System.getProperty("line.separator");
     StringBuilder initFile = new StringBuilder("<?php" + nl
-            + "function init(){" + nl
-            + "$UMPLE_MODEL = array();" + nl);
+            + "function initialize_model(){" + nl
+            + "$UMPLE_MODEL = array();" + nl
+            + "$UMPLE_MODEL['execution_id'] = basename(__DIR__);" + nl);
     //this file is never shared
     Path path = this.outputPath.resolve(Paths.get(this.filesToGenerate.get("initialize_model.php")));
 
