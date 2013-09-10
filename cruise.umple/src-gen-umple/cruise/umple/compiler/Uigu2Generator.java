@@ -158,7 +158,7 @@ public class Uigu2Generator extends PhpGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={145},file={"Generator_CodeUigu2.ump"},javaline={162},length={156})
+  //  @umplesourcefile(line={145},file={"Generator_CodeUigu2.ump"},javaline={162},length={157})
   @Override
   @umplesourcefile(line={147},file={"Generator_CodeUigu2.ump"},javaline={164},length={18})
   public void generate() {
@@ -288,12 +288,13 @@ public class Uigu2Generator extends PhpGenerator
   /*
    * Generates initialize_model.php file with UmpleModel information accessible to all controllers.
    */
-  @umplesourcefile(line={266},file={"Generator_CodeUigu2.ump"},javaline={292},length={16})
+  @umplesourcefile(line={266},file={"Generator_CodeUigu2.ump"},javaline={292},length={17})
   private void generateInitializationFile() throws IOException{
     String nl = System.getProperty("line.separator");
     StringBuilder initFile = new StringBuilder("<?php" + nl
-            + "function init(){" + nl
-            + "$UMPLE_MODEL = array();" + nl);
+            + "function initialize_model(){" + nl
+            + "$UMPLE_MODEL = array();" + nl
+            + "$UMPLE_MODEL['execution_id'] = basename(__DIR__);" + nl);
     //this file is never shared
     Path path = this.outputPath.resolve(Paths.get(this.filesToGenerate.get("initialize_model.php")));
 
@@ -312,7 +313,7 @@ public class Uigu2Generator extends PhpGenerator
    * @param text content of text file to be written
    * @param filePath Absolute path in the FileSystem to file to be written
    */
-  @umplesourcefile(line={289},file={"Generator_CodeUigu2.ump"},javaline={316},length={12})
+  @umplesourcefile(line={290},file={"Generator_CodeUigu2.ump"},javaline={317},length={12})
   private void writeStringToFile(String text, Path filePath) throws IOException {
     Files.createDirectories(filePath.getParent());
     BufferedWriter bw = null;
