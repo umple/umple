@@ -463,7 +463,7 @@ public class CppHeaderGenerator implements ILang
   
 
     stringBuffer.append(TEXT_6);
-     if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } 
+     if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).getIsInline()) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } 
     stringBuffer.append(TEXT_7);
     stringBuffer.append(uClass.getName());
     stringBuffer.append( gen.translate("isA",uClass) );

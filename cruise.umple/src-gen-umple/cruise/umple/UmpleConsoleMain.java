@@ -42,6 +42,8 @@ public class UmpleConsoleMain
 
   @umplesourcefile(line={30},file={"Main_Code.ump"},javaline={44},length={70})
    public static  void main(String [] args){
+    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
     console = "";
 
         OptionSet optset = optParse(args);
@@ -112,19 +114,19 @@ public class UmpleConsoleMain
         System.exit(0);
   }
 
-  @umplesourcefile(line={103},file={"Main_Code.ump"},javaline={116},length={4})
+  @umplesourcefile(line={103},file={"Main_Code.ump"},javaline={118},length={4})
    private static  void println(String output){
     console += output + "\n";
         System.out.println(output);
   }
 
-  @umplesourcefile(line={108},file={"Main_Code.ump"},javaline={122},length={4})
+  @umplesourcefile(line={108},file={"Main_Code.ump"},javaline={124},length={4})
    private static  void printerr(String err){
     console += err;
         System.err.print(err);
   }
 
-  @umplesourcefile(line={114},file={"Main_Code.ump"},javaline={128},length={7})
+  @umplesourcefile(line={114},file={"Main_Code.ump"},javaline={130},length={7})
    private static  void printUsage(){
     println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
         try{
@@ -140,7 +142,7 @@ public class UmpleConsoleMain
    * Argument: optSet - set of the options and corresponding arguments
    * Return: boolean - If application should terminate immediately after return
    */
-  @umplesourcefile(line={126},file={"Main_Code.ump"},javaline={137},length={14})
+  @umplesourcefile(line={126},file={"Main_Code.ump"},javaline={139},length={14})
    private static  boolean preModelOptionProcess(OptionSet optSet){
     if (optSet == null) {
             return true;
@@ -156,7 +158,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={141},file={"Main_Code.ump"},javaline={160},length={22})
+  @umplesourcefile(line={141},file={"Main_Code.ump"},javaline={162},length={22})
    private static  boolean postModelOptionProcess(OptionSet optset, UmpleModel model){
     if (optset.has("generate")) {
             boolean override=false;
@@ -180,7 +182,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={164},file={"Main_Code.ump"},javaline={184},length={24})
+  @umplesourcefile(line={164},file={"Main_Code.ump"},javaline={186},length={24})
    private static  OptionSet optParse(String [] args){
     optparser = new OptionParser();
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
@@ -209,8 +211,79 @@ public class UmpleConsoleMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={189},file={"Main_Code.ump"},javaline={213},length={3})
-  public static String console;
-  private static OptionParser optparser;
+  //  @umplesourcefile(line={189},file={"Main_Code.ump"},javaline={215},length={5})
+  public static String console ;
 
+//  @umplesourcefile(line={190},file={"Main_Code.ump"},javaline={218},length={2})
+  private static OptionParser optparser ;
+
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      translate(e);
+      if(e.getCause()!=null)
+      {
+        translate(e.getCause());
+      }
+      e.printStackTrace();
+    }
+    public void translate(Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          Class clazz = Class.forName(element.getClassName());
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())
+          {
+            if(meth.getName().equals(methodName))
+            {
+              for(java.lang.annotation.Annotation anno: meth.getAnnotations())
+              {
+                if(anno.annotationType().getSimpleName().equals("umplesourcefile"))
+                {
+                  int[] methodlength = (int[])anno.annotationType().getMethod("length", new Class[]{}).invoke(anno,new Object[]{});
+                  int[] javaline = (int[])anno.annotationType().getMethod("javaline", new Class[]{}).invoke(anno,new Object[]{});
+                  int[] line = (int[])anno.annotationType().getMethod("line", new Class[]{}).invoke(anno,new Object[]{});
+                  String[] file = (String[])anno.annotationType().getMethod("file", new Class[]{}).invoke(anno,new Object[]{});
+                  for(int i=0;i<file.length;i++)
+                  {
+                    int distanceFromStart = element.getLineNumber()-javaline[i]-(("main".equals(methodName))?2:0);
+                    if(file[i] == "")
+                    {
+                      break;
+                    }
+                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])
+                    {
+                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));
+                      methodFound = true;
+                      break;
+                    }
+                  }
+                }
+              }
+              if(methodFound)
+              {
+                break;
+              }
+            }
+          }
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+    }
+  }
 }

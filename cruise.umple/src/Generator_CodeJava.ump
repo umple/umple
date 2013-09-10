@@ -12,7 +12,6 @@ namespace cruise.umple.compiler;
 class JavaGenerator
 {
   depend cruise.umple.util.StringFormatter;
-  brace = "}";
   
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
@@ -884,7 +883,7 @@ class JavaGenerator
         if(cur.getIsAssociation())
         {
           before = new CodeInjection("before", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), setMethod_code, aClass);         
-          after = new CodeInjection("after", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), getBrace(), aClass);
+          after = new CodeInjection("after", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), "}", aClass);
           before.setIsInternal(true);
           after.setIsInternal(true);
           aClass.addCodeInjection(before);

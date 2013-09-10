@@ -7,5 +7,9 @@
 // [*http://umple.org/license*]
 
 misnamedAttribute : [name] ; | [type] [name] ;
-exception : [[misnamedAttribute]]
-
+malformedStatement1 : [!stuff:[^\\{\\};]*] ( [!stuff:[^\\{\\};]*] )* ;
+malformedStatemachine1 : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*] { [**innerstuff] }
+malformedStatement2 : [!stuff:[^\\{\\};]*] ( [!stuff:[^\\{\\};]*] )* { [**innerstuff] } ;
+malformedStatemachine2 : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*]  ( [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*] )* { [**innerstuff] }
+malformedMethod : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*] ( [!stuff:[^\\{\\}]*] )* { [**innerstuff] }
+exception : [[misnamedAttribute]] | [[malformedStatement1]] | [[malformedStatemachine1]] | [[malformedStatement2]] | [[malformedStatemachine2]] | [[malformedMethod]]

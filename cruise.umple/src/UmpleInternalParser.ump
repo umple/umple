@@ -33,8 +33,33 @@ class UmpleInternalParser
   // The Umple meta model which will be populated based on what was parsed.
   UmpleModel model;
   
+  Integer[] allowedMessages;
+  Integer[] ignoredMessages;
+  Integer[] disallowedMessages;
+  Integer[] expectedMessages;
     // The strictness level. ModelOnly means warn on method body or extra code
-  strictness {none {} modelOnly {} noExtraCode {} }
+  strictness { 
+    none {
+      modelOnly -> modelOnly;
+      noExtraCode -> noExtraCode;
+      allowMessage(Integer id) -> / {allowedMessages.add(id);} none;
+      ignoreMessage(Integer id) -> / {ignoredMessages.add(id);} none;  
+      disallowMessage(Integer id) -> / {disallowedMessages.add(id);} none;  
+      expectMessage(Integer id) -> / {expectedMessages.add(id);} none;  
+    } 
+    modelOnly {
+      allowMessage(Integer id) -> / {allowedMessages.add(id);} modelOnly;
+      ignoreMessage(Integer id) -> / {ignoredMessages.add(id);} modelOnly;  
+      disallowMessage(Integer id) -> / {disallowedMessages.add(id);} modelOnly;  
+      expectMessage(Integer id) -> / {expectedMessages.add(id);} modelOnly; 
+    } 
+    noExtraCode {
+      allowMessage(Integer id) -> / {allowedMessages.add(id);} noExtraCode;
+      ignoreMessage(Integer id) -> / {ignoredMessages.add(id);} noExtraCode;  
+      disallowMessage(Integer id) -> / {disallowedMessages.add(id);} noExtraCode;  
+      expectMessage(Integer id) -> / {expectedMessages.add(id);} noExtraCode; 
+    }
+  }
   
   // List of errors or warnings to expect. It is an error if they do not occur.
   // This is used to set up test cases for the presence of certain messages

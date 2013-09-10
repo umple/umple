@@ -160,14 +160,9 @@ public class StringFormatter
       return first + ", " + second;
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={439},file={"Util_Code.ump"},javaline={168},length={126})
-  @umplesourcefile(line={440},file={"Util_Code.ump"},javaline={169},length={22})
-  public static String appendParameter(String input, String endingText)
-  {
+
+  @umplesourcefile(line={440},file={"Util_Code.ump"},javaline={165},length={21})
+   public static  String appendParameter(String input, String endingText){
     if (input == null || "".equals(input))
     {
       return "";
@@ -188,10 +183,9 @@ public class StringFormatter
     }
     return answer.toString();
   }
-  
-  @umplesourcefile(line={463},file={"Util_Code.ump"},javaline={193},length={40})
-  public static String replaceParameter(String input, String oldParameter, String newParameter)
-  {
+
+  @umplesourcefile(line={463},file={"Util_Code.ump"},javaline={188},length={39})
+   public static  String replaceParameter(String input, String oldParameter, String newParameter){
     if (input == null || "".equals(input))
     {
       return "";
@@ -230,16 +224,14 @@ public class StringFormatter
     }
     return answer.toString();
   }
-  
-  @umplesourcefile(line={504},file={"Util_Code.ump"},javaline={235},length={4})
-  public static String format(String input)
-  {
+
+  @umplesourcefile(line={504},file={"Util_Code.ump"},javaline={229},length={3})
+   public static  String format(String input){
     return input;
   }
-  
-  @umplesourcefile(line={509},file={"Util_Code.ump"},javaline={241},length={11})
-  public static String format(String input, Object... variables)
-  {
+
+  @umplesourcefile(line={509},file={"Util_Code.ump"},javaline={234},length={10})
+   public static  String format(String input, Object... variables){
     String answer = input;
     for (int i=0; i<variables.length; i++)
     {
@@ -249,28 +241,26 @@ public class StringFormatter
     
     return answer;
   }
-  
-  @umplesourcefile(line={521},file={"Util_Code.ump"},javaline={254},length={7})
-  public static String addPathOrAbsolute(String prePath, String path)
-  {
-  	if(path.startsWith("/") || path.matches("^[a-zA-Z]:.*"))
+
+  @umplesourcefile(line={521},file={"Util_Code.ump"},javaline={246},length={6})
+   public static  String addPathOrAbsolute(String prePath, String path){
+    if(path.startsWith("/") || path.matches("^[a-zA-Z]:.*"))
   		return path + File.separator;
   	
   	return prePath + File.separator + path + File.separator;
   }
-  
-  @umplesourcefile(line={529},file={"Util_Code.ump"},javaline={263},length={7})
-  public static String stripLeadingPath(String filename)
-  {  	
-	int index = 0;
+
+  @umplesourcefile(line={529},file={"Util_Code.ump"},javaline={254},length={6})
+   public static  String stripLeadingPath(String filename){
+    int index = 0;
 	while(filename.indexOf(File.separatorChar, index) != -1)
 	  index = filename.indexOf(File.separatorChar, index) + 1;
   	return filename.substring(index);
   }
-  
-  @umplesourcefile(line={537},file={"Util_Code.ump"},javaline={272},length={24})
-  public static String sanitizeForJson(String input){
-	 String ret = "";
+
+  @umplesourcefile(line={537},file={"Util_Code.ump"},javaline={262},length={24})
+   public static  String sanitizeForJson(String input){
+    String ret = "";
      for (int i=0; i<input.length(); i++)
 	 {
          switch(input.charAt(i))
@@ -291,11 +281,11 @@ public class StringFormatter
          			break;
          }
 	 }
-	 return ret;   
+	 return ret;
   }
-  @umplesourcefile(line={561},file={"Util_Code.ump"},javaline={297},length={4})
-  private static String clean(Object input)
-  {
+
+  @umplesourcefile(line={561},file={"Util_Code.ump"},javaline={288},length={3})
+   private static  String clean(Object input){
     return input == null ? "" : input.toString();
   }
 

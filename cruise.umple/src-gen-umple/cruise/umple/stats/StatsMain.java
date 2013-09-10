@@ -30,16 +30,9 @@ public class StatsMain
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={17},file={"UmpleStats_Code.ump"},javaline={38},length={40})
-  public static String console;
-  
-  @umplesourcefile(line={20},file={"UmpleStats_Code.ump"},javaline={41},length={33})
-  public static void main(String[] args) 
-  {
+
+  @umplesourcefile(line={20},file={"UmpleStats_Code.ump"},javaline={35},length={30})
+   public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
     console = "";
@@ -71,13 +64,18 @@ public class StatsMain
     collector.save(outputFilename);
     println("Saved results to ["+ outputFilename +"]");
   }
-  
-  @umplesourcefile(line={52},file={"UmpleStats_Code.ump"},javaline={76},length={5})
-  private static void println(String output)
-  {
+
+  @umplesourcefile(line={52},file={"UmpleStats_Code.ump"},javaline={69},length={4})
+   private static  void println(String output){
     console += output + "\n";
     System.out.println(output);
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={17},file={"UmpleStats_Code.ump"},javaline={78},length={2})
+  public static String console ;
 
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

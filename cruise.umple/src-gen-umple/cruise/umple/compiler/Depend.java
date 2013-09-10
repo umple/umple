@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 
 /**
  * A depend relationship indicates a package on which this class depends
- * @umplesource Umple.ump 449
+ * @umplesource Umple.ump 451
  * @umplesource Umple_Code.ump 412
  */
-// line 449 "../../../../src/Umple.ump"
+// line 451 "../../../../src/Umple.ump"
 // line 412 "../../../../src/Umple_Code.ump"
 public class Depend
 {

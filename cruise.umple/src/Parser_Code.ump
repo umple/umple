@@ -1361,8 +1361,6 @@ class Parser
     return openBracket > closeBracket;
   }
 
-  private float average = 0.0f;
-  private int times = 1;
   private boolean isBalanced(String input)
   {
     if(input == null){
@@ -1711,7 +1709,7 @@ class ParseResult
     else
       hasWarnings = true;
   }
-
+  
   public String toString()
   {
     String ret = "";

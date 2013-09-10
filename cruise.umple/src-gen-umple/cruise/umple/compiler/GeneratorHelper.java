@@ -346,21 +346,14 @@ public class GeneratorHelper
    private static  void postpareTrace(UmpleClass aClass){
     
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={30},file={"GeneratorHelper_CodeTrace.ump"},javaline={354},length={158})
-  static private boolean generateConsole = true;
-  static private boolean generateFile = true;
-  static private boolean generateString = true;
-  @umplesourcefile(line={34},file={"GeneratorHelper_CodeTrace.ump"},javaline={358},length={3})
-  public static boolean getWillGenerateString(){
-  	return generateString;
+
+  @umplesourcefile(line={34},file={"GeneratorHelper_CodeTrace.ump"},javaline={351},length={3})
+   public static  boolean getWillGenerateString(){
+    return generateString;
   }
-  @umplesourcefile(line={37},file={"GeneratorHelper_CodeTrace.ump"},javaline={362},length={48})
-  public static void prepareAllTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups)
-  {    
+
+  @umplesourcefile(line={37},file={"GeneratorHelper_CodeTrace.ump"},javaline={356},length={47})
+   public static  void prepareAllTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass,  Map<String, String> templateLookups){
     for(TraceDirective td: aClass.getTraceDirectives())
     {
       if(templateLookups.containsKey("dependTracer"))
@@ -408,13 +401,15 @@ public class GeneratorHelper
     }
   }
 
-  // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
-  // expects the following action semantic lookups
-  //  + packageName: What package should this class belong to?
-  //  + extraCode: What is the code required to execute the trace 
-  @umplesourcefile(line={90},file={"GeneratorHelper_CodeTrace.ump"},javaline={416},length={20})
-  public static void prepareStringTracer(UmpleModel model, Map<String,String> lookups)
-  {
+
+  /**
+   * Add a StringTracer class to support "String" tracing - typically used for testing, this methods
+   * expects the following action semantic lookups
+   * + packageName: What package should this class belong to?
+   * + extraCode: What is the code required to execute the trace
+   */
+  @umplesourcefile(line={90},file={"GeneratorHelper_CodeTrace.ump"},javaline={405},length={19})
+   public static  void prepareStringTracer(UmpleModel model, Map<String,String> lookups){
     UmpleClass aClass = model.addUmpleClass("StringTracer");
     
     if (aClass.numberOfAttributes() == 0)
@@ -433,9 +428,9 @@ public class GeneratorHelper
     }
     aClass.createGeneratedClass(model);
   }
-  @umplesourcefile(line={110},file={"GeneratorHelper_CodeTrace.ump"},javaline={437},length={17})
-  public static void prepareConsoleTracer(UmpleModel model, Map<String,String> lookups)
-  {
+
+  @umplesourcefile(line={110},file={"GeneratorHelper_CodeTrace.ump"},javaline={433},length={16})
+   public static  void prepareConsoleTracer(UmpleModel model, Map<String,String> lookups){
     UmpleClass aClass = model.addUmpleClass("ConsoleTracer");
     
     if (aClass.getExtraCode().equals(""))
@@ -451,9 +446,9 @@ public class GeneratorHelper
     }
     aClass.createGeneratedClass(model);
   }
-  @umplesourcefile(line={127},file={"GeneratorHelper_CodeTrace.ump"},javaline={455},length={20})
-  public static void prepareFileTracer(UmpleModel model, Map<String,String> lookups)
-  {
+
+  @umplesourcefile(line={127},file={"GeneratorHelper_CodeTrace.ump"},javaline={451},length={19})
+   public static  void prepareFileTracer(UmpleModel model, Map<String,String> lookups){
     UmpleClass aClass = model.addUmpleClass("FileTracer");
     
     if (aClass.getExtraCode()=="")
@@ -472,11 +467,14 @@ public class GeneratorHelper
     }
     aClass.createGeneratedClass(model);
   }
-  
-  // Process output to force consistency 
-  // this method deals with what is inside the System.err.println();
-  static String prepareConsistentOutput(String[] record, Object... params) 
-  {
+
+
+  /**
+   * Process output to force consistency
+   * this method deals with what is inside the System.err.println();
+   */
+  @umplesourcefile(line={150},file={"GeneratorHelper_CodeTrace.ump"},javaline={472},length={23})
+   static  String prepareConsistentOutput(String [] record, Object... params){
     String output = StringFormatter.format("\"{0}=\" + {1}",params[0],params[1]);
     int i;
     
@@ -499,10 +497,13 @@ public class GeneratorHelper
         
     return output;
   }
-  
-  // purpose of this method is make sure that output is not redundant
-  static boolean outputRedundant( int index, Object target, Object... params)
-  {
+
+
+  /**
+   * purpose of this method is make sure that output is not redundant
+   */
+  @umplesourcefile(line={176},file={"GeneratorHelper_CodeTrace.ump"},javaline={502},length={11})
+   static  boolean outputRedundant(int index, Object target, Object... params){
     boolean flag = false;
     
     for( int i =  0 ; i < index ; i += 2 )
@@ -513,5 +514,17 @@ public class GeneratorHelper
     
     return flag;
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={30},file={"GeneratorHelper_CodeTrace.ump"},javaline={522},length={8})
+  static private boolean generateConsole = true ;
+
+//  @umplesourcefile(line={31},file={"GeneratorHelper_CodeTrace.ump"},javaline={525},length={5})
+  static private boolean generateFile = true ;
+
+//  @umplesourcefile(line={32},file={"GeneratorHelper_CodeTrace.ump"},javaline={528},length={2})
+  static private boolean generateString = true ;
 
 }

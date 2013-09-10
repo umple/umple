@@ -40,95 +40,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
   {
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeSql.ump"},javaline={48},length={1073})
-  private static Map<String,String> UpperCaseSingularLookupMap;
-  private static Map<String,String> UpperCasePluralLookupMap;
-  private static Map<String,String> AsIsSingularLookupMap;
-  private static Map<String,String> AsIsPluralLookupMap;
-  private static List<String> OneOrManyLookup;
-  private static List<String> SqlPrimitives;
-  private static String beforeCode;
-  private static String afterCode;
 
-  static
-  {
-
-    UpperCaseSingularLookupMap = new HashMap<String, String>();
-
-    UpperCasePluralLookupMap = new HashMap<String, String>();
-
-    AsIsSingularLookupMap = new HashMap<String, String>();
-    AsIsSingularLookupMap.put("attributeOne", "{0}");
-    AsIsSingularLookupMap.put("attributeOneQuoted", "`{0}`");
-    AsIsSingularLookupMap.put("attributeConstant", "{0}");
-    AsIsSingularLookupMap.put("attributeConstantQuoted", "`{0}`");
-
-    AsIsPluralLookupMap = new HashMap<String, String>();
-
-    OneOrManyLookup = new ArrayList<String>();
-    OneOrManyLookup.add("attribute");
-    OneOrManyLookup.add("parameter");
-    
-    SqlPrimitives = new ArrayList<String>();
-    //MySQL types
-    SqlPrimitives.add("CHAR");
-    SqlPrimitives.add("VARCHAR");
-    SqlPrimitives.add("TINYTEXT");
-    SqlPrimitives.add("TEXT");
-    SqlPrimitives.add("BLOB");
-    SqlPrimitives.add("MEDIUMTEXT");
-    SqlPrimitives.add("MEDIUMBLOB");
-    SqlPrimitives.add("LONGTEXT");
-    SqlPrimitives.add("LONGBLOB");
-    SqlPrimitives.add("ENUM");
-    SqlPrimitives.add("SET");
-    SqlPrimitives.add("TINYINT");
-    SqlPrimitives.add("SMALLINT");
-    SqlPrimitives.add("MEDIUMINT");
-    SqlPrimitives.add("INT");
-    SqlPrimitives.add("BIGINT");
-    SqlPrimitives.add("FLOAT");
-    SqlPrimitives.add("DOUBLE");
-    SqlPrimitives.add("DECIMAL");
-    SqlPrimitives.add("DATE");
-    SqlPrimitives.add("DATETIME");
-    SqlPrimitives.add("TIMESTAMP");
-    SqlPrimitives.add("TIME");
-    SqlPrimitives.add("YEAR");
-    //Additional Sql Server types
-    SqlPrimitives.add("NCHAR");
-    SqlPrimitives.add("NVARCHAR");
-    SqlPrimitives.add("NTEXT");
-    SqlPrimitives.add("BIT");
-    SqlPrimitives.add("BINARY");
-    SqlPrimitives.add("VARBINARY");
-    SqlPrimitives.add("IMAGE");
-    SqlPrimitives.add("NUMERIC");
-    SqlPrimitives.add("SMALLMONEY");
-    SqlPrimitives.add("MONEY");
-    SqlPrimitives.add("REAL");
-    SqlPrimitives.add("DATETIME2");
-    SqlPrimitives.add("SMALLDATETIME");
-    SqlPrimitives.add("DATETIMEOFFSET");
-    //Other types
-    SqlPrimitives.add("SQL_VARIANT");
-    SqlPrimitives.add("UNIQUEIDENTIFIER");
-    SqlPrimitives.add("XML");
-    SqlPrimitives.add("CURSOR");
-    SqlPrimitives.add("TABLE");
-    
-    //Codes used to break the generated code into groups
-    beforeCode = "@BEFORE_CODE@";
-    afterCode = "@AFTER_CODE@";
-  }
-  
-  @umplesourcefile(line={96},file={"Generator_CodeSql.ump"},javaline={130},length={49})
-  public void prepare()
-  {
+  @umplesourcefile(line={96},file={"Generator_CodeSql.ump"},javaline={45},length={48})
+   public void prepare(){
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
     for (UmpleClass aClass : allClasses)
     {
@@ -176,11 +90,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
       }
     }
   }
-  
-  
-  @umplesourcefile(line={147},file={"Generator_CodeSql.ump"},javaline={182},length={100})
-  public List<Attribute> resolvePrimaryKey(UmpleClass aClass)
-  {
+
+  @umplesourcefile(line={147},file={"Generator_CodeSql.ump"},javaline={95},length={99})
+   public List<Attribute> resolvePrimaryKey(UmpleClass aClass){
     List<Attribute> result = new ArrayList<Attribute>();
     
     //Check for Primary Key
@@ -279,26 +191,23 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     }
     return result;
   }
-  
-  @umplesourcefile(line={248},file={"Generator_CodeSql.ump"},javaline={284},length={8})
-  private Attribute attributePsudoCopy(Attribute a, String prefix, String suffix)
-  {
+
+  @umplesourcefile(line={248},file={"Generator_CodeSql.ump"},javaline={196},length={7})
+   private Attribute attributePsudoCopy(Attribute a, String prefix, String suffix){
     Attribute aCopy = new Attribute(prefix + a.getName() + suffix, a.getType(), a.getModifier(), a.getValue(), a.getIsAutounique(), a.getUmpleClass());
     aCopy.setIsList(a.getIsList());
     aCopy.setIsDerived(a.getIsDerived());
     aCopy.setIsLazy(a.getIsLazy());
     return aCopy;
   }
-  
-  @umplesourcefile(line={257},file={"Generator_CodeSql.ump"},javaline={294},length={4})
-  private Attribute makeFakeAttribute(String name, UmpleClass parent)
-  {
+
+  @umplesourcefile(line={257},file={"Generator_CodeSql.ump"},javaline={205},length={3})
+   private Attribute makeFakeAttribute(String name, UmpleClass parent){
     return new Attribute(name, "", "", "", false, parent);
   }
-  
-  @umplesourcefile(line={262},file={"Generator_CodeSql.ump"},javaline={300},length={29})
-  public String getType(UmpleVariable av)
-  {
+
+  @umplesourcefile(line={262},file={"Generator_CodeSql.ump"},javaline={210},length={28})
+   public String getType(UmpleVariable av){
     String myType = av.getType();
     
     if (myType == null || myType.length() == 0) //No type specified.
@@ -326,28 +235,24 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     //Unknown type
     return "BLOB";
   }
-  
-  @umplesourcefile(line={292},file={"Generator_CodeSql.ump"},javaline={331},length={4})
-  public boolean isNullable(UmpleVariable av)
-  {
+
+  @umplesourcefile(line={292},file={"Generator_CodeSql.ump"},javaline={240},length={3})
+   public boolean isNullable(UmpleVariable av){
     return true;
   }
 
-  @umplesourcefile(line={297},file={"Generator_CodeSql.ump"},javaline={337},length={4})
-  public String translate(String format, Constraint constraint)
-  {
-  	return "{0}";
+  @umplesourcefile(line={297},file={"Generator_CodeSql.ump"},javaline={245},length={3})
+   public String translate(String format, Constraint constraint){
+    return "{0}";
   }
-  
-  @umplesourcefile(line={302},file={"Generator_CodeSql.ump"},javaline={343},length={4})
-  public String relatedTranslate(String name, AssociationVariable av)
-  {
+
+  @umplesourcefile(line={302},file={"Generator_CodeSql.ump"},javaline={250},length={3})
+   public String relatedTranslate(String name, AssociationVariable av){
     return translate(name,av.getRelatedAssociation());
   }
-  
-  @umplesourcefile(line={307},file={"Generator_CodeSql.ump"},javaline={349},length={14})
-  public ILang getLanguageFor(UmpleElement aElement)
-  {
+
+  @umplesourcefile(line={307},file={"Generator_CodeSql.ump"},javaline={255},length={13})
+   public ILang getLanguageFor(UmpleElement aElement){
     if (aElement instanceof UmpleInterface)
     {
       return new SqlInterfaceGenerator();
@@ -360,10 +265,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     	return null;    	
     }
   }
-  
-  @umplesourcefile(line={322},file={"Generator_CodeSql.ump"},javaline={365},length={12})
-  public String translate(String name, UmpleInterface aInterface)
-  {
+
+  @umplesourcefile(line={322},file={"Generator_CodeSql.ump"},javaline={270},length={11})
+   public String translate(String name, UmpleInterface aInterface){
     String result = "";
     if ("packageDefinition".equals(name) && aInterface.getPackageName().length() > 0)
     {
@@ -374,10 +278,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     }
     return result;
   }
-  
-  @umplesourcefile(line={335},file={"Generator_CodeSql.ump"},javaline={379},length={54})
-  public String translate(String name, UmpleClass aClass)
-  {
+
+  @umplesourcefile(line={335},file={"Generator_CodeSql.ump"},javaline={283},length={53})
+   public String translate(String name, UmpleClass aClass){
     if ("constructorMandatory".equals(name))
     {
       return aClass.getGeneratedClass().getLookup("constructorSignature_mandatory");
@@ -430,34 +333,31 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     }
     return "UNKNOWN ID: " + name;
   }
-  
-  @umplesourcefile(line={390},file={"Generator_CodeSql.ump"},javaline={435},length={10})
-   private String getExtendAndImplements(UmpleClass uClass)
-  {
-	  String extendsString = "";
+
+  @umplesourcefile(line={390},file={"Generator_CodeSql.ump"},javaline={338},length={9})
+   private String getExtendAndImplements(UmpleClass uClass){
+    String extendsString = "";
 	  String implementsString = "";
 	  
 	  extendsString = getExtendClassesNames(uClass);
 	  implementsString = getImplementsInterfacesNames(uClass);
 	  
-	  return extendsString + implementsString; 
+	  return extendsString + implementsString;
   }
-  
-  @umplesourcefile(line={401},file={"Generator_CodeSql.ump"},javaline={447},length={9})
-   private String getImplementsInterfacesNames(UmpleClass uClass)
-   {
-	  if (uClass.hasParentInterface() == false){
+
+  @umplesourcefile(line={401},file={"Generator_CodeSql.ump"},javaline={349},length={8})
+   private String getImplementsInterfacesNames(UmpleClass uClass){
+    if (uClass.hasParentInterface() == false){
 		  return "";
 	  }
 	  else{
 		 return " < " +  uClass.getParentInterface().get(0).getName();
 	  }
-   }
+  }
 
-  @umplesourcefile(line={411},file={"Generator_CodeSql.ump"},javaline={458},length={11})
- private String getExtendClassesNames(UmpleClass uClass)
-  {
-	  UmpleClass parent = uClass.getExtendsClass();
+  @umplesourcefile(line={411},file={"Generator_CodeSql.ump"},javaline={359},length={10})
+   private String getExtendClassesNames(UmpleClass uClass){
+    UmpleClass parent = uClass.getExtendsClass();
 	  if (parent == null)
 	  {
 		  return "";
@@ -467,29 +367,25 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
 	  }
   }
 
-  @umplesourcefile(line={423},file={"Generator_CodeSql.ump"},javaline={471},length={5})
-  public String translate(String keyName, Attribute av)
-  {
+  @umplesourcefile(line={423},file={"Generator_CodeSql.ump"},javaline={371},length={4})
+   public String translate(String keyName, Attribute av){
     boolean isMany = av.getIsList();
     return translate(keyName,av,isMany);
   }
-  
-  @umplesourcefile(line={429},file={"Generator_CodeSql.ump"},javaline={478},length={4})
-  public String translate(String keyName, TraceItem ti)
-  {
-  	return "";
+
+  @umplesourcefile(line={429},file={"Generator_CodeSql.ump"},javaline={377},length={3})
+   public String translate(String keyName, TraceItem ti){
+    return "";
   }
-   
-  @umplesourcefile(line={434},file={"Generator_CodeSql.ump"},javaline={484},length={5})
-  public String translate(String keyName, AssociationVariable av)
-  {
+
+  @umplesourcefile(line={434},file={"Generator_CodeSql.ump"},javaline={382},length={4})
+   public String translate(String keyName, AssociationVariable av){
     boolean isMany = av.isMany();
     return translate(keyName,av,isMany);
-  }  
-  
-  @umplesourcefile(line={440},file={"Generator_CodeSql.ump"},javaline={491},length={114})
-  private String translate(String keyName, UmpleVariable av, boolean isMany)
-  {
+  }
+
+  @umplesourcefile(line={440},file={"Generator_CodeSql.ump"},javaline={388},length={113})
+   private String translate(String keyName, UmpleVariable av, boolean isMany){
     if (OneOrManyLookup.contains(keyName))
     {
       String realKeyName = isMany ? keyName + "Many" : keyName + "One";
@@ -602,10 +498,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     }    
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={555},file={"Generator_CodeSql.ump"},javaline={607},length={41})
-  public String translate(String keyName, State state)
-  {
+
+  @umplesourcefile(line={555},file={"Generator_CodeSql.ump"},javaline={503},length={40})
+   public String translate(String keyName, State state){
     String singularName = StringFormatter.toUnderscore(state.getName());
     String pluralName = getModel().getGlossary().getPlural(singularName);
     String stateMachinePlusState = StringFormatter.format("{0}_{1}",StringFormatter.toUnderscore(state.getStateMachine().getName()),singularName);
@@ -645,10 +540,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={597},file={"Generator_CodeSql.ump"},javaline={650},length={40})
-  public String translate(String keyName, StateMachine sm)
-  {
+
+  @umplesourcefile(line={597},file={"Generator_CodeSql.ump"},javaline={545},length={39})
+   public String translate(String keyName, StateMachine sm){
     String singularName = StringFormatter.toUnderscore(sm.getFullName());
     String pluralName = getModel().getGlossary().getPlural(singularName);
   
@@ -687,10 +581,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     }
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={638},file={"Generator_CodeSql.ump"},javaline={692},length={24})
-  public String translate(String keyName, Event event)
-  {
+
+  @umplesourcefile(line={638},file={"Generator_CodeSql.ump"},javaline={586},length={23})
+   public String translate(String keyName, Event event){
     String singularName = event.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
 
@@ -713,18 +606,16 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={663},file={"Generator_CodeSql.ump"},javaline={718},length={6})
-  public void generate()
-  {
+
+  @umplesourcefile(line={663},file={"Generator_CodeSql.ump"},javaline={611},length={5})
+   public void generate(){
     prepare();
     writeFile();
     GeneratorHelper.postpare(getModel());
   }
 
-  @umplesourcefile(line={670},file={"Generator_CodeSql.ump"},javaline={726},length={17})
-  public String nameOf(String name, boolean hasMultiple)
-  {
+  @umplesourcefile(line={670},file={"Generator_CodeSql.ump"},javaline={618},length={16})
+   public String nameOf(String name, boolean hasMultiple){
     if (name == null)
     {
       return null;
@@ -740,10 +631,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
       return "a_" + name;
     }
   }
-  
-  @umplesourcefile(line={688},file={"Generator_CodeSql.ump"},javaline={745},length={23})
-  public static String typeOf(String aType)
-  {
+
+  @umplesourcefile(line={688},file={"Generator_CodeSql.ump"},javaline={636},length={22})
+   public static  String typeOf(String aType){
     if (aType == null || aType.length() == 0)
     {
       return "String";
@@ -765,10 +655,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
       return aType;
     }
   }
-  
-  @umplesourcefile(line={712},file={"Generator_CodeSql.ump"},javaline={770},length={76})
-  private void writeFile()
-  {
+
+  @umplesourcefile(line={712},file={"Generator_CodeSql.ump"},javaline={660},length={75})
+   private void writeFile(){
     try //Output all elements in a single file
     {
       String path = StringFormatter.addPathOrAbsolute( 
@@ -844,9 +733,8 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={789},file={"Generator_CodeSql.ump"},javaline={848},length={15})
-  private String getUpperCaseName(String name)
-  {
+  @umplesourcefile(line={789},file={"Generator_CodeSql.ump"},javaline={737},length={14})
+   private String getUpperCaseName(String name){
     if (name == null || name.length() == 0)
     {
       return name;
@@ -860,10 +748,9 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
       return name.toUpperCase().charAt(0) + name.substring(1);
     }
   }
-  
-  @umplesourcefile(line={805},file={"Generator_CodeSql.ump"},javaline={865},length={84})
-  private void prepare(UmpleClass aClass)
-  {
+
+  @umplesourcefile(line={805},file={"Generator_CodeSql.ump"},javaline={753},length={82})
+   private void prepare(UmpleClass aClass){
     if (aClass.getGeneratedClass() != null)
     {
       return;
@@ -944,12 +831,10 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     lookups.put("stringTemplate","StringTracer::execute(\"{0}=#{{1}}\")");
     lookups.put("executeMethods",executeMethods);
     //GeneratorHelper.prepareAllStringTracers(this,getModel(),aClass,lookups);
-
   }
-  
-  @umplesourcefile(line={890},file={"Generator_CodeSql.ump"},javaline={951},length={66})
-  private void generateConstructorSignature(GeneratedClass genClass)
-  {
+
+  @umplesourcefile(line={890},file={"Generator_CodeSql.ump"},javaline={837},length={65})
+   private void generateConstructorSignature(GeneratedClass genClass){
     StringBuffer signature = new StringBuffer();
     StringBuffer signatureCaller = new StringBuffer();
     
@@ -1015,22 +900,19 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
   }
 
-  @umplesourcefile(line={957},file={"Generator_CodeSql.ump"},javaline={1019},length={4})
-  public String nameOf(Attribute av)
-  {
+  @umplesourcefile(line={957},file={"Generator_CodeSql.ump"},javaline={904},length={3})
+   public String nameOf(Attribute av){
     return nameOf(av.getName(),false);
   }
-  
-  @umplesourcefile(line={962},file={"Generator_CodeSql.ump"},javaline={1025},length={5})
-  public String nameOf(AssociationVariable av)
-  {
+
+  @umplesourcefile(line={962},file={"Generator_CodeSql.ump"},javaline={909},length={4})
+   public String nameOf(AssociationVariable av){
     boolean hasMultiple = av.isMany();
     return nameOf(av.getName(),hasMultiple);
   }
-  
-  @umplesourcefile(line={968},file={"Generator_CodeSql.ump"},javaline={1032},length={37})
-  private void generateSecondaryConstructorSignatures(GeneratedClass genClass)
-  {
+
+  @umplesourcefile(line={968},file={"Generator_CodeSql.ump"},javaline={915},length={36})
+   private void generateSecondaryConstructorSignatures(GeneratedClass genClass){
     UmpleClass uClass = genClass.getUClass();
     
     String mandatorySignature = genClass.getLookup("constructorSignature");
@@ -1066,31 +948,26 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
       }
     }
   }
-  
-  @umplesourcefile(line={1006},file={"Generator_CodeSql.ump"},javaline={1071},length={5})
-  private void generateNullableConstructorSignature(GeneratedClass genClass)
-  {
+
+  @umplesourcefile(line={1006},file={"Generator_CodeSql.ump"},javaline={953},length={4})
+   private void generateNullableConstructorSignature(GeneratedClass genClass){
     String currentConstructor = genClass.getLookup("constructorSignature");
     genClass.setLookup("constructorSignature_nulled", StringFormatter.appendParameter(currentConstructor, " = null"));
   }
-  
 
-  @umplesourcefile(line={1013},file={"Generator_CodeSql.ump"},javaline={1079},length={5})
-  private void addImports(UmpleClass aClass, GeneratedClass genClass)
-  {
+  @umplesourcefile(line={1013},file={"Generator_CodeSql.ump"},javaline={959},length={4})
+   private void addImports(UmpleClass aClass, GeneratedClass genClass){
     addAttributeImports(aClass,genClass);
     addAssociationImports(aClass,genClass);
   }
 
-  @umplesourcefile(line={1019},file={"Generator_CodeSql.ump"},javaline={1086},length={4})
-  private void addAssociationImports(UmpleClass aClass, GeneratedClass genClass)
-  {
-
+  @umplesourcefile(line={1019},file={"Generator_CodeSql.ump"},javaline={965},length={3})
+   private void addAssociationImports(UmpleClass aClass, GeneratedClass genClass){
+    
   }
 
-  @umplesourcefile(line={1024},file={"Generator_CodeSql.ump"},javaline={1092},length={18})
-  private void addAttributeImports(UmpleClass aClass, GeneratedClass genClass)
-  {
+  @umplesourcefile(line={1024},file={"Generator_CodeSql.ump"},javaline={970},length={17})
+   private void addAttributeImports(UmpleClass aClass, GeneratedClass genClass){
     String timeImport = "time";
     String dateImport = "date";
     
@@ -1106,11 +983,10 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
         genClass.addMultiLookup("import", dateImport);
       }
     }
-  }  
+  }
 
-  @umplesourcefile(line={1043},file={"Generator_CodeSql.ump"},javaline={1112},length={34})
-  private void addRelatedImports()
-  {
+  @umplesourcefile(line={1043},file={"Generator_CodeSql.ump"},javaline={989},length={33})
+   private void addRelatedImports(){
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
@@ -1144,15 +1020,114 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={1078},file={"Generator_CodeSql.ump"},javaline={1148},length={9})
-	public void initializeLangaugeBasedVariables() {
-	    UmpleToPrimitiveMap.put("Integer","INT");
+  @umplesourcefile(line={1078},file={"Generator_CodeSql.ump"},javaline={1024},length={9})
+   public void initializeLangaugeBasedVariables(){
+    UmpleToPrimitiveMap.put("Integer","INT");
 	    UmpleToPrimitiveMap.put("Float","FLOAT");
 	    UmpleToPrimitiveMap.put("Double","DOUBLE");
 	    UmpleToPrimitiveMap.put("String","VARCHAR(255)");
 	    UmpleToPrimitiveMap.put("Boolean","BIT");
 	    UmpleToPrimitiveMap.put("Date","DATE");
 	    UmpleToPrimitiveMap.put("Time","TIME");
-	}
+  }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={14},file={"Generator_CodeSql.ump"},javaline={1038},length={95})
+  private static Map<String,String> UpperCaseSingularLookupMap ;
+
+//  @umplesourcefile(line={15},file={"Generator_CodeSql.ump"},javaline={1041},length={92})
+  private static Map<String,String> UpperCasePluralLookupMap ;
+
+//  @umplesourcefile(line={16},file={"Generator_CodeSql.ump"},javaline={1044},length={89})
+  private static Map<String,String> AsIsSingularLookupMap ;
+
+//  @umplesourcefile(line={17},file={"Generator_CodeSql.ump"},javaline={1047},length={86})
+  private static Map<String,String> AsIsPluralLookupMap ;
+
+//  @umplesourcefile(line={18},file={"Generator_CodeSql.ump"},javaline={1050},length={83})
+  private static List<String> OneOrManyLookup ;
+
+//  @umplesourcefile(line={19},file={"Generator_CodeSql.ump"},javaline={1053},length={80})
+  private static List<String> SqlPrimitives ;
+
+//  @umplesourcefile(line={20},file={"Generator_CodeSql.ump"},javaline={1056},length={77})
+  private static String beforeCode ;
+
+//  @umplesourcefile(line={21},file={"Generator_CodeSql.ump"},javaline={1059},length={74})
+  private static String afterCode ;
+
+//  @umplesourcefile(line={23},file={"Generator_CodeSql.ump"},javaline={1062},length={71})
+  static 
+  {
+    UpperCaseSingularLookupMap = new HashMap<String, String>();
+
+    UpperCasePluralLookupMap = new HashMap<String, String>();
+
+    AsIsSingularLookupMap = new HashMap<String, String>();
+    AsIsSingularLookupMap.put("attributeOne", "{0}");
+    AsIsSingularLookupMap.put("attributeOneQuoted", "`{0}`");
+    AsIsSingularLookupMap.put("attributeConstant", "{0}");
+    AsIsSingularLookupMap.put("attributeConstantQuoted", "`{0}`");
+
+    AsIsPluralLookupMap = new HashMap<String, String>();
+
+    OneOrManyLookup = new ArrayList<String>();
+    OneOrManyLookup.add("attribute");
+    OneOrManyLookup.add("parameter");
+    
+    SqlPrimitives = new ArrayList<String>();
+    //MySQL types
+    SqlPrimitives.add("CHAR");
+    SqlPrimitives.add("VARCHAR");
+    SqlPrimitives.add("TINYTEXT");
+    SqlPrimitives.add("TEXT");
+    SqlPrimitives.add("BLOB");
+    SqlPrimitives.add("MEDIUMTEXT");
+    SqlPrimitives.add("MEDIUMBLOB");
+    SqlPrimitives.add("LONGTEXT");
+    SqlPrimitives.add("LONGBLOB");
+    SqlPrimitives.add("ENUM");
+    SqlPrimitives.add("SET");
+    SqlPrimitives.add("TINYINT");
+    SqlPrimitives.add("SMALLINT");
+    SqlPrimitives.add("MEDIUMINT");
+    SqlPrimitives.add("INT");
+    SqlPrimitives.add("BIGINT");
+    SqlPrimitives.add("FLOAT");
+    SqlPrimitives.add("DOUBLE");
+    SqlPrimitives.add("DECIMAL");
+    SqlPrimitives.add("DATE");
+    SqlPrimitives.add("DATETIME");
+    SqlPrimitives.add("TIMESTAMP");
+    SqlPrimitives.add("TIME");
+    SqlPrimitives.add("YEAR");
+    //Additional Sql Server types
+    SqlPrimitives.add("NCHAR");
+    SqlPrimitives.add("NVARCHAR");
+    SqlPrimitives.add("NTEXT");
+    SqlPrimitives.add("BIT");
+    SqlPrimitives.add("BINARY");
+    SqlPrimitives.add("VARBINARY");
+    SqlPrimitives.add("IMAGE");
+    SqlPrimitives.add("NUMERIC");
+    SqlPrimitives.add("SMALLMONEY");
+    SqlPrimitives.add("MONEY");
+    SqlPrimitives.add("REAL");
+    SqlPrimitives.add("DATETIME2");
+    SqlPrimitives.add("SMALLDATETIME");
+    SqlPrimitives.add("DATETIMEOFFSET");
+    //Other types
+    SqlPrimitives.add("SQL_VARIANT");
+    SqlPrimitives.add("UNIQUEIDENTIFIER");
+    SqlPrimitives.add("XML");
+    SqlPrimitives.add("CURSOR");
+    SqlPrimitives.add("TABLE");
+    
+    //Codes used to break the generated code into groups
+    beforeCode = "@BEFORE_CODE@";
+    afterCode = "@AFTER_CODE@";
+  }
 
 }

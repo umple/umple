@@ -662,6 +662,34 @@ class AssociationClass
 class UmpleClass
 {
 
+  after setExtendsClass {
+    if(aExtendsClass!=null&&aExtendsClass.getMethods()!=null)
+    for(Method method:aExtendsClass.getMethods())
+    {
+      if(this.hasMethod(method))
+      {
+        Method aMethod = this.getMethod(method);
+        
+        if(aMethod.getMethodBody().getExtraCode("")==null||"".equals(aMethod.getMethodBody().getExtraCode("")))
+        {
+          aMethod.getMethodBody().setExtraCode("",method.getMethodBody().getExtraCode(""));
+          while(aMethod.hasMethodParameters())
+          {
+            aMethod.removeMethodParameter(aMethod.getMethodParameter(0));
+          }
+          for(MethodParameter mp:method.getMethodParameters())
+          {
+            aMethod.addMethodParameter(mp);
+          }
+          if(!"".equals(aMethod.getMethodBody().getExtraCode("")))
+          {
+            aMethod.setIsImplemented(false);
+          }
+        }
+      }
+    }
+  }
+
   public UmpleClass(String name)
   {
     this(name, null);
@@ -863,6 +891,34 @@ class UmpleClass
       }
     }
     return false;  
+  }
+  
+  public Method getMethod(Method comparedMethod){
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){  
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size())
+        {
+          boolean allSame = true;
+          for (int i = 0; i < numberOfParams; i++)
+          {
+            if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
+            {
+              allSame = false;
+              break;
+            }
+          }
+          if(allSame)
+          {
+            return aMethod;
+          }
+        }
+      }
+    }
+    return null;  
   }
 
   public Attribute getAttribute(String name)
@@ -1866,7 +1922,7 @@ class Coordinate
  */
 class Comment
 {
-  public Boolean isInline = true;
+  Boolean isInline = true;
 
   /**
    * Used to take a comment and process it into a format appropriate for displaying in generated code.

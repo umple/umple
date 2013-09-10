@@ -44,7 +44,7 @@ class Product{
  ourCode; description; picture;
  ourListPricePerunit; numberInInventory; numberToKeepInv;
  1 -- * ClientOrderLineItem;
- 1-- * ProductSource;
+ 1 -- * ProductSource;
 }
 class Supplier {
  id; name; address; 

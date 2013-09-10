@@ -51,10 +51,29 @@ class UmpleInternalParser
     {
       shouldConsumeComment = false;
     }
-    else if (t.is("strictness") || t.is("message"))
+    else if (t.is("strictness") )
     {
       // unimplemented feature. Issue a warning that it is currently not fully implemented
       setFailedPosition(t.getPosition(), 9999, t.getName(), t.toString());
+    }
+    else if (t.is("strictnessMessage"))
+    {
+      if(t.getValue("message").equals("allow"))
+      {
+        allowMessage(Integer.parseInt(t.getValue("messageNumber")));
+      }
+      else if(t.getValue("message").equals("disallow"))
+      {
+        disallowMessage(Integer.parseInt(t.getValue("messageNumber")));
+      }
+      else if(t.getValue("message").equals("ignore"))
+      {
+        ignoreMessage(Integer.parseInt(t.getValue("messageNumber")));
+      }
+      else if(t.getValue("message").equals("expect"))
+      {
+        expectMessage(Integer.parseInt(t.getValue("messageNumber")));
+      }
     }      
     else if (t.is("namespace"))
     {
@@ -272,7 +291,7 @@ class UmpleInternalParser
       }
       else {
         Comment comment = new Comment(theComment);
-        comment.isInline = false;
+        comment.setIsInline(false);
         lastComments.add(comment);
       }
     }
@@ -893,7 +912,10 @@ class UmpleInternalParser
         boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
         if (!(uClass.hasMethod(aMethod)) && shouldAddMethod)
         {
-          aMethod.setIsImplemented(true);
+          if("".equals(aMethod.getMethodBody().getExtraCode("")))
+          {
+            aMethod.setIsImplemented(true);
+          }
           uClass.addMethod(aMethod);
         }
       }
@@ -1302,6 +1324,10 @@ class UmpleInternalParser
       else if (token.is("type"))
       {
         aMethod.setType(token.getValue());
+      }
+      else if (token.is("list"))
+      {
+        aMethod.setType(aMethod.getType()+"[]");
       }
       else if (token.is("methodDeclarator"))
       {
@@ -2040,6 +2066,58 @@ class UmpleInternalParser
           setFailedPosition(sub.getPosition(), 140, type);
         }
       }
+    }
+    else if(sub.is("malformedStatement1")||sub.is("malformedStatement2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      if(sub.getValue("innerstuff")!=null)
+      {
+        extraCode += "{"+sub.getValue("innerstuff")+"};";
+      }
+      else
+      {
+        extraCode += ";";
+      }
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1007, sub.getValue("name"));
+    }
+    else if(sub.is("malformedStatemachine1")||sub.is("malformedStatemachine2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
+    }
+    else if(sub.is("malformedMethod"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }
   }
 } 

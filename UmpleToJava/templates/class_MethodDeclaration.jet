@@ -27,6 +27,12 @@
         String aSingleParameter="";
         String isList="";
           String parameters = ""; 
+        if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static"))
+        {
+          properMethodBody = "    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());\n"+
+                             "    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());\n"+properMethodBody;
+          uClass.setHasMainMethod(true);
+        }
         if (aMethod.hasMethodParameters())
         {
           for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 

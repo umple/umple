@@ -70,11 +70,6 @@ class UmpleFile
     File file = new File(path,fileName);
     return file.exists();
   }
-
-  public String getPath()
-  {
-    return path;
-  }
   
   public String getParent()
   {

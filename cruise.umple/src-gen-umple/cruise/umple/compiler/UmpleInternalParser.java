@@ -54,6 +54,10 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   private boolean packageNameUsed;
   private boolean outputUmpleSource;
   private UmpleModel model;
+  private List<Integer> allowedMessages;
+  private List<Integer> ignoredMessages;
+  private List<Integer> disallowedMessages;
+  private List<Integer> expectedMessages;
   private List<String> unparsedUmpleFiles;
   private List<String> parsedUmpleFiles;
   private boolean shouldProcessAgain;
@@ -83,7 +87,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={41},file={"UmpleInternalParser_Code.ump"},javaline={114},length={1})
+  @umplesourcefile(line={41},file={"UmpleInternalParser_Code.ump"},javaline={122},length={1})
   public UmpleInternalParser(String aName, UmpleModel aModel)
   {
     super(aName);
@@ -91,6 +95,10 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     packageNameUsed = true;
     outputUmpleSource = false;
     model = aModel;
+    allowedMessages = new ArrayList<Integer>();
+    ignoredMessages = new ArrayList<Integer>();
+    disallowedMessages = new ArrayList<Integer>();
+    expectedMessages = new ArrayList<Integer>();
     unparsedUmpleFiles = new ArrayList<String>();
     parsedUmpleFiles = new ArrayList<String>();
     shouldProcessAgain = false;
@@ -142,15 +150,71 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return wasSet;
   }
 
-  @umplesourcefile(line={47},file={"UmpleInternalParser.ump"},javaline={152},length={1})
+  @umplesourcefile(line={72},file={"UmpleInternalParser.ump"},javaline={160},length={1})
   public boolean setModel(UmpleModel aModel)
   {
     boolean wasSet = false;
     model = aModel;
     wasSet = true;
-    // line 47 "../../../../src/UmpleInternalParser.ump"
+    // line 72 "../../../../src/UmpleInternalParser.ump"
     if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}
     return wasSet;
+  }
+
+  public boolean addAllowedMessage(Integer aAllowedMessage)
+  {
+    boolean wasAdded = false;
+    wasAdded = allowedMessages.add(aAllowedMessage);
+    return wasAdded;
+  }
+
+  public boolean removeAllowedMessage(Integer aAllowedMessage)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = allowedMessages.remove(aAllowedMessage);
+    return wasRemoved;
+  }
+
+  public boolean addIgnoredMessage(Integer aIgnoredMessage)
+  {
+    boolean wasAdded = false;
+    wasAdded = ignoredMessages.add(aIgnoredMessage);
+    return wasAdded;
+  }
+
+  public boolean removeIgnoredMessage(Integer aIgnoredMessage)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = ignoredMessages.remove(aIgnoredMessage);
+    return wasRemoved;
+  }
+
+  public boolean addDisallowedMessage(Integer aDisallowedMessage)
+  {
+    boolean wasAdded = false;
+    wasAdded = disallowedMessages.add(aDisallowedMessage);
+    return wasAdded;
+  }
+
+  public boolean removeDisallowedMessage(Integer aDisallowedMessage)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = disallowedMessages.remove(aDisallowedMessage);
+    return wasRemoved;
+  }
+
+  public boolean addExpectedMessage(Integer aExpectedMessage)
+  {
+    boolean wasAdded = false;
+    wasAdded = expectedMessages.add(aExpectedMessage);
+    return wasAdded;
+  }
+
+  public boolean removeExpectedMessage(Integer aExpectedMessage)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = expectedMessages.remove(aExpectedMessage);
+    return wasRemoved;
   }
 
   public boolean setTraceFlagId(int aTraceFlagId)
@@ -184,7 +248,127 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return model;
   }
 
-  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeTrace.ump"},javaline={190},length={1})
+  public Integer getAllowedMessage(int index)
+  {
+    Integer aAllowedMessage = allowedMessages.get(index);
+    return aAllowedMessage;
+  }
+
+  public Integer[] getAllowedMessages()
+  {
+    Integer[] newAllowedMessages = allowedMessages.toArray(new Integer[allowedMessages.size()]);
+    return newAllowedMessages;
+  }
+
+  public int numberOfAllowedMessages()
+  {
+    int number = allowedMessages.size();
+    return number;
+  }
+
+  public boolean hasAllowedMessages()
+  {
+    boolean has = allowedMessages.size() > 0;
+    return has;
+  }
+
+  public int indexOfAllowedMessage(Integer aAllowedMessage)
+  {
+    int index = allowedMessages.indexOf(aAllowedMessage);
+    return index;
+  }
+
+  public Integer getIgnoredMessage(int index)
+  {
+    Integer aIgnoredMessage = ignoredMessages.get(index);
+    return aIgnoredMessage;
+  }
+
+  public Integer[] getIgnoredMessages()
+  {
+    Integer[] newIgnoredMessages = ignoredMessages.toArray(new Integer[ignoredMessages.size()]);
+    return newIgnoredMessages;
+  }
+
+  public int numberOfIgnoredMessages()
+  {
+    int number = ignoredMessages.size();
+    return number;
+  }
+
+  public boolean hasIgnoredMessages()
+  {
+    boolean has = ignoredMessages.size() > 0;
+    return has;
+  }
+
+  public int indexOfIgnoredMessage(Integer aIgnoredMessage)
+  {
+    int index = ignoredMessages.indexOf(aIgnoredMessage);
+    return index;
+  }
+
+  public Integer getDisallowedMessage(int index)
+  {
+    Integer aDisallowedMessage = disallowedMessages.get(index);
+    return aDisallowedMessage;
+  }
+
+  public Integer[] getDisallowedMessages()
+  {
+    Integer[] newDisallowedMessages = disallowedMessages.toArray(new Integer[disallowedMessages.size()]);
+    return newDisallowedMessages;
+  }
+
+  public int numberOfDisallowedMessages()
+  {
+    int number = disallowedMessages.size();
+    return number;
+  }
+
+  public boolean hasDisallowedMessages()
+  {
+    boolean has = disallowedMessages.size() > 0;
+    return has;
+  }
+
+  public int indexOfDisallowedMessage(Integer aDisallowedMessage)
+  {
+    int index = disallowedMessages.indexOf(aDisallowedMessage);
+    return index;
+  }
+
+  public Integer getExpectedMessage(int index)
+  {
+    Integer aExpectedMessage = expectedMessages.get(index);
+    return aExpectedMessage;
+  }
+
+  public Integer[] getExpectedMessages()
+  {
+    Integer[] newExpectedMessages = expectedMessages.toArray(new Integer[expectedMessages.size()]);
+    return newExpectedMessages;
+  }
+
+  public int numberOfExpectedMessages()
+  {
+    int number = expectedMessages.size();
+    return number;
+  }
+
+  public boolean hasExpectedMessages()
+  {
+    boolean has = expectedMessages.size() > 0;
+    return has;
+  }
+
+  public int indexOfExpectedMessage(Integer aExpectedMessage)
+  {
+    int index = expectedMessages.indexOf(aExpectedMessage);
+    return index;
+  }
+
+  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeTrace.ump"},javaline={374},length={1})
   public int getTraceFlagId()
   {
     // line 20 "../../../../src/UmpleInternalParser_CodeTrace.ump"
@@ -213,10 +397,177 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return strictness;
   }
 
-  public boolean setStrictness(Strictness aStrictness)
+  public boolean modelOnly()
+  {
+    boolean wasEventProcessed = false;
+    
+    Strictness aStrictness = strictness;
+    switch (aStrictness)
+    {
+      case none:
+        setStrictness(Strictness.modelOnly);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean noExtraCode()
+  {
+    boolean wasEventProcessed = false;
+    
+    Strictness aStrictness = strictness;
+    switch (aStrictness)
+    {
+      case none:
+        setStrictness(Strictness.noExtraCode);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={45,51,57}, file={"UmpleInternalParser.ump","UmpleInternalParser.ump","UmpleInternalParser.ump"}, javaline={445,451,457}, length={1,1,1})
+  public boolean allowMessage(Integer id)
+  {
+    boolean wasEventProcessed = false;
+    
+    Strictness aStrictness = strictness;
+    switch (aStrictness)
+    {
+      case none:
+        // line 45 "../../../../src/UmpleInternalParser.ump"
+        allowedMessages.add(id);
+        setStrictness(Strictness.none);
+        wasEventProcessed = true;
+        break;
+      case modelOnly:
+        // line 51 "../../../../src/UmpleInternalParser.ump"
+        allowedMessages.add(id);
+        setStrictness(Strictness.modelOnly);
+        wasEventProcessed = true;
+        break;
+      case noExtraCode:
+        // line 57 "../../../../src/UmpleInternalParser.ump"
+        allowedMessages.add(id);
+        setStrictness(Strictness.noExtraCode);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={46,52,58}, file={"UmpleInternalParser.ump","UmpleInternalParser.ump","UmpleInternalParser.ump"}, javaline={478,484,490}, length={1,1,1})
+  public boolean ignoreMessage(Integer id)
+  {
+    boolean wasEventProcessed = false;
+    
+    Strictness aStrictness = strictness;
+    switch (aStrictness)
+    {
+      case none:
+        // line 46 "../../../../src/UmpleInternalParser.ump"
+        ignoredMessages.add(id);
+        setStrictness(Strictness.none);
+        wasEventProcessed = true;
+        break;
+      case modelOnly:
+        // line 52 "../../../../src/UmpleInternalParser.ump"
+        ignoredMessages.add(id);
+        setStrictness(Strictness.modelOnly);
+        wasEventProcessed = true;
+        break;
+      case noExtraCode:
+        // line 58 "../../../../src/UmpleInternalParser.ump"
+        ignoredMessages.add(id);
+        setStrictness(Strictness.noExtraCode);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={47,53,59}, file={"UmpleInternalParser.ump","UmpleInternalParser.ump","UmpleInternalParser.ump"}, javaline={511,517,523}, length={1,1,1})
+  public boolean disallowMessage(Integer id)
+  {
+    boolean wasEventProcessed = false;
+    
+    Strictness aStrictness = strictness;
+    switch (aStrictness)
+    {
+      case none:
+        // line 47 "../../../../src/UmpleInternalParser.ump"
+        disallowedMessages.add(id);
+        setStrictness(Strictness.none);
+        wasEventProcessed = true;
+        break;
+      case modelOnly:
+        // line 53 "../../../../src/UmpleInternalParser.ump"
+        disallowedMessages.add(id);
+        setStrictness(Strictness.modelOnly);
+        wasEventProcessed = true;
+        break;
+      case noExtraCode:
+        // line 59 "../../../../src/UmpleInternalParser.ump"
+        disallowedMessages.add(id);
+        setStrictness(Strictness.noExtraCode);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={48,54,60}, file={"UmpleInternalParser.ump","UmpleInternalParser.ump","UmpleInternalParser.ump"}, javaline={544,550,556}, length={1,1,1})
+  public boolean expectMessage(Integer id)
+  {
+    boolean wasEventProcessed = false;
+    
+    Strictness aStrictness = strictness;
+    switch (aStrictness)
+    {
+      case none:
+        // line 48 "../../../../src/UmpleInternalParser.ump"
+        expectedMessages.add(id);
+        setStrictness(Strictness.none);
+        wasEventProcessed = true;
+        break;
+      case modelOnly:
+        // line 54 "../../../../src/UmpleInternalParser.ump"
+        expectedMessages.add(id);
+        setStrictness(Strictness.modelOnly);
+        wasEventProcessed = true;
+        break;
+      case noExtraCode:
+        // line 60 "../../../../src/UmpleInternalParser.ump"
+        expectedMessages.add(id);
+        setStrictness(Strictness.noExtraCode);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setStrictness(Strictness aStrictness)
   {
     strictness = aStrictness;
-    return true;
   }
 
   public ErrorType getMessagesToExpect(int index)
@@ -408,17 +759,17 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     super.delete();
   }
 
-  @umplesourcefile(line={43},file={"UmpleInternalParser_Code.ump"},javaline={412},length={3})
+  @umplesourcefile(line={43},file={"UmpleInternalParser_Code.ump"},javaline={763},length={3})
    public  UmpleInternalParser(){
     this("UmpleInternalParser", new UmpleModel(null));
   }
 
-  @umplesourcefile(line={48},file={"UmpleInternalParser_Code.ump"},javaline={417},length={3})
+  @umplesourcefile(line={48},file={"UmpleInternalParser_Code.ump"},javaline={768},length={3})
    public  UmpleInternalParser(UmpleModel aModel){
     this("UmpleInternalParser", aModel);
   }
 
-  @umplesourcefile(line={53},file={"UmpleInternalParser_Code.ump"},javaline={422},length={25})
+  @umplesourcefile(line={53},file={"UmpleInternalParser_Code.ump"},javaline={773},length={25})
    private void init(){
     if(model.getUmpleFile() != null)
     {
@@ -445,12 +796,12 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     addRulesInFile("/umple_exceptions.grammar");
   }
 
-  @umplesourcefile(line={80},file={"UmpleInternalParser_Code.ump"},javaline={449},length={3})
+  @umplesourcefile(line={80},file={"UmpleInternalParser_Code.ump"},javaline={800},length={3})
    public ParseResult parse(String ruleName, String input){
     return super.parse(ruleName,input);
   }
 
-  @umplesourcefile(line={85},file={"UmpleInternalParser_Code.ump"},javaline={454},length={10})
+  @umplesourcefile(line={85},file={"UmpleInternalParser_Code.ump"},javaline={805},length={10})
    public ParseResult analyze(boolean shouldGenerate){
     parseAllFiles();
     analyzeAllTokens(getRootToken());
@@ -469,7 +820,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * ------------------------
    * When an error occurs, set the failed position and mark the compile as NOT successful
    */
-  @umplesourcefile(line={102},file={"UmpleInternalParser_Code.ump"},javaline={466},length={5})
+  @umplesourcefile(line={102},file={"UmpleInternalParser_Code.ump"},javaline={817},length={5})
    private void setFailedPosition(Position position, int errorCode, String... messages){
     //getParseResult().setWasSuccess(false);
     getParseResult().setPosition(position);
@@ -482,7 +833,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Each token is analyzed as long as "shouldProcessAgain" is set to true during the analysis
    * analyzeToken and quits early if a problem arises
    */
-  @umplesourcefile(line={112},file={"UmpleInternalParser_Code.ump"},javaline={480},length={18})
+  @umplesourcefile(line={112},file={"UmpleInternalParser_Code.ump"},javaline={831},length={18})
    private void analyzeAllTokens(Token rootToken){
     int analysisStep = 0;
     shouldProcessAgain = true;
@@ -509,7 +860,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * "1" is for the first round of analysis and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
    * put everything under the "1"
    */
-  @umplesourcefile(line={136},file={"UmpleInternalParser_Code.ump"},javaline={506},length={18})
+  @umplesourcefile(line={136},file={"UmpleInternalParser_Code.ump"},javaline={857},length={18})
    private void analyzeAllTokens(Token rootToken, UmpleClass aClass){
     int analysisStep = 0;
     shouldProcessClassAgain = true;
@@ -533,7 +884,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Delegate function to analyze a token and send it to the write
    */
-  @umplesourcefile(line={157},file={"UmpleInternalParser_Code.ump"},javaline={533},length={7})
+  @umplesourcefile(line={157},file={"UmpleInternalParser_Code.ump"},javaline={884},length={7})
    private void analyzeToken(Token t, int analysisStep){
     analyzeCoreToken(t,analysisStep);
     analyzeClassToken(t,analysisStep);
@@ -546,7 +897,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze an individual token, delegates to the various components in Umple
    */
-  @umplesourcefile(line={167},file={"UmpleInternalParser_Code.ump"},javaline={546},length={7})
+  @umplesourcefile(line={167},file={"UmpleInternalParser_Code.ump"},javaline={897},length={7})
    private void analyzeToken(Token t, UmpleClass aClass, int analysisStep){
     analyzeCoreToken(t,aClass,analysisStep);
     analyzeClassToken(t,aClass,analysisStep);
@@ -561,8 +912,9 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Each step in the process might "fail", so we check the status before calling each delegate
    * token post token analysis method
    */
-  @umplesourcefile(line={179},file={"UmpleInternalParser_Code.ump"},javaline={559},length={29})
+  @umplesourcefile(line={179},file={"UmpleInternalParser_Code.ump"},javaline={910},length={30})
    private void postTokenAnalysis(){
+    analyzeParseResult();
     if (getParseResult().getWasSuccess())
     {
       postTokenCoreAnalysis();
@@ -596,7 +948,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Locate all 'use *.ump' references and add those files if not already parsed
    */
-  @umplesourcefile(line={214},file={"UmpleInternalParser_Code.ump"},javaline={596},length={47})
+  @umplesourcefile(line={214},file={"UmpleInternalParser_Code.ump"},javaline={948},length={47})
    private void addNecessaryFiles(){
     for(Token t : getRootToken().getSubTokens())
     {
@@ -649,7 +1001,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Loop through all unparsed files, parse them, and add any missing references
    */
-  @umplesourcefile(line={264},file={"UmpleInternalParser_Code.ump"},javaline={649},length={16})
+  @umplesourcefile(line={264},file={"UmpleInternalParser_Code.ump"},javaline={1001},length={16})
    private void parseAllFiles(){
     addNecessaryFiles();
     while (!unparsedUmpleFiles.isEmpty() && getParseResult().getWasSuccess())
@@ -667,11 +1019,94 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
+  @umplesourcefile(line={282},file={"UmpleInternalParser_Code.ump"},javaline={1023},length={81})
+   public void analyzeParseResult(){
+    int numberOfErrors = 0;
+    int numberOfWarnings = 0;
+    for(int i = 0; i<getParseResult().numberOfErrorMessages(); i++)
+    {
+      ErrorMessage error = getParseResult().getErrorMessage(i);
+      if(error.getErrorType().getSeverity() <= 2)
+      {
+        numberOfErrors++;
+      }
+      else
+      {
+        numberOfWarnings++;
+      }
+      if(allowedMessages.contains(error.getErrorType().getErrorCode()))
+      {
+        if(error.getErrorType().getSeverity() <= 2)
+        {
+          numberOfErrors--;
+        }
+        else
+        {
+          numberOfWarnings--;
+        }
+        getParseResult().removeErrorMessage(error);
+        i--;
+        continue;
+      }
+      if(ignoredMessages.contains(error.getErrorType().getErrorCode()))
+      {
+        if(error.getErrorType().getSeverity() <= 2)
+        {
+          numberOfErrors--;
+        }
+        else
+        {
+          numberOfWarnings--;
+        }
+        getParseResult().removeErrorMessage(error);
+        i--;
+        continue;
+      }
+      if(expectedMessages.contains(error.getErrorType().getErrorCode()))
+      {
+        if(error.getErrorType().getSeverity() <= 2)
+        {
+          numberOfErrors--;
+        }
+        else
+        {
+          numberOfWarnings--;
+        }
+      }
+    }
+    for(Integer id: expectedMessages)
+    {
+      boolean hasMessage = false;
+      for(int i = 0; i<getParseResult().numberOfErrorMessages(); i++)
+      {        
+        ErrorMessage error = getParseResult().getErrorMessage(i);
+        if(error.getErrorType().getErrorCode() == id)
+        {          
+          getParseResult().removeErrorMessage(error);
+          hasMessage = true;
+          break;
+        }
+      }
+      if(!hasMessage)
+      {
+        // setFailedPosition
+      }
+    }
+    if(numberOfErrors == 0)
+    {
+      getParseResult().setWasSuccess(true);
+    }
+    if(numberOfWarnings == 0)
+    {
+      getParseResult().setHasWarnings(false);
+    }
+  }
+
 
   /**
    * Analyze core tokens to the Umple language
    */
-  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeCore.ump"},javaline={671},length={19})
+  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeCore.ump"},javaline={1106},length={19})
    private void analyzeCoreToken(Token t, int analyzeCoreToken){
     if (analyzeCoreToken != 1)
     {
@@ -697,7 +1132,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * There are currently no core tokens of concern in the context of an UmpleClass
    * This method is available if needed
    */
-  @umplesourcefile(line={44},file={"UmpleInternalParser_CodeCore.ump"},javaline={696},length={3})
+  @umplesourcefile(line={44},file={"UmpleInternalParser_CodeCore.ump"},javaline={1131},length={3})
    private void analyzeCoreToken(Token t, UmpleClass aClass, int analysisStep){
     
   }
@@ -706,7 +1141,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Perform post token analysis on core elements of the Umple language
    */
-  @umplesourcefile(line={50},file={"UmpleInternalParser_CodeCore.ump"},javaline={706},length={50})
+  @umplesourcefile(line={50},file={"UmpleInternalParser_CodeCore.ump"},javaline={1141},length={50})
    private void postTokenCoreAnalysis(){
     boolean overrode_all = false;
 		
@@ -762,7 +1197,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Add singular / plural forms of words to the glossary to be used by the code generator
    */
-  @umplesourcefile(line={104},file={"UmpleInternalParser_CodeCore.ump"},javaline={762},length={11})
+  @umplesourcefile(line={104},file={"UmpleInternalParser_CodeCore.ump"},javaline={1197},length={11})
    private void analyzeGlossary(Token glossaryToken){
     for(Token wordToken : glossaryToken.getSubTokens())
     {
@@ -775,7 +1210,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={117},file={"UmpleInternalParser_CodeCore.ump"},javaline={779},length={20})
+  @umplesourcefile(line={117},file={"UmpleInternalParser_CodeCore.ump"},javaline={1214},length={20})
    private void analyzeGenerate(Token genToken){
     if(genToken.is("generate_path"))
   	{
@@ -804,7 +1239,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param t The current token that will be analyzed to determine how to further make use of it (is it a comment, class, etc?)
    * @param analysisStep Used to determine whether or not things should be analyzed more than once (multi-pass).
    */
-  @umplesourcefile(line={38},file={"UmpleInternalParser_CodeClass.ump"},javaline={801},length={72})
+  @umplesourcefile(line={38},file={"UmpleInternalParser_CodeClass.ump"},javaline={1236},length={91})
    private void analyzeClassToken(Token t, int analysisStep){
     if (analysisStep != 2)
     {
@@ -820,10 +1255,29 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     {
       shouldConsumeComment = false;
     }
-    else if (t.is("strictness") || t.is("message"))
+    else if (t.is("strictness") )
     {
       // unimplemented feature. Issue a warning that it is currently not fully implemented
       setFailedPosition(t.getPosition(), 9999, t.getName(), t.toString());
+    }
+    else if (t.is("strictnessMessage"))
+    {
+      if(t.getValue("message").equals("allow"))
+      {
+        allowMessage(Integer.parseInt(t.getValue("messageNumber")));
+      }
+      else if(t.getValue("message").equals("disallow"))
+      {
+        disallowMessage(Integer.parseInt(t.getValue("messageNumber")));
+      }
+      else if(t.getValue("message").equals("ignore"))
+      {
+        ignoreMessage(Integer.parseInt(t.getValue("messageNumber")));
+      }
+      else if(t.getValue("message").equals("expect"))
+      {
+        expectMessage(Integer.parseInt(t.getValue("messageNumber")));
+      }
     }      
     else if (t.is("namespace"))
     {
@@ -888,7 +1342,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * it.
    * @param analysisStep Used to determine whether or not things should be analyzed more than once (multi-pass).
    */
-  @umplesourcefile(line={122},file={"UmpleInternalParser_CodeClass.ump"},javaline={882},length={104})
+  @umplesourcefile(line={141},file={"UmpleInternalParser_CodeClass.ump"},javaline={1336},length={104})
    private void analyzeClassToken(Token token, UmpleClass aClass, int analysisStep){
     if (analysisStep != 1)
     {
@@ -1004,7 +1458,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * 
    * @param token The current token which has been flagged to be a comment to analyze, containing its value.
    */
-  @umplesourcefile(line={236},file={"UmpleInternalParser_CodeClass.ump"},javaline={998},length={14})
+  @umplesourcefile(line={255},file={"UmpleInternalParser_CodeClass.ump"},javaline={1452},length={14})
    private void analyzeComment(Token token){
     String theValue = "";
     // Special comment directive to force umpleoutput directives to be added
@@ -1020,7 +1474,1823 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={1024},length={10})
+
+  /**
+   * 
+   * Analyzes a comment to determine if it should be added into the list of currently parsed comments waiting to be added to
+   * a class, attribute, association, method or otherwise.
+   * 
+   * Note that this is for a multiline comment, which essentially means the possibility of multiple inline comments (1 per line)
+   * that will be concatenated together.
+   * 
+   * @param token The current token which has been flagged to be a comment to analyze, containing its value.
+   */
+  @umplesourcefile(line={280},file={"UmpleInternalParser_CodeClass.ump"},javaline={1478},length={18})
+   private void analyzeMultilineComment(Token token){
+    String inlineComments[] = token.getValue().split("\n");
+
+    // Go through the inline comments and add them to the list of comments waiting to be applied
+    String theComment = "";
+    for (int i = 0; i < inlineComments.length; i++) 
+    {
+      theComment = inlineComments[i];
+      if(theComment.startsWith("@outputumplesource")) {
+        outputUmpleSource = true;
+      }
+      else {
+        Comment comment = new Comment(theComment);
+        comment.setIsInline(false);
+        lastComments.add(comment);
+      }
+    }
+  }
+
+
+  /**
+   * Link associations, association variables and extends that were "defined" after their use
+   */
+  @umplesourcefile(line={301},file={"UmpleInternalParser_CodeClass.ump"},javaline={1509},length={14})
+   private void postTokenClassAnalysis(){
+    if (verifyClassesInUse())
+    {
+      checkSingletonAssociations();
+      addUnlinkedAssociationVariables();
+      addUnlinkedAssociations();
+      addUnlinkedExtends();
+      checkDuplicateAssociationNames();
+      checkExtendsForCycles();
+      checkSortedAssociations();
+      checkClassInterfaceAssocations();
+      checkExtendsClass();
+    }
+  }
+
+  @umplesourcefile(line={317},file={"UmpleInternalParser_CodeClass.ump"},javaline={1529},length={4})
+   private void postTokenInterfaceAnalysis(){
+    addUnlinkedInterfaceExtends();
+    checkExtendsForCyclesInterface();
+  }
+
+  @umplesourcefile(line={352},file={"UmpleInternalParser_CodeClass.ump"},javaline={1535},length={16})
+   private void checkExtendsForCyclesInterface(){
+    for(UmpleInterface I : model.getUmpleInterfaces())
+    {
+      HashMap<UmpleInterface, Boolean> vistedMap = new HashMap<UmpleInterface, Boolean>();
+      if(I.getExtendsInterface() != null)
+      {
+        if(recursiveCycleCheckInterface(I.getExtendsInterface(), I, vistedMap).contains(I)){
+          Token t = I.getExtendsToken();
+              if(t.getValue().equals(I.getName()))
+                getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Interface",I.getName()));
+              else
+                getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),"Interface",t.getValue(),I.getName()));
+        }
+      }
+    }
+  }
+
+  @umplesourcefile(line={370},file={"UmpleInternalParser_CodeClass.ump"},javaline={1553},length={17})
+   private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent,  HashMap<UmpleClass, Boolean> map){
+    UmpleClass temp = null;
+
+    if(extend == null)
+      return null;
+
+    if(map.containsKey(extend))
+      return extend;
+
+    map.put(extend, true);
+
+    if(parent.equals(extend.getExtendsClass()))
+      return extend.getExtendsClass();
+
+    temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
+    return temp;
+  }
+
+  @umplesourcefile(line={389},file={"UmpleInternalParser_CodeClass.ump"},javaline={1572},length={17})
+   private void checkExtendsForCycles(){
+    for(UmpleClass C : model.getUmpleClasses())
+    {
+      HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
+      if(C.getExtendsClass() != null)
+      {
+        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) 
+        {
+          Token t = C.getExtendsToken();
+          if(t.getValue().equals(C.getName()))
+            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Class",C.getName()));
+          else
+            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),"Class",t.getValue(),C.getName()));
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Check for the existence of a a parent class
+   */
+  @umplesourcefile(line={409},file={"UmpleInternalParser_CodeClass.ump"},javaline={1591},length={12})
+   private void checkExtendsClass(){
+    for(UmpleClass child : model.getUmpleClasses()) {
+      if(child.getExtendsToken() != null)
+        if (child.getExtendsClass() != null )
+          continue;
+      else{
+        Token t = child.getExtendsToken();
+        getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),
+          child.getName()));      
+      }
+    }
+  }
+
+
+  /**
+   * Analyzes all associations that are part of the given token indicated to be related to an association.
+   * 
+   * @param associationToken The token indicated to be an association or association Class where sub tokens will be analyzed from to further
+   * analyze the individual associations.
+   */
+  @umplesourcefile(line={428},file={"UmpleInternalParser_CodeClass.ump"},javaline={1609},length={23})
+   private void analyzeAllAssociations(Token associationToken){
+    String name = associationToken.getValue("name");
+
+    // Go through every token that is a child of the current token (all associations part of this association).
+    for(Token token : associationToken.getSubTokens()){
+      boolean isAssociationToken = token.is("association");
+
+      //Issue 213/131: [association] elements inside associationClasses generate 2 associations instead of one
+      if (isAssociationToken && associationToken.is("associationClassDefinition")) {
+        for (Token t : token.getSubTokens()) {
+          if (t.is("associationEnd")) {
+            analyzeAssociation(t, "");
+          }
+        }
+      } else if (isAssociationToken || token.is("singleAssociationEnd")){
+        Association association = analyzeAssociation(token, "");
+        if(isAssociationToken && association != null){
+          association.setName(name);
+        }
+      }
+      if (!getParseResult().getWasSuccess()) { return; }
+    }
+  }
+
+
+  /**
+   * Analyzes a class token to populate an Umple class.
+   * 
+   * This is also where the list of currently parsed comments will be added to the Umple class.
+   * 
+   * @param classToken The token which contains the data to be analyzed to populate an Umple class.
+   * 
+   * @return An Umple class populated with data based on the analysis of the class token.
+   */
+  @umplesourcefile(line={462},file={"UmpleInternalParser_CodeClass.ump"},javaline={1641},length={91})
+   private UmpleClass analyzeClass(Token classToken){
+    String className = classToken.getValue("name").split(" ")[classToken.getValue("name").split(" ").length-1];
+    //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
+    if (Token.isValidIdentifier(className, "[A-Za-z]") != true) {
+      setFailedPosition(classToken.getPosition(), 100, className);
+    }
+    else if ( className.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.
+      setFailedPosition(classToken.getPosition(), 101, className);
+    }
+    UmpleClass aClass;
+    //Issue 213: UmpleClass can be an AssociationClass
+    if(classToken.is("associationClassDefinition")){
+        aClass = model.addAssociationClass(classToken.getValue("name"));
+    }else{
+        aClass = model.addUmpleClass(classToken.getValue("name"));
+    }
+    if ( classToken.is("classDefinition") && "external".equals(aClass.getModifier()) )
+      aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
+
+    Position thePosition = classToken.getPosition();
+    Position endPosition = classToken.getEndPosition();
+
+    // Set the original .ump file and line number
+    aClass.addPosition(thePosition);
+    aClass.addEndPosition(endPosition);
+
+    // Add all the comments in the comment list to the Umple class.
+    // But add them before any umplesource special comments
+    int regularCommentCountEnd = 0;
+    for (Comment c : aClass.getComments()) {
+      if(c.getText().startsWith("@umplesource")) break;
+      regularCommentCountEnd++;
+    }
+
+    for (Comment c : lastComments)
+    {
+      aClass.addCommentAt(c,regularCommentCountEnd);
+      regularCommentCountEnd++;
+    }
+    
+    // Add special position comment at the end if @outputumplesource had been 
+    // detected earlier in a comment
+    if(outputUmpleSource == true) {  
+      aClass.addComment(new Comment("@umplesource " + thePosition.getRelativePath(null,"Java")+" "+thePosition.getLineNumber()));
+    }
+
+  // If the "abstract" keyword is parsed, make the Umple class an abstract class.
+    if (classToken.getValue("abstract") != null)
+    {
+      boolean wasSet = aClass.setIsAbstract(true);
+      
+      // Ensure the value was set.
+      if (wasSet == false)
+      {
+        setFailedPosition(classToken.getPosition(), 0, "Unable to make class abstract!");
+      }
+    }
+
+    addExtendsTo(classToken, aClass, unlinkedExtends, unlinkedExtendsTokens);
+    
+    // If the "singleton" keyword is parsed, make the Umple class a singleton.
+    if (classToken.getValue("singleton") != null)
+    {
+      aClass.setIsSingleton(true);
+    }
+    if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName()) && !packageNameUsed){
+      setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
+      aClass.setPackageName(currentPackageName);    
+    }    
+    if("".equals(aClass.getPackageName())){
+      aClass.setPackageName(currentPackageName);
+  }
+  packageNameUsed = true;
+    if (aClass.getIsSingleton()) 
+    {
+      classToken.setName(classToken.getName());  
+    }
+
+    if (classToken.getValue("immutable") != null)
+    {
+      boolean wasSet = aClass.setImmutable();
+      if (!wasSet)
+      {
+        // Future-proofing: currently all paths cause wasSet to be true
+        setFailedPosition(classToken.getPosition(), 14, classToken.getName());
+      }
+    }
+
+    analyzeAllTokens(classToken,aClass);
+    return aClass;
+  }
+
+
+  /**
+   * Returns the number of umple class in extends list (extList)
+   */
+  @umplesourcefile(line={587},file={"UmpleInternalParser_CodeClass.ump"},javaline={1744},length={9})
+   private int numberOfExtendsClass(List<Token> extList){
+    int counter = 0;
+		for(Token t : extList)
+		{	
+			if(isAnUmpleClass(t.getValue("extendsName")))
+				counter++;
+		}
+		return counter;
+  }
+
+
+  /**
+   * This method checks if an umple element with name "name" is an umple class
+   */
+  @umplesourcefile(line={599},file={"UmpleInternalParser_CodeClass.ump"},javaline={1759},length={12})
+   private boolean isAnUmpleClass(String name){
+    for(UmpleClass aClass : model.getUmpleClasses())
+		{
+			if(aClass != null)
+			{
+				String nam = aClass.getName();
+				if(nam.equals(name))
+					return true;
+			}
+		}
+		return false;
+  }
+
+  @umplesourcefile(line={612},file={"UmpleInternalParser_CodeClass.ump"},javaline={1777},length={9})
+   private UmpleClass analyzeExternal(Token externalToken){
+    // Check to see if there is an existing class
+    UmpleClass existingClass = model.getUmpleClass(externalToken.getValue("name"));
+    UmpleClass aClass = analyzeClass(externalToken);
+    // Only set the modifier to external if there is not a class defined with the same name
+    if ( existingClass == null )
+      aClass.setModifier("external");
+    return aClass;
+  }
+
+  @umplesourcefile(line={623},file={"UmpleInternalParser_CodeClass.ump"},javaline={1788},length={5})
+   private UmpleInterface analyzeExternalInterface(Token externalToken){
+    UmpleInterface anInterface = analyzeInterface(externalToken);
+    anInterface.setModifier("external");
+    return anInterface;
+  }
+
+  @umplesourcefile(line={630},file={"UmpleInternalParser_CodeClass.ump"},javaline={1795},length={23})
+   private UmpleInterface analyzeInterface(Token t){
+    String interfaceName = t.getValue("name");   
+    //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
+    if (Token.isValidIdentifier(interfaceName, "[A-Za-z|@]") != true) {
+      setFailedPosition(t.getPosition(), 110, interfaceName);
+    }
+    else if ( interfaceName.matches("[a-z].*") ){ // Warn when interface name doesn't start with a capital letter.
+       setFailedPosition(t.getPosition(), 111, interfaceName);
+    }
+  
+    UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
+    model.addUmpleInterface(newInterface);
+    if(!"".equals(newInterface.getPackageName()) && !currentPackageName.equals(newInterface.getPackageName()) && !packageNameUsed){
+      setFailedPosition(t.getPosition(), 30, newInterface.getName(), currentPackageName);
+      newInterface.setPackageName(currentPackageName);    
+    }    
+    if("".equals(newInterface.getPackageName())){
+      newInterface.setPackageName(currentPackageName);
+  }
+  packageNameUsed = true;
+    analyzeInterface(t,newInterface);
+    return newInterface;
+  }
+
+  @umplesourcefile(line={655},file={"UmpleInternalParser_CodeClass.ump"},javaline={1820},length={26})
+   private void analyzeInterface(Token interfaceToken, UmpleInterface aInterface){
+    for(Token token : interfaceToken.getSubTokens())
+    {
+      if (token.is("depend"))
+      {
+        Depend d = new Depend(token.getValue());
+        aInterface.addDepend(d);
+      }
+      if (token.is("interfaceMemberDeclaration"))
+      {
+        analyzeInterfaceMembers(token, aInterface);
+      }
+      else if (token.is("elementPosition"))
+      {
+        aInterface.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
+      }
+      else if (token.is("displayColor"))
+      {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
+        String theColor = token.getValue("colorValue");
+        if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
+        if(!theColor.startsWith("\"")) theColor= "\""+theColor;
+        if(!theColor.endsWith("\"")) theColor= theColor+"\"";         
+        aInterface.setDisplayColor(theColor);
+      }
+    }
+  }
+
+  @umplesourcefile(line={683},file={"UmpleInternalParser_CodeClass.ump"},javaline={1848},length={46})
+   private void addUnlinkedInterfaceExtends(){
+    for (UmpleClassifier c : unlinkedInterfaceExtends.keySet())
+    {
+      UmpleInterface child = null; //unlinkedInterfaceExtends guaranteed to contain only UmpleInterfaces
+      if (c instanceof UmpleInterface){
+        child = (UmpleInterface) c;
+      }
+      List<String> extendsNames = unlinkedInterfaceExtends.get(child);
+      List<Token>  extendsToken = unlinkedExtendsTokensInterface.get(child);
+      
+
+      if (extendsNames == null)
+      {
+        continue;
+      }
+      
+
+      for (int i=0; i < extendsNames.size();i++)
+      {
+        String extendName= extendsNames.get(i);
+        UmpleInterface uInterface=  model.getUmpleInterface(extendName);
+        boolean wasSet = child.addExtendsInterface(uInterface);
+        
+        if (!wasSet)
+        {
+          Position pos;
+          try
+          {
+            pos = extendsToken.get(i).getPosition();
+          }
+          catch(Exception e)
+          {
+            pos = new Position("",0,0,0);
+          }
+          setFailedPosition(pos, 16, child.getName(), uInterface.getName());
+          return;
+        }
+        try
+        {
+          child.setExtendsToken(extendsToken.get(i));
+        }
+        
+        catch(Exception e){}
+      }
+    }
+  }
+
+  @umplesourcefile(line={731},file={"UmpleInternalParser_CodeClass.ump"},javaline={1896},length={18})
+   private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface){
+    for(Token childToken : interfaceMemberToken.getSubTokens())
+    {
+      addExtendsTo(interfaceMemberToken, aInterface, unlinkedInterfaceExtends, unlinkedExtendsTokensInterface);
+      if(childToken.is("abstractMethodDeclaration"))
+      {
+        analyzeMethod(childToken, aInterface);   
+      }  
+      else if (childToken.is("constantDeclaration"))
+      {
+        analyzeConstant(childToken, aInterface);    
+      }
+      else if (childToken.is("extraCode"))
+      {
+        aInterface.appendExtraCode(childToken.getValue("extraCode"));
+      }
+    }
+  }
+
+  @umplesourcefile(line={751},file={"UmpleInternalParser_CodeClass.ump"},javaline={1916},length={19})
+   private void analyzeAssociationClass(Token classToken){
+    //test if Association class has at least 1 association or more than one singleEndAssociation
+    List<Token> subtokens = classToken.getSubTokens();
+    int singleAssocNumber = 0;
+    int assocNumber = 0;
+    for(Token t : subtokens){
+        if(t.is("singleAssociationEnd")){
+            singleAssocNumber++;
+        }else if (t.is("association")){
+            assocNumber++;
+        }
+    }
+    if(singleAssocNumber == 1 || (assocNumber == 0 && singleAssocNumber == 0)){
+        setFailedPosition(classToken.getPosition(), 8, classToken.getValue("name"));
+        return;
+    }
+    analyzeClass(classToken);
+    analyzeAllAssociations(classToken);
+  }
+
+  @umplesourcefile(line={772},file={"UmpleInternalParser_CodeClass.ump"},javaline={1937},length={17})
+   private boolean verifyClassesInUse(){
+    for(Map.Entry<Position, String> e : positionToClassNameReference.entrySet())
+    {
+      boolean isAClass = model.getUmpleClass(e.getValue()) != null;
+      boolean isAInterface = model.getUmpleInterface(e.getValue()) != null;
+
+      if (!isAClass && !isAInterface) //item referenced not a class or interface
+      {
+        UmpleClass aClass = model.addUmpleClass(e.getValue());
+        aClass.setPackageName(model.getDefaultNamespace());
+        setFailedPosition(e.getKey(), 5, e.getValue());
+        return false;
+      }
+    }
+    
+    return true;
+  }
+
+  @umplesourcefile(line={791},file={"UmpleInternalParser_CodeClass.ump"},javaline={1956},length={13})
+   private boolean associationIsBetweenClassAndInterface(Association a){
+    AssociationEnd myEnd = a.getEnd(0);
+       AssociationEnd yourEnd = a.getEnd(1);
+       
+       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+       UmpleInterface yourClass = model.getUmpleInterface(yourEnd.getClassName());
+       
+       if (myClass != null && yourClass != null ){ //association is between class and interface
+         return true;
+       }
+       
+       return false;
+  }
+
+  @umplesourcefile(line={808},file={"UmpleInternalParser_CodeClass.ump"},javaline={1971},length={38})
+   private void addUnlinkedAssociationVariables(){
+    for (AssociationVariable av : unlinkedAssociationVariables)
+    {
+       
+      UmpleClass aClass = model.getUmpleClass(av.getType());
+      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());   
+      
+      if (aClass == null || bClass == null){ //Association is between Class and Interface
+        continue;
+      }   
+
+      Association assoc = bClass.getAssociation(bClass.indexOfAssociationVariable(av));
+
+      boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
+      if (!added)
+      {
+        if ((!aClass.isImmutable() && !av.getRelatedAssociation().getIsNavigable()) || (!bClass.isImmutable() && !av.getIsNavigable())) 
+        { 
+          setFailedPosition(assoc.getTokenPosition(),13);
+        }
+        else { setFailedPosition(assoc.getTokenPosition(),18); }
+        return;
+      }
+
+      aClass.addAssociation(assoc);
+
+      if (av.getIsNavigable())
+      {
+        bClass.addReferencedPackage(aClass.getPackageName());
+      }
+
+      if (av.getRelatedAssociation().getIsNavigable())
+      {
+        aClass.addReferencedPackage(bClass.getPackageName());
+      }
+
+    }
+  }
+
+  @umplesourcefile(line={848},file={"UmpleInternalParser_CodeClass.ump"},javaline={2011},length={3})
+   private boolean isUmpleClass(String elementName){
+    return (model.getUmpleInterface(elementName) != null) ? false: true;
+  }
+
+  @umplesourcefile(line={853},file={"UmpleInternalParser_CodeClass.ump"},javaline={2016},length={50})
+   private void addUnlinkedExtends(){
+    for (UmpleClassifier c : unlinkedExtends.keySet())
+    {
+      UmpleClass child = null; // unlinkedExtends guaranteed to contain only UmpleClasses
+      if (c instanceof UmpleClass){
+        child = (UmpleClass) c;
+      }  
+    
+      List<String> extendsNames = unlinkedExtends.get(child);    
+      List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
+
+      if (extendsNames == null)
+      {
+        continue;
+      }
+
+      for (int i=0; i < extendsNames.size();i++){
+        String extendName= extendsNames.get(i);
+        if (isUmpleClass(extendName))
+        {
+          UmpleClass parent = model.getUmpleClass(extendName);     
+          boolean wasSet = child.setExtendsClass(parent);
+          if (!wasSet)
+          {
+            Position pos;
+            try
+            {
+              pos = extendsToken.get(i).getPosition();
+            }
+            catch(Exception e)
+            {
+              pos = new Position("",0,0,0);
+            }
+            setFailedPosition(pos, 16, child.getName(), parent.getName());
+            return;
+          }
+          try
+          {
+            child.setExtendsToken(extendsToken.get(i));
+          }
+          catch(Exception e){}
+        }
+        else {
+          UmpleInterface uInterface=  model.getUmpleInterface(extendName);
+          child.addParentInterface(uInterface);
+          addImplementedMethodsFromInterface(uInterface, child);
+        }
+      }
+    }
+  }
+
+  @umplesourcefile(line={905},file={"UmpleInternalParser_CodeClass.ump"},javaline={2068},length={18})
+   private void addImplementedMethodsFromInterface(UmpleInterface parentInterface, UmpleClass uClass){
+    //GET AND SET METHODS CHECK?
+    if (parentInterface.hasMethods())
+    {
+      for (Method aMethod : parentInterface.getMethods())
+      {
+        boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
+        if (!(uClass.hasMethod(aMethod)) && shouldAddMethod)
+        {
+          if("".equals(aMethod.getMethodBody().getExtraCode("")))
+          {
+            aMethod.setIsImplemented(true);
+          }
+          uClass.addMethod(aMethod);
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Used to determine if a method is a contructor or a getter/setter.
+   * 
+   * @param uClass The Umple class for which the method is contained.
+   * @param aMethod The method which is contained within the Umple class.
+   * 
+   * @return True if the method is a constructor, getter/setter, false otherwise.
+   */
+  @umplesourcefile(line={933},file={"UmpleInternalParser_CodeClass.ump"},javaline={2088},length={33})
+   private boolean verifyIfMethodIsConstructorOrGetSet(UmpleClass uClass, Method aMethod){
+    String methodName = aMethod.getName();
+
+    // Have to check for short method names.
+    if (methodName.length() >= 3)
+    {
+      //1. Verify if method to be added is a setter or a getter
+      String accessorName = methodName.substring(0,3);
+      if ((accessorName.equals("get") && aMethod.numberOfMethodParameters()==0) || (accessorName.equals("set")&& aMethod.numberOfMethodParameters()==1))
+      {
+        String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
+        Attribute attr = uClass.getAttribute(possibleAttributeName);
+        if (attr != null)
+        {
+          return false;
+        }
+      }
+      //2. Verify if method to be added is a constructor
+      if (aMethod.getType().equals("public"))
+      {
+        uClass.appendExtraCode(aMethod.toString());
+        return false;
+      }  
+      //3. Verify if method from interface is already part of the Class extracode
+      String match = "public " + aMethod.getType() + " " + aMethod.getName();    
+      if (uClass.getExtraCode().contains(match))
+      {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  @umplesourcefile(line={968},file={"UmpleInternalParser_CodeClass.ump"},javaline={2132},length={110})
+   private void checkDuplicateAssociationNames(){
+    for(UmpleClass C : model.getUmpleClasses())
+    {
+      // Create the list of attribute names (for issue 272)
+      List<String> existingAttributeNames = new ArrayList<String>();
+      for (Attribute attr : C.getAttributes())
+      {
+              existingAttributeNames.add(attr.getName());
+      }
+      
+      Boolean roleMatchesClassName, hasMultipleAssocToSameClass;
+      List<String> classesWithAssociationsToCurrClass = new ArrayList<String>();
+      List<String> roleNameSameAsClassName = new ArrayList<String>();
+      List<String> existingNames = new ArrayList<String>();
+      List<Association> visitedAssociations = new ArrayList<Association>();
+      for(Association assoc : C.getAssociations())
+      {  
+       roleMatchesClassName = false;
+       hasMultipleAssocToSameClass = false;
+       
+        if (visitedAssociations.contains(assoc))
+        {
+          continue;
+        }
+        
+        AssociationEnd firstEnd = assoc.getEnd(0);
+        AssociationEnd secondEnd = assoc.getEnd(1);  
+        
+        Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
+        Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
+        Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
+        
+        //issue 288: firstEnd of association does not indicate current (this) class being analyzed.
+        //If association is NOT reflexive, must check the differing class.  Check if role name
+        //matches class name, but only if it is a user entered role name.  Current class must
+        //also have multiple associations to the same class to cause java compile errors.  
+        if(!associationIsReflexive && C.numberOfAssociations() > 1)
+        { 
+          //check the differing class
+          if(checkFirstEnd)
+          {
+            if(roleNameSameAsClassName.contains(firstEnd.getClassName().toLowerCase()))
+            {
+              hasMultipleAssocToSameClass = true;   //flag error 19
+            }
+            //is a user-defined role name and rolename matches class name
+            else if(firstEnd.getRoleName().toLowerCase().equals(firstEnd.getClassName().toLowerCase()) && !firstEnd.getIsDefaultRoleName())
+            {    
+              roleNameSameAsClassName.add(firstEnd.getRoleName().toLowerCase());
+            }
+            
+            classesWithAssociationsToCurrClass.add(firstEnd.getClassName());
+          }
+          //check the differing class
+          if(checkSecondEnd)
+          {
+            if(roleNameSameAsClassName.contains(secondEnd.getClassName().toLowerCase()))
+            {
+              hasMultipleAssocToSameClass = true;  //flag error 19
+            }
+            //is a user-defined role name and rolename matches class name
+            else if(secondEnd.getRoleName().toLowerCase().equals(secondEnd.getClassName().toLowerCase()) && !secondEnd.getIsDefaultRoleName())
+            {    
+              roleNameSameAsClassName.add(secondEnd.getRoleName().toLowerCase());
+            }
+            
+            classesWithAssociationsToCurrClass.add(secondEnd.getClassName());          
+          }
+        }
+
+        // check names on other-class end of associations to other classes
+        if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
+        { 
+          if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+          }
+          else if (existingAttributeNames.contains(firstEnd.getRoleName()))
+          {  // Check if the association name is the same as an attribute name
+             getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
+          }
+          else
+          {
+            existingNames.add(firstEnd.getRoleName());
+          }
+        }
+        if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
+        {
+          if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+          }
+          else if (existingAttributeNames.contains(secondEnd.getRoleName()))
+          {  // Check if the association name is the same as an attribute name
+             getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
+          }
+          else
+          {
+            existingNames.add(secondEnd.getRoleName());
+          }
+        }
+        
+        if (associationIsReflexive)
+        { 
+          // The UmpleClass is only expected to have duplicate references to reflexive associations
+          visitedAssociations.add(assoc);
+        }
+      }
+    }
+  }
+
+  @umplesourcefile(line={1080},file={"UmpleInternalParser_CodeClass.ump"},javaline={2244},length={36})
+   private void checkSingletonAssociations(){
+    for (Association association : model.getAssociations()) 
+    {  
+      if (associationIsBetweenClassAndInterface (association)){continue;}  
+      
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+
+      if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
+      {
+        yourEnd.getMultiplicity().setRange("0", "1");
+        yourEnd.getMultiplicity().setBound(null);
+        setFailedPosition(association.getTokenPosition(), 2, association.getName());  
+      }
+
+      if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
+      {
+        myEnd.getMultiplicity().setRange("0", "1");
+        myEnd.getMultiplicity().setBound(null);
+        setFailedPosition(association.getTokenPosition(), 2, association.getName());
+      }
+
+      if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) 
+      {
+        setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
+      }
+
+      if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1)) 
+      {
+        setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
+      }
+    }
+  }
+
+  @umplesourcefile(line={1118},file={"UmpleInternalParser_CodeClass.ump"},javaline={2282},length={59})
+   private void addUnlinkedAssociations(){
+    for (Association association : unlinkedAssociations)
+    {         
+      if (associationIsBetweenClassAndInterface (association)){continue;}  
+      
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+      
+      AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
+      AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
+      myAs.setRelatedAssociation(yourAs);
+      
+      if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
+      if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
+      
+      if (association.isImmutable())
+      {
+        boolean set = myAs.setImmutable();
+        if (set) { yourAs.setImmutable(); }
+        else
+        {
+          setFailedPosition(association.getTokenPosition(),17);
+        }
+      }
+      
+      boolean added = myClass.addAssociationVariable(yourAs);
+      if (!added)
+      {
+        if (myClass.isImmutable()) { setFailedPosition(association.getTokenPosition(),17); }
+        else { setFailedPosition(association.getTokenPosition(),13); }
+        return;
+      }
+      myClass.addAssociation(association);
+
+      added = yourClass.addAssociationVariable(myAs);
+      if (!added)
+      {
+        if (myClass == yourClass) { setFailedPosition(association.getTokenPosition(),18); }
+        else { setFailedPosition(association.getTokenPosition(),13); }
+        return;
+      }
+      
+      yourClass.addAssociation(association);
+
+      if (myAs.getIsNavigable())
+      {
+        yourClass.addReferencedPackage(myClass.getPackageName());
+      }
+
+      if (yourAs.getIsNavigable())
+      {
+        myClass.addReferencedPackage(yourClass.getPackageName());
+      }      
+
+    }
+  }
+
+  @umplesourcefile(line={1179},file={"UmpleInternalParser_CodeClass.ump"},javaline={2343},length={94})
+   private void checkSortedAssociations(){
+    for (Association association : model.getAssociations()) 
+    {
+      if (associationIsBetweenClassAndInterface (association)){continue;}
+      AssociationEnd myEnd = association.getEnd(0);
+      AssociationEnd yourEnd = association.getEnd(1);
+
+      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
+      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+
+      String value;
+
+      if(!"".equals(yourEnd.getPriority())){
+        Attribute temp = yourClass.getAttribute(yourEnd.getPriority());
+        if(temp != null)
+        {
+          if(Pattern.matches("Integer|Short|Long|Float|Double|String", temp.getType())) 
+          {
+            String attributeType = yourClass.getName();
+            String priorityType = temp.getType();
+            String sortedName = yourEnd.getPriority().substring(0,1).toUpperCase() + yourEnd.getPriority().substring(1);
+            String php_codeblock = 
+                "\n      function($x, $y)\n"+
+                    "      {\n"+
+                    "        return $x->get"+ sortedName +"() -\n"+ 
+                    "               $y->get"+ sortedName +"();\n"+
+                    "      }";  
+            String java_codeblock = 
+                "\n      new Comparator<" + attributeType +">(){\n"+
+                    "        @Override\n"+
+                    "        public int compare("+attributeType+" arg0, "+attributeType+" arg1)\n"+ 
+                    "        {\n"+
+                    "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
+                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
+                    "        }\n"+
+                    "      }";    
+
+            Attribute priority = new Attribute(yourEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, yourClass);
+            CodeBlock cb = new CodeBlock();
+            cb.setCode("Php", php_codeblock);
+            cb.setCode("Java", java_codeblock);
+            cb.setCode("Ruby", "\"\"");
+            priority.setCodeblock(cb); 
+            myClass.addAttribute(priority);
+
+          } 
+          else
+            setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());
+        }
+        else
+          setFailedPosition(association.getTokenPosition(), 25, yourClass.getName(), yourEnd.getPriority());
+      }
+
+      if(!"".equals(myEnd.getPriority())){
+        Attribute temp = myClass.getAttribute(myEnd.getPriority());
+        if(temp != null)
+        {
+          if(Pattern.matches("Integer|Short|Long|Float|Double|String", temp.getType()))
+          {
+            String attributeType = myClass.getName() ;
+            String priorityType = temp.getType();
+            String sortedName = myEnd.getPriority().substring(0,1).toUpperCase() + myEnd.getPriority().substring(1);
+            String php_codeblock = 
+                "\n      function($x, $y)\n"+
+                    "      {\n"+
+                    "        return $x->get"+ sortedName +"() -\n"+ 
+                    "               $y->get"+ sortedName +"();\n"+
+                    "      }";  
+            String java_codeblock = 
+                "\n      new Comparator<" + attributeType +">(){\n"+
+                    "        @Override\n"+
+                    "        public int compare("+attributeType+" arg0, "+attributeType +" arg1)\n"+ 
+                    "        {\n"+
+                    "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
+                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
+                    "        }\n"+
+                    "      }";    
+
+            Attribute priority = new Attribute(myEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, myClass);
+            CodeBlock cb = new CodeBlock();
+            cb.setCode("Php", php_codeblock);
+            cb.setCode("Java", java_codeblock);
+            cb.setCode("Ruby", "\"\"");
+            priority.setCodeblock(cb); 
+            yourClass.addAttribute(priority);
+          }  
+          else
+            setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());
+        }
+        else
+          setFailedPosition(association.getTokenPosition(), 25, myClass.getName(), myEnd.getPriority());
+      }
+    }
+  }
+
+  @umplesourcefile(line={1275},file={"UmpleInternalParser_CodeClass.ump"},javaline={2439},length={10})
+   private void checkClassInterfaceAssocations(){
+    for (Association a : model.getAssociations()){
+      if (associationIsBetweenClassAndInterface(a)){
+        boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); // Assocation has "->" arrow
+        if (!hasCorrectArrow){
+          setFailedPosition(a.getTokenPosition(), 20, a.getEnd(0).getClassName());
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Analyzes a token flagged to be a method in which case the data that makes up the method will be populated into a
+   * method instance and added to an Umple element (which could be an Umple class).
+   * 
+   * @param method The token flagged to be the method.
+   * @param uElement The Umple element for which the method will be added.
+   */
+  @umplesourcefile(line={1293},file={"UmpleInternalParser_CodeClass.ump"},javaline={2451},length={95})
+   private void analyzeMethod(Token method, UmpleElement uElement){
+    String modifier = "";
+    Method aMethod = new Method("","","",false);
+
+  // Set method position
+  aMethod.setPosition(method.getPosition());
+  aMethod.setEndPosition(method.getEndPosition());
+  
+    // Add comments above the method to the method.
+    for (Comment c : lastComments)
+    {
+      aMethod.addComment(c);
+    }
+
+    // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
+    List<String> langs = new ArrayList<String>();
+    CodeBlock cb = new CodeBlock("");
+    boolean canClear = false;
+    for(Token token : method.getSubTokens())
+    {
+      if (token.is("modifier"))
+      {
+        modifier += " " + (token.getValue());
+        aMethod.setModifier(modifier);
+      }
+      else if(token.is("static"))
+      {
+        modifier += " static ";
+        aMethod.setModifier(modifier);
+      }
+      else if (token.is("type"))
+      {
+        aMethod.setType(token.getValue());
+      }
+      else if (token.is("list"))
+      {
+        aMethod.setType(aMethod.getType()+"[]");
+      }
+      else if (token.is("methodDeclarator"))
+      {
+        analyzeMethodDeclarator(token, aMethod);
+      }
+      else if (token.is("code"))
+      {        
+        if(langs.isEmpty())
+        {
+          cb.setCode(token.getValue());
+        }  
+        else
+        {
+          for(String str: langs)
+          {
+            cb.setCode(str,(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+token.getValue());
+          }
+        }
+        canClear = true;
+      }
+      else if (token.is("codeLang"))
+      {
+        if(canClear)
+        {
+          langs.clear();
+          canClear = false;
+        }
+        langs.add(token.getValue());
+      }
+      else if (token.is("precondition")){ 
+        if (uElement instanceof UmpleClass){
+          analyzePrecondition(token, (UmpleClass) uElement, aMethod);
+        }  
+      }
+    }
+    MethodBody meth = new MethodBody(cb);
+    aMethod.setMethodBody(meth);
+
+    // Add method to Class or Interface
+    if (uElement instanceof UmpleClass)
+    {
+      UmpleClass uClass = (UmpleClass) uElement;
+      
+      boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
+      if (!uClass.hasMethod(aMethod) && shouldAddMethod )
+      {
+        uClass.addMethod(aMethod); 
+      }
+    }
+    else if (uElement instanceof UmpleInterface)
+    {
+      UmpleInterface uInterface = (UmpleInterface) uElement;
+      if (!uInterface.hasMethod(aMethod))
+      {
+        uInterface.addMethod(aMethod); 
+      }
+    }
+  }
+
+
+  /**
+   * Analyzes a method header, from a token flagged to be one, to populate a method instance for things such as the
+   * method name, type and parameters.
+   * 
+   * @param token The token flagged to be a method header.
+   * @param aMethod The method to be populated from the analysis of the token.
+   */
+  @umplesourcefile(line={1397},file={"UmpleInternalParser_CodeClass.ump"},javaline={2556},length={34})
+   private void analyzeMethodDeclarator(Token token, Method aMethod){
+    // Go through all sub tokens of the method token to obtain data such as the methods name, parameters etc and add them to the method.
+    for(Token methodToken : token.getSubTokens())
+    {
+      if (methodToken.is("methodName"))
+      {
+        aMethod.setName(methodToken.getValue());
+      }
+      if (methodToken.is("parameterList"))
+      {
+        for(Token parameterToken : methodToken.getSubTokens())
+        {
+          boolean isList = false;
+          if (parameterToken.is("parameter"))
+          {
+            String paramType="";
+            if (parameterToken.getSubToken("type") != null)
+            {
+              paramType = parameterToken.getSubToken("type").getValue();
+            }
+            if (parameterToken.getSubToken("list") != null)
+            {
+              isList = parameterToken.getSubToken("list").getValue() != null;        
+            }
+
+            String paramName = parameterToken.getSubToken("name").getValue();
+            MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
+            aParameter.setIsList(isList);
+            aMethod.addMethodParameter(aParameter);
+          }
+        }
+      }
+    }
+  }
+
+
+  /**
+   * Analyzes a constant, from a token flagged to be one, to add a constant instance to an Umple element.
+   * 
+   * @param constantToken The token flagged to be a constant.
+   * @param uElement The Umple element for which a new constant will be added (populated from analysis of the token).
+   */
+  @umplesourcefile(line={1439},file={"UmpleInternalParser_CodeClass.ump"},javaline={2600},length={37})
+   private void analyzeConstant(Token constantToken, UmpleElement uElement){
+    Constant aConstant = new Constant("","","","");
+    String modifier = "";
+
+    // Create the Constant Object
+    for(Token token : constantToken.getSubTokens())
+    {
+      if (token.is("modifier"))
+      {
+        modifier += " " + (token.getSubToken(0).getName());
+        aConstant.setModifier(modifier);
+      }
+      else if (token.is("name"))
+      {
+        aConstant.setName(token.getValue());
+      }
+      else  if (token.is("type"))
+      {
+        aConstant.setType(token.getValue());
+      }
+      else  if (token.is("value"))
+      {
+        aConstant.setValue(token.getValue());
+      }
+    }  
+    // Add constant to Class or Interface
+    if (uElement instanceof UmpleClass)
+    {
+      UmpleClass uClass = (UmpleClass) uElement;
+      uClass.addConstant(aConstant);
+    }
+    else if (uElement instanceof UmpleInterface)
+    {
+      UmpleInterface uInterface = (UmpleInterface) uElement;
+      uInterface.addConstant(aConstant);
+    }
+  }
+
+  @umplesourcefile(line={1478},file={"UmpleInternalParser_CodeClass.ump"},javaline={2646},length={8})
+   private void analyzeInjectionCode(Token injectToken, UmpleClass aClass){
+    String type = injectToken.is("beforeCode") ? "before" : "after";    
+    CodeBlock cb = new CodeBlock();
+    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),"",aClass);
+    makeCodeInject(injectToken,injection,cb,aClass);
+    injection.setSnippet(cb);
+    aClass.addCodeInjection(injection);
+  }
+
+  @umplesourcefile(line={1488},file={"UmpleInternalParser_CodeClass.ump"},javaline={2656},length={30})
+   private void makeCodeInject(Token injectToken, CodeInjection injection, CodeBlock cb, UmpleClass aClass){
+    List<String> langs = new ArrayList<String>();
+    for(Token sub: injectToken.getSubTokens())
+    {
+      if(sub.is("codeLang"))
+      {
+        langs.add(sub.getValue());
+      }
+      if(sub.is("code"))
+      {          
+        if(langs.size()==0)
+        {
+          cb.setCode(sub.getValue());
+        }
+        else
+        {
+          for(String lang:langs)
+            {
+            cb.setCode(lang,sub.getValue());
+            }
+        }
+        langs.clear();      
+      }
+      if(sub.is("codeInject"))
+      {
+        makeCodeInject(sub,injection, cb , aClass);
+      }
+    }    
+    injection.setPosition(injectToken.getPosition());
+  }
+
+  @umplesourcefile(line={1521},file={"UmpleInternalParser_CodeClass.ump"},javaline={2688},length={84})
+   private void analyzeKey(Token keyToken, UmpleClass aClass){
+    if (aClass.getKey().isProvided())
+    {
+      setFailedPosition(keyToken.getPosition(), 7, keyToken.getParentToken().getValue("name"));
+    }
+
+    if (keyToken.is("defaultKey"))
+    {
+      aClass.getKey().setIsDefault(true);
+      return;
+    }
+
+    List<String> tokensAdded = new ArrayList<String>();
+    Boolean tokenMatch;
+    for(Token token : keyToken.getSubTokens())
+    {
+      tokenMatch = false;
+      
+      if (!token.is("keyId"))
+      {
+        continue;
+      }
+ 
+      //Checks for duplicate attributes/associations/stateMachines
+      if(tokensAdded.contains(token.getValue()))
+      {
+        setFailedPosition(keyToken.getPosition(), 26, token.getValue(), keyToken.getParentToken().getValue("name"));
+      }
+   
+    if(!aClass.hasAttributes() && !aClass.hasAssociations() && !aClass.hasStateMachines())
+      {
+        setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+      }
+      else{
+        if(aClass.hasAttributes())
+        {
+          for(Attribute aAttribute : aClass.getAttributes())
+          {
+            if(aAttribute.getName().equals(token.getValue()))
+            {
+              tokenMatch = true;
+            }
+        }
+        }
+      
+        if(aClass.hasAssociations())
+      {
+        AssociationEnd firstEnd, secondEnd;
+        String firstEndName, secondEndName;
+  
+        for(Association aAssociation : aClass.getAssociations())
+          { 
+            firstEnd = aAssociation.getEnd(0);
+            secondEnd = aAssociation.getEnd(1);
+            firstEndName =  firstEnd.getRoleName();
+            secondEndName = secondEnd.getRoleName();        
+                      
+            if(firstEndName.equals(token.getValue()) || secondEndName.equals(token.getValue()))
+            {
+              tokenMatch = true;
+            }
+        }
+      }  
+
+        if(aClass.hasStateMachines())  
+        {
+        for(StateMachine aStateMachine : aClass.getStateMachines())
+        {
+            if(aStateMachine.getName().equals(token.getValue()))
+            {
+              tokenMatch = true;
+            }      
+        }
+      }      
+
+      if(!tokenMatch)
+      {
+        setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+      }
+    }
+      aClass.getKey().addMember(token.getValue());
+      tokensAdded.add(token.getValue()); 
+    }
+  }
+
+  @umplesourcefile(line={1607},file={"UmpleInternalParser_CodeClass.ump"},javaline={2774},length={22})
+   private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleClass aClass){
+    String myName = symmetricReflexiveAssociationToken.getValue("roleName");
+    String myType = aClass.getName();
+    String myModifier = "symmetricreflexive";
+    String myBound = symmetricReflexiveAssociationToken.getValue("bound");
+    String myLowerBound = symmetricReflexiveAssociationToken.getValue("lowerBound");
+    String myUpperBound = symmetricReflexiveAssociationToken.getValue("upperBound");
+    Multiplicity myMult = new Multiplicity();
+    myMult.setBound(myBound);
+    myMult.setRange(myLowerBound,myUpperBound);
+
+    AssociationVariable myAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
+    AssociationVariable yourAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
+
+    myAs.setRelatedAssociation(yourAs);
+    aClass.addAssociationVariable(yourAs);
+    
+    AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
+    AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
+    Association assoc = new Association(false, true, leftEnd, rightEnd);
+    aClass.addAssociation(assoc);
+  }
+
+  @umplesourcefile(line={1631},file={"UmpleInternalParser_CodeClass.ump"},javaline={2798},length={12})
+   private Association createAssociation(String navigation, AssociationEnd firstEnd, AssociationEnd secondEnd){
+    Association association;
+    if(navigation != null){
+      boolean isNavigable = "--".equals(navigation);
+      boolean isFirstNavigable = "<-".equals(navigation) || isNavigable;
+      boolean isSecondNavigable = "->".equals(navigation) || isNavigable;
+      association = new Association(isFirstNavigable,isSecondNavigable,firstEnd,secondEnd);
+    }else{
+      association = new Association(true, true, firstEnd, secondEnd);
+    }
+    return association;
+  }
+
+  @umplesourcefile(line={1645},file={"UmpleInternalParser_CodeClass.ump"},javaline={2812},length={98})
+   private Association analyzeAssociation(Token associationToken, String defaultMyType){
+    Token parentToken = associationToken.getParentToken();
+    Token gParentToken = parentToken.getParentToken();
+    boolean isAssociationClass = parentToken.is("associationClassDefinition") || gParentToken.is("associationClassDefinition");
+    boolean isSingleAssociationEnd = associationToken.is("singleAssociationEnd");
+    boolean isInlineAssociation = associationToken.is("inlineAssociation");
+    Token myEndToken = null;
+    Token yourEndToken = null;
+    String navigation = null;
+    String associationModifier = null;
+    String name = null;
+
+    //Issue 213/131: associations can be inside AssociationClasses, but
+    //inline associations inside associationClasses are treated just like in regular classes
+    if(isAssociationClass && !isInlineAssociation){
+        if(isSingleAssociationEnd){
+            myEndToken = parentToken;
+            associationModifier = associationToken.getValue("modifier");
+            navigation = null;
+            name = parentToken.getValue("name");
+
+        }else{ //association inside associationClass
+            myEndToken = parentToken.getParentToken();
+            associationModifier = parentToken.getValue("modifier");
+            navigation = parentToken.getValue("arrow");
+            name = gParentToken.getValue("name");
+        }
+        yourEndToken = associationToken;
+    }else{//inline association or external "association{..}" block
+        name = parentToken.getValue("name");
+        int myMultOffset = 0;
+        int yourMultOffset = 2;
+        Token associationModifierToken = associationToken.getSubToken("modifier");
+        if (associationModifierToken != null){
+          associationModifier = associationModifierToken.getValue();
+          myMultOffset++;
+          yourMultOffset++;
+        }
+        myEndToken = associationToken.getSubToken(myMultOffset);
+        navigation = associationToken.getValue("arrow");
+        yourEndToken = associationToken.getSubToken(yourMultOffset);
+    }
+    AssociationEnd firstEnd = createPreliminaryAssociationEnd(myEndToken, defaultMyType);
+    AssociationEnd secondEnd = createPreliminaryAssociationEnd(yourEndToken, defaultMyType);
+    if(firstEnd == null || secondEnd == null){
+        setFailedPosition(associationToken.getPosition(), 8, name);
+        return null;
+    }
+    String myType = firstEnd.getClassName();
+    String myRoleName = firstEnd.getRoleName();
+    String yourType = secondEnd.getClassName();
+    String yourRoleName = secondEnd.getRoleName();
+    Multiplicity myMult = firstEnd.getMultiplicity();
+    Multiplicity yourMult = secondEnd.getMultiplicity();
+
+    if("".equals(firstEnd.getClassName())){
+        firstEnd.setClassName(defaultMyType);
+    }
+    firstEnd.setReferenceToClassName(yourType);
+    secondEnd.setReferenceToClassName(myType);
+    //Association Classes have Mutiplicities switched between ends: an association
+    //between A and B in associationClass C becomes A -- C and B -- C
+    if(isAssociationClass){
+        firstEnd.setMultiplicity(secondEnd.getMultiplicity());
+        secondEnd.setMultiplicity(myMult);
+    }
+    updateAssociationEnds(firstEnd,secondEnd);
+
+    // Trap cases where both ends are the same class (reflexive) and 
+    // there is no or same role name and same multiplicity. Fixes issue 295
+    if(myType.equals(yourType) && ((myRoleName == null && yourRoleName == null) || (myRoleName != null && yourRoleName != null && myRoleName.equals(yourRoleName))) && myMult.toString().equals(yourMult.toString())) {
+      setFailedPosition(associationToken.getPosition(), 21, myType);
+      return null;
+    }
+  
+    if (firstEnd.getRoleName().equals(secondEnd.getRoleName()) && firstEnd.getClassName().equals(secondEnd.getClassName())){
+      setFailedPosition(associationToken.getPosition(), 32, firstEnd.getRoleName());
+      return null;
+    }  
+  
+    Association association = createAssociation(navigation,firstEnd,secondEnd);
+    
+    if (associationModifier != null && "immutable".equals(associationModifier)){
+      association.setImmutable();
+    }
+    association.setTokenPosition(associationToken.getPosition());
+    association.setTokenEndPosition(associationToken.getEndPosition());
+    
+    if (!association.isValid()){
+      Token atFaultToken = association.whoIsInvalid() == 0 ? myEndToken : yourEndToken;
+      String invalidBound = atFaultToken.getValue("bound") == null ? invalidBound = atFaultToken.getValue("lowerBound") + ".." + atFaultToken.getValue("upperBound") : atFaultToken.getValue("bound");
+      setFailedPosition(atFaultToken.getPosition(), 9, invalidBound);
+      return null;
+    }
+    model.addAssociation(association);
+    if(!isInlineAssociation){ unlinkedAssociations.add(association); }
+    return association;
+  }
+
+
+  /**
+   * Given a [[associationEnd]], [[singleAssociationEnd]], [[inlineAssociationEnd]] or 
+   * a [[associationClassDefinition]] token, creates a
+   * preliminary AssociationEnd object to help in the creation of an Association object.
+   * The resulting object will have to be completed with setReferenceToClassName()depending on the type of association.
+   * @return an AssociationEnd object or null if an error occured
+   */
+  @umplesourcefile(line={1752},file={"UmpleInternalParser_CodeClass.ump"},javaline={2912},length={47})
+   private AssociationEnd createPreliminaryAssociationEnd(Token associationEndToken, String defaultType){
+    if(associationEndToken != null){
+      String name, type, modifier, roleName, bound, lowerBound, upperBound, priority;
+      bound = lowerBound = upperBound = priority = roleName = null;
+      Multiplicity mult = new Multiplicity();
+      String typeIndex;
+
+      //special case when [[singleAssociationEnd]] is used in one end: the 
+      //parent associationClassDefinition is used as the other
+      if(associationEndToken.is("associationClassDefinition")){
+        name = null;
+        type = associationEndToken.getValue("name");
+        modifier = null;
+        mult.setRange("1","1");
+        typeIndex = "name";
+      }else{
+        type = associationEndToken.getValue("type");
+        modifier = associationEndToken.getValue("modifier");
+        roleName = associationEndToken.getValue("roleName");
+        bound = associationEndToken.getValue("bound");
+        lowerBound = associationEndToken.getValue("lowerBound");
+        upperBound = associationEndToken.getValue("upperBound");
+        priority = associationEndToken.getValue("priority");
+        mult.setRange(lowerBound, upperBound);
+        mult.setBound(bound);
+        typeIndex = "type";
+      }
+      // Report an error if the multiplicity is invalid
+      if (!mult.isValid()){
+        String invalidBound = bound == null ? lowerBound + ".." + upperBound : bound;
+        setFailedPosition(associationEndToken.getPosition(), 4, invalidBound);
+        return null;
+      }
+      if(type == null){
+          type = defaultType;
+      }
+      AssociationEnd assocEnd = new AssociationEnd(roleName,type,modifier,null,mult);
+
+      if(priority != null){
+          assocEnd.setPriority(priority);
+      }
+      positionToClassNameReference.put(associationEndToken.getPosition(typeIndex),type);
+      return assocEnd;
+    }else{
+        return null;
+    }
+  }
+
+  @umplesourcefile(line={1800},file={"UmpleInternalParser_CodeClass.ump"},javaline={2969},length={17})
+   private void updateAssociationEnds(AssociationEnd firstEnd, AssociationEnd secondEnd){
+    if (firstEnd.getRoleName().length() == 0)
+    { 
+      String rawName = StringFormatter.toCamelCase(firstEnd.getClassName());
+      String name = firstEnd.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+      firstEnd.setRoleName(name);
+      firstEnd.setIsDefaultRoleName(true);
+    }
+
+    if (secondEnd.getRoleName().length() == 0)
+    {
+      String rawName = StringFormatter.toCamelCase(secondEnd.getClassName());
+      String name = secondEnd.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+      secondEnd.setRoleName(name);
+      secondEnd.setIsDefaultRoleName(true);
+    }
+  }
+
+
+  /**
+   * Analyzes a token flagged to be an association within an Umple class to create an instance of one and add it to the class.
+   * 
+   * @param inlineAssociationToken The token flagged to be an inline association.
+   * @param aClass The Umple class for which an association instance will be added (populated from analysis of the token).
+   */
+  @umplesourcefile(line={1826},file={"UmpleInternalParser_CodeClass.ump"},javaline={2988},length={50})
+   private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleClass aClass){
+    Association association = analyzeAssociation(inlineAssociationToken,aClass.getName());
+
+    if (!getParseResult().getWasSuccess())
+    {
+      return;
+    }
+
+    AssociationEnd myEnd = association.getEnd(0);
+    AssociationEnd yourEnd = association.getEnd(1);
+
+    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
+    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
+    myAs.setRelatedAssociation(yourAs);
+    
+    if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
+    if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
+    
+    if (association.isImmutable())
+    {
+      boolean set = myAs.setImmutable();
+      if (set)
+      {
+        yourAs.setImmutable();
+      }
+      else
+      {
+        setFailedPosition(inlineAssociationToken.getPosition(),17);
+      }
+    }
+
+    // Add comments above the association to the association.
+    for (Comment c : lastComments)
+    {
+      yourAs.addComment(c);
+    }
+
+    boolean added = aClass.addAssociationVariable(yourAs);
+    if (added)
+    {
+      unlinkedAssociationVariables.add(yourAs);
+      aClass.addAssociation(association);
+    }
+    else
+    {
+      if (aClass.isImmutable()) { setFailedPosition(inlineAssociationToken.getPosition(),17); }
+      
+      else { setFailedPosition(inlineAssociationToken.getPosition(),13); }
+    }
+  }
+
+
+  /**
+   * Analyzes a token flagged to be an attribute within an Umple class to create an instance of one and add it to the class.
+   * 
+   * @param attributeToken The token flagged to be an attribute.
+   * @param aClass The Umple class for which an attribute instance will be added (populated from analysis of the token).
+   */
+  @umplesourcefile(line={1884},file={"UmpleInternalParser_CodeClass.ump"},javaline={3047},length={146})
+   private void analyzeAttribute(Token attributeToken, UmpleClass aClass){
+    boolean isAutounique = attributeToken.getValue("autounique") != null;
+    boolean isUnique = attributeToken.getValue("unique") != null;
+    boolean isLazy = attributeToken.getValue("lazy") != null;
+    boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
+    boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
+    boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
+    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
+    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
+    
+    if(!validName)
+    {
+      if(looksLikeAssociation){
+        setFailedPosition(attributeToken.getPosition(), 132, attributeToken.getValue("name"));
+      } else {
+        setFailedPosition(attributeToken.getPosition(), 130, attributeToken.getValue("name"));
+      }
+      
+      return;
+    }
+    
+    if(!properName){
+      setFailedPosition(attributeToken.getPosition(), 131, attributeToken.getValue("name"));
+    }
+    
+    if (aClass.getIsSingleton() && !isLazy) 
+    {
+      isLazy = true;
+      setFailedPosition(attributeToken.getPosition(), 1, attributeToken.getValue("name"));
+    }
+
+    String modifier = attributeToken.getValue("modifier");
+    String type = attributeToken.getValue("type");
+    String name = attributeToken.getValue("name");
+    String value = attributeToken.getValue("value");
+    String derivedValue = attributeToken.getValue("code");
+
+  if (isLazyRedundant(isLazy, value))
+  {
+    setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);
+  }
+
+    for(Attribute aAttribute : aClass.getAttributes()){
+      if (aAttribute.getName().equals(name)){
+        setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);
+      }
+  }
+    CodeBlock languageSpecificCode = new CodeBlock();
+    if (derivedValue != null)
+    {
+      value = "";
+      List<String> codelangs = new ArrayList<String>();
+      for(Token tkn: attributeToken.getSubTokens())
+      {
+      if(tkn.is("codeLang"))
+      {
+        codelangs.add(tkn.getValue());
+      } else if(tkn.is("code")) {
+        if(codelangs.isEmpty())
+        {
+          languageSpecificCode.setCode(tkn.getValue());
+        } else {
+          for(String lang: codelangs)
+          {
+            languageSpecificCode.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+        }
+      }
+      }
+    }
+
+    if ("defaulted".equals(modifier) && value == null)
+    {
+      setFailedPosition(attributeToken.getPosition(), 6, attributeToken.getValue("name"));
+      return;
+    }
+
+    if (isUnique)
+    {
+      UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(name,type,modifier,value);
+      aClass.setUniqueIdentifier(uniqueIdentifier);
+      return;
+    }
+
+    if (isAutounique)
+    {
+      type = "Integer";
+    }
+
+    if (type == null && value != null)
+    {
+      if(value.matches("-?[0-9]+\\.[0-9]+"))
+      {
+        type = "Double";
+      }
+      else if(value.matches("-?[0-9]+"))
+      {
+        type = "Integer";
+      }
+      else if(value.matches("(true|false)"))
+      {
+        type = "Boolean";
+      }
+      else
+      {
+        type = "String";
+      }
+    }
+    else if(type == null)
+    {
+      type = "String";
+    } 
+    else {      
+      if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type)) {
+        setFailedPosition(attributeToken.getPosition(), 140, type);
+          return;
+        }
+    }
+
+    Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
+    attribute.setIsLazy(isLazy);
+    boolean isList = attributeToken.getValue("list") != null;
+
+    if (name == null)
+    {
+      String rawName = StringFormatter.toCamelCase(type); 
+      name = isList ? model.getGlossary().getPlural(rawName) : rawName;
+    }
+
+    if (derivedValue != null)
+    {
+      attribute.setPosition(attributeToken.getPosition());
+      attribute.setEndPosition(attributeToken.getEndPosition());
+      attribute.setIsDerived(true);
+      attribute.setCodeblock(languageSpecificCode);
+    }
+
+    attribute.setIsList(isList);
+
+    // Add comments above the attribute to the attribute.
+    for (Comment c : lastComments)
+    {
+      attribute.addComment(c);
+    }
+  }
+
+  @umplesourcefile(line={2032},file={"UmpleInternalParser_CodeClass.ump"},javaline={3202},length={3})
+   private Boolean isLazyRedundant(Boolean isLazy, String value){
+    return (isLazy && value != null);
+  }
+
+  @umplesourcefile(line={2037},file={"UmpleInternalParser_CodeClass.ump"},javaline={3207},length={85})
+   private void analyzeException(Token exception, UmpleClass aClass){
+    Token sub = exception.getSubToken(0);
+    if(sub.is("misnamedAttribute"))
+    {
+      if(!Token.isValidIdentifier(sub.getValue("name")))
+      {
+        boolean looksLikeAssociation = sub.getValue("name").contains("--") || sub.getValue("name").contains("->");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
+        if(looksLikeAssociation)
+        {
+          setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));
+        }
+        else 
+        {
+          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+        }
+        return;
+      }
+      if(Token.isValidIdentifier(sub.getValue("name"), "[A-Z]"))
+      {
+        setFailedPosition(sub.getPosition(), 131, sub.getValue("name"));
+      }
+      String type = sub.getValue("type");
+      if(type!=null)
+      {
+        if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
+        {
+          setFailedPosition(sub.getPosition(), 140, type);
+        }
+      }
+    }
+    else if(sub.is("malformedStatement1")||sub.is("malformedStatement2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      if(sub.getValue("innerstuff")!=null)
+      {
+        extraCode += "{"+sub.getValue("innerstuff")+"};";
+      }
+      else
+      {
+        extraCode += ";";
+      }
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1007, sub.getValue("name"));
+    }
+    else if(sub.is("malformedStatemachine1")||sub.is("malformedStatemachine2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
+    }
+    else if(sub.is("malformedMethod"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      aClass.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
+    }
+  }
+
+  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3294},length={10})
    private void analyzePrecondition(Token preconditionToken, UmpleClass aClass, Method method){
     List <ConstraintVariable> cvs = analyzeConstraint(preconditionToken, aClass); //adds all identifiers to constraints
     Precondition precondition = new Precondition(method);
@@ -1039,7 +3309,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param invariantToken The token containting the constraintsub.
    * @param aClass The Umple class for which an attribute is being constrained.
    */
-  @umplesourcefile(line={38},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={1036},length={10})
+  @umplesourcefile(line={38},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3306},length={10})
    private void analyzeInvariant(Token invariantToken, UmpleClass aClass){
     List <ConstraintVariable> cvs = analyzeConstraint(invariantToken, aClass); //adds all identifiers to constraints
     Constraint constraint = new Constraint();
@@ -1055,7 +3325,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * This recursive function parses the expression. It's very broken down to allow new features to be added easily.
    */
-  @umplesourcefile(line={51},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={1055},length={53})
+  @umplesourcefile(line={51},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3325},length={53})
    private List<ConstraintVariable> analyzeConstraint(Token invariantToken, UmpleClass aClass){
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
     List<Token> subs = invariantToken.getSubTokens();
@@ -1110,13 +3380,1247 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   return rawLine;
   }
 
+  @umplesourcefile(line={130},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3384},length={23})
+   private List<ConstraintVariable> analyzeLinkingOpExpression(Token linkingOpExpressionToken, UmpleClass aClass){
+    List<Token> LinkingOpExpressionSubtokens = linkingOpExpressionToken.getSubTokens();
+	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	  
+	  Token subOp = LinkingOpExpressionSubtokens.get(0); //the linking Expr (ie) &&, ||
+	  
+	
+	  if (subOp.is("||")||subOp.is("orOp"))
+	  {
+		  rawLine.add(new ConstraintVariable("OPERATOR","||"));
+	  } 
+	  else if (subOp.is("andOp"))
+	  {
+		  rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+	  }
+	  
+	  Token subExpr = LinkingOpExpressionSubtokens.get(LinkingOpExpressionSubtokens.size()>1?1:0); //the constraintExpr token
+	  Token dummyToken = new Token ("dummyToken", null); //need to encapsulate constrainExpr in dummy token
+	  dummyToken.addSubToken(subExpr);
+	  rawLine.addAll(analyzeConstraint(dummyToken, aClass)); 
+
+	  return rawLine;
+  }
+
+  @umplesourcefile(line={155},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3409},length={29})
+   private List<ConstraintVariable> analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClass aClass){
+    List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	List<Token> generalExpressionSubtokens = generalExpressionToken.getSubTokens();
+    for(Token sub : generalExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      } 
+      else if(sub.is("constraintName"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true));
+      }
+      else if(sub.is("equalsOp"))
+      {
+		ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv); 
+      }
+      else if(sub.is("notequalsOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv); 
+      }
+    }
+    return rawLine;
+  }
+
+  @umplesourcefile(line={186},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3440},length={33})
+   private List<ConstraintVariable> analyzeBooleanConstraintExpression(Token booleanExpressionToken, UmpleClass aClass){
+    List<Token> BooleanExpressionSubtokens = booleanExpressionToken.getSubTokens();
+  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  	for(Token sub : BooleanExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      }
+      else if (sub.getValue().equals("true"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","true"));
+      } 
+      else if (sub.getValue().equals("false"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","false"));
+      }
+      else if(sub.is("constraintName"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true,"boolean"));
+      }
+      else if(sub.is("equalsOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","=="));
+      }
+      else if(sub.is("notequalsOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","!="));
+      }           
+    }
+    return rawLine;
+  }
+
+
+  /**
+   * cardinal && all : not doable
+   * cardinal && !all : for each number in the list, size == that number ||, if assLit/name then size == number of elements in the list
+   * !cardinal && all : for each number or name have a contains() &&, not currently implemented for a list of lists
+   * !cardinal && !all : for each number or name have a contains() ||, not currently implemented for a list of lists
+   */
+  @umplesourcefile(line={227},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3475},length={62})
+   private List<ConstraintVariable> analyzeAssociationLiteralConstraintExpression(Token literalToken, UmpleClass aClass, boolean cardinal, boolean all, boolean firstName, List<ConstraintVariable> subject, ConstraintVariable operator){
+    List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+    for(Token sub:literalToken.getSubTokens())
+    {
+      if(sub.is("associationLit"))
+      {
+        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub, aClass, cardinal, all, firstName, subject, operator));
+        firstName = false;
+      }
+      else if(sub.is("constraintName"))
+      {
+        if(!firstName)
+        {
+          if(all&&!cardinal)
+          {
+            rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+          }
+          else 
+          {
+            rawLine.add(new ConstraintVariable("OPERATOR","||"));
+          }          
+        }
+        else
+        {
+          firstName = false;
+        }
+        rawLine.addAll(subject);
+        rawLine.add(operator);
+        rawLine.add(analyzeConstraintName(sub,aClass,true));
+      }
+      else if(sub.is("elements"))
+      {
+        if(!cardinal)
+        {
+          operator.setValue("cardinality==");
+        }
+      }
+      else if(sub.is("number"))
+      {
+        if(!firstName)
+        {
+          if(all&&!cardinal)
+          {
+            rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+          }
+          else 
+          {
+            rawLine.add(new ConstraintVariable("OPERATOR","||"));
+          }          
+        }
+        else
+        {
+          firstName = false;
+        }
+        rawLine.addAll(subject);
+        rawLine.add(operator);
+        rawLine.add(analyzeConstraintNumber(sub));
+        firstName = false;
+      }
+    }
+    return rawLine;
+  }
+
+  @umplesourcefile(line={291},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3546},length={81})
+   private List<ConstraintVariable> analyzeAssociationConstraintExpression(Token associationExpressionToken, UmpleClass aClass){
+    List<Token> associationExpressionSubtokens = associationExpressionToken.getSubTokens();
+  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  	List<ConstraintVariable> subject = new ArrayList<ConstraintVariable>();
+  	boolean card = associationExpressionToken.getValue("firstOp").equals("cardinality");
+  	boolean all = false;
+  	ConstraintVariable operator = new ConstraintVariable("OPERATOR",associationExpressionToken.getValue("firstOp"));
+  	operator.setIsPrimitive(false);
+  	for(Token sub : associationExpressionSubtokens)
+    {
+      if(sub.is("constraintName"))
+      {
+        subject.add(analyzeConstraintName(sub,aClass,true));
+      }
+      else if(sub.is("associationLit"))
+      {
+        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub,aClass,card,all,true,subject,operator));
+      }
+      else if(sub.is("all"))
+      {
+        if(!card)
+        {
+          operator.setValue("hasAll");
+          all = true;
+        }
+        else
+        {
+          //warning that cardinality all is not supported
+        }
+      }
+      else if(sub.is("moreOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality>");
+      }
+      else if(sub.is("smallerOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality<");
+      }
+      else if(sub.is("greaterOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality>=");
+      }
+      else if(sub.is("lessOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality<=");
+      }
+      else if(sub.is("equalsOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality==");
+      }
+      else if(sub.is("notequalsOp"))
+      {        
+        if(!card)
+        {
+          card = true;
+        }
+        operator.setValue("cardinality!=");
+      }
+    }
+    return rawLine;
+  }
+
+  @umplesourcefile(line={374},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3629},length={33})
+   private List<ConstraintVariable> analyzeStringConstraintExpression(Token stringExpressionToken, UmpleClass aClass){
+    List<Token> stringExpressionSubtokens = stringExpressionToken.getSubTokens();
+  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  	for(Token sub : stringExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      }
+      else if (sub.is("quote"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
+      }
+      else if(sub.is("constraintName"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true,"string"));
+      }
+      else if(sub.is("equalsOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv);        
+      }
+      else if(sub.is("notequalsOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv); 
+      }           
+    }
+    return rawLine;
+  }
+
+  @umplesourcefile(line={409},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3664},length={47})
+   private List<ConstraintVariable> analyzeNumberConstraintExpression(Token numberExpressionToken, UmpleClass aClass){
+    List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
+    for(Token sub : numberExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+      	if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      } 
+      else if(sub.is("constraintName"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double"));
+      }
+      else if(sub.is("number"))
+      {
+        rawLine.add(analyzeConstraintNumber(sub));
+      }
+      else if(sub.is("moreOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR",">"));
+      }
+      else if(sub.is("smallerOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","<"));
+      }
+      else if(sub.is("greaterOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR",">="));
+      }
+      else if(sub.is("lessOp"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","<="));
+      }
+      else if(sub.is("equalsOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+        rawLine.add(cv);        
+      }
+      else if(sub.is("notequalsOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
+        rawLine.add(cv); 
+      } 
+    }
+    return rawLine;
+  }
+
+  @umplesourcefile(line={458},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3713},length={144})
+   private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean mustBeInClass, String... type){
+    Token grandparentToken = nameToken.getParentToken().getParentToken();
+  	ConstraintVariable cv = new ConstraintVariable("NAME","");
+  	cv.setSubConstraint(new Constraint());
+  	boolean isNew = false;
+  	for(Token sub:nameToken.getSubTokens())
+  	{
+  	  if(sub.is("constraintParameterList"))
+  	  {
+  	    for(Token param: sub.getSubTokens())
+  	    {
+  	      if(param.is("constraintParameter"))
+  	      {
+  	        Token value = param.getSubToken(0);
+  	        if(value.is("quote"))
+  	        {
+  	          cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
+  	        }
+  	        else if(value.is("number"))
+  	        {
+  	          cv.getSubConstraint().addExpression(analyzeConstraintNumber(value));
+  	        }
+  	        else if(value.is("constraintName")){
+  	          cv.getSubConstraint().addExpression(analyzeConstraintName(value,aClass,true));
+  	        }
+  	      }
+  	      else
+  	      {
+  	        cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",param.getName()));
+  	      }
+  	    }
+  	  }
+  	  else if(sub.is("index"))
+  	  {  	    
+        analyzeConstraintIndex(sub,cv);
+  	  }
+  	  else if(sub.is("new"))
+  	  {  	    
+  	    isNew = true;
+        cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","initialise").isNotPrimitive());
+  	  }
+  	  else if(sub.is("constraintScopeOperator"))
+  	  {
+  	    cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","."));
+  	    for(Token subsub:sub.getSubTokens()){
+  	      if(subsub.is("constraintName"))
+  	      {
+  	        cv.getSubConstraint().addExpression(analyzeConstraintName(subsub,aClass,true));
+  	      }
+  	    }
+  	  }
+  	  else if(sub.is("name"))
+  	  {
+  	    cv.setValue(sub.getValue());
+  	    cv.getAttribute(aClass);
+  	    ConstraintVariable name = new ConstraintVariable("",sub.getValue());
+  	    cv.getSubConstraint().addExpression(name);
+  	    UmpleVariable attribute;
+        if(mustBeInClass)
+        {
+          attribute = name.getAttribute(aClass);
+          if(attribute!=null||isNew)
+          {
+      	    if(type!=null&&type.length!=0)
+      	    {
+      	      boolean isType = false;
+      	      String typesFailed = "";
+      	      for(String t: type)
+      	      {
+      	        if((isNew?sub.getValue():attribute.getType()).toLowerCase().equals(t))
+                {
+                  isType = true;
+                }          
+                else
+                {
+                  typesFailed += t+",";
+                }
+              }
+              if(!isType)
+              {
+          	    setFailedPosition(sub.getPosition(), 29, sub.getValue(), typesFailed);
+              }
+            }
+            name.setType(isNew?sub.getValue():attribute.getType());
+          }
+          else if (grandparentToken.getName().equals("precondition"))
+          { //if it was a precondition, check if it matches any of the method arguments
+    	    Token concreteMethod = grandparentToken.getParentToken();
+    	    ArrayList <MethodParameter> methodparams = new ArrayList <MethodParameter>();
+    	    for (Token t : concreteMethod.getSubTokens())
+    	    {
+              if (t.getName().equals("methodDeclarator"))
+              {
+    		    for (Token st : t.getSubTokens())
+    		    {
+    	          if (st.getName().equals("parameterList"))
+    	          {
+    			    for (Token sst : st.getSubTokens())
+    		        {
+    			      if(sst.getName().equals("parameter"))
+    			      {
+    				    String paramName = null;
+    				    String paramType = null;
+    				    for (Token ssst: sst.getSubTokens())
+    				    {
+    				      if (ssst.getName().equals("type"))
+    				      {
+    					    paramType = ssst.getValue();
+    				      }
+    				      if (ssst.getName().equals("name"))
+    				      {
+    				        paramName = ssst.getValue();
+    				      }
+    				    }
+    				    MethodParameter mp = new MethodParameter(paramName, paramType, null, null, false);
+    			        methodparams.add(mp);
+    			      }
+    			    }
+    	          }
+    		    }
+    	      }
+    	      boolean matchesAnyMethodParams = false;
+    	      for (MethodParameter mp : methodparams)
+    	      { 
+    	 	    if (mp.getName().equals(sub.getValue()))
+    		    {
+    	          matchesAnyMethodParams = true; 
+    		      cv.setType(mp.getType());
+    		    }
+    	      }
+            }
+          }
+          else if(attribute==null)
+          {
+            cv.setType("SYNTAX");
+            cv.setValue(sub.getValue());
+            setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());      
+          }
+          
+        }
+      }
+    }
+    return cv;
+  }
+
+  @umplesourcefile(line={603},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3859},length={3})
+   private ConstraintVariable analyzeConstraintNumber(Token numberToken){
+    return new ConstraintVariable("OPERATOR",numberToken.getValue());
+  }
+
+  @umplesourcefile(line={607},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3864},length={16})
+   private void analyzeConstraintIndex(Token indexToken, ConstraintVariable cv){
+    Token sub = indexToken;
+  	try {
+      int i = Integer.parseInt(sub.getValue());
+      if(cv.getIsAssociation())
+      {
+        cv.setIndex(i);
+      }
+      else
+      {
+        setFailedPosition(sub.getPosition(), 29, cv.getValue(), "association or list");
+      }
+    } catch (NumberFormatException e) {
+      setFailedPosition(sub.getPosition(), 29, sub.getValue(), "integer");
+    }
+  }
+
+
+  /**
+   * Check if "extra code" is likely a malformed state machine
+   */
+  @umplesourcefile(line={28},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3882},length={7})
+   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
+    String code = extraCodeToken.getValue();
+    String[] parts = code.split("\\{");
+    if(parts.length < 2) return false; //This means there are no opening brackets
+    if(!Token.isValidIdentifier(parts[0].trim())) return false; //This means we don't have an identifier. If the SM name is misspelt, that should be picked up elsewhere.
+    return true; //We have an identifier followed by a { followe by something else that is probably a state machine
+  }
+
+
+  /**
+   * Analyze state machine related tokens
+   */
+  @umplesourcefile(line={37},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3895},length={11})
+   private void analyzeStateMachineToken(Token token, int analysisStep){
+    if (analysisStep != 1)
+    {
+      return;
+    }
+  
+    if (token.is("stateMachineDefinition"))
+    {
+      analyzeStateMachineDefinition(token);
+    }
+  }
+
+  @umplesourcefile(line={50},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3912},length={9})
+   private String getThreadName(Token activeToken){
+    Token name = activeToken.getSubToken("name");
+    
+    if (name == null)
+    {
+      return "thread1";
+    }
+    return name.getValue();
+  }
+
+  @umplesourcefile(line={61},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3923},length={5})
+   private String getActiveCode(Token activeToken){
+    Token code = activeToken.getSubToken("code");
+    
+    return code.getValue();
+  }
+
+  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3930},length={11})
+   private void analyzeActiveObject(Token activeToken, UmpleClass aClass){
+    analyzeStateMachine(generateActiveStateMachineToken(activeToken), aClass);
+    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), aClass))
+    {
+      numberOfActiveObjects++;
+    }
+    else
+    {
+      numberOfActiveObjects = 1;
+    }
+  }
+
+  @umplesourcefile(line={81},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3943},length={9})
+   private Token generateActiveStateMachineToken(Token stateMachineToken){
+    Token token = new Token("name", "stateMachine" + numberOfActiveObjects);
+    
+    token.addSubToken(new Token("{", "STATIC"));
+    token.addSubToken(generateActiveTopLevelStateToken(stateMachineToken));
+    token.addSubToken(new Token("}", "STATIC"));
+    
+    return token;
+  }
+
+  @umplesourcefile(line={92},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3954},length={10})
+   private Token generateActiveTopLevelStateToken(Token stateMachineToken){
+    Token token = new Token("state", "START_TOKEN");
+    
+    token.addSubToken(new Token("stateName", "topLevel"));
+    token.addSubToken(new Token("{", "STATIC"));
+    token.addSubToken(generateActiveStateToken(stateMachineToken));
+    token.addSubToken(new Token("}", "STATIC"));
+    
+    return token;
+  }
+
+  @umplesourcefile(line={104},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3966},length={10})
+   private Token generateActiveStateToken(Token stateMachineToken){
+    Token token = new Token("state", "START_TOKEN");
+    
+    token.addSubToken(new Token("stateName", getThreadName(stateMachineToken)));
+    token.addSubToken(new Token("{", "STATIC"));
+    token.addSubToken(generateActivityToken(stateMachineToken));
+    token.addSubToken(new Token("}", "STATIC"));
+    
+    return token;
+  }
+
+  @umplesourcefile(line={116},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3978},length={10})
+   private Token generateActivityToken(Token stateMachineToken){
+    Token token = new Token("activity", "START_TOKEN");
+    
+    token.addSubToken(new Token("do", "STATIC"));
+    token.addSubToken(new Token("{", "STATIC"));
+    token.addSubToken(new Token("code", getActiveCode(stateMachineToken)));
+    token.addSubToken(new Token("}", "STATIC"));
+    
+    return token;
+  }
+
+
+  /**
+   * Analyze state machine related tokens within the context of an Umple class
+   */
+  @umplesourcefile(line={130},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={3990},length={31})
+   private void analyzeStateMachineToken(Token token, UmpleClass aClass, int analysisStep){
+    if (analysisStep != 1)
+    {
+      return;
+    }
+    
+    if (token.is("stateMachine"))
+    {
+      if (aClass.isImmutable())
+      {
+    	  setFailedPosition(token.getPosition(), 15, aClass.getName());
+    	  return;
+      }
+      
+      Token subToken = token.getSubToken(0);
+      if (subToken.is("activeDefinition"))
+      {
+        analyzeActiveObject(subToken, aClass);
+      }
+      
+      if (subToken.is("enum") || subToken.is("inlineStateMachine"))
+      {
+        analyzeStateMachine(subToken,aClass);
+      }
+      
+      if (subToken.is("referencedStateMachine"))
+      {
+        analyzedReferencedStateMachine(subToken,aClass);
+      }
+    }
+  }
+
+  @umplesourcefile(line={163},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4027},length={20})
+   private int numberOfActiveObjectsInClass(Token token, UmpleClass aClass){
+    int activeObjects = 0;
+    
+    Token parent = token.getParentToken();
+    if (parent != null)
+    {
+      for (Token sub : parent.getSubTokens())
+      {
+        if (sub.is("stateMachine"))
+        {
+          if (sub.getSubToken(0).is("activeDefinition"))
+          {
+            activeObjects++;
+          }
+        }
+      }
+    }
+    
+    return activeObjects;
+  }
+
+  @umplesourcefile(line={185},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4049},length={14})
+   private void postTokenStateMachineAnalysis(){
+    // Generate error message for issue 354. Check for conflicting names between
+    // state machines and attributes as well as state machines and association names
+    checkStateMachineNameConflict();
+
+    for(Iterator<Map.Entry<State, List<Token>>> i = possiblyUnknownStates.entrySet().iterator(); i.hasNext();){
+    	Map.Entry<State, List<Token>> entry = (Map.Entry<State, List<Token>>)i.next();
+    	List<Token> tokens = (List<Token>)entry.getValue();
+		for(int j = 0; j < tokens.size(); j++){
+			setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue("stateName"));
+		}    
+    }
+    possiblyUnknownStates = new HashMap<State,List<Token>>();
+  }
+
+
+  /**
+   * Check for name conflicts between state machines and attributes/association names
+   * Author: Blake Quebec Desloges
+   */
+  @umplesourcefile(line={205},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4065},length={75})
+   private void checkStateMachineNameConflict(){
+    for(UmpleClass C : model.getUmpleClasses())
+    {    
+      // Create the list of attribute names 
+      List<String> existingAttributeNames = new ArrayList<String>();
+      for (Attribute attr : C.getAttributes())
+      {
+      	existingAttributeNames.add(attr.getName());
+      }
+      
+      //Create the list of state machine names while checking for conflicts with attributes
+      List<String> existingStateMachineNames = new ArrayList<String>();
+      for (StateMachine sm : C.getStateMachines())
+      {
+      	// Check if the current state machine conflicts with an attribute name
+      	if (existingAttributeNames.contains(sm.getName()))
+      	{
+      	   Token stateMachineToken = stateMachineNameToToken.get(sm.getName());
+          setFailedPosition(stateMachineToken.getPosition(), 52, sm.getName());
+       }
+       else
+          existingStateMachineNames.add(sm.getName());
+      }
+      
+      List<String> existingAssociationNames = new ArrayList<String>();
+      List<Association> visitedAssociations = new ArrayList<Association>();
+      for(Association assoc : C.getAssociations())
+      {
+        if (visitedAssociations.contains(assoc))
+        {
+          continue;
+        }
+        
+      	AssociationEnd firstEnd = assoc.getEnd(0);
+      	AssociationEnd secondEnd = assoc.getEnd(1);
+      	
+      	Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
+      	Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
+      	Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
+      	
+      	// check names on other-class end of associations to other classes
+        if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
+        {
+          // Check if the association name is the same as a state machine name
+          if (existingStateMachineNames.contains(firstEnd.getRoleName()))
+          {
+             setFailedPosition(assoc.getTokenPosition(), 52, firstEnd.getRoleName());
+          }
+          else
+          {
+            existingAssociationNames.add(firstEnd.getRoleName());
+          }
+          
+        }
+        if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
+        {
+          // Check if the association name is the same as a state machine name
+          if (existingStateMachineNames.contains(secondEnd.getRoleName()))
+          {
+             setFailedPosition(assoc.getTokenPosition(), 52, secondEnd.getRoleName());
+          }
+          else
+          {
+            existingAssociationNames.add(secondEnd.getRoleName());
+          }
+        }
+         
+        if (associationIsReflexive)
+        { 
+          // The UmpleClass is only expected to have duplicate references to reflexive associations
+          visitedAssociations.add(assoc);
+        }
+      }
+    }
+  }
+
+  @umplesourcefile(line={283},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4147},length={4})
+   private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken){
+    StateMachine smd = analyzeStateMachine(stateMachineDefinitionToken,null);
+    model.addStateMachineDefinition(smd);
+  }
+
+  @umplesourcefile(line={289},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4153},length={30})
+   private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClass aClass){
+    String name = stateMachineToken.getValue("name");
+
+    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
+    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+
+    String definitionName = stateMachineToken.getValue("definitionName");
+      
+    Token stateMachineDefinitionToken = stateMachineNameToToken.get(definitionName);
+    if (stateMachineDefinitionToken == null)
+    {
+      return;
+    }
+
+    StateMachine sm = new StateMachine(name);
+    boolean wasSet = sm.setUmpleClass(aClass);
+    if (!wasSet)
+    {
+    	// Future-proofing: currently all paths cause wasSet to be true
+    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
+    }
+    
+    populateStateMachine(stateMachineDefinitionToken,sm, aClass);
+    Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
+    if (extendedStateMachineTokens != null)
+    {
+      populateStateMachine(extendedStateMachineTokens, sm, aClass);
+    }
+  }
+
+  @umplesourcefile(line={322},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4185},length={31})
+   private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClass aClass){
+    placeholderStateMachine = new StateMachine("PLACE_HOLDER");
+    String name = stateMachineToken.getValue("name");
+
+    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
+    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+
+    stateMachineNameToToken.put(name,stateMachineToken);
+    
+    StateMachine sm = new StateMachine(name);
+    boolean wasSet = sm.setUmpleClass(aClass);
+    if (!wasSet)
+    {
+    	// Future-proofing: currently all paths cause wasSet to be true
+    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
+    }
+      
+    if(stateMachineToken.is("queued"))
+    {
+      sm.setQueued(true);
+    } 
+
+    populateStateMachine(stateMachineToken, sm, aClass);
+
+    while (placeholderStateMachine.numberOfStates() > 0)
+    {
+      placeholderStateMachine.getState(0).setStateMachine(sm);
+    }
+    return sm;
+  }
+
+  @umplesourcefile(line={355},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4218},length={28})
+   private State createStateFromTransition(Token transitionToken, StateMachine sm){
+    if(!Token.isValidIdentifier(transitionToken.getValue("stateName"))){
+    	setFailedPosition(transitionToken.getPosition(), 152, transitionToken.getValue("stateName"));
+    }
+    String name = transitionToken.getValue("stateName");
+    State nextState = sm.findState(name);
+    
+    if ("Final".equals(name))
+    {
+      nextState = new State(name,sm);
+    }
+    else
+    {
+      if (nextState == null)
+      {
+        nextState = placeholderStateMachine.findState(name);
+        if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
+      }
+
+      if (nextState == null)
+      {
+        nextState = new State(name,placeholderStateMachine);
+        possiblyUnknownStates.put(nextState, new ArrayList<Token>());
+        possiblyUnknownStates.get(nextState).add(transitionToken);
+      }
+    }
+    return nextState;
+  }
+
+  @umplesourcefile(line={385},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4248},length={20})
+   private State createStateFromDefinition(Token stateToken, StateMachine sm){
+    if(!Token.isValidIdentifier(stateToken.getValue("stateName"))){
+    	setFailedPosition(stateToken.getPosition(), 152, stateToken.getValue("stateName"));
+    }
+    State s = sm.findState(stateToken.getValue("stateName"),false);
+    if (s == null)
+    {
+      s = placeholderStateMachine.findState(stateToken.getValue("stateName"));
+      if (s != null)
+      {
+        s.setStateMachine(sm);
+      }
+    }
+    if (s == null)
+    {
+      s = new State(stateToken.getValue("stateName"),sm);
+    }
+    possiblyUnknownStates.remove(s);
+    return s;
+  }
+
+  @umplesourcefile(line={407},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4270},length={49})
+   private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClass aClass){
+    boolean isFirst = true;
+    boolean isFinalState = false;
+    String changeType = null;
+    
+    for(Token stateToken : stateMachineToken.getSubTokens())
+    {
+      if(stateToken.is("queued"))
+      {
+        sm.setQueued(true);
+      }
+      
+      // Concurrency is only allowed between nested state-machines
+      if (stateToken.is("||"))
+      {
+        setFailedPosition(stateMachineToken.getPosition(), 53, sm.getName());
+      }
+      
+      if(stateToken.is("trace"))
+      {
+    	analyzeTraceStatement(aClass,stateToken);
+      }
+      
+      if (!stateToken.is("state") && !stateToken.is("stateName"))
+      {
+        if (stateToken.is("changeType")) { changeType = stateToken.getValue(); }      
+        continue;
+      }
+
+      if ("-".equals(changeType))
+      {
+        State deleteMe = sm.findState(stateToken.getValue("stateName"));
+        if (deleteMe != null) { deleteMe.delete(); }
+      }
+      else
+      {
+        State s = createStateFromDefinition(stateToken,sm);
+        s.setFinalState(isFinalState);
+        if (isFirst)
+        {
+          s.setIsStartState(true);
+        }
+        isFirst = false;
+        isFinalState = false;
+        analyzeState(stateToken, s);
+        changeType = null;
+      }
+    }
+  }
+
+  @umplesourcefile(line={458},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4321},length={70})
+   private void analyzeState(Token stateToken, State fromState){
+    boolean addNewSm = true;
+    boolean isConcurrentState = false;
+    boolean isFinalState = false;
+    String changeType = null;
+    
+    for(Token subToken : stateToken.getSubTokens())
+    {
+      if (subToken.is("changeType"))
+      {
+        changeType = subToken.getValue();
+      }
+      else if (subToken.is("final"))
+      {
+        fromState.setFinalState(true);
+      }
+      else if (subToken.is("transition"))
+      {
+        analyzeTransition(false,subToken, fromState, changeType); 
+      }
+      else if (subToken.is("autoTransition"))
+      {
+        analyzeTransition(true,subToken, fromState, changeType);
+      }
+      else if (subToken.is("activity"))
+      {
+        analyzeActivity(subToken, fromState);
+      }
+      else if (subToken.is("entryOrExitAction"))
+      {
+      	fromState.addAction(analyzeAction(subToken, fromState));
+      }
+      else if (subToken.is("||"))
+      {
+        if (fromState.numberOfNestedStateMachines() == 0) { continue; }
+        int previousSmIndex = fromState.numberOfNestedStateMachines() - 1;
+              StateMachine nestedSm = fromState.getNestedStateMachine(previousSmIndex);
+              if (nestedSm.numberOfStates() == 0) { continue; }
+              nestedSm.setName(nestedSm.getState(0).getName());
+              addNewSm = true;
+              isConcurrentState = true;
+      }
+      else if (subToken.is("state"))
+      {
+        StateMachine nestedStateMachine = null;
+        if (addNewSm)
+        {
+          nestedStateMachine = new StateMachine(fromState.getName());
+          fromState.addNestedStateMachine(nestedStateMachine);
+        }
+        else
+        {
+          int lastIndex = fromState.numberOfNestedStateMachines() - 1;
+          nestedStateMachine = fromState.getNestedStateMachine(lastIndex);
+        }
+        State s = createStateFromDefinition(subToken,nestedStateMachine);
+        //alignStateDefinitionWithStateMachine(s,nestedStateMachine);
+        if (addNewSm)
+        {
+                  if (isConcurrentState)
+                  {
+                    nestedStateMachine.setName(s.getName());
+                  }
+          s.setIsStartState(true);
+        }
+        addNewSm = false;
+        analyzeState(subToken, s);
+      }
+    }
+  }
+
+  @umplesourcefile(line={530},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4393},length={27})
+   private Activity analyzeActivity(Token activityToken, State fromState){
+    Activity act= new Activity("", fromState);
+  	CodeBlock cb = new CodeBlock();
+  	
+  	List<String> codelangs = new ArrayList<String>();
+  	for(Token tkn: activityToken.getSubTokens()){
+  	  if(tkn.is("codeLang")){
+  		codelangs.add(tkn.getValue());
+  	  } else if(tkn.is("code")){
+  		if(codelangs.isEmpty())
+  		{
+  		  cb.setCode(tkn.getValue());
+  		} 
+  		else {
+  		  for(String lang: codelangs){
+  			cb.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+    	}
+      }
+    }
+    act.setCodeblock(cb);
+    
+    act.setPosition(activityToken.getPosition());
+    act.setEndPosition(activityToken.getEndPosition());
+    return act;
+  }
+
+  @umplesourcefile(line={559},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4422},length={28})
+   private Action analyzeAction(Token actionToken, State fromState){
+    Action action= new Action("");
+  	CodeBlock cb = new CodeBlock();
+  	List<String> codelangs = new ArrayList<String>();
+  	for(Token tkn: actionToken.getSubTokens()){
+  	  if(tkn.is("codeLang")){
+  		codelangs.add(tkn.getValue());
+  	  } else if(tkn.is("code")){
+  		if(codelangs.isEmpty())
+  		{
+  		  cb.setCode(tkn.getValue());
+  		} 
+  		else {
+  		  for(String lang: codelangs){
+  			cb.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+    	}
+      }
+    }
+    action.setCodeblock(cb);
+    	
+    action.setPosition(actionToken.getPosition());
+    action.setEndPosition(actionToken.getEndPosition());
+    action.setActionType(actionToken.getValue("type"));
+        
+    return action;
+  }
+
+  @umplesourcefile(line={587},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4452},length={27})
+   private Guard analyzeGuard(Token guardToken, State fromState){
+    Guard guard= new Guard("true");
+  	CodeBlock cb = new CodeBlock();
+  	List<String> codelangs = new ArrayList<String>();
+  	for(Token tkn: guardToken.getSubTokens()){
+  	  if(tkn.is("codeLang")){
+  		codelangs.add(tkn.getValue());
+  	  } else if(tkn.is("code")){
+  		if(codelangs.isEmpty())
+  		{
+  		  cb.setCode(tkn.getValue());
+  		} 
+  		else {
+  		  for(String lang: codelangs){
+  			cb.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+    	}
+      }
+    }
+    guard.setCodeblock(cb);
+    
+    guard.setPosition(guardToken.getPosition());
+    guard.setEndPosition(guardToken.getEndPosition());
+    
+    return guard;
+  }
+
+  @umplesourcefile(line={615},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4481},length={135})
+   private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType){
+    State nextState = createStateFromTransition(transitionToken,fromState.getStateMachine());
+    
+    Transition t; 
+    if ("-".equals(changeType))
+    {
+      t = Transition.createPlaceholder(nextState);
+    }
+    else
+    {
+      t = new Transition(fromState, nextState);
+    }
+
+    t.setAutoTransition(isAutoTransition);
+
+    String eventName = transitionToken.getValue("event");
+    String eventTimerAmount = transitionToken.getValue("timer");
+    String name="";
+    String type="";
+    String paramType="";
+    String paramName="";
+    if (eventName == null && eventTimerAmount != null)
+    {
+      eventName = fromState.newTimedEventName(nextState);
+    }
+
+    Token guardToken = transitionToken.getSubToken("guard");
+    if (guardToken != null)
+    {
+      t.setGuard(analyzeGuard(guardToken, fromState));
+    }
+
+    Token actionToken = transitionToken.getSubToken("action");
+    if (actionToken != null)
+    {
+      
+      t.setAction(analyzeAction(actionToken,fromState));
+    }
+    if (eventName != null || isAutoTransition)
+    {
+      StateMachine sm = fromState.getStateMachine();
+      UmpleClass uClass = sm.getUmpleClass();
+      Event event = isAutoTransition ? Event.createAutoTransition() : uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
+      if (eventTimerAmount != null)
+      {
+        event.setIsTimer(true);
+        event.setTimerInSeconds(eventTimerAmount);
+      }
+      t.setEvent(event);
+      
+      if ("-".equals(changeType))
+      {
+        fromState.removeTransition(t);      
+      }
+     
+     for (Token subEventToken : transitionToken.getSubTokens())
+     {
+     	Event aEvent = sm.getEvent(event.getName());
+        
+      	if (subEventToken.is("parameterList"))
+      	{
+      		if ( aEvent == event && ! event.hasParams() )
+      		{
+      			for(Token parameterToken : subEventToken.getSubTokens())
+      			{
+      				boolean isList = false;
+      				if (parameterToken.is("parameter"))
+      				{
+      					if (parameterToken.getSubToken("type") != null)
+      					{
+      						paramType = parameterToken.getSubToken("type").getValue();
+      					}
+      					if (parameterToken.getSubToken("list") != null)
+      					{
+      						isList = parameterToken.getSubToken("list").getValue() != null;
+      					}
+      					
+      					paramName = parameterToken.getSubToken("name").getValue();
+      					MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
+      					aParameter.setIsList(isList);
+      					if (event.getParams().contains(aParameter))
+      					{
+      						break;
+      					}
+      					else
+      					{
+      						event.addParam(aParameter);
+      					}
+      				}
+      			}
+      		}
+      		else
+      		{ 
+      			for(Token parameterSecondToken : subEventToken.getSubTokens())
+      			{
+      				boolean isListt = false;
+      				if (parameterSecondToken.is("parameter"))
+      				{
+      					String paramTypee="";
+      					if (parameterSecondToken.getSubToken("type") != null)
+      					{
+      						type = parameterSecondToken.getSubToken("type").getValue();
+      					}
+      					if (parameterSecondToken.getSubToken("list") != null)
+      					{
+      						isListt = parameterSecondToken.getSubToken("list").getValue() != null;
+      					}
+      					name = parameterSecondToken.getSubToken("name").getValue();
+      				}	
+      			}
+      		
+      			for (int i=1; i <= event.getParams().size(); i++)
+      			{
+      			    if (!event.getArgs().contains(type) || !event.getArgs().contains(name))
+      			    {
+      			    	setFailedPosition(transitionToken.getPosition(), 51, event.getArgs());
+      			    	
+      			    }
+      			}
+      		}
+      	}
+      }
+      
+      for(Token subToken : transitionToken.getSubTokens())
+      {
+        if (subToken.is("activity"))
+        {
+          t.setAutoTransition(false);
+          Activity act = analyzeActivity(subToken, fromState);
+          act.setOnCompletionEvent(event);
+        }
+    }      
+    
+    }
+  }
+
 
   /**
    * 
    * Trace Glue Code   ************
    * 
    */
-  @umplesourcefile(line={26},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1114},length={27})
+  @umplesourcefile(line={26},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4618},length={27})
    private void analyzeTraceToken(Token token, int analysisStep){
     if (analysisStep != 1)
     {
@@ -1149,7 +4653,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Process trace related tokens within the context of a class
    */
-  @umplesourcefile(line={58},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1149},length={17})
+  @umplesourcefile(line={58},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4653},length={17})
    private void analyzeTraceToken(Token token, UmpleClass aClass, int analysisStep){
     // Only process trace tokens once all other entities have been analyzed
     if (analysisStep == 1 || shouldProcessClassAgain)
@@ -1172,7 +4676,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Process Trace statement subtokens. Token could be trace directive or trace case
    */
-  @umplesourcefile(line={78},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1172},length={150})
+  @umplesourcefile(line={78},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4676},length={150})
    private void analyzeTraceStatement(UmpleClass aClass, Token token){
     TraceDirective traceDirective = new TraceDirective(model.getTracer());
     AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
@@ -1328,7 +4832,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze trace record in a trace directive
    */
-  @umplesourcefile(line={232},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1328},length={14})
+  @umplesourcefile(line={232},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4832},length={14})
    private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord){
     String record = token.getValue("trace_record");
     Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("trace_record"));
@@ -1348,7 +4852,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze Trace Item Token whether trace item is an attribute or a method ... etc
    */
-  @umplesourcefile(line={249},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1348},length={64})
+  @umplesourcefile(line={249},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4852},length={64})
    private void analyzeTraceItem(Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, AttributeTraceItem traceAttr){
     UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
     attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
@@ -1414,7 +4918,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={315},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1418},length={134})
+  @umplesourcefile(line={315},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4922},length={134})
    private void analyzeStateMachineTraceItem(Token traceToken, TraceDirective traceDirective){
     List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
     StateMachine stm = null;
@@ -1550,7 +5054,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={451},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1554},length={12})
+  @umplesourcefile(line={451},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5058},length={12})
    private void analyzeAssociationTraceItem(Token traceToken, TraceDirective traceDirective){
     if( traceToken.getParentToken().getSubToken(1).getName().equals("cardinality") )  
     {
@@ -1569,7 +5073,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
    * Returns a trace condition filled with left and right hands operands, with comparison operator used
    */
-  @umplesourcefile(line={467},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1568},length={16})
+  @umplesourcefile(line={467},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5072},length={16})
    private TraceCondition analyzeTraceCondition(Token traceConditionToken, String conditionType){
     ConditionRhs rhs = new ConditionRhs();
     TraceCondition tc = new TraceCondition(rhs);
@@ -1591,7 +5095,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyzes trace case token and its subtokens (i.e. trace directive tokens)
    */
-  @umplesourcefile(line={486},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1591},length={25})
+  @umplesourcefile(line={486},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5095},length={25})
    public void analyzeTraceCaseToken(UmpleClass aClass, Token token){
     TraceCase tca = new TraceCase();
     TraceDirective td = new TraceDirective(model.getTracer());
@@ -1623,7 +5127,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Modified version of method "analyzeTraceDirective"
    * This method analyzes trace directive fragments inside a trace case
    */
-  @umplesourcefile(line={515},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1622},length={43})
+  @umplesourcefile(line={515},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5126},length={43})
    private void analyzeTraceDirectiveFragments(TraceDirective traceDirective, UmpleClass aClass, Token traceToken, Token token){
     AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
       MethodTraceEntity mte = new MethodTraceEntity();
@@ -1672,7 +5176,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Perform post token analysis on trace related elements of the Umple language
    */
-  @umplesourcefile(line={561},file={"UmpleInternalParser_CodeTrace.ump"},javaline={1672},length={3})
+  @umplesourcefile(line={561},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5176},length={3})
    private void postTokenTraceAnalysis(){
     
   }
@@ -1681,7 +5185,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze layout tokens to the Umple language
    */
-  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeLayout.ump"},javaline={1681},length={3})
+  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5185},length={3})
    private void analyzeLayoutToken(Token token, int analysisStep){
     
   }
@@ -1691,7 +5195,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * There are currently no core tokens of concern in the context of an UmpleClass
    * This method is available if needed
    */
-  @umplesourcefile(line={27},file={"UmpleInternalParser_CodeLayout.ump"},javaline={1690},length={38})
+  @umplesourcefile(line={27},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5194},length={38})
    private void analyzeLayoutToken(Token token, UmpleClass aClass, int analysisStep){
     // Only process layout tokens once all other entities have been analyzed
     if (analysisStep == 1 || shouldProcessClassAgain)
@@ -1735,7 +5239,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Perform post token analysis on core elements of the Umple language
    */
-  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeLayout.ump"},javaline={1735},length={3})
+  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5239},length={3})
    private void postTokenLayoutAnalysis(){
     layoutNewElements();
   }
@@ -1744,7 +5248,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Look for any new elements and give them positions if undefined
    */
-  @umplesourcefile(line={74},file={"UmpleInternalParser_CodeLayout.ump"},javaline={1744},length={53})
+  @umplesourcefile(line={74},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5248},length={53})
    private void layoutNewElements(){
     // layout classes
     for (int i=0; i<model.numberOfUmpleClasses(); i++)
@@ -1802,57 +5306,10 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={260},file={"UmpleInternalParser_CodeClass.ump"},javaline={1806},length={3033})
-  @umplesourcefile(line={261},file={"UmpleInternalParser_CodeClass.ump"},javaline={1807},length={19})
-  private void analyzeMultilineComment(Token token)
+  //  @umplesourcefile(line={322},file={"UmpleInternalParser_CodeClass.ump"},javaline={5310},length={82})
+  @umplesourcefile(line={323},file={"UmpleInternalParser_CodeClass.ump"},javaline={5311},length={27})
+  private List <UmpleInterface> recursiveCycleCheckInterface(List <UmpleInterface> extend,UmpleInterface parent, HashMap<UmpleInterface, Boolean> map) 
   {
-    String inlineComments[] = token.getValue().split("\n");
-
-    // Go through the inline comments and add them to the list of comments waiting to be applied
-    String theComment = "";
-    for (int i = 0; i < inlineComments.length; i++) 
-    {
-      theComment = inlineComments[i];
-      if(theComment.startsWith("@outputumplesource")) {
-        outputUmpleSource = true;
-      }
-      else {
-        Comment comment = new Comment(theComment);
-        comment.isInline = false;
-        lastComments.add(comment);
-      }
-    }
-  }
-
-  // Link associations, association variables and extends that were "defined" after their use
-  @umplesourcefile(line={282},file={"UmpleInternalParser_CodeClass.ump"},javaline={1829},length={15})
-  private void postTokenClassAnalysis()
-  {
-    if (verifyClassesInUse())
-    {
-      checkSingletonAssociations();
-      addUnlinkedAssociationVariables();
-      addUnlinkedAssociations();
-      addUnlinkedExtends();
-      checkDuplicateAssociationNames();
-      checkExtendsForCycles();
-      checkSortedAssociations();
-      checkClassInterfaceAssocations();
-      checkExtendsClass();
-    }
-  }
-
-  @umplesourcefile(line={298},file={"UmpleInternalParser_CodeClass.ump"},javaline={1846},length={5})
-  private void postTokenInterfaceAnalysis()
-  {
-    addUnlinkedInterfaceExtends();
-    checkExtendsForCyclesInterface();
-  }
-  
-  @umplesourcefile(line={304},file={"UmpleInternalParser_CodeClass.ump"},javaline={1853},length={28})
-   private List <UmpleInterface> recursiveCycleCheckInterface(List <UmpleInterface> extend,UmpleInterface parent, HashMap<UmpleInterface, Boolean> map)
-  {
-
     List <UmpleInterface> temp = new ArrayList <UmpleInterface>();
 
     if(extend == null|| extend.isEmpty())
@@ -1879,224 +5336,9 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return temp;
   }
 
-  @umplesourcefile(line={333},file={"UmpleInternalParser_CodeClass.ump"},javaline={1883},length={17})
-  private void checkExtendsForCyclesInterface()
-  {
-    for(UmpleInterface I : model.getUmpleInterfaces())
-    {
-      HashMap<UmpleInterface, Boolean> vistedMap = new HashMap<UmpleInterface, Boolean>();
-      if(I.getExtendsInterface() != null)
-      {
-        if(recursiveCycleCheckInterface(I.getExtendsInterface(), I, vistedMap).contains(I)){
-          Token t = I.getExtendsToken();
-              if(t.getValue().equals(I.getName()))
-                getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Interface",I.getName()));
-              else
-                getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),"Interface",t.getValue(),I.getName()));
-        }
-      }
-    }
-  }
-
-  @umplesourcefile(line={351},file={"UmpleInternalParser_CodeClass.ump"},javaline={1902},length={18})
-  private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map)
-  {
-    UmpleClass temp = null;
-
-    if(extend == null)
-      return null;
-
-    if(map.containsKey(extend))
-      return extend;
-
-    map.put(extend, true);
-
-    if(parent.equals(extend.getExtendsClass()))
-      return extend.getExtendsClass();
-
-    temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
-    return temp;
-  }
-
-  @umplesourcefile(line={370},file={"UmpleInternalParser_CodeClass.ump"},javaline={1922},length={18})
-  private void checkExtendsForCycles()
-  {
-    for(UmpleClass C : model.getUmpleClasses())
-    {
-      HashMap<UmpleClass, Boolean> vistedMap = new HashMap<UmpleClass, Boolean>();
-      if(C.getExtendsClass() != null)
-      {
-        if(C.equals(recursiveCycleCheck(C.getExtendsClass(), C, vistedMap))) 
-        {
-          Token t = C.getExtendsToken();
-          if(t.getValue().equals(C.getName()))
-            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Class",C.getName()));
-          else
-            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),"Class",t.getValue(),C.getName()));
-        }
-      }
-    }
-  }
-
-  // Check for the existence of a a parent class
-  @umplesourcefile(line={390},file={"UmpleInternalParser_CodeClass.ump"},javaline={1943},length={12})
-  private void checkExtendsClass(){
-    for(UmpleClass child : model.getUmpleClasses()) {
-      if(child.getExtendsToken() != null)
-        if (child.getExtendsClass() != null )
-          continue;
-      else{
-        Token t = child.getExtendsToken();
-        getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),
-          child.getName()));      
-      }
-    }
-  }
-
-  /*
-   * Analyzes all associations that are part of the given token indicated to be related to an association.
-   * 
-   * @param associationToken The token indicated to be an association or association Class where sub tokens will be analyzed from to further
-   * analyze the individual associations.
-   */
-  @umplesourcefile(line={409},file={"UmpleInternalParser_CodeClass.ump"},javaline={1963},length={24})
-  private void analyzeAllAssociations(Token associationToken)
-  {
-    String name = associationToken.getValue("name");
-
-    // Go through every token that is a child of the current token (all associations part of this association).
-    for(Token token : associationToken.getSubTokens()){
-      boolean isAssociationToken = token.is("association");
-
-      //Issue 213/131: [association] elements inside associationClasses generate 2 associations instead of one
-      if (isAssociationToken && associationToken.is("associationClassDefinition")) {
-        for (Token t : token.getSubTokens()) {
-          if (t.is("associationEnd")) {
-            analyzeAssociation(t, "");
-          }
-        }
-      } else if (isAssociationToken || token.is("singleAssociationEnd")){
-        Association association = analyzeAssociation(token, "");
-        if(isAssociationToken && association != null){
-          association.setName(name);
-        }
-      }
-      if (!getParseResult().getWasSuccess()) { return; }
-    }
-  }
-
-  /*
-   * Analyzes a class token to populate an Umple class.
-   * 
-   * This is also where the list of currently parsed comments will be added to the Umple class.
-   * 
-   * @param classToken The token which contains the data to be analyzed to populate an Umple class.
-   * 
-   * @return An Umple class populated with data based on the analysis of the class token.
-   */
-  @umplesourcefile(line={443},file={"UmpleInternalParser_CodeClass.ump"},javaline={1998},length={10})
-  private UmpleClass analyzeClass(Token classToken)
-  {
-    String className = classToken.getValue("name").split(" ")[classToken.getValue("name").split(" ").length-1];
-    //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
-    if (Token.isValidIdentifier(className, "[A-Za-z]") != true) {
-      setFailedPosition(classToken.getPosition(), 100, className);
-    }
-    else if ( className.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.
-      setFailedPosition(classToken.getPosition(), 101, className);
-    }
-    UmpleClass aClass;
-    //Issue 213: UmpleClass can be an AssociationClass
-    if(classToken.is("associationClassDefinition")){
-        aClass = model.addAssociationClass(classToken.getValue("name"));
-    }else{
-        aClass = model.addUmpleClass(classToken.getValue("name"));
-    }
-    if ( classToken.is("classDefinition") && "external".equals(aClass.getModifier()) )
-      aClass.setModifier(""); // Remove the external modifier if a non-external specification of this class is found.
-
-    Position thePosition = classToken.getPosition();
-    Position endPosition = classToken.getEndPosition();
-
-    // Set the original .ump file and line number
-    aClass.addPosition(thePosition);
-    aClass.addEndPosition(endPosition);
-
-    // Add all the comments in the comment list to the Umple class.
-    // But add them before any umplesource special comments
-    int regularCommentCountEnd = 0;
-    for (Comment c : aClass.getComments()) {
-      if(c.getText().startsWith("@umplesource")) break;
-      regularCommentCountEnd++;
-    }
-
-    for (Comment c : lastComments)
-    {
-      aClass.addCommentAt(c,regularCommentCountEnd);
-      regularCommentCountEnd++;
-    }
-    
-    // Add special position comment at the end if @outputumplesource had been 
-    // detected earlier in a comment
-    if(outputUmpleSource == true) {  
-      aClass.addComment(new Comment("@umplesource " + thePosition.getRelativePath(null,"Java")+" "+thePosition.getLineNumber()));
-    }
-
-  // If the "abstract" keyword is parsed, make the Umple class an abstract class.
-    if (classToken.getValue("abstract") != null)
-    {
-      boolean wasSet = aClass.setIsAbstract(true);
-      
-      // Ensure the value was set.
-      if (wasSet == false)
-      {
-        setFailedPosition(classToken.getPosition(), 0, "Unable to make class abstract!");
-      }
-    }
-
-    addExtendsTo(classToken, aClass, unlinkedExtends, unlinkedExtendsTokens);
-    
-    // If the "singleton" keyword is parsed, make the Umple class a singleton.
-    if (classToken.getValue("singleton") != null)
-    {
-      aClass.setIsSingleton(true);
-    }
-    if(!"".equals(aClass.getPackageName()) && !currentPackageName.equals(aClass.getPackageName()) && !packageNameUsed){
-      setFailedPosition(classToken.getPosition(), 30, aClass.getName(), currentPackageName);
-      aClass.setPackageName(currentPackageName);    
-    }    
-    if("".equals(aClass.getPackageName())){
-      aClass.setPackageName(currentPackageName);
-  }
-  packageNameUsed = true;
-    if (aClass.getIsSingleton()) 
-    {
-      classToken.setName(classToken.getName());  
-    }
-
-    if (classToken.getValue("immutable") != null)
-    {
-      boolean wasSet = aClass.setImmutable();
-      if (!wasSet)
-      {
-        // Future-proofing: currently all paths cause wasSet to be true
-        setFailedPosition(classToken.getPosition(), 14, classToken.getName());
-      }
-    }
-
-    analyzeAllTokens(classToken,aClass);
-    return aClass;
-  }
-
-  /*
-   * Takes an Umple classifier and analyzes a classifier token to add classifiers which extend it.
-   * 
-   * @param classifierToken The token to be analyzed to add subclasses to the specified Umple classifier.
-   * @param aClassifier The Umple classifier for which subclasses will be added.
-   */
-  @umplesourcefile(line={542},file={"UmpleInternalParser_CodeClass.ump"},javaline={2098},length={24})
-  private void addExtendsTo(Token classifierToken, UmpleClassifier aClassifier, Map <UmpleClassifier,List <String>> unlinkedExtends, Map <UmpleClassifier, List<Token>> unlinkedExtendsTokens)
-  //private void addExtendsTo(Token classToken, UmpleClassifier aClassifier)
+//  @umplesourcefile(line={560},file={"UmpleInternalParser_CodeClass.ump"},javaline={5340},length={53})
+  @umplesourcefile(line={561},file={"UmpleInternalParser_CodeClass.ump"},javaline={5341},length={23})
+  private void addExtendsTo(Token classifierToken, UmpleClassifier aClassifier, Map <UmpleClassifier,List <String>> unlinkedExtends, Map <UmpleClassifier, List<Token>> unlinkedExtendsTokens) //private void addExtendsTo(Token classToken, UmpleClassifier aClassifier) 
   {
     List<String> extendsList = new ArrayList<String>();
     List<Token> extendsTokenList = new ArrayList<Token>();
@@ -2118,1526 +5360,13 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 			Token t = extendsTokenList.get(0);			
 			getParseResult().addErrorMessage(new ErrorMessage(34,t.getPosition(),aClassifier.getName(),t.getValue()));
 		}
-   }
-	
-	//Returns the number of umple class in extends list (extList)
-  @umplesourcefile(line={568},file={"UmpleInternalParser_CodeClass.ump"},javaline={2125},length={10})
-  private int numberOfExtendsClass(List<Token> extList)
-	{
-		int counter = 0;
-		for(Token t : extList)
-		{	
-			if(isAnUmpleClass(t.getValue("extendsName")))
-				counter++;
-		}
-		return counter;
-	}
+  }
 
-	//This method checks if an umple element with name "name" is an umple class
-  @umplesourcefile(line={580},file={"UmpleInternalParser_CodeClass.ump"},javaline={2138},length={13})
-	private boolean isAnUmpleClass(String name)
-	{
-		for(UmpleClass aClass : model.getUmpleClasses())
-		{
-			if(aClass != null)
-			{
-				String nam = aClass.getName();
-				if(nam.equals(name))
-					return true;
-			}
-		}
-		return false;
-	}
-  @umplesourcefile(line={593},file={"UmpleInternalParser_CodeClass.ump"},javaline={2152},length={10})
-  private UmpleClass analyzeExternal(Token externalToken)
+//  @umplesourcefile(line={105},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={5366},length={28})
+  @umplesourcefile(line={106},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={5367},length={24})
+  private List <ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClass aClass) 
   {
-    // Check to see if there is an existing class
-    UmpleClass existingClass = model.getUmpleClass(externalToken.getValue("name"));
-    UmpleClass aClass = analyzeClass(externalToken);
-    // Only set the modifier to external if there is not a class defined with the same name
-    if ( existingClass == null )
-      aClass.setModifier("external");
-    return aClass;
-  }
-
-  @umplesourcefile(line={604},file={"UmpleInternalParser_CodeClass.ump"},javaline={2164},length={6})
-  private UmpleInterface analyzeExternalInterface(Token externalToken)
-  {
-    UmpleInterface anInterface = analyzeInterface(externalToken);
-    anInterface.setModifier("external");
-    return anInterface;
-  }
-
-  @umplesourcefile(line={611},file={"UmpleInternalParser_CodeClass.ump"},javaline={2172},length={10})
-  private UmpleInterface analyzeInterface(Token t)
-  {
-    String interfaceName = t.getValue("name");   
-    //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
-    if (Token.isValidIdentifier(interfaceName, "[A-Za-z|@]") != true) {
-      setFailedPosition(t.getPosition(), 110, interfaceName);
-    }
-    else if ( interfaceName.matches("[a-z].*") ){ // Warn when interface name doesn't start with a capital letter.
-       setFailedPosition(t.getPosition(), 111, interfaceName);
-    }
-  
-    UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
-    model.addUmpleInterface(newInterface);
-    if(!"".equals(newInterface.getPackageName()) && !currentPackageName.equals(newInterface.getPackageName()) && !packageNameUsed){
-      setFailedPosition(t.getPosition(), 30, newInterface.getName(), currentPackageName);
-      newInterface.setPackageName(currentPackageName);    
-    }    
-    if("".equals(newInterface.getPackageName())){
-      newInterface.setPackageName(currentPackageName);
-  }
-  packageNameUsed = true;
-    analyzeInterface(t,newInterface);
-    return newInterface;
-  }
-
-  @umplesourcefile(line={636},file={"UmpleInternalParser_CodeClass.ump"},javaline={2198},length={26})
-  private void analyzeInterface(Token interfaceToken, UmpleInterface aInterface)
-  {
-    for(Token token : interfaceToken.getSubTokens())
-    {
-      if (token.is("depend"))
-      {
-        Depend d = new Depend(token.getValue());
-        aInterface.addDepend(d);
-      }
-      if (token.is("interfaceMemberDeclaration"))
-      {
-        analyzeInterfaceMembers(token, aInterface);
-      }
-      else if (token.is("elementPosition"))
-      {
-        aInterface.setCoordinates(new Coordinate(token.getIntValue("x"),token.getIntValue("y"), token.getIntValue("width"), token.getIntValue("height")));
-      }
-      else if (token.is("displayColor"))
-      {  // Note: See near clone in UmpleInternalParser_CodeLayout.ump
-        String theColor = token.getValue("colorValue");
-        if(theColor.startsWith("=")) theColor=theColor.substring(1,theColor.length());
-        if(!theColor.startsWith("\"")) theColor= "\""+theColor;
-        if(!theColor.endsWith("\"")) theColor= theColor+"\"";         
-        aInterface.setDisplayColor(theColor);
-      }
-    }
-  }
-
-  @umplesourcefile(line={664},file={"UmpleInternalParser_CodeClass.ump"},javaline={2227},length={47})
-  private void addUnlinkedInterfaceExtends()
-  {  
-    for (UmpleClassifier c : unlinkedInterfaceExtends.keySet())
-    {
-      UmpleInterface child = null; //unlinkedInterfaceExtends guaranteed to contain only UmpleInterfaces
-      if (c instanceof UmpleInterface){
-        child = (UmpleInterface) c;
-      }
-      List<String> extendsNames = unlinkedInterfaceExtends.get(child);
-      List<Token>  extendsToken = unlinkedExtendsTokensInterface.get(child);
-      
-
-      if (extendsNames == null)
-      {
-        continue;
-      }
-      
-
-      for (int i=0; i < extendsNames.size();i++)
-      {
-        String extendName= extendsNames.get(i);
-        UmpleInterface uInterface=  model.getUmpleInterface(extendName);
-        boolean wasSet = child.addExtendsInterface(uInterface);
-        
-        if (!wasSet)
-        {
-          Position pos;
-          try
-          {
-            pos = extendsToken.get(i).getPosition();
-          }
-          catch(Exception e)
-          {
-            pos = new Position("",0,0,0);
-          }
-          setFailedPosition(pos, 16, child.getName(), uInterface.getName());
-          return;
-        }
-        try
-        {
-          child.setExtendsToken(extendsToken.get(i));
-        }
-        
-        catch(Exception e){}
-      }
-    }
-  }  
-
-  @umplesourcefile(line={712},file={"UmpleInternalParser_CodeClass.ump"},javaline={2276},length={19})
-  private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface)
-  {
-    for(Token childToken : interfaceMemberToken.getSubTokens())
-    {
-      addExtendsTo(interfaceMemberToken, aInterface, unlinkedInterfaceExtends, unlinkedExtendsTokensInterface);
-      if(childToken.is("abstractMethodDeclaration"))
-      {
-        analyzeMethod(childToken, aInterface);   
-      }  
-      else if (childToken.is("constantDeclaration"))
-      {
-        analyzeConstant(childToken, aInterface);    
-      }
-      else if (childToken.is("extraCode"))
-      {
-        aInterface.appendExtraCode(childToken.getValue("extraCode"));
-      }
-    }
-  }
-
-  @umplesourcefile(line={732},file={"UmpleInternalParser_CodeClass.ump"},javaline={2297},length={20})
-  private void analyzeAssociationClass(Token classToken)
-  {
-    //test if Association class has at least 1 association or more than one singleEndAssociation
-    List<Token> subtokens = classToken.getSubTokens();
-    int singleAssocNumber = 0;
-    int assocNumber = 0;
-    for(Token t : subtokens){
-        if(t.is("singleAssociationEnd")){
-            singleAssocNumber++;
-        }else if (t.is("association")){
-            assocNumber++;
-        }
-    }
-    if(singleAssocNumber == 1 || (assocNumber == 0 && singleAssocNumber == 0)){
-        setFailedPosition(classToken.getPosition(), 8, classToken.getValue("name"));
-        return;
-    }
-    analyzeClass(classToken);
-    analyzeAllAssociations(classToken);
-  }
-
-  @umplesourcefile(line={753},file={"UmpleInternalParser_CodeClass.ump"},javaline={2319},length={18})
-   private boolean verifyClassesInUse()
-  {
-    for(Map.Entry<Position, String> e : positionToClassNameReference.entrySet())
-    {
-      boolean isAClass = model.getUmpleClass(e.getValue()) != null;
-      boolean isAInterface = model.getUmpleInterface(e.getValue()) != null;
-
-      if (!isAClass && !isAInterface) //item referenced not a class or interface
-      {
-        UmpleClass aClass = model.addUmpleClass(e.getValue());
-        aClass.setPackageName(model.getDefaultNamespace());
-        setFailedPosition(e.getKey(), 5, e.getValue());
-        return false;
-      }
-    }
-    
-    return true;
-  }
-  
-  @umplesourcefile(line={772},file={"UmpleInternalParser_CodeClass.ump"},javaline={2339},length={10})
-    private boolean associationIsBetweenClassAndInterface (Association a){
-     AssociationEnd myEnd = a.getEnd(0);
-       AssociationEnd yourEnd = a.getEnd(1);
-       
-       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
-       UmpleInterface yourClass = model.getUmpleInterface(yourEnd.getClassName());
-       
-       if (myClass != null && yourClass != null ){ //association is between class and interface
-         return true;
-       }
-       
-       return false;
-      
-   }
-  
-
-
-  @umplesourcefile(line={789},file={"UmpleInternalParser_CodeClass.ump"},javaline={2357},length={38})
-  private void addUnlinkedAssociationVariables()
-  {
-    for (AssociationVariable av : unlinkedAssociationVariables)
-    {
-       
-      UmpleClass aClass = model.getUmpleClass(av.getType());
-      UmpleClass bClass = model.getUmpleClass(av.getRelatedAssociation().getType());   
-      
-      if (aClass == null || bClass == null){ //Association is between Class and Interface
-        continue;
-      }   
-
-      Association assoc = bClass.getAssociation(bClass.indexOfAssociationVariable(av));
-
-      boolean added = aClass.addAssociationVariable(av.getRelatedAssociation());
-      if (!added)
-      {
-        if ((!aClass.isImmutable() && !av.getRelatedAssociation().getIsNavigable()) || (!bClass.isImmutable() && !av.getIsNavigable())) 
-        { 
-          setFailedPosition(assoc.getTokenPosition(),13);
-        }
-        else { setFailedPosition(assoc.getTokenPosition(),18); }
-        return;
-      }
-
-      aClass.addAssociation(assoc);
-
-      if (av.getIsNavigable())
-      {
-        bClass.addReferencedPackage(aClass.getPackageName());
-      }
-
-      if (av.getRelatedAssociation().getIsNavigable())
-      {
-        aClass.addReferencedPackage(bClass.getPackageName());
-      }
-
-    }
-  }
-
-  @umplesourcefile(line={829},file={"UmpleInternalParser_CodeClass.ump"},javaline={2398},length={4})
-  private boolean isUmpleClass(String elementName)
-  {
-    return (model.getUmpleInterface(elementName) != null) ? false: true;
-  }
-
-  @umplesourcefile(line={834},file={"UmpleInternalParser_CodeClass.ump"},javaline={2404},length={51})
-  private void addUnlinkedExtends()
-  {  
-    for (UmpleClassifier c : unlinkedExtends.keySet())
-    {
-      UmpleClass child = null; // unlinkedExtends guaranteed to contain only UmpleClasses
-      if (c instanceof UmpleClass){
-        child = (UmpleClass) c;
-      }  
-    
-      List<String> extendsNames = unlinkedExtends.get(child);    
-      List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
-
-      if (extendsNames == null)
-      {
-        continue;
-      }
-
-      for (int i=0; i < extendsNames.size();i++){
-        String extendName= extendsNames.get(i);
-        if (isUmpleClass(extendName))
-        {
-          UmpleClass parent = model.getUmpleClass(extendName);     
-          boolean wasSet = child.setExtendsClass(parent);
-          if (!wasSet)
-          {
-            Position pos;
-            try
-            {
-              pos = extendsToken.get(i).getPosition();
-            }
-            catch(Exception e)
-            {
-              pos = new Position("",0,0,0);
-            }
-            setFailedPosition(pos, 16, child.getName(), parent.getName());
-            return;
-          }
-          try
-          {
-            child.setExtendsToken(extendsToken.get(i));
-          }
-          catch(Exception e){}
-        }
-        else {
-          UmpleInterface uInterface=  model.getUmpleInterface(extendName);
-          child.addParentInterface(uInterface);
-          addImplementedMethodsFromInterface(uInterface, child);
-        }
-      }
-    }
-  }  
-
-  @umplesourcefile(line={886},file={"UmpleInternalParser_CodeClass.ump"},javaline={2457},length={16})
-  private void addImplementedMethodsFromInterface(UmpleInterface parentInterface, UmpleClass uClass)
-  {
-    //GET AND SET METHODS CHECK?
-    if (parentInterface.hasMethods())
-    {
-      for (Method aMethod : parentInterface.getMethods())
-      {
-        boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
-        if (!(uClass.hasMethod(aMethod)) && shouldAddMethod)
-        {
-          aMethod.setIsImplemented(true);
-          uClass.addMethod(aMethod);
-        }
-      }
-    }
-  }
-
-  /*
-   * Used to determine if a method is a contructor or a getter/setter.
-   * 
-   * @param uClass The Umple class for which the method is contained.
-   * @param aMethod The method which is contained within the Umple class.
-   * 
-   * @return True if the method is a constructor, getter/setter, false otherwise.
-   */
-  @umplesourcefile(line={911},file={"UmpleInternalParser_CodeClass.ump"},javaline={2483},length={34})
-  private boolean verifyIfMethodIsConstructorOrGetSet(UmpleClass uClass, Method aMethod)
-  {
-    String methodName = aMethod.getName();
-
-    // Have to check for short method names.
-    if (methodName.length() >= 3)
-    {
-      //1. Verify if method to be added is a setter or a getter
-      String accessorName = methodName.substring(0,3);
-      if ((accessorName.equals("get") && aMethod.numberOfMethodParameters()==0) || (accessorName.equals("set")&& aMethod.numberOfMethodParameters()==1))
-      {
-        String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
-        Attribute attr = uClass.getAttribute(possibleAttributeName);
-        if (attr != null)
-        {
-          return false;
-        }
-      }
-      //2. Verify if method to be added is a constructor
-      if (aMethod.getType().equals("public"))
-      {
-        uClass.appendExtraCode(aMethod.toString());
-        return false;
-      }  
-      //3. Verify if method from interface is already part of the Class extracode
-      String match = "public " + aMethod.getType() + " " + aMethod.getName();    
-      if (uClass.getExtraCode().contains(match))
-      {
-        return false;
-      }
-    }
-
-    return true;
-  }
-  
-  @umplesourcefile(line={946},file={"UmpleInternalParser_CodeClass.ump"},javaline={2519},length={109})
-  private void checkDuplicateAssociationNames()
-  {
-    for(UmpleClass C : model.getUmpleClasses())
-    {
-      // Create the list of attribute names (for issue 272)
-      List<String> existingAttributeNames = new ArrayList<String>();
-      for (Attribute attr : C.getAttributes())
-      {
-              existingAttributeNames.add(attr.getName());
-      }
-      
-      Boolean roleMatchesClassName, hasMultipleAssocToSameClass;
-      List<String> classesWithAssociationsToCurrClass = new ArrayList<String>();
-      List<String> roleNameSameAsClassName = new ArrayList<String>();
-      List<String> existingNames = new ArrayList<String>();
-      List<Association> visitedAssociations = new ArrayList<Association>();
-      for(Association assoc : C.getAssociations())
-      {  
-       roleMatchesClassName = false;
-       hasMultipleAssocToSameClass = false;
-       
-        if (visitedAssociations.contains(assoc))
-        {
-          continue;
-        }
-        
-        AssociationEnd firstEnd = assoc.getEnd(0);
-        AssociationEnd secondEnd = assoc.getEnd(1);  
-        
-        Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
-        Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
-        Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
-        
-        //issue 288: firstEnd of association does not indicate current (this) class being analyzed.
-        //If association is NOT reflexive, must check the differing class.  Check if role name
-        //matches class name, but only if it is a user entered role name.  Current class must
-        //also have multiple associations to the same class to cause java compile errors.  
-        if(!associationIsReflexive && C.numberOfAssociations() > 1)
-        { 
-          //check the differing class
-          if(checkFirstEnd)
-          {
-            if(roleNameSameAsClassName.contains(firstEnd.getClassName().toLowerCase()))
-            {
-              hasMultipleAssocToSameClass = true;   //flag error 19
-            }
-            //is a user-defined role name and rolename matches class name
-            else if(firstEnd.getRoleName().toLowerCase().equals(firstEnd.getClassName().toLowerCase()) && !firstEnd.getIsDefaultRoleName())
-            {    
-              roleNameSameAsClassName.add(firstEnd.getRoleName().toLowerCase());
-            }
-            
-            classesWithAssociationsToCurrClass.add(firstEnd.getClassName());
-          }
-          //check the differing class
-          if(checkSecondEnd)
-          {
-            if(roleNameSameAsClassName.contains(secondEnd.getClassName().toLowerCase()))
-            {
-              hasMultipleAssocToSameClass = true;  //flag error 19
-            }
-            //is a user-defined role name and rolename matches class name
-            else if(secondEnd.getRoleName().toLowerCase().equals(secondEnd.getClassName().toLowerCase()) && !secondEnd.getIsDefaultRoleName())
-            {    
-              roleNameSameAsClassName.add(secondEnd.getRoleName().toLowerCase());
-            }
-            
-            classesWithAssociationsToCurrClass.add(secondEnd.getClassName());          
-          }
-        }
-
-        // check names on other-class end of associations to other classes
-        if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
-        { 
-          if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
-          {
-            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
-          }
-          else if (existingAttributeNames.contains(firstEnd.getRoleName()))
-          {  // Check if the association name is the same as an attribute name
-             getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
-          }
-          else
-          {
-            existingNames.add(firstEnd.getRoleName());
-          }
-        }
-        if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
-        {
-          if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
-          {
-            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
-          }
-          else if (existingAttributeNames.contains(secondEnd.getRoleName()))
-          {  // Check if the association name is the same as an attribute name
-             getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),secondEnd.getRoleName()));
-          }
-          else
-          {
-            existingNames.add(secondEnd.getRoleName());
-          }
-        }
-        
-        if (associationIsReflexive)
-        { 
-          // The UmpleClass is only expected to have duplicate references to reflexive associations
-          visitedAssociations.add(assoc);
-        }
-      }
-    }
-  }
-
-  @umplesourcefile(line={1058},file={"UmpleInternalParser_CodeClass.ump"},javaline={2632},length={37})
-  private void checkSingletonAssociations() 
-  {
-    for (Association association : model.getAssociations()) 
-    {  
-      if (associationIsBetweenClassAndInterface (association)){continue;}  
-      
-      AssociationEnd myEnd = association.getEnd(0);
-      AssociationEnd yourEnd = association.getEnd(1);
-
-      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
-      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-
-      if (myClass.getIsSingleton() && (yourEnd.getMultiplicity().getRangeParts()[0].equals("1") && yourEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
-      {
-        yourEnd.getMultiplicity().setRange("0", "1");
-        yourEnd.getMultiplicity().setBound(null);
-        setFailedPosition(association.getTokenPosition(), 2, association.getName());  
-      }
-
-      if (yourClass.getIsSingleton() && (myEnd.getMultiplicity().getRangeParts()[0].equals("1") && myEnd.getMultiplicity().getRangeParts()[1].equals("1"))) 
-      {
-        myEnd.getMultiplicity().setRange("0", "1");
-        myEnd.getMultiplicity().setBound(null);
-        setFailedPosition(association.getTokenPosition(), 2, association.getName());
-      }
-
-      if(myClass.getIsSingleton() && (myEnd.getMultiplicity().getUpperBound() < 0 || myEnd.getMultiplicity().getUpperBound() > 1)) 
-      {
-        setFailedPosition(association.getTokenPosition(), 10, myEnd.getClassName());
-      }
-
-      if(yourClass.getIsSingleton() && (yourEnd.getMultiplicity().getUpperBound() < 0 || yourEnd.getMultiplicity().getUpperBound() > 1)) 
-      {
-        setFailedPosition(association.getTokenPosition(), 10, yourEnd.getClassName());
-      }
-    }
-  }
-
-  @umplesourcefile(line={1096},file={"UmpleInternalParser_CodeClass.ump"},javaline={2671},length={60})
-  private void addUnlinkedAssociations()
-  {
-    for (Association association : unlinkedAssociations)
-    {         
-      if (associationIsBetweenClassAndInterface (association)){continue;}  
-      
-      AssociationEnd myEnd = association.getEnd(0);
-      AssociationEnd yourEnd = association.getEnd(1);
-
-      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
-      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-      
-      AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
-      AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
-      myAs.setRelatedAssociation(yourAs);
-      
-      if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
-      if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
-      
-      if (association.isImmutable())
-      {
-        boolean set = myAs.setImmutable();
-        if (set) { yourAs.setImmutable(); }
-        else
-        {
-          setFailedPosition(association.getTokenPosition(),17);
-        }
-      }
-      
-      boolean added = myClass.addAssociationVariable(yourAs);
-      if (!added)
-      {
-        if (myClass.isImmutable()) { setFailedPosition(association.getTokenPosition(),17); }
-        else { setFailedPosition(association.getTokenPosition(),13); }
-        return;
-      }
-      myClass.addAssociation(association);
-
-      added = yourClass.addAssociationVariable(myAs);
-      if (!added)
-      {
-        if (myClass == yourClass) { setFailedPosition(association.getTokenPosition(),18); }
-        else { setFailedPosition(association.getTokenPosition(),13); }
-        return;
-      }
-      
-      yourClass.addAssociation(association);
-
-      if (myAs.getIsNavigable())
-      {
-        yourClass.addReferencedPackage(myClass.getPackageName());
-      }
-
-      if (yourAs.getIsNavigable())
-      {
-        myClass.addReferencedPackage(yourClass.getPackageName());
-      }      
-
-    }
-  }
-
-  @umplesourcefile(line={1157},file={"UmpleInternalParser_CodeClass.ump"},javaline={2733},length={95})
-  private void checkSortedAssociations()
-  {
-    for (Association association : model.getAssociations()) 
-    {
-      if (associationIsBetweenClassAndInterface (association)){continue;}
-      AssociationEnd myEnd = association.getEnd(0);
-      AssociationEnd yourEnd = association.getEnd(1);
-
-      UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
-      UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
-
-      String value;
-
-      if(!"".equals(yourEnd.getPriority())){
-        Attribute temp = yourClass.getAttribute(yourEnd.getPriority());
-        if(temp != null)
-        {
-          if(Pattern.matches("Integer|Short|Long|Float|Double|String", temp.getType())) 
-          {
-            String attributeType = yourClass.getName();
-            String priorityType = temp.getType();
-            String sortedName = yourEnd.getPriority().substring(0,1).toUpperCase() + yourEnd.getPriority().substring(1);
-            String php_codeblock = 
-                "\n      function($x, $y)\n"+
-                    "      {\n"+
-                    "        return $x->get"+ sortedName +"() -\n"+ 
-                    "               $y->get"+ sortedName +"();\n"+
-                    "      }";  
-            String java_codeblock = 
-                "\n      new Comparator<" + attributeType +">(){\n"+
-                    "        @Override\n"+
-                    "        public int compare("+attributeType+" arg0, "+attributeType+" arg1)\n"+ 
-                    "        {\n"+
-                    "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
-                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
-                    "        }\n"+
-                    "      }";    
-
-            Attribute priority = new Attribute(yourEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, yourClass);
-            CodeBlock cb = new CodeBlock();
-            cb.setCode("Php", php_codeblock);
-            cb.setCode("Java", java_codeblock);
-            cb.setCode("Ruby", "\"\"");
-            priority.setCodeblock(cb); 
-            myClass.addAttribute(priority);
-
-          } 
-          else
-            setFailedPosition(association.getTokenPosition(), 24, yourEnd.getPriority(), myClass.getName());
-        }
-        else
-          setFailedPosition(association.getTokenPosition(), 25, yourClass.getName(), yourEnd.getPriority());
-      }
-
-      if(!"".equals(myEnd.getPriority())){
-        Attribute temp = myClass.getAttribute(myEnd.getPriority());
-        if(temp != null)
-        {
-          if(Pattern.matches("Integer|Short|Long|Float|Double|String", temp.getType()))
-          {
-            String attributeType = myClass.getName() ;
-            String priorityType = temp.getType();
-            String sortedName = myEnd.getPriority().substring(0,1).toUpperCase() + myEnd.getPriority().substring(1);
-            String php_codeblock = 
-                "\n      function($x, $y)\n"+
-                    "      {\n"+
-                    "        return $x->get"+ sortedName +"() -\n"+ 
-                    "               $y->get"+ sortedName +"();\n"+
-                    "      }";  
-            String java_codeblock = 
-                "\n      new Comparator<" + attributeType +">(){\n"+
-                    "        @Override\n"+
-                    "        public int compare("+attributeType+" arg0, "+attributeType +" arg1)\n"+ 
-                    "        {\n"+
-                    "          return (("+priorityType+")arg0.get"+sortedName+"()).compareTo(\n"+
-                    "                 (("+priorityType+")arg1.get"+sortedName+"()));\n"+ 
-                    "        }\n"+
-                    "      }";    
-
-            Attribute priority = new Attribute(myEnd.getRoleName()+"Priority","Comparator<" + attributeType +">", "", "", false, myClass);
-            CodeBlock cb = new CodeBlock();
-            cb.setCode("Php", php_codeblock);
-            cb.setCode("Java", java_codeblock);
-            cb.setCode("Ruby", "\"\"");
-            priority.setCodeblock(cb); 
-            yourClass.addAttribute(priority);
-          }  
-          else
-            setFailedPosition(association.getTokenPosition(), 24, myEnd.getPriority(), yourClass.getName());
-        }
-        else
-          setFailedPosition(association.getTokenPosition(), 25, myClass.getName(), myEnd.getPriority());
-      }
-    }
-  }
-  
-  @umplesourcefile(line={1253},file={"UmpleInternalParser_CodeClass.ump"},javaline={2830},length={10})
-   private void checkClassInterfaceAssocations(){
-    for (Association a : model.getAssociations()){
-      if (associationIsBetweenClassAndInterface(a)){
-        boolean hasCorrectArrow = !a.getIsLeftNavigable()&&a.getIsRightNavigable(); // Assocation has "->" arrow
-        if (!hasCorrectArrow){
-          setFailedPosition(a.getTokenPosition(), 20, a.getEnd(0).getClassName());
-        }
-      }
-    }
-  }
-  
-  /*
-   * Analyzes a token flagged to be a method in which case the data that makes up the method will be populated into a
-   * method instance and added to an Umple element (which could be an Umple class).
-   * 
-   * @param method The token flagged to be the method.
-   * @param uElement The Umple element for which the method will be added.
-   */
-  @umplesourcefile(line={1271},file={"UmpleInternalParser_CodeClass.ump"},javaline={2849},length={92})
-  private void analyzeMethod(Token method, UmpleElement uElement)
-  {
-    String modifier = "";
-    Method aMethod = new Method("","","",false);
-
-  // Set method position
-  aMethod.setPosition(method.getPosition());
-  aMethod.setEndPosition(method.getEndPosition());
-  
-    // Add comments above the method to the method.
-    for (Comment c : lastComments)
-    {
-      aMethod.addComment(c);
-    }
-
-    // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
-    List<String> langs = new ArrayList<String>();
-    CodeBlock cb = new CodeBlock("");
-    boolean canClear = false;
-    for(Token token : method.getSubTokens())
-    {
-      if (token.is("modifier"))
-      {
-        modifier += " " + (token.getValue());
-        aMethod.setModifier(modifier);
-      }
-      else if(token.is("static"))
-      {
-        modifier += " static ";
-        aMethod.setModifier(modifier);
-      }
-      else if (token.is("type"))
-      {
-        aMethod.setType(token.getValue());
-      }
-      else if (token.is("methodDeclarator"))
-      {
-        analyzeMethodDeclarator(token, aMethod);
-      }
-      else if (token.is("code"))
-      {        
-        if(langs.isEmpty())
-        {
-          cb.setCode(token.getValue());
-        }  
-        else
-        {
-          for(String str: langs)
-          {
-            cb.setCode(str,(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+token.getValue());
-          }
-        }
-        canClear = true;
-      }
-      else if (token.is("codeLang"))
-      {
-        if(canClear)
-        {
-          langs.clear();
-          canClear = false;
-        }
-        langs.add(token.getValue());
-      }
-      else if (token.is("precondition")){ 
-        if (uElement instanceof UmpleClass){
-          analyzePrecondition(token, (UmpleClass) uElement, aMethod);
-        }  
-      }
-    }
-    MethodBody meth = new MethodBody(cb);
-    aMethod.setMethodBody(meth);
-
-    // Add method to Class or Interface
-    if (uElement instanceof UmpleClass)
-    {
-      UmpleClass uClass = (UmpleClass) uElement;
-      
-      boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
-      if (!uClass.hasMethod(aMethod) && shouldAddMethod )
-      {
-        uClass.addMethod(aMethod); 
-      }
-    }
-    else if (uElement instanceof UmpleInterface)
-    {
-      UmpleInterface uInterface = (UmpleInterface) uElement;
-      if (!uInterface.hasMethod(aMethod))
-      {
-        uInterface.addMethod(aMethod); 
-      }
-    }  
-  }
-
-  /*
-   * Analyzes a method header, from a token flagged to be one, to populate a method instance for things such as the
-   * method name, type and parameters.
-   * 
-   * @param token The token flagged to be a method header.
-   * @param aMethod The method to be populated from the analysis of the token.
-   */
-  @umplesourcefile(line={1371},file={"UmpleInternalParser_CodeClass.ump"},javaline={2950},length={35})
-  private void analyzeMethodDeclarator(Token token, Method aMethod)
-  {
-    // Go through all sub tokens of the method token to obtain data such as the methods name, parameters etc and add them to the method.
-    for(Token methodToken : token.getSubTokens())
-    {
-      if (methodToken.is("methodName"))
-      {
-        aMethod.setName(methodToken.getValue());
-      }
-      if (methodToken.is("parameterList"))
-      {
-        for(Token parameterToken : methodToken.getSubTokens())
-        {
-          boolean isList = false;
-          if (parameterToken.is("parameter"))
-          {
-            String paramType="";
-            if (parameterToken.getSubToken("type") != null)
-            {
-              paramType = parameterToken.getSubToken("type").getValue();
-            }
-            if (parameterToken.getSubToken("list") != null)
-            {
-              isList = parameterToken.getSubToken("list").getValue() != null;        
-            }
-
-            String paramName = parameterToken.getSubToken("name").getValue();
-            MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
-            aParameter.setIsList(isList);
-            aMethod.addMethodParameter(aParameter);
-          }
-        }
-      }
-    }
-  }
-
-  /*
-   * Analyzes a constant, from a token flagged to be one, to add a constant instance to an Umple element.
-   * 
-   * @param constantToken The token flagged to be a constant.
-   * @param uElement The Umple element for which a new constant will be added (populated from analysis of the token).
-   */
-  @umplesourcefile(line={1413},file={"UmpleInternalParser_CodeClass.ump"},javaline={2993},length={38})
-  private void analyzeConstant(Token constantToken, UmpleElement uElement)
-  {
-    Constant aConstant = new Constant("","","","");
-    String modifier = "";
-
-    // Create the Constant Object
-    for(Token token : constantToken.getSubTokens())
-    {
-      if (token.is("modifier"))
-      {
-        modifier += " " + (token.getSubToken(0).getName());
-        aConstant.setModifier(modifier);
-      }
-      else if (token.is("name"))
-      {
-        aConstant.setName(token.getValue());
-      }
-      else  if (token.is("type"))
-      {
-        aConstant.setType(token.getValue());
-      }
-      else  if (token.is("value"))
-      {
-        aConstant.setValue(token.getValue());
-      }
-    }  
-    // Add constant to Class or Interface
-    if (uElement instanceof UmpleClass)
-    {
-      UmpleClass uClass = (UmpleClass) uElement;
-      uClass.addConstant(aConstant);
-    }
-    else if (uElement instanceof UmpleInterface)
-    {
-      UmpleInterface uInterface = (UmpleInterface) uElement;
-      uInterface.addConstant(aConstant);
-    }  
-  }
-
-  @umplesourcefile(line={1452},file={"UmpleInternalParser_CodeClass.ump"},javaline={3033},length={9})
-  private void analyzeInjectionCode(Token injectToken, UmpleClass aClass)
-  {
-    String type = injectToken.is("beforeCode") ? "before" : "after";    
-    CodeBlock cb = new CodeBlock();
-    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),"",aClass);
-    makeCodeInject(injectToken,injection,cb,aClass);
-    injection.setSnippet(cb);
-    aClass.addCodeInjection(injection);    
-  }
-  
-  @umplesourcefile(line={1462},file={"UmpleInternalParser_CodeClass.ump"},javaline={3044},length={32})
-  private void makeCodeInject(Token injectToken,CodeInjection injection, CodeBlock cb, UmpleClass aClass)
-  {
-    List<String> langs = new ArrayList<String>();
-    for(Token sub: injectToken.getSubTokens())
-    {
-      if(sub.is("codeLang"))
-      {
-        langs.add(sub.getValue());
-      }
-      if(sub.is("code"))
-      {          
-        if(langs.size()==0)
-        {
-          cb.setCode(sub.getValue());
-        }
-        else
-        {
-          for(String lang:langs)
-            {
-            cb.setCode(lang,sub.getValue());
-            }
-        }
-        langs.clear();      
-      }
-      if(sub.is("codeInject"))
-      {
-        makeCodeInject(sub,injection, cb , aClass);
-      }
-    }    
-    injection.setPosition(injectToken.getPosition());
-    
-  }
-
-  @umplesourcefile(line={1495},file={"UmpleInternalParser_CodeClass.ump"},javaline={3078},length={85})
-  private void analyzeKey(Token keyToken, UmpleClass aClass)
-  {
-    if (aClass.getKey().isProvided())
-    {
-      setFailedPosition(keyToken.getPosition(), 7, keyToken.getParentToken().getValue("name"));
-    }
-
-    if (keyToken.is("defaultKey"))
-    {
-      aClass.getKey().setIsDefault(true);
-      return;
-    }
-
-    List<String> tokensAdded = new ArrayList<String>();
-    Boolean tokenMatch;
-    for(Token token : keyToken.getSubTokens())
-    {
-      tokenMatch = false;
-      
-      if (!token.is("keyId"))
-      {
-        continue;
-      }
- 
-      //Checks for duplicate attributes/associations/stateMachines
-      if(tokensAdded.contains(token.getValue()))
-      {
-        setFailedPosition(keyToken.getPosition(), 26, token.getValue(), keyToken.getParentToken().getValue("name"));
-      }
-   
-    if(!aClass.hasAttributes() && !aClass.hasAssociations() && !aClass.hasStateMachines())
-      {
-        setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
-      }
-      else{
-        if(aClass.hasAttributes())
-        {
-          for(Attribute aAttribute : aClass.getAttributes())
-          {
-            if(aAttribute.getName().equals(token.getValue()))
-            {
-              tokenMatch = true;
-            }
-        }
-        }
-      
-        if(aClass.hasAssociations())
-      {
-        AssociationEnd firstEnd, secondEnd;
-        String firstEndName, secondEndName;
-  
-        for(Association aAssociation : aClass.getAssociations())
-          { 
-            firstEnd = aAssociation.getEnd(0);
-            secondEnd = aAssociation.getEnd(1);
-            firstEndName =  firstEnd.getRoleName();
-            secondEndName = secondEnd.getRoleName();        
-                      
-            if(firstEndName.equals(token.getValue()) || secondEndName.equals(token.getValue()))
-            {
-              tokenMatch = true;
-            }
-        }
-      }  
-
-        if(aClass.hasStateMachines())  
-        {
-        for(StateMachine aStateMachine : aClass.getStateMachines())
-        {
-            if(aStateMachine.getName().equals(token.getValue()))
-            {
-              tokenMatch = true;
-            }      
-        }
-      }      
-
-      if(!tokenMatch)
-      {
-        setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
-      }
-    }
-      aClass.getKey().addMember(token.getValue());
-      tokensAdded.add(token.getValue()); 
-    }
-  }
-
-  @umplesourcefile(line={1581},file={"UmpleInternalParser_CodeClass.ump"},javaline={3165},length={23})
-  private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleClass aClass)
-  {
-    String myName = symmetricReflexiveAssociationToken.getValue("roleName");
-    String myType = aClass.getName();
-    String myModifier = "symmetricreflexive";
-    String myBound = symmetricReflexiveAssociationToken.getValue("bound");
-    String myLowerBound = symmetricReflexiveAssociationToken.getValue("lowerBound");
-    String myUpperBound = symmetricReflexiveAssociationToken.getValue("upperBound");
-    Multiplicity myMult = new Multiplicity();
-    myMult.setBound(myBound);
-    myMult.setRange(myLowerBound,myUpperBound);
-
-    AssociationVariable myAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
-    AssociationVariable yourAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
-
-    myAs.setRelatedAssociation(yourAs);
-    aClass.addAssociationVariable(yourAs);
-    
-    AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
-    AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
-    Association assoc = new Association(false, true, leftEnd, rightEnd);
-    aClass.addAssociation(assoc);
-  }
-
-  @umplesourcefile(line={1605},file={"UmpleInternalParser_CodeClass.ump"},javaline={3190},length={13})
-  private Association createAssociation(String navigation, AssociationEnd firstEnd, AssociationEnd secondEnd)
-  {
-    Association association;
-    if(navigation != null){
-      boolean isNavigable = "--".equals(navigation);
-      boolean isFirstNavigable = "<-".equals(navigation) || isNavigable;
-      boolean isSecondNavigable = "->".equals(navigation) || isNavigable;
-      association = new Association(isFirstNavigable,isSecondNavigable,firstEnd,secondEnd);
-    }else{
-      association = new Association(true, true, firstEnd, secondEnd);
-    }
-    return association;
-  }
-
-  @umplesourcefile(line={1619},file={"UmpleInternalParser_CodeClass.ump"},javaline={3205},length={99})
-  private Association analyzeAssociation(Token associationToken, String defaultMyType)
-  {
-    Token parentToken = associationToken.getParentToken();
-    Token gParentToken = parentToken.getParentToken();
-    boolean isAssociationClass = parentToken.is("associationClassDefinition") || gParentToken.is("associationClassDefinition");
-    boolean isSingleAssociationEnd = associationToken.is("singleAssociationEnd");
-    boolean isInlineAssociation = associationToken.is("inlineAssociation");
-    Token myEndToken = null;
-    Token yourEndToken = null;
-    String navigation = null;
-    String associationModifier = null;
-    String name = null;
-
-    //Issue 213/131: associations can be inside AssociationClasses, but
-    //inline associations inside associationClasses are treated just like in regular classes
-    if(isAssociationClass && !isInlineAssociation){
-        if(isSingleAssociationEnd){
-            myEndToken = parentToken;
-            associationModifier = associationToken.getValue("modifier");
-            navigation = null;
-            name = parentToken.getValue("name");
-
-        }else{ //association inside associationClass
-            myEndToken = parentToken.getParentToken();
-            associationModifier = parentToken.getValue("modifier");
-            navigation = parentToken.getValue("arrow");
-            name = gParentToken.getValue("name");
-        }
-        yourEndToken = associationToken;
-    }else{//inline association or external "association{..}" block
-        name = parentToken.getValue("name");
-        int myMultOffset = 0;
-        int yourMultOffset = 2;
-        Token associationModifierToken = associationToken.getSubToken("modifier");
-        if (associationModifierToken != null){
-          associationModifier = associationModifierToken.getValue();
-          myMultOffset++;
-          yourMultOffset++;
-        }
-        myEndToken = associationToken.getSubToken(myMultOffset);
-        navigation = associationToken.getValue("arrow");
-        yourEndToken = associationToken.getSubToken(yourMultOffset);
-    }
-    AssociationEnd firstEnd = createPreliminaryAssociationEnd(myEndToken, defaultMyType);
-    AssociationEnd secondEnd = createPreliminaryAssociationEnd(yourEndToken, defaultMyType);
-    if(firstEnd == null || secondEnd == null){
-        setFailedPosition(associationToken.getPosition(), 8, name);
-        return null;
-    }
-    String myType = firstEnd.getClassName();
-    String myRoleName = firstEnd.getRoleName();
-    String yourType = secondEnd.getClassName();
-    String yourRoleName = secondEnd.getRoleName();
-    Multiplicity myMult = firstEnd.getMultiplicity();
-    Multiplicity yourMult = secondEnd.getMultiplicity();
-
-    if("".equals(firstEnd.getClassName())){
-        firstEnd.setClassName(defaultMyType);
-    }
-    firstEnd.setReferenceToClassName(yourType);
-    secondEnd.setReferenceToClassName(myType);
-    //Association Classes have Mutiplicities switched between ends: an association
-    //between A and B in associationClass C becomes A -- C and B -- C
-    if(isAssociationClass){
-        firstEnd.setMultiplicity(secondEnd.getMultiplicity());
-        secondEnd.setMultiplicity(myMult);
-    }
-    updateAssociationEnds(firstEnd,secondEnd);
-
-    // Trap cases where both ends are the same class (reflexive) and 
-    // there is no or same role name and same multiplicity. Fixes issue 295
-    if(myType.equals(yourType) && ((myRoleName == null && yourRoleName == null) || (myRoleName != null && yourRoleName != null && myRoleName.equals(yourRoleName))) && myMult.toString().equals(yourMult.toString())) {
-      setFailedPosition(associationToken.getPosition(), 21, myType);
-      return null;
-    }
-  
-    if (firstEnd.getRoleName().equals(secondEnd.getRoleName()) && firstEnd.getClassName().equals(secondEnd.getClassName())){
-      setFailedPosition(associationToken.getPosition(), 32, firstEnd.getRoleName());
-      return null;
-    }  
-  
-    Association association = createAssociation(navigation,firstEnd,secondEnd);
-    
-    if (associationModifier != null && "immutable".equals(associationModifier)){
-      association.setImmutable();
-    }
-    association.setTokenPosition(associationToken.getPosition());
-    association.setTokenEndPosition(associationToken.getEndPosition());
-    
-    if (!association.isValid()){
-      Token atFaultToken = association.whoIsInvalid() == 0 ? myEndToken : yourEndToken;
-      String invalidBound = atFaultToken.getValue("bound") == null ? invalidBound = atFaultToken.getValue("lowerBound") + ".." + atFaultToken.getValue("upperBound") : atFaultToken.getValue("bound");
-      setFailedPosition(atFaultToken.getPosition(), 9, invalidBound);
-      return null;
-    }
-    model.addAssociation(association);
-    if(!isInlineAssociation){ unlinkedAssociations.add(association); }
-    return association;
-  }
-
-  /*
-   * Given a [[associationEnd]], [[singleAssociationEnd]], [[inlineAssociationEnd]] or 
-   * a [[associationClassDefinition]] token, creates a
-   * preliminary AssociationEnd object to help in the creation of an Association object.
-   * The resulting object will have to be completed with setReferenceToClassName()depending on the type of association.
-   * @return an AssociationEnd object or null if an error occured
-  */
-  @umplesourcefile(line={1726},file={"UmpleInternalParser_CodeClass.ump"},javaline={3313},length={47})
-  private AssociationEnd createPreliminaryAssociationEnd(Token associationEndToken, String defaultType){
-    if(associationEndToken != null){
-      String name, type, modifier, roleName, bound, lowerBound, upperBound, priority;
-      bound = lowerBound = upperBound = priority = roleName = null;
-      Multiplicity mult = new Multiplicity();
-      String typeIndex;
-
-      //special case when [[singleAssociationEnd]] is used in one end: the 
-      //parent associationClassDefinition is used as the other
-      if(associationEndToken.is("associationClassDefinition")){
-        name = null;
-        type = associationEndToken.getValue("name");
-        modifier = null;
-        mult.setRange("1","1");
-        typeIndex = "name";
-      }else{
-        type = associationEndToken.getValue("type");
-        modifier = associationEndToken.getValue("modifier");
-        roleName = associationEndToken.getValue("roleName");
-        bound = associationEndToken.getValue("bound");
-        lowerBound = associationEndToken.getValue("lowerBound");
-        upperBound = associationEndToken.getValue("upperBound");
-        priority = associationEndToken.getValue("priority");
-        mult.setRange(lowerBound, upperBound);
-        mult.setBound(bound);
-        typeIndex = "type";
-      }
-      // Report an error if the multiplicity is invalid
-      if (!mult.isValid()){
-        String invalidBound = bound == null ? lowerBound + ".." + upperBound : bound;
-        setFailedPosition(associationEndToken.getPosition(), 4, invalidBound);
-        return null;
-      }
-      if(type == null){
-          type = defaultType;
-      }
-      AssociationEnd assocEnd = new AssociationEnd(roleName,type,modifier,null,mult);
-
-      if(priority != null){
-          assocEnd.setPriority(priority);
-      }
-      positionToClassNameReference.put(associationEndToken.getPosition(typeIndex),type);
-      return assocEnd;
-    }else{
-        return null;
-    }
-  }
-
-  @umplesourcefile(line={1774},file={"UmpleInternalParser_CodeClass.ump"},javaline={3362},length={19})
-  private void updateAssociationEnds(AssociationEnd firstEnd, AssociationEnd secondEnd)
-  {
-
-    if (firstEnd.getRoleName().length() == 0)
-    { 
-      String rawName = StringFormatter.toCamelCase(firstEnd.getClassName());
-      String name = firstEnd.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
-      firstEnd.setRoleName(name);
-      firstEnd.setIsDefaultRoleName(true);
-    }
-
-    if (secondEnd.getRoleName().length() == 0)
-    {
-      String rawName = StringFormatter.toCamelCase(secondEnd.getClassName());
-      String name = secondEnd.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
-      secondEnd.setRoleName(name);
-      secondEnd.setIsDefaultRoleName(true);
-    }
-  }
-
-  /*
-   * Analyzes a token flagged to be an association within an Umple class to create an instance of one and add it to the class.
-   * 
-   * @param inlineAssociationToken The token flagged to be an inline association.
-   * @param aClass The Umple class for which an association instance will be added (populated from analysis of the token).
-   */
-  @umplesourcefile(line={1800},file={"UmpleInternalParser_CodeClass.ump"},javaline={3389},length={51})
-  private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleClass aClass)
-  {
-    Association association = analyzeAssociation(inlineAssociationToken,aClass.getName());
-
-    if (!getParseResult().getWasSuccess())
-    {
-      return;
-    }
-
-    AssociationEnd myEnd = association.getEnd(0);
-    AssociationEnd yourEnd = association.getEnd(1);
-
-    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
-    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
-    myAs.setRelatedAssociation(yourAs);
-    
-    if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
-    if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
-    
-    if (association.isImmutable())
-    {
-      boolean set = myAs.setImmutable();
-      if (set)
-      {
-        yourAs.setImmutable();
-      }
-      else
-      {
-        setFailedPosition(inlineAssociationToken.getPosition(),17);
-      }
-    }
-
-    // Add comments above the association to the association.
-    for (Comment c : lastComments)
-    {
-      yourAs.addComment(c);
-    }
-
-    boolean added = aClass.addAssociationVariable(yourAs);
-    if (added)
-    {
-      unlinkedAssociationVariables.add(yourAs);
-      aClass.addAssociation(association);
-    }
-    else
-    {
-      if (aClass.isImmutable()) { setFailedPosition(inlineAssociationToken.getPosition(),17); }
-      
-      else { setFailedPosition(inlineAssociationToken.getPosition(),13); }
-    }
-  }
-
-  /*
-   * Analyzes a token flagged to be an attribute within an Umple class to create an instance of one and add it to the class.
-   * 
-   * @param attributeToken The token flagged to be an attribute.
-   * @param aClass The Umple class for which an attribute instance will be added (populated from analysis of the token).
-   */
-  @umplesourcefile(line={1858},file={"UmpleInternalParser_CodeClass.ump"},javaline={3448},length={147})
-  private void analyzeAttribute(Token attributeToken, UmpleClass aClass)
-  {
-    boolean isAutounique = attributeToken.getValue("autounique") != null;
-    boolean isUnique = attributeToken.getValue("unique") != null;
-    boolean isLazy = attributeToken.getValue("lazy") != null;
-    boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
-    boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
-    boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
-    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
-    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
-    
-    if(!validName)
-    {
-      if(looksLikeAssociation){
-        setFailedPosition(attributeToken.getPosition(), 132, attributeToken.getValue("name"));
-      } else {
-        setFailedPosition(attributeToken.getPosition(), 130, attributeToken.getValue("name"));
-      }
-      
-      return;
-    }
-    
-    if(!properName){
-      setFailedPosition(attributeToken.getPosition(), 131, attributeToken.getValue("name"));
-    }
-    
-    if (aClass.getIsSingleton() && !isLazy) 
-    {
-      isLazy = true;
-      setFailedPosition(attributeToken.getPosition(), 1, attributeToken.getValue("name"));
-    }
-
-    String modifier = attributeToken.getValue("modifier");
-    String type = attributeToken.getValue("type");
-    String name = attributeToken.getValue("name");
-    String value = attributeToken.getValue("value");
-    String derivedValue = attributeToken.getValue("code");
-
-  if (isLazyRedundant(isLazy, value))
-  {
-    setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);
-  }
-
-    for(Attribute aAttribute : aClass.getAttributes()){
-      if (aAttribute.getName().equals(name)){
-        setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);
-      }
-  }
-    CodeBlock languageSpecificCode = new CodeBlock();
-    if (derivedValue != null)
-    {
-      value = "";
-      List<String> codelangs = new ArrayList<String>();
-      for(Token tkn: attributeToken.getSubTokens())
-      {
-      if(tkn.is("codeLang"))
-      {
-        codelangs.add(tkn.getValue());
-      } else if(tkn.is("code")) {
-        if(codelangs.isEmpty())
-        {
-          languageSpecificCode.setCode(tkn.getValue());
-        } else {
-          for(String lang: codelangs)
-          {
-            languageSpecificCode.setCode(lang, tkn.getValue());
-          }
-          codelangs.clear();
-        }
-      }
-      }
-    }
-
-    if ("defaulted".equals(modifier) && value == null)
-    {
-      setFailedPosition(attributeToken.getPosition(), 6, attributeToken.getValue("name"));
-      return;
-    }
-
-    if (isUnique)
-    {
-      UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(name,type,modifier,value);
-      aClass.setUniqueIdentifier(uniqueIdentifier);
-      return;
-    }
-
-    if (isAutounique)
-    {
-      type = "Integer";
-    }
-
-    if (type == null && value != null)
-    {
-      if(value.matches("-?[0-9]+\\.[0-9]+"))
-      {
-        type = "Double";
-      }
-      else if(value.matches("-?[0-9]+"))
-      {
-        type = "Integer";
-      }
-      else if(value.matches("(true|false)"))
-      {
-        type = "Boolean";
-      }
-      else
-      {
-        type = "String";
-      }
-    }
-    else if(type == null)
-    {
-      type = "String";
-    } 
-    else {      
-      if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type)) {
-        setFailedPosition(attributeToken.getPosition(), 140, type);
-          return;
-        }
-    }
-
-    Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
-    attribute.setIsLazy(isLazy);
-    boolean isList = attributeToken.getValue("list") != null;
-
-    if (name == null)
-    {
-      String rawName = StringFormatter.toCamelCase(type); 
-      name = isList ? model.getGlossary().getPlural(rawName) : rawName;
-    }
-
-    if (derivedValue != null)
-    {
-      attribute.setPosition(attributeToken.getPosition());
-      attribute.setEndPosition(attributeToken.getEndPosition());
-      attribute.setIsDerived(true);
-      attribute.setCodeblock(languageSpecificCode);
-    }
-
-    attribute.setIsList(isList);
-
-    // Add comments above the attribute to the attribute.
-    for (Comment c : lastComments)
-    {
-      attribute.addComment(c);
-    }
-  }
-  
-  @umplesourcefile(line={2006},file={"UmpleInternalParser_CodeClass.ump"},javaline={3597},length={4})
-  private Boolean isLazyRedundant(Boolean isLazy, String value)
-  {
-    return (isLazy && value != null);
-  }
-  
-  @umplesourcefile(line={2011},file={"UmpleInternalParser_CodeClass.ump"},javaline={3603},length={34})
-  private void analyzeException(Token exception, UmpleClass aClass)
-  {
-    Token sub = exception.getSubToken(0);
-    if(sub.is("misnamedAttribute"))
-    {
-      if(!Token.isValidIdentifier(sub.getValue("name")))
-      {
-        boolean looksLikeAssociation = sub.getValue("name").contains("--") || sub.getValue("name").contains("->");
-        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
-        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
-        if(looksLikeAssociation)
-        {
-          setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));
-        }
-        else 
-        {
-          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
-        }
-        return;
-      }
-      if(Token.isValidIdentifier(sub.getValue("name"), "[A-Z]"))
-      {
-        setFailedPosition(sub.getPosition(), 131, sub.getValue("name"));
-      }
-      String type = sub.getValue("type");
-      if(type!=null)
-      {
-        if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
-        {
-          setFailedPosition(sub.getPosition(), 140, type);
-        }
-      }
-    }
-  }
-//  @umplesourcefile(line={105},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3638},length={1248})
-  @umplesourcefile(line={106},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3639},length={23})
-  private List <ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClass aClass){
-	  List<Token> negativeConstraintSubtokens = negativeConstraintToken.getSubTokens();
+    List<Token> negativeConstraintSubtokens = negativeConstraintToken.getSubTokens();
 	  List <Token> subtokensCopy = new ArrayList <Token> ();
 	  subtokensCopy.addAll(negativeConstraintSubtokens);
 	  
@@ -3659,1263 +5388,8 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 
 	  return rawLine; //rawLine = !(constraintBodystuff)
   }
-  
-  @umplesourcefile(line={130},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3664},length={25})
-  private List<ConstraintVariable> analyzeLinkingOpExpression(Token linkingOpExpressionToken , UmpleClass aClass)
-  {
-	  List<Token> LinkingOpExpressionSubtokens = linkingOpExpressionToken.getSubTokens();
-	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
-	  
-	  Token subOp = LinkingOpExpressionSubtokens.get(0); //the linking Expr (ie) &&, ||
-	  
-	
-	  if (subOp.is("||")||subOp.is("orOp"))
-	  {
-		  rawLine.add(new ConstraintVariable("OPERATOR","||"));
-	  } 
-	  else if (subOp.is("andOp"))
-	  {
-		  rawLine.add(new ConstraintVariable("OPERATOR","&&"));
-	  }
-	  
-	  Token subExpr = LinkingOpExpressionSubtokens.get(LinkingOpExpressionSubtokens.size()>1?1:0); //the constraintExpr token
-	  Token dummyToken = new Token ("dummyToken", null); //need to encapsulate constrainExpr in dummy token
-	  dummyToken.addSubToken(subExpr);
-	  rawLine.addAll(analyzeConstraint(dummyToken, aClass)); 
 
-	  return rawLine;
-
-  }
-  @umplesourcefile(line={155},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3690},length={30})
-  private List<ConstraintVariable> analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClass aClass)
-  {
-	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
-	List<Token> generalExpressionSubtokens = generalExpressionToken.getSubTokens();
-    for(Token sub : generalExpressionSubtokens)
-    {
-      if (sub.getValue().equals("STATIC"))
-      {
-        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
-          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
-      } 
-      else if(sub.is("constraintName"))
-      {
-        rawLine.add(analyzeConstraintName(sub,aClass,true));
-      }
-      else if(sub.is("equalsOp"))
-      {
-		ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
-        cv.setIsPrimitive(false);
-        rawLine.add(cv); 
-      }
-      else if(sub.is("notequalsOp"))
-      {
-        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
-        cv.setIsPrimitive(false);
-        rawLine.add(cv); 
-      }
-    }
-    return rawLine;
-  }
-  
-  @umplesourcefile(line={186},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3722},length={34})
-  private List<ConstraintVariable> analyzeBooleanConstraintExpression(Token booleanExpressionToken , UmpleClass aClass)
-  {
-  	List<Token> BooleanExpressionSubtokens = booleanExpressionToken.getSubTokens();
-  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
-  	for(Token sub : BooleanExpressionSubtokens)
-    {
-      if (sub.getValue().equals("STATIC"))
-      {
-        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
-          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
-      }
-      else if (sub.getValue().equals("true"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR","true"));
-      } 
-      else if (sub.getValue().equals("false"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR","false"));
-      }
-      else if(sub.is("constraintName"))
-      {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,"boolean"));
-      }
-      else if(sub.is("equalsOp"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR","=="));
-      }
-      else if(sub.is("notequalsOp"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR","!="));
-      }           
-    }
-    return rawLine;
-  }
-  
-  /*
-  cardinal && all : not doable
-  cardinal && !all : for each number in the list, size == that number ||, if assLit/name then size == number of elements in the list
-  !cardinal && all : for each number or name have a contains() &&, not currently implemented for a list of lists
-  !cardinal && !all : for each number or name have a contains() ||, not currently implemented for a list of lists
-  */
-  @umplesourcefile(line={227},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3764},length={63})
-  private List<ConstraintVariable> analyzeAssociationLiteralConstraintExpression(Token literalToken, UmpleClass aClass, boolean cardinal, boolean all, boolean firstName, List<ConstraintVariable> subject, ConstraintVariable operator)
-  {
-    List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
-    for(Token sub:literalToken.getSubTokens())
-    {
-      if(sub.is("associationLit"))
-      {
-        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub, aClass, cardinal, all, firstName, subject, operator));
-        firstName = false;
-      }
-      else if(sub.is("constraintName"))
-      {
-        if(!firstName)
-        {
-          if(all&&!cardinal)
-          {
-            rawLine.add(new ConstraintVariable("OPERATOR","&&"));
-          }
-          else 
-          {
-            rawLine.add(new ConstraintVariable("OPERATOR","||"));
-          }          
-        }
-        else
-        {
-          firstName = false;
-        }
-        rawLine.addAll(subject);
-        rawLine.add(operator);
-        rawLine.add(analyzeConstraintName(sub,aClass,true));
-      }
-      else if(sub.is("elements"))
-      {
-        if(!cardinal)
-        {
-          operator.setValue("cardinality==");
-        }
-      }
-      else if(sub.is("number"))
-      {
-        if(!firstName)
-        {
-          if(all&&!cardinal)
-          {
-            rawLine.add(new ConstraintVariable("OPERATOR","&&"));
-          }
-          else 
-          {
-            rawLine.add(new ConstraintVariable("OPERATOR","||"));
-          }          
-        }
-        else
-        {
-          firstName = false;
-        }
-        rawLine.addAll(subject);
-        rawLine.add(operator);
-        rawLine.add(analyzeConstraintNumber(sub));
-        firstName = false;
-      }
-    }
-    return rawLine;
-  }
-  
-  @umplesourcefile(line={291},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3829},length={82})
-  private List<ConstraintVariable> analyzeAssociationConstraintExpression(Token associationExpressionToken , UmpleClass aClass)
-  {
-  	List<Token> associationExpressionSubtokens = associationExpressionToken.getSubTokens();
-  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
-  	List<ConstraintVariable> subject = new ArrayList<ConstraintVariable>();
-  	boolean card = associationExpressionToken.getValue("firstOp").equals("cardinality");
-  	boolean all = false;
-  	ConstraintVariable operator = new ConstraintVariable("OPERATOR",associationExpressionToken.getValue("firstOp"));
-  	operator.setIsPrimitive(false);
-  	for(Token sub : associationExpressionSubtokens)
-    {
-      if(sub.is("constraintName"))
-      {
-        subject.add(analyzeConstraintName(sub,aClass,true));
-      }
-      else if(sub.is("associationLit"))
-      {
-        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub,aClass,card,all,true,subject,operator));
-      }
-      else if(sub.is("all"))
-      {
-        if(!card)
-        {
-          operator.setValue("hasAll");
-          all = true;
-        }
-        else
-        {
-          //warning that cardinality all is not supported
-        }
-      }
-      else if(sub.is("moreOp"))
-      {        
-        if(!card)
-        {
-          card = true;
-        }
-        operator.setValue("cardinality>");
-      }
-      else if(sub.is("smallerOp"))
-      {        
-        if(!card)
-        {
-          card = true;
-        }
-        operator.setValue("cardinality<");
-      }
-      else if(sub.is("greaterOp"))
-      {        
-        if(!card)
-        {
-          card = true;
-        }
-        operator.setValue("cardinality>=");
-      }
-      else if(sub.is("lessOp"))
-      {        
-        if(!card)
-        {
-          card = true;
-        }
-        operator.setValue("cardinality<=");
-      }
-      else if(sub.is("equalsOp"))
-      {        
-        if(!card)
-        {
-          card = true;
-        }
-        operator.setValue("cardinality==");
-      }
-      else if(sub.is("notequalsOp"))
-      {        
-        if(!card)
-        {
-          card = true;
-        }
-        operator.setValue("cardinality!=");
-      }
-    }
-    return rawLine;
-  }
-  
-  @umplesourcefile(line={374},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3913},length={34})
-  private List<ConstraintVariable> analyzeStringConstraintExpression(Token stringExpressionToken , UmpleClass aClass)
-  {
-  	List<Token> stringExpressionSubtokens = stringExpressionToken.getSubTokens();
-  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
-  	for(Token sub : stringExpressionSubtokens)
-    {
-      if (sub.getValue().equals("STATIC"))
-      {
-        if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
-          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
-      }
-      else if (sub.is("quote"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
-      }
-      else if(sub.is("constraintName"))
-      {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,"string"));
-      }
-      else if(sub.is("equalsOp"))
-      {
-        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
-        cv.setIsPrimitive(false);
-        rawLine.add(cv);        
-      }
-      else if(sub.is("notequalsOp"))
-      {
-        ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
-        cv.setIsPrimitive(false);
-        rawLine.add(cv); 
-      }           
-    }
-    return rawLine;
-  }
-  
-  @umplesourcefile(line={409},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3949},length={48})
-  private List<ConstraintVariable> analyzeNumberConstraintExpression(Token numberExpressionToken, UmpleClass aClass)
-  {
-	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
-	List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
-    for(Token sub : numberExpressionSubtokens)
-    {
-      if (sub.getValue().equals("STATIC"))
-      {
-      	if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
-          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
-      } 
-      else if(sub.is("constraintName"))
-      {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double"));
-      }
-      else if(sub.is("number"))
-      {
-        rawLine.add(analyzeConstraintNumber(sub));
-      }
-      else if(sub.is("moreOp"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR",">"));
-      }
-      else if(sub.is("smallerOp"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR","<"));
-      }
-      else if(sub.is("greaterOp"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR",">="));
-      }
-      else if(sub.is("lessOp"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR","<="));
-      }
-      else if(sub.is("equalsOp"))
-      {
-        ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
-        rawLine.add(cv);        
-      }
-      else if(sub.is("notequalsOp"))
-      {
-        ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
-        rawLine.add(cv); 
-      } 
-    }
-    return rawLine;
-  }
-  
-  @umplesourcefile(line={458},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3999},length={143})
-  private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean mustBeInClass, String... type)
-  {
-  	Token grandparentToken = nameToken.getParentToken().getParentToken();
-  	ConstraintVariable cv = new ConstraintVariable("NAME","");
-  	cv.setSubConstraint(new Constraint());
-  	boolean isNew = false;
-  	for(Token sub:nameToken.getSubTokens())
-  	{
-  	  if(sub.is("constraintParameterList"))
-  	  {
-  	    for(Token param: sub.getSubTokens())
-  	    {
-  	      if(param.is("constraintParameter"))
-  	      {
-  	        Token value = param.getSubToken(0);
-  	        if(value.is("quote"))
-  	        {
-  	          cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
-  	        }
-  	        else if(value.is("number"))
-  	        {
-  	          cv.getSubConstraint().addExpression(analyzeConstraintNumber(value));
-  	        }
-  	        else if(value.is("constraintName")){
-  	          cv.getSubConstraint().addExpression(analyzeConstraintName(value,aClass,true));
-  	        }
-  	      }
-  	      else
-  	      {
-  	        cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",param.getName()));
-  	      }
-  	    }
-  	  }
-  	  else if(sub.is("index"))
-  	  {  	    
-        analyzeConstraintIndex(sub,cv);
-  	  }
-  	  else if(sub.is("new"))
-  	  {  	    
-  	    isNew = true;
-        cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","initialise").isNotPrimitive());
-  	  }
-  	  else if(sub.is("constraintScopeOperator"))
-  	  {
-  	    cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","."));
-  	    for(Token subsub:sub.getSubTokens()){
-  	      if(subsub.is("constraintName"))
-  	      {
-  	        cv.getSubConstraint().addExpression(analyzeConstraintName(subsub,aClass,true));
-  	      }
-  	    }
-  	  }
-  	  else if(sub.is("name"))
-  	  {
-  	    cv.setValue(sub.getValue());
-  	    cv.getAttribute(aClass);
-  	    ConstraintVariable name = new ConstraintVariable("",sub.getValue());
-  	    cv.getSubConstraint().addExpression(name);
-  	    UmpleVariable attribute;
-        if(mustBeInClass)
-        {
-          attribute = name.getAttribute(aClass);
-          if(attribute!=null||isNew)
-          {
-      	    if(type!=null&&type.length!=0)
-      	    {
-      	      boolean isType = false;
-      	      String typesFailed = "";
-      	      for(String t: type)
-      	      {
-      	        if((isNew?sub.getValue():attribute.getType()).toLowerCase().equals(t))
-                {
-                  isType = true;
-                }          
-                else
-                {
-                  typesFailed += t+",";
-                }
-              }
-              if(!isType)
-              {
-          	    setFailedPosition(sub.getPosition(), 29, sub.getValue(), typesFailed);
-              }
-            }
-            name.setType(isNew?sub.getValue():attribute.getType());
-          }
-          else if (grandparentToken.getName().equals("precondition"))
-          { //if it was a precondition, check if it matches any of the method arguments
-    	    Token concreteMethod = grandparentToken.getParentToken();
-    	    ArrayList <MethodParameter> methodparams = new ArrayList <MethodParameter>();
-    	    for (Token t : concreteMethod.getSubTokens())
-    	    {
-              if (t.getName().equals("methodDeclarator"))
-              {
-    		    for (Token st : t.getSubTokens())
-    		    {
-    	          if (st.getName().equals("parameterList"))
-    	          {
-    			    for (Token sst : st.getSubTokens())
-    		        {
-    			      if(sst.getName().equals("parameter"))
-    			      {
-    				    String paramName = null;
-    				    String paramType = null;
-    				    for (Token ssst: sst.getSubTokens())
-    				    {
-    				      if (ssst.getName().equals("type"))
-    				      {
-    					    paramType = ssst.getValue();
-    				      }
-    				      if (ssst.getName().equals("name"))
-    				      {
-    				        paramName = ssst.getValue();
-    				      }
-    				    }
-    				    MethodParameter mp = new MethodParameter(paramName, paramType, null, null, false);
-    			        methodparams.add(mp);
-    			      }
-    			    }
-    	          }
-    		    }
-    	      }
-    	      boolean matchesAnyMethodParams = false;
-    	      for (MethodParameter mp : methodparams)
-    	      { 
-    	 	    if (mp.getName().equals(sub.getValue()))
-    		    {
-    	          matchesAnyMethodParams = true; 
-    		      cv.setType(mp.getType());
-    		    }
-    	      }
-            }
-          }
-          else if(attribute==null)
-          {
-            cv.setType("SYNTAX");
-            cv.setValue(sub.getValue());
-            setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());      
-          }
-          
-        }
-      }
-    }
-    return cv;
-  }
-  @umplesourcefile(line={603},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4145},length={4})
-  private ConstraintVariable analyzeConstraintNumber(Token numberToken)
-  {
-    return new ConstraintVariable("OPERATOR",numberToken.getValue());
-  }
-  @umplesourcefile(line={607},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4150},length={18})
-  private void analyzeConstraintIndex(Token indexToken, ConstraintVariable cv)
-  {
-  	Token sub = indexToken;
-  	try {
-      int i = Integer.parseInt(sub.getValue());
-      if(cv.getIsAssociation())
-      {
-        cv.setIndex(i);
-      }
-      else
-      {
-        setFailedPosition(sub.getPosition(), 29, cv.getValue(), "association or list");
-      }
-    } catch (NumberFormatException e) {
-      setFailedPosition(sub.getPosition(), 29, sub.getValue(), "integer");
-    } 
-  	   
-  }
-//  @umplesourcefile(line={24},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4169},length={728})
-  private static int numberOfActiveObjects = 1;
-  
-  //Check if "extra code" is likely a malformed state machine
-  @umplesourcefile(line={28},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4173},length={724})
-  private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
-    String code = extraCodeToken.getValue();
-    String[] parts = code.split("\\{");
-    if(parts.length < 2) return false; //This means there are no opening brackets
-    if(!Token.isValidIdentifier(parts[0].trim())) return false; //This means we don't have an identifier. If the SM name is misspelt, that should be picked up elsewhere.
-    return true; //We have an identifier followe by a { followe by something else that is probably a state machine
-  }
-  
-  // Analyze state machine related tokens
-  @umplesourcefile(line={37},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4183},length={12})
-  private void analyzeStateMachineToken(Token token, int analysisStep)
-  {
-    if (analysisStep != 1)
-    {
-      return;
-    }
-  
-    if (token.is("stateMachineDefinition"))
-    {
-      analyzeStateMachineDefinition(token);
-    }
-  }  
-  
-  @umplesourcefile(line={50},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4197},length={10})
-  private String getThreadName(Token activeToken)
-  {
-    Token name = activeToken.getSubToken("name");
-    
-    if (name == null)
-    {
-      return "thread1";
-    }
-    return name.getValue();
-  }
-  
-  @umplesourcefile(line={61},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4209},length={6})
-  private String getActiveCode(Token activeToken)
-  {
-    Token code = activeToken.getSubToken("code");
-    
-    return code.getValue();
-  }
-  
-  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4217},length={12})
-  private void analyzeActiveObject(Token activeToken, UmpleClass aClass)
-  {
-    analyzeStateMachine(generateActiveStateMachineToken(activeToken), aClass);
-    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), aClass))
-    {
-      numberOfActiveObjects++;
-    }
-    else
-    {
-      numberOfActiveObjects = 1;
-    }
-  }
-  
-  @umplesourcefile(line={81},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4231},length={10})
-  private Token generateActiveStateMachineToken(Token stateMachineToken)
-  {
-    Token token = new Token("name", "stateMachine" + numberOfActiveObjects);
-    
-    token.addSubToken(new Token("{", "STATIC"));
-    token.addSubToken(generateActiveTopLevelStateToken(stateMachineToken));
-    token.addSubToken(new Token("}", "STATIC"));
-    
-    return token;
-  }
-  
-  @umplesourcefile(line={92},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4243},length={11})
-  private Token generateActiveTopLevelStateToken(Token stateMachineToken)
-  {
-    Token token = new Token("state", "START_TOKEN");
-    
-    token.addSubToken(new Token("stateName", "topLevel"));
-    token.addSubToken(new Token("{", "STATIC"));
-    token.addSubToken(generateActiveStateToken(stateMachineToken));
-    token.addSubToken(new Token("}", "STATIC"));
-    
-    return token;
-  }
-  
-  @umplesourcefile(line={104},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4256},length={11})
-  private Token generateActiveStateToken(Token stateMachineToken)
-  {
-    Token token = new Token("state", "START_TOKEN");
-    
-    token.addSubToken(new Token("stateName", getThreadName(stateMachineToken)));
-    token.addSubToken(new Token("{", "STATIC"));
-    token.addSubToken(generateActivityToken(stateMachineToken));
-    token.addSubToken(new Token("}", "STATIC"));
-    
-    return token;
-  }
-  
-  @umplesourcefile(line={116},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4269},length={11})
-  private Token generateActivityToken(Token stateMachineToken)
-  {
-    Token token = new Token("activity", "START_TOKEN");
-    
-    token.addSubToken(new Token("do", "STATIC"));
-    token.addSubToken(new Token("{", "STATIC"));
-    token.addSubToken(new Token("code", getActiveCode(stateMachineToken)));
-    token.addSubToken(new Token("}", "STATIC"));
-    
-    return token;
-  }
-  
-
-  // Analyze state machine related tokens within the context of an Umple class
-  @umplesourcefile(line={130},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4284},length={32})
-  private void analyzeStateMachineToken(Token token, UmpleClass aClass, int analysisStep)
-  {
-    if (analysisStep != 1)
-    {
-      return;
-    }
-    
-    if (token.is("stateMachine"))
-    {
-      if (aClass.isImmutable())
-      {
-    	  setFailedPosition(token.getPosition(), 15, aClass.getName());
-    	  return;
-      }
-      
-      Token subToken = token.getSubToken(0);
-      if (subToken.is("activeDefinition"))
-      {
-        analyzeActiveObject(subToken, aClass);
-      }
-      
-      if (subToken.is("enum") || subToken.is("inlineStateMachine"))
-      {
-        analyzeStateMachine(subToken,aClass);
-      }
-      
-      if (subToken.is("referencedStateMachine"))
-      {
-        analyzedReferencedStateMachine(subToken,aClass);
-      }
-    }
-  }
-
-  @umplesourcefile(line={163},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4318},length={21})
-  private int numberOfActiveObjectsInClass(Token token, UmpleClass aClass)
-  {
-    int activeObjects = 0;
-    
-    Token parent = token.getParentToken();
-    if (parent != null)
-    {
-      for (Token sub : parent.getSubTokens())
-      {
-        if (sub.is("stateMachine"))
-        {
-          if (sub.getSubToken(0).is("activeDefinition"))
-          {
-            activeObjects++;
-          }
-        }
-      }
-    }
-    
-    return activeObjects;
-  }
-  
-  @umplesourcefile(line={185},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4341},length={15})
-  private void postTokenStateMachineAnalysis()
-  {
-    // Generate error message for issue 354. Check for conflicting names between
-    // state machines and attributes as well as state machines and association names
-    checkStateMachineNameConflict();
-
-    for(Iterator<Map.Entry<State, List<Token>>> i = possiblyUnknownStates.entrySet().iterator(); i.hasNext();){
-    	Map.Entry<State, List<Token>> entry = (Map.Entry<State, List<Token>>)i.next();
-    	List<Token> tokens = (List<Token>)entry.getValue();
-		for(int j = 0; j < tokens.size(); j++){
-			setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue("stateName"));
-		}    
-    }
-    possiblyUnknownStates = new HashMap<State,List<Token>>();
-  }
-  
-  /*
-  	Check for name conflicts between state machines and attributes/association names
-  	Author: Blake Quebec Desloges
-  */
-  @umplesourcefile(line={205},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4362},length={76})
-  private void checkStateMachineNameConflict()
-  {
-    for(UmpleClass C : model.getUmpleClasses())
-    {    
-      // Create the list of attribute names 
-      List<String> existingAttributeNames = new ArrayList<String>();
-      for (Attribute attr : C.getAttributes())
-      {
-      	existingAttributeNames.add(attr.getName());
-      }
-      
-      //Create the list of state machine names while checking for conflicts with attributes
-      List<String> existingStateMachineNames = new ArrayList<String>();
-      for (StateMachine sm : C.getStateMachines())
-      {
-      	// Check if the current state machine conflicts with an attribute name
-      	if (existingAttributeNames.contains(sm.getName()))
-      	{
-      	   Token stateMachineToken = stateMachineNameToToken.get(sm.getName());
-          setFailedPosition(stateMachineToken.getPosition(), 52, sm.getName());
-       }
-       else
-          existingStateMachineNames.add(sm.getName());
-      }
-      
-      List<String> existingAssociationNames = new ArrayList<String>();
-      List<Association> visitedAssociations = new ArrayList<Association>();
-      for(Association assoc : C.getAssociations())
-      {
-        if (visitedAssociations.contains(assoc))
-        {
-          continue;
-        }
-        
-      	AssociationEnd firstEnd = assoc.getEnd(0);
-      	AssociationEnd secondEnd = assoc.getEnd(1);
-      	
-      	Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
-      	Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
-      	Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
-      	
-      	// check names on other-class end of associations to other classes
-        if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
-        {
-          // Check if the association name is the same as a state machine name
-          if (existingStateMachineNames.contains(firstEnd.getRoleName()))
-          {
-             setFailedPosition(assoc.getTokenPosition(), 52, firstEnd.getRoleName());
-          }
-          else
-          {
-            existingAssociationNames.add(firstEnd.getRoleName());
-          }
-          
-        }
-        if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
-        {
-          // Check if the association name is the same as a state machine name
-          if (existingStateMachineNames.contains(secondEnd.getRoleName()))
-          {
-             setFailedPosition(assoc.getTokenPosition(), 52, secondEnd.getRoleName());
-          }
-          else
-          {
-            existingAssociationNames.add(secondEnd.getRoleName());
-          }
-        }
-         
-        if (associationIsReflexive)
-        { 
-          // The UmpleClass is only expected to have duplicate references to reflexive associations
-          visitedAssociations.add(assoc);
-        }
-      }
-    }
-  }
-  
-  
-  @umplesourcefile(line={283},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4441},length={5})
-  private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken)
-  {
-    StateMachine smd = analyzeStateMachine(stateMachineDefinitionToken,null);
-    model.addStateMachineDefinition(smd);
-  }
-
-  @umplesourcefile(line={289},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4448},length={32})
-  private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClass aClass)
-  {
-    String name = stateMachineToken.getValue("name");
-
-    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
-    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
-    }
-
-    String definitionName = stateMachineToken.getValue("definitionName");
-      
-    Token stateMachineDefinitionToken = stateMachineNameToToken.get(definitionName);
-    if (stateMachineDefinitionToken == null)
-    {
-      return;
-    }
-
-    StateMachine sm = new StateMachine(name);
-    boolean wasSet = sm.setUmpleClass(aClass);
-    if (!wasSet)
-    {
-    	// Future-proofing: currently all paths cause wasSet to be true
-    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
-    }
-    
-    populateStateMachine(stateMachineDefinitionToken,sm, aClass);
-    Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
-    if (extendedStateMachineTokens != null)
-    {
-      populateStateMachine(extendedStateMachineTokens, sm, aClass);
-    }
-
-  }
-
-  @umplesourcefile(line={322},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4482},length={32})
-  private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClass aClass)
-  {
-    placeholderStateMachine = new StateMachine("PLACE_HOLDER");
-    String name = stateMachineToken.getValue("name");
-
-    if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
-    	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
-    }
-
-    stateMachineNameToToken.put(name,stateMachineToken);
-    
-    StateMachine sm = new StateMachine(name);
-    boolean wasSet = sm.setUmpleClass(aClass);
-    if (!wasSet)
-    {
-    	// Future-proofing: currently all paths cause wasSet to be true
-    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
-    }
-      
-    if(stateMachineToken.is("queued"))
-    {
-      sm.setQueued(true);
-    } 
-
-    populateStateMachine(stateMachineToken, sm, aClass);
-
-    while (placeholderStateMachine.numberOfStates() > 0)
-    {
-      placeholderStateMachine.getState(0).setStateMachine(sm);
-    }
-    return sm;
-  }
-
-  @umplesourcefile(line={355},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4516},length={29})
-  private State createStateFromTransition(Token transitionToken, StateMachine sm)
-  {
-    if(!Token.isValidIdentifier(transitionToken.getValue("stateName"))){
-    	setFailedPosition(transitionToken.getPosition(), 152, transitionToken.getValue("stateName"));
-    }
-    String name = transitionToken.getValue("stateName");
-    State nextState = sm.findState(name);
-    
-    if ("Final".equals(name))
-    {
-      nextState = new State(name,sm);
-    }
-    else
-    {
-      if (nextState == null)
-      {
-        nextState = placeholderStateMachine.findState(name);
-        if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
-      }
-
-      if (nextState == null)
-      {
-        nextState = new State(name,placeholderStateMachine);
-        possiblyUnknownStates.put(nextState, new ArrayList<Token>());
-        possiblyUnknownStates.get(nextState).add(transitionToken);
-      }
-    }
-    return nextState;
-  }
-
-  @umplesourcefile(line={385},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4547},length={21})
-  private State createStateFromDefinition(Token stateToken, StateMachine sm)
-  {
-    if(!Token.isValidIdentifier(stateToken.getValue("stateName"))){
-    	setFailedPosition(stateToken.getPosition(), 152, stateToken.getValue("stateName"));
-    }
-    State s = sm.findState(stateToken.getValue("stateName"),false);
-    if (s == null)
-    {
-      s = placeholderStateMachine.findState(stateToken.getValue("stateName"));
-      if (s != null)
-      {
-        s.setStateMachine(sm);
-      }
-    }
-    if (s == null)
-    {
-      s = new State(stateToken.getValue("stateName"),sm);
-    }
-    possiblyUnknownStates.remove(s);
-    return s;
-  }
-
-  @umplesourcefile(line={407},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4570},length={50})
-  private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClass aClass)
-  {
-    boolean isFirst = true;
-    boolean isFinalState = false;
-    String changeType = null;
-    
-    for(Token stateToken : stateMachineToken.getSubTokens())
-    {
-      if(stateToken.is("queued"))
-      {
-        sm.setQueued(true);
-      }
-      
-      // Concurrency is only allowed between nested state-machines
-      if (stateToken.is("||"))
-      {
-        setFailedPosition(stateMachineToken.getPosition(), 53, sm.getName());
-      }
-      
-      if(stateToken.is("trace"))
-      {
-    	analyzeTraceStatement(aClass,stateToken);
-      }
-      
-      if (!stateToken.is("state") && !stateToken.is("stateName"))
-      {
-        if (stateToken.is("changeType")) { changeType = stateToken.getValue(); }      
-        continue;
-      }
-
-      if ("-".equals(changeType))
-      {
-        State deleteMe = sm.findState(stateToken.getValue("stateName"));
-        if (deleteMe != null) { deleteMe.delete(); }
-      }
-      else
-      {
-        State s = createStateFromDefinition(stateToken,sm);
-        s.setFinalState(isFinalState);
-        if (isFirst)
-        {
-          s.setIsStartState(true);
-        }
-        isFirst = false;
-        isFinalState = false;
-        analyzeState(stateToken, s);
-        changeType = null;
-      }
-    }
-  }
-
-  @umplesourcefile(line={458},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4622},length={71})
-  private void analyzeState(Token stateToken, State fromState)
-  {
-    boolean addNewSm = true;
-    boolean isConcurrentState = false;
-    boolean isFinalState = false;
-    String changeType = null;
-    
-    for(Token subToken : stateToken.getSubTokens())
-    {
-      if (subToken.is("changeType"))
-      {
-        changeType = subToken.getValue();
-      }
-      else if (subToken.is("final"))
-      {
-        fromState.setFinalState(true);
-      }
-      else if (subToken.is("transition"))
-      {
-        analyzeTransition(false,subToken, fromState, changeType); 
-      }
-      else if (subToken.is("autoTransition"))
-      {
-        analyzeTransition(true,subToken, fromState, changeType);
-      }
-      else if (subToken.is("activity"))
-      {
-        analyzeActivity(subToken, fromState);
-      }
-      else if (subToken.is("entryOrExitAction"))
-      {
-      	fromState.addAction(analyzeAction(subToken, fromState));
-      }
-      else if (subToken.is("||"))
-      {
-        if (fromState.numberOfNestedStateMachines() == 0) { continue; }
-        int previousSmIndex = fromState.numberOfNestedStateMachines() - 1;
-              StateMachine nestedSm = fromState.getNestedStateMachine(previousSmIndex);
-              if (nestedSm.numberOfStates() == 0) { continue; }
-              nestedSm.setName(nestedSm.getState(0).getName());
-              addNewSm = true;
-              isConcurrentState = true;
-      }
-      else if (subToken.is("state"))
-      {
-        StateMachine nestedStateMachine = null;
-        if (addNewSm)
-        {
-          nestedStateMachine = new StateMachine(fromState.getName());
-          fromState.addNestedStateMachine(nestedStateMachine);
-        }
-        else
-        {
-          int lastIndex = fromState.numberOfNestedStateMachines() - 1;
-          nestedStateMachine = fromState.getNestedStateMachine(lastIndex);
-        }
-        State s = createStateFromDefinition(subToken,nestedStateMachine);
-        //alignStateDefinitionWithStateMachine(s,nestedStateMachine);
-        if (addNewSm)
-        {
-                  if (isConcurrentState)
-                  {
-                    nestedStateMachine.setName(s.getName());
-                  }
-          s.setIsStartState(true);
-        }
-        addNewSm = false;
-        analyzeState(subToken, s);
-      }
-    }
-  }
-
-  @umplesourcefile(line={530},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4695},length={28})
-  private Activity analyzeActivity(Token activityToken, State fromState)
-  {
-    Activity act= new Activity("", fromState);
-  	CodeBlock cb = new CodeBlock();
-  	
-  	List<String> codelangs = new ArrayList<String>();
-  	for(Token tkn: activityToken.getSubTokens()){
-  	  if(tkn.is("codeLang")){
-  		codelangs.add(tkn.getValue());
-  	  } else if(tkn.is("code")){
-  		if(codelangs.isEmpty())
-  		{
-  		  cb.setCode(tkn.getValue());
-  		} 
-  		else {
-  		  for(String lang: codelangs){
-  			cb.setCode(lang, tkn.getValue());
-          }
-          codelangs.clear();
-    	}
-      }
-    }
-    act.setCodeblock(cb);
-    
-    act.setPosition(activityToken.getPosition());
-    act.setEndPosition(activityToken.getEndPosition());
-    return act;
-  }
-  
-  @umplesourcefile(line={559},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4725},length={28})
-  private Action analyzeAction(Token actionToken, State fromState){
-  	Action action= new Action("");
-  	CodeBlock cb = new CodeBlock();
-  	List<String> codelangs = new ArrayList<String>();
-  	for(Token tkn: actionToken.getSubTokens()){
-  	  if(tkn.is("codeLang")){
-  		codelangs.add(tkn.getValue());
-  	  } else if(tkn.is("code")){
-  		if(codelangs.isEmpty())
-  		{
-  		  cb.setCode(tkn.getValue());
-  		} 
-  		else {
-  		  for(String lang: codelangs){
-  			cb.setCode(lang, tkn.getValue());
-          }
-          codelangs.clear();
-    	}
-      }
-    }
-    action.setCodeblock(cb);
-    	
-    action.setPosition(actionToken.getPosition());
-    action.setEndPosition(actionToken.getEndPosition());
-    action.setActionType(actionToken.getValue("type"));
-        
-    return action;
-  }
-  @umplesourcefile(line={587},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4754},length={27})
-  private Guard analyzeGuard(Token guardToken, State fromState){
-  	Guard guard= new Guard("true");
-  	CodeBlock cb = new CodeBlock();
-  	List<String> codelangs = new ArrayList<String>();
-  	for(Token tkn: guardToken.getSubTokens()){
-  	  if(tkn.is("codeLang")){
-  		codelangs.add(tkn.getValue());
-  	  } else if(tkn.is("code")){
-  		if(codelangs.isEmpty())
-  		{
-  		  cb.setCode(tkn.getValue());
-  		} 
-  		else {
-  		  for(String lang: codelangs){
-  			cb.setCode(lang, tkn.getValue());
-          }
-          codelangs.clear();
-    	}
-      }
-    }
-    guard.setCodeblock(cb);
-    
-    guard.setPosition(guardToken.getPosition());
-    guard.setEndPosition(guardToken.getEndPosition());
-    
-    return guard;
-  }
-
-  @umplesourcefile(line={615},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4783},length={137})
-  private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
-  {
-    State nextState = createStateFromTransition(transitionToken,fromState.getStateMachine());
-    
-    Transition t; 
-    if ("-".equals(changeType))
-    {
-      t = Transition.createPlaceholder(nextState);
-    }
-    else
-    {
-      t = new Transition(fromState, nextState);
-    }
-
-    t.setAutoTransition(isAutoTransition);
-
-    String eventName = transitionToken.getValue("event");
-    String eventTimerAmount = transitionToken.getValue("timer");
-    String name="";
-    String type="";
-    String paramType="";
-    String paramName="";
-    if (eventName == null && eventTimerAmount != null)
-    {
-      eventName = fromState.newTimedEventName(nextState);
-    }
-
-    Token guardToken = transitionToken.getSubToken("guard");
-    if (guardToken != null)
-    {
-      t.setGuard(analyzeGuard(guardToken, fromState));
-    }
-
-    Token actionToken = transitionToken.getSubToken("action");
-    if (actionToken != null)
-    {
-      
-      t.setAction(analyzeAction(actionToken,fromState));
-    }
-    if (eventName != null || isAutoTransition)
-    {
-      StateMachine sm = fromState.getStateMachine();
-      UmpleClass uClass = sm.getUmpleClass();
-      Event event = isAutoTransition ? Event.createAutoTransition() : uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
-      if (eventTimerAmount != null)
-      {
-        event.setIsTimer(true);
-        event.setTimerInSeconds(eventTimerAmount);
-      }
-      t.setEvent(event);
-      
-      if ("-".equals(changeType))
-      {
-        fromState.removeTransition(t);      
-      }
-     
-     for (Token subEventToken : transitionToken.getSubTokens())
-     {
-     	Event aEvent = sm.getEvent(event.getName());
-        
-      	if (subEventToken.is("parameterList"))
-      	{
-      		if ( aEvent == event && ! event.hasParams() )
-      		{
-      			for(Token parameterToken : subEventToken.getSubTokens())
-      			{
-      				boolean isList = false;
-      				if (parameterToken.is("parameter"))
-      				{
-      					if (parameterToken.getSubToken("type") != null)
-      					{
-      						paramType = parameterToken.getSubToken("type").getValue();
-      					}
-      					if (parameterToken.getSubToken("list") != null)
-      					{
-      						isList = parameterToken.getSubToken("list").getValue() != null;
-      					}
-      					
-      					paramName = parameterToken.getSubToken("name").getValue();
-      					MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
-      					aParameter.setIsList(isList);
-      					if (event.getParams().contains(aParameter))
-      					{
-      						break;
-      					}
-      					else
-      					{
-      						event.addParam(aParameter);
-      					}
-      				}
-      			}
-      		}
-      		else
-      		{ 
-      			for(Token parameterSecondToken : subEventToken.getSubTokens())
-      			{
-      				boolean isListt = false;
-      				if (parameterSecondToken.is("parameter"))
-      				{
-      					String paramTypee="";
-      					if (parameterSecondToken.getSubToken("type") != null)
-      					{
-      						type = parameterSecondToken.getSubToken("type").getValue();
-      					}
-      					if (parameterSecondToken.getSubToken("list") != null)
-      					{
-      						isListt = parameterSecondToken.getSubToken("list").getValue() != null;
-      					}
-      					name = parameterSecondToken.getSubToken("name").getValue();
-      				}	
-      			}
-      		
-      			for (int i=1; i <= event.getParams().size(); i++)
-      			{
-      			    if (!event.getArgs().contains(type) || !event.getArgs().contains(name))
-      			    {
-      			    	setFailedPosition(transitionToken.getPosition(), 51, event.getArgs());
-      			    	
-      			    }
-      			}
-      		}
-      	}
-      }
-      
-      for(Token subToken : transitionToken.getSubTokens())
-      {
-        if (subToken.is("activity"))
-        {
-          t.setAutoTransition(false);
-          Activity act = analyzeActivity(subToken, fromState);
-          act.setOnCompletionEvent(event);
-        }
-    }      
-    
-    }
-
-  }
+//  @umplesourcefile(line={24},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={5393},length={2})
+  private static int numberOfActiveObjects = 1 ;
 
 }

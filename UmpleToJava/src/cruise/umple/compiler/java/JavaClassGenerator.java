@@ -8888,6 +8888,12 @@ if (p != null) {
         String aSingleParameter="";
         String isList="";
           String parameters = ""; 
+        if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static"))
+        {
+          properMethodBody = "    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());\n"+
+                             "    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());\n"+properMethodBody;
+          uClass.setHasMainMethod(true);
+        }
         if (aMethod.hasMethodParameters())
         {
           for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
@@ -9083,7 +9089,7 @@ if (p != null) {
     if(l.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String([ |\\t]*)\\[([ |\\t]*)\\]([ |\\t]+)([a-z|A-Z|0-9|_]+)([ |\\t]*)[)](.*)"))
     {
        isMainMethod = true;
-       isMainClass = true;
+       uClass.setHasMainMethod(true);
     }
     else if(l.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String[ |\\t]+[a-z|A-Z|0-9|_]+[ |\\t]*\\[[ |\\t]*\\][ |\\t]*[)](.*)"))
     {
@@ -9094,8 +9100,7 @@ if (p != null) {
     {
       setIsMainMethodToFalse=true;
       l+="\n    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());";
-      l+="\n    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());";
-      
+      l+="\n    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());";      
     }
     if(lineNumberMatcher.find())
     {
@@ -9161,7 +9166,7 @@ if (p != null) {
   }
   
     stringBuffer.append(extraCode);
-    if(isMainClass){
+    if(uClass.getHasMainMethod()){
     stringBuffer.append(TEXT_2059);
     }
      } 

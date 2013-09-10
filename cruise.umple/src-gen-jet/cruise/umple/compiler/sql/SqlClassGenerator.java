@@ -76,7 +76,7 @@ public class SqlClassGenerator implements ILang
     stringBuffer.append(TEXT_2);
     stringBuffer.append(gen.translate("packageDefinition",uClass));
     stringBuffer.append(TEXT_3);
-     if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } 
+     if (uClass.numberOfComments() > 0) { if(!uClass.getComments().get(0).getIsInline()) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else { append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} } 
     stringBuffer.append(TEXT_4);
     stringBuffer.append(gen.translate("typeWithPackage", uClass) );
     stringBuffer.append(TEXT_5);

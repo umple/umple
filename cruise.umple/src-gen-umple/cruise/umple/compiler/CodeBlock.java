@@ -91,6 +91,6 @@ public class CodeBlock
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   //  @umplesourcefile(line={319},file={"Umple.ump"},javaline={94},length={2})
-  public static String languageUsed = "";
+  public static String languageUsed = "" ;
 
 }

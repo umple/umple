@@ -201,9 +201,9 @@ class JsonGenerator
 }
 
 class JavaGenerator
-{
-  isA SuperCodeGenerator;
+{  
   isA CodeTranslator;
+  isA SuperCodeGenerator;
   depend java.util.*;
   depend java.io.*;
   depend cruise.umple.util.*;

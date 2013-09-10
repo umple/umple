@@ -29,16 +29,9 @@ public class DocumenterMain
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={14},file={"Documenter_Code.ump"},javaline={37},length={33})
-  private static String console = "";
-  
-  @umplesourcefile(line={17},file={"Documenter_Code.ump"},javaline={40},length={26})
-  public static void main(String[] args) 
-  {
+
+  @umplesourcefile(line={17},file={"Documenter_Code.ump"},javaline={34},length={23})
+   public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
     console = "";
@@ -63,13 +56,18 @@ public class DocumenterMain
       println(message);
     }
   }
-   
-  @umplesourcefile(line={42},file={"Documenter_Code.ump"},javaline={68},length={5})
-  private static void println(String output)
-  {
+
+  @umplesourcefile(line={42},file={"Documenter_Code.ump"},javaline={61},length={4})
+   private static  void println(String output){
     console += output + "\n";
     System.out.println(output);
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={14},file={"Documenter_Code.ump"},javaline={70},length={2})
+  private static String console = "" ;
 
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

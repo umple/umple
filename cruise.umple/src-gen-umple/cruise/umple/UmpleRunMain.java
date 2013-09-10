@@ -36,17 +36,12 @@ public class UmpleRunMain
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={206},file={"Main_Code.ump"},javaline={44},length={101})
-  @umplesourcefile(line={207},file={"Main_Code.ump"},javaline={45},length={75})
-  public static void main(String[] args) 
-    {
+
+  @umplesourcefile(line={207},file={"Main_Code.ump"},javaline={41},length={72})
+   public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
-        console = "";
+    console = "";
 
         if (args.length < 2)
         {
@@ -116,37 +111,39 @@ public class UmpleRunMain
             println("failed.");
             printerr(e.getMessage());
         }
-    }
+  }
 
-  @umplesourcefile(line={281},file={"Main_Code.ump"},javaline={122},length={9})
-    private static void print(String output)
-    {
-        console += output;
+  @umplesourcefile(line={281},file={"Main_Code.ump"},javaline={117},length={7})
+   private static  void print(String output){
+    console += output;
         if (displayOutput)
         {
             System.out.print(output);  
         }
+  }
 
-    }
+  @umplesourcefile(line={291},file={"Main_Code.ump"},javaline={126},length={3})
+   private static  void println(String output){
+    print(output + "\n");
+  }
 
-  @umplesourcefile(line={291},file={"Main_Code.ump"},javaline={133},length={4})
-    private static void println(String output)
-    {
-        print(output + "\n");
-    }
-
-  @umplesourcefile(line={296},file={"Main_Code.ump"},javaline={139},length={8})
-    private static void printerr(String err)
-    {
-        console += err;
+  @umplesourcefile(line={296},file={"Main_Code.ump"},javaline={131},length={7})
+   private static  void printerr(String err){
+    console += err;
         if (displayOutput)
         {
             System.err.print(err);
         }
-    }
+  }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={304},file={"Main_Code.ump"},javaline={143},length={5})
+  public static String console ;
 
-    public static String console;
-    public static boolean displayOutput = true;
+//  @umplesourcefile(line={305},file={"Main_Code.ump"},javaline={146},length={2})
+  public static boolean displayOutput = true ;
 
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

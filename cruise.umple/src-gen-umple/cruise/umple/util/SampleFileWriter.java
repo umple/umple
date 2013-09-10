@@ -32,17 +32,11 @@ public class SampleFileWriter
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={573},file={"Util_Code.ump"},javaline={40},length={261})
-  @umplesourcefile(line={574},file={"Util_Code.ump"},javaline={41},length={11})
-  public static File[] getAllFiles(File inputDirectory)
-  {
+
+  @umplesourcefile(line={574},file={"Util_Code.ump"},javaline={37},length={10})
+   public static  File[] getAllFiles(File inputDirectory){
     File[] allFiles = inputDirectory.listFiles();
     Arrays.sort(allFiles, new Comparator<File>(){
-  @umplesourcefile(line={578},file={"Util_Code.ump"},javaline={46},length={4})
       public int compare(File f1, File f2)
       {
         return f1.getName().compareTo(f2.getName());
@@ -51,9 +45,8 @@ public class SampleFileWriter
     return allFiles;
   }
 
-  @umplesourcefile(line={586},file={"Util_Code.ump"},javaline={55},length={27})
-  public static String readContent(File filename)
-  {
+  @umplesourcefile(line={586},file={"Util_Code.ump"},javaline={49},length={25})
+   public static  String readContent(File filename){
     BufferedReader reader = null;
     StringBuffer answer = new StringBuffer();
     
@@ -77,12 +70,10 @@ public class SampleFileWriter
       closeAsRequired(reader);
     }    
     return answer.toString();
-
   }
-  
-  @umplesourcefile(line={614},file={"Util_Code.ump"},javaline={84},length={11})
-  public static void assertEitherFileContent(File expected1, File expected2, String actual)
-  {
+
+  @umplesourcefile(line={614},file={"Util_Code.ump"},javaline={76},length={10})
+   public static  void assertEitherFileContent(File expected1, File expected2, String actual){
     try
     {
       assertFileContent(expected1,actual);
@@ -92,10 +83,9 @@ public class SampleFileWriter
       assertFileContent(expected2,actual);
     }
   }
-  
-  @umplesourcefile(line={626},file={"Util_Code.ump"},javaline={97},length={45})
-  public static void assertPartialFileContent(File partial, String actual)
-  {
+
+  @umplesourcefile(line={626},file={"Util_Code.ump"},javaline={88},length={55})
+   public static  void assertPartialFileContent(File partial, String actual){
     BufferedReader expectedReader = null;
     BufferedReader actualReader = null;
     boolean foundMatch = false;
@@ -150,17 +140,14 @@ public class SampleFileWriter
     }
     if (!foundMatch) { Assert.fail("Did not find expected lines"); }
   }
-  
-  @umplesourcefile(line={683},file={"Util_Code.ump"},javaline={155},length={4})
-  public static void assertFileContent(File expected, String actual)
-  {
+
+  @umplesourcefile(line={683},file={"Util_Code.ump"},javaline={145},length={3})
+   public static  void assertFileContent(File expected, String actual){
     assertFileContent(expected, actual, true);
   }
-  
-  @umplesourcefile(line={688},file={"Util_Code.ump"},javaline={161},length={38})
-  public static void assertFileContent(File expected, String actual, boolean ignoreLineComments)
-  {
-    
+
+  @umplesourcefile(line={688},file={"Util_Code.ump"},javaline={150},length={46})
+   public static  void assertFileContent(File expected, String actual, boolean ignoreLineComments){
     BufferedReader expectedReader = null;
     BufferedReader actualReader = null;
     
@@ -204,12 +191,11 @@ public class SampleFileWriter
     {
       closeAsRequired(expectedReader);
       closeAsRequired(actualReader);
-    }    
+    }
   }
-  
-  @umplesourcefile(line={737},file={"Util_Code.ump"},javaline={211},length={14})
-  public static void closeAsRequired(BufferedReader reader)
-  {
+
+  @umplesourcefile(line={737},file={"Util_Code.ump"},javaline={198},length={13})
+   public static  void closeAsRequired(BufferedReader reader){
     if (reader != null)
     {
       try
@@ -222,10 +208,9 @@ public class SampleFileWriter
       }
     }
   }
-  
-  @umplesourcefile(line={752},file={"Util_Code.ump"},javaline={227},length={14})
-  public static void closeAsRequired(InputStream reader)
-  {
+
+  @umplesourcefile(line={752},file={"Util_Code.ump"},javaline={213},length={13})
+   public static  void closeAsRequired(InputStream reader){
     if (reader != null)
     {
       try
@@ -238,10 +223,9 @@ public class SampleFileWriter
       }
     }
   }
-  
-  @umplesourcefile(line={767},file={"Util_Code.ump"},javaline={243},length={19})
-  public static String rationalize(String rawPath)
-  {
+
+  @umplesourcefile(line={767},file={"Util_Code.ump"},javaline={228},length={18})
+   public static  String rationalize(String rawPath){
     String path = rawPath;
     File f = new File(path);
     if (f.exists())
@@ -259,10 +243,9 @@ public class SampleFileWriter
     path = "/h/ralph/umple/trunk/cruise.umple/" + rawPath;
     return path;
   }
-  
-  @umplesourcefile(line={787},file={"Util_Code.ump"},javaline={264},length={16})
-  public static void createFile(String filename, String input)
-  {
+
+  @umplesourcefile(line={787},file={"Util_Code.ump"},javaline={248},length={15})
+   public static  void createFile(String filename, String input){
     File f = new File(filename);
     f.getAbsoluteFile().getParentFile().mkdirs();
     
@@ -277,11 +260,9 @@ public class SampleFileWriter
       throw new RuntimeException("Unable to create file [" + filename + "]", e);
     }
   }
-  
-  @umplesourcefile(line={804},file={"Util_Code.ump"},javaline={282},length={14})
-  public static void destroy(String filename)
-  {
-    
+
+  @umplesourcefile(line={804},file={"Util_Code.ump"},javaline={265},length={12})
+   public static  void destroy(String filename){
     File file = new File(filename);
     
     if (file.isDirectory())
@@ -293,10 +274,9 @@ public class SampleFileWriter
       file.delete();
     }
   }
-  
-  @umplesourcefile(line={819},file={"Util_Code.ump"},javaline={298},length={15})
-  private static void destroy(File path)
-  {
+
+  @umplesourcefile(line={819},file={"Util_Code.ump"},javaline={279},length={14})
+   private static  void destroy(File path){
     if( path.exists() ) {
       File[] files = path.listFiles();
       for(int i=0; i<files.length; i++) {
