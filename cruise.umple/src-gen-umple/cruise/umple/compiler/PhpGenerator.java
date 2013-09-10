@@ -40,96 +40,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
   {
     super.delete();
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodePhp.ump"},javaline={48},length={1028})
-  private static Map<String,String> UpperCaseSingularLookupMap;
-  private static Map<String,String> UpperCasePluralLookupMap;
-  private static Map<String,String> AsIsSingularLookupMap;
-  private static Map<String,String> AsIsPluralLookupMap;
-  private static List<String> OneOrManyLookup;
-  static
-  {
-    UpperCaseSingularLookupMap = new HashMap<String, String>();
-    UpperCaseSingularLookupMap.put("parameterOne", "a{0}");
-    UpperCaseSingularLookupMap.put("removeParameterOne", "placeholder{0}");
-    UpperCaseSingularLookupMap.put("parameterNew", "aNew{0}");
-    UpperCaseSingularLookupMap.put("parameterNext", "next{0}");
-    UpperCaseSingularLookupMap.put("addMethod", "add{0}");
-    UpperCaseSingularLookupMap.put("addViaMethod", "add{0}Via");
-    UpperCaseSingularLookupMap.put("addAtMethod", "add{0}At");
-    UpperCaseSingularLookupMap.put("addOrMoveAtMethod", "addOrMove{0}At");
-    UpperCaseSingularLookupMap.put("removeMethod", "remove{0}");
-    UpperCaseSingularLookupMap.put("indexOfMethod", "indexOf{0}");
-    UpperCaseSingularLookupMap.put("parameterOld", "anOld{0}");
-    UpperCaseSingularLookupMap.put("parameterExisting", "existing{0}");
-    UpperCaseSingularLookupMap.put("parameterExistingSerialized", "existingSerialized{0}");
-    UpperCaseSingularLookupMap.put("parameterIsNew", "isNew{0}");
-    UpperCaseSingularLookupMap.put("associationNew", "new{0}");
-    UpperCaseSingularLookupMap.put("canSetMethod", "canSet{0}");
-    UpperCaseSingularLookupMap.put("parameterCurrent", "current{0}");
-    UpperCaseSingularLookupMap.put("deleteMethod", "delete{0}");
-    UpperCaseSingularLookupMap.put("setMethod", "set{0}");
-    UpperCaseSingularLookupMap.put("enterMethod", "enter{0}");
-    UpperCaseSingularLookupMap.put("exitMethod", "exit{0}");
-    UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");
-    UpperCaseSingularLookupMap.put("getMethod", "get{0}");
-    UpperCaseSingularLookupMap.put("isMethod", "is{0}");
-    UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");
-    UpperCaseSingularLookupMap.put("isFinalMethod", "is{0}Final");
-    UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
-    UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");
-    UpperCaseSingularLookupMap.put("hasMethod", "has{0}");
-    UpperCaseSingularLookupMap.put("associationCanSetOne","canSet{0}");
-    UpperCaseSingularLookupMap.put("attributeCanSetOne","canSet{0}");
-    UpperCaseSingularLookupMap.put("eventStartMethod", "start{0}Handler");
-    UpperCaseSingularLookupMap.put("eventStopMethod", "stop{0}Handler");    
-    UpperCaseSingularLookupMap.put("stateNull","{0}Null");
-    
-    UpperCasePluralLookupMap = new HashMap<String, String>();
-    UpperCasePluralLookupMap.put("parameterMany", "new{0}");
-    UpperCasePluralLookupMap.put("parameterAll", "all{0}");
-    UpperCasePluralLookupMap.put("numberOfMethod", "numberOf{0}");
-    UpperCasePluralLookupMap.put("minimumNumberOfMethod", "minimumNumberOf{0}");
-    UpperCasePluralLookupMap.put("maximumNumberOfMethod", "maximumNumberOf{0}");
-    UpperCasePluralLookupMap.put("isNumberOfValidMethod", "isNumberOf{0}Valid");
-    UpperCasePluralLookupMap.put("parameterVerifiedMany", "verified{0}");
-    UpperCasePluralLookupMap.put("parameterOldMany", "old{0}");
-    UpperCasePluralLookupMap.put("parameterCheckNewMany", "checkNew{0}");
-    UpperCasePluralLookupMap.put("parameterCopyOfMany", "copyOf{0}");
-    UpperCasePluralLookupMap.put("getManyMethod", "get{0}");
-    UpperCasePluralLookupMap.put("parameterMany", "new{0}");
-    UpperCasePluralLookupMap.put("setManyMethod", "set{0}");
-    UpperCasePluralLookupMap.put("didAddMany", "didAdd{0}");
-    UpperCasePluralLookupMap.put("hasManyMethod", "has{0}");
-    UpperCasePluralLookupMap.put("associationCanSetMany","canSet{0}");
-    UpperCasePluralLookupMap.put("attributeCanSetMany","canSet{0}");
-    UpperCasePluralLookupMap.put("requiredNumberOfMethod", "requiredNumberOf{0}");
 
-    AsIsSingularLookupMap = new HashMap<String, String>();
-    AsIsSingularLookupMap.put("associationOne","{0}");
-    AsIsSingularLookupMap.put("attributeOne","{0}");
-    AsIsSingularLookupMap.put("stateMachineOne","{0}");
-    //AsIsSingularLookupMap.put("stateOne","{0}");
-    //AsIsSingularLookupMap.put("stateString","\"{0}\"");
-    AsIsSingularLookupMap.put("eventMethod","{0}");
-    AsIsSingularLookupMap.put("eventHandler", "{0}Handler");
-
-    AsIsPluralLookupMap = new HashMap<String, String>();
-    AsIsPluralLookupMap.put("associationMany","{0}");
-    AsIsPluralLookupMap.put("attributeMany","{0}");
-
-    OneOrManyLookup = new ArrayList<String>();
-    OneOrManyLookup.add("attribute");
-    OneOrManyLookup.add("parameter");
-    
-  }
-
-  @umplesourcefile(line={97},file={"Generator_CodePhp.ump"},javaline={131},length={18})
-  public void prepare()
-  {
+  @umplesourcefile(line={97},file={"Generator_CodePhp.ump"},javaline={45},length={17})
+   public void prepare(){
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
     for (UmpleClass aClass : allClasses)
     {
@@ -146,16 +59,15 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 
     addRelatedImports();
   }
-  
-  @umplesourcefile(line={116},file={"Generator_CodePhp.ump"},javaline={151},length={4})
-  public boolean isNullable(UmpleVariable av)
-  {
+
+  @umplesourcefile(line={116},file={"Generator_CodePhp.ump"},javaline={64},length={3})
+   public boolean isNullable(UmpleVariable av){
     return true;
   }
-  @umplesourcefile(line={120},file={"Generator_CodePhp.ump"},javaline={156},length={73})
-  public String translate(String format, Constraint constraint)
-  {
-  	if(constraint==null)
+
+  @umplesourcefile(line={120},file={"Generator_CodePhp.ump"},javaline={69},length={87})
+   public String translate(String format, Constraint constraint){
+    if(constraint==null)
   	  return "{0}";
   	  
   	if(format.contains("Values"))
@@ -241,16 +153,14 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
   	}
   	return StringFormatter.format("  if({0})\n    {\n    {1}\n    }",expression, "{0}");
   }
-  
-  @umplesourcefile(line={209},file={"Generator_CodePhp.ump"},javaline={246},length={4})
-  public String relatedTranslate(String name, AssociationVariable av)
-  {
+
+  @umplesourcefile(line={209},file={"Generator_CodePhp.ump"},javaline={158},length={3})
+   public String relatedTranslate(String name, AssociationVariable av){
     return translate(name,av.getRelatedAssociation());
   }
-  
-  @umplesourcefile(line={214},file={"Generator_CodePhp.ump"},javaline={252},length={14})
-  public ILang getLanguageFor(UmpleElement aElement)
-  {
+
+  @umplesourcefile(line={214},file={"Generator_CodePhp.ump"},javaline={163},length={13})
+   public ILang getLanguageFor(UmpleElement aElement){
     if (aElement instanceof UmpleInterface)
     {
        return new PhpInterfaceGenerator();
@@ -263,20 +173,18 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     	return null;    	
     }
   }
-  
-  @umplesourcefile(line={229},file={"Generator_CodePhp.ump"},javaline={268},length={8})
-  public String translate(String name, UmpleInterface aInterface)
-  {
+
+  @umplesourcefile(line={229},file={"Generator_CodePhp.ump"},javaline={178},length={7})
+   public String translate(String name, UmpleInterface aInterface){
     if ("packageDefinition".equals(name))
     {
       return aInterface.getPackageName().length() == 0 ? "" : "package " + aInterface.getPackageName() + ";"; 
     }
     return "UNKNOWN ID: " + name;
   }
-  
-  @umplesourcefile(line={238},file={"Generator_CodePhp.ump"},javaline={278},length={16})
-  public String translate(String methodType)
-  {
+
+  @umplesourcefile(line={238},file={"Generator_CodePhp.ump"},javaline={187},length={15})
+   public String translate(String methodType){
     if ("String".equals(methodType))
     {
       return "\"\"";
@@ -291,10 +199,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }       
     return "null";
   }
-  
-  @umplesourcefile(line={255},file={"Generator_CodePhp.ump"},javaline={296},length={25})
-  public String translate(String keyName, UmpleClass aClass)
-  {
+
+  @umplesourcefile(line={255},file={"Generator_CodePhp.ump"},javaline={204},length={24})
+   public String translate(String keyName, UmpleClass aClass){
     if ("constructorMandatory".equals(keyName))
     {
       return aClass.getGeneratedClass().getLookup("constructorSignature_mandatory");
@@ -318,23 +225,21 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={281},file={"Generator_CodePhp.ump"},javaline={323},length={10})
-  private String getExtendAndImplements(UmpleClass uClass)
-  {
-	  String extendsString = "";
+
+  @umplesourcefile(line={281},file={"Generator_CodePhp.ump"},javaline={230},length={9})
+   private String getExtendAndImplements(UmpleClass uClass){
+    String extendsString = "";
 	  String implementsString = "";
 
 	  extendsString = getExtendClassesNames(uClass);
 	  implementsString = getImplementsInterfacesNames(uClass);
 
-	  return extendsString + implementsString; 
+	  return extendsString + implementsString;
   }
 
-  @umplesourcefile(line={292},file={"Generator_CodePhp.ump"},javaline={335},length={11})
-  private String getExtendClassesNames(UmpleClass uClass)
-  {
-	  UmpleClass parent = uClass.getExtendsClass();
+  @umplesourcefile(line={292},file={"Generator_CodePhp.ump"},javaline={241},length={10})
+   private String getExtendClassesNames(UmpleClass uClass){
+    UmpleClass parent = uClass.getExtendsClass();
 	  if (parent == null)
 	  {
 		  return "";
@@ -344,10 +249,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 	  }
   }
 
-  @umplesourcefile(line={304},file={"Generator_CodePhp.ump"},javaline={348},length={9})
-  private String getImplementsInterfacesNames(UmpleClass uClass)
-  {
-	  if (uClass.hasParentInterface() == false){
+  @umplesourcefile(line={304},file={"Generator_CodePhp.ump"},javaline={253},length={8})
+   private String getImplementsInterfacesNames(UmpleClass uClass){
+    if (uClass.hasParentInterface() == false){
 		  return "";
 	  }
 	  else{
@@ -355,23 +259,20 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 	  }
   }
 
-  @umplesourcefile(line={314},file={"Generator_CodePhp.ump"},javaline={359},length={5})
-  public String translate(String keyName, Attribute av)
-  {
+  @umplesourcefile(line={314},file={"Generator_CodePhp.ump"},javaline={263},length={4})
+   public String translate(String keyName, Attribute av){
     boolean isMany = av.getIsList();
     return translate(keyName,av,isMany);
   }
-  
-  @umplesourcefile(line={320},file={"Generator_CodePhp.ump"},javaline={366},length={5})
-  public String translate(String keyName, AssociationVariable av)
-  {
+
+  @umplesourcefile(line={320},file={"Generator_CodePhp.ump"},javaline={269},length={4})
+   public String translate(String keyName, AssociationVariable av){
     boolean isMany = av.isMany();
     return translate(keyName,av,isMany);
-  }  
-  
-  @umplesourcefile(line={326},file={"Generator_CodePhp.ump"},javaline={373},length={98})
-  private String translate(String keyName, UmpleVariable av, boolean isMany)
-  {
+  }
+
+  @umplesourcefile(line={326},file={"Generator_CodePhp.ump"},javaline={275},length={97})
+   private String translate(String keyName, UmpleVariable av, boolean isMany){
     if (OneOrManyLookup.contains(keyName))
     {
       String realKeyName = isMany ? keyName + "Many" : keyName + "One";
@@ -468,10 +369,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }    
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={425},file={"Generator_CodePhp.ump"},javaline={473},length={41})
-  public String translate(String keyName, State state)
-  {
+
+  @umplesourcefile(line={425},file={"Generator_CodePhp.ump"},javaline={374},length={40})
+   public String translate(String keyName, State state){
     String singularName = state.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
     String fullStateName = StringFormatter.format("{0}{1}",getUpperCaseName(state.getStateMachine().getFullName()),getUpperCaseName(singularName));
@@ -511,10 +411,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={467},file={"Generator_CodePhp.ump"},javaline={516},length={45})
-  public String translate(String keyName, StateMachine sm)
-  {
+
+  @umplesourcefile(line={467},file={"Generator_CodePhp.ump"},javaline={416},length={44})
+   public String translate(String keyName, StateMachine sm){
     String singularName = sm.getFullName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
   
@@ -558,10 +457,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={513},file={"Generator_CodePhp.ump"},javaline={563},length={23})
-  public String translate(String keyName, Event event)
-  {
+
+  @umplesourcefile(line={513},file={"Generator_CodePhp.ump"},javaline={462},length={22})
+   public String translate(String keyName, Event event){
     String singularName = event.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
 
@@ -583,10 +481,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
     return "UNKNOWN ID: " + keyName;
   }
-  
-  @umplesourcefile(line={537},file={"Generator_CodePhp.ump"},javaline={588},length={19})
-  public void generate()
-  {
+
+  @umplesourcefile(line={537},file={"Generator_CodePhp.ump"},javaline={486},length={18})
+   public void generate(){
     prepare();
     try{
       for (UmpleElement currentElement : getModel().getUmpleElements())
@@ -605,9 +502,8 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     GeneratorHelper.postpare(getModel());
   }
 
-  @umplesourcefile(line={557},file={"Generator_CodePhp.ump"},javaline={609},length={17})
-  public String nameOf(String name, boolean hasMultiple)
-  {
+  @umplesourcefile(line={557},file={"Generator_CodePhp.ump"},javaline={506},length={16})
+   public String nameOf(String name, boolean hasMultiple){
     if (name == null)
     {
       return null;
@@ -623,10 +519,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
       return "a" + StringFormatter.toPascalCase(name);
     }
   }
-  
-  @umplesourcefile(line={575},file={"Generator_CodePhp.ump"},javaline={628},length={23})
-  public static String typeOf(String aType)
-  {
+
+  @umplesourcefile(line={575},file={"Generator_CodePhp.ump"},javaline={524},length={22})
+   public static  String typeOf(String aType){
     if (aType == null || aType.length() == 0)
     {
       return "String";
@@ -648,10 +543,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
       return aType;
     }
   }
-  
-  @umplesourcefile(line={599},file={"Generator_CodePhp.ump"},javaline={653},length={26})
-  private void writeFile(UmpleElement aElement)
-  {
+
+  @umplesourcefile(line={599},file={"Generator_CodePhp.ump"},javaline={548},length={25})
+   private void writeFile(UmpleElement aElement){
     try
     {
       ILang language = getLanguageFor(aElement);
@@ -677,9 +571,8 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={626},file={"Generator_CodePhp.ump"},javaline={681},length={15})
-  private String getUpperCaseName(String name)
-  {
+  @umplesourcefile(line={626},file={"Generator_CodePhp.ump"},javaline={575},length={14})
+   private String getUpperCaseName(String name){
     if (name == null || name.length() == 0)
     {
       return name;
@@ -693,10 +586,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
       return name.toUpperCase().charAt(0) + name.substring(1);
     }
   }
-    
-  @umplesourcefile(line={642},file={"Generator_CodePhp.ump"},javaline={698},length={136})
-  private void prepare(UmpleClass aClass)
-  {
+
+  @umplesourcefile(line={642},file={"Generator_CodePhp.ump"},javaline={591},length={159})
+   private void prepare(UmpleClass aClass){
     if (aClass.getGeneratedClass() != null)
     {
       return;
@@ -853,15 +745,11 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     for (StateMachine sm : aClass.getStateMachines())
     {
       prepareNestedStatesFor(sm,null,0);
-    }    
-    
+    }
   }
-  
-  
 
-  @umplesourcefile(line={806},file={"Generator_CodePhp.ump"},javaline={863},length={10})
-  private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm)
-  {
+  @umplesourcefile(line={806},file={"Generator_CodePhp.ump"},javaline={752},length={9})
+   private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm){
     Map<String,String> lookups = new HashMap<String,String>();
     
     String deleteActionCode;
@@ -870,10 +758,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     lookups.put("deleteActionCode",deleteActionCode);
     GeneratorHelper.prepareFinalState(sm,lookups);
   }
-  
-  @umplesourcefile(line={817},file={"Generator_CodePhp.ump"},javaline={875},length={37})
-  private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex)
-  {
+
+  @umplesourcefile(line={817},file={"Generator_CodePhp.ump"},javaline={763},length={36})
+   private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex){
     prepareFinalStateFor(sm,parentSm);  
     if (sm.getParentState() != null && sm.getStartState() != null)
     {
@@ -907,12 +794,11 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     
     Map<String,String> lookups = new HashMap<String,String>();
     lookups.put("callEvent","$this->{0}();");
-    GeneratorHelper.prepareAutoTransitions(sm,this,lookups);    
-  }  
-  
-  @umplesourcefile(line={855},file={"Generator_CodePhp.ump"},javaline={914},length={66})
-  private void generateConstructorSignature(GeneratedClass genClass)
-  {
+    GeneratorHelper.prepareAutoTransitions(sm,this,lookups);
+  }
+
+  @umplesourcefile(line={855},file={"Generator_CodePhp.ump"},javaline={801},length={65})
+   private void generateConstructorSignature(GeneratedClass genClass){
     StringBuffer signature = new StringBuffer();
     StringBuffer signatureCaller = new StringBuffer();
     
@@ -978,22 +864,19 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
   }
 
-  @umplesourcefile(line={922},file={"Generator_CodePhp.ump"},javaline={982},length={4})
-  private String nameOf(Attribute av)
-  {
+  @umplesourcefile(line={922},file={"Generator_CodePhp.ump"},javaline={868},length={3})
+   private String nameOf(Attribute av){
     return nameOf(av.getName(),av.getIsList());
   }
-  
-  @umplesourcefile(line={927},file={"Generator_CodePhp.ump"},javaline={988},length={5})
-  private String nameOf(AssociationVariable av)
-  {
+
+  @umplesourcefile(line={927},file={"Generator_CodePhp.ump"},javaline={873},length={4})
+   private String nameOf(AssociationVariable av){
     boolean hasMultiple = av.isMany();
     return nameOf(av.getName(),hasMultiple);
   }
-  
-  @umplesourcefile(line={933},file={"Generator_CodePhp.ump"},javaline={995},length={37})
-  private void generateSecondaryConstructorSignatures(GeneratedClass genClass)
-  {
+
+  @umplesourcefile(line={933},file={"Generator_CodePhp.ump"},javaline={879},length={36})
+   private void generateSecondaryConstructorSignatures(GeneratedClass genClass){
     UmpleClass uClass = genClass.getUClass();
     
     String mandatorySignature = genClass.getLookup("constructorSignature");
@@ -1029,18 +912,15 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
       }
     }
   }
-  
-  @umplesourcefile(line={971},file={"Generator_CodePhp.ump"},javaline={1034},length={5})
-  private void generateNullableConstructorSignature(GeneratedClass genClass)
-  {
+
+  @umplesourcefile(line={971},file={"Generator_CodePhp.ump"},javaline={917},length={4})
+   private void generateNullableConstructorSignature(GeneratedClass genClass){
     String currentConstructor = genClass.getLookup("constructorSignature");
     genClass.setLookup("constructorSignature_nulled", StringFormatter.appendParameter(currentConstructor, " = null"));
   }
-  
 
-  @umplesourcefile(line={978},file={"Generator_CodePhp.ump"},javaline={1042},length={15})
-  private void addImports(UmpleClass aClass, GeneratedClass genClass)
-  {      
+  @umplesourcefile(line={978},file={"Generator_CodePhp.ump"},javaline={923},length={14})
+   private void addImports(UmpleClass aClass, GeneratedClass genClass){
     for (AssociationVariable av : aClass.getAssociationVariables()) 
     {
       if (!av.getIsNavigable())
@@ -1055,9 +935,8 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={994},file={"Generator_CodePhp.ump"},javaline={1059},length={34})
-  private void addRelatedImports()
-  {
+  @umplesourcefile(line={994},file={"Generator_CodePhp.ump"},javaline={939},length={33})
+   private void addRelatedImports(){
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
       GeneratedClass genClass = aClass.getGeneratedClass();
@@ -1091,9 +970,9 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={1029},file={"Generator_CodePhp.ump"},javaline={1095},length={13})
-	public void initializeLangaugeBasedVariables() {
-		UmpleToPrimitiveMap.put("String","String");
+  @umplesourcefile(line={1029},file={"Generator_CodePhp.ump"},javaline={974},length={13})
+   public void initializeLangaugeBasedVariables(){
+    UmpleToPrimitiveMap.put("String","String");
 		//
 		TraceLookupMap.put("concatinator",".");
     	TraceLookupMap.put("accessor","$this->");
@@ -1104,6 +983,111 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     	TraceLookupMap.put("thread","uniqid()");
     	TraceLookupMap.put("self","$this");
     	TraceLookupMap.put("increment","{0}++;");
-	}
+  }
+
+  @umplesourcefile(line={32},file={"Generator.ump"},javaline={989},length={8})
+  public String translate(String keyName, TraceItem ti){
+    if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
+			return TraceLookupMap.get(keyName.substring(5).toLowerCase());
+    	}
+    	else {
+    		return "INVALID KEYNAME IN TRANSLATE";
+    	}
+  }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={14},file={"Generator_CodePhp.ump"},javaline={1002},length={91})
+  private static Map<String,String> UpperCaseSingularLookupMap ;
+
+//  @umplesourcefile(line={15},file={"Generator_CodePhp.ump"},javaline={1005},length={88})
+  private static Map<String,String> UpperCasePluralLookupMap ;
+
+//  @umplesourcefile(line={16},file={"Generator_CodePhp.ump"},javaline={1008},length={85})
+  private static Map<String,String> AsIsSingularLookupMap ;
+
+//  @umplesourcefile(line={17},file={"Generator_CodePhp.ump"},javaline={1011},length={82})
+  private static Map<String,String> AsIsPluralLookupMap ;
+
+//  @umplesourcefile(line={18},file={"Generator_CodePhp.ump"},javaline={1014},length={79})
+  private static List<String> OneOrManyLookup ;
+
+//  @umplesourcefile(line={19},file={"Generator_CodePhp.ump"},javaline={1017},length={76})
+  static 
+  {
+    UpperCaseSingularLookupMap = new HashMap<String, String>();
+    UpperCaseSingularLookupMap.put("parameterOne", "a{0}");
+    UpperCaseSingularLookupMap.put("removeParameterOne", "placeholder{0}");
+    UpperCaseSingularLookupMap.put("parameterNew", "aNew{0}");
+    UpperCaseSingularLookupMap.put("parameterNext", "next{0}");
+    UpperCaseSingularLookupMap.put("addMethod", "add{0}");
+    UpperCaseSingularLookupMap.put("addViaMethod", "add{0}Via");
+    UpperCaseSingularLookupMap.put("addAtMethod", "add{0}At");
+    UpperCaseSingularLookupMap.put("addOrMoveAtMethod", "addOrMove{0}At");
+    UpperCaseSingularLookupMap.put("removeMethod", "remove{0}");
+    UpperCaseSingularLookupMap.put("indexOfMethod", "indexOf{0}");
+    UpperCaseSingularLookupMap.put("parameterOld", "anOld{0}");
+    UpperCaseSingularLookupMap.put("parameterExisting", "existing{0}");
+    UpperCaseSingularLookupMap.put("parameterExistingSerialized", "existingSerialized{0}");
+    UpperCaseSingularLookupMap.put("parameterIsNew", "isNew{0}");
+    UpperCaseSingularLookupMap.put("associationNew", "new{0}");
+    UpperCaseSingularLookupMap.put("canSetMethod", "canSet{0}");
+    UpperCaseSingularLookupMap.put("parameterCurrent", "current{0}");
+    UpperCaseSingularLookupMap.put("deleteMethod", "delete{0}");
+    UpperCaseSingularLookupMap.put("setMethod", "set{0}");
+    UpperCaseSingularLookupMap.put("enterMethod", "enter{0}");
+    UpperCaseSingularLookupMap.put("exitMethod", "exit{0}");
+    UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");
+    UpperCaseSingularLookupMap.put("getMethod", "get{0}");
+    UpperCaseSingularLookupMap.put("isMethod", "is{0}");
+    UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");
+    UpperCaseSingularLookupMap.put("isFinalMethod", "is{0}Final");
+    UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
+    UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");
+    UpperCaseSingularLookupMap.put("hasMethod", "has{0}");
+    UpperCaseSingularLookupMap.put("associationCanSetOne","canSet{0}");
+    UpperCaseSingularLookupMap.put("attributeCanSetOne","canSet{0}");
+    UpperCaseSingularLookupMap.put("eventStartMethod", "start{0}Handler");
+    UpperCaseSingularLookupMap.put("eventStopMethod", "stop{0}Handler");    
+    UpperCaseSingularLookupMap.put("stateNull","{0}Null");
+    
+    UpperCasePluralLookupMap = new HashMap<String, String>();
+    UpperCasePluralLookupMap.put("parameterMany", "new{0}");
+    UpperCasePluralLookupMap.put("parameterAll", "all{0}");
+    UpperCasePluralLookupMap.put("numberOfMethod", "numberOf{0}");
+    UpperCasePluralLookupMap.put("minimumNumberOfMethod", "minimumNumberOf{0}");
+    UpperCasePluralLookupMap.put("maximumNumberOfMethod", "maximumNumberOf{0}");
+    UpperCasePluralLookupMap.put("isNumberOfValidMethod", "isNumberOf{0}Valid");
+    UpperCasePluralLookupMap.put("parameterVerifiedMany", "verified{0}");
+    UpperCasePluralLookupMap.put("parameterOldMany", "old{0}");
+    UpperCasePluralLookupMap.put("parameterCheckNewMany", "checkNew{0}");
+    UpperCasePluralLookupMap.put("parameterCopyOfMany", "copyOf{0}");
+    UpperCasePluralLookupMap.put("getManyMethod", "get{0}");
+    UpperCasePluralLookupMap.put("parameterMany", "new{0}");
+    UpperCasePluralLookupMap.put("setManyMethod", "set{0}");
+    UpperCasePluralLookupMap.put("didAddMany", "didAdd{0}");
+    UpperCasePluralLookupMap.put("hasManyMethod", "has{0}");
+    UpperCasePluralLookupMap.put("associationCanSetMany","canSet{0}");
+    UpperCasePluralLookupMap.put("attributeCanSetMany","canSet{0}");
+    UpperCasePluralLookupMap.put("requiredNumberOfMethod", "requiredNumberOf{0}");
+
+    AsIsSingularLookupMap = new HashMap<String, String>();
+    AsIsSingularLookupMap.put("associationOne","{0}");
+    AsIsSingularLookupMap.put("attributeOne","{0}");
+    AsIsSingularLookupMap.put("stateMachineOne","{0}");
+    //AsIsSingularLookupMap.put("stateOne","{0}");
+    //AsIsSingularLookupMap.put("stateString","\"{0}\"");
+    AsIsSingularLookupMap.put("eventMethod","{0}");
+    AsIsSingularLookupMap.put("eventHandler", "{0}Handler");
+
+    AsIsPluralLookupMap = new HashMap<String, String>();
+    AsIsPluralLookupMap.put("associationMany","{0}");
+    AsIsPluralLookupMap.put("attributeMany","{0}");
+
+    OneOrManyLookup = new ArrayList<String>();
+    OneOrManyLookup.add("attribute");
+    OneOrManyLookup.add("parameter");
+  }
 
 }

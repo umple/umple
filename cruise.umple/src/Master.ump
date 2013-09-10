@@ -15,6 +15,10 @@ The following instructs the system to inject comments on every class point to th
 generate Java "../src-gen-umple";
 generate Ecore;
 
+strictness allow 1006;
+strictness allow 1007;
+strictness allow 1008;
+
 use Documenter.ump;
 use Generator.ump;
 use Json.ump;

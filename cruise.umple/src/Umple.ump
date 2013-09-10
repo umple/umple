@@ -396,6 +396,8 @@ class UmpleClass
 
   // Specifies whether or not the Umple class is a singleton.
   Boolean isSingleton = false;
+  
+  Boolean hasMainMethod = false;
 
   Association[] associations;
 

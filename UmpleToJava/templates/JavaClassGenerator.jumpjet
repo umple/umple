@@ -203,7 +203,7 @@ for (StateMachine smq : uClass.getStateMachines())
     if(l.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String([ |\\t]*)\\[([ |\\t]*)\\]([ |\\t]+)([a-z|A-Z|0-9|_]+)([ |\\t]*)[)](.*)"))
     {
        isMainMethod = true;
-       isMainClass = true;
+       uClass.setHasMainMethod(true);
     }
     else if(l.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String[ |\\t]+[a-z|A-Z|0-9|_]+[ |\\t]*\\[[ |\\t]*\\][ |\\t]*[)](.*)"))
     {
@@ -214,8 +214,7 @@ for (StateMachine smq : uClass.getStateMachines())
     {
       setIsMainMethodToFalse=true;
       l+="\n    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());";
-      l+="\n    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());";
-      
+      l+="\n    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());";      
     }
     if(lineNumberMatcher.find())
     {
@@ -280,7 +279,7 @@ for (StateMachine smq : uClass.getStateMachines())
     extraCode+=l+"\n";
   }
   %><%=extraCode%>
-  <%if(isMainClass){%><%@ include file="uncaught_exception.jet"%><%}%>
+  <%if(uClass.getHasMainMethod()){%><%@ include file="uncaught_exception.jet"%><%}%>
 <% } %>
   <%@ include file="trace.jet" %>
 }<%

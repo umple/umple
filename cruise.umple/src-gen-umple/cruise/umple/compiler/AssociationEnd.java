@@ -10,11 +10,11 @@ package cruise.umple.compiler;
  * TODO: Code smell referenceToClassName is a duplication, can access via the association 
  * Create a derived attribute otherend (the other AssociationEnd)
  * In Umple_Code.ump: Methods for computing compound properties
- * @umplesource Umple.ump 561
- * @umplesource Umple_Code.ump 1232
+ * @umplesource Umple.ump 563
+ * @umplesource Umple_Code.ump 1288
  */
-// line 561 "../../../../src/Umple.ump"
-// line 1232 "../../../../src/Umple_Code.ump"
+// line 563 "../../../../src/Umple.ump"
+// line 1288 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -130,37 +130,37 @@ public class AssociationEnd
     return wasSet;
   }
 
-  @umplesourcefile(line={574},file={"Umple.ump"},javaline={137},length={1})
+  @umplesourcefile(line={576},file={"Umple.ump"},javaline={137},length={1})
   public String getRoleName()
   {
-    // line 574 "../../../../src/Umple.ump"
+    // line 576 "../../../../src/Umple.ump"
     if (roleName == null) { return ""; }
     return roleName;
   }
 
-  @umplesourcefile(line={575},file={"Umple.ump"},javaline={144},length={1})
+  @umplesourcefile(line={577},file={"Umple.ump"},javaline={144},length={1})
   public String getClassName()
   {
-    // line 575 "../../../../src/Umple.ump"
+    // line 577 "../../../../src/Umple.ump"
     if (className == null) { return ""; }
     return className;
   }
 
-  @umplesourcefile(line={576},file={"Umple.ump"},javaline={151},length={1})
+  @umplesourcefile(line={578},file={"Umple.ump"},javaline={151},length={1})
   public String getModifier()
   {
-    // line 576 "../../../../src/Umple.ump"
+    // line 578 "../../../../src/Umple.ump"
     if (modifier == null || "".equals(modifier)) { return "internal"; }
     return modifier;
   }
 
-  @umplesourcefile(line={577},file={"Umple.ump"},javaline={161},length={1})
+  @umplesourcefile(line={579},file={"Umple.ump"},javaline={161},length={1})
   /**
    * potential enum 'internal'
    */
   public String getReferenceToClassName()
   {
-    // line 577 "../../../../src/Umple.ump"
+    // line 579 "../../../../src/Umple.ump"
     if (referenceToClassName == null) { return ""; }
     return referenceToClassName;
   }
@@ -312,40 +312,29 @@ public class AssociationEnd
       association.delete();
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1234},file={"Umple_Code.ump"},javaline={320},length={116})
-  private static int MULT_MANY = -1;
 
-  @umplesourcefile(line={1237},file={"Umple_Code.ump"},javaline={323},length={4})
-  public boolean isNavigable()
-  {
+  @umplesourcefile(line={1293},file={"Umple_Code.ump"},javaline={317},length={3})
+   public boolean isNavigable(){
     return !getModifier().toLowerCase().equals("nonnavigable");
-  }  
+  }
 
-  @umplesourcefile(line={1242},file={"Umple_Code.ump"},javaline={329},length={4})
-  public String getLowerBoundString()
-  {
+  @umplesourcefile(line={1298},file={"Umple_Code.ump"},javaline={322},length={3})
+   public String getLowerBoundString(){
     return getMultiplicity().getLowerBound() == -1 ? "*" : getMultiplicity().getLowerBound() + "";
   }
 
-  @umplesourcefile(line={1247},file={"Umple_Code.ump"},javaline={335},length={4})
-  public String getUpperBoundString()
-  {
+  @umplesourcefile(line={1303},file={"Umple_Code.ump"},javaline={327},length={3})
+   public String getUpperBoundString(){
     return getMultiplicity().getUpperBound() == -1 ? "*" : getMultiplicity().getUpperBound() + "";
   }
 
-  @umplesourcefile(line={1252},file={"Umple_Code.ump"},javaline={341},length={4})
-  public String getDisplayRoleName()
-  {
+  @umplesourcefile(line={1308},file={"Umple_Code.ump"},javaline={332},length={3})
+   public String getDisplayRoleName(){
     return isDefaultRoleName ? "" : getRoleName();
   }
 
-  @umplesourcefile(line={1257},file={"Umple_Code.ump"},javaline={347},length={19})
-  public String toSimpleString()
-  {
+  @umplesourcefile(line={1313},file={"Umple_Code.ump"},javaline={337},length={18})
+   public String toSimpleString(){
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
     {
       return formatEnd(getMultiplicity().getUpperBound());
@@ -364,9 +353,8 @@ public class AssociationEnd
     }
   }
 
-  @umplesourcefile(line={1277},file={"Umple_Code.ump"},javaline={368},length={23})
-  public String toGenericString()
-  {
+  @umplesourcefile(line={1333},file={"Umple_Code.ump"},javaline={357},length={22})
+   public String toGenericString(){
     if (getMultiplicity().getLowerBound() == 0 && getMultiplicity().getUpperBound() == MULT_MANY)
     {
       return formatEnd(getMultiplicity().getUpperBound());
@@ -389,9 +377,8 @@ public class AssociationEnd
     }
   }
 
-  @umplesourcefile(line={1301},file={"Umple_Code.ump"},javaline={393},length={27})
-  public String toString()
-  {
+  @umplesourcefile(line={1357},file={"Umple_Code.ump"},javaline={381},length={26})
+   public String toString(){
     String asText = "";
 
     if (!getModifier().equals("internal"))
@@ -418,16 +405,13 @@ public class AssociationEnd
     return asText;
   }
 
-  @umplesourcefile(line={1329},file={"Umple_Code.ump"},javaline={422},length={4})
-  private String formatEnd(int aValue)
-  {
+  @umplesourcefile(line={1385},file={"Umple_Code.ump"},javaline={409},length={3})
+   private String formatEnd(int aValue){
     return aValue == MULT_MANY ? "*" : aValue + "";
   }
 
-  @umplesourcefile(line={1334},file={"Umple_Code.ump"},javaline={428},length={16})
-  private String formatGenericEnd(int aValue, String defaultIfNotOneOrMany)
-  {
-
+  @umplesourcefile(line={1390},file={"Umple_Code.ump"},javaline={414},length={14})
+   private String formatGenericEnd(int aValue, String defaultIfNotOneOrMany){
     if (aValue == MULT_MANY)
     {
       return "*";
@@ -441,5 +425,11 @@ public class AssociationEnd
       return defaultIfNotOneOrMany;
     }
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={1290},file={"Umple_Code.ump"},javaline={433},length={2})
+  private static int MULT_MANY = -1 ;
 
 }

@@ -8,11 +8,11 @@ import java.util.*;
  * TODO: Code smell: This duplicates the structure of the class from UmpleClass
  * This is a problem for model-to-model transformations
  * Should be abolished
- * @umplesource Umple.ump 627
- * @umplesource Umple_Code.ump 1673
+ * @umplesource Umple.ump 629
+ * @umplesource Umple_Code.ump 1729
  */
-// line 627 "../../../../src/Umple.ump"
-// line 1673 "../../../../src/Umple_Code.ump"
+// line 629 "../../../../src/Umple.ump"
+// line 1729 "../../../../src/Umple_Code.ump"
 public class GeneratedElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -35,25 +35,14 @@ public class GeneratedElement
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1675},file={"Umple_Code.ump"},javaline={43},length={67})
-  @umplesourcefile(line={1676},file={"Umple_Code.ump"},javaline={44},length={7})
-  private Map<String, String> lookups = new HashMap<String, String>();
-  @umplesourcefile(line={1677},file={"Umple_Code.ump"},javaline={46},length={6})
-  private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>();
 
-  @umplesourcefile(line={1679},file={"Umple_Code.ump"},javaline={49},length={4})
-  public void setLookup(String aKey, String aValue)
-  {
+  @umplesourcefile(line={1735},file={"Umple_Code.ump"},javaline={40},length={3})
+   public void setLookup(String aKey, String aValue){
     lookups.put(aKey, aValue);
   }
 
-  @umplesourcefile(line={1684},file={"Umple_Code.ump"},javaline={55},length={11})
-  public String getLookup(String aKey)
-  {
+  @umplesourcefile(line={1740},file={"Umple_Code.ump"},javaline={45},length={10})
+   public String getLookup(String aKey){
     if (aKey == null)
     {
       return null;
@@ -64,9 +53,8 @@ public class GeneratedElement
     }
   }
 
-  @umplesourcefile(line={1696},file={"Umple_Code.ump"},javaline={68},length={21})
-  public boolean addMultiLookup(String aKey, String aValue)
-  {
+  @umplesourcefile(line={1752},file={"Umple_Code.ump"},javaline={57},length={20})
+   public boolean addMultiLookup(String aKey, String aValue){
     List<String> oldList = null;
     if (multiLookups.containsKey(aKey))
     {
@@ -87,9 +75,8 @@ public class GeneratedElement
     return true;
   }
 
-  @umplesourcefile(line={1718},file={"Umple_Code.ump"},javaline={91},length={13})
-  public String[] getMultiLookup(String aKey)
-  {
+  @umplesourcefile(line={1774},file={"Umple_Code.ump"},javaline={79},length={12})
+   public String[] getMultiLookup(String aKey){
     if (aKey == null || !multiLookups.containsKey(aKey))
     {
       return new String[0];
@@ -102,9 +89,8 @@ public class GeneratedElement
     }
   }
 
-  @umplesourcefile(line={1732},file={"Umple_Code.ump"},javaline={106},length={10})
-  public String toString()
-  {
+  @umplesourcefile(line={1788},file={"Umple_Code.ump"},javaline={93},length={9})
+   public String toString(){
     String answer = "<<";
     for (String aKey : lookups.keySet())
     {
@@ -113,5 +99,16 @@ public class GeneratedElement
     answer += ">>";
     return answer;
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={1731},file={"Umple_Code.ump"},javaline={107},length={5})
+  @umplesourcefile(line={1732},file={"Umple_Code.ump"},javaline={108},length={4})
+  private Map<String, String> lookups = new HashMap<String, String>() ;
+
+//  @umplesourcefile(line={1732},file={"Umple_Code.ump"},javaline={111},length={2})
+  @umplesourcefile(line={1733},file={"Umple_Code.ump"},javaline={112},length={1})
+  private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>() ;
 
 }

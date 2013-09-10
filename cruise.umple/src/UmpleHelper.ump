@@ -27,7 +27,7 @@ class UmpleFile
 
   File file;
   fileName = null;
-  internal String path = null;
+  String path = null;
   internal StringBuilder fileContent = init();
   // list of command-based linked Umple files
   internal String linkedFiles="";

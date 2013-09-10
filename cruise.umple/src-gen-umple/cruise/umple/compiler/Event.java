@@ -275,37 +275,17 @@ public class Event
     params.clear();
   }
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "name" + ":" + getName()+ "," +
-            "isTimer" + ":" + getIsTimer()+ "," +
-            "autoTransition" + ":" + getAutoTransition()+ "," +
-            "timerInSeconds" + ":" + getTimerInSeconds()+ "," +
-            "isInternal" + ":" + getIsInternal()+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={294},length={36})
-  private static int nextAutoTransitionId = 1;
-
-  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={297},length={7})
-  public static Event createAutoTransition()
-  {
+  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={279},length={6})
+   public static  Event createAutoTransition(){
     Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
     e.setAutoTransition(true);
     Event.nextAutoTransitionId += 1;
     return e;
   }
-  
-  @umplesourcefile(line={457},file={"StateMachine_Code.ump"},javaline={306},length={25})
-  public String getArgs()
-  {
-  	String args="";
+
+  @umplesourcefile(line={457},file={"StateMachine_Code.ump"},javaline={287},length={24})
+   public String getArgs(){
+    String args="";
     String paramName="";
     String paramType="";
     String aSingleParameter="";
@@ -328,5 +308,23 @@ public class Event
      }
      return args;
   }
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "," +
+            "isTimer" + ":" + getIsTimer()+ "," +
+            "autoTransition" + ":" + getAutoTransition()+ "," +
+            "timerInSeconds" + ":" + getTimerInSeconds()+ "," +
+            "isInternal" + ":" + getIsInternal()+ "]"
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={328},length={2})
+  private static int nextAutoTransitionId = 1 ;
 
 }

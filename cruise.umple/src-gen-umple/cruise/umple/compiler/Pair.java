@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * Simple name-value pair used in the Umple Parser
- * @umplesource UmpleInternalParser.ump 54
+ * @umplesource UmpleInternalParser.ump 79
  */
-// line 54 "../../../../src/UmpleInternalParser.ump"
+// line 79 "../../../../src/UmpleInternalParser.ump"
 public class Pair
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

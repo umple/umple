@@ -31,16 +31,9 @@ public class VmlConsole
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={18},file={"Vml_Code.ump"},javaline={39},length={47})
-  public static String console = "";
-  
-  @umplesourcefile(line={21},file={"Vml_Code.ump"},javaline={42},length={40})
-  public static void main(String[] args) 
-  {
+
+  @umplesourcefile(line={21},file={"Vml_Code.ump"},javaline={36},length={37})
+   public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
     console = "";
@@ -79,13 +72,18 @@ public class VmlConsole
     SampleFileWriter.createFile(outputFile,parser.getSystem().getCode());
     println("Successfully created ["+ outputFile +"]");
   }
-   
-  @umplesourcefile(line={60},file={"Vml_Code.ump"},javaline={84},length={5})
-  private static void println(String output)
-  {
+
+  @umplesourcefile(line={60},file={"Vml_Code.ump"},javaline={77},length={4})
+   private static  void println(String output){
     console += output + "\n";
     System.out.println(output);
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={18},file={"Vml_Code.ump"},javaline={86},length={2})
+  public static String console = "" ;
 
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

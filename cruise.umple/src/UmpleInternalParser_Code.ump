@@ -178,7 +178,7 @@ class UmpleInternalParser
   // token post token analysis method
   private void postTokenAnalysis()
   {
-    
+    analyzeParseResult();
     if (getParseResult().getWasSuccess())
     {
       postTokenCoreAnalysis();
@@ -277,7 +277,90 @@ class UmpleInternalParser
       parse("program", input);
       addNecessaryFiles();
     }    
-  }  
+  } 
+  
+  public void analyzeParseResult()
+  {
+    int numberOfErrors = 0;
+    int numberOfWarnings = 0;
+    for(int i = 0; i<getParseResult().numberOfErrorMessages(); i++)
+    {
+      ErrorMessage error = getParseResult().getErrorMessage(i);
+      if(error.getErrorType().getSeverity() <= 2)
+      {
+        numberOfErrors++;
+      }
+      else
+      {
+        numberOfWarnings++;
+      }
+      if(allowedMessages.contains(error.getErrorType().getErrorCode()))
+      {
+        if(error.getErrorType().getSeverity() <= 2)
+        {
+          numberOfErrors--;
+        }
+        else
+        {
+          numberOfWarnings--;
+        }
+        getParseResult().removeErrorMessage(error);
+        i--;
+        continue;
+      }
+      if(ignoredMessages.contains(error.getErrorType().getErrorCode()))
+      {
+        if(error.getErrorType().getSeverity() <= 2)
+        {
+          numberOfErrors--;
+        }
+        else
+        {
+          numberOfWarnings--;
+        }
+        getParseResult().removeErrorMessage(error);
+        i--;
+        continue;
+      }
+      if(expectedMessages.contains(error.getErrorType().getErrorCode()))
+      {
+        if(error.getErrorType().getSeverity() <= 2)
+        {
+          numberOfErrors--;
+        }
+        else
+        {
+          numberOfWarnings--;
+        }
+      }
+    }
+    for(Integer id: expectedMessages)
+    {
+      boolean hasMessage = false;
+      for(int i = 0; i<getParseResult().numberOfErrorMessages(); i++)
+      {        
+        ErrorMessage error = getParseResult().getErrorMessage(i);
+        if(error.getErrorType().getErrorCode() == id)
+        {          
+          getParseResult().removeErrorMessage(error);
+          hasMessage = true;
+          break;
+        }
+      }
+      if(!hasMessage)
+      {
+        // setFailedPosition
+      }
+    }
+    if(numberOfErrors == 0)
+    {
+      getParseResult().setWasSuccess(true);
+    }
+    if(numberOfWarnings == 0)
+    {
+      getParseResult().setHasWarnings(false);
+    }
+  } 
 }
 
 use UmpleInternalParser_CodeCore.ump;

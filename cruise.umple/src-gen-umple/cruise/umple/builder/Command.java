@@ -222,30 +222,15 @@ public class Command
     }
   }
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "currentObject" + "=" + (getCurrentObject() != null ? !getCurrentObject().equals(this)  ? getCurrentObject().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "loader" + "=" + (getLoader() != null ? !getLoader().equals(this)  ? getLoader().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={33},file={"Builder_Code.ump"},javaline={238},length={152})
-  @umplesourcefile(line={34},file={"Builder_Code.ump"},javaline={239},length={6})
-  public String[] popMessages()
-  {
+  @umplesourcefile(line={34},file={"Builder_Code.ump"},javaline={226},length={5})
+   public String[] popMessages(){
     String[] local = getMessages();
     messages = new ArrayList<String>();
     return local;
   }
 
-  @umplesourcefile(line={41},file={"Builder_Code.ump"},javaline={247},length={46})
-  public Object exec(String rawInput)
-  {
+  @umplesourcefile(line={41},file={"Builder_Code.ump"},javaline={233},length={45})
+   public Object exec(String rawInput){
     addHistory(rawInput);
     
     String input = "";
@@ -291,9 +276,8 @@ public class Command
     return answer;
   }
 
-  @umplesourcefile(line={88},file={"Builder_Code.ump"},javaline={295},length={22})
-  public Object newObject(String className)
-  {
+  @umplesourcefile(line={88},file={"Builder_Code.ump"},javaline={280},length={21})
+   public Object newObject(String className){
     currentObject = null;
     try 
     {
@@ -314,22 +298,19 @@ public class Command
     
     return currentObject;
   }
-  
-  @umplesourcefile(line={111},file={"Builder_Code.ump"},javaline={319},length={4})
-  public void runMethod(String methodName)
-  {
+
+  @umplesourcefile(line={111},file={"Builder_Code.ump"},javaline={303},length={3})
+   public void runMethod(String methodName){
     callMethod(methodName,false,true);
   }
-  
-  @umplesourcefile(line={116},file={"Builder_Code.ump"},javaline={325},length={4})
-  public Object showResults(String methodName)
-  {
+
+  @umplesourcefile(line={116},file={"Builder_Code.ump"},javaline={308},length={3})
+   public Object showResults(String methodName){
     return callMethod(methodName,true,false);
   }
-  
-  @umplesourcefile(line={121},file={"Builder_Code.ump"},javaline={331},length={27})
-  public boolean assertMethod(String methodName, String rawExpectedValue)
-  {
+
+  @umplesourcefile(line={121},file={"Builder_Code.ump"},javaline={313},length={26})
+   public boolean assertMethod(String methodName, String rawExpectedValue){
     String expectedValue = rawExpectedValue.trim();
     
     if (expectedValue.equals(""))
@@ -355,10 +336,9 @@ public class Command
       return false;
     }
   }
-  
-  @umplesourcefile(line={149},file={"Builder_Code.ump"},javaline={360},length={24})
-  private Object callMethod(String methodName, boolean showValue, boolean showExecuted)
-  {
+
+  @umplesourcefile(line={149},file={"Builder_Code.ump"},javaline={341},length={23})
+   private Object callMethod(String methodName, boolean showValue, boolean showExecuted){
     try 
     {
       Class<? extends Object> c = currentObject.getClass();
@@ -381,10 +361,9 @@ public class Command
       return null;
     }
   }
-  
-  @umplesourcefile(line={174},file={"Builder_Code.ump"},javaline={386},length={11})
-  private void showValue(String methodName, Object answer)
-  {
+
+  @umplesourcefile(line={174},file={"Builder_Code.ump"},javaline={366},length={10})
+   private void showValue(String methodName, Object answer){
     if (answer == null)
     {
       addMessage(methodName + " = [NULL]");
@@ -395,4 +374,13 @@ public class Command
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "currentObject" + "=" + (getCurrentObject() != null ? !getCurrentObject().equals(this)  ? getCurrentObject().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "loader" + "=" + (getLoader() != null ? !getLoader().equals(this)  ? getLoader().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
 }

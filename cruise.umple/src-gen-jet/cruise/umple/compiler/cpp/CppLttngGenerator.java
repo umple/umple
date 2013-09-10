@@ -80,7 +80,7 @@ public class CppLttngGenerator implements ILang
  	
 
     stringBuffer.append(TEXT_2);
-     if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).isInline) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } 
+     if (uClass.numberOfComments() > 0) { if (!uClass.getComments().get(0).getIsInline()) {append(stringBuffer, "\n{0}", Comment.format("Multiline",uClass.getComments()));} else {append(stringBuffer, "\n{0}", Comment.format("Slashes",uClass.getComments())); } } 
     stringBuffer.append(TEXT_3);
     for( TraceDirective td : uClass.getTraceDirectives() )
   {

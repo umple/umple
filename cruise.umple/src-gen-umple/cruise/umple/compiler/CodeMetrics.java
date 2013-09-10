@@ -179,8 +179,9 @@ public class CodeMetrics extends SimpleMetricsGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={181},file={"Generator_CodeSimpleMetrics.ump"},javaline={183},length={85})
-  CountLines countLinesInFile(String filename)throws java.io.IOException{
+  //  @umplesourcefile(line={181},file={"Generator_CodeSimpleMetrics.ump"},javaline={183},length={86})
+  CountLines countLinesInFile(String filename)throws java.io.IOException 
+  {
     //CountLines countLinesInFile(String filename) throws IOException
      CountLines cl = new CountLines();
      cl.setCountLines(0);
@@ -263,6 +264,6 @@ public class CodeMetrics extends SimpleMetricsGenerator
 */
        //System.out.println("======================="+cl.toString());
        return cl;
-   } // End method
+  }
 
 }

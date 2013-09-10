@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * @umplesource Umple.ump 174
- * @umplesource Umple.ump 493
+ * @umplesource Umple.ump 495
  */
 // line 174 "../../../../src/Umple.ump"
-// line 493 "../../../../src/Umple.ump"
+// line 495 "../../../../src/Umple.ump"
 public class UniqueIdentifier extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

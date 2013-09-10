@@ -10,11 +10,11 @@ import cruise.umple.util.*;
  * 
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
  * In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
- * @umplesource Umple.ump 612
- * @umplesource Umple_Code.ump 1530
+ * @umplesource Umple.ump 614
+ * @umplesource Umple_Code.ump 1586
  */
-// line 612 "../../../../src/Umple.ump"
-// line 1530 "../../../../src/Umple_Code.ump"
+// line 614 "../../../../src/Umple.ump"
+// line 1586 "../../../../src/Umple_Code.ump"
 public class Multiplicity
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -179,44 +179,28 @@ public class Multiplicity
   public void delete()
   {}
 
-  @umplesourcefile(line={1533},file={"Umple_Code.ump"},javaline={183},length={4})
+  @umplesourcefile(line={1589},file={"Umple_Code.ump"},javaline={183},length={4})
    public void setRange(String lowerBound, String upperBound){
     minimum = lowerBound;
     maximum = upperBound;
   }
 
-  @umplesourcefile(line={1539},file={"Umple_Code.ump"},javaline={189},length={5})
+  @umplesourcefile(line={1595},file={"Umple_Code.ump"},javaline={189},length={5})
    public String getRange(){
     String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
     String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
     return StringFormatter.format("[{0},{1}]",lowerBound,upperBound);
   }
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "maximum" + ":" + getMaximum()+ "," +
-            "minimum" + ":" + getMinimum()+ "," +
-            "bound" + ":" + getBound()+ "]"
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1545},file={"Umple_Code.ump"},javaline={209},length={124})
-  @umplesourcefile(line={1546},file={"Umple_Code.ump"},javaline={210},length={6})
-  public String[] getRangeParts()
-  {
+  @umplesourcefile(line={1602},file={"Umple_Code.ump"},javaline={196},length={5})
+   public String[] getRangeParts(){
     String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
     String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
     return new String[] { lowerBound, upperBound };
   }
 
-  @umplesourcefile(line={1553},file={"Umple_Code.ump"},javaline={218},length={31})
-  public boolean isValid()
-  {
+  @umplesourcefile(line={1609},file={"Umple_Code.ump"},javaline={203},length={30})
+   public boolean isValid(){
     if ("*".equals(getMinimum()))
     {
       return false;
@@ -247,9 +231,8 @@ public class Multiplicity
     return true;
   }
 
-  @umplesourcefile(line={1585},file={"Umple_Code.ump"},javaline={251},length={11})
-  public void minimizeRange(Multiplicity compareTo)
-  {
+  @umplesourcefile(line={1641},file={"Umple_Code.ump"},javaline={235},length={10})
+   public void minimizeRange(Multiplicity compareTo){
     if (compareTo.getLowerBound() > getLowerBound() && compareTo.minimum != null)
     {
       minimum = compareTo.minimum;
@@ -260,9 +243,8 @@ public class Multiplicity
     }
   }
 
-  @umplesourcefile(line={1597},file={"Umple_Code.ump"},javaline={264},length={11})
-  public int getLowerBound()
-  {
+  @umplesourcefile(line={1653},file={"Umple_Code.ump"},javaline={247},length={10})
+   public int getLowerBound(){
     if (getBound() != null)
     {
       return parseInt(getBound(),0);
@@ -273,9 +255,8 @@ public class Multiplicity
     }
   }
 
-  @umplesourcefile(line={1609},file={"Umple_Code.ump"},javaline={277},length={11})
-  public int getUpperBound()
-  {
+  @umplesourcefile(line={1665},file={"Umple_Code.ump"},javaline={259},length={10})
+   public int getUpperBound(){
     if (getBound() != null)
     {
       return parseInt(getBound(),-1);
@@ -286,45 +267,38 @@ public class Multiplicity
     }
   }
 
-  @umplesourcefile(line={1621},file={"Umple_Code.ump"},javaline={290},length={4})
-  public boolean isLowerBoundMany()
-  {
+  @umplesourcefile(line={1677},file={"Umple_Code.ump"},javaline={271},length={3})
+   public boolean isLowerBoundMany(){
     return getLowerBound() == -1;
   }
 
-  @umplesourcefile(line={1626},file={"Umple_Code.ump"},javaline={296},length={4})
-  public boolean isUpperBoundMany()
-  {
+  @umplesourcefile(line={1682},file={"Umple_Code.ump"},javaline={276},length={3})
+   public boolean isUpperBoundMany(){
     return getUpperBound() == -1;
   }
 
-  @umplesourcefile(line={1631},file={"Umple_Code.ump"},javaline={302},length={4})
-  public boolean isLowerBoundNumeric()
-  {
+  @umplesourcefile(line={1687},file={"Umple_Code.ump"},javaline={281},length={3})
+   public boolean isLowerBoundNumeric(){
     return getLowerBound() >= -1;
   }
 
-  @umplesourcefile(line={1636},file={"Umple_Code.ump"},javaline={308},length={4})
-  public boolean isUpperBoundNumeric()
-  {
+  @umplesourcefile(line={1692},file={"Umple_Code.ump"},javaline={286},length={3})
+   public boolean isUpperBoundNumeric(){
     return getUpperBound() >= -1;
   }
 
-  @umplesourcefile(line={1641},file={"Umple_Code.ump"},javaline={314},length={4})
-  public boolean isMany()
-  {
+  @umplesourcefile(line={1697},file={"Umple_Code.ump"},javaline={291},length={3})
+   public boolean isMany(){
     return getUpperBound() > 1 || getUpperBound() == -1;
   }
 
-  @umplesourcefile(line={1646},file={"Umple_Code.ump"},javaline={320},length={4})
-  public boolean isOne()
-  {
+  @umplesourcefile(line={1702},file={"Umple_Code.ump"},javaline={296},length={3})
+   public boolean isOne(){
     return getUpperBound() == 1;
   }
 
-  @umplesourcefile(line={1651},file={"Umple_Code.ump"},javaline={326},length={18})
-  private int parseInt(String input, int defaultIfStar)
-  {
+  @umplesourcefile(line={1707},file={"Umple_Code.ump"},javaline={301},length={17})
+   private int parseInt(String input, int defaultIfStar){
     try
     {
       if ("*".equals(input))
@@ -342,4 +316,14 @@ public class Multiplicity
     }
   }
 
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "maximum" + ":" + getMaximum()+ "," +
+            "minimum" + ":" + getMinimum()+ "," +
+            "bound" + ":" + getBound()+ "]"
+     + outputString;
+  }
 }

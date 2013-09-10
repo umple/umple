@@ -34,15 +34,9 @@ public class CodeCompiler
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={21},file={"Compiler.ump"},javaline={42},length={139})
-  public static String console;
 
-  @umplesourcefile(line={24},file={"Compiler.ump"},javaline={45},length={19})
-  public static boolean compile(UmpleModel model, String entryClass, String... extraArgs) {
+  @umplesourcefile(line={24},file={"Compiler.ump"},javaline={39},length={19})
+   public static  boolean compile(UmpleModel model, String entryClass, String... extraArgs){
     boolean error_flag = true;
     String extra = "";
     for(String arg:extraArgs)
@@ -62,8 +56,8 @@ public class CodeCompiler
     return error_flag;
   }
 
-  @umplesourcefile(line={44},file={"Compiler.ump"},javaline={66},length={27})
-  private static boolean compileJava(UmpleElement aClass, UmpleModel model, String args) {
+  @umplesourcefile(line={44},file={"Compiler.ump"},javaline={60},length={27})
+   private static  boolean compileJava(UmpleElement aClass, UmpleModel model, String args){
     String path="";
     for (GenerateTarget gt : model.getGenerates()) {
       if (gt.getLanguage().equals("Java")) {
@@ -91,9 +85,12 @@ public class CodeCompiler
     return successful;
   }
 
-  // To do: Use model to determine generation path
-  @umplesourcefile(line={73},file={"Compiler.ump"},javaline={96},length={43})
-  private static String translateLineToUmple(String line, UmpleModel model) {
+
+  /**
+   * To do: Use model to determine generation path
+   */
+  @umplesourcefile(line={73},file={"Compiler.ump"},javaline={89},length={43})
+   private static  String translateLineToUmple(String line, UmpleModel model){
     String modifiedLine = line;
     StackTraceElement ust;
     String javaFileName;
@@ -137,17 +134,14 @@ public class CodeCompiler
     return(ust.getFileName()+":"+ust.getLineNumber()+":"+lineParts[2]);
   }
 
-  @umplesourcefile(line={117},file={"Compiler.ump"},javaline={141},length={5})
-  private static void println(String output)
-  {
+  @umplesourcefile(line={117},file={"Compiler.ump"},javaline={138},length={4})
+   private static  void println(String output){
     console += output + "\n";
     System.out.println(output);
   }
 
-  @umplesourcefile(line={123},file={"Compiler.ump"},javaline={148},length={13})
-  public static String getSimpleFileName(String fileName)
-  {
-
+  @umplesourcefile(line={123},file={"Compiler.ump"},javaline={144},length={11})
+   public static  String getSimpleFileName(String fileName){
     int lastIndex = fileName.lastIndexOf("/");
     if (lastIndex == -1)
     {
@@ -158,10 +152,9 @@ public class CodeCompiler
       return fileName.substring(lastIndex+1, fileName.length());
     }
   }
-  
-  @umplesourcefile(line={137},file={"Compiler.ump"},javaline={163},length={23})
-  public static List<UmpleClass> getMainClasses(UmpleModel model)
-  {
+
+  @umplesourcefile(line={137},file={"Compiler.ump"},javaline={157},length={22})
+   public static  List<UmpleClass> getMainClasses(UmpleModel model){
     List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();
     for(UmpleClass c:model.getUmpleClasses())
     {
@@ -183,5 +176,11 @@ public class CodeCompiler
     }
     return mainClasses;
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={21},file={"Compiler.ump"},javaline={184},length={2})
+  public static String console ;
 
 }

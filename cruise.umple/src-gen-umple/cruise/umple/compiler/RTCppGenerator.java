@@ -110,10 +110,11 @@ public class RTCppGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={37},file={"Generator_CodeRTCpp.ump"},javaline={114},length={25})
-  @umplesourcefile(line={38},file={"Generator_CodeRTCpp.ump"},javaline={115},length={24})
-  protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException {		
-		 String path = model.getUmpleFile().getPath() + "/";
+  //  @umplesourcefile(line={37},file={"Generator_CodeRTCpp.ump"},javaline={114},length={26})
+  @umplesourcefile(line={38},file={"Generator_CodeRTCpp.ump"},javaline={115},length={25})
+  protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException 
+  {
+    String path = model.getUmpleFile().getPath() + "/";
 		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");
 		 String qualifiedPath = path+ owingFolder;
 		 File folder = new File(qualifiedPath);
@@ -135,6 +136,6 @@ public class RTCppGenerator implements CodeGenerator
 		 BufferedWriter output = new BufferedWriter(new FileWriter(folderFile));
 		 output.write(content);
 		 output.close();
-	}
+  }
 
 }

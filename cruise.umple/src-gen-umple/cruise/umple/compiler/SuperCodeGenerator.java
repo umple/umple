@@ -72,33 +72,17 @@ public abstract class SuperCodeGenerator implements CodeGenerator
   {}
 
 
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={7},file={"Generator_SuperCodeGenerator.ump"},javaline={87},length={36})
-  Map <String,String> UmpleToPrimitiveMap;
-	Map <String,String> TraceLookupMap;
-	
-	//This method is because of issue number 373;
-  @umplesourcefile(line={12},file={"Generator_SuperCodeGenerator.ump"},javaline={92},length={3})
-	public void generate() {
-	
-	}
-	
-  @umplesourcefile(line={16},file={"Generator_SuperCodeGenerator.ump"},javaline={97},length={17})
-	public abstract void initializeLangaugeBasedVariables();
-	
-  @umplesourcefile(line={18},file={"Generator_SuperCodeGenerator.ump"},javaline={100},length={15})
- 	public String getType(UmpleVariable av)	{
-    	String myType = av.getType();
+  /**
+   * This method is because of issue number 373;
+   */
+  @umplesourcefile(line={12},file={"Generator_SuperCodeGenerator.ump"},javaline={75},length={3})
+   public void generate(){
+    
+  }
+
+  @umplesourcefile(line={18},file={"Generator_SuperCodeGenerator.ump"},javaline={84},length={15})
+   public String getType(UmpleVariable av){
+    String myType = av.getType();
     	if (myType == null || myType.length() == 0)
     	{
       		return UmpleToPrimitiveMap.get("String");
@@ -111,17 +95,38 @@ public abstract class SuperCodeGenerator implements CodeGenerator
     	{
       		return myType;
    		 }
-  	}
-  	
-  @umplesourcefile(line={34},file={"Generator_SuperCodeGenerator.ump"},javaline={117},length={9})
-	public String translate(String keyName, TraceItem ti)
-	{
-		if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
+  }
+
+  @umplesourcefile(line={34},file={"Generator_SuperCodeGenerator.ump"},javaline={101},length={8})
+   public String translate(String keyName, TraceItem ti){
+    if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
 			return TraceLookupMap.get(keyName.substring(5).toLowerCase());
     	}
     	else {
     		return "INVALID KEYNAME IN TRANSLATE";
     	}
-  	}
+  }
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "output" + ":" + getOutput()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={7},file={"Generator_SuperCodeGenerator.ump"},javaline={123},length={8})
+  Map <String,String> UmpleToPrimitiveMap ;
+
+//  @umplesourcefile(line={8},file={"Generator_SuperCodeGenerator.ump"},javaline={126},length={5})
+  Map <String,String> TraceLookupMap ;
+
+//  @umplesourcefile(line={15},file={"Generator_SuperCodeGenerator.ump"},javaline={129},length={2})
+  @umplesourcefile(line={16},file={"Generator_SuperCodeGenerator.ump"},javaline={130},length={1})
+  public abstract void initializeLangaugeBasedVariables() ;
 
 }

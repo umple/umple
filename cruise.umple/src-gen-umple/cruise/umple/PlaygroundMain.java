@@ -39,17 +39,12 @@ public class PlaygroundMain
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={323},file={"Main_Code.ump"},javaline={47},length={167})
-  @umplesourcefile(line={324},file={"Main_Code.ump"},javaline={48},length={104})
-  public static void main(String[] args)
-    {
+
+  @umplesourcefile(line={324},file={"Main_Code.ump"},javaline={44},length={101})
+   public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
-        console = "";
+    console = "";
         String answer = "";
 
         if (args.length == 0)
@@ -148,19 +143,17 @@ public class PlaygroundMain
         }
 
         print(answer);
-    }
+  }
 
-  @umplesourcefile(line={427},file={"Main_Code.ump"},javaline={154},length={5})
-    private static void print(String output)
-    {
-        console += output;
+  @umplesourcefile(line={427},file={"Main_Code.ump"},javaline={149},length={4})
+   private static  void print(String output){
+    console += output;
         System.out.print(output);
-    }
+  }
 
-  @umplesourcefile(line={433},file={"Main_Code.ump"},javaline={161},length={55})
-    private static SynchronizationAction action(String type, String deltaCode, String umpleCode)
-    {
-        if ("-addClass".equals(type))
+  @umplesourcefile(line={433},file={"Main_Code.ump"},javaline={155},length={54})
+   private static  SynchronizationAction action(String type, String deltaCode, String umpleCode){
+    if ("-addClass".equals(type))
         {
             return new NewAction(deltaCode,umpleCode);
         }
@@ -212,9 +205,13 @@ public class PlaygroundMain
         {
             return null;
         }
-    }
-
-    public static String console = "";
+  }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={488},file={"Main_Code.ump"},javaline={214},length={2})
+  public static String console = "" ;
 
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {

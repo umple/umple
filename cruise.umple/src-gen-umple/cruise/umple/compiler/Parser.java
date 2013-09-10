@@ -1007,16 +1007,9 @@ public class Parser
     int closeBracket = definition.lastIndexOf("]");
     return openBracket > closeBracket;
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={1363},file={"Parser_Code.ump"},javaline={1015},length={93})
-  private float average = 0.0f;
-  private int times = 1;
-  @umplesourcefile(line={1366},file={"Parser_Code.ump"},javaline={1018},length={65})
-  private boolean isBalanced(String input)
-  {
+
+  @umplesourcefile(line={1364},file={"Parser_Code.ump"},javaline={1012},length={64})
+   private boolean isBalanced(String input){
     if(input == null){
       return true;
     }
@@ -1081,33 +1074,28 @@ public class Parser
     return braces == 0;
   }
 
-  @umplesourcefile(line={1432},file={"Parser_Code.ump"},javaline={1085},length={4})
-  public Token getToken(int index)
-  {
+  @umplesourcefile(line={1430},file={"Parser_Code.ump"},javaline={1078},length={3})
+   public Token getToken(int index){
     return rootToken.getSubToken(index);
   }
 
-  @umplesourcefile(line={1437},file={"Parser_Code.ump"},javaline={1091},length={4})
-  public List<Token> getTokens()
-  {
+  @umplesourcefile(line={1435},file={"Parser_Code.ump"},javaline={1083},length={3})
+   public List<Token> getTokens(){
     return rootToken.getSubTokens();
   }
 
-  @umplesourcefile(line={1442},file={"Parser_Code.ump"},javaline={1097},length={4})
-  public int numberOfTokens()
-  {
+  @umplesourcefile(line={1440},file={"Parser_Code.ump"},javaline={1088},length={3})
+   public int numberOfTokens(){
     return rootToken.numberOfSubTokens();
   }
 
-  @umplesourcefile(line={1447},file={"Parser_Code.ump"},javaline={1103},length={4})
-  public boolean hasTokens()
-  {
+  @umplesourcefile(line={1445},file={"Parser_Code.ump"},javaline={1093},length={3})
+   public boolean hasTokens(){
     return numberOfTokens() > 0;
   }
 
-  @umplesourcefile(line={1452},file={"Parser_Code.ump"},javaline={1109},length={4})
-  public int indexOf(Token aToken)
-  {
+  @umplesourcefile(line={1450},file={"Parser_Code.ump"},javaline={1098},length={3})
+   public int indexOf(Token aToken){
     return rootToken.indexOfSubToken(aToken);
   }
 

@@ -87,25 +87,9 @@ public class FileManager
       throw new RuntimeException("Error writing ["+ file.getAbsoluteFile() +"] to disk",e);
     }
   }
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={169},file={"Util_Code.ump"},javaline={95},length={34})
-  @umplesourcefile(line={170},file={"Util_Code.ump"},javaline={96},length={9})
-  private static void writeFileToDisk(FileOutputStream fout, String text) throws IOException
-  {
-    OutputStream bout = new BufferedOutputStream(fout);
-    OutputStreamWriter out = new OutputStreamWriter(bout);
 
-    out.write(text);
-    out.flush();
-    out.close();
-  }
-  
-  @umplesourcefile(line={180},file={"Util_Code.ump"},javaline={107},length={23})
-  private static String loadFile(FileReader reader)
-  {
+  @umplesourcefile(line={180},file={"Util_Code.ump"},javaline={92},length={22})
+   private static  String loadFile(FileReader reader){
     try 
     {
       String content = "";
@@ -125,7 +109,22 @@ public class FileManager
     catch (Exception e) 
     {
       return null;
-    }  
+    }
+  }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={169},file={"Util_Code.ump"},javaline={119},length={10})
+  @umplesourcefile(line={170},file={"Util_Code.ump"},javaline={120},length={9})
+  private static void writeFileToDisk(FileOutputStream fout, String text) throws IOException 
+  {
+    OutputStream bout = new BufferedOutputStream(fout);
+    OutputStreamWriter out = new OutputStreamWriter(bout);
+
+    out.write(text);
+    out.flush();
+    out.close();
   }
 
 }

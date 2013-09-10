@@ -30,7 +30,7 @@ class UmpleInternalParser
     String[] parts = code.split("\\{");
     if(parts.length < 2) return false; //This means there are no opening brackets
     if(!Token.isValidIdentifier(parts[0].trim())) return false; //This means we don't have an identifier. If the SM name is misspelt, that should be picked up elsewhere.
-    return true; //We have an identifier followe by a { followe by something else that is probably a state machine
+    return true; //We have an identifier followed by a { followe by something else that is probably a state machine
   }
   
   // Analyze state machine related tokens
