@@ -29,6 +29,10 @@ class Uigu2_Controller extends KISS_Controller {
     $_SESSION[$execution_id]['instances'][$class_name][] = $reflection->newInstanceArgs($params);
   }
 
+  public static function get_object($execution_id, $class_name, $index){
+    return $_SESSION[$execution_id]['instances'][$class_name][$index];
+  }
+
 }
 
 class Uigu2_View extends KISS_View {

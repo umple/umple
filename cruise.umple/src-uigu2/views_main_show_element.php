@@ -8,13 +8,11 @@
     </tr>
     <?php 
       echo "<input type='hidden' name='element_name' value='$name' />";
-      foreach($attributes as $order => $att){
-        if(isset($att['constructor_param'])){
-          $value = isset($att['value']) ? $att['value'] : ''; 
-          echo "<tr><td>{$att['name']}</td>".
-                 "<td>{$att['type']}</td>".
-                 "<td><input type='text' name='{$att['name']}' value='$value'/></td></tr>";
-        }
+      foreach($constructor as $att){
+        $value = isset($att['value']) ? $att['value'] : ''; 
+        echo "<tr><td>{$att['name']}</td>".
+               "<td>{$att['type']}</td>".
+               "<td><input type='text' name='constructor_values[]' value='$value'/></td></tr>";
       }
     ?>
     <tr>

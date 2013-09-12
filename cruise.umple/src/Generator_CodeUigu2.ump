@@ -31,13 +31,8 @@ class Uigu2ElementGenerator
 
     if(uElement instanceof UmpleClass){
       UmpleClass aClass = (UmpleClass)uElement;
+      String className = aClass.getName();
       
-      //TODO
-      Association[] associations = aClass.getAssociations();
-      if(associations.length > 0){
-        throw new UmpleCompilerException("Support for Associations is currently under development.",
-          new UnsupportedOperationException());
-      }
       //TODO
       UmpleClass parentClass = aClass.getExtendsClass();
       if(parentClass != null){
@@ -46,9 +41,13 @@ class Uigu2ElementGenerator
       }
 
       elementKind = "Class";
+      code.append("$constructor = array();").append(nl);
       this.appendAttributesCode(code, aClass);
+      this.appendAssociationsCode(code, aClass);
+      this.appendToElementsArray(code, className, "constructor", "$constructor");
+
       if(aClass.getIsAbstract()){
-        this.appendToElementsArray(code,aClass.getName(),"abstract","1");
+        this.appendToElementsArray(code, className, "abstract", "1");
       }
     }else if(uElement instanceof UmpleInterface){
       elementKind = "Interface";
@@ -57,39 +56,45 @@ class Uigu2ElementGenerator
     return code.toString();
   }
 
+  private void appendAttributesCode(StringBuilder code, UmpleClass uClass) {
+    List<Attribute> attributes = uClass.getAttributes();
+    code.append("$attributes = array();").append(nl);
+    String name, value, type;
+    for (Attribute att : attributes){
+      name = att.getName();
+      value = att.getValue();
+      type = att.getType();
+      code.append("$a_attribute = array();").append(nl);
+      code.append("$a_attribute['name'] = '" + name + "';").append(nl);
+      code.append("$a_attribute['type'] = '" + type + "';").append(nl);
+      if(value != null){
+        value = value.replaceAll("\"", "");
+        code.append("$a_attribute['value'] = '" + value + "';").append(nl);
+      }
+      if(att.getIsLazy()){
+        code.append("$a_attribute['lazy'] = " + 1 + ";").append(nl);
+        code.append("$attributes['" + name + "'] = $a_attribute;").append(nl);
+      }else{
+        code.append("$attributes['" + name + "'] = $a_attribute;").append(nl);
+        //attribute must be initialized in constructor
+        code.append("$constructor[] =& $attributes['" + name + "'];").append(nl);
+      }
+    }
+    this.appendToElementsArray(code,uClass.getName(),"attributes","$attributes");
+  }
+
+  private void appendAssociationsCode(StringBuilder code, UmpleClass uClass) {
+    Association[] associations = uClass.getAssociations();
+    //TODO: iterate Associations, add to $associations within $ELEMENTS, add to $constructor
+  }
+
   /**
-   * Adds to the $ELEMENTS php array (where information about UmpleElements are passed to
+   * appends code that adds to the $ELEMENTS php array (where information about UmpleElements are passed to
    * UIGU) the specified key and value, ie. "$ELEMENTS[elementName][key] = value;"
    */
   private void appendToElementsArray(StringBuilder code, String elementName, String key, String value) {
     code.append("$ELEMENTS['").append(elementName).append("']['").append(key).append("']");
     code.append(" = ").append(value).append(";").append(nl);
-  }
-
-  /**
-   * Adds to the StringBuilder being built php code that deals with attributes.
-   */
-  private void appendAttributesCode(StringBuilder code, UmpleClass uClass) {
-    List<Attribute> attributes = uClass.getAttributes();
-    Attribute att;
-    code.append("$attributes = array();").append(nl);    
-    for (int i = 0, size = attributes.size(); i < size; i++) {
-      att = attributes.get(i);
-      code.append("$attributes[" + i +"]['name'] = '" + att.getName() + "';").append(nl);
-      code.append("$attributes[" + i +"]['type'] = '" + att.getType() + "';").append(nl);
-      String value = att.getValue();
-      if(value != null){
-        value = value.replaceAll("\"", "");
-        code.append("$attributes[" + i +"]['value'] = '" + value + "';").append(nl);
-      }
-      if(att.getIsLazy()){
-        code.append("$attributes[" + i +"]['lazy'] = '" + 1 + "';").append(nl);
-      }else{
-        //attribute must be initialized in constructor
-        code.append("$attributes[" + i +"]['constructor_param'] = '" + 1 + "';").append(nl);
-      }
-    }
-    this.appendToElementsArray(code,uClass.getName(),"attributes","$attributes");
   }
 }
 
@@ -222,31 +227,34 @@ class Uigu2Generator
   * Generates setup.php to the sharedFilesPath (if set), or outputPath.
   */
   private void generateSetupFile() throws IOException{
-    String nl = System.getProperty("line.separator");
     Path sharedFilesPath = getPreferredSharedFilesPath(); 
     Path writePath = sharedFilesPath.resolve(Paths.get("setup.php"));
-    Path appPath = sharedFilesPath.resolve(Paths.get("app/"));
 
-    String setupFile = "<?php" + nl + nl
-        + "/*EDIT BELOW: parent URL of the folder where index.php is located" + nl
-        + " *eg. to access 'http://a/b/c/index.php', use 'http://a/b/' (with trailing slash) */" + nl
-        + "define('WEB_DOMAIN_ROOT','http://default/');" + nl + nl
-        + "/*EDIT BELOW: parent path of the folder where index.php is located," + nl
-        + " *relative to the <DocumentRoot> element of the apache config file " + nl
-        + " *eg.  if <DocumentRoot> is '/var/www/' and the full path is '/var/www/a/b/index.php'" + nl
-        + " *use '/a/' (with trailing slash) */" + nl 
-        + "define('WEB_FOLDER_ROOT','/');" + nl + nl
-        + "define('APP_PATH','" + appPath.toString() + "/');" + nl
-        + "define('VIEW_PATH',APP_PATH.'views/');" + nl
-        + "define('CONTROLLER_PATH',APP_PATH.'controllers/');" + nl;
+    if(!writePath.toFile().exists()){
+      Path appPath = sharedFilesPath.resolve(Paths.get("app/"));
+      String setupFile = "<?php" + nl + nl
+          + "/*EDIT BELOW: parent URL of the folder where index.php is located" + nl
+          + " *eg. to access 'http://a/b/c/index.php', use 'http://a/b/' (with trailing slash) */" + nl
+          + "define('WEB_DOMAIN_ROOT','http://default/');" + nl + nl
 
-    writeStringToFile(setupFile, writePath);
+          + "/*EDIT BELOW: parent path of the folder where index.php is located," + nl
+          + " *relative to the <DocumentRoot> element of the apache config file " + nl
+          + " *eg.  if <DocumentRoot> is '/var/www/' and the full path is '/var/www/a/b/index.php'" + nl
+          + " *use '/a/' (with trailing slash) */" + nl 
+          + "define('WEB_FOLDER_ROOT','/');" + nl + nl
+
+          + "define('APP_PATH','" + appPath.toString() + "/');" + nl
+          + "define('VIEW_PATH',APP_PATH.'views/');" + nl
+          + "define('CONTROLLER_PATH',APP_PATH.'controllers/');" + nl;
+
+      writeStringToFile(setupFile, writePath);
+    }
   }
 
   /*
    * Generates initialize_model.php file with UmpleModel information accessible to all controllers.
    */
-  private void generateInitializationFile() throws IOException{    
+  private void generateInitializationFile() throws IOException{
     //this file is never shared
     Path path = this.outputPath.resolve(Paths.get("initialize_model.php"));
 
@@ -256,13 +264,13 @@ class Uigu2Generator
             + "$UMPLE_MODEL['execution_id'] = basename(__DIR__);" + nl);
 
     //$ELEMENTS associative array with info from each UmpleElement
-    if (this.elements.size() > 0) {       
+    if (this.elements.size() > 0) {
       for (UmpleElement e : this.elements) {
         initFile.append(this.generator.getCode(super.getModel(), e));
       }
       initFile.append("$UMPLE_MODEL['ELEMENTS'] = $ELEMENTS;").append(nl);
     }
-    
+
     initFile.append("return $UMPLE_MODEL;").append(nl).append("}");
     writeStringToFile(initFile.toString(), path);
   }
