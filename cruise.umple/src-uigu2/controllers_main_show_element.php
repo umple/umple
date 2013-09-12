@@ -19,6 +19,7 @@ function _show_element($params) {
     //return false;
   }
 
+  //the view will have direct access to variables inside $element
   $data['body'][]=Uigu2_View::do_fetch(VIEW_PATH.'main/show_element.php', $element);
   Uigu2_View::do_dump(VIEW_PATH.'layout.php',$data);
 }
