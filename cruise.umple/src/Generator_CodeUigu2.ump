@@ -84,7 +84,16 @@ class Uigu2ElementGenerator
   }
 
   private void appendAssociationsCode(StringBuilder code, UmpleClass uClass) {
+    /*
+    GeneratedClass gc = uClass.getGeneratedClass();
+    System.out.println(gc.toString());
+
     Association[] associations = uClass.getAssociations();
+    for (Association as : associations){
+      List<AssociationEnd> ends = as.getEnds();   
+
+    }
+    */
     //TODO: iterate Associations, add to $associations within $ELEMENTS, add to $constructor
   }
 
@@ -210,8 +219,8 @@ class Uigu2Generator
         + "ini_set('display_errors','On');" + nl
         + "error_reporting(E_ALL);" + nl
         + "require_once('" + setupFilePath + "');" + nl
-        + "define('WEB_DOMAIN', WEB_DOMAIN_ROOT . basename(__DIR__));" + nl
-        + "define('WEB_FOLDER', WEB_FOLDER_ROOT . basename(__DIR__) . '/');" + nl
+        + "define('WEB_DOMAIN', WEB_DOMAIN_ROOT . basename(dirname(__FILE__)));" + nl
+        + "define('WEB_FOLDER', WEB_FOLDER_ROOT . basename(dirname(__FILE__)) . '/');" + nl
         + "require_once(APP_PATH.'kissmvc_uigu2.php');" + nl
         + "session_start();" + nl + nl
         + "function __autoload($classname) {" + nl
@@ -263,7 +272,7 @@ class Uigu2Generator
     StringBuilder initFile = new StringBuilder("<?php" + nl + nl
             + "function initialize_model(){" + nl
             + "$UMPLE_MODEL = array();" + nl
-            + "$UMPLE_MODEL['execution_id'] = basename(__DIR__);" + nl);
+            + "$UMPLE_MODEL['execution_id'] = basename(dirname(__FILE__));" + nl);
 
     //$ELEMENTS associative array with info from each UmpleElement
     if (this.elements.size() > 0) {

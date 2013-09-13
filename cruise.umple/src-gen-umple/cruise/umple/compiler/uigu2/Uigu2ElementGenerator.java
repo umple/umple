@@ -109,9 +109,18 @@ public class Uigu2ElementGenerator
     this.appendToElementsArray(code,uClass.getName(),"attributes","$attributes");
   }
 
-  @umplesourcefile(line={86},file={"Generator_CodeUigu2.ump"},javaline={113},length={4})
+  @umplesourcefile(line={86},file={"Generator_CodeUigu2.ump"},javaline={113},length={13})
    private void appendAssociationsCode(StringBuilder code, UmpleClass uClass){
+    /*
+    GeneratedClass gc = uClass.getGeneratedClass();
+    System.out.println(gc.toString());
+
     Association[] associations = uClass.getAssociations();
+    for (Association as : associations){
+      List<AssociationEnd> ends = as.getEnds();   
+
+    }
+    */
     //TODO: iterate Associations, add to $associations within $ELEMENTS, add to $constructor
   }
 
@@ -121,7 +130,7 @@ public class Uigu2ElementGenerator
    * appends code that adds to the $ELEMENTS php array (where information about UmpleElements are passed to
    * UIGU) the specified key and value, ie. "$ELEMENTS[elementName][key] = value;"
    */
-  @umplesourcefile(line={95},file={"Generator_CodeUigu2.ump"},javaline={119},length={4})
+  @umplesourcefile(line={104},file={"Generator_CodeUigu2.ump"},javaline={128},length={4})
    private void appendToElementsArray(StringBuilder code, String elementName, String key, String value){
     code.append("$ELEMENTS['").append(elementName).append("']['").append(key).append("']");
     code.append(" = ").append(value).append(";").append(nl);
