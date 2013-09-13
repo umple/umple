@@ -103,6 +103,7 @@ namespace cruise.umple.compiler;
 class Uigu2Generator
 {
   depend cruise.umple.compiler.uigu2.Uigu2ElementGenerator;
+  depend java.nio.file.StandardCopyOption;
 
   const String packageFilesPath = "/cruise/umple/compiler/uigu2/files/";
   const Charset charset = StandardCharsets.UTF_8;
@@ -187,15 +188,15 @@ class Uigu2Generator
   * Copies default files that are always put in outputPath Path
   */
   private void copyNonSharedFiles() throws IOException{
-    //if more default non shared files are needed, create a Map nonSharedFilesToCopy
-    copyFileFromPackage("mod_rewrite_file", this.outputPath.resolve(Paths.get(".htaccess"))); 
+    Path writePath = this.outputPath.resolve(Paths.get(".htaccess"));
+    copyFileFromPackage("mod_rewrite_file", writePath); 
   }
 
   private void copyFileFromPackage(String fileName, Path destinationPath) throws IOException{
     //File is obtained as a Resource from the Classpath, not as Path or File
     InputStream from = this.getClass().getResourceAsStream(this.packageFilesPath + fileName);
     Files.createDirectories(destinationPath.getParent());
-    Files.copy(from, destinationPath);
+    Files.copy(from, destinationPath, StandardCopyOption.REPLACE_EXISTING);
   }
 
   /*
@@ -230,6 +231,7 @@ class Uigu2Generator
     Path sharedFilesPath = getPreferredSharedFilesPath(); 
     Path writePath = sharedFilesPath.resolve(Paths.get("setup.php"));
 
+    //setup.php carries user configurations and should change - so keep it if present
     if(!writePath.toFile().exists()){
       Path appPath = sharedFilesPath.resolve(Paths.get("app/"));
       String setupFile = "<?php" + nl + nl
@@ -283,6 +285,7 @@ class Uigu2Generator
     Files.createDirectories(filePath.getParent());
     BufferedWriter bw = null;
     try {
+      //Replaces existing files
       bw = Files.newBufferedWriter(filePath, charset);
       bw.write(text);
     }finally{
