@@ -966,6 +966,7 @@ public class UmpleParserTest
   public void attributeProperNamingStyle()
   {
 	  assertHasWarningsParse("008_attributeUpperFirstChar.ump", 131);
+          assertSimpleParse("008_constAttributeUpperFirstChar.ump");
   }
   
   @Test
