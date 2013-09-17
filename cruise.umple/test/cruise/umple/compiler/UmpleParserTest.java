@@ -969,6 +969,12 @@ public class UmpleParserTest
   }
   
   @Test
+  public void TypeValueMismatchWarning()
+  {
+    assertHasWarningsParse("008_attributeTypeValueMismatch.ump",141);
+  }
+
+  @Test
   public void attributeLooksLikeAssociation()
   {
 	  assertFailedParse("008_attributeContainsDoubleDash.ump", 132);

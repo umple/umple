@@ -30,4 +30,23 @@ public class TypeInferenceTest
         Assert.assertTrue(x.getQ() == 0);
 		Assert.assertTrue(x.getR() == 3);
 	}
+
+	MoreTypeInference y = new MoreTypeInference(null,null);
+	
+	@Test
+	public void moreInferenceCheck()
+	{
+	  Assert.assertTrue(y.getA() instanceof Time);
+	  Assert.assertTrue(y.getB() == null);
+	  Assert.assertTrue(y.getC() instanceof String);
+	  Assert.assertTrue(y.getD() instanceof Time);
+	  Assert.assertTrue(y.getE() instanceof String);
+	  Assert.assertTrue(y.getF() instanceof String);
+	  Assert.assertTrue(y.getG() instanceof Date);
+	  Assert.assertTrue(y.getH() == null);
+	  Assert.assertTrue(y.getI() instanceof String);
+	  Assert.assertTrue(y.getJ() instanceof String);
+ 	  Assert.assertTrue(y.getK() instanceof Date);
+	  Assert.assertTrue(y.getL() instanceof Object);
+	}
 }
