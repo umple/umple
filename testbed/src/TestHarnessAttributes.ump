@@ -75,3 +75,19 @@ class TypeInference
   Double r = 3;
 }
 
+class MoreTypeInference
+{
+  a = "12:12:12";       
+  Time b; 
+  c = "12:12";  
+  Time d = "12:12:12";      
+  e = "99:99:99";  
+  f = "2000:01:01";  
+  g = "2000-01-01";  
+  Date h;           
+  i = "2000-01"; 
+  j = "2000:01:01"; 
+  Date k = "2000-01-01";
+
+  l = new Object(); 
+}

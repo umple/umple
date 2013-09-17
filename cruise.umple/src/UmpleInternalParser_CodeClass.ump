@@ -1972,35 +1972,32 @@ class UmpleInternalParser
       type = "Integer";
     }
 
-    if (type == null && value != null)
+    if(type != null)
+    { 
+      Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?)").matcher(type);
+      if(!m.matches()) 
+      {
+        setFailedPosition(attributeToken.getPosition(), 140, type);
+        return;
+      }
+    }
+        
+    if(type != null && value != null)
     {
-      if(value.matches("-?[0-9]+\\.[0-9]+"))
+      if(!compareTypeToValue(type,value))
       {
-        type = "Double";
+        setFailedPosition(attributeToken.getPosition(),141,type,value);  
       }
-      else if(value.matches("-?[0-9]+"))
-      {
-        type = "Integer";
-      }
-      else if(value.matches("(true|false)"))
-      {
-        type = "Boolean";
-      }
-      else
-      {
-        type = "String";
-      }
+    }
+    else if (type == null && value != null)
+    {
+      type = inferType(value, type);
     }
     else if(type == null)
     {
       type = "String";
     } 
-    else {      
-      if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type)) {
-        setFailedPosition(attributeToken.getPosition(), 140, type);
-          return;
-        }
-    }
+
 
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
     attribute.setIsLazy(isLazy);
@@ -2029,6 +2026,91 @@ class UmpleInternalParser
     }
   }
   
+
+  private String inferType(String value, String type)
+  {
+    String inferredType;
+    if(value.matches("-?[0-9]+\\.[0-9]+"))
+    {
+      inferredType = "Double";
+    }
+    else if(value.matches("-?[0-9]+"))
+    {
+      inferredType = "Integer";
+    }
+    else if(value.matches("(true|false)"))
+    {
+      inferredType = "Boolean";
+    }
+    else if(value.matches("\"\\d{4}-[0-3][0-9]-[0-1][0-9]\""))
+    {
+      inferredType="Date";
+    }
+    else if(value.matches("\"[0-2][0-9]:[0-5][0-9]:[0-5][0-9]\""))
+    {
+      inferredType = "Time";
+    }
+    else if(value.matches("\".*\""))
+    {
+      inferredType = "String";
+    }
+    else if(type == null)
+    {
+      Matcher m = Pattern.compile("(new\\s+)([a-zA-Z_][0-9a-zA-Z_]*(\\s*<(.*)>)?)(\\s*\\(\\))").matcher(value);
+      if(m.matches())        
+      {  
+        inferredType = m.group(2);
+      }
+      else
+      { 
+        //if anything other than the default new X(); one cannot infer the type
+        inferredType = "String";
+      }
+    }
+    //worst case scenarios when we can't anticipate what a user will use as value.
+    //and to ignore inheritance/polymorphism 
+    else if(type != null)
+    {
+      inferredType = type; 
+    }
+    else
+    {
+      inferredType = "String";
+    }
+    return inferredType;
+  }
+  
+  private boolean compareTypeToValue(String type, String value)
+  { 
+    //cannot infer null
+    if(value.equals("null"))
+    {
+      return true;
+    }
+
+    String inferredType = inferType(value,type);   
+    if(type.equals("String") && (inferredType.equals("Date") || inferredType.equals("Time")))
+    {
+      return true;
+    }
+    else if((type.equals("Float") || type.equals("float") || type.equals("Double") || type.equals("double")) && (inferredType.equals("Integer") || inferredType.equals("Double")))
+    {
+      return true;
+    }
+    else if(type.equals("int") && inferredType.equals("Integer"))
+    {
+      return true;
+    }
+    else if(type.equals("boolean") && inferredType.equals("Boolean"))
+    {
+      return true;
+    } 
+    else
+    {
+      return inferredType.equals(type);
+    }
+  } 
+
   private Boolean isLazyRedundant(Boolean isLazy, String value)
   {
     return (isLazy && value != null);

@@ -63,6 +63,7 @@
 132: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute name '{0}' contains special characters. Association declaration must be separated by spaces ;
 
 140: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute type name '{0}' must be alphanumeric, starting with a letter ;
+141: 4, "http://umple.org/PageBeingDeveloped.html", Mismatch between type '{0}' and value {1} ;
 
 150: 2, "http://umple.org/WE1xxIdentifierInvalid.html", State machine name '{0}' must be alphanumeric and start with a letter ;
 152: 2, "http://umple.org/WE1xxIdentifierInvalid.html", State name '{0}' must be alphanumeric and start with a letter ;
