@@ -1,0 +1,8 @@
+interface ChatIF {
+   void display();
+   }
+
+class ClientConsole {
+  isA ChatIF;
+  // Console UI. Code for display would be required.
+}

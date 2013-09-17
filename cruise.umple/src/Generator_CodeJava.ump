@@ -489,14 +489,18 @@ class JavaGenerator
     {
       return "\"\"";
     }
-    if ("int".equals(methodType))
+    if ("int".equals(methodType) || "double".equals(methodType) || "float".equals(methodType))
     {
       return "0";
     }
     if ("boolean".equals(methodType))
     {
       return "false";
-    }       
+    }
+    if ("void".equals(methodType))
+    {
+      return "";
+    }        
     return "null";
   }
   
