@@ -3072,7 +3072,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
       return;
     }
     
-    if(!properName){
+    if(!properName && !"const".equals(attributeToken.getValue("modifier"))){
       setFailedPosition(attributeToken.getPosition(), 131, attributeToken.getValue("name"));
     }
     
