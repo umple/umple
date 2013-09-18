@@ -8,11 +8,6 @@ class SuperCodeGenerator {
 	Map <String,String> UmpleToPrimitiveMap;
 	Map <String,String> TraceLookupMap;
 	
-	//This method is because of issue number 373;
-	public void generate() {
-	
-	}
-	
 	public abstract void initializeLangaugeBasedVariables();
 	
  	public String getType(UmpleVariable av)	{
