@@ -1,0 +1,691 @@
+/*******************************************************************************
+* Copyright (c) 2013 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+namespace cruise.umple.compiler;
+
+class CodeAnalysisGenerator{
+  
+  HtmlDocument doc = new HtmlDocument(true);
+
+  void generate (){
+    doc.createParagraphElement("Code Analysis from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
+    UmpleModelWalker walker = new UmpleModelWalker(model);
+    walker.accept( new LLOCMetricVisitor(doc)); // LLOC Metrics
+    walker.accept( new McCabeMetricVisitor(doc));  // McCabe Metrics
+    walker.accept( new ClassStatsVisitor(doc));  // Class Stats Stats
+    walker.accept( new StateMachineStatsVisitor(doc));  // Class StateMachines Stats
+	model.setCode(doc.toString());
+    writeModel();
+    return;
+  }
+  
+  // Output the metrics to a file 
+  void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".html";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("Code Analysis Exception: " + e, e);
+    }
+  } 
+     
+}
+
+/*
+ * Designed to be implemnted ny metric classes. IT is used as an abstract representation for
+ *any type of Maasurment vistors (@see LLOCMetricVisitor).
+ */
+class MeasurmentObject{
+  Integer codeCount;
+  Integer commentsCount;
+}
+
+/*
+ * A common util for the implemented Measurment objects (@see MeasurmentObject).
+ */
+class UmpleModelHelper {
+	singleton;
+    depend java.io.Reader;
+    depend java.io.IOException;
+ 	
+  MeasurmentObject countLOC(String contents) throws java.io.IOException {
+  	if(contents == null){
+		contents = "";  		
+  	}
+  	
+  	java.io.StringReader reader = new java.io.StringReader(contents);
+  	MeasurmentObject object = doCount(reader);
+  	reader.close();
+  	return object;
+  }
+ 
+  MeasurmentObject countFileLOC(String filePath) throws java.io.IOException {
+  	java.io.FileReader reader = new java.io.FileReader(filePath);
+  	MeasurmentObject object = doCount(reader);
+  	reader.close();
+  	return object;
+  }
+ 
+ private MeasurmentObject doCount(Reader reader)throws IOException {
+  int commentIndex;
+  int starCommentStartIndex;
+  int starCommentEndIndex;
+  java.io.BufferedReader bufferedReader = new java.io.BufferedReader(new java.io.BufferedReader(reader));
+  String line = bufferedReader.readLine();
+  
+  int codeCount=0;
+  int commentsCount=0;
+  boolean codeBlock = false;
+  
+  while (line != null) {
+   normalizeLine:{
+    line= line.replaceAll("\t", "").replaceAll(" ", ""); //No spaces, and no tabs //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    
+    int position1= line.indexOf("\""); //$NON-NLS-1$
+    if(position1==-1){
+     break normalizeLine;
+    }
+    
+    int position2 = line.indexOf("\"", position1 + 1); //$NON-NLS-1$
+    if(position2==-1|| position2 > position1){
+     break normalizeLine;
+    }
+    line= line.substring(0, position1 + 1)+ line.substring(position1 + (position2 - position1),line.length());
+   }
+   
+   if (line.length() == 0) {
+    line = bufferedReader.readLine();
+    continue;
+   }
+   
+   commentIndex = line.indexOf("//"); //$NON-NLS-1$
+   starCommentStartIndex = line.indexOf("/*"); //$NON-NLS-1$
+   starCommentEndIndex = line.indexOf("*/"); //$NON-NLS-1$
+
+   measure:{
+    if (codeBlock) {
+     commentsCount++;
+     if (starCommentEndIndex != -1) {
+      codeBlock = false;
+     }
+    } else {
+     if (commentIndex != -1) {
+      commentsCount++;
+      
+      line = line.substring(0, 2);
+      if(starCommentStartIndex>0){
+       codeCount++;
+       break measure;
+      }
+     }
+     else{
+      if(starCommentStartIndex == -1 && starCommentEndIndex == -1){
+       codeCount++;
+       break measure;
+      }
+     }
+     
+     if (starCommentStartIndex != -1) {
+      commentsCount++;
+      if (starCommentEndIndex == -1) {
+       codeBlock = true;
+      }
+     }
+    }
+    
+    if (starCommentEndIndex != -1 && starCommentEndIndex < line.length() - 2){
+     codeCount++;
+    }
+   }
+   
+   line = bufferedReader.readLine();
+  }
+  return new MeasurmentObject(codeCount, commentsCount);
+ }
+
+}
+
+/*
+ * LLOC metrics vistor. It walks through given root model in order to extract the required LLOC 
+ * metrics information (@see IWalker) and have it represented in an analytical manner (@see IHtmlElement)
+*/
+class LLOCMetricVisitor {
+	depend java.io.IOException;
+	isA UmpleModelVisitor;
+	HtmlDocument doc;
+	Integer total_lloc = 0;
+    Integer total_comments = 0;
+    
+    Integer cur_lloc = 0;
+    Integer cur_comments = 0;
+    String  cur_clazz = null;
+    TableElement tbl = null;
+	
+	after constructor {
+		doc.createParagraphElement("LLOC Metrics", false);
+		tbl = doc.createTable(4);
+		tbl.setBorder(1);
+		tbl.setTitles(new String[] {"Class Name","LLOC","Comments","Total"});
+	}
+	
+	void done() {
+		addTableEntry(null);
+		tbl.addRow(new String [] {"Total",String.valueOf(total_lloc),String.valueOf(total_comments),String.valueOf(total_lloc+total_comments)});
+	}
+	
+	void addTableEntry(UmpleElement element) {
+		if(cur_clazz != null) {
+			tbl.addRow(new String [] {cur_clazz,String.valueOf(cur_lloc),String.valueOf(cur_comments),String.valueOf(cur_lloc+cur_comments)});
+			total_lloc+= cur_lloc;
+			total_comments+= cur_comments;
+		}
+		cur_clazz = element!= null ? element.getName() : "";
+		cur_lloc = 0; 
+		cur_comments = 0;
+	}
+  
+	// Comment
+	void visit(Comment comment) {		
+		cur_comments++;
+	}
+	
+	// Umple Classifiers
+	void visit(UmpleClass umpleClass) {
+		addTableEntry(umpleClass);
+		cur_lloc+= 2;
+	}
+	void visit(UmpleInterface umpleInterface) {
+		addTableEntry(umpleInterface);
+		cur_lloc+= 2;
+	}
+	void visit(AssociationClass associationC) {
+		addTableEntry(associationC);
+		cur_lloc+= 2;
+	}
+	
+	// Dependency
+	void visit(Depend dependE) {
+		cur_lloc++;
+	}
+	void visit(Package pkg) {
+		cur_lloc++;
+	}
+	void visit(ClassPattern ptrn) {
+		cur_lloc++;
+	}
+	void visit(Hierarchy hier) {
+		cur_lloc+= hier.getParentInterfaces().size();
+		if(hier.getParentClass() != null) {
+			cur_lloc++;			
+		}
+	}
+	
+	// Attributes
+	void visit(Constant cnst) {
+		cur_lloc++;
+	}
+	void visit(Attribute attribute) {
+		if(attribute.isIsDerived()) {
+			cur_lloc+= 2;			
+		} else {
+			cur_lloc++;
+		}
+	}
+	void visit(Key keyO) {
+		cur_lloc++;
+	}
+	
+	void visit(UniqueIdentifier uid) {
+		cur_lloc++;
+	}
+	
+	// Methods
+	void visit(Method method) {
+		if(method.isIsImplemented()) {
+			cur_lloc+= 2;
+		} else {
+			cur_lloc++;			
+		}
+	}
+	
+	// Logical
+	void visit(Precondition pre) {
+		cur_lloc++;
+	}
+	void visit(Constraint constraint) {
+		cur_lloc++;
+	}
+	
+	// Aspect
+	void visit(CodeInjection codeInjection) {
+		cur_lloc+= 2;
+	}
+	
+	// Association
+	void visit(Association associationE) {
+		cur_lloc++;
+	}
+//	void visit(AssociationVariable var) {
+//		cur_lloc++;
+//	}
+	
+	// Statemachine
+	void visit(StateMachine sm) {
+		cur_lloc+= 2;
+	}
+	void visit(State state) {
+		cur_lloc+= 2;
+	}
+//	void visit(Guard guard) {
+//		cur_lloc++;
+//	}
+	void visit(Action action) {
+		cur_lloc++;
+	}
+	void visit(Event event) {
+		cur_lloc+= 2;
+	}
+//	void visit(Transition transition) {
+//		cur_lloc++;
+//	}
+	void visit(Activity activity) {
+		cur_lloc+= 2;
+	}
+	
+	// Trace
+	void visit(Tracer tracer) {
+		cur_lloc++;
+	}
+	void visit(TraceItem traceItem) {
+		cur_lloc++;
+	}
+	void visit(TraceRecord traceRecord) {
+		cur_lloc++;
+	}
+	void visit(AttributeTraceItem attributeT) {
+		cur_lloc++;
+	}
+	void visit(MethodTraceEntity methodTraceEntity) {
+		cur_lloc++;
+	}
+	void visit(StateMachineTraceItem stateMachineTraceItem) {
+		cur_lloc++;
+	}
+	
+	
+	// User Code
+	void visit(CodeBlock block) {
+		MeasurmentObject m;
+	  	try {
+			m = UmpleModelHelper.getInstance().countLOC(block.getCode());
+			cur_lloc+= m.getCodeCount();
+	  	} catch (IOException e) {}
+	}
+	void visit(UserCode userCode) {
+		MeasurmentObject m;
+	  	try {
+			m = UmpleModelHelper.getInstance().countLOC(userCode.getUserCode());
+			cur_lloc+= m.getCodeCount();
+	  	} catch (IOException e) {}
+	}
+}
+
+
+// McCabe = Edges - Nodes + 2 * ExitNodes
+// McCabe = Edges - Nodes + ExitNodes
+// McCabe = Number of logical points + 1
+//@see LLOCMetricVisitor 
+class McCabeMetricVisitor {
+	isA UmpleModelVisitor;
+	HtmlDocument doc;
+	
+	Integer total_conditions = 0;
+    Integer total_iteration = 0;
+    
+    Integer cur_conditions = 0;
+    Integer cur_iterations = 0;
+    String  cur_clazz = null;
+    
+    TableElement tbl = null;
+	
+	after constructor {
+		doc.createParagraphElement("McCabe Metrics", false);
+		tbl = doc.createTable(4);
+		tbl.setBorder(1);
+		tbl.setTitles(new String[] {"Class Name","#Conditions","#Iterations","Total"});
+	}
+	
+	void done() {
+		addTableEntry(null);
+		int mcabe = total_conditions + total_iteration + 1;
+		tbl.addRow(new String [] {"Total",String.valueOf(total_conditions),String.valueOf(total_iteration),String.valueOf(mcabe)});
+	}
+	
+	void addTableEntry(UmpleElement element) {
+		if(cur_clazz != null) {
+			int mcabe = cur_conditions + cur_iterations + 1;
+			tbl.addRow(new String [] {cur_clazz,String.valueOf(cur_conditions),String.valueOf(cur_iterations),String.valueOf(mcabe)});
+			total_conditions+= cur_conditions;
+			total_iteration+= cur_iterations;
+		}
+		cur_clazz = element!= null ? element.getName() : "";
+		cur_conditions = 0; 
+		cur_iterations = 0;
+	}
+	
+	// Umple Classifiers
+	void visit(UmpleClass umpleClass) {
+		addTableEntry(umpleClass);
+	}
+	void visit(UmpleInterface umpleInterface) {
+		addTableEntry(umpleInterface);
+	}
+	void visit(AssociationClass associationC) {
+		addTableEntry(associationC);
+	}
+	
+	// Attributes
+	void visit(Attribute attribute) {
+		if(attribute.isIsDerived()) {
+			cur_conditions++;			
+		}
+	}
+	void visit(Key keyO) {
+		cur_conditions++;
+	}
+	void visit(ConstraintVariable cnstVar) {
+		cur_conditions++;
+	}
+	void visit(UniqueIdentifier uid) {
+		cur_conditions++;
+	}
+		
+	// Logical
+	void visit(Condition cond) {
+		cur_conditions++;
+	} 
+	void visit(Precondition pre) {
+		cur_conditions++;
+	}
+	void visit(Constraint constraint) {
+		cur_conditions++;
+	}
+	
+	// Aspect
+	void visit(CodeInjection codeInjection) {
+		cur_conditions++;
+	}
+	
+	// Association
+	void visit(Association associationE) {
+		cur_conditions++;
+	}
+//	void visit(AssociationVariable var) {
+//		cur_conditions++;
+//	}
+	
+	// Statemachine
+	void visit(StateMachine sm) {
+		cur_conditions++; // Default case
+	}
+	void visit(State state) {
+		cur_conditions++; // Each state is a case statement
+	}
+	void visit(Event event) {
+		if(event.isIsTimer()) {
+			cur_iterations++; // While statement			
+		}
+	}
+	void visit(Guard guard) {
+		cur_conditions++;
+	}
+	void visit(Transition transition) {
+		State nextState = transition.getNextState();
+		State fromState = transition.getFromState();
+							
+		StateMachine targetStateMachine = nextState.getStateMachine();
+		StateMachine sourceStateMachine = fromState.getStateMachine();
+		if(targetStateMachine!= sourceStateMachine){
+			//Means that we are going to a different statemachine (another switch statement), so complexity is increased so increment by 2
+			cur_conditions= cur_conditions+ 2;
+		}else{
+			State targetParentState = targetStateMachine.getParentState();
+			State sourceParentState = sourceStateMachine.getParentState();
+								
+			//If the parent states are the same then we are at the same level, in that case, this means less complexity, thus only increment the
+			//complexity by one; otherwise, this requires more thinking and therefore, the complexity will be increased by "2"
+			//If targetParentState and sourceParentState are null, then this means that they are the root states, and also means
+			//that they are at the same level, so the equality condition is ennough to catch this case
+			if(targetParentState== sourceParentState){
+				cur_conditions= cur_conditions+ 1;
+			}else{
+				cur_conditions= cur_conditions+ 2;
+			}
+		}
+	}
+	void visit(Activity activity) {
+		cur_iterations++; // Concurrent Iterative statement
+	}
+	
+	// Trace
+	void visit(AttributeTraceItem attributeT) {
+		if(attributeT.isConditionallyWhere()) {
+			cur_conditions++;
+		}
+		if(attributeT.getPeriodClause() != null || attributeT.getPeriodClause().length() > 0) {
+			cur_iterations++;
+		}
+		if(attributeT.getDuringClause() != null || attributeT.getDuringClause().length() > 0) {
+			cur_iterations++;
+		}
+	}
+	void visit(TraceCase traceCase) {
+		cur_conditions++;
+	}
+	void visit(TraceCondition traceCondition) {
+		cur_conditions++;
+	}	
+}
+
+/*Used to extract the required metrics information for the states of a given class. It is designed to
+ * to be used by other metrics to show states information. @See StateMachineStatsVisitor
+ */
+class ClassStatsVisitor {
+	depend java.io.IOException;
+	isA UmpleModelVisitor;
+	HtmlDocument doc;
+	Integer total_assoc = 0;
+    Integer total_attributes = 0;
+    Integer total_subclass = 0;
+    Integer total_classMethods = 0;
+    Integer total_classMethodParams = 0;
+    
+    Integer cur_assoc = 0;
+    Integer cur_attributes = 0;
+    Integer cur_subclass = 0;
+    Integer cur_classMethods = 0;
+    Integer cur_classMethodParams = 0;
+    
+    String  cur_clazz = null;
+    TableElement tbl = null;
+	
+	after constructor {
+		doc.createParagraphElement("Class Statistics", false);
+		tbl = doc.createTable(6);
+		tbl.setBorder(1);
+		tbl.setTitles(new String[] {"Class Name","#Attributes","#Association","#Sub-Classes","#Methods","#Method Parameters"});
+	}
+	
+	void done() {
+		addTableEntry(null);
+		tbl.addRow(new String [] {"Total",String.valueOf(total_attributes),String.valueOf(total_assoc),String.valueOf(total_subclass),String.valueOf(total_classMethods),String.valueOf(total_classMethodParams)});
+	}
+	
+	void addTableEntry(UmpleElement element) {
+		if(cur_clazz != null) {
+			tbl.addRow(new String [] {cur_clazz,String.valueOf(cur_attributes),String.valueOf(cur_assoc),String.valueOf(cur_subclass),String.valueOf(cur_classMethods),String.valueOf(cur_classMethodParams)});
+			
+			total_assoc+= cur_assoc;
+			total_attributes+= cur_attributes;
+			total_subclass+= cur_subclass;
+			total_classMethods+= cur_classMethods;
+			total_classMethodParams= Math.max(total_classMethodParams, cur_classMethodParams);
+		}
+		cur_clazz = element!= null ? element.getName() : "";
+		cur_assoc = 0;
+		cur_attributes = 0;
+		cur_subclass = 0;
+		cur_classMethods = 0;
+		cur_classMethodParams = 0;
+	}
+  
+	// Umple Classifiers
+	void visit(UmpleClass umpleClass) {
+		addTableEntry(umpleClass);
+		cur_subclass = umpleClass.getSubclasses().size();
+	}
+	
+	void visit(AssociationClass associationC) {
+		addTableEntry(associationC);
+		cur_subclass = associationC.getSubclasses().size();
+	}
+	
+	// Attributes
+	void visit(Attribute attribute) {
+		cur_attributes++;
+	}
+	
+	// Methods
+	void visit(Method method) {
+		cur_classMethods++;
+		cur_classMethods = Math.max(cur_classMethods, method.getMethodParameters().size());
+	}
+	
+	// Association
+	void visit(Association associationE) {
+		cur_assoc++;
+	}
+}
+
+/* 
+ * Used to extract the required metrics information for the statemachines of a given class. 
+ * @see ClassStatsVisitor 
+ */
+class StateMachineStatsVisitor {
+	depend java.io.IOException;
+	isA UmpleModelVisitor;
+	HtmlDocument doc;
+	Integer total_stateMachines = 0;
+    Integer total_states = 0;
+    Integer total_transitions = 0;
+    Integer total_guards = 0;
+    Integer total_events = 0;
+    Integer total_actions = 0;
+    Integer total_activities = 0;
+        
+    Integer cur_stateMachines = 0;
+    Integer cur_states = 0;
+    Integer cur_transitions = 0;
+    Integer cur_guards = 0;
+    Integer cur_events = 0;
+    Integer cur_actions = 0;
+    Integer cur_activities = 0;
+    
+    String  cur_clazz = null;
+    TableElement tbl = null;
+	
+	after constructor {
+		doc.createParagraphElement("StateMachine Statistics", false);
+		tbl = doc.createTable(8);
+		tbl.setBorder(1);
+		tbl.setTitles(new String[] {"Class Name","#StateMachines","#States","#Transitions","#Guards","#Events","#Actions","#Activities"});
+	}
+	
+	void done() {
+		addTableEntry(null);
+		tbl.addRow(new String [] {"Total",String.valueOf(total_stateMachines),String.valueOf(total_states),String.valueOf(total_transitions),String.valueOf(total_guards),String.valueOf(total_events),String.valueOf(total_actions),String.valueOf(total_activities)});
+	}
+	
+	void addTableEntry(UmpleElement element) {
+		if(cur_clazz != null) {
+			tbl.addRow(new String [] {cur_clazz,String.valueOf(cur_stateMachines),String.valueOf(cur_states),String.valueOf(cur_transitions),String.valueOf(cur_guards),String.valueOf(cur_events),String.valueOf(cur_actions),String.valueOf(cur_activities)});
+			
+			total_stateMachines+= cur_stateMachines;
+    		total_states+= cur_states;
+    		total_transitions+= cur_transitions;
+    		total_guards+= cur_guards;
+    		total_events+= cur_events;
+    		total_actions+= cur_actions;
+    		total_activities+= cur_activities;
+		}
+		cur_clazz = element!= null ? element.getName() : "";
+		cur_stateMachines = 0;
+    	cur_states = 0;
+    	cur_guards = 0;
+    	cur_transitions = 0;
+    	cur_events = 0;
+    	cur_actions = 0;
+    	cur_activities = 0;
+	}
+  
+	// Umple Classifiers
+	void visit(UmpleClass umpleClass) {
+		addTableEntry(umpleClass);
+	}
+	void visit(UmpleInterface umpleInterface) {
+		addTableEntry(umpleInterface);
+	}
+	void visit(AssociationClass associationC) {
+		addTableEntry(associationC);
+	}
+	
+	void visit(StateMachine sm) {
+		cur_stateMachines++;
+	}
+	void visit(State state) {
+		cur_states++;
+	}
+	void visit(Guard guard) {
+		cur_guards++;
+	}
+	void visit(Action action) {
+		cur_actions++;
+	}
+	void visit(Event event) {
+		cur_events++;
+	}
+	void visit(Transition transition) {
+		cur_transitions++;
+	}
+	void visit(Activity activity) {
+		cur_activities++;
+	}
+}
+
+//TODO: Pending for implementation after having some major points discussed
+//class CogntivieMetricsVisitor {}

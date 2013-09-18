@@ -66,6 +66,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CodeAnalysisGenerator" eSuperTypes="#//CodeGenerator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="doc" eType="#//HtmlDocument"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SimpleMetricsGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -485,6 +490,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleModel" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/umpleInterfaces"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="referenceTypes" lowerBound="0" upperBound="-1" eType="#//ReferenceType" eOpposite="#//ReferenceType/umpleInterface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/parentInterface"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hierarchies" lowerBound="0" upperBound="-1" eType="#//Hierarchy" eOpposite="#//Hierarchy/parentInterfaces"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleClass" eSuperTypes="#//UmpleClassifier">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -512,6 +518,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="referenceTypes" lowerBound="0" upperBound="-1" eType="#//ReferenceType" eOpposite="#//ReferenceType/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjections" lowerBound="0" upperBound="-1" eType="#//CodeInjection" eOpposite="#//CodeInjection/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedClass" lowerBound="0" upperBound="1" eType="#//GeneratedClass" eOpposite="#//GeneratedClass/uClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="hierarchies" lowerBound="0" upperBound="-1" eType="#//Hierarchy" eOpposite="#//Hierarchy/parentClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Depend">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -977,6 +984,177 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="countCode" eType="#//int"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Format">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ITagsConstants">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tagClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tr" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="th" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tfoot" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="td" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tbody" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="table" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="style" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="span" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="small" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="script" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="p" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="img" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="html" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="head" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="font" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="div" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="a" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IAttributesConstants">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="attributeClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="target" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="href" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="xlmn" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="alt" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="src" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="border" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AttributeElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Element">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="tagName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" eType="#//AttributeElement" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" lowerBound="0" upperBound="1" eType="#//Element" eOpposite="#//Element/children"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" lowerBound="0" upperBound="-1" eType="#//Element" eOpposite="#//Element/element"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TextContents" eSuperTypes="#//Element">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IHtmlElement" interface="true" abstract="true">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HtmlElement" eSuperTypes="#//IHtmlElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="html" eType="#//Element"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DivElement" eSuperTypes="#//IHtmlElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="div" eType="#//Element"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableElement" eSuperTypes="#//IHtmlElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parent" eType="#//IHtmlElement"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="column" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="index" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="titles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="table" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tableBody" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="headersRow" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bodyId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cssClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="border" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="IHtmlElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ScriptElement" eSuperTypes="#//IHtmlElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parent" eType="#//IHtmlElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="script" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="scriptText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StyleElement" eSuperTypes="#//IHtmlElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parent" eType="#//IHtmlElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="style" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="styleText" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParagraphElement" eSuperTypes="#//IHtmlElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parent" eType="#//IHtmlElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="par" eType="#//Element"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="small" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="HtmlDocument">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parentHtml" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parent" eType="#//IHtmlElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Package">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UserCode">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="userCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassPattern">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="classPattern" eType="#//UmpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pattern" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Condition">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" eType="#//Object"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Hierarchy">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="element" eType="#//UmpleClassifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/hierarchies"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/hierarchies"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleModelVisitor">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="IWalker" interface="true" abstract="true">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleModelWalker" eSuperTypes="#//IWalker">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MeasurmentObject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="codeCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="commentsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleModelHelper">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LLOCMetricVisitor" eSuperTypes="#//UmpleModelVisitor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="doc" eType="#//HtmlDocument"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_lloc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_lloc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_comment" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_clazz" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tbl" eType="#//TableElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="McCabeMetricVisitor" eSuperTypes="#//UmpleModelVisitor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="doc" eType="#//HtmlDocument"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_iteration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_iteration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_clazz" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tbl" eType="#//TableElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ClassStatsVisitor" eSuperTypes="#//UmpleModelVisitor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="doc" eType="#//HtmlDocument"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_assoc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_attribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_subclass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_classMethod" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_classMethodParam" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_assoc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_attribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_subclass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_classMethod" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_classMethodParam" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_clazz" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tbl" eType="#//TableElement"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="StateMachineStatsVisitor" eSuperTypes="#//UmpleModelVisitor">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="doc" eType="#//HtmlDocument"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_stateMachine" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_state" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_transition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_guard" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_action" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="total_activity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_stateMachine" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_state" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_transition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_guard" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_event" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_action" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_activity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cur_clazz" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tbl" eType="#//TableElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
   </eClassifiers>

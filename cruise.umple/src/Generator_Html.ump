@@ -1,0 +1,493 @@
+/*******************************************************************************
+* Copyright (c) 2013 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
+namespace cruise.umple.compiler;
+
+/*
+ * Generator HTML utils are designed to proivde a standlone HTML elements generation using Umple.
+ * It provides the required utils to generate HTML elements at the level of Umple, which means
+ * that it can be used by a given target langauge. 
+ * 
+ */
+
+//TODO: Should be interface instead. We need to update the parser to accept constatns for the iterfaces
+class ITagsConstants {
+	const String tagClass = "class"; //$NON-NLS-1$
+	const String tr = "tr"; //$NON-NLS-1$
+	const String th = "th"; //$NON-NLS-1$
+	const String tfoot = "tfoot"; //$NON-NLS-1$
+	const String td = "td"; //$NON-NLS-1$
+	const String tbody = "tbody"; //$NON-NLS-1$
+	const String table = "table"; //$NON-NLS-1$
+	const String style = "style"; //$NON-NLS-1$
+	const String span = "span"; //$NON-NLS-1$
+	const String small = "small"; //$NON-NLS-1$
+	const String script = "script"; //$NON-NLS-1$
+	const String p = "p"; //$NON-NLS-1$
+	const String img = "img"; //$NON-NLS-1$
+
+	const String html = 	"html"; //$NON-NLS-1$
+	const String head = "head"; //$NON-NLS-1$
+	const String font = "font"; //$NON-NLS-1$
+	const String div = "div"; //$NON-NLS-1$
+	const String body = "body"; //$NON-NLS-1$
+	const String a = "a"; //$NON-NLS-1$
+}
+
+class IAttributesConstants {
+	const String attributeClass = "class"; //$NON-NLS-1$
+	const String target = "target"; //$NON-NLS-1$
+	const String href = "href"; //$NON-NLS-1$
+	const String xlmns = "xmlns"; //$NON-NLS-1$
+	const String alt = "alt"; //$NON-NLS-1$
+	const String src = "src"; //$NON-NLS-1$
+	const String type = "type"; //$NON-NLS-1$
+	const String id = "id"; //$NON-NLS-1$
+	const String border = "border"; //$NON-NLS-1$
+}
+
+
+class AttributeElement {
+	String name;
+	String value;
+	
+	String toString(){
+		StringBuffer stringBuffer = new StringBuffer(" "); //$NON-NLS-1$
+		stringBuffer.append(getName());
+		if(getValue() == null){
+			return stringBuffer.toString();
+		}
+		return stringBuffer.append("=\"").append(getValue()).append("\"").toString(); //$NON-NLS-1$ //$NON-NLS-2$
+	}	
+}
+
+class Element {
+	depend java.util.ArrayList;
+	depend java.util.List;
+	
+	String tagName;
+	Element parent;
+	
+	AttributeElement [] attributes;
+	0..1 -- * Element children;
+	
+	after constructor {  
+		if(aParent != null) {
+			setParentInternally(aParent);
+			aParent.addChild(this);
+		}		
+	}
+	
+	after addChild {
+		if(aChild== null|| aChild.equals(this)){
+			return false;
+		}
+		aChild.setParentInternally(this);
+	}
+	
+	private void setParentInternally(Element parent) {
+		if(parent== null|| parent.equals(getParent())){
+			return;
+		}
+		if(getParent() != null){
+			getParent().removeChild(this);
+		}
+		setParent(parent);
+	}
+		
+	
+	AttributeElement getAttributeElement(String name){
+		for(AttributeElement attribute: getAttributes()){
+			if(attribute.getName().equals(name)){
+				return attribute;
+			}
+		}
+		return null;
+	}
+	
+	String getAttribute(String name){
+		AttributeElement attributeElement = getAttributeElement(name);
+		return attributeElement!= null?attributeElement.getValue(): null;
+	}
+	
+	Element appendText(String... texts) {
+		return appendTextContents(false, texts);
+	}
+	
+	Element appendTextContents(boolean newLine, String... texts) {
+		for(String text: texts){
+			addChild(new TextContents(text, null));
+			if(newLine){
+				addChild(new TextContents("\n", null)); //$NON-NLS-1$
+			}
+		}
+		return this;
+	}
+	
+	Element appendText(String text) {
+		Element child = new TextContents(text, null);
+	  	addChild(child);
+	  	return child;
+	}
+	
+	Element getChildByPath(String... path) {
+		List<Element> childrenByPath = getChildrenByPath(path);
+		return childrenByPath.isEmpty()? null: childrenByPath.get(0);
+	}
+	
+	Element getChildByPath(List<String> attributesObjects, String... path) {
+		List<Element> childByPath = getChildrenByPath(attributesObjects, path);
+		return childByPath.isEmpty()? null: childByPath.get(0);
+	}
+	
+	List<Element> getChildrenByPath(List<String> attributesObjects, String... path) {
+		List<String> asArray= new ArrayList<String>();
+		for(int index=0; index<path.length; index++){
+			asArray.add(path[index]);
+		}	
+		List<Element> filteredList= new ArrayList<Element>();
+		for(Element element: getChildrenByPath(asArray)){
+			for(int index=0; index<attributesObjects.size(); index= index+2){
+				String name= attributesObjects.get(index);
+				String value= index+1>=attributesObjects.size()?null: attributesObjects.get(index+1);
+				String attribute = element.getAttribute(name);
+				if(attribute== null? value!= null: !attribute.equals(value)){
+					continue;
+				}
+				filteredList.add(element);
+			}
+		}
+		return filteredList;
+	}
+	
+	List<Element> getChildrenByPath(String... path) {
+		List<String> asArray= new ArrayList<String>();
+		for(int index=0; index<path.length; index++){
+			asArray.add(path[index]);
+		}
+		return getChildrenByPath(asArray);
+	}
+	
+	List<Element> getChildrenByPath(List<String> path) {
+		ArrayList<Element> elements = new ArrayList<Element>();
+		getChildrenByPath(path, elements);
+		return elements;
+	}
+	
+	private void getChildrenByPath(List<String> path, List<Element> retrieved) {
+		List<Element> elements= new ArrayList<Element>();
+		if(path.isEmpty()){
+			return;
+		}
+		String segment= path.get(0);
+		for(Element element: getChildren()){
+			if(!element.getTagName().equals(segment)){
+				continue;
+			}
+			elements.add(element);
+		}
+		if(path.size()==1){
+			retrieved.addAll(elements);
+		}else{
+			for(Element element: elements){
+				element.getChildrenByPath(path.subList(1, path.size()), retrieved);
+			}
+		}
+	}  
+	
+	String toString() {
+		return this.htmlString();
+	}
+	
+	protected String htmlString() {
+		StringBuffer b = new StringBuffer(openStatement());
+		if(getChildren() != null && getChildren().size() > 0){
+			for(Element child: getChildren()){
+				b.append(child.htmlString());
+			}
+		}
+		b.append(closeStatement());
+		return b.toString();
+	}
+	
+	private String openStatement(){
+		StringBuffer b = new StringBuffer("<").append(getTagName()); //$NON-NLS-1$
+		for(AttributeElement attr: getAttributes()){
+			b.append(attr.toString());
+		}
+		return b.append(">").toString(); //$NON-NLS-1$
+	}
+	
+	private String closeStatement(){
+		return new StringBuffer("</").append(getTagName()).append(">").toString(); //$NON-NLS-1$ //$NON-NLS-2$
+	}
+}
+
+class TextContents {
+	isA Element;	
+	String htmlString(){
+		return getTagName();
+	}	
+}
+
+interface IHtmlElement {
+	Element getElement();
+	String htmlString();
+}
+
+class HtmlElement {
+	isA IHtmlElement;
+	internal Element html = null;
+	after constructor {		
+		html = new Element(ITagsConstants.html, null);
+		html.addAttribute( new AttributeElement( IAttributesConstants.xlmns, "http://www.w3.org/1999/xhtml"));
+	}
+	
+	Element getElement() {
+		return html;
+	}
+	
+	String htmlString() {
+		return html.toString();
+	}
+}
+
+class DivElement {
+	isA IHtmlElement;
+	internal Element div = null;
+	after constructor {		
+		div = new Element(ITagsConstants.div, null);
+	}
+	
+	Element getElement() {
+		return div;
+	}
+	
+	String htmlString() {
+		return div.toString();
+	}
+}
+
+class TableElement {
+	isA IHtmlElement;
+	
+	IHtmlElement parent; 
+	immutable Integer columns;
+	
+	internal Integer index = 0;
+	internal String [] titles;
+	internal Element table = null;
+	internal Element tableBody = null;
+	internal Element headersRow = null;
+	defaulted String id = ""; defaulted String bodyId = "";
+	defaulted String cssClass = ""; 
+	//defaulted String cssHeadersRow = "";defaulted String cssHeadersColumn = "";
+	defaulted Integer border = 0;
+	
+	
+	
+	after constructor {		
+		table = new Element(ITagsConstants.table, parent!=null ? parent.getElement() : null);
+		tableBody = new Element(ITagsConstants.tbody,table);		
+		headersRow = new Element(ITagsConstants.tr, tableBody);
+		headersRow.addAttribute(new AttributeElement(IAttributesConstants.id, "headersRow"));
+	}
+	
+	after setId {
+		if(!isNull(id)) {
+			table.addAttribute( new AttributeElement(IAttributesConstants.id, id));
+		}
+  	}
+  	
+  	after setBodyId {  
+     	if(!isNull(bodyId)) {
+			tableBody.addAttribute( new AttributeElement(IAttributesConstants.id, bodyId));
+		}
+  	}
+  	
+  	after setCssClass {  
+     	if(!isNull(cssClass)) {
+			table.addAttribute( new AttributeElement(IAttributesConstants.attributeClass, cssClass));
+		}
+  	}
+  	
+  	after setBorder {  
+     	table.addAttribute( new AttributeElement(IAttributesConstants.border, String.valueOf(border)));
+  	}
+  	
+  	public void addRow(String [] rowData){
+		Element tableRow = new Element(ITagsConstants.tr, tableBody);
+		tableRow.addAttribute(new AttributeElement(IAttributesConstants.id, "TableRow"+index));
+		for(int cellIndex=0 ;cellIndex<columns; cellIndex++){
+			Element td = new Element(ITagsConstants.td, tableRow);
+			td.appendText(rowData[cellIndex]);
+		}
+	}
+  	
+  	void setTitles(String titles []) {
+		for(int index=0 ;index<columns; index++){
+			Element th = new Element(ITagsConstants.th, headersRow);
+			th.appendText(titles[index]);
+		}
+  	}
+  	
+	private boolean isNull(String attr){
+		return attr == null || attr.length() == 0;
+	}
+	
+	Element getElement() {
+		return table;
+	}
+	
+	String htmlString() {
+		return table.toString();
+	}
+}
+
+class ScriptElement {
+	isA IHtmlElement;
+	
+	IHtmlElement parent; 
+	
+	internal Element script = null;
+	immutable String scriptText;
+	
+	after constructor {		
+		script = new Element(ITagsConstants.script, parent!=null ? parent.getElement() : null);
+		script.addAttribute( new AttributeElement(IAttributesConstants.type, "text/javascript"));
+	}
+	
+	Element getElement() {
+		return script;
+	}
+	
+	String htmlString() {
+		return script.toString();
+	}
+}
+
+
+class StyleElement {
+	isA IHtmlElement;
+	
+	IHtmlElement parent; 
+	
+	internal Element style = null;
+	immutable String styleText;
+	
+	after constructor {		
+		style =new Element(ITagsConstants.style, parent!=null ? parent.getElement() : null);
+		style.addAttribute(new AttributeElement(IAttributesConstants.type, "text/css"));
+	}
+	
+	public Element getElement() {
+		return style;
+	}
+	
+	public String htmlString() {
+		return style.toString();
+	}
+}
+
+class ParagraphElement {
+	isA IHtmlElement;
+	
+	IHtmlElement parent; 
+	
+	internal Element par = null;
+	immutable String text;
+	Boolean small;
+	
+	after constructor {		
+		if(aSmall) {
+			par = new Element(ITagsConstants.small, new Element(ITagsConstants.p, parent!=null ? parent.getElement() : null));
+		} else {
+			par = new Element(ITagsConstants.p, parent!=null ? parent.getElement() : null);
+		}
+		par.appendTextContents(true,text);
+	}
+	
+  	private void appendText(String text){
+  		if(!isNull(text)) {
+			par.appendTextContents(true,text);
+		}  		
+  	}
+  	
+	private boolean isNull(String attr){
+		return attr == null || attr.length() == 0;
+	}
+	
+	Element getElement() {
+		return par;
+	}
+	
+	String htmlString() {
+		return par.toString();
+	}
+}
+
+class HtmlDocument {	
+	immutable Boolean parentHtml;
+	internal IHtmlElement parent = null;
+	
+	after constructor {
+		if(parentHtml) {
+			parent = new HtmlElement();
+		} else {
+			parent = new DivElement();
+		}
+	}
+	
+	public TableElement createTable(int aColumns) {
+		TableElement tbl = new TableElement(parent, aColumns);
+		return tbl;
+	}
+	
+	public ScriptElement createScript(String... aScriptTexts) {
+		StringBuffer stringBuffer = new StringBuffer(""); //$NON-NLS-1$
+		for(String text: aScriptTexts){
+			stringBuffer.append(text);
+			stringBuffer.append("\n"); //$NON-NLS-1$
+		}
+		ScriptElement script = new ScriptElement(parent, stringBuffer.toString());
+		return script;
+	}
+	
+	public StyleElement createStyle(String... aStyleTexts) {
+		StringBuffer stringBuffer = new StringBuffer(""); //$NON-NLS-1$
+		for(String text: aStyleTexts){
+			stringBuffer.append(text);
+			stringBuffer.append("\n"); //$NON-NLS-1$
+		}
+		StyleElement style = new StyleElement(parent, stringBuffer.toString());
+		return style;
+	}
+	
+	ParagraphElement createParagraphElement(String aText, boolean aSmall) {
+		ParagraphElement p = new ParagraphElement(parent, aText, aSmall);
+		return p;
+	}
+	
+	String htmlString() {
+		return parent.htmlString();
+	}
+	
+	String toString() {
+		return this.htmlString();
+	}
+}
