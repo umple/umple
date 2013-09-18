@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.cpp.*;
 
 /**
- * @umplesource Generator.ump 232
+ * @umplesource Generator.ump 246
  * @umplesource Generator_CodeCpp.ump 12
  */
-// line 232 "../../../../src/Generator.ump"
+// line 246 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodeCpp.ump"
 public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
 {
