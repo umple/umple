@@ -182,6 +182,7 @@ public class StateMachineTraceItem implements TraceItem
     return constraint;
   }
 
+  @umplesourcefile(line={127},file={"Trace.ump"},javaline={189},length={2})
   public String getTracerType()
   {
     return getTraceDirective().getTracerType();
@@ -367,12 +368,12 @@ public class StateMachineTraceItem implements TraceItem
     placeholderTraceDirective.removeStateMachineTraceItem(this);
   }
 
-  @umplesourcefile(line={293},file={"Trace_Code.ump"},javaline={371},length={3})
+  @umplesourcefile(line={293},file={"Trace_Code.ump"},javaline={372},length={3})
    public Boolean getIsPre(){
     return conditionallyWhere;
   }
 
-  @umplesourcefile(line={296},file={"Trace_Code.ump"},javaline={376},length={3})
+  @umplesourcefile(line={296},file={"Trace_Code.ump"},javaline={377},length={3})
    public Boolean getIsPost(){
     return !conditionallyWhere;
   }
@@ -386,7 +387,7 @@ public class StateMachineTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace
    */
-  @umplesourcefile(line={307},file={"Trace_Code.ump"},javaline={381},length={59})
+  @umplesourcefile(line={307},file={"Trace_Code.ump"},javaline={382},length={59})
    public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
     String name = "";
     String extra = "";
@@ -452,7 +453,7 @@ public class StateMachineTraceItem implements TraceItem
    * Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line={370},file={"Trace_Code.ump"},javaline={451},length={3})
+  @umplesourcefile(line={370},file={"Trace_Code.ump"},javaline={452},length={3})
    public String getExtremities(CodeTranslator gen, String name){
     return gen.translate("Closed",constraint);
   }

@@ -271,6 +271,7 @@ public class UmpleModel implements Runnable
     return generatedCode;
   }
 
+  @umplesourcefile(line={19},file={"Trace.ump"},javaline={278},length={2})
   public String getTraceType()
   {
     return getTracer().getName();
@@ -659,7 +660,7 @@ public class UmpleModel implements Runnable
     umpleInterfaces.clear();
   }
 
-  @umplesourcefile(line={20},file={"Umple_Code.ump"},javaline={663},length={6})
+  @umplesourcefile(line={20},file={"Umple_Code.ump"},javaline={664},length={6})
    public List<UmpleElement> getUmpleElements(){
     List<UmpleElement> all = new ArrayList<UmpleElement>();
     all.addAll(getUmpleClasses());
@@ -667,7 +668,7 @@ public class UmpleModel implements Runnable
     return all;
   }
 
-  @umplesourcefile(line={28},file={"Umple_Code.ump"},javaline={671},length={9})
+  @umplesourcefile(line={28},file={"Umple_Code.ump"},javaline={672},length={9})
    public UmpleInterface addUmpleInterface(String name){
     UmpleInterface newInterface = getUmpleInterface(name);
     if (newInterface == null)
@@ -678,7 +679,7 @@ public class UmpleModel implements Runnable
     return newInterface;
   }
 
-  @umplesourcefile(line={39},file={"Umple_Code.ump"},javaline={682},length={9})
+  @umplesourcefile(line={39},file={"Umple_Code.ump"},javaline={683},length={9})
    public UmpleClass addUmpleClass(String name){
     UmpleClass newClass = getUmpleClass(name);
     if (newClass == null)
@@ -689,7 +690,7 @@ public class UmpleModel implements Runnable
     return newClass;
   }
 
-  @umplesourcefile(line={50},file={"Umple_Code.ump"},javaline={693},length={10})
+  @umplesourcefile(line={50},file={"Umple_Code.ump"},javaline={694},length={10})
    public Association getAssociation(String name){
     for (Association a : associations)
     {
@@ -701,7 +702,7 @@ public class UmpleModel implements Runnable
     return null;
   }
 
-  @umplesourcefile(line={62},file={"Umple_Code.ump"},javaline={705},length={9})
+  @umplesourcefile(line={62},file={"Umple_Code.ump"},javaline={706},length={9})
    public AssociationClass addAssociationClass(String className){
     AssociationClass newClass = (AssociationClass) getUmpleClass(className);
     if (newClass == null)
@@ -712,12 +713,12 @@ public class UmpleModel implements Runnable
     return newClass;
   }
 
-  @umplesourcefile(line={73},file={"Umple_Code.ump"},javaline={716},length={3})
+  @umplesourcefile(line={73},file={"Umple_Code.ump"},javaline={717},length={3})
    public void addGenerate(String lang){
     addGenerate(new GenerateTarget(lang, null));
   }
 
-  @umplesourcefile(line={83},file={"Umple_Code.ump"},javaline={721},length={12})
+  @umplesourcefile(line={83},file={"Umple_Code.ump"},javaline={722},length={12})
    public String getDefaultGenerate(){
     // Note that this method should be getDefaultGenerateLanguage
     // To avoid rippling changes throughout the code, the name is left as is 
@@ -731,7 +732,7 @@ public class UmpleModel implements Runnable
     }
   }
 
-  @umplesourcefile(line={97},file={"Umple_Code.ump"},javaline={735},length={10})
+  @umplesourcefile(line={97},file={"Umple_Code.ump"},javaline={736},length={10})
    public String getDefaultGeneratePath(){
     if (numberOfGenerates() == 0)
     {
@@ -743,12 +744,12 @@ public class UmpleModel implements Runnable
     }
   }
 
-  @umplesourcefile(line={109},file={"Umple_Code.ump"},javaline={747},length={3})
+  @umplesourcefile(line={109},file={"Umple_Code.ump"},javaline={748},length={3})
    public void clearGenerates(){
     generates.clear();
   }
 
-  @umplesourcefile(line={114},file={"Umple_Code.ump"},javaline={752},length={10})
+  @umplesourcefile(line={114},file={"Umple_Code.ump"},javaline={753},length={10})
    public UmpleClass getUmpleClass(String name){
     for (UmpleClass aClass : getUmpleClasses())
     {
@@ -760,7 +761,7 @@ public class UmpleModel implements Runnable
     return null;
   }
 
-  @umplesourcefile(line={126},file={"Umple_Code.ump"},javaline={764},length={10})
+  @umplesourcefile(line={126},file={"Umple_Code.ump"},javaline={765},length={10})
    public UmpleInterface getUmpleInterface(String name){
     for (UmpleInterface aInterface : getUmpleInterfaces())
     {
@@ -772,7 +773,7 @@ public class UmpleModel implements Runnable
     return null;
   }
 
-  @umplesourcefile(line={139},file={"Umple_Code.ump"},javaline={776},length={10})
+  @umplesourcefile(line={139},file={"Umple_Code.ump"},javaline={777},length={10})
    public StateMachine getStateMachineDefinition(String name){
     for (StateMachine aStateMachine : getStateMachineDefinitions())
     {
@@ -788,7 +789,7 @@ public class UmpleModel implements Runnable
   /**
    * Creates a new parser, loads the input, parses, then analyses
    */
-  @umplesourcefile(line={154},file={"Umple_Code.ump"},javaline={788},length={24})
+  @umplesourcefile(line={154},file={"Umple_Code.ump"},javaline={789},length={24})
    public void run(){
     boolean failed = false;
     String input;
@@ -818,7 +819,7 @@ public class UmpleModel implements Runnable
   /**
    * Generates the actual code for each generation target
    */
-  @umplesourcefile(line={182},file={"Umple_Code.ump"},javaline={818},length={36})
+  @umplesourcefile(line={182},file={"Umple_Code.ump"},javaline={819},length={36})
    public void generate(){
     boolean foundGenerator;
     Class<?> classDefinition = null;
@@ -856,7 +857,7 @@ public class UmpleModel implements Runnable
     }
   }
 
-  @umplesourcefile(line={221},file={"Umple_Code.ump"},javaline={860},length={13})
+  @umplesourcefile(line={221},file={"Umple_Code.ump"},javaline={861},length={13})
    public Coordinate getDefaultClassPosition(int numDefaults){
     int xIndex  = 0;
     int yIndex = 0;
@@ -871,7 +872,7 @@ public class UmpleModel implements Runnable
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
 
-  @umplesourcefile(line={236},file={"Umple_Code.ump"},javaline={875},length={91})
+  @umplesourcefile(line={236},file={"Umple_Code.ump"},javaline={876},length={91})
    public Coordinate[] getDefaultAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     int offsetY = offsetFromEdge.getX();
@@ -964,7 +965,7 @@ public class UmpleModel implements Runnable
     return defaults;
   }
 
-  @umplesourcefile(line={329},file={"Umple_Code.ump"},javaline={968},length={59})
+  @umplesourcefile(line={329},file={"Umple_Code.ump"},javaline={969},length={59})
    private Coordinate[] getDefaultReflexiveAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();
@@ -1046,8 +1047,8 @@ public class UmpleModel implements Runnable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={77},file={"Umple_Code.ump"},javaline={1050},length={5})
-  @umplesourcefile(line={78},file={"Umple_Code.ump"},javaline={1051},length={4})
+  //  @umplesourcefile(line={77},file={"Umple_Code.ump"},javaline={1051},length={5})
+  @umplesourcefile(line={78},file={"Umple_Code.ump"},javaline={1052},length={4})
   public void addGenerate(Collection <?extends GenerateTarget> c) 
   {
     generates.addAll(c);
