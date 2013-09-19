@@ -931,7 +931,7 @@ Action.generateCode = function(languageStyle,languageName)
     actualLanguage = "Experimental-"+languageName;
   }
   jQuery(generateCodeSelector).showLoading();
-  Action.ajax(function(response) {Action.generateCodeCallback(response,languageStyle);},format("language={0}",actualLanguage),"true");
+  Action.ajax(function(response) {Action.generateCodeCallback(response,languageStyle);},format("language={0}&languageStyle={1}",actualLanguage, languageStyle),"true");
 }
 
 Action.photoReady = function()
