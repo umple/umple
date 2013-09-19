@@ -43,6 +43,7 @@ else if (isset($_REQUEST["umpleCode"]))
 {
   $input = $_REQUEST["umpleCode"];
   $language = $_REQUEST["language"];
+  $languageStyle = $_REQUEST["languageStyle"];
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
   $uigu = False;
 
@@ -51,6 +52,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $classDiagram = false;
   $yumlDiagram = false;
   $uigu = false;
+  $htmlContents = false;
 
   if ($language == "javadoc")
   {
@@ -77,7 +79,10 @@ else if (isset($_REQUEST["umpleCode"]))
      $language = "Uigu";
      $uigu = True;
   }
-  
+  if ($languageStyle == "html")
+  {
+     $htmlContents = true;
+  }
   if ($language == "Simulate")
   {
     $filename = saveFile("generate Php \"./\" --override-all;\n" . $input);
@@ -100,6 +105,18 @@ else if (isset($_REQUEST["umpleCode"]))
     copy("$filename", "JSFProvider/model.ump");
 	executeCommand("java -cp GUIModel.jar;JSFProvider.jar;GUIGenerator.jar cruise.generator.UIGU UmpleProject.xml model.ump TempDir TempApp");*/
   }
+
+  else if ($htmlContents) {
+    $filename = saveFile($input);
+    $errorFilename = "{$filename}.erroroutput";
+    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+    $errors = getErrorHtml($errorFilename, 0);    
+    if($outputErr == "true")
+ 	echo $errors;
+    echo $sourceCode;
+    return;      
+  } // end html content      
+
   elseif (!in_array($language,array("Php","Java","Ruby","RTCpp","Cpp","Sql","GvStateDiagram","GvClassDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     $filename = saveFile($input);
@@ -258,7 +275,7 @@ else if (isset($_REQUEST["umpleCode"]))
       }
       echo $html;
     } // end yuml diagram  
-      
+
     else // This is where the Java, PHP and other output is placed on the screen
     {
 	   exec("cd $thedir; rm {$language}FromUmple.zip; /usr/bin/zip -r {$language}FromUmple {$language}");
