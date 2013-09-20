@@ -246,6 +246,8 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("026_externalDefinitionAndClassDefinition_last.ump", "[classDefinition][name:X][attribute][name:abcd][externalDefinition][name:X]");
     fileToOutputs.put("026_externalDefinitionAndClassDefinition_middle.ump", "[classDefinition][name:X][attribute][name:abcd][externalDefinition][name:X][classDefinition][name:X][attribute][name:xyz]");
 
+    fileToOutputs.put("412_association_comment.ump", "[classDefinition][name:A][attribute][name:aName][classDefinition][name:B][attribute][name:bName][associationDefinition][association][associationEnd][bound:1][type:A][arrow:--][associationEnd][bound:*][type:B][inlineComment:comment....]");
+    
   }
 
   @Before
@@ -265,7 +267,11 @@ public class UmpleInternalParserTest extends UmpleParserTest
     }
     else
     {
-      Assert.fail("Please provide a expected output of the tokenized string");
+      // There should be an expected result, but there wasn't
+      // Go ahead and try parsing anyway so in the error message we can say what
+      // the parse was. This output needs to be put in fileToOutputs above
+      parse(filename);
+      Assert.fail("Please provide a expected output of the tokenized string. If you don't want to do that, use assertSimpleParse. Output found which should be compared: "+parser.toString());
     }
   }
 

@@ -19,7 +19,7 @@ interfaceDefinition : interface [name] { [[depend]]* [[interfaceBody]] }
 
 // Associations can be declared outside the body of classes. 
 // See user manual page [*IndependentlyDefinedAssociations*]
-associationDefinition : association [name]? { [[association]]* }
+associationDefinition : association [name]? { ([[comment]] | [[association]])* }
 
 // Associations that would be many-many can also become full-fledged classes too
 // See user manual page [*AssociationClassDefinition*]

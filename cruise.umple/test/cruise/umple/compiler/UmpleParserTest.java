@@ -2049,7 +2049,15 @@ public class UmpleParserTest
     UmpleClass x = model.getUmpleClass("X");
     Assert.assertEquals(1,x.numberOfAttributes());
   }
-
+  
+  
+  // Test for issue 412 by F.K
+  @Test 
+  public void commentInAssociation()
+  {
+	assertParse("412_association_comment.ump");
+  }
+  
   public boolean parse(String filename)
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));
