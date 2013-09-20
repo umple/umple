@@ -21,7 +21,7 @@ enum : [name] { } | [name] { [stateName] (, [stateName])* }
 
 state : [stateName] { [[stateInternal]]* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
-stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]]
+stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]] | ;
 
 autoTransition : [[autoTransitionBlock]] | [[activity]] [[autoTransitionBlock]]
 

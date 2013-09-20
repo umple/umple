@@ -1,0 +1,7 @@
+class CourseX {
+  status {
+    Open {
+      entry / { System.out.println("Enter open"); };
+    }
+  }
+}
