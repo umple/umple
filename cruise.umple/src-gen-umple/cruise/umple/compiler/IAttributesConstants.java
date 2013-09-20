@@ -17,13 +17,45 @@ public class IAttributesConstants
   //------------------------
 
   public static final String attributeClass = "class";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String target = "target";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String href = "href";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String xlmns = "xmlns";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String alt = "alt";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String src = "src";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String type = "type";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String id = "id";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String border = "border";
 
   //------------------------

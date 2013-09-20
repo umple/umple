@@ -1,4 +1,5 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<% if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); } %>
   public <%=gen.translate("type",av)%> <%= gen.translate("getMethod",av) %>()
   {
 <%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")

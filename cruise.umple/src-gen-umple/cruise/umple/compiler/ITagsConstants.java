@@ -22,23 +22,95 @@ public class ITagsConstants
   //------------------------
 
   public static final String tagClass = "class";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String tr = "tr";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String th = "th";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String tfoot = "tfoot";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String td = "td";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String tbody = "tbody";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String table = "table";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String style = "style";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String span = "span";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String small = "small";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String script = "script";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String p = "p";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String img = "img";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String html = "html";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String head = "head";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String font = "font";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String div = "div";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String body = "body";
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String a = "a";
 
   //------------------------

@@ -96,6 +96,8 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/IFirstChild.php");
     SampleFileWriter.destroy(pathToInput + "/ISecondChild.php");
     SampleFileWriter.destroy(pathToInput + "/CodeTranslator.php");
+    SampleFileWriter.destroy(pathToInput + "/ChatIF.java");
+    SampleFileWriter.destroy(pathToInput + "/ClientConsole.java");
 
     SampleFileWriter.destroy(pathToRoot + "/X.java");
     SampleFileWriter.destroy(pathToRoot + "/X.php");

@@ -9,8 +9,6 @@
       continue;
     }
 
-	TraceItem traceItem = av.getTraced("getMethod", uClass);
-
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
 
@@ -31,14 +29,6 @@
 
     boolean hasCodeInjections = customGetPrefixCode != null || customGetPostfixCode != null;
   
-    String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customGetPrefixCode, customGetPostfixCode,
-      customGetDefaultPrefixCode, customGetDefaultPostfixCode,
-      customGetManyPrefixCode, customGetManyPostfixCode,
-      customNumberOfPrefixCode, customNumberOfPostfixCode,
-      customHasManyPrefixCode,customHasManyPostfixCode,
-      customIndexOfPrefixCode,customIndexOfPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
     if (av.isOne())
     {
       %><%@ include file="association_GetOne.jet" %><%
