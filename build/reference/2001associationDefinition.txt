@@ -35,7 +35,7 @@ Associations can be presented in two ways in Umple.
 <p>
 <ul>
   <li><a href="InlineAssociations.html">Inline</a> - Defined within one of the associated classes. See line 7 of the example below; the association is defined between A and B.</li>
-  <li><a href=""IndependentlyDefinedAssociations.html">Independently</a> - defined as a first-class entity in the model. See line 18 of the example below; the association is defined between A and C.</li>
+  <li><a href="IndependentlyDefinedAssociations.html">Independently</a> - defined as a first-class entity in the model. See line 18 of the example below; the association is defined between A and C.</li>
 </ul>
 </p>
 
