@@ -1,0 +1,10 @@
+class A {	
+	aName;
+}
+class B {
+	bName;
+}
+association {
+	1 A -- * B;
+	//comment....
+}
