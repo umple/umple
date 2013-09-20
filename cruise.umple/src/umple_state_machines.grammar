@@ -17,9 +17,12 @@ referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionNam
 extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
 
 // An enum is a state machine that has no events
-enum : [name] { } | [name] { [stateName] (, [stateName])* }
+// 	stateName is prefixed with ~ to match alphanumeric names only.
+// 	This is needed to solve issue 399, which is cause when a terminating } is parsed as part of the statename. 
+enum : [name] { } | [name] { [~stateName] (, [~stateName])* }
 
-state : [stateName] { [[stateInternal]]* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
+//state : [stateName] { [[stateInternal]]* } | [=final] [stateName] { ( [[stateInternal]]  )* } 
+state : [=final]? [stateName] { [[stateInternal]]* } 
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
 stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]] | ;
 

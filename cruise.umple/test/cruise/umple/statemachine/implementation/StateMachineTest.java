@@ -20,6 +20,8 @@ import cruise.umple.compiler.Event;
 public class StateMachineTest extends StateMachineTemplateTest
 {
 
+  // SIMPLE STATES
+	
   @Test
   public void NoStates()
   {
@@ -38,6 +40,8 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("SimpleStateMachine.ump",languagePath + "/SimpleStateMachine_TwoStates."+ languagePath +".txt","Course");
   }
 
+  // TRANSITIONS
+  
   @Test
   public void EventTransitionSameState()
   {
@@ -55,6 +59,8 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("EmptyAndNonEmptyStates.ump",languagePath + "/EmptyAndNonEmptyStates."+ languagePath +".txt","Light");
   }   
+  
+  // GUARDS
   
   @Test
   public void oneGuard()
@@ -74,6 +80,10 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("multipleGuardsSameEventWithDefaultNoGuard.ump",languagePath + "/multipleGuardsSameEventWithDefaultNoGuard."+ languagePath +".txt","LightFixture");
   }
   
+  // SPACING
+  
+  // Spacing of state transaction actions
+  
   @Test //Test the spacing problems in issue 155
   public void guardSpacing() {
 	  assertUmpleTemplateFor("guardSpacing.ump",languagePath + "/guardSpacing."+ languagePath +".txt","Garage");
@@ -85,12 +95,64 @@ public class StateMachineTest extends StateMachineTemplateTest
 	  assertUmpleTemplateFor("stateMachineSpacing2.ump",languagePath + "/stateMachineSpacing2."+ languagePath +".txt","Garage");
   }
   
+  // Spacing of state names (issue 399)
+  
+  /**
+   * Tests spacing issues by changing the spacing in the test file for <{@link #NoStates()}.
+   * Changing the spacing should have no effect on the output and so this method compares to the same
+   * output files as {@link #NoStates()}.
+   * <p>This test case addresses <b>issue 399</b>.
+   * @author Kenan Kigunda
+   * @since September 20, 2013
+   */
+  @Test
+  public void stateNameSpacingForNoStates() {
+	  assertUmpleTemplateFor("SimpleStateMachineSpacing.ump",languagePath + "/SimpleStateMachine."+ languagePath +".txt","Mentor");
+  }
+  
+  /**
+   * Test spacing issues by changing the spacing in the test file for {@link #OneState()}.
+   * @see #stateNameSpacingForNoStates()
+   */
+  @Test
+  public void stateNameSpacingForOneState() {
+	  assertUmpleTemplateFor("SimpleStateMachineSpacing.ump",languagePath + "/SimpleStateMachine_OneState."+ languagePath +".txt","Student");	  
+  }
+  
+  /**
+   * Test spacing issues by changing the spacing in the test file for {@link #TwoState()}.
+   * @see #stateNameSpacingForNoStates()
+   */
+  @Test
+  public void stateNameSpacingForTwoStates() {
+	  assertUmpleTemplateFor("SimpleStateMachineSpacing.ump",languagePath + "/SimpleStateMachine_TwoStates."+ languagePath +".txt","Course");  
+  }
+  
+  /**
+   * Test spacing issues by changing the spacing in the test file for {@link #EventTransitionSameState()}.
+   * @see #stateNameSpacingForNoStates()
+   */
+  @Test
+  public void stateNameSpacingForEventTransitionSameState() {
+	  assertUmpleTemplateFor("EventTransitionSpacing.ump",languagePath + "/EventTransition_NewState."+ languagePath +".txt","Light");
+  }
+  
+  /**
+   * Test spacing issues by changing the spacing in the test file for {@link #EventTransitionNewState()}.
+   * @see #stateNameSpacingForNoStates()
+   */
+  @Test
+  public void stateNameSpacingForEventTransitionNewState() {
+	  assertUmpleTemplateFor("EventTransitionSpacing.ump",languagePath + "/EventTransition."+ languagePath +".txt","Course");	  
+  }
+  
+  // ACTIONS
+  
   @Test
   public void transitionAction()
   {
     assertUmpleTemplateFor("transitionAction.ump",languagePath + "/transitionAction."+ languagePath +".txt","Course");
   }
- 
   
   @Test 
   public void entryAction()
@@ -151,7 +213,7 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("sameEvent_twoStates_differentStateMachines.ump",languagePath + "/sameEvent_twoStates_differentStatemachines."+ languagePath +".txt","LightFixture");
   }
-
+  
   @Test
   public void nestedStates()
   {

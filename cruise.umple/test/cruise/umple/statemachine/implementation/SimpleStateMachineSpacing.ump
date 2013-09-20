@@ -1,0 +1,23 @@
+
+namespace example;
+
+class Mentor 
+{
+  status{}
+}
+
+class Student
+{
+  grade{
+    Pass{}
+  }
+}
+
+class Course
+{
+  status
+  {
+    Open{ }
+    Full { }
+  }
+}
