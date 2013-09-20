@@ -33,7 +33,10 @@
 
     appendln(stringBuffer, "");
     
-    //if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    if("internal".equals(av.getModifier()))
+    {
+      if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    }
     
     append(stringBuffer, "  private {0} {1};", type, attribute);
   }
@@ -53,6 +56,7 @@
       isFirst = false;
     }
     appendln(stringBuffer, "");
+    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
     append(stringBuffer, "  private int {0};", gen.translate("attributeOne",av));
   }
   

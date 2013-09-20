@@ -2204,6 +2204,7 @@ for (StateMachine smq : uClass.getStateMachines())
     if (av.isConstant())
     {
       appendln(stringBuffer, "");
+      if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
       append(stringBuffer, "  public static final {0} {1} = {2};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
     }
     else if (av.getIsAutounique())
@@ -2264,7 +2265,10 @@ for (StateMachine smq : uClass.getStateMachines())
 
     appendln(stringBuffer, "");
     
-    //if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    if("internal".equals(av.getModifier()))
+    {
+      if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
+    }
     
     append(stringBuffer, "  private {0} {1};", type, attribute);
   }
@@ -2284,6 +2288,7 @@ for (StateMachine smq : uClass.getStateMachines())
       isFirst = false;
     }
     appendln(stringBuffer, "");
+    if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
     append(stringBuffer, "  private int {0};", gen.translate("attributeOne",av));
   }
   
@@ -3709,6 +3714,7 @@ for (StateMachine smq : uClass.getStateMachines())
       if (av.getIsDerived() && customGetPostfixCode != null)
       {
         
+     if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); } 
     stringBuffer.append(TEXT_276);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_277);
@@ -3735,6 +3741,7 @@ for (StateMachine smq : uClass.getStateMachines())
       else if (av.getIsDerived())
       {
         
+     if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); } 
     stringBuffer.append(TEXT_286);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_287);

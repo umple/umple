@@ -23,6 +23,7 @@
     if (av.isConstant())
     {
       appendln(stringBuffer, "");
+      if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
       append(stringBuffer, "  public static final {0} {1} = {2};", gen.getType(av), av.getName(), gen.translate("parameterValue",av));
     }
     else if (av.getIsAutounique())

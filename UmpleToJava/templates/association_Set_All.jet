@@ -12,8 +12,6 @@
     {
       continue;
     } 
-    
-    TraceItem traceItem = av.getTraced("setMethod", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -30,14 +28,6 @@
     String customIsNumberOfValidPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isNumberOfValidMethod",av)));
     String customIsNumberOfValidPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isNumberOfValidMethod",av)));
     
-    String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customSetPrefixCode, customSetPostfixCode,
-      customSetManyPrefixCode, customSetManyPostfixCode,
-      customAddPrefixCode, customAddPostfixCode,
-      customRemovePrefixCode, customRemovePostfixCode,
-      customIsNumberOfValidPrefixCode, customIsNumberOfValidPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-    
     String includeFileOne = null;
     String includeFileTwo = null;
     
@@ -49,7 +39,7 @@
     boolean hasRemoveManyTemplateMethod = false;
     String includeFile = null;
     String includeFile2 = null;
-  String includeFile3 = null;
+	String includeFile3 = null;
 
     if (!relatedAssociation.getIsNavigable())
     {
@@ -71,8 +61,8 @@
       }
       else if (av.isMN())
       {
-        if (!av.isImmutable())
-        {
+      	if (!av.isImmutable())
+      	{
           includeFile = "association_AddUnidirectionalMN.jet";
         }
         includeFile2 = "association_SetUnidirectionalMN.jet";
@@ -84,14 +74,14 @@
       else if (av.isOptionalN())
       {
         if (!av.isImmutable())
-        {
+      	{
           includeFile = "association_AddUnidirectionalOptionalN.jet";
         }
         includeFile2 = "association_SetUnidirectionalOptionalN.jet";
       }
       else if (av.isImmutable() && av.isMany())
       {
-        includeFile = "association_SetUnidirectionalMany.jet";
+      	includeFile = "association_SetUnidirectionalMany.jet";
       }
       else if (av.isMany())
       {
@@ -171,7 +161,7 @@
       hasAddManyToManyTemplateMethod = true;
       if (!av.isImmutable())
       {
-        hasRemoveManyTemplateMethod = true;
+      	hasRemoveManyTemplateMethod = true;
       }
     }
     else if (av.isOptionalN() && relatedAssociation.isOptionalMany())
@@ -179,7 +169,7 @@
       hasAddManyToManyTemplateMethod = true;
       if (!av.isImmutable())
       {
-        hasRemoveManyTemplateMethod = true;
+      	hasRemoveManyTemplateMethod = true;
       }
       includeFile = "association_SetOptionalNToMany.jet";
     }
@@ -192,7 +182,7 @@
       hasAddManyToManyTemplateMethod = true;
       if (!av.isImmutable())
       {
-        hasRemoveManyTemplateMethod = true;
+      	hasRemoveManyTemplateMethod = true;
       }
     }
     else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN() || relatedAssociation.isMany()))
@@ -200,7 +190,7 @@
       hasAddManyToManyTemplateMethod = true;
       if (!av.isImmutable())
       {
-        hasRemoveManyTemplateMethod = true;
+      	hasRemoveManyTemplateMethod = true;
       }
     }
     else if (av.isOptionalN() && relatedAssociation.isOptionalOne())
@@ -277,7 +267,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
       %><%@ include file="association_IsNumberOfValidMethod.jet" %><%
     }
     
@@ -285,7 +274,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
       %><%@ include file="association_RequiredNumberOfMethod.jet" %><%
     }
 
@@ -293,7 +281,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
       %><%@ include file="association_MinimumNumberOfMethod.jet" %><%
     }
     
@@ -301,7 +288,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
       %><%@ include file="association_MaximumNumberOfMethod.jet" %><%
     }
     
@@ -309,8 +295,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
-      %><%= umpleSourceFile 
       %><%@ include file="association_AddManyToManyMethod.jet" %><%
     }
     
@@ -318,14 +302,12 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
       %><%@ include file="association_RemoveMany.jet" %><%
     }
 
     if (addNewLine) { appendln(stringBuffer,""); }
     addNewLine = true;
     
-    %><%
     // How do you dynamically include a file in JET?!?
     if (includeFile == "association_SetUnidirectionalOptionalOne.jet")
     {
@@ -433,9 +415,9 @@
     }
     else if (includeFile == "association_SetUnidirectionalMany.jet")
     {
-      %><%@ include file="association_SetUnidirectionalMany.jet"%><%
+    	%><%@ include file="association_SetUnidirectionalMany.jet"%><%
     }
-  else if (includeFile == "association_SetOptionalOneToMandatoryMany.jet")
+	else if (includeFile == "association_SetOptionalOneToMandatoryMany.jet")
     {
       %><%@ include file="association_SetOptionalOneToMandatoryMany.jet"%><%
     }
@@ -448,7 +430,6 @@
       appendln(stringBuffer,"You forgot to include {0}",includeFile);
     }
     
-    %><%
     if (includeFile2 == "association_SetMNToMany.jet")
     {
       %><%@ include file="association_SetMNToMany.jet"%><%

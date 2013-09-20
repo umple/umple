@@ -52,6 +52,12 @@ public class JavaClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("ClassTemplateTest_VoidImplementedMethod.ump",languagePath + "/ClassTemplateTest_VoidImplementedMethod." +languagePath+".txt","ClientConsole"); 
   }
 
+  @Test
+  public void InternalAndConstantAndDerivedAttributeComments()
+  {
+        assertUmpleTemplateFor("ClassTemplateTest_AttributeComments.ump",languagePath+"/ClassTemplateTest_AttributeComments." + languagePath + ".txt","Student");
+  }
+
   
   @Test
   public void Java()

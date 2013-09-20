@@ -1,0 +1,12 @@
+class Student
+{
+  //Comment for a const attribute
+  const a;
+
+  //Comment for an internal attribute
+  internal b;
+
+  //Comment for a derived attribute
+  int c={1+1}
+}
+
