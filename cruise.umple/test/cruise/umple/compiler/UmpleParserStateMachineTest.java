@@ -907,14 +907,28 @@ public class UmpleParserStateMachineTest
 	  assertHasWarning("107_badStateMachineSyntaxBrokenArrow.ump", 0, 1006, new Position("107_badStateMachineSyntaxBrokenArrow.ump", 4, 2, 45));
 	  assertHasWarning("107_badStateMachineSyntaxEmptyCodeBlock.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyCodeBlock.ump", 4, 2, 45));
 	  assertHasWarning("107_badStateMachineSyntaxEmptyGuard.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyGuard.ump", 4, 2, 45));
-	  assertHasWarning("107_badStateMachineSyntaxExtraSemiColon.ump", 0, 1006, new Position("107_badStateMachineSyntaxExtraSemiColon.ump", 4, 2, 45));
 	  assertHasWarning("107_badStateMachineSyntaxMisplacedAttribute.ump", 0, 1006, new Position("107_badStateMachineSyntaxMisplacedAttribute.ump", 3, 2, 16));
 	  assertHasWarning("107_badStateMachineSyntaxMisplacedGuard.ump", 0, 1006, new Position("107_badStateMachineSyntaxMisplacedGuard.ump", 4, 2, 45));
 	  assertHasWarning("107_badStateMachineSyntaxMissingForwardSlash.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissingForwardSlash.ump", 4, 2, 45));
 	  assertHasWarning("107_badStateMachineSyntaxMissingSemiColon.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissingSemiColon.ump", 4, 2, 45));
 	  assertHasWarning("107_badStateMachineSyntaxMissmatchedBrackets.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissmatchedBrackets.ump", 4, 2, 45));
   }
-  
+  @Test
+	public void semicolonStateMachine() {
+		assertParse(
+				"379_semicolon_extracode.ump",
+				"[classDefinition][name:CourseX][stateMachine][inlineStateMachine][name:status][state][stateName:Open][entryOrExitAction][type:entry][code:System.out.println(\"Enter open\");]");
+		UmpleClass c = model.getUmpleClass("CourseX");
+		StateMachine sm = c.getStateMachine(0);
+
+		Assert.assertEquals("status", sm.getName());
+
+		Assert.assertEquals(1, sm.numberOfStates());
+		State state1 = sm.getState(0);
+		Assert.assertEquals("Open", state1.getName());
+		Assert.assertEquals(0, state1.numberOfTransitions());
+		Assert.assertEquals(true, state1.getHasEntryAction());
+	}
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);
