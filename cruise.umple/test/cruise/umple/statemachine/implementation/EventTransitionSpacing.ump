@@ -1,0 +1,20 @@
+
+namespace example;
+
+class Course
+{
+  status
+  {
+    Open{ register -> Open;  }
+  }
+
+}
+
+class Light
+{
+  bulb
+  {
+    Off{ flip -> On; }
+    On {flip -> Off; }
+  }
+}
