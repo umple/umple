@@ -117,7 +117,7 @@ public class YumlGenerator implements CodeGenerator
       if(!assocEnds.isEmpty())
       {  
         roleName1 = assocEnds.get(0);
-        roleName2= assocEnds.get(1);
+        roleName2 = assocEnds.get(1);
       }
 
       String direction = "-";
@@ -129,7 +129,7 @@ public class YumlGenerator implements CodeGenerator
       {
         direction = "->";
       }
-      yuml.append(StringFormatter.format("[{0}]{5}{2}{4}{6}{3}[{1}],",c1.getName(),c2.getName(),mult1,mult2,direction,roleName1.getRoleName(),roleName2.getRoleName()));
+      yuml.append(StringFormatter.format("[{0}]{5}{2}{4}{6}{3}[{1}],",c1.getName(),c2.getName(),mult1,mult2,direction,roleName1.getRoleName()+" ",roleName2.getRoleName()+" "));
     }
 
     model.setCode(yuml.toString());

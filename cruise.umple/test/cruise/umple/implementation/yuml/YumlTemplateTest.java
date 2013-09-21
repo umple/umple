@@ -67,4 +67,9 @@ public class YumlTemplateTest extends TemplateTest
   {
     assertEitherUmpleTemplateFor("yuml/InheritanceTemplateTest1_Yuml.ump","yuml/InheritanceTemplateTest1_Yuml.yuml.txt","yuml/InheritanceTemplateTest1b_Yuml.yuml.txt");
   }
+  @Test
+  public void RoleNameWithMultiplicity()
+  {
+	  assertUmpleTemplateFor("yuml/RoleNameWIthMultiplicity.ump","yuml/RoleNameWIthMultiplicity.yuml.txt");  
+  }
 }

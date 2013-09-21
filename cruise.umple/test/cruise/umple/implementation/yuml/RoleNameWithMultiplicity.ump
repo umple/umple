@@ -1,0 +1,6 @@
+class User {
+}
+
+class Client {
+    * clients <- 1 User user;
+}
