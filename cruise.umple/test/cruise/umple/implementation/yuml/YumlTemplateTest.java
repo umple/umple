@@ -70,6 +70,6 @@ public class YumlTemplateTest extends TemplateTest
   @Test
   public void RoleNameWithMultiplicity()
   {
-	  assertUmpleTemplateFor("yuml/RoleNameWIthMultiplicity.ump","yuml/RoleNameWIthMultiplicity.yuml.txt");  
+	  assertUmpleTemplateFor("yuml/RoleNameWithMultiplicity.ump","yuml/RoleNameWithMultiplicity.yuml.txt");  
   }
 }
