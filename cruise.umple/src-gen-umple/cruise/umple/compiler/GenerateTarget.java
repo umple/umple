@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * Represents the generation target, such as what the generated output language will be.
- * @umplesource Umple.ump 706
- * @umplesource Umple_Code.ump 2055
+ * @umplesource Umple.ump 712
+ * @umplesource Umple_Code.ump 2100
  */
-// line 706 "../../../../src/Umple.ump"
-// line 2055 "../../../../src/Umple_Code.ump"
+// line 712 "../../../../src/Umple.ump"
+// line 2100 "../../../../src/Umple_Code.ump"
 public class GenerateTarget
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -95,10 +95,10 @@ public class GenerateTarget
     return language;
   }
 
-  @umplesourcefile(line={720},file={"Umple.ump"},javaline={102},length={1})
+  @umplesourcefile(line={726},file={"Umple.ump"},javaline={102},length={1})
   public String getPath()
   {
-    // line 720 "../../../../src/Umple.ump"
+    // line 726 "../../../../src/Umple.ump"
     if(path == null) path = "";
     return path;
   }
@@ -165,12 +165,12 @@ public class GenerateTarget
   public void delete()
   {}
 
-  @umplesourcefile(line={2056},file={"Umple_Code.ump"},javaline={169},length={3})
+  @umplesourcefile(line={2101},file={"Umple_Code.ump"},javaline={169},length={3})
    public void setOption(String key, String value){
     this.options.put(key, value);
   }
 
-  @umplesourcefile(line={2060},file={"Umple_Code.ump"},javaline={174},length={3})
+  @umplesourcefile(line={2105},file={"Umple_Code.ump"},javaline={174},length={3})
    public String getOption(String key){
     return this.options.get(key);
   }

@@ -9,10 +9,10 @@ import java.util.*;
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
  * @umplesource Umple.ump 72
- * @umplesource Umple_Code.ump 628
+ * @umplesource Umple_Code.ump 658
  */
 // line 72 "../../../../src/Umple.ump"
-// line 628 "../../../../src/Umple_Code.ump"
+// line 658 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -27,7 +27,11 @@ public class UmpleElement
   private String modifier;
   private List<String> namespaces;
   private String packageName;
-  private String extraCode;
+
+  /**
+   * The code associated with the Umple element.
+   */
+  private ExtraCode extraCode;
   private boolean isInternal;
   private Coordinate coordinates;
   private String displayColor;
@@ -46,7 +50,7 @@ public class UmpleElement
     modifier = null;
     namespaces = new ArrayList<String>();
     packageName = "";
-    extraCode = "";
+    extraCode = new ExtraCode();
     isInternal = false;
     coordinates = new Coordinate(-1,-1,-1,-1);
     displayColor = "";
@@ -88,21 +92,13 @@ public class UmpleElement
     return wasRemoved;
   }
 
-  @umplesourcefile(line={102},file={"Umple.ump"},javaline={96},length={1})
+  @umplesourcefile(line={102},file={"Umple.ump"},javaline={100},length={1})
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
     // line 102 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setExtraCode(String aExtraCode)
-  {
-    boolean wasSet = false;
-    extraCode = aExtraCode;
     wasSet = true;
     return wasSet;
   }
@@ -181,14 +177,6 @@ public class UmpleElement
   public String getPackageName()
   {
     return packageName;
-  }
-
-  /**
-   * The code associated with the Umple element.
-   */
-  public String getExtraCode()
-  {
-    return extraCode;
   }
 
   /**
@@ -404,22 +392,37 @@ public class UmpleElement
     endPositions.clear();
   }
 
-  @umplesourcefile(line={630},file={"Umple_Code.ump"},javaline={408},length={3})
+  @umplesourcefile(line={660},file={"Umple_Code.ump"},javaline={396},length={3})
    public void appendExtraCode(String newCode){
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={635},file={"Umple_Code.ump"},javaline={413},length={11})
+  @umplesourcefile(line={665},file={"Umple_Code.ump"},javaline={401},length={11})
    public void appendExtraCode(String newCode, boolean addNewline){
     if (newCode == null) 
     { 
       return;
     }
-    if (!"".equals(extraCode) && addNewline)
+    if (extraCode.getHasCode() && addNewline)
     {
-      extraCode += System.getProperty("line.separator");
+      newCode = System.getProperty("line.separator") + newCode;
     } 
-    extraCode += newCode;
+    extraCode.appendExtraCode(newCode);
+  }
+
+  @umplesourcefile(line={678},file={"Umple_Code.ump"},javaline={414},length={3})
+   public void appendExtraCode(boolean flag, CodeBlock cb){
+    extraCode.appendExtraCode(cb);
+  }
+
+  @umplesourcefile(line={683},file={"Umple_Code.ump"},javaline={419},length={3})
+   public boolean hasExtraCode(){
+    return extraCode.getHasCode();
+  }
+
+  @umplesourcefile(line={688},file={"Umple_Code.ump"},javaline={424},length={3})
+   public String getExtraCode(){
+    return extraCode.getExtraCode();
   }
 
 
@@ -430,7 +433,6 @@ public class UmpleElement
             "name" + ":" + getName()+ "," +
             "modifier" + ":" + getModifier()+ "," +
             "packageName" + ":" + getPackageName()+ "," +
-            "extraCode" + ":" + getExtraCode()+ "," +
             "isInternal" + ":" + getIsInternal()+ "," +
             "displayColor" + ":" + getDisplayColor()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "coordinates" + "=" + (getCoordinates() != null ? !getCoordinates().equals(this)  ? getCoordinates().toString().replaceAll("  ","    ") : "this" : "null")

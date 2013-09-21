@@ -31,3 +31,8 @@ class DoorG
   lazy immutable Date dateId;
   lazy immutable Time timeId;
 }
+
+class ExtraCodeTest
+{
+  extracode
+}

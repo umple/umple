@@ -8,12 +8,12 @@ import java.util.*;
  * Superclass for tracking member variables in all target languages
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
- * @umplesource Umple.ump 477
- * @umplesource Umple_Code.ump 1115
+ * @umplesource Umple.ump 483
+ * @umplesource Umple_Code.ump 1160
  * @umplesource Trace_Code.ump 16
  */
-// line 477 "../../../../src/Umple.ump"
-// line 1115 "../../../../src/Umple_Code.ump"
+// line 483 "../../../../src/Umple.ump"
+// line 1160 "../../../../src/Umple_Code.ump"
 // line 16 "../../../../src/Trace_Code.ump"
 public class UmpleVariable
 {
@@ -50,11 +50,11 @@ public class UmpleVariable
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={491},file={"Umple.ump"},javaline={58},length={1})
+  @umplesourcefile(line={497},file={"Umple.ump"},javaline={58},length={1})
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    // line 491 "../../../../src/Umple.ump"
+    // line 497 "../../../../src/Umple.ump"
     if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); }
     name = aName;
     wasSet = true;
@@ -101,13 +101,13 @@ public class UmpleVariable
     return type;
   }
 
-  @umplesourcefile(line={493},file={"Umple.ump"},javaline={110},length={1})
+  @umplesourcefile(line={499},file={"Umple.ump"},javaline={110},length={1})
   /**
    * The modifier associated with the Umple variable.
    */
   public String getModifier()
   {
-    // line 493 "../../../../src/Umple.ump"
+    // line 499 "../../../../src/Umple.ump"
     if (modifier == null) { return "settable"; }
     return modifier;
   }
@@ -243,7 +243,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1117},file={"Umple_Code.ump"},javaline={247},length={14})
+  @umplesourcefile(line={1162},file={"Umple_Code.ump"},javaline={247},length={14})
    public String getUpperCaseName(){
     if (name == null || name.length() == 0)
     {
@@ -259,7 +259,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1133},file={"Umple_Code.ump"},javaline={263},length={3})
+  @umplesourcefile(line={1178},file={"Umple_Code.ump"},javaline={263},length={3})
    public boolean isImmutable(){
     return "immutable".equals(modifier);
   }
