@@ -8,6 +8,8 @@
       continue;
     }
     
+    TraceItem traceItem = av.getTraced("getMethod", uClass);
+    
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
 
@@ -26,6 +28,18 @@
     String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
     String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
     
+    
+    
+    String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customGetPrefixCode,customGetPostfixCode,
+      customGetDefaultPrefixCode,customGetDefaultPostfixCode,
+      customGetManyPrefixCode,customGetManyPostfixCode,
+      customNumberOfPrefixCode,customNumberOfPostfixCode,
+      customHasManyPrefixCode,customHasManyPostfixCode,
+      customIndexOfPrefixCode,customIndexOfPostfixCode, 
+      av.getIsDerived()?"return "+gen.translate("parameterValue",av)+";\n// line "+av.getPosition().getLineNumber()+" "+av.getPosition().getRelativePath(av.getUmpleClass(),"Java")+"\n"+gen.translate("parameterValue",av):null},
+      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+    %><%= umpleSourceFile %><%
     if (av.getIsList())
     {
       %><%@ include file="attribute_GetMany.jet" %><%
@@ -70,6 +84,8 @@
     {
       String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
       String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
+      
+      TraceItem traceItem = av.getTraced("getMethod", uClass);
       
       if (customGetPostfixCode != null)
       {
