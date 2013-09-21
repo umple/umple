@@ -834,6 +834,9 @@ class Parser
             // Colour all named identifiers such as [name] green
             cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E~?)([a-zA-Z_]+)\\Q]\\E", "$1<font color=\"green\">$2</font>]");
             
+            // Colour all named identifiers such as "bound" in [!bound:\d+] green
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E!)([a-zA-Z_]+)\\Q:\\d+]\\E", "$1<font color=\"green\">$2</font>:\\\\d+]");
+            
             // Colour pairs of identifiers green (where one or both may be supplied
             cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E)([a-zA-Z_]+),([a-zA-Z_]+)", "$1<font color=\"green\">$2</font>,<font color=\"green\">$3</font>");
             
