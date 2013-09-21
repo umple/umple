@@ -1,6 +1,6 @@
 interface ISomething
 {
- constant String aVariable = aValue;
- constant String aSecondVariable = aSecondValue;
+ const String aVariable = aValue;
+ const String aSecondVariable = aSecondValue;
  String getMethod(String name); 
 }
