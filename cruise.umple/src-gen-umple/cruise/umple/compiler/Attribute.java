@@ -10,11 +10,11 @@ import java.util.*;
  * it can be derived, and have various other modifiers such as being
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
- * @umplesource Umple.ump 505
- * @umplesource Umple_Code.ump 1142
+ * @umplesource Umple.ump 511
+ * @umplesource Umple_Code.ump 1187
  */
-// line 505 "../../../../src/Umple.ump"
-// line 1142 "../../../../src/Umple_Code.ump"
+// line 511 "../../../../src/Umple.ump"
+// line 1187 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -42,7 +42,7 @@ public class Attribute extends UmpleVariable
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={519},file={"Umple.ump"},javaline={62},length={1})
+  @umplesourcefile(line={525},file={"Umple.ump"},javaline={62},length={1})
   public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleClass aUmpleClass)
   {
     super(aName, aType, aModifier, aValue);
@@ -58,7 +58,7 @@ public class Attribute extends UmpleVariable
       throw new RuntimeException("Unable to create attribute due to umpleClass");
     }
     traceRecords = new ArrayList<TraceRecord>();
-    // line 519 "../../../../src/Umple.ump"
+    // line 525 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 
@@ -433,17 +433,17 @@ public class Attribute extends UmpleVariable
     super.delete();
   }
 
-  @umplesourcefile(line={1144},file={"Umple_Code.ump"},javaline={437},length={3})
+  @umplesourcefile(line={1189},file={"Umple_Code.ump"},javaline={437},length={3})
    public boolean isConstant(){
     return "const".equals(getModifier());
   }
 
-  @umplesourcefile(line={1149},file={"Umple_Code.ump"},javaline={442},length={3})
+  @umplesourcefile(line={1194},file={"Umple_Code.ump"},javaline={442},length={3})
    public boolean isPrimitive(){
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
-  @umplesourcefile(line={1155},file={"Umple_Code.ump"},javaline={447},length={6})
+  @umplesourcefile(line={1200},file={"Umple_Code.ump"},javaline={447},length={6})
    public boolean isImmutable(){
     boolean varIsImmutable = super.isImmutable();
     boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
@@ -451,12 +451,12 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
 
-  @umplesourcefile(line={1163},file={"Umple_Code.ump"},javaline={455},length={3})
+  @umplesourcefile(line={1208},file={"Umple_Code.ump"},javaline={455},length={3})
    public String getValue(){
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
 
-  @umplesourcefile(line={1167},file={"Umple_Code.ump"},javaline={460},length={3})
+  @umplesourcefile(line={1212},file={"Umple_Code.ump"},javaline={460},length={3})
    public void setValue(String lang, String code){
     codeblock.setCode(lang,code);
   }

@@ -7,11 +7,11 @@ import java.util.*;
 /**
  * Represents a interface.
  * Like a class, but can't have any concrete methods, attributes or associations.
- * @umplesource Umple.ump 370
- * @umplesource Umple_Code.ump 597
+ * @umplesource Umple.ump 376
+ * @umplesource Umple_Code.ump 627
  */
-// line 370 "../../../../src/Umple.ump"
-// line 597 "../../../../src/Umple_Code.ump"
+// line 376 "../../../../src/Umple.ump"
+// line 627 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -131,7 +131,7 @@ public class UmpleInterface extends UmpleClassifier
     super.delete();
   }
 
-  @umplesourcefile(line={599},file={"Umple_Code.ump"},javaline={135},length={24})
+  @umplesourcefile(line={629},file={"Umple_Code.ump"},javaline={135},length={24})
    public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;
     String methodName = comparedMethod.getName();

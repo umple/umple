@@ -89,7 +89,7 @@ class UmpleElement
   packageName = "";
 
   // The code associated with the Umple element.
-  extraCode = "";
+  internal ExtraCode extraCode = new ExtraCode();
 
   // Specifies whether or not the Umple element is internal.
   Boolean isInternal = false;
@@ -335,6 +335,12 @@ class CodeInjection
   1 -> 0..1 Constraint;
   lazy Position position;
   Boolean isInternal = false;
+}
+
+class ExtraCode
+{
+ internal CodeBlock[] code;
+ boolean hasCode=false;
 }
 
 /*

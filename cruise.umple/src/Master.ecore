@@ -378,7 +378,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="namespaces" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="extraCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extraCode" eType="#//ExtraCode"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="coordinate" eType="#//Coordinate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayColor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -473,6 +473,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/codeInjections"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" lowerBound="0" upperBound="1" eType="#//Constraint" eOpposite="#//Constraint/codeInjection"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/codeInjections"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtraCode">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codes" eType="#//CodeBlock" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasCode" eType="#//boolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Key">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDefault" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>

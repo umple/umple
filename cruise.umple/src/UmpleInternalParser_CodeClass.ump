@@ -197,18 +197,7 @@ class UmpleInternalParser
     }
     else if (token.is("extraCode"))
     {
-      //This is a catch all and will be used less often as the grammar gets updated.
-      if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
-      //Append #line comment to indicate line and position of source
-      if (token.getPosition() != null)
-      {
-        aClass.appendExtraCode("// line " + token.getPosition().getLineNumber() + " " + token.getPosition().getRelativePath(aClass, "Java"));
-        aClass.appendExtraCode("  " + token.getValue());
-      }
-      else
-      {
-        aClass.appendExtraCode(token.getValue());
-      }
+      analyzeExtraCode(token,aClass);
     }
     else if (token.is("constantDeclaration"))
     {
@@ -2210,6 +2199,33 @@ class UmpleInternalParser
       aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
       aClass.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
+    }
+  }
+  
+  private void analyzeExtraCode(Token token, UmpleClass aClass)
+  {
+    //This is a catch all and will be used less often as the grammar gets updated.
+    if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
+    //Append #line comment to indicate line and position of source
+    if (token.getPosition() != null)
+    {
+      String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + token.getPosition().getRelativePath(aClass, "Java");
+	  String rubyComment = "#" + extraCodeLineNumberComment;
+	  String otherComment = "//" + extraCodeLineNumberComment;
+ 	  if(aClass.hasExtraCode())
+	  {
+	    rubyComment = System.getProperty("line.separator") + rubyComment;
+	    otherComment = System.getProperty("line.separator") + otherComment;
+	  }
+	  CodeBlock cb = new CodeBlock();
+      cb.setCode(otherComment);
+      cb.setCode("Ruby", rubyComment);
+      aClass.appendExtraCode(true,cb);
+      aClass.appendExtraCode("  " + token.getValue());
+    }
+    else
+    {
+      aClass.appendExtraCode(token.getValue());
     }
   }
 } 
