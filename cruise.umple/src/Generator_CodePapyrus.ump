@@ -74,13 +74,13 @@ class PapyrusGenerator
         for(Attribute av : uClass.getAttributes())
         {
           String typeName = av.getType() == null ? "String" : av.getType();
-
+          
           if (typeName.equals("String") || typeName.equals("Integer") || typeName.equals("Boolean"))
           {
             code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
             code.append(StringFormatter.format("      <type xmi:type=\"uml:PrimitiveType\" href=\"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#{0}\"/>\n",typeName));
           }
-          else if (typeName.equals("Double") || typeName.equals("Date"))
+          else if (typeName.equals("Double") || typeName.equals("Float") || typeName.equals("Date"))
           {
             code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
             code.append(StringFormatter.format("      <type xmi:type=\"uml:PrimitiveType\" href=\"pathmap://UML_METAMODELS/Ecore.metamodel.uml#E{0}\"/>\n",typeName));
@@ -90,6 +90,7 @@ class PapyrusGenerator
             typeName = StringFormatter.format("dataType-{0}",typeName);
             code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\" type=\"{2}\">\n",uClass.getName(),av.getName(),typeName));
           }
+
 
           code.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
           code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));

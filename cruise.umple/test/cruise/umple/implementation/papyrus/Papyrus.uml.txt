@@ -36,6 +36,11 @@
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-isActive-_upperValue" value="1"/>
       <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-isActive-_lowerValue" value="1"/>
     </ownedAttribute>
+    <ownedAttribute xmi:id="Product-tax" name="tax" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_METAMODELS/Ecore.metamodel.uml#EFloat"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-tax-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="Product-tax-_lowerValue" value="1"/>
+    </ownedAttribute>
   </packagedElement>
   <packagedElement xmi:type="uml:Association" xmi:id="CartItem:item__Product" name="CartItem:item__Product" memberEnd="CartItem:item__Product-item CartItem:item__Product-product" navigableOwnedEnd="CartItem:item__Product-item CartItem:item__Product-product">
     <ownedEnd xmi:id="CartItem:item__Product-item" name="item" type="CartItem" association="CartItem:item__Product">
