@@ -214,6 +214,11 @@ class UmpleInternalParser
     {
       analyzeConstant(token,aClass);
     }
+    else if(token.is("constantDeclarationDeprecated"))
+    {
+      setFailedPosition(token.getPosition(), 901);
+      analyzeConstant(token,aClass);
+    }
     else if (token.is("concreteMethodDeclaration"))
     {
       analyzeMethod(token,aClass);
@@ -739,6 +744,11 @@ class UmpleInternalParser
       }  
       else if (childToken.is("constantDeclaration"))
       {
+        analyzeConstant(childToken, aInterface);    
+      }
+      else if (childToken.is("constantDeclarationDeprecated"))
+      {
+        setFailedPosition(childToken.getPosition(), 901);
         analyzeConstant(childToken, aInterface);    
       }
       else if (childToken.is("extraCode"))
