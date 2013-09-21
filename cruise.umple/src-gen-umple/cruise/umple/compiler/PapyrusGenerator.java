@@ -153,7 +153,7 @@ public class PapyrusGenerator implements CodeGenerator
    * this function examines the contents of the Umple code file and translates these into XML that Papyrus can understand.
    * It repeatedly adds these strings to 'code' a massive StringBuilder instance, rather then straight into a file.
    */
-  @umplesourcefile(line={22},file={"Generator_CodePapyrus.ump"},javaline={152},length={252})
+  @umplesourcefile(line={22},file={"Generator_CodePapyrus.ump"},javaline={152},length={253})
    public void generate(){
     boolean hasClassDiagram = false; //true if the umple file has one or more class diagrams in it.
     StringBuilder code = new StringBuilder();
@@ -208,13 +208,13 @@ public class PapyrusGenerator implements CodeGenerator
         for(Attribute av : uClass.getAttributes())
         {
           String typeName = av.getType() == null ? "String" : av.getType();
-
+          
           if (typeName.equals("String") || typeName.equals("Integer") || typeName.equals("Boolean"))
           {
             code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
             code.append(StringFormatter.format("      <type xmi:type=\"uml:PrimitiveType\" href=\"pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#{0}\"/>\n",typeName));
           }
-          else if (typeName.equals("Double") || typeName.equals("Date"))
+          else if (typeName.equals("Double") || typeName.equals("Float") || typeName.equals("Date"))
           {
             code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\">\n",uClass.getName(),av.getName()));
             code.append(StringFormatter.format("      <type xmi:type=\"uml:PrimitiveType\" href=\"pathmap://UML_METAMODELS/Ecore.metamodel.uml#E{0}\"/>\n",typeName));
@@ -224,6 +224,7 @@ public class PapyrusGenerator implements CodeGenerator
             typeName = StringFormatter.format("dataType-{0}",typeName);
             code.append(StringFormatter.format("    <ownedAttribute xmi:id=\"{0}-{1}\" name=\"{1}\" visibility=\"private\" type=\"{2}\">\n",uClass.getName(),av.getName(),typeName));
           }
+
 
           code.append(StringFormatter.format("      <upperValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_upperValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
           code.append(StringFormatter.format("      <lowerValue xmi:type=\"uml:LiteralUnlimitedNatural\" xmi:id=\"{0}-{1}-_lowerValue\" value=\"1\"/>\n",uClass.getName(),av.getName()));
@@ -411,7 +412,7 @@ public class PapyrusGenerator implements CodeGenerator
   /**
    * This method generates random ID's to be used in 'model.notation'
    */
-  @umplesourcefile(line={278},file={"Generator_CodePapyrus.ump"},javaline={411},length={10})
+  @umplesourcefile(line={279},file={"Generator_CodePapyrus.ump"},javaline={412},length={10})
    private String generatePapyrusID(){
     final String ALPHA_NUM = "012345ABCDEFGHIJKLMNOPQRSTUWXYZavkilrms";
      final int ID_LENGTH = 22;
@@ -429,7 +430,7 @@ public class PapyrusGenerator implements CodeGenerator
    * // As currently created, it is very bare bones. To increase Papyrus functionality, you will need to improve this function.
    * // @param isClassDiagram determines if the file will contain the notation for a class diagram or a state machine
    */
-  @umplesourcefile(line={294},file={"Generator_CodePapyrus.ump"},javaline={427},length={61})
+  @umplesourcefile(line={295},file={"Generator_CodePapyrus.ump"},javaline={428},length={61})
    private void writeModNotation(boolean isClassDiagram){
     try {
       String path = model.getUmpleFile().getPath();
@@ -497,7 +498,7 @@ public class PapyrusGenerator implements CodeGenerator
    * // Creates a "model.di" file. This file specifies what types of models are part of the Papyrus project.
    * // @param isClassDiagram determines if the file's name will be model.di or the name of the state machine
    */
-  @umplesourcefile(line={361},file={"Generator_CodePapyrus.ump"},javaline={496},length={44})
+  @umplesourcefile(line={362},file={"Generator_CodePapyrus.ump"},javaline={497},length={44})
    private void writeModDI(boolean isClassDiagram){
     try {
       String path = model.getUmpleFile().getPath();
@@ -547,7 +548,7 @@ public class PapyrusGenerator implements CodeGenerator
   /**
    * Creates a ".project" file for Eclipse. This allows the Papyrus output to be easily loaded into Eclipse for editing.
    */
-  @umplesourcefile(line={408},file={"Generator_CodePapyrus.ump"},javaline={547},length={23})
+  @umplesourcefile(line={409},file={"Generator_CodePapyrus.ump"},javaline={548},length={23})
    private void writeModProject(){
     try {
       String path = model.getUmpleFile().getPath();
@@ -578,7 +579,7 @@ public class PapyrusGenerator implements CodeGenerator
    * // The code generation for this file is done above, in the 'generate()' function.
    * // @param isClassDiagram determines if the file will be named model.uml or the name of the state machine.
    */
-  @umplesourcefile(line={439},file={"Generator_CodePapyrus.ump"},javaline={576},length={29})
+  @umplesourcefile(line={440},file={"Generator_CodePapyrus.ump"},javaline={577},length={29})
    private void writeModel(boolean isClassDiagram){
     try
     {

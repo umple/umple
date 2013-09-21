@@ -77,4 +77,5 @@ public class PapyrusGeneratorTest extends TemplateTest
     Assert.assertEquals(true, (new File(pathToInput + "/papyrus/Associations/.project")).exists());
   }  
   
+  
 }

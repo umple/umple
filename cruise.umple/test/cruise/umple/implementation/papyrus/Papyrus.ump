@@ -34,6 +34,7 @@ class Product
   Date createdDate;
   Time createdTime;
   Boolean isActive;
+  Float tax;
 }
 
 interface ICart
