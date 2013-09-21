@@ -69,7 +69,7 @@ public class TraceStm
     {
       case Open:
         exitStatus();
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/jc/subversion/umple/testbed/src/TestHarnessTracer.ump,92,TraceStm,"+System.identityHashCode(this)+",sm_t,Open,ev1,Close" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/tcl/nobackup-tmp/CheckoutForUmplePatchTest3/umple/testbed/src/TestHarnessTracer.ump,92,TraceStm,"+System.identityHashCode(this)+",sm_t,Open,ev1,Close" );
         setStatus(Status.Close);
         wasEventProcessed = true;
         break;
@@ -93,12 +93,12 @@ public class TraceStm
     switch (aStatus)
     {
       case HalfOpen:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/jc/subversion/umple/testbed/src/TestHarnessTracer.ump,97,TraceStm,"+System.identityHashCode(this)+",sm_t,HalfOpen,ev2,HalfClose" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/tcl/nobackup-tmp/CheckoutForUmplePatchTest3/umple/testbed/src/TestHarnessTracer.ump,97,TraceStm,"+System.identityHashCode(this)+",sm_t,HalfOpen,ev2,HalfClose" );
         setStatus(Status.HalfClose);
         wasEventProcessed = true;
         break;
       case HalfClose:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/jc/subversion/umple/testbed/src/TestHarnessTracer.ump,97,TraceStm,"+System.identityHashCode(this)+",sm_t,HalfClose,ev2,HalfOpen" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/tcl/nobackup-tmp/CheckoutForUmplePatchTest3/umple/testbed/src/TestHarnessTracer.ump,97,TraceStm,"+System.identityHashCode(this)+",sm_t,HalfClose,ev2,HalfOpen" );
         setStatus(Status.HalfOpen);
         wasEventProcessed = true;
         break;
@@ -137,7 +137,7 @@ public class TraceStm
         log = "entry called";
         break;
       case Close:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/home/jc/subversion/umple/testbed/src/TestHarnessTracer.ump,94,TraceStm,"+System.identityHashCode(this)+",sm_e,Close,status" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",/Users/tcl/nobackup-tmp/CheckoutForUmplePatchTest3/umple/testbed/src/TestHarnessTracer.ump,94,TraceStm,"+System.identityHashCode(this)+",sm_e,Close,status" );
         // line 80 "../../../../src/TestHarnessTracer.ump"
         log = "Close entry called";
         break;

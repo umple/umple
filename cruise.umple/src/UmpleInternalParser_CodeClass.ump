@@ -1912,6 +1912,14 @@ class UmpleInternalParser
       setFailedPosition(attributeToken.getPosition(), 1, attributeToken.getValue("name"));
     }
 
+    if(attributeToken.getValue("modifier") != null)
+    {
+      if((attributeToken.getValue("modifier").contains("const")) && (attributeToken.getValue("value") == null))
+      {
+        setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"));
+      }
+     }
+
     String modifier = attributeToken.getValue("modifier");
     String type = attributeToken.getValue("type");
     String name = attributeToken.getValue("name");
