@@ -9,10 +9,10 @@ import java.util.List;
  * Represents an error type, which contains an error code, the severity of the error, etc.
  * Error data is read from the en.error file
  * @umplesource Parser.ump 67
- * @umplesource Parser_Code.ump 1773
+ * @umplesource Parser_Code.ump 1776
  */
 // line 67 "../../../../src/Parser.ump"
-// line 1773 "../../../../src/Parser_Code.ump"
+// line 1776 "../../../../src/Parser_Code.ump"
 public class ErrorType
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -140,7 +140,7 @@ public class ErrorType
   public void delete()
   {}
 
-  @umplesourcefile(line={1778},file={"Parser_Code.ump"},javaline={144},length={3})
+  @umplesourcefile(line={1781},file={"Parser_Code.ump"},javaline={144},length={3})
    public String format(List<String> arguments){
     return StringFormatter.format(errorFormat, arguments.toArray());
   }
