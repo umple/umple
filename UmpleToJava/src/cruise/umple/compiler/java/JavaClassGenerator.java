@@ -8884,6 +8884,7 @@ if (p != null) {
           positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+3)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";
         }
         String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+        String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
         String methodName = aMethod.getName();
         String methodType = aMethod.getType();
         String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
@@ -8922,12 +8923,18 @@ if (p != null) {
         }
         
           append(stringBuffer,override);
-          append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);  
-          appendln(stringBuffer, "{");
-          if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-          appendln(stringBuffer, properMethodBody);
-          appendln(stringBuffer, "  }");
-          
+          append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);    
+          if(aMethod.getIsAbstract())
+          {
+            append(stringBuffer, ";");
+          }
+          else
+          {
+            appendln(stringBuffer, "{");
+            if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+            appendln(stringBuffer, properMethodBody);
+            appendln(stringBuffer, "  }");
+          }
         }
         else{
            
@@ -8939,11 +8946,18 @@ if (p != null) {
         }
            
           append(stringBuffer,override);          
-          append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
+          append(stringBuffer, "  {0}{1} {2} {3}()", methodModifier, methodImplementationModifier, methodType, methodName);
+          if(aMethod.getIsAbstract())
+          {
+            append(stringBuffer, ";");
+          }
+          else
+          {
             appendln(stringBuffer, "{");
             if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-          appendln(stringBuffer, properMethodBody);
-          appendln(stringBuffer, "  }");
+            appendln(stringBuffer, properMethodBody);
+            appendln(stringBuffer, "  }");
+          }
         }
       }
     }

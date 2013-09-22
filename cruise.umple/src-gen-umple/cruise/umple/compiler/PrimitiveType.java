@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * NOT used right now
- * @umplesource Umple.ump 207
+ * @umplesource Umple.ump 210
  */
-// line 207 "../../../../src/Umple.ump"
+// line 210 "../../../../src/Umple.ump"
 public class PrimitiveType extends Type
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

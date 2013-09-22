@@ -233,6 +233,16 @@ public class UmpleParserTest
   }
   
   @Test
+  public void abstractMethod()
+  {
+    assertSimpleParse("422_abstractMethod.ump");
+      
+    Assert.assertEquals(1, model.getUmpleClass("Foome").numberOfMethods());
+    Assert.assertEquals("barme", model.getUmpleClass("Foome").getMethod(0).getName());
+    Assert.assertEquals(true, model.getUmpleClass("Foome").getMethod(0).getIsAbstract());
+  }
+
+  @Test
   public void immutableClass()
   {
     assertParse("022_immutableClass.ump");

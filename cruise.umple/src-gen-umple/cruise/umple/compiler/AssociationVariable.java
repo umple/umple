@@ -13,10 +13,10 @@ import java.util.*;
  * 
  * TODO: Code smell. Should be replaced by the 'otherEnd' of the AssociationEnd
  * In Umple_Code.ump: Methods for testing various complex properties
- * @umplesource Umple.ump 597
+ * @umplesource Umple.ump 600
  * @umplesource Umple_Code.ump 1457
  */
-// line 597 "../../../../src/Umple.ump"
+// line 600 "../../../../src/Umple.ump"
 // line 1457 "../../../../src/Umple_Code.ump"
 public class AssociationVariable extends UmpleVariable
 {
@@ -143,11 +143,11 @@ public class AssociationVariable extends UmpleVariable
     return traceDirective;
   }
 
-  @umplesourcefile(line={611},file={"Umple.ump"},javaline={153},length={1})
+  @umplesourcefile(line={614},file={"Umple.ump"},javaline={153},length={1})
   public boolean setRelatedAssociation(AssociationVariable aNewRelatedAssociation)
   {
     boolean wasSet = false;
-    // line 611 "../../../../src/Umple.ump"
+    // line 614 "../../../../src/Umple.ump"
     if(!canBeRelatedAssociation(aNewRelatedAssociation)) { return false; }
     if (aNewRelatedAssociation == null)
     {
@@ -236,11 +236,11 @@ public class AssociationVariable extends UmpleVariable
     return wasAdded;
   }
 
-  @umplesourcefile(line={609},file={"Umple.ump"},javaline={245},length={1})
+  @umplesourcefile(line={612},file={"Umple.ump"},javaline={245},length={1})
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
-    // line 609 "../../../../src/Umple.ump"
+    // line 612 "../../../../src/Umple.ump"
     if ((aUmpleClass != null) && !aUmpleClass.immutabilityAssociationRulesSatisfied(this, aUmpleClass.isImmutable())) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;

@@ -71,7 +71,9 @@ public abstract class SuperCodeGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={13},file={"Generator_SuperCodeGenerator.ump"},javaline={75},length={15})
+  @umplesourcefile(line={11},file={"Generator_SuperCodeGenerator.ump"},javaline={75},length={3})
+   public abstract void initializeLangaugeBasedVariables();
+  @umplesourcefile(line={13},file={"Generator_SuperCodeGenerator.ump"},javaline={78},length={15})
    public String getType(UmpleVariable av){
     String myType = av.getType();
     	if (myType == null || myType.length() == 0)
@@ -88,7 +90,7 @@ public abstract class SuperCodeGenerator implements CodeGenerator
    		 }
   }
 
-  @umplesourcefile(line={29},file={"Generator_SuperCodeGenerator.ump"},javaline={92},length={8})
+  @umplesourcefile(line={29},file={"Generator_SuperCodeGenerator.ump"},javaline={94},length={8})
    public String translate(String keyName, TraceItem ti){
     if (keyName.length()>5&&"trace".equals(keyName.substring(0,5))){
 			return TraceLookupMap.get(keyName.substring(5).toLowerCase());
@@ -103,7 +105,7 @@ public abstract class SuperCodeGenerator implements CodeGenerator
    * Allows independent code generation tools
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={22},file={"Generator.ump"},javaline={102},length={2})
+  @umplesourcefile(line={22},file={"Generator.ump"},javaline={104},length={2})
   @Override
   public void generate(){
           return ;
@@ -121,14 +123,10 @@ public abstract class SuperCodeGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={7},file={"Generator_SuperCodeGenerator.ump"},javaline={125},length={8})
+  //  @umplesourcefile(line={7},file={"Generator_SuperCodeGenerator.ump"},javaline={127},length={5})
   Map <String,String> UmpleToPrimitiveMap ;
 
-//  @umplesourcefile(line={8},file={"Generator_SuperCodeGenerator.ump"},javaline={128},length={5})
+//  @umplesourcefile(line={8},file={"Generator_SuperCodeGenerator.ump"},javaline={130},length={2})
   Map <String,String> TraceLookupMap ;
-
-//  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={131},length={2})
-  @umplesourcefile(line={11},file={"Generator_SuperCodeGenerator.ump"},javaline={132},length={1})
-  public abstract void initializeLangaugeBasedVariables() ;
 
 }

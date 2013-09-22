@@ -109,6 +109,9 @@ class UmpleElement
 class Method
 {
   depend cruise.umple.compiler.Position;
+
+  // Specifies whether or not the Method is abstract.
+  Boolean isAbstract = false;
   
   // The modifier associated with the method.
   modifier;

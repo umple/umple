@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 
 /**
  * The contents of a method, such as the code within it.
- * @umplesource Umple.ump 150
+ * @umplesource Umple.ump 153
  * @umplesource Umple_Code.ump 471
  */
-// line 150 "../../../../src/Umple.ump"
+// line 153 "../../../../src/Umple.ump"
 // line 471 "../../../../src/Umple_Code.ump"
 public class MethodBody
 {
@@ -43,7 +43,7 @@ public class MethodBody
     return wasSet;
   }
 
-  @umplesourcefile(line={153},file={"Umple.ump"},javaline={54},length={2})
+  @umplesourcefile(line={156},file={"Umple.ump"},javaline={54},length={2})
   /**
    * The code within the method body.
    */

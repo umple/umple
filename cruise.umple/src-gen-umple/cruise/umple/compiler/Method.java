@@ -23,6 +23,7 @@ public class Method
   //------------------------
 
   //Method Attributes
+  private boolean isAbstract;
   private String modifier;
   private String name;
   private Position position;
@@ -41,6 +42,7 @@ public class Method
 
   public Method(String aModifier, String aName, String aType, boolean aIsImplemented)
   {
+    isAbstract = false;
     modifier = aModifier;
     name = aName;
     type = aType;
@@ -52,6 +54,14 @@ public class Method
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setIsAbstract(boolean aIsAbstract)
+  {
+    boolean wasSet = false;
+    isAbstract = aIsAbstract;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setModifier(String aModifier)
   {
@@ -102,6 +112,14 @@ public class Method
   }
 
   /**
+   * Specifies whether or not the Method is abstract.
+   */
+  public boolean getIsAbstract()
+  {
+    return isAbstract;
+  }
+
+  /**
    * The modifier associated with the method.
    */
   public String getModifier()
@@ -141,6 +159,11 @@ public class Method
   public boolean getIsImplemented()
   {
     return isImplemented;
+  }
+
+  public boolean isIsAbstract()
+  {
+    return isAbstract;
   }
 
   public boolean isIsImplemented()
@@ -348,7 +371,7 @@ public class Method
     comments.clear();
   }
 
-  @umplesourcefile(line={429},file={"Umple_Code.ump"},javaline={352},length={6})
+  @umplesourcefile(line={429},file={"Umple_Code.ump"},javaline={375},length={6})
    public boolean getExistsInLanguage(String lang){
     if(getMethodBody().getExtraCode(lang)==null)
       return isImplemented;
@@ -356,7 +379,7 @@ public class Method
       return true;
   }
 
-  @umplesourcefile(line={436},file={"Umple_Code.ump"},javaline={360},length={30})
+  @umplesourcefile(line={436},file={"Umple_Code.ump"},javaline={383},length={30})
    public String toString(){
     StringBuffer methodBuffer = new StringBuffer();
     methodBuffer.append(" " + this.getType()+ " " + this.getName());

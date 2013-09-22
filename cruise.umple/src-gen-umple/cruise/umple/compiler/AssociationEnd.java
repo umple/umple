@@ -10,10 +10,10 @@ package cruise.umple.compiler;
  * TODO: Code smell referenceToClassName is a duplication, can access via the association 
  * Create a derived attribute otherend (the other AssociationEnd)
  * In Umple_Code.ump: Methods for computing compound properties
- * @umplesource Umple.ump 569
+ * @umplesource Umple.ump 572
  * @umplesource Umple_Code.ump 1333
  */
-// line 569 "../../../../src/Umple.ump"
+// line 572 "../../../../src/Umple.ump"
 // line 1333 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
@@ -130,37 +130,37 @@ public class AssociationEnd
     return wasSet;
   }
 
-  @umplesourcefile(line={582},file={"Umple.ump"},javaline={137},length={1})
+  @umplesourcefile(line={585},file={"Umple.ump"},javaline={137},length={1})
   public String getRoleName()
   {
-    // line 582 "../../../../src/Umple.ump"
+    // line 585 "../../../../src/Umple.ump"
     if (roleName == null) { return ""; }
     return roleName;
   }
 
-  @umplesourcefile(line={583},file={"Umple.ump"},javaline={144},length={1})
+  @umplesourcefile(line={586},file={"Umple.ump"},javaline={144},length={1})
   public String getClassName()
   {
-    // line 583 "../../../../src/Umple.ump"
+    // line 586 "../../../../src/Umple.ump"
     if (className == null) { return ""; }
     return className;
   }
 
-  @umplesourcefile(line={584},file={"Umple.ump"},javaline={151},length={1})
+  @umplesourcefile(line={587},file={"Umple.ump"},javaline={151},length={1})
   public String getModifier()
   {
-    // line 584 "../../../../src/Umple.ump"
+    // line 587 "../../../../src/Umple.ump"
     if (modifier == null || "".equals(modifier)) { return "internal"; }
     return modifier;
   }
 
-  @umplesourcefile(line={585},file={"Umple.ump"},javaline={161},length={1})
+  @umplesourcefile(line={588},file={"Umple.ump"},javaline={161},length={1})
   /**
    * potential enum 'internal'
    */
   public String getReferenceToClassName()
   {
-    // line 585 "../../../../src/Umple.ump"
+    // line 588 "../../../../src/Umple.ump"
     if (referenceToClassName == null) { return ""; }
     return referenceToClassName;
   }

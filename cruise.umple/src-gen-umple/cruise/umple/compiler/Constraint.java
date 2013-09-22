@@ -7,9 +7,9 @@ import java.util.*;
 
 /**
  * The Constraint object related to Umple Classes
- * @umplesource Umple.ump 264
+ * @umplesource Umple.ump 267
  */
-// line 264 "../../../../src/Umple.ump"
+// line 267 "../../../../src/Umple.ump"
 public class Constraint extends CodeBlock
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -145,7 +145,7 @@ public class Constraint extends CodeBlock
     super.delete();
   }
 
-  @umplesourcefile(line={273},file={"Umple.ump"},javaline={149},length={23})
+  @umplesourcefile(line={276},file={"Umple.ump"},javaline={149},length={23})
   public void mergeWith(Constraint constraint){
     if(numberOfExpressions()>0)
     {
@@ -170,7 +170,7 @@ public class Constraint extends CodeBlock
     addExpression(new ConstraintVariable("SYNTAX",")"));
   }
 
-  @umplesourcefile(line={297},file={"Umple.ump"},javaline={174},length={3})
+  @umplesourcefile(line={300},file={"Umple.ump"},javaline={174},length={3})
   public String getCode(){
     return StringFormatter.format(gen.translate((getNegated()?"Not":"")+format,this),inject);
   }
