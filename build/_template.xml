@@ -102,7 +102,7 @@
       <include name="**/*.java"/>
     </replace>
 
-    <echo message="Resetting To Test Version: ${umple.version} -> @UMPLE_VERSION@" />
+    <echo message="Resetting To Test Version: ${last.version} -> @UMPLE_VERSION@" />
     <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="${last.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/src/UmpleVersion.ump" token="${umple.version}" value="@UMPLE_VERSION@" />
     <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="${umple.version}" value="@UMPLE_VERSION@" />
