@@ -51,7 +51,7 @@ codeLang- : [=codeLang:Java|RTCpp|Cpp|Php|Ruby]
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
 methodBody- : [**code]
-concreteMethodDeclaration : [=modifier:public|protected|private] [=static]? [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )* | [=modifier:public|protected|private]? [=static]? [type] [[methodDeclarator]]  ( [[precondition]] )* ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )*  ( [[postcondition]] )* 
+concreteMethodDeclaration : [=modifier:public|protected|private] [=static]? [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )* | [=modifier:public|protected|private]? [=static]? [type] [[methodDeclarator]]  ( [[precondition]] )* ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )*  ( [[postcondition]] )* | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] 
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ;   
 methodDeclarator : [methodName] [[parameterList]]
 parameterList : OPEN_ROUND_BRACKET [[parameters]]? CLOSE_ROUND_BRACKET

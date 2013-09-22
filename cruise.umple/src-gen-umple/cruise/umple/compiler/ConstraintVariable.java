@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * Under Development
- * @umplesource Umple.ump 224
+ * @umplesource Umple.ump 227
  */
-// line 224 "../../../../src/Umple.ump"
+// line 227 "../../../../src/Umple.ump"
 public class ConstraintVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -115,13 +115,13 @@ public class ConstraintVariable
     return value;
   }
 
-  @umplesourcefile(line={229},file={"Umple.ump"},javaline={122},length={2})
+  @umplesourcefile(line={232},file={"Umple.ump"},javaline={122},length={2})
   public boolean getIsAttribute()
   {
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
   }
 
-  @umplesourcefile(line={230},file={"Umple.ump"},javaline={127},length={2})
+  @umplesourcefile(line={233},file={"Umple.ump"},javaline={127},length={2})
   public boolean getIsOperator()
   {
     return "OPERATOR".equals(type);
@@ -142,7 +142,7 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
-  @umplesourcefile(line={234},file={"Umple.ump"},javaline={149},length={6})
+  @umplesourcefile(line={237},file={"Umple.ump"},javaline={149},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
@@ -212,13 +212,13 @@ public class ConstraintVariable
     subConstraint = null;
   }
 
-  @umplesourcefile(line={238},file={"Umple.ump"},javaline={216},length={4})
+  @umplesourcefile(line={241},file={"Umple.ump"},javaline={216},length={4})
   public ConstraintVariable isNotPrimitive(){
     isPrimitive = false;
     return this;
   }
 
-  @umplesourcefile(line={242},file={"Umple.ump"},javaline={222},length={16})
+  @umplesourcefile(line={245},file={"Umple.ump"},javaline={222},length={16})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;

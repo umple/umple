@@ -1315,6 +1315,15 @@ class UmpleInternalParser
         modifier += " " + (token.getValue());
         aMethod.setModifier(modifier);
       }
+      else if(token.is("abstract")) {
+        boolean wasSet = aMethod.setIsAbstract(true);
+
+        // Ensure the value was set.
+        if (wasSet == false)
+        {
+          setFailedPosition(token.getPosition(), 0, "Unable to make method abstract!");
+        }
+      }
       else if(token.is("static"))
       {
         modifier += " static ";
