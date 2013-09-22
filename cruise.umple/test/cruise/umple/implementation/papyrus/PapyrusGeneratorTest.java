@@ -45,6 +45,8 @@ public class PapyrusGeneratorTest extends TemplateTest
     
     SampleFileWriter.destroy("/myfile/model.di");
     SampleFileWriter.destroy("/myfile/model.notation");
+    SampleFileWriter.destroy("/myfile/model.uml");
+    SampleFileWriter.destroy("/myfile/model");
   }
 
   @Test

@@ -70,6 +70,8 @@ public class UmpleModelTest
     SampleFileWriter.destroy("student.txt");
     
     SampleFileWriter.destroy("TestSymmetric.txt");
+
+    SampleFileWriter.destroy("Course.java");
   }
 
   
