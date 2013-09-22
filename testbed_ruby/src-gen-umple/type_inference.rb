@@ -245,15 +245,15 @@ class TypeInference
     @r
   end
 
-  def is_c
+  def is_c?
     @c
   end
 
-  def is_o
+  def is_o?
     @o
   end
 
-  def is_p
+  def is_p?
     @p
   end
 

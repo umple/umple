@@ -192,7 +192,7 @@ class DoorD
     Time.parse("10:11:15")
   end
 
-  def is_booleanId
+  def is_booleanId?
     @booleanId
   end
 
