@@ -210,6 +210,18 @@ public class UmpleParserTest
   }
   
   @Test
+  public void internalAttributeGetterMethod()
+  {
+    assertSimpleParse("008_internalAttributeNotAllowedGetterMethod.ump");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
+    Assert.assertEquals(1, model.getUmpleClass(0).numberOfAttributes());
+    Assert.assertEquals("internal", model.getUmpleClass(0).getAttribute(0).getModifier());
+    Assert.assertEquals(1, model.getUmpleClass(0).numberOfMethods());
+    Assert.assertEquals("getTest",model.getUmpleClass(0).getMethod(0).getName());
+    Assert.assertEquals("MyOtherObject", model.getUmpleClass(0).getMethod(0).getType());
+  }
+
+  @Test
   public void languageDefault()
   {
     assertParse("001_empty.ump");

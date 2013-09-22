@@ -2109,7 +2109,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
       {
         String possibleAttributeName =   methodName.substring(3,methodName.length()).toLowerCase();
         Attribute attr = uClass.getAttribute(possibleAttributeName);
-        if (attr != null)
+        if (attr != null && !"internal".equals(attr.getModifier()))
         {
           return false;
         }

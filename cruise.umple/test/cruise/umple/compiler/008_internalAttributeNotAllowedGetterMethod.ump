@@ -1,0 +1,8 @@
+class Student
+{
+  internal MyObject test;
+  public MyOtherObject getTest()
+  {
+    return test.someMethod();
+  }
+}
