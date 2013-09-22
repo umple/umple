@@ -281,7 +281,7 @@ class Mentor
     @x
   end
 
-  def is_lBool
+  def is_lBool?
     @lBool
   end
 

@@ -176,14 +176,14 @@ class Student
     2/3
   end
 
-  def is_injBool
+  def is_injBool?
     print "before injBool";
     a_injBool = @injBool
     print "after injBool";
     a_injBool
   end
 
-  def is_dInjBool
+  def is_dInjBool?
     print "before dInjBool";
     a_dInjBool = 2/3
     print "after dInjBool";

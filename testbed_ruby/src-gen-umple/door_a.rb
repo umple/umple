@@ -73,7 +73,7 @@ class DoorA
     @timeId
   end
 
-  def is_booleanId
+  def is_booleanId?
     @booleanId
   end
 
