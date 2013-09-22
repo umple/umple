@@ -2720,6 +2720,7 @@ public class PhpClassGenerator implements ILang
 
     TraceItem traceItem = av.getTraced("setMethod", uClass);
 
+
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
 
@@ -6842,6 +6843,7 @@ public class PhpClassGenerator implements ILang
     	    if(!aMethod.getExistsInLanguage("Php"))
     		  continue;
     		String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+    		String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
     		String methodName = aMethod.getName();
     		String methodType = "function";
     		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
@@ -6858,8 +6860,9 @@ public class PhpClassGenerator implements ILang
     		String paramName="";
     		String paramType="";
     		String aSingleParameter="";
+    		String finalParams = "";
     		String isList="";
-    	    String parameters = "";
+    	  String parameters = "";
     		if (aMethod.hasMethodParameters())
     		{
     			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
@@ -6871,33 +6874,25 @@ public class PhpClassGenerator implements ILang
         			parameters += aSingleParameter + ", ";
     			}
     			
-    			String finalParams = parameters.substring(0, parameters.length()-2);
-
+    			finalParams = parameters.substring(0, parameters.length()-2);
+        }
+        
 				appendln(stringBuffer, "");
-				
 				if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Method Javadoc",aMethod.getComments())); }
 				
-    			//appendln(stringBuffer,override);
-    			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, methodType, methodName, finalParams);	
+  			//appendln(stringBuffer,override);
+  			append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);    
+        if(aMethod.getIsAbstract())
+  			{
+  			  append(stringBuffer, ";");
+  			}
+  			else
+  			{
     			appendln(stringBuffer, "\n  {");
     			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
     			appendln(stringBuffer, properMethodBody);
     			appendln(stringBuffer, "  }");
-    			
-    		}
-    		else{
-    		
-	   			appendln(stringBuffer, "");
-	   			
-	   			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Method Javadoc",aMethod.getComments())); }
-	   			
-    			//appendln(stringBuffer,override);    			
-    			append(stringBuffer, "  {0} {1} {2}()", methodModifier, methodType, methodName);
-    		    appendln(stringBuffer, "\n  {");
-    		    if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			appendln(stringBuffer, properMethodBody);
-    			appendln(stringBuffer, "  }");
-    		}
+  			}
     	}
     }
 

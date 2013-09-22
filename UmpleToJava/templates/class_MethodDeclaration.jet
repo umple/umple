@@ -27,6 +27,7 @@
         String paramType="";
         String aSingleParameter="";
         String isList="";
+        String finalParams = "";
           String parameters = ""; 
         if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static"))
         {
@@ -34,6 +35,7 @@
                              "    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());\n"+properMethodBody;
           uClass.setHasMainMethod(true);
         }
+
         if (aMethod.hasMethodParameters())
         {
           for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
@@ -45,51 +47,24 @@
               parameters += aSingleParameter + ", ";
           }
           
-          String finalParams = parameters.substring(0, parameters.length()-2);
+          finalParams = parameters.substring(0, parameters.length()-2);
+        }
         
         if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+        if (p != null) { appendln(stringBuffer, positionHeader); }
         
-        if (p != null)
+        append(stringBuffer,override);
+        append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);    
+        if(aMethod.getIsAbstract())
         {
-          appendln(stringBuffer, positionHeader);
+          append(stringBuffer, ";");
         }
-        
-          append(stringBuffer,override);
-          append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);    
-          if(aMethod.getIsAbstract())
-          {
-            append(stringBuffer, ";");
-          }
-          else
-          {
-            appendln(stringBuffer, "{");
-            if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-            appendln(stringBuffer, properMethodBody);
-            appendln(stringBuffer, "  }");
-          }
-        }
-        else{
-           
-           if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
-           
-           if (p != null)
+        else
         {
-          appendln(stringBuffer, positionHeader);
-        }
-           
-          append(stringBuffer,override);          
-          append(stringBuffer, "  {0}{1} {2} {3}()", methodModifier, methodImplementationModifier, methodType, methodName);
-          if(aMethod.getIsAbstract())
-          {
-            append(stringBuffer, ";");
-          }
-          else
-          {
-            appendln(stringBuffer, "{");
-            if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-            appendln(stringBuffer, properMethodBody);
-            appendln(stringBuffer, "  }");
-          }
+          appendln(stringBuffer, "{");
+          if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+          appendln(stringBuffer, properMethodBody);
+          appendln(stringBuffer, "  }");
         }
       }
     }
