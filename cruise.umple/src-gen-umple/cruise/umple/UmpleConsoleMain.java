@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
 
 package cruise.umple;
 import cruise.umple.compiler.*;
@@ -12,7 +12,7 @@ import java.io.*;
 
 /**
  * Main program for the command line Umple compiler
- * Run java -jar umple.jar --help for details
+ * Run java -jar umple.jar --help for details 
  * Takes an umple file as an argument, which can in turn use (include) other
  * @umplesource Main_Code.ump 19
  */
