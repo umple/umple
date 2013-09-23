@@ -13,7 +13,7 @@ namespace cruise.umple;
 
 /*
  * Main program for the command line Umple compiler
- * Run java -jar umple.jar --help for details
+ * Run java -jar umple.jar --help for details 
  * Takes an umple file as an argument, which can in turn use (include) other
  */
 class UmpleConsoleMain

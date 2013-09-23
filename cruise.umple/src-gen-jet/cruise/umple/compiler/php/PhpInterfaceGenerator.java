@@ -19,7 +19,7 @@ public class PhpInterfaceGenerator implements ILang
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "<?php";
-  protected final String TEXT_2 = NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE ${last.version} modeling language!*/" + NL + "" + NL + "interface ";
+  protected final String TEXT_2 = NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/" + NL + "" + NL + "interface ";
   protected final String TEXT_3 = NL + "{";
   protected final String TEXT_4 = NL + "  ";
   protected final String TEXT_5 = NL + "}" + NL + "?>";
