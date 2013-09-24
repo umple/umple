@@ -1,0 +1,706 @@
+
+/***************************************************************************************************
+* C O P Y R I G H T:  
+*  All contributers to the Umple Project
+* 
+* C R E D I T S
+*  Implementation Of Graph by Antonio Maria Pereira de Resende during his visit at
+*  University of Ottawa as a Visit Researh (March-2013 to March-2014) and under supervision 
+*  of Timothy Lethbridge.
+*  This research is supported by CNPQ-BRAZIL and Universidade Federal de Lavras-UFLA (Brazil)
+*  
+*  A B O U T   T H I S    F I L E
+*  File..........: SimpleMetrics_SM.ump 
+*  Description...: It contains the class and routines to calculate State Machine Metrics.
+*                  The State Machine Metrics involved are: 
+*                      #State Machines - Total of SM per class
+*                      #States- Total of States per class
+*                      #Transitions- Total of Transitions per class: All transitions are counted. Transitions with same name are counted the same number of times they appear.
+*                      #Different Transitions- Sum the total of different transitions per SM. Transitions with the same name are counted once per SM.
+*                      #Events- Total of Events per class
+*                      #Actions- Total of Actions per class 
+*                      #Nested SM- Total of Nested SM. Total of states that is other state machine.
+*                      #Cycles- Total of Cycles. Sum all cycles considering all states (self cycles + cycles)
+*                      #Self Cycles- Total of Self Cycles. Sum self Cycles considering all states.
+*
+*  Dependencies..: SimpleMetrics_util.ump
+*  Changes affect: Generator_CodeSimpleMetrics.ump
+*  Compilation...: It's library, compile it by compiling Generator_CodeSimpleMetrics.ump        
+*  Execution.....: It's library. Not Executable
+*  Initiated.....: July-2013
+***************************************************************************************************/
+
+/***************************************************************************************************
+* 
+* CLASS USED TO COUNT MEASURE STATE MACHINES
+* 
+*
+* B U G S   K N O W N (If this considerations are accepted, write it down on google code bugs controlling):        
+*  
+*
+**************************************************************************************************/
+namespace cruise.umple.compiler;
+use SimpleMetrics_Util.ump;
+ 
+class StateMachineMetrics{	
+    depend java.text.*;
+	depend java.util.*;
+	isA SimpleMetricsGenerator;
+	StringBuilder code = null;
+	UmpleModel model=null;
+
+	void calculate(){
+      // Output basic file header
+      code.append( "\n\n\n");
+      code.append(Format.repeat("*",126)+"\n");
+      code.append(Format.repeat(" ",20)+"S T A T E   M A C H I N E  ( S M )   M E A S U R E S"+"\n");
+      code.append(Format.repeat("*",126)+"\n");
+	  
+	  // Preparing Head (columns) of output file
+      List<String>title = new ArrayList<String>();
+      title.add(" Class Name                   ");
+      title.add(" #State Machines ");
+      title.add(" #States ");
+	  title.add(" #Transitions ");
+	  title.add(" #Different Transitions ");
+      title.add(" #Events ");
+	  title.add(" #Guards ");
+      title.add(" #Actions ");
+      title.add(" #Nested SM ");
+	  title.add(" #Cycles ");
+	  title.add(" #Self Cycles ");
+      code.append(Format.repeat("-",170)+"\n");
+      for (int i=0;i<title.size();i++){ code.append("|"+title.get(i));  }
+      code.append(" |\n");
+      code.append(Format.repeat("-",170)+"\n");
+
+	  DecimalFormat df = new DecimalFormat( "###,##0.0###");
+
+      CountSM countPerClass = new CountSM(); // Class that contains values per class of counting about State Machine Metrics
+	  CountSM countTotals = new CountSM();   // Class that contains Max, Min and totals values of counting about State Machine Metrics
+	  boolean FirstTime = true; // used to allow setting first counted values to Min and Max attributes
+      for (UmpleClass uClass : model.getUmpleClasses()) {  
+	    
+		if (uClass!=null){
+
+		  code.append( "| " +uClass.getName()+ Format.repeat(" ", title.get(0).length()-(""+uClass.getName()).length()-1 ) );
+
+		  // CALCULATING STATE MACHINE METRICS
+		  countPerClass.calculate(uClass);
+		  
+		  // writing and formating string to record in output file
+		  code.append( "| " +Format.repeat(" ", title.get(1).length()-(""+countPerClass.getTotalStateMachinesPerClass()).length()-1 )+ countPerClass.getTotalStateMachinesPerClass() );
+          code.append( "| " +Format.repeat(" ", title.get(2).length()-(""+countPerClass.getTotalStatesPerClass()).length()-1 )+ countPerClass.getTotalStatesPerClass() );
+          code.append( "| " +Format.repeat(" ", title.get(3).length()-(""+countPerClass.getTotalTransitionsPerClass()).length()-1 )+ countPerClass.getTotalTransitionsPerClass() );
+		  code.append( "| " +Format.repeat(" ", title.get(4).length()-(""+countPerClass.getTotalDifferentTransitionsPerClass()).length()-1 )+ countPerClass.getTotalDifferentTransitionsPerClass() );
+          code.append( "| " +Format.repeat(" ", title.get(5).length()-(""+countPerClass.getTotalEventsPerClass()).length()-1 )+ countPerClass.getTotalEventsPerClass() );
+		  code.append( "| " +Format.repeat(" ", title.get(6).length()-(""+countPerClass.getTotalGuardsPerClass()).length()-1 )+ countPerClass.getTotalGuardsPerClass() );
+		  code.append( "| " +Format.repeat(" ", title.get(7).length()-(""+countPerClass.getTotalActionsPerClass()).length()-1 )+ countPerClass.getTotalActionsPerClass() );
+          code.append( "| " +Format.repeat(" ", title.get(8).length()-(""+countPerClass.getTotalNestedStateMachinePerClass()).length()-1 )+ countPerClass.getTotalNestedStateMachinePerClass() );
+		  code.append( "| " +Format.repeat(" ", title.get(9).length()-(""+countPerClass.getTotalCyclesPerClass()).length()-1 )+ countPerClass.getTotalCyclesPerClass() );
+		  code.append( "| " +Format.repeat(" ", title.get(10).length()-(""+countPerClass.getTotalSelfCyclesPerClass()).length()-1 ) + countPerClass.getTotalSelfCyclesPerClass() );
+          code.append( " |\n" ); // closing the record. One record one line.
+          code.append(Format.repeat("-",170)+"\n");
+		  
+		  // Sum all values per class in Totals
+		  countTotals.incTotal(countPerClass); 
+		  
+		  // if it is first loop, the first calculated values must be set like Max and Min values
+		  if (FirstTime){
+		    countTotals.setMinMax(countPerClass);
+			FirstTime= false;
+		  };
+		  countTotals.calcMinMax(countPerClass); 
+          countPerClass = new CountSM(); // Class that keep values of counting about State Machine Metrics
+        }
+      }
+
+	  // printing totals
+	  code.append( "| TOTALS " + Format.repeat(" ", title.get(0).length()-("| TOTALS ").length()+1 ) );
+	  code.append( "| " +Format.repeat(" ", title.get(1).length()-(""+countTotals.getTotalStateMachines()).length()-1 )+ countTotals.getTotalStateMachines() );
+      code.append( "| " +Format.repeat(" ", title.get(2).length()-(""+countTotals.getTotalStates()).length()-1 )+ countTotals.getTotalStates() );
+      code.append( "| " +Format.repeat(" ", title.get(3).length()-(""+countTotals.getTotalTransitions()).length()-1 )+ countTotals.getTotalTransitions() );
+	  code.append( "| " +Format.repeat(" ", title.get(4).length()-(""+countTotals.getTotalDifferentTransitions()).length()-1 )+ countTotals.getTotalDifferentTransitions() );
+      code.append( "| " +Format.repeat(" ", title.get(5).length()-(""+countTotals.getTotalEvents()).length()-1 )+ countTotals.getTotalEvents() );
+	  code.append( "| " +Format.repeat(" ", title.get(6).length()-(""+countTotals.getTotalGuards()).length()-1 )+ countTotals.getTotalGuards() );
+      code.append( "| " +Format.repeat(" ", title.get(7).length()-(""+countTotals.getTotalActions()).length()-1 )+ countTotals.getTotalActions() );
+      code.append( "| " +Format.repeat(" ", title.get(8).length()-(""+countTotals.getTotalNestedStateMachine()).length()-1 )+ countTotals.getTotalNestedStateMachine() );
+	  code.append( "| " +Format.repeat(" ", title.get(9).length()-(""+countTotals.getTotalCycles()).length()-1 )+ countTotals.getTotalCycles() );
+	  code.append( "| " +Format.repeat(" ", title.get(10).length()-(""+countTotals.getTotalSelfCycles()).length()-1 ) + countTotals.getTotalSelfCycles() );
+      code.append( " |\n" ); // closing the record. One record one line.
+      code.append(Format.repeat("-",170)+"\n");
+	  
+	  // printing averages
+	  int tc = countTotals.getTotalClass();
+	  String res;
+	  code.append( "| AVERAGES " + Format.repeat(" ", title.get(0).length()-("| AVERAGES ").length()+1 ) );
+	  res =  df.format((double)countTotals.getTotalStateMachines()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(1).length()-res.length()-1 )+ res );
+      res =  df.format((double)countTotals.getTotalStates()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(2).length()-res.length()-1 )+ res );
+      res =  df.format((double)countTotals.getTotalTransitions()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(3).length()-res.length()-1 )+ res );
+	  res =  df.format((double)countTotals.getTotalDifferentTransitions()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(4).length()-res.length()-1 )+ res );
+      res =  df.format((double)countTotals.getTotalEvents()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(5).length()-res.length()-1 )+ res );
+	  res =  df.format((double)countTotals.getTotalGuards()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(6).length()-res.length()-1 )+ res );
+      res =  df.format((double)countTotals.getTotalActions()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(7).length()-res.length()-1 )+ res );
+      res =  df.format((double)countTotals.getTotalNestedStateMachine()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(8).length()-res.length()-1 )+ res );
+	  res =  df.format((double)countTotals.getTotalCycles()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(9).length()-res.length()-1 )+ res );
+	  res =  df.format((double)countTotals.getTotalSelfCycles()/tc);
+	  code.append( "| " +Format.repeat(" ", title.get(10).length()-res.length()-1 )+ res );
+	  code.append( " |\n" ); // closing the record. One record one line.
+	  code.append(Format.repeat("-",170)+"\n");
+
+	  
+	  // printing MAX values
+	  code.append( "| MAX VALUES " + Format.repeat(" ", title.get(0).length()-( "| MAX VALUES ").length()+1 ) );
+	  res =  "" + countTotals.getTotalStateMachinesPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(1).length()-res.length()-1 )+ res );
+      res =  "" + countTotals.getTotalStatesPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(2).length()-res.length()-1 )+ res );
+      res =  "" + countTotals.getTotalTransitionsPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(3).length()-res.length()-1 )+ res );
+	  res =  "" + countTotals.getTotalDifferentTransitionsPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(4).length()-res.length()-1 )+ res );
+      res =  "" + countTotals.getTotalEventsPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(5).length()-res.length()-1 )+ res );
+	  res =  "" + countTotals.getTotalGuardsPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(6).length()-res.length()-1 )+ res );
+      res =  "" + countTotals.getTotalActionsPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(7).length()-res.length()-1 )+ res );
+      res = "" + countTotals.getTotalNestedStateMachinePerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(8).length()-res.length()-1 )+ res );
+	  res =  "" + countTotals.getTotalCyclesPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(9).length()-res.length()-1 )+ res );
+	  res =  "" + countTotals.getTotalSelfCyclesPerClassMax();
+	  code.append( "| " +Format.repeat(" ", title.get(10).length()-res.length()-1 )+ res );
+	  code.append( " |\n" ); // closing the record. One record one line.
+	  code.append(Format.repeat("-",170)+"\n");
+	  
+      // printing MIN values
+	  code.append(  "| MIN VALUES " + Format.repeat(" ", title.get(0).length()-( "| MIN VALUES ").length()+1 ) );
+	  res =  "" + countTotals.getTotalStateMachinesPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(1).length()-res.length()-1 )+ res );
+      res =  "" + countTotals.getTotalStatesPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(2).length()-res.length()-1 )+ res );
+      res =  "" + countTotals.getTotalTransitionsPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(3).length()-res.length()-1 )+ res );
+	  res =  "" + countTotals.getTotalDifferentTransitionsPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(4).length()-res.length()-1 )+ res );
+      res =  "" + countTotals.getTotalEventsPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(5).length()-res.length()-1 )+ res );
+	  res =  "" + countTotals.getTotalGuardsPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(6).length()-res.length()-1 )+ res );
+      res =  "" + countTotals.getTotalActionsPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(7).length()-res.length()-1 )+ res );
+      res = "" + countTotals.getTotalNestedStateMachinePerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(8).length()-res.length()-1 )+ res );
+	  res =  "" + countTotals.getTotalCyclesPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(9).length()-res.length()-1 )+ res );
+	  res =  "" + countTotals.getTotalSelfCyclesPerClassMin();
+	  code.append( "| " +Format.repeat(" ", title.get(10).length()-res.length()-1 )+ res );
+	  code.append( " |\n" ); // closing the record. One record one line.
+	  code.append(Format.repeat("-",170)+"\n");	  
+	  
+      
+	  code.append("\n\n");
+	  
+	  code.append("Legend of State Machine Metrics:\n");
+	  code.append("   #State Machines - Total of SM per class.\n");
+	  code.append("   #States - Total of States per class.\n");
+	  code.append("   #Transitions - Total of Transitions per class: All transitions are counted. Transitions with same name are counted the same number of times they appear.\n");
+	  code.append("   #Different Transitions - Total of Different per SM: Transitions with the same name are counted once\n");
+	  code.append("   #Events - Total of Events per class without repetition. \n");
+	  code.append("   #Guards - Total of Guards per class without repetition. \n");
+	  code.append("   #Actions - Total of Actions per SM. \n");
+	  code.append("   #Nested SM - Total of Nested SM: Total of states that is other state machine.\n");
+	  code.append("   #States with Cycles - Total of Cycles: Total of Cycles (self cycles + cycles).\n");
+	  code.append("   #Self Cycles - Total of Self Cycles: Total of self Cycles.\n");
+    
+      super.setCode(code);
+      return;		
+	}// End of method calculate()
+	
+	
+	
+  
+} // END OF CLASS StateMachineMetrics
+
+
+/**********************************************************************
+* CountSM class used to calculate State Machine Metrics.
+*
+* D E F I N I T I O N S   U S E D:
+*             PATH - A set of transitions in a specific sequence that start in some node and finish
+*                    in other node or the same node. 
+*
+*       SELF CYCLE - A PATH with ONE transition that start and finish in the same node.
+*
+*            CYCLE - A PATH with one or more transitions that start and finish in the same node and
+*                    doesn't have repeated node (except the start and the end node).
+*                  - A SELF CYCLE is a special case of CYCLE with just ONE transition.
+*
+* K N O W N   B U G S (If this considerations are accepted, write it down on google code bugs controlling):   
+*          
+*
+*************************************************************************/
+
+class CountSM{ 
+    depend java.util.*;
+	
+	int totalStateMachines= 0; // total StM found considering all classes analysed.
+    int totalStateMachinesPerClass= 0;	
+    int totalStates= 0;
+	int totalStatesPerClass= 0;
+    int totalEvents=0;
+	int totalEventsPerClass= 0;
+	int totalTransitions= 0;
+	int totalTransitionsPerClass= 0;
+	int totalGuards= 0;
+	int totalGuardsPerClass= 0;
+	int totalDifferentTransitions= 0;
+	int totalDifferentTransitionsPerClass= 0;
+    int totalActions= 0;
+	int totalActionsPerClass= 0;
+	int totalNestedStateMachine= 0;
+	int totalNestedStateMachinePerClass= 0;
+	int totalSelfCycles= 0;
+	int totalSelfCyclesPerClass= 0;	
+	int totalCycles= 0;
+	int totalCyclesPerClass= 0;	
+	int totalClass= 0;
+	
+    // MAX ATTRIBUTES
+    int totalStateMachinesPerClassMax= 0;	 
+	int totalStatesPerClassMax= 0;
+	int totalEventsPerClassMax= 0;
+	int totalGuardsPerClassMax= 0;	
+	int totalTransitionsPerClassMax= 0;
+	int totalDifferentTransitionsPerClassMax= 0;
+	int totalActionsPerClassMax= 0;
+	int totalNestedStateMachinePerClassMax= 0;
+	int totalSelfCyclesPerClassMax= 0;	
+	int totalCyclesPerClassMax= 0;
+	
+	// MIN ATTRIBUTES
+    int totalStateMachinesPerClassMin= 0;	
+	int totalStatesPerClassMin= 0;
+	int totalEventsPerClassMin= 0;
+	int totalGuardsPerClassMin= 0;
+	int totalTransitionsPerClassMin= 0;
+	int totalDifferentTransitionsPerClassMin= 0;
+	int totalActionsPerClassMin= 0;
+	int totalNestedStateMachinePerClassMin= 0;
+	int totalSelfCyclesPerClassMin= 0;	
+	int totalCyclesPerClassMin= 0;
+	
+	List<State> visitedStates = new ArrayList<State>();
+	Set<Transition> transitionsList = new HashSet<Transition>(); // keep transitions without repetition of an StM. Use method Load
+	Set<State> statesSet = new HashSet<State>(); 
+	Set<Event> eventsSet = new HashSet<Event>(); 
+	
+	/***********************************************
+	* Increment Total Values with partial values or values counted in
+	* a class.
+	************************************************/
+	void incTotal( CountSM countPerClass ){ 
+	  this.incTotalClass(1);	  	
+	  this.incTotalStateMachines(countPerClass.getTotalStateMachinesPerClass());
+	  this.incTotalStates(countPerClass.getTotalStatesPerClass());
+	  this.incTotalTransitions(countPerClass.getTotalTransitionsPerClass());
+	  this.incTotalTransitions(countPerClass.getTotalGuardsPerClass());
+	  this.incTotalDifferentTransitions(countPerClass.getTotalDifferentTransitionsPerClass());
+	  this.incTotalEvents(countPerClass.getTotalEventsPerClass());
+	  this.incTotalGuards(countPerClass.getTotalGuardsPerClass());
+	  this.incTotalActions(countPerClass.getTotalActionsPerClass());
+	  this.incTotalNestedStateMachine(countPerClass.getTotalNestedStateMachinePerClass());
+	  this.incTotalCycles(countPerClass.getTotalCyclesPerClass());
+	  this.incTotalSelfCycles(countPerClass.getTotalSelfCyclesPerClass());
+	  return;
+	}
+	
+	/***********************************************
+	* Analyze if new values collected is MIN or MAX than values had stored in order to hold correct
+	* MAX and MIN values.
+	************************************************/
+	void calcMinMax( CountSM countPerClass ){ 
+	  // calculating MAX
+	  
+	  if (countPerClass.getTotalStateMachinesPerClass() > this.getTotalStateMachinesPerClassMax()) {
+	     this.setTotalStateMachinesPerClassMax(countPerClass.getTotalStateMachinesPerClass());
+	  }
+	  if(countPerClass.getTotalStatesPerClass() > this.getTotalStatesPerClassMax() ){
+	    this.setTotalStatesPerClassMax(countPerClass.getTotalStatesPerClass());
+	  }
+	  if(countPerClass.getTotalTransitionsPerClass() > this.getTotalTransitionsPerClassMax() ){
+	    this.setTotalTransitionsPerClassMax(countPerClass.getTotalTransitionsPerClass());
+	  }
+	  if(countPerClass.getTotalGuardsPerClass() > this.getTotalGuardsPerClassMax() ){
+	    this.setTotalGuardsPerClassMax(countPerClass.getTotalGuardsPerClass());
+	  }
+	  if(countPerClass.getTotalDifferentTransitionsPerClass() > this.getTotalDifferentTransitionsPerClassMax() ){
+	    this.setTotalDifferentTransitionsPerClassMax(countPerClass.getTotalDifferentTransitionsPerClass());
+	  }
+	  if(countPerClass.getTotalEventsPerClass() > this.getTotalEventsPerClassMax() ){
+	    this.setTotalEventsPerClassMax(countPerClass.getTotalEventsPerClass() );
+	  }
+	  if(countPerClass.getTotalActionsPerClass() > this.getTotalActionsPerClassMax() ){
+	    this.setTotalActionsPerClassMax(countPerClass.getTotalActionsPerClass() );
+	  }
+	  if(countPerClass.getTotalNestedStateMachinePerClass() > this.getTotalNestedStateMachinePerClassMax() ){
+	    this.setTotalNestedStateMachinePerClassMax(countPerClass.getTotalNestedStateMachinePerClass());
+	  }
+	  if(countPerClass.getTotalCyclesPerClass() > this.getTotalCyclesPerClassMax() ){
+	    this.setTotalCyclesPerClassMax(countPerClass.getTotalCyclesPerClass());
+	  }
+	  if(countPerClass.getTotalSelfCyclesPerClass() > this.getTotalSelfCyclesPerClassMax() ){
+	    this.setTotalSelfCyclesPerClassMax(countPerClass.getTotalSelfCyclesPerClass());
+	  }
+	  
+	  // calculating MIN
+	  if (countPerClass.getTotalStateMachinesPerClass() < this.getTotalStateMachinesPerClassMin()) {
+	     this.setTotalStateMachinesPerClassMin(countPerClass.getTotalStateMachinesPerClass());
+	  }
+	  if(countPerClass.getTotalStatesPerClass() < this.getTotalStatesPerClassMin() ){
+	    this.setTotalStatesPerClassMin(countPerClass.getTotalStatesPerClass());
+	  }
+	  if(countPerClass.getTotalTransitionsPerClass() < this.getTotalTransitionsPerClassMin() ){
+	    this.setTotalTransitionsPerClassMin(countPerClass.getTotalTransitionsPerClass());
+	  }
+	  if(countPerClass.getTotalGuardsPerClass() < this.getTotalGuardsPerClassMin() ){
+	    this.setTotalGuardsPerClassMin(countPerClass.getTotalGuardsPerClass());
+	  }
+	  if(countPerClass.getTotalDifferentTransitionsPerClass() < this.getTotalDifferentTransitionsPerClassMin() ){
+	    this.setTotalDifferentTransitionsPerClassMin(countPerClass.getTotalDifferentTransitionsPerClass());
+	  }
+	  if(countPerClass.getTotalEventsPerClass() < this.getTotalEventsPerClassMin() ){
+	    this.setTotalEventsPerClassMin(countPerClass.getTotalEventsPerClass() );
+	  }
+	  if(countPerClass.getTotalActionsPerClass() < this.getTotalActionsPerClassMin() ){
+	    this.setTotalActionsPerClassMin(countPerClass.getTotalActionsPerClass() );
+	  }
+	  if(countPerClass.getTotalNestedStateMachinePerClass() < this.getTotalNestedStateMachinePerClassMin() ){
+	    this.setTotalNestedStateMachinePerClassMin(countPerClass.getTotalNestedStateMachinePerClass());
+	  }
+	  if(countPerClass.getTotalCyclesPerClass() < this.getTotalCyclesPerClassMin() ){
+	    this.setTotalCyclesPerClassMin(countPerClass.getTotalCyclesPerClass());
+	  }
+	  if(countPerClass.getTotalSelfCyclesPerClass() < this.getTotalSelfCyclesPerClassMin() ){
+	    this.setTotalSelfCyclesPerClassMin(countPerClass.getTotalSelfCyclesPerClass());
+	  }
+	  return;
+	}
+	
+	/********************************************************************
+	* Calculate State Machine Metrics for given Umple Class.
+	* Considering an Umple Class can have multiples State Machines, this
+	* method call the method calculate (StateMachine) per each State Machine
+	* found in Umple Class. It is a Wraper Class.
+    * @param  Umple Class under analysis
+	********************************************************************/
+	void calculate( UmpleClass uClass){
+	  this.setTotalStateMachinesPerClass( uClass.getStateMachines().size() );
+	  
+	  for ( StateMachine sm : uClass.getStateMachines() ) {
+		eventsSet.clear();
+		this.setTotalEventsPerClass(0);
+		this.calculate ( sm );
+      }
+	}
+	
+	/********************************************************************
+	* Calculate State Machine Metrics for a given State Machine.
+	* Considering an state can be a state machine also, this method call
+	* nestedSM (sm) to analyse Statemachine recursively.
+    * @param  StateMachine under analysis
+	********************************************************************/
+	void calculate( StateMachine sm){
+	  nestedSM (sm);	 
+	  
+	  // Put each event of all transitions in a SET structure
+	  for(Transition tran : transitionsList){
+	    eventsSet.add(tran.getEvent()); // add event to a Set Java Structure
+	  }
+	  this.incTotalEventsPerClass(eventsSet.size());
+	 
+	  eventsSet.clear();
+	}
+	
+	/**********************************************************************
+	* This method calculate the metrics of StateMachine recursively, storaging
+	* values per class and totals of files analyzed.
+	* Programmer consideration when alter this method. 
+	* Immediately before return, always call methods:
+    *	- this.resetVisitedStates(); 
+	* @param  StateMachine under analysis
+	***********************************************************************/
+	void nestedSM( StateMachine sm ){
+      this.load(sm); // Load all transitions to SET  Java Structure
+      // Look for states
+      for ( State state: sm.getStates() ) {          
+
+		this.incTotalStatesPerClass( 1 );
+		
+		// Count self cycle
+		this.incTotalSelfCyclesPerClass( this.getAmountSelfCycles( state ) );
+		
+		// Count Cycles
+        this.incTotalCyclesPerClass( this.getAmountCycles( state ) );
+        
+        // Look for Actions
+		for ( Action actions: state.getActions() ) {  
+		  this.incTotalActionsPerClass( 1 );
+		}
+		
+        // Look for transitions
+        for ( Transition transition: state.getTransitions() ) {
+		  this.incTotalTransitionsPerClass( 1 );
+		  if (transition.getGuard()!=null){     // if there is a guard condition then count it
+		    this.incTotalGuardsPerClass(1);
+		  }   
+		}
+           
+        // Look for Nested StateMachine
+        for ( StateMachine smnested: state.getNestedStateMachines() ) {
+		  this.incTotalNestedStateMachinePerClass( 1 );
+          nestedSM( smnested );     
+        }               
+      }
+	  
+	  this.setTotalDifferentTransitionsPerClass( this.transitionsList.size() );
+	  
+	  this.resetVisitedStates();	
+	  return ;
+    } //END METHOD	
+	
+	
+	
+	/************************************************
+	* Answer if there is a Self Cycle in a specific state.
+    * @param  state used to look for self cycles
+    * @return TRUE  means there is at least one self cycle
+    *         FALSE means there is NOT self cycle
+	*************************************************/
+	boolean hasSelfCycle(State state){
+	  List <Transition> TransitionsList= state.getTransitions();
+	  for( Transition transition : TransitionsList){
+	    if(transition.getNextState() == state ) return true;
+	  }
+	  return false;
+	}
+	
+	/**************************************************************************
+	* Answer the amount of Self cycles in a specific state. 	
+    * @param  state used to look for cycles
+    * @return The amount of transitions that represents Self Cycles 
+	***************************************************************************/
+	int getAmountSelfCycles(State state){
+	  int amount=0;
+	  List <Transition> TransitionsList= state.getTransitions();
+	  for( Transition transition : TransitionsList){
+	    if(transition.getNextState() == state ) ++amount;
+	  }
+	  return amount;
+	}
+	
+	/**************************************************************************
+	* Count the amount of cycles considering a specific state as start node.
+    * @param  state used to look for cycles
+    * @return  The amount of transitions that provoke Self Cycles. 
+	*          Value Zero means there is NOT cycle.
+	*          Value -1 means a invalid NULL state was supplied as parameter.
+	***************************************************************************/
+	int getAmountCycles( State state ){
+	  this.resetVisitedStates();
+	  if (state==null) return -1;
+	  
+	  int sum=0;
+	  List <Transition> TransitionsList= state.getTransitions();
+	  for( Transition transition : TransitionsList){
+	    if(transition.getNextState().equals(state) ) {
+		  visitedStates.add(state); // Mark currentState like state already visited
+		  sum= sum + 1 ;
+		}else{
+		  sum = countCycles( state, transition.getNextState(), sum );
+		}
+	  }
+	  return sum;
+    }
+	
+	/**************************************************************************
+	* Count the amount of cycles recursively considering a specific state as start node.
+    * This function was created to help execution of getAmountCycles(State). 
+    * It must not be used directly. Use getAmountCycles(State)
+    * @param  firstState is the state used like first state through looking for cycles
+	* @param  currentState is the state under analysis. Algorithm checks if it returned to firstState
+    *         completing a cycle. It means, if currentState=firstState a Cycle was found.
+    * @param  sum is used as accumulator (summing) among recursive loops.        	
+    * @return  The amount of transitions that provoke Self Cycles. 
+	*          Value Zero means there is NOT cycle.
+	***************************************************************************/
+	int countCycles( State firstState, State currentState, int sum ){	  
+      int count=0;
+	  
+      if ( currentState==null || visitedStates.contains(currentState) ) return sum; 
+	  
+	  visitedStates.add(currentState); // Mark currentState like state already visited
+	  List <Transition> TransitionsList= currentState.getTransitions();
+	  for( Transition transition : TransitionsList){
+	    if(transition.getNextState() == firstState ) {
+		  count = count + 1;
+		}else{
+		  count = countCycles( firstState, transition.getNextState(), count );
+		}         	  
+	  }
+	  sum = sum + count;
+	  return sum;
+    }
+	
+	/***********************************************************************************
+	* Load all transitions from a list of stateMachines to transitionsList attribute, without 
+	* repeating of transitions.
+    * This function was created to help execution of getAmountCycles(State). 
+    * It must not be used directly. Use getAmountCycles(State)
+	************************************************************************************/
+	void load(List<StateMachine> stateMachinesList){
+	  loadStatesRecursively( stateMachinesList ); // load all states of list of StateMachines
+	  for(State state : statesSet){
+		transitionsList.addAll(state.getTransitions()); // load all transitions without repeating from states loaded
+	  }
+	}
+	  
+	void load(StateMachine SM){
+	  if ( SM == null ) return;
+	  statesSet.addAll(SM.getStates());
+	  
+	  for ( State state: SM.getStates() ) {
+		  load(state.getNestedStateMachines());
+      } 
+	}
+	
+	void loadStatesRecursively(List<StateMachine> stateMachinesList){
+	  for (StateMachine sm: stateMachinesList){
+	    loadStatesRecursively( sm );
+	  }
+	}
+	
+	void loadStatesRecursively(StateMachine SM){
+	  if ( SM == null ) return;
+	  statesSet.addAll(SM.getStates());
+	  
+	  for ( State state: SM.getStates() ) {
+		  loadStatesRecursively(state.getNestedStateMachines());
+      } 
+	}
+	
+	void resetVisitedStates(){
+	  visitedStates.clear();
+	}
+
+	void incTotalStateMachines(int a){
+      this.totalStateMachines+=a;
+    } 
+	void incTotalStateMachinesPerClass(int a){
+      this.totalStateMachinesPerClass+=a;
+    } 	
+	void incTotalStatesPerClass(int a){
+      this.totalStatesPerClass+=a;
+    } 
+	void incTotalStates(int a){
+      this.totalStates+=a;
+    }
+	void incTotalEvents(int a){
+      this.totalEvents+=a;
+    }
+	void incTotalEventsPerClass(int a){
+      this.totalEventsPerClass+=a;
+    }
+	void incTotalTransitions(int a){
+      this.totalTransitions+=a;
+    } 	
+	void incTotalTransitionsPerClass(int a){
+      this.totalTransitionsPerClass+=a;
+    }
+	void incTotalGuards(int a){
+      this.totalGuards+=a;
+    } 	
+	void incTotalGuardsPerClass(int a){
+      this.totalGuardsPerClass+=a;
+    }
+	void incTotalDifferentTransitions(int a){
+      this.totalDifferentTransitions+=a;
+    }
+	void incTotalDifferentTransitionsPerClass(int a){
+      this.totalDifferentTransitionsPerClass+=a;
+    } 	
+	/*void incAvgTransitionsPerClass(int a){
+      this.avgTransitionsPerClass+=a;
+    } */
+	void incTotalActions(int a){
+      this.totalActions+=a;
+    }	
+	void incTotalActionsPerClass(int a){
+      this.totalActionsPerClass+=a;
+    }
+	void incTotalNestedStateMachine(int a){
+      this.totalNestedStateMachine+=a;
+    }
+	void incTotalNestedStateMachinePerClass(int a){
+      this.totalNestedStateMachinePerClass+=a;
+    }
+	void incTotalSelfCycles(int a){
+      this.totalSelfCycles+=a;
+    }
+	void incTotalSelfCyclesPerClass(int a){
+      this.totalSelfCyclesPerClass+=a;
+    }
+	void incTotalCycles(int a){
+      this.totalCycles+=a;
+    }
+	void incTotalCyclesPerClass(int a){
+      this.totalCyclesPerClass+=a;
+    }
+    void incTotalClass(int a){
+      this.totalClass+=a;
+    }	
+	
+	
+    /************************************************
+	* Get values and set them like MIN and MAX values.
+	* Used after first values calculated, when those values is MIN and MAX, considering they are first
+	* values calculated.
+    * @param  a CountSM class containing first values calculated   
+	*************************************************/
+	void setMinMax(CountSM count){
+	  // MAX ATTRIBUTES
+      this.totalStateMachinesPerClassMax = count.getTotalStateMachinesPerClassMax();	
+	  this.totalStatesPerClassMax = count.getTotalStatesPerClassMax();
+	  this.totalEventsPerClassMax = count.getTotalEventsPerClassMax();
+	  this.totalGuardsPerClassMax = count.getTotalGuardsPerClassMax();
+	  this.totalTransitionsPerClassMax = count.getTotalTransitionsPerClassMax();
+	  this.totalDifferentTransitionsPerClassMax = count.getTotalDifferentTransitionsPerClassMax();
+	  this.totalActionsPerClassMax = count.getTotalActionsPerClassMax();
+	  this.totalNestedStateMachinePerClassMax = count.getTotalNestedStateMachinePerClassMax();
+	  this.totalSelfCyclesPerClassMax = count.getTotalSelfCyclesPerClassMax();	
+	  this.totalCyclesPerClassMax = count.getTotalCyclesPerClassMax(); 
+	  
+	  // MIN ATTRIBUTES
+      this.totalStateMachinesPerClassMin = count.getTotalStateMachinesPerClassMin();	
+	  this.totalStatesPerClassMin = count.getTotalStatesPerClassMin();
+	  this.totalEventsPerClassMin = count.getTotalEventsPerClassMin();
+	  this.totalGuardsPerClassMin = count.getTotalGuardsPerClassMin();
+	  this.totalTransitionsPerClassMin = count.getTotalTransitionsPerClassMin();
+	  this.totalDifferentTransitionsPerClassMin = count.getTotalDifferentTransitionsPerClassMin();
+	  this.totalActionsPerClassMin = count.getTotalActionsPerClassMin();
+	  this.totalNestedStateMachinePerClassMin = count.getTotalNestedStateMachinePerClassMin();
+	  this.totalSelfCyclesPerClassMin = count.getTotalSelfCyclesPerClassMin();	
+	  this.totalCyclesPerClassMin = count.getTotalCyclesPerClassMin();
+	  
+	}
+}

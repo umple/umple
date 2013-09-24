@@ -1,74 +1,68 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/***************************************************************************************************
+*
+*  C R E D I T S
+*  Implementation Of Code Line Metrics by Antonio Maria Pereira de Resende during his visit at
+*  University of Ottawa as a Visit Researh (March-2013 to March-2014) and under supervision 
+*  of Timothy Lethbridge.
+*  This research is supported by CNPQ-BRAZIL and Universidade Federal de Lavras-UFLA (Brazil)
+*  
+*  A B O U T   T H I S    F I L E
+*  File..........: SimpleMetrics_CodeLines.ump 
+*  Description...: It contains the class and routines to calculate Code Line Metrics.
+*                  Code Line Metrics involved are: 
+*                  Comment Lines, Blank Lines, Code Lines, Total of Lines per File
+*  Dependencies..: None
+*  Changes affect: Generator_CodeSimpleMetrics.ump
+*  Compilation...: It's library, compile it by compiling Generator_CodeSimpleMetrics.ump        
+*  Execution.....: It's library. Not Executable
+*  Initiated.....: Jun-2013
+***************************************************************************************************/
 
-package cruise.umple.compiler;
+/***************************************************************************************************
+* 
+* CLASS USED TO COUNT MEASURE LINES IN A FILE
+* 
+* D E F I N I T I O N S   U S E D:
+*       BLANK LINES - Lines without any caracter or containing only spaces.
+*                   - So, blank lines inside block comments are counted twice. Once like Blank Lines 
+*                     and once like Comment Lines.
+*
+*     COMMENT LINES - Lines after double slash (one comment line) at any place of a line OR
+*                   - Lines started by slash followed by asterisk and ended by asterisk followed by 
+*                     slash (block comments).
+*                   
+*        CODE LINES - Lines not classified like Blank or Comment.
+* 
+*   TOTAL OF LINES  - The amount of lines in a file including blanks, comments, and code lines.
+*                     The amount are NOT NOT NOT the same of BLANKS+COMMENTS+CODE lines. There is 
+*                     comment line in the same line of a code line. There is blank line inside block
+*                     comments. So, Total of Lines will get a value not greater than 
+*                     BLANKS+COMMENTS+CODE lines. In the most cases, probably, will be less than 
+*                     those sum.
+*
+* K N O W N   B U G S  (If this considerations are accepted, write it down on google code bugs controlling):        
+*
+*          QUOTED   - Quoted is not identified correctly yet due to use of regex and sum of strings
+*                     using special characters. So strings containing double slash or slash+asterisk 
+*                     could provoke errors during classification and wrong values could be generated.
+*
+*                     Examples:
+*                     Mistakes got in file which double slash is used with another meaning like:
+*                     (1) "[protocol]://", where protocol means http, ftp, file, and so on. Other
+*                     (2) Double slash when first slash indicate that there is a special character 
+*                     after it, and the special character is the slash. This is commonly found in
+*                     compilers with regex like UMPLE TOOL.                   
+*
+**************************************************************************************************/
+use SimpleMetrics_Util.ump;
 
-/**
- * @umplesource SimpleMetrics_CodeLines.ump 59
- */
-// line 59 "../../../../src/SimpleMetrics_CodeLines.ump"
-public class CodeMetrics extends SimpleMetricsGenerator
-{
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
-
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
-
-  //CodeMetrics Attributes
-  private StringBuilder code;
-  private UmpleModel model;
-
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
-
-  public CodeMetrics()
-  {
-    super();
-    code = null;
-    model = null;
-  }
-
-  //------------------------
-  // INTERFACE
-  //------------------------
-
-  public boolean setCode(StringBuilder aCode)
-  {
-    boolean wasSet = false;
-    code = aCode;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setModel(UmpleModel aModel)
-  {
-    boolean wasSet = false;
-    model = aModel;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public StringBuilder getCode()
-  {
-    return code;
-  }
-
-  public UmpleModel getModel()
-  {
-    return model;
-  }
-
-  public void delete()
-  {
-    super.delete();
-  }
-
-  @umplesourcefile(line={64},file={"SimpleMetrics_CodeLines.ump"},javaline={70},length={85})
-  public void calculate(){
-    int totalLineCount = 0; //count lines per file
+class CodeMetrics {
+	isA SimpleMetricsGenerator;
+	StringBuilder code = null;
+	UmpleModel model=null;
+	
+	void calculate(){
+      int totalLineCount = 0; //count lines per file
       int totalLoc = 0;
       int totalComments = 0;
       int totalBlanks = 0;
@@ -151,24 +145,10 @@ public class CodeMetrics extends SimpleMetricsGenerator
         code.append("\n  Total Total of Lines = "+totalLineCount + "\n");
 	    code.append("\n\n");
 		return;
-  }
-
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "code" + "=" + (getCode() != null ? !getCode().equals(this)  ? getCode().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "model" + "=" + (getModel() != null ? !getModel().equals(this)  ? getModel().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={149},file={"SimpleMetrics_CodeLines.ump"},javaline={169},length={73})
-  CountLines countLinesInFile(String filename)throws java.io.IOException 
-  {
-    CountLines cl = new CountLines();
+	}
+	
+	CountLines countLinesInFile(String filename)throws java.io.IOException{
+     CountLines cl = new CountLines();
      cl.setCountLines(0);
      cl.setCountComments(0);
      cl.setCountBlanks(0);
@@ -237,6 +217,27 @@ public class CodeMetrics extends SimpleMetricsGenerator
           } // close while (line != null)
           arq.close();
        return cl;
-  }
-
+   } // End method	
 }
+
+
+// This class is used like a structure to help keep values about lines
+class CountLines{
+  int countLines = 0;    // total of lines
+  int countComments = 0; // total of comment lines
+  int countBlanks = 0;   // total of blank lines
+  int countCode = 0;     // total of code line
+  void incCountLines(){
+    ++this.countLines;
+  }
+  void incCountComments(){
+    ++this.countComments;
+  }
+  void incCountBlanks(){
+    ++this.countBlanks;
+  }
+  void incCountCode(){
+    ++this.countCode;
+  }
+} 
+
