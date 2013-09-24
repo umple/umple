@@ -115,7 +115,7 @@ class Transition
   * -> 0..1 Guard;
   0..1 -> 0..1 Action;
   
-  key { fromState, event, nextState, guard, action } 
+  key { event, nextState, guard, action } 
   
 }
 

@@ -37,7 +37,6 @@ public class Transition
 
   //Helper Variables
   private int cachedHashCode;
-  private boolean canSetFromState;
   private boolean canSetEvent;
   private boolean canSetNextState;
   private boolean canSetGuard;
@@ -50,7 +49,6 @@ public class Transition
   public Transition(State aFromState, State aNextState)
   {
     cachedHashCode = -1;
-    canSetFromState = true;
     canSetEvent = true;
     canSetNextState = true;
     canSetGuard = true;
@@ -177,7 +175,6 @@ public class Transition
   public boolean setFromState(State aFromState)
   {
     boolean wasSet = false;
-    if (!canSetFromState) { return false; }
     if (aFromState == null)
     {
       return wasSet;
@@ -310,15 +307,6 @@ public class Transition
 
     Transition compareTo = (Transition)obj;
   
-    if (fromState == null && compareTo.fromState != null)
-    {
-      return false;
-    }
-    else if (fromState != null && !fromState.equals(compareTo.fromState))
-    {
-      return false;
-    }
-
     if (event == null && compareTo.event != null)
     {
       return false;
@@ -365,14 +353,6 @@ public class Transition
       return cachedHashCode;
     }
     cachedHashCode = 17;
-    if (fromState != null)
-    {
-      cachedHashCode = cachedHashCode * 23 + fromState.hashCode();
-    }
-    else
-    {
-      cachedHashCode = cachedHashCode * 23;
-    }
     if (event != null)
     {
       cachedHashCode = cachedHashCode * 23 + event.hashCode();
@@ -406,7 +386,6 @@ public class Transition
       cachedHashCode = cachedHashCode * 23;
     }
 
-    canSetFromState = false;
     canSetEvent = false;
     canSetNextState = false;
     canSetGuard = false;
@@ -431,7 +410,7 @@ public class Transition
     }
   }
 
-  @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={435},length={5})
+  @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={414},length={5})
    public static  Transition createPlaceholder(State nextState){
     StateMachine nullSm = new StateMachine("null");
     State nullState = new State("null",nullSm);

@@ -40,22 +40,22 @@ class CourseO
     return null;
   }
 
-  public function stay()
+  public function setOne($aOne)
   {
-    $wasEventProcessed = false;
-    
-    $aOne = $this->one;
-    if ($aOne == self::$OneOn)
+    if ($aOne == "OneOn" || $aOne == self::$OneOn)
     {
-      $this->setOne(self::$OneOn);
-      $wasEventProcessed = true;
+      $this->one = self::$OneOn;
+      return true;
     }
-    return $wasEventProcessed;
-  }
-
-  private function setOne($aOne)
-  {
-    $this->one = $aOne;
+    elseif ($aOne == "OneOff" || $aOne == self::$OneOff)
+    {
+      $this->one = self::$OneOff;
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 
   public function equals($compareTo)

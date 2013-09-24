@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource SimpleMetrics_Util.ump 29
+ * @umplesource Generator_CodeSimpleMetrics.ump 680
  */
-// line 29 "../../../../src/SimpleMetrics_Util.ump"
+// line 680 "../../../../src/Generator_CodeSimpleMetrics.ump"
 public class Format
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -30,7 +30,7 @@ public class Format
   public void delete()
   {}
 
-  @umplesourcefile(line={30},file={"SimpleMetrics_Util.ump"},javaline={34},length={7})
+  @umplesourcefile(line={681},file={"Generator_CodeSimpleMetrics.ump"},javaline={34},length={7})
    public static  String repeat(String string, int quantidade){
     StringBuffer retorno = new StringBuffer();   
     for (int j=0; j<quantidade; j++){   

@@ -292,7 +292,7 @@ public class StateTest
     Assert.assertEquals(false,sX.isSameState(sB,nested2));
   }  
 
-  /* Temporary exclude to get build to pass
+  
   @Test
   public void removeTransition_simple()
   {
@@ -304,5 +304,5 @@ public class StateTest
     state.removeTransition(deleteT);
     Assert.assertEquals(0, state.numberOfTransitions());
   }
-  */
+  
 }
