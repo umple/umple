@@ -1,8 +1,8 @@
 <?php
 function _show_element($params) {
-  //get the names to be shown in the select menu
-  $data['element_names'] = array_keys($params['UMPLE_MODEL']['ELEMENTS']);
-  
+  $controller = $params['CONTROLLER'];
+
+  //parameters can be received from POST or from the URL (mod_rewrite)
   if(!empty($params[0])){
     $element_name = $params[0];
   }else if(!empty($_POST['element_name'])){
@@ -11,14 +11,14 @@ function _show_element($params) {
     //TODO: redirect and show error message
     //return false;
   }
-  if(isset($params['UMPLE_MODEL']['ELEMENTS'][$element_name])){
-    $element = $params['UMPLE_MODEL']['ELEMENTS'][$element_name];
-    $element['name'] = $element_name;
-  }else{
+  $element = $controller->get_element($element_name);
+  if(!$element){
     //TODO: redirect and show error message
     //return false;
   }
 
+  //get the names to be shown in the select menu
+  $data['element_names'] = $controller->get_element_names();
   //the view will have direct access to variables inside $element
   $data['body'][]=Uigu2_View::do_fetch(VIEW_PATH.'main/show_element.php', $element);
   Uigu2_View::do_dump(VIEW_PATH.'layout.php',$data);

@@ -283,7 +283,7 @@ public class Uigu2Generator extends PhpGenerator
     StringBuilder initFile = new StringBuilder("<?php" + nl + nl
             + "function initialize_model(){" + nl
             + "$UMPLE_MODEL = array();" + nl
-            + "$UMPLE_MODEL['execution_id'] = basename(dirname(__FILE__));" + nl);
+            + "$UMPLE_MODEL['execution_id'] = '_'.basename(dirname(__FILE__));" + nl);
 
     //$ELEMENTS associative array with info from each UmpleElement
     if (this.elements.size() > 0) {
