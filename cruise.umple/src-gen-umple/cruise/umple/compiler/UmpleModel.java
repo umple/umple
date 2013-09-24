@@ -35,7 +35,7 @@ public class UmpleModel implements Runnable
   // STATIC VARIABLES
   //------------------------
 
-  public static final String versionNumber = "@UMPLE_VERSION@";
+  public static final String versionNumber = "1.17.0.2716";
 
   //------------------------
   // MEMBER VARIABLES

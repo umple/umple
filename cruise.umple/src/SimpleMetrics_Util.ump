@@ -1,0 +1,38 @@
+/* 
+* Copyright: All contributers to the Umple Project
+*
+* This file is made available subject to the open source license found at:
+* http://umple.org/license
+*
+*/
+
+/****************************************************************************
+*
+*  C R E D I T S
+*  Implementation Of Format Class by Antonio Maria Pereira de Resende during his visit at
+*  University of Ottawa as a Visit Researh  (March-2013 to March-2014) and under supervision of 
+*  Timothy Lethbridge.
+*  This research is supported by CNPQ-BRAZIL and Universidade Federal de Lavras-UFLA (Brazil)
+*  
+*  A B O U T   T H I S    F I L E
+*  File..........: SimpleMetrics_Util.ump 
+*  Description...: It contains secondary structures and routines that support SimpleMetric Module.
+*  Dependencies..: None
+*  Changes affect: Generator_CodeSimpleMetrics, SimpleMetrics_Class, SimpleMetrics_SM, 
+*                  SimpleMetric_CodeLine.ump
+*  Compilation...: It's library, compile it by compiling Generator_CodeSimpleMetrics.ump        
+*  Execution.....: It's library. Not Executable
+*  Initiated.....: Jun-2013
+******************************************************************************/
+namespace cruise.umple.compiler;
+
+class Format{
+  public static String repeat(String string, int quantidade) {   
+    StringBuffer retorno = new StringBuffer();   
+    for (int j=0; j<quantidade; j++){   
+      retorno.append(string);   
+    }   
+    return retorno.toString();   
+  } 
+  
+}
