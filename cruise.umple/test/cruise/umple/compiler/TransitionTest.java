@@ -55,18 +55,10 @@ public class TransitionTest
   }
   
   @Test
-  public void equalsIgnoreFromState()
-  {
-    Transition t = Transition.createPlaceholder(too);
-    Transition t2 = Transition.createPlaceholder(too);
-    Assert.assertEquals(t, t2);
-  }
-  
-  @Test
   public void equalsChecksGuard()
   {
-    Transition t = Transition.createPlaceholder(too);
-    Transition t2 = Transition.createPlaceholder(too);
+    Transition t = new Transition(from, too);
+    Transition t2 =  new Transition(from, too);
     Transition t3 = Transition.createPlaceholder(too);
 
     t.setGuard(new Guard());
@@ -84,8 +76,8 @@ public class TransitionTest
   @Test
   public void equalsChecksEvent()
   {
-    Transition t = Transition.createPlaceholder(too);
-    Transition t2 = Transition.createPlaceholder(too);
+    Transition t =  new Transition(from, too);
+    Transition t2 =  new Transition(from, too);
 
     t.setEvent(new Event("e"));
     t2.setEvent(new Event("e"));
@@ -99,8 +91,8 @@ public class TransitionTest
   @Test
   public void equalsChecksAction()
   {
-    Transition t = Transition.createPlaceholder(too);
-    Transition t2 = Transition.createPlaceholder(too);
+    Transition t =  new Transition(from, too);
+    Transition t2 =  new Transition(from, too);
 
     t.setAction(new Action("a"));
     t2.setAction(new Action("a"));

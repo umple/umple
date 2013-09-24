@@ -298,10 +298,10 @@ public class StateTest
   {
     State state = new State("On",sm);
     State state2 = new State("Off",sm);
-    new Transition(state, state2);
-    
-    Transition deleteT = Transition.createPlaceholder(state2);
-    state.removeTransition(deleteT);
+    Transition deleteT = new Transition(state, state2);
+       
+    deleteT.delete();
+
     Assert.assertEquals(0, state.numberOfTransitions());
   }
   
