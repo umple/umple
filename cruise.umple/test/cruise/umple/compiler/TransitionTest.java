@@ -11,6 +11,8 @@ package cruise.umple.compiler;
 
 import org.junit.*;
 
+import cruise.umple.compiler.Transition;
+
 public class TransitionTest
 {
 
@@ -65,13 +67,17 @@ public class TransitionTest
   {
     Transition t = Transition.createPlaceholder(too);
     Transition t2 = Transition.createPlaceholder(too);
+    Transition t3 = Transition.createPlaceholder(too);
 
-    t.setGuard(new Guard("x"));
-    t2.setGuard(new Guard("x"));
+    t.setGuard(new Guard());
+    t.getGuard().addExpression(new ConstraintVariable("NAME","x"));
+    t2.setGuard(new Guard());
+    t2.getGuard().addExpression(new ConstraintVariable("NAME","x"));
     Assert.assertEquals(t, t2);
 
-    t2.setGuard(new Guard("y"));
-    Assert.assertEquals(false, t.equals(t2));
+    t3.setGuard(new Guard());
+    t3.getGuard().addExpression(new ConstraintVariable("NAME","y"));
+    Assert.assertEquals(false, t.getGuard().getExpression(0).equals(t3.getGuard().getExpression(0)));
   
   }
   

@@ -69,7 +69,7 @@ public class LanguageSpecificCodeBlock
     return state;
   }
 
-  @umplesourcefile(line={78,78}, file={"TestHarnessPatterns.ump","TestHarnessPatterns.ump"}, javaline={80,83}, length={1,1})
+  @umplesourcefile(line={78,78}, file={"TestHarnessPatterns.ump","TestHarnessPatterns.ump"}, javaline={80,84}, length={1,1})
   public boolean applySpecificAction()
   {
     boolean wasEventProcessed = false;
@@ -78,7 +78,7 @@ public class LanguageSpecificCodeBlock
     switch (aState)
     {
       case allLanguages:
-        if (isJava())
+        if (this.isJava())
         {
         // line 78 "../../../../src/TestHarnessPatterns.ump"
           name = "action=java";

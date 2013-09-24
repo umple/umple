@@ -26,6 +26,7 @@ import cruise.umple.compiler.Action;
 import cruise.umple.compiler.Activity;
 import cruise.umple.compiler.Event;
 import cruise.umple.compiler.Guard;
+import cruise.umple.compiler.JavaGenerator;
 import cruise.umple.compiler.Position;
 import cruise.umple.compiler.State;
 import cruise.umple.compiler.StateMachine;
@@ -174,11 +175,9 @@ public class UmpleStatemachineGenerationPolicy{
 			return CommonConstants.BLANK;
 		}
 		
-		String code = guard.getCodeblock().getCode(language);
-		if(code== null|| code.isEmpty()){
-			String condition = guard.getCondition();
-			code= condition!= null?condition: CommonConstants.BLANK;
-		}
+		String condition = guard.getCondition(new JavaGenerator());
+		String code = condition!= null?condition: CommonConstants.BLANK;
+		
 		
 		if(code== null|| code.isEmpty()){
 			return CommonConstants.BLANK;

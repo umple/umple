@@ -57,7 +57,7 @@ public class LightFixture
     return bulb;
   }
 
-  @umplesourcefile(line={9,10}, file={"multipleGuardsSameEventWithDefaultNoGuard.ump","multipleGuardsSameEventWithDefaultNoGuard.ump"}, javaline={69,75}, length={1,1})
+  @umplesourcefile(line={9,10}, file={"multipleGuardsSameEventWithDefaultNoGuard.ump","multipleGuardsSameEventWithDefaultNoGuard.ump"}, javaline={69,76}, length={1,1})
   public boolean push()
   {
     boolean wasEventProcessed = false;
@@ -66,13 +66,13 @@ public class LightFixture
     switch (aBulb)
     {
       case On:
-        if (brightness < 1)
+        if (brightness<1)
         {
           setBulb(Bulb.Off);
           wasEventProcessed = true;
           break;
         }
-        if (brightness > 10)
+        if (brightness>10)
         {
           setBulb(Bulb.Amber);
           wasEventProcessed = true;

@@ -73,7 +73,7 @@ class LanguageSpecificCodeBlock
     $aState = $this->state;
     if ($aState == self::$StateAllLanguages)
     {
-      if (!$this->isJava())
+      if ($this->isJava())
       {
         $this->name = "actionphp";
         $this->setState(self::$StateTo);

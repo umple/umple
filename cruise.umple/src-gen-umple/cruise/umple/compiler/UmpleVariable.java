@@ -8,11 +8,11 @@ import java.util.*;
  * Superclass for tracking member variables in all target languages
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
- * @umplesource Umple.ump 486
+ * @umplesource Umple.ump 440
  * @umplesource Umple_Code.ump 1160
  * @umplesource Trace_Code.ump 16
  */
-// line 486 "../../../../src/Umple.ump"
+// line 440 "../../../../src/Umple.ump"
 // line 1160 "../../../../src/Umple_Code.ump"
 // line 16 "../../../../src/Trace_Code.ump"
 public class UmpleVariable
@@ -50,11 +50,11 @@ public class UmpleVariable
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={500},file={"Umple.ump"},javaline={58},length={1})
+  @umplesourcefile(line={454},file={"Umple.ump"},javaline={58},length={1})
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    // line 500 "../../../../src/Umple.ump"
+    // line 454 "../../../../src/Umple.ump"
     if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); }
     name = aName;
     wasSet = true;
@@ -101,13 +101,13 @@ public class UmpleVariable
     return type;
   }
 
-  @umplesourcefile(line={502},file={"Umple.ump"},javaline={110},length={1})
+  @umplesourcefile(line={456},file={"Umple.ump"},javaline={110},length={1})
   /**
    * The modifier associated with the Umple variable.
    */
   public String getModifier()
   {
-    // line 502 "../../../../src/Umple.ump"
+    // line 456 "../../../../src/Umple.ump"
     if (modifier == null) { return "settable"; }
     return modifier;
   }

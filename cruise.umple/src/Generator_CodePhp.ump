@@ -117,94 +117,6 @@ class PhpGenerator
   {
     return true;
   }
-  public String translate(String format, Constraint constraint)
-  {
-  	if(constraint==null)
-  	  return "{0}";
-  	  
-  	if(format.contains("Values"))
-    {
-      String out = "";
-      if(constraint.numberOfExpressions()==1)
-      {
-        return constraint.getExpression(0).getValue();
-      }
-      else
-      {
-      	List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
-      	for(int m = 0; m < constraint.numberOfExpressions()-1; m++)
-      	{
-      	  if(constraint.getExpression(m).getIsAttribute()&&!alreadyDone.contains(constraint.getExpression(m)))
-      	  {
-      	  	alreadyDone.add(constraint.getExpression(m));
-      	    out += constraint.getExpression(m).getValue()+", ";
-      	  }
-      	}
-      	boolean onlyOne = false;
-      	if(constraint.getExpression(constraint.numberOfExpressions()-1).getIsAttribute()&&!alreadyDone.contains(constraint.getExpression(constraint.numberOfExpressions()-1)))
-      	{
-          if(alreadyDone.size()==1)
-      	  {
-      	    out = out.substring(0,out.length()-2);
-      	  } 
-      	  if(alreadyDone.size()>0)
-      	  {
-      		out += " and " ;
-      	  }	
-      	  else
-      	  {
-      	  	onlyOne = true;
-      	  }
-       	  out += constraint.getExpression(constraint.numberOfExpressions()-1).getValue();
-       	  alreadyDone.add(constraint.getExpression(constraint.numberOfExpressions()-1));
-      	}  
-      	if(alreadyDone.size()==1 && !onlyOne)
-      	{
-      	  out = out.substring(0,out.length()-2);
-      	} 
-      	   	
-      }      
-      return out;
-    }
-  	  
-  	String expression = "";
-  	for(ConstraintVariable expr: constraint.getExpressions())
-  	{
-  		if( expr.getIsAttribute() )
-        {
-        	if(format.contains("allParameterOne"))
-        	{
-        		expression += "$a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
-        	}
-            else if(format.contains(expr.getValue()))
-            {
-        	   expression += "$a"+expr.getValue().substring(0,1).toUpperCase()+expr.getValue().substring(1);
-            }
-            else 
-            { 
-        	  expression += "$"+expr.getValue();
-            }
-          } 
-          else
-          { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
-            expression += expr.getValue();
-          }
-  	}
-  	
-  	if(format.contains("Not"))
-    {
-      expression = " !("+expression+")";
-    }
-  	if(format.contains("Closed"))
-  	{
-  		return StringFormatter.format("  if({0})\n    {\n    {1}\n    }",expression, "{0}");
-  	}
-  	else if(format.contains("Open"))
-  	{
-  		return StringFormatter.format("  if({0})\n    {\n    {1}\n",expression, "{0}");
-  	}
-  	return StringFormatter.format("  if({0})\n    {\n    {1}\n    }",expression, "{0}");
-  }
   
   public String relatedTranslate(String name, AssociationVariable av)
   {
@@ -727,58 +639,59 @@ class PhpGenerator
         aClass.addCodeInjection(set);
       }
     }
+    Constraint constraint = new Constraint();
+    constraint.setNegated(true);
+    constraint.setFormat("allParameterOneClosed");
+    constraint.setInject("throw new RuntimeException(\"Please provide a valid");
+    constraint.setGen(this);
     for (Constraint ac : aClass.getConstraints())
     {      
       List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
+      boolean isAssociation = false;
+      CodeInjection before;
       for (ConstraintVariable cur : ac.getExpressions())
       {
-      	if(!cur.getIsAttribute() || alreadyDone.contains(cur))
-      	  continue;
-      	alreadyDone.add(cur);
-      	String set_expression = "";
-      	String con_expression = "";
-      	String set_code = "if ({0})\n{";
-      	String con_code = "if ( !({0}))\n{\n" +
-      						     "  throw new RuntimeException(\"Please provide a valid "+ cur.getValue() +"\");\n"+
-                                 "}";
-      	for (ConstraintVariable  expr: ac.getExpressions())
-        {
-          if( expr.getIsAttribute() )
-          {
-          	con_expression += "$"+translate("parameterOne",aClass.getAttribute(expr.getValue()));
-            if (cur == expr) { 
-        	  set_expression += "$"+translate("parameterOne",aClass.getAttribute(expr.getValue()));
-            }
-            else 
-            { 
-        	  set_expression += "$"+translate("attributeOne",aClass.getAttribute(expr.getValue()));
-            }
-          } 
-          else
-          { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
-            con_expression += expr.getValue();
-            set_expression += expr.getValue();
-          }
-        }
-        String setMethod_code = StringFormatter.format(set_code, set_expression);
-        CodeInjection before = new CodeInjection("before", translate("setMethod", aClass.getAttribute(cur.getValue())), setMethod_code, aClass);         
-        CodeInjection after = new CodeInjection("after", translate("setMethod", aClass.getAttribute(cur.getValue())), "}", aClass);
+        if(cur.getIsAssociation())
+          isAssociation = true;
+        if(!cur.getIsAttribute()  || alreadyDone.contains(cur))
+          continue;
+        if(cur.getSubConstraint()!=null&&cur.getSubConstraint().getExpression(0).getValue().equals("initialise"))
+          continue;
+        alreadyDone.add(cur);
+        
+        String setMethod_code = StringFormatter.format(translate(cur.getValue()+":Open",ac),"");
+        
+        before = new CodeInjection("before", cur.getFoundAttribute()==null?cur.getValue():translate("setMethod", cur.getAttribute(aClass), cur.getIsAssociation()), setMethod_code, aClass);         
+        CodeInjection after = new CodeInjection("after", cur.getFoundAttribute()==null?cur.getValue():translate("setMethod", cur.getAttribute(aClass), cur.getIsAssociation()), "}", aClass);
         before.setIsInternal(true);
         after.setIsInternal(true);
         aClass.addCodeInjection(before);
         aClass.addCodeInjection(after);
         
-        String constructor_code = StringFormatter.format(con_code, con_expression);
-        before = new CodeInjection("before",  "constructor", constructor_code, aClass);  
-        before.setIsInternal(true);
-        aClass.addCodeInjection(before);
-      
+        if(cur.getIsAssociation())
+        {
+          before = new CodeInjection("before", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), setMethod_code, aClass);         
+          after = new CodeInjection("after", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), "}", aClass);
+          before.setIsInternal(true);
+          after.setIsInternal(true);
+          aClass.addCodeInjection(before);
+          aClass.addCodeInjection(after);
+        }
       }
+      constraint.mergeWith(ac);
+      constraint.setInject(constraint.getInject()+" "+ac.toString());
+    }
+    if(constraint.numberOfExpressions()>0)
+    {
+      constraint.setInject(constraint.getInject()+"\");");
+      CodeInjection constructor = new CodeInjection("after",  "constructor", constraint, aClass);  
+      constructor.setIsInternal(true);
+      aClass.addCodeInjection(constructor);
     }
 
 	for (Precondition pc : aClass.getPreconditions()){ 
     	String methodName = pc.getMethod().getName();
-    	String precondition_code = StringFormatter.format(translate("NotClosed",pc),"throw new RuntimeException(\"Please provide a valid "+ translate("Values",pc) +"\");");
+    	String precondition_code = StringFormatter.format(translate(pc.getMethod().getMethodParameters().toString().replace("[","").replace("]","")+":NotClosed",pc),"throw new RuntimeException(\"Please provide a valid "+ pc.toString() +"\");");
     	CodeInjection before = new CodeInjection("before", methodName+"Precondition", precondition_code, aClass);         
     	before.setIsInternal(true);
     	aClass.addCodeInjection(before);    
@@ -1026,17 +939,34 @@ class PhpGenerator
     }
   }
 
-	public void initializeLangaugeBasedVariables() {
-		UmpleToPrimitiveMap.put("String","String");
-		//
-		TraceLookupMap.put("concatinator",".");
-    	TraceLookupMap.put("accessor","$this->");
-    	TraceLookupMap.put("indent","    ");
-    	TraceLookupMap.put("template","{0}Tracer::handle( {1} );");
-    	TraceLookupMap.put("timestamp","gettimeofday(true)");
-    	TraceLookupMap.put("identifier","spl_object_hash( {0} )");
-    	TraceLookupMap.put("thread","uniqid()");
-    	TraceLookupMap.put("self","$this");
-    	TraceLookupMap.put("increment","{0}++;");
-	} 
+  public void initializeLangaugeBasedVariables() {
+	UmpleToPrimitiveMap.put("String","String");
+	//
+	TraceLookupMap.put("concatinator",".");
+    TraceLookupMap.put("accessor","$this->");
+    TraceLookupMap.put("indent","    ");
+    TraceLookupMap.put("template","{0}Tracer::handle( {1} );");
+    TraceLookupMap.put("timestamp","gettimeofday(true)");
+    TraceLookupMap.put("identifier","spl_object_hash( {0} )");
+    TraceLookupMap.put("thread","uniqid()");
+    TraceLookupMap.put("self","$this");
+    TraceLookupMap.put("increment","{0}++;");
+    //
+    ConstraintLookupMap.put("==","=={0}");
+    ConstraintLookupMap.put("accessor","$");
+    ConstraintLookupMap.put("ifstatement","if ({0})\n{");
+    ConstraintLookupMap.put("end","}");
+    ConstraintLookupMap.put(".","->{0}");
+    ConstraintLookupMap.put("this","$this");
+    ConstraintLookupMap.put("[]","{1}[{0}]");
+    ConstraintLookupMap.put("initialise","new {0}");
+    ConstraintLookupMap.put("has","in_array({0},{1})");
+    ConstraintLookupMap.put("hasAll","in_array({0},{1})");
+    ConstraintLookupMap.put("cardinality==","count({1})=={0}");
+    ConstraintLookupMap.put("cardinality!=","count({1})!={0}");
+    ConstraintLookupMap.put("cardinality>=","count({1})>={0}");
+    ConstraintLookupMap.put("cardinality<=","count({1})<={0}");
+    ConstraintLookupMap.put("cardinality>","count({1})>{0}");
+    ConstraintLookupMap.put("cardinality<","count({1})<{0}");
+  } 
 }

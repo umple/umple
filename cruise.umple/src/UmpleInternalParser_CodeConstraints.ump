@@ -17,7 +17,7 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {  
 
-private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Method method) 
+  private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Method method) 
   {
     List <ConstraintVariable> cvs = analyzeConstraint(preconditionToken, aClass); //adds all identifiers to constraints
     Precondition precondition = new Precondition(method);
@@ -86,7 +86,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
         }
         else if(sub.is("loneBoolean"))
         {
-          rawLine.add(analyzeConstraintName(sub,aClass,true,"boolean"));
+          rawLine.add(analyzeConstraintName(sub.getSubToken(0),aClass,true));
         }
         else if (sub.is("linkingOp")){
         	rawLine.addAll(analyzeLinkingOpExpression(sub,aClass));
@@ -455,12 +455,14 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
     return rawLine;
   }
   
+  boolean mustWarn = true;
   private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean mustBeInClass, String... type)
   {
   	Token grandparentToken = nameToken.getParentToken().getParentToken();
   	ConstraintVariable cv = new ConstraintVariable("NAME","");
   	cv.setSubConstraint(new Constraint());
   	boolean isNew = false;
+  	boolean isComplex = nameToken.numberOfSubTokens()>1;
   	for(Token sub:nameToken.getSubTokens())
   	{
   	  if(sub.is("constraintParameterList"))
@@ -479,7 +481,7 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
   	          cv.getSubConstraint().addExpression(analyzeConstraintNumber(value));
   	        }
   	        else if(value.is("constraintName")){
-  	          cv.getSubConstraint().addExpression(analyzeConstraintName(value,aClass,true));
+  	          cv.getSubConstraint().addExpression(analyzeConstraintName(value,aClass,false));
   	        }
   	      }
   	      else
@@ -499,13 +501,17 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
   	  }
   	  else if(sub.is("constraintScopeOperator"))
   	  {
-  	    cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","."));
+  	    ConstraintVariable dot = new ConstraintVariable("OPERATOR",".");
+  	    dot.setIsPrimitive(false);
+  	    cv.getSubConstraint().addExpression(dot);
+  	    mustWarn = false;
   	    for(Token subsub:sub.getSubTokens()){
   	      if(subsub.is("constraintName"))
   	      {
   	        cv.getSubConstraint().addExpression(analyzeConstraintName(subsub,aClass,true));
   	      }
-  	    }
+  	    }  	    
+  	    mustWarn = false;
   	  }
   	  else if(sub.is("name"))
   	  {
@@ -513,10 +519,15 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
   	    cv.getAttribute(aClass);
   	    ConstraintVariable name = new ConstraintVariable("",sub.getValue());
   	    cv.getSubConstraint().addExpression(name);
+  	    if("this".equals(name.getValue()))
+  	    {
+  	      continue;
+  	    }
   	    UmpleVariable attribute;
         if(mustBeInClass)
         {
           attribute = name.getAttribute(aClass);
+          
           if(attribute!=null||isNew)
           {
       	    if(type!=null&&type.length!=0)
@@ -590,14 +601,14 @@ private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Me
           }
           else if(attribute==null)
           {
-            cv.setType("SYNTAX");
-            cv.setValue(sub.getValue());
-            setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());      
-          }
-          
+            if(!isComplex&&mustWarn){
+              setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());
+            }      
+          }          
         }
       }
     }
+    mustWarn = true;
     return cv;
   }
   private ConstraintVariable analyzeConstraintNumber(Token numberToken)

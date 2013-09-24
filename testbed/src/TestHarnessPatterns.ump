@@ -75,7 +75,7 @@ class LanguageSpecificCodeBlock
 	
 	state{
 	  allLanguages{
-	    applySpecificAction Java [isJava()] Php [!$this->isJava()]   / Java {name = "action=java";} Php {$this->name = "actionphp";} -> to;
+	    applySpecificAction [this.isJava()] / Java {name = "action=java";} Php {$this->name = "actionphp";} -> to;
     }
     to{
     }

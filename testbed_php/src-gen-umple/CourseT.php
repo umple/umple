@@ -66,7 +66,7 @@ class CourseT
     $aOne = $this->one;
     if ($aOne == self::$OneOff)
     {
-      if ($this->count > 10)
+      if ($this->count>10)
       {
         $this->setOne(self::$OneOn);
         $wasEventProcessed = true;
@@ -82,7 +82,7 @@ class CourseT
     $aOne = $this->one;
     if ($aOne == self::$OneOff)
     {
-      if ($this->count <= 10)
+      if ($this->count<=10)
       {
         $this->setOne(self::$OneWait);
         $wasEventProcessed = true;

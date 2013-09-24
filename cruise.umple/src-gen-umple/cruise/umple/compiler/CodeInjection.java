@@ -8,10 +8,10 @@ import java.util.*;
 
 /**
  * A block of code that can be injected into one or more methods, constructor, etc.
- * @umplesource Umple.ump 329
+ * @umplesource Umple.ump 283
  * @umplesource Umple_Code.ump 540
  */
-// line 329 "../../../../src/Umple.ump"
+// line 283 "../../../../src/Umple.ump"
 // line 540 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {
@@ -184,7 +184,7 @@ public class CodeInjection
   	  }
   	  else if("Php".equals(CodeBlock.languageUsed))
   	  {
-  	  	return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
+  	  	return StringFormatter.format((new PhpGenerator()).translate("Closed",getConstraint()),
   	  		snippet.getCode()
   	  	);
   	  }

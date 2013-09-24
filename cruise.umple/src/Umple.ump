@@ -238,27 +238,7 @@ class ConstraintVariable{
     "float".equals(type.toLowerCase())||
      "double".equals(type.toLowerCase())};
   UmpleVariable foundAttribute = null;
-  ConstraintVariable isNotPrimitive(){
-    isPrimitive = false;
-    return this;
-  }
-  UmpleVariable getAttribute(UmpleClass aClass){
-    if(!getIsAttribute()) {
-      return null;
-    }
-    UmpleVariable uv = aClass.getAttribute(this.getValue());
-    
-    if(uv!=null){
-      setFoundAttribute(uv);
-      isAssociation = ((Attribute)uv).getIsList();
-      return uv;
-    }
-    uv = aClass.getAssociationVariable(this.getValue());
-    setFoundAttribute(uv);
-    isAssociation = uv!=null;
-    return uv;
-  }
-  key {value};
+  
 }
 
 /*
@@ -273,33 +253,7 @@ class Constraint{
   boolean negated = false;
   ConstraintVariable[] expressions; 
   
-  void mergeWith(Constraint constraint){
-    if(numberOfExpressions()>0)
-    {
-      if(getNegated()&&!constraint.getNegated())
-      {
-        addExpression(new ConstraintVariable("OPERATOR","||"));
-      }
-      else 
-      {
-        addExpression(new ConstraintVariable("OPERATOR","&&"));
-      }
-    }
-    if(constraint.getNegated())
-    {
-      addExpression(new ConstraintVariable("OPERATOR","!"));
-    }  
-    addExpression(new ConstraintVariable("SYNTAX","("));
-    for(ConstraintVariable cv: constraint.getExpressions())
-    {
-      addExpression(cv);
-    }
-    addExpression(new ConstraintVariable("SYNTAX",")"));
-  }
   
-  String getCode(){
-    return StringFormatter.format(gen.translate((getNegated()?"Not":"")+format,this),inject);
-  }
 }
 
 /*

@@ -77,7 +77,7 @@
     switch (bulb)
     {
       case On:
-        if (brightness < 1)
+        if (brightness<1)
         {
           setBulb(Off);
           wasEventProcessed = true;

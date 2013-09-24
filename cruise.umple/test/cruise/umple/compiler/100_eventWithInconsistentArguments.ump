@@ -1,6 +1,7 @@
 class LightFixture
 {
   Integer brightness = 0;
+  Integer dimmer = 0;
   bulb{
 	Off{
 	    turnDimmer(Integer lightval) /{setBrightness(lightval)} -> Off;

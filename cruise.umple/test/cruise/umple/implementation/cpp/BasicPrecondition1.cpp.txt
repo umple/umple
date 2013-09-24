@@ -59,14 +59,14 @@ Client::~Client()
 
    int Client::someMethod(int arg){
 
-      if( !(arg>5))
-        {
-        throw "Please provide a valid arg";
-        }
-      if( !(minAge<8))
-        {
-        throw "Please provide a valid minAge";
-        }
+    if ( !(arg>5))
+    {
+      throw "Please provide a valid arg";
+    }
+    if ( !(minAge<8))
+    {
+      throw "Please provide a valid minAge";
+    }
       // rest of stuff that we don't interpret
  return 0;
   }

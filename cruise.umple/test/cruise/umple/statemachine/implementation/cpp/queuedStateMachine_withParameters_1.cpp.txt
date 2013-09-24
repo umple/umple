@@ -127,7 +127,7 @@
     switch (bulb)
     {
       case Dimmed:
-        if (dimmer > 99)
+        if (dimmer>99)
         {
           setBulb(On);
           wasEventProcessed = true;

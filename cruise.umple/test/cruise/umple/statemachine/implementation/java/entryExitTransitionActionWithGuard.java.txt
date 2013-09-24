@@ -40,7 +40,7 @@ public class LightFixture
     return bulb;
   }
 
-  @umplesourcefile(line={10,10}, file={"entryExitTransitionActionWithGuard.ump","entryExitTransitionActionWithGuard.ump"}, javaline={52,56}, length={1,1})
+  @umplesourcefile(line={10,10}, file={"entryExitTransitionActionWithGuard.ump","entryExitTransitionActionWithGuard.ump"}, javaline={52,57}, length={1,1})
   public boolean push()
   {
     boolean wasEventProcessed = false;

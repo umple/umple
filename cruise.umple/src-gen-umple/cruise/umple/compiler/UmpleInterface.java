@@ -7,10 +7,10 @@ import java.util.*;
 /**
  * Represents a interface.
  * Like a class, but can't have any concrete methods, attributes or associations.
- * @umplesource Umple.ump 379
+ * @umplesource Umple.ump 333
  * @umplesource Umple_Code.ump 627
  */
-// line 379 "../../../../src/Umple.ump"
+// line 333 "../../../../src/Umple.ump"
 // line 627 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {

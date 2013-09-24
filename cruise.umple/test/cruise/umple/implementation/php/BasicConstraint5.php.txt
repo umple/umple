@@ -19,16 +19,12 @@ class student
 
   public function __construct($aAge, $aWeight)
   {
-    if ( !($aWeight<3&&$aAge>18))
-    {
-      throw new RuntimeException("Please provide a valid weight");
-    }
-    if ( !($aWeight<3&&$aAge>18))
-    {
-      throw new RuntimeException("Please provide a valid age");
-    }
     $this->age = $aAge;
     $this->weight = $aWeight;
+    if ( !(($aWeight<3&&$aAge>18)))
+    {
+      throw new RuntimeException("Please provide a valid weight, age, ");
+    }
   }
 
   //------------------------
