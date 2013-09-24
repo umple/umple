@@ -41,27 +41,10 @@ public class CourseO
     return one;
   }
 
-  public boolean stay()
-  {
-    boolean wasEventProcessed = false;
-    
-    One aOne = one;
-    switch (aOne)
-    {
-      case On:
-        setOne(One.On);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private void setOne(One aOne)
+  public boolean setOne(One aOne)
   {
     one = aOne;
+    return true;
   }
 
   public void delete()
