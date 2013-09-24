@@ -724,8 +724,7 @@ public class UmpleParserStateMachineTest
     UmpleClass uClass = model.getUmpleClass("OnOffSwitch");
     StateMachine sm = uClass.getStateMachine(0);
     State on = sm.findState("On");
-    Assert.assertEquals(1,on.numberOfTransitions());
-    Assert.assertEquals("flop", on.getTransition(0).getEvent().getName());
+    Assert.assertEquals(2,on.numberOfTransitions());
   }
 
   @Test
