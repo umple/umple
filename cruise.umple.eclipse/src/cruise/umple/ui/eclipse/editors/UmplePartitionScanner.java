@@ -11,15 +11,5 @@ public class UmplePartitionScanner extends RuleBasedPartitionScanner {
 	public final static String Umple_TAG = "__Umple_tag";
 
 	public UmplePartitionScanner() {
-
-		IToken UmpleComment = new Token(Umple_COMMENT);
-		IToken tag = new Token(Umple_TAG);
-
-		IPredicateRule[] rules = new IPredicateRule[2];
-
-		rules[0] = new MultiLineRule("<!--", "-->", UmpleComment);
-		rules[1] = new TagRule(tag);
-
-		setPredicateRules(rules);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
+import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
@@ -58,62 +59,83 @@ public class UmpleScanner extends RuleBasedScanner {
 
     // IRule[] rules = new IRule[21];
     // Add rule for processing instructions
-    rules.add(new SingleLineRule("clas", "s", structIdentifierToken));
-    rules.add(new SingleLineRule("interfac", "e", structIdentifierToken));
-    rules.add(new SingleLineRule("associatio", "n", structIdentifierToken));
+    rules.add(new SingleWordRule("class", structIdentifierToken));
+    rules.add(new SingleWordRule("interface", structIdentifierToken));
+    rules.add(new SingleWordRule("association", structIdentifierToken));
     rules.add(new EndOfLineRule("//", commentToken));
-    rules.add(new SingleLineRule("isA", " ", reservedWordToken));
-    rules.add(new SingleLineRule("implements", " ", reservedWordToken));
-    rules.add(new SingleLineRule("1", " ", associationMultToken));// number, in
+    rules.add(new SingleWordRule("isA", reservedWordToken));
+    rules.add(new SingleWordRule("implements", reservedWordToken));
+    rules.add(new RegexRule("([0-9]|\\Q*\\E)+", associationMultToken));// number, in
     // an
     // association.
-    rules.add(new SingleLineRule("2", " ", associationMultToken));// number, in
-    // an
+    rules.add(new SingleWordRule("String", typeToken));// *, in an
     // association.
-    rules.add(new SingleLineRule("3", " ", associationMultToken));// number, in
-    // an
+    rules.add(new SingleWordRule("Integer", typeToken));// *, in an
     // association.
-    rules.add(new SingleLineRule("4", " ", associationMultToken));// number, in
-    // an
+    rules.add(new SingleWordRule("Time", typeToken));// *, in an
     // association.
-    rules.add(new SingleLineRule("5", " ", associationMultToken));// number, in
-    // an
+    rules.add(new SingleWordRule("Date", typeToken));// *, in an
     // association.
-    rules.add(new SingleLineRule("6", " ", associationMultToken));// number, in
-    // an
+    rules.add(new SingleWordRule("immutable", immutableToken));// *, in an
     // association.
-    rules.add(new SingleLineRule("7", " ", associationMultToken));// number, in
-    // an
+    rules.add(new SingleWordRule("settable", settableToken));// *, in an
     // association.
-    rules.add(new SingleLineRule("8", " ", associationMultToken));// number, in
-    // an
-    // association.
-    rules.add(new SingleLineRule("9", " ", associationMultToken));// number, in
-    // an
-    // association.
-    rules.add(new SingleLineRule("0", " ", associationMultToken));// number, in
-    // an
-    // association.
-    rules.add(new SingleLineRule("*", " ", associationMultToken));// *, in an
-    // association.
-    rules.add(new SingleLineRule("String", " ", typeToken));// *, in an
-    // association.
-    rules.add(new SingleLineRule("Integer", " ", typeToken));// *, in an
-    // association.
-    rules.add(new SingleLineRule("Time", " ", typeToken));// *, in an
-    // association.
-    rules.add(new SingleLineRule("Date", " ", typeToken));// *, in an
-    // association.
-    rules.add(new SingleLineRule("immutable", " ", immutableToken));// *, in an
-    // association.
-    rules.add(new SingleLineRule("settable", " ", settableToken));// *, in an
-    // association.
-    rules.add(new SingleLineRule("namespac", "e", structIdentifierToken));
-    rules.add(new SingleLineRule("us", "e", reservedWordTokenThin));
-    rules.add(new SingleLineRule("uniqu", "e", uniqueToken));
+    rules.add(new SingleWordRule("namespace", structIdentifierToken));
+    rules.add(new SingleWordRule("use", reservedWordTokenThin));
+    rules.add(new SingleWordRule("unique", uniqueToken));
     // Add generic whitespace rule.
     // rules[0] = new SingleLineRule("class", "class", tokenTwo);
 
     setRules((IRule[]) rules.toArray(new IRule[0]));
   }
+  
+  public class RegexRule implements IRule {
+	private IToken token;
+	private String regex;
+	public RegexRule(String regex, IToken associationMultToken){
+		this.token = associationMultToken;
+		this.regex = regex;
+	}
+	@Override
+	public IToken evaluate(ICharacterScanner scanner) {
+		String input = ""+(char)scanner.read();
+		if(!input.matches(regex)){
+			scanner.unread();
+			return Token.UNDEFINED;
+		}
+		else {
+			while(input.matches(regex)){
+				input += (char)scanner.read();
+			}
+			scanner.unread();
+			return token;
+		}
+	}	  
+  }
+  
+  public class SingleWordRule implements IRule {
+		private IToken token;
+		private String word;
+		public SingleWordRule(String word, IToken associationMultToken){
+			this.token = associationMultToken;
+			this.word = word+" ";
+		}
+		@Override
+		public IToken evaluate(ICharacterScanner scanner) {
+			String input = "";
+			for(int i=0;i<word.length();i++){
+				input += (char)scanner.read();
+			}			
+			if(!input.equals(word)){
+				for(int i=0;i<word.length();i++){
+					scanner.unread();
+				}
+				return Token.UNDEFINED;
+			}
+			else {				
+				scanner.unread();
+				return token;
+			}
+		}	  
+	  }
 }

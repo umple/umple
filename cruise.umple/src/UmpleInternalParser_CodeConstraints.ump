@@ -601,7 +601,7 @@ class UmpleInternalParser
           }
           else if(attribute==null)
           {
-            if(!isComplex&&mustWarn){
+            if(!isComplex&&mustWarn&&aClass!=null){
               setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());
             }      
           }          
