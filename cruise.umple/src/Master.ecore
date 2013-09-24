@@ -309,11 +309,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="activities" lowerBound="0" upperBound="-1" eType="#//Activity" eOpposite="#//Activity/onCompletionEvent"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" lowerBound="0" upperBound="-1" eType="#//Transition" eOpposite="#//Transition/event"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Guard">
+  <eClassifiers xsi:type="ecore:EClass" name="Guard" eSuperTypes="#//Constraint">
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" eType="#//Position"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="condition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="codeblock" eType="#//CodeBlock"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" lowerBound="0" upperBound="-1" eType="#//Transition" eOpposite="#//Transition/guard"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="TextParser">
@@ -757,6 +755,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtendsTokensInterface" eType="#//Map%3CUmpleClassifier%2CList%3CToken%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedInterfaceExtend" eType="#//Map%3CUmpleClassifier%2CList%3CString%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastComment" eType="#//List%3CComment%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mustWarn" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="placeholderStateMachine" eType="#//StateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="possiblyUnknownState" eType="#//Map%3CState%2CList%3CToken%3E%3E"/>

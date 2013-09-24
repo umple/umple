@@ -47,7 +47,7 @@ class LightFixture
     $aBulb = $this->bulb;
     if ($aBulb == self::$BulbOn)
     {
-      if (isTurnedOn)
+      if ($isTurnedOn)
       {
         $this->exitBulb();
         doTransition();

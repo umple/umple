@@ -35,15 +35,15 @@ class Tracer
   {
     $wasSet = false;
     $this->id = $aId;
-      if($traceFlag2)
-        {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeAfter.ump,8,Tracer,".spl_object_hash( $this ).",at_s,id,".$this->id );
-        }
+    if ($traceFlag2)
+    {
+      ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeAfter.ump,8,Tracer,".spl_object_hash( $this ).",at_s,id,".$this->id );
+    }
     $wasSet = true;
-      if(@id>232100) then
-        
-        traceFlag2=true;
-         end
+    if ($id>232100)
+    {
+      traceFlag2=true;
+    }
     return $wasSet;
   }
 
@@ -51,15 +51,15 @@ class Tracer
   {
     $wasSet = false;
     $this->name = $aName;
-      if($traceFlag1)
-        {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeAfter.ump,7,Tracer,".spl_object_hash( $this ).",at_s,name,".$this->name );
-        }
+    if ($traceFlag1)
+    {
+      ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeAfter.ump,7,Tracer,".spl_object_hash( $this ).",at_s,name,".$this->name );
+    }
     $wasSet = true;
-      if(@name=="tim") then
-        
-        traceFlag1=true;
-         end
+    if ($name=="tim")
+    {
+      traceFlag1=true;
+    }
     return $wasSet;
   }
 

@@ -563,7 +563,7 @@ class CodeInjection
   	  }
   	  else if("Php".equals(CodeBlock.languageUsed))
   	  {
-  	  	return StringFormatter.format((new RubyGenerator()).translate("Closed",getConstraint()),
+  	  	return StringFormatter.format((new PhpGenerator()).translate("Closed",getConstraint()),
   	  		snippet.getCode()
   	  	);
   	  }
@@ -1324,6 +1324,147 @@ class Association
   public boolean isImmutable()
   {
     return this.immutable;
+  }
+}
+
+class ConstraintVariable
+{
+  ConstraintVariable isNotPrimitive(){
+    isPrimitive = false;
+    return this;
+  }
+  UmpleVariable getAttribute(UmpleClass aClass){
+    if(!getIsAttribute()) {
+      return null;
+    }
+    UmpleVariable uv = aClass.getAttribute(this.getValue());
+    
+    if(uv!=null){
+      setFoundAttribute(uv);
+      isAssociation = ((Attribute)uv).getIsList();
+      return uv;
+    }
+    uv = aClass.getAssociationVariable(this.getValue());
+    setFoundAttribute(uv);
+    isAssociation = uv!=null;
+    return uv;
+  }
+  
+  public boolean equals(Object object)
+  {
+    if(object==null)
+    {
+      return false;
+    }
+    ConstraintVariable cv = (ConstraintVariable)object;
+    if(cv.getSubConstraint()!=null&&getSubConstraint()!=null)
+    {
+      return cv.getValue().equals(getValue())&&cv.getSubConstraint().equals(getSubConstraint());
+    }
+    else
+    {
+      return cv.getValue().equals(getValue());
+    }
+  }
+}
+
+class Constraint
+{
+  public String toString()
+  {
+    String out = "";
+    if(numberOfExpressions()==1)
+    {
+      return getExpression(0).getValue();
+    }
+    else
+    {
+      List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
+      for(int m = 0; m < numberOfExpressions()-1; m++)
+      {
+        if(getExpression(m).getIsAttribute()&&!alreadyDone.contains(getExpression(m)))
+        {
+          alreadyDone.add(getExpression(m));
+      	  out += getExpression(m).getValue()+", ";
+      	}
+      }
+      boolean onlyOne = false;
+      if(getExpression(numberOfExpressions()-1).getIsAttribute()&&!alreadyDone.contains(getExpression(numberOfExpressions()-1)))
+      {
+        if(alreadyDone.size()==1)
+      	{
+      	  out = out.substring(0,out.length()-2);
+      	} 
+      	if(alreadyDone.size()>0)
+      	{
+      	  out += " and " ;
+      	}	
+      	else
+      	{
+      	  onlyOne = true;
+      	}
+       	out += getExpression(numberOfExpressions()-1).getValue();
+       	alreadyDone.add(getExpression(numberOfExpressions()-1));
+      }  
+      if(alreadyDone.size()==1 && !onlyOne)
+      {
+        out = out.substring(0,out.length()-2);
+      } 
+    }      
+    return out;
+  }
+  
+  void mergeWith(Constraint constraint){
+    if(numberOfExpressions()>0)
+    {
+      if(getNegated()&&!constraint.getNegated())
+      {
+        addExpression(new ConstraintVariable("OPERATOR","||"));
+      }
+      else 
+      {
+        addExpression(new ConstraintVariable("OPERATOR","&&"));
+      }
+    }
+    if(constraint.getNegated())
+    {
+      addExpression(new ConstraintVariable("OPERATOR","!"));
+    }  
+    addExpression(new ConstraintVariable("SYNTAX","("));
+    for(ConstraintVariable cv: constraint.getExpressions())
+    {
+      addExpression(cv);
+    }
+    addExpression(new ConstraintVariable("SYNTAX",")"));
+  }
+  
+  String getCode(){
+    return StringFormatter.format(gen.translate((getNegated()?"Not":"")+format,this),inject);
+  }
+  
+  public boolean equals(Object object)
+  {
+    if(object==null)
+    {
+      return false;
+    }
+    else
+    {
+      Constraint constraint = (Constraint)object;
+      int size = constraint.numberOfExpressions();
+      if(numberOfExpressions()!=size)
+      {
+        return false;
+      }
+      for(int i=0;i<size;i++)
+      {
+        if(!getExpression(i).equals(constraint.getExpression(i)))
+        {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 }
 

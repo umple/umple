@@ -185,38 +185,11 @@ class Guard
 {
   depend cruise.umple.compiler.Position;
   
+  isA Constraint;
+  
   lazy Position position;
   lazy Position endPosition;
-  condition; // target language code
   
-  CodeBlock codeblock = null;
-  after constructor {codeblock = aCondition!=null ? new CodeBlock(aCondition) : new CodeBlock();}
-  before setCondition {codeblock.setCode(aCondition);}
-  after getCondition{
-  	if (codeblock.getCode()!=null)
-  	  return codeblock.getCode();
-  	  else
-  	
-  }
-  after setCodeblock {
-  	if(condition!=null){
-  	  condition+= aCodeblock.getCode();
-  	}
-  	else
-  	  condition = aCodeblock.getCode();
-  }
-  
-  void setCondition(String lang, String code)
-  {
-  	if(condition!=null){
-  	  condition+= lang+code;
-  	}
-  	else 
-  	  condition = lang+code;
-  	codeblock.setCode(lang,code);
-  }
-  
-  key { condition }
 }
 
 use Umple.ump;

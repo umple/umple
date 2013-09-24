@@ -11,10 +11,10 @@ import cruise.umple.compiler.uigu2.Uigu2ElementGenerator;
 import java.nio.file.StandardCopyOption;
 
 /**
- * @umplesource Generator.ump 271
+ * @umplesource Generator.ump 273
  * @umplesource Generator_CodeUigu2.ump 112
  */
-// line 271 "../../../../src/Generator.ump"
+// line 273 "../../../../src/Generator.ump"
 // line 112 "../../../../src/Generator_CodeUigu2.ump"
 public class Uigu2Generator extends PhpGenerator
 {

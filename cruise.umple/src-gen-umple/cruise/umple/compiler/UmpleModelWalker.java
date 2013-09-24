@@ -51,7 +51,7 @@ public class UmpleModelWalker implements IWalker
   public void delete()
   {}
 
-  @umplesourcefile(line={155},file={"Generator_UmpleModelWalker.ump"},javaline={55},length={208})
+  @umplesourcefile(line={155},file={"Generator_UmpleModelWalker.ump"},javaline={55},length={209})
   public void accept(UmpleModelVisitor visitor){
     List<UmpleElement> umpleElements = model.getUmpleElements();
 		
@@ -202,9 +202,10 @@ public class UmpleModelWalker implements IWalker
 								visitor.visit(transition.getGuard());
 								if(transition.getGuard() != null) {
 									Guard gElm = (Guard)transition.getGuard();
-									visitor.visit(gElm.getCodeblock());
-									if(gElm.getCondition() != null && gElm.getCondition().length() > 0) {
-										visitor.visit(new Condition(gElm.getCondition(), gElm));										
+									String condition = gElm.getCondition(new cruise.umple.compiler.JavaGenerator());
+									visitor.visit(gElm);
+									if(condition != null && condition.length() > 0) {
+										visitor.visit(new Condition(condition, gElm));										
 									}
 								}	
 								visitor.visit(transition.getEvent());

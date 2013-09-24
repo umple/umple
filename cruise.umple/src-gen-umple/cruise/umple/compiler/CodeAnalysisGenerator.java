@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 120
+ * @umplesource Generator.ump 122
  * @umplesource Generator_CodeAnalysis.ump 21
  */
-// line 120 "../../../../src/Generator.ump"
+// line 122 "../../../../src/Generator.ump"
 // line 21 "../../../../src/Generator_CodeAnalysis.ump"
 public class CodeAnalysisGenerator implements CodeGenerator
 {

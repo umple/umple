@@ -78,13 +78,13 @@
     switch (bulb)
     {
       case On:
-        if (brightness < 1)
+        if (brightness<1)
         {
           setBulb(Off);
           wasEventProcessed = true;
           break;
         }
-        if (brightness > 10)
+        if (brightness>10)
         {
           setBulb(Amber);
           wasEventProcessed = true;

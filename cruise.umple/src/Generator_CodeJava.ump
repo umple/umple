@@ -17,7 +17,6 @@ class JavaGenerator
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
   private static Map<String,String> AsIsPluralLookupMap;
-  private static Map<String,String> ConstraintOperatorNonPrimitiveMap;
   private static List<String> OneOrManyLookup;
   
   
@@ -95,20 +94,6 @@ class JavaGenerator
     OneOrManyLookup = new ArrayList<String>();
     OneOrManyLookup.add("attribute");
     OneOrManyLookup.add("parameter");
-        
-    ConstraintOperatorNonPrimitiveMap = new HashMap<String,String>();
-    ConstraintOperatorNonPrimitiveMap.put("==",".equals({0})");
-    ConstraintOperatorNonPrimitiveMap.put("[]",".get({0})");
-    ConstraintOperatorNonPrimitiveMap.put("initialise","new {0}");
-    ConstraintOperatorNonPrimitiveMap.put("has",".contains({0})");
-    ConstraintOperatorNonPrimitiveMap.put("hasAll",".contains({0})");
-    ConstraintOperatorNonPrimitiveMap.put("cardinality==",".size()=={0}");
-    ConstraintOperatorNonPrimitiveMap.put("cardinality!=",".size()!={0}");
-    ConstraintOperatorNonPrimitiveMap.put("cardinality>=",".size()>={0}");
-    ConstraintOperatorNonPrimitiveMap.put("cardinality<=",".size()<={0}");
-    ConstraintOperatorNonPrimitiveMap.put("cardinality>",".size()>{0}");
-    ConstraintOperatorNonPrimitiveMap.put("cardinality<",".size()<{0}");
-
   }
   
   public void generate()
@@ -165,187 +150,6 @@ class JavaGenerator
   public String relatedTranslate(String name, AssociationVariable av)
   {
     return translate(name,av.getRelatedAssociation());
-  }
-  
-  public String translate(String format, Constraint constraint)
-  {
-    if(constraint==null)
-      return "{0}";
-    if(format.contains("Values"))
-    {
-      String out = "";
-      if(constraint.numberOfExpressions()==1)
-      {
-        return constraint.getExpression(0).getValue();
-      }
-      else
-      {
-      	List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
-      	for(int m = 0; m < constraint.numberOfExpressions()-1; m++)
-      	{
-      	  if(constraint.getExpression(m).getIsAttribute()&&!alreadyDone.contains(constraint.getExpression(m)))
-      	  {
-      	  	alreadyDone.add(constraint.getExpression(m));
-      	    out += constraint.getExpression(m).getValue()+", ";
-      	  }
-      	}
-      	boolean onlyOne = false;
-      	if(constraint.getExpression(constraint.numberOfExpressions()-1).getIsAttribute()&&!alreadyDone.contains(constraint.getExpression(constraint.numberOfExpressions()-1)))
-      	{
-          if(alreadyDone.size()==1)
-      	  {
-      	    out = out.substring(0,out.length()-2);
-      	  } 
-      	  if(alreadyDone.size()>0)
-      	  {
-      		out += " and " ;
-      	  }	
-      	  else
-      	  {
-      	  	onlyOne = true;
-      	  }
-       	  out += constraint.getExpression(constraint.numberOfExpressions()-1).getValue();
-       	  alreadyDone.add(constraint.getExpression(constraint.numberOfExpressions()-1));
-      	}  
-      	if(alreadyDone.size()==1 && !onlyOne)
-      	{
-      	  out = out.substring(0,out.length()-2);
-      	} 
-      	   	
-      }      
-      return out;
-    }
-    String expression = "";
-    boolean insertNext = false;
-    boolean strictNext = false;
-    for(int i=0;i<constraint.numberOfExpressions();i++)
-    {      
-      ConstraintVariable expr = constraint.getExpression(i);
-      // Debug statement: System.out.println(""+i + ">>" + expr.getType()+":"+expr.getValue() +">>"+expression);
-      if( expr.getType().equals("NAME"))
-      {
-        if(insertNext)
-        {
-          expression = StringFormatter.format(expression,translate("Plain"+format,expr.getSubConstraint()));
-          insertNext = false;
-        }
-        else
-        {
-          expression+=translate(format+":Plain",expr.getSubConstraint());
-        }
-      }
-      else if( expr.getIsAttribute() )
-      {
-        String value;
-        if(format.contains("allParameterOne")&&!strictNext)
-        {
-          if(!expr.getIsAssociation())
-          {
-             value = expr.getFoundAttribute()==null?expr.getValue():translate("parameterOne",expr.getFoundAttribute(),expr.getIsAssociation());
-          }
-          else 
-          {
-            if(expr.getIndex()==-1)
-            {
-              value = expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",expr.getFoundAttribute(),expr.getIsAssociation());
-            }
-            else {
-              value = expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",expr.getFoundAttribute(),expr.getIsAssociation()) + StringFormatter.format(ConstraintOperatorNonPrimitiveMap.get("[]"),""+expr.getIndex());
-            }
-          }
-        }
-        else if(format.split(":")[0].equals(expr.getValue())&&!strictNext)
-        {
-          if(!expr.getIsAssociation())
-          {
-             value = expr.getFoundAttribute()==null?expr.getValue():translate("parameterOne",expr.getFoundAttribute(),expr.getIsAssociation());
-          }
-          else 
-          {
-            if(expr.getIndex()==-1)
-            {
-              value = expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",expr.getFoundAttribute(),expr.getIsAssociation());
-            }
-            else {
-              value = expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",expr.getFoundAttribute(),expr.getIsAssociation()) + StringFormatter.format(ConstraintOperatorNonPrimitiveMap.get("[]"),""+expr.getIndex());
-            }
-          }
-        }
-        else 
-        { 
-          value = expr.getValue();
-          strictNext=false;
-        }
-        if(insertNext){
-          expression = StringFormatter.format(expression,value);
-          insertNext = false;
-        }
-        else {
-          expression += value;
-        }
-      } 
-      else
-      { //This appends all the STATIC code, further features may require additional if statments to analyze them seperately.
-        
-        if(expr.getValue().equals("."))
-        {
-          strictNext=true;
-        }
-        if(expr.getIsOperator())
-        { 
-          String opValue = expr.getValue();
-          if(!expr.getIsPrimitive()&&ConstraintOperatorNonPrimitiveMap.containsKey(opValue))
-          {
-            if(insertNext)
-            {
-              expression = StringFormatter.format(expression,ConstraintOperatorNonPrimitiveMap.get(opValue));
-              insertNext = true;
-            }
-            else 
-            {
-              expression += ConstraintOperatorNonPrimitiveMap.get(opValue);
-              insertNext = true;
-            }
-          }
-          else
-          {
-			if(insertNext)
-            {
-              expression = StringFormatter.format(expression,opValue);
-              insertNext = false;
-            }
-            else 
-            {
-              expression += opValue;
-            }
-          }
-        }
-        else if(insertNext){
-          expression = StringFormatter.format(expression,expr.getValue());
-          insertNext = false;
-        }
-        else {
-          expression += expr.getValue();
-        }
-      }
-    }
-    if(format.contains("Plain"))
-    {
-      return expression;
-    }
-    else if(format.contains("Not"))
-    {
-      expression = " !("+expression+")";
-    }
-    if(format.contains("Closed"))
-    {
-      return StringFormatter.format("if ({0})\n{\n  {1}\n}",expression, "{0}");
-    }
-    else if(format.contains("Open"))
-    {
-      return StringFormatter.format("if ({0})\n{",expression, "{0}");
-    }
-    return StringFormatter.format("if ({0})\n{\n  {1}\n}",expression, "{0}");
   }
   
   public String translate(String keyName, State state)
@@ -895,7 +699,7 @@ class JavaGenerator
         }
       }
       constraint.mergeWith(ac);
-      constraint.setInject(constraint.getInject()+" "+translate("allAttributesValues",ac));
+      constraint.setInject(constraint.getInject()+" "+ac.toString());
     }
     if(constraint.numberOfExpressions()>0)
     {
@@ -907,7 +711,7 @@ class JavaGenerator
     
     for (Precondition pc : aClass.getPreconditions()){ 
     	String methodName = pc.getMethod().getName();
-    	String precondition_code = StringFormatter.format(translate("NotClosed",pc),"throw new RuntimeException(\"Please provide a valid "+ translate("allAttributesValues",pc) +"\");");
+    	String precondition_code = StringFormatter.format(translate("NotClosed",pc),"throw new RuntimeException(\"Please provide a valid "+ pc.toString() +"\");");
     	CodeInjection before = new CodeInjection("before", methodName+"Precondition", precondition_code, aClass);         
     	before.setIsInternal(true);
     	aClass.addCodeInjection(before);    
@@ -1411,22 +1215,37 @@ class JavaGenerator
     }
   }
 
-	public void initializeLangaugeBasedVariables() {
-		UmpleToPrimitiveMap.put("Integer","int");
-		UmpleToPrimitiveMap.put("Boolean","boolean");
-		UmpleToPrimitiveMap.put("Double","double");
-		UmpleToPrimitiveMap.put("Float","float");
-		UmpleToPrimitiveMap.put("String","String");
-		//
-		TraceLookupMap.put("concatinator","+");
-	    TraceLookupMap.put("accessor","");
-	    TraceLookupMap.put("indent","    ");
-	    TraceLookupMap.put("template","{0}Tracer.handle( {1} );");
-	    TraceLookupMap.put("timestamp","System.currentTimeMillis()");
-	    TraceLookupMap.put("identifier","System.identityHashCode({0})");
-	    TraceLookupMap.put("thread","Thread.currentThread().getId()");
-	    TraceLookupMap.put("self","this");
-	    TraceLookupMap.put("increment","{0}++;");
-	    TraceLookupMap.put("formatnonprimitive",".toString().replace(\"\\n\",\"\").replace(\",\",\";\")");		
-	}
+  public void initializeLangaugeBasedVariables() {
+    UmpleToPrimitiveMap.put("Integer","int");
+    UmpleToPrimitiveMap.put("Boolean","boolean");
+    UmpleToPrimitiveMap.put("Double","double");
+    UmpleToPrimitiveMap.put("Float","float");
+    UmpleToPrimitiveMap.put("String","String");
+    //
+    TraceLookupMap.put("concatinator","+");
+    TraceLookupMap.put("accessor","");
+    TraceLookupMap.put("indent","    ");
+    TraceLookupMap.put("template","{0}Tracer.handle( {1} );");
+    TraceLookupMap.put("timestamp","System.currentTimeMillis()");
+    TraceLookupMap.put("identifier","System.identityHashCode({0})");
+    TraceLookupMap.put("thread","Thread.currentThread().getId()");
+    TraceLookupMap.put("self","this");
+    TraceLookupMap.put("increment","{0}++;");
+    TraceLookupMap.put("formatnonprimitive",".toString().replace(\"\\n\",\"\").replace(\",\",\";\")");
+    //
+    ConstraintLookupMap.put("==",".equals({0})");
+    ConstraintLookupMap.put("accessor","");
+    ConstraintLookupMap.put("ifstatement","if ({0})\n{");
+    ConstraintLookupMap.put("end","}");
+    ConstraintLookupMap.put("[]","{1}.get({0})");
+    ConstraintLookupMap.put("initialise","new {0}");
+    ConstraintLookupMap.put("has",".contains({0})");
+    ConstraintLookupMap.put("hasAll",".contains({0})");
+    ConstraintLookupMap.put("cardinality==",".size()=={0}");
+    ConstraintLookupMap.put("cardinality!=",".size()!={0}");
+    ConstraintLookupMap.put("cardinality>=",".size()>={0}");
+    ConstraintLookupMap.put("cardinality<=",".size()<={0}");
+    ConstraintLookupMap.put("cardinality>",".size()>{0}");
+    ConstraintLookupMap.put("cardinality<",".size()<{0}");
+  }
 }

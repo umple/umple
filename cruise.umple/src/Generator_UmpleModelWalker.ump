@@ -302,9 +302,10 @@ class UmpleModelWalker {
 								visitor.visit(transition.getGuard());
 								if(transition.getGuard() != null) {
 									Guard gElm = (Guard)transition.getGuard();
-									visitor.visit(gElm.getCodeblock());
-									if(gElm.getCondition() != null && gElm.getCondition().length() > 0) {
-										visitor.visit(new Condition(gElm.getCondition(), gElm));										
+									String condition = gElm.getCondition(new cruise.umple.compiler.JavaGenerator());
+									visitor.visit(gElm);
+									if(condition != null && condition.length() > 0) {
+										visitor.visit(new Condition(condition, gElm));										
 									}
 								}	
 								visitor.visit(transition.getEvent());

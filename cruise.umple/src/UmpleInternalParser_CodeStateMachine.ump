@@ -584,33 +584,6 @@ class UmpleInternalParser
         
     return action;
   }
-  private Guard analyzeGuard(Token guardToken, State fromState){
-  	Guard guard= new Guard("true");
-  	CodeBlock cb = new CodeBlock();
-  	List<String> codelangs = new ArrayList<String>();
-  	for(Token tkn: guardToken.getSubTokens()){
-  	  if(tkn.is("codeLang")){
-  		codelangs.add(tkn.getValue());
-  	  } else if(tkn.is("code")){
-  		if(codelangs.isEmpty())
-  		{
-  		  cb.setCode(tkn.getValue());
-  		} 
-  		else {
-  		  for(String lang: codelangs){
-  			cb.setCode(lang, tkn.getValue());
-          }
-          codelangs.clear();
-    	}
-      }
-    }
-    guard.setCodeblock(cb);
-    
-    guard.setPosition(guardToken.getPosition());
-    guard.setEndPosition(guardToken.getEndPosition());
-    
-    return guard;
-  }
 
   private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType)
   {
@@ -642,7 +615,15 @@ class UmpleInternalParser
     Token guardToken = transitionToken.getSubToken("guard");
     if (guardToken != null)
     {
-      t.setGuard(analyzeGuard(guardToken, fromState));
+      List <ConstraintVariable> cvs = analyzeConstraint(guardToken, fromState.getStateMachine().getUmpleClass()); //adds all identifiers to constraints
+      Guard constraint = new Guard();
+      for(ConstraintVariable cv: cvs)
+      {
+        constraint.addExpression(cv);
+      }
+      constraint.setPosition(guardToken.getPosition());
+      constraint.setEndPosition(guardToken.getEndPosition());
+      t.setGuard(constraint);//analyzeGuard(guardToken, fromState));
     }
 
     Token actionToken = transitionToken.getSubToken("action");

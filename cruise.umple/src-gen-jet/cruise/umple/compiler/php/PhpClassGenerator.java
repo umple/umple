@@ -3286,11 +3286,10 @@ public class PhpClassGenerator implements ILang
         State nextState = t.getNextState();
         String spaceOffset = t.getGuard() == null ? "" : "  ";
         StateMachine exitSm = state.exitableStateMachine(nextState);
-        
-        if (t.getGuard() != null)
+        String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";        
+        if (!"if ()\n{".equals(condition))
         {
-          allCases.append(StringFormatter.format("      if ({0})\n",t.getGuard().getCondition()));
-          allCases.append(StringFormatter.format("      {\n"));
+          allCases.append(GeneratorHelper.doIndent(condition, "      ")+"\n");
         }
         if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
         {
@@ -3305,7 +3304,7 @@ public class PhpClassGenerator implements ILang
         allCases.append(StringFormatter.format("{0}      $this->{1}(self::${2});\n",spaceOffset,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
         allCases.append(StringFormatter.format("{0}      $wasEventProcessed = true;\n",spaceOffset));
   
-        if (t.getGuard() != null)
+        if (!"if ()\n{".equals(condition))
         {
           allCases.append(StringFormatter.format("      }\n"));
         }

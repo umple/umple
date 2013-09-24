@@ -51,5 +51,4 @@ entryOrExitAction : [=type:entry|exit] / ([[codeLang]] [[codeLangs]])? { [**code
 // A do activity is long-lasting and can be interrupted
 activity : do ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
 
-moreGuards- : ([[codeLang]] [[codeLangs]])? [ [**code] ]
-guard : ([[codeLang]] [[codeLangs]])? [ [**code] ] ( [[moreGuards]] )*
+guard : [ [[constraint]] ]

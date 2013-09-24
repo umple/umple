@@ -479,4 +479,11 @@ class Event
      }
      return args;
   }
+  
+  class Guard
+  {
+    String getCondition(CodeTranslator gen){
+  	  return gen.translate(":Open",this);
+    }    
+  }
 }

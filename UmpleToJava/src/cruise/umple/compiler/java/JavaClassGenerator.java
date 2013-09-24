@@ -4118,15 +4118,16 @@ for (StateMachine smq : uClass.getStateMachines())
         String tabSpace = t.getGuard() == null ? "        " : "          ";
         StateMachine exitSm = state.exitableStateMachine(nextState);
         
-        if (t.getGuard() != null)
+        String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";
+        if (!"if ()\n{".equals(condition))
         {
-          actionLineNumbers.append(","+t.getGuard().getPosition().getLineNumber());
-          actionFileNames.append("," + "\""+t.getGuard().getPosition().getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"","")+"\"");
-          actionJavaLineNumbers.append("," + (javaLine-1));
-          actionLengths.append("," + t.getGuard().getCondition().split("\\n").length);
-          allCases.append(StringFormatter.format("        if ({0})\n",t.getGuard().getCondition()));
-          allCases.append(StringFormatter.format("        {\n"));
-          javaLine+=1+t.getGuard().getCondition().split("\\n").length;
+            actionLineNumbers.append(","+t.getGuard().getPosition().getLineNumber());
+            actionFileNames.append("," + "\""+t.getGuard().getPosition().getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"","")+"\"");
+            actionJavaLineNumbers.append("," + (javaLine-1));
+            actionLengths.append("," + (condition.split("\\n").length-1));
+            allCases.append(GeneratorHelper.doIndent(condition, "        ")+"\n");
+            javaLine+=1+condition.split("\\n").length;
+          
         }
         if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
         {
@@ -4158,7 +4159,7 @@ for (StateMachine smq : uClass.getStateMachines())
         
         javaLine+=traceItem!=null?4:3;
         
-        if (t.getGuard() != null)
+        if (!"if ()\n{".equals(condition))
         {
           allCases.append(StringFormatter.format("        }\n"));
           javaLine++;
@@ -4593,19 +4594,15 @@ for (StateMachine smq : uClass.getStateMachines())
      if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
      if (customGetPostfixCode == null) { 
     stringBuffer.append( 
-    (traceItem!=null?
-  "\n"+GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"get", uClass, "!no arguments")))
-   ,"    "):
-   ""));
+(traceItem!=null?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
+);
     stringBuffer.append(TEXT_427);
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_428);
      } else { 
+    stringBuffer.append( 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
+);
     stringBuffer.append(TEXT_429);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_430);
@@ -4614,15 +4611,8 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("associationOne",av));
     stringBuffer.append(TEXT_432);
     stringBuffer.append( 
-    (traceItem!=null?
-  "\n"+GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"get", uClass, "")))
-   ,"    "):
-   ""));
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("parameterOne",av)):"")
+);
      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); 
     stringBuffer.append(TEXT_433);
     stringBuffer.append(gen.translate("parameterOne",av));
@@ -4641,6 +4631,9 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("getMethod",av));
     stringBuffer.append(TEXT_438);
      if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } 
+    stringBuffer.append( 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationMany",av)+".get(index)"):"")
+);
     stringBuffer.append(TEXT_439);
     stringBuffer.append(gen.translate("type",av));
     stringBuffer.append(TEXT_440);
@@ -4648,6 +4641,9 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_441);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_442);
+    stringBuffer.append( 
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("parameterOne",av)):"")
+);
      if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } 
     stringBuffer.append(TEXT_443);
     stringBuffer.append(gen.translate("parameterOne",av));

@@ -167,8 +167,8 @@ class CourseT
   one
   {
     Off {
-     [$this->count > 10] -> On;
-     [$this->count <= 10] -> Wait;
+     [ this.count > 10] -> On;
+     [ this.count <= 10] -> Wait;
     }
     On { 
     }  

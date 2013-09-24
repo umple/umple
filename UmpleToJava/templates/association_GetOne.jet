@@ -3,27 +3,15 @@
   {
     <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>
 <% if (customGetPostfixCode == null) { %><%= 
-    (traceItem!=null?
-  "\n"+GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"get", uClass, "!no arguments")))
-   ,"    "):
-   "")%>
+(traceItem!=null?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
+%>
     return <%=gen.translate("associationOne",av)%>;
-<% } else { %>
+<% } else { %><%= 
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationOne",av)):"")
+%>
     <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationOne",av)%>;<%= 
-    (traceItem!=null?
-  "\n"+GeneratorHelper.doIndent(
-    StringFormatter.format(traceItem.getExtremities(gen,av.getName()),
-      StringFormatter.format(
-        "{0}Tracer.handle( {1}  + new Date());", 
-        traceItem.getTracerType(), 
-        traceItem.trace(gen, av,"get", uClass, "")))
-   ,"    "):
-   "")%>
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("parameterOne",av)):"")
+%>
     <% append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); %>
     return <%=gen.translate("parameterOne",av)%>;
 <% } %>

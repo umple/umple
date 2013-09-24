@@ -67,7 +67,7 @@ public class CourseT
     switch (aOne)
     {
       case Off:
-        if (count > 10)
+        if (count>10)
         {
           setOne(One.On);
           wasEventProcessed = true;
@@ -90,7 +90,7 @@ public class CourseT
     switch (aOne)
     {
       case Off:
-        if (count <= 10)
+        if (count<=10)
         {
           setOne(One.Wait);
           wasEventProcessed = true;

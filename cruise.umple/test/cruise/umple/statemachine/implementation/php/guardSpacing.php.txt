@@ -69,7 +69,7 @@ class Garage
     $aGarageDoor = $this->GarageDoor;
     if ($aGarageDoor == self::$GarageDoorOpen)
     {
-      if (getEntranceClear())
+      if ($getEntranceClear())
       {
         $this->setGarageDoor(self::$GarageDoorClosing);
         $wasEventProcessed = true;

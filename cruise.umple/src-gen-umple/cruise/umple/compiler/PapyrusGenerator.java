@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 64
+ * @umplesource Generator.ump 66
  * @umplesource Generator_CodePapyrus.ump 12
  */
-// line 64 "../../../../src/Generator.ump"
+// line 66 "../../../../src/Generator.ump"
 // line 12 "../../../../src/Generator_CodePapyrus.ump"
 public class PapyrusGenerator implements CodeGenerator
 {
@@ -335,8 +335,8 @@ public class PapyrusGenerator implements CodeGenerator
             {
               //check if transition has a guard condition
               if(t.getGuard()!= null){
-                smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" guard=\"_{2}\" source=\"_{3}\" target=\"_{4}\">\n",generatePapyrusID(), t.getEvent().getName(), t.getGuard().getCondition(), t.getFromState().getName(), t.getNextState().getName() ));
-                smSubCode.append(StringFormatter.format("        <ownedRule xmi:id=\"_{0}\" name=\"{0}\"/>\n", t.getGuard().getCondition() ));
+                smSubCode.append(StringFormatter.format("      <transition xmi:id=\"_{0}\" name=\"{1}\" guard=\"_{2}\" source=\"_{3}\" target=\"_{4}\">\n",generatePapyrusID(), t.getEvent().getName(), t.getGuard().getCondition(new JavaGenerator()), t.getFromState().getName(), t.getNextState().getName() ));
+                smSubCode.append(StringFormatter.format("        <ownedRule xmi:id=\"_{0}\" name=\"{0}\"/>\n", t.getGuard().getCondition(new JavaGenerator()) ));
                 //check if transition also has an action
                 if(t.getAction() != null){
                   smSubCode.append(StringFormatter.format("        <effect xmi:type=\"uml:Activity\" xmi:id=\"_{0}\" name=\"{1}\"/>\n", generatePapyrusID(), t.getAction().getActionCode() ));

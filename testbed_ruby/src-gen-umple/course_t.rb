@@ -57,8 +57,7 @@ class CourseT
     switch (one)
     {
       case OneOff:
-        if ($this->count > 10)
-        {
+        if @this.count>10 then
           set_one(UNKNOWN ID: type.OneOn);
           wasEventProcessed = true
           break;
@@ -76,8 +75,7 @@ class CourseT
     switch (one)
     {
       case OneOff:
-        if ($this->count <= 10)
-        {
+        if @this.count<=10 then
           set_one(UNKNOWN ID: type.OneWait);
           wasEventProcessed = true
           break;

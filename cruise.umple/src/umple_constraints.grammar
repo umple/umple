@@ -28,7 +28,7 @@ constraintExpr- :  [[negativeConstraint]] | [[stringExpr]]|[[boolExpr]]|[[numExp
 
 compoundExpr- : [[stringExpr]]|[[numExpr]]|[[boolExpr]]|[[genExpr]]
 
-loneBoolean : [[constrainValue]]
+loneBoolean : [[constraintName]]
 
 //must be a boolean
 boolExpr :  [[constraintName]] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]]  [[constraintName]]
@@ -63,7 +63,7 @@ associationLit : [[numLit]] [=elements]? | [[stringLit]] | [[constraintName]] | 
 
 constraintName : [=new]? [~name] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
 constraintIndexOperator- : [ [!index:[0-9]+] ]
-constraintScopeOperator :  [!scopeOperator:OPEN_ROUND_BRACKET\\.|->CLOSE_ROUND_BRACKET] [[constraintName]]
+constraintScopeOperator :  ( . | -> ) [[constraintName]]
 constraintParameterList : OPEN_ROUND_BRACKET [[constraintParameter]] ( , [[constraintParameter]] )* CLOSE_ROUND_BRACKET
 constraintParameter : [[stringLit]] | [[constraintName]] | [[numLit]]
 

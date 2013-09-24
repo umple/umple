@@ -134,7 +134,7 @@ public class LightFixture implements Runnable
     switch (aBulb)
     {
       case Dimmed:
-        if (dimmer > 99)
+        if (dimmer>99)
         {
           setBulb(Bulb.On);
           wasEventProcessed = true;

@@ -11,6 +11,8 @@ package cruise.umple.compiler;
 
 import org.junit.*;
 
+import cruise.umple.compiler.Guard;
+
 public class GuardTest
 {
 
@@ -19,23 +21,26 @@ public class GuardTest
   @Before
   public void setUp()
   {
-    guard = new Guard("x");
+    guard = new Guard();
+    guard.addExpression(new ConstraintVariable("NAME","x"));
   }
   
   @Test
   public void condition()
   {
-    Assert.assertEquals("x",guard.getCondition());
+    Assert.assertEquals("x",guard.getExpression(0).getValue());
   }
   
   @Test
   public void equalsOnlyCaresAboutCondition()
   {
-    Guard g2 = new Guard("x");
-    Assert.assertEquals(guard, g2);
-    
-    g2.setCondition("y");
-    Assert.assertEquals(false, guard.equals(g2));
+	Guard guard2 = new Guard();
+	guard2.addExpression(new ConstraintVariable("NAME","x"));
+    Assert.assertEquals(guard.getExpression(0).getValue(), guard2.getExpression(0).getValue());
+
+	Guard guard3 = new Guard();
+	guard3.addExpression(new ConstraintVariable("NAME","y"));
+    Assert.assertEquals(false,guard.getExpression(0).getValue().equals(guard3.getExpression(0).getValue()));
   }
   
 }

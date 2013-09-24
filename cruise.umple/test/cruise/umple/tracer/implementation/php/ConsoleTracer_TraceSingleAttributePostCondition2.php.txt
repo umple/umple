@@ -49,10 +49,10 @@ class Tracer
   {
     $wasSet = false;
     $this->c = $aC;
-      if($a<$b)
-        {
-        ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributePostCondition2.ump,8,Tracer,".spl_object_hash( $this ).",at_s,c,".$this->c );
-        }
+    if ($a<$b)
+    {
+      ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributePostCondition2.ump,8,Tracer,".spl_object_hash( $this ).",at_s,c,".$this->c );
+    }
     $wasSet = true;
     return $wasSet;
   }

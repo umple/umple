@@ -3485,10 +3485,11 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       {
         State nextState = t.getNextState();
         String tabSpace = t.getGuard() == null ? "        " : "          ";
-        if (t.getGuard() != null)
+        
+        String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";
+        if (!"if ()\n{".equals(condition))
         {
-          allCases.append(StringFormatter.format("        if ({0})\n",t.getGuard().getCondition()));
-          allCases.append(StringFormatter.format("        {\n"));
+          allCases.append(GeneratorHelper.doIndent(condition, "        ")+"\n");
         }
         if (hasExitAction)
         {
@@ -3504,7 +3505,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
         allCases.append(StringFormatter.format("{0}wasEventProcessed = true;\n",tabSpace));
         allCases.append(StringFormatter.format("{0}break;\n",tabSpace));
 
-        if (t.getGuard() != null)
+        if (!"if ()\n{".equals(condition))
         {
           allCases.append(StringFormatter.format("        }\n"));
         }

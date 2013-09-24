@@ -7,8 +7,10 @@ import java.util.*;
 /**
  * Under Development
  * @umplesource Umple.ump 227
+ * @umplesource Umple_Code.ump 1330
  */
 // line 227 "../../../../src/Umple.ump"
+// line 1330 "../../../../src/Umple_Code.ump"
 public class ConstraintVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -29,18 +31,12 @@ public class ConstraintVariable
   //ConstraintVariable Associations
   private Constraint subConstraint;
 
-  //Helper Variables
-  private int cachedHashCode;
-  private boolean canSetValue;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public ConstraintVariable(String aType, String aValue)
   {
-    cachedHashCode = -1;
-    canSetValue = true;
     type = aType;
     value = aValue;
     isAssociation = false;
@@ -64,7 +60,6 @@ public class ConstraintVariable
   public boolean setValue(String aValue)
   {
     boolean wasSet = false;
-    if (!canSetValue) { return false; }
     value = aValue;
     wasSet = true;
     return wasSet;
@@ -115,13 +110,13 @@ public class ConstraintVariable
     return value;
   }
 
-  @umplesourcefile(line={232},file={"Umple.ump"},javaline={122},length={2})
+  @umplesourcefile(line={232},file={"Umple.ump"},javaline={117},length={2})
   public boolean getIsAttribute()
   {
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
   }
 
-  @umplesourcefile(line={233},file={"Umple.ump"},javaline={127},length={2})
+  @umplesourcefile(line={233},file={"Umple.ump"},javaline={122},length={2})
   public boolean getIsOperator()
   {
     return "OPERATOR".equals(type);
@@ -142,7 +137,7 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
-  @umplesourcefile(line={237},file={"Umple.ump"},javaline={149},length={6})
+  @umplesourcefile(line={237},file={"Umple.ump"},javaline={144},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
@@ -168,57 +163,18 @@ public class ConstraintVariable
     return wasSet;
   }
 
-  public boolean equals(Object obj)
-  {
-    if (obj == null) { return false; }
-    if (!getClass().equals(obj.getClass())) { return false; }
-
-    ConstraintVariable compareTo = (ConstraintVariable)obj;
-  
-    if (value == null && compareTo.value != null)
-    {
-      return false;
-    }
-    else if (value != null && !value.equals(compareTo.value))
-    {
-      return false;
-    }
-
-    return true;
-  }
-
-  public int hashCode()
-  {
-    if (cachedHashCode != -1)
-    {
-      return cachedHashCode;
-    }
-    cachedHashCode = 17;
-    if (value != null)
-    {
-      cachedHashCode = cachedHashCode * 23 + value.hashCode();
-    }
-    else
-    {
-      cachedHashCode = cachedHashCode * 23;
-    }
-
-    canSetValue = false;
-    return cachedHashCode;
-  }
-
   public void delete()
   {
     subConstraint = null;
   }
 
-  @umplesourcefile(line={241},file={"Umple.ump"},javaline={216},length={4})
+  @umplesourcefile(line={1332},file={"Umple_Code.ump"},javaline={172},length={4})
   public ConstraintVariable isNotPrimitive(){
     isPrimitive = false;
     return this;
   }
 
-  @umplesourcefile(line={245},file={"Umple.ump"},javaline={222},length={16})
+  @umplesourcefile(line={1336},file={"Umple_Code.ump"},javaline={178},length={16})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
@@ -236,13 +192,30 @@ public class ConstraintVariable
     return uv;
   }
 
+  @umplesourcefile(line={1353},file={"Umple_Code.ump"},javaline={196},length={15})
+   public boolean equals(Object object){
+    if(object==null)
+    {
+      return false;
+    }
+    ConstraintVariable cv = (ConstraintVariable)object;
+    if(cv.getSubConstraint()!=null&&getSubConstraint()!=null)
+    {
+      return cv.getValue().equals(getValue())&&cv.getSubConstraint().equals(getSubConstraint());
+    }
+    else
+    {
+      return cv.getValue().equals(getValue());
+    }
+  }
+
 
   public String toString()
   {
 	  String outputString = "";
     return super.toString() + "["+
-            "value" + ":" + getValue()+ "," +
             "type" + ":" + getType()+ "," +
+            "value" + ":" + getValue()+ "," +
             "isAttribute" + ":" + getIsAttribute()+ "," +
             "isOperator" + ":" + getIsOperator()+ "," +
             "isAssociation" + ":" + getIsAssociation()+ "," +

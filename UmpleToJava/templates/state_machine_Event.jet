@@ -38,15 +38,16 @@
         String tabSpace = t.getGuard() == null ? "        " : "          ";
         StateMachine exitSm = state.exitableStateMachine(nextState);
         
-        if (t.getGuard() != null)
+        String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";
+        if (!"if ()\n{".equals(condition))
         {
-          actionLineNumbers.append(","+t.getGuard().getPosition().getLineNumber());
-          actionFileNames.append("," + "\""+t.getGuard().getPosition().getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"","")+"\"");
-          actionJavaLineNumbers.append("," + (javaLine-1));
-          actionLengths.append("," + t.getGuard().getCondition().split("\\n").length);
-          allCases.append(StringFormatter.format("        if ({0})\n",t.getGuard().getCondition()));
-          allCases.append(StringFormatter.format("        {\n"));
-          javaLine+=1+t.getGuard().getCondition().split("\\n").length;
+            actionLineNumbers.append(","+t.getGuard().getPosition().getLineNumber());
+            actionFileNames.append("," + "\""+t.getGuard().getPosition().getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"","")+"\"");
+            actionJavaLineNumbers.append("," + (javaLine-1));
+            actionLengths.append("," + (condition.split("\\n").length-1));
+            allCases.append(GeneratorHelper.doIndent(condition, "        ")+"\n");
+            javaLine+=1+condition.split("\\n").length;
+          
         }
         if (exitSm != null && !e.getIsInternal() && !state.isSameState(nextState,exitSm)) 
         {
@@ -78,7 +79,7 @@
         
         javaLine+=traceItem!=null?4:3;
         
-        if (t.getGuard() != null)
+        if (!"if ()\n{".equals(condition))
         {
           allCases.append(StringFormatter.format("        }\n"));
           javaLine++;
