@@ -615,7 +615,7 @@ class UmpleInternalParser
     Token guardToken = transitionToken.getSubToken("guard");
     if (guardToken != null)
     {
-      List <ConstraintVariable> cvs = analyzeConstraint(guardToken, fromState.getStateMachine().getUmpleClass()); //adds all identifiers to constraints
+      List <ConstraintVariable> cvs = analyzeConstraint(guardToken, fromState.getStateMachine().getRootStateMachine().getUmpleClass()); //adds all identifiers to constraints
       Guard constraint = new Guard();
       for(ConstraintVariable cv: cvs)
       {

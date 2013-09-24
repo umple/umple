@@ -174,10 +174,13 @@ public class ConstraintVariable
     return this;
   }
 
-  @umplesourcefile(line={1336},file={"Umple_Code.ump"},javaline={178},length={16})
+  @umplesourcefile(line={1336},file={"Umple_Code.ump"},javaline={178},length={19})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
+    }
+    if(aClass==null){
+    	return null;
     }
     UmpleVariable uv = aClass.getAttribute(this.getValue());
     
@@ -192,7 +195,7 @@ public class ConstraintVariable
     return uv;
   }
 
-  @umplesourcefile(line={1353},file={"Umple_Code.ump"},javaline={196},length={15})
+  @umplesourcefile(line={1356},file={"Umple_Code.ump"},javaline={199},length={15})
    public boolean equals(Object object){
     if(object==null)
     {

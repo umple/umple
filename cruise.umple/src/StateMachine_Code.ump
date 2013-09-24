@@ -264,7 +264,7 @@ class StateMachine
     return null;
   }
   
-  private StateMachine getRootStateMachine()
+  public StateMachine getRootStateMachine()
   {
     StateMachine root = this;
     

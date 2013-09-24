@@ -7,10 +7,10 @@ import java.util.*;
 /**
  * Represents the generation target, such as what the generated output language will be.
  * @umplesource Umple.ump 669
- * @umplesource Umple_Code.ump 2241
+ * @umplesource Umple_Code.ump 2244
  */
 // line 669 "../../../../src/Umple.ump"
-// line 2241 "../../../../src/Umple_Code.ump"
+// line 2244 "../../../../src/Umple_Code.ump"
 public class GenerateTarget
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -165,12 +165,12 @@ public class GenerateTarget
   public void delete()
   {}
 
-  @umplesourcefile(line={2242},file={"Umple_Code.ump"},javaline={169},length={3})
+  @umplesourcefile(line={2245},file={"Umple_Code.ump"},javaline={169},length={3})
    public void setOption(String key, String value){
     this.options.put(key, value);
   }
 
-  @umplesourcefile(line={2246},file={"Umple_Code.ump"},javaline={174},length={3})
+  @umplesourcefile(line={2249},file={"Umple_Code.ump"},javaline={174},length={3})
    public String getOption(String key){
     return this.options.get(key);
   }

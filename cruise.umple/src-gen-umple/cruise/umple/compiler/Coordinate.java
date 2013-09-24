@@ -7,10 +7,10 @@ package cruise.umple.compiler;
  * A Coordinate is used in  the layout of classes
  * It represents the shape of a class box in a diagram
  * @umplesource Umple.ump 638
- * @umplesource Umple_Code.ump 2012
+ * @umplesource Umple_Code.ump 2015
  */
 // line 638 "../../../../src/Umple.ump"
-// line 2012 "../../../../src/Umple_Code.ump"
+// line 2015 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -202,47 +202,47 @@ public class Coordinate
   public void delete()
   {}
 
-  @umplesourcefile(line={2015},file={"Umple_Code.ump"},javaline={206},length={3})
+  @umplesourcefile(line={2018},file={"Umple_Code.ump"},javaline={206},length={3})
    public Point getTopLeft(){
     return new Point(x,y);
   }
 
-  @umplesourcefile(line={2020},file={"Umple_Code.ump"},javaline={211},length={3})
+  @umplesourcefile(line={2023},file={"Umple_Code.ump"},javaline={211},length={3})
    public Point getTopRight(){
     return new Point(x+width,y);
   }
 
-  @umplesourcefile(line={2025},file={"Umple_Code.ump"},javaline={216},length={3})
+  @umplesourcefile(line={2028},file={"Umple_Code.ump"},javaline={216},length={3})
    public Point getBottomLeft(){
     return new Point(x,y+height);
   }
 
-  @umplesourcefile(line={2030},file={"Umple_Code.ump"},javaline={221},length={3})
+  @umplesourcefile(line={2033},file={"Umple_Code.ump"},javaline={221},length={3})
    public Point getBottomRight(){
     return new Point(x+width,y+height);
   }
 
-  @umplesourcefile(line={2035},file={"Umple_Code.ump"},javaline={226},length={3})
+  @umplesourcefile(line={2038},file={"Umple_Code.ump"},javaline={226},length={3})
    public Point getTopMiddle(){
     return new Point(x+width/2,y);
   }
 
-  @umplesourcefile(line={2040},file={"Umple_Code.ump"},javaline={231},length={3})
+  @umplesourcefile(line={2043},file={"Umple_Code.ump"},javaline={231},length={3})
    public Point getBottomMiddle(){
     return new Point(x+width/2,y+height);
   }
 
-  @umplesourcefile(line={2045},file={"Umple_Code.ump"},javaline={236},length={3})
+  @umplesourcefile(line={2048},file={"Umple_Code.ump"},javaline={236},length={3})
    public Point getRightMiddle(){
     return new Point(x+width,y+height/2);
   }
 
-  @umplesourcefile(line={2050},file={"Umple_Code.ump"},javaline={241},length={3})
+  @umplesourcefile(line={2053},file={"Umple_Code.ump"},javaline={241},length={3})
    public Point getLeftMiddle(){
     return new Point(x,y+height/2);
   }
 
-  @umplesourcefile(line={2055},file={"Umple_Code.ump"},javaline={246},length={24})
+  @umplesourcefile(line={2058},file={"Umple_Code.ump"},javaline={246},length={24})
    public String whereIs(Coordinate neighbour){
     int topDeltaY = getTopMiddle().getY() - neighbour.getBottomMiddle().getY();
     int topDeltaX = getTopMiddle().getX() - neighbour.getBottomMiddle().getX();
@@ -268,7 +268,7 @@ public class Coordinate
     }
   }
 
-  @umplesourcefile(line={2081},file={"Umple_Code.ump"},javaline={272},length={6})
+  @umplesourcefile(line={2084},file={"Umple_Code.ump"},javaline={272},length={6})
    public int distanceTo(Coordinate other){
     int a = other.getX() - getX();
     int b = other.getY() - getY();
@@ -276,12 +276,12 @@ public class Coordinate
     return c;
   }
 
-  @umplesourcefile(line={2089},file={"Umple_Code.ump"},javaline={280},length={3})
+  @umplesourcefile(line={2092},file={"Umple_Code.ump"},javaline={280},length={3})
    public String toString(){
     return "(" + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + ")";
   }
 
-  @umplesourcefile(line={2094},file={"Umple_Code.ump"},javaline={285},length={10})
+  @umplesourcefile(line={2097},file={"Umple_Code.ump"},javaline={285},length={10})
    private void updateStatus(){
     if (x == -1 && y == -1 && width == -1 && height == -1)
     {

@@ -1337,6 +1337,9 @@ class ConstraintVariable
     if(!getIsAttribute()) {
       return null;
     }
+    if(aClass==null){
+    	return null;
+    }
     UmpleVariable uv = aClass.getAttribute(this.getValue());
     
     if(uv!=null){

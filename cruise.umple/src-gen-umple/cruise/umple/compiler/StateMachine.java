@@ -806,7 +806,7 @@ public class StateMachine
   }
 
   @umplesourcefile(line={267},file={"StateMachine_Code.ump"},javaline={809},length={12})
-   private StateMachine getRootStateMachine(){
+   public StateMachine getRootStateMachine(){
     StateMachine root = this;
     
     State parent = getParentState();

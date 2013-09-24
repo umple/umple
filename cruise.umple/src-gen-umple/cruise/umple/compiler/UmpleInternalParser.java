@@ -3997,7 +3997,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
           }
           else if(attribute==null)
           {
-            if(!isComplex&&mustWarn){
+            if(!isComplex&&mustWarn&&aClass!=null){
               setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());
             }      
           }          
@@ -4631,7 +4631,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     Token guardToken = transitionToken.getSubToken("guard");
     if (guardToken != null)
     {
-      List <ConstraintVariable> cvs = analyzeConstraint(guardToken, fromState.getStateMachine().getUmpleClass()); //adds all identifiers to constraints
+      List <ConstraintVariable> cvs = analyzeConstraint(guardToken, fromState.getStateMachine().getRootStateMachine().getUmpleClass()); //adds all identifiers to constraints
       Guard constraint = new Guard();
       for(ConstraintVariable cv: cvs)
       {
