@@ -322,10 +322,10 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
     if(attributeT.isConditionallyWhere()) {
 			cur_conditions++;
 		}
-		if(attributeT.getPeriodClause() != null || attributeT.getPeriodClause().length() > 0) {
+		if(attributeT.getPeriodClause() != null && attributeT.getPeriodClause().length() > 0) {
 			cur_iterations++;
 		}
-		if(attributeT.getDuringClause() != null || attributeT.getDuringClause().length() > 0) {
+		if(attributeT.getDuringClause() != null && attributeT.getDuringClause().length() > 0) {
 			cur_iterations++;
 		}
   }
