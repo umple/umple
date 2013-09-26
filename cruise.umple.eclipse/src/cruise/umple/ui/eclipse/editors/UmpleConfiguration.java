@@ -57,12 +57,12 @@ public class UmpleConfiguration extends SourceViewerConfiguration {
 	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
 		PresentationReconciler reconciler = new PresentationReconciler();
 
-		DefaultDamagerRepairer dr =
-			new DefaultDamagerRepairer(getUmpleTagScanner());
+		UmpleDamagerRepairer dr =
+			new UmpleDamagerRepairer(getUmpleTagScanner());
 		reconciler.setDamager(dr, UmplePartitionScanner.Umple_TAG);
 		reconciler.setRepairer(dr, UmplePartitionScanner.Umple_TAG);
 
-		dr = new DefaultDamagerRepairer(getUmpleScanner());
+		dr = new UmpleDamagerRepairer(getUmpleScanner());
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 

@@ -25,6 +25,11 @@ public class TagRule extends MultiLineRule {
 				// comment - abort
 				return false;
 			}
+			if (c == ';') {
+				scanner.unread();
+				// end of line
+				return false;
+			}
 		} else if (sequence[0] == '>') {
 			scanner.unread();
 		}
