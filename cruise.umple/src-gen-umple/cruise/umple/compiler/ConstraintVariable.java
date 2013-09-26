@@ -110,11 +110,13 @@ public class ConstraintVariable
     return value;
   }
 
+  @umplesourcefile(line={232},file={"Umple.ump"},javaline={117},length={2})
   public boolean getIsAttribute()
   {
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
   }
 
+  @umplesourcefile(line={233},file={"Umple.ump"},javaline={122},length={2})
   public boolean getIsOperator()
   {
     return "OPERATOR".equals(type);
@@ -135,6 +137,7 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
+  @umplesourcefile(line={237},file={"Umple.ump"},javaline={144},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
@@ -165,13 +168,13 @@ public class ConstraintVariable
     subConstraint = null;
   }
 
-  @umplesourcefile(line={1332},file={"Umple_Code.ump"},javaline={169},length={4})
+  @umplesourcefile(line={1332},file={"Umple_Code.ump"},javaline={172},length={4})
   public ConstraintVariable isNotPrimitive(){
     isPrimitive = false;
     return this;
   }
 
-  @umplesourcefile(line={1336},file={"Umple_Code.ump"},javaline={175},length={19})
+  @umplesourcefile(line={1336},file={"Umple_Code.ump"},javaline={178},length={19})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
@@ -192,7 +195,7 @@ public class ConstraintVariable
     return uv;
   }
 
-  @umplesourcefile(line={1356},file={"Umple_Code.ump"},javaline={196},length={15})
+  @umplesourcefile(line={1356},file={"Umple_Code.ump"},javaline={199},length={15})
    public boolean equals(Object object){
     if(object==null)
     {

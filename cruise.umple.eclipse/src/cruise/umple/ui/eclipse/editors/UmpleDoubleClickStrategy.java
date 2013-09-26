@@ -16,9 +16,9 @@ public class UmpleDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 		fText = part;
 
-		if (!selectComment(pos)) {
+		//if (!selectComment(pos)) {
 			selectWord(pos);
-		}
+		//}
 	}
 	protected boolean selectComment(int caretPos) {
 		IDocument doc = fText.getDocument();
@@ -80,7 +80,7 @@ public class UmpleDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 			while (pos >= 0) {
 				c = doc.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c))
+				if (c==' '||c=='\t'||c=='\n'||c=='.'||c=='\"'||c=='\''||c=='('||c==')'||c==';'||c==',')
 					break;
 				--pos;
 			}
@@ -92,7 +92,7 @@ public class UmpleDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 			while (pos < length) {
 				c = doc.getChar(pos);
-				if (!Character.isJavaIdentifierPart(c))
+				if (c==' '||c=='\t'||c=='\n'||c=='.'||c=='\"'||c=='\''||c=='('||c==')'||c==';'||c==',')
 					break;
 				++pos;
 			}

@@ -161,6 +161,7 @@ public class AttributeTraceItem implements TraceItem
     return constraint;
   }
 
+  @umplesourcefile(line={101},file={"Trace.ump"},javaline={168},length={2})
   public String getTracerType()
   {
     return getTraceDirective().getTracerType();
@@ -370,22 +371,22 @@ public class AttributeTraceItem implements TraceItem
     placeholderTraceDirective.removeAttributeTraceItem(this);
   }
 
-  @umplesourcefile(line={178},file={"Trace_Code.ump"},javaline={374},length={3})
+  @umplesourcefile(line={178},file={"Trace_Code.ump"},javaline={375},length={3})
   public Attribute getAttribute(int index){
     return (Attribute)getUmpleVariable(index);
   }
 
-  @umplesourcefile(line={181},file={"Trace_Code.ump"},javaline={379},length={3})
+  @umplesourcefile(line={181},file={"Trace_Code.ump"},javaline={380},length={3})
   public Boolean addAttribute(Attribute attr){
     return addUmpleVariable(attr);
   }
 
-  @umplesourcefile(line={184},file={"Trace_Code.ump"},javaline={384},length={3})
+  @umplesourcefile(line={184},file={"Trace_Code.ump"},javaline={385},length={3})
    public Boolean getIsPre(){
     return conditionallyWhere;
   }
 
-  @umplesourcefile(line={187},file={"Trace_Code.ump"},javaline={389},length={3})
+  @umplesourcefile(line={187},file={"Trace_Code.ump"},javaline={390},length={3})
    public Boolean getIsPost(){
     return !conditionallyWhere;
   }
@@ -399,7 +400,7 @@ public class AttributeTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace
    */
-  @umplesourcefile(line={199},file={"Trace_Code.ump"},javaline={394},length={77})
+  @umplesourcefile(line={199},file={"Trace_Code.ump"},javaline={395},length={77})
    public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
     //find the object being traced
     for(UmpleVariable attr: umpleVariables)
@@ -484,7 +485,7 @@ public class AttributeTraceItem implements TraceItem
    * needs the name of the attribute
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line={280},file={"Trace_Code.ump"},javaline={482},length={3})
+  @umplesourcefile(line={280},file={"Trace_Code.ump"},javaline={483},length={3})
    public String getExtremities(CodeTranslator gen, String name){
     return gen.translate(name+":Closed",constraint);
   }
