@@ -267,12 +267,12 @@ public class UmpleScanner extends RuleBasedScanner {
 		}
 	}
 	public class TypeRule extends RegexRule {
-		private RegexWordRule arrows1;
-		private RegexWordRule square;
+		private RegexRule arrows1;
+		private RegexRule square;
 		public TypeRule(IToken token){ 
 			super("[^a-zA-Z0-9][A-Z][a-zA-Z0-9_-]*",2,1,token);
-			arrows1 = new RegexWordRule("<[^>]*>?",1,true,token);
-			square = new RegexWordRule("[\\s*]?",1,true,token);
+			arrows1 = new RegexRule("<[^>\\n;]*>?",1,0,token);
+			square = new RegexRule("\\[\\s*\\]?",1,0,token);
 		}
 		@Override
 		public IToken evaluate(ICharacterScanner scanner) {
@@ -286,10 +286,17 @@ public class UmpleScanner extends RuleBasedScanner {
 					if(arrows1.evaluate(scanner)==Token.UNDEFINED){						
 						return Token.UNDEFINED;
 					}
-					scanner.unread();
+					if(arrows1.input.charAt(arrows1.input.length()-2)!='>'){
+						arrows1.rewind(scanner);
+						return Token.UNDEFINED;
+					}
 				}
 				else if(current=='['){
 					if(square.evaluate(scanner)==Token.UNDEFINED){
+						return Token.UNDEFINED;
+					}
+					if(square.input.charAt(square.input.length()-2)!=']'){
+						square.rewind(scanner);
 						return Token.UNDEFINED;
 					}
 				}
@@ -358,23 +365,28 @@ public class UmpleScanner extends RuleBasedScanner {
 		}
 	}
 	public class ScopeRule implements IRule {
-		IRule open;
-		IRule close;
-		IToken token;
+		private int min;
+		private String open;
+		private String close;
+		private IToken token;
 		public ScopeRule(String open,String close,int min, IToken token){
-			this.open = new RegexWordRule(open,min,false,token);
-			this.close = new RegexWordRule(close,min,false,token);
+			this.open = open;
+			this.close = close;
 			this.token = token;
+			this.min = min;
 		}
 		@Override
 		public IToken evaluate(ICharacterScanner scanner) {
-
-			if(!open.evaluate(scanner).equals(Token.UNDEFINED)){
+			String input = "";
+			for(int i=0;i<min;i++){
+				input += (char)scanner.read();
+			}
+			if(input.matches(open)){
 					currentScope = new Scope(currentScope);
 					currentScope.begin(fOffset);
 				return token;
 			}
-			else if(!close.evaluate(scanner).equals(Token.UNDEFINED)){
+			else if(input.matches(close)){
 				currentScope.end(fOffset);
 				if(currentScope.parent!=null){
 					currentScope = currentScope.parent;
@@ -383,6 +395,9 @@ public class UmpleScanner extends RuleBasedScanner {
 			}
 			else
 			{
+				for(int i=0;i<min;i++){
+					scanner.unread();
+				}
 				return Token.UNDEFINED;
 			}
 			//nextNameIsNotAType = true;
@@ -395,6 +410,4 @@ public class UmpleScanner extends RuleBasedScanner {
 		nextNameIsAnAttributeName = false;
 		
 	}
-
-
 }

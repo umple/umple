@@ -17,9 +17,9 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {  
 
-  private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Method method) 
+  private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Method method)
   {
-    List <ConstraintVariable> cvs = analyzeConstraint(preconditionToken, aClass); //adds all identifiers to constraints
+    List<ConstraintVariable> cvs = analyzeConstraint(preconditionToken, aClass); //adds all identifiers to constraints
     Precondition precondition = new Precondition(method);
     
     for(ConstraintVariable cv: cvs)
@@ -37,7 +37,7 @@ class UmpleInternalParser
    */
   private void analyzeInvariant (Token invariantToken, UmpleClass aClass)
   {
-    List <ConstraintVariable> cvs = analyzeConstraint(invariantToken, aClass); //adds all identifiers to constraints
+    List<ConstraintVariable> cvs = analyzeConstraint(invariantToken, aClass); //adds all identifiers to constraints
     Constraint constraint = new Constraint();
     
     for(ConstraintVariable cv: cvs)
@@ -103,9 +103,9 @@ class UmpleInternalParser
   return rawLine;
   }
   
-  private List <ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClass aClass){
+  private List<ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClass aClass){
 	  List<Token> negativeConstraintSubtokens = negativeConstraintToken.getSubTokens();
-	  List <Token> subtokensCopy = new ArrayList <Token> ();
+	  List<Token> subtokensCopy = new ArrayList<Token> ();
 	  subtokensCopy.addAll(negativeConstraintSubtokens);
 	  
 	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -555,7 +555,7 @@ class UmpleInternalParser
           else if (grandparentToken.getName().equals("precondition"))
           { //if it was a precondition, check if it matches any of the method arguments
     	    Token concreteMethod = grandparentToken.getParentToken();
-    	    ArrayList <MethodParameter> methodparams = new ArrayList <MethodParameter>();
+    	    ArrayList<MethodParameter> methodparams = new ArrayList<MethodParameter>();
     	    for (Token t : concreteMethod.getSubTokens())
     	    {
               if (t.getName().equals("methodDeclarator"))

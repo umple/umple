@@ -10,10 +10,10 @@ import cruise.umple.util.*;
  * 
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
  * In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
- * @umplesource Umple.ump 577
+ * @umplesource Umple.ump 576
  * @umplesource Umple_Code.ump 1775
  */
-// line 577 "../../../../src/Umple.ump"
+// line 576 "../../../../src/Umple.ump"
 // line 1775 "../../../../src/Umple_Code.ump"
 public class Multiplicity
 {
