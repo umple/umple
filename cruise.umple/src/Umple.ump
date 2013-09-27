@@ -244,16 +244,15 @@ class ConstraintVariable{
 /*
  * The Constraint object related to Umple Classes
  */
-class Constraint{
+class Constraint {
   depend cruise.umple.util.*;
   isA CodeBlock;
+  
   format = "allParameterClosed";
   String inject = "";
   CodeTranslator gen = null;
   boolean negated = false;
-  ConstraintVariable[] expressions; 
-  
-  
+  ConstraintVariable[] expressions;  
 }
 
 /*
