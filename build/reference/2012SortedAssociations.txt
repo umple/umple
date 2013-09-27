@@ -53,7 +53,7 @@ class Registration {
 
   
   public String toString() {
-    return \"Registration: \" getName() \":\" getCode();
+    return "Registration: " + getName() + ":" + getCode();
   }
 }
 
@@ -61,12 +61,12 @@ class Registration {
 class Academy {
   public static void main(String [ ] args) {
     Academy ac = new Academy();
-    Student j = ac.addRegistrant(12,\"Jim\");
-    Student a = ac.addRegistrant(4,\"Ali\");
-    Student m = ac.addRegistrant(8,\"Mary\");
-    Student f = ac.addRegistrant(3,\"Francois\");
-    Course c = ac.addCourse(\"CS191\");
-    Course c2 = ac.addCourse(\"AN234\");    
+    Student j = ac.addRegistrant(12,"Jim");
+    Student a = ac.addRegistrant(4,"Ali");
+    Student m = ac.addRegistrant(8,"Mary");
+    Student f = ac.addRegistrant(3,"Francois");
+    Course c = ac.addCourse("CS191");
+    Course c2 = ac.addCourse("AN234");    
     j.addRegistration(c);
     a.addRegistration(c);
     m.addRegistration(c);
@@ -76,13 +76,13 @@ class Academy {
     System.out.println(ac);
   }
   public String toString() {
-    String result=\"Students:\\n\";
+    String result="Students:\n";
     for (Student s: getRegistrants()) {
-      result =s \"\\n\";
+      result +=s + "\n";
     }
-    result =\"Courses:\\n\";
+    result +="Courses:\n";
     for (Course c: getCourses()) {
-      result =c \"\\n\";
+      result +=c + "\n";
     }
 
     return result;
@@ -91,9 +91,9 @@ class Academy {
 
 class Student {
   public String toString() {
-    String result=\"Student=\" id \"[\" name \"]\\n\";
+    String result="Student=" + id + "[" + name + "\n";
     for (Registration r: getRegistrations()) {
-      result =\"  In: \" r \"\\n\";
+      result +="  In: " + r + "\n";
     }
     return result;
   }
@@ -101,9 +101,9 @@ class Student {
 
 class Course {
   public String toString() {
-    String result =\"Course=\" code \"\\n\";
+    String result ="Course=" + code + "\n";
     for (Registration r: getRegistrations()) {
-      result =\"  Has: \" r \"\\n\";
+      result +="  Has: " + r + "\n";
     }    
     return result;
   }
@@ -130,4 +130,5 @@ class Registration
   position.association Registration__Student 30,0 44,77;
   position.association Course__Registration 110,16 0,29;
   position 50 220 109 74;
-}@@endexample
+}
+@@endexample
