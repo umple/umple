@@ -457,6 +457,7 @@ public class CPPContentsPointsHandler{
 			}
 			return ((SimpleEntry<?, String>)generationValueGetter.generationPoint(allValues.get(0), IModelingConstructorDefinitionsConstants.CONSTRUCT_OBJECT_INTERNALLY,
 					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_SOURCE, source),
+					GenerationArgumentDescriptor.arg(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_IS_INTERNAL, Boolean.TRUE),
 					GenerationArgumentDescriptor.arg(IModelingElementDefinitions.TYPE_NAME, typeName),
 					GenerationArgumentDescriptor.arg(IModelingElementDefinitions.NAME, name)).get(0)).getValue();
 		}
@@ -469,17 +470,27 @@ public class CPPContentsPointsHandler{
 			@GenerationBaseElement Object containingElement,
 			@GenerationArgument(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
 			@GenerationArgument(id= IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_SOURCE) Object source,
+			//@GenerationArgument(id= IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_IS_INTERNAL) boolean isInternal,
 			@GenerationArgument(id = IModelingElementDefinitions.NAME) String name) {
 		
 		String sourceType= generationValueGetter.getString(source, IModelingElementDefinitions.NAME);
 		
-		Set<Object> filtered = getElementParameters(generationValueGetter, containingElement);
-
 		List<String> paramsList= new ArrayList<String>();
 		String parametersString = CommonConstants.BLANK;
-
+		
+		Set<Object> parametersListItems = getElementParameters(generationValueGetter, containingElement);
+//		List<Object> parametersListItems;
+//		if(isInternal){
+//			parametersListItems = new ArrayList<Object>(getElementParameters(generationValueGetter, containingElement));
+//		}else{
+//			//Set<Object> parametersListItems = getElementParameters(generationValueGetter, containingElement);
+//			List<Object> defaultParametersObjects = getParametersObjects(generationValueGetter, containingElement);
+//			parametersListItems = generationValueGetter.generationPointList(containingElement, 
+//					IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_PROCESSOR, defaultParametersObjects);
+//		}
+		
 		List<Object> constructionParameters= new ArrayList<Object>();
-		Iterator<Object> iterator = filtered.iterator();
+		Iterator<Object> iterator = parametersListItems.iterator();
 		while (iterator.hasNext()) {
 			Object item = iterator.next();
 
@@ -515,8 +526,7 @@ public class CPPContentsPointsHandler{
 			}
 		}
 		
-		generationValueGetter.addUniqueValue(ICppDefinitions.CONSTRUCTOR_INTERNAL_CONSTRUCTION_PARAMETERS_LIST, constructionParameters,
-				typeName, source);
+		generationValueGetter.addUniqueValue(ICppDefinitions.CONSTRUCTOR_INTERNAL_CONSTRUCTION_PARAMETERS_LIST, constructionParameters, source);
 		
 		String value = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCT_CLASS, containingElement, parametersString, typeName, name);
 		return new SimpleEntry<List<String>, String>(paramsList, value);

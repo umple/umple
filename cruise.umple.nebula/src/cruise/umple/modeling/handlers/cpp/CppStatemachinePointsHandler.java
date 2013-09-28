@@ -58,7 +58,6 @@ import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.IModelingStatemachinePriorityHandler;
 import cruise.umple.modeling.handlers.VisibilityConstants;
 
-
 public class CppStatemachinePointsHandler{
 	
 	private final static String EXIT_IMPLEMENTATION= "cpp.exit.implementation"; //$NON-NLS-1$
@@ -1473,7 +1472,7 @@ public class CppStatemachinePointsHandler{
 	@GenerationPoint(generationPoint= ICppStatemachinesDefinitions.TRANSITION_GUARD_CODE_BODY)
 	public static String guard(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationBaseElement Object transition){
-		return generationValueGetter.getString(transition, ICppStatemachinesDefinitions.TRANSITION_GUARD_CODE_BODY, CPPCommonConstants.CPP_LANGUAGE);
+		return generationValueGetter.generationPointString(transition, IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS);
 	}
 	
 	@GenerationPoint(generationPoint= ICppStatemachinesDefinitions.STATE_ENTRY_CODE_BODY)

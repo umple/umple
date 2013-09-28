@@ -627,22 +627,9 @@ public class CPPDependsPointsHandler{
 		}
 	}
 	
-	@GenerationPoint(generationPoint = IModelingDecisions.DELETE_GENERATION_POINT)
-	public static void deleteIncludeDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.MANY_TYPE_NAME) String manyTypeName,
-			@GenerationArgument String id, @GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
-		
-		if(ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE.equals(id)||
-				ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE.equals(id)){
-			generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, manyTypeName),
-					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
-					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
-		}
-	}
-	
-	@GenerationPoint(generationPoint = IModelingDecisions.SETTER_GENERATION_POINT)
-	public static void setterIncludeDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,@GenerationArgument String id,
+	@GenerationPoint(generationPoint = ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT)
+	public static void setterIncludeDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationArgument(id= ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID) String id,
 			@GenerationProcedureParameter(id = IModelingElementDefinitions.MANY_TYPE_NAME) String manyTypeName,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
