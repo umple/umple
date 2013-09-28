@@ -36,6 +36,7 @@ import cruise.umple.compiler.Method;
 import cruise.umple.compiler.MethodBody;
 import cruise.umple.compiler.MethodParameter;
 import cruise.umple.compiler.Position;
+import cruise.umple.compiler.Precondition;
 import cruise.umple.compiler.UmpleClass;
 import cruise.umple.compiler.UmpleClassifier;
 import cruise.umple.compiler.UmpleElement;
@@ -242,6 +243,8 @@ public class UmpleModelGenerationPolicy{
 			return ((Method) element).getName();
 		}else if(element instanceof MethodParameter){
 			return ((MethodParameter)element).getName();
+		}else if(element instanceof Precondition){
+			return ((Precondition)element).toString();
 		}
 		return null;
 	}
@@ -262,50 +265,76 @@ public class UmpleModelGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
-	public static List<List<String>> constraints(@GenerationBaseElement UmpleClass element, Attribute attribute){
-		String name = attribute.getName();
-		return constraints(element, name);
+	public static List<Constraint> constraints(@GenerationBaseElement UmpleClass element){
+		return element.getConstraints();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
-	public static List<List<String>> constraints(@GenerationBaseElement UmpleClass element, AssociationVariable associationVariable){
-		String name = associationVariable.getName();
-		return constraints(element, name);
+	public static List<Precondition> constraints(@GenerationBaseElement Method element,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
+		List<Precondition> constraints= new ArrayList<Precondition>();
+		if(parent== null){
+			return constraints;
+		}
+		for(Precondition preCondition: parent.getPreconditions()){
+			if(element.equals(preCondition.getMethod())){
+				constraints.add(preCondition);
+			}
+		}
+		return constraints;
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
+	public static List<Constraint> constraints(@GenerationBaseElement Attribute element,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
+		List<Constraint> constraints= new ArrayList<Constraint>();
+		String name= element.getName();
+		for(Constraint constraint: parent.getConstraints()){
+			if(name.equals(constraint.toString())){
+				constraints.add(constraint);
+			}
+		}
+		return constraints;
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
+	public static List<Constraint> constraints(@GenerationBaseElement ConstraintVariable element){
+		return Arrays.asList(element.getSubConstraint());
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS)
+	public static List<ConstraintVariable> constraintExpressions(@GenerationBaseElement Constraint element){
+		return Arrays.asList(element.getExpressions());
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_TYPE)
+	public static String constraintExpressionType(@GenerationBaseElement ConstraintVariable element){
+		return element.getType();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_ATTRIBUTE)
+	public static boolean constraintExpressionIsAttribute(@GenerationBaseElement ConstraintVariable element){
+		return element.getIsAttribute();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_VALUE)
+	public static String constraintExpressionValue(@GenerationBaseElement ConstraintVariable element){
+		return element.getValue();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_OPERATOR)
+	public static boolean constraintExpressionIsOperator(@GenerationBaseElement ConstraintVariable element){
+		return element.getIsOperator();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_PRIMITIVE)
+	public static boolean constraintExpressionIsPrimitive(@GenerationBaseElement ConstraintVariable element){
+		return element.getIsPrimitive();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_SINGLETON)
 	public static boolean isSingleton(@GenerationBaseElement UmpleClass element){
 		return element.isIsSingleton();
-	}
-	
-	private static List<List<String>> constraints(UmpleClass element,String name) {
-		List<List<String>> expressions= new ArrayList<List<String>>();
-		if(name== null){
-			return null;
-		}
-		for(Constraint constraint: element.getConstraints()){
-			ConstraintVariable[] expressionsList= constraint.getExpressions();
-			if(expressionsList.length==0){
-				continue;
-			}
-			
-			boolean contains= false;
-			List<String> strings= new ArrayList<String>();
-			for(ConstraintVariable variable: expressionsList){
-				strings.add(variable.getValue());
-				if(name.equals(variable.getValue())){
-					contains= true;
-				}
-			}
-			
-			if(!contains){
-				continue;
-			}
-			
-			
-			expressions.add(strings);
-		}
-		return expressions;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ROLE_NAME)

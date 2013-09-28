@@ -23,6 +23,7 @@ import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
+import cruise.umple.core.GenerationArgumentDescriptor;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.LoopProcessorAnnotation;
@@ -32,1160 +33,301 @@ import cruise.umple.modeling.handlers.cpp.ICppAssociationsDefinitionsConstants;
 
 public class ModelingAssociationsGenerationPointsHandler{
 	
-	/////////////////////////////////////////OPTIONAL HANDLERS//////////////////////////////////
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
 			/*Associations variables paths*/
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL})
-	public static void associationsVairablesOptionalToOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+	})
+	public static void associationsVairablesHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CHECK_NULLIFY_BY_SETTER_DEFINITION, Boolean.FALSE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HANDLE_OPTIONAL_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL})
-	public static void associationsVairablesOptionalToRangedOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HANDLE_UNBOUND_DECLARATION, Boolean.TRUE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE})
-	public static void associationsVairablesOptionalToOneHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_USE_DELETE_DEFINITION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HANDLE_ONE_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND})
-	public static void associationsVairablesOptionalToRangedUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_REMOVE_OR_NULLIFY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_RANGED_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY})
-	public static void associationsVairablesOptionalToRangedMandatoryHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_REMOVE_OR_NULLIFY);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED})
-	public static void associationsVairablesOptionalToFixedHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OPTIONAL) boolean isOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL) boolean isRangedOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_ONE) boolean isOne,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND) boolean isRangedUnbound,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY) boolean isRangedMandatory,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_FIXED) boolean isFixed,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_UNBOUND) boolean isUnbound,
 			
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CHECK_USE_DELETE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND})
-	public static void associationsVairablesOptionalToUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL) boolean isOtherEndOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL) boolean isOtherEndRangedOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE) boolean isOtherEndOne,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND) boolean isOtherEndRangedUnbound,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY) boolean isOtherEndRangedMandatory,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED) boolean isOtherEndFixed,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND) boolean isOtherEndUnbound,
+			
+			@GenerationProcedureParameter(id = IModelingConstants.MODELING_DEFAULT_NEW_PARAMETER_NAME) String instnace,
+			
 			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HANDLE_UNBOUND_DECLARATION);
+		
+		if(isOptional){
+			if(isDirected){
+				if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION));
+				}
+			}else{
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HANDLE_OPTIONAL_DECLARATION));
+				}else if(isOtherEndRangedOptional){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HANDLE_UNBOUND_DECLARATION),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.CHECK,Boolean.TRUE));
+				}else if(isOtherEndOne){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HANDLE_ONE_DECLARATION));
+				}else if(isOtherEndRangedUnbound|| isOtherEndRangedMandatory){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_RANGED_DECLARATION));
+				}else if(isOtherEndFixed){
+					/*Do Nothing */
+				}else if(isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HANDLE_UNBOUND_DECLARATION));
+				}
+			}
+		}else if(isRangedOptional){
+			if(isDirected){
+				if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION), 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.COPY_DIRECTLY,Boolean.TRUE));
+				}
+			}else{
+				if(isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION));
+				}
+			}
+		}else if(isOne){
+			if(isDirected){
+				if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION), 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.CHECK,Boolean.TRUE));
+				}
+			}else{
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_USE_EXISTING_SETTER_DECLARATION));
+				}else if(isOtherEndOne){
+					/*Do Nothing */
+				}else if(isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndRangedOptional){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_MAXIMUM_MANY_DECLARATION));
+				}else if(isOtherEndUnbound){	
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_USE_EXISTING_REMOVE_DECLARATION));
+				}
+			}
+		}else if(isRangedUnbound|| isRangedMandatory){
+			if(isDirected){
+				if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION), 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.COPY_DIRECTLY,Boolean.TRUE));
+				}
+			}else{
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HASH_MAP_DECLARATION));
+				}else if(isOtherEndOne){
+					/*Do Nothing */
+				}else if(isOtherEndRangedOptional|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION));
+				}
+			}
+		}else if(isFixed){
+			if(isDirected){
+				if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION), 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.COPY_DIRECTLY,Boolean.TRUE));
+				}
+			}else{
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_MINIMUM_FIXED_DECLARATION));
+				}else if(isOtherEndRangedOptional){
+					/*Do Nothing */
+				}else if(isOtherEndOne){
+					/*Do Nothing */
+				}else if(isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+						GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION));
+				}
+			}
+		}else if(isUnbound){
+			/*Empty Block */
 		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN);
 		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
 	}
 	
-	/////////////////////////////////////////////////Ranged Optional Handler//////////////////////////////////////////////////////////////////////////////
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
 			/*Associations variables paths*/
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL})
-	public static void associationsVairablesRangedOptionalToOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+	})
+	public static void associationsVairablesRemoveAssociatedObjectsHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
+			
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OPTIONAL) boolean isOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL) boolean isRangedOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_ONE) boolean isOne,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND) boolean isRangedUnbound,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY) boolean isRangedMandatory,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_FIXED) boolean isFixed,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_UNBOUND) boolean isUnbound,
+			
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL) boolean isOtherEndOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL) boolean isOtherEndRangedOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE) boolean isOtherEndOne,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND) boolean isOtherEndRangedUnbound,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY) boolean isOtherEndRangedMandatory,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED) boolean isOtherEndFixed,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND) boolean isOtherEndUnbound,
+			
 			@GenerationBaseElement Object element){
 		
 		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
+			//if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
 			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_ALL_BY_SETTER);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL})
-	public static void associationsVairablesRangedOptionalToRangedOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
+					GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+					ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY));
 		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE})
-	public static void associationsVairablesRangedOptionalToOneHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_USE_DELETE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND})
-	public static void associationsVairablesRangedOptionalToRangedUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY})
-	public static void associationsVairablesRangedOptionalToRangedMandatoryHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED})
-	public static void associationsVairablesRangedOptionalToFixedHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND})
-	public static void associationsVairablesRangedOptionalToUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	///////////////////////////////////////////////////One///////////////////////////////////////////////////////////////
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_ONE, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL})
-	public static void associationsVairablesOneToOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CHECK_NULLIFY_BY_SETTER_DEFINITION, Boolean.TRUE);
-			
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_USE_EXISTING_SETTER_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_ONE, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL})
-	public static void associationsVairablesOneToRangedOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_MAXIMUM_MANY_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_ONE, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE})
-	public static void associationsVairablesOneToOneHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_USE_DELETE_DEFINITION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_CHECK_OTHER, typeParameterName);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_ONE, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND})
-	public static void associationsVairablesOneToRangedUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_MAXIMUM_MANY_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_ONE, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY})
-	public static void associationsVairablesOneToRangedMandatoryHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_MAXIMUM_MANY_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_ONE, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED})
-	public static void associationsVairablesOneToFixedHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_MAXIMUM_MANY_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_ONE, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND})
-	public static void associationsVairablesOneToUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_USE_EXISTING_REMOVE_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-		
-	///////////////////////////////////////////////////Ranged Unbound///////////////////////////////////////////////////////////////
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL})
-	public static void associationsVairablesRangedUnboundToOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HASH_MAP_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_USE_FRIEND_SETTER);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL})
-	public static void associationsVairablesRangedUnboundToRangedOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE})
-	public static void associationsVairablesRangedUnboundToOneHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_USE_DELETE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND})
-	public static void associationsVairablesRangedUnboundToRangedUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY})
-	public static void associationsVairablesRangedUnboundToRangedMandatoryHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,null, Boolean.FALSE);
-			
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED})
-	public static void associationsVairablesRangedUnboundToFixedHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND})
-	public static void associationsVairablesRangedUnboundToUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	///////////////////////////////////////////////////Ranged Mandatory///////////////////////////////////////////////////////////////
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL})
-	public static void associationsVairablesRangedMandatoryToOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_USE_FRIEND_SETTER);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_HASH_MAP_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL})
-	public static void associationsVairablesRangedMandatoryToRangedOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE})
-	public static void associationsVairablesRangedMandatoryToOneHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_USE_DELETE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND})
-	public static void associationsVairablesRangedMandatoryToRangedUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY})
-	public static void associationsVairablesRangedMandatoryToRangedMandatoryHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED})
-	public static void associationsVairablesRangedMandatoryToFixedHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND})
-	public static void associationsVairablesRangedMandatoryToUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	///////////////////////////////////////////////////Fixed///////////////////////////////////////////////////////////////
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_FIXED, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL})
-	public static void associationsVairablesFixedToOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_USE_FRIEND_SETTER);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_MINIMUM_FIXED_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_FIXED, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL})
-	public static void associationsVairablesFixedToRangedOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_FIXED, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE})
-	public static void associationsVairablesFixedToOneHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_USE_DELETE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_FIXED, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND})
-	public static void associationsVairablesFixedToRangedUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_FIXED, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY})
-	public static void associationsVairablesFixedToRangedMandatoryHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_FIXED, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED})
-	public static void associationsVairablesFixedToFixedHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-			generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-					IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		}
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_FIXED, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND})
-	public static void associationsVairablesFixedToUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION, Boolean.TRUE);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-			generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_VERIFIED_LIST_DECLARATION);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	///////////////////////////////////////////////////Unbound///////////////////////////////////////////////////////////////
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL})
-	public static void associationsVairablesUnboundToOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_ALL_BY_SETTER);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL})
-	public static void associationsVairablesUnboundToRangedOptionalHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE})
-	public static void associationsVairablesUnboundToOneHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-		
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_USE_DELETE);
+			if(isOptional){
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_CHECK_NULLIFY_BY_SETTER_DEFINITION));
+				}else if(isOtherEndRangedOptional|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION),
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.CHECK, Boolean.TRUE));
+				}else if(isOtherEndOne){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_USE_DELETE_DEFINITION));
+				}else if(isOtherEndRangedUnbound|| isOtherEndRangedMandatory){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_REMOVE_OR_NULLIFY));
+				}else if(isOtherEndFixed){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_CHECK_USE_DELETE));
+				}
+			}else if(isRangedOptional){
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_ALL_BY_SETTER));
+				}else if(isOtherEndRangedOptional|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE));
+				}else if(isOtherEndOne){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_USE_DELETE));
+				}else if(isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE));
+				}
+			}else if(isOne){
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_CHECK_NULLIFY_BY_SETTER_DEFINITION),
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.NULLIFY, Boolean.TRUE));
+				}else if(isOtherEndRangedOptional|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_ASSIGN_REMOVE_DEFINITION));
+				}else if(isOtherEndOne){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_USE_DELETE_DEFINITION));
+				}
+			}else if(isRangedUnbound|| isRangedMandatory|| isFixed){
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_USE_FRIEND_SETTER));
+				}else if(isOtherEndRangedOptional|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE));
+				}else if(isOtherEndOne){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_USE_DELETE));
+				}else if(isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE));
+				}
+			}else if(isUnbound){
+				if(isOtherEndOptional){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_ALL_BY_SETTER));
+				}else if(isOtherEndRangedOptional|| isOtherEndUnbound){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE));
+				}else if(isOtherEndOne){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_NULLIFY_USE_DELETE));
+				}else if(isRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed){
+					generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
+							GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID,
+							ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE));
+				}
+			}
 		}
 	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND})
-	public static void associationsVairablesUnboundToRangedUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY})
-	public static void associationsVairablesUnboundToRangedMandatoryHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED})
-	public static void associationsVairablesUnboundToFixedHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, 
-					ICppAssociationsDefinitionsConstants.DELETE_CLEAR_THEN_DELETE_OR_REMOVE);
-		}
-		
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
-	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
-			/*Associations variables paths*/
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
-			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
-	}, ifConditionIds= {IModelingDecisions.ATTRIBUTE_IS_UNBOUND, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND})
-	public static void associationsVairablesUnboundToUnboundHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
-			@GenerationBaseElement Object element){
-		
-		if(isDirected){
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY);
-		}else{
-			generationValueGetter.generationPointString(element, IModelingDecisions.DELETE_GENERATION_POINT, ICppAssociationsDefinitionsConstants.DELETE_SAFELY_CLEAR_AND_REMOVE);
-		}
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
-				IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
-	}
-	
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
 			/*Association paths*/
@@ -1193,15 +335,12 @@ public class ModelingAssociationsGenerationPointsHandler{
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.ATTRIBUTES_PROCESSOR})
 	})
 	public static void attributesHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationBaseElement Object element,
-			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
-			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName){
-		
-		//If many, then do not add the attribute to the parameters as it will be considered optional
-		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.TRUE,
-				isMany?null:IModelingConstructorDefinitionsConstants.CONSTRUCTOR_ASSIGN_DIRECTLY, isMany?null:typeParameterName, Boolean.FALSE);
-		generationValueGetter.generationPointString(element, IModelingDecisions.SETTER_GENERATION_POINT, 
-				ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION);
+			@GenerationProcedureParameter(id = IModelingConstants.MODELING_DEFAULT_NEW_PARAMETER_NAME) String instnace,
+			@GenerationBaseElement Object element){
+		generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, 
+				GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.VARIABLE_NAME, instnace),
+				GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID, 
+						ICppAssociationsDefinitionsConstants.ATTRIBUTE_SETTER_ASSIGN_DIRECTLY_DECLARATION));
 		generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_GENERATION_POINT);
 	}
 	
@@ -1212,7 +351,6 @@ public class ModelingAssociationsGenerationPointsHandler{
 			@GenerationProcedureParameter(id = IModelingDecisions.IS_BOOLEAN) boolean isBoolean,
 			@GenerationProcedureParameter(id = IModelingDecisions.REMOVE_AT_FILTER_DECISION) boolean filterRemoveAt,
 			@GenerationBaseElement Object element) {
-		
 		if(!isMany){
 			//Single Getter
 			generationValueGetter.generationPointString(element, IModelingDecisions.GETTER_SINGLE_GENERATION_POINT);
@@ -1236,7 +374,6 @@ public class ModelingAssociationsGenerationPointsHandler{
 			}
 		}
 	}
-	
 	
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
 			/*Associations variables paths*/

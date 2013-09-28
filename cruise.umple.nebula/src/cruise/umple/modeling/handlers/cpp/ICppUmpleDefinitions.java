@@ -20,17 +20,19 @@ package cruise.umple.modeling.handlers.cpp;
 
 public interface ICppUmpleDefinitions {
 	
-	public final String CPP_GENERATION_ID= "RTCpp"; //$NON-NLS-1$
+	public final static String CPP_GENERATION_ID= "RTCpp"; //$NON-NLS-1$
 	
-	public final String RESET_NAME= "reset.method.name"; //$NON-NLS-1$
-	public final String SINGLETON_CALL= "singleton.call"; //$NON-NLS-1$
-	public final String DEFAULT_NAME= "default.method.name"; //$NON-NLS-1$
-	public final String NEXT_NAME= "next.attribute.name"; //$NON-NLS-1$
-	public final String RESET_IMPLEMENTATION= "reset.method.implementation"; //$NON-NLS-1$
-	public final String DEFAULT_GETTER_IMPLEMENTATION= "default.getter.method.implementation"; //$NON-NLS-1$
+	public final static String SETTER_CAN_SET_CHECK= "class.setter.can.set.check";  //$NON-NLS-1$
+	
+	public final static String RESET_NAME= "reset.method.name"; //$NON-NLS-1$
+	public final static String SINGLETON_CALL= "singleton.call"; //$NON-NLS-1$
+	public final static String DEFAULT_NAME= "default.method.name"; //$NON-NLS-1$
+	public final static String NEXT_NAME= "next.attribute.name"; //$NON-NLS-1$
+	public final static String RESET_IMPLEMENTATION= "reset.method.implementation"; //$NON-NLS-1$
+	public final static String DEFAULT_GETTER_IMPLEMENTATION= "default.getter.method.implementation"; //$NON-NLS-1$
 	
 	public final static String AUTOUNIQUE_ATTRIBUTE_DECLARATIONS= "cpp.umple.autounique.attribute.declarations"; //$NON-NLS-1$
 	public final static String SINGLETON_TEMPLATE_DEFINITION= "cpp.template.definition"; //$NON-NLS-1$
 	
-	public final String CONSTRAINT_MESSAGE= "constraint message"; //$NON-NLS-1$
+	public final static String CONSTRAINT_MESSAGE= "constraint message"; //$NON-NLS-1$
 }

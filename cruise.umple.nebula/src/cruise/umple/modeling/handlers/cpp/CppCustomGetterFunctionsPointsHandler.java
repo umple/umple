@@ -29,6 +29,7 @@ import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
+import cruise.umple.core.GenerationCallback.GenerationArguments;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
@@ -46,7 +47,6 @@ import cruise.umple.modeling.handlers.IModelingConstructorDefinitionsConstants;
 import cruise.umple.modeling.handlers.IModelingDecisions;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.VisibilityConstants;
-
 
 public class CppCustomGetterFunctionsPointsHandler{
 	
@@ -276,8 +276,6 @@ public class CppCustomGetterFunctionsPointsHandler{
 		
 		List<Object> parametersArgument = generationValueGetter.getValues(IModelingDecisions.OPERATION_PARAMETER_ARGUMENT, element, parent);
 		
-		
-		
 //		String type= generationValueGetter.generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME, 
 //		GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_AS_PARAMETER_ARGUMENT, Boolean.TRUE), Boolean.TRUE);
 		
@@ -483,7 +481,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 		//TODO: construct argument
 	}
 	
-	@GenerationPoint(generationPoint = IModelingDecisions.SETTER_GENERATION_POINT, ifConditionIds= IModelingDecisions.ATTRIBUTE_IS_SETTABLE, 
+	@GenerationPoint(generationPoint = ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, ifConditionIds= IModelingDecisions.ATTRIBUTE_IS_SETTABLE, 
 			priority= IGenerationPointPriorityConstants.LOWEST)
 	public static void setSetterDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object element,
@@ -493,12 +491,13 @@ public class CppCustomGetterFunctionsPointsHandler{
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
 			@GenerationProcedureParameter(id = IModelingConstants.MODELING_DEFAULT_NEW_PARAMETER_NAME) String instnace,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationArgument String id, @GenerationArgument Object generationArguments) {
+			@GenerationArgument(id= ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID) String id, 
+			@GenerationArguments Object... generationArguments) {
 		
 		String expectedType= !isPointer&& !isMany?generationValueGetter.generate(ICppDefinitions.CONSTANT_PARAMETER, element, normalizedType): normalizedType;
 		String parametersString = generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, expectedType, instnace);
 		
-		String contents = generationValueGetter.generate(id, element, instnace, generationArguments);
+		String contents = generationValueGetter.generate(id, element, generationArguments);
 		String extra= generationValueGetter.generationPointString(element, ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION_CONDITION, 
 				GenerationArgumentDescriptor.arg(ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION_ARGUMENT, contents));
 		if(extra!= null&& !extra.isEmpty()){
@@ -528,8 +527,8 @@ public class CppCustomGetterFunctionsPointsHandler{
 			@GenerationBaseElement Object element,
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
-			@GenerationArgument String id,
-			@GenerationArgument Object generationArguments) {
+			@GenerationArgument(id= ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID) String id,
+			@GenerationArguments Object... arguments) {
 		
 		if(ICppAssociationsDefinitionsConstants.DELETE_DIRECTLY.equals(id)){
 			if(isMany){
@@ -546,7 +545,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 				generationValueGetter.addValue(IModelingConstants.REMOVE_ASSOCIATED_OBJECTS, deleteImplementation, parent);
 			}
 		}else{
-			String deleteImplementation= generationValueGetter.generate(id, element, generationArguments);
+			String deleteImplementation= generationValueGetter.generate(id, element, arguments);
 			generationValueGetter.addValue(IModelingConstants.REMOVE_ASSOCIATED_OBJECTS, deleteImplementation, parent);
 		}
 	}
@@ -874,7 +873,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_DEFAULTED_IMPLEMENTATION, null));
 	}
 
-	@GenerationPoint(generationPoint = IModelingDecisions.SETTER_GENERATION_POINT)
+	@GenerationPoint(generationPoint = ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT)
 	public static void setterFriendsDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,@GenerationArgument String id,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE) Object otherEndType,
 			@GenerationBaseElement Object element) {
@@ -896,7 +895,8 @@ public class CppCustomGetterFunctionsPointsHandler{
 	}
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.DELETE_GENERATION_POINT)
-	public static void deleteFriendsDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,@GenerationArgument String id,
+	public static void deleteFriendsDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationArgument(id= ICppAssociationsDefinitionsConstants.RemoveMessages.HANDLE_ID) String id,
 			@GenerationElementParameter(id = IModelingElementDefinitions.OTHER_END_TYPE) Object otherEndType,
 			@GenerationBaseElement Object element) {
 		
