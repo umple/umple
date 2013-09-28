@@ -63,7 +63,10 @@ public class UmpleCPPGenerationUtil {
 	public static List<String> getPositions(List<Position> elementPositions,
 			String language, UmpleClass umpleClass) {
 		List<String> positions = new ArrayList<String>();
-		for (Position p : elementPositions) { 
+		for (Position p : elementPositions) {
+			if(p== null){
+				continue;
+			}
 			StringBuffer stringBuffer= new StringBuffer();
 		    stringBuffer.append("// line "); //$NON-NLS-1$
 		    stringBuffer.append( p.getLineNumber() );

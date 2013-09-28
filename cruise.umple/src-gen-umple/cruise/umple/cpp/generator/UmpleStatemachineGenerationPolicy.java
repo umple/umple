@@ -24,9 +24,10 @@ import java.util.List;
 
 import cruise.umple.compiler.Action;
 import cruise.umple.compiler.Activity;
+import cruise.umple.compiler.Constraint;
+import cruise.umple.compiler.ConstraintVariable;
 import cruise.umple.compiler.Event;
 import cruise.umple.compiler.Guard;
-import cruise.umple.compiler.JavaGenerator;
 import cruise.umple.compiler.Position;
 import cruise.umple.compiler.State;
 import cruise.umple.compiler.StateMachine;
@@ -168,22 +169,13 @@ public class UmpleStatemachineGenerationPolicy{
 		return code;
 	}
 	
-	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.TRANSITION_GUARD_CODE_BODY)
-	public static String getTransitionGuardCodeBody(@GenerationBaseElement Transition element, String language){
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
+	public static List<Constraint> constraints(@GenerationBaseElement Transition element){
 		Guard guard = element.getGuard();
 		if(guard== null){
-			return CommonConstants.BLANK;
+			return Collections.emptyList();
 		}
-		
-		String condition = guard.getCondition(new JavaGenerator());
-		String code = condition!= null?condition: CommonConstants.BLANK;
-		
-		
-		if(code== null|| code.isEmpty()){
-			return CommonConstants.BLANK;
-		}
-		
-		return code;
+		return Arrays.asList(new Constraint[]{guard});
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.LINE_NUMBERS)

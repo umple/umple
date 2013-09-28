@@ -52,9 +52,6 @@ public interface IModelingDecisions {
 	public final static String INTERFACES_IMPLEMENTS= "modeling.interfaces.implements";  //$NON-NLS-1$
 	
 	public final static String GETTER_GENERATION_POINT= "getter.generation.point";  //$NON-NLS-1$
-	public final static String SETTER_GENERATION_POINT= "setter.generation.point";  //$NON-NLS-1$
-	
-	public final static String SETTER_GENERATION_ID= "setter.generation.id";  //$NON-NLS-1$
 	
 	public final static String GETTER_SINGLE_GENERATION_POINT= "getter.single.generation.point";  //$NON-NLS-1$
 	public final static String GETTER_MANY_GENERATION_POINT= "getter.many.generation.point";  //$NON-NLS-1$

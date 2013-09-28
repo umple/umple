@@ -34,6 +34,16 @@ public interface IModelingElementDefinitions {
 	public static final String HAS_KEY_MEMBERS= "key"; //$NON-NLS-1$
 	public static final String IS_KEY_MEMBER= "isKeyMemeber"; //$NON-NLS-1$
 	public static final String CONSTRAINTS= "constraints"; //$NON-NLS-1$
+	public static final String CONSTRAINT_EXPRESSIONS= "constraintExpressions"; //$NON-NLS-1$
+	public static final String CONSTRAINT_EXPRESSION_TYPE= "constraintExrpessionType"; //$NON-NLS-1$
+	public static final String CONSTRAINT_EXPRESSION_VALUE= "constraintExrpessionValue"; //$NON-NLS-1$
+	public static final String CONSTRAINT_EXPRESSION_IS_ATTRIBUTE= "constraintExrpessionIsAttribute"; //$NON-NLS-1$
+	public static final String CONSTRAINT_EXPRESSION_IS_OPERATOR= "constraintExrpessionIsOperator"; //$NON-NLS-1$
+	public static final String CONSTRAINT_EXPRESSION_IS_PRIMITIVE= "constraintExrpessionIsPrimitive"; //$NON-NLS-1$
+	public static final String CONSTRAINTS_EXPRESSIONS_CONTENTS= "constraintsExpressionsContents"; //$NON-NLS-1$
+	public static final String CONSTRAINT_EXPRESSIONS_CONTENTS= "constraintExpressionsContents"; //$NON-NLS-1$
+	public static final String CONSTRAINT_CHECK_THROW= "constraintCheckThrow"; //$NON-NLS-1$
+	
 	public static final String CODE= "code"; //$NON-NLS-1$
 	public static final String CODE_INJECTION= "codeInjection"; //$NON-NLS-1$
 	public static final String PRIORITY= "priority"; //$NON-NLS-1$

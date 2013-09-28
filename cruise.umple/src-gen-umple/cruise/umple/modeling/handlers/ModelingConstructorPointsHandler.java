@@ -31,9 +31,122 @@ import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPolicyRegistry;
-
+import cruise.umple.core.LoopProcessorAnnotation;
+import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
 
 public class ModelingConstructorPointsHandler{
+	
+	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
+			/*Associations variables paths*/
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES_PROCESSOR})
+	})
+	public static void associationsVairablesConstructorsHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_DIRECTED) boolean isDirected,
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName,
+			
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OPTIONAL) boolean isOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_OPTIONAL) boolean isRangedOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_ONE) boolean isOne,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_UNBOUND) boolean isRangedUnbound,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_RANGED_MANDATORY) boolean isRangedMandatory,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_FIXED) boolean isFixed,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_UNBOUND) boolean isUnbound,
+			
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_OPTIONAL) boolean isOtherEndOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL) boolean isOtherEndRangedOptional,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_ONE) boolean isOtherEndOne,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND) boolean isOtherEndRangedUnbound,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY) boolean isOtherEndRangedMandatory,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_FIXED) boolean isOtherEndFixed,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_OTHER_END_UNBOUND) boolean isOtherEndUnbound,
+			
+			@GenerationBaseElement Object element){
+		
+		if(isOptional){
+			if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+						IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN);
+			}
+		}else if(isRangedOptional){
+			if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+						IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
+			}
+		}else if(isOne){
+			if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+						IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
+			}else if(isOtherEndOne){
+				if(isDirected){
+					generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+							IModelingConstructorDefinitionsConstants.SET_AND_CHECK, typeParameterName);
+				}else{
+					generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+							IModelingConstructorDefinitionsConstants.SET_CHECK_OTHER, typeParameterName);
+				}
+			}
+		}else if(isRangedUnbound){
+			if(isOtherEndOptional){
+				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+						IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
+			}else if(isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+				if(isDirected){
+					generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+							IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
+				}else{
+					generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+							IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,null, Boolean.FALSE);
+				}
+			}
+		}else if(isRangedMandatory){
+			if(isOtherEndOptional|| isOtherEndUnbound){
+				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+						IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
+			}else if(isOtherEndRangedOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed){
+				if(isDirected){
+					generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+							IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
+				}else{
+					generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+							IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
+				}
+			}
+		}else if(isFixed){
+			if(isOtherEndOptional|| isOtherEndUnbound){
+				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+						IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
+			}else if(isOtherEndOptional|| isOtherEndOne|| isOtherEndRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed){
+				if(isDirected){
+					generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+							IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY,typeParameterName, Boolean.TRUE);
+				}else{
+					generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+							IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
+				}
+			}
+		}else if(isUnbound){
+			if(isOtherEndOptional|| isOtherEndRangedOptional|| isOtherEndOne|| isRangedUnbound|| isOtherEndRangedMandatory|| isOtherEndFixed|| isOtherEndUnbound){
+				generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.FALSE, 
+						IModelingConstructorDefinitionsConstants.SET_NEW_ARRAY, null, Boolean.FALSE);
+			}
+		}
+	}
+	
+	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
+			/*Association paths*/
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.ATTRIBUTES_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR, IModelingElementDefinitions.ATTRIBUTES_PROCESSOR})
+	})
+	public static void attributesHandler(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
+			@GenerationProcedureParameter(id = IModelingElementDefinitions.TYPE_PARAMETER_NAME) String typeParameterName){
+		
+		//If many, then do not add the attribute to the parameters as it will be considered optional
+		generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, Boolean.TRUE,
+				isMany?null:IModelingConstructorDefinitionsConstants.CONSTRUCTOR_ASSIGN_DIRECTLY, isMany?null:typeParameterName, Boolean.FALSE);
+	}
 	
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_GENERATION_POINT)
 	public static void constructorParameters(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 

@@ -210,6 +210,9 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			
 			loopProcessorObject.fMethod.invoke(loopProcessorObject.fInstance,
 					getParameters(obj, this, loopProcessorObject.fMethod));
+			
+			//System.gc();
+			//Runtime.getRuntime().freeMemory();
 		}
 	}
 
@@ -1435,7 +1438,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			return comparePriorities(priority1, priority2);
 		}
 
-		private int comparePriorities(int priority1, int priority2) {
+		private static int comparePriorities(int priority1, int priority2) {
 			if(priority1== priority2){
 				return 0;
 			}
