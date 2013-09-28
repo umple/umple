@@ -56,6 +56,8 @@ import cruise.umple.modeling.handlers.VisibilityConstants;
 
 public class CppTestsPointsHandler{
 	
+	private static final String INTERNAL_DEFINED_VALUE = "@@@@"; //$NON-NLS-1$
+
 	public static boolean GENERATE_TESTS= false;
 	
 	private static final int FINALIZE_HIGH_PRIORITY= 600;
@@ -80,13 +82,15 @@ public class CppTestsPointsHandler{
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR})
 	}, aspect= LoopAspectConstants.FINALIZE, priority= GenerationPolicyRegistryPriorities.MEDIUM, aspectGroup= FINALIZE_HIGH_PRIORITY)
-	public static void classAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationLoopElement Object modelPackage) throws IOException{
+	public static void classAfterProcessor(@GenerationRegistry final GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement final Object element,
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) final String name,
+			@GenerationLoopElement final Object modelPackage) throws IOException{
 		if(!GENERATE_TESTS){
 			return;
 		}
 		generateTests(generationValueGetter, element, name, modelPackage);
+		System.gc();
+		Runtime.getRuntime().freeMemory();
 	}
 	
 //	@LoopProcessorAnnotation(aspect= LoopAspectConstants.TERMINATE)
@@ -107,14 +111,56 @@ public class CppTestsPointsHandler{
 //		}
 //	}
 
-	private static void generateTests(GenerationPolicyRegistry generationValueGetter,
+	protected static void generateTests(GenerationPolicyRegistry generationValueGetter,
 			Object element, String name, Object modelPackage) throws IOException {
 		
+		String modelPath = generationValueGetter.getString(modelPackage, IModelingElementDefinitions.FILE_PATH);
 		
+		String methodTestName = "test"+StringUtil.firstCharacterToUpperCase(name); //$NON-NLS-1$
+		
+		List<Object> namesValues = generationValueGetter.getValues(TEST_CLASS_INSTANCE_NAMES_TRACKER, ICppTestsDefinitions.TEST_STUBS);
+		String testStubNextName = ICppTestsDefinitions.TEST_STUBS;
+		if(!namesValues.isEmpty()){
+			testStubNextName= testStubNextName+ namesValues.size();
+		}
+		generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_NAMES_TRACKER, testStubNextName, ICppTestsDefinitions.TEST_STUBS);
+		
+		File folderFile = new File(modelPath+ CommonConstants.BACK_SLASH+ testStubNextName+ ".h"); 	 //$NON-NLS-1$
+		 
+		if (!folderFile.exists()) {
+			folderFile.createNewFile();
+		}
+		BufferedWriter output = new BufferedWriter(new FileWriter(folderFile));
+		
+		//generationValueGetter.addUniqueValue(ICppDefinitions.MAIN_CONTENTS, assertStatements+ CommonConstants.NEW_LINE);
+			
+		String useAllNamespaces= CommonConstants.BLANK;
+		Iterator<Object> namespacesIterator = generationValueGetter.getAllValues(IModelingConstants.NAMESPACES_TRACKER, modelPackage).iterator();
+		while(namespacesIterator.hasNext()){
+			String object = namespacesIterator.next().toString();
+			object= object.replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX).
+					replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+			useAllNamespaces= useAllNamespaces+ generationValueGetter.use(ICppDefinitions.USE_NAMESPACE, CPPCommonConstants.DECLARATION_COMMON_PREFIX+object);
+			
+			if(namespacesIterator.hasNext()){
+				useAllNamespaces= useAllNamespaces+ CommonConstants.NEW_LINE;
+			}
+		}
+			
+		String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, CPPDependsPointsHandler.ALL_MODEL_INCLUDES_TRACKER, "Main"); //$NON-NLS-1$
+		if(!useAllNamespaces.isEmpty()){
+			if(!implementationDetails.isEmpty()){
+				implementationDetails= implementationDetails+ CommonConstants.NEW_LINE;
+			}
+			implementationDetails= implementationDetails+ useAllNamespaces;
+		}
+			
+		String startContents= generationValueGetter.generate(ICppTestsDefinitions.TEST_FILE_START, modelPackage, implementationDetails, testStubNextName, methodTestName);
+			output.write(startContents);
+		 
 		String instanceName= getNextAvailableName(generationValueGetter, element);
 		
-		StringBuffer assertStatements = new StringBuffer();
-		constructInstance(generationValueGetter, assertStatements, modelPackage, element, name, instanceName);
+		constructInstance(generationValueGetter, output, modelPackage, element, name, instanceName);
 		
 		List<Object> ids = generationValueGetter.getValues(IModelingConstants.METHOD_IDS, element);
 		
@@ -126,15 +172,15 @@ public class CppTestsPointsHandler{
 					continue;
 				}
 				String identifier= (String) current;
-				assertGetter(generationValueGetter, modelPackage, assertStatements, element, instanceName, identifier);
-				assertSetter(generationValueGetter, assertStatements, element, modelPackage, instanceName, identifier);
-				assertInternalConstruct(generationValueGetter, assertStatements, element, modelPackage, instanceName, identifier);
-				assertMany(generationValueGetter, assertStatements, element, modelPackage, instanceName, identifier);
+				assertGetter(generationValueGetter, modelPackage, output, element, instanceName, identifier);
+				assertSetter(generationValueGetter, output, element, modelPackage, instanceName, identifier);
+				assertInternalConstruct(generationValueGetter, output, element, modelPackage, instanceName, identifier);
+				assertMany(generationValueGetter, output, element, modelPackage, instanceName, identifier);
 			}
 			
 			String delete = generationValueGetter.use(ICppNameConstants.DELETE_METHOD);
-			
-			assertStatements.append(CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element, 
+			output.newLine();
+			appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element, 
 					instanceName, delete));
 			
 			for(Object associationVariable: generationValueGetter.getList(element, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES)){
@@ -150,55 +196,11 @@ public class CppTestsPointsHandler{
 			}
 			
 			for(Object current: ids){
-				assertStatements.append(assertRestrictions(generationValueGetter, (String) current,element,instanceName, values.get(0)));
+				appendToFile(output, assertRestrictions(generationValueGetter, (String) current,element,instanceName, values.get(0)));
 			}
 		}
 		
-		//generationValueGetter.addUniqueValue(ICppDefinitions.MAIN_CONTENTS, assertStatements+ CommonConstants.NEW_LINE);
-		
-		String modelPath = generationValueGetter.getString(modelPackage, IModelingElementDefinitions.FILE_PATH);
-		
-		String methodTestName = "test"+StringUtil.firstCharacterToUpperCase(name); //$NON-NLS-1$
-		
-		List<Object> namesValues = generationValueGetter.getValues(TEST_CLASS_INSTANCE_NAMES_TRACKER, ICppTestsDefinitions.TEST_STUBS);
-		String testStubNextName = ICppTestsDefinitions.TEST_STUBS;
-		if(!namesValues.isEmpty()){
-			testStubNextName= testStubNextName+ namesValues.size();
-		}
-		generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_NAMES_TRACKER, testStubNextName, ICppTestsDefinitions.TEST_STUBS);
-		
-		File folderFile = new File(modelPath+ CommonConstants.BACK_SLASH+ testStubNextName+ ".h"); 	 //$NON-NLS-1$
-		 
-		 if (!folderFile.exists()) {
-		 	folderFile.createNewFile();
-		 }
-		
-		 BufferedWriter output = new BufferedWriter(new FileWriter(folderFile));
-		
-		String useAllNamespaces= CommonConstants.BLANK;
-		Iterator<Object> namespacesIterator = generationValueGetter.getAllValues(IModelingConstants.NAMESPACES_TRACKER, modelPackage).iterator();
-		while(namespacesIterator.hasNext()){
-			String object = namespacesIterator.next().toString();
-			object= object.replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX).
-					replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
-			useAllNamespaces= useAllNamespaces+ generationValueGetter.use(ICppDefinitions.USE_NAMESPACE, CPPCommonConstants.DECLARATION_COMMON_PREFIX+object);
-			
-			if(namespacesIterator.hasNext()){
-				useAllNamespaces= useAllNamespaces+ CommonConstants.NEW_LINE;
-			}
-		}
-		
-		String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, CPPDependsPointsHandler.ALL_MODEL_INCLUDES_TRACKER, "Main"); //$NON-NLS-1$
-		if(!useAllNamespaces.isEmpty()){
-			if(!implementationDetails.isEmpty()){
-				implementationDetails= implementationDetails+ CommonConstants.NEW_LINE;
-			}
-			implementationDetails= implementationDetails+ useAllNamespaces;
-		}
-		
-		String startContents= generationValueGetter.generate(ICppTestsDefinitions.TEST_FILE_START, modelPackage, implementationDetails, testStubNextName, methodTestName);
-		output.write(startContents);
-		output.write(StringUtil.indent(assertStatements+ CommonConstants.NEW_LINE, 1));
+		//output.write(StringUtil.indent(assertStatements+ CommonConstants.NEW_LINE, 1));
 		
 		String testStubCall= generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, methodTestName, CommonConstants.BLANK, Boolean.TRUE);
 		String endContents= generationValueGetter.generate(ICppTestsDefinitions.TEST_FILE_END, modelPackage);
@@ -211,11 +213,10 @@ public class CppTestsPointsHandler{
 		generationValueGetter.addUniqueValue(TEST_FILES_INCLUDES, include, modelPackage);
 	}
 
-	private static void assertInternalConstruct(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, Object element, Object modelPackage,
-			String instanceName, String identifier) {
+	private static void assertInternalConstruct(GenerationPolicyRegistry generationValueGetter, BufferedWriter output, Object element, Object modelPackage,
+			String instanceName, String identifier) throws IOException {
 		List<Object> internalConstructors = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCT_OBJECT_INTERNALLY, identifier, element, 
 				VisibilityConstants.PUBLIC);
-		
 		
 		if(internalConstructors.isEmpty()){
 			//TODO: Do not forget JUnit assertion here
@@ -236,7 +237,7 @@ public class CppTestsPointsHandler{
 			return;
 		}
 		
-		generationValueGetter.generationPoint(values.get(0), ICppDefinitions.CONSTRUCTOR_INTERNAL_CONSTRUCTION_PARAMETERS_LIST,typeName, element);
+		//generationValueGetter.generationPoint(values.get(0), ICppDefinitions.CONSTRUCTOR_INTERNAL_CONSTRUCTION_PARAMETERS_LIST,typeName, element);
 				
 		int numberOfLoops= !canAdd(generationValueGetter, instanceName, null, methodObject)? 1:
 				generationValueGetter.getInt(methodObject, IModelingElementDefinitions.UPPER_BOUND);
@@ -252,7 +253,8 @@ public class CppTestsPointsHandler{
 		
 		for(int index=0; index<numberOfLoops; index++){
 			List<String> randomValues= new ArrayList<String>();
-			setConstrctorValues(generationValueGetter, contents, modelPackage, containingObject, element, instanceName, randomValues, false, true);
+			output.newLine();
+			setConstrctorValues(generationValueGetter, output, modelPackage, containingObject, element, instanceName, randomValues, false, true);
 			
 			String parametersString= CommonConstants.BLANK;
 			
@@ -266,23 +268,22 @@ public class CppTestsPointsHandler{
 				}
 			}
 			
-			contents.append(CommonConstants.NEW_LINE);
-			contents.append(generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,instanceName, constructMethodNameObject, 
+			appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,instanceName, constructMethodNameObject, 
 					parametersString));
 			
 			if(!canAdd(generationValueGetter, instanceName, null, methodObject)){
-				contents.append(CommonConstants.NEW_LINE);
-				contents.append("//Previous add must not have worked due to restrictions");  //$NON-NLS-1$
+				output.newLine();
+				appendToFile(output, "//Previous add must not have worked due to restrictions");  //$NON-NLS-1$
 				continue;
 			}
 			increaseSize(generationValueGetter, instanceName, typeName);
 			//generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, callee, instanceName);
 		}
-		contents.append(CommonConstants.NEW_LINE);
+		output.newLine();
 	}
 
-	private static void assertSetter(GenerationPolicyRegistry generationValueGetter,StringBuffer assertStatements, 
-			Object element, Object modelPackage, String instanceName, String identifier) {
+	private static void assertSetter(GenerationPolicyRegistry generationValueGetter,BufferedWriter output, 
+			Object element, Object modelPackage, String instanceName, String identifier) throws IOException {
 		List<Object> setters = generationValueGetter.getValues(ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION, identifier, element, 
 				VisibilityConstants.PUBLIC);
 		
@@ -310,7 +311,8 @@ public class CppTestsPointsHandler{
 		HashMap<?, ?> getterMap= (HashMap<?, ?>) getterObject;
 		Object getterMethodNameObject = getterMap.get(IModelingConstants.METHOD_NAME);
 		
-		assertStatements.append(CommonConstants.NEW_LINE+ CommonConstants.NEW_LINE);
+		output.newLine();
+		output.newLine();
 		
 		HashMap<?, ?> map= (HashMap<?, ?>) object;
 		
@@ -323,7 +325,7 @@ public class CppTestsPointsHandler{
 		List<Object> values = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName);
 		
 		Object currentParamaeterInstanceValue= getDefinedValue(generationValueGetter, element, instanceName, typeName, identifier, methodObject);
-		String newParamaeterInstanceValue = getSomeRandomValue(generationValueGetter,assertStatements, modelPackage, instanceName, typeName, identifier, methodObject);
+		String newParamaeterInstanceValue = getSomeRandomValue(generationValueGetter,output, modelPackage, instanceName, typeName, identifier, methodObject);
 		
 		//TODO: Find better condition
 		boolean isAssociationSetter = currentParamaeterInstanceValue== newParamaeterInstanceValue&& currentParamaeterInstanceValue== CPPCommonConstants.NULL;
@@ -336,16 +338,17 @@ public class CppTestsPointsHandler{
 			}
 			Object typeCalss= allValues.get(0);
 			nextAvailableName = getNextAvailableName(generationValueGetter, typeCalss);
-			constructInstance(generationValueGetter,assertStatements, modelPackage, typeCalss, typeName, nextAvailableName);
+			constructInstance(generationValueGetter,output, modelPackage, typeCalss, typeName, nextAvailableName);
 			
-			assertStatements.append(CommonConstants.NEW_LINE);
+			output.newLine();
 			newParamaeterInstanceValue = nextAvailableName;
 			
-			assertStatements.append(assertRestrictions(generationValueGetter, identifier,methodObject,nextAvailableName, instanceName)+CommonConstants.NEW_LINE);
+			appendToFile(output, assertRestrictions(generationValueGetter, identifier,methodObject,nextAvailableName, instanceName));
+			output.newLine();
 		}
 		
-		assertStatements.append(generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,instanceName, setterMethodNameObject, newParamaeterInstanceValue));
-		assertStatements.append(CommonConstants.NEW_LINE);
+		appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,instanceName, setterMethodNameObject, newParamaeterInstanceValue));
+		output.newLine();
 		
 		int otherEndUpperBound = generationValueGetter.getInt(methodObject, IModelingElementDefinitions.OTHER_END_UPPER_BOUND);
 		int otherEndLowerBound = generationValueGetter.getInt(methodObject, IModelingElementDefinitions.OTHER_END_LOWER_BOUND);
@@ -372,14 +375,16 @@ public class CppTestsPointsHandler{
 						generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_OPTIONAL))/*||
 				(generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_ONE)&&
 				generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_UNBOUND))*/){
-			assertStatements.append(generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element, 
-					instanceName, getterMethodNameObject, newParamaeterInstanceValue)+ CommonConstants.NEW_LINE);
+			appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element, 
+					instanceName, getterMethodNameObject, newParamaeterInstanceValue));
+			output.newLine();
 		}else{
-			assertStatements.append(CommonConstants.NEW_LINE);
-			assertStatements.append("//Checking to see that the previous setter did not work due to the minimum restriction contraints"); //$NON-NLS-1$
-			assertStatements.append(CommonConstants.NEW_LINE);
-			assertStatements.append(generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element,
-					instanceName, getterMethodNameObject, currentParamaeterInstanceValue)+ CommonConstants.NEW_LINE);
+			output.newLine();
+			appendToFile(output, "//Checking to see that the previous setter did not work due to the minimum restriction contraints"); //$NON-NLS-1$
+			output.newLine();
+			appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element,
+					instanceName, getterMethodNameObject, currentParamaeterInstanceValue));
+			output.newLine();
 		}
 		
 //		if(otherRange==0|| generationValueGetter.getBoolean(methodObject, IModelingDecisions.ATTRIBUTE_IS_OTHER_END_RANGED_MANDATORY)){
@@ -414,29 +419,31 @@ public class CppTestsPointsHandler{
 //		}
 		
 		if(isAssociationSetter){
-			assertStatements.append(assertRestrictions(generationValueGetter, identifier,methodObject,nextAvailableName, instanceName)+ CommonConstants.NEW_LINE);
+			appendToFile(output, assertRestrictions(generationValueGetter, identifier,methodObject,nextAvailableName, instanceName));
+			output.newLine();
 		}
 		
 		//Required check if the original value is NULL
 		//Required check if the setter was not working due to restrictions on the other side
-		if(!currentParamaeterInstanceValue.equals(normalizedValue)&& otherRange!=0|| (otherRange==0&& otherEndUpperBound==0 && otherEndLowerBound== 0)){
+		if(!currentParamaeterInstanceValue.equals(INTERNAL_DEFINED_VALUE)&&
+				!currentParamaeterInstanceValue.equals(normalizedValue)&& otherRange!=0|| (otherRange==0&& otherEndUpperBound==0 && otherEndLowerBound== 0)){
 			//Reset and then assert the original value
-			assertStatements.append(generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,
+			appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,
 					instanceName, setterMethodNameObject, currentParamaeterInstanceValue));
 			
-			assertStatements.append(CommonConstants.NEW_LINE);
-			assertStatements.append(generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element,
+			output.newLine();
+			appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element,
 					instanceName, getterMethodNameObject, currentParamaeterInstanceValue));
 		}
 		
 		if(isAssociationSetter){
-			assertStatements.append(assertRestrictions(generationValueGetter, identifier, methodObject,nextAvailableName, instanceName)+ 
-					CommonConstants.NEW_LINE);
+			appendToFile(output, assertRestrictions(generationValueGetter, identifier, methodObject,nextAvailableName, instanceName));
+			output.newLine();
 		}
 	}
 
 	private static void assertGetter(GenerationPolicyRegistry generationValueGetter,Object modelPackage, 
-			StringBuffer contents, Object element, String instanceName, String identifier) {
+			BufferedWriter output, Object element, String instanceName, String identifier) throws IOException {
 		List<Object> getterValues = generationValueGetter.getValues(ICppAssociationsDefinitionsConstants.GETTER_IMPLEMENTATION, identifier, element, 
 				VisibilityConstants.PUBLIC);
 		
@@ -458,16 +465,23 @@ public class CppTestsPointsHandler{
 		
 		String operator= null;
 		List<Object> trackedTypes = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName);
-		if(!trackedTypes.isEmpty()&& generationValueGetter.getValues(TEST_CLASS_PARAMETERS_DEFINED_INTERNALLY_TRACKER, element).contains(identifier)){
+		
+		if(INTERNAL_DEFINED_VALUE.equals(paramaeterInstanceValue)){
 			operator= CommonConstants.NOT+ CommonConstants.EQUAL;
+			paramaeterInstanceValue= CPPCommonConstants.NULL;
+		}else{
+			if(!trackedTypes.isEmpty()&& generationValueGetter.getValues(TEST_CLASS_PARAMETERS_DEFINED_INTERNALLY_TRACKER, element).contains(identifier)){
+				operator= CommonConstants.NOT+ CommonConstants.EQUAL;
+			}
 		}
 		
-		contents.append(CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element, 
+		output.newLine();
+		appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element, 
 				instanceName, getterMethodNameObject, paramaeterInstanceValue, null, operator));
 	}
 
-	private static void assertMany(GenerationPolicyRegistry generationValueGetter,StringBuffer contents, 
-			Object element, Object modelPackage, String instanceName, String identifier) {
+	private static void assertMany(GenerationPolicyRegistry generationValueGetter,BufferedWriter output, 
+			Object element, Object modelPackage, String instanceName, String identifier) throws IOException {
 		if(getAddMethodName(generationValueGetter, identifier, element)== null){
 			return;
 		}
@@ -483,9 +497,9 @@ public class CppTestsPointsHandler{
 		int lowerBound = generationValueGetter.getInt(methodObject, IModelingElementDefinitions.LOWER_BOUND);
 		int upperBound = generationValueGetter.getInt(methodObject, IModelingElementDefinitions.UPPER_BOUND);
 		
-		contents.append(assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
+		appendToFile(output, assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
 		
-		String typeInstanceName = addCall(generationValueGetter, modelPackage, contents, identifier, instanceName, element);
+		String typeInstanceName = addCall(generationValueGetter, modelPackage, output, identifier, instanceName, element);
 		
 		int otherEndUpperBound = generationValueGetter.getInt(methodObject, IModelingElementDefinitions.OTHER_END_UPPER_BOUND);
 		int otherEndLowerBound = generationValueGetter.getInt(methodObject, IModelingElementDefinitions.OTHER_END_LOWER_BOUND);
@@ -493,43 +507,43 @@ public class CppTestsPointsHandler{
 		int range= (otherEndUpperBound== otherEndLowerBound&& otherEndUpperBound==1)? 1:
 				otherEndUpperBound==-1?otherEndUpperBound:upperBound- lowerBound/*otherEndUpperBound- otherEndLowerBound*/;
 		
-		contents.append(assertRestrictions(generationValueGetter, identifier,element,instanceName, methodObject));
+		appendToFile(output, assertRestrictions(generationValueGetter, identifier,element,instanceName, methodObject));
 		
-		remove(generationValueGetter,modelPackage,contents, element, instanceName, identifier, rootType, typeInstanceName, methodObject);
+		remove(generationValueGetter,modelPackage,output, element, instanceName, identifier, rootType, typeInstanceName, methodObject);
 		
 		if(range!=0){
 			List<String> someExtraAdds= new ArrayList<String>();
 			
-			String fullConstructedObject = fullConstructedObject(generationValueGetter, contents, element, modelPackage, typeName, rootType);
+			String fullConstructedObject = fullConstructedObject(generationValueGetter, output, element, modelPackage, typeName, rootType);
 			if(fullConstructedObject!= null){
-				addCall(generationValueGetter, contents, identifier, instanceName, element, fullConstructedObject);
-				contents.append(assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
+				addCall(generationValueGetter, output, identifier, instanceName, element, fullConstructedObject);
+				appendToFile(output, assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
 				
 				remove(generationValueGetter,modelPackage,
-						contents, element, instanceName, identifier, rootType,
+						output, element, instanceName, identifier, rootType,
 						fullConstructedObject/*,lowerBound, expectedNewLength*/, methodObject);
 			}
 			
 			for(int i=0; i<4; i++){
 				String instanceNewVariable= getNextAvailableName(generationValueGetter, rootType, typeName);
 				
-				contents.append(CommonConstants.NEW_LINE);
-				constructInstance(generationValueGetter,contents, modelPackage, rootType, typeName, instanceNewVariable);
+				output.newLine();
+				constructInstance(generationValueGetter,output, modelPackage, rootType, typeName, instanceNewVariable);
 				
-				addCall(generationValueGetter, contents, identifier, instanceName, element, instanceNewVariable);
+				addCall(generationValueGetter, output, identifier, instanceName, element, instanceNewVariable);
 				someExtraAdds.add(instanceNewVariable);
 			}
 			
-			contents.append(assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
+			appendToFile(output, assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
 		}
 		
-		addAt(generationValueGetter, contents, element, modelPackage, instanceName, identifier, typeName, rootType, methodObject, 2);
+		addAt(generationValueGetter, output, element, modelPackage, instanceName, identifier, typeName, rootType, methodObject, 2);
 	}
 
 	private static void addAt(GenerationPolicyRegistry generationValueGetter,
-			StringBuffer contents, Object element, Object modelPackage,
+			BufferedWriter output, Object element, Object modelPackage,
 			String instanceName, String identifier, String typeName,
-			Object rootType, Object methodObject, int index) {
+			Object rootType, Object methodObject, int index) throws IOException {
 		List<Object> addAtImplementationsValues = generationValueGetter.getValues(ICppAssociationsDefinitionsConstants.ADD_AT_IMPLEMENTATION, identifier, element, 
 				VisibilityConstants.PUBLIC);
 		
@@ -539,10 +553,11 @@ public class CppTestsPointsHandler{
 		
 		Object addAtMethodName = ((HashMap<?, ?>)addAtImplementationsValues.get(0)).get(IModelingConstants.METHOD_NAME);
 		String instanceNewVariable= getNextAvailableName(generationValueGetter, rootType, typeName);
-		contents.append(CommonConstants.NEW_LINE);
-		constructInstance(generationValueGetter, contents, modelPackage, rootType, typeName, instanceNewVariable);
-		
-		contents.append(CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element, 
+		output.newLine();
+		constructInstance(generationValueGetter, output, modelPackage, rootType, typeName, instanceNewVariable);
+	
+		output.newLine();
+		appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element, 
 				instanceName, addAtMethodName, instanceNewVariable+ CommonConstants.COMMA_SEPARATOR+ String.valueOf(index)));
 		
 		int expectedNewLength= getSize(generationValueGetter, instanceName, typeName);
@@ -552,8 +567,8 @@ public class CppTestsPointsHandler{
 			//Means that it was not added due to maximum restriction violation
 			place= -1;
 			
-			contents.append(CommonConstants.NEW_LINE);
-			contents.append("//Previous add at must not have worked due to restrictions");  //$NON-NLS-1$
+			output.newLine();
+			appendToFile(output, "//Previous add at must not have worked due to restrictions");  //$NON-NLS-1$
 			//TODO: add JUnit
 		}else{
 			expectedNewLength = 1+ expectedNewLength;
@@ -566,23 +581,24 @@ public class CppTestsPointsHandler{
 			Object indexOfMethodName = ((HashMap<?, ?>)indexOfImplementationsValues.get(0)).get(IModelingConstants.METHOD_NAME);
 			
 			if(place==-1){
-				contents.append(CommonConstants.NEW_LINE);
-				contents.append(CommonConstants.NEW_LINE);
-				contents.append("//Check for -1 as the previous add at should have not worked due to the upper bound restriction"); //$NON-NLS-1$
+				output.newLine();
+				output.newLine();
+				appendToFile(output, "//Check for -1 as the previous add at should have not worked due to the upper bound restriction"); //$NON-NLS-1$
 			}
 			int updatedSize= getSize(generationValueGetter, instanceName, typeName);
 			if(place>=getSize(generationValueGetter, instanceName, typeName)){
 				place= updatedSize-1;
-				contents.append(CommonConstants.NEW_LINE);
-				contents.append("//Check for the end index as the last add at exceeded the size"); //$NON-NLS-1$
+				output.newLine();
+				appendToFile(output, "//Check for the end index as the last add at exceeded the size"); //$NON-NLS-1$
 			}
-			contents.append(CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element, 
+			output.newLine();
+			appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.ASSERT_GETTER, element, 
 					instanceName, indexOfMethodName, String.valueOf(place), instanceNewVariable));
 		}
 	}
 
-	private static boolean remove(GenerationPolicyRegistry generationValueGetter,Object modelPackage, StringBuffer contents, Object element, String instanceName,
-			String identifier, Object rootType, String typeInstanceName, Object methodObject) {
+	private static boolean remove(GenerationPolicyRegistry generationValueGetter,Object modelPackage, BufferedWriter output, Object element, String instanceName,
+			String identifier, Object rootType, String typeInstanceName, Object methodObject) throws IOException {
 		
 		List<Object> removeImplementationsValues = generationValueGetter.getValues(ICppAssociationsDefinitionsConstants.REMOVE_IMPLEMENTATION, identifier, element, 
 				VisibilityConstants.PUBLIC);
@@ -637,9 +653,9 @@ public class CppTestsPointsHandler{
 					Object subMethodObject = subMap.get(IModelingConstants.METHOD_OBJECT);
 					String subTypeName= generationValueGetter.getString(subMethodObject, IModelingElementDefinitions.TYPE_NAME);
 					
-					contents.append(CommonConstants.NEW_LINE);
-					contents.append(CommonConstants.NEW_LINE);
-					contents.append("//Reset the value of "+ typeInstanceName+ "'s "+ currentElementName+ " instead");  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+					output.newLine();
+					output.newLine();
+					appendToFile(output, "//Reset the value of "+ typeInstanceName+ "'s "+ currentElementName+ " instead");  //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
 					
 					int setterUpperBound = generationValueGetter.getInt(subMethodObject, IModelingElementDefinitions.UPPER_BOUND);
 					int setterLowerBound = generationValueGetter.getInt(subMethodObject, IModelingElementDefinitions.LOWER_BOUND);
@@ -647,43 +663,43 @@ public class CppTestsPointsHandler{
 					String originalConstructorParameterValue;
 					int delta = 0;
 					if(setterUpperBound>1|| setterUpperBound==-1){
-						contents.append(CommonConstants.NEW_LINE);
+						output.newLine();
 						String newListConstruct = generationValueGetter.generate(ISTLConstants.NEW_LIST_DEFINITION, subMethodObject);
 						String normalizedType = generationValueGetter.generationPointString(subMethodObject, IModelingConstants.NORMALIZED_TYPE_NAME);
 						originalConstructorParameterValue = typeInstanceName+ CommonConstants.UNDERSCORE+ subTypeName+ "_Many_Reset"; //$NON-NLS-1$
 						String assignStatement = generationValueGetter.use(ICppDefinitions.ASSIGN_STATEMENET, 
 								originalConstructorParameterValue, newListConstruct, normalizedType);
 						
-						contents.append(assignStatement);
-						contents.append(CommonConstants.NEW_LINE);
+						appendToFile(output, assignStatement);
+						output.newLine();
 						
 						//Construct a number of instances and add them to the vector/set to match the minimum constraints requirements
 						for(int index=0; index<setterLowerBound; index++){
 							String newListValue = originalConstructorParameterValue+ CommonConstants.UNDERSCORE+ getNextAvailableName(generationValueGetter, element, subTypeName);
 							
-							contents.append(CommonConstants.NEW_LINE);
-							constructInstance(generationValueGetter, contents, modelPackage, 
+							output.newLine();
+							constructInstance(generationValueGetter, output, modelPackage, 
 									generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, subTypeName).get(0), subTypeName, newListValue);
-							contents.append(CommonConstants.NEW_LINE);
+							output.newLine();
 							
 							String add= generationValueGetter.generationPointString(element, ICppDefinitions.ADD_INVOCATION,
 									GenerationArgumentDescriptor.arg(ICppDefinitions.ADD_VARIABLE_ARGUMENT, originalConstructorParameterValue),
 									GenerationArgumentDescriptor.arg(ICppDefinitions.ADD_PARAMETER_ARGUMENT, newListValue));
 							
 							generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, newListValue, typeInstanceName);
-							contents.append(add);
-							contents.append(CommonConstants.NEW_LINE);
+							appendToFile(output, add);
+							output.newLine();
 						}
 						delta= delta-setterLowerBound;
 					}else{
 						delta=-1;
 						originalConstructorParameterValue =  getNextAvailableName(generationValueGetter, element); //values.get(0);
-						contents.append(CommonConstants.NEW_LINE);
-						constructInstance(generationValueGetter,contents, modelPackage, element, currentElementName, originalConstructorParameterValue);
+						output.newLine();
+						constructInstance(generationValueGetter,output, modelPackage, element, currentElementName, originalConstructorParameterValue);
 					}
 					
-					contents.append(CommonConstants.NEW_LINE);
-					contents.append(generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, rootType,typeInstanceName, setterMethodNameObject, 
+					output.newLine();
+					appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, rootType,typeInstanceName, setterMethodNameObject, 
 							originalConstructorParameterValue));
 					
 					
@@ -693,13 +709,14 @@ public class CppTestsPointsHandler{
 						currentLength= getSize(generationValueGetter, instanceName, rootType);
 						generationValueGetter.removeValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, typeInstanceName, instanceName);
 					}else{
-						contents.append(assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
+						appendToFile(output, assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
 					}
 				}
 			}
 		}
 		
-		contents.append(CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element, 
+		output.newLine();
+		appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element, 
 				instanceName, removeMethodNameObject, typeInstanceName));
 		
 		if(canDecrease(generationValueGetter, instanceName, typeInstanceName, rootType, element, methodObject,1)){
@@ -707,10 +724,11 @@ public class CppTestsPointsHandler{
 			currentLength= getSize(generationValueGetter, instanceName, rootType);
 			generationValueGetter.removeValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, typeInstanceName, instanceName);
 		}else{
-			contents.append(CommonConstants.NEW_LINE+ "//Previous remove must not have worked due to restrictions"); //$NON-NLS-1$
+			output.newLine();
+			appendToFile(output, "//Previous remove must not have worked due to restrictions"); //$NON-NLS-1$
 		}
 		
-		contents.append(assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
+		appendToFile(output, assertRestrictions(generationValueGetter, identifier, element,instanceName, rootType));
 		
 		return true;
 	}
@@ -789,8 +807,8 @@ public class CppTestsPointsHandler{
 	}
 
 	private static String fullConstructedObject(GenerationPolicyRegistry generationValueGetter,
-			StringBuffer contents, Object element, Object modelPackage,
-			String typeName, Object rootType) {
+			BufferedWriter output, Object element, Object modelPackage,
+			String typeName, Object rootType) throws IOException {
 		String nextTypeInstanceName= null;
 		//Create full object that used all setter in order to ensure that we will use other options if there due to having non-null values
 		List<Object> ids = generationValueGetter.getValues(IModelingConstants.METHOD_IDS, rootType);
@@ -798,8 +816,8 @@ public class CppTestsPointsHandler{
 			//Here
 			nextTypeInstanceName= getNextAvailableName(generationValueGetter, rootType, typeName);
 			
-			contents.append(CommonConstants.NEW_LINE);
-			constructInstance(generationValueGetter,contents, modelPackage, rootType, typeName, nextTypeInstanceName);
+			output.newLine();
+			constructInstance(generationValueGetter,output, modelPackage, rootType, typeName, nextTypeInstanceName);
 			
 			for(Object current: ids){
 				if(current instanceof String== false){
@@ -820,7 +838,7 @@ public class CppTestsPointsHandler{
 					continue;
 				}
 				
-				contents.append(CommonConstants.NEW_LINE);
+				output.newLine();
 				
 				HashMap<?, ?> subMap = (HashMap<?, ?>) setterObject;
 				Object setterMethodNameObject = subMap.get(IModelingConstants.METHOD_NAME);
@@ -841,17 +859,17 @@ public class CppTestsPointsHandler{
 					String assignStatement = generationValueGetter.use(ICppDefinitions.ASSIGN_STATEMENET, 
 							newParamaeterInstanceValue, newListConstruct, normalizedType);
 					
-					contents.append(assignStatement);
-					contents.append(CommonConstants.NEW_LINE);
+					appendToFile(output, assignStatement);
+					output.newLine();
 					
 					//Construct a number of instances and add them to the vector/set to match the minimum constraints requirements
 					for(int index=0; index<lowerBound; index++){
 						String newListValue = newParamaeterInstanceValue+ CommonConstants.UNDERSCORE+ getNextAvailableName(generationValueGetter, element, subTypeName);
 						
-						contents.append(CommonConstants.NEW_LINE);
-						constructInstance(generationValueGetter, contents, modelPackage, 
+						output.newLine();
+						constructInstance(generationValueGetter, output, modelPackage, 
 								generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, subTypeName).get(0), subTypeName, newListValue);
-						contents.append(CommonConstants.NEW_LINE);
+						output.newLine();
 						
 						String add= generationValueGetter.generationPointString(element, ICppDefinitions.ADD_INVOCATION,
 								GenerationArgumentDescriptor.arg(ICppDefinitions.ADD_VARIABLE_ARGUMENT, newParamaeterInstanceValue),
@@ -859,16 +877,16 @@ public class CppTestsPointsHandler{
 						
 						generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, newListValue, nextTypeInstanceName);
 						increaseSize(generationValueGetter, nextTypeInstanceName, subTypeName);
-						contents.append(add);
+						appendToFile(output, add);
 					}
 				}else{
-					newParamaeterInstanceValue = getSomeRandomValue(generationValueGetter,contents, modelPackage, nextTypeInstanceName, 
+					newParamaeterInstanceValue = getSomeRandomValue(generationValueGetter,output, modelPackage, nextTypeInstanceName, 
 							subTypeName, otherIdentifier, subMethodObject);
 				}
 				
-				contents.append(CommonConstants.NEW_LINE);
+				output.newLine();
 				
-				contents.append(generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,nextTypeInstanceName, setterMethodNameObject, 
+				appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,nextTypeInstanceName, setterMethodNameObject, 
 						newParamaeterInstanceValue));
 				
 			}
@@ -917,9 +935,7 @@ public class CppTestsPointsHandler{
 		return CommonConstants.BLANK;
 	}
 
-	private static Set<Object> getElementParameters(
-			GenerationPolicyRegistry generationValueGetter,
-			Object containingElement) {
+	private static Set<Object> getElementParameters(GenerationPolicyRegistry generationValueGetter, Object containingElement) {
 		List<Object> parametersObjects = generationValueGetter.generationPointList(containingElement, ICppDefinitions.CONSTRUCTOR_PARAMETERS_LIST);
 		List<Object> parentParameters = generationValueGetter.generationPointList(generationValueGetter.getObject(containingElement, 
 				IModelingConstants.PARENT_CLASS), ICppDefinitions.CONSTRUCTOR_ALL_PARAMETERS_LIST);
@@ -1006,17 +1022,16 @@ public class CppTestsPointsHandler{
 		return assertStatements;
 	}
 	
-	private static void constructInstance(GenerationPolicyRegistry generationValueGetter,StringBuffer contents, Object modelPackage, 
-			Object containingElement, String type, String instanceName) {
-		constructInstance(generationValueGetter, contents, modelPackage, containingElement, type, instanceName, false);
+	private static void constructInstance(GenerationPolicyRegistry generationValueGetter,BufferedWriter output, Object modelPackage, 
+			Object containingElement, String type, String instanceName) throws IOException {
+		constructInstance(generationValueGetter, output, modelPackage, containingElement, type, instanceName, false);
 	}
 	
-	private static void constructInstance(GenerationPolicyRegistry generationValueGetter,StringBuffer contents, Object modelPackage, 
-			Object containingElement, String type, String instanceName, boolean isRecursive) {
+	private static void constructInstance(GenerationPolicyRegistry generationValueGetter,BufferedWriter output, Object modelPackage, 
+			Object containingElement, String type, String instanceName, boolean isRecursive) throws IOException {
 		
 		List<String> randomValues= new ArrayList<String>();
-		setConstrctorValues(generationValueGetter, contents, modelPackage, containingElement, containingElement, instanceName, randomValues, false);
-		
+		setConstrctorValues(generationValueGetter, output, modelPackage, containingElement, containingElement, instanceName, randomValues, false);
 		
 		String parametersString= CommonConstants.BLANK;
 		
@@ -1033,7 +1048,7 @@ public class CppTestsPointsHandler{
 		String generate = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCT_CLASS, containingElement, parametersString, type,instanceName,
 				Boolean.TRUE);
 		
-		contents.append(generate);
+		appendToFile(output, generate);
 		
 		if(!isRecursive){
 			for(Object associationVariable: generationValueGetter.getList(containingElement, IModelingElementDefinitions.NAVIGABLE_ASSOCIATION_VARIABLES)){
@@ -1044,7 +1059,7 @@ public class CppTestsPointsHandler{
 					String typeName= generationValueGetter.getString(associationVariable, IModelingElementDefinitions.TYPE_NAME);
 					String name= generationValueGetter.getString(associationVariable, IModelingElementDefinitions.NAME);
 					
-					contents.append(CommonConstants.NEW_LINE);
+					output.newLine();
 					
 					List<Object> values = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName);
 					
@@ -1059,14 +1074,14 @@ public class CppTestsPointsHandler{
 								return;
 							}
 							
-							String newParamaeterInstanceValue = constructObjectAttributeOrAssociation(generationValueGetter, contents, modelPackage, typeName,
+							String newParamaeterInstanceValue = constructObjectAttributeOrAssociation(generationValueGetter, output, modelPackage, typeName,
 									associationVariable, typeName, value, instanceName);
 							
 							HashMap<?, ?> map= (HashMap<?, ?>) object;
 							Object setterMethodNameObject = map.get(IModelingConstants.METHOD_NAME);
 							Object methodObject = map.get(IModelingConstants.METHOD_OBJECT);
 							
-							contents.append(generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, containingElement,instanceName, setterMethodNameObject, 
+							appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, containingElement,instanceName, setterMethodNameObject, 
 									newParamaeterInstanceValue));
 							
 							List<Object> ids = generationValueGetter.getValues(IModelingConstants.METHOD_IDS, ICppAssociationsDefinitionsConstants.GETTER_IMPLEMENTATION, methodObject, 
@@ -1077,8 +1092,9 @@ public class CppTestsPointsHandler{
 									//String defaultValue= generationValueGetter.generationPointString(associationVariable, IModelingConstants.NORMALIZED_DEFAULT_VALUE);
 										//generationValueGetter.addValue(TEST_CLASS_PARAMETERS_VALUES_IN_CONSTRUCTOR_TRACKER,defaultValue , 
 										//		instanceName, typeName, ids.get(0).toString(), containingElement);
-										contents.append(CommonConstants.NEW_LINE+ "//Previous set must not have worked due to rsstrictions"); //$NON-NLS-1$
-										assertGetter(generationValueGetter, modelPackage, contents, containingElement, instanceName, ids.get(0).toString());
+									output.newLine();
+									appendToFile(output, "//Previous set must not have worked due to rsstrictions"); //$NON-NLS-1$
+										assertGetter(generationValueGetter, modelPackage, output, containingElement, instanceName, ids.get(0).toString());
 								}else{
 									generationValueGetter.addValue(TEST_CLASS_PARAMETERS_VALUES_IN_CONSTRUCTOR_TRACKER,newParamaeterInstanceValue , 
 											instanceName, typeName, ids.get(0).toString(), containingElement);
@@ -1110,8 +1126,9 @@ public class CppTestsPointsHandler{
 								for(int index=0; index<bound; index++){
 									String typeInstanceName= getNextAvailableName(generationValueGetter, value, typeName);
 									
-									constructInstance(generationValueGetter,contents,modelPackage, value, typeName, typeInstanceName, true);
-									contents.append(CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, value,
+									constructInstance(generationValueGetter,output,modelPackage, value, typeName, typeInstanceName, true);
+									output.newLine();
+									appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, value,
 											instanceName, addMethodNameObject, typeInstanceName));
 									
 									if(canAdd(generationValueGetter, instanceName, typeInstanceName, methodObject)){
@@ -1119,13 +1136,13 @@ public class CppTestsPointsHandler{
 									}
 									
 									if(index<bound-1){
-										contents.append(CommonConstants.NEW_LINE);
+										output.newLine();
 									}
 									generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, typeInstanceName, instanceName);
 									
 									if(!canAdd(generationValueGetter, instanceName, typeInstanceName, methodObject)){
-										contents.append(CommonConstants.NEW_LINE);
-										contents.append("//Previous add must not have worked due to restrictions");  //$NON-NLS-1$
+										output.newLine();
+										appendToFile(output, "//Previous add must not have worked due to restrictions");  //$NON-NLS-1$
 										break;
 									}
 									increaseSize(generationValueGetter, instanceName, typeName);
@@ -1138,19 +1155,34 @@ public class CppTestsPointsHandler{
 		}
 	}
 
-	private static void setConstrctorValues(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, Object modelPackage,
-			Object containingElement, Object root, String instanceName, List<String> randomValues, boolean isRecursive) {
-		setConstrctorValues(generationValueGetter, contents, modelPackage, containingElement, root, instanceName, randomValues, isRecursive, false);
+	private static void setConstrctorValues(GenerationPolicyRegistry generationValueGetter, BufferedWriter output, Object modelPackage,
+			Object containingElement, Object root, String instanceName, List<String> randomValues, boolean isRecursive) throws IOException {
+		setConstrctorValues(generationValueGetter, output, modelPackage, containingElement, root, instanceName, randomValues, isRecursive, false);
 	}
 	
-	private static void setConstrctorValues(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, Object modelPackage,
-			Object containingElement, Object root, String instanceName, List<String> randomValues, boolean isRecursive, boolean isInternal) {
+	@SuppressWarnings("unchecked")
+	private static void setConstrctorValues(GenerationPolicyRegistry generationValueGetter, BufferedWriter contents, Object modelPackage,
+			Object containingElement, Object root, String instanceName, List<String> randomValues, boolean isRecursive, boolean isInternal) throws IOException {
 		List<Object> parameters = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, containingElement);
 		
-		@SuppressWarnings("unchecked")
-		SimpleEntry<List<?>, Object> otherParams= (SimpleEntry<List<?>, Object>) parameters.get(isRecursive?0:parameters.size()-1);
+		List<?> otherParams;
+		List<?> internalDefinedParams= new ArrayList<Object>();
+		if(isInternal){
+			otherParams= generationValueGetter.generationPointList(containingElement, ICppDefinitions.CONSTRUCTOR_ALL_PARAMETERS_LIST);
+			
+			otherParams = generationValueGetter.generationPointList(containingElement, 
+					IModelingConstructorDefinitionsConstants.CONSTRUCTOR_PARAMETERS_PROCESSOR, otherParams);
+		}else{
+			if(isRecursive){
+				otherParams= ((SimpleEntry<List<?>, Object>) parameters.get(0)).getKey();
+			}else{
+				otherParams= ((SimpleEntry<List<?>, Object>) parameters.get(parameters.size()-1)).getKey();
+				internalDefinedParams= ((SimpleEntry<List<?>, Object>) parameters.get(0)).getKey();
+			}
+		}
 		
-		for(Object obj: otherParams.getKey()){
+		List<Object> constrcutedKeys= new ArrayList<Object>();
+		for(Object obj: otherParams){
 			if(obj instanceof SimpleEntry== false){
 				continue;
 			}
@@ -1176,7 +1208,28 @@ public class CppTestsPointsHandler{
 			generationValueGetter.addValue(TEST_CLASS_PARAMETERS_VALUES_IN_CONSTRUCTOR_TRACKER, randomValue, 
 					instanceName, currentType, currentKey, containingElement);
 			
+			constrcutedKeys.add(entryKey.toString());
 			randomValues.add(randomValue);
+		}
+		
+		for(Object obj: internalDefinedParams){
+			if(obj instanceof SimpleEntry== false){
+				continue;
+			}
+			
+			SimpleEntry<?, ?> simpleEntry = (SimpleEntry<?, ?>)obj;
+			SimpleEntry<?, ?> simpleEntryValue = (SimpleEntry<?, ?>)simpleEntry.getValue();
+			SimpleEntry<?, ?> entryKey = (SimpleEntry<?, ?>) (simpleEntryValue).getKey();
+			
+			if(constrcutedKeys.contains(entryKey.toString())){
+				continue;
+			}
+			
+			String currentType = entryKey.getValue().toString();
+			String currentKey = entryKey.getKey().toString();
+			
+			generationValueGetter.addValue(TEST_CLASS_PARAMETERS_VALUES_IN_CONSTRUCTOR_TRACKER, INTERNAL_DEFINED_VALUE,
+					instanceName, currentType, currentKey, containingElement);
 		}
 	}
 	
@@ -1192,8 +1245,8 @@ public class CppTestsPointsHandler{
 		return typeInstanceName;
 	}
 	
-	private static String getSomeRandomValue(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, Object modelPackage,
-			String instanceName, String type, String value, Object element) {
+	private static String getSomeRandomValue(GenerationPolicyRegistry generationValueGetter, BufferedWriter contents, Object modelPackage,
+			String instanceName, String type, String value, Object element) throws IOException {
 		String paramaeterInstanceName;
 		if(ISTLConstants.STRING.equals(type)){
 			paramaeterInstanceName = CommonConstants.QUOTATION+ instanceName+ CommonConstants.UNDERSCORE+ value+ 
@@ -1228,8 +1281,8 @@ public class CppTestsPointsHandler{
 		return paramaeterInstanceName;
 	}
 
-	private static String constructObjectAttributeOrAssociation(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, Object modelPackage, String type,
-			Object element, String typeName, Object containingElement, String instanceName) {
+	private static String constructObjectAttributeOrAssociation(GenerationPolicyRegistry generationValueGetter, BufferedWriter output, Object modelPackage, String type,
+			Object element, String typeName, Object containingElement, String instanceName) throws IOException {
 		String paramaeterInstanceName;
 		
 		int upperBound = generationValueGetter.getInt(element, IModelingElementDefinitions.UPPER_BOUND);
@@ -1245,21 +1298,21 @@ public class CppTestsPointsHandler{
 			String assignStatement = generationValueGetter.use(ICppDefinitions.ASSIGN_STATEMENET, 
 					parameterAsMany, newListConstruct, normalizedType);
 			
-			contents.append(assignStatement);
-			contents.append(CommonConstants.NEW_LINE);
+			appendToFile(output, assignStatement);
+			output.newLine();
 			
 			//Construct a number of instances and add them to the vector/set to match the minimum constraints requirements
 			for(int index=0; index<bound; index++){
 				String paramaeterInstanceListItem= getNextAvailableName(generationValueGetter, containingElement, type);
-				constructInstance(generationValueGetter,contents,modelPackage, containingElement, typeName, paramaeterInstanceListItem, true);
-				contents.append(CommonConstants.NEW_LINE);
+				constructInstance(generationValueGetter,output,modelPackage, containingElement, typeName, paramaeterInstanceListItem, true);
+				output.newLine();
 				
 				String add= generationValueGetter.generationPointString(element, ICppDefinitions.ADD_INVOCATION,
 						GenerationArgumentDescriptor.arg(ICppDefinitions.ADD_VARIABLE_ARGUMENT, parameterAsMany),
 						GenerationArgumentDescriptor.arg(ICppDefinitions.ADD_PARAMETER_ARGUMENT, paramaeterInstanceListItem));
 				
-				contents.append(add);
-				contents.append(CommonConstants.NEW_LINE);
+				appendToFile(output, add);
+				output.newLine();
 				generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, paramaeterInstanceListItem, instanceName);
 			}
 			
@@ -1267,8 +1320,8 @@ public class CppTestsPointsHandler{
 			paramaeterInstanceName= parameterAsMany;
 		}else{
 			paramaeterInstanceName= getNextAvailableName(generationValueGetter, containingElement, type);
-			constructInstance(generationValueGetter,contents,modelPackage, containingElement, typeName, paramaeterInstanceName, true);
-			contents.append(CommonConstants.NEW_LINE);
+			constructInstance(generationValueGetter,output,modelPackage, containingElement, typeName, paramaeterInstanceName, true);
+			output.newLine();
 		}
 		setSize(generationValueGetter, instanceName, typeName, bound);
 		generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, paramaeterInstanceName, instanceName);
@@ -1284,8 +1337,8 @@ public class CppTestsPointsHandler{
 		return (String) values.get(values.size()-1);
 	}
 	
-	private static String addCall(GenerationPolicyRegistry generationValueGetter, Object modelPackage, StringBuffer contents, String identifier, String caller, 
-			Object element){
+	private static String addCall(GenerationPolicyRegistry generationValueGetter, Object modelPackage, BufferedWriter output, String identifier, String caller, 
+			Object element) throws IOException{
 		
 		List<Object> allAddImplementationsValues = generationValueGetter.getValues(ICppAssociationsDefinitionsConstants.ADD_IMPLEMENTATION, identifier, element, 
 				VisibilityConstants.PUBLIC);
@@ -1298,14 +1351,14 @@ public class CppTestsPointsHandler{
 		String typeName= generationValueGetter.getString(methodObject, IModelingElementDefinitions.TYPE_NAME);
 		Object rootType = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName).get(0);
 		String typeInstanceName= getNextAvailableName(generationValueGetter, rootType, typeName);
-		contents.append(CommonConstants.NEW_LINE);
-		constructInstance(generationValueGetter,contents, modelPackage, rootType, typeName, typeInstanceName);
-		addCall(generationValueGetter, contents, identifier, caller, element, typeInstanceName);
+		output.newLine();
+		constructInstance(generationValueGetter,output, modelPackage, rootType, typeName, typeInstanceName);
+		addCall(generationValueGetter, output, identifier, caller, element, typeInstanceName);
 		return typeInstanceName;
 	}
 	
-	private static boolean addCall(GenerationPolicyRegistry generationValueGetter, StringBuffer contents, String identifier, String caller, 
-			Object element, String callee){
+	private static boolean addCall(GenerationPolicyRegistry generationValueGetter, BufferedWriter output, String identifier, String caller, 
+			Object element, String callee) throws IOException{
 		HashMap<?, ?> map = getAddMethodName(generationValueGetter, identifier, element);
 		if(map== null){
 			return false;
@@ -1319,12 +1372,14 @@ public class CppTestsPointsHandler{
 			typeName= generationValueGetter.getString(methodObject, IModelingElementDefinitions.NAME);
 		}
 
-		contents.append(CommonConstants.NEW_LINE+ generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,
+		output.newLine();
+		appendToFile(output, generationValueGetter.generate(ICppTestsDefinitions.METHOD_CALL, element,
 				caller, addMethodNameObject, callee));
 		
 		if(!canAdd(generationValueGetter, caller, callee, methodObject)){
-			contents.append(CommonConstants.NEW_LINE);
-			contents.append("//Previous add must not have worked due to restrictions");  //$NON-NLS-1$
+			output.newLine();
+			appendToFile(output, "//Previous add must not have worked due to restrictions");  //$NON-NLS-1$
+			output.newLine();
 			return false;
 		}
 		generationValueGetter.addUniqueValue(TEST_CLASS_INSTANCE_ASSOCIATIONS_TRACKER, callee, caller);
@@ -1473,6 +1528,10 @@ public class CppTestsPointsHandler{
 			return null;
 		}
 		return map;
-		
 	}
+	
+	private static void appendToFile(BufferedWriter output, CharSequence contents) throws IOException{
+		output.write(StringUtil.indent(contents.toString(), 1));
+	}
+	
 }

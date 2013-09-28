@@ -693,7 +693,7 @@ public class CPPBaseGenerationPointsHandler{
 		return normalizedNamespace;
 	}
 	
-	@GenerationPoint(generationPoint = ICppDefinitions.DEFNIED_NAMESPACES_MACROS)
+	@GenerationPoint(generationPoint = ICppDefinitions.DEFNIED_NAMESPACES_MACROS, priority= IGenerationPointPriorityConstants.LOWEST)
 	public static String incompleteDefinitions(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element) {
 		return setPredefinedTypes(generationValueGetter, element);
 	}
@@ -1092,7 +1092,36 @@ public class CPPBaseGenerationPointsHandler{
 	
 	@GenerationPoint(generationPoint = IModelingElementDefinitions.OPERATION_BODY)
 	public static String operationBody(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element){
-		return generationValueGetter.getString(element, IModelingElementDefinitions.OPERATION_BODY, CPPCommonConstants.CPP_LANGUAGE);
+		
+		String all= CommonConstants.BLANK;
+		List<?> constraints= generationValueGetter.getList(element, IModelingElementDefinitions.CONSTRAINTS);
+		
+		List<String> conditions= new ArrayList<String>();
+		for(Object constraint: constraints){
+			String current= generationValueGetter.generationPointString(constraint, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS,constraint);
+			if(current.isEmpty()){
+				continue;
+			}
+			conditions.add(generationValueGetter.generationPointString(constraint, IModelingElementDefinitions.CONSTRAINT_CHECK_THROW, current, Boolean.TRUE));
+		}
+		
+		Iterator<String> iterator = conditions.iterator();
+		while(iterator.hasNext()){
+			String condition = iterator.next();
+			all+= condition;
+			
+			all= all+ CommonConstants.NEW_LINE;
+			if(iterator.hasNext()){
+				all= all+ CommonConstants.NEW_LINE;
+			}
+		}
+		
+		if(!all.isEmpty()){
+			all= all+ CommonConstants.NEW_LINE;
+		}
+		
+		all= all+ generationValueGetter.getString(element, IModelingElementDefinitions.OPERATION_BODY, CPPCommonConstants.CPP_LANGUAGE);
+		return all;
 	}
 	
 	@GenerationPoint(generationPoint = IModelingConstants.NORMALIZED_RETURN_TYPE, unique= true)
@@ -1407,7 +1436,6 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationArgument(id= IModelingConstants.METHOD_ID_ARGUMENT) String id, 
 			@GenerationArgument(id= IModelingConstants.METHOD_VISIBILITY_ARGUMENT) String visibility,
 			@GenerationArgument(id= IModelingConstants.METHOD_SEPARATOR_ARGUMENT) boolean separator) {
-		String declarationsContents= CommonConstants.BLANK;
 		List<Object> groups = generationValueGetter.getValues(IModelingConstants.METHODS_GROUPS, element, visibility);
 		
 		Collections.sort(groups, new Comparator<Object>() {
@@ -1434,13 +1462,16 @@ public class CPPBaseGenerationPointsHandler{
 		List<Object> objects = generationValueGetter.getValues(IModelingConstants.METHODS_OBJECTS, element, visibility);
 		
 		Iterator<Object> iterator = groups.iterator();
+		List<String> strings= new ArrayList<String>();
+		int totalLength= 0;
 		while(iterator.hasNext()){
 			Object group = iterator.next();
 			
-			String newContents= CommonConstants.BLANK;
 			List<Object> baseDeclarations = generationValueGetter.getValues(id, element, group, visibility);
 			for(Object declaration: baseDeclarations){
-				newContents= newContents+ declaration+ CommonConstants.NEW_LINE;
+				String newString = declaration+ CommonConstants.NEW_LINE;
+				strings.add(newString);
+				totalLength= totalLength+ newString.length();
 			}
 			
 			for(Object object: objects){
@@ -1454,21 +1485,30 @@ public class CPPBaseGenerationPointsHandler{
 					if(value.isEmpty()){
 						continue;
 					}
-					newContents= newContents+ value+ CommonConstants.NEW_LINE;
+					String newString = value+ CommonConstants.NEW_LINE;
+					strings.add(newString);
+					totalLength= totalLength+ newString.length();
+					
 					if(separator){
-						newContents= newContents+ CommonConstants.NEW_LINE;
+						strings.add(CommonConstants.NEW_LINE);
+						totalLength= totalLength+ CommonConstants.NEW_LINE.length();
 					}
 				}
 			}
-			if(!newContents.isEmpty()){
-				declarationsContents= declarationsContents+ newContents;
-				
+			if(!strings.isEmpty()){
 				if(iterator.hasNext()&& !separator){
-					declarationsContents= declarationsContents+ CommonConstants.NEW_LINE;
+					strings.add(CommonConstants.NEW_LINE);
+					totalLength= totalLength+ CommonConstants.NEW_LINE.length();
 				}
 			}
 		}
-		return declarationsContents;
+		
+		StringBuffer contents= new StringBuffer(totalLength);
+		for(String string: strings){
+			contents.append(string);
+		}
+		
+		return contents.toString();
 	}
 	
 	

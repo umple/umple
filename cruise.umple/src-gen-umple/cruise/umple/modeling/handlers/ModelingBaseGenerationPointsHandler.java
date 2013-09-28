@@ -42,6 +42,7 @@ import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
 import cruise.umple.cpp.utils.CPPTypesConstants;
 import cruise.umple.cpp.utils.GenerationUtil;
 import cruise.umple.cpp.utils.StringUtil;
+import cruise.umple.modeling.handlers.cpp.ICppAssociationsDefinitionsConstants;
 import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
 import cruise.umple.modeling.handlers.cpp.ICppNameConstants;
 
@@ -761,7 +762,7 @@ public class ModelingBaseGenerationPointsHandler {
 		return isManyCompare?returnName: returnType;
 	}
 
-	@DecisionPoint(watchIf= {IModelingDecisions.SETTER_GENERATION_POINT}, ifNotConditionIds= {IModelingDecisions.SETTER_GENERATION_POINT_FILTER})
+	@DecisionPoint(watchIf= {ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT}, ifNotConditionIds= {IModelingDecisions.SETTER_GENERATION_POINT_FILTER})
 	public static boolean filterAttributeSetter(@GenerationElementParameter(id = IModelingElementDefinitions.IS_INTERNAL) boolean isInternal) {
 		//Disable setters for the internal attributes
 		//Use SETTER_GENERATION_POINT_FILTER for extensibility

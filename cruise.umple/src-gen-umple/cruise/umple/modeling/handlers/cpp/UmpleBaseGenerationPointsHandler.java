@@ -19,13 +19,12 @@
 
 package cruise.umple.modeling.handlers.cpp;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.AbstractMap.SimpleEntry;
 
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
@@ -96,7 +95,7 @@ public class UmpleBaseGenerationPointsHandler{
 	
 	@DecisionPoint(watchIf= {IModelingDecisions.ATTRIBUTE_GENERATION_POINT,
 			IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, IModelingDecisions.DELETE_GENERATION_POINT,
-			IModelingDecisions.ADD_GENERATION_POINT, IModelingDecisions.SETTER_GENERATION_POINT})
+			IModelingDecisions.ADD_GENERATION_POINT, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT})
 	public static boolean filterAttributes(@GenerationElementParameter(id = IModelingElementDefinitions.IS_DERIVED) boolean isDerived) {
 		//Disable getters for the internal attributes
 		//Use GETTER_GENERATION_POINT_FILTER for extensibility
@@ -105,7 +104,7 @@ public class UmpleBaseGenerationPointsHandler{
 	
 	@DecisionPoint(watchIf= {IModelingDecisions.ATTRIBUTE_GENERATION_POINT,
 			IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_POINT, IModelingDecisions.DELETE_GENERATION_POINT,
-			IModelingDecisions.ADD_GENERATION_POINT, IModelingDecisions.SETTER_GENERATION_POINT, IModelingDecisions.GETTER_GENERATION_POINT_FILTER,
+			IModelingDecisions.ADD_GENERATION_POINT, ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, IModelingDecisions.GETTER_GENERATION_POINT_FILTER,
 			IModelingDecisions.GETTER_SINGLE_GENERATION_POINT})
 	public static boolean filterSortedAttributes(@GenerationElementParameter(id = IModelingElementDefinitions.IS_SORTED) boolean isSorted) {
 		return !isSorted;
@@ -333,7 +332,7 @@ public class UmpleBaseGenerationPointsHandler{
 					new SimpleEntry<Object, String>(element, constructorCall), parent, Boolean.TRUE);
 			
 			//And, then update the setter method to have the lazy check code segment
-			return StringUtil.indent(generationValueGetter.use(ICppAssociationsDefinitionsConstants.SETTER_CAN_SET_CHECK, canSet), 1);
+			return StringUtil.indent(generationValueGetter.use(ICppUmpleDefinitions.SETTER_CAN_SET_CHECK, canSet), 1);
 		}
 		return null;
 	}
@@ -450,81 +449,113 @@ public class UmpleBaseGenerationPointsHandler{
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@GenerationPoint(generationPoint = ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION_CONDITION)
 	public static String setterImplementation(
 			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
-			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationArgument(id= ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION_ARGUMENT) String contents) {
-		List<?> constraints= generationValueGetter.getList(parent, IModelingElementDefinitions.CONSTRAINTS, element);
-		if(constraints.isEmpty()){
+		String all= generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS);
+		if(all.isEmpty()){
 			return null;
 		}
-		
-		String all= CommonConstants.BLANK;
-		Iterator<?> iterator = constraints.iterator();
-		while(iterator.hasNext()){
-			if(iterator.hasNext()){
-				if(!all.isEmpty()){
-					all= all+ CommonConstants.SPACE+ CPPCommonConstants.AND;
-				}
-				
-				Object next = iterator.next();
-				List<Object> list = (List<Object>) next;
-				String condition= CommonConstants.BLANK;
-				for(Object obj: list){
-					if(!condition.isEmpty()){
-						condition= condition+ CommonConstants.SPACE;
-					}
-					condition= condition+ obj;
-				}
-				all= all+ condition;
-			}
-		}
-		
 		return StringUtil.indent(generationValueGetter.use(ICppDefinitions.IF_CONDITION_BLOCK, all, CommonConstants.NEW_LINE+ contents), 1);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@GenerationPoint(generationPoint = IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS)
+	public static String constraintsExpressions(
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationElementParameter(id = IModelingElementDefinitions.CONSTRAINTS) List<?> constraints) {
+		return processConstraintsExpressions(generationValueGetter, constraints);
+	}
+
+	@GenerationPoint(generationPoint = IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS)
+	public static String processConstraintsExpressions(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationArgument Object constraint) {
+		StringBuffer stringBuffer= new StringBuffer();
+		List<?> list= constraint instanceof List? (List<?>) constraint: Arrays.asList(new Object[]{constraint});
+		
+		processConstraintsExpressions(generationValueGetter, stringBuffer, list);
+		return stringBuffer.toString();
+	}
+	
+	private static void processConstraintsExpressions(GenerationPolicyRegistry generationValueGetter, StringBuffer stringBuffer, List<?> constraints) {
+		for(Object constraint: constraints){
+			
+			List<?> expressions= generationValueGetter.getList(constraint, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS);
+			if(expressions== null){
+				continue;
+			}
+			
+			for(Object expr: expressions){
+				String type= generationValueGetter.getString(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_TYPE);
+				
+				if (type.equals("NAME")) { //$NON-NLS-1$
+					List<?> subConstraints = generationValueGetter.getList(expr, IModelingElementDefinitions.CONSTRAINTS);
+					if(subConstraints== null){
+						continue;
+					}
+					processConstraintsExpressions(generationValueGetter, stringBuffer, subConstraints);
+					continue;
+				}
+				
+				boolean isAttribute= generationValueGetter.getBoolean(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_ATTRIBUTE);
+				String value= generationValueGetter.getString(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_VALUE);
+				
+				
+				if (isAttribute) {
+					stringBuffer.append(value);
+					continue;
+				} 
+				
+				if (value.equals(CommonConstants.DOT)) {
+					//TODO: To be looked upon
+					stringBuffer.append(value);
+					continue;
+				}
+				
+				boolean isOperator= generationValueGetter.getBoolean(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_OPERATOR);
+				
+				if (isOperator){
+					boolean isPrimitive= generationValueGetter.getBoolean(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_PRIMITIVE);
+					if (!isPrimitive) {
+						//TODO: To be looked upon
+						stringBuffer.append(value);
+					} else{
+						stringBuffer.append(value);
+					}
+				}else {
+					stringBuffer.append(value);
+				}
+			}
+		}
+	}
+	
+	
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_CONDITION)
 	public static String constructor(
 			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationArgument(id= IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_ARGUMENT) String contents) {
-		List<?> constraints= generationValueGetter.getList(parent, IModelingElementDefinitions.CONSTRAINTS, element);
 		
-		if(constraints.isEmpty()){
+		String all= generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS);
+		if(all.isEmpty()){
 			return null;
 		}
 		
-		String all= CommonConstants.BLANK;
-		Iterator<?> iterator = constraints.iterator();
-		while(iterator.hasNext()){
-			if(iterator.hasNext()){
-				if(!all.isEmpty()){
-					all= all+ CommonConstants.SPACE+ CPPCommonConstants.AND;
-				}
-				
-				Object next = iterator.next();
-				List<Object> list = (List<Object>) next;
-				String condition= CommonConstants.BLANK;
-				for(Object obj: list){
-					if(!condition.isEmpty()){
-						condition= condition+ CommonConstants.SPACE;
-					}
-					condition= condition+ obj;
-				}
-				all= all+ condition;
-			}
-		}
-		
-		String throwStatement = generationValueGetter.use(ICppDefinitions.THROW_STATEMENET, generationValueGetter.use(ICppUmpleDefinitions.CONSTRAINT_MESSAGE, name));
-		String constraintCondition = generationValueGetter.use(ICppDefinitions.IF_CONDITION_BLOCK, all, StringUtil.indent(CommonConstants.NEW_LINE+ throwStatement, 1));
+		String constraintCondition = generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINT_CHECK_THROW, all, Boolean.TRUE);
 		return constraintCondition+ CommonConstants.NEW_LINE+ contents;
 	}
 	
-	@GenerationPoint(generationPoint = IModelingDecisions.SETTER_GENERATION_POINT, unique= true, priority= IGenerationPointPriorityConstants.HIGH)
+	@GenerationPoint(generationPoint = IModelingElementDefinitions.CONSTRAINT_CHECK_THROW)
+	public static String constraintCheck(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
+			@GenerationArgument String conditions,
+			@GenerationArgument Boolean invert) {
+		String throwStatement = generationValueGetter.use(ICppDefinitions.THROW_STATEMENET, generationValueGetter.use(ICppUmpleDefinitions.CONSTRAINT_MESSAGE, name));
+		String constraintCondition = generationValueGetter.use(ICppDefinitions.IF_CONDITION_BLOCK, conditions, 
+				StringUtil.indent(CommonConstants.NEW_LINE+ throwStatement, 1), invert);
+		return constraintCondition;
+	}
+	
+	
+	@GenerationPoint(generationPoint = ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, unique= true, priority= IGenerationPointPriorityConstants.HIGH)
 	public static boolean setterFilters(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object element,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {

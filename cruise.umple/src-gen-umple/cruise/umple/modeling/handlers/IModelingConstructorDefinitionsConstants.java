@@ -69,6 +69,7 @@ public interface IModelingConstructorDefinitionsConstants {
 	public final static String CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR="cpp.constructor.implementation.negotiator";  //$NON-NLS-1$
 	public final static String CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_CONTENTS="cpp.constructor.implementation.negotiator.contents";  //$NON-NLS-1$
 	public final static String CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_SOURCE="cpp.constructor.implementation.negotiator.source";  //$NON-NLS-1$
+	public final static String CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_IS_INTERNAL="cpp.constructor.implementation.negotiator.is.internal";  //$NON-NLS-1$
 	public final static String CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_PRE="cpp.constructor.implementation.negotiator.pre";  //$NON-NLS-1$
 	public final static String CONSTRUCTOR_IMPLEMENTATION_NEGOTIATOR_IS_ATTRIBUTE="cpp.constructor.implementation.negotiator.is.attribute";  //$NON-NLS-1$
 	public final static String CONSTRUCT_OBJECT_INTERNALLY="cpp.constructor.construct.object.internally";  //$NON-NLS-1$

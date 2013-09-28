@@ -1,12 +1,21 @@
-/*
-Copyright: All contributers to the Umple Project
-
-This file is made available subject to the open source license found at:
-http://umple.org/license
-
-Model for generating documentation such as the Umple user manual
-See Documenter_Code.ump for the methods injected into these classes
-*/
+/*******************************************************************************
+* Copyright (c) 2013 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
 
 package cruise.umple.cpp.jet.util;
 
@@ -41,7 +50,10 @@ public class UmpleCppTemplateHelper extends CppGenerationTemplate{
   protected final String TEXT_8 = "\tbool wasReset = false;" + NL + "\tthis->";
   protected final String TEXT_9 = "= ";
   protected final String TEXT_10 = "();" + NL + "\twasReset = true; " + NL + "\treturn wasReset;";
-  protected final String TEXT_11 = "//Autounique Attributes";
+  protected final String TEXT_11 = "if(!this->";
+  protected final String TEXT_12 = ") { " + NL + "\treturn false; " + NL + "}" + NL + "this->";
+  protected final String TEXT_13 = "= false;" + NL;
+  protected final String TEXT_14 = "//Autounique Attributes";
 
   /**
   * @param argument
@@ -202,6 +214,39 @@ public void execute() {
 
 }});
 
+getRegistry().define(ICppUmpleDefinitions.SETTER_CAN_SET_CHECK, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+	
+	@StubPoint(id = ICppNameConstants.CAN_SET) String nameAsVariableElement;
+	@GenerationArgument String nameAsVariable;
+	
+	String canSetFlag;
+			
+@Override
+public void execute() {
+
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(canSetFlag);
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append(canSetFlag);
+    stringBuffer.append(TEXT_13);
+    
+}
+
+@Override
+public void preExecute(){
+	//Allow defining by element type name, if not, then by argument
+	this.canSetFlag= element!=null? this.nameAsVariableElement: this.nameAsVariable;
+}
+
+});
+
+}});
+
 getRegistry().define(ICppUmpleDefinitions.AUTOUNIQUE_ATTRIBUTE_DECLARATIONS+ ICppDefinitions.COMMENTS_SUFFIX, new GenerationProcdure(this){
 	
 @Override
@@ -212,7 +257,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_14);
     
 }});
 

@@ -1,12 +1,21 @@
-/*
-Copyright: All contributers to the Umple Project
-
-This file is made available subject to the open source license found at:
-http://umple.org/license
-
-Model for generating documentation such as the Umple user manual
-See Documenter_Code.ump for the methods injected into these classes
-*/
+/*******************************************************************************
+* Copyright (c) 2013 Ahmed M.Orabi, Mahmoud M.Orabi.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+*
+* Contributors:
+*     Ahmed M.Orabi
+*     Mahmoud M.Orabi
+*
+* Please refer to the code authors before making any changes. 
+* For any code reuse or copy, contact the authors and it is a MUST 
+* to refer author names.
+*
+* @author -Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+* @author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+*******************************************************************************/
 
 package cruise.umple.cpp.jet;
 
@@ -51,7 +60,7 @@ public class CppHeader extends CppGenerationTemplate{
   protected final String TEXT_18 = NL + NL + "#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__) || defined(_WIN64)" + NL + "#define WINDOWS_OS" + NL + "// NO PREPROCESSOR DEFINITION FOR PRAGMA" + NL + "#if _MSC_VER" + NL + "#define PRAGMA" + NL + "#pragma warning( disable : 4290 )" + NL + "#endif" + NL + "#elif defined(hpux) || defined(__hpux) || defined(__hpux__)" + NL + "#define HPUX_OS" + NL + "#elif defined(__APPLE__) || defined(macintosh)" + NL + "#define MAC_OS" + NL + "#elif defined(bsdi) || defined(__bsdi__)" + NL + "#define BSD_OS" + NL + "#endif" + NL + "" + NL + "#ifdef PRAGMA" + NL + "#pragma once" + NL + "#ifdef _MSC_VER";
   protected final String TEXT_19 = NL;
   protected final String TEXT_20 = NL + "#else" + NL + "#pragma interface \"";
-  protected final String TEXT_21 = ".h\"" + NL + "#endif" + NL + "#endif" + NL + "" + NL + "//------------------------" + NL + "// PACKAGE FILES DECLARATION" + NL + "//------------------------" + NL + "#ifdef WINDOWS_OS" + NL + "#include <windows.h>" + NL + "#include <process.h>" + NL + "#else" + NL + "#include <errno.h>" + NL + "#include <pthread.h>" + NL + "#include <unistd.h>" + NL + "#endif" + NL + "" + NL + "#ifdef HPUX_OS" + NL + "#include <sys/pstat.h>" + NL + "#elif  MAC_OS" + NL + "#undef DEBUG" + NL + "#include <CoreServices/CoreServices.h>" + NL + "#elif BSD_OS" + NL + "#include <mach/mach_types.h>" + NL + "#include <sys/systm.h>" + NL + "#include <sys/types.h>" + NL + "#include <sys/sysctl.h>" + NL + "#endif";
+  protected final String TEXT_21 = ".h\"" + NL + "#endif" + NL + "#endif" + NL + "" + NL + "//------------------------" + NL + "// PACKAGE FILES DECLARATION" + NL + "//------------------------" + NL + "#ifdef WINDOWS_OS" + NL + "#include <windows.h>" + NL + "#include <process.h>" + NL + "#else" + NL + "#include <errno.h>" + NL + "#include <pthread.h>" + NL + "#include <unistd.h>" + NL + "#endif" + NL + "" + NL + "#ifdef HPUX_OS" + NL + "#include <sys/pstat.h>" + NL + "#elif defined MAC_OS" + NL + "#undef DEBUG" + NL + "#include <CoreServices/CoreServices.h>" + NL + "#elif defined BSD_OS" + NL + "#include <mach/mach_types.h>" + NL + "#include <sys/systm.h>" + NL + "#include <sys/types.h>" + NL + "#include <sys/sysctl.h>" + NL + "#endif";
   protected final String TEXT_22 = NL;
   protected final String TEXT_23 = NL;
   protected final String TEXT_24 = NL;
