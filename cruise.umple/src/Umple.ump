@@ -83,6 +83,8 @@ class UmpleElement
 
   // The modifier associated with the Umple element.
   modifier = null;
+  
+  Boolean hasMainMethod = false;
 
   String[] namespaces;
 
@@ -314,11 +316,11 @@ class Key
  */
 class UmpleClassifier
 {
- isA UmpleElement;
- // The methods contained within the Umple Classifier.
- 1 -> 0..* Method;
+  isA UmpleElement;
+  // The methods contained within the Umple Classifier.
+  1 -> 0..* Method;
 
- * -> * Depend;
+  * -> * Depend;  
 
   // The constants contained within the Umple Classifier.
   1 -> 0..* Constant;
@@ -358,8 +360,6 @@ class UmpleClass
 
   // Specifies whether or not the Umple class is a singleton.
   Boolean isSingleton = false;
-  
-  Boolean hasMainMethod = false;
 
   Association[] associations;
 

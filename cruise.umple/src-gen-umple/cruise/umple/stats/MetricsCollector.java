@@ -209,4 +209,5 @@ public class MetricsCollector
 //  @umplesourcefile(line={72},file={"UmpleStats_Code.ump"},javaline={210},length={2})
   private ArrayList<String> _allAssociationTypes ;
 
+  
 }

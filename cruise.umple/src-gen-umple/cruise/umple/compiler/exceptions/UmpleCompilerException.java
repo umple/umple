@@ -38,4 +38,5 @@ public class UmpleCompilerException extends RuntimeException
   //  @umplesourcefile(line={21},file={"UmpleExceptions.ump"},javaline={39},length={2})
   static final long serialVersionUID = 1 ;
 
+  
 }

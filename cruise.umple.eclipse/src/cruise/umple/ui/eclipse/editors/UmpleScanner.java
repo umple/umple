@@ -82,8 +82,8 @@ public class UmpleScanner extends RuleBasedScanner {
 		IToken quoteToken =
 				new Token(new TextAttribute(manager
 						.getColor(IUmpleColorConstants.QUOTE), null, SWT.NONE));
-		
-		
+
+
 		// IToken tokenTwo = new Token(new
 		// TextAttribute(manager.getColor(IXMLColorConstants.TAG)));
 
@@ -101,17 +101,17 @@ public class UmpleScanner extends RuleBasedScanner {
 		rules.add(new RegexWordRule("\\s([0-9]|\\Q*\\E)+(\\.\\.?([0-9]|\\Q*\\E)*)?",2,false, associationMultToken));// number or asterisk in an association
 		rules.add(new RegexWordRule("[^a-zA-Z0-9](\\Q--\\E|\\Q->\\E|\\Q<-\\E)",3,false, associationMultToken));// number or asterisk in an association
 		rules.add(new RegexWordRule("[^a-zA-Z0-9](if)[\\s\\(]",4,false, reservedWordToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](int)\\s",5,true, structIdentifierToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](new|for|try|isA)[\\s\\(]",5,false, reservedWordToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](void|char)\\s",6,true, structIdentifierToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](else|true|null)[\\s\\(;]",6,false, reservedWordToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](while|catch|false)[\\s\\(;]",7,false, reservedWordToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](float)\\s",7,true, structIdentifierToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](int)[\\s\\)]",5,true, structIdentifierToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](new|for|try|isA)[\\s\\(\\)]",5,false, reservedWordToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](void|char)[\\s\\)]",6,true, structIdentifierToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](else|true|null)[\\s\\(;\\)]",6,false, reservedWordToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](while|catch|false)[\\s\\(;\\)]",7,false, reservedWordToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](float)[\\s\\)]",7,true, structIdentifierToken));
 		rules.add(new RegexWordRule("[^a-zA-Z0-9](public|return)\\s",8,false, structIdentifierToken));
 		rules.add(new RegexRule("[^a-zA-Z0-9](return)[\\s;]",8,2, structIdentifierToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](double)\\s",8,true, structIdentifierToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](private)\\s",9,false, structIdentifierToken));
-		rules.add(new RegexWordRule("[^a-zA-Z0-9](boolean)\\s",9,true, structIdentifierToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](double)[\\s\\)]",8,true, structIdentifierToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](private)[\\s\\)]",9,false, structIdentifierToken));
+		rules.add(new RegexWordRule("[^a-zA-Z0-9](boolean)[\\s\\)]",9,true, structIdentifierToken));
 		rules.add(new RegexWordRule("[^a-zA-Z0-9](generate|glossary)\\s",10,false, structIdentifierToken));
 		rules.add(new RegexWordRule("[^a-zA-Z0-9](protected)\\s",11,false, structIdentifierToken));
 		rules.add(new RegexWordRule("[^a-zA-Z0-9](strictness)\\s",12,false, structIdentifierToken));
@@ -159,7 +159,7 @@ public class UmpleScanner extends RuleBasedScanner {
 		public IToken evaluate(ICharacterScanner scanner) {
 			input = "";
 			if(min>1){
-			  scanner.unread();	
+				scanner.unread();	
 			}			
 			for(int i=0;i<min;i++){
 				input += (char)scanner.read();
@@ -319,31 +319,31 @@ public class UmpleScanner extends RuleBasedScanner {
 		@Override
 		public IToken evaluate(ICharacterScanner scanner) {
 			//if(!"".equals(currentClass)){
-				IToken token = super.evaluate(scanner);
-				if(!token.equals(Token.UNDEFINED)){
-					String name = input.substring(1,input.length()-1);
-					AttributeDefinition ad = currentScope.getAttribute(name);
-					boolean contains =  ad!=null;
-					//System.out.print(nextNameIsAnAttributeName);
-					if(nextNameIsAnAttributeName||contains){
-						if(nextNameIsAnAttributeName&&!contains){
-							//System.out.println(nextNameIsAnAttributeName);
-							currentScope.add(new AttributeDefinition(name,fOffset-currentScope.getBegin()-name.length(),fOffset-currentScope.getBegin()));
-						}
-						else if(!nextNameIsAnAttributeName&&contains){
-							ad.add(new AttributeDefinition(name,fOffset-currentScope.getBegin()-name.length(),fOffset-currentScope.getBegin()));							
-						}
-						else {
-							currentScope.addFloatingDefinition(new AttributeDefinition(name,fOffset-currentScope.getBegin()-name.length(),fOffset-currentScope.getBegin()));
-						}
-						nextNameIsAnAttributeName = false;
-						return token;
+			IToken token = super.evaluate(scanner);
+			if(!token.equals(Token.UNDEFINED)){
+				String name = input.substring(1,input.length()-1);
+				AttributeDefinition ad = currentScope.getAttribute(name);
+				boolean contains =  ad!=null;
+				//System.out.print(nextNameIsAnAttributeName);
+				if(nextNameIsAnAttributeName||contains){
+					if(nextNameIsAnAttributeName&&!contains){
+						//System.out.println(nextNameIsAnAttributeName);
+						currentScope.add(new AttributeDefinition(name,fOffset-currentScope.getBegin()-name.length(),fOffset-currentScope.getBegin()));
+					}
+					else if(!nextNameIsAnAttributeName&&contains){
+						ad.add(new AttributeDefinition(name,fOffset-currentScope.getBegin()-name.length(),fOffset-currentScope.getBegin()));							
+					}
+					else {
+						currentScope.addFloatingDefinition(new AttributeDefinition(name,fOffset-currentScope.getBegin()-name.length(),fOffset-currentScope.getBegin()));
 					}
 					nextNameIsAnAttributeName = false;
+					return token;
 				}
-				int current = input.charAt(input.length()-1);
-				rewind(scanner);
-				return Token.UNDEFINED;
+				nextNameIsAnAttributeName = false;
+			}
+			int current = input.charAt(input.length()-1);
+			rewind(scanner);
+			return Token.UNDEFINED;
 			//}
 			//else {
 			//	return Token.UNDEFINED;
@@ -382,8 +382,9 @@ public class UmpleScanner extends RuleBasedScanner {
 				input += (char)scanner.read();
 			}
 			if(input.matches(open)){
-					currentScope = new Scope(currentScope);
-					currentScope.begin(fOffset);
+				currentScope = new Scope(currentScope);
+				currentScope.begin(fOffset);
+				nextNameIsAnAttributeName = false;
 				return token;
 			}
 			else if(input.matches(close)){
@@ -391,6 +392,7 @@ public class UmpleScanner extends RuleBasedScanner {
 				if(currentScope.parent!=null){
 					currentScope = currentScope.parent;
 				}
+				nextNameIsAnAttributeName = false;
 				return token;
 			}
 			else
@@ -408,6 +410,6 @@ public class UmpleScanner extends RuleBasedScanner {
 	}
 	public void reset() {
 		nextNameIsAnAttributeName = false;
-		
+
 	}
 }

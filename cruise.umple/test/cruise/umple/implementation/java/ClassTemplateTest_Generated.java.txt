@@ -31,4 +31,73 @@ public class Mentor
     
   }
 
+  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
+  {
+    public void uncaughtException(Thread t, Throwable e)
+    {
+      translate(e);
+      if(e.getCause()!=null)
+      {
+        translate(e.getCause());
+      }
+      e.printStackTrace();
+    }
+    public void translate(Throwable e)
+    {
+      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();
+      StackTraceElement[] elements = e.getStackTrace();
+      try
+      {
+        for(StackTraceElement element:elements)
+        {
+          Class clazz = Class.forName(element.getClassName());
+          String methodName = element.getMethodName();
+          boolean methodFound = false;
+          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())
+          {
+            if(meth.getName().equals(methodName))
+            {
+              for(java.lang.annotation.Annotation anno: meth.getAnnotations())
+              {
+                if(anno.annotationType().getSimpleName().equals("umplesourcefile"))
+                {
+                  int[] methodlength = (int[])anno.annotationType().getMethod("length", new Class[]{}).invoke(anno,new Object[]{});
+                  int[] javaline = (int[])anno.annotationType().getMethod("javaline", new Class[]{}).invoke(anno,new Object[]{});
+                  int[] line = (int[])anno.annotationType().getMethod("line", new Class[]{}).invoke(anno,new Object[]{});
+                  String[] file = (String[])anno.annotationType().getMethod("file", new Class[]{}).invoke(anno,new Object[]{});
+                  for(int i=0;i<file.length;i++)
+                  {
+                    int distanceFromStart = element.getLineNumber()-javaline[i]-(("main".equals(methodName))?2:0);
+                    if(file[i] == "")
+                    {
+                      break;
+                    }
+                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])
+                    {
+                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));
+                      methodFound = true;
+                      break;
+                    }
+                  }
+                }
+              }
+              if(methodFound)
+              {
+                break;
+              }
+            }
+          }
+          if(!methodFound)
+          {
+            result.add(element);
+          }
+        }
+      }
+      catch (Exception e1)
+      {
+        e1.printStackTrace();
+      }
+      e.setStackTrace(result.toArray(new StackTraceElement[0]));
+    }
+  }
 }

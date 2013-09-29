@@ -53,4 +53,5 @@ public static void handle(String message)
   }
 static{getInstance();}
 
+  
 }

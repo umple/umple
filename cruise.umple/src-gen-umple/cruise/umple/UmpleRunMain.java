@@ -145,6 +145,7 @@ public class UmpleRunMain
 //  @umplesourcefile(line={305},file={"Main_Code.ump"},javaline={146},length={2})
   public static boolean displayOutput = true ;
 
+  
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)

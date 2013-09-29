@@ -80,7 +80,7 @@ public class UmpleDoubleClickStrategy implements ITextDoubleClickStrategy {
 
 			while (pos >= 0) {
 				c = doc.getChar(pos);
-				if (c==' '||c=='\t'||c=='\n'||c=='.'||c=='\"'||c=='\''||c=='('||c==')'||c==';'||c==',')
+				if (c==' '||c=='\t'||c=='\n'||c=='.'||c=='\"'||c=='\''||c=='('||c==')'||c==';'||c==','||c=='|'||c=='&')
 					break;
 				--pos;
 			}

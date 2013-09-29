@@ -11,12 +11,12 @@
   
  student::student(const int & aAge, const int & aWeight)
   {
-    if ( !(!(aAge>18)))
+    age = aAge;
+    weight = aWeight;
+    if ( !((!(aAge>18))))
     {
       throw "Please provide a valid age";
     }
-    age = aAge;
-    weight = aWeight;
   }
   
   //------------------------

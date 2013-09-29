@@ -38,7 +38,6 @@ class student
   def set_age(a_age)
     was_set = false
     if 18>a_age then
-    
     @age = a_age
     was_set = true
     end
