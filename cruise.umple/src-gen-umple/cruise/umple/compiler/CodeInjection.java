@@ -8,10 +8,10 @@ import java.util.*;
 
 /**
  * A block of code that can be injected into one or more methods, constructor, etc.
- * @umplesource Umple.ump 282
+ * @umplesource Umple.ump 284
  * @umplesource Umple_Code.ump 540
  */
-// line 282 "../../../../src/Umple.ump"
+// line 284 "../../../../src/Umple.ump"
 // line 540 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {

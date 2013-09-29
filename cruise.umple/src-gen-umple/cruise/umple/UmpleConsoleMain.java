@@ -217,6 +217,7 @@ public class UmpleConsoleMain
 //  @umplesourcefile(line={190},file={"Main_Code.ump"},javaline={218},length={2})
   private static OptionParser optparser ;
 
+  
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)

@@ -213,6 +213,7 @@ public class PlaygroundMain
   //  @umplesourcefile(line={488},file={"Main_Code.ump"},javaline={214},length={2})
   public static String console = "" ;
 
+  
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)

@@ -25,6 +25,7 @@ public class UmpleElement
   //UmpleElement Attributes
   private String name;
   private String modifier;
+  private boolean hasMainMethod;
   private List<String> namespaces;
   private String packageName;
 
@@ -48,6 +49,7 @@ public class UmpleElement
   {
     name = aName;
     modifier = null;
+    hasMainMethod = false;
     namespaces = new ArrayList<String>();
     packageName = "";
     extraCode = new ExtraCode();
@@ -78,6 +80,14 @@ public class UmpleElement
     return wasSet;
   }
 
+  public boolean setHasMainMethod(boolean aHasMainMethod)
+  {
+    boolean wasSet = false;
+    hasMainMethod = aHasMainMethod;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean addNamespace(String aNamespace)
   {
     boolean wasAdded = false;
@@ -92,11 +102,11 @@ public class UmpleElement
     return wasRemoved;
   }
 
-  @umplesourcefile(line={102},file={"Umple.ump"},javaline={100},length={1})
+  @umplesourcefile(line={104},file={"Umple.ump"},javaline={110},length={1})
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
-    // line 102 "../../../../src/Umple.ump"
+    // line 104 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;
@@ -142,6 +152,11 @@ public class UmpleElement
   public String getModifier()
   {
     return modifier;
+  }
+
+  public boolean getHasMainMethod()
+  {
+    return hasMainMethod;
   }
 
   public String getNamespace(int index)
@@ -201,6 +216,11 @@ public class UmpleElement
   public String getDisplayColor()
   {
     return displayColor;
+  }
+
+  public boolean isHasMainMethod()
+  {
+    return hasMainMethod;
   }
 
   public boolean isIsInternal()
@@ -392,12 +412,12 @@ public class UmpleElement
     endPositions.clear();
   }
 
-  @umplesourcefile(line={660},file={"Umple_Code.ump"},javaline={396},length={3})
+  @umplesourcefile(line={660},file={"Umple_Code.ump"},javaline={416},length={3})
    public void appendExtraCode(String newCode){
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={665},file={"Umple_Code.ump"},javaline={401},length={11})
+  @umplesourcefile(line={665},file={"Umple_Code.ump"},javaline={421},length={11})
    public void appendExtraCode(String newCode, boolean addNewline){
     if (newCode == null) 
     { 
@@ -410,17 +430,17 @@ public class UmpleElement
     extraCode.appendExtraCode(newCode);
   }
 
-  @umplesourcefile(line={678},file={"Umple_Code.ump"},javaline={414},length={3})
+  @umplesourcefile(line={678},file={"Umple_Code.ump"},javaline={434},length={3})
    public void appendExtraCode(boolean flag, CodeBlock cb){
     extraCode.appendExtraCode(cb);
   }
 
-  @umplesourcefile(line={683},file={"Umple_Code.ump"},javaline={419},length={3})
+  @umplesourcefile(line={683},file={"Umple_Code.ump"},javaline={439},length={3})
    public boolean hasExtraCode(){
     return extraCode.getHasCode();
   }
 
-  @umplesourcefile(line={688},file={"Umple_Code.ump"},javaline={424},length={3})
+  @umplesourcefile(line={688},file={"Umple_Code.ump"},javaline={444},length={3})
    public String getExtraCode(){
     return extraCode.getExtraCode();
   }
@@ -432,6 +452,7 @@ public class UmpleElement
     return super.toString() + "["+
             "name" + ":" + getName()+ "," +
             "modifier" + ":" + getModifier()+ "," +
+            "hasMainMethod" + ":" + getHasMainMethod()+ "," +
             "packageName" + ":" + getPackageName()+ "," +
             "isInternal" + ":" + getIsInternal()+ "," +
             "displayColor" + ":" + getDisplayColor()+ "]" + System.getProperties().getProperty("line.separator") +

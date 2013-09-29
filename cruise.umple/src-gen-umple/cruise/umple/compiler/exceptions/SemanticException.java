@@ -38,4 +38,5 @@ public class SemanticException extends RuntimeException
   //  @umplesourcefile(line={28},file={"UmpleExceptions.ump"},javaline={39},length={2})
   static final long serialVersionUID = 2 ;
 
+  
 }

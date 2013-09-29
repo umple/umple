@@ -183,4 +183,5 @@ public class CodeCompiler
   //  @umplesourcefile(line={21},file={"Compiler.ump"},javaline={184},length={2})
   public static String console ;
 
+  
 }

@@ -177,7 +177,9 @@ for (StateMachine smq : uClass.getStateMachines())
     } 
     private String getAllExtraCode(StringBuffer stringBuffer, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {%>
-<% if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>  
+<% 
+  boolean isMainClass = false;
+  if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { %>  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
@@ -190,7 +192,6 @@ for (StateMachine smq : uClass.getStateMachines())
   extraCode = "";
   boolean setIsMainMethodToFalse = false;
   boolean isMainMethod = false;
-  boolean isMainClass = false;
   int linenumber = 0;
   int javaline = stringBuffer.toString().split("\\n").length+1;
   String umplefilename = "";
@@ -279,8 +280,8 @@ for (StateMachine smq : uClass.getStateMachines())
     extraCode+=l+"\n";
   }
   %><%=extraCode%>
-  <%if(uClass.getHasMainMethod()){%><%@ include file="uncaught_exception.jet"%><%}%>
-<% } %>
+  
+<% } %><%if(uClass.getHasMainMethod()||isMainClass){%><%@ include file="uncaught_exception.jet"%><%}%>
   <%@ include file="trace.jet" %>
 }<%
   return stringBuffer.toString();

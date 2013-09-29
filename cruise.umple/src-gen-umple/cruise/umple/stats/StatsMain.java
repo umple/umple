@@ -77,6 +77,7 @@ public class StatsMain
   //  @umplesourcefile(line={17},file={"UmpleStats_Code.ump"},javaline={78},length={2})
   public static String console ;
 
+  
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)

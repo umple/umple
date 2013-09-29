@@ -527,4 +527,5 @@ public class GeneratorHelper
 //  @umplesourcefile(line={32},file={"GeneratorHelper_CodeTrace.ump"},javaline={528},length={2})
   static private boolean generateString = true ;
 
+  
 }

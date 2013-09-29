@@ -69,6 +69,7 @@ public class DocumenterMain
   //  @umplesourcefile(line={14},file={"Documenter_Code.ump"},javaline={70},length={2})
   private static String console = "" ;
 
+  
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)

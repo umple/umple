@@ -327,4 +327,5 @@ public class Event
   //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={328},length={2})
   private static int nextAutoTransitionId = 1 ;
 
+  
 }

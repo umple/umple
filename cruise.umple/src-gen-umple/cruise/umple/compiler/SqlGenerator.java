@@ -1130,4 +1130,5 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
     afterCode = "@AFTER_CODE@";
   }
 
+  
 }

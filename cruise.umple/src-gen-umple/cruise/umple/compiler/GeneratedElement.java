@@ -111,4 +111,5 @@ public class GeneratedElement
   @umplesourcefile(line={1922},file={"Umple_Code.ump"},javaline={112},length={1})
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>() ;
 
+  
 }

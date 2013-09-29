@@ -639,55 +639,8 @@ class PhpGenerator
         aClass.addCodeInjection(set);
       }
     }
-    Constraint constraint = new Constraint();
-    constraint.setNegated(true);
-    constraint.setFormat("allParameterOneClosed");
-    constraint.setInject("throw new RuntimeException(\"Please provide a valid");
-    constraint.setGen(this);
-    for (Constraint ac : aClass.getConstraints())
-    {      
-      List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
-      boolean isAssociation = false;
-      CodeInjection before;
-      for (ConstraintVariable cur : ac.getExpressions())
-      {
-        if(cur.getIsAssociation())
-          isAssociation = true;
-        if(!cur.getIsAttribute()  || alreadyDone.contains(cur))
-          continue;
-        if(cur.getSubConstraint()!=null&&cur.getSubConstraint().getExpression(0).getValue().equals("initialise"))
-          continue;
-        alreadyDone.add(cur);
-        
-        String setMethod_code = StringFormatter.format(translate(cur.getValue()+":Open",ac),"");
-        
-        before = new CodeInjection("before", cur.getFoundAttribute()==null?cur.getValue():translate("setMethod", cur.getAttribute(aClass), cur.getIsAssociation()), setMethod_code, aClass);         
-        CodeInjection after = new CodeInjection("after", cur.getFoundAttribute()==null?cur.getValue():translate("setMethod", cur.getAttribute(aClass), cur.getIsAssociation()), "}", aClass);
-        before.setIsInternal(true);
-        after.setIsInternal(true);
-        aClass.addCodeInjection(before);
-        aClass.addCodeInjection(after);
-        
-        if(cur.getIsAssociation())
-        {
-          before = new CodeInjection("before", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), setMethod_code, aClass);         
-          after = new CodeInjection("after", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod", cur.getAttribute(aClass), cur.getIsAssociation()), "}", aClass);
-          before.setIsInternal(true);
-          after.setIsInternal(true);
-          aClass.addCodeInjection(before);
-          aClass.addCodeInjection(after);
-        }
-      }
-      constraint.mergeWith(ac);
-      constraint.setInject(constraint.getInject()+" "+ac.toString());
-    }
-    if(constraint.numberOfExpressions()>0)
-    {
-      constraint.setInject(constraint.getInject()+"\");");
-      CodeInjection constructor = new CodeInjection("after",  "constructor", constraint, aClass);  
-      constructor.setIsInternal(true);
-      aClass.addCodeInjection(constructor);
-    }
+    
+    prepareConstraints(aClass);
 
 	for (Precondition pc : aClass.getPreconditions()){ 
     	String methodName = pc.getMethod().getName();
@@ -954,6 +907,8 @@ class PhpGenerator
     //
     ConstraintLookupMap.put("==","=={0}");
     ConstraintLookupMap.put("accessor","$");
+    ConstraintLookupMap.put("paramaccessor","$");
+    ConstraintLookupMap.put("exception","throw new RuntimeException(\"Please provide a valid{0}\");");
     ConstraintLookupMap.put("ifstatement","if ({0})\n{");
     ConstraintLookupMap.put("end","}");
     ConstraintLookupMap.put(".","->{0}");

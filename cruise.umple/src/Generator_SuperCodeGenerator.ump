@@ -6,9 +6,9 @@ class SuperCodeGenerator {
     initializeLangaugeBasedVariables();
   }
 
-  Map <String,String> UmpleToPrimitiveMap;
-  Map <String,String> TraceLookupMap;
-  Map <String,String> ConstraintLookupMap;
+  protected Map<String,String> UmpleToPrimitiveMap = new HashMap<String,String>();
+  protected Map<String,String> TraceLookupMap = new HashMap<String,String>();
+  protected Map<String,String> ConstraintLookupMap = new HashMap<String,String>();
 	
   //This method is because of issue number 373;
   public void generate() {
@@ -50,8 +50,10 @@ class SuperCodeGenerator {
       return "{0}";
     String expression = "";
     boolean insertNext = false;
-    boolean strictNext = false;
+    boolean strictNext = format.contains("$strict$");
     boolean plain = format.contains("Plain");
+    int mode = format.contains("allParameterOne")?0:format.contains("$constructor$")?1:2;
+    List<String> names = Arrays.asList(format.split(":")[0].split(","));
     String previousName = "";
     for(int i=0;i<constraint.numberOfExpressions();i++)
     {      
@@ -60,16 +62,16 @@ class SuperCodeGenerator {
       {
         if(insertNext)
         {
-          String name = (!plain?ConstraintLookupMap.get("accessor"):"")+
-        		                      translate(format+":Plain",expr.getSubConstraint());
+          String name = //(!plain?ConstraintLookupMap.get("accessor"):"")+
+        		                      translate(format+":Plain"+(strictNext?"$strict$":""),expr.getSubConstraint());
           expression = StringFormatter.format(expression,name,previousName);
           previousName = name;
           insertNext = false;
         }
         else
         {
-          String name = (!plain?ConstraintLookupMap.get("accessor"):"")+
-        		                      translate(format+":Plain",expr.getSubConstraint());
+          String name = //(!plain?ConstraintLookupMap.get("accessor"):"")+
+        		                      translate(format+":Plain"+(strictNext?"$strict$":""),expr.getSubConstraint());
           expression+=name;
           previousName = name;
         }
@@ -77,51 +79,28 @@ class SuperCodeGenerator {
       else if( expr.getIsAttribute() )
       {
         String value;
-        if(format.contains("allParameterOne")&&!strictNext)
+        if(mode==0&&!strictNext)
         {
-          if(!expr.getIsAssociation())
-          {
-             value = (!plain?ConstraintLookupMap.get("accessor"):"")+
-                     (expr.getFoundAttribute()==null?expr.getValue():translate("parameterOne",(Attribute)expr.getFoundAttribute()));
-          }
-          else 
-          {
-            if(expr.getIndex()==-1)
-            {
-              value = (!plain?ConstraintLookupMap.get("accessor"):"")+
-                      (expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",(AssociationVariable)expr.getFoundAttribute()));
-            }
-            else {
-              value = (!plain?ConstraintLookupMap.get("accessor"):"")+
-                      (expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",(AssociationVariable)expr.getFoundAttribute())); 
-              value = StringFormatter.format(ConstraintLookupMap.get("[]"),""+expr.getIndex(), value);
-            }
-          }
+          value = (ConstraintLookupMap.get("paramaccessor"))+getParameterFromConstraint(expr,plain);
         }
-        else if(Arrays.asList(format.split(":")[0].split(",")).contains(expr.getValue())&&!strictNext)
+        else if(mode==2&&names.contains(expr.getValue())&&!strictNext)
         {
-          if(!expr.getIsAssociation())
+          value = (ConstraintLookupMap.get("paramaccessor"))+getParameterFromConstraint(expr,plain);
+        }
+        else if(mode==1&&!strictNext)
+        {
+          if(expr.getFoundAttribute()!=null&&(expr.getFoundAttribute().getValue()==null||"".equals(expr.getFoundAttribute().getValue())))
           {
-             value = (!plain?ConstraintLookupMap.get("accessor"):"")+
-                     (expr.getFoundAttribute()==null?expr.getValue():translate("parameterOne",(Attribute)expr.getFoundAttribute()));
+            value = (ConstraintLookupMap.get("paramaccessor"))+getParameterFromConstraint(expr,plain);
           }
-          else 
+          else
           {
-            if(expr.getIndex()==-1 )
-            {
-              value = (!plain?ConstraintLookupMap.get("accessor"):"")+
-                      (expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",(AssociationVariable)expr.getFoundAttribute()));
-            }
-            else {
-              value = (!plain?ConstraintLookupMap.get("accessor"):"")+
-                      (expr.getFoundAttribute()==null?expr.getValue():translate("associationMany",(AssociationVariable)expr.getFoundAttribute()));
-              value = StringFormatter.format(ConstraintLookupMap.get("[]"),""+expr.getIndex(), value);
-            }
+            value = (ConstraintLookupMap.get("accessor"))+expr.getValue();
           }
         }
         else 
         {
-          value = (!plain?ConstraintLookupMap.get("accessor"):"")+expr.getValue();
+          value = (!strictNext?ConstraintLookupMap.get("accessor"):"")+expr.getValue();
           strictNext=false;
         }
         if(insertNext){
@@ -193,5 +172,90 @@ class SuperCodeGenerator {
       return StringFormatter.format(ConstraintLookupMap.get("ifstatement"),expression, "{0}");
     }
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
+  }
+  
+  public String getParameterFromConstraint(ConstraintVariable expr, Boolean plain)
+  {
+    if(expr.getFoundAttribute()==null)
+    {
+      return expr.getValue();
+    }
+    String value = "";
+    if(!expr.getIsAssociation())
+    {
+      value = translate("parameterOne",(Attribute)expr.getFoundAttribute());
+    }
+    else 
+    {
+      if(expr.getIndex()==-1 )
+      {
+         value = translate("associationMany",(AssociationVariable)expr.getFoundAttribute());
+      }
+      else {
+        value = translate("associationMany",(AssociationVariable)expr.getFoundAttribute());
+        value = StringFormatter.format(ConstraintLookupMap.get("[]"),""+expr.getIndex(), value);
+      }
+    }
+    return value;
+  }
+  
+  public void prepareConstraints(UmpleClass aClass)
+  {
+    Constraint constraint = new Constraint();
+    constraint.setNegated(true);
+    constraint.setFormat("$constructor$Closed");
+    constraint.setInject("");
+    constraint.setGen(this);
+    for (Constraint ac : aClass.getConstraints())
+    {      
+      List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
+      boolean isAssociation = false;
+      CodeInjection before;
+      for (ConstraintVariable cur : ac.getExpressions())
+      {
+        if(cur.getIsAssociation())
+          isAssociation = true;
+        if(!cur.getIsAttribute()  || alreadyDone.contains(cur))
+          continue;
+        if(cur.getSubConstraint()!=null&&cur.getSubConstraint().getExpression(0).getValue().equals("initialise"))
+          continue;
+        alreadyDone.add(cur);
+        
+        String setMethod_code = StringFormatter.format(translate(cur.getValue()+":Open",ac),"");
+        
+        if(cur.getIsAssociation())
+        {
+          before = new CodeInjection("before", cur.getFoundAttribute()==null?("set"+cur.getValue()):translate("setMethod", (AssociationVariable)cur.getFoundAttribute()), setMethod_code, aClass);         
+          CodeInjection after = new CodeInjection("after", cur.getFoundAttribute()==null?("set"+cur.getValue()):translate("setMethod",(AssociationVariable)cur.getFoundAttribute()), ConstraintLookupMap.get("end"), aClass);
+          before.setIsInternal(true);
+          after.setIsInternal(true);
+          aClass.addCodeInjection(before);
+          aClass.addCodeInjection(after);
+          before = new CodeInjection("before", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod",(AssociationVariable)cur.getFoundAttribute()), setMethod_code, aClass);         
+          after = new CodeInjection("after", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod",(AssociationVariable)cur.getFoundAttribute()), ConstraintLookupMap.get("end"), aClass);
+          before.setIsInternal(true);
+          after.setIsInternal(true);
+          aClass.addCodeInjection(before);
+          aClass.addCodeInjection(after);
+        }
+        else {
+          before = new CodeInjection("before", cur.getFoundAttribute()==null?("set"+cur.getValue()):translate("setMethod", (Attribute)cur.getFoundAttribute()), setMethod_code, aClass);         
+          CodeInjection after = new CodeInjection("after", cur.getFoundAttribute()==null?("set"+cur.getValue()):translate("setMethod",(Attribute)cur.getFoundAttribute()), ConstraintLookupMap.get("end"), aClass);
+          before.setIsInternal(true);
+          after.setIsInternal(true);
+          aClass.addCodeInjection(before);
+          aClass.addCodeInjection(after);
+        }
+      }
+      constraint.mergeWith(ac);
+      constraint.setInject(constraint.getInject()+" "+ac.toString());
+    }
+    if(constraint.numberOfExpressions()>0)
+    {
+      constraint.setInject(StringFormatter.format(ConstraintLookupMap.get("exception"),constraint.getInject()));
+      CodeInjection constructor = new CodeInjection("after",  "constructor", constraint, aClass);  
+      constructor.setIsInternal(true);
+      aClass.addCodeInjection(constructor);
+    }
   }
 }

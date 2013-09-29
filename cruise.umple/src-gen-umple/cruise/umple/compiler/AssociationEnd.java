@@ -432,4 +432,5 @@ public class AssociationEnd
   //  @umplesourcefile(line={1479},file={"Umple_Code.ump"},javaline={433},length={2})
   private static int MULT_MANY = -1 ;
 
+  
 }

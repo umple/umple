@@ -85,6 +85,7 @@ public class VmlConsole
   //  @umplesourcefile(line={18},file={"Vml_Code.ump"},javaline={86},length={2})
   public static String console = "" ;
 
+  
   public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler
   {
     public void uncaughtException(Thread t, Throwable e)

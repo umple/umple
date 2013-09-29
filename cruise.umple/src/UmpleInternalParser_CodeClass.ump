@@ -1294,9 +1294,9 @@ class UmpleInternalParser
     String modifier = "";
     Method aMethod = new Method("","","",false);
 
-  // Set method position
-  aMethod.setPosition(method.getPosition());
-  aMethod.setEndPosition(method.getEndPosition());
+    // Set method position
+    aMethod.setPosition(method.getPosition());
+    aMethod.setEndPosition(method.getEndPosition());
   
     // Add comments above the method to the method.
     for (Comment c : lastComments)
@@ -1339,7 +1339,7 @@ class UmpleInternalParser
       }
       else if (token.is("methodDeclarator"))
       {
-        analyzeMethodDeclarator(token, aMethod);
+        analyzeMethodDeclarator(token, uElement, aMethod);
       }
       else if (token.is("code"))
       {        
@@ -1402,7 +1402,7 @@ class UmpleInternalParser
    * @param token The token flagged to be a method header.
    * @param aMethod The method to be populated from the analysis of the token.
    */
-  private void analyzeMethodDeclarator(Token token, Method aMethod)
+  private void analyzeMethodDeclarator(Token token, UmpleElement uElement, Method aMethod)
   {
     // Go through all sub tokens of the method token to obtain data such as the methods name, parameters etc and add them to the method.
     for(Token methodToken : token.getSubTokens())
@@ -1410,6 +1410,10 @@ class UmpleInternalParser
       if (methodToken.is("methodName"))
       {
         aMethod.setName(methodToken.getValue());
+        if (methodToken.getValue().equals("main"))
+        {
+          uElement.setHasMainMethod(true);
+        }
       }
       if (methodToken.is("parameterList"))
       {

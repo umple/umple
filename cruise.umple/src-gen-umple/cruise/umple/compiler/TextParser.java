@@ -884,4 +884,5 @@ public class TextParser
   //  @umplesourcefile(line={13},file={"TextParser_Code.ump"},javaline={885},length={2})
   private char[] _textCharacters ;
 
+  
 }
