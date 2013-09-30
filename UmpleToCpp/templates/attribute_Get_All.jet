@@ -8,6 +8,8 @@
       continue;
     }
     
+    TraceItem traceItem = av.getTraced("getMethod", uClass);
+    
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
 
@@ -25,7 +27,27 @@
 
     String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
     String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
+        
+    String customHasUniquePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("hasUniqueMethod",av)));
+    String customHasUniquePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("hasUniqueMethod",av)));
     
+    String customGetUniquePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getUniqueMethod",av)));
+    String customGetUniquePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getUniqueMethod",av)));
+ 
+    
+    
+    String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customGetPrefixCode,customGetPostfixCode,
+      customGetDefaultPrefixCode,customGetDefaultPostfixCode,
+      customGetManyPrefixCode,customGetManyPostfixCode,
+      customNumberOfPrefixCode,customNumberOfPostfixCode,
+      customHasManyPrefixCode,customHasManyPostfixCode,
+      customIndexOfPrefixCode,customIndexOfPostfixCode,
+      customHasUniquePrefixCode,customHasUniquePostfixCode,
+      customGetUniquePrefixCode,customGetUniquePostfixCode, 
+      av.getIsDerived()?"return "+gen.translate("parameterValue",av)+";\n// line "+av.getPosition().getLineNumber()+" "+av.getPosition().getRelativePath(av.getUmpleClass(),"Java")+"\n"+gen.translate("parameterValue",av):null},
+      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+    %><%= umpleSourceFile %><%
     if (av.getIsList())
     {
       %><%@ include file="attribute_GetMany.jet" %><%
@@ -60,6 +82,27 @@
       {
         %><%@ include file="attribute_GetDefaulted.jet" %><%
       }
+      
+      if (av.getIsUnique())
+      {
+        %><%@ include file="attribute_GetUniqueMap.jet"%><%
+        if (customGetUniquePostfixCode != null)
+        {
+          %><%@ include file="attribute_GetUniqueCodeInjection.jet" %><%
+        } 
+        else 
+        {
+          %><%@ include file="attribute_GetUnique.jet" %><%
+        }
+        if (customHasUniquePostfixCode != null)
+        {
+          %><%@ include file="attribute_HasUniqueCodeInjection.jet" %><%
+        }
+        else
+        {
+          %><%@ include file="attribute_HasUnique.jet" %><%
+        }
+      }
     }
   }
 
@@ -70,6 +113,8 @@
     {
       String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
       String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
+      
+      TraceItem traceItem = av.getTraced("getMethod", uClass);
       
       if (customGetPostfixCode != null)
       {

@@ -3172,7 +3172,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     {
       UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(name,type,modifier,value);
       aClass.setUniqueIdentifier(uniqueIdentifier);
-      return;
     }
 
     if (isAutounique)
@@ -3208,6 +3207,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 
 
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
+    attribute.setIsUnique(isUnique);
     attribute.setIsLazy(isLazy);
     boolean isList = attributeToken.getValue("list") != null;
 
@@ -4068,7 +4068,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     String code = extraCodeToken.getValue();
     String[] parts = code.split("\\{");
-    if(parts.length < 2) return false; // > // This means there are no opening brackets
+    if(parts.length < 2) return false; // This means there are no opening brackets
     if(!Token.isValidIdentifier(parts[0].trim())) return false; //This means we don't have an identifier. If the SM name is misspelt, that should be picked up elsewhere.
     return true; //We have an identifier followed by a { followe by something else that is probably a state machine
   }
@@ -4111,7 +4111,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   @umplesourcefile(line={68},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4112},length={11})
    private void analyzeActiveObject(Token activeToken, UmpleClass aClass){
     analyzeStateMachine(generateActiveStateMachineToken(activeToken), aClass);
-    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), aClass)) // >
+    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), aClass))
     {
       numberOfActiveObjects++;
     }

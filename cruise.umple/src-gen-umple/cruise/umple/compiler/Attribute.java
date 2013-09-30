@@ -26,6 +26,7 @@ public class Attribute extends UmpleVariable
 
   //Attribute Attributes
   private boolean isAutounique;
+  private boolean isUnique;
   private boolean isList;
   private boolean isDerived;
   private CodeBlock codeblock;
@@ -42,11 +43,12 @@ public class Attribute extends UmpleVariable
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={481},file={"Umple.ump"},javaline={62},length={1})
+  @umplesourcefile(line={485},file={"Umple.ump"},javaline={64},length={1})
   public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleClass aUmpleClass)
   {
     super(aName, aType, aModifier, aValue);
     isAutounique = aIsAutounique;
+    isUnique = false;
     isList = false;
     isDerived = false;
     codeblock = null;
@@ -58,7 +60,7 @@ public class Attribute extends UmpleVariable
       throw new RuntimeException("Unable to create attribute due to umpleClass");
     }
     traceRecords = new ArrayList<TraceRecord>();
-    // line 481 "../../../../src/Umple.ump"
+    // line 485 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 
@@ -70,6 +72,14 @@ public class Attribute extends UmpleVariable
   {
     boolean wasSet = false;
     isAutounique = aIsAutounique;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setIsUnique(boolean aIsUnique)
+  {
+    boolean wasSet = false;
+    isUnique = aIsUnique;
     wasSet = true;
     return wasSet;
   }
@@ -108,6 +118,7 @@ public class Attribute extends UmpleVariable
 
   /**
    * Specifies whether or not the method parameter is auto unique.
+   * TODO: should default to false, but constructors would need updating
    */
   public boolean getIsAutounique()
   {
@@ -115,7 +126,14 @@ public class Attribute extends UmpleVariable
   }
 
   /**
-   * TODO: should default to false, but constructors would need updating
+   * Specifies whether or not the attribute is unique.
+   */
+  public boolean getIsUnique()
+  {
+    return isUnique;
+  }
+
+  /**
    * Specifies whether or not the method parameter is a list.
    */
   public boolean getIsList()
@@ -147,6 +165,11 @@ public class Attribute extends UmpleVariable
   public boolean isIsAutounique()
   {
     return isAutounique;
+  }
+
+  public boolean isIsUnique()
+  {
+    return isUnique;
   }
 
   public boolean isIsList()
@@ -433,17 +456,17 @@ public class Attribute extends UmpleVariable
     super.delete();
   }
 
-  @umplesourcefile(line={1189},file={"Umple_Code.ump"},javaline={437},length={3})
+  @umplesourcefile(line={1189},file={"Umple_Code.ump"},javaline={460},length={3})
    public boolean isConstant(){
     return "const".equals(getModifier());
   }
 
-  @umplesourcefile(line={1194},file={"Umple_Code.ump"},javaline={442},length={3})
+  @umplesourcefile(line={1194},file={"Umple_Code.ump"},javaline={465},length={3})
    public boolean isPrimitive(){
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
-  @umplesourcefile(line={1200},file={"Umple_Code.ump"},javaline={447},length={6})
+  @umplesourcefile(line={1200},file={"Umple_Code.ump"},javaline={470},length={6})
    public boolean isImmutable(){
     boolean varIsImmutable = super.isImmutable();
     boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
@@ -451,12 +474,12 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
 
-  @umplesourcefile(line={1208},file={"Umple_Code.ump"},javaline={455},length={3})
+  @umplesourcefile(line={1208},file={"Umple_Code.ump"},javaline={478},length={3})
    public String getValue(){
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
 
-  @umplesourcefile(line={1212},file={"Umple_Code.ump"},javaline={460},length={3})
+  @umplesourcefile(line={1212},file={"Umple_Code.ump"},javaline={483},length={3})
    public void setValue(String lang, String code){
     codeblock.setCode(lang,code);
   }
@@ -467,6 +490,7 @@ public class Attribute extends UmpleVariable
 	  String outputString = "";
     return super.toString() + "["+
             "isAutounique" + ":" + getIsAutounique()+ "," +
+            "isUnique" + ":" + getIsUnique()+ "," +
             "isList" + ":" + getIsList()+ "," +
             "isDerived" + ":" + getIsDerived()+ "," +
             "isLazy" + ":" + getIsLazy()+ "]" + System.getProperties().getProperty("line.separator") +

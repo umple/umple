@@ -469,7 +469,11 @@ class Attribute
   isA UmpleVariable;
 
   // Specifies whether or not the method parameter is auto unique.
-  Boolean isAutounique; // TODO: should default to false, but constructors would need updating
+  // TODO: should default to false, but constructors would need updating
+  Boolean isAutounique; 
+
+  // Specifies whether or not the attribute is unique.
+  Boolean isUnique = false;
 
   // Specifies whether or not the method parameter is a list.
   Boolean isList = false;

@@ -5,7 +5,7 @@
   for(Attribute av : uClass.getAttributes())
   {
   
-    if (!av.isConstant() && !av.getIsAutounique())
+    if (!av.isConstant() && !av.getIsAutounique() && !av.getIsUnique())
     {
       continue;
     }
@@ -31,6 +31,14 @@
       String defaultValue = av.getValue() == null ? "1" : av.getValue();
       appendln(stringBuffer, "");
       append(stringBuffer, "  private static int next{0} = {1};", av.getUpperCaseName(), defaultValue);
+    }
+    else if (av.getIsUnique())
+    {
+      appendln(stringBuffer, "");
+      append(stringBuffer, "  private static Map<{0}, {1}> {2} = new HashMap<{0}, {1}>();",
+        av.getType(),
+        av.getUmpleClass().getName(),
+        gen.translate("uniqueMap", av));
     }
   }
   
