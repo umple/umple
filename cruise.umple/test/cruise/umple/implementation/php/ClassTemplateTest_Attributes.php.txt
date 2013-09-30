@@ -28,6 +28,7 @@ class Mentor
   private $d;
   private $t;
   private $i;
+  private $id;
   private $p;
   private $q;
   private $r;
@@ -49,7 +50,7 @@ class Mentor
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aStr, $aD, $aI)
+  public function __construct($aStr, $aD, $aI, $aId)
   {
     $this->str = $aStr;
     $this->canSetStr = false;
@@ -61,6 +62,7 @@ class Mentor
     $this->d = $aD;
     $this->t = new Time();
     $this->i = $aI;
+    $this->id = $aId;
     $this->resetP();
     $this->q = "chicken";
     $this->resetR();
@@ -131,6 +133,14 @@ class Mentor
   {
     $wasSet = false;
     $this->i = $aI;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setId($aId)
+  {
+    $wasSet = false;
+    $this->id = $aId;
     $wasSet = true;
     return $wasSet;
   }
@@ -266,6 +276,11 @@ class Mentor
   public function getDerivedTwiceI()
   {
     return i*2;
+  }
+
+  public function getId()
+  {
+    return $this->id;
   }
 
   public function getP()

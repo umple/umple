@@ -159,7 +159,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("008_associationAttribute.ump", "[classDefinition][name:Token][attribute][name:number][attribute][type:Position][name:startPosition][classDefinition][name:Position][attribute][type:Integer][name:lineNumber][attribute][type:Integer][name:offset]");
     fileToOutputs.put("008_typeAttribute.ump", "[classDefinition][name:Student][attribute][type:Integer][name:name][attribute][type:String][name:name2][attribute][type:Time][name:name3][attribute][type:Date][name:name4][attribute][type:Double][name:name5]");
     fileToOutputs.put("008_uniqueAttribute.ump", "[classDefinition][name:Student][attribute][unique:unique][name:number]");
-    fileToOutputs.put("008_assignedValueAttribute.ump", "[classDefinition][name:Student][attribute][unique:unique][type:Integer][name:number][value:1][attribute][modifier:settable][type:String][name:s][value:\"s\"][attribute][name:s2][value:\"s2\"]");
+    fileToOutputs.put("008_assignedValueAttribute.ump", "[classDefinition][name:Student][attribute][modifier:settable][type:String][name:s][value:\"s\"][attribute][name:s2][value:\"s2\"]");
     fileToOutputs.put("008_autouniqueAttribute.ump", "[classDefinition][name:Student][attribute][autounique:autounique][name:id]");
     fileToOutputs.put("008_complexAssignedAttribute.ump", "[classDefinition][name:Student][attribute][type:Time][name:t][value:new Time(\"now\")]");
     fileToOutputs.put("009_externalNamedAssociation.ump", "[classDefinition][name:Student][classDefinition][name:Mentor][associationDefinition][name:Counsellor][association][associationEnd][lowerBound:4][upperBound:5][type:Student][arrow:--][associationEnd][lowerBound:6][upperBound:9][type:Mentor]");

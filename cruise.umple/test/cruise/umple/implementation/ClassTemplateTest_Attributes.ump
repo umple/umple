@@ -18,6 +18,7 @@ class Mentor
   Integer i;
   Integer derivedTwiceI = { i*2 }
   autounique x;
+  unique id;
   defaulted String p = "robot";
   String q = "chicken"; 
   defaulted r = "";

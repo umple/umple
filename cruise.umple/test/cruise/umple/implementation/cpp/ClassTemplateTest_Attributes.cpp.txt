@@ -9,7 +9,7 @@
   // CONSTRUCTOR
   //------------------------
   
- Mentor::Mentor(const String & aStr, const Date & aD, const int & aI)
+ Mentor::Mentor(const String & aStr, const Date & aD, const int & aI, const string & aId)
   {
     str = aStr;
     canSetStr = false;
@@ -20,6 +20,7 @@
     d = aD;
     t = new Time();
     i = aI;
+    id = aId;
     resetP();
     q = "chicken";
     resetR();
@@ -52,6 +53,7 @@
     this->i = mentor.i;
     this->derivedTwiceI = mentor.derivedTwiceI;
     this->x = mentor.x;
+    this->id = mentor.id;
     this->p = mentor.p;
     this->q = mentor.q;
     this->r = mentor.r;
@@ -82,6 +84,7 @@
     this->i = mentor.i;
     this->derivedTwiceI = mentor.derivedTwiceI;
     this->x = mentor.x;
+    this->id = mentor.id;
     this->p = mentor.p;
     this->q = mentor.q;
     this->r = mentor.r;
@@ -150,6 +153,14 @@
   {
     bool wasSet = false;
     i = aI;
+    wasSet = true;
+    return wasSet;
+  }
+
+  bool Mentor::setId(const string & aId)
+  {
+    bool wasSet = false;
+    id = aId;
     wasSet = true;
     return wasSet;
   }
@@ -287,6 +298,11 @@
     return i*2;
   }
 
+  string Mentor::getId() const
+  {
+    return id;
+  }
+
   string Mentor::getP() const
   {
     return p;
@@ -359,3 +375,4 @@
   
 Mentor::~Mentor()
   {}
+

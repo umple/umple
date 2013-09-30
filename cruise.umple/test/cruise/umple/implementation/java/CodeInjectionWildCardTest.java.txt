@@ -46,14 +46,14 @@ public class Student
     return wasSet;
   }
 
-  @umplesourcefile(line={8, 8, 8, 8, 8, 8},file={"CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump"},javaline={54, 61, 54, 61, 54, 61},length={1, 1, 1, 1, 1, 1})
+  @umplesourcefile(line={8, 8, 8, 8, 8, 8, 8, 8},file={"CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump"},javaline={54, 61, 54, 61, 54, 61, 54, 61},length={1, 1, 1, 1, 1, 1, 1, 1})
   public String getFirstName()
   {
     print "before";
     return firstName;
   }
 
-  @umplesourcefile(line={8, 8, 8, 8, 8, 8},file={"CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump"},javaline={54, 61, 54, 61, 54, 61},length={1, 1, 1, 1, 1, 1})
+  @umplesourcefile(line={8, 8, 8, 8, 8, 8, 8, 8},file={"CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump", "CodeInjectionWildCardTest.ump"},javaline={54, 61, 54, 61, 54, 61, 54, 61},length={1, 1, 1, 1, 1, 1, 1, 1})
   public String getLastName()
   {
     print "before";

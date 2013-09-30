@@ -4,6 +4,7 @@
 package example;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.*;
 
 public class Mentor
 {
@@ -18,6 +19,7 @@ public class Mentor
   public static final int MIN = -99;
   public static final String HELLO = "Hello";
   private static int nextX = 1;
+  private static Map<String, Mentor> mentorsById = new HashMap<String, Mentor>();
 
   //------------------------
   // MEMBER VARIABLES
@@ -33,6 +35,7 @@ public class Mentor
   private Date d;
   private Time t;
   private int i;
+  private String id;
   private String p;
   private String q;
   private String r;
@@ -54,7 +57,7 @@ public class Mentor
   // CONSTRUCTOR
   //------------------------
 
-  public Mentor(String aStr, Date aD, int aI)
+  public Mentor(String aStr, Date aD, int aI, String aId)
   {
     str = aStr;
     canSetStr = false;
@@ -76,6 +79,10 @@ public class Mentor
     resetV();
     resetW();
     x = nextX++;
+    if (!setId(aId))
+    {
+      throw new RuntimeException("Cannot create due to duplicate id");
+    }
   }
 
   //------------------------
@@ -137,6 +144,22 @@ public class Mentor
     boolean wasSet = false;
     i = aI;
     wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setId(String aId)
+  {
+    boolean wasSet = false;
+    String anOldId = getId();
+    if (hasWithId(aId)) {
+      return wasSet;
+    }
+    id = aId;
+    wasSet = true;
+    if (anOldId != null) {
+      getMentorsById().remove(anOldId);
+    }
+    getMentorsById().put(aId, this);
     return wasSet;
   }
 
@@ -268,10 +291,30 @@ public class Mentor
     return i;
   }
 
-  @umplesourcefile(line={19},file={"ClassTemplateTest_Attributes.ump"},javaline={276},length={2})
+  @umplesourcefile(line={19},file={"ClassTemplateTest_Attributes.ump"},javaline={299},length={2})
   public int getDerivedTwiceI()
   {
     return i*2;
+  }
+
+  public String getId()
+  {
+    return id;
+  }
+
+  private static Map<String, Mentor> getMentorsById()
+  {
+    return mentorsById;
+  }
+
+  public static Mentor getWithId(String aId)
+  {
+    return getMentorsById().get(aId);
+  }
+
+  public static boolean hasWithId(String aId)
+  {
+    return getWithId(aId) != null;
   }
 
   public String getP()
@@ -345,7 +388,9 @@ public class Mentor
   }
 
   public void delete()
-  {}
+  {
+    getMentorsById().remove(getId());
+  }
 
 
   public String toString()
@@ -361,6 +406,7 @@ public class Mentor
             "name" + ":" + getName()+ "," +
             "i" + ":" + getI()+ "," +
             "derivedTwiceI" + ":" + getDerivedTwiceI()+ "," +
+            "id" + ":" + getId()+ "," +
             "p" + ":" + getP()+ "," +
             "q" + ":" + getQ()+ "," +
             "r" + ":" + getR()+ "," +

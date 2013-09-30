@@ -34,6 +34,8 @@ class JavaGenerator
     UpperCaseSingularLookupMap.put("parameterOld", "anOld{0}");
     UpperCaseSingularLookupMap.put("parameterExisting", "existing{0}");
     UpperCaseSingularLookupMap.put("parameterIsNew", "isNew{0}");
+    UpperCaseSingularLookupMap.put("parameterGetUnique", "retrievedBy{0}");
+    UpperCaseSingularLookupMap.put("parameterHasUnique", "hasUnique{0}");
     UpperCaseSingularLookupMap.put("associationNew", "new{0}");
     UpperCaseSingularLookupMap.put("canSetMethod", "canSet{0}");
     UpperCaseSingularLookupMap.put("parameterCurrent", "current{0}");
@@ -495,6 +497,22 @@ class JavaGenerator
         String actualLookup = attVar.getIsList() ? "attributeCanSetMany" : "attributeCanSetOne";
         return translate(actualLookup,av,isMany);
       }
+      else if ("hasUniqueMethod".equals(keyName)) 
+      {
+        return "hasWith" + attVar.getUpperCaseName();
+      } 
+      else if ("getUniqueMethod".equals(keyName))
+      {
+        return "getWith" + attVar.getUpperCaseName();
+      }
+      else if ("getUniqueMap".equals(keyName))
+      {
+        return "get" + attVar.getUmpleClass().getName() + "s" + "By" + attVar.getUpperCaseName();
+      }
+      else if ("uniqueMap".equals(keyName))
+      {
+        return attVar.getUmpleClass().getName().toLowerCase() + "s" + "By" + attVar.getUpperCaseName();
+      }
     }
     
     return "UNKNOWN ID: " + keyName;
@@ -569,7 +587,30 @@ class JavaGenerator
   {
     return StringFormatter.toPascalCase(name);
   }  
+
+  private void injectIntoUnique(String method, String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    String code = StringFormatter.format(injection,
+      translate("type", av),
+	    translate("parameterOne", av),
+	    translate("parameterOld", av),
+	    translate("getMethod", av),
+	    translate("hasUniqueMethod", av),
+	    translate("getUniqueMap", av));
+    CodeInjection set = new CodeInjection(when, method, code, aClass);
+	  aClass.addCodeInjection(set);
+  }
   
+  private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    injectIntoUnique(translate("setMethod", av), injection, when, av, aClass);
+  }
+  
+  private void injectIntoUniqueDelete(String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    injectIntoUnique("delete", injection, when, av, aClass);
+  }
+    
   private void prepare(UmpleClass aClass)
   {
     if (aClass.getGeneratedClass() != null)
@@ -607,6 +648,22 @@ class JavaGenerator
         CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
+      }
+      
+      if (av.getIsUnique())
+      {
+        injectIntoUniqueSet(
+          "{0} {2} = {3}();" + "\n" + 
+          "if ({4}({1})) {" + "\n" + 
+          "  return wasSet;" + "\n" +
+          "}", "before", av, aClass);
+        injectIntoUniqueSet(
+          "if ({2} != null) {" + "\n" +
+          "  {5}().remove({2});" + "\n" +
+          "}" + "\n" +
+          "{5}().put({1}, this);", "after", av, aClass);
+        injectIntoUniqueDelete(
+          "{5}().remove({3}());", "before", av, aClass);
       }
     }
     for(AssociationVariable av : aClass.getAssociationVariables())
@@ -1080,7 +1137,7 @@ class JavaGenerator
         genClass.addMultiLookup("import", dateImport);
       }
       
-      if (av.getIsList())
+      if (av.getIsList() || av.getIsUnique())
       {
         genClass.addMultiLookup("import", utilImport);
       }

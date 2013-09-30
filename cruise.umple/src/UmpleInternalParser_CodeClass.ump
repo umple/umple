@@ -1984,7 +1984,6 @@ class UmpleInternalParser
     {
       UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(name,type,modifier,value);
       aClass.setUniqueIdentifier(uniqueIdentifier);
-      return;
     }
 
     if (isAutounique)
@@ -2020,6 +2019,7 @@ class UmpleInternalParser
 
 
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
+    attribute.setIsUnique(isUnique);
     attribute.setIsLazy(isLazy);
     boolean isList = attributeToken.getValue("list") != null;
 

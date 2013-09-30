@@ -933,9 +933,8 @@ public class UmpleParserTest
   public void attribute_Unique()
   {
     assertParse("008_uniqueAttribute.ump");
-    UmpleClass aClass = model.getUmpleClass("Student");
-    UmpleVariable variable = aClass.getUniqueIdentifier();
-    Assert.assertEquals("number", variable.getName());
+    Attribute number = model.getUmpleClass("Student").getAttribute("number");
+    Assert.assertTrue(number.getIsUnique());
   }
 
   @Test
@@ -944,10 +943,6 @@ public class UmpleParserTest
     assertParse("008_assignedValueAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     UmpleVariable variable;
-    
-    variable = aClass.getUniqueIdentifier();
-    Assert.assertEquals("number", variable.getName());    
-    Assert.assertEquals("1", variable.getValue());
 
     variable = aClass.getAttribute("s");
     Assert.assertEquals("\"s\"", variable.getValue());

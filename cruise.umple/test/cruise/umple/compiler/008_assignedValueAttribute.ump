@@ -1,7 +1,6 @@
 
 class Student
 {
-  unique Integer number = 1;
   settable String s = "s";
   s2 = "s2";
 }

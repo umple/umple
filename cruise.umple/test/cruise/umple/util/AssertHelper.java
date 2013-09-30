@@ -65,8 +65,8 @@ public class AssertHelper
 	      do 
 	      {
 	        actualLine = actualReader.readLine();
-	        // HACK: To deal with // line # comments
-	        while (actualLine != null && actualLine.indexOf("// line") != -1)
+	        // HACK: To deal with line number comments (start with // [java] or # [ruby])
+	        while (actualLine != null && actualLine.matches("(//|#) line.*"))
 	        { //Ignore the line, go to next
 	          actualLine = actualReader.readLine();
 	        }

@@ -24,7 +24,7 @@ class Mentor
   #------------------------
 
   #Mentor Attributes - for documentation purposes
-  #attr_reader :str, :str2, :someName, :lDoub, :lBool, :name, :d, :t, :i, :p, :q, :r, :s, :tt, :u, :v, :w
+  #attr_reader :str, :str2, :someName, :lDoub, :lBool, :name, :d, :t, :i, :id, :p, :q, :r, :s, :tt, :u, :v, :w
 
   #Autounique Attributes - for documentation purposes
   #attr_reader x;
@@ -33,7 +33,7 @@ class Mentor
   # CONSTRUCTOR
   #------------------------
 
-  def initialize(a_str, a_d, a_i)
+  def initialize(a_str, a_d, a_i, a_id)
     @initialized = false
     @deleted = false
     @str = a_str
@@ -47,6 +47,7 @@ class Mentor
     @d = a_d
     @t = new Time()
     @i = a_i
+    @id = a_id
     reset_p
     @q = "chicken"
     reset_r
@@ -112,6 +113,13 @@ class Mentor
   def set_i(a_i)
     was_set = false
     @i = a_i
+    was_set = true
+    was_set
+  end
+
+  def set_id(a_id)
+    was_set = false
+    @id = a_id
     was_set = true
     was_set
   end
@@ -227,6 +235,10 @@ class Mentor
 
   def get_derivedTwiceI
     i*2
+  end
+
+  def get_id
+    @id
   end
 
   def get_p

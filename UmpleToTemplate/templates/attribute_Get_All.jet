@@ -27,7 +27,13 @@
 
     String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
     String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
+        
+    String customHasUniquePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("hasUniqueMethod",av)));
+    String customHasUniquePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("hasUniqueMethod",av)));
     
+    String customGetUniquePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getUniqueMethod",av)));
+    String customGetUniquePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getUniqueMethod",av)));
+ 
     
     
     String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
@@ -36,7 +42,9 @@
       customGetManyPrefixCode,customGetManyPostfixCode,
       customNumberOfPrefixCode,customNumberOfPostfixCode,
       customHasManyPrefixCode,customHasManyPostfixCode,
-      customIndexOfPrefixCode,customIndexOfPostfixCode, 
+      customIndexOfPrefixCode,customIndexOfPostfixCode,
+      customHasUniquePrefixCode,customHasUniquePostfixCode,
+      customGetUniquePrefixCode,customGetUniquePostfixCode, 
       av.getIsDerived()?"return "+gen.translate("parameterValue",av)+";\n// line "+av.getPosition().getLineNumber()+" "+av.getPosition().getRelativePath(av.getUmpleClass(),"Java")+"\n"+gen.translate("parameterValue",av):null},
       isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
     %><%= umpleSourceFile %><%
@@ -73,6 +81,27 @@
       else if (av.getModifier().equals("defaulted"))
       {
         %><%@ include file="attribute_GetDefaulted.jet" %><%
+      }
+      
+      if (av.getIsUnique())
+      {
+        %><%@ include file="attribute_GetUniqueMap.jet"%><%
+        if (customGetUniquePostfixCode != null)
+        {
+          %><%@ include file="attribute_GetUniqueCodeInjection.jet" %><%
+        } 
+        else 
+        {
+          %><%@ include file="attribute_GetUnique.jet" %><%
+        }
+        if (customHasUniquePostfixCode != null)
+        {
+          %><%@ include file="attribute_HasUniqueCodeInjection.jet" %><%
+        }
+        else
+        {
+          %><%@ include file="attribute_HasUnique.jet" %><%
+        }
       }
     }
   }
