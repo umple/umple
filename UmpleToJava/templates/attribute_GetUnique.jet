@@ -1,0 +1,8 @@
+<%@ jet package="cruise.umple.ignore" class="Ignore"%><%= umpleSourceFile %>
+  public static <%=av.getUmpleClass().getName()%> <%=gen.translate("getUniqueMethod",av)%>(<%=gen.translate("type", av)%> <%=gen.translate("parameterOne", av)%>)
+  {
+    <% if (customGetUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } %>
+<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+%>    return <%=gen.translate("getUniqueMap",av)%>().get(<%=gen.translate("parameterOne",av)%>);
+  }
+
