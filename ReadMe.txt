@@ -1,4 +1,19 @@
-This is the main directory for various Umple subprojects
+This is the main directory for various Umple subprojects and components.
+
+Umple is a model-oriented programming technology. It allows developers to embed modelling concepts (e.g. associations, state machines), patterns and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP (and can be embedded in or embed these), as well as diagrams, metrics and many other artifacts.
+
+Umple is developed in itself, guaranteeing robustness, hence the Umple compiler has to be distributed with the source (in the releases directory).
+
+Development follows a model-driven, test-driven, agile, continuous-integration process. Umple is hosted currently on Google Code at http://code.umple.org. It is mirrored on Github at https://github.com/umple/Umple Umple has been largely developed as a research project at the University of Ottawa, Canada, by numerous PhD and masters students, Many undergraduates from across Canada have also contributed. See the license file for the list of contributors.
+
+More details can be found as follows
+  * Umple home page: http://www.umple.org
+  * Umple user manual: http://manual.umple.org
+  * Download page: http://dl.umple.org
+  * Live diagram of the metamodel: http://metamodel.umple.org
+  * Architecture: http:/architecture.umple.org
+
+The items below are in alphabetical order.
 
 Items marked *** are created by the build process only and are not version controlled.
 They are referenced here so that people can better understand the hierarchy of files whether or not they have built the system.
@@ -16,12 +31,12 @@ They are referenced here so that people can better understand the hierarchy of f
     cruise.umple.xtext.ui
        Code for the Eciipse plugins
 
-    examples
-         Examples of Umple that the Umple team itself is managing
-    externalexamples
-         Products that use Umple that we have allowed to be managed here
-         The idea is that they serve as extra tests
+    cruise.umple.nebula
+       New code generation infrastructure used for real-timeC++
 
+    dev-tools
+       Scripts and other tools used to help developers of Umple itself
+       
     dist ***
        Main products to be distributed after a build
        cruise.umple/reference - the user manual (needs also some umplewww pages)
@@ -32,6 +47,19 @@ They are referenced here so that people can better understand the hierarchy of f
        umplesync.jar - used by UmpleOnline to synchronize graphical form
        vml.jar - an extension for variability modeling
 
+    examples
+         Examples of Umple that the Umple team itself is managing
+    externalexamples
+         Products that use Umple that we have allowed to be managed here
+         The idea is that they serve as extra tests
+
+    ExternalTextEditrPlugins
+       plugins to text editing tools to allow them to do syntax highlighting with Umple or other more sophisticated Umple operations
+
+    jopt-simple
+       Fork of one of the very few packages (MIT-licensed) where we have borrowed code from others
+       See http://pholser.github.io/jopt-simple/
+    
     lib
        Elements the Umple build depends on
 
@@ -47,7 +75,10 @@ They are referenced here so that people can better understand the hierarchy of f
     UmpleToJava -> Code generation for Java
     UmpleToPhp  -> Code generation for Php
     UmpleToRuby -> Code generation for Ruby
-    UmpleTCpp   -> Code generation for C++ - not yet ready / initialized with Java gen
+    UmpleToRTCpp -> Code generation for C++
+    UmpleTCpp   -> Code generation for alternative C++ - not yet ready
+    UmpleToSDL -> Code generation to convert Umple to SDL
+    UmpleToSql -> Code generation SQL from Umple models
     UmpleToTemplate -> Template for creating new code generation subprojects
         
     umpleonline -> The UmpleOnline web application, which allows generation of code
