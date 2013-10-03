@@ -402,13 +402,28 @@ class UmpleInternalParser
   // Check for the existence of a a parent class
   private void checkExtendsClass(){
     for(UmpleClass child : model.getUmpleClasses()) {
-      if(child.getExtendsToken() != null)
-        if (child.getExtendsClass() != null )
+      if(child.getExtendsToken() != null) {
+        if (child.getExtendsClass() != null ) {
+          // check to make sure attribute doesn't share a name with inherited attribute - F.K.
+          UmpleClass extend = child.getExtendsClass();
+          for(Attribute aAttribute : child.getAttributes()){
+            while(extend!=null) {
+              for(Attribute extendAttr : extend.getAttributes()) {
+                String currentName = aAttribute.getName();
+                if (extendAttr.getName().equals(currentName)) {
+                  setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
+                }
+              }
+              extend = extend.getExtendsClass();
+            }  
+          }     
           continue;
-      else{
-        Token t = child.getExtendsToken();
-        getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),
-          child.getName()));      
+        }
+        else{
+          Token t = child.getExtendsToken();
+          getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),
+            child.getName()));      
+        }
       }
     }
   }
@@ -2031,11 +2046,13 @@ class UmpleInternalParser
 
     if (derivedValue != null)
     {
-      attribute.setPosition(attributeToken.getPosition());
       attribute.setEndPosition(attributeToken.getEndPosition());
       attribute.setIsDerived(true);
       attribute.setCodeblock(languageSpecificCode);
     }
+
+    // set position regardless of derivedValue    
+    attribute.setPosition(attributeToken.getPosition());
 
     attribute.setIsList(isList);
 

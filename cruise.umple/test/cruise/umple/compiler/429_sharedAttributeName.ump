@@ -1,0 +1,7 @@
+class C
+{ cAttr; }
+
+class E { 
+  isA C; 
+  cAttr;
+}

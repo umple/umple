@@ -1009,6 +1009,15 @@ public class UmpleParserTest
   }
   
   @Test
+  // test to make sure none of the attributes in a class share their name with attributes
+  // in a superclass.
+  public void attributeSharedName()
+  {
+	  assertHasWarningsParse("429_sharedAttributeName.ump", 44);
+  	  assertHasWarningsParse("429_sharedAttributeName_ML.ump", 44);
+  }
+  
+  @Test
   public void associationName()
   {
     assertParse("009_externalNamedAssociation.ump");
