@@ -11,7 +11,7 @@ More details can be found as follows
   * Umple user manual: http://manual.umple.org
   * Download page: http://dl.umple.org
   * Live diagram of the metamodel: http://metamodel.umple.org
-  * Architecture: http:/architecture.umple.org
+  * Architecture: http://architecture.umple.org
 
 The items below are in alphabetical order.
 
