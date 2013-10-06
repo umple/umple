@@ -12,7 +12,11 @@ function _new_instance($params) {
   $obj_params = $_POST['constructor_values'];
 
   $exec_id = $controller->get_execution_id();
-  $controller->create_object($element_name, $obj_params);
+  $result = $controller->create_object($element_name, $obj_params);
+
+  if(!$result){
+    //TODO: redirect and show error message
+  }
 
   //Redirect after job is done
   header('Location: '.WEB_DOMAIN.'/main/show_element/'.$element_name);
