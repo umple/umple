@@ -7,10 +7,9 @@ import cruise.umple.compiler.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * This was not compiled with Jet, but compatibility was maintained
- * @umplesource Generator_CodeUigu2.ump 13
+ * @umplesource Generator_CodeUigu2.ump 12
  */
-// line 13 "../../../../../src/Generator_CodeUigu2.ump"
+// line 12 "../../../../../src/Generator_CodeUigu2.ump"
 public class Uigu2ElementGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -26,12 +25,21 @@ public class Uigu2ElementGenerator
   // MEMBER VARIABLES
   //------------------------
 
+  //Uigu2ElementGenerator Attributes
+
+  /**
+   * keeps track of elements whose codes have already been generated
+   */
+  private List<UmpleElement> generatedElements;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Uigu2ElementGenerator()
-  {}
+  {
+    generatedElements = new ArrayList<UmpleElement>();
+  }
 
   //------------------------
   // INTERFACE
@@ -45,101 +53,132 @@ public class Uigu2ElementGenerator
    * 
    * Returns the generated code specific to an UmpleElement.
    */
-  @umplesourcefile(line={24},file={"Generator_CodeUigu2.ump"},javaline={44},length={31})
+  @umplesourcefile(line={25},file={"Generator_CodeUigu2.ump"},javaline={52},length={33})
    public String getCode(UmpleModel model, UmpleElement uElement){
+    if(this.generatedElements.contains(uElement)){
+      return "";
+    }
     StringBuilder code = new StringBuilder();
     String name = uElement.getName();
-    String elementKind = null;
-
-    code.append("//Generated code for Umple Element " + name).append(nl);
-    code.append("$ELEMENTS['" + name + "']['name'] = '"+name+"';").append(nl);
 
     if(uElement instanceof UmpleClass){
-      elementKind = "Class";
       UmpleClass aClass = (UmpleClass) uElement;
-      String className = aClass.getName();
-      
-      UmpleClass parentClass = aClass.getExtendsClass();
-      if(parentClass != null){
-        throw new UmpleCompilerException("Support for Inherited Classes is currently under development.",
-          new UnsupportedOperationException());
-      }
-      this.appendAttributesCode(code, aClass);
-      this.appendAssociationsCode(code, aClass);
-      this.appendConstructorCode(code, aClass);
+      code.append("$ELEMENTS['" + name + "']['name'] = '"+name+"';").append(nl);
+      code.append("$ELEMENTS['" + name + "']['element_kind'] = 'Class';").append(nl);
 
       if(aClass.getIsAbstract()){
         code.append("$ELEMENTS['" + name + "']['abstract'] = 1;").append(nl);
       }
-    }else if(uElement instanceof UmpleInterface){
-      elementKind = "Interface";
-    }
-    code.append("$ELEMENTS['" + name + "']['element_kind'] = '" + elementKind + "';").append(nl);
-    return code.toString();
-  }
+      this.appendAttributesCode(code, aClass);
+      this.appendAssociationsCode(code, aClass);
+      this.appendConstructorCode(code, aClass);
+      this.generatedElements.add(uElement);
 
-  @umplesourcefile(line={56},file={"Generator_CodeUigu2.ump"},javaline={82},length={19})
-   private void appendAttributesCode(StringBuilder code, UmpleClass uClass){
-    List<Attribute> attributes = uClass.getAttributes();
-    code.append("$attributes = array();").append(nl);
-    String name, value, type;
-    for (Attribute att : attributes){
-      name = att.getName();
-      value = att.getValue();
-      type = att.getType();
-      code.append("$a_attribute = array();").append(nl);
-      code.append("$a_attribute['name'] = '" + name + "';").append(nl);
-      code.append("$a_attribute['type'] = '" + type + "';").append(nl);
-      if(value != null){
-        value = value.replaceAll("\"", "");
-        code.append("$a_attribute['value'] = '" + value + "';").append(nl);
+      if(aClass.isRoot()){
+        return code.toString();
+
+      }else {
+        UmpleClass parent = aClass.getExtendsClass();
+        code.append("$ELEMENTS['" + name + "']['parent'] = '" + parent.getName() + "';").append(nl);
+        return this.getCode(model, parent) + code.toString();
       }
-      code.append("$attributes['" + name + "'] = $a_attribute;").append(nl);
+    //TODO else if(uElement instanceof UmpleInterface){
+    }else {
+      return "";
     }
-    code.append("$ELEMENTS['" + uClass.getName() + "']['attributes'] = $attributes;").append(nl);
   }
 
-  @umplesourcefile(line={76},file={"Generator_CodeUigu2.ump"},javaline={103},length={14})
+  @umplesourcefile(line={60},file={"Generator_CodeUigu2.ump"},javaline={92},length={21})
+   private void appendAttributesCode(StringBuilder code, UmpleClass uClass){
+    List<Attribute> attributes = this.getAttributesSuperClasses(uClass);
+    if(attributes.size() > 0){
+      code.append("$attributes = array();").append(nl);
+      String name, value, type;
+      for (Attribute att : attributes){
+        name = att.getName();
+        value = att.getValue();
+        type = att.getType();
+        code.append("$a_attribute = array();").append(nl);
+        code.append("$a_attribute['name'] = '" + name + "';").append(nl);
+        code.append("$a_attribute['type'] = '" + type + "';").append(nl);
+        if(value != null){
+          value = value.replaceAll("\"", "");
+          code.append("$a_attribute['value'] = '" + value + "';").append(nl);
+        }
+        code.append("$attributes['" + name + "'] = $a_attribute;").append(nl);
+      }
+      code.append("$ELEMENTS['" + uClass.getName() + "']['attributes'] = $attributes;").append(nl);
+    }
+  }
+
+
+  /**
+   * Returns attributes from uClass and from all the classes above it in the inheritance hierarchy.
+   * eg. if A is subclass of B, and B is subclass of C. Calling the method for A will return all
+   * the attributes of A, B and C
+   */
+  @umplesourcefile(line={87},file={"Generator_CodeUigu2.ump"},javaline={115},length={9})
+   private List<Attribute> getAttributesSuperClasses(UmpleClass uClass){
+    List<Attribute> attributes = new ArrayList<Attribute>();
+    attributes.addAll(uClass.getAttributes());
+    if(!uClass.isRoot()){
+      UmpleClass parent = uClass.getExtendsClass();
+      attributes.addAll(this.getAttributesSuperClasses(parent));
+    }
+    return attributes;
+  }
+
+  @umplesourcefile(line={97},file={"Generator_CodeUigu2.ump"},javaline={132},length={16})
    private void appendAssociationsCode(StringBuilder code, UmpleClass uClass){
     String className = uClass.getName();
-    List<AssociationVariable> avs = uClass.getAssociationVariables();
-    code.append("$associations = array();").append(nl);
-    for(AssociationVariable av : avs){
-      String name = av.getName();
-      String type = av.getType();
-      code.append("$a_association = array();").append(nl);
-      code.append("$a_association['name'] = '" + name + "';").append(nl);
-      code.append("$a_association['type'] = '" + type + "';").append(nl);
-      code.append("$associations['" + name + "'] = $a_association;").append(nl);
+    List<AssociationVariable> avs = this.getAssociationsSuperClasses(uClass);
+    if(avs.size() > 0){
+      code.append("$associations = array();").append(nl);
+      for(AssociationVariable av : avs){
+        String name = av.getName();
+        String type = av.getType();
+        code.append("$a_association = array();").append(nl);
+        code.append("$a_association['name'] = '" + name + "';").append(nl);
+        code.append("$a_association['type'] = '" + type + "';").append(nl);
+        code.append("$associations['" + name + "'] = $a_association;").append(nl);
+      }
+      code.append("$ELEMENTS['" + className + "']['associations'] = $associations;").append(nl);
     }
-    code.append("$ELEMENTS['" + className + "']['associations'] = $associations;").append(nl);
   }
 
-  @umplesourcefile(line={91},file={"Generator_CodeUigu2.ump"},javaline={119},length={25})
+
+  /**
+   * similar to method getAttributesSuperClasses above
+   */
+  @umplesourcefile(line={115},file={"Generator_CodeUigu2.ump"},javaline={150},length={10})
+   private List<AssociationVariable> getAssociationsSuperClasses(UmpleClass uClass){
+    List<AssociationVariable> avs = new ArrayList<AssociationVariable>();
+    avs.addAll(uClass.getAssociationVariables());
+
+    if(!uClass.isRoot()){
+      UmpleClass parent = uClass.getExtendsClass();
+      avs.addAll(this.getAssociationsSuperClasses(parent));
+    }
+    return avs;
+  }
+
+  @umplesourcefile(line={126},file={"Generator_CodeUigu2.ump"},javaline={166},length={17})
    private void appendConstructorCode(StringBuilder code, UmpleClass uClass){
     String className = uClass.getName();
-    code.append("$constructor = array();").append(nl);
     GeneratedClass gc = uClass.getGeneratedClass();
     String constructorSignature = gc.getLookup("constructorSignature");
-    String[] constructorParams = constructorSignature.split(", ");
-    for(int i = 0; i < constructorParams.length; i++){
-      //"$aAttributeName" => "attributeName"
-      String param = constructorParams[i];
-      param = Character.toLowerCase(param.charAt(2)) + param.substring(3); 
+    code.append("$constructor_params = array();").append(nl);
 
-      //TODO: call recursively in case of being a subclass
-      Attribute att = uClass.getAttribute(param);
-      if(att != null){
-        code.append("$constructor[] =& $ELEMENTS['" + className + "']['attributes']['" + att.getName() + "'];").append(nl);
-      }else {
-        //TODO: call recursively in case of being a subclass
-        AssociationVariable av = uClass.getAssociationVariable(param);
-        if(av != null){
-          code.append("$constructor[] =& $ELEMENTS['" + className + "']['associations']['" + av.getName() + "'];").append(nl);
-        }
+    if(!constructorSignature.equals("")){
+      String[] constructorParams = constructorSignature.split(", ");
+      for(int i = 0; i < constructorParams.length; i++){
+        //"$aAttributeName" => "attributeName"
+        String param = constructorParams[i];
+        param = Character.toLowerCase(param.charAt(2)) + param.substring(3); 
+        code.append("$constructor_params[] = '" + param + "';").append(nl);
       }
     }
-    code.append("$ELEMENTS['" + className + "']['constructor'] = $constructor;").append(nl);
+    code.append("$ELEMENTS['" + className + "']['constructor_params'] = $constructor_params;").append(nl);
   }
 
 

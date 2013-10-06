@@ -38,7 +38,7 @@ class Uigu2_Controller extends KISS_Controller {
     //TODO: test if session was started
     $execution_id = $this->get_execution_id();
     $umple_class = $this->umple_model['ELEMENTS'][$class_name];
-    $constructor = $umple_class['constructor'];
+    $constructor = $umple_class['constructor_params'];
     $associations = $umple_class['associations'];
 
     if(count($params) != count($constructor)){
@@ -47,8 +47,8 @@ class Uigu2_Controller extends KISS_Controller {
     }
     //if constructor parameter is an association, value in $param is the index to obtain the object and must be replaced by it
     for($i = 0; $i < count($constructor); $i++){
-      if(isset($associations[$constructor[$i]['name']])){
-        $obj_ref = $this->get_object($constructor[$i]['type'], $params[$i]);
+      if($assoc = $associations[$constructor[$i]]){
+        $obj_ref = $this->get_object($assoc['type'], $params[$i]);
         if(empty($obj_ref)){
           //TODO:object not found - set error message
           return false;

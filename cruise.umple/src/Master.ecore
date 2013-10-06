@@ -946,6 +946,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Uigu2ElementGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="nl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="generatedElement" eType="#//List%3CUmpleElement%3E"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ITagsConstants">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tagClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
