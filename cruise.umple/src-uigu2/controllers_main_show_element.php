@@ -17,9 +17,8 @@ function _show_element($params) {
     //return false;
   }
 
-  //get the names to be shown in the select menu
-  $data['element_names'] = $controller->get_element_names();
   //the view will have direct access to variables inside $element
   $data['body'][]=Uigu2_View::do_fetch(VIEW_PATH.'main/show_element.php', $element);
+  $data['element_names'] = $controller->get_element_names();
   Uigu2_View::do_dump(VIEW_PATH.'layout.php',$data);
 }

@@ -8,7 +8,13 @@
     </tr>
     <?php 
       echo "<input type='hidden' name='element_name' value='$name' />";
-      foreach($constructor as $att){
+      //TODO move this logic to the controller 
+      foreach($constructor_params as $p){
+        if(isset($attributes[$p])){
+          $att = $attributes[$p];
+        }else{
+          $att = $associations[$p];
+        }
         $value = isset($att['value']) ? $att['value'] : ''; 
         echo "<tr><td>{$att['name']}</td>".
                "<td>{$att['type']}</td>".

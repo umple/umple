@@ -9,7 +9,11 @@ function _new_instance($params) {
     //TODO: redirect and show error message
     //return false;
   }
-  $obj_params = $_POST['constructor_values'];
+  if(isset($_POST['constructor_values'])){
+    $obj_params = $_POST['constructor_values'];
+  }else{
+    $obj_params = array();
+  }
 
   $exec_id = $controller->get_execution_id();
   $result = $controller->create_object($element_name, $obj_params);
