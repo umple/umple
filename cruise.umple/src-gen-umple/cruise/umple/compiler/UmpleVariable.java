@@ -101,10 +101,10 @@ public class UmpleVariable
     return type;
   }
 
-  @umplesourcefile(line={455},file={"Umple.ump"},javaline={110},length={1})
   /**
    * The modifier associated with the Umple variable.
    */
+  @umplesourcefile(line={455},file={"Umple.ump"},javaline={110},length={1})
   public String getModifier()
   {
     // line 455 "../../../../src/Umple.ump"

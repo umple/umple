@@ -13,10 +13,6 @@
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isMethod",av)));
     
-    %><%= getUmpleSourceFile(baseJavaLine,new String[]{
-      customGetPrefixCode,customGetPostfixCode},
-      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true))%><%
-    
     if (av.getIsDerived() && customGetPostfixCode != null)
     {
       %><%@ include file="attribute_IsBooleanCodeInjectionDerived.jet" %><%

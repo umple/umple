@@ -1,7 +1,4 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
-  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customHasUniquePrefixCode},
-      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));%><%= umpleSourceFile %>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public static boolean <%=gen.translate("hasUniqueMethod",av)%>(<%=gen.translate("type", av)%> <%=gen.translate("parameterOne", av)%>)
   {
     <% if (customHasUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } %>

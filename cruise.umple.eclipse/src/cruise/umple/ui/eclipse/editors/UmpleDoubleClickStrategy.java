@@ -69,7 +69,6 @@ public class UmpleDoubleClickStrategy implements ITextDoubleClickStrategy {
 		return false;
 	}
 	protected boolean selectWord(int caretPos) {
-
 		IDocument doc = fText.getDocument();
 		int startPos, endPos;
 

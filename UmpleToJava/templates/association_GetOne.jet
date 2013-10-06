@@ -1,4 +1,13 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%= umpleSourceFile %>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
+  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customGetPrefixCode, customGetPostfixCode,
+      customGetDefaultPrefixCode, customGetDefaultPostfixCode,
+      customGetManyPrefixCode, customGetManyPostfixCode,
+      customNumberOfPrefixCode, customNumberOfPostfixCode,
+      customHasManyPrefixCode,customHasManyPostfixCode,
+      customIndexOfPrefixCode,customIndexOfPostfixCode},
+      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+  %><%= umpleSourceFile %>
   public <%=gen.translate("type",av)%> <%=gen.translate("getMethod",av)%>()
   {
     <% if (customGetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %>

@@ -1,4 +1,7 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
+  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+      customSetPrefixCode,customSetPostfixCode},
+      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));%><%= umpleSourceFile %>
   public boolean <%= gen.translate("setMethod",av) %>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasSet = false;
