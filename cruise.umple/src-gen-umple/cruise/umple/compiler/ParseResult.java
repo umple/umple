@@ -135,12 +135,12 @@ public class ParseResult
     return wasSet;
   }
 
-  @umplesourcefile(line={1690, 1696},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public static int minimumNumberOfErrorMessages()
   {
     return 0;
   }
 
+  @umplesourcefile(line={1690, 1696},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean addErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasAdded = false;
@@ -182,6 +182,7 @@ public class ParseResult
     return wasRemoved;
   }
 
+  @umplesourcefile(line={1690, 1696},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean addErrorMessageAt(ErrorMessage aErrorMessage, int index)
   {  
     boolean wasAdded = false;
@@ -221,7 +222,7 @@ public class ParseResult
     errorMessages.clear();
   }
 
-  @umplesourcefile(line={1716},file={"Parser_Code.ump"},javaline={225},length={6})
+  @umplesourcefile(line={1716},file={"Parser_Code.ump"},javaline={226},length={6})
    public String toString(){
     String ret = "";
     for(ErrorMessage em : errorMessages)
@@ -229,7 +230,7 @@ public class ParseResult
     return ret;
   }
 
-  @umplesourcefile(line={1724},file={"Parser_Code.ump"},javaline={233},length={28})
+  @umplesourcefile(line={1724},file={"Parser_Code.ump"},javaline={234},length={28})
    public String toJSON(){
     String ret = "{ \"results\" : [ ";
     boolean hasOne = false;

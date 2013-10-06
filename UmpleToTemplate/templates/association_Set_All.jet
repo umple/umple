@@ -30,14 +30,6 @@
     String customIsNumberOfValidPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isNumberOfValidMethod",av)));
     String customIsNumberOfValidPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isNumberOfValidMethod",av)));
     
-    String umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customSetPrefixCode, customSetPostfixCode,
-      customSetManyPrefixCode, customSetManyPostfixCode,
-      customAddPrefixCode, customAddPostfixCode,
-      customRemovePrefixCode, customRemovePostfixCode,
-      customIsNumberOfValidPrefixCode, customIsNumberOfValidPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-    
     String includeFileOne = null;
     String includeFileTwo = null;
     
@@ -309,8 +301,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
-      %><%= umpleSourceFile 
       %><%@ include file="association_AddManyToManyMethod.jet" %><%
     }
     
@@ -318,7 +308,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
       %><%@ include file="association_RemoveMany.jet" %><%
     }
 

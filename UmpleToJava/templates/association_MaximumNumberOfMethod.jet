@@ -4,13 +4,17 @@
 
     String customMaximumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("maximumNumberOfMethod",av)));
     String customMaximumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("maximumNumberOfMethod",av)));
-%><%= umpleSourceFile %>
+    
+    umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+    customMaximumNumberOfPrefixCode, customMaximumNumberOfPostfixCode},
+    isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+    %>
 <% if (customMaximumNumberOfPrefixCode == null && customMaximumNumberOfPostfixCode == null) { %>
   public static int <%=gen.translate("maximumNumberOfMethod",av)%>()
   {
     return <%=av.getMultiplicity().getUpperBound()%>;
   }
-<% } else { %>
+<% } else { %><%=umpleSourceFile%>
   public static int <%=gen.translate("maximumNumberOfMethod",av)%>()
   {
     <% if (customMaximumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMaximumNumberOfPrefixCode, "    ")); } %>

@@ -2,7 +2,10 @@
 <%
     String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
     String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
-%><%= umpleSourceFile %>
+  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
+    customMinimumNumberOfPrefixCode, customMinimumNumberOfPostfixCode},
+    isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
+    %><%= umpleSourceFile %>
 <% if (customMinimumNumberOfPrefixCode == null && customMinimumNumberOfPostfixCode == null) { %>
   public static int <%=gen.translate("minimumNumberOfMethod",av)%>()
   {

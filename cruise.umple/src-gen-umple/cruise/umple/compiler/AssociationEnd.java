@@ -154,10 +154,10 @@ public class AssociationEnd
     return modifier;
   }
 
-  @umplesourcefile(line={545},file={"Umple.ump"},javaline={161},length={1})
   /**
    * potential enum 'internal'
    */
+  @umplesourcefile(line={545},file={"Umple.ump"},javaline={161},length={1})
   public String getReferenceToClassName()
   {
     // line 545 "../../../../src/Umple.ump"

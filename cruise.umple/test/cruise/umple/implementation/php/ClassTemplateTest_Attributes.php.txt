@@ -283,6 +283,21 @@ class Mentor
     return $this->id;
   }
 
+  private static Map<String, Mentor> UNKNOWN ID: getUniqueMap()
+  {
+    return UNKNOWN ID: uniqueMap;
+  }
+
+  public static Mentor UNKNOWN ID: getUniqueMethod(String aId)
+  {
+    return UNKNOWN ID: getUniqueMap().get(aId);
+  }
+
+  public static boolean UNKNOWN ID: hasUniqueMethod(String aId)
+  {
+    return UNKNOWN ID: getUniqueMethod(aId) != null;
+  }
+
   public function getP()
   {
     return $this->p;

@@ -65,10 +65,10 @@ public class Token
     return wasSet;
   }
 
-  @umplesourcefile(line={111},file={"Parser.ump"},javaline={75},length={1})
   /**
    * The name of the token.
    */
+  @umplesourcefile(line={111},file={"Parser.ump"},javaline={75},length={1})
   public String getName()
   {
     // line 111 "../../../../src/Parser.ump"
@@ -76,10 +76,10 @@ public class Token
     return name;
   }
 
-  @umplesourcefile(line={112},file={"Parser.ump"},javaline={85},length={1})
   /**
    * The value of the token.
    */
+  @umplesourcefile(line={112},file={"Parser.ump"},javaline={85},length={1})
   public String getValue()
   {
     // line 112 "../../../../src/Parser.ump"

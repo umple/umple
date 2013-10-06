@@ -118,10 +118,10 @@ public class Association
     return wasSet;
   }
 
-  @umplesourcefile(line={518},file={"Umple.ump"},javaline={128},length={1})
   /**
    * The name of the association.
    */
+  @umplesourcefile(line={518},file={"Umple.ump"},javaline={128},length={1})
   public String getName()
   {
     // line 518 "../../../../src/Umple.ump"

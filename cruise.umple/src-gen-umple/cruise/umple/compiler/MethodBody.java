@@ -43,11 +43,11 @@ public class MethodBody
     return wasSet;
   }
 
-  @umplesourcefile(line={158},file={"Umple.ump"},javaline={54},length={2})
   /**
    * The code within the method body.
    */
 
+  @umplesourcefile(line={158},file={"Umple.ump"},javaline={54},length={2})
   public String getExtraCode()
   {
     return codeblock.getCode() != null ? codeblock.getCode() : "";
