@@ -2,6 +2,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
 
+// attributes on both sides of the constraint's boolean expression
 class Client
 {
 
@@ -11,14 +12,20 @@ class Client
 
   //Client Attributes
   private $minAge;
+  private $age;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aMinAge)
+  public function __construct($aMinAge, $aAge)
   {
     $this->minAge = $aMinAge;
+    $this->age = $aAge;
+    if ( !(($aAge>$aMinAge)))
+    {
+      throw new RuntimeException("Please provide a valid age and minAge");
+    }
   }
 
   //------------------------
@@ -28,14 +35,33 @@ class Client
   public function setMinAge($aMinAge)
   {
     $wasSet = false;
+    if ($age>$aMinAge)
+    {
     $this->minAge = $aMinAge;
     $wasSet = true;
+    }
+    return $wasSet;
+  }
+
+  public function setAge($aAge)
+  {
+    $wasSet = false;
+    if ($aAge>$minAge)
+    {
+    $this->age = $aAge;
+    $wasSet = true;
+    }
     return $wasSet;
   }
 
   public function getMinAge()
   {
     return $this->minAge;
+  }
+
+  public function getAge()
+  {
+    return $this->age;
   }
 
   public function equals($compareTo)
@@ -45,21 +71,6 @@ class Client
 
   public function delete()
   {}
-
-  public function someMethod(Integer arg)
-  {
-
-    if ( !($arg>5))
-    {
-      throw new RuntimeException("Please provide a valid arg");
-    }
-    if ( !($minAge<8))
-    {
-      throw new RuntimeException("Please provide a valid minAge");
-    }
-    // rest of stuff that we don't interpret
- return 0;
-  }
 
 }
 ?>

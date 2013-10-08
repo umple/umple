@@ -41,7 +41,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     super.delete();
   }
 
-  @umplesourcefile(line={97},file={"Generator_CodePhp.ump"},javaline={45},length={17})
+  @umplesourcefile(line={99},file={"Generator_CodePhp.ump"},javaline={45},length={17})
    public void prepare(){
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
     for (UmpleClass aClass : allClasses)
@@ -60,17 +60,17 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     addRelatedImports();
   }
 
-  @umplesourcefile(line={116},file={"Generator_CodePhp.ump"},javaline={64},length={3})
+  @umplesourcefile(line={118},file={"Generator_CodePhp.ump"},javaline={64},length={3})
    public boolean isNullable(UmpleVariable av){
     return true;
   }
 
-  @umplesourcefile(line={121},file={"Generator_CodePhp.ump"},javaline={69},length={3})
+  @umplesourcefile(line={123},file={"Generator_CodePhp.ump"},javaline={69},length={3})
    public String relatedTranslate(String name, AssociationVariable av){
     return translate(name,av.getRelatedAssociation());
   }
 
-  @umplesourcefile(line={126},file={"Generator_CodePhp.ump"},javaline={74},length={13})
+  @umplesourcefile(line={128},file={"Generator_CodePhp.ump"},javaline={74},length={13})
    public ILang getLanguageFor(UmpleElement aElement){
     if (aElement instanceof UmpleInterface)
     {
@@ -85,7 +85,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={141},file={"Generator_CodePhp.ump"},javaline={89},length={7})
+  @umplesourcefile(line={143},file={"Generator_CodePhp.ump"},javaline={89},length={7})
    public String translate(String name, UmpleInterface aInterface){
     if ("packageDefinition".equals(name))
     {
@@ -94,7 +94,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + name;
   }
 
-  @umplesourcefile(line={150},file={"Generator_CodePhp.ump"},javaline={98},length={15})
+  @umplesourcefile(line={152},file={"Generator_CodePhp.ump"},javaline={98},length={15})
    public String translate(String methodType){
     if ("String".equals(methodType))
     {
@@ -111,7 +111,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     return "null";
   }
 
-  @umplesourcefile(line={167},file={"Generator_CodePhp.ump"},javaline={115},length={24})
+  @umplesourcefile(line={169},file={"Generator_CodePhp.ump"},javaline={115},length={24})
    public String translate(String keyName, UmpleClass aClass){
     if ("constructorMandatory".equals(keyName))
     {
@@ -137,7 +137,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={193},file={"Generator_CodePhp.ump"},javaline={141},length={9})
+  @umplesourcefile(line={195},file={"Generator_CodePhp.ump"},javaline={141},length={9})
    private String getExtendAndImplements(UmpleClass uClass){
     String extendsString = "";
 	  String implementsString = "";
@@ -148,7 +148,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 	  return extendsString + implementsString;
   }
 
-  @umplesourcefile(line={204},file={"Generator_CodePhp.ump"},javaline={152},length={10})
+  @umplesourcefile(line={206},file={"Generator_CodePhp.ump"},javaline={152},length={10})
    private String getExtendClassesNames(UmpleClass uClass){
     UmpleClass parent = uClass.getExtendsClass();
 	  if (parent == null)
@@ -160,7 +160,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 	  }
   }
 
-  @umplesourcefile(line={216},file={"Generator_CodePhp.ump"},javaline={164},length={8})
+  @umplesourcefile(line={218},file={"Generator_CodePhp.ump"},javaline={164},length={8})
    private String getImplementsInterfacesNames(UmpleClass uClass){
     if (uClass.hasParentInterface() == false){
 		  return "";
@@ -170,19 +170,19 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 	  }
   }
 
-  @umplesourcefile(line={226},file={"Generator_CodePhp.ump"},javaline={174},length={4})
+  @umplesourcefile(line={228},file={"Generator_CodePhp.ump"},javaline={174},length={4})
    public String translate(String keyName, Attribute av){
     boolean isMany = av.getIsList();
     return translate(keyName,av,isMany);
   }
 
-  @umplesourcefile(line={232},file={"Generator_CodePhp.ump"},javaline={180},length={4})
+  @umplesourcefile(line={234},file={"Generator_CodePhp.ump"},javaline={180},length={4})
    public String translate(String keyName, AssociationVariable av){
     boolean isMany = av.isMany();
     return translate(keyName,av,isMany);
   }
 
-  @umplesourcefile(line={238},file={"Generator_CodePhp.ump"},javaline={186},length={97})
+  @umplesourcefile(line={240},file={"Generator_CodePhp.ump"},javaline={186},length={113})
    private String translate(String keyName, UmpleVariable av, boolean isMany){
     if (OneOrManyLookup.contains(keyName))
     {
@@ -277,11 +277,27 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
         String actualLookup = attVar.getIsList() ? "attributeCanSetMany" : "attributeCanSetOne";
         return translate(actualLookup,av,isMany);
       }
+      else if ("hasUniqueMethod".equals(keyName)) 
+      {
+        return "hasWith" + attVar.getUpperCaseName();
+      } 
+      else if ("getUniqueMethod".equals(keyName))
+      {
+        return "getWith" + attVar.getUpperCaseName();
+      }
+      else if ("getUniqueMap".equals(keyName))
+      {
+        return attVar.getUmpleClass().getName() + "::$" + translate("uniqueMap", av, isMany);
+      }
+      else if ("uniqueMap".equals(keyName))
+      {
+        return attVar.getUmpleClass().getName().toLowerCase() + "s" + "By" + attVar.getUpperCaseName();
+      }
     }    
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={337},file={"Generator_CodePhp.ump"},javaline={285},length={40})
+  @umplesourcefile(line={355},file={"Generator_CodePhp.ump"},javaline={301},length={40})
    public String translate(String keyName, State state){
     String singularName = state.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -323,7 +339,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={379},file={"Generator_CodePhp.ump"},javaline={327},length={44})
+  @umplesourcefile(line={397},file={"Generator_CodePhp.ump"},javaline={343},length={44})
    public String translate(String keyName, StateMachine sm){
     String singularName = sm.getFullName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -369,7 +385,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={425},file={"Generator_CodePhp.ump"},javaline={373},length={22})
+  @umplesourcefile(line={443},file={"Generator_CodePhp.ump"},javaline={389},length={22})
    public String translate(String keyName, Event event){
     String singularName = event.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -393,7 +409,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={449},file={"Generator_CodePhp.ump"},javaline={397},length={18})
+  @umplesourcefile(line={467},file={"Generator_CodePhp.ump"},javaline={413},length={18})
    public void generate(){
     prepare();
     try{
@@ -413,7 +429,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     GeneratorHelper.postpare(getModel());
   }
 
-  @umplesourcefile(line={469},file={"Generator_CodePhp.ump"},javaline={417},length={16})
+  @umplesourcefile(line={487},file={"Generator_CodePhp.ump"},javaline={433},length={16})
    public String nameOf(String name, boolean hasMultiple){
     if (name == null)
     {
@@ -431,7 +447,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={487},file={"Generator_CodePhp.ump"},javaline={435},length={22})
+  @umplesourcefile(line={505},file={"Generator_CodePhp.ump"},javaline={451},length={22})
    public static  String typeOf(String aType){
     if (aType == null || aType.length() == 0)
     {
@@ -455,7 +471,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={511},file={"Generator_CodePhp.ump"},javaline={459},length={25})
+  @umplesourcefile(line={529},file={"Generator_CodePhp.ump"},javaline={475},length={25})
    private void writeFile(UmpleElement aElement){
     try
     {
@@ -482,7 +498,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={538},file={"Generator_CodePhp.ump"},javaline={486},length={14})
+  @umplesourcefile(line={556},file={"Generator_CodePhp.ump"},javaline={502},length={14})
    private String getUpperCaseName(String name){
     if (name == null || name.length() == 0)
     {
@@ -498,7 +514,31 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={554},file={"Generator_CodePhp.ump"},javaline={502},length={113})
+  @umplesourcefile(line={572},file={"Generator_CodePhp.ump"},javaline={518},length={12})
+   private void injectIntoUnique(String method, String injection, String when, Attribute av, UmpleClass aClass){
+    String code = StringFormatter.format(injection,
+      av.getName(),
+      translate("parameterOne", av),
+      translate("parameterOld", av),
+      translate("getMethod", av),
+      translate("hasUniqueMethod", av),
+      translate("getUniqueMap", av),
+      av.getUmpleClass().getName());
+    CodeInjection set = new CodeInjection(when, method, code, aClass);
+    aClass.addCodeInjection(set);
+  }
+
+  @umplesourcefile(line={586},file={"Generator_CodePhp.ump"},javaline={532},length={3})
+   private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass){
+    injectIntoUnique(translate("setMethod", av), injection, when, av, aClass);
+  }
+
+  @umplesourcefile(line={591},file={"Generator_CodePhp.ump"},javaline={537},length={3})
+   private void injectIntoUniqueDelete(String injection, String when, Attribute av, UmpleClass aClass){
+    injectIntoUnique("delete", injection, when, av, aClass);
+  }
+
+  @umplesourcefile(line={596},file={"Generator_CodePhp.ump"},javaline={542},length={131})
    private void prepare(UmpleClass aClass){
     if (aClass.getGeneratedClass() != null)
     {
@@ -535,6 +575,24 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
         CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
+      }
+      
+      if (av.getIsUnique())
+      {
+        injectIntoUniqueSet(
+          "if (isset($this->{0})) {" + "\n" +
+          "  ${2} = $this->{3}();" + "\n" + 
+          "}" + "\n" + 
+          "if ({6}::{4}(${1})) {" + "\n" + 
+          "  return $wasSet;" + "\n" +
+          "}", "before", av, aClass);
+        injectIntoUniqueSet(
+          "if (isset(${2})) {" + "\n" +
+          "  unset({5}[(string)${2}]);" + "\n" +
+          "}" + "\n" +
+          "{5}[(string)${1}] = $this;", "after", av, aClass);
+        injectIntoUniqueDelete(
+          "unset({5}[(string)$this->{3}()]);", "before", av, aClass);
       }
     }
     
@@ -613,7 +671,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={672},file={"Generator_CodePhp.ump"},javaline={617},length={9})
+  @umplesourcefile(line={732},file={"Generator_CodePhp.ump"},javaline={675},length={9})
    private void prepareFinalStateFor(StateMachine sm, StateMachine parentSm){
     Map<String,String> lookups = new HashMap<String,String>();
     
@@ -624,7 +682,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     GeneratorHelper.prepareFinalState(sm,lookups);
   }
 
-  @umplesourcefile(line={683},file={"Generator_CodePhp.ump"},javaline={628},length={36})
+  @umplesourcefile(line={743},file={"Generator_CodePhp.ump"},javaline={686},length={36})
    private void prepareNestedStatesFor(StateMachine sm, StateMachine parentSm, int concurrentIndex){
     prepareFinalStateFor(sm,parentSm);  
     if (sm.getParentState() != null && sm.getStartState() != null)
@@ -662,7 +720,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     GeneratorHelper.prepareAutoTransitions(sm,this,lookups);
   }
 
-  @umplesourcefile(line={721},file={"Generator_CodePhp.ump"},javaline={666},length={65})
+  @umplesourcefile(line={781},file={"Generator_CodePhp.ump"},javaline={724},length={65})
    private void generateConstructorSignature(GeneratedClass genClass){
     StringBuffer signature = new StringBuffer();
     StringBuffer signatureCaller = new StringBuffer();
@@ -729,18 +787,18 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
   }
 
-  @umplesourcefile(line={788},file={"Generator_CodePhp.ump"},javaline={733},length={3})
+  @umplesourcefile(line={848},file={"Generator_CodePhp.ump"},javaline={791},length={3})
    private String nameOf(Attribute av){
     return nameOf(av.getName(),av.getIsList());
   }
 
-  @umplesourcefile(line={793},file={"Generator_CodePhp.ump"},javaline={738},length={4})
+  @umplesourcefile(line={853},file={"Generator_CodePhp.ump"},javaline={796},length={4})
    private String nameOf(AssociationVariable av){
     boolean hasMultiple = av.isMany();
     return nameOf(av.getName(),hasMultiple);
   }
 
-  @umplesourcefile(line={799},file={"Generator_CodePhp.ump"},javaline={744},length={36})
+  @umplesourcefile(line={859},file={"Generator_CodePhp.ump"},javaline={802},length={36})
    private void generateSecondaryConstructorSignatures(GeneratedClass genClass){
     UmpleClass uClass = genClass.getUClass();
     
@@ -778,13 +836,13 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={837},file={"Generator_CodePhp.ump"},javaline={782},length={4})
+  @umplesourcefile(line={897},file={"Generator_CodePhp.ump"},javaline={840},length={4})
    private void generateNullableConstructorSignature(GeneratedClass genClass){
     String currentConstructor = genClass.getLookup("constructorSignature");
     genClass.setLookup("constructorSignature_nulled", StringFormatter.appendParameter(currentConstructor, " = null"));
   }
 
-  @umplesourcefile(line={844},file={"Generator_CodePhp.ump"},javaline={788},length={14})
+  @umplesourcefile(line={904},file={"Generator_CodePhp.ump"},javaline={846},length={14})
    private void addImports(UmpleClass aClass, GeneratedClass genClass){
     for (AssociationVariable av : aClass.getAssociationVariables()) 
     {
@@ -800,7 +858,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={860},file={"Generator_CodePhp.ump"},javaline={804},length={33})
+  @umplesourcefile(line={920},file={"Generator_CodePhp.ump"},javaline={862},length={33})
    private void addRelatedImports(){
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
@@ -835,7 +893,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={895},file={"Generator_CodePhp.ump"},javaline={839},length={32})
+  @umplesourcefile(line={955},file={"Generator_CodePhp.ump"},javaline={897},length={32})
    public void initializeLangaugeBasedVariables(){
     UmpleToPrimitiveMap.put("String","String");
 	//
@@ -869,7 +927,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     ConstraintLookupMap.put("cardinality<","count({1})<{0}");
   }
 
-  @umplesourcefile(line={31},file={"Generator.ump"},javaline={873},length={128})
+  @umplesourcefile(line={31},file={"Generator.ump"},javaline={931},length={128})
   public String translate(String format, Constraint constraint){
     if(constraint==null)
       return "{0}";
@@ -999,7 +1057,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
   }
 
-  @umplesourcefile(line={32},file={"Generator.ump"},javaline={1003},length={10})
+  @umplesourcefile(line={32},file={"Generator.ump"},javaline={1061},length={10})
   public String translate(String keyName, TraceItem ti){
     if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
 	{
@@ -1014,22 +1072,22 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodePhp.ump"},javaline={1018},length={91})
+  //  @umplesourcefile(line={14},file={"Generator_CodePhp.ump"},javaline={1076},length={93})
   private static Map<String,String> UpperCaseSingularLookupMap ;
 
-//  @umplesourcefile(line={15},file={"Generator_CodePhp.ump"},javaline={1021},length={88})
+//  @umplesourcefile(line={15},file={"Generator_CodePhp.ump"},javaline={1079},length={90})
   private static Map<String,String> UpperCasePluralLookupMap ;
 
-//  @umplesourcefile(line={16},file={"Generator_CodePhp.ump"},javaline={1024},length={85})
+//  @umplesourcefile(line={16},file={"Generator_CodePhp.ump"},javaline={1082},length={87})
   private static Map<String,String> AsIsSingularLookupMap ;
 
-//  @umplesourcefile(line={17},file={"Generator_CodePhp.ump"},javaline={1027},length={82})
+//  @umplesourcefile(line={17},file={"Generator_CodePhp.ump"},javaline={1085},length={84})
   private static Map<String,String> AsIsPluralLookupMap ;
 
-//  @umplesourcefile(line={18},file={"Generator_CodePhp.ump"},javaline={1030},length={79})
+//  @umplesourcefile(line={18},file={"Generator_CodePhp.ump"},javaline={1088},length={81})
   private static List<String> OneOrManyLookup ;
 
-//  @umplesourcefile(line={19},file={"Generator_CodePhp.ump"},javaline={1033},length={76})
+//  @umplesourcefile(line={19},file={"Generator_CodePhp.ump"},javaline={1091},length={78})
   static 
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();
@@ -1047,6 +1105,8 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     UpperCaseSingularLookupMap.put("parameterExisting", "existing{0}");
     UpperCaseSingularLookupMap.put("parameterExistingSerialized", "existingSerialized{0}");
     UpperCaseSingularLookupMap.put("parameterIsNew", "isNew{0}");
+    UpperCaseSingularLookupMap.put("parameterGetUnique", "retrievedBy{0}");
+    UpperCaseSingularLookupMap.put("parameterHasUnique", "hasUnique{0}");
     UpperCaseSingularLookupMap.put("associationNew", "new{0}");
     UpperCaseSingularLookupMap.put("canSetMethod", "canSet{0}");
     UpperCaseSingularLookupMap.put("parameterCurrent", "current{0}");

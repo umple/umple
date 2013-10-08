@@ -157,9 +157,9 @@ public class Mentor
     id = aId;
     wasSet = true;
     if (anOldId != null) {
-      getMentorsById().remove(anOldId);
+      mentorsById.remove(anOldId);
     }
-    getMentorsById().put(aId, this);
+    mentorsById.put(aId, this);
     return wasSet;
   }
 
@@ -302,14 +302,9 @@ public class Mentor
     return id;
   }
 
-  private static Map<String, Mentor> getMentorsById()
-  {
-    return mentorsById;
-  }
-
   public static Mentor getWithId(String aId)
   {
-    return getMentorsById().get(aId);
+    return mentorsById.get(aId);
   }
 
   public static boolean hasWithId(String aId)
@@ -389,7 +384,7 @@ public class Mentor
 
   public void delete()
   {
-    getMentorsById().remove(getId());
+    mentorsById.remove(getId());
   }
 
 

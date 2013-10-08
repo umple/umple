@@ -34,6 +34,8 @@ class PhpGenerator
     UpperCaseSingularLookupMap.put("parameterExisting", "existing{0}");
     UpperCaseSingularLookupMap.put("parameterExistingSerialized", "existingSerialized{0}");
     UpperCaseSingularLookupMap.put("parameterIsNew", "isNew{0}");
+    UpperCaseSingularLookupMap.put("parameterGetUnique", "retrievedBy{0}");
+    UpperCaseSingularLookupMap.put("parameterHasUnique", "hasUnique{0}");
     UpperCaseSingularLookupMap.put("associationNew", "new{0}");
     UpperCaseSingularLookupMap.put("canSetMethod", "canSet{0}");
     UpperCaseSingularLookupMap.put("parameterCurrent", "current{0}");
@@ -330,6 +332,22 @@ class PhpGenerator
         String actualLookup = attVar.getIsList() ? "attributeCanSetMany" : "attributeCanSetOne";
         return translate(actualLookup,av,isMany);
       }
+      else if ("hasUniqueMethod".equals(keyName)) 
+      {
+        return "hasWith" + attVar.getUpperCaseName();
+      } 
+      else if ("getUniqueMethod".equals(keyName))
+      {
+        return "getWith" + attVar.getUpperCaseName();
+      }
+      else if ("getUniqueMap".equals(keyName))
+      {
+        return attVar.getUmpleClass().getName() + "::$" + translate("uniqueMap", av, isMany);
+      }
+      else if ("uniqueMap".equals(keyName))
+      {
+        return attVar.getUmpleClass().getName().toLowerCase() + "s" + "By" + attVar.getUpperCaseName();
+      }
     }    
     return "UNKNOWN ID: " + keyName;
   }
@@ -551,6 +569,30 @@ class PhpGenerator
     }
   }
     
+  private void injectIntoUnique(String method, String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    String code = StringFormatter.format(injection,
+      av.getName(),
+      translate("parameterOne", av),
+      translate("parameterOld", av),
+      translate("getMethod", av),
+      translate("hasUniqueMethod", av),
+      translate("getUniqueMap", av),
+      av.getUmpleClass().getName());
+    CodeInjection set = new CodeInjection(when, method, code, aClass);
+    aClass.addCodeInjection(set);
+  }
+  
+  private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    injectIntoUnique(translate("setMethod", av), injection, when, av, aClass);
+  }
+  
+  private void injectIntoUniqueDelete(String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    injectIntoUnique("delete", injection, when, av, aClass);
+  }
+    
   private void prepare(UmpleClass aClass)
   {
     if (aClass.getGeneratedClass() != null)
@@ -588,6 +630,24 @@ class PhpGenerator
         CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
+      }
+      
+      if (av.getIsUnique())
+      {
+        injectIntoUniqueSet(
+          "if (isset($this->{0})) {" + "\n" +
+          "  ${2} = $this->{3}();" + "\n" + 
+          "}" + "\n" + 
+          "if ({6}::{4}(${1})) {" + "\n" + 
+          "  return $wasSet;" + "\n" +
+          "}", "before", av, aClass);
+        injectIntoUniqueSet(
+          "if (isset(${2})) {" + "\n" +
+          "  unset({5}[(string)${2}]);" + "\n" +
+          "}" + "\n" +
+          "{5}[(string)${1}] = $this;", "after", av, aClass);
+        injectIntoUniqueDelete(
+          "unset({5}[(string)$this->{3}()]);", "before", av, aClass);
       }
     }
     

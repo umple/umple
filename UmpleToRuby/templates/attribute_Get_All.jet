@@ -71,7 +71,6 @@
       
       if (av.getIsUnique())
       {
-        %><%@ include file="attribute_GetUniqueMap.jet"%><%
         if (customGetUniquePostfixCode != null)
         {
           %><%@ include file="attribute_GetUniqueCodeInjection.jet" %><%

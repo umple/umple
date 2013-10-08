@@ -6,6 +6,6 @@
   {
     <% if (customGetUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } %>
 <%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-%>    return <%=gen.translate("getUniqueMap",av)%>().get(<%=gen.translate("parameterOne",av)%>);
+%>    return <%=gen.translate("uniqueMap",av)%>.get(<%=gen.translate("parameterOne",av)%>);
   }
 
