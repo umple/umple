@@ -91,3 +91,7 @@ class MoreTypeInference
 
   l = new Object(); 
 }
+
+class ItemWithUniqueId {
+  unique id;
+}

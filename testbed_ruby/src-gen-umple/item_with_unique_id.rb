@@ -3,31 +3,26 @@
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
+module CruiseAttributesTest
 
-
-# attributes on both sides of the constraint's boolean expression
-class Client
+class ItemWithUniqueId
 
 
   #------------------------
   # MEMBER VARIABLES
   #------------------------
 
-  #Client Attributes - for documentation purposes
-  #attr_reader :minAge, :age
+  #ItemWithUniqueId Attributes - for documentation purposes
+  #attr_reader :id
 
   #------------------------
   # CONSTRUCTOR
   #------------------------
 
-  def initialize(a_minAge, a_age)
+  def initialize(a_id)
     @initialized = false
     @deleted = false
-    @minAge = a_minAge
-    @age = a_age
-    if  !((a_age>a_minAge)) then
-      raise RuntimeError, 'Please provide a valid age and minAge'
-    end
+    @id = a_id
     @initialized = true
   end
 
@@ -35,34 +30,20 @@ class Client
   # INTERFACE
   #------------------------
 
-  def set_minAge(a_minAge)
+  def set_id(a_id)
     was_set = false
-    if @age>a_minAge then
-    @minAge = a_minAge
+    @id = a_id
     was_set = true
-    end
     was_set
   end
 
-  def set_age(a_age)
-    was_set = false
-    if a_age>@minAge then
-    @age = a_age
-    was_set = true
-    end
-    was_set
-  end
-
-  def get_minAge
-    @minAge
-  end
-
-  def get_age
-    @age
+  def get_id
+    @id
   end
 
   def delete
     @deleted = true
   end
 
+end
 end

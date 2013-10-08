@@ -13,6 +13,7 @@ class Mentor
   public static $MIN = -99;
   public static $HELLO = "Hello";
   private static $nextX = 1;
+  private static $mentorsById = array();
 
   //------------------------
   // MEMBER VARIABLES
@@ -62,7 +63,6 @@ class Mentor
     $this->d = $aD;
     $this->t = new Time();
     $this->i = $aI;
-    $this->id = $aId;
     $this->resetP();
     $this->q = "chicken";
     $this->resetR();
@@ -73,6 +73,10 @@ class Mentor
     $this->resetV();
     $this->resetW();
     $this->x = self::$nextX++;
+    if (!$this->setId($aId))
+    {
+      throw new RuntimeException("Cannot create due to duplicate id");
+    }
   }
 
   //------------------------
@@ -140,8 +144,18 @@ class Mentor
   public function setId($aId)
   {
     $wasSet = false;
+    if (isset($this->id)) {
+      $anOldId = $this->getId();
+    }
+    if (Mentor::hasWithId($aId)) {
+      return $wasSet;
+    }
     $this->id = $aId;
     $wasSet = true;
+    if (isset($anOldId)) {
+      unset(Mentor::$mentorsById[(string)$anOldId]);
+    }
+    Mentor::$mentorsById[(string)$aId] = $this;
     return $wasSet;
   }
 
@@ -283,19 +297,14 @@ class Mentor
     return $this->id;
   }
 
-  private static Map<String, Mentor> UNKNOWN ID: getUniqueMap()
+  public static function getWithId($aId)
   {
-    return UNKNOWN ID: uniqueMap;
+    return Mentor::$mentorsById[(string)$aId];
   }
 
-  public static Mentor UNKNOWN ID: getUniqueMethod(String aId)
+  public static function hasWithId($aId)
   {
-    return UNKNOWN ID: getUniqueMap().get(aId);
-  }
-
-  public static boolean UNKNOWN ID: hasUniqueMethod(String aId)
-  {
-    return UNKNOWN ID: getUniqueMethod(aId) != null;
+    return array_key_exists((string)$aId, Mentor::$mentorsById);
   }
 
   public function getP()
@@ -374,7 +383,9 @@ class Mentor
   }
 
   public function delete()
-  {}
+  {
+    unset(Mentor::$mentorsById[(string)$this->getId()]);
+  }
 
 }
 ?>

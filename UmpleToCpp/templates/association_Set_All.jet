@@ -308,7 +308,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
       %><%@ include file="association_RemoveMany.jet" %><%
     }
 

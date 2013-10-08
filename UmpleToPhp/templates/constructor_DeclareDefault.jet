@@ -62,7 +62,7 @@
   
   for (Attribute av : uClass.getAttributes())
   {
-    if (av.getIsAutounique() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
+    if (av.getIsAutounique() || av.getIsUnique() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
     {
       continue;
     }
@@ -106,6 +106,11 @@
     {
       hasBody = true;
       %><%@ include file="constructor_AttributeAssignAutounique.jet"%><%
+    }
+    else if (av.getIsUnique())
+    {
+      hasBody = true;
+      %><%@ include file="constructor_AttributeAssignUnique.jet"%><%
     }
   }
   
