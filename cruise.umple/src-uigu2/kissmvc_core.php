@@ -36,9 +36,7 @@ abstract class KISS_Controller {
   protected $action;
   protected $params=array();
 
-  function __construct($controller_path,$web_folder,$default_controller,$default_action)  {
-    $this->controller_path=$controller_path;
-    $this->web_folder=$web_folder;
+  function __construct($default_controller,$default_action)  {
     $this->controller=$default_controller;
     $this->action=$default_action;
     $this->explode_http_request()->parse_http_request()->route_request();
@@ -76,7 +74,7 @@ abstract class KISS_Controller {
     require($controllerfile);
     if (!function_exists($function))
       $this->request_not_found('Function not found: '.$function);
-    call_user_func($function,$this->params);
+    call_user_func($function,$this);
     return $this;
   }
 

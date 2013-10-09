@@ -1,8 +1,6 @@
 <?php
-function _index($params) {
-  //get the names to be shown in the select menu
-  $data['element_names'] = $params['CONTROLLER']->get_element_names();
-  
-  $data['body'][]=Uigu2_View::do_fetch(VIEW_PATH.'main/index.php');
-  Uigu2_View::do_dump(VIEW_PATH.'layout.php',$data);
+function _index($controller) {
+  $layout_data['element_names'] = $controller->get_element_names();
+  $layout_data['body'][]=$controller->get_view()->fetch();
+  Uigu2_View::do_dump(VIEW_PATH.'layout.php',$layout_data);
 }

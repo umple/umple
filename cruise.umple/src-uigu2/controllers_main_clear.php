@@ -1,7 +1,6 @@
 <?php
 
-function _clear($params){
-  $exec_id = $params['CONTROLLER']->get_execution_id();
-  unset($_SESSION[$exec_id]);
+function _clear($controller){
+  unset($_SESSION[$controller->get_execution_id()]);
   header('Location: '.WEB_DOMAIN);
 }

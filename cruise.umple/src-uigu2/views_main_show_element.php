@@ -25,8 +25,10 @@
       <td><input type="submit" value="Create new instance"/></td>
     </tr>
   </table>
+</form>
+
   <p>//Here: Instructions for this page</p>
   <p>//right column: table with created instances</p>
   <pre> <?php echo print_r($_SESSION); ?></pre>
   
-</form>
+

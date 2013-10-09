@@ -91,8 +91,8 @@ public class Uigu2ElementGenerator
   @umplesourcefile(line={60},file={"Generator_CodeUigu2.ump"},javaline={92},length={21})
    private void appendAttributesCode(StringBuilder code, UmpleClass uClass){
     List<Attribute> attributes = this.getAttributesSuperClasses(uClass);
+    code.append("$attributes = array();").append(nl);
     if(attributes.size() > 0){
-      code.append("$attributes = array();").append(nl);
       String name, value, type;
       for (Attribute att : attributes){
         name = att.getName();
@@ -107,8 +107,45 @@ public class Uigu2ElementGenerator
         }
         code.append("$attributes['" + name + "'] = $a_attribute;").append(nl);
       }
-      code.append("$ELEMENTS['" + uClass.getName() + "']['attributes'] = $attributes;").append(nl);
     }
+    code.append("$ELEMENTS['" + uClass.getName() + "']['attributes'] = $attributes;").append(nl);
+  }
+
+  @umplesourcefile(line={82},file={"Generator_CodeUigu2.ump"},javaline={115},length={16})
+   private void appendAssociationsCode(StringBuilder code, UmpleClass uClass){
+    String className = uClass.getName();
+    List<AssociationVariable> avs = this.getAssociationsSuperClasses(uClass);
+    code.append("$associations = array();").append(nl);
+    if(avs.size() > 0){
+      for(AssociationVariable av : avs){
+        String name = av.getName();
+        String type = av.getType();
+        code.append("$a_association = array();").append(nl);
+        code.append("$a_association['name'] = '" + name + "';").append(nl);
+        code.append("$a_association['type'] = '" + type + "';").append(nl);
+        code.append("$associations['" + name + "'] = $a_association;").append(nl);
+      }
+    }
+    code.append("$ELEMENTS['" + className + "']['associations'] = $associations;").append(nl);
+  }
+
+  @umplesourcefile(line={99},file={"Generator_CodeUigu2.ump"},javaline={133},length={17})
+   private void appendConstructorCode(StringBuilder code, UmpleClass uClass){
+    String className = uClass.getName();
+    GeneratedClass gc = uClass.getGeneratedClass();
+    String constructorSignature = gc.getLookup("constructorSignature");
+    code.append("$constructor_params = array();").append(nl);
+
+    if(!"".equals(constructorSignature)){
+      String[] constructorParams = constructorSignature.split(", ");
+      for(int i = 0; i < constructorParams.length; i++){
+        //"$aAttributeName" => "attributeName"
+        String param = constructorParams[i];
+        param = Character.toLowerCase(param.charAt(2)) + param.substring(3); 
+        code.append("$constructor_params[] = '" + param + "';").append(nl);
+      }
+    }
+    code.append("$ELEMENTS['" + className + "']['constructor_params'] = $constructor_params;").append(nl);
   }
 
 
@@ -117,7 +154,7 @@ public class Uigu2ElementGenerator
    * eg. if A is subclass of B, and B is subclass of C. Calling the method for A will return all
    * the attributes of A, B and C
    */
-  @umplesourcefile(line={87},file={"Generator_CodeUigu2.ump"},javaline={115},length={9})
+  @umplesourcefile(line={122},file={"Generator_CodeUigu2.ump"},javaline={152},length={9})
    private List<Attribute> getAttributesSuperClasses(UmpleClass uClass){
     List<Attribute> attributes = new ArrayList<Attribute>();
     attributes.addAll(uClass.getAttributes());
@@ -128,57 +165,15 @@ public class Uigu2ElementGenerator
     return attributes;
   }
 
-  @umplesourcefile(line={97},file={"Generator_CodeUigu2.ump"},javaline={132},length={16})
-   private void appendAssociationsCode(StringBuilder code, UmpleClass uClass){
-    String className = uClass.getName();
-    List<AssociationVariable> avs = this.getAssociationsSuperClasses(uClass);
-    if(avs.size() > 0){
-      code.append("$associations = array();").append(nl);
-      for(AssociationVariable av : avs){
-        String name = av.getName();
-        String type = av.getType();
-        code.append("$a_association = array();").append(nl);
-        code.append("$a_association['name'] = '" + name + "';").append(nl);
-        code.append("$a_association['type'] = '" + type + "';").append(nl);
-        code.append("$associations['" + name + "'] = $a_association;").append(nl);
-      }
-      code.append("$ELEMENTS['" + className + "']['associations'] = $associations;").append(nl);
-    }
-  }
-
-
-  /**
-   * similar to method getAttributesSuperClasses above
-   */
-  @umplesourcefile(line={115},file={"Generator_CodeUigu2.ump"},javaline={150},length={10})
+  @umplesourcefile(line={132},file={"Generator_CodeUigu2.ump"},javaline={169},length={9})
    private List<AssociationVariable> getAssociationsSuperClasses(UmpleClass uClass){
     List<AssociationVariable> avs = new ArrayList<AssociationVariable>();
     avs.addAll(uClass.getAssociationVariables());
-
     if(!uClass.isRoot()){
       UmpleClass parent = uClass.getExtendsClass();
       avs.addAll(this.getAssociationsSuperClasses(parent));
     }
     return avs;
-  }
-
-  @umplesourcefile(line={126},file={"Generator_CodeUigu2.ump"},javaline={166},length={17})
-   private void appendConstructorCode(StringBuilder code, UmpleClass uClass){
-    String className = uClass.getName();
-    GeneratedClass gc = uClass.getGeneratedClass();
-    String constructorSignature = gc.getLookup("constructorSignature");
-    code.append("$constructor_params = array();").append(nl);
-
-    if(!constructorSignature.equals("")){
-      String[] constructorParams = constructorSignature.split(", ");
-      for(int i = 0; i < constructorParams.length; i++){
-        //"$aAttributeName" => "attributeName"
-        String param = constructorParams[i];
-        param = Character.toLowerCase(param.charAt(2)) + param.substring(3); 
-        code.append("$constructor_params[] = '" + param + "';").append(nl);
-      }
-    }
-    code.append("$ELEMENTS['" + className + "']['constructor_params'] = $constructor_params;").append(nl);
   }
 
 
