@@ -12,10 +12,10 @@ import java.nio.file.StandardCopyOption;
 
 /**
  * @umplesource Generator.ump 273
- * @umplesource Generator_CodeUigu2.ump 148
+ * @umplesource Generator_CodeUigu2.ump 146
  */
 // line 273 "../../../../src/Generator.ump"
-// line 148 "../../../../src/Generator_CodeUigu2.ump"
+// line 146 "../../../../src/Generator_CodeUigu2.ump"
 public class Uigu2Generator extends PhpGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -44,13 +44,13 @@ public class Uigu2Generator extends PhpGenerator
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={177},file={"Generator_CodeUigu2.ump"},javaline={54},length={10})
+  @umplesourcefile(line={175},file={"Generator_CodeUigu2.ump"},javaline={54},length={10})
   public Uigu2Generator()
   {
     super();
     generator = new Uigu2ElementGenerator();
     sharedFilesToCopy = new HashMap<String,String>();
-    // line 177 "../../../../src/Generator_CodeUigu2.ump"
+    // line 175 "../../../../src/Generator_CodeUigu2.ump"
     this.sharedFilesToCopy.put("kissmvc_core.php", "app/kissmvc_core.php");
         this.sharedFilesToCopy.put("kissmvc_uigu2.php", "app/kissmvc_uigu2.php");
         this.sharedFilesToCopy.put("layout.php", "app/views/layout.php");
@@ -128,20 +128,20 @@ public class Uigu2Generator extends PhpGenerator
    * Returns the appropriate path for shared files - the sharedFilesPath when
    * available, or the outputPath when not
    */
-  @umplesourcefile(line={346},file={"Generator_CodeUigu2.ump"},javaline={127},length={4})
+  @umplesourcefile(line={344},file={"Generator_CodeUigu2.ump"},javaline={127},length={4})
    public Path getPreferredSharedFilesPath(){
     return this.sharedFilesPath == null ?
       this.outputPath : this.sharedFilesPath;
   }
 
-  @umplesourcefile(line={351},file={"Generator_CodeUigu2.ump"},javaline={138},length={5})
+  @umplesourcefile(line={349},file={"Generator_CodeUigu2.ump"},javaline={138},length={5})
    public void setSharedFilesPath(String pathname){
     if(pathname != null){
       this.sharedFilesPath = Paths.get(pathname).toAbsolutePath();
     }
   }
 
-  @umplesourcefile(line={357},file={"Generator_CodeUigu2.ump"},javaline={145},length={5})
+  @umplesourcefile(line={355},file={"Generator_CodeUigu2.ump"},javaline={145},length={5})
    public void setOutputPath(String pathname){
     if(pathname != null){
       this.outputPath = Paths.get(pathname).toAbsolutePath();
@@ -161,7 +161,7 @@ public class Uigu2Generator extends PhpGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={189},file={"Generator_CodeUigu2.ump"},javaline={165},length={145})
+  //  @umplesourcefile(line={187},file={"Generator_CodeUigu2.ump"},javaline={165},length={145})
   @Override public void generate() 
   {
     //use default PHP generator to create the domain classes
@@ -182,8 +182,8 @@ public class Uigu2Generator extends PhpGenerator
     }
   }
 
-//  @umplesourcefile(line={214},file={"Generator_CodeUigu2.ump"},javaline={186},length={124})
-  @umplesourcefile(line={215},file={"Generator_CodeUigu2.ump"},javaline={187},length={16})
+//  @umplesourcefile(line={212},file={"Generator_CodeUigu2.ump"},javaline={186},length={124})
+  @umplesourcefile(line={213},file={"Generator_CodeUigu2.ump"},javaline={187},length={16})
   private void copySharedFiles() throws IOException 
   {
     Iterator<Map.Entry<String, String>> iterator = this.sharedFilesToCopy.entrySet().iterator();
@@ -201,16 +201,16 @@ public class Uigu2Generator extends PhpGenerator
     }
   }
 
-//  @umplesourcefile(line={233},file={"Generator_CodeUigu2.ump"},javaline={205},length={106})
-  @umplesourcefile(line={234},file={"Generator_CodeUigu2.ump"},javaline={206},length={5})
+//  @umplesourcefile(line={231},file={"Generator_CodeUigu2.ump"},javaline={205},length={106})
+  @umplesourcefile(line={232},file={"Generator_CodeUigu2.ump"},javaline={206},length={5})
   private void copyNonSharedFiles() throws IOException 
   {
     Path writePath = this.outputPath.resolve(Paths.get(".htaccess"));
     copyFileFromPackage("mod_rewrite_file", writePath);
   }
 
-//  @umplesourcefile(line={238},file={"Generator_CodeUigu2.ump"},javaline={213},length={99})
-  @umplesourcefile(line={239},file={"Generator_CodeUigu2.ump"},javaline={214},length={7})
+//  @umplesourcefile(line={236},file={"Generator_CodeUigu2.ump"},javaline={213},length={99})
+  @umplesourcefile(line={237},file={"Generator_CodeUigu2.ump"},javaline={214},length={7})
   private void copyFileFromPackage(String fileName, Path destinationPath) throws IOException 
   {
     //File is obtained as a Resource from the Classpath, not as Path or File
@@ -219,8 +219,8 @@ public class Uigu2Generator extends PhpGenerator
     Files.copy(from, destinationPath, StandardCopyOption.REPLACE_EXISTING);
   }
 
-//  @umplesourcefile(line={248},file={"Generator_CodeUigu2.ump"},javaline={223},length={90})
-  @umplesourcefile(line={249},file={"Generator_CodeUigu2.ump"},javaline={224},length={22})
+//  @umplesourcefile(line={246},file={"Generator_CodeUigu2.ump"},javaline={223},length={90})
+  @umplesourcefile(line={247},file={"Generator_CodeUigu2.ump"},javaline={224},length={22})
   private void generateIndexFile() throws IOException 
   {
     Path writePath = this.outputPath.resolve(Paths.get("index.php"));
@@ -240,12 +240,12 @@ public class Uigu2Generator extends PhpGenerator
         + "\t\trequire_once($classname.'.php');" + nl
         + "\t}" + nl
         + "}" + nl
-        + "new Uigu2_Controller(CONTROLLER_PATH,WEB_FOLDER,'main','index');";
+        + "new Uigu2_Controller('main','index');";
     writeStringToFile(indexFile, writePath);
   }
 
-//  @umplesourcefile(line={273},file={"Generator_CodeUigu2.ump"},javaline={248},length={66})
-  @umplesourcefile(line={274},file={"Generator_CodeUigu2.ump"},javaline={249},length={26})
+//  @umplesourcefile(line={271},file={"Generator_CodeUigu2.ump"},javaline={248},length={66})
+  @umplesourcefile(line={272},file={"Generator_CodeUigu2.ump"},javaline={249},length={26})
   private void generateSetupFile() throws IOException 
   {
     Path sharedFilesPath = getPreferredSharedFilesPath(); 
@@ -273,8 +273,8 @@ public class Uigu2Generator extends PhpGenerator
     }
   }
 
-//  @umplesourcefile(line={302},file={"Generator_CodeUigu2.ump"},javaline={277},length={38})
-  @umplesourcefile(line={303},file={"Generator_CodeUigu2.ump"},javaline={278},length={21})
+//  @umplesourcefile(line={300},file={"Generator_CodeUigu2.ump"},javaline={277},length={38})
+  @umplesourcefile(line={301},file={"Generator_CodeUigu2.ump"},javaline={278},length={21})
   private void generateInitializationFile() throws IOException 
   {
     //this file is never shared
@@ -297,8 +297,8 @@ public class Uigu2Generator extends PhpGenerator
     writeStringToFile(initFile.toString(), path);
   }
 
-//  @umplesourcefile(line={327},file={"Generator_CodeUigu2.ump"},javaline={301},length={15})
-  @umplesourcefile(line={328},file={"Generator_CodeUigu2.ump"},javaline={302},length={14})
+//  @umplesourcefile(line={325},file={"Generator_CodeUigu2.ump"},javaline={301},length={15})
+  @umplesourcefile(line={326},file={"Generator_CodeUigu2.ump"},javaline={302},length={14})
   private void writeStringToFile(String text, Path filePath) throws IOException 
   {
     Files.createDirectories(filePath.getParent());
