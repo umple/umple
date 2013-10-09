@@ -1587,16 +1587,21 @@ class UmpleInternalParser
             if(aAttribute.getName().equals(token.getValue()))
             {
               tokenMatch = true;
+              // throw warning if attribute is initialized
+              if(aAttribute.getValue() != null)
+              {
+                setFailedPosition(keyToken.getPosition(), 45, aAttribute.getName(), aClass.getName());
+              }
             }
-        }
+          }
         }
       
         if(aClass.hasAssociations())
-      {
-        AssociationEnd firstEnd, secondEnd;
-        String firstEndName, secondEndName;
-  
-        for(Association aAssociation : aClass.getAssociations())
+        {
+          AssociationEnd firstEnd, secondEnd;
+          String firstEndName, secondEndName;
+    
+          for(Association aAssociation : aClass.getAssociations())
           { 
             firstEnd = aAssociation.getEnd(0);
             secondEnd = aAssociation.getEnd(1);
@@ -1607,17 +1612,17 @@ class UmpleInternalParser
             {
               tokenMatch = true;
             }
-        }
-      }  
+          }
+        }  
 
         if(aClass.hasStateMachines())  
         {
         for(StateMachine aStateMachine : aClass.getStateMachines())
         {
-            if(aStateMachine.getName().equals(token.getValue()))
-            {
-              tokenMatch = true;
-            }      
+          if(aStateMachine.getName().equals(token.getValue()))
+          {
+            tokenMatch = true;
+          }      
         }
       }      
 
@@ -1953,7 +1958,7 @@ class UmpleInternalParser
     String name = attributeToken.getValue("name");
     String value = attributeToken.getValue("value");
     String derivedValue = attributeToken.getValue("code");
-
+    
   if (isLazyRedundant(isLazy, value))
   {
     setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);

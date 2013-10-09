@@ -1683,6 +1683,12 @@ public class UmpleParserTest
   }
   
   @Test
+  public void keyWithInitializedAttribute()
+  {
+    assertHasWarningsParse("306_keyWithInitializedAttribute.ump", 45);
+  }
+	  
+  @Test
   public void beforeKeyword()
   {
     assertParse("019_before.ump");
