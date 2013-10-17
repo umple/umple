@@ -112,13 +112,16 @@ public class Event
     return autoTransition;
   }
 
+  /**
+   * TODO: how do you specify milliseconds etc.
+   */
   public String getTimerInSeconds()
   {
     return timerInSeconds;
   }
 
   /**
-   * TODO: how do you specify milliseconds etc.
+   * for code generation only e.g. ouside scope of nested state
    */
   public boolean getIsInternal()
   {
@@ -147,7 +150,6 @@ public class Event
   }
 
   /**
-   * for code generation only e.g. ouside scope of nested state
    * The event parameters.
    */
   public List<MethodParameter> getParams()
@@ -275,7 +277,7 @@ public class Event
     params.clear();
   }
 
-  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={279},length={6})
+  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={281},length={6})
    public static  Event createAutoTransition(){
     Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
     e.setAutoTransition(true);
@@ -283,7 +285,7 @@ public class Event
     return e;
   }
 
-  @umplesourcefile(line={457},file={"StateMachine_Code.ump"},javaline={287},length={24})
+  @umplesourcefile(line={457},file={"StateMachine_Code.ump"},javaline={289},length={24})
    public String getArgs(){
     String args="";
     String paramName="";
@@ -324,7 +326,7 @@ public class Event
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={328},length={2})
+  //  @umplesourcefile(line={446},file={"StateMachine_Code.ump"},javaline={330},length={2})
   private static int nextAutoTransitionId = 1 ;
 
   

@@ -255,6 +255,18 @@ public class UmpleParserTest
   }
 
   @Test
+  public void abstractInheritanceClass()
+  {
+    assertSimpleParse("422_abstractInheritanceClass.ump");
+
+    Assert.assertEquals(true,model.getUmpleClass("A").getIsAbstract());
+    Assert.assertEquals(true,model.getUmpleClass("B").getIsAbstract());
+    Assert.assertEquals(true,model.getUmpleClass("C").getIsAbstract());
+    Assert.assertEquals(false,model.getUmpleClass("D").getIsAbstract());
+    Assert.assertEquals(false,model.getUmpleClass("E").getIsAbstract());
+  }
+
+  @Test
   public void immutableClass()
   {
     assertParse("022_immutableClass.ump");

@@ -1,0 +1,22 @@
+class A {
+  public abstract void hello();
+}
+
+class B {
+  isA A;
+}
+
+class C {
+  isA B;
+}
+
+class D {
+  isA C;
+  public void hello() {
+  
+  }
+}
+
+class E {
+  isA D;
+}

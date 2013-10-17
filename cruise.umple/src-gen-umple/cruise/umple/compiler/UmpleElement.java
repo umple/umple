@@ -146,7 +146,6 @@ public class UmpleElement
   }
 
   /**
-   * Kept aligned with positions
    * The modifier associated with the Umple element.
    */
   public String getModifier()
@@ -268,6 +267,9 @@ public class UmpleElement
     return aEndPosition;
   }
 
+  /**
+   * Kept aligned with positions
+   */
   public List<Position> getEndPositions()
   {
     List<Position> newEndPositions = Collections.unmodifiableList(endPositions);
@@ -412,12 +414,12 @@ public class UmpleElement
     endPositions.clear();
   }
 
-  @umplesourcefile(line={660},file={"Umple_Code.ump"},javaline={416},length={3})
+  @umplesourcefile(line={660},file={"Umple_Code.ump"},javaline={418},length={3})
    public void appendExtraCode(String newCode){
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={665},file={"Umple_Code.ump"},javaline={421},length={11})
+  @umplesourcefile(line={665},file={"Umple_Code.ump"},javaline={423},length={11})
    public void appendExtraCode(String newCode, boolean addNewline){
     if (newCode == null) 
     { 
@@ -430,17 +432,17 @@ public class UmpleElement
     extraCode.appendExtraCode(newCode);
   }
 
-  @umplesourcefile(line={678},file={"Umple_Code.ump"},javaline={434},length={3})
+  @umplesourcefile(line={678},file={"Umple_Code.ump"},javaline={436},length={3})
    public void appendExtraCode(boolean flag, CodeBlock cb){
     extraCode.appendExtraCode(cb);
   }
 
-  @umplesourcefile(line={683},file={"Umple_Code.ump"},javaline={439},length={3})
+  @umplesourcefile(line={683},file={"Umple_Code.ump"},javaline={441},length={3})
    public boolean hasExtraCode(){
     return extraCode.getHasCode();
   }
 
-  @umplesourcefile(line={688},file={"Umple_Code.ump"},javaline={444},length={3})
+  @umplesourcefile(line={688},file={"Umple_Code.ump"},javaline={446},length={3})
    public String getExtraCode(){
     return extraCode.getExtraCode();
   }

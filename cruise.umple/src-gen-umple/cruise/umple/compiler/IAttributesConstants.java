@@ -16,6 +16,10 @@ public class IAttributesConstants
   // STATIC VARIABLES
   //------------------------
 
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String attributeClass = "class";
 
   /**

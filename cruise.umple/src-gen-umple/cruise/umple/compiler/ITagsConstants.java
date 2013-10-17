@@ -21,6 +21,10 @@ public class ITagsConstants
   // STATIC VARIABLES
   //------------------------
 
+
+  /**
+   * $NON-NLS-1$
+   */
   public static final String tagClass = "class";
 
   /**

@@ -499,14 +499,14 @@ public class CountSM
     return wasSet;
   }
 
+  /**
+   * total StM found considering all classes analysed.
+   */
   public int getTotalStateMachines()
   {
     return totalStateMachines;
   }
 
-  /**
-   * total StM found considering all classes analysed.
-   */
   public int getTotalStateMachinesPerClass()
   {
     return totalStateMachinesPerClass;
@@ -718,14 +718,14 @@ public class CountSM
     return visitedStates;
   }
 
+  /**
+   * keep transitions without repetition of an StM. Use method Load
+   */
   public Set<Transition> getTransitionsList()
   {
     return transitionsList;
   }
 
-  /**
-   * keep transitions without repetition of an StM. Use method Load
-   */
   public Set<State> getStatesSet()
   {
     return statesSet;

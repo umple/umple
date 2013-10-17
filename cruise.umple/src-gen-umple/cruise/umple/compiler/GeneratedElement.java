@@ -8,10 +8,10 @@ import java.util.*;
  * TODO: Code smell: This duplicates the structure of the class from UmpleClass
  * This is a problem for model-to-model transformations
  * Should be abolished
- * @umplesource Umple.ump 595
+ * @umplesource Umple.ump 598
  * @umplesource Umple_Code.ump 1918
  */
-// line 595 "../../../../src/Umple.ump"
+// line 598 "../../../../src/Umple.ump"
 // line 1918 "../../../../src/Umple_Code.ump"
 public class GeneratedElement
 {

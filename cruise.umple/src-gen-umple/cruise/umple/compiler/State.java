@@ -131,14 +131,14 @@ public class State
     return isStartState;
   }
 
+  /**
+   * for code generation only e.g. ouside scope of nested state
+   */
   public boolean getIsInternal()
   {
     return isInternal;
   }
 
-  /**
-   * for code generation only e.g. ouside scope of nested state
-   */
   public boolean getIsHistoryState()
   {
     return isHistoryState;

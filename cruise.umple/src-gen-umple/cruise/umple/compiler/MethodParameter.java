@@ -75,6 +75,7 @@ public class MethodParameter extends UmpleVariable
 
   /**
    * Specifies whether or not the method parameter is auto unique.
+   * TODO: should default to false, but constructors would need updating
    */
   public boolean getIsAutounique()
   {
@@ -82,7 +83,6 @@ public class MethodParameter extends UmpleVariable
   }
 
   /**
-   * TODO: should default to false, but constructors would need updating
    * Specifies whether or not the method parameter is a list.
    */
   public boolean getIsList()

@@ -139,9 +139,6 @@ public class Action
     return aActionCode;
   }
 
-  /**
-   * target language code
-   */
   public boolean getIsInternal()
   {
     return isInternal;
@@ -218,7 +215,7 @@ public class Action
   public void delete()
   {}
 
-  @umplesourcefile(line={151},file={"StateMachine.ump"},javaline={222},length={8})
+  @umplesourcefile(line={151},file={"StateMachine.ump"},javaline={219},length={8})
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;

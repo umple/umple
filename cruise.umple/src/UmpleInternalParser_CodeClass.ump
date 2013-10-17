@@ -339,6 +339,7 @@ class UmpleInternalParser
       checkSortedAssociations();
       checkClassInterfaceAssocations();
       checkExtendsClass();
+      checkAbstractClass();
     }
   }
 
@@ -431,6 +432,58 @@ class UmpleInternalParser
         }
       }
     }
+  }
+
+  // Check for classes that should be abstract
+  private void checkAbstractClass(){
+    for(UmpleClass uClass : model.getUmpleClasses()) 
+    { 
+      if(uClass.getIsAbstract()) 
+      {
+        // no work needs to be done on this class.
+        continue;
+      }     
+
+      if(uClass.getUnimplementedMethods().length > 0) 
+      {
+        uClass.setIsAbstract(true);
+        continue;
+      }      
+
+      // Check if class should be abstract based on properties of ancestors
+      HashMap<String, Integer> uChildren = new HashMap<String, Integer>();
+      checkAbstractClassRecursive(uClass, uChildren);
+    }
+  }
+
+  /*
+   * Checks for unimplemented methods in ancestor classes
+   * against the implemented methods in aClass. if neither
+   * aClass nor its ancestors implemented a method, then
+   * aClass must be abstract.
+   */
+  private Method[] checkAbstractClassRecursive(UmpleClass aClass, HashMap<String, Integer> aChildren){
+    if(aClass.getExtendsToken() == null || aClass.getExtendsClass() == null || aChildren.get(aClass.getName()) != null) 
+    {
+      return aClass.getUnimplementedMethods();
+    }
+
+    aChildren.put(aClass.getName(), 1);
+    Method[] ancestorUnimplementedMethods = checkAbstractClassRecursive(aClass.getExtendsClass(), aChildren);
+    for(Method unimplementedMethod : ancestorUnimplementedMethods) 
+    {
+      if(!aClass.hasMethod(unimplementedMethod)) 
+      {
+        aClass.addUnimplementedMethod(unimplementedMethod);
+      }
+    }
+
+    if(aClass.getUnimplementedMethods().length > 0) 
+    {
+      aClass.setIsAbstract(true);
+    }
+
+    return aClass.getUnimplementedMethods();
   }
 
   // Check for the existence of a a parent class
@@ -1423,15 +1476,30 @@ class UmpleInternalParser
     MethodBody meth = new MethodBody(cb);
     aMethod.setMethodBody(meth);
 
-    // Add method to Class or Interface
+    // Handle Class/Interface Modifications
     if (uElement instanceof UmpleClass)
     {
       UmpleClass uClass = (UmpleClass) uElement;
       
+      // Add Getter/Setter/Constructor to Class
       boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
-      if (!uClass.hasMethod(aMethod) && shouldAddMethod )
+      if (!uClass.hasMethod(aMethod) && shouldAddMethod)
       {
         uClass.addMethod(aMethod); 
+      } 
+
+      // Make class abstract if an abstract method was added
+      if(uClass.hasMethod(aMethod) && aMethod.getIsAbstract()) 
+      {
+        uClass.setIsAbstract(true);
+        uClass.addUnimplementedMethod(aMethod);
+      }
+
+      // If method not added to class, add it to list of
+      // unimplemented methods
+      if(!uClass.hasMethod(aMethod)) 
+      {
+        uClass.addUnimplementedMethod(aMethod);
       }
     }
     else if (uElement instanceof UmpleInterface)
