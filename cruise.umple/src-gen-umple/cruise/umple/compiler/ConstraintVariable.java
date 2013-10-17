@@ -97,14 +97,14 @@ public class ConstraintVariable
     return wasSet;
   }
 
+  /**
+   * NOT USED: One order of parsing list each type of Umple Variable (Including the Constrained Variable).
+   */
   public String getType()
   {
     return type;
   }
 
-  /**
-   * NOT USED: One order of parsing list each type of Umple Variable (Including the Constrained Variable).
-   */
   public String getValue()
   {
     return value;

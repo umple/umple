@@ -10,10 +10,10 @@ import java.util.*;
  * it can be derived, and have various other modifiers such as being
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
- * @umplesource Umple.ump 467
+ * @umplesource Umple.ump 470
  * @umplesource Umple_Code.ump 1187
  */
-// line 467 "../../../../src/Umple.ump"
+// line 470 "../../../../src/Umple.ump"
 // line 1187 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
@@ -43,7 +43,7 @@ public class Attribute extends UmpleVariable
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={485},file={"Umple.ump"},javaline={64},length={1})
+  @umplesourcefile(line={488},file={"Umple.ump"},javaline={64},length={1})
   public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleClass aUmpleClass)
   {
     super(aName, aType, aModifier, aValue);
@@ -60,7 +60,7 @@ public class Attribute extends UmpleVariable
       throw new RuntimeException("Unable to create attribute due to umpleClass");
     }
     traceRecords = new ArrayList<TraceRecord>();
-    // line 485 "../../../../src/Umple.ump"
+    // line 488 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 

@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * Represents a class that is generated from an Umple class, such as a Java or Cpp class.
- * @umplesource Umple.ump 603
+ * @umplesource Umple.ump 606
  */
-// line 603 "../../../../src/Umple.ump"
+// line 606 "../../../../src/Umple.ump"
 public class GeneratedClass extends GeneratedElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

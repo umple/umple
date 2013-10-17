@@ -10,10 +10,10 @@ import cruise.umple.util.*;
  * 
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
  * In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
- * @umplesource Umple.ump 580
+ * @umplesource Umple.ump 583
  * @umplesource Umple_Code.ump 1775
  */
-// line 580 "../../../../src/Umple.ump"
+// line 583 "../../../../src/Umple.ump"
 // line 1775 "../../../../src/Umple_Code.ump"
 public class Multiplicity
 {
@@ -81,14 +81,14 @@ public class Multiplicity
     return wasSet;
   }
 
+  /**
+   * used when minimum=maximum;
+   */
   public String getBound()
   {
     return bound;
   }
 
-  /**
-   * used when minimum=maximum;
-   */
   public String getMinimum()
   {
     return minimum;

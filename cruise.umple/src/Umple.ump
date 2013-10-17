@@ -363,6 +363,9 @@ class UmpleClass
 
   Association[] associations;
 
+  // List of candidate methods that were not added to the class
+  Method[] unimplementedMethods;
+
   Key key = new Key();
 
   // Specifies whether or not the Umple class is immutable.
