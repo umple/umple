@@ -11,10 +11,10 @@ import java.util.*;
  * 
  * As parsing is going on "tokens" will be created and linked together in a hierarchy fashion based on what was parsed.
  * @umplesource Parser.ump 186
- * @umplesource Parser_Code.ump 709
+ * @umplesource Parser_Code.ump 714
  */
 // line 186 "../../../../src/Parser.ump"
-// line 709 "../../../../src/Parser_Code.ump"
+// line 714 "../../../../src/Parser_Code.ump"
 public class Parser
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -352,7 +352,7 @@ public class Parser
    * @param aFilename The Umple file (.ump) that the parser will parse.
    * @param aName The name of the parser, typically "UmpleInternalParser" or "innerParser".
    */
-  @umplesourcefile(line={717},file={"Parser_Code.ump"},javaline={349},length={9})
+  @umplesourcefile(line={722},file={"Parser_Code.ump"},javaline={349},length={9})
    public  Parser(String aFilename, String aName){
     filename = aFilename;
     name = aName;
@@ -363,13 +363,13 @@ public class Parser
     couples = new ArrayList<Couple>();
   }
 
-  @umplesourcefile(line={729},file={"Parser_Code.ump"},javaline={367},length={4})
+  @umplesourcefile(line={734},file={"Parser_Code.ump"},javaline={367},length={4})
    public Token reset(){
     rootToken = new Token(getName(),"ROOT", new Position(filename,1,0,0));
     return rootToken;
   }
 
-  @umplesourcefile(line={735},file={"Parser_Code.ump"},javaline={373},length={10})
+  @umplesourcefile(line={740},file={"Parser_Code.ump"},javaline={373},length={10})
    public Rule getRule(String ruleName){
     for (Rule r : rules)
     {
@@ -381,14 +381,14 @@ public class Parser
     return null;
   }
 
-  @umplesourcefile(line={747},file={"Parser_Code.ump"},javaline={385},length={5})
+  @umplesourcefile(line={752},file={"Parser_Code.ump"},javaline={385},length={5})
    public String toString(){
     StringBuffer answer = new StringBuffer();
     toString(answer,rootToken);
     return answer.toString();
   }
 
-  @umplesourcefile(line={754},file={"Parser_Code.ump"},javaline={392},length={17})
+  @umplesourcefile(line={759},file={"Parser_Code.ump"},javaline={392},length={17})
    public String toGrammarNoStyle(){
     StringBuilder answer = new StringBuilder();
     for(String rule : grammarRules)
@@ -411,12 +411,12 @@ public class Parser
   /**
    * Used to generate a nice html representation for the user manual
    */
-  @umplesourcefile(line={774},file={"Parser_Code.ump"},javaline={411},length={3})
+  @umplesourcefile(line={779},file={"Parser_Code.ump"},javaline={411},length={3})
    public String toGrammar(){
     return toGrammarParts("");
   }
 
-  @umplesourcefile(line={779},file={"Parser_Code.ump"},javaline={420},length={119})
+  @umplesourcefile(line={784},file={"Parser_Code.ump"},javaline={420},length={119})
    public String toGrammarParts(String rulesToOutput){
     StringBuilder answer = new StringBuilder();
     StringBuilder queuedComments = new StringBuilder();
@@ -541,12 +541,12 @@ public class Parser
   /**
    * Output the parse tree. The code originally here has been refactored to Token class
    */
-  @umplesourcefile(line={901},file={"Parser_Code.ump"},javaline={541},length={3})
+  @umplesourcefile(line={906},file={"Parser_Code.ump"},javaline={541},length={3})
    public StringBuffer toString(StringBuffer stringSoFar, Token currentToken){
     return currentToken.toString(stringSoFar,rootToken);
   }
 
-  @umplesourcefile(line={906},file={"Parser_Code.ump"},javaline={550},length={49})
+  @umplesourcefile(line={911},file={"Parser_Code.ump"},javaline={550},length={49})
    public int addRulesInFile(String filenameOrResourcePath){
     InputStream resourceStream = null;
     BufferedReader reader = null;
@@ -597,7 +597,7 @@ public class Parser
     return numberOfRulesProcessed;
   }
 
-  @umplesourcefile(line={957},file={"Parser_Code.ump"},javaline={601},length={51})
+  @umplesourcefile(line={962},file={"Parser_Code.ump"},javaline={601},length={51})
    public void addRule(String input){
     input = input.replace("-(","OPEN_ROUND_BRACKET");
     input = input.replace("-)","CLOSE_ROUND_BRACKET");
@@ -660,7 +660,7 @@ public class Parser
    * 
    * @return The result of the parsing.
    */
-  @umplesourcefile(line={1018},file={"Parser_Code.ump"},javaline={654},length={16})
+  @umplesourcefile(line={1023},file={"Parser_Code.ump"},javaline={654},length={16})
    public ParseResult parse(String ruleName, String input){
     // Create a new instance of a text parser to parse the input from the Umple file.
     TextParser inputParser = new TextParser(filename, input);
@@ -692,7 +692,7 @@ public class Parser
    * 
    * @return True if the input was successfully parsed, false otherwise.
    */
-  @umplesourcefile(line={1048},file={"Parser_Code.ump"},javaline={682},length={301})
+  @umplesourcefile(line={1053},file={"Parser_Code.ump"},javaline={682},length={301})
    private boolean parse(String ruleName, TextParser inputParser, Token parentToken, int level, String... stopAts){
     // Go through each rule.
     for (Rule r : rules)
@@ -995,7 +995,7 @@ public class Parser
     return false;
   }
 
-  @umplesourcefile(line={1351},file={"Parser_Code.ump"},javaline={999},length={7})
+  @umplesourcefile(line={1356},file={"Parser_Code.ump"},javaline={999},length={7})
    private void restorePrevious(TextParser inputParser, int savedIndex, Token currentToken, int size){
     inputParser.reset(savedIndex);
     while (size < currentToken.numberOfSubTokens())
@@ -1004,14 +1004,14 @@ public class Parser
     }
   }
 
-  @umplesourcefile(line={1360},file={"Parser_Code.ump"},javaline={1008},length={5})
+  @umplesourcefile(line={1365},file={"Parser_Code.ump"},javaline={1008},length={5})
    private boolean isWithinVariable(String definition){
     int openBracket = definition.lastIndexOf("[");
     int closeBracket = definition.lastIndexOf("]");
     return openBracket > closeBracket;
   }
 
-  @umplesourcefile(line={1367},file={"Parser_Code.ump"},javaline={1015},length={64})
+  @umplesourcefile(line={1372},file={"Parser_Code.ump"},javaline={1015},length={64})
    private boolean isBalanced(String input){
     if(input == null){
       return true;
@@ -1077,27 +1077,27 @@ public class Parser
     return braces == 0;
   }
 
-  @umplesourcefile(line={1433},file={"Parser_Code.ump"},javaline={1081},length={3})
+  @umplesourcefile(line={1438},file={"Parser_Code.ump"},javaline={1081},length={3})
    public Token getToken(int index){
     return rootToken.getSubToken(index);
   }
 
-  @umplesourcefile(line={1438},file={"Parser_Code.ump"},javaline={1086},length={3})
+  @umplesourcefile(line={1443},file={"Parser_Code.ump"},javaline={1086},length={3})
    public List<Token> getTokens(){
     return rootToken.getSubTokens();
   }
 
-  @umplesourcefile(line={1443},file={"Parser_Code.ump"},javaline={1091},length={3})
+  @umplesourcefile(line={1448},file={"Parser_Code.ump"},javaline={1091},length={3})
    public int numberOfTokens(){
     return rootToken.numberOfSubTokens();
   }
 
-  @umplesourcefile(line={1448},file={"Parser_Code.ump"},javaline={1096},length={3})
+  @umplesourcefile(line={1453},file={"Parser_Code.ump"},javaline={1096},length={3})
    public boolean hasTokens(){
     return numberOfTokens() > 0;
   }
 
-  @umplesourcefile(line={1453},file={"Parser_Code.ump"},javaline={1101},length={3})
+  @umplesourcefile(line={1458},file={"Parser_Code.ump"},javaline={1101},length={3})
    public int indexOf(Token aToken){
     return rootToken.indexOfSubToken(aToken);
   }

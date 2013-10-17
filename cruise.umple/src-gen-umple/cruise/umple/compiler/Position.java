@@ -205,12 +205,21 @@ public class Position
     return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
   }
 
-  @umplesourcefile(line={341},file={"Parser_Code.ump"},javaline={209},length={3})
+
+  /**
+   * extract the line number of the position
+   */
+  @umplesourcefile(line={342},file={"Parser_Code.ump"},javaline={209},length={3})
+   public int getLineNum(){
+    return getLineNumber();
+  }
+
+  @umplesourcefile(line={346},file={"Parser_Code.ump"},javaline={218},length={3})
    public String toString(){
     return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
   }
 
-  @umplesourcefile(line={346},file={"Parser_Code.ump"},javaline={214},length={11})
+  @umplesourcefile(line={351},file={"Parser_Code.ump"},javaline={223},length={11})
    private int countChars(String str, char c){
     int count = 0;
     for (int i = 0; i < str.length(); i++)
@@ -223,7 +232,7 @@ public class Position
     return count;
   }
 
-  @umplesourcefile(line={359},file={"Parser_Code.ump"},javaline={227},length={3})
+  @umplesourcefile(line={364},file={"Parser_Code.ump"},javaline={236},length={3})
    private String deWindowsify(String str){
     return str.replace('\\','/');
   }
@@ -234,7 +243,7 @@ public class Position
    * It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
    * As a result, it has been replaced by the placeholder above, that simply returns the full path.
    */
-  @umplesourcefile(line={367},file={"Parser_Code.ump"},javaline={232},length={55})
+  @umplesourcefile(line={372},file={"Parser_Code.ump"},javaline={241},length={55})
    public String getRelativePath(UmpleClass parent, String language){
     if (filename == null)
     {
