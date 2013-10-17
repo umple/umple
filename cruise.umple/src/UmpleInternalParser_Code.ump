@@ -169,7 +169,35 @@ class UmpleInternalParser
     analyzeCoreToken(t,aClass,analysisStep);
     analyzeClassToken(t,aClass,analysisStep);
     analyzeStateMachineToken(t,aClass,analysisStep);
-    analyzeTraceToken(t,aClass,analysisStep);
+    analyzeDependentTokens(t,aClass,analysisStep);
+  }
+  
+
+  //The analysis methods in this function can depend on prior analysis (ex: constraints/keys on attributes defined later in the code)
+  //Therefore it is necessary to force a second pass of the analysis for these cases
+  private void analyzeDependentTokens(Token t, UmpleClass aClass, int analysisStep)
+  {
+    if(analysisStep == 1 || shouldProcessClassAgain)
+    {
+      shouldProcessClassAgain = true;
+      return;
+    }
+
+    // Methods after this point will occur on analysisStep > 1
+    
+    if (t.is("invariant"))
+    {
+      analyzeInvariant(t,aClass);
+    }
+    else if (t.is("beforeCode") || t.is("afterCode"))
+    {
+      analyzeInjectionCode(t,aClass);
+    }
+    else if (t.is("key") || t.is("defaultKey"))
+    {
+      analyzeKey(t,aClass);
+    }
+    analyzeTraceToken(t,aClass);
     analyzeLayoutToken(t,aClass,analysisStep);
   }
   
