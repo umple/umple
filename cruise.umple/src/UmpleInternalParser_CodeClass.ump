@@ -29,6 +29,12 @@ class UmpleInternalParser
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
   internal List<Comment> lastComments = new ArrayList<Comment>();
 
+  // last attribute made.
+  internal Attribute lastattr = null;
+
+  // last association made.
+  internal AssociationVariable lastassoc = null;
+  Position lastassocPosition = null;
   /*
    * Analyze class definitions and related tokens.
    * 
@@ -89,7 +95,7 @@ class UmpleInternalParser
     else if (t.is("inlineComment"))
     {
       analyzeComment(t);
-      shouldConsumeComment = false;
+      shouldConsumeComment = addToLastAttributeOrAssociation(t);
     } 
     else if (t.is("multilineComment"))
     {
@@ -130,6 +136,49 @@ class UmpleInternalParser
   }  
 
   /*
+   * If the last attribute/association made matches the line number of the comment, add the comment to the attribute/association.
+   * 
+   * @param t the comment token that is used to see the position of the comment
+   */
+  private boolean addToLastAttributeOrAssociation(Token t)
+  {
+    if (t.getPosition() == null) {return false;}
+    if (lastattr != null)
+    {
+      if (lastattr.getPosition().getLineNum() == t.getPosition().getLineNum())
+      {
+        // this will only add the current comment, as there can only be 1 inline comment per line
+        for (Comment c : lastComments)
+        {
+          lastattr.addComment(c);
+        }
+        return true;
+      }
+      else
+      {
+        lastattr = null;
+      }
+    }  
+    else if (lastassoc != null && lastassocPosition != null)
+    {
+      if (lastassocPosition.getLineNum() == t.getPosition().getLineNum())
+      {
+        // this will only add the current comment, as there can only be 1 inline comment per line
+        for (Comment c : lastComments)
+        {
+          lastassoc.addComment(c);
+        }
+        return true;
+      }
+      else
+      {
+        lastassoc = null;
+      }
+    }                
+    return false;
+  }
+
+  /*
    * Analyze class content tokens.
    * 
    * @param token The current token that will be analyzed to determine how to further make use of it (is it a method, comment, 
@@ -158,7 +207,7 @@ class UmpleInternalParser
     else if (token.is("inlineComment"))
     {
       analyzeComment(token);
-      shouldConsumeComment = false;
+      shouldConsumeComment = addToLastAttributeOrAssociation(token);
     }
     else if (token.is("multilineComment"))
     {
@@ -1877,6 +1926,12 @@ class UmpleInternalParser
     {
       yourAs.addComment(c);
     }
+    
+    // set last association made to be yourAs. clear lastattr.
+    lastassoc = yourAs;
+    lastassocPosition = inlineAssociationToken.getPosition();
+    lastattr = null;
+    
 
     boolean added = aClass.addAssociationVariable(yourAs);
     if (added)
@@ -2051,6 +2106,11 @@ class UmpleInternalParser
     {
       attribute.addComment(c);
     }
+    
+    // set the last attribute made to be attribute, clear lastassoc
+    lastattr = attribute;
+    lastassoc = null;
+    
   }
   
 

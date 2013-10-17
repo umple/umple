@@ -756,6 +756,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtendsTokensInterface" eType="#//Map%3CUmpleClassifier%2CList%3CToken%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedInterfaceExtend" eType="#//Map%3CUmpleClassifier%2CList%3CString%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastComment" eType="#//List%3CComment%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lastattr" eType="#//Attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lastassoc" eType="#//AssociationVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lastassocPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="mustWarn" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="placeholderStateMachine" eType="#//StateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>

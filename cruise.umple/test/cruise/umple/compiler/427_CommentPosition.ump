@@ -1,0 +1,26 @@
+class Test
+{
+  //Comment
+  test;  //OtherComment
+  test2;
+}
+
+class Test2
+{
+  attr;
+}
+
+class X
+{
+  // Acomment
+  * -- 1 Test; // Aothercomment
+  * -- 1 Test2;
+}
+
+/*
+associationClass Y
+{
+  // FirstComment
+  * Test; // SecondComment
+  * Test2;
+}*/

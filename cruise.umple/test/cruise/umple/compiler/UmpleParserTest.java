@@ -1938,7 +1938,27 @@ public class UmpleParserTest
     
   }
   
-
+  @Test
+  public void sameLineComments()
+  {
+    assertSimpleParse("427_CommentPosition.ump");
+	// check that attribute comments are attributing properly.
+	UmpleClass Test = model.getUmpleClass("Test");
+	Attribute a1 = Test.getAttribute("test");
+	Assert.assertEquals(2, a1.numberOfComments());
+	Attribute a2 = Test.getAttribute("test2");
+	Assert.assertEquals(0, a2.numberOfComments());
+	
+	// check that association comments are attributing properly.
+	UmpleClass X = model.getUmpleClass("X");
+	AssociationVariable av1 = X.getAssociationVariable("test");
+	Assert.assertEquals(2, av1.numberOfComments());
+	AssociationVariable av2 = X.getAssociationVariable("test2");
+	Assert.assertEquals(0, av2.numberOfComments());
+	
+  }
+  
+  
   @Test
   public void mixingRegularAndDerivedAttributes_bug201()
   {

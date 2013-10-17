@@ -337,6 +337,11 @@ class Position
     String tfile = filename == null ? more.getFilename() : filename;
     return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
   }
+  
+  // extract the line number of the position
+  public int getLineNum() {
+    return getLineNumber();
+  }
 
   public String toString()
   {
