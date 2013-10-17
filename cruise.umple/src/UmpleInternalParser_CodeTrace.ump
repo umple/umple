@@ -55,14 +55,8 @@ private void analyzeTraceToken(Token token, int analysisStep)
   }
   
   // Process trace related tokens within the context of a class
-  private void analyzeTraceToken(Token token, UmpleClass aClass, int analysisStep)
+  private void analyzeTraceToken(Token token, UmpleClass aClass)
   {
-    // Only process trace tokens once all other entities have been analyzed
-    if (analysisStep == 1 || shouldProcessClassAgain)
-    {
-      shouldProcessClassAgain = true;
-      return;
-    }
     // Analyze trace statement token
     if (token.is("trace"))
     {

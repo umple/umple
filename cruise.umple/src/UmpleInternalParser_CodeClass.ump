@@ -180,21 +180,6 @@ class UmpleInternalParser
     {
       analyzeAttribute(token,aClass);
     }
-    else if (token.is("invariant"))
-    {
-      analyzeInvariant(token,aClass);
-      // unimplemented feature. Issue a warning that it is currently not fully implemented
-      // setFailedPosition(token.getPosition(), 9999, token.getName(), token.toString());
-    } 
-    else if (token.is("beforeCode") || token.is("afterCode"))
-    {
-      
-      analyzeInjectionCode(token,aClass);
-    }
-    else if (token.is("key") || token.is("defaultKey")) 
-    {
-      analyzeKey(token,aClass);
-    }
     else if (token.is("extraCode"))
     {
       analyzeExtraCode(token,aClass);
