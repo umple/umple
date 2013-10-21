@@ -4,6 +4,7 @@ require_once('kissmvc_core.php');
 class Uigu2_Controller extends KISS_Controller {
   const UMPLE_MODEL_INIT_FILE = 'initialize_model.php';
   protected $umple_model;
+  protected $execution_id;
   protected $view_path='../app/views/'; //with trailing slash
   protected $view;
   
@@ -15,6 +16,7 @@ class Uigu2_Controller extends KISS_Controller {
     } else {
       $this->request_not_found('Controller initialization file not found: ' . $init_file);
     }
+    $this->execution_id = $this->umple_model['execution_id'];
     if (defined('CONTROLLER_PATH')){
       $this->controller_path = CONTROLLER_PATH;
     }
@@ -58,11 +60,7 @@ class Uigu2_Controller extends KISS_Controller {
   }
 
   public function get_execution_id(){
-    if(!empty($this->umple_model['execution_id'])){
-      return $this->umple_model['execution_id'];
-    }else{
-      return '_default';
-    }
+    return $this->execution_id;
   }
 
   /*
@@ -72,7 +70,6 @@ class Uigu2_Controller extends KISS_Controller {
   public function create_object($class_name, array $params){
     //TODO: test if __autoload() is declared
     //TODO: test if session was started
-    $execution_id = $this->get_execution_id();
     $umple_class = $this->umple_model['ELEMENTS'][$class_name];
     $constructor = $umple_class['constructor_params'];
     $associations = $umple_class['associations'];
@@ -95,7 +92,7 @@ class Uigu2_Controller extends KISS_Controller {
       }
     }
     $reflection = new ReflectionClass($class_name);
-    $_SESSION[$execution_id]['instances'][$class_name][] = $reflection->newInstanceArgs($params);
+    $_SESSION[$this->execution_id]['instances'][$class_name][] = $reflection->newInstanceArgs($params);
     return true;
   }
 
@@ -103,9 +100,17 @@ class Uigu2_Controller extends KISS_Controller {
   * Returns a specific Umple Object already instanciated, or false if no such object was found.
   */
   public function get_object($class_name, $index){
-    $execution_id = $this->get_execution_id();
-    if(!empty($_SESSION[$execution_id]['instances'][$class_name][$index])){
-      return $_SESSION[$execution_id]['instances'][$class_name][$index];
+    $objects = $this->get_objects($class_name);
+    if(!empty($objects) && isset($objects[$index])){
+      return $objects[$index];
+    }else{
+      return false;
+    }
+  }
+
+  public function get_objects($class_name){
+    if(!empty($_SESSION[$this->execution_id]['instances'][$class_name])){
+      return $_SESSION[$this->execution_id]['instances'][$class_name];
     }else{
       return false;
     }
@@ -129,6 +134,30 @@ class Uigu2_Controller extends KISS_Controller {
     }
   }
 
+  public function set_message($message, $is_error = false){
+      $class = $is_error ? 'message_error' : 'message_ok';
+      $_SESSION[$this->execution_id]['messages'][] = "<span class='{$class}'>".$message.'</span>';
+  }
+
+  public function get_messages_clear(){
+    if(isset($_SESSION[$this->execution_id]['messages'])){
+      $msgs = $_SESSION[$this->execution_id]['messages'];
+      unset($_SESSION[$this->execution_id]['messages']);
+      return $msgs;
+    }else{
+      return false;
+    }
+  }
+
+  public function clear_data(){
+    if(isset($_SESSION[$this->execution_id])){
+      unset($_SESSION[$this->execution_id]);
+    }
+  }
+
+  static function redirect($action_path='index'){
+    header('Location: '.WEB_DOMAIN.'/main/'.$action_path);
+  }
 }
 
 class Uigu2_View extends KISS_View {

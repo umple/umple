@@ -3,14 +3,25 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>User Interface Generation for Umple</title>
-    <link rel="stylesheet" type="text/css" href="/uigu2/css/layout.css" />
+    <style type="text/css">
+      table#menu form{
+        display: inline;
+      }
+      .center{
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .message_error{color: red;}
+      .message_ok{color: green;}
+      .subtle{font-style: italic;}
+    </style>
   </head>
   <body>
-    <div id="heading_title" class="center">
+    <div id="div_heading_title" class="center">
       <h1>User Interface Generation for Umple</h1>
     </div>
-    <div id="heading_bar">
-      <table id="menu">
+    <div id="div_heading_bar">
+      <table id="table_menu">
         <tr>
           <td>
             <a href="<?php echo WEB_FOLDER ?>">Main Page</a> 
@@ -35,13 +46,24 @@
       </table>
     </div>
     <hr />
-    <div id="body">
+    <div id="div_body">
       <?php
-      if (isset($body) && is_array($body))
-        foreach ($body as $html)
+      if (isset($messages) && is_array($messages)){
+        foreach ($messages as $msg){
+          echo "$msg\n";
+        }
+      }
+      if (isset($body) && is_array($body)){
+        foreach ($body as $html){
           echo "$html\n";
+        }
+      }
       ?>
     </div>
-    <div id="bottom"><hr/>//Here: link, contacts, license information</div>
+    <div id="div_bottom">
+      <hr/>//Here: link, contacts, license information
+    </div>
+    //Debugging (content of $_SESSION), disregard below
+    <pre><?php var_dump($_SESSION); ?></pre>
   </body>
 </html>
