@@ -12,6 +12,6 @@ class Teacher
 class Test
 {
 	name;
-	1 -- 0..1 Y stuff;
+	1 -- 0..1 Teacher stuff;
 	key{name, stuff}
 }

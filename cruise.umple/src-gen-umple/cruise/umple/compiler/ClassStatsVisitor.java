@@ -7,9 +7,9 @@ import java.io.IOException;
 /**
  * Used to extract the required metrics information for the states of a given class. It is designed to
  * to be used by other metrics to show states information. @See StateMachineStatsVisitor
- * @umplesource Generator_CodeAnalysis.ump 518
+ * @umplesource Generator_CodeAnalysis.ump 517
  */
-// line 518 "../../../../src/Generator_CodeAnalysis.ump"
+// line 517 "../../../../src/Generator_CodeAnalysis.ump"
 public class ClassStatsVisitor extends UmpleModelVisitor
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

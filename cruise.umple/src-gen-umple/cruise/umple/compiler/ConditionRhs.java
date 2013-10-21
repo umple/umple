@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Trace.ump 43
+ * @umplesource Trace.ump 42
  */
-// line 43 "../../../../src/Trace.ump"
+// line 42 "../../../../src/Trace.ump"
 public class ConditionRhs
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

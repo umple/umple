@@ -8,11 +8,11 @@ import cruise.umple.compiler.*;
 /**
  * Specialist parser for the Umple user manual
  * Parses files in build/reference/*
- * @umplesource Documenter.ump 69
- * @umplesource Documenter_Code.ump 347
+ * @umplesource Documenter.ump 68
+ * @umplesource Documenter_Code.ump 346
  */
-// line 69 "../../../../src/Documenter.ump"
-// line 347 "../../../../src/Documenter_Code.ump"
+// line 68 "../../../../src/Documenter.ump"
+// line 346 "../../../../src/Documenter_Code.ump"
 public class ContentParser extends Parser
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

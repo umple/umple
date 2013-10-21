@@ -8,11 +8,11 @@ import java.util.List;
 /**
  * Represents an error type, which contains an error code, the severity of the error, etc.
  * Error data is read from the en.error file
- * @umplesource Parser.ump 67
- * @umplesource Parser_Code.ump 1781
+ * @umplesource Parser.ump 66
+ * @umplesource Parser_Code.ump 1780
  */
-// line 67 "../../../../src/Parser.ump"
-// line 1781 "../../../../src/Parser_Code.ump"
+// line 66 "../../../../src/Parser.ump"
+// line 1780 "../../../../src/Parser_Code.ump"
 public class ErrorType
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

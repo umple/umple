@@ -8,11 +8,11 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 66
- * @umplesource Generator_CodePapyrus.ump 12
+ * @umplesource Generator.ump 65
+ * @umplesource Generator_CodePapyrus.ump 11
  */
-// line 66 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodePapyrus.ump"
+// line 65 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodePapyrus.ump"
 public class PapyrusGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -275,14 +275,14 @@ private void analyzeTraceToken(Token token, int analysisStep)
     {
       traceAttr.setPosition(traceToken.getPosition());
       traceAttr.addUmpleVariable(attr);
+       
+      boolean wasSet = false;
       
       for(Token sub: traceToken.getParentToken().getSubTokens())
       {
         
         if(sub.is("traceOptions"))
         {
-       
-          boolean wasSet = false;
           traceAttr.setTraceSet(false);
           for(Token sub2: sub.getSubTokens())
           {
@@ -297,11 +297,11 @@ private void analyzeTraceToken(Token token, int analysisStep)
               traceAttr.setTraceSet(true);
             }
           }
-          if(!wasSet)
-          {
-            traceAttr.setTraceSet(true);
-          }
         }
+      }
+      if(!wasSet)
+      {
+        traceAttr.setTraceSet(true);
       }
     }
   }

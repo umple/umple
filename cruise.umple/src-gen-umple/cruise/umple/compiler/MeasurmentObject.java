@@ -6,9 +6,9 @@ package cruise.umple.compiler;
 /**
  * Designed to be implemnted ny metric classes. IT is used as an abstract representation for
  * any type of Maasurment vistors (@see LLOCMetricVisitor).
- * @umplesource Generator_CodeAnalysis.ump 63
+ * @umplesource Generator_CodeAnalysis.ump 62
  */
-// line 63 "../../../../src/Generator_CodeAnalysis.ump"
+// line 62 "../../../../src/Generator_CodeAnalysis.ump"
 public class MeasurmentObject
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

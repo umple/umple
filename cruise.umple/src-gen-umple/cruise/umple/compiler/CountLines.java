@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * This class is used like a structure to help keep values about lines
- * @umplesource SimpleMetrics_CodeLines.ump 225
+ * @umplesource SimpleMetrics_CodeLines.ump 224
  */
-// line 225 "../../../../src/SimpleMetrics_CodeLines.ump"
+// line 224 "../../../../src/SimpleMetrics_CodeLines.ump"
 public class CountLines
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

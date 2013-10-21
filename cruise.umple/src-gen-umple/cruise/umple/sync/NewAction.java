@@ -6,11 +6,11 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.*;
 
 /**
- * @umplesource UmpleSync.ump 33
- * @umplesource UmpleSync_Code.ump 230
+ * @umplesource UmpleSync.ump 32
+ * @umplesource UmpleSync_Code.ump 229
  */
-// line 33 "../../../../src/UmpleSync.ump"
-// line 230 "../../../../src/UmpleSync_Code.ump"
+// line 32 "../../../../src/UmpleSync.ump"
+// line 229 "../../../../src/UmpleSync_Code.ump"
 public class NewAction extends SynchronizationAction
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

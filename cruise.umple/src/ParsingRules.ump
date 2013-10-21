@@ -1,0 +1,157 @@
+namespace cruise.umple.parser.rules;
+
+/*
+  name : [[rule]] ( | [[rule]] )*
+  The basic parsing rule. Contains the neccassary components for most other parsing rules to function.
+  The basic structure is 1 -> * Rules.
+  Its own parse rule choses one of its sub-rules, and tries to parse that one(it does this in order, so it tries sub rule 0 first and 1 second and so on)
+  Parsing has three basic components, success of sub rules, token construction and then returning the new parse position
+  Success of subrules in the case of a Choice Rule is dependent on at least one sub rule being successful(not returning -1)
+*/
+class ChoiceRule
+{
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.analysis.*;
+
+  name;
+  boolean negate = false;
+  ParserAction action = null;
+  ChoiceRule parent = null;
+  ChoiceRule[] rules;
+  boolean dontDelete = false;
+  boolean optional = false;
+  StringBuilder firstValueBuilder = null;
+}
+
+/*
+  name : [[rule]] [[rule]]*
+  Similar to the Choice rule, except all sub rules must be successful when parsing(similar to an 'and' being performed on a hypotheical "isSuccess" for each rule)
+  Because of the possibility for subrules to be optional, this Rule type must support back tracking, where after a failure, the rule will remove tokens from the growing return token when it needs to reconsider a sub rule as being parsable.
+*/
+class ChainRule
+{
+  isA ChoiceRule;
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.analysis.*;
+}
+
+/*
+  name: [[rule]](option)
+  Repeatable rules are rules that are repeated sequencially one after the other in some form
+   option: ? means either the rule does not parse or it does once and only once, i.e. that it is made optional
+           * means either the rule does not parse or it does any number of times
+           + means the rule must parse at least once, and can parse any number of times after
+*/
+class RepeatableRule 
+{
+  isA ChoiceRule;
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.analysis.*;
+
+  //the minimum number of times the subrule can be parsed for this rule to be successful
+  int min;
+
+  //the maximum number of times the subrule should be considered to be able to parse(a max of 1 will not repeat more than once)
+  int max;
+}
+
+/*
+  Terminals are the only rules that actually don't use sub rules, instead, they use regex to compute whether there is a successful parse.
+  for example if the parse position is at "String name;" the terminal which was created with the ~ (alphanumeric) symbol, will parse the
+  String(excluding whitespace) and will return the position so that the next parse position will be "name;"
+*/
+class Terminal
+{
+  isA ChoiceRule;  
+  depend java.util.*;
+  depend java.util.regex.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.analysis.*;
+
+  //the inner regex(i.e. not the whitespace considerations or the neccessary trailing .*
+  regex;
+ 
+  //A regex which, if matched by the parse, will cause the terminal to return -1(Failure). This is useful for such cases as a rolename consuming the "sorted" token
+  cannotBe=null;
+  
+  //The pattern associated to the cannotBe attribute
+  Pattern cannotBePattern = null;
+
+  //The main pattern, which is checked first for passing
+  Pattern pattern = null;
+
+  //Usually null except in the case where you have a premodifier-less token [token] and then an optional rule of some kind, which means that the first parse should try to parse as if the second rule is present, that is the regex becomes regex+nextRule.getFirstValue()
+  Pattern pattern2 = null;
+
+  //If true this is a STATIC token, which are things like braces and keywords
+  boolean onlyValue = false;
+
+  //isOptional will return this value for Terminal
+  boolean optional = false;
+
+  //(not used)
+  boolean lookBack = false;
+
+  //for determining whether "" is an acceptable parse
+  boolean canBeNull = false;
+
+  //the grammar files care about \n while the umple files do not, this value reflects that difference, so when constructing rules for the grammar files " \\t" is used and when constructing rules for the umple files " \\t\\n" is used
+  static String space = " \\t";
+}
+
+/*
+  The only difference between a root rule and a choice rule is that after parsing the parse position must be at the end of the file for this rule to pass
+*/
+class RootRule 
+{
+  isA ChoiceRule;
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.analysis.*;
+}
+
+/*
+  Balanced rules ensure that braces are balanced, that is, that the corresponding brace is matched.
+  For example {a {b }c }d 'a' is matched with 'd' and 'b' is matched 'c' instead of a with c
+*/
+class BalancedRule  
+{
+  isA ChoiceRule;
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.parser.analysis.*;
+  depend cruise.umple.parser.analysis.*;
+
+  key = "";
+  ChoiceRule spacesTerminal = new Terminal("spaces","",false).dontCare();
+}
+
+/*
+  ParsingCouples are used by balanced rules to quickly find the corresponding brace. They are initialized at the begining of each file parsed
+  and are stored in the ParserDataPackage. They contain the character positions of each open brace and each close brace(when braces are the key)
+  so {{}} would have positionFrom = {1,2} and positionTo = {4,3}
+*/
+class ParsingCouple 
+{  
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+
+  public static int ignoreLevel = 0;
+
+  //The open key, a close brace or quote for example
+  open;
+
+  //The close key, a close brace or quote for example
+  close;
+
+  //The character position of all the open keys in the file
+  Integer[] positionFrom;
+
+  //The character position of all the close keys in the file, in an order which corresponds to the values in positionFrom
+  Integer[] positionTo;
+}
+
+use ParsingRules_Code.ump;

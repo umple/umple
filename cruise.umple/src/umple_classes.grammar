@@ -38,8 +38,8 @@ interfaceMemberDeclaration : [[constantDeclaration]] | [[constantDeclarationDepr
 
 // Constants in interfaces (e.g. const String ACONSTANT="aValue";)
 // Note: in Classes const is a modifier
-constantDeclarationDeprecated : constant ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
-constantDeclaration : const ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) (= [**value])? ;
+constantDeclarationDeprecated : constant [[typedName]] (= [**value])? ;
+constantDeclaration : const [[typedName]] (= [**value])? ;
 
 //TODO Should we use modifier for concrete methods [=modifier:public|protected|private]?
 //TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
@@ -50,30 +50,30 @@ codeLang- : [=codeLang:Java|RTCpp|Cpp|Php|Ruby]
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
-methodBody- : [**code]
 concreteMethodDeclaration : [=modifier:public|protected|private] [=static]? [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )* | [=modifier:public|protected|private]? [=static]? [type] [[methodDeclarator]]  ( [[precondition]] )* ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )*  ( [[postcondition]] )* | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] 
-abstractMethodDeclaration :  [type] [[methodDeclarator]] ;   
+abstractMethodDeclaration :  [type] [[methodDeclarator]] ; 
+methodBody- : [**code]  
 methodDeclarator : [methodName] [[parameterList]]
 parameterList : OPEN_ROUND_BRACKET [[parameters]]? CLOSE_ROUND_BRACKET
 parameters- : [[parameter]] ( , [[parameter]] )*
-parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0]) 
+parameter : [[typedName]]
 
 // Details of associations: See manual page [*AssociationDefinition*]
 association : [=modifier:immutable]? [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
 symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
 inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
-inlineAssociationEnd : [[multiplicity]] [[isSorted]] | [[multiplicity]] [roleName] [[isSorted]] | [[multiplicity]] [roleName]?
-singleAssociationEnd : [[multiplicity]] [type,roleName] ;
-associationEnd : [[multiplicity]] [type,roleName] | [[multiplicity]] [type,roleName] [[isSorted]]
-multiplicity- : [=bound:*] | [lowerBound] .. [upperBound] | [!bound:\d+]
+inlineAssociationEnd : [[multiplicity]] [~roleName]? [[isSorted]]?
+singleAssociationEnd : [[multiplicity]] [type] [~roleName]? ;
+associationEnd : [[multiplicity]] [type] [~roleName]? [[isSorted]]?
+multiplicity- : [=bound:*] | [!lowerBound:\d+|[*]] .. [!upperBound:\d+|[*]] | [!bound:\d+|[*]]
 isSorted- : sorted { [priority] }
 
 // Details of attributes. See user manual page [*AttributeDefinition*]
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
 simpleAttribute- : [~name] ;
 autouniqueAttribute- : [=autounique] [~name] ;
-derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? ([=list:[]] [~name] | [~type] [=list:[]] [~name] | [~type] [~name] | [~name] ) = ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? ([~type]? [=list:[]]? [~name] ) (= [**value])? ;
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? [[typedName]] = ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? [[typedName]] (= [**value])? ;
 
 
 // Keys are used to define quality and hash codes, plus Sql keys.
@@ -87,3 +87,6 @@ depend- : depend [depend] ;
 // Anything inside a class that is not parsable by Umple is passed on to the base language
 // compiler. To raise warnings when this occurs, use the strictness directive.
 extraCode- : [**extraCode]
+
+list- : [!list:\[\s*\]]
+typedName- : [type]? [!list:\[\s*\]]? [~name]

@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * Data captured during parsing when a certain rule matches
- * @umplesource Parser.ump 215
- * @umplesource Parser_Code.ump 1466
+ * @umplesource Parser.ump 214
+ * @umplesource Parser_Code.ump 1465
  */
-// line 215 "../../../../src/Parser.ump"
-// line 1466 "../../../../src/Parser_Code.ump"
+// line 214 "../../../../src/Parser.ump"
+// line 1465 "../../../../src/Parser_Code.ump"
 public class RuleInstance
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

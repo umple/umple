@@ -6,9 +6,9 @@ package cruise.umple.compiler;
 /**
  * An element of Boolean logic determining whether a trace directive
  * when encountered, will result in trace output
- * @umplesource Trace.ump 33
+ * @umplesource Trace.ump 32
  */
-// line 33 "../../../../src/Trace.ump"
+// line 32 "../../../../src/Trace.ump"
 public class TraceCondition
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

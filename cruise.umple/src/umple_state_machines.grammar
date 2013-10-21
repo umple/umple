@@ -11,7 +11,7 @@ stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] | 
 
 activeDefinition : [=active] [name]? { [**code] }
 
-inlineStateMachine : [=queued]? [name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] )* }
+inlineStateMachine : [=queued]? [~name:key] { ( [[comment]] | [[state]] | [[trace]] | [=-||] )* }
 referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[extendedStateMachine]] }
 
 extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
@@ -19,7 +19,7 @@ extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
 // An enum is a state machine that has no events
 // 	stateName is prefixed with ~ to match alphanumeric names only.
 // 	This is needed to solve issue 399, which is cause when a terminating } is parsed as part of the statename. 
-enum : [name] { } | [name] { [~stateName] (, [~stateName])* }
+enum : [~name:key] { [~stateName]? (, [~stateName])* }
 
 state : [=final]? [stateName] { [[stateInternal]]* } 
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
@@ -40,8 +40,6 @@ transition : [[guard]]? [[eventDefinition]]? -> [[action]]? [stateName] ; | [[gu
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event] ( [[parameterList]] )?
 afterEveryEvent- : afterEvery -( [timer] -)
 afterEvent- : after -( [timer] -)
-parameterList : OPEN_ROUND_BRACKET [[parameter]] ( , [[parameter]] )* CLOSE_ROUND_BRACKET 
-parameter : ([=list:[]] [name] | [type] [=list:[]] [name] | [type,name>1,0])
 
 // An action can be executed on a transition, or on entry or exit
 action : / ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*

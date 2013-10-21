@@ -18,12 +18,12 @@ invariant : [ ([name] :)? ([[constraint]]) ]
 constraintToken : [[constraint]]
 
 // A constraint is an expression optionally be surrounded in round brackets or negated
-constraint- : OPEN_ROUND_BRACKET ([[constraintBody]]) CLOSE_ROUND_BRACKET |  [[constraintBody]]
+constraint- :  [[constraintBody]] |  [[constraintExpr]] [[linkingOp]]?
 negativeConstraint : ! [[constraint]] | not [[constraint]] | ~ [[constraint]]
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
-constraintBody- : ( [[constraintExpr]] ) [[linkingOp]]*
-linkingOp : ( [=||] | [=andOp:and|&&|&] | [=orOp:or] ) [[constraintExpr]]
+constraintBody- : OPEN_ROUND_BRACKET [[constraint]] CLOSE_ROUND_BRACKET
+linkingOp : ( [=||] | [=andOp:and|&&|&] | [=orOp:or] ) [[constraint]]
 constraintExpr- :  [[negativeConstraint]] | [[stringExpr]]|[[boolExpr]]|[[numExpr]]|[[associationExpr]]|[[numExpr2]]|[[genExpr]]| [[loneBoolean]] 
 
 compoundExpr- : [[stringExpr]]|[[numExpr]]|[[boolExpr]]|[[genExpr]]
@@ -61,10 +61,10 @@ associationExpr : [[constraintName]] [[associationOps]] [[associationLit]]
 associationOps- : [=firstOp:cardinality|has] ( [[ordinalOp]] | [[equalityOp]] | [=all] )?
 associationLit : [[numLit]] [=elements]? | [[stringLit]] | [[constraintName]] | { [[associationLit]] ( , [[associationLit]] )* }
 
-constraintName : [=new]? [~name] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
+constraintName : [=new]? [!name:[a-zA-Z_][a-zA-Z0-9_-]*] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
 constraintIndexOperator- : [ [!index:[0-9]+] ]
 constraintScopeOperator :  ( . | -> ) [[constraintName]]
-constraintParameterList : OPEN_ROUND_BRACKET [[constraintParameter]] ( , [[constraintParameter]] )* CLOSE_ROUND_BRACKET
+constraintParameterList : OPEN_ROUND_BRACKET [[constraintParameter]]? ( , [[constraintParameter]] )* CLOSE_ROUND_BRACKET
 constraintParameter : [[stringLit]] | [[constraintName]] | [[numLit]]
 
 // NOTE: Additional grammar parts deleted while testing is ongoing.

@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 
 /**
  * It is used to track user code when processing objects information
- * @umplesource Generator_UmpleModelWalker.ump 29
+ * @umplesource Generator_UmpleModelWalker.ump 28
  */
-// line 29 "../../../../src/Generator_UmpleModelWalker.ump"
+// line 28 "../../../../src/Generator_UmpleModelWalker.ump"
 public class UserCode
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

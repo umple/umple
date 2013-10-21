@@ -6,17 +6,17 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource Generator.ump 47
- * @umplesource GeneratorHelper_Code.ump 20
- * @umplesource GeneratorHelper_CodeClass.ump 16
- * @umplesource GeneratorHelper_CodeStateMachine.ump 16
- * @umplesource GeneratorHelper_CodeTrace.ump 16
+ * @umplesource Generator.ump 46
+ * @umplesource GeneratorHelper_Code.ump 19
+ * @umplesource GeneratorHelper_CodeClass.ump 15
+ * @umplesource GeneratorHelper_CodeStateMachine.ump 15
+ * @umplesource GeneratorHelper_CodeTrace.ump 15
  */
-// line 47 "../../../../src/Generator.ump"
-// line 20 "../../../../src/GeneratorHelper_Code.ump"
-// line 16 "../../../../src/GeneratorHelper_CodeClass.ump"
-// line 16 "../../../../src/GeneratorHelper_CodeStateMachine.ump"
-// line 16 "../../../../src/GeneratorHelper_CodeTrace.ump"
+// line 46 "../../../../src/Generator.ump"
+// line 19 "../../../../src/GeneratorHelper_Code.ump"
+// line 15 "../../../../src/GeneratorHelper_CodeClass.ump"
+// line 15 "../../../../src/GeneratorHelper_CodeStateMachine.ump"
+// line 15 "../../../../src/GeneratorHelper_CodeTrace.ump"
 public class GeneratorHelper
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -209,7 +209,7 @@ public class GeneratorHelper
   }
 
   @umplesourcefile(line={66},file={"GeneratorHelper_CodeStateMachine.ump"},javaline={212},length={16})
-   public static  void prepareAutoTransitions(StateMachine sm, CodeTranslator codeTranslate,  Map<String, String> lookups){
+   public static  void prepareAutoTransitions(StateMachine sm, CodeTranslator codeTranslate, Map<String,String> lookups){
     for (State s : sm.getStates())
     {
       for (Transition t : s.getTransitions())
@@ -249,7 +249,7 @@ public class GeneratorHelper
    * Add the necessary before / after hooks to support nested state machines
    */
   @umplesourcefile(line={100},file={"GeneratorHelper_CodeStateMachine.ump"},javaline={248},length={45})
-   public static  void prepareNestedStateMachine(StateMachine sm, int concurrentIndex,  Map<String, String> lookups){
+   public static  void prepareNestedStateMachine(StateMachine sm, int concurrentIndex, Map<String,String> lookups){
     String entryEventName = lookups.get("entryEventName");
     String exitEventName = lookups.get("exitEventName");
     String parentEntryActionCode = lookups.get("parentEntryActionCode");
@@ -333,7 +333,7 @@ public class GeneratorHelper
     }
   }
 
-  @umplesourcefile(line={19},file={"GeneratorHelper_CodeTrace.ump"},javaline={337},length={3})
+  @umplesourcefile(line={18},file={"GeneratorHelper_CodeTrace.ump"},javaline={337},length={3})
    private static  void postpareTrace(UmpleModel aModel){
     
   }
@@ -353,7 +353,7 @@ public class GeneratorHelper
   }
 
   @umplesourcefile(line={37},file={"GeneratorHelper_CodeTrace.ump"},javaline={356},length={47})
-   public static  void prepareAllTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass,  Map<String, String> templateLookups){
+   public static  void prepareAllTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups){
     for(TraceDirective td: aClass.getTraceDirectives())
     {
       if(templateLookups.containsKey("dependTracer"))

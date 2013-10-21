@@ -3,7 +3,7 @@
 
 package cruise.patterns.test;
 
-// line 20 "../../../../src/TestHarnessPatterns.ump"
+// line 19 "../../../../src/TestHarnessPatterns.ump"
 public class WidgetC
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

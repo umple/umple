@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Generator_Html.ump 286
+ * @umplesource Generator_Html.ump 285
  */
-// line 286 "../../../../src/Generator_Html.ump"
+// line 285 "../../../../src/Generator_Html.ump"
 public class TableElement implements IHtmlElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -255,7 +255,7 @@ public class TableElement implements IHtmlElement
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   //  @umplesourcefile(line={341},file={"Generator_Html.ump"},javaline={258},length={8})
-  void setTitles(String titles []) 
+  void setTitles (String titles []) 
   {
     for(int index=0 ;index<columns; index++){
 			Element th = new Element(ITagsConstants.th, headersRow);

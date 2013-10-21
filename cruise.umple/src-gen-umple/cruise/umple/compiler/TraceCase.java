@@ -7,9 +7,9 @@ import java.util.*;
 /**
  * To be done. A group of trace directives that can be switched on or off by other
  * trace directives
- * @umplesource Trace.ump 153
+ * @umplesource Trace.ump 152
  */
-// line 153 "../../../../src/Trace.ump"
+// line 152 "../../../../src/Trace.ump"
 public class TraceCase
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

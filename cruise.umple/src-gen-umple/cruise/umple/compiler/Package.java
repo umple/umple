@@ -6,9 +6,9 @@ package cruise.umple.compiler;
 /**
  * A root class elemnt. It is used to backtrack the parent package when walking through
  * an elemnt (@see IWalker, UmpleModelVisitor)
- * @umplesource Generator_UmpleModelWalker.ump 24
+ * @umplesource Generator_UmpleModelWalker.ump 23
  */
-// line 24 "../../../../src/Generator_UmpleModelWalker.ump"
+// line 23 "../../../../src/Generator_UmpleModelWalker.ump"
 public class Package
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * Data to record in a trace directive
- * @umplesource Trace.ump 52
+ * @umplesource Trace.ump 51
  */
-// line 52 "../../../../src/Trace.ump"
+// line 51 "../../../../src/Trace.ump"
 public class TraceRecord
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

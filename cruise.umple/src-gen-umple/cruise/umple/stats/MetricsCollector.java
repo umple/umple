@@ -7,9 +7,9 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource UmpleStats_Code.ump 60
+ * @umplesource UmpleStats_Code.ump 59
  */
-// line 60 "../../../../src/UmpleStats_Code.ump"
+// line 59 "../../../../src/UmpleStats_Code.ump"
 public class MetricsCollector
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

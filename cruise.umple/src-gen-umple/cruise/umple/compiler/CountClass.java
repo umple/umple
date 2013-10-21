@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * end of class ClassMetrics
- * @umplesource SimpleMetrics_Class.ump 190
+ * @umplesource SimpleMetrics_Class.ump 189
  */
-// line 190 "../../../../src/SimpleMetrics_Class.ump"
+// line 189 "../../../../src/SimpleMetrics_Class.ump"
 public class CountClass
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

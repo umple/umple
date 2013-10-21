@@ -23,9 +23,9 @@ import java.util.*;
  * 
  * 
  * 
- * @umplesource SimpleMetrics_SM.ump 254
+ * @umplesource SimpleMetrics_SM.ump 253
  */
-// line 254 "../../../../src/SimpleMetrics_SM.ump"
+// line 253 "../../../../src/SimpleMetrics_SM.ump"
 public class CountSM
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

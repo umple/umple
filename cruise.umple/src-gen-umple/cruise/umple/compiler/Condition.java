@@ -6,9 +6,9 @@ package cruise.umple.compiler;
 /**
  * Used to associated condition patern for an umple elemnt. Designed to be generic so, this elemnt
  * can be of different types
- * @umplesource Generator_UmpleModelWalker.ump 45
+ * @umplesource Generator_UmpleModelWalker.ump 44
  */
-// line 45 "../../../../src/Generator_UmpleModelWalker.ump"
+// line 44 "../../../../src/Generator_UmpleModelWalker.ump"
 public class Condition
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -8,11 +8,11 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 80
- * @umplesource Generator_CodeXmi.ump 12
+ * @umplesource Generator.ump 79
+ * @umplesource Generator_CodeXmi.ump 11
  */
-// line 80 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeXmi.ump"
+// line 79 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeXmi.ump"
 public class XmiGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -5,9 +5,9 @@ package cruise.umple.util;
 import java.util.*;
 
 /**
- * @umplesource Util_Code.ump 847
+ * @umplesource Util_Code.ump 846
  */
-// line 847 "../../../../src/Util_Code.ump"
+// line 846 "../../../../src/Util_Code.ump"
 public class Glossary
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

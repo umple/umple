@@ -3,7 +3,7 @@
 
 package cruise.statemachine.test;
 
-// line 179 "../../../../src/TestHarnessStateMachineJava.ump"
+// line 178 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseU
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

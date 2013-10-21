@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Violet.ump 42
+ * @umplesource Violet.ump 41
  */
-// line 42 "../../../../src/Violet.ump"
+// line 41 "../../../../src/Violet.ump"
 public class VioletAssociation
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

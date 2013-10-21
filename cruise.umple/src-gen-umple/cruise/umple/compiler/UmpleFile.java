@@ -7,11 +7,11 @@ import cruise.umple.compiler.exceptions.*;
 
 /**
  * TODO: Users of this can most likely just use File, so this could be refactored out
- * @umplesource UmpleHelper.ump 23
- * @umplesource UmpleHelper_Code.ump 12
+ * @umplesource UmpleHelper.ump 22
+ * @umplesource UmpleHelper_Code.ump 11
  */
-// line 23 "../../../../src/UmpleHelper.ump"
-// line 12 "../../../../src/UmpleHelper_Code.ump"
+// line 22 "../../../../src/UmpleHelper.ump"
+// line 11 "../../../../src/UmpleHelper_Code.ump"
 public class UmpleFile
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -214,7 +214,7 @@ public class UmpleFile
   //------------------------
   //  @umplesourcefile(line={56},file={"UmpleHelper_Code.ump"},javaline={216},length={5})
   @umplesourcefile(line={57},file={"UmpleHelper_Code.ump"},javaline={217},length={4})
-  public InputStream getFileStream() throws FileNotFoundException 
+  public InputStream getFileStream () throws FileNotFoundException 
   {
     return new FileInputStream(file);
   }

@@ -11,11 +11,11 @@ import cruise.umple.compiler.uigu2.Uigu2ElementGenerator;
 import java.nio.file.StandardCopyOption;
 
 /**
- * @umplesource Generator.ump 273
- * @umplesource Generator_CodeUigu2.ump 146
+ * @umplesource Generator.ump 272
+ * @umplesource Generator_CodeUigu2.ump 145
  */
-// line 273 "../../../../src/Generator.ump"
-// line 146 "../../../../src/Generator_CodeUigu2.ump"
+// line 272 "../../../../src/Generator.ump"
+// line 145 "../../../../src/Generator_CodeUigu2.ump"
 public class Uigu2Generator extends PhpGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -161,8 +161,10 @@ public class Uigu2Generator extends PhpGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={187},file={"Generator_CodeUigu2.ump"},javaline={165},length={145})
-  @Override public void generate() 
+  //  @umplesourcefile(line={187},file={"Generator_CodeUigu2.ump"},javaline={165},length={146})
+  @Override
+  @umplesourcefile(line={189},file={"Generator_CodeUigu2.ump"},javaline={167},length={19})
+  public void generate () 
   {
     //use default PHP generator to create the domain classes
     super.generate();
@@ -182,9 +184,9 @@ public class Uigu2Generator extends PhpGenerator
     }
   }
 
-//  @umplesourcefile(line={212},file={"Generator_CodeUigu2.ump"},javaline={186},length={124})
-  @umplesourcefile(line={213},file={"Generator_CodeUigu2.ump"},javaline={187},length={16})
-  private void copySharedFiles() throws IOException 
+//  @umplesourcefile(line={212},file={"Generator_CodeUigu2.ump"},javaline={188},length={124})
+  @umplesourcefile(line={213},file={"Generator_CodeUigu2.ump"},javaline={189},length={16})
+  private void copySharedFiles () throws IOException 
   {
     Iterator<Map.Entry<String, String>> iterator = this.sharedFilesToCopy.entrySet().iterator();
     String fileName = "";
@@ -201,17 +203,17 @@ public class Uigu2Generator extends PhpGenerator
     }
   }
 
-//  @umplesourcefile(line={231},file={"Generator_CodeUigu2.ump"},javaline={205},length={106})
-  @umplesourcefile(line={232},file={"Generator_CodeUigu2.ump"},javaline={206},length={5})
-  private void copyNonSharedFiles() throws IOException 
+//  @umplesourcefile(line={231},file={"Generator_CodeUigu2.ump"},javaline={207},length={106})
+  @umplesourcefile(line={232},file={"Generator_CodeUigu2.ump"},javaline={208},length={5})
+  private void copyNonSharedFiles () throws IOException 
   {
     Path writePath = this.outputPath.resolve(Paths.get(".htaccess"));
     copyFileFromPackage("mod_rewrite_file", writePath);
   }
 
-//  @umplesourcefile(line={236},file={"Generator_CodeUigu2.ump"},javaline={213},length={99})
-  @umplesourcefile(line={237},file={"Generator_CodeUigu2.ump"},javaline={214},length={7})
-  private void copyFileFromPackage(String fileName, Path destinationPath) throws IOException 
+//  @umplesourcefile(line={236},file={"Generator_CodeUigu2.ump"},javaline={215},length={99})
+  @umplesourcefile(line={237},file={"Generator_CodeUigu2.ump"},javaline={216},length={7})
+  private void copyFileFromPackage (String fileName, Path destinationPath) throws IOException 
   {
     //File is obtained as a Resource from the Classpath, not as Path or File
     InputStream from = this.getClass().getResourceAsStream(this.packageFilesPath + fileName);
@@ -219,9 +221,9 @@ public class Uigu2Generator extends PhpGenerator
     Files.copy(from, destinationPath, StandardCopyOption.REPLACE_EXISTING);
   }
 
-//  @umplesourcefile(line={246},file={"Generator_CodeUigu2.ump"},javaline={223},length={90})
-  @umplesourcefile(line={247},file={"Generator_CodeUigu2.ump"},javaline={224},length={22})
-  private void generateIndexFile() throws IOException 
+//  @umplesourcefile(line={246},file={"Generator_CodeUigu2.ump"},javaline={225},length={90})
+  @umplesourcefile(line={247},file={"Generator_CodeUigu2.ump"},javaline={226},length={22})
+  private void generateIndexFile () throws IOException 
   {
     Path writePath = this.outputPath.resolve(Paths.get("index.php"));
     Path setupFilePath = getPreferredSharedFilesPath().resolve(Paths.get("setup.php")); 
@@ -244,9 +246,9 @@ public class Uigu2Generator extends PhpGenerator
     writeStringToFile(indexFile, writePath);
   }
 
-//  @umplesourcefile(line={271},file={"Generator_CodeUigu2.ump"},javaline={248},length={66})
-  @umplesourcefile(line={272},file={"Generator_CodeUigu2.ump"},javaline={249},length={26})
-  private void generateSetupFile() throws IOException 
+//  @umplesourcefile(line={271},file={"Generator_CodeUigu2.ump"},javaline={250},length={66})
+  @umplesourcefile(line={272},file={"Generator_CodeUigu2.ump"},javaline={251},length={26})
+  private void generateSetupFile () throws IOException 
   {
     Path sharedFilesPath = getPreferredSharedFilesPath(); 
     Path writePath = sharedFilesPath.resolve(Paths.get("setup.php"));
@@ -273,9 +275,9 @@ public class Uigu2Generator extends PhpGenerator
     }
   }
 
-//  @umplesourcefile(line={300},file={"Generator_CodeUigu2.ump"},javaline={277},length={38})
-  @umplesourcefile(line={301},file={"Generator_CodeUigu2.ump"},javaline={278},length={21})
-  private void generateInitializationFile() throws IOException 
+//  @umplesourcefile(line={300},file={"Generator_CodeUigu2.ump"},javaline={279},length={38})
+  @umplesourcefile(line={301},file={"Generator_CodeUigu2.ump"},javaline={280},length={21})
+  private void generateInitializationFile () throws IOException 
   {
     //this file is never shared
     Path path = this.outputPath.resolve(Paths.get("initialize_model.php"));
@@ -297,9 +299,9 @@ public class Uigu2Generator extends PhpGenerator
     writeStringToFile(initFile.toString(), path);
   }
 
-//  @umplesourcefile(line={325},file={"Generator_CodeUigu2.ump"},javaline={301},length={15})
-  @umplesourcefile(line={326},file={"Generator_CodeUigu2.ump"},javaline={302},length={14})
-  private void writeStringToFile(String text, Path filePath) throws IOException 
+//  @umplesourcefile(line={325},file={"Generator_CodeUigu2.ump"},javaline={303},length={15})
+  @umplesourcefile(line={326},file={"Generator_CodeUigu2.ump"},javaline={304},length={14})
+  private void writeStringToFile (String text, Path filePath) throws IOException 
   {
     Files.createDirectories(filePath.getParent());
     BufferedWriter bw = null;

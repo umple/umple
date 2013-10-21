@@ -7,11 +7,11 @@ import java.nio.file.*;
 /**
  * Used to indicate the coordinates of a position when parsing.  This is done by keeping track of the
  * filename, the line number and the corresponding offset on that line number.
- * @umplesource Parser.ump 122
- * @umplesource Parser_Code.ump 321
+ * @umplesource Parser.ump 121
+ * @umplesource Parser_Code.ump 320
  */
-// line 122 "../../../../src/Parser.ump"
-// line 321 "../../../../src/Parser_Code.ump"
+// line 121 "../../../../src/Parser.ump"
+// line 320 "../../../../src/Parser_Code.ump"
 public class Position
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

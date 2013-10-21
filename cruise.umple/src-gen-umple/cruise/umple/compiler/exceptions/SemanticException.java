@@ -4,9 +4,9 @@
 package cruise.umple.compiler.exceptions;
 
 /**
- * @umplesource UmpleExceptions.ump 25
+ * @umplesource UmpleExceptions.ump 24
  */
-// line 25 "../../../../../src/UmpleExceptions.ump"
+// line 24 "../../../../../src/UmpleExceptions.ump"
 public class SemanticException extends RuntimeException
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

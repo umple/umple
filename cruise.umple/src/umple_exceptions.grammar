@@ -8,7 +8,7 @@
 
 misnamedAttribute : [name] ; | [type] [name] ;
 malformedStatement1 : [!stuff:[^\\{\\};]*] ( [!stuff:[^\\{\\};]*] )* ;
-malformedStatemachine1 : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*] { [**innerstuff] }
+malformedStatemachine1 : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET ]*] { [**innerstuff] }
 malformedStatement2 : [!stuff:[^\\{\\};]*] ( [!stuff:[^\\{\\};]*] )* { [**innerstuff] } ;
 malformedStatemachine2 : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*]  ( [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*] )* { [**innerstuff] }
 malformedMethod : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*] ( [!stuff:[^\\{\\}]*] )* { [**innerstuff] }

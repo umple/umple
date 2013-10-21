@@ -26,14 +26,14 @@ public class UmpleInternalParserTest extends UmpleParserTest
     
     fileToOutputs.put("001_empty.ump", "");
     fileToOutputs.put("001_empty.ump", "");
-    fileToOutputs.put("001_emptyComment.ump", "[classDefinition][name:Student]");
-    fileToOutputs.put("001_emptyCommentWithSpaces.ump", "[classDefinition][name:Student]");
-    fileToOutputs.put("001_multipleEmptyComments.ump", "[classDefinition][name:Student][classDefinition][name:Mentor][classDefinition][name:Teacher]");
-    fileToOutputs.put("001_multipleEmptyCommentsWithSpaces.ump", "[classDefinition][name:Foo][classDefinition][name:Bar][classDefinition][name:Foobar][classDefinition][name:Student][classDefinition][name:Mentor]");
-    fileToOutputs.put("001_emptyMultiLineComment.ump", "[classDefinition][name:Student]");
-    fileToOutputs.put("001_emptyMultiLineCommentWithSpaces.ump", "[classDefinition][name:Student]");
+    fileToOutputs.put("001_emptyComment.ump", "[inlineComment:][classDefinition][name:Student]");
+    fileToOutputs.put("001_emptyCommentWithSpaces.ump", "[inlineComment:][classDefinition][name:Student]");
+    fileToOutputs.put("001_multipleEmptyComments.ump", "[inlineComment:][classDefinition][name:Student][inlineComment:][classDefinition][name:Mentor][inlineComment:][classDefinition][name:Teacher]");
+    fileToOutputs.put("001_multipleEmptyCommentsWithSpaces.ump", "[inlineComment:][classDefinition][name:Foo][inlineComment:][classDefinition][name:Bar][inlineComment:][inlineComment:][inlineComment:][classDefinition][name:Foobar][inlineComment:][classDefinition][name:Student][inlineComment:][classDefinition][name:Mentor]");
+    fileToOutputs.put("001_emptyMultiLineComment.ump", "[multilineComment:][classDefinition][name:Student]");
+    fileToOutputs.put("001_emptyMultiLineCommentWithSpaces.ump", "[multilineComment:][classDefinition][name:Student]");
     
-    expectedResult = "[classDefinition][name:Foo][classDefinition][name:Bar][multilineComment:*][classDefinition][name:Foobar][multilineComment:* \n * \n *][classDefinition][name:Student][multilineComment:*                                        \n *    \n       \n *   \n *  \n *][classDefinition][name:Mentor][classDefinition][name:Teacher]";
+    expectedResult = "[multilineComment:][classDefinition][name:Foo][multilineComment:][classDefinition][name:Bar][multilineComment:*][classDefinition][name:Foobar][multilineComment:* ";
     fileToOutputs.put("001_multipleEmptyMultiLineCommentsWithSpaces.ump", expectedResult);
     
     expectedResult = "[classDefinition][name:Foo][inlineComment:I am a comment above a method.]" + 
@@ -193,7 +193,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("015_ClassWithImplementedMethods.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][classDefinition][name:Something][attribute][type:implements][name:ISomething][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
     fileToOutputs.put("015_classMethods.ump", "[classDefinition][name:Student][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");
     
-    fileToOutputs.put("015_base.ump", "[use:015_Student.ump][use:015_Mentor.ump][classDefinition][name:Student][use:015_Student.ump][classDefinition][name:Mentor][extendsName:Student]");
+    fileToOutputs.put("015_base.ump", "[useStatement][use:015_Student.ump][classDefinition][name:Student][useStatement][use:015_Mentor.ump][useStatement][use:015_Student.ump][classDefinition][name:Mentor][extendsName:Student]");
     fileToOutputs.put("016_classPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40]");
     fileToOutputs.put("016_defaultClassPosition.ump", "[classDefinition][name:Student][elementPosition][x:10][y:20][width:30][height:40]");
     fileToOutputs.put("016_associationPosition.ump", "[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][bound:1][arrow:--][associationEnd][bound:*][type:Mentor][elementPosition][x:10][y:20][width:30][height:40][associationPosition][name:Mentor__Student][coordinate][x:1][y:2][coordinate][x:3][y:4][classDefinition][name:Mentor]");
@@ -208,7 +208,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("020_enumEmpty.ump","[classDefinition][name:Student][stateMachine][enum][name:status]");
     fileToOutputs.put("020_enum.ump","[classDefinition][name:Student][stateMachine][enum][name:status][stateName:FullTime][stateName:PartTime][stateName:MidTime][stateMachine][enum][name:grade][stateName:High]");
     fileToOutputs.put("020_enumLongHand.ump","[classDefinition][name:Student][stateMachine][inlineStateMachine][name:status][state][stateName:FullTime][state][stateName:PartTime]");
-    fileToOutputs.put("021_nestedUse.ump","[classDefinition][name:Student][attribute][name:fisrtName][use:021_nestedUse_B.ump][classDefinition][name:Student][attribute][name:lastName][use:021_nestedUse_C.ump][classDefinition][name:Student][attribute][name:middleName]");
+    fileToOutputs.put("021_nestedUse.ump","[classDefinition][name:Student][attribute][name:fisrtName][useStatement][use:021_nestedUse_B.ump][classDefinition][name:Student][attribute][name:lastName][useStatement][use:021_nestedUse_C.ump][classDefinition][name:Student][attribute][name:middleName]");
     fileToOutputs.put("022_immutableClass.ump","[classDefinition][name:Student][immutable:immutable][classDefinition][name:Mentor]");
     fileToOutputs.put("022_mutableToImmutableAssocRight.ump", "[classDefinition][name:StudentA][inlineAssociation][inlineAssociationEnd][bound:1][arrow:->][associationEnd][bound:1][type:MentorA][classDefinition][name:MentorA][immutable:immutable]");
     fileToOutputs.put("022_mutableToImmutableAssocLeft.ump", "[classDefinition][name:StudentB][immutable:immutable][inlineAssociation][inlineAssociationEnd][bound:1][arrow:<-][associationEnd][bound:1][type:MentorB][classDefinition][name:MentorB]");

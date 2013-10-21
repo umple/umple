@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Generator_Html.ump 52
+ * @umplesource Generator_Html.ump 51
  */
-// line 52 "../../../../src/Generator_Html.ump"
+// line 51 "../../../../src/Generator_Html.ump"
 public class IAttributesConstants
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

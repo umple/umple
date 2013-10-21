@@ -9,9 +9,9 @@ package cruise.umple.compiler;
  * that it can be used by a given target langauge. 
  * 
  * TODO: Should be interface instead. We need to update the parser to accept constatns for the iterfaces
- * @umplesource Generator_Html.ump 29
+ * @umplesource Generator_Html.ump 28
  */
-// line 29 "../../../../src/Generator_Html.ump"
+// line 28 "../../../../src/Generator_Html.ump"
 public class ITagsConstants
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

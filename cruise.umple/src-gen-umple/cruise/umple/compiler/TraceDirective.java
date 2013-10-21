@@ -7,9 +7,9 @@ import java.util.*;
 /**
  * A statement found in Umple that directs code to be generated
  * to trace a model element and generate output using some tracing tool
- * @umplesource Trace.ump 71
+ * @umplesource Trace.ump 70
  */
-// line 71 "../../../../src/Trace.ump"
+// line 70 "../../../../src/Trace.ump"
 public class TraceDirective
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

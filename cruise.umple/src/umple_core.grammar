@@ -34,7 +34,7 @@ generate- : generate [=generate:Java|Php|RTCpp|Ruby|Cpp|Json|Yuml|Violet|Umlet|S
 generate_path : generate [=language:Java|Php|RTCpp|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|GvStateDiagram|GvClassDiagram|Papyrus|Ecore|Xmi|Xtext|Sql] " [**output] " [=override:--override|--override-all]? ;
 
 // Use statements allow incorporation of other Umple files. See [*UseStatements*]
-useStatement- : use [use] ;
+useStatement : use [use] ;
 
 // Namespaces divide the code into logical groups. See [*NamespaceDirectives*] 
 namespace- : namespace [namespace] ;

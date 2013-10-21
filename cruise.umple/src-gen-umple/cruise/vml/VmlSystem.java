@@ -13,13 +13,13 @@ import java.util.*;
  * An online tool is available at
  * http://try.umple.org/vml.php
  * It is the intention to integrate VML into the core Umple language
- * @umplesource Vml.ump 24
- * @umplesource Vml_Code.ump 68
- * @umplesource Vml_Code.ump 392
+ * @umplesource Vml.ump 23
+ * @umplesource Vml_Code.ump 67
+ * @umplesource Vml_Code.ump 391
  */
-// line 24 "../../../src/Vml.ump"
-// line 68 "../../../src/Vml_Code.ump"
-// line 392 "../../../src/Vml_Code.ump"
+// line 23 "../../../src/Vml.ump"
+// line 67 "../../../src/Vml_Code.ump"
+// line 391 "../../../src/Vml_Code.ump"
 public class VmlSystem
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

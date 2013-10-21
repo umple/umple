@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * Under Development
- * @umplesource Umple.ump 229
- * @umplesource Umple_Code.ump 1330
+ * @umplesource Umple.ump 228
+ * @umplesource Umple_Code.ump 1322
  */
-// line 229 "../../../../src/Umple.ump"
-// line 1330 "../../../../src/Umple_Code.ump"
+// line 228 "../../../../src/Umple.ump"
+// line 1322 "../../../../src/Umple_Code.ump"
 public class ConstraintVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -168,13 +168,13 @@ public class ConstraintVariable
     subConstraint = null;
   }
 
-  @umplesourcefile(line={1332},file={"Umple_Code.ump"},javaline={172},length={4})
+  @umplesourcefile(line={1325},file={"Umple_Code.ump"},javaline={172},length={4})
   public ConstraintVariable isNotPrimitive(){
     isPrimitive = false;
     return this;
   }
 
-  @umplesourcefile(line={1336},file={"Umple_Code.ump"},javaline={178},length={19})
+  @umplesourcefile(line={1329},file={"Umple_Code.ump"},javaline={178},length={19})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
@@ -195,7 +195,7 @@ public class ConstraintVariable
     return uv;
   }
 
-  @umplesourcefile(line={1356},file={"Umple_Code.ump"},javaline={199},length={15})
+  @umplesourcefile(line={1349},file={"Umple_Code.ump"},javaline={199},length={15})
    public boolean equals(Object object){
     if(object==null)
     {

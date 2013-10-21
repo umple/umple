@@ -7,11 +7,11 @@ import java.util.*;
 
 /**
  * Represents an error message, typically used with parsing.
- * @umplesource Parser.ump 51
- * @umplesource Parser_Code.ump 1760
+ * @umplesource Parser.ump 50
+ * @umplesource Parser_Code.ump 1759
  */
-// line 51 "../../../../src/Parser.ump"
-// line 1760 "../../../../src/Parser_Code.ump"
+// line 50 "../../../../src/Parser.ump"
+// line 1759 "../../../../src/Parser_Code.ump"
 public class ErrorMessage
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -10,11 +10,11 @@ import cruise.umple.cpp.generator.UmpleCppPoliciesProcessor;
 import cruise.umple.cpp.core.ContentsDescriptor;
 
 /**
- * @umplesource Generator.ump 231
- * @umplesource Generator_CodeRTCpp.ump 12
+ * @umplesource Generator.ump 230
+ * @umplesource Generator_CodeRTCpp.ump 11
  */
-// line 231 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeRTCpp.ump"
+// line 230 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeRTCpp.ump"
 public class RTCppGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -112,7 +112,7 @@ public class RTCppGenerator implements CodeGenerator
   //------------------------
   //  @umplesourcefile(line={37},file={"Generator_CodeRTCpp.ump"},javaline={114},length={26})
   @umplesourcefile(line={38},file={"Generator_CodeRTCpp.ump"},javaline={115},length={25})
-  protected void generateContents(UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException 
+  protected void generateContents (UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException 
   {
     String path = model.getUmpleFile().getPath() + "/";
 		 owingFolder= owingFolder.replace(".", "::").replace("::", "/");

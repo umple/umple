@@ -4,11 +4,11 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource UmpleHelper.ump 36
- * @umplesource UmpleHelper_Code.ump 124
+ * @umplesource UmpleHelper.ump 35
+ * @umplesource UmpleHelper_Code.ump 123
  */
-// line 36 "../../../../src/UmpleHelper.ump"
-// line 124 "../../../../src/UmpleHelper_Code.ump"
+// line 35 "../../../../src/UmpleHelper.ump"
+// line 123 "../../../../src/UmpleHelper_Code.ump"
 public class UmpleParserFactory
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

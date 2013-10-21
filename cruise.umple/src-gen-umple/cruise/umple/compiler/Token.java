@@ -10,11 +10,11 @@ import java.util.*;
  * As parsing is taking place these will indicate what is currently being looked for
  * (such as a class definition or attribute) and helps to keep
  * track of the positions that the input parser parsed things at.
- * @umplesource Parser.ump 100
- * @umplesource Parser_Code.ump 80
+ * @umplesource Parser.ump 99
+ * @umplesource Parser_Code.ump 79
  */
-// line 100 "../../../../src/Parser.ump"
-// line 80 "../../../../src/Parser_Code.ump"
+// line 99 "../../../../src/Parser.ump"
+// line 79 "../../../../src/Parser_Code.ump"
 public class Token
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

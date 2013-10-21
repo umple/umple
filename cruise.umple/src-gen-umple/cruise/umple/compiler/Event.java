@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource StateMachine.ump 164
- * @umplesource StateMachine_Code.ump 445
+ * @umplesource StateMachine.ump 163
+ * @umplesource StateMachine_Code.ump 444
  */
-// line 164 "../../../../src/StateMachine.ump"
-// line 445 "../../../../src/StateMachine_Code.ump"
+// line 163 "../../../../src/StateMachine.ump"
+// line 444 "../../../../src/StateMachine_Code.ump"
 public class Event
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

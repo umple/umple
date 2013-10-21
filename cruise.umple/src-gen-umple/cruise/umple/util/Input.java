@@ -5,9 +5,9 @@ package cruise.umple.util;
 import java.io.*;
 
 /**
- * @umplesource Util_Code.ump 77
+ * @umplesource Util_Code.ump 76
  */
-// line 77 "../../../../src/Util_Code.ump"
+// line 76 "../../../../src/Util_Code.ump"
 public class Input
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

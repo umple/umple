@@ -8,11 +8,11 @@ import java.util.*;
 /**
  * An entity in a running program that can have a set of values (states) and which
  * changes values by taking transitions in response to various events.
- * @umplesource StateMachine.ump 18
- * @umplesource StateMachine_Code.ump 14
+ * @umplesource StateMachine.ump 17
+ * @umplesource StateMachine_Code.ump 13
  */
-// line 18 "../../../../src/StateMachine.ump"
-// line 14 "../../../../src/StateMachine_Code.ump"
+// line 17 "../../../../src/StateMachine.ump"
+// line 13 "../../../../src/StateMachine_Code.ump"
 public class StateMachine
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

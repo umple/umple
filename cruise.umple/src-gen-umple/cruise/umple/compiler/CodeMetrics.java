@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource SimpleMetrics_CodeLines.ump 59
+ * @umplesource SimpleMetrics_CodeLines.ump 58
  */
-// line 59 "../../../../src/SimpleMetrics_CodeLines.ump"
+// line 58 "../../../../src/SimpleMetrics_CodeLines.ump"
 public class CodeMetrics extends SimpleMetricsGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -166,7 +166,7 @@ public class CodeMetrics extends SimpleMetricsGenerator
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   //  @umplesourcefile(line={149},file={"SimpleMetrics_CodeLines.ump"},javaline={169},length={73})
-  CountLines countLinesInFile(String filename)throws java.io.IOException 
+  CountLines countLinesInFile (String filename)throws java.io.IOException 
   {
     CountLines cl = new CountLines();
      cl.setCountLines(0);

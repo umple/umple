@@ -151,25 +151,18 @@ class UmpleModel
 /*
  * Creates a new parser, loads the input, parses, then analyses 
  */
-  public void run()
-  {
+  public void run(){
     boolean failed = false;
     String input;
-    UmpleParser parser = new UmpleInternalParser(this);
-    try {
-      input = SampleFileWriter.readContent(getUmpleFile().getFile());
-      // this adds command-based linked umple files to the content of file.
-	  input = input+getUmpleFile().getLinkedFiles();
-    }
-    catch (RuntimeException e){
-      input = "use "+getUmpleFile().getFileName()+";\n";
-    }
-    ParseResult result = parser.parse("program", input);
+    cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+    UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
+    ParseResult result = parser.parse(umpleFile);
+    
     failed = !result.getWasSuccess();
     lastResult = result;
 
     if(!failed)
-      result = parser.analyze(getShouldGenerate());
+      result = analyzer.analyze(getShouldGenerate());
 
     failed |= !result.getWasSuccess();
 

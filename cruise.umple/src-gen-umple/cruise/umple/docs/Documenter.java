@@ -10,11 +10,11 @@ import java.util.*;
 
 /**
  * The tool to create the html text of the Umple user manual
- * @umplesource Documenter.ump 17
- * @umplesource Documenter_Code.ump 50
+ * @umplesource Documenter.ump 16
+ * @umplesource Documenter_Code.ump 49
  */
-// line 17 "../../../../src/Documenter.ump"
-// line 50 "../../../../src/Documenter_Code.ump"
+// line 16 "../../../../src/Documenter.ump"
+// line 49 "../../../../src/Documenter_Code.ump"
 public class Documenter
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -413,7 +413,7 @@ public class Documenter
   //------------------------
   //  @umplesourcefile(line={166},file={"Documenter_Code.ump"},javaline={415},length={13})
   @umplesourcefile(line={167},file={"Documenter_Code.ump"},javaline={416},length={12})
-  private Hashtable<String, String> createReferenceLookup() 
+  private Hashtable<String, String> createReferenceLookup () 
   {
     Hashtable<String, String> referenceLookup = new Hashtable<String, String>();
     for (Group group : getParser().getGroups())

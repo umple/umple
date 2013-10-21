@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umlet.ump 26
- * @umplesource Umlet_Code.ump 140
+ * @umplesource Umlet.ump 25
+ * @umplesource Umlet_Code.ump 139
  */
-// line 26 "../../../../src/Umlet.ump"
-// line 140 "../../../../src/Umlet_Code.ump"
+// line 25 "../../../../src/Umlet.ump"
+// line 139 "../../../../src/Umlet_Code.ump"
 public class UmletDiagram
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -5,9 +5,9 @@ package cruise.umple.stats;
 import cruise.umple.util.*;
 
 /**
- * @umplesource UmpleStats_Code.ump 14
+ * @umplesource UmpleStats_Code.ump 13
  */
-// line 14 "../../../../src/UmpleStats_Code.ump"
+// line 13 "../../../../src/UmpleStats_Code.ump"
 public class StatsMain
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

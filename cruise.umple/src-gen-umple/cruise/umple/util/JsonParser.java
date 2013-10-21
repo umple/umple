@@ -6,11 +6,11 @@ import cruise.umple.compiler.*;
 import java.util.*;
 
 /**
- * @umplesource Json.ump 12
- * @umplesource Json_Code.ump 12
+ * @umplesource Json.ump 11
+ * @umplesource Json_Code.ump 11
  */
-// line 12 "../../../../src/Json.ump"
-// line 12 "../../../../src/Json_Code.ump"
+// line 11 "../../../../src/Json.ump"
+// line 11 "../../../../src/Json_Code.ump"
 public class JsonParser extends Parser
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

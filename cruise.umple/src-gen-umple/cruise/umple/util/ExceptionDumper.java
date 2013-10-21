@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.io.*;
 
 /**
- * @umplesource Util_Code.ump 997
+ * @umplesource Util_Code.ump 996
  */
-// line 997 "../../../../src/Util_Code.ump"
+// line 996 "../../../../src/Util_Code.ump"
 public class ExceptionDumper
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

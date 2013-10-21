@@ -4,7 +4,7 @@
 package cruise.statemachine.test;
 import java.util.*;
 
-// line 86 "../../../../src/TestHarnessStateMachineJava.ump"
+// line 85 "../../../../src/TestHarnessStateMachineJava.ump"
 public class CourseK
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -14,9 +14,9 @@ import java.io.*;
  * Main program for the command line Umple compiler
  * Run java -jar umple.jar --help for details 
  * Takes an umple file as an argument, which can in turn use (include) other
- * @umplesource Main_Code.ump 19
+ * @umplesource Main_Code.ump 18
  */
-// line 19 "../../../src/Main_Code.ump"
+// line 18 "../../../src/Main_Code.ump"
 public class UmpleConsoleMain
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

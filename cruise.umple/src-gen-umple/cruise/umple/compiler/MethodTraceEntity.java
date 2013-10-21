@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Trace.ump 60
+ * @umplesource Trace.ump 59
  */
-// line 60 "../../../../src/Trace.ump"
+// line 59 "../../../../src/Trace.ump"
 public class MethodTraceEntity
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

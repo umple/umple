@@ -4,11 +4,11 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource UmpleXtextParser.ump 17
- * @umplesource UmpleXtextParser_Code.ump 14
+ * @umplesource UmpleXtextParser.ump 16
+ * @umplesource UmpleXtextParser_Code.ump 13
  */
-// line 17 "../../../../src/UmpleXtextParser.ump"
-// line 14 "../../../../src/UmpleXtextParser_Code.ump"
+// line 16 "../../../../src/UmpleXtextParser.ump"
+// line 13 "../../../../src/UmpleXtextParser_Code.ump"
 public class UmpleXtextParser implements UmpleParser
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

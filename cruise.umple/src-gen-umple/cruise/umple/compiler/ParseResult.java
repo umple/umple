@@ -8,11 +8,11 @@ import java.util.*;
 /**
  * Represents the results of parsing, such as if it was successful,
  * whether it had warnings, etc.
- * @umplesource Parser.ump 29
- * @umplesource Parser_Code.ump 1693
+ * @umplesource Parser.ump 28
+ * @umplesource Parser_Code.ump 1692
  */
-// line 29 "../../../../src/Parser.ump"
-// line 1693 "../../../../src/Parser_Code.ump"
+// line 28 "../../../../src/Parser.ump"
+// line 1692 "../../../../src/Parser_Code.ump"
 public class ParseResult
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

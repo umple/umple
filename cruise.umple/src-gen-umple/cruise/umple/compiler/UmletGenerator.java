@@ -7,11 +7,11 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource Umlet.ump 14
- * @umplesource Umlet_Code.ump 12
+ * @umplesource Umlet.ump 13
+ * @umplesource Umlet_Code.ump 11
  */
-// line 14 "../../../../src/Umlet.ump"
-// line 12 "../../../../src/Umlet_Code.ump"
+// line 13 "../../../../src/Umlet.ump"
+// line 11 "../../../../src/Umlet_Code.ump"
 public class UmletGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

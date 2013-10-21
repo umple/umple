@@ -8,9 +8,9 @@ package cruise.umple.compiler;
  * McCabe = Edges - Nodes + ExitNodes
  * McCabe = Number of logical points + 1
  * @see LLOCMetricVisitor
- * @umplesource Generator_CodeAnalysis.ump 363
+ * @umplesource Generator_CodeAnalysis.ump 362
  */
-// line 363 "../../../../src/Generator_CodeAnalysis.ump"
+// line 362 "../../../../src/Generator_CodeAnalysis.ump"
 public class McCabeMetricVisitor extends UmpleModelVisitor
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

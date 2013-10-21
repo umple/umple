@@ -6,9 +6,9 @@ import java.text.*;
 import java.util.*;
 
 /**
- * @umplesource SimpleMetrics_SM.ump 45
+ * @umplesource SimpleMetrics_SM.ump 44
  */
-// line 45 "../../../../src/SimpleMetrics_SM.ump"
+// line 44 "../../../../src/SimpleMetrics_SM.ump"
 public class StateMachineMetrics extends SimpleMetricsGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

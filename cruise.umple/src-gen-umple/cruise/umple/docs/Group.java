@@ -7,11 +7,11 @@ import java.util.*;
 /**
  * A section of the Umple user manual
  * Defined in the build/references/order.group
- * @umplesource Documenter.ump 59
- * @umplesource Documenter_Code.ump 339
+ * @umplesource Documenter.ump 58
+ * @umplesource Documenter_Code.ump 338
  */
-// line 59 "../../../../src/Documenter.ump"
-// line 339 "../../../../src/Documenter_Code.ump"
+// line 58 "../../../../src/Documenter.ump"
+// line 338 "../../../../src/Documenter_Code.ump"
 public class Group
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

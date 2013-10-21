@@ -4,9 +4,9 @@
 package cruise.umple.util;
 
 /**
- * @umplesource Util_Code.ump 836
+ * @umplesource Util_Code.ump 835
  */
-// line 836 "../../../../src/Util_Code.ump"
+// line 835 "../../../../src/Util_Code.ump"
 public class DeleteLanguage
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -57,6 +57,10 @@ class UmpleInternalParser
     {
       shouldConsumeComment = false;
     }
+    else if (t.is("useStatement") )
+    {
+    	analyzeAllTokens(t);
+    }
     else if (t.is("strictness") )
     {
       // unimplemented feature. Issue a warning that it is currently not fully implemented
@@ -326,6 +330,7 @@ class UmpleInternalParser
   }
 
   // Link associations, association variables and extends that were "defined" after their use
+  
   private void postTokenClassAnalysis()
   {
     if (verifyClassesInUse())
@@ -349,7 +354,7 @@ class UmpleInternalParser
     checkExtendsForCyclesInterface();
   }
   
-   private List <UmpleInterface> recursiveCycleCheckInterface(List <UmpleInterface> extend,UmpleInterface parent, HashMap<UmpleInterface, Boolean> map)
+  private List <UmpleInterface> recursiveCycleCheckInterface(List <UmpleInterface> extend,UmpleInterface parent, HashMap<UmpleInterface, Boolean> map)
   {
 
     List <UmpleInterface> temp = new ArrayList <UmpleInterface>();
@@ -2143,8 +2148,7 @@ class UmpleInternalParser
     else if(type == null)
     {
       type = "String";
-    } 
-
+    }
 
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
     attribute.setIsUnique(isUnique);
@@ -2333,6 +2337,10 @@ class UmpleInternalParser
       {
         if(token.is("stuff"))
         {
+          if(!"".equals(token.getValue())&&!token.getValue().contains(" ")&&!Token.isValidIdentifier(token.getValue()))
+          {
+            setFailedPosition(token.getPosition(), 150, token.getValue("name"));
+          }
           extraCode += token.getValue()+ " ";
         }
       }

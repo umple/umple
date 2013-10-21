@@ -8,11 +8,11 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 94
- * @umplesource Generator_CodeTextUml.ump 12
+ * @umplesource Generator.ump 93
+ * @umplesource Generator_CodeTextUml.ump 11
  */
-// line 94 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeTextUml.ump"
+// line 93 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeTextUml.ump"
 public class TextUmlGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

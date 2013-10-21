@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 
 /**
- * @umplesource Generator.ump 208
- * @umplesource Generator_CodeJson.ump 12
+ * @umplesource Generator.ump 207
+ * @umplesource Generator_CodeJson.ump 11
  */
-// line 208 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeJson.ump"
+// line 207 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeJson.ump"
 public class JsonGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

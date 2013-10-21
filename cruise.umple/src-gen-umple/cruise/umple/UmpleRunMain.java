@@ -11,9 +11,9 @@ import java.io.*;
 
 /**
  * Main program for a jar that can inject calls to Umple at runtime
- * @umplesource Main_Code.ump 197
+ * @umplesource Main_Code.ump 196
  */
-// line 197 "../../../src/Main_Code.ump"
+// line 196 "../../../src/Main_Code.ump"
 public class UmpleRunMain
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

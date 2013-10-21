@@ -14,6 +14,7 @@ import java.io.File;
 import org.junit.*;
 
 import cruise.umple.compiler.*;
+import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.SampleFileWriter;
 
 public class TemplateTest
@@ -202,6 +203,12 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/student.java");
     SampleFileWriter.destroy(pathToInput + "/Teacher.java");
     SampleFileWriter.destroy(pathToInput + "/Mentor.java");
+    
+    // Tear down Client
+    SampleFileWriter.destroy(pathToInput + "/Client.java");
+    SampleFileWriter.destroy(pathToInput + "/client.rb");
+    SampleFileWriter.destroy(pathToInput + "/Client.php");
+    SampleFileWriter.destroy(pathToInput + "/Client.cpp");
   }
 
   @Test
@@ -275,6 +282,7 @@ public class TemplateTest
     	  SampleFileWriter.assertFileContent(expected, actual, true); 
       else
     	  SampleFileWriter.assertFileContent(expected, actual, false);
+      
     }
     else
     {
@@ -285,22 +293,19 @@ public class TemplateTest
 
   public UmpleModel createUmpleSystem(String path, String filename)
   {
-    UmpleParser parser = UmpleParserFactory.create(umpleParserName, true);
-
-    String input = SampleFileWriter.readContent(new File(path, filename));
-    parser.setFilename(filename);
-    ParseResult result = parser.parse("program", input);
+	UmpleFile file = new UmpleFile(pathToInput,filename);
+	UmpleModel model = new UmpleModel(file);
+	model.setShouldGenerate(false);
+	RuleBasedParser rbp = new RuleBasedParser();
+	UmpleParser parser = new UmpleInternalParser(umpleParserName,model,rbp);
+	ParseResult result = rbp.parse(file);
+	model.setLastResult(result);
 
     if (!result.getWasSuccess())
     {
       Assert.fail("Syntax Failed at:" + result.getPosition());
     }
-
-    UmpleModel model = parser.getModel();
-    if (model == null)
-    {
-      Assert.fail("Null model");
-    }
+    
     model.setUmpleFile(new UmpleFile(new File(path, filename)));
 
     if (language != null)

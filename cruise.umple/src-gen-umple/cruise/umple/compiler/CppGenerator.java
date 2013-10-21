@@ -9,11 +9,11 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.cpp.*;
 
 /**
- * @umplesource Generator.ump 248
- * @umplesource Generator_CodeCpp.ump 12
+ * @umplesource Generator.ump 247
+ * @umplesource Generator_CodeCpp.ump 11
  */
-// line 248 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeCpp.ump"
+// line 247 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeCpp.ump"
 public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -1354,7 +1354,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
 
 //  @umplesourcefile(line={1087},file={"Generator_CodeCpp.ump"},javaline={1356},length={97})
   @umplesourcefile(line={1088},file={"Generator_CodeCpp.ump"},javaline={1357},length={15})
-  public void writeLttngFile(String name, String tp_code, String path) throws IOException 
+  public void writeLttngFile (String name, String tp_code, String path) throws IOException 
   {
     String lttngFileName = path + File.separator + name + "_tracepoint.tp";
 		BufferedWriter lttngBw = new BufferedWriter(new FileWriter(lttngFileName));
@@ -1372,7 +1372,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
 
 //  @umplesourcefile(line={1104},file={"Generator_CodeCpp.ump"},javaline={1374},length={80})
   @umplesourcefile(line={1105},file={"Generator_CodeCpp.ump"},javaline={1375},length={66})
-  private void writeFile(UmpleElement aClass) throws IOException 
+  private void writeFile (UmpleElement aClass) throws IOException 
   {
     ILang language = getLanguageFor(aClass);
     ILang headerlanguage = getLanguageFor(aClass);
