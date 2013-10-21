@@ -39,6 +39,11 @@ public class ConstraintExpressionsTest extends TemplateTest{
 	}
 	
 	@Test
+	public void BasicConstraint8(){ // [! (18 > age)]
+		assertUmpleTemplateFor("BasicConstraint8.ump", languagePath + "/BasicConstraint8."+ languagePath +".txt", "student");
+	}
+	
+	@Test
 	public void BasicPrecondition1(){ // [pre: arg > 5] , [pre: minAge < 8]
 		assertUmpleTemplateFor("BasicPrecondition1.ump", languagePath + "/BasicPrecondition1."+ languagePath +".txt", "Client");
 	}

@@ -1,25 +1,27 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
-class Student
+class student
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Student Attributes
+  //student Attributes
   private $age;
+  private $weight;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aAge)
+  public function __construct($aAge, $aWeight)
   {
     $this->age = $aAge;
-    if ( !((($aAge>18))))
+    $this->weight = $aWeight;
+    if ( !(($aAge<10&&($aAge<10))))
     {
       throw new RuntimeException("Please provide a valid age");
     }
@@ -32,7 +34,7 @@ class Student
   public function setAge($aAge)
   {
     $wasSet = false;
-    if (($aAge>18))
+    if ($aAge<10&&($aAge<10))
     {
     $this->age = $aAge;
     $wasSet = true;
@@ -40,9 +42,22 @@ class Student
     return $wasSet;
   }
 
+  public function setWeight($aWeight)
+  {
+    $wasSet = false;
+    $this->weight = $aWeight;
+    $wasSet = true;
+    return $wasSet;
+  }
+
   public function getAge()
   {
     return $this->age;
+  }
+
+  public function getWeight()
+  {
+    return $this->weight;
   }
 
   public function equals($compareTo)

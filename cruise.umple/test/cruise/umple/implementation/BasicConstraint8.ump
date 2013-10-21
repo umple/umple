@@ -1,0 +1,6 @@
+class student
+{
+  Integer age;
+  Integer weight;
+ [age<10&&(age<10)]
+ }

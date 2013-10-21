@@ -54,9 +54,9 @@ class UmpleInternalParser
     List<Token> subs = invariantToken.getSubTokens();
     for (Token sub : subs)
     {
-      if (sub.is(")") || sub.is("("))
+      if (sub.is("brace"))
       {
-        rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+        rawLine.add(new ConstraintVariable("SYNTAX",sub.getValue()));
       }
       if (!sub.getValue().equals("STATIC"))
       { 
@@ -111,7 +111,6 @@ class UmpleInternalParser
 	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
 	 
 	  rawLine.add(new ConstraintVariable("OPERATOR","!"));
-	  rawLine.add(new ConstraintVariable("SYNTAX","("));
 	 
 	  for (Token s :subtokensCopy){
 		   String name = s.getName();
@@ -122,7 +121,6 @@ class UmpleInternalParser
 	  
 	  rawLine.addAll(analyzeConstraint(negativeConstraintToken, aClass)); 
 	  
-	  rawLine.add(new ConstraintVariable("SYNTAX",")"));
 
 	  return rawLine; //rawLine = !(constraintBodystuff)
   }
@@ -135,7 +133,7 @@ class UmpleInternalParser
 	  Token subOp = LinkingOpExpressionSubtokens.get(0); //the linking Expr (ie) &&, ||
 	  
 	
-	  if (subOp.is("||")||subOp.is("orOp"))
+      if (subOp.is("||")||subOp.is("orOp"))
 	  {
 		  rawLine.add(new ConstraintVariable("OPERATOR","||"));
 	  } 
@@ -143,11 +141,7 @@ class UmpleInternalParser
 	  {
 		  rawLine.add(new ConstraintVariable("OPERATOR","&&"));
 	  }
-	  
-	  Token subExpr = LinkingOpExpressionSubtokens.get(LinkingOpExpressionSubtokens.size()>1?1:0); //the constraintExpr token
-	  Token dummyToken = new Token ("dummyToken", null); //need to encapsulate constrainExpr in dummy token
-	  dummyToken.addSubToken(subExpr);
-	  rawLine.addAll(analyzeConstraint(dummyToken, aClass)); 
+	  rawLine.addAll(analyzeConstraint(linkingOpExpressionToken.getSubToken(1), aClass)); 
 
 	  return rawLine;
 
@@ -472,7 +466,11 @@ class UmpleInternalParser
   	      if(param.is("constraintParameter"))
   	      {
   	        Token value = param.getSubToken(0);
-  	        if(value.is("quote"))
+  	        if(value.is("boolLit"))
+  	        {
+  	          cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",sub.getValue()));
+  	        }
+  	        else if(value.is("quote"))
   	        {
   	          cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
   	        }

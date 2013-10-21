@@ -1,10 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package cruise.attributes.test;
 
-// line 2 "../../../../src/TestHarnessConstraints.ump"
-public class Student
+
+public class student
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -13,17 +12,19 @@ public class Student
   // MEMBER VARIABLES
   //------------------------
 
-  //Student Attributes
+  //student Attributes
   private int age;
+  private int weight;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Student(int aAge)
+  public student(int aAge, int aWeight)
   {
     age = aAge;
-    if ( !(((aAge>18))))
+    weight = aWeight;
+    if ( !((aAge<10&&(aAge<10))))
     {
       throw new RuntimeException("Please provide a valid age");
     }
@@ -36,7 +37,7 @@ public class Student
   public boolean setAge(int aAge)
   {
     boolean wasSet = false;
-    if ((aAge>18))
+    if (aAge<10&&(aAge<10))
     {
     age = aAge;
     wasSet = true;
@@ -44,9 +45,22 @@ public class Student
     return wasSet;
   }
 
+  public boolean setWeight(int aWeight)
+  {
+    boolean wasSet = false;
+    weight = aWeight;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getAge()
   {
     return age;
+  }
+
+  public int getWeight()
+  {
+    return weight;
   }
 
   public void delete()
@@ -57,7 +71,8 @@ public class Student
   {
 	  String outputString = "";
     return super.toString() + "["+
-            "age" + ":" + getAge()+ "]"
+            "age" + ":" + getAge()+ "," +
+            "weight" + ":" + getWeight()+ "]"
      + outputString;
   }
 }

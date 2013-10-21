@@ -22,28 +22,28 @@ constraint- :  [[constraintBody]] |  [[constraintExpr]] [[linkingOp]]?
 negativeConstraint : ! [[constraint]] | not [[constraint]] | ~ [[constraint]]
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
-constraintBody- : OPEN_ROUND_BRACKET [[constraint]] CLOSE_ROUND_BRACKET
-linkingOp : ( [=||] | [=andOp:and|&&|&] | [=orOp:or] ) [[constraint]]
-constraintExpr- :  [[negativeConstraint]] | [[stringExpr]]|[[boolExpr]]|[[numExpr]]|[[associationExpr]]|[[numExpr2]]|[[genExpr]]| [[loneBoolean]] 
+constraintBody- : [=brace:OPEN_ROUND_BRACKET] [[constraint]] [=brace:CLOSE_ROUND_BRACKET]
+linkingOp : ( [=||] | [=andOp:and|&&|&] | [=orOp:or] ) [[constraintToken]]
+constraintExpr- :  [[negativeConstraint]] | [[stringExpr]]|[[boolExpr]]|[[numExpr]]|[[associationExpr]]|[[statemachineExpr]]|[[genExpr]]| [[loneBoolean]] 
 
 compoundExpr- : [[stringExpr]]|[[numExpr]]|[[boolExpr]]|[[genExpr]]
 
 loneBoolean : [[constraintName]]
 
 //must be a boolean
-boolExpr :  [[constraintName]] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]]  [[constraintName]]
+boolExpr :  [[constraintName]] [[equalityOp]] [=literal:true|false] | [=literal:true|false] [[equalityOp]]  [[constraintName]] | [=literal:true|false]
 
 //must be string
-stringExpr : [[constraintName]] [[equalityOp]] [[stringLit]]
+stringExpr : [[constraintName]] [[equalityOp]] [[stringLit]] | [[stringLit]] [[equalityOp]] [[constraintName]]
 stringLit- : " [**quote] " | ' [**quote] '
 
 //basically the "other" catagory, contains everything that can be equal to something else
 genExpr : [[constraintName]] [[equalityOp]] [[constraintName]]
 
 //for floats, doubles and ints
-numExpr : [[constraintName]] ( [[ordinalOp]] | [[equalityOp]] ) [[numLit]]
-numExpr2 : [[constraintName]] [[ordinalOp]] [[constraintName]]
+numExpr : [[numNam]] [[ordinalOp]] [[numNam]] | [[constraintName]] [[equalityOp]] [[numLit]] | [[numLit]] [[equalityOp]] [[constraintName]]
 numLit- : [!number:[0-9]+OPEN_ROUND_BRACKET[\\.][0-9]+CLOSE_ROUND_BRACKET?]
+numNam- : [[numLit]] | [[constraintName]]
 
 equalityOp- :  [[equalsOp]] | [[notequalsOp]] 
 
@@ -61,10 +61,14 @@ associationExpr : [[constraintName]] [[associationOps]] [[associationLit]]
 associationOps- : [=firstOp:cardinality|has] ( [[ordinalOp]] | [[equalityOp]] | [=all] )?
 associationLit : [[numLit]] [=elements]? | [[stringLit]] | [[constraintName]] | { [[associationLit]] ( , [[associationLit]] )* }
 
+statemachineExpr : [[constraintName]] [[statemachineOps]] [[statemachineLit]]
+statemachineOps- : [=isInOp:is in|isIn|state==] | [=isNotInOp:is not in|isNotIn|state!=]
+statemachineLit- : [=state]? [[constraintName]]
+
 constraintName : [=new]? [!name:[a-zA-Z_][a-zA-Z0-9_-]*] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
 constraintIndexOperator- : [ [!index:[0-9]+] ]
 constraintScopeOperator :  ( . | -> ) [[constraintName]]
 constraintParameterList : OPEN_ROUND_BRACKET [[constraintParameter]]? ( , [[constraintParameter]] )* CLOSE_ROUND_BRACKET
-constraintParameter : [[stringLit]] | [[constraintName]] | [[numLit]]
+constraintParameter : [=boolLit:true|false] | [[stringLit]] | [[constraintName]] | [[numLit]]
 
 // NOTE: Additional grammar parts deleted while testing is ongoing.
