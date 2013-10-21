@@ -11,10 +11,10 @@ import cruise.umple.parser.rules.*;
  * created. This thread then parses that file in parallel. Ordering is preserved by having the result of the parse being put within the
  * useStatement. So, in effect, a useStatement is the root to a file's tokens.
  * @umplesource GrammarParsing.ump 128
- * @umplesource GrammarParsing_Code.ump 248
+ * @umplesource GrammarParsing_Code.ump 286
  */
 // line 128 "../../../../../src/GrammarParsing.ump"
-// line 248 "../../../../../src/GrammarParsing_Code.ump"
+// line 286 "../../../../../src/GrammarParsing_Code.ump"
 public class RuleBasedParserThread extends Thread
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -119,7 +119,7 @@ public class RuleBasedParserThread extends Thread
    * Each Thread will parse a separate file. When parsing is complete it will fill the useStatement token with the tokens computed from the
    * file which was parsed. This run method performs this function as well as initializes the data package which will be used during the parsing
    */
-  @umplesourcefile(line={255},file={"GrammarParsing_Code.ump"},javaline={118},length={22})
+  @umplesourcefile(line={293},file={"GrammarParsing_Code.ump"},javaline={118},length={22})
    public void run(){
     HashMap<String,String[]> keys = data.getKeys();
     List<String> hasParsed = data.getHasParsed();

@@ -858,17 +858,15 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     parser.addGrammarFile("/umple_exceptions.grammar");
   }
 
-  @umplesourcefile(line={80},file={"UmpleInternalParser_Code.ump"},javaline={862},length={8})
+  @umplesourcefile(line={80},file={"UmpleInternalParser_Code.ump"},javaline={862},length={6})
    public ParseResult parse(String ruleName, String input){
-    SampleFileWriter.createFile("temp.ump", input);
-	UmpleFile file = new UmpleFile(new File("temp.ump").getAbsoluteFile().getParentFile().getAbsolutePath(),"temp.ump");
-    setParseResult(parser.parse(file));
+    setParseResult(parser.parse(ruleName,input));
     setRootToken(parser.getRootToken());
     SampleFileWriter.destroy("temp.ump");
     return getParseResult();
   }
 
-  @umplesourcefile(line={89},file={"UmpleInternalParser_Code.ump"},javaline={872},length={11})
+  @umplesourcefile(line={87},file={"UmpleInternalParser_Code.ump"},javaline={870},length={11})
    public ParseResult analyze(boolean shouldGenerate){
     setParseResult(parser.getParseResult());    
     setRootToken(parser.getRootToken());
@@ -888,7 +886,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * ------------------------
    * When an error occurs, set the failed position and mark the compile as NOT successful
    */
-  @umplesourcefile(line={107},file={"UmpleInternalParser_Code.ump"},javaline={885},length={5})
+  @umplesourcefile(line={105},file={"UmpleInternalParser_Code.ump"},javaline={883},length={5})
    private void setFailedPosition(Position position, int errorCode, String... messages){
     //getParseResult().setWasSuccess(false);
     getParseResult().setPosition(position);
@@ -901,7 +899,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Each token is analyzed as long as "shouldProcessAgain" is set to true during the analysis
    * analyzeToken and quits early if a problem arises
    */
-  @umplesourcefile(line={117},file={"UmpleInternalParser_Code.ump"},javaline={899},length={18})
+  @umplesourcefile(line={115},file={"UmpleInternalParser_Code.ump"},javaline={897},length={18})
    private void analyzeAllTokens(Token rootToken){
     int analysisStep = 0;
     shouldProcessAgain = true;
@@ -928,7 +926,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * "1" is for the first round of analysis and "2" for the second.  The "2" is used for chicken-and-egg initialization problems, otherwise
    * put everything under the "1"
    */
-  @umplesourcefile(line={141},file={"UmpleInternalParser_Code.ump"},javaline={925},length={18})
+  @umplesourcefile(line={139},file={"UmpleInternalParser_Code.ump"},javaline={923},length={18})
    private void analyzeAllTokens(Token rootToken, UmpleClass aClass){
     int analysisStep = 0;
     shouldProcessClassAgain = true;
@@ -952,7 +950,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Delegate function to analyze a token and send it to the write
    */
-  @umplesourcefile(line={162},file={"UmpleInternalParser_Code.ump"},javaline={952},length={7})
+  @umplesourcefile(line={160},file={"UmpleInternalParser_Code.ump"},javaline={950},length={7})
    private void analyzeToken(Token t, int analysisStep){
     analyzeCoreToken(t,analysisStep);
     analyzeClassToken(t,analysisStep);
@@ -965,7 +963,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze an individual token, delegates to the various components in Umple
    */
-  @umplesourcefile(line={172},file={"UmpleInternalParser_Code.ump"},javaline={965},length={6})
+  @umplesourcefile(line={170},file={"UmpleInternalParser_Code.ump"},javaline={963},length={6})
    private void analyzeToken(Token t, UmpleClass aClass, int analysisStep){
     analyzeCoreToken(t,aClass,analysisStep);
     analyzeClassToken(t,aClass,analysisStep);
@@ -978,7 +976,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * The analysis methods in this function can depend on prior analysis (ex: constraints/keys on attributes defined later in the code)
    * Therefore it is necessary to force a second pass of the analysis for these cases
    */
-  @umplesourcefile(line={183},file={"UmpleInternalParser_Code.ump"},javaline={977},length={24})
+  @umplesourcefile(line={181},file={"UmpleInternalParser_Code.ump"},javaline={975},length={24})
    private void analyzeDependentTokens(Token t, UmpleClass aClass, int analysisStep){
     if(analysisStep == 1 || shouldProcessClassAgain)
     {
@@ -1010,7 +1008,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Each step in the process might "fail", so we check the status before calling each delegate
    * token post token analysis method
    */
-  @umplesourcefile(line={212},file={"UmpleInternalParser_Code.ump"},javaline={1008},length={30})
+  @umplesourcefile(line={210},file={"UmpleInternalParser_Code.ump"},javaline={1006},length={30})
    private void postTokenAnalysis(){
     analyzeParseResult();
     if (getParseResult().getWasSuccess())
@@ -1046,7 +1044,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Locate all 'use *.ump' references and add those files if not already parsed
    */
-  @umplesourcefile(line={247},file={"UmpleInternalParser_Code.ump"},javaline={1046},length={3})
+  @umplesourcefile(line={245},file={"UmpleInternalParser_Code.ump"},javaline={1044},length={3})
    private void addNecessaryFiles(){
     
   }
@@ -1055,7 +1053,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Loop through all unparsed files, parse them, and add any missing references
    */
-  @umplesourcefile(line={252},file={"UmpleInternalParser_Code.ump"},javaline={1055},length={16})
+  @umplesourcefile(line={250},file={"UmpleInternalParser_Code.ump"},javaline={1053},length={16})
    private void parseAllFiles(){
     addNecessaryFiles();
     while (!unparsedUmpleFiles.isEmpty() && getParseResult().getWasSuccess())
@@ -1073,7 +1071,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={270},file={"UmpleInternalParser_Code.ump"},javaline={1077},length={81})
+  @umplesourcefile(line={268},file={"UmpleInternalParser_Code.ump"},javaline={1075},length={81})
    public void analyzeParseResult(){
     int numberOfErrors = 0;
     int numberOfWarnings = 0;
@@ -1160,7 +1158,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze core tokens to the Umple language
    */
-  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeCore.ump"},javaline={1160},length={19})
+  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeCore.ump"},javaline={1158},length={19})
    private void analyzeCoreToken(Token t, int analyzeCoreToken){
     if (analyzeCoreToken != 1)
     {
@@ -1186,7 +1184,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * There are currently no core tokens of concern in the context of an UmpleClass
    * This method is available if needed
    */
-  @umplesourcefile(line={44},file={"UmpleInternalParser_CodeCore.ump"},javaline={1185},length={3})
+  @umplesourcefile(line={44},file={"UmpleInternalParser_CodeCore.ump"},javaline={1183},length={3})
    private void analyzeCoreToken(Token t, UmpleClass aClass, int analysisStep){
     
   }
@@ -1195,7 +1193,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Perform post token analysis on core elements of the Umple language
    */
-  @umplesourcefile(line={50},file={"UmpleInternalParser_CodeCore.ump"},javaline={1195},length={50})
+  @umplesourcefile(line={50},file={"UmpleInternalParser_CodeCore.ump"},javaline={1193},length={50})
    private void postTokenCoreAnalysis(){
     boolean overrode_all = false;
 		
@@ -1251,7 +1249,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Add singular / plural forms of words to the glossary to be used by the code generator
    */
-  @umplesourcefile(line={104},file={"UmpleInternalParser_CodeCore.ump"},javaline={1251},length={11})
+  @umplesourcefile(line={104},file={"UmpleInternalParser_CodeCore.ump"},javaline={1249},length={11})
    private void analyzeGlossary(Token glossaryToken){
     for(Token wordToken : glossaryToken.getSubTokens())
     {
@@ -1264,7 +1262,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={117},file={"UmpleInternalParser_CodeCore.ump"},javaline={1268},length={20})
+  @umplesourcefile(line={117},file={"UmpleInternalParser_CodeCore.ump"},javaline={1266},length={20})
    private void analyzeGenerate(Token genToken){
     if(genToken.is("generate_path"))
   	{
@@ -1293,7 +1291,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param t The current token that will be analyzed to determine how to further make use of it (is it a comment, class, etc?)
    * @param analysisStep Used to determine whether or not things should be analyzed more than once (multi-pass).
    */
-  @umplesourcefile(line={44},file={"UmpleInternalParser_CodeClass.ump"},javaline={1290},length={95})
+  @umplesourcefile(line={44},file={"UmpleInternalParser_CodeClass.ump"},javaline={1288},length={95})
    private void analyzeClassToken(Token t, int analysisStep){
     if (analysisStep != 2)
     {
@@ -1396,7 +1394,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * 
    * @param t the comment token that is used to see the position of the comment
    */
-  @umplesourcefile(line={147},file={"UmpleInternalParser_CodeClass.ump"},javaline={1394},length={36})
+  @umplesourcefile(line={147},file={"UmpleInternalParser_CodeClass.ump"},javaline={1392},length={36})
    private boolean addToLastAttributeOrAssociation(Token t){
     if (t.getPosition() == null) {return false;}
     if (lastattr != null)
@@ -1444,7 +1442,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * it.
    * @param analysisStep Used to determine whether or not things should be analyzed more than once (multi-pass).
    */
-  @umplesourcefile(line={194},file={"UmpleInternalParser_CodeClass.ump"},javaline={1438},length={83})
+  @umplesourcefile(line={194},file={"UmpleInternalParser_CodeClass.ump"},javaline={1436},length={83})
    private void analyzeClassToken(Token token, UmpleClass aClass, int analysisStep){
     if (analysisStep != 1)
     {
@@ -1539,7 +1537,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * 
    * @param token The current token which has been flagged to be a comment to analyze, containing its value.
    */
-  @umplesourcefile(line={287},file={"UmpleInternalParser_CodeClass.ump"},javaline={1533},length={14})
+  @umplesourcefile(line={287},file={"UmpleInternalParser_CodeClass.ump"},javaline={1531},length={14})
    private void analyzeComment(Token token){
     String theValue = "";
     // Special comment directive to force umpleoutput directives to be added
@@ -1566,7 +1564,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * 
    * @param token The current token which has been flagged to be a comment to analyze, containing its value.
    */
-  @umplesourcefile(line={312},file={"UmpleInternalParser_CodeClass.ump"},javaline={1559},length={18})
+  @umplesourcefile(line={312},file={"UmpleInternalParser_CodeClass.ump"},javaline={1557},length={18})
    private void analyzeMultilineComment(Token token){
     String inlineComments[] = token.getValue().split("\n");
 
@@ -1590,7 +1588,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Link associations, association variables and extends that were "defined" after their use
    */
-  @umplesourcefile(line={334},file={"UmpleInternalParser_CodeClass.ump"},javaline={1590},length={15})
+  @umplesourcefile(line={334},file={"UmpleInternalParser_CodeClass.ump"},javaline={1588},length={15})
    private void postTokenClassAnalysis(){
     if (verifyClassesInUse())
     {
@@ -1607,13 +1605,13 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={351},file={"UmpleInternalParser_CodeClass.ump"},javaline={1611},length={4})
+  @umplesourcefile(line={351},file={"UmpleInternalParser_CodeClass.ump"},javaline={1609},length={4})
    private void postTokenInterfaceAnalysis(){
     addUnlinkedInterfaceExtends();
     checkExtendsForCyclesInterface();
   }
 
-  @umplesourcefile(line={386},file={"UmpleInternalParser_CodeClass.ump"},javaline={1617},length={16})
+  @umplesourcefile(line={386},file={"UmpleInternalParser_CodeClass.ump"},javaline={1615},length={16})
    private void checkExtendsForCyclesInterface(){
     for(UmpleInterface I : model.getUmpleInterfaces())
     {
@@ -1631,7 +1629,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={404},file={"UmpleInternalParser_CodeClass.ump"},javaline={1635},length={17})
+  @umplesourcefile(line={404},file={"UmpleInternalParser_CodeClass.ump"},javaline={1633},length={17})
    private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map){
     UmpleClass temp = null;
 
@@ -1650,7 +1648,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return temp;
   }
 
-  @umplesourcefile(line={423},file={"UmpleInternalParser_CodeClass.ump"},javaline={1654},length={17})
+  @umplesourcefile(line={423},file={"UmpleInternalParser_CodeClass.ump"},javaline={1652},length={17})
    private void checkExtendsForCycles(){
     for(UmpleClass C : model.getUmpleClasses())
     {
@@ -1673,7 +1671,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Check for classes that should be abstract
    */
-  @umplesourcefile(line={443},file={"UmpleInternalParser_CodeClass.ump"},javaline={1673},length={20})
+  @umplesourcefile(line={443},file={"UmpleInternalParser_CodeClass.ump"},javaline={1671},length={20})
    private void checkAbstractClass(){
     for(UmpleClass uClass : model.getUmpleClasses()) 
     { 
@@ -1702,7 +1700,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * aClass nor its ancestors implemented a method, then
    * aClass must be abstract.
    */
-  @umplesourcefile(line={470},file={"UmpleInternalParser_CodeClass.ump"},javaline={1699},length={23})
+  @umplesourcefile(line={470},file={"UmpleInternalParser_CodeClass.ump"},javaline={1697},length={23})
    private Method[] checkAbstractClassRecursive(UmpleClass aClass, HashMap<String, Integer> aChildren){
     if(aClass.getExtendsToken() == null || aClass.getExtendsClass() == null || aChildren.get(aClass.getName()) != null) 
     {
@@ -1731,7 +1729,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Check for the existence of a a parent class
    */
-  @umplesourcefile(line={495},file={"UmpleInternalParser_CodeClass.ump"},javaline={1731},length={27})
+  @umplesourcefile(line={495},file={"UmpleInternalParser_CodeClass.ump"},javaline={1729},length={27})
    private void checkExtendsClass(){
     for(UmpleClass child : model.getUmpleClasses()) {
       if(child.getExtendsToken() != null) {
@@ -1767,7 +1765,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param associationToken The token indicated to be an association or association Class where sub tokens will be analyzed from to further
    * analyze the individual associations.
    */
-  @umplesourcefile(line={529},file={"UmpleInternalParser_CodeClass.ump"},javaline={1764},length={23})
+  @umplesourcefile(line={529},file={"UmpleInternalParser_CodeClass.ump"},javaline={1762},length={23})
    private void analyzeAllAssociations(Token associationToken){
     String name = associationToken.getValue("name");
 
@@ -1802,7 +1800,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * 
    * @return An Umple class populated with data based on the analysis of the class token.
    */
-  @umplesourcefile(line={563},file={"UmpleInternalParser_CodeClass.ump"},javaline={1796},length={91})
+  @umplesourcefile(line={563},file={"UmpleInternalParser_CodeClass.ump"},javaline={1794},length={91})
    private UmpleClass analyzeClass(Token classToken){
     String className = classToken.getValue("name").split(" ")[classToken.getValue("name").split(" ").length-1];
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
@@ -1899,7 +1897,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Returns the number of umple class in extends list (extList)
    */
-  @umplesourcefile(line={688},file={"UmpleInternalParser_CodeClass.ump"},javaline={1899},length={9})
+  @umplesourcefile(line={688},file={"UmpleInternalParser_CodeClass.ump"},javaline={1897},length={9})
    private int numberOfExtendsClass(List<Token> extList){
     int counter = 0;
 		for(Token t : extList)
@@ -1914,7 +1912,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * This method checks if an umple element with name "name" is an umple class
    */
-  @umplesourcefile(line={700},file={"UmpleInternalParser_CodeClass.ump"},javaline={1914},length={12})
+  @umplesourcefile(line={700},file={"UmpleInternalParser_CodeClass.ump"},javaline={1912},length={12})
    private boolean isAnUmpleClass(String name){
     for(UmpleClass aClass : model.getUmpleClasses())
 		{
@@ -1928,7 +1926,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 		return false;
   }
 
-  @umplesourcefile(line={713},file={"UmpleInternalParser_CodeClass.ump"},javaline={1932},length={9})
+  @umplesourcefile(line={713},file={"UmpleInternalParser_CodeClass.ump"},javaline={1930},length={9})
    private UmpleClass analyzeExternal(Token externalToken){
     // Check to see if there is an existing class
     UmpleClass existingClass = model.getUmpleClass(externalToken.getValue("name"));
@@ -1939,14 +1937,14 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return aClass;
   }
 
-  @umplesourcefile(line={724},file={"UmpleInternalParser_CodeClass.ump"},javaline={1943},length={5})
+  @umplesourcefile(line={724},file={"UmpleInternalParser_CodeClass.ump"},javaline={1941},length={5})
    private UmpleInterface analyzeExternalInterface(Token externalToken){
     UmpleInterface anInterface = analyzeInterface(externalToken);
     anInterface.setModifier("external");
     return anInterface;
   }
 
-  @umplesourcefile(line={731},file={"UmpleInternalParser_CodeClass.ump"},javaline={1950},length={23})
+  @umplesourcefile(line={731},file={"UmpleInternalParser_CodeClass.ump"},javaline={1948},length={23})
    private UmpleInterface analyzeInterface(Token t){
     String interfaceName = t.getValue("name");   
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
@@ -1971,7 +1969,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return newInterface;
   }
 
-  @umplesourcefile(line={756},file={"UmpleInternalParser_CodeClass.ump"},javaline={1975},length={26})
+  @umplesourcefile(line={756},file={"UmpleInternalParser_CodeClass.ump"},javaline={1973},length={26})
    private void analyzeInterface(Token interfaceToken, UmpleInterface aInterface){
     for(Token token : interfaceToken.getSubTokens())
     {
@@ -1999,7 +1997,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={784},file={"UmpleInternalParser_CodeClass.ump"},javaline={2003},length={46})
+  @umplesourcefile(line={784},file={"UmpleInternalParser_CodeClass.ump"},javaline={2001},length={46})
    private void addUnlinkedInterfaceExtends(){
     for (UmpleClassifier c : unlinkedInterfaceExtends.keySet())
     {
@@ -2047,7 +2045,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={832},file={"UmpleInternalParser_CodeClass.ump"},javaline={2051},length={23})
+  @umplesourcefile(line={832},file={"UmpleInternalParser_CodeClass.ump"},javaline={2049},length={23})
    private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface){
     for(Token childToken : interfaceMemberToken.getSubTokens())
     {
@@ -2072,7 +2070,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={857},file={"UmpleInternalParser_CodeClass.ump"},javaline={2076},length={19})
+  @umplesourcefile(line={857},file={"UmpleInternalParser_CodeClass.ump"},javaline={2074},length={19})
    private void analyzeAssociationClass(Token classToken){
     //test if Association class has at least 1 association or more than one singleEndAssociation
     List<Token> subtokens = classToken.getSubTokens();
@@ -2093,7 +2091,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     analyzeAllAssociations(classToken);
   }
 
-  @umplesourcefile(line={878},file={"UmpleInternalParser_CodeClass.ump"},javaline={2097},length={17})
+  @umplesourcefile(line={878},file={"UmpleInternalParser_CodeClass.ump"},javaline={2095},length={17})
    private boolean verifyClassesInUse(){
     for(Map.Entry<Position, String> e : positionToClassNameReference.entrySet())
     {
@@ -2112,7 +2110,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return true;
   }
 
-  @umplesourcefile(line={897},file={"UmpleInternalParser_CodeClass.ump"},javaline={2116},length={13})
+  @umplesourcefile(line={897},file={"UmpleInternalParser_CodeClass.ump"},javaline={2114},length={13})
    private boolean associationIsBetweenClassAndInterface(Association a){
     AssociationEnd myEnd = a.getEnd(0);
        AssociationEnd yourEnd = a.getEnd(1);
@@ -2127,7 +2125,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
        return false;
   }
 
-  @umplesourcefile(line={914},file={"UmpleInternalParser_CodeClass.ump"},javaline={2131},length={38})
+  @umplesourcefile(line={914},file={"UmpleInternalParser_CodeClass.ump"},javaline={2129},length={38})
    private void addUnlinkedAssociationVariables(){
     for (AssociationVariable av : unlinkedAssociationVariables)
     {
@@ -2167,12 +2165,12 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={954},file={"UmpleInternalParser_CodeClass.ump"},javaline={2171},length={3})
+  @umplesourcefile(line={954},file={"UmpleInternalParser_CodeClass.ump"},javaline={2169},length={3})
    private boolean isUmpleClass(String elementName){
     return (model.getUmpleInterface(elementName) != null) ? false: true;
   }
 
-  @umplesourcefile(line={959},file={"UmpleInternalParser_CodeClass.ump"},javaline={2176},length={50})
+  @umplesourcefile(line={959},file={"UmpleInternalParser_CodeClass.ump"},javaline={2174},length={50})
    private void addUnlinkedExtends(){
     for (UmpleClassifier c : unlinkedExtends.keySet())
     {
@@ -2224,7 +2222,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={1011},file={"UmpleInternalParser_CodeClass.ump"},javaline={2228},length={18})
+  @umplesourcefile(line={1011},file={"UmpleInternalParser_CodeClass.ump"},javaline={2226},length={18})
    private void addImplementedMethodsFromInterface(UmpleInterface parentInterface, UmpleClass uClass){
     //GET AND SET METHODS CHECK?
     if (parentInterface.hasMethods())
@@ -2253,7 +2251,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * 
    * @return True if the method is a constructor, getter/setter, false otherwise.
    */
-  @umplesourcefile(line={1039},file={"UmpleInternalParser_CodeClass.ump"},javaline={2248},length={33})
+  @umplesourcefile(line={1039},file={"UmpleInternalParser_CodeClass.ump"},javaline={2246},length={33})
    private boolean verifyIfMethodIsConstructorOrGetSet(UmpleClass uClass, Method aMethod){
     String methodName = aMethod.getName();
 
@@ -2288,7 +2286,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return true;
   }
 
-  @umplesourcefile(line={1074},file={"UmpleInternalParser_CodeClass.ump"},javaline={2292},length={110})
+  @umplesourcefile(line={1074},file={"UmpleInternalParser_CodeClass.ump"},javaline={2290},length={110})
    private void checkDuplicateAssociationNames(){
     for(UmpleClass C : model.getUmpleClasses())
     {
@@ -2400,7 +2398,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={1186},file={"UmpleInternalParser_CodeClass.ump"},javaline={2404},length={36})
+  @umplesourcefile(line={1186},file={"UmpleInternalParser_CodeClass.ump"},javaline={2402},length={36})
    private void checkSingletonAssociations(){
     for (Association association : model.getAssociations()) 
     {  
@@ -2438,7 +2436,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={1224},file={"UmpleInternalParser_CodeClass.ump"},javaline={2442},length={59})
+  @umplesourcefile(line={1224},file={"UmpleInternalParser_CodeClass.ump"},javaline={2440},length={59})
    private void addUnlinkedAssociations(){
     for (Association association : unlinkedAssociations)
     {         
@@ -2499,7 +2497,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={1285},file={"UmpleInternalParser_CodeClass.ump"},javaline={2503},length={94})
+  @umplesourcefile(line={1285},file={"UmpleInternalParser_CodeClass.ump"},javaline={2501},length={94})
    private void checkSortedAssociations(){
     for (Association association : model.getAssociations()) 
     {
@@ -2595,7 +2593,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={1381},file={"UmpleInternalParser_CodeClass.ump"},javaline={2599},length={10})
+  @umplesourcefile(line={1381},file={"UmpleInternalParser_CodeClass.ump"},javaline={2597},length={10})
    private void checkClassInterfaceAssocations(){
     for (Association a : model.getAssociations()){
       if (associationIsBetweenClassAndInterface(a)){
@@ -2615,7 +2613,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param method The token flagged to be the method.
    * @param uElement The Umple element for which the method will be added.
    */
-  @umplesourcefile(line={1399},file={"UmpleInternalParser_CodeClass.ump"},javaline={2611},length={119})
+  @umplesourcefile(line={1399},file={"UmpleInternalParser_CodeClass.ump"},javaline={2609},length={119})
    private void analyzeMethod(Token method, UmpleElement uElement){
     String modifier = "";
     Method aMethod = new Method("","","",false);
@@ -2744,7 +2742,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param token The token flagged to be a method header.
    * @param aMethod The method to be populated from the analysis of the token.
    */
-  @umplesourcefile(line={1527},file={"UmpleInternalParser_CodeClass.ump"},javaline={2740},length={38})
+  @umplesourcefile(line={1527},file={"UmpleInternalParser_CodeClass.ump"},javaline={2738},length={38})
    private void analyzeMethodDeclarator(Token token, UmpleElement uElement, Method aMethod){
     // Go through all sub tokens of the method token to obtain data such as the methods name, parameters etc and add them to the method.
     for(Token methodToken : token.getSubTokens())
@@ -2791,7 +2789,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param constantToken The token flagged to be a constant.
    * @param uElement The Umple element for which a new constant will be added (populated from analysis of the token).
    */
-  @umplesourcefile(line={1573},file={"UmpleInternalParser_CodeClass.ump"},javaline={2788},length={37})
+  @umplesourcefile(line={1573},file={"UmpleInternalParser_CodeClass.ump"},javaline={2786},length={37})
    private void analyzeConstant(Token constantToken, UmpleElement uElement){
     Constant aConstant = new Constant("","","","");
     String modifier = "";
@@ -2830,7 +2828,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={1612},file={"UmpleInternalParser_CodeClass.ump"},javaline={2834},length={8})
+  @umplesourcefile(line={1612},file={"UmpleInternalParser_CodeClass.ump"},javaline={2832},length={8})
    private void analyzeInjectionCode(Token injectToken, UmpleClass aClass){
     String type = injectToken.is("beforeCode") ? "before" : "after";    
     CodeBlock cb = new CodeBlock();
@@ -2840,7 +2838,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     aClass.addCodeInjection(injection);
   }
 
-  @umplesourcefile(line={1622},file={"UmpleInternalParser_CodeClass.ump"},javaline={2844},length={30})
+  @umplesourcefile(line={1622},file={"UmpleInternalParser_CodeClass.ump"},javaline={2842},length={30})
    private void makeCodeInject(Token injectToken, CodeInjection injection, CodeBlock cb, UmpleClass aClass){
     List<String> langs = new ArrayList<String>();
     for(Token sub: injectToken.getSubTokens())
@@ -2872,7 +2870,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     injection.setPosition(injectToken.getPosition());
   }
 
-  @umplesourcefile(line={1655},file={"UmpleInternalParser_CodeClass.ump"},javaline={2876},length={89})
+  @umplesourcefile(line={1655},file={"UmpleInternalParser_CodeClass.ump"},javaline={2874},length={89})
    private void analyzeKey(Token keyToken, UmpleClass aClass){
     if (aClass.getKey().isProvided())
     {
@@ -2963,7 +2961,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={1746},file={"UmpleInternalParser_CodeClass.ump"},javaline={2967},length={22})
+  @umplesourcefile(line={1746},file={"UmpleInternalParser_CodeClass.ump"},javaline={2965},length={22})
    private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleClass aClass){
     String myName = symmetricReflexiveAssociationToken.getValue("roleName");
     String myType = aClass.getName();
@@ -2987,7 +2985,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     aClass.addAssociation(assoc);
   }
 
-  @umplesourcefile(line={1770},file={"UmpleInternalParser_CodeClass.ump"},javaline={2991},length={12})
+  @umplesourcefile(line={1770},file={"UmpleInternalParser_CodeClass.ump"},javaline={2989},length={12})
    private Association createAssociation(String navigation, AssociationEnd firstEnd, AssociationEnd secondEnd){
     Association association;
     if(navigation != null){
@@ -3001,7 +2999,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return association;
   }
 
-  @umplesourcefile(line={1784},file={"UmpleInternalParser_CodeClass.ump"},javaline={3005},length={98})
+  @umplesourcefile(line={1784},file={"UmpleInternalParser_CodeClass.ump"},javaline={3003},length={98})
    private Association analyzeAssociation(Token associationToken, String defaultMyType){
     Token parentToken = associationToken.getParentToken();
     Token gParentToken = parentToken.getParentToken();
@@ -3109,7 +3107,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * The resulting object will have to be completed with setReferenceToClassName()depending on the type of association.
    * @return an AssociationEnd object or null if an error occured
    */
-  @umplesourcefile(line={1891},file={"UmpleInternalParser_CodeClass.ump"},javaline={3105},length={47})
+  @umplesourcefile(line={1891},file={"UmpleInternalParser_CodeClass.ump"},javaline={3103},length={47})
    private AssociationEnd createPreliminaryAssociationEnd(Token associationEndToken, String defaultType){
     if(associationEndToken != null){
       String name, type, modifier, roleName, bound, lowerBound, upperBound, priority;
@@ -3158,7 +3156,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={1939},file={"UmpleInternalParser_CodeClass.ump"},javaline={3162},length={17})
+  @umplesourcefile(line={1939},file={"UmpleInternalParser_CodeClass.ump"},javaline={3160},length={17})
    private void updateAssociationEnds(AssociationEnd firstEnd, AssociationEnd secondEnd){
     if (firstEnd.getRoleName().length() == 0)
     { 
@@ -3184,7 +3182,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param inlineAssociationToken The token flagged to be an inline association.
    * @param aClass The Umple class for which an association instance will be added (populated from analysis of the token).
    */
-  @umplesourcefile(line={1965},file={"UmpleInternalParser_CodeClass.ump"},javaline={3181},length={56})
+  @umplesourcefile(line={1965},file={"UmpleInternalParser_CodeClass.ump"},javaline={3179},length={56})
    private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleClass aClass){
     Association association = analyzeAssociation(inlineAssociationToken,aClass.getName());
 
@@ -3249,7 +3247,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param attributeToken The token flagged to be an attribute.
    * @param aClass The Umple class for which an attribute instance will be added (populated from analysis of the token).
    */
-  @umplesourcefile(line={2029},file={"UmpleInternalParser_CodeClass.ump"},javaline={3246},length={156})
+  @umplesourcefile(line={2029},file={"UmpleInternalParser_CodeClass.ump"},javaline={3244},length={156})
    private void analyzeAttribute(Token attributeToken, UmpleClass aClass){
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
@@ -3407,7 +3405,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     lastassoc = null;
   }
 
-  @umplesourcefile(line={2189},file={"UmpleInternalParser_CodeClass.ump"},javaline={3411},length={51})
+  @umplesourcefile(line={2189},file={"UmpleInternalParser_CodeClass.ump"},javaline={3409},length={51})
    private String inferType(String value, String type){
     String inferredType;
     if(value.matches("-?[0-9]+\\.[0-9]+"))
@@ -3460,7 +3458,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return inferredType;
   }
 
-  @umplesourcefile(line={2242},file={"UmpleInternalParser_CodeClass.ump"},javaline={3464},length={29})
+  @umplesourcefile(line={2242},file={"UmpleInternalParser_CodeClass.ump"},javaline={3462},length={29})
    private boolean compareTypeToValue(String type, String value){
     //cannot infer null
     if(value.equals("null"))
@@ -3491,12 +3489,12 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={2273},file={"UmpleInternalParser_CodeClass.ump"},javaline={3495},length={3})
+  @umplesourcefile(line={2273},file={"UmpleInternalParser_CodeClass.ump"},javaline={3493},length={3})
    private Boolean isLazyRedundant(Boolean isLazy, String value){
     return (isLazy && value != null);
   }
 
-  @umplesourcefile(line={2278},file={"UmpleInternalParser_CodeClass.ump"},javaline={3500},length={89})
+  @umplesourcefile(line={2278},file={"UmpleInternalParser_CodeClass.ump"},javaline={3498},length={89})
    private void analyzeException(Token exception, UmpleClass aClass){
     Token sub = exception.getSubToken(0);
     if(sub.is("misnamedAttribute"))
@@ -3587,7 +3585,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={2369},file={"UmpleInternalParser_CodeClass.ump"},javaline={3591},length={25})
+  @umplesourcefile(line={2369},file={"UmpleInternalParser_CodeClass.ump"},javaline={3589},length={25})
    private void analyzeExtraCode(Token token, UmpleClass aClass){
     //This is a catch all and will be used less often as the grammar gets updated.
     if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
@@ -3614,7 +3612,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3618},length={10})
+  @umplesourcefile(line={20},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3616},length={10})
    private void analyzePrecondition(Token preconditionToken, UmpleClass aClass, Method method){
     List<ConstraintVariable> cvs = analyzeConstraint(preconditionToken, aClass); //adds all identifiers to constraints
     Precondition precondition = new Precondition(method);
@@ -3633,7 +3631,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * @param invariantToken The token containting the constraintsub.
    * @param aClass The Umple class for which an attribute is being constrained.
    */
-  @umplesourcefile(line={38},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3630},length={10})
+  @umplesourcefile(line={38},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3628},length={10})
    private void analyzeInvariant(Token invariantToken, UmpleClass aClass){
     List<ConstraintVariable> cvs = analyzeConstraint(invariantToken, aClass); //adds all identifiers to constraints
     Constraint constraint = new Constraint();
@@ -3649,15 +3647,15 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * This recursive function parses the expression. It's very broken down to allow new features to be added easily.
    */
-  @umplesourcefile(line={51},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3649},length={53})
+  @umplesourcefile(line={51},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3647},length={53})
    private List<ConstraintVariable> analyzeConstraint(Token invariantToken, UmpleClass aClass){
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
     List<Token> subs = invariantToken.getSubTokens();
     for (Token sub : subs)
     {
-      if (sub.is(")") || sub.is("("))
+      if (sub.is("brace"))
       {
-        rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+        rawLine.add(new ConstraintVariable("SYNTAX",sub.getValue()));
       }
       if (!sub.getValue().equals("STATIC"))
       { 
@@ -3704,7 +3702,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   return rawLine;
   }
 
-  @umplesourcefile(line={106},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3708},length={23})
+  @umplesourcefile(line={106},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3706},length={21})
    private List<ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClass aClass){
     List<Token> negativeConstraintSubtokens = negativeConstraintToken.getSubTokens();
 	  List<Token> subtokensCopy = new ArrayList<Token> ();
@@ -3713,7 +3711,6 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
 	 
 	  rawLine.add(new ConstraintVariable("OPERATOR","!"));
-	  rawLine.add(new ConstraintVariable("SYNTAX","("));
 	 
 	  for (Token s :subtokensCopy){
 		   String name = s.getName();
@@ -3724,12 +3721,11 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 	  
 	  rawLine.addAll(analyzeConstraint(negativeConstraintToken, aClass)); 
 	  
-	  rawLine.add(new ConstraintVariable("SYNTAX",")"));
 
 	  return rawLine; //rawLine = !(constraintBodystuff)
   }
 
-  @umplesourcefile(line={130},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3733},length={23})
+  @umplesourcefile(line={128},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3729},length={19})
    private List<ConstraintVariable> analyzeLinkingOpExpression(Token linkingOpExpressionToken, UmpleClass aClass){
     List<Token> LinkingOpExpressionSubtokens = linkingOpExpressionToken.getSubTokens();
 	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -3737,7 +3733,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 	  Token subOp = LinkingOpExpressionSubtokens.get(0); //the linking Expr (ie) &&, ||
 	  
 	
-	  if (subOp.is("||")||subOp.is("orOp"))
+      if (subOp.is("||")||subOp.is("orOp"))
 	  {
 		  rawLine.add(new ConstraintVariable("OPERATOR","||"));
 	  } 
@@ -3745,16 +3741,12 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 	  {
 		  rawLine.add(new ConstraintVariable("OPERATOR","&&"));
 	  }
-	  
-	  Token subExpr = LinkingOpExpressionSubtokens.get(LinkingOpExpressionSubtokens.size()>1?1:0); //the constraintExpr token
-	  Token dummyToken = new Token ("dummyToken", null); //need to encapsulate constrainExpr in dummy token
-	  dummyToken.addSubToken(subExpr);
-	  rawLine.addAll(analyzeConstraint(dummyToken, aClass)); 
+	  rawLine.addAll(analyzeConstraint(linkingOpExpressionToken.getSubToken(1), aClass)); 
 
 	  return rawLine;
   }
 
-  @umplesourcefile(line={155},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3758},length={29})
+  @umplesourcefile(line={149},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3750},length={29})
    private List<ConstraintVariable> analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClass aClass){
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
 	List<Token> generalExpressionSubtokens = generalExpressionToken.getSubTokens();
@@ -3785,7 +3777,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return rawLine;
   }
 
-  @umplesourcefile(line={186},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3789},length={33})
+  @umplesourcefile(line={180},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3781},length={33})
    private List<ConstraintVariable> analyzeBooleanConstraintExpression(Token booleanExpressionToken, UmpleClass aClass){
     List<Token> BooleanExpressionSubtokens = booleanExpressionToken.getSubTokens();
   	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -3827,7 +3819,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * !cardinal && all : for each number or name have a contains() &&, not currently implemented for a list of lists
    * !cardinal && !all : for each number or name have a contains() ||, not currently implemented for a list of lists
    */
-  @umplesourcefile(line={227},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3824},length={62})
+  @umplesourcefile(line={221},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3816},length={62})
    private List<ConstraintVariable> analyzeAssociationLiteralConstraintExpression(Token literalToken, UmpleClass aClass, boolean cardinal, boolean all, boolean firstName, List<ConstraintVariable> subject, ConstraintVariable operator){
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
     for(Token sub:literalToken.getSubTokens())
@@ -3891,7 +3883,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return rawLine;
   }
 
-  @umplesourcefile(line={291},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3895},length={81})
+  @umplesourcefile(line={285},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3887},length={81})
    private List<ConstraintVariable> analyzeAssociationConstraintExpression(Token associationExpressionToken, UmpleClass aClass){
     List<Token> associationExpressionSubtokens = associationExpressionToken.getSubTokens();
   	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -3974,7 +3966,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return rawLine;
   }
 
-  @umplesourcefile(line={374},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3978},length={33})
+  @umplesourcefile(line={368},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={3970},length={33})
    private List<ConstraintVariable> analyzeStringConstraintExpression(Token stringExpressionToken, UmpleClass aClass){
     List<Token> stringExpressionSubtokens = stringExpressionToken.getSubTokens();
   	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -4009,7 +4001,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return rawLine;
   }
 
-  @umplesourcefile(line={409},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4013},length={47})
+  @umplesourcefile(line={403},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4005},length={47})
    private List<ConstraintVariable> analyzeNumberConstraintExpression(Token numberExpressionToken, UmpleClass aClass){
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
 	List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
@@ -4058,7 +4050,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return rawLine;
   }
 
-  @umplesourcefile(line={459},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4062},length={154})
+  @umplesourcefile(line={453},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4054},length={158})
    private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean mustBeInClass, String... type){
     Token grandparentToken = nameToken.getParentToken().getParentToken();
   	ConstraintVariable cv = new ConstraintVariable("NAME","");
@@ -4074,7 +4066,11 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   	      if(param.is("constraintParameter"))
   	      {
   	        Token value = param.getSubToken(0);
-  	        if(value.is("quote"))
+  	        if(value.is("boolLit"))
+  	        {
+  	          cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",sub.getValue()));
+  	        }
+  	        else if(value.is("quote"))
   	        {
   	          cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
   	        }
@@ -4214,12 +4210,12 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return cv;
   }
 
-  @umplesourcefile(line={614},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4218},length={3})
+  @umplesourcefile(line={612},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4214},length={3})
    private ConstraintVariable analyzeConstraintNumber(Token numberToken){
     return new ConstraintVariable("OPERATOR",numberToken.getValue());
   }
 
-  @umplesourcefile(line={618},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4223},length={16})
+  @umplesourcefile(line={616},file={"UmpleInternalParser_CodeConstraints.ump"},javaline={4219},length={16})
    private void analyzeConstraintIndex(Token indexToken, ConstraintVariable cv){
     Token sub = indexToken;
   	try {
@@ -4241,7 +4237,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Check if "extra code" is likely a malformed state machine
    */
-  @umplesourcefile(line={28},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4241},length={7})
+  @umplesourcefile(line={28},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4237},length={7})
    private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     String code = extraCodeToken.getValue();
     String[] parts = code.split("\\{");
@@ -4254,7 +4250,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze state machine related tokens
    */
-  @umplesourcefile(line={37},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4254},length={11})
+  @umplesourcefile(line={37},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4250},length={11})
    private void analyzeStateMachineToken(Token token, int analysisStep){
     if (analysisStep != 1)
     {
@@ -4267,7 +4263,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={50},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4271},length={9})
+  @umplesourcefile(line={50},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4267},length={9})
    private String getThreadName(Token activeToken){
     Token name = activeToken.getSubToken("name");
     
@@ -4278,14 +4274,14 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return name.getValue();
   }
 
-  @umplesourcefile(line={61},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4282},length={5})
+  @umplesourcefile(line={61},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4278},length={5})
    private String getActiveCode(Token activeToken){
     Token code = activeToken.getSubToken("code");
     
     return code.getValue();
   }
 
-  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4289},length={11})
+  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4285},length={11})
    private void analyzeActiveObject(Token activeToken, UmpleClass aClass){
     analyzeStateMachine(generateActiveStateMachineToken(activeToken), aClass);
     if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), aClass))
@@ -4298,7 +4294,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={81},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4302},length={9})
+  @umplesourcefile(line={81},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4298},length={9})
    private Token generateActiveStateMachineToken(Token stateMachineToken){
     Token token = new Token("name", "stateMachine" + numberOfActiveObjects);
     
@@ -4309,7 +4305,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return token;
   }
 
-  @umplesourcefile(line={92},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4313},length={10})
+  @umplesourcefile(line={92},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4309},length={10})
    private Token generateActiveTopLevelStateToken(Token stateMachineToken){
     Token token = new Token("state", "START_TOKEN");
     
@@ -4321,7 +4317,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return token;
   }
 
-  @umplesourcefile(line={104},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4325},length={10})
+  @umplesourcefile(line={104},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4321},length={10})
    private Token generateActiveStateToken(Token stateMachineToken){
     Token token = new Token("state", "START_TOKEN");
     
@@ -4333,7 +4329,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return token;
   }
 
-  @umplesourcefile(line={116},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4337},length={10})
+  @umplesourcefile(line={116},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4333},length={10})
    private Token generateActivityToken(Token stateMachineToken){
     Token token = new Token("activity", "START_TOKEN");
     
@@ -4349,7 +4345,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze state machine related tokens within the context of an Umple class
    */
-  @umplesourcefile(line={130},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4349},length={31})
+  @umplesourcefile(line={130},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4345},length={31})
    private void analyzeStateMachineToken(Token token, UmpleClass aClass, int analysisStep){
     if (analysisStep != 1)
     {
@@ -4382,7 +4378,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={163},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4386},length={20})
+  @umplesourcefile(line={163},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4382},length={20})
    private int numberOfActiveObjectsInClass(Token token, UmpleClass aClass){
     int activeObjects = 0;
     
@@ -4404,7 +4400,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return activeObjects;
   }
 
-  @umplesourcefile(line={185},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4408},length={14})
+  @umplesourcefile(line={185},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4404},length={14})
    private void postTokenStateMachineAnalysis(){
     // Generate error message for issue 354. Check for conflicting names between
     // state machines and attributes as well as state machines and association names
@@ -4425,7 +4421,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Check for name conflicts between state machines and attributes/association names
    * Author: Blake Quebec Desloges
    */
-  @umplesourcefile(line={205},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4424},length={75})
+  @umplesourcefile(line={205},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4420},length={75})
    private void checkStateMachineNameConflict(){
     for(UmpleClass C : model.getUmpleClasses())
     {    
@@ -4502,13 +4498,13 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={283},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4506},length={4})
+  @umplesourcefile(line={283},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4502},length={4})
    private void analyzeStateMachineDefinition(Token stateMachineDefinitionToken){
     StateMachine smd = analyzeStateMachine(stateMachineDefinitionToken,null);
     model.addStateMachineDefinition(smd);
   }
 
-  @umplesourcefile(line={289},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4512},length={30})
+  @umplesourcefile(line={289},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4508},length={30})
    private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClass aClass){
     String name = stateMachineToken.getValue("name");
 
@@ -4540,7 +4536,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={322},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4544},length={31})
+  @umplesourcefile(line={322},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4540},length={31})
    private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClass aClass){
     placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
@@ -4573,7 +4569,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return sm;
   }
 
-  @umplesourcefile(line={355},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4577},length={28})
+  @umplesourcefile(line={355},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4573},length={28})
    private State createStateFromTransition(Token transitionToken, StateMachine sm){
     if(!Token.isValidIdentifier(transitionToken.getValue("stateName"))){
     	setFailedPosition(transitionToken.getPosition(), 152, transitionToken.getValue("stateName"));
@@ -4603,7 +4599,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return nextState;
   }
 
-  @umplesourcefile(line={385},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4607},length={20})
+  @umplesourcefile(line={385},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4603},length={20})
    private State createStateFromDefinition(Token stateToken, StateMachine sm){
     if(!Token.isValidIdentifier(stateToken.getValue("stateName"))){
     	setFailedPosition(stateToken.getPosition(), 152, stateToken.getValue("stateName"));
@@ -4625,7 +4621,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return s;
   }
 
-  @umplesourcefile(line={407},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4629},length={49})
+  @umplesourcefile(line={407},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4625},length={49})
    private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClass aClass){
     boolean isFirst = true;
     boolean isFinalState = false;
@@ -4676,7 +4672,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={458},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4680},length={70})
+  @umplesourcefile(line={458},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4676},length={70})
    private void analyzeState(Token stateToken, State fromState){
     boolean addNewSm = true;
     boolean isConcurrentState = false;
@@ -4748,7 +4744,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={530},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4752},length={27})
+  @umplesourcefile(line={530},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4748},length={27})
    private Activity analyzeActivity(Token activityToken, State fromState){
     Activity act= new Activity("", fromState);
   	CodeBlock cb = new CodeBlock();
@@ -4777,7 +4773,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return act;
   }
 
-  @umplesourcefile(line={559},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4781},length={28})
+  @umplesourcefile(line={559},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4777},length={28})
    private Action analyzeAction(Token actionToken, State fromState){
     Action action= new Action("");
   	CodeBlock cb = new CodeBlock();
@@ -4807,7 +4803,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return action;
   }
 
-  @umplesourcefile(line={588},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4811},length={143})
+  @umplesourcefile(line={588},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={4807},length={143})
    private void analyzeTransition(boolean isAutoTransition, Token transitionToken, State fromState, String changeType){
     State nextState = createStateFromTransition(transitionToken,fromState.getStateMachine());
     
@@ -4958,7 +4954,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Trace Glue Code   ************
    * 
    */
-  @umplesourcefile(line={25},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4956},length={27})
+  @umplesourcefile(line={25},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4952},length={27})
    private void analyzeTraceToken(Token token, int analysisStep){
     if (analysisStep != 1)
     {
@@ -4991,7 +4987,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Process trace related tokens within the context of a class
    */
-  @umplesourcefile(line={58},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4991},length={11})
+  @umplesourcefile(line={58},file={"UmpleInternalParser_CodeTrace.ump"},javaline={4987},length={11})
    private void analyzeTraceToken(Token token, UmpleClass aClass){
     // Analyze trace statement token
     if (token.is("trace"))
@@ -5008,7 +5004,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Process Trace statement subtokens. Token could be trace directive or trace case
    */
-  @umplesourcefile(line={72},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5008},length={150})
+  @umplesourcefile(line={72},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5004},length={150})
    private void analyzeTraceStatement(UmpleClass aClass, Token token){
     TraceDirective traceDirective = new TraceDirective(model.getTracer());
     AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
@@ -5164,7 +5160,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze trace record in a trace directive
    */
-  @umplesourcefile(line={226},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5164},length={14})
+  @umplesourcefile(line={226},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5160},length={14})
    private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord){
     String record = token.getValue("trace_record");
     Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("trace_record"));
@@ -5184,7 +5180,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze Trace Item Token whether trace item is an attribute or a method ... etc
    */
-  @umplesourcefile(line={243},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5184},length={64})
+  @umplesourcefile(line={243},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5180},length={64})
    private void analyzeTraceItem(Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, AttributeTraceItem traceAttr){
     UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
     attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
@@ -5250,7 +5246,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={309},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5254},length={134})
+  @umplesourcefile(line={309},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5250},length={134})
    private void analyzeStateMachineTraceItem(Token traceToken, TraceDirective traceDirective){
     List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
     StateMachine stm = null;
@@ -5386,7 +5382,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     }
   }
 
-  @umplesourcefile(line={445},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5390},length={12})
+  @umplesourcefile(line={445},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5386},length={12})
    private void analyzeAssociationTraceItem(Token traceToken, TraceDirective traceDirective){
     if( traceToken.getParentToken().getSubToken(1).getName().equals("cardinality") )  
     {
@@ -5405,7 +5401,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Analyze Trace Condition Token. Called when different Trace Directive conditions are encountered (where,until,after)
    * Returns a trace condition filled with left and right hands operands, with comparison operator used
    */
-  @umplesourcefile(line={461},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5404},length={16})
+  @umplesourcefile(line={461},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5400},length={16})
    private TraceCondition analyzeTraceCondition(Token traceConditionToken, String conditionType){
     ConditionRhs rhs = new ConditionRhs();
     TraceCondition tc = new TraceCondition(rhs);
@@ -5427,7 +5423,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyzes trace case token and its subtokens (i.e. trace directive tokens)
    */
-  @umplesourcefile(line={480},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5427},length={25})
+  @umplesourcefile(line={480},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5423},length={25})
    public void analyzeTraceCaseToken(UmpleClass aClass, Token token){
     TraceCase tca = new TraceCase();
     TraceDirective td = new TraceDirective(model.getTracer());
@@ -5459,7 +5455,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * Modified version of method "analyzeTraceDirective"
    * This method analyzes trace directive fragments inside a trace case
    */
-  @umplesourcefile(line={509},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5458},length={43})
+  @umplesourcefile(line={509},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5454},length={43})
    private void analyzeTraceDirectiveFragments(TraceDirective traceDirective, UmpleClass aClass, Token traceToken, Token token){
     AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
       MethodTraceEntity mte = new MethodTraceEntity();
@@ -5508,7 +5504,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Perform post token analysis on trace related elements of the Umple language
    */
-  @umplesourcefile(line={555},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5508},length={3})
+  @umplesourcefile(line={555},file={"UmpleInternalParser_CodeTrace.ump"},javaline={5504},length={3})
    private void postTokenTraceAnalysis(){
     
   }
@@ -5517,7 +5513,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Analyze layout tokens to the Umple language
    */
-  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5517},length={3})
+  @umplesourcefile(line={21},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5513},length={3})
    private void analyzeLayoutToken(Token token, int analysisStep){
     
   }
@@ -5527,7 +5523,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
    * There are currently no core tokens of concern in the context of an UmpleClass
    * This method is available if needed
    */
-  @umplesourcefile(line={27},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5526},length={38})
+  @umplesourcefile(line={27},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5522},length={38})
    private void analyzeLayoutToken(Token token, UmpleClass aClass, int analysisStep){
     // Only process layout tokens once all other entities have been analyzed
     if (analysisStep == 1 || shouldProcessClassAgain)
@@ -5571,7 +5567,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Perform post token analysis on core elements of the Umple language
    */
-  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5571},length={3})
+  @umplesourcefile(line={68},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5567},length={3})
    private void postTokenLayoutAnalysis(){
     layoutNewElements();
   }
@@ -5580,7 +5576,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   /**
    * Look for any new elements and give them positions if undefined
    */
-  @umplesourcefile(line={74},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5580},length={53})
+  @umplesourcefile(line={74},file={"UmpleInternalParser_CodeLayout.ump"},javaline={5576},length={53})
    private void layoutNewElements(){
     // layout classes
     for (int i=0; i<model.numberOfUmpleClasses(); i++)
@@ -5638,8 +5634,8 @@ public class UmpleInternalParser extends Parser implements UmpleParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={356},file={"UmpleInternalParser_CodeClass.ump"},javaline={5642},length={57})
-  @umplesourcefile(line={357},file={"UmpleInternalParser_CodeClass.ump"},javaline={5643},length={27})
+  //  @umplesourcefile(line={356},file={"UmpleInternalParser_CodeClass.ump"},javaline={5638},length={57})
+  @umplesourcefile(line={357},file={"UmpleInternalParser_CodeClass.ump"},javaline={5639},length={27})
   private List <UmpleInterface> recursiveCycleCheckInterface (List <UmpleInterface> extend,UmpleInterface parent, HashMap<UmpleInterface, Boolean> map) 
   {
     List <UmpleInterface> temp = new ArrayList <UmpleInterface>();
@@ -5668,8 +5664,8 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     return temp;
   }
 
-//  @umplesourcefile(line={661},file={"UmpleInternalParser_CodeClass.ump"},javaline={5672},length={28})
-  @umplesourcefile(line={662},file={"UmpleInternalParser_CodeClass.ump"},javaline={5673},length={24})
+//  @umplesourcefile(line={661},file={"UmpleInternalParser_CodeClass.ump"},javaline={5668},length={28})
+  @umplesourcefile(line={662},file={"UmpleInternalParser_CodeClass.ump"},javaline={5669},length={24})
   private void addExtendsTo (Token classifierToken, UmpleClassifier aClassifier, Map <UmpleClassifier,List <String>> unlinkedExtends, Map <UmpleClassifier, List<Token>> unlinkedExtendsTokens)
   //private void addExtendsTo(Token classToken, UmpleClassifier aClassifier) 
   {
@@ -5695,7 +5691,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 		}
   }
 
-//  @umplesourcefile(line={24},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={5699},length={2})
+//  @umplesourcefile(line={24},file={"UmpleInternalParser_CodeStateMachine.ump"},javaline={5695},length={2})
   private static int numberOfActiveObjects = 1 ;
 
   

@@ -250,6 +250,19 @@ public class RuleBasedParser
     return getParseResult();
   }
 
+  @umplesourcefile(line={174},file={"GrammarParsing_Code.ump"},javaline={254},length={11})
+   public ParseResult parse(String ruleName, String input){
+    if(analyzer==null)
+    {
+      setupRules();
+    }
+    analyzer.init(ruleName, input);
+    analyzer.execute();
+    setRootToken(analyzer.getRootToken());
+    setParseResult(analyzer.getParseResult());
+    return getParseResult();
+  }
+
 
   public String toString()
   {
@@ -263,10 +276,10 @@ public class RuleBasedParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={48},file={"GrammarParsing.ump"},javaline={267},length={5})
+  //  @umplesourcefile(line={48},file={"GrammarParsing.ump"},javaline={280},length={5})
   public static int parsing = 0 ;
 
-//  @umplesourcefile(line={94},file={"GrammarParsing_Code.ump"},javaline={270},length={2})
+//  @umplesourcefile(line={94},file={"GrammarParsing_Code.ump"},javaline={283},length={2})
   private static GrammarAnalyzer analyzer = null ;
 
   

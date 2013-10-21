@@ -170,6 +170,18 @@ class RuleBasedParser
     setParseResult(analyzer.getParseResult());
     return getParseResult();
   }
+  
+  public ParseResult parse(String ruleName, String input) {
+	if(analyzer==null)
+    {
+      setupRules();
+    }
+    analyzer.init(ruleName, input);
+    analyzer.execute();
+    setRootToken(analyzer.getRootToken());
+    setParseResult(analyzer.getParseResult());
+    return getParseResult();
+  }
 
 }
 
@@ -237,6 +249,32 @@ class ParserDataPackage
     }
     couples = new HashMap<String,ParsingCouple>();    
     BalancedRule.initialize(input,this);
+  }
+  
+  public void init(String rawinput, Position usePosition){
+	String file = "temp";
+	int offset = 0;
+	int linenumber = 0;
+	linenumbers = new LinkedHashMap<Integer,Integer>();
+	try {
+	  for(String line:rawinput.split("\\n"))
+	  {
+	    linenumbers.put(offset, linenumber);
+	    offset+=line.length()+1;
+	    linenumber++;
+	    input += line+"\n";
+	  }
+    }
+    catch(NullPointerException n)
+    {
+	  if(this.getParseResult()==null)
+	  {
+	    this.setParseResult(new ParseResult(false));
+	  }
+	  this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
+	}
+	couples = new HashMap<String,ParsingCouple>();    
+	BalancedRule.initialize(input,this);
   }
 }
 
@@ -328,6 +366,13 @@ class GrammarAnalyzer {
     setData(new ParserDataPackage(input));
     getData().setKeys(keys);
     getData().init(null);
+  }
+  
+  public void init(String ruleName, String input2) {
+    input = input2;
+    setData(new ParserDataPackage("temp"));
+    getData().setKeys(keys);
+    getData().init(input,null);	
   }
 
   /*

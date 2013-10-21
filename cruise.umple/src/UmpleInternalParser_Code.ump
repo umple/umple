@@ -78,9 +78,7 @@ class UmpleInternalParser
   }
 
   public ParseResult parse(String ruleName, String input){
-	SampleFileWriter.createFile("temp.ump", input);
-	UmpleFile file = new UmpleFile(new File("temp.ump").getAbsoluteFile().getParentFile().getAbsolutePath(),"temp.ump");
-    setParseResult(parser.parse(file));
+	setParseResult(parser.parse(ruleName,input));
     setRootToken(parser.getRootToken());
     SampleFileWriter.destroy("temp.ump");
     return getParseResult();
