@@ -3,15 +3,16 @@ function _new_instance($controller) {
   $element_name = $controller->get_param('element_name');
   $constructor_values = $controller->get_param('constructor_values');
   if (!$element_name){
-    //TODO: redirect and show error message
-    //return false;
+    $controller->set_message('Error creating new instance: the Element name was not provided', true);
+    Uigu2_Controller::redirect(); 
   }
   if(!$constructor_values){
     $constructor_values = array();
   }
   $result = $controller->create_object($element_name, $constructor_values);
   if(!$result){
-    //TODO: redirect and show error message
+    $controller->set_message('Error creating new instance: error from constructor of Element '.$element_name, true);
+    Uigu2_Controller::redirect(); 
   }
-  header('Location: '.WEB_DOMAIN.'/main/show_element/'.$element_name);
+  Uigu2_Controller::redirect('show_element/'.$element_name); 
 }

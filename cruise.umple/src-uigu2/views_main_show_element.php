@@ -1,34 +1,28 @@
 <h2><?php echo "$element_kind $name"?></h2>
-<form id="new_instance" method="post" action="<?php echo WEB_FOLDER.'main/new_instance'?>">
+<div id="div_new_instance">
+  <h3>Create New Instance</h3>
+  <form method="post" action="<?php echo WEB_FOLDER.'main/new_instance'?>">
+    <fieldset>
+      <table>
+        <?php echo $constructor_table_body; ?>
+        <input type='hidden' name='element_name' value='<?php echo $name; ?>' />
+        <tr>
+          <td><input type="submit" value="Create" 
+            <?php echo $constructor_table_enabled ? '' : "disabled = 'disabled'"; ?>/></td>
+        </tr>
+        <?php echo $constructor_table_enabled ? '' : 
+          "<tr><span class='subtle'> The Constructor of {$name} requires a reference to another object."
+            ."Create that object first </span></tr>"; ?>
+      </table>
+    </fieldset>
+  </form>
+</div>
+<div id="div_all_instances">
+  <h3>Existing Instances of this Class</h3>
   <table>
-    <tr>
-      <th>Attribute Name</th>
-      <th>Type</th>
-      <th>Value</th>
-    </tr>
-    <?php 
-      echo "<input type='hidden' name='element_name' value='$name' />";
-      //TODO move this logic to the controller 
-      foreach($constructor_params as $p){
-        if(isset($attributes[$p])){
-          $att = $attributes[$p];
-        }else{
-          $att = $associations[$p];
-        }
-        $value = isset($att['value']) ? $att['value'] : ''; 
-        echo "<tr><td>{$att['name']}</td>".
-               "<td>{$att['type']}</td>".
-               "<td><input type='text' name='constructor_values[]' value='$value'/></td></tr>";
-      }
-    ?>
-    <tr>
-      <td><input type="submit" value="Create new instance"/></td>
-    </tr>
+    <?php echo $objects_table; ?>
   </table>
-</form>
-
-  <p>//Here: Instructions for this page</p>
-  <p>//right column: table with created instances</p>
-  <pre> <?php echo print_r($_SESSION); ?></pre>
+</div>
+<p>//Here: Instructions for this page</p>
   
 

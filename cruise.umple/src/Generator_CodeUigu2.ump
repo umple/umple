@@ -46,6 +46,7 @@ class Uigu2ElementGenerator
       if(aClass.isRoot()){
         return code.toString();
 
+      //Use recursion to make sure classes with dependencies are generated last
       }else {
         UmpleClass parent = aClass.getExtendsClass();
         code.append("$ELEMENTS['" + name + "']['parent'] = '" + parent.getName() + "';").append(nl);
@@ -176,13 +177,13 @@ class Uigu2Generator
     this.sharedFilesToCopy.put("kissmvc_core.php", "app/kissmvc_core.php");
     this.sharedFilesToCopy.put("kissmvc_uigu2.php", "app/kissmvc_uigu2.php");
     this.sharedFilesToCopy.put("layout.php", "app/views/layout.php");
+    //this.sharedFilesToCopy.put("css_layout.css", "app/views/layout.css");
     this.sharedFilesToCopy.put("views_main_index.php", "app/views/main/index.php");
     this.sharedFilesToCopy.put("views_main_show_element.php", "app/views/main/show_element.php");
     this.sharedFilesToCopy.put("controllers_main_index.php", "app/controllers/main/index.php");
     this.sharedFilesToCopy.put("controllers_main_clear.php", "app/controllers/main/clear.php");
     this.sharedFilesToCopy.put("controllers_main_show_element.php", "app/controllers/main/show_element.php");
     this.sharedFilesToCopy.put("controllers_main_new_instance.php", "app/controllers/main/new_instance.php");
-    this.sharedFilesToCopy.put("css_layout.css", "app/css/layout.css");
   }
 
   @Override
