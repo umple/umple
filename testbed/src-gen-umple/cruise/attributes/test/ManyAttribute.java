@@ -4,7 +4,7 @@
 package cruise.attributes.test;
 import java.util.*;
 
-// line 51 "../../../../src/TestHarnessAttributes.ump"
+// line 50 "../../../../src/TestHarnessAttributes.ump"
 public class ManyAttribute
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

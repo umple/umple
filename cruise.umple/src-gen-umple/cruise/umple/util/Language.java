@@ -5,9 +5,9 @@ package cruise.umple.util;
 import java.util.*;
 
 /**
- * @umplesource Util_Code.ump 24
+ * @umplesource Util_Code.ump 23
  */
-// line 24 "../../../../src/Util_Code.ump"
+// line 23 "../../../../src/Util_Code.ump"
 public class Language
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

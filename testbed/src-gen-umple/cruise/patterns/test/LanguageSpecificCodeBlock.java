@@ -3,7 +3,7 @@
 
 package cruise.patterns.test;
 
-// line 66 "../../../../src/TestHarnessPatterns.ump"
+// line 65 "../../../../src/TestHarnessPatterns.ump"
 public class LanguageSpecificCodeBlock
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

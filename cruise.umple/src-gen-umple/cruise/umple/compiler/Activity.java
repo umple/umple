@@ -10,9 +10,9 @@ import cruise.umple.compiler.Position;
  * The code is executed in a separate threat, and can be terminated by
  * an outgoing transition. Upon completion of the activity, any
  * autotransition will be taken
- * @umplesource StateMachine.ump 63
+ * @umplesource StateMachine.ump 62
  */
-// line 63 "../../../../src/StateMachine.ump"
+// line 62 "../../../../src/StateMachine.ump"
 public class Activity
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

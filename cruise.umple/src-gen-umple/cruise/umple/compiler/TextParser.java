@@ -7,11 +7,11 @@ import java.util.*;
 /**
  * Parses textual input and used in conjunction with the umple parser and internal parser to tokenize the contents of a file such
  * as an Umple file.
- * @umplesource TextParser.ump 16
- * @umplesource TextParser_Code.ump 12
+ * @umplesource TextParser.ump 15
+ * @umplesource TextParser_Code.ump 11
  */
-// line 16 "../../../../src/TextParser.ump"
-// line 12 "../../../../src/TextParser_Code.ump"
+// line 15 "../../../../src/TextParser.ump"
+// line 11 "../../../../src/TextParser_Code.ump"
 public class TextParser
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -39,6 +39,7 @@ public class TextParser
 
   /**
    * The filename that the parser is going to retrieve textual input data from.
+   * ```````````````````````
    */
   private String _filename;
 
@@ -64,18 +65,18 @@ public class TextParser
   public void delete()
   {}
 
-  @umplesourcefile(line={16},file={"TextParser_Code.ump"},javaline={68},length={4})
+  @umplesourcefile(line={16},file={"TextParser_Code.ump"},javaline={69},length={4})
    public  TextParser(String filename, String input){
     init(input);
     _filename = filename;
   }
 
-  @umplesourcefile(line={22},file={"TextParser_Code.ump"},javaline={74},length={3})
+  @umplesourcefile(line={22},file={"TextParser_Code.ump"},javaline={75},length={3})
    public  TextParser(String input){
     init(input);
   }
 
-  @umplesourcefile(line={27},file={"TextParser_Code.ump"},javaline={79},length={4})
+  @umplesourcefile(line={27},file={"TextParser_Code.ump"},javaline={80},length={4})
    private String init(String text){
     load(text);
     return text;
@@ -83,11 +84,10 @@ public class TextParser
 
 
   /**
-   * ```````````````````````
    * INTERFACE
    * ```````````````````````
    */
-  @umplesourcefile(line={37},file={"TextParser_Code.ump"},javaline={85},length={3})
+  @umplesourcefile(line={37},file={"TextParser_Code.ump"},javaline={86},length={3})
    public String getText(){
     return _text;
   }

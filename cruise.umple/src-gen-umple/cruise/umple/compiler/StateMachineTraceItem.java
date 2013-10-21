@@ -8,11 +8,11 @@ import java.util.*;
 /**
  * An element of a trace directive that indicates to trace one or more state machines
  * or transitions
- * @umplesource Trace.ump 122
- * @umplesource Trace_Code.ump 285
+ * @umplesource Trace.ump 121
+ * @umplesource Trace_Code.ump 284
  */
-// line 122 "../../../../src/Trace.ump"
-// line 285 "../../../../src/Trace_Code.ump"
+// line 121 "../../../../src/Trace.ump"
+// line 284 "../../../../src/Trace_Code.ump"
 public class StateMachineTraceItem implements TraceItem
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

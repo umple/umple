@@ -7,9 +7,9 @@ package cruise.umple.compiler;
  * It is designed to visit different types of umple elemnts so it can process and understand
  * the defined walkers (@see IWalker). Any umple IWalker can use this visitor in order to ensure 
  * that the given visitor will be able to interact with the contents in temrs of being Umple-related
- * @umplesource Generator_UmpleModelWalker.ump 61
+ * @umplesource Generator_UmpleModelWalker.ump 60
  */
-// line 61 "../../../../src/Generator_UmpleModelWalker.ump"
+// line 60 "../../../../src/Generator_UmpleModelWalker.ump"
 public class UmpleModelVisitor
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

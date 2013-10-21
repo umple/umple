@@ -6,11 +6,11 @@ import java.util.*;
 import cruise.umple.util.*;
 
 /**
- * @umplesource Generator.ump 178
- * @umplesource Generator_CodeYuml.ump 12
+ * @umplesource Generator.ump 177
+ * @umplesource Generator_CodeYuml.ump 11
  */
-// line 178 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeYuml.ump"
+// line 177 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeYuml.ump"
 public class YumlGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

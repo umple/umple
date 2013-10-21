@@ -7,11 +7,11 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource Violet.ump 14
- * @umplesource Violet_Code.ump 12
+ * @umplesource Violet.ump 13
+ * @umplesource Violet_Code.ump 11
  */
-// line 14 "../../../../src/Violet.ump"
-// line 12 "../../../../src/Violet_Code.ump"
+// line 13 "../../../../src/Violet.ump"
+// line 11 "../../../../src/Violet_Code.ump"
 public class VioletGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

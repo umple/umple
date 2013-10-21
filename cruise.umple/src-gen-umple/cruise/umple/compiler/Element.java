@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.*;
 
 /**
- * @umplesource Generator_Html.ump 79
+ * @umplesource Generator_Html.ump 78
  */
-// line 79 "../../../../src/Generator_Html.ump"
+// line 78 "../../../../src/Generator_Html.ump"
 public class Element
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

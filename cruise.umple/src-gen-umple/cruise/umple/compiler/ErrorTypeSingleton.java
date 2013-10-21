@@ -9,11 +9,11 @@ import java.util.*;
 
 /**
  * Lists all the errors in the system
- * @umplesource Parser.ump 84
- * @umplesource Parser_Code.ump 1792
+ * @umplesource Parser.ump 83
+ * @umplesource Parser_Code.ump 1791
  */
-// line 84 "../../../../src/Parser.ump"
-// line 1792 "../../../../src/Parser_Code.ump"
+// line 83 "../../../../src/Parser.ump"
+// line 1791 "../../../../src/Parser_Code.ump"
 public class ErrorTypeSingleton
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

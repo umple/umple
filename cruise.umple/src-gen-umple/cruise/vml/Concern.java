@@ -7,13 +7,13 @@ import java.util.*;
 /**
  * A named group of VariationPoints.
  * POSITION INFORMATION
- * @umplesource Vml.ump 46
- * @umplesource Vml_Code.ump 87
- * @umplesource Vml_Code.ump 369
+ * @umplesource Vml.ump 45
+ * @umplesource Vml_Code.ump 86
+ * @umplesource Vml_Code.ump 368
  */
-// line 46 "../../../src/Vml.ump"
-// line 87 "../../../src/Vml_Code.ump"
-// line 369 "../../../src/Vml_Code.ump"
+// line 45 "../../../src/Vml.ump"
+// line 86 "../../../src/Vml_Code.ump"
+// line 368 "../../../src/Vml_Code.ump"
 public class Concern
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

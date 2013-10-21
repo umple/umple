@@ -4,7 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
-// line 32 "../../../src/LocalHarness.ump"
+// line 31 "../../../src/LocalHarness.ump"
 public class ConstructorManyClass
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -9,11 +9,11 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sdl.*;
 
 /**
- * @umplesource Generator.ump 307
- * @umplesource Generator_CodeSDL.ump 12
+ * @umplesource Generator.ump 306
+ * @umplesource Generator_CodeSDL.ump 11
  */
-// line 307 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeSDL.ump"
+// line 306 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeSDL.ump"
 public class SDLGenerator implements CodeGenerator,CodeTranslator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -240,12 +240,12 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
     }
   }
 
-  @umplesourcefile(line={198},file={"Generator_CodeSDL.ump"},javaline={244},length={3})
+  @umplesourcefile(line={197},file={"Generator_CodeSDL.ump"},javaline={244},length={3})
    public String translate(String id, Attribute attribute){
     return null;
   }
 
-  @umplesourcefile(line={203},file={"Generator_CodeSDL.ump"},javaline={249},length={3})
+  @umplesourcefile(line={202},file={"Generator_CodeSDL.ump"},javaline={249},length={3})
    public String translate(String keyName, TraceItem ti){
     return null;
   }
@@ -324,10 +324,10 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeSDL.ump"},javaline={328},length={16})
+  //  @umplesourcefile(line={14},file={"Generator_CodeSDL.ump"},javaline={328},length={17})
   private static List<String> SdlPrimitives ;
 
-//  @umplesourcefile(line={16},file={"Generator_CodeSDL.ump"},javaline={331},length={13})
+//  @umplesourcefile(line={16},file={"Generator_CodeSDL.ump"},javaline={331},length={14})
   static 
   {
     SdlPrimitives = new ArrayList<String>();
@@ -335,8 +335,10 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
     SdlPrimitives.add("TINYTEXT");
   }
 
-//  @umplesourcefile(line={208},file={"Generator_CodeSDL.ump"},javaline={339},length={5})
-  @Override public String translate(String id, AssociationVariable aVar) 
+//  @umplesourcefile(line={207},file={"Generator_CodeSDL.ump"},javaline={339},length={6})
+  @Override
+  @umplesourcefile(line={209},file={"Generator_CodeSDL.ump"},javaline={341},length={4})
+public String translate (String id, AssociationVariable aVar) 
   {
     return null;
   }

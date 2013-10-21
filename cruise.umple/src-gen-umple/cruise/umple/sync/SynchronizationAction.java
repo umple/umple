@@ -4,11 +4,11 @@
 package cruise.umple.sync;
 
 /**
- * @umplesource UmpleSync.ump 14
- * @umplesource UmpleSync_Code.ump 14
+ * @umplesource UmpleSync.ump 13
+ * @umplesource UmpleSync_Code.ump 13
  */
-// line 14 "../../../../src/UmpleSync.ump"
-// line 14 "../../../../src/UmpleSync_Code.ump"
+// line 13 "../../../../src/UmpleSync.ump"
+// line 13 "../../../../src/UmpleSync_Code.ump"
 public class SynchronizationAction
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

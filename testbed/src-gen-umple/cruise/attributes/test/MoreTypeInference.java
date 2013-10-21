@@ -5,7 +5,7 @@ package cruise.attributes.test;
 import java.sql.Time;
 import java.sql.Date;
 
-// line 78 "../../../../src/TestHarnessAttributes.ump"
+// line 77 "../../../../src/TestHarnessAttributes.ump"
 public class MoreTypeInference
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

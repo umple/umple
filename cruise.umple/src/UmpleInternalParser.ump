@@ -26,12 +26,15 @@ class UmpleInternalParser
   isA Parser;
   depend java.io.*;
   depend cruise.umple.util.*;
+  depend cruise.umple.parser.analysis.*;
+  
   currentPackageName = "";
   Boolean packageNameUsed = true;
   Boolean outputUmpleSource = false; 
 
   // The Umple meta model which will be populated based on what was parsed.
   UmpleModel model;
+  RuleBasedParser parser;
   
   Integer[] allowedMessages;
   Integer[] ignoredMessages;

@@ -6,11 +6,11 @@ package cruise.umple.docs;
 /**
  * Set of html templates used in the Umple User manual for certain
  * kinds of page elements
- * @umplesource Documenter.ump 79
- * @umplesource Documenter_Code.ump 412
+ * @umplesource Documenter.ump 78
+ * @umplesource Documenter_Code.ump 411
  */
-// line 79 "../../../../src/Documenter.ump"
-// line 412 "../../../../src/Documenter_Code.ump"
+// line 78 "../../../../src/Documenter.ump"
+// line 411 "../../../../src/Documenter_Code.ump"
 public class Template
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

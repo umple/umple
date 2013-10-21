@@ -6,11 +6,11 @@ import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 
 /**
- * @umplesource UmpleSync.ump 75
- * @umplesource UmpleSync_Code.ump 1025
+ * @umplesource UmpleSync.ump 74
+ * @umplesource UmpleSync_Code.ump 1024
  */
-// line 75 "../../../../src/UmpleSync.ump"
-// line 1025 "../../../../src/UmpleSync_Code.ump"
+// line 74 "../../../../src/UmpleSync.ump"
+// line 1024 "../../../../src/UmpleSync_Code.ump"
 public class DeleteAssociationAction extends SynchronizationAction
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

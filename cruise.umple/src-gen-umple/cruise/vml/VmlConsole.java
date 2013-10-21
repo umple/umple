@@ -6,9 +6,9 @@ import java.io.*;
 import cruise.umple.util.*;
 
 /**
- * @umplesource Vml_Code.ump 15
+ * @umplesource Vml_Code.ump 14
  */
-// line 15 "../../../src/Vml_Code.ump"
+// line 14 "../../../src/Vml_Code.ump"
 public class VmlConsole
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

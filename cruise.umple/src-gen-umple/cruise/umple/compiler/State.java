@@ -6,13 +6,13 @@ import java.util.*;
 
 /**
  * One of the values in which a state machine can be at any given point in time
- * @umplesource StateMachine.ump 37
- * @umplesource StateMachine_Code.ump 303
- * @umplesource Trace_Code.ump 64
+ * @umplesource StateMachine.ump 36
+ * @umplesource StateMachine_Code.ump 302
+ * @umplesource Trace_Code.ump 63
  */
-// line 37 "../../../../src/StateMachine.ump"
-// line 303 "../../../../src/StateMachine_Code.ump"
-// line 64 "../../../../src/Trace_Code.ump"
+// line 36 "../../../../src/StateMachine.ump"
+// line 302 "../../../../src/StateMachine_Code.ump"
+// line 63 "../../../../src/Trace_Code.ump"
 public class State
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

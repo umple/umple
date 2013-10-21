@@ -9,11 +9,11 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sql.*;
 
 /**
- * @umplesource Generator.ump 295
- * @umplesource Generator_CodeSql.ump 12
+ * @umplesource Generator.ump 294
+ * @umplesource Generator_CodeSql.ump 11
  */
-// line 295 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeSql.ump"
+// line 294 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeSql.ump"
 public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -7,11 +7,11 @@ import java.util.*;
 /**
  * An open-close pair, such as open curly brackets and close curly brackets
  * Used to identify block start and end while parsing
- * @umplesource Parser.ump 18
- * @umplesource Parser_Code.ump 11
+ * @umplesource Parser.ump 17
+ * @umplesource Parser_Code.ump 10
  */
-// line 18 "../../../../src/Parser.ump"
-// line 11 "../../../../src/Parser_Code.ump"
+// line 17 "../../../../src/Parser.ump"
+// line 10 "../../../../src/Parser_Code.ump"
 public class Couple
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

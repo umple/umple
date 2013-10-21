@@ -4,8 +4,8 @@
 package cruise.attributes.test;
 import java.sql.Date;
 
-// line 37 "../../../../src/TestHarnessAttributes.ump"
-// line 18 "../../../../src/LocalHarness.ump"
+// line 36 "../../../../src/TestHarnessAttributes.ump"
+// line 17 "../../../../src/LocalHarness.ump"
 public class DoorE
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -8,11 +8,11 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 52
- * @umplesource Generator_CodeEcore.ump 12
+ * @umplesource Generator.ump 51
+ * @umplesource Generator_CodeEcore.ump 11
  */
-// line 52 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeEcore.ump"
+// line 51 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeEcore.ump"
 public class EcoreGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

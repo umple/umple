@@ -3,7 +3,7 @@
 
 package cruise.attributes.test;
 
-// line 3 "../../../../src/TestHarnessConstraints.ump"
+// line 2 "../../../../src/TestHarnessConstraints.ump"
 public class Student
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

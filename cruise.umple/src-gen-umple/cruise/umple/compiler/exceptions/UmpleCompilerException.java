@@ -4,9 +4,9 @@
 package cruise.umple.compiler.exceptions;
 
 /**
- * @umplesource UmpleExceptions.ump 18
+ * @umplesource UmpleExceptions.ump 17
  */
-// line 18 "../../../../../src/UmpleExceptions.ump"
+// line 17 "../../../../../src/UmpleExceptions.ump"
 public class UmpleCompilerException extends RuntimeException
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

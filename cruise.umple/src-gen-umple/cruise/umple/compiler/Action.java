@@ -6,9 +6,9 @@ import cruise.umple.compiler.Position;
 
 /**
  * A quickly-executed block of code that is run upon entry or exit from a state
- * @umplesource StateMachine.ump 125
+ * @umplesource StateMachine.ump 124
  */
-// line 125 "../../../../src/StateMachine.ump"
+// line 124 "../../../../src/StateMachine.ump"
 public class Action
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

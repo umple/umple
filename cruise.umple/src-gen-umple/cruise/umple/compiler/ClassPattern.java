@@ -6,9 +6,9 @@ package cruise.umple.compiler;
 /**
  * A pattern object is used to persist Patentable information for a class elemnt such as
  * abstract, delegate, immutable, etc.
- * @umplesource Generator_UmpleModelWalker.ump 37
+ * @umplesource Generator_UmpleModelWalker.ump 36
  */
-// line 37 "../../../../src/Generator_UmpleModelWalker.ump"
+// line 36 "../../../../src/Generator_UmpleModelWalker.ump"
 public class ClassPattern
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

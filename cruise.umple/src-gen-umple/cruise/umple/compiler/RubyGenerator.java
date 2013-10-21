@@ -9,11 +9,11 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.ruby.*;
 
 /**
- * @umplesource Generator.ump 283
- * @umplesource Generator_CodeRuby.ump 12
+ * @umplesource Generator.ump 282
+ * @umplesource Generator_CodeRuby.ump 11
  */
-// line 283 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeRuby.ump"
+// line 282 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeRuby.ump"
 public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

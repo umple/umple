@@ -42,12 +42,12 @@ class UmpleInternalParser
   
   public UmpleInternalParser()
   {
-    this("UmpleInternalParser", new UmpleModel(null));
+    this("UmpleInternalParser", new UmpleModel(null), new RuleBasedParser());
   }
 
   public UmpleInternalParser(UmpleModel aModel)
   {   
-    this("UmpleInternalParser", aModel);
+    this("UmpleInternalParser", aModel, new RuleBasedParser());
   }
 
   private void init()
@@ -67,24 +67,29 @@ class UmpleInternalParser
     braces.addIgnore(new Couple("//","\n"));
     
     addCouple(braces);
-    addRulesInFile("/umple_core.grammar");
-    addRulesInFile("/umple_classes.grammar");
-    addRulesInFile("/umple_patterns.grammar");
-    addRulesInFile("/umple_state_machines.grammar");
-    addRulesInFile("/umple_traces.grammar");
-    addRulesInFile("/umple_constraints.grammar");  // TODO Under development
-    addRulesInFile("/umple_layout.grammar");
-    addRulesInFile("/umple_exceptions.grammar");
+    parser.addGrammarFile("/umple_core.grammar");
+    parser.addGrammarFile("/umple_classes.grammar");
+    parser.addGrammarFile("/umple_patterns.grammar");
+    parser.addGrammarFile("/umple_state_machines.grammar");
+    parser.addGrammarFile("/umple_traces.grammar");
+    parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
+    parser.addGrammarFile("/umple_layout.grammar");
+    parser.addGrammarFile("/umple_exceptions.grammar");
   }
 
-  public ParseResult parse(String ruleName, String input)
-  {
-    return super.parse(ruleName,input);
+  public ParseResult parse(String ruleName, String input){
+	SampleFileWriter.createFile("temp.ump", input);
+	UmpleFile file = new UmpleFile(new File("temp.ump").getAbsoluteFile().getParentFile().getAbsolutePath(),"temp.ump");
+    setParseResult(parser.parse(file));
+    setRootToken(parser.getRootToken());
+    SampleFileWriter.destroy("temp.ump");
+    return getParseResult();
   }
 
   public ParseResult analyze(boolean shouldGenerate)
   {
-    parseAllFiles();
+    setParseResult(parser.getParseResult());    
+    setRootToken(parser.getRootToken());
     analyzeAllTokens(getRootToken());
     postTokenAnalysis();
     if (shouldGenerate && getParseResult().getWasSuccess())
@@ -241,51 +246,6 @@ class UmpleInternalParser
   // Locate all 'use *.ump' references and add those files if not already parsed 
   private void addNecessaryFiles()
   {
-    for(Token t : getRootToken().getSubTokens())
-    {
-      if (t.is("use"))
-      {
-        // A file included with a use statement could be in the same directory
-        String filename = model.getUmpleFile().getPath() + File.separator + t.getValue();
-        
-        // Or it could be in the parent directory
-        String filenamePD = model.getUmpleFile().getParent() + File.separator + t.getValue();
-        
-        // Or it could be in a lib directory of the current directory
-        String filenameLD = model.getUmpleFile().getPath() + File.separator + "lib" + File.separator + t.getValue();
-        
-        // TO DO: Or it could be on the web as a standard Umple file
-        // This should ideally also be turned into a 'search path' based mechanism
-
-        if (!parsedUmpleFiles.contains(filename) && !unparsedUmpleFiles.contains(filename) && !parsedUmpleFiles.contains(filenamePD) && !unparsedUmpleFiles.contains(filenamePD) && !parsedUmpleFiles.contains(filenameLD) && !unparsedUmpleFiles.contains(filenameLD) )
-        {
-          // We have not encountered this 'use' file yet
-          // Check if file name exists - if not raise error message        
-          if((new File(filename)).exists()) {
-            // We have found the file and it needs to be queued for processing
-            unparsedUmpleFiles.add(filename);
-          }
-          else if((new File(filenamePD)).exists()) {
-            // We have found the file and it needs to be queued for processing
-            unparsedUmpleFiles.add(filenamePD);
-          }
-          else if((new File(filenameLD)).exists()) {
-            // We have found the file and it needs to be queued for processing
-            unparsedUmpleFiles.add(filenameLD);
-          }
-          else {
-            getParseResult().addErrorMessage(new ErrorMessage(1510, t.getPosition(), t.getValue()));
-            
-            if(!getParseResult().getWasSuccess()) break;
-          }
-        }  
-                
-        // To do: If file doesn't exist, then t.getValue may be referring to a
-        // library file in ../ump or on the web. Try these before raising error
-        
-      }
-
-    }
   }
   
   // Loop through all unparsed files, parse them, and add any missing references

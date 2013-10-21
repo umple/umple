@@ -4,7 +4,7 @@
 package cruise.patterns.test;
 import java.util.*;
 
-// line 38 "../../../../src/TestHarnessPatterns.ump"
+// line 37 "../../../../src/TestHarnessPatterns.ump"
 public class WidgetE
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

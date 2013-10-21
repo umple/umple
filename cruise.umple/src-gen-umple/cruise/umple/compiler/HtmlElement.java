@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Generator_Html.ump 253
+ * @umplesource Generator_Html.ump 252
  */
-// line 253 "../../../../src/Generator_Html.ump"
+// line 252 "../../../../src/Generator_Html.ump"
 public class HtmlElement implements IHtmlElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

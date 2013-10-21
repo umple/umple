@@ -6,11 +6,12 @@ import java.util.*;
 
 /**
  * A block of code in an arbitrary language to be injected into generated code
- * @umplesource Umple.ump 273
- * @umplesource Umple_Code.ump 493
+ * 
+ * @umplesource Umple.ump 272
+ * @umplesource Umple_Code.ump 485
  */
-// line 273 "../../../../src/Umple.ump"
-// line 493 "../../../../src/Umple_Code.ump"
+// line 272 "../../../../src/Umple.ump"
+// line 485 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -39,19 +40,19 @@ public class CodeBlock
   public void delete()
   {}
 
-  @umplesourcefile(line={496},file={"Umple_Code.ump"},javaline={43},length={4})
+  @umplesourcefile(line={489},file={"Umple_Code.ump"},javaline={44},length={4})
    public  CodeBlock(String add){
     this();
     codes.put("",add);
   }
 
-  @umplesourcefile(line={501},file={"Umple_Code.ump"},javaline={49},length={4})
+  @umplesourcefile(line={494},file={"Umple_Code.ump"},javaline={50},length={4})
    public  CodeBlock(String lang, String add){
     this();
     codes.put(lang,add);
   }
 
-  @umplesourcefile(line={506},file={"Umple_Code.ump"},javaline={55},length={6})
+  @umplesourcefile(line={499},file={"Umple_Code.ump"},javaline={56},length={6})
    public void setCode(String add){
     if(add!=null)
       codes.put("",add);
@@ -59,7 +60,7 @@ public class CodeBlock
       codes.put("","");
   }
 
-  @umplesourcefile(line={513},file={"Umple_Code.ump"},javaline={63},length={6})
+  @umplesourcefile(line={506},file={"Umple_Code.ump"},javaline={64},length={6})
    public void setCode(String lang, String add){
     if(add!=null)
       codes.put(lang,add);
@@ -67,17 +68,17 @@ public class CodeBlock
       codes.put(lang,"");
   }
 
-  @umplesourcefile(line={520},file={"Umple_Code.ump"},javaline={71},length={3})
+  @umplesourcefile(line={513},file={"Umple_Code.ump"},javaline={72},length={3})
    public String getCode(){
     return !codes.containsKey(languageUsed) ? "".equals(languageUsed) ? null : codes.get("") : codes.get(languageUsed);
   }
 
-  @umplesourcefile(line={524},file={"Umple_Code.ump"},javaline={76},length={3})
+  @umplesourcefile(line={517},file={"Umple_Code.ump"},javaline={77},length={3})
    public String getCode(String lang){
     return codes.containsKey(lang)? codes.get(lang) : codes.get("");
   }
 
-  @umplesourcefile(line={528},file={"Umple_Code.ump"},javaline={81},length={8})
+  @umplesourcefile(line={521},file={"Umple_Code.ump"},javaline={82},length={8})
    public String toString(){
     String out = "";
     for(String next:codes.values())
@@ -90,7 +91,7 @@ public class CodeBlock
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={277},file={"Umple.ump"},javaline={94},length={2})
+  //  @umplesourcefile(line={277},file={"Umple.ump"},javaline={95},length={2})
   public static String languageUsed = "" ;
 
   

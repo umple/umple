@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * Part of a grammar rule
- * @umplesource Parser.ump 165
- * @umplesource Parser_Code.ump 430
+ * @umplesource Parser.ump 164
+ * @umplesource Parser_Code.ump 429
  */
-// line 165 "../../../../src/Parser.ump"
-// line 430 "../../../../src/Parser_Code.ump"
+// line 164 "../../../../src/Parser.ump"
+// line 429 "../../../../src/Parser_Code.ump"
 public class RulePart
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

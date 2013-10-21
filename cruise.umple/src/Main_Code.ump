@@ -382,7 +382,9 @@ class PlaygroundMain
         {
             System.err.print(model.getLastResult().toJSON());
         }
-
+        
+        
+        
         if ("-classList".equals(args[0]))
         {
             for (UmpleClass aClass : model.getUmpleClasses())

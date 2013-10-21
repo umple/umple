@@ -5,9 +5,9 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umlet.ump 31
+ * @umplesource Umlet.ump 30
  */
-// line 31 "../../../../src/Umlet.ump"
+// line 30 "../../../../src/Umlet.ump"
 public class UmletElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -4,7 +4,7 @@
 package cruise.patterns.test;
 import java.sql.Date;
 
-// line 3 "../../../../src/TestHarnessPatterns.ump"
+// line 2 "../../../../src/TestHarnessPatterns.ump"
 public class WidgetA
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

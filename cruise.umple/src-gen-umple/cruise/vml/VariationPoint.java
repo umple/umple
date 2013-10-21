@@ -7,13 +7,13 @@ import java.util.*;
 /**
  * Identifies where one product line member may differ
  * from another.
- * @umplesource Vml.ump 58
- * @umplesource Vml_Code.ump 127
- * @umplesource Vml_Code.ump 376
+ * @umplesource Vml.ump 57
+ * @umplesource Vml_Code.ump 126
+ * @umplesource Vml_Code.ump 375
  */
-// line 58 "../../../src/Vml.ump"
-// line 127 "../../../src/Vml_Code.ump"
-// line 376 "../../../src/Vml_Code.ump"
+// line 57 "../../../src/Vml.ump"
+// line 126 "../../../src/Vml_Code.ump"
+// line 375 "../../../src/Vml_Code.ump"
 public class VariationPoint
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -7,9 +7,9 @@ import java.io.*;
 import org.junit.*;
 
 /**
- * @umplesource Util_Code.ump 567
+ * @umplesource Util_Code.ump 566
  */
-// line 567 "../../../../src/Util_Code.ump"
+// line 566 "../../../../src/Util_Code.ump"
 public class SampleFileWriter
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

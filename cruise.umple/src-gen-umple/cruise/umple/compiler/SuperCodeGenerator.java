@@ -6,10 +6,10 @@ import java.util.*;
 import cruise.umple.util.*;
 
 /**
- * @umplesource Generator.ump 37
+ * @umplesource Generator.ump 36
  * @umplesource Generator_SuperCodeGenerator.ump 1
  */
-// line 37 "../../../../src/Generator.ump"
+// line 36 "../../../../src/Generator.ump"
 // line 1 "../../../../src/Generator_SuperCodeGenerator.ump"
 public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
 {

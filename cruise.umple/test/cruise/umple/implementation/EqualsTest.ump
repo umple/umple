@@ -7,7 +7,7 @@ class Student
   Boolean booleanId;
   String stringId;
   String[] stringListIds;
-  
+    
   key { intId, doubleId, booleanId, stringId, stringListIds }
 }
 

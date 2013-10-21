@@ -8,11 +8,11 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 150
- * @umplesource Generator_CodeGvClassDiagram.ump 18
+ * @umplesource Generator.ump 149
+ * @umplesource Generator_CodeGvClassDiagram.ump 17
  */
-// line 150 "../../../../src/Generator.ump"
-// line 18 "../../../../src/Generator_CodeGvClassDiagram.ump"
+// line 149 "../../../../src/Generator.ump"
+// line 17 "../../../../src/Generator_CodeGvClassDiagram.ump"
 public class GvClassDiagramGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

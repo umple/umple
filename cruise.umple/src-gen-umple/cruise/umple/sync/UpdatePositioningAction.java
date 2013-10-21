@@ -7,11 +7,11 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource UmpleSync.ump 20
- * @umplesource UmpleSync_Code.ump 23
+ * @umplesource UmpleSync.ump 19
+ * @umplesource UmpleSync_Code.ump 22
  */
-// line 20 "../../../../src/UmpleSync.ump"
-// line 23 "../../../../src/UmpleSync_Code.ump"
+// line 19 "../../../../src/UmpleSync.ump"
+// line 22 "../../../../src/UmpleSync_Code.ump"
 public class UpdatePositioningAction extends SynchronizationAction
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

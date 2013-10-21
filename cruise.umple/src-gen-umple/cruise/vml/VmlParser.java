@@ -7,13 +7,13 @@ import java.util.*;
 
 /**
  * Specialist parser for parsing VML
- * @umplesource Vml.ump 95
- * @umplesource Vml_Code.ump 174
- * @umplesource Vml_Code.ump 401
+ * @umplesource Vml.ump 94
+ * @umplesource Vml_Code.ump 173
+ * @umplesource Vml_Code.ump 400
  */
-// line 95 "../../../src/Vml.ump"
-// line 174 "../../../src/Vml_Code.ump"
-// line 401 "../../../src/Vml_Code.ump"
+// line 94 "../../../src/Vml.ump"
+// line 173 "../../../src/Vml_Code.ump"
+// line 400 "../../../src/Vml_Code.ump"
 public class VmlParser extends Parser
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

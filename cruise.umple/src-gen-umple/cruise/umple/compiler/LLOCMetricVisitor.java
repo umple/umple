@@ -7,9 +7,9 @@ import java.io.IOException;
 /**
  * LLOC metrics vistor. It walks through given root model in order to extract the required LLOC 
  * metrics information (@see IWalker) and have it represented in an analytical manner (@see IHtmlElement)
- * @umplesource Generator_CodeAnalysis.ump 177
+ * @umplesource Generator_CodeAnalysis.ump 176
  */
-// line 177 "../../../../src/Generator_CodeAnalysis.ump"
+// line 176 "../../../../src/Generator_CodeAnalysis.ump"
 public class LLOCMetricVisitor extends UmpleModelVisitor
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

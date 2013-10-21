@@ -1,6 +1,6 @@
 class X {
   sm {
-    "state1 {
+    ""state1 {
       e1 -> state2;
     }
     state2 {

@@ -8,9 +8,9 @@ import java.util.*;
  * Represents a grammar rule, which has a name and contains definitions that describe it.
  * 
  * Examples of this are a class definition.
- * @umplesource Parser.ump 144
+ * @umplesource Parser.ump 143
  */
-// line 144 "../../../../src/Parser.ump"
+// line 143 "../../../../src/Parser.ump"
 public class Rule
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

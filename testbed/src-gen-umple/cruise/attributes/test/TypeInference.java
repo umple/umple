@@ -3,7 +3,7 @@
 
 package cruise.attributes.test;
 
-// line 56 "../../../../src/TestHarnessAttributes.ump"
+// line 55 "../../../../src/TestHarnessAttributes.ump"
 public class TypeInference
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

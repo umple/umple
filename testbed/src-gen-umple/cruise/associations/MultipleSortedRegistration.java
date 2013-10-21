@@ -3,7 +3,7 @@
 
 package cruise.associations;
 
-// line 666 "../../../src/TestHarnessAssociations.ump"
+// line 665 "../../../src/TestHarnessAssociations.ump"
 public class MultipleSortedRegistration
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

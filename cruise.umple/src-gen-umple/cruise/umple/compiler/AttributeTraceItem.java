@@ -8,11 +8,11 @@ import java.util.*;
 
 /**
  * An element of a trace directive that indicates to trace one or more attributes
- * @umplesource Trace.ump 97
- * @umplesource Trace_Code.ump 173
+ * @umplesource Trace.ump 96
+ * @umplesource Trace_Code.ump 172
  */
-// line 97 "../../../../src/Trace.ump"
-// line 173 "../../../../src/Trace_Code.ump"
+// line 96 "../../../../src/Trace.ump"
+// line 172 "../../../../src/Trace_Code.ump"
 public class AttributeTraceItem implements TraceItem
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

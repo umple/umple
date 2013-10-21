@@ -4,7 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
-// line 638 "../../../src/TestHarnessAssociations.ump"
+// line 637 "../../../src/TestHarnessAssociations.ump"
 public class ClassWithManySortedAssociations
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

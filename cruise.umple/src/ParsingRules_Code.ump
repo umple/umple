@@ -1,0 +1,839 @@
+class ChoiceRule 
+{
+  /*
+    For ease of use the ... is used here to help the user to input sub rules
+  */
+  public ChoiceRule(String name, ChoiceRule... rules)
+  {
+    this(name);
+    for(ChoiceRule rule:rules)
+    {
+      this.add(rule);
+    }
+  }
+  /*
+    Add sub rule
+  */
+  public boolean add(ChoiceRule rule)
+  {
+    if(rule.parent==null)
+    {
+      rule.parent = this;
+    }
+    return rules.add(rule);
+  }
+  /*
+    Add sub rule at specific index
+  */
+  public void add(int i, ChoiceRule rule)
+  {
+    if(rule.parent==null)
+    {
+      rule.parent = this;
+    }
+    rules.add(i,rule);
+  }
+  /*
+    Get sub rule
+  */
+  public ChoiceRule get(int index)
+  {
+    return rules.get(index);
+  }
+  /*
+    Remove sub rule at specific index
+  */
+  public ChoiceRule remove(int index)
+  {
+    return rules.remove(index);
+  }
+  /*
+    Index of sub rule
+  */
+  public int indexOf(ChoiceRule rule)
+  {
+    return rules.indexOf(rule);
+  }
+  /*
+    Remove sub rule
+  */
+  public void remove(ChoiceRule rule)
+  {
+    rules.remove(rule);
+  }
+  /*
+    Size of sub rules.
+  */
+  public int size()
+  {
+    return rules.size();
+  }
+  /*
+    Adds the self token to the parent token with the proper positions set for the self token.
+  */
+  public void addToken(Token parent, Token self, int from, int end, ParserDataPackage data)
+  {
+    parent.addSubToken(self);
+    
+    self.setPosition(findPosition(from,data));
+    self.setEndPosition(findPosition(end,data));    
+  }
+  /*
+    Given an offset this function constructs the Position object using the ParserDataPackage's linenumbers hashmap
+  */
+  public Position findPosition(int lookfor, ParserDataPackage data)
+  {
+    Set<Integer> keys = data.getLinenumbers().keySet();
+    int offset = 0;
+    int linenumber = 0;
+    int offsetend = 0;
+    int linenumberend = 0;
+    int previous = 0;
+    for(Integer key:keys)
+    {
+      if(key>=lookfor)
+      {
+        offset = lookfor-previous;
+        linenumber = data.getLinenumbers().get(key);        
+        break;
+      }
+      previous = key;
+    }
+    if(linenumber==0)
+    {
+    	linenumber = 1;
+    	offset = lookfor;
+    }
+    return new Position(
+        data.getFilename(),
+        linenumber,
+        offset,
+        lookfor
+        );
+  }
+  /*
+    For each sub token in the self token, this menthod adds it to the token Token
+  */
+  public void addAllTokens(Token token, Token self)
+  {
+    for(int i=0;i<self.numberOfSubTokens();)
+    {
+      Token aSubToken = self.getSubToken(i);
+      self.removeSubToken(aSubToken);
+      token.addSubToken(aSubToken);
+    }
+  }
+  /*
+    Tries to parse, if successful, will add a new Token to the token Token (if this rule is not negated). Returns the position where the parser
+    was able to get to. So, if the parse started at 9 and parsed the word "word" it would then be at 13 and would return that value.
+    If there is no sub rule which can parse the input, this function will return -1 to indicate a failure.
+  */
+  public int parse(Token token, int from, int max, String input, ParserDataPackage data)
+  {
+    if(size()==0)
+    {
+      return from;
+    }
+    Token self = new Token(getName(),"START_TOKEN");
+    for(int i=0;i<size();i++)
+    {
+      int parseResult = get(i).parse(self,from,max, input, data);
+      if(parseResult!=-1)
+      {
+        if(!getNegate()&&from!=max)
+        {
+          addToken(token,self,from,parseResult,data);
+        }
+        else 
+        {
+          addAllTokens(token,self);
+        }
+
+        if(action!=null&&this.getName().equals("useStatement"))
+        {
+          action.onSuccess(getNegate()?token:self,data);
+        }
+        return parseResult;
+      }
+      self = new Token(getName(),"START_TOKEN");
+    }
+    return -1;
+  }
+  /*
+    Don't cares are things like spaces and anonymous rules which are 
+  */
+  public ChoiceRule dontCare()
+  {
+    negate = true;
+    return this;
+  }
+  /*
+    Computes whether this Rule is optional or not by checking if any of the optional sub rules are optional
+  */
+  public boolean isOptional()
+  {
+    if(optional)
+    {
+      return true;
+    }
+    optional  = true;
+    for(ChoiceRule rule:getRules())
+    {
+      if(rule.isOptional())
+      {
+        return true;
+      }
+    }
+    optional = false;
+    return false;
+  }
+  
+  /*
+    This function works, however it never called because the recursive decent into the 
+  */
+  public void optimize()
+  {
+    if(!dontDelete&&negate&&optimizeCondition())
+    {
+      int index = parent.indexOf(this);
+      if(index!=-1)
+      {
+        parent.remove(index);
+        parent.add(index,get(0));
+      }
+      else
+      {
+	dontDelete = true;
+      }
+    }
+  }
+
+  /*
+    This function is used in the optimize method to decide whether this rule should be deleted
+  */
+  public boolean optimizeCondition()
+  {
+    return size()==1;
+  }
+  
+  /*
+    For finding the first value of the next terminal in the rule.
+    Within the context of a choice rule this means any of the choices are a possibility
+  */
+  public String getFirstValue()
+  {
+	  if(firstValueBuilder!=null)
+	  {
+		  return firstValueBuilder.toString();
+	  }
+	  firstValueBuilder = new StringBuilder();
+	  String pipe = "";
+	  for(int i=0;i<size();i++)
+	  {
+		  firstValueBuilder.append(pipe+get(i).getFirstValue());
+		  pipe = "|";
+	  }
+	  return firstValueBuilder.toString();
+  }
+}
+
+class ChainRule
+{
+  /*
+    Overriding the corresponding constructor
+  */
+  public ChainRule(String name, ChoiceRule... rules)
+  {
+    super(name,rules);
+  }
+
+  /*
+    If each of the subtokens positively parses then this method will return the result of the last parsed sub ruled.
+  */
+  public int parse(Token token, int from,int max, String input, ParserDataPackage data)
+  {
+    if(size()==0)
+    {
+      return from;
+    }
+    Token self = getNegate()?token:new Token(getName(),"START_TOKEN");
+    int start = from;
+    int end = from;
+    Stack<Integer> savedEnds = new Stack<Integer>();
+    Stack<Integer> savedIds = new Stack<Integer>();
+    Stack<Integer> savedSizes = new Stack<Integer>();
+    
+    for(int i=0;i<size();i++)
+    {
+      int beforeSize = self.numberOfSubTokens();
+      int parseResult = get(i).parse(self,end,max, input, data);
+      if(parseResult==-1)
+      {
+        if(savedEnds.isEmpty())
+        {
+          return -1;
+        }
+        else
+        {
+          end = savedEnds.pop();
+          i = savedIds.pop();
+          int size = savedSizes.pop();
+          while(self.numberOfSubTokens()>size)
+          {
+            self.removeSubToken(self.getSubToken(size));
+          }
+        }
+      }
+      else 
+      {
+        if(get(i).isOptional())
+        {
+          savedEnds.push(end);
+          savedIds.push(i);
+          savedSizes.push(beforeSize);
+        }
+        end = parseResult;
+        if(end>data.getFurthestGotten())
+        {
+          data.setPreviousFurthest(from);
+          data.setFurthestGotten(end);
+          data.setPosition(findPosition(end,data));
+        }
+      }
+    }
+    if(!getNegate()&&from!=end)
+    {
+      addToken(token,self,from,end,data);
+    }
+    return end;
+  }
+
+  /*
+    If there exists a subrule that is not optional, this function will return false, otherwise it will return true(i.e. all sub tokens are optional)
+  */
+  public boolean isOptional()
+  {
+    //TODO cache this value
+    for(ChoiceRule rule:getRules())
+    {
+      if(!rule.isOptional())
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+  
+  /*
+    Within the context of a chain rule this function means the very first rule's value, and if that rule is optional,
+    the or of the next one, and so on.
+  */
+  public String getFirstValue()
+  {
+	if(getFirstValueBuilder()!=null)
+	{
+	  return getFirstValueBuilder().toString();
+	}
+	setFirstValueBuilder(new StringBuilder());
+	String pipe = "";
+	for(int i=0;i<size();i++)
+	{
+      getFirstValueBuilder().append(pipe+get(i).getFirstValue());
+	  if(!get(i).isOptional())
+	  {
+	    return getFirstValueBuilder().toString();
+	  }
+	  if(!getFirstValueBuilder().toString().equals(""))
+	  {
+		  pipe = "|";
+	  }
+	}
+	return getFirstValueBuilder().toString();
+  }
+}
+
+
+class RepeatableRule 
+{
+  /*
+    Takes one rule and the minimum number of repeats as well as the maximum
+  */
+  public RepeatableRule(String name,int min, int max, ChoiceRule rule)
+  {
+    super(name,rule);
+    this.setMin(min);
+    this.max = max;
+  }
+
+  /*
+    Doesn't take a rule, but does take the mininum and maximum number of repeats.
+  */
+  after constructor {
+    this.min = min;
+    this.max = max;
+  }
+
+  /*
+    Tries to parse the subrule min<=times<=max.
+  */
+  public int parse(Token token, int from, int stop, String input, ParserDataPackage data)
+  {
+    Token self = getNegate()?token:new Token(getName(),"START_TOKEN");
+    ChoiceRule rule = this.get(0);
+    int start = from;
+    int end = from;
+    int i=0;
+    for(;i<max;i++)
+    {
+      int parseResult = rule.parse(self,end,stop,input,data);
+      if(parseResult!=-1&&end!=parseResult)
+      {    
+        end = parseResult;
+      }
+      else 
+      {
+        break;
+      }
+    }
+    if(i<getMin())
+    {
+      return -1;
+    }
+    else 
+    {
+      if(!getNegate()&&from!=end)
+      {
+        addToken(token,self,from,end,data);
+      }
+      return end;
+    }
+  }
+
+  /*
+    returns true if optional, i.e. if the min is 0 or the sub rule is optional
+  */
+  public boolean isOptional()
+  {
+    return (this.min == 0);
+  }
+
+  /*
+    For optimization, this object will be removed if it has no sub rules.
+  */
+  public boolean optimizeCondition()
+  {
+    return size()==0;
+  }
+  
+  /*
+    The size of a repeatable rule can be 0 or 1 and, therefore can have the value of either "" or the value of it's one and only rule
+  */
+  public String getFirstValue()
+  {
+	if(getFirstValueBuilder()!=null)
+	{
+	  return getFirstValueBuilder().toString();
+	}
+	setFirstValueBuilder(new StringBuilder());
+	for(int i=0;i<size();i++)
+	{
+	  getFirstValueBuilder().append(get(i).getFirstValue());
+	}
+	return getFirstValueBuilder().toString();
+  }
+}
+
+class RootRule 
+{
+  /*
+    For passing to super constructor.
+  */
+  public RootRule(String name, ChoiceRule... rules)
+  {
+    super(name,rules);
+  }
+
+  /*
+    Does exactly the same as the ChoiceRule, except it will return -1 if the parseResult was not the same as the input's length, i.e. it will fail if some of the file was not parsed.
+  */
+  public int parse(Token token, int from, int max, String input, ParserDataPackage data)
+  {
+    Token self = new Token(getName(),"START_TOKEN");
+    for(int i=0;i<this.size();++i)
+    {
+      int parseResult = get(i).parse(getNegate()?token:self,from, max, input, data);
+      if(parseResult>=max)
+      {
+        if(!getNegate())
+        {
+          token.addSubToken(self);
+        }
+        return parseResult;
+      }
+      self = new Token(getName(),"START_TOKEN");
+    }
+    
+    return -1;
+  }
+}
+
+class Terminal
+{
+  /*
+    mustSpace being true makes sure that there is a space after the regex, false means that there is optional space.
+  */
+  public Terminal(String name, String regex, boolean mustSpace)
+  {
+    super(name);
+    this.regex = regex;
+
+    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]"+(mustSpace?"+":"*")+").*",Pattern.DOTALL);
+
+  }
+  /*
+    sets up the regex without the space, just the plain regex.
+  */
+  after constructor 
+  {
+    pattern = Pattern.compile("(("+regex+")).*",Pattern.DOTALL);
+  }
+
+  after setCannotBe
+  {
+    cannotBePattern = Pattern.compile("["+space+"]*("+cannotBe+")["+space+"]*.*",Pattern.DOTALL);
+  }
+  /*
+    Returns the result of the regex matching the input string. Where the parseResult is the futurthest including spaces.
+  */
+  public int parse(Token token, int from, int max, String input, ParserDataPackage data)
+  {
+    Matcher matcher = getPattern().matcher(input.substring(from,max));
+    if(matcher.matches())
+    {
+      String matched = matcher.group(2);
+      if(cannotBe!=null&&matched.matches(cannotBe)&&!getCannotBePattern().matcher(input.substring(from+matcher.group(1).length(),max)).matches())
+      {
+        return -1;
+      }
+      if(!getNegate())
+      {
+        if(!matched.equals("")||(canBeNull&&!getName().equals("extraCode")))
+        {
+          Token tok = onlyValue?new Token(matched.trim(),"STATIC"):new Token(getName(),matched.trim());
+          addToken(token,tok,
+              from,
+              from+matcher.group(1).length(),data);
+        }
+      }
+      return from+matcher.group(1).length();
+    }
+    else if(getPattern2()!=null)
+    {
+      matcher = getPattern2().matcher(input.substring(from,max));
+      if(matcher.matches())
+      {
+        String matched = matcher.group(2);
+        if(cannotBe!=null&&matched.matches(cannotBe)&&!getCannotBePattern().matcher(input.substring(from+matcher.group(1).length(),max)).matches())
+        {
+          return -1;
+        }
+        if(!getNegate())
+        {
+          if(!matched.equals("")||(canBeNull&&!getName().equals("extraCode")))
+          {
+            Token tok = onlyValue?new Token(matched.trim(),"STATIC"):new Token(getName(),matched.trim());
+            addToken(token,tok,
+                from,
+                from+matcher.group(1).length(),data);
+          }
+        }
+        return from+matcher.group(1).length();
+      }
+    }
+    return -1;
+  }
+
+  /*
+    onlyValue is used for determining if the terminal is a token or a STATIC.
+  */
+  public ChoiceRule onlyValue()
+  {
+    onlyValue = true;
+    return this;
+  }
+
+  /*
+    to set the space (for the grammar it's " \t", for the UmpleGrammar " \t\n"
+  */
+  public static void space(String string)
+  {
+    space = string;
+  }
+
+  /*
+    returns optional
+  */
+  public boolean isOptional()
+  {
+    return optional;
+  }
+  
+  public String getFirstValue()
+  {
+	return regex;
+  }
+
+  /*
+    re-initializes the regex
+  */
+  public void redoRegex(String regex)
+  {
+    this.regex = (isOptional()?"(":"")+regex+(isOptional()?")?":"");
+    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*).*",Pattern.DOTALL);
+
+  } 
+
+  /*
+    re-initializes the regex with a given value that can follow the regex(this value should be commuted with getFirstValue).
+  */
+  public void redoRegex(String regex, String following, boolean optional) {
+	this.regex = (isOptional()?"(":"")+regex+(isOptional()?")?":"");	
+    if(optional)
+    {
+    	pattern2 = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*).*",Pattern.DOTALL);
+    }
+    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*)("+following+").*",Pattern.DOTALL);	
+	if(isOptional())
+	{
+	  setCannotBe(following);
+	}
+  }
+  
+  /*
+    This function removes the argument string from the regex
+  */
+  public void removeFromAllRegex(String replacement)
+  {
+    this.regex = regex.replace(replacement,"");
+    pattern = Pattern.compile("(["+space+"]*("+regex.replace(replacement,"")+")["+space.replace(replacement,"")+"]*).*",Pattern.DOTALL);
+  }
+}
+
+class BalancedRule 
+{
+  /*
+    A balanced rule is of the form "open key" rule "close key", for example: { [[classDefinition]]* }
+    This constructor reflect's that form.
+  */
+  public BalancedRule(String name, String open, ChoiceRule rule, String close)
+  {
+    super(name, rule);
+    key = open+close;
+    spacesTerminal = new Terminal("spaces","",false).dontCare();
+  }
+
+  /*
+    The parsing of the balanced rule is relies on the commuted couples from the ParserDataPackage.
+    The only thing that has to be respected is that there cannot be anything besides the couple's open string first so there cannot be whitespace for this parse to work
+    for example: "{ key }" would work, but " { key }" would not. trailing whitespace is accounted for.
+    This is the only rule that does not account for whitespace before it begins.
+  */
+  public int parse(Token token, int from, int to, String input, ParserDataPackage data)
+  {
+    int index = data.getCouples().get(key).indexOfPositionFrom(from);
+    if(index!=-1)
+    {
+      
+      Token self = getNegate()?token:new Token(getName(),"START_TOKEN");
+      int from2 = Terminal.space.equals(" \\t")?-1:spacesTerminal.parse(self, from+data.getCouples().get(key).getOpen().length(), to, input, data);
+      if(from2==-1)
+      {
+    	  from2 = from+data.getCouples().get(key).getOpen().length();
+      }
+      Token open = new Token(data.getCouples().get(key).getOpen(),"STATIC");
+      addToken(token,
+  			open,
+  			from,
+  			from+data.getCouples().get(key).getOpen().length(),
+  			data);
+      int parseResult = get(0).parse(self,
+          from2,
+          data.getCouples().get(key).getPositionTo(index),
+          input,
+          data);
+      if(parseResult!=-1&&parseResult==data.getCouples().get(key).getPositionTo(index))
+      {
+    	int result = parseResult;
+    	parseResult = Terminal.space.equals(" \\t")?-1:spacesTerminal.parse(self, parseResult+data.getCouples().get(key).getClose().length(), to, input, data);
+    	if(parseResult==-1)
+    	{
+    		parseResult = result+data.getCouples().get(key).getClose().length();
+        }
+    	if(!getNegate())
+        {
+          addToken(token,
+        		  self,
+        		  from+data.getCouples().get(key).getOpen().length(),
+        		  result,
+        		  data);
+        }
+        else
+        {
+          //addAllTokens(token,self);
+        }
+        addToken(token,new Token(data.getCouples().get(key).getClose(),"STATIC"),result,result+1,data);
+        return parseResult;
+      }
+      token.removeSubToken(open);
+    }
+    return -1;
+  }
+  
+  /*
+    initializes the couples, and puts them into the data package
+  */
+  public static void initialize(String input, ParserDataPackage data)
+  {
+    data.setCouples(new HashMap<String,ParsingCouple>());
+    for(String[] key:data.getKeys().values())
+    {
+      data.getCouples().put(key[0]+key[1],new ParsingCouple(key[0],key[1]).init(input));
+    }
+  }
+
+  /*
+    Balanced rules are never optional, the way to make them optional is to use a Repeatable rule as their parent.
+  */
+  public boolean isOptional()
+  {
+    return false;
+  }
+  
+  /*
+    the first value of the balanced rule must always be the open key
+  */
+  public String getFirstValue()
+  {
+	return "\\Q"+key.charAt(0)+"\\E";
+  }
+}
+
+class ParsingCouple
+{
+  /*
+    Searches the input string for the key this couple protects.
+    If a key is found with a \ before it, it is not considered
+    
+    if a key is found between // and \n it is not considered
+    if a key is found within " and " it is not considered
+    if a key is found between ' and ' it is not considered
+    
+    if ever there is a need for say "\{" to happen, i.e. that \ is  terminal followed by { code } or something like that
+    then this function will need to be revised so that there can be conditional escaping(it would probably just be an attribute of the couple)
+    
+    future plans also include refactoring this function so that all the couples are found on one pass through the input instead of having to re-initialize on every new input
+    
+    The ignore level comes into play for instance if you have /*lvl0 /*lvl1 and you only want to hide lvl1 you would put the ignore level as 1
+  */
+  public ParsingCouple init(String input)
+  {      
+    int level = 0;
+    boolean isQuote = false;
+    boolean isSingleQuote = false;
+    boolean isComment = false;
+    boolean isMultiComment = false;
+    boolean escaping = false;
+    char[] chars = input.toCharArray();
+    int size = input.length();
+    List<Integer> levels = new ArrayList<Integer>();
+    for(int i=0;i<size;i++)
+    {
+      if(!escaping)
+      {
+        if(chars[i]=='\\')
+        {
+          escaping = true;
+        }
+        else if(!isComment&&!isMultiComment&&!isQuote&&!isSingleQuote)
+        {
+          if(level>0&&(close.length()==1&&close.charAt(0)==(chars[i]))||(close.length()>1&&(i+close.length()<input.length()?input.substring(i,i+close.length()).matches("\\Q"+close+"\\E"):false)))
+          {            
+            level--;
+            if(level<0)
+            {
+              level=0;
+            }
+            else
+            {
+              positionFrom.add(levels.get(level));
+              positionTo.add(new Integer(i));
+            }
+          }            
+          else if((open.length()==1&&open.charAt(0)==(chars[i]))||open.length()>1&&(i+open.length()<input.length()?input.substring(i,i+open.length()).matches("\\Q"+open+"\\E"):false))
+          {
+            if(levels.size()<=level)
+            {
+              levels.add(i);
+            }
+            else 
+            {
+              levels.set(level, i);
+            }
+            level++;
+          }            
+          else if (level>ParsingCouple.ignoreLevel)
+          {
+            if(chars[i]=='\"')
+            {
+              isQuote = true;
+            }
+            else if(chars[i]=='\'')
+            {
+              isSingleQuote = true;
+            }
+            if(i<size-1&&chars[i]=='/')
+            {
+              if(chars[i+1]=='/')
+              {
+                isComment = true;
+              }
+              else if(chars[i+1]=='*')
+              {
+                isMultiComment = true;
+                i++;
+              }
+            }
+          }
+        }          
+        else if(isQuote&&chars[i]=='\"')
+        {
+          isQuote = false;
+        }
+        else if(isSingleQuote&&chars[i]=='\'')
+        {
+          isSingleQuote = false;
+        }
+        else if(isComment&&chars[i]=='\n')
+        {
+          isComment = false;
+        }
+        else if(isMultiComment&&i<size-1&&chars[i]=='*'&&chars[i+1]=='/')
+        {
+          isMultiComment = false;
+        }          
+        else {
+          escaping = false;
+        }      
+      }
+      else {
+        escaping = false;
+      }
+    }
+    return this;
+  }
+
+  public int hashCode()
+  {
+    return open.hashCode()+close.hashCode();
+  }
+}

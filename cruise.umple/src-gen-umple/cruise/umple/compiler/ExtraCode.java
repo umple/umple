@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 298
- * @umplesource Umple_Code.ump 595
+ * @umplesource Umple.ump 297
+ * @umplesource Umple_Code.ump 587
  */
-// line 298 "../../../../src/Umple.ump"
-// line 595 "../../../../src/Umple_Code.ump"
+// line 297 "../../../../src/Umple.ump"
+// line 587 "../../../../src/Umple_Code.ump"
 public class ExtraCode
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -53,19 +53,19 @@ public class ExtraCode
   public void delete()
   {}
 
-  @umplesourcefile(line={597},file={"Umple_Code.ump"},javaline={57},length={4})
+  @umplesourcefile(line={590},file={"Umple_Code.ump"},javaline={57},length={4})
    public void appendExtraCode(String newCode){
     code.add(new CodeBlock(newCode));
     setHasCode(true);
   }
 
-  @umplesourcefile(line={603},file={"Umple_Code.ump"},javaline={63},length={4})
+  @umplesourcefile(line={596},file={"Umple_Code.ump"},javaline={63},length={4})
    public void appendExtraCode(CodeBlock cb){
     code.add(cb);
     setHasCode(true);
   }
 
-  @umplesourcefile(line={609},file={"Umple_Code.ump"},javaline={69},length={12})
+  @umplesourcefile(line={602},file={"Umple_Code.ump"},javaline={69},length={12})
    public String getExtraCode(){
     String returnCode = "";
     if(getHasCode())

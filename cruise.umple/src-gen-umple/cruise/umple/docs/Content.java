@@ -7,11 +7,11 @@ import java.util.*;
 /**
  * Data for the user manual taken from one of the files in 
  * build/reference
- * @umplesource Documenter.ump 35
- * @umplesource Documenter_Code.ump 330
+ * @umplesource Documenter.ump 34
+ * @umplesource Documenter_Code.ump 329
  */
-// line 35 "../../../../src/Documenter.ump"
-// line 330 "../../../../src/Documenter_Code.ump"
+// line 34 "../../../../src/Documenter.ump"
+// line 329 "../../../../src/Documenter_Code.ump"
 public class Content
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

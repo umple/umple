@@ -9,11 +9,11 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource Generator.ump 190
- * @umplesource Generator_CodeXtext.ump 12
+ * @umplesource Generator.ump 189
+ * @umplesource Generator_CodeXtext.ump 11
  */
-// line 190 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeXtext.ump"
+// line 189 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeXtext.ump"
 public class XtextGenerator implements CodeGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -364,7 +364,7 @@ public class XtextGenerator implements CodeGenerator
 
 //  @umplesourcefile(line={205},file={"Generator_CodeXtext.ump"},javaline={366},length={22})
   @umplesourcefile(line={206},file={"Generator_CodeXtext.ump"},javaline={367},length={21})
-  private void writeFile(String contents) throws IOException 
+  private void writeFile (String contents) throws IOException 
   {
     String path = StringFormatter.addPathOrAbsolute( 
                   model.getUmpleFile().getPath(), 

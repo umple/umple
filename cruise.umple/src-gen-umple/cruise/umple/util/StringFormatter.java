@@ -5,9 +5,9 @@ package cruise.umple.util;
 import java.io.File;
 
 /**
- * @umplesource Util_Code.ump 305
+ * @umplesource Util_Code.ump 304
  */
-// line 305 "../../../../src/Util_Code.ump"
+// line 304 "../../../../src/Util_Code.ump"
 public class StringFormatter
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

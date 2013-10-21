@@ -5,9 +5,9 @@ package cruise.umple.util;
 import java.io.*;
 
 /**
- * @umplesource Util_Code.ump 107
+ * @umplesource Util_Code.ump 106
  */
-// line 107 "../../../../src/Util_Code.ump"
+// line 106 "../../../../src/Util_Code.ump"
 public class FileManager
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -117,7 +117,7 @@ public class FileManager
   //------------------------
   //  @umplesourcefile(line={169},file={"Util_Code.ump"},javaline={119},length={10})
   @umplesourcefile(line={170},file={"Util_Code.ump"},javaline={120},length={9})
-  private static void writeFileToDisk(FileOutputStream fout, String text) throws IOException 
+  private static void writeFileToDisk (FileOutputStream fout, String text) throws IOException 
   {
     OutputStream bout = new BufferedOutputStream(fout);
     OutputStreamWriter out = new OutputStreamWriter(bout);

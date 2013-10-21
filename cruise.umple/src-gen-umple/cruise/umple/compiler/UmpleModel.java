@@ -17,15 +17,15 @@ import java.util.*;
  * Because of this it is absolutely critical to understand the model since it is basically the "root" of everything.
  * 
  * In Umple_Code.ump: Methods for manipulating the Model
- * @umplesource Umple.ump 25
- * @umplesource Trace.ump 17
- * @umplesource UmpleVersion.ump 13
- * @umplesource Umple_Code.ump 18
+ * @umplesource Umple.ump 24
+ * @umplesource UmpleVersion.ump 12
+ * @umplesource Umple_Code.ump 17
+ * @umplesource Trace.ump 16
  */
-// line 25 "../../../../src/Umple.ump"
-// line 17 "../../../../src/Trace.ump"
-// line 13 "../../../../src/UmpleVersion.ump"
-// line 18 "../../../../src/Umple_Code.ump"
+// line 24 "../../../../src/Umple.ump"
+// line 12 "../../../../src/UmpleVersion.ump"
+// line 17 "../../../../src/Umple_Code.ump"
+// line 16 "../../../../src/Trace.ump"
 public class UmpleModel implements Runnable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -797,25 +797,19 @@ public class UmpleModel implements Runnable
   /**
    * Creates a new parser, loads the input, parses, then analyses
    */
-  @umplesourcefile(line={154},file={"Umple_Code.ump"},javaline={797},length={24})
+  @umplesourcefile(line={154},file={"Umple_Code.ump"},javaline={797},length={18})
    public void run(){
     boolean failed = false;
     String input;
-    UmpleParser parser = new UmpleInternalParser(this);
-    try {
-      input = SampleFileWriter.readContent(getUmpleFile().getFile());
-      // this adds command-based linked umple files to the content of file.
-	  input = input+getUmpleFile().getLinkedFiles();
-    }
-    catch (RuntimeException e){
-      input = "use "+getUmpleFile().getFileName()+";\n";
-    }
-    ParseResult result = parser.parse("program", input);
+    cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+    UmpleParser analyzer = new UmpleInternalParser("UmpleInternalParser",this,parser);
+    ParseResult result = parser.parse(umpleFile);
+    
     failed = !result.getWasSuccess();
     lastResult = result;
 
     if(!failed)
-      result = parser.analyze(getShouldGenerate());
+      result = analyzer.analyze(getShouldGenerate());
 
     failed |= !result.getWasSuccess();
 
@@ -827,7 +821,7 @@ public class UmpleModel implements Runnable
   /**
    * Generates the actual code for each generation target
    */
-  @umplesourcefile(line={182},file={"Umple_Code.ump"},javaline={827},length={36})
+  @umplesourcefile(line={175},file={"Umple_Code.ump"},javaline={821},length={36})
    public void generate(){
     boolean foundGenerator;
     Class<?> classDefinition = null;
@@ -865,7 +859,7 @@ public class UmpleModel implements Runnable
     }
   }
 
-  @umplesourcefile(line={221},file={"Umple_Code.ump"},javaline={869},length={13})
+  @umplesourcefile(line={214},file={"Umple_Code.ump"},javaline={863},length={13})
    public Coordinate getDefaultClassPosition(int numDefaults){
     int xIndex  = 0;
     int yIndex = 0;
@@ -880,7 +874,7 @@ public class UmpleModel implements Runnable
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
 
-  @umplesourcefile(line={236},file={"Umple_Code.ump"},javaline={884},length={91})
+  @umplesourcefile(line={229},file={"Umple_Code.ump"},javaline={878},length={91})
    public Coordinate[] getDefaultAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     int offsetY = offsetFromEdge.getX();
@@ -973,7 +967,7 @@ public class UmpleModel implements Runnable
     return defaults;
   }
 
-  @umplesourcefile(line={329},file={"Umple_Code.ump"},javaline={977},length={59})
+  @umplesourcefile(line={322},file={"Umple_Code.ump"},javaline={971},length={59})
    private Coordinate[] getDefaultReflexiveAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();
@@ -1055,9 +1049,9 @@ public class UmpleModel implements Runnable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={77},file={"Umple_Code.ump"},javaline={1059},length={5})
-  @umplesourcefile(line={78},file={"Umple_Code.ump"},javaline={1060},length={4})
-  public void addGenerate(Collection <?extends GenerateTarget> c) 
+  //  @umplesourcefile(line={77},file={"Umple_Code.ump"},javaline={1053},length={5})
+  @umplesourcefile(line={78},file={"Umple_Code.ump"},javaline={1054},length={4})
+  public void addGenerate (Collection <?extends GenerateTarget> c) 
   {
     generates.addAll(c);
   }

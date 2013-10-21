@@ -10,11 +10,11 @@ import cruise.umple.compiler.java.*;
 import cruise.umple.util.StringFormatter;
 
 /**
- * @umplesource Generator.ump 219
- * @umplesource Generator_CodeJava.ump 12
+ * @umplesource Generator.ump 218
+ * @umplesource Generator_CodeJava.ump 11
  */
-// line 219 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodeJava.ump"
+// line 218 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodeJava.ump"
 public class JavaGenerator extends SuperCodeGenerator implements CodeTranslator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -1412,7 +1412,7 @@ public class JavaGenerator extends SuperCodeGenerator implements CodeTranslator
 
 //  @umplesourcefile(line={1194},file={"Generator_CodeJava.ump"},javaline={1414},length={27})
   @umplesourcefile(line={1195},file={"Generator_CodeJava.ump"},javaline={1415},length={26})
-  private void writeFile(UmpleElement aClass) throws IOException 
+  private void writeFile (UmpleElement aClass) throws IOException 
   {
     ILang language = getLanguageFor(aClass);
     

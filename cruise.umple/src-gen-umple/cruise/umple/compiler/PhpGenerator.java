@@ -9,11 +9,11 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.*;
 
 /**
- * @umplesource Generator.ump 261
- * @umplesource Generator_CodePhp.ump 12
+ * @umplesource Generator.ump 260
+ * @umplesource Generator_CodePhp.ump 11
  */
-// line 261 "../../../../src/Generator.ump"
-// line 12 "../../../../src/Generator_CodePhp.ump"
+// line 260 "../../../../src/Generator.ump"
+// line 11 "../../../../src/Generator_CodePhp.ump"
 public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

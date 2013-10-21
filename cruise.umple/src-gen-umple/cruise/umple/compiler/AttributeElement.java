@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource Generator_Html.ump 65
+ * @umplesource Generator_Html.ump 64
  */
-// line 65 "../../../../src/Generator_Html.ump"
+// line 64 "../../../../src/Generator_Html.ump"
 public class AttributeElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

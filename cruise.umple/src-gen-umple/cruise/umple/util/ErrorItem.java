@@ -5,9 +5,9 @@ package cruise.umple.util;
 import java.util.*;
 
 /**
- * @umplesource Util_Code.ump 289
+ * @umplesource Util_Code.ump 288
  */
-// line 289 "../../../../src/Util_Code.ump"
+// line 288 "../../../../src/Util_Code.ump"
 public class ErrorItem
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

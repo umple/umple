@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Violet.ump 28
- * @umplesource Violet_Code.ump 110
+ * @umplesource Violet.ump 27
+ * @umplesource Violet_Code.ump 109
  */
-// line 28 "../../../../src/Violet.ump"
-// line 110 "../../../../src/Violet_Code.ump"
+// line 27 "../../../../src/Violet.ump"
+// line 109 "../../../../src/Violet_Code.ump"
 public class VioletDiagram
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

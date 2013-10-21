@@ -7,9 +7,9 @@ import java.util.List;
 /**
  * A generic walker that is designed to parse different types of umple elements. It receives
  * an umple model, and recrusively walks through different contained nodes.
- * @umplesource Generator_UmpleModelWalker.ump 151
+ * @umplesource Generator_UmpleModelWalker.ump 150
  */
-// line 151 "../../../../src/Generator_UmpleModelWalker.ump"
+// line 150 "../../../../src/Generator_UmpleModelWalker.ump"
 public class UmpleModelWalker implements IWalker
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

@@ -10,11 +10,12 @@ import java.util.*;
  * It associates two other classes that would otherwise have a many-many
  * relationship. Instances of the AssociationClass represent data 
  * held by the links between those two classes.
- * @umplesource Umple.ump 431
- * @umplesource Umple_Code.ump 696
+ * 
+ * @umplesource Umple.ump 430
+ * @umplesource Umple_Code.ump 688
  */
-// line 431 "../../../../src/Umple.ump"
-// line 696 "../../../../src/Umple_Code.ump"
+// line 430 "../../../../src/Umple.ump"
+// line 688 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -166,7 +167,7 @@ public class AssociationClass extends UmpleClass
     super.delete();
   }
 
-  @umplesourcefile(line={698},file={"Umple_Code.ump"},javaline={170},length={3})
+  @umplesourcefile(line={691},file={"Umple_Code.ump"},javaline={171},length={3})
    public  AssociationClass(String name){
     super(name);
   }

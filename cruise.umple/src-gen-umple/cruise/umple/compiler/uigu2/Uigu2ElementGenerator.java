@@ -7,9 +7,9 @@ import cruise.umple.compiler.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator_CodeUigu2.ump 12
+ * @umplesource Generator_CodeUigu2.ump 11
  */
-// line 12 "../../../../../src/Generator_CodeUigu2.ump"
+// line 11 "../../../../../src/Generator_CodeUigu2.ump"
 public class Uigu2ElementGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
