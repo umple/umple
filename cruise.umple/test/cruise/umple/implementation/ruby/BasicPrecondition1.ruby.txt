@@ -54,7 +54,7 @@ class Client
       raise RuntimeError, 'Please provide a valid minAge'
     end
     // rest of stuff that we don't interpret
- return 0;
+    return 0;
   end
 
 

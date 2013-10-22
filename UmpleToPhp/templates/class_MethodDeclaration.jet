@@ -10,7 +10,9 @@
     		String methodImplementationModifier = aMethod.getIsAbstract() ? " abstract" : "";
     		String methodName = aMethod.getName();
     		String methodType = "function";
-    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
+    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
+            customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
+        
     		String methodBody = aMethod.getIsImplemented() ? "      return \"\";" : aMethod.getMethodBody().getExtraCode();    		
     		
     		/*String methodBody = "";
@@ -45,7 +47,23 @@
 				if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Method Javadoc",aMethod.getComments())); }
 				
   			//appendln(stringBuffer,override);
-  			append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);    
+  			append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
+  	  if(!"".equals(customPostconditionCode))
+      {
+        appendln(stringBuffer, "\n  {");
+        if(!"".equals(aMethod.getType())||!"void".equals(aMethod.getType())){
+          append(stringBuffer, "    $result = {0}Original({1});\n", methodName, finalParams);
+        }
+        else {
+          append(stringBuffer, "    $this->{0}Original({1});\n", methodName, finalParams);
+        }
+        appendln(stringBuffer, GeneratorHelper.doIndent(customPostconditionCode, "    "));
+        if(!"".equals(aMethod.getType())||!"void".equals(aMethod.getType())){
+          append(stringBuffer, "    return $result;\n");
+        }          
+        appendln(stringBuffer, "  }");
+        append(stringBuffer, "\n  {0}{1} {2} {3}Original({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
+      }    
         if(aMethod.getIsAbstract())
   			{
   			  append(stringBuffer, ";");

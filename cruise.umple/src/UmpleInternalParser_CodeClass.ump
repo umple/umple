@@ -1477,6 +1477,11 @@ class UmpleInternalParser
           analyzePrecondition(token, (UmpleClass) uElement, aMethod);
         }  
       }
+      else if (token.is("postcondition")){ 
+        if (uElement instanceof UmpleClass){
+          analyzePostcondition(token, (UmpleClass) uElement, aMethod);
+        }  
+      }
     }
     MethodBody meth = new MethodBody(cb);
     aMethod.setMethodBody(meth);

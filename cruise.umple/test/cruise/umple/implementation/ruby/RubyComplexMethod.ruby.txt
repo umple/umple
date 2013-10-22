@@ -26,7 +26,7 @@ class Foo
     @deleted = true
   end
 
-  def testMethod (firstName,lastName)
+  def testMethod (firstName, lastName)
     @fullName = firstName + ' ' + lastName
 		@greeting = 'Hello there ' + @fullName
 		@greeting = @greeting + ', how are you doing?'

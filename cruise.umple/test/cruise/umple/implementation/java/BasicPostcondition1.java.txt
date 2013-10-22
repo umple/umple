@@ -1,9 +1,8 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 
 
-// line 1 "BasicPrecondition1.ump"
 public class Client
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -45,19 +44,20 @@ public class Client
   public void delete()
   {}
 
-  @umplesourcefile(line={4},file={"BasicPrecondition1.ump"},javaline={49},length={4})
+  @umplesourcefile(line={4},file={"BasicPostCondition1.ump"},javaline={49},length={4})
   public int someMethod(Integer arg){
-
+    int result = someMethod_Original(arg);
     if ( !(arg>5))
     {
       throw new RuntimeException("Please provide a valid arg");
     }
-    if ( !(minAge<8))
-    {
-      throw new RuntimeException("Please provide a valid minAge");
-    }
+    return result;
+  }
+
+  @umplesourcefile(line={4},file={"BasicPostCondition1.ump"},javaline={49},length={4})
+  public int someMethod_Original(Integer arg){
     // rest of stuff that we don't interpret
- return 0;
+   return 0;
   }
 
 

@@ -7,10 +7,10 @@ import java.util.*;
 /**
  * A block of code in an arbitrary language to be injected into generated code
  * 
- * @umplesource Umple.ump 272
+ * @umplesource Umple.ump 280
  * @umplesource Umple_Code.ump 485
  */
-// line 272 "../../../../src/Umple.ump"
+// line 280 "../../../../src/Umple.ump"
 // line 485 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
@@ -91,7 +91,7 @@ public class CodeBlock
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={277},file={"Umple.ump"},javaline={95},length={2})
+  //  @umplesourcefile(line={285},file={"Umple.ump"},javaline={95},length={2})
   public static String languageUsed = "" ;
 
   

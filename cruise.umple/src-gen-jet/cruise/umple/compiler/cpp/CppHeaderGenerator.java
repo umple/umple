@@ -2391,6 +2391,17 @@ public class CppHeaderGenerator implements ILang
     			append(stringBuffer, "  {0} {1} {2}();", methodModifier, gen.translate(methodType), methodName);
     		 
     		}
+    		if(null!=GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition")))
+    		{
+    		  if (aMethod.hasMethodParameters())
+    		  {
+    		    append(stringBuffer, "\n  {0} {1} {2}_orig({3});", methodModifier, gen.translate(methodType), methodName);
+    		  }
+    		  else
+    		  {
+    		    append(stringBuffer, "\n  {0} {1} {2}_orig();", methodModifier, gen.translate(methodType), methodName);
+    		  }
+    		}
     	}
     }
 

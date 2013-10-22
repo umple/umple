@@ -9,10 +9,10 @@ import java.util.*;
  * This is a problem for model-to-model transformations
  * Should be abolished
  * 
- * @umplesource Umple.ump 597
+ * @umplesource Umple.ump 608
  * @umplesource Umple_Code.ump 1910
  */
-// line 597 "../../../../src/Umple.ump"
+// line 608 "../../../../src/Umple.ump"
 // line 1910 "../../../../src/Umple_Code.ump"
 public class GeneratedElement
 {

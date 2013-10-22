@@ -11,10 +11,10 @@ import java.util.*;
  * of the other class reference the first cass.
  * The number of references is governed by the Multiplicity at each AssociationEnd
  * 
- * @umplesource Umple.ump 508
+ * @umplesource Umple.ump 519
  * @umplesource Umple_Code.ump 1212
  */
-// line 508 "../../../../src/Umple.ump"
+// line 519 "../../../../src/Umple.ump"
 // line 1212 "../../../../src/Umple_Code.ump"
 public class Association
 {
@@ -41,7 +41,7 @@ public class Association
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={522},file={"Umple.ump"},javaline={61},length={1})
+  @umplesourcefile(line={533},file={"Umple.ump"},javaline={61},length={1})
   public Association(boolean aIsLeftNavigable, boolean aIsRightNavigable, AssociationEnd... allEnds)
   {
     name = null;
@@ -57,7 +57,7 @@ public class Association
     {
       throw new RuntimeException("Unable to create Association, must have 2 ends");
     }
-    // line 522 "../../../../src/Umple.ump"
+    // line 533 "../../../../src/Umple.ump"
     this.setLeftAndRight();
   }
 
@@ -122,10 +122,10 @@ public class Association
   /**
    * The name of the association.
    */
-  @umplesourcefile(line={521},file={"Umple.ump"},javaline={129},length={1})
+  @umplesourcefile(line={532},file={"Umple.ump"},javaline={129},length={1})
   public String getName()
   {
-    // line 521 "../../../../src/Umple.ump"
+    // line 532 "../../../../src/Umple.ump"
     if (name == null || "".equals(name)) { return this.deriveName(); }
     return name;
   }

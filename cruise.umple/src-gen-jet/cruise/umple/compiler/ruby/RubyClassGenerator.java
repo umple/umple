@@ -2346,11 +2346,13 @@ public class RubyClassGenerator implements ILang
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
   for (Attribute av : uClass.getAttributes())
   {
-  
     if (av.isConstant() || av.getIsAutounique() || "internal".equals(av.getModifier()) || av.getIsDerived())
     {
       continue;
     }
+    
+    TraceItem traceItem = av.getTraced("setMethod", uClass);
+    
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -2473,6 +2475,8 @@ public class RubyClassGenerator implements ILang
       continue;
     }
     
+    TraceItem traceItem = av.getTraced("getMethod", uClass);
+    
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
 
@@ -2490,7 +2494,13 @@ public class RubyClassGenerator implements ILang
 
     String customIndexOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("indexOfMethod",av)));
     String customIndexOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("indexOfMethod",av)));
+        
+    String customHasUniquePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("hasUniqueMethod",av)));
+    String customHasUniquePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("hasUniqueMethod",av)));
     
+    String customGetUniquePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getUniqueMethod",av)));
+    String customGetUniquePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getUniqueMethod",av)));
+
     if (av.getIsList())
     {
       
@@ -2639,6 +2649,50 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_197);
     
       }
+      
+      if (av.getIsUnique())
+      {
+        if (customGetUniquePostfixCode != null)
+        {
+          
+    
+// This class is a placeholder for the Ruby implementation of the unique keyword.
+// The unique keyword will be implemented in the next few days as of October 7, 2013.
+// In the meantime, this class is included so that Ruby JET templates will build for those who need to work on them.
+
+    
+        } 
+        else 
+        {
+          
+    
+// This class is a placeholder for the Ruby implementation of the unique keyword.
+// The unique keyword will be implemented in the next few days as of October 7, 2013.
+// In the meantime, this class is included so that Ruby JET templates will build for those who need to work on them.
+
+    
+        }
+        if (customHasUniquePostfixCode != null)
+        {
+          
+    
+// This class is a placeholder for the Ruby implementation of the unique keyword.
+// The unique keyword will be implemented in the next few days as of October 7, 2013.
+// In the meantime, this class is included so that Ruby JET templates will build for those who need to work on them.
+
+    
+        }
+        else
+        {
+          
+    
+// This class is a placeholder for the Ruby implementation of the unique keyword.
+// The unique keyword will be implemented in the next few days as of October 7, 2013.
+// In the meantime, this class is included so that Ruby JET templates will build for those who need to work on them.
+
+    
+        }
+      }
     }
   }
 
@@ -2649,6 +2703,8 @@ public class RubyClassGenerator implements ILang
     {
       String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
       String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
+      
+      TraceItem traceItem = av.getTraced("getMethod", uClass);
       
       if (customGetPostfixCode != null)
       {
@@ -2689,6 +2745,8 @@ public class RubyClassGenerator implements ILang
     {
       continue;
     }
+  
+    TraceItem traceItem = av.getTraced("getMethod", uClass);
 
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("isMethod",av)));
@@ -3022,6 +3080,8 @@ public class RubyClassGenerator implements ILang
       continue;
     }
 
+	TraceItem traceItem = av.getTraced("getMethod", uClass);
+
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
 
@@ -3140,6 +3200,8 @@ public class RubyClassGenerator implements ILang
     {
       continue;
     } 
+    
+    TraceItem traceItem = av.getTraced("setMethod", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -3167,7 +3229,7 @@ public class RubyClassGenerator implements ILang
     boolean hasRemoveManyTemplateMethod = false;
     String includeFile = null;
     String includeFile2 = null;
-	String includeFile3 = null;
+  String includeFile3 = null;
 
     if (!relatedAssociation.getIsNavigable())
     {
@@ -3189,8 +3251,8 @@ public class RubyClassGenerator implements ILang
       }
       else if (av.isMN())
       {
-      	if (!av.isImmutable())
-      	{
+        if (!av.isImmutable())
+        {
           includeFile = "association_AddUnidirectionalMN.jet";
         }
         includeFile2 = "association_SetUnidirectionalMN.jet";
@@ -3202,14 +3264,14 @@ public class RubyClassGenerator implements ILang
       else if (av.isOptionalN())
       {
         if (!av.isImmutable())
-      	{
+        {
           includeFile = "association_AddUnidirectionalOptionalN.jet";
         }
         includeFile2 = "association_SetUnidirectionalOptionalN.jet";
       }
       else if (av.isImmutable() && av.isMany())
       {
-      	includeFile = "association_SetUnidirectionalMany.jet";
+        includeFile = "association_SetUnidirectionalMany.jet";
       }
       else if (av.isMany())
       {
@@ -3289,7 +3351,7 @@ public class RubyClassGenerator implements ILang
       hasAddManyToManyTemplateMethod = true;
       if (!av.isImmutable())
       {
-      	hasRemoveManyTemplateMethod = true;
+        hasRemoveManyTemplateMethod = true;
       }
     }
     else if (av.isOptionalN() && relatedAssociation.isOptionalMany())
@@ -3297,7 +3359,7 @@ public class RubyClassGenerator implements ILang
       hasAddManyToManyTemplateMethod = true;
       if (!av.isImmutable())
       {
-      	hasRemoveManyTemplateMethod = true;
+        hasRemoveManyTemplateMethod = true;
       }
       includeFile = "association_SetOptionalNToMany.jet";
     }
@@ -3310,7 +3372,7 @@ public class RubyClassGenerator implements ILang
       hasAddManyToManyTemplateMethod = true;
       if (!av.isImmutable())
       {
-      	hasRemoveManyTemplateMethod = true;
+        hasRemoveManyTemplateMethod = true;
       }
     }
     else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN() || relatedAssociation.isMany()))
@@ -3318,7 +3380,7 @@ public class RubyClassGenerator implements ILang
       hasAddManyToManyTemplateMethod = true;
       if (!av.isImmutable())
       {
-      	hasRemoveManyTemplateMethod = true;
+        hasRemoveManyTemplateMethod = true;
       }
     }
     else if (av.isOptionalN() && relatedAssociation.isOptionalOne())
@@ -3401,6 +3463,8 @@ public class RubyClassGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
+    
+      
     stringBuffer.append(TEXT_290);
     stringBuffer.append(gen.translate("isNumberOfValidMethod",av));
      if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } 
@@ -3436,6 +3500,8 @@ public class RubyClassGenerator implements ILang
       addNewLine = true;
       
     
+      
+    
     String customRequiredNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("requiredNumberOfMethod",av)));
     String customRequiredNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("requiredNumberOfMethod",av)));
 
@@ -3463,6 +3529,8 @@ public class RubyClassGenerator implements ILang
       addNewLine = true;
       
     
+      
+    
     String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
     String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
 
@@ -3488,6 +3556,8 @@ public class RubyClassGenerator implements ILang
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
+      
+    
       
     
     String customMaximumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("maximumNumberOfMethod",av)));
@@ -3559,6 +3629,8 @@ public class RubyClassGenerator implements ILang
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
       
+    
+      
     stringBuffer.append(TEXT_336);
     stringBuffer.append(gen.translate("removeMethod",av));
     stringBuffer.append(TEXT_337);
@@ -3597,6 +3669,8 @@ public class RubyClassGenerator implements ILang
 
     if (addNewLine) { appendln(stringBuffer,""); }
     addNewLine = true;
+    
+    
     
     // How do you dynamically include a file in JET?!?
     if (includeFile == "association_SetUnidirectionalOptionalOne.jet")
@@ -5066,7 +5140,7 @@ public class RubyClassGenerator implements ILang
     }
     else if (includeFile == "association_SetUnidirectionalMany.jet")
     {
-    	
+      
     stringBuffer.append(TEXT_1046);
     stringBuffer.append(gen.translate("setManyMethod",av));
     stringBuffer.append(TEXT_1047);
@@ -5111,7 +5185,7 @@ public class RubyClassGenerator implements ILang
     stringBuffer.append(TEXT_1068);
     
     }
-	else if (includeFile == "association_SetOptionalOneToMandatoryMany.jet")
+  else if (includeFile == "association_SetOptionalOneToMandatoryMany.jet")
     {
       
     stringBuffer.append(TEXT_1069);
@@ -5276,6 +5350,8 @@ public class RubyClassGenerator implements ILang
     {
       appendln(stringBuffer,"You forgot to include {0}",includeFile);
     }
+    
+    
     
     if (includeFile2 == "association_SetMNToMany.jet")
     {
@@ -6320,14 +6396,18 @@ public class RubyClassGenerator implements ILang
 
      if (uClass.hasMethods()) { 
     
-    if (uClass.hasMethods())
-    {
-    	for (Method aMethod : uClass.getMethods()) 
-    	{
-    		String methodName = aMethod.getName();
-    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
-    		String methodBody = (aMethod.getMethodBody() != null) ? aMethod.getMethodBody().getExtraCode() : "";
-    		String properMethodBody = "    " + methodBody;
+  if (uClass.hasMethods())
+  {
+  	for (Method aMethod : uClass.getMethods()) 
+  	{
+      String methodName = aMethod.getName();
+      String methodType = aMethod.getType();
+      String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
+      String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
+      customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
+        
+      String methodBody = (aMethod.getMethodBody() != null) ? aMethod.getMethodBody().getExtraCode() : "";
+      String properMethodBody = "    " + methodBody;
     		
     		/*String lines[] = properMethodBody.split("\n");
     		properMethodBody = "";
@@ -6356,44 +6436,48 @@ public class RubyClassGenerator implements ILang
 				}
 		    }*/
     		
-    		String paramName="";
-    	    String parameters = "";
-    		if (aMethod.hasMethodParameters())
-    		{
-    			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
-    			{
-    				paramName = aMethodParam.getName();
-        			parameters += paramName + ",";
-    			}
-    			String finalParams = parameters.substring(0, parameters.length()-1);
-    			appendln(stringBuffer, "");
-    			
-    			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
-    			
-    			append(stringBuffer, "  def {0} ({1})\n", methodName, finalParams);	
-    			
-    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			
-    			appendln(stringBuffer, properMethodBody);
-    			
-				appendln(stringBuffer, "  end");
-    			
-    		}
-    		else{
-    			appendln(stringBuffer, "");
-    			
-    			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
-    			
-    			append(stringBuffer, "  def {0}()\n", methodName);
-    			
-    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			
-    			appendln(stringBuffer, properMethodBody);
-    			
-    			appendln(stringBuffer, "  end");
-    		}
-    	}
-    }
+      String finalParams = "";
+      StringBuilder parameters = new StringBuilder();
+      if (aMethod.hasMethodParameters())
+      {
+        for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+        {
+          String paramName = aMethodParam.getName();
+          String aSingleParameter = paramName;
+          parameters.append(aSingleParameter + ", ");
+        }
+        finalParams = parameters.toString().substring(0, parameters.toString().length()-2);
+      }
+        
+      appendln(stringBuffer, "");
+      	
+      if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
+    	
+      append(stringBuffer, "  def {0} ({1})\n", methodName, finalParams);
+      
+      if(!"".equals(customPostconditionCode))
+      {
+        if(!"".equals(methodType)||!"void".equals(methodType)){
+          append(stringBuffer, "    result = {0}_original({1})\n", methodName, finalParams);
+        }
+        else {
+          append(stringBuffer, "    {0}_original({1})\n", methodName, finalParams);
+        }
+        appendln(stringBuffer, GeneratorHelper.doIndent(customPostconditionCode, "    "));
+        if(!"".equals(methodType)||!"void".equals(methodType)){
+          append(stringBuffer, "    return result\n");
+        }          
+        appendln(stringBuffer, "  end");
+        append(stringBuffer, "\n  def {0}_original({1})\n", methodName, finalParams);
+      }
+    	
+      if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+    	
+      appendln(stringBuffer, properMethodBody);
+    	
+	  appendln(stringBuffer, "  end");
+  	}
+  }
 
     stringBuffer.append(TEXT_1527);
      } 

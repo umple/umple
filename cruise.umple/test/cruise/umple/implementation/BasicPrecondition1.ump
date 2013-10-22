@@ -1,11 +1,12 @@
 class Client {
   Integer minAge;
   
-int someMethod(Integer arg) 
- [pre: arg > 5]
- [pre: minAge < 8] {
- // rest of stuff that we don't interpret
- return 0;
-}
+  int someMethod(Integer arg) 
+  { 
+    [pre: arg > 5]
+    [pre: minAge < 8] 
+    // rest of stuff that we don't interpret
+    return 0;
+  }
 
 }

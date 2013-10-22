@@ -30,7 +30,7 @@ class Foo
   =begin
   Inline comment above method.
   =end
-  def testMethod1()
+  def testMethod1 ()
     // I am a comment inside a method.
   end
 
@@ -39,7 +39,7 @@ class Foo
   Multiple inline comments
   above method.
   =end
-  def testMethod2()
+  def testMethod2 ()
     // I am a comment inside a method.
   end
 
@@ -47,7 +47,7 @@ class Foo
   =begin
   Multiline comment above method.
   =end
-  def testMethod3()
+  def testMethod3 ()
     // I am a comment inside a method.
   end
 
@@ -56,7 +56,7 @@ class Foo
   Multiple multiline comments
   above method.
   =end
-  def testMethod4()
+  def testMethod4 ()
     // I am a comment inside a method.
   end
 

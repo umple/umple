@@ -1,0 +1,11 @@
+class Client {
+  Integer minAge;
+  
+ int someMethod(Integer arg) 
+ {
+   [post: arg > 5]
+   // rest of stuff that we don't interpret
+   return 0;
+ }
+
+}

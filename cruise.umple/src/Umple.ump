@@ -266,6 +266,14 @@ class Precondition{
    
 }
 
+/*
+ * The Postcondition object (special Constraint) related to Umple Classes
+ */
+class Postcondition{  
+  isA Constraint;
+   * -> 1 Method ; // The method postcondition belongs to
+   
+}
 
 /*
  * A block of code in an arbitrary language to be injected into generated code
@@ -376,6 +384,9 @@ class UmpleClass
   
   //The possible Preconditions related to the Umple Class
   1 -> 0..* Precondition;
+  
+  //The possible Preconditions related to the Umple Class
+  1 -> 0..* Postcondition;
 
   // The possible Constraints related to the Umple Class
   1 -> 0..* Constraint;

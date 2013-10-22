@@ -713,14 +713,6 @@ class JavaGenerator
     
     prepareConstraints(aClass);
     
-    for (Precondition pc : aClass.getPreconditions()){ 
-    	String methodName = pc.getMethod().getName();
-    	String precondition_code = StringFormatter.format(translate("NotClosed",pc),"throw new RuntimeException(\"Please provide a valid "+ pc.toString() +"\");");
-    	CodeInjection before = new CodeInjection("before", methodName+"Precondition", precondition_code, aClass);         
-    	before.setIsInternal(true);
-    	aClass.addCodeInjection(before);    
-    }
-    
     Map<String,String> lookups = new HashMap<String,String>();
     String executeMethods = "public static void handle(String message) { getInstance().addTrace(message); }\n";
     executeMethods += "public void reset() { getInstance().traces.clear(); }";

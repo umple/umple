@@ -8,10 +8,10 @@ import java.util.*;
  * Data for the user manual taken from one of the files in 
  * build/reference
  * @umplesource Documenter.ump 34
- * @umplesource Documenter_Code.ump 329
+ * @umplesource Documenter_Code.ump 330
  */
 // line 34 "../../../../src/Documenter.ump"
-// line 329 "../../../../src/Documenter_Code.ump"
+// line 330 "../../../../src/Documenter_Code.ump"
 public class Content
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -162,7 +162,7 @@ public class Content
   public void delete()
   {}
 
-  @umplesourcefile(line={333},file={"Documenter_Code.ump"},javaline={166},length={3})
+  @umplesourcefile(line={334},file={"Documenter_Code.ump"},javaline={166},length={3})
    public String getTitleFilename(){
     return title.replace(" ","") + ".html";
   }

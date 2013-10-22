@@ -26,7 +26,7 @@ class Mentor
     @deleted = true
   end
 
-  def main()
+  def main ()
     
   end
 

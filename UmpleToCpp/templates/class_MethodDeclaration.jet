@@ -1,57 +1,66 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
-    if (uClass.hasMethods())
-    {
-    	for (Method aMethod : uClass.getMethods()) 
-    	{
-    		String methodModifier = aMethod.getModifier().equals("") ? "" : aMethod.getModifier();
-    		String methodName = (uClass.getName()+"::"+aMethod.getName());
-    		String methodType = aMethod.getType();
-    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
-    		String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translateReturnType(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
-    		String properMethodBody = "      " + methodBody; 
-    		String override =  aMethod.getIsImplemented() ? "" : "";
-    		String paramName="";
-    		String paramType="";
-    		String aSingleParameter="";
-    		String isList="";
-    	    String parameters = "";
-    		if (aMethod.hasMethodParameters())
-    		{
-    			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
-    			{
-    				paramName = aMethodParam.getName();
-    				paramType = gen.translate(aMethodParam.getType());
-    				isList = aMethodParam.getIsList() ? " [] " : " ";
-    				aSingleParameter = paramType + isList + paramName;
-        			parameters += aSingleParameter + ", ";
-    			}
-    			String finalParams = parameters.substring(0, parameters.length()-2);
-    			appendln(stringBuffer, "");
-    			
-    			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
-    			
-    			//appendln(stringBuffer,override);
-    			append(stringBuffer, "  {0} {1} {2}({3})", methodModifier, gen.translate(methodType), methodName, finalParams);	
-    			appendln(stringBuffer, "{");
-    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			appendln(stringBuffer, properMethodBody);
-    			appendln(stringBuffer, "  }");
-    			
-    		}
-    		else{
-    			appendln(stringBuffer, "");
-    			
-    			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
-    			
-    			//appendln(stringBuffer,override);
-    			appendln(stringBuffer,"");
-    			append(stringBuffer, "  {0} {1} {2}()", methodModifier, gen.translate(methodType), methodName);
-    		    appendln(stringBuffer, "{");
-    		    if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			appendln(stringBuffer, properMethodBody);
-    			appendln(stringBuffer, "  }");
-    		}
-    	}
+   if (uClass.hasMethods())
+   {
+     for (Method aMethod : uClass.getMethods()) 
+     {
+       String methodModifier = aMethod.getModifier().equals("") ? "" : aMethod.getModifier();
+       String methodName = (uClass.getName()+"::"+aMethod.getName());
+       String methodType = aMethod.getType();
+       String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
+       String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
+       customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
+        
+       String methodBody = aMethod.getIsImplemented() ? "      return " + gen.translateReturnType(methodType) + ";" : aMethod.getMethodBody().getExtraCode();
+       String properMethodBody = "      " + methodBody; 
+       String override =  aMethod.getIsImplemented() ? "" : "";
+       String paramName="";
+       String paramType="";
+       String aSingleParameter="";
+       String isList="";
+       String finalParams = "";
+       String finalParamsWithoutTypes = "";
+       StringBuilder parameters = new StringBuilder();
+       StringBuilder parametersWithoutTypes = new StringBuilder();
+       if(aMethod.hasMethodParameters())
+       {
+         for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+         {
+            paramName = aMethodParam.getName();
+            paramType = gen.translate(aMethodParam.getType());
+            isList = aMethodParam.getIsList() ? " [] " : " ";
+            aSingleParameter = paramType + isList + paramName;
+            parameters.append(aSingleParameter + ", ");
+            parametersWithoutTypes.append(aMethodParam.getName() + ", ");
+          }
+          finalParams = parameters.toString().substring(0, parameters.toString().length()-2);
+          finalParamsWithoutTypes = parametersWithoutTypes.toString().substring(0, parametersWithoutTypes.toString().length()-2);
+        }
+        else {
+           appendln(stringBuffer,"");
+        }
+        if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
+        append(stringBuffer, "\n  {0} {1} {2}({3})", methodModifier, gen.translate(methodType), methodName, finalParams);
+        if(!"".equals(customPostconditionCode))
+        {
+          appendln(stringBuffer, "{");
+          if(!"".equals(methodType)||!"void".equals(methodType)){
+            append(stringBuffer, "    {0} result = {1}_Original({2});\n", methodType, methodName, finalParamsWithoutTypes);
+          }
+          else {
+            append(stringBuffer, "    {0}_Original({1});\n", methodType, methodName, finalParamsWithoutTypes);
+          }
+          appendln(stringBuffer, GeneratorHelper.doIndent(customPostconditionCode, "    "));
+          if(!"".equals(methodType)||!"void".equals(methodType)){
+            append(stringBuffer, "    return result;\n");
+          }          
+          appendln(stringBuffer, "  }");
+          append(stringBuffer, "  {0} {1} {2}_Original({3})", methodModifier, methodType, methodName, finalParams);
+        }
+    	appendln(stringBuffer, "{");
+    	if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+    	appendln(stringBuffer, properMethodBody);
+    	appendln(stringBuffer, "  }");
+      }
     }
 %>

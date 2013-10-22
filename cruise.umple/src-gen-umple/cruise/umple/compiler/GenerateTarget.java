@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * Represents the generation target, such as what the generated output language will be.
- * @umplesource Umple.ump 674
+ * @umplesource Umple.ump 685
  * @umplesource Umple_Code.ump 2236
  */
-// line 674 "../../../../src/Umple.ump"
+// line 685 "../../../../src/Umple.ump"
 // line 2236 "../../../../src/Umple_Code.ump"
 public class GenerateTarget
 {
@@ -95,10 +95,10 @@ public class GenerateTarget
     return language;
   }
 
-  @umplesourcefile(line={689},file={"Umple.ump"},javaline={102},length={1})
+  @umplesourcefile(line={700},file={"Umple.ump"},javaline={102},length={1})
   public String getPath()
   {
-    // line 689 "../../../../src/Umple.ump"
+    // line 700 "../../../../src/Umple.ump"
     if(path == null) path = "";
     return path;
   }

@@ -28,6 +28,18 @@ class UmpleInternalParser
     }  
     aClass.addPrecondition(precondition);
   }
+  
+  private void analyzePostcondition (Token PostconditionToken, UmpleClass aClass, Method method)
+  {
+    List<ConstraintVariable> cvs = analyzeConstraint(PostconditionToken, aClass); //adds all identifiers to constraints
+    Postcondition postcondition = new Postcondition(method);
+    
+    for(ConstraintVariable cv: cvs)
+    {
+    	postcondition.addExpression(cv);
+    }  
+    aClass.addPostcondition(postcondition);
+  }
     
   /*
    * Analyzes a token recognized as a constraint
@@ -550,8 +562,8 @@ class UmpleInternalParser
             }
             name.setType(isNew?sub.getValue():attribute.getType());
           }
-          else if (grandparentToken.getName().equals("precondition"))
-          { //if it was a precondition, check if it matches any of the method arguments
+          else if (grandparentToken.is("precondition")||grandparentToken.is("postcondition"))
+          { //if it was a precondition or postcondition, check if it matches any of the method arguments
     	    Token concreteMethod = grandparentToken.getParentToken();
     	    ArrayList<MethodParameter> methodparams = new ArrayList<MethodParameter>();
     	    for (Token t : concreteMethod.getSubTokens())
@@ -599,7 +611,10 @@ class UmpleInternalParser
           }
           else if(attribute==null)
           {
-            if(!isComplex&&mustWarn&&aClass!=null){
+            if(grandparentToken.is("postcondition")&&sub.getValue().equals("result")){
+              //don't throw error if the attribute is named "result" the result is the return value from the original function
+            }
+            else if(!isComplex&&mustWarn&&aClass!=null){
               setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());
             }      
           }          

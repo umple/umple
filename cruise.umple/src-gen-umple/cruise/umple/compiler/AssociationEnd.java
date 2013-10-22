@@ -10,10 +10,10 @@ package cruise.umple.compiler;
  * TODO: Code smell referenceToClassName is a duplication, can access via the association 
  * Create a derived attribute otherend (the other AssociationEnd)
  * In Umple_Code.ump: Methods for computing compound properties
- * @umplesource Umple.ump 531
+ * @umplesource Umple.ump 542
  * @umplesource Umple_Code.ump 1469
  */
-// line 531 "../../../../src/Umple.ump"
+// line 542 "../../../../src/Umple.ump"
 // line 1469 "../../../../src/Umple_Code.ump"
 public class AssociationEnd
 {
@@ -130,18 +130,18 @@ public class AssociationEnd
     return wasSet;
   }
 
-  @umplesourcefile(line={545},file={"Umple.ump"},javaline={137},length={1})
+  @umplesourcefile(line={556},file={"Umple.ump"},javaline={137},length={1})
   public String getRoleName()
   {
-    // line 545 "../../../../src/Umple.ump"
+    // line 556 "../../../../src/Umple.ump"
     if (roleName == null) { return ""; }
     return roleName;
   }
 
-  @umplesourcefile(line={546},file={"Umple.ump"},javaline={144},length={1})
+  @umplesourcefile(line={557},file={"Umple.ump"},javaline={144},length={1})
   public String getClassName()
   {
-    // line 546 "../../../../src/Umple.ump"
+    // line 557 "../../../../src/Umple.ump"
     if (className == null) { return ""; }
     return className;
   }
@@ -149,18 +149,18 @@ public class AssociationEnd
   /**
    * potential enum 'internal'
    */
-  @umplesourcefile(line={547},file={"Umple.ump"},javaline={154},length={1})
+  @umplesourcefile(line={558},file={"Umple.ump"},javaline={154},length={1})
   public String getModifier()
   {
-    // line 547 "../../../../src/Umple.ump"
+    // line 558 "../../../../src/Umple.ump"
     if (modifier == null || "".equals(modifier)) { return "internal"; }
     return modifier;
   }
 
-  @umplesourcefile(line={548},file={"Umple.ump"},javaline={161},length={1})
+  @umplesourcefile(line={559},file={"Umple.ump"},javaline={161},length={1})
   public String getReferenceToClassName()
   {
-    // line 548 "../../../../src/Umple.ump"
+    // line 559 "../../../../src/Umple.ump"
     if (referenceToClassName == null) { return ""; }
     return referenceToClassName;
   }

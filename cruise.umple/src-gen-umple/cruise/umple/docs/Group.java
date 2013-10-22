@@ -8,10 +8,10 @@ import java.util.*;
  * A section of the Umple user manual
  * Defined in the build/references/order.group
  * @umplesource Documenter.ump 58
- * @umplesource Documenter_Code.ump 338
+ * @umplesource Documenter_Code.ump 339
  */
 // line 58 "../../../../src/Documenter.ump"
-// line 338 "../../../../src/Documenter_Code.ump"
+// line 339 "../../../../src/Documenter_Code.ump"
 public class Group
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -146,7 +146,7 @@ public class Group
     contents.clear();
   }
 
-  @umplesourcefile(line={341},file={"Documenter_Code.ump"},javaline={150},length={3})
+  @umplesourcefile(line={342},file={"Documenter_Code.ump"},javaline={150},length={3})
    public String getGroupIdName(){
     return name.replace(" ","");
   }

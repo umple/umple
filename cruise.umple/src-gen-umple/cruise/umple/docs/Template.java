@@ -7,10 +7,10 @@ package cruise.umple.docs;
  * Set of html templates used in the Umple User manual for certain
  * kinds of page elements
  * @umplesource Documenter.ump 78
- * @umplesource Documenter_Code.ump 411
+ * @umplesource Documenter_Code.ump 412
  */
 // line 78 "../../../../src/Documenter.ump"
-// line 411 "../../../../src/Documenter_Code.ump"
+// line 412 "../../../../src/Documenter_Code.ump"
 public class Template
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -45,23 +45,23 @@ public class Template
   public void delete()
   {}
 
-  @umplesourcefile(line={415},file={"Documenter_Code.ump"},javaline={49},length={4})
+  @umplesourcefile(line={416},file={"Documenter_Code.ump"},javaline={49},length={4})
    private static  String navigationHeaderTemplate(){
     return "        <div class=\"level1\"><a href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
            "        <div id=\"@@NAVIGATION_HEADER_ID@@\">";
   }
 
-  @umplesourcefile(line={421},file={"Documenter_Code.ump"},javaline={55},length={3})
+  @umplesourcefile(line={422},file={"Documenter_Code.ump"},javaline={55},length={3})
    private static  String navigationItemTemplate(){
     return "          <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
   }
 
-  @umplesourcefile(line={426},file={"Documenter_Code.ump"},javaline={60},length={3})
+  @umplesourcefile(line={427},file={"Documenter_Code.ump"},javaline={60},length={3})
    private static  String navigationItemTemplateNoAnchor(){
     return "          <div class=\"level2\"><b>@@NAVIGATION_ITEM_NAME@@</b></div>" + "\n";
   }
 
-  @umplesourcefile(line={431},file={"Documenter_Code.ump"},javaline={65},length={12})
+  @umplesourcefile(line={432},file={"Documenter_Code.ump"},javaline={65},length={12})
    private static  String exampleTemplate(){
     String template = "" + 
       "      <h3>@@EXAMPLE_NUMBER@@</h3>" + "\n" +
@@ -75,7 +75,7 @@ public class Template
     return template;
   }
 
-  @umplesourcefile(line={445},file={"Documenter_Code.ump"},javaline={79},length={9})
+  @umplesourcefile(line={446},file={"Documenter_Code.ump"},javaline={79},length={9})
    private static  String syntaxTemplate(){
     String template = "" + 
       "      <h3>Syntax</h3>" + "\n" +
@@ -86,7 +86,7 @@ public class Template
     return template;
   }
 
-  @umplesourcefile(line={456},file={"Documenter_Code.ump"},javaline={90},length={83})
+  @umplesourcefile(line={457},file={"Documenter_Code.ump"},javaline={90},length={83})
    private static  String htmlTemplate(){
     String template = "" + 
         "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
