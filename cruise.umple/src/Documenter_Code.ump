@@ -240,6 +240,10 @@ class Documenter
       return "";
     }
     
+    UmpleInternalParser grammarparser = new UmpleInternalParser();
+    for(String file:grammarparser.getParser().getGrammarFiles()){
+      grammarparser.addRulesInFile(file);
+    }
     
     String htmlOutput = Template.htmlTemplate;
     htmlOutput = htmlOutput.replace("@@TITLE@@", selectedContent.getTitle());
@@ -255,7 +259,7 @@ class Documenter
     }
     else
     {
-      String syntaxHtml = Template.syntaxTemplate.replace("@@SYNTAX_CODE@@",getParser().toGrammarParts(selectedContent.getSyntax()));
+      String syntaxHtml = Template.syntaxTemplate.replace("@@SYNTAX_CODE@@",grammarparser.toGrammarParts(selectedContent.getSyntax()));
       htmlOutput = htmlOutput.replace("@@SYNTAX@@", syntaxHtml);
     }
     
@@ -278,7 +282,7 @@ class Documenter
       exampleOutput += nextExample;
     }
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
-    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", getParser().toGrammar());
+    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", grammarparser.toGrammar());
     return htmlOutput;
   }
   
