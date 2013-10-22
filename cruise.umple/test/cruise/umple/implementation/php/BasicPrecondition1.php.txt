@@ -58,7 +58,7 @@ class Client
       throw new RuntimeException("Please provide a valid minAge");
     }
     // rest of stuff that we don't interpret
- return 0;
+    return 0;
   }
 
 }

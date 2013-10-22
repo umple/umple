@@ -41,7 +41,7 @@ class Foo
   These lines should come out as we see here.
   Comments such as these are often used to improve readability through whitespace clarity.
   =end
-  def testMethod()
+  def testMethod ()
     // I am a test method.
   end
 

@@ -268,7 +268,7 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
     return value;
   }
 
-  @umplesourcefile(line={202},file={"Generator_SuperCodeGenerator.ump"},javaline={272},length={58})
+  @umplesourcefile(line={202},file={"Generator_SuperCodeGenerator.ump"},javaline={272},length={80})
    public void prepareConstraints(UmpleClass aClass){
     Constraint constraint = new Constraint();
     constraint.setNegated(true);
@@ -326,27 +326,49 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
       constructor.setIsInternal(true);
       aClass.addCodeInjection(constructor);
     }
+    
+   for (Precondition pc : aClass.getPreconditions()){ 
+     String methodName = pc.getMethod().getName();
+     pc.setNegated(true);
+     pc.setGen(this);
+     pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
+     pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception")," "+pc.toString()));
+     CodeInjection before = new CodeInjection("before", methodName+"Precondition", pc, aClass);         
+     before.setIsInternal(true);
+     aClass.addCodeInjection(before);    
+    }
+    
+    for (Postcondition pc : aClass.getPostconditions()){ 
+     String methodName = pc.getMethod().getName();
+     pc.setNegated(true);
+     pc.setGen(this);
+     pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
+     pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception")," "+pc.toString()));
+     CodeInjection before = new CodeInjection("before", methodName+"Postcondition", pc, aClass);         
+     before.setIsInternal(true);
+     aClass.addCodeInjection(before);    
+    }
   }
 
-  @umplesourcefile(line={27},file={"Generator.ump"},javaline={332},length={2})
+  @umplesourcefile(line={27},file={"Generator.ump"},javaline={354},length={2})
   @Override
   public String translate(String id, Attribute attribute){
           return "";
   }
 
-  @umplesourcefile(line={28},file={"Generator.ump"},javaline={338},length={2})
+  @umplesourcefile(line={28},file={"Generator.ump"},javaline={360},length={2})
   @Override
   public String translate(String id, StateMachine stm){
           return "";
   }
 
-  @umplesourcefile(line={29},file={"Generator.ump"},javaline={344},length={2})
+  @umplesourcefile(line={29},file={"Generator.ump"},javaline={366},length={2})
   @Override
   public String translate(String id, Event e){
           return "";
   }
 
-  @umplesourcefile(line={30},file={"Generator.ump"},javaline={350},length={2})
+  @umplesourcefile(line={30},file={"Generator.ump"},javaline={372},length={2})
   @Override
   public String translate(String id, AssociationVariable aVar){
           return "";
@@ -364,16 +386,16 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={8},file={"Generator_SuperCodeGenerator.ump"},javaline={368},length={8})
-  @umplesourcefile(line={9},file={"Generator_SuperCodeGenerator.ump"},javaline={369},length={7})
+  //  @umplesourcefile(line={8},file={"Generator_SuperCodeGenerator.ump"},javaline={390},length={8})
+  @umplesourcefile(line={9},file={"Generator_SuperCodeGenerator.ump"},javaline={391},length={7})
   protected Map<String,String> UmpleToPrimitiveMap = new HashMap<String,String>() ;
 
-//  @umplesourcefile(line={9},file={"Generator_SuperCodeGenerator.ump"},javaline={372},length={5})
-  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={373},length={4})
+//  @umplesourcefile(line={9},file={"Generator_SuperCodeGenerator.ump"},javaline={394},length={5})
+  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={395},length={4})
   protected Map<String,String> TraceLookupMap = new HashMap<String,String>() ;
 
-//  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={376},length={2})
-  @umplesourcefile(line={11},file={"Generator_SuperCodeGenerator.ump"},javaline={377},length={1})
+//  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={398},length={2})
+  @umplesourcefile(line={11},file={"Generator_SuperCodeGenerator.ump"},javaline={399},length={1})
   protected Map<String,String> ConstraintLookupMap = new HashMap<String,String>() ;
 
   

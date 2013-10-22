@@ -257,5 +257,27 @@ class SuperCodeGenerator {
       constructor.setIsInternal(true);
       aClass.addCodeInjection(constructor);
     }
+    
+   for (Precondition pc : aClass.getPreconditions()){ 
+     String methodName = pc.getMethod().getName();
+     pc.setNegated(true);
+     pc.setGen(this);
+     pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
+     pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception")," "+pc.toString()));
+     CodeInjection before = new CodeInjection("before", methodName+"Precondition", pc, aClass);         
+     before.setIsInternal(true);
+     aClass.addCodeInjection(before);    
+    }
+    
+    for (Postcondition pc : aClass.getPostconditions()){ 
+     String methodName = pc.getMethod().getName();
+     pc.setNegated(true);
+     pc.setGen(this);
+     pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
+     pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception")," "+pc.toString()));
+     CodeInjection before = new CodeInjection("before", methodName+"Postcondition", pc, aClass);         
+     before.setIsInternal(true);
+     aClass.addCodeInjection(before);    
+    }
   }
 }

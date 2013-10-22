@@ -1,13 +1,17 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
-    if (uClass.hasMethods())
-    {
-    	for (Method aMethod : uClass.getMethods()) 
-    	{
-    		String methodName = aMethod.getName();
-    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
-    		String methodBody = (aMethod.getMethodBody() != null) ? aMethod.getMethodBody().getExtraCode() : "";
-    		String properMethodBody = "    " + methodBody;
+  if (uClass.hasMethods())
+  {
+  	for (Method aMethod : uClass.getMethods()) 
+  	{
+      String methodName = aMethod.getName();
+      String methodType = aMethod.getType();
+      String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));
+      String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
+      customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
+        
+      String methodBody = (aMethod.getMethodBody() != null) ? aMethod.getMethodBody().getExtraCode() : "";
+      String properMethodBody = "    " + methodBody;
     		
     		/*String lines[] = properMethodBody.split("\n");
     		properMethodBody = "";
@@ -36,44 +40,48 @@
 				}
 		    }*/
     		
-    		String paramName="";
-    	    String parameters = "";
-    		if (aMethod.hasMethodParameters())
-    		{
-    			for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
-    			{
-    				paramName = aMethodParam.getName();
-        			parameters += paramName + ",";
-    			}
-    			String finalParams = parameters.substring(0, parameters.length()-1);
-    			appendln(stringBuffer, "");
-    			
-    			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
-    			
-    			append(stringBuffer, "  def {0} ({1})\n", methodName, finalParams);	
-    			
-    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			
-    			appendln(stringBuffer, properMethodBody);
-    			
-				appendln(stringBuffer, "  end");
-    			
-    		}
-    		else{
-    			appendln(stringBuffer, "");
-    			
-    			if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
-    			
-    			append(stringBuffer, "  def {0}()\n", methodName);
-    			
-    			if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-    			
-    			appendln(stringBuffer, properMethodBody);
-    			
-    			appendln(stringBuffer, "  end");
-    		}
-    	}
-    }
+      String finalParams = "";
+      StringBuilder parameters = new StringBuilder();
+      if (aMethod.hasMethodParameters())
+      {
+        for (MethodParameter aMethodParam : aMethod.getMethodParameters()) 
+        {
+          String paramName = aMethodParam.getName();
+          String aSingleParameter = paramName;
+          parameters.append(aSingleParameter + ", ");
+        }
+        finalParams = parameters.toString().substring(0, parameters.toString().length()-2);
+      }
+        
+      appendln(stringBuffer, "");
+      	
+      if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("RubyMultiline Internal", aMethod.getComments())); }
+    	
+      append(stringBuffer, "  def {0} ({1})\n", methodName, finalParams);
+      
+      if(!"".equals(customPostconditionCode))
+      {
+        if(!"".equals(methodType)||!"void".equals(methodType)){
+          append(stringBuffer, "    result = {0}_original({1})\n", methodName, finalParams);
+        }
+        else {
+          append(stringBuffer, "    {0}_original({1})\n", methodName, finalParams);
+        }
+        appendln(stringBuffer, GeneratorHelper.doIndent(customPostconditionCode, "    "));
+        if(!"".equals(methodType)||!"void".equals(methodType)){
+          append(stringBuffer, "    return result\n");
+        }          
+        appendln(stringBuffer, "  end");
+        append(stringBuffer, "\n  def {0}_original({1})\n", methodName, finalParams);
+      }
+    	
+      if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
+    	
+      appendln(stringBuffer, properMethodBody);
+    	
+	  appendln(stringBuffer, "  end");
+  	}
+  }
 %>
 
 

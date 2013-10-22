@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource Umple.ump 297
+ * @umplesource Umple.ump 305
  * @umplesource Umple_Code.ump 587
  */
-// line 297 "../../../../src/Umple.ump"
+// line 305 "../../../../src/Umple.ump"
 // line 587 "../../../../src/Umple_Code.ump"
 public class ExtraCode
 {

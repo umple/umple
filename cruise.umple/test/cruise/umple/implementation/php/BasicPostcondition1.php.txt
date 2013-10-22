@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 class Client
 {
@@ -48,17 +48,18 @@ class Client
 
   public function someMethod(Integer arg)
   {
-
+    $result = someMethodOriginal(Integer arg);
     if ( !($arg>5))
     {
       throw new RuntimeException("Please provide a valid arg");
     }
-    if ( !($minAge<8))
-    {
-      throw new RuntimeException("Please provide a valid minAge");
-    }
+    return $result;
+  }
+
+  public function someMethodOriginal(Integer arg)
+  {
     // rest of stuff that we don't interpret
- return 0;
+   return 0;
   }
 
 }

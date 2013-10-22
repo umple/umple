@@ -1,5 +1,5 @@
 # PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE 1.18.0.3036 modeling language!
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
@@ -46,15 +46,16 @@ class Client
   end
 
   def someMethod (arg)
-
+    result = someMethod_original(arg)
     if  !(@arg>5) then
       raise RuntimeError, 'Please provide a valid arg'
     end
-    if  !(@minAge<8) then
-      raise RuntimeError, 'Please provide a valid minAge'
-    end
+    return result
+  end
+
+  def someMethod_original(arg)
     // rest of stuff that we don't interpret
- return 0;
+   return 0;
   end
 
 

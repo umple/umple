@@ -534,6 +534,18 @@ class CppGenerator
         String actualLookup = attVar.getIsList() ? "attributeCanSetMany" : "attributeCanSetOne";
         return translate(actualLookup,av,isMany);
       }
+      else if ("hasUniqueMethod".equals(keyName)) 
+      {
+        return "hasWith" + attVar.getUpperCaseName();
+      } 
+      else if ("getUniqueMethod".equals(keyName))
+      {
+        return "getWith" + attVar.getUpperCaseName();
+      }
+      else if ("uniqueMap".equals(keyName))
+      {
+        return attVar.getUmpleClass().getName().toLowerCase() + "s" + "By" + attVar.getUpperCaseName();
+      }
     }
     
     return "UNKNOWN ID: " + keyName;
@@ -670,14 +682,6 @@ class CppGenerator
     }
     
     prepareConstraints(aClass);
-    
-     for (Precondition pc : aClass.getPreconditions()){ 
-    	String methodName = pc.getMethod().getName();
-    	String precondition_code = StringFormatter.format(translate("NotClosed",pc),"throw \"Please provide a valid "+ pc.toString() +"\";");
-    	CodeInjection before = new CodeInjection("before", methodName+"Precondition", precondition_code, aClass);         
-    	before.setIsInternal(true);
-    	aClass.addCodeInjection(before);    
-    }
     
     Map<String,String> lookups = new HashMap<String,String>();
     String executeMethods = "public static void execute(String message) { getInstance().addTrace(message); }\n";

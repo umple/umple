@@ -26,11 +26,11 @@ class Something < ISomething
     @deleted = true
   end
 
-  def getCode (aParam,anotherParam)
+  def getCode (aParam, anotherParam)
     
   end
 
-  def isValid()
+  def isValid ()
     
   end
 

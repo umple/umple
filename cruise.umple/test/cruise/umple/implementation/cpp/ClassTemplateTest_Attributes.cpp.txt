@@ -303,6 +303,16 @@
     return id;
   }
 
+  Mentor getWithId(string aId)
+  {
+    return mentorsById.get(aId);
+  }
+
+  bool hasWithId(string aId)
+  {
+    return getWithId(aId) != null;
+  }
+
   string Mentor::getP() const
   {
     return p;

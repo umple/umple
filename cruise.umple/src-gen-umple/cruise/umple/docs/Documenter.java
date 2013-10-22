@@ -303,7 +303,7 @@ public class Documenter
     }
   }
 
-  @umplesourcefile(line={234},file={"Documenter_Code.ump"},javaline={307},length={48})
+  @umplesourcefile(line={234},file={"Documenter_Code.ump"},javaline={307},length={49})
    private String toHtml(Content selectedContent, String navigationOutput, String toHideOutput, String prevNextOutput){
     int endOfExampleBeforePosition=0;
     
@@ -311,6 +311,7 @@ public class Documenter
     {
       return "";
     }
+    
     
     String htmlOutput = Template.htmlTemplate;
     htmlOutput = htmlOutput.replace("@@TITLE@@", selectedContent.getTitle());
@@ -326,7 +327,7 @@ public class Documenter
     }
     else
     {
-      String syntaxHtml = Template.syntaxTemplate.replace("@@SYNTAX_CODE@@",(new UmpleInternalParser()).toGrammarParts(selectedContent.getSyntax()));
+      String syntaxHtml = Template.syntaxTemplate.replace("@@SYNTAX_CODE@@",getParser().toGrammarParts(selectedContent.getSyntax()));
       htmlOutput = htmlOutput.replace("@@SYNTAX@@", syntaxHtml);
     }
     
@@ -349,11 +350,11 @@ public class Documenter
       exampleOutput += nextExample;
     }
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
-    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", (new UmpleInternalParser()).toGrammar());
+    htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", getParser().toGrammar());
     return htmlOutput;
   }
 
-  @umplesourcefile(line={284},file={"Documenter_Code.ump"},javaline={357},length={31})
+  @umplesourcefile(line={285},file={"Documenter_Code.ump"},javaline={358},length={31})
    private String toNavigationHtml(Group groupToAlwaysShow, Content contentToNotHighlight){
     String navigationOutput = "";
     String theFileName = "";
@@ -386,7 +387,7 @@ public class Documenter
     return navigationOutput;
   }
 
-  @umplesourcefile(line={317},file={"Documenter_Code.ump"},javaline={390},length={10})
+  @umplesourcefile(line={318},file={"Documenter_Code.ump"},javaline={391},length={10})
    private String toSectionsToHideHtml(Group groupToAlwaysShow){
     String sectionsToHideOutput = "";
     for (Group group : getParser().getGroups())
@@ -411,8 +412,8 @@ public class Documenter
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={166},file={"Documenter_Code.ump"},javaline={415},length={13})
-  @umplesourcefile(line={167},file={"Documenter_Code.ump"},javaline={416},length={12})
+  //  @umplesourcefile(line={166},file={"Documenter_Code.ump"},javaline={416},length={13})
+  @umplesourcefile(line={167},file={"Documenter_Code.ump"},javaline={417},length={12})
   private Hashtable<String, String> createReferenceLookup () 
   {
     Hashtable<String, String> referenceLookup = new Hashtable<String, String>();
