@@ -1161,6 +1161,7 @@ Action.loadExample = function loadExample()
   else if (sel=="DMMSourceObjectHierarchy.ump"){Page.setUmpleCanvasSize(740,520);}
   else if (sel=="DMMRelationshipHierarchy.ump"){Page.setUmpleCanvasSize(935,570);}
   else if (sel=="DMMExtensionCTF.ump"){Page.setUmpleCanvasSize(815,620);}
+  else if (sel=="Decisions.ump"){Page.setUmpleCanvasSize(780,720);}
   else if (sel=="ElectionSystem.ump"){Page.setUmpleCanvasSize(680,530);}
   else if (sel=="ElevatorSystemB.ump"){Page.setUmpleCanvasSize(820,550);}
   else if (sel=="GeographicalInformationSystem.ump"){Page.setUmpleCanvasSize(765,550);}

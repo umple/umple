@@ -246,6 +246,7 @@
     <copy tofile="cruise.umple/test/data/Airline/AirlineExample.ump" file="umpleonline/ump/AirlineExample.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Banking/a/BankingSystemA.ump" file="umpleonline/ump/BankingSystemA.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Banking/b/BankingSystemB.ump" file="umpleonline/ump/BankingSystemB.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/Decisions/Decisions.ump" file="umpleonline/ump/Decisions.ump" overwrite="true" />    
     <copy tofile="cruise.umple/test/data/Election/ElectionSystem.ump" file="umpleonline/ump/ElectionSystem.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Elevator/a/ElevatorSystemA.ump" file="umpleonline/ump/ElevatorSystemA.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Elevator/b/ElevatorSystemB.ump" file="umpleonline/ump/ElevatorSystemB.ump" overwrite="true" />
@@ -280,6 +281,7 @@
     <copy file="cruise.umple/test/data/Airline/AirlineExample.ump" tofile="umpleonline/ump/AirlineExample.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Banking/a/BankingSystemA.ump" tofile="umpleonline/ump/BankingSystemA.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Banking/b/BankingSystemB.ump" tofile="umpleonline/ump/BankingSystemB.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/Decisions/Decisions.ump" tofile="umpleonline/ump/Decisions.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Election/ElectionSystem.ump" tofile="umpleonline/ump/ElectionSystem.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Elevator/a/ElevatorSystemA.ump" tofile="umpleonline/ump/ElevatorSystemA.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Elevator/b/ElevatorSystemB.ump" tofile="umpleonline/ump/ElevatorSystemB.ump" overwrite="true" />
