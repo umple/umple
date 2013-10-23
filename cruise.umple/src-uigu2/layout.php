@@ -4,9 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>User Interface Generation for Umple</title>
     <style type="text/css">
-      table#menu form{
-        display: inline;
-      }
+      table#table_menu form{display: inline;}
       .center{
         margin-left: auto;
         margin-right: auto;

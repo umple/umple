@@ -74,7 +74,8 @@ abstract class KISS_Controller {
     require($controllerfile);
     if (!function_exists($function))
       $this->request_not_found('Function not found: '.$function);
-    call_user_func($function,$this);
+    //sending the array is a workaround to passing parameter as reference
+    call_user_func_array($function,array(&$this));
     return $this;
   }
 

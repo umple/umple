@@ -5,12 +5,13 @@ function _show_element($controller) {
   if(($element_name = $controller->get_param('element_name')) ||
       ($element_name = $controller->get_param())){
 
+    $view = $controller->get_view();
     if($element = $controller->get_element($element_name)){
-      $view_data = array();
-      $view_data['name'] = $element['name'];
-      $view_data['element_kind'] = $element['element_kind'];
+      $view->set('name', $element['name']);
+      $view->set('element_kind', $element['element_kind']);
 
       //Create table with parameters needed for constructor
+      //TODO do not create html here, leave it to the view
       if(count($element['constructor_params']) > 0){
         $constructor_table_body = '<tr><th>Attribute Name</th><th>Type</th><th>Value</th></tr>';
         $form_enabled = true;
@@ -40,13 +41,13 @@ function _show_element($controller) {
                  "<td>{$field['type']}</td>".
                  "<td>{$input_field}</td></tr>";
         }
-        $view_data['constructor_table_body'] = $constructor_table_body;
-        $view_data['constructor_table_enabled'] = $form_enabled;
+        $view->set('constructor_table_enabled', $form_enabled);
       }else {
-        $view_data['constructor_table_body'] = "<span class='subtle'> This Class has an empty constructor,"
+        $constructor_table_body = "<span class='subtle'> This Class has an empty constructor,"
           .' press the button below to create an instance </span>';
-        $view_data['constructor_table_enabled'] = true;
+        $view->set('constructor_table_enabled', true);
       }
+      $view->set('constructor_table_body', $constructor_table_body);
 
       //Create table with instantiated objects of this class
       $objects = $controller->get_objects($element_name);
@@ -55,21 +56,20 @@ function _show_element($controller) {
         for($i=0; $i < count($objects); $i++){
           $objects_table .= '<tr><td>'.$i.'</td><td>'.serialize($objects[$i]).'</td></tr>';
         }
-        $view_data['objects_table'] = $objects_table;
       } else{
-        $view_data['objects_table'] = "<span class='subtle'> There are no created instances for this Class </span>";
+        $objects_table = "<span class='subtle'> There are no created instances for this Class </span>";
       }
-      $layout_data['body'][]=$controller->get_view()->fetch($view_data);
-      $layout_data['element_names'] = $controller->get_element_names();
-      $layout_data['messages'] = $controller->get_messages_clear();
-      Uigu2_View::do_dump(VIEW_PATH.'layout.php',$layout_data);
+      $view->set('objects_table', $objects_table);
+      $element_names = $controller->get_element_names();
+      $messages = $controller->get_messages_clear();
+      $view->show($element_names, $messages);
 
     } else{
       $controller->set_message('Error showing Element: '.$element_name.' does not exist', true);
-      Uigu2_Controller::redirect(); 
+      Uigu2_Controller::redirect('index'); 
     }
   } else{
     $controller->set_message('Error showing Element: the Element name was not provided', true);
-    Uigu2_Controller::redirect(); 
+    Uigu2_Controller::redirect('index'); 
   }
 }
