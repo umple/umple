@@ -155,12 +155,24 @@ class Uigu2_Controller extends KISS_Controller {
     }
   }
 
-  static function redirect($action_path='index'){
+  static function redirect($action_path){
     header('Location: '.WEB_DOMAIN.'/main/'.$action_path);
   }
 }
 
 class Uigu2_View extends KISS_View {
+
+  /*
+  * Uses the fixed layout and the content of the view (with the same name of the controller that created it)
+  * to compose and show the page to the user
+  */
+  function show($layout_element_names, $layout_messages){
+    $layout_data = array();
+    $layout_data['element_names'] = $layout_element_names;
+    $layout_data['messages'] = $layout_messages;
+    $layout_data['body'][]=$this->fetch();
+    Uigu2_View::do_dump(VIEW_PATH.'layout.php',$layout_data);
+  }
 
   function create_table($array='', $attributes=''){
     if(!is_array($array)||!count($array)){
