@@ -20,47 +20,47 @@ public class IAttributesConstants
   /**
    * $NON-NLS-1$
    */
-  public static final String attributeClass = "class";
+  public static final String ATTRIBUTE_CLASS = "class";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String target = "target";
+  public static final String TARGET = "target";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String href = "href";
+  public static final String HREF = "href";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String xlmns = "xmlns";
+  public static final String XLMNS = "xmlns";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String alt = "alt";
+  public static final String ALT = "alt";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String src = "src";
+  public static final String SRC = "src";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String type = "type";
+  public static final String TYPE = "type";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String id = "id";
+  public static final String ID = "id";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String border = "border";
+  public static final String BORDER = "border";
 
   //------------------------
   // MEMBER VARIABLES

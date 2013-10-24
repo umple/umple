@@ -28,8 +28,8 @@ public class HtmlElement implements IHtmlElement
   {
     html = null;
     // line 256 "../../../../src/Generator_Html.ump"
-    html = new Element(ITagsConstants.html, null);
-    		html.addAttribute( new AttributeElement( IAttributesConstants.xlmns, "http://www.w3.org/1999/xhtml"));
+    html = new Element(ITagsConstants.HTML, null);
+    		html.addAttribute( new AttributeElement( IAttributesConstants.XLMNS, "http://www.w3.org/1999/xhtml"));
   }
 
   //------------------------

@@ -201,8 +201,6 @@ class UmpleInternalParser
     // Only need to clear comments if there actually was comments.
     boolean shouldConsumeComment = lastComments.size() > 0;
     
-
-
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
     if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
     {
@@ -229,14 +227,6 @@ class UmpleInternalParser
         setFailedPosition(token.getPosition(), 16, childClass.getName(), aClass.getName());
       }
     }
-    else if (token.is("attribute"))
-    {
-      analyzeAttribute(token,aClass);
-    }
-    else if (token.is("extraCode"))
-    {
-      analyzeExtraCode(token,aClass);
-    }
     else if (token.is("constantDeclaration"))
     {
       analyzeConstant(token,aClass);
@@ -246,6 +236,15 @@ class UmpleInternalParser
       setFailedPosition(token.getPosition(), 901);
       analyzeConstant(token,aClass);
     }
+    else if (token.is("attribute"))
+    {
+      analyzeAttribute(token,aClass);
+    }
+    else if (token.is("extraCode"))
+    {
+      analyzeExtraCode(token,aClass);
+    }
+
     else if (token.is("concreteMethodDeclaration"))
     {
       analyzeMethod(token,aClass);
@@ -1579,6 +1578,16 @@ class UmpleInternalParser
   {
     Constant aConstant = new Constant("","","","");
     String modifier = "";
+    boolean validName = Token.isValidIdentifier(constantToken.getValue("name"));
+    boolean properName = Token.isValidIdentifier(constantToken.getValue("name"), "[A-Z]");
+
+    if(validName != true){
+      setFailedPosition(constantToken.getPosition(), 160, constantToken.getValue("name"));
+      return;
+    }
+    if(properName != true){
+      setFailedPosition(constantToken.getPosition(), 161, constantToken.getValue("name"));
+    }
 
     // Create the Constant Object
     for(Token token : constantToken.getSubTokens())
@@ -1601,6 +1610,7 @@ class UmpleInternalParser
         aConstant.setValue(token.getValue());
       }
     }  
+
     // Add constant to Class or Interface
     if (uElement instanceof UmpleClass)
     {
@@ -2036,6 +2046,7 @@ class UmpleInternalParser
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
     boolean isLazy = attributeToken.getValue("lazy") != null;
+    boolean isConstant = "const".equals(attributeToken.getValue("modifier"));
     boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
     boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
     boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
@@ -2046,15 +2057,22 @@ class UmpleInternalParser
     {
       if(looksLikeAssociation){
         setFailedPosition(attributeToken.getPosition(), 132, attributeToken.getValue("name"));
-      } else {
+      } 
+      else if(isConstant){
+        setFailedPosition(attributeToken.getPosition(), 160, attributeToken.getValue("name"));
+      }
+      else {
         setFailedPosition(attributeToken.getPosition(), 130, attributeToken.getValue("name"));
       }
       
       return;
     }
     
-    if(!properName && !"const".equals(attributeToken.getValue("modifier"))){
+    if(!properName && !isConstant){
       setFailedPosition(attributeToken.getPosition(), 131, attributeToken.getValue("name"));
+    }
+    else if(properName && isConstant){
+      setFailedPosition(attributeToken.getPosition(), 161, attributeToken.getValue("name"));
     }
     
     if (aClass.getIsSingleton() && !isLazy) 

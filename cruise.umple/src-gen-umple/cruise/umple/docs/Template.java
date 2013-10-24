@@ -20,12 +20,12 @@ public class Template
   // STATIC VARIABLES
   //------------------------
 
-  public static final String htmlTemplate = htmlTemplate();
-  public static final String exampleTemplate = exampleTemplate();
-  public static final String syntaxTemplate = syntaxTemplate();
-  public static final String navigationHeaderTemplate = navigationHeaderTemplate();
-  public static final String navigationItemTemplate = navigationItemTemplate();
-  public static final String navigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();
+  public static final String HtmlTemplate = htmlTemplate();
+  public static final String ExampleTemplate = exampleTemplate();
+  public static final String SyntaxTemplate = syntaxTemplate();
+  public static final String NavigationHeaderTemplate = navigationHeaderTemplate();
+  public static final String NavigationItemTemplate = navigationItemTemplate();
+  public static final String NavigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();
 
   //------------------------
   // MEMBER VARIABLES

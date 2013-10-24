@@ -39,9 +39,9 @@ public class ParagraphElement implements IHtmlElement
     small = aSmall;
     // line 416 "../../../../src/Generator_Html.ump"
     if(aSmall) {
-    			par = new Element(ITagsConstants.small, new Element(ITagsConstants.p, parent!=null ? parent.getElement() : null));
+    			par = new Element(ITagsConstants.SMALL, new Element(ITagsConstants.P, parent!=null ? parent.getElement() : null));
     		} else {
-    			par = new Element(ITagsConstants.p, parent!=null ? parent.getElement() : null);
+    			par = new Element(ITagsConstants.P, parent!=null ? parent.getElement() : null);
     		}
     		par.appendTextContents(true,text);
   }
