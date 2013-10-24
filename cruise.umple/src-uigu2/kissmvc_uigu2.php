@@ -9,24 +9,39 @@ class Uigu2_Controller extends KISS_Controller {
   protected $view;
   
   function __construct($default_controller,$default_action)  {
-    $init_file = Uigu2_Controller::UMPLE_MODEL_INIT_FILE;
-    if (file_exists($init_file)) {
-      require $init_file;
-      $this->umple_model = initialize_model();
-    } else {
-      $this->request_not_found('Controller initialization file not found: ' . $init_file);
-    }
+    $this->check_setup();
+    require Uigu2_Controller::UMPLE_MODEL_INIT_FILE;
+    $this->umple_model = initialize_model();
     $this->execution_id = $this->umple_model['execution_id'];
-    if (defined('CONTROLLER_PATH')){
-      $this->controller_path = CONTROLLER_PATH;
-    }
-    if (defined('WEB_FOLDER')){
-      $this->web_folder = WEB_FOLDER;
-    }
-    if (defined('VIEW_PATH')){
-      $this->view_path = VIEW_PATH;
-    }
+    $this->controller_path = CONTROLLER_PATH;
+    $this->web_folder = WEB_FOLDER;
+    $this->view_path = VIEW_PATH;
     parent::__construct($default_controller,$default_action);
+  }
+
+  function check_setup(){
+    if (!file_exists(Uigu2_Controller::UMPLE_MODEL_INIT_FILE)) {
+      $this->fatal_error('Umple Model initialization file not found: ' . $init_file);
+    }
+    if (!defined('WEB_FOLDER')){
+      $this->fatal_error('Constant WEB_FOLDER not defined');
+    }
+    if (!defined('WEB_DOMAIN')){
+      $this->fatal_error('Constant WEB_DOMAIN not defined');
+    }
+    if (!defined('CONTROLLER_PATH')){
+      $this->fatal_error('Constant CONTROLLER_PATH not defined');
+    }
+    if (!defined('VIEW_PATH')){
+      $this->fatal_error('Constant VIEW_PATH not defined');
+    }
+    if (!function_exists('__autoload')){
+      $this->fatal_error('Required function __autoload not declared');
+    }
+    //if (session_status() != PHP_SESSION_ACTIVE){ //only for php 5.4+
+    if(!defined('SID')){ //this is unsafe, but should be enough because we are not calling session_destroy() anywhere
+      $this->fatal_error('Session not active. Please initiate session with function session_start()');
+    }
   }
   
   function parse_http_request() {
@@ -68,14 +83,11 @@ class Uigu2_Controller extends KISS_Controller {
   * under the execution instance given by $execution_id. Returns true if creation was succesful.
   */
   public function create_object($class_name, array $params){
-    //TODO: test if __autoload() is declared
-    //TODO: test if session was started
     $umple_class = $this->umple_model['ELEMENTS'][$class_name];
     $constructor = $umple_class['constructor_params'];
     $associations = $umple_class['associations'];
 
     if(count($params) != count($constructor)){
-      //TODO: set error message
       return false;
     }
     //if constructor parameter is an association, value in $param is the index to obtain the object and must be replaced by it
@@ -84,7 +96,6 @@ class Uigu2_Controller extends KISS_Controller {
         $assoc = $associations[$constructor[$i]];
         $obj_ref = $this->get_object($assoc['type'], $params[$i]);
         if(empty($obj_ref)){
-          //TODO:object not found - set error message
           return false;
         }else{
           $params[$i] = $obj_ref;
@@ -135,6 +146,7 @@ class Uigu2_Controller extends KISS_Controller {
   }
 
   public function set_message($message, $is_error = false){
+      //TODO: dont mention html here
       $class = $is_error ? 'message_error' : 'message_ok';
       $_SESSION[$this->execution_id]['messages'][] = "<span class='{$class}'>".$message.'</span>';
   }

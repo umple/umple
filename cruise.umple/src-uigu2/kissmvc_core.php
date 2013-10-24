@@ -79,10 +79,16 @@ abstract class KISS_Controller {
     return $this;
   }
 
-  //Override this function for your own custom 404 page
   function request_not_found($msg='') {
-    header("HTTP/1.0 404 Not Found");
-    die('<html><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>'.$msg.'<p>The requested URL was not found on this server.</p><p>Please go <a href="javascript: history.back(1)">back</a> and try again.</p><hr /><p>Powered By: <a href="http://kissmvc.com">KISSMVC</a></p></body></html>');
+    $header = 'HTTP/1.0 404 Not Found';
+    $title = 'Not Found';
+    $body = "<p>The requested URL was not found on this server.</p><p>Details: {$msg}</p><hr/>";
+    $this->fatal_error($body,$title,$header);
+  }
+
+  function fatal_error($msg,$title='Fatal Error',$header='HTTP/1.0 500 Internal Server Error"') {
+    header($header);
+    die("<html><head><title>{$title}</title></head><body><h1>{$title}</h1>{$msg}</body></html>");
   }
 }
 

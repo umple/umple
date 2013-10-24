@@ -61,7 +61,5 @@
     <div id="div_bottom">
       <hr/>//Here: link, contacts, license information
     </div>
-    //Debugging (content of $_SESSION), disregard below
-    <pre><?php var_dump($_SESSION); ?></pre>
   </body>
 </html>
