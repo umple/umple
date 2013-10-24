@@ -53,10 +53,10 @@ public class TableElement implements IHtmlElement
     resetCssClass();
     resetBorder();
     // line 304 "../../../../src/Generator_Html.ump"
-    table = new Element(ITagsConstants.table, parent!=null ? parent.getElement() : null);
-    		tableBody = new Element(ITagsConstants.tbody,table);		
-    		headersRow = new Element(ITagsConstants.tr, tableBody);
-    		headersRow.addAttribute(new AttributeElement(IAttributesConstants.id, "headersRow"));
+    table = new Element(ITagsConstants.TABLE, parent!=null ? parent.getElement() : null);
+    		tableBody = new Element(ITagsConstants.TBODY,table);		
+    		headersRow = new Element(ITagsConstants.TR, tableBody);
+    		headersRow.addAttribute(new AttributeElement(IAttributesConstants.ID, "headersRow"));
   }
 
   //------------------------
@@ -79,7 +79,7 @@ public class TableElement implements IHtmlElement
     wasSet = true;
     // line 311 "../../../../src/Generator_Html.ump"
     if(!isNull(id)) {
-    			table.addAttribute( new AttributeElement(IAttributesConstants.id, id));
+    			table.addAttribute( new AttributeElement(IAttributesConstants.ID, id));
     		}
     return wasSet;
   }
@@ -101,7 +101,7 @@ public class TableElement implements IHtmlElement
     wasSet = true;
     // line 317 "../../../../src/Generator_Html.ump"
     if(!isNull(bodyId)) {
-    			tableBody.addAttribute( new AttributeElement(IAttributesConstants.id, bodyId));
+    			tableBody.addAttribute( new AttributeElement(IAttributesConstants.ID, bodyId));
     		}
     return wasSet;
   }
@@ -123,7 +123,7 @@ public class TableElement implements IHtmlElement
     wasSet = true;
     // line 323 "../../../../src/Generator_Html.ump"
     if(!isNull(cssClass)) {
-    			table.addAttribute( new AttributeElement(IAttributesConstants.attributeClass, cssClass));
+    			table.addAttribute( new AttributeElement(IAttributesConstants.ATTRIBUTE_CLASS, cssClass));
     		}
     return wasSet;
   }
@@ -144,7 +144,7 @@ public class TableElement implements IHtmlElement
     border = aBorder;
     wasSet = true;
     // line 329 "../../../../src/Generator_Html.ump"
-    table.addAttribute( new AttributeElement(IAttributesConstants.border, String.valueOf(border)));
+    table.addAttribute( new AttributeElement(IAttributesConstants.BORDER, String.valueOf(border)));
     return wasSet;
   }
 
@@ -215,10 +215,10 @@ public class TableElement implements IHtmlElement
 
   @umplesourcefile(line={333},file={"Generator_Html.ump"},javaline={217},length={8})
    public void addRow(String [] rowData){
-    Element tableRow = new Element(ITagsConstants.tr, tableBody);
-		tableRow.addAttribute(new AttributeElement(IAttributesConstants.id, "TableRow"+index));
+    Element tableRow = new Element(ITagsConstants.TR, tableBody);
+		tableRow.addAttribute(new AttributeElement(IAttributesConstants.ID, "TableRow"+index));
 		for(int cellIndex=0 ;cellIndex<columns; cellIndex++){
-			Element td = new Element(ITagsConstants.td, tableRow);
+			Element td = new Element(ITagsConstants.TD, tableRow);
 			td.appendText(rowData[cellIndex]);
 		}
   }
@@ -258,7 +258,7 @@ public class TableElement implements IHtmlElement
   void setTitles (String titles []) 
   {
     for(int index=0 ;index<columns; index++){
-			Element th = new Element(ITagsConstants.th, headersRow);
+			Element th = new Element(ITagsConstants.TH, headersRow);
 			th.appendText(titles[index]);
 		}
   }

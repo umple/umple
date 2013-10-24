@@ -27,38 +27,38 @@ namespace cruise.umple.compiler;
 
 //TODO: Should be interface instead. We need to update the parser to accept constatns for the iterfaces
 class ITagsConstants {
-	const String tagClass = "class"; //$NON-NLS-1$
-	const String tr = "tr"; //$NON-NLS-1$
-	const String th = "th"; //$NON-NLS-1$
-	const String tfoot = "tfoot"; //$NON-NLS-1$
-	const String td = "td"; //$NON-NLS-1$
-	const String tbody = "tbody"; //$NON-NLS-1$
-	const String table = "table"; //$NON-NLS-1$
-	const String style = "style"; //$NON-NLS-1$
-	const String span = "span"; //$NON-NLS-1$
-	const String small = "small"; //$NON-NLS-1$
-	const String script = "script"; //$NON-NLS-1$
-	const String p = "p"; //$NON-NLS-1$
-	const String img = "img"; //$NON-NLS-1$
+  const String TAG_CLASS = "class"; //$NON-NLS-1$
+  const String TR = "tr"; //$NON-NLS-1$
+  const String TH = "th"; //$NON-NLS-1$
+  const String TFOOT = "tfoot"; //$NON-NLS-1$
+  const String TD = "td"; //$NON-NLS-1$
+  const String TBODY = "tbody"; //$NON-NLS-1$
+  const String TABLE = "table"; //$NON-NLS-1$
+  const String STYLE = "style"; //$NON-NLS-1$
+  const String SPAN = "span"; //$NON-NLS-1$
+  const String SMALL = "small"; //$NON-NLS-1$
+  const String SCRIPT = "script"; //$NON-NLS-1$
+  const String P = "p"; //$NON-NLS-1$
+  const String IMG = "img"; //$NON-NLS-1$
 
-	const String html = 	"html"; //$NON-NLS-1$
-	const String head = "head"; //$NON-NLS-1$
-	const String font = "font"; //$NON-NLS-1$
-	const String div = "div"; //$NON-NLS-1$
-	const String body = "body"; //$NON-NLS-1$
-	const String a = "a"; //$NON-NLS-1$
+  const String HTML = "html"; //$NON-NLS-1$
+  const String HEAD = "head"; //$NON-NLS-1$
+  const String FONT = "font"; //$NON-NLS-1$
+  const String DIV = "div"; //$NON-NLS-1$
+  const String BODY = "body"; //$NON-NLS-1$
+  const String A = "a"; //$NON-NLS-1$
 }
 
 class IAttributesConstants {
-	const String attributeClass = "class"; //$NON-NLS-1$
-	const String target = "target"; //$NON-NLS-1$
-	const String href = "href"; //$NON-NLS-1$
-	const String xlmns = "xmlns"; //$NON-NLS-1$
-	const String alt = "alt"; //$NON-NLS-1$
-	const String src = "src"; //$NON-NLS-1$
-	const String type = "type"; //$NON-NLS-1$
-	const String id = "id"; //$NON-NLS-1$
-	const String border = "border"; //$NON-NLS-1$
+  const String ATTRIBUTE_CLASS = "class"; //$NON-NLS-1$
+  const String TARGET = "target"; //$NON-NLS-1$
+  const String HREF = "href"; //$NON-NLS-1$
+  const String XLMNS = "xmlns"; //$NON-NLS-1$
+  const String ALT = "alt"; //$NON-NLS-1$
+  const String SRC = "src"; //$NON-NLS-1$
+  const String TYPE = "type"; //$NON-NLS-1$
+  const String ID = "id"; //$NON-NLS-1$
+  const String BORDER = "border"; //$NON-NLS-1$
 }
 
 
@@ -254,8 +254,8 @@ class HtmlElement {
 	isA IHtmlElement;
 	internal Element html = null;
 	after constructor {		
-		html = new Element(ITagsConstants.html, null);
-		html.addAttribute( new AttributeElement( IAttributesConstants.xlmns, "http://www.w3.org/1999/xhtml"));
+		html = new Element(ITagsConstants.HTML, null);
+		html.addAttribute( new AttributeElement( IAttributesConstants.XLMNS, "http://www.w3.org/1999/xhtml"));
 	}
 	
 	Element getElement() {
@@ -271,7 +271,7 @@ class DivElement {
 	isA IHtmlElement;
 	internal Element div = null;
 	after constructor {		
-		div = new Element(ITagsConstants.div, null);
+		div = new Element(ITagsConstants.DIV, null);
 	}
 	
 	Element getElement() {
@@ -302,46 +302,46 @@ class TableElement {
 	
 	
 	after constructor {		
-		table = new Element(ITagsConstants.table, parent!=null ? parent.getElement() : null);
-		tableBody = new Element(ITagsConstants.tbody,table);		
-		headersRow = new Element(ITagsConstants.tr, tableBody);
-		headersRow.addAttribute(new AttributeElement(IAttributesConstants.id, "headersRow"));
+		table = new Element(ITagsConstants.TABLE, parent!=null ? parent.getElement() : null);
+		tableBody = new Element(ITagsConstants.TBODY,table);		
+		headersRow = new Element(ITagsConstants.TR, tableBody);
+		headersRow.addAttribute(new AttributeElement(IAttributesConstants.ID, "headersRow"));
 	}
 	
 	after setId {
 		if(!isNull(id)) {
-			table.addAttribute( new AttributeElement(IAttributesConstants.id, id));
+			table.addAttribute( new AttributeElement(IAttributesConstants.ID, id));
 		}
   	}
   	
   	after setBodyId {  
      	if(!isNull(bodyId)) {
-			tableBody.addAttribute( new AttributeElement(IAttributesConstants.id, bodyId));
+			tableBody.addAttribute( new AttributeElement(IAttributesConstants.ID, bodyId));
 		}
   	}
   	
   	after setCssClass {  
      	if(!isNull(cssClass)) {
-			table.addAttribute( new AttributeElement(IAttributesConstants.attributeClass, cssClass));
+			table.addAttribute( new AttributeElement(IAttributesConstants.ATTRIBUTE_CLASS, cssClass));
 		}
   	}
   	
   	after setBorder {  
-     	table.addAttribute( new AttributeElement(IAttributesConstants.border, String.valueOf(border)));
+     	table.addAttribute( new AttributeElement(IAttributesConstants.BORDER, String.valueOf(border)));
   	}
   	
   	public void addRow(String [] rowData){
-		Element tableRow = new Element(ITagsConstants.tr, tableBody);
-		tableRow.addAttribute(new AttributeElement(IAttributesConstants.id, "TableRow"+index));
+		Element tableRow = new Element(ITagsConstants.TR, tableBody);
+		tableRow.addAttribute(new AttributeElement(IAttributesConstants.ID, "TableRow"+index));
 		for(int cellIndex=0 ;cellIndex<columns; cellIndex++){
-			Element td = new Element(ITagsConstants.td, tableRow);
+			Element td = new Element(ITagsConstants.TD, tableRow);
 			td.appendText(rowData[cellIndex]);
 		}
 	}
   	
   	void setTitles(String titles []) {
 		for(int index=0 ;index<columns; index++){
-			Element th = new Element(ITagsConstants.th, headersRow);
+			Element th = new Element(ITagsConstants.TH, headersRow);
 			th.appendText(titles[index]);
 		}
   	}
@@ -368,8 +368,8 @@ class ScriptElement {
 	immutable String scriptText;
 	
 	after constructor {		
-		script = new Element(ITagsConstants.script, parent!=null ? parent.getElement() : null);
-		script.addAttribute( new AttributeElement(IAttributesConstants.type, "text/javascript"));
+		script = new Element(ITagsConstants.SCRIPT, parent!=null ? parent.getElement() : null);
+		script.addAttribute( new AttributeElement(IAttributesConstants.TYPE, "text/javascript"));
 	}
 	
 	Element getElement() {
@@ -391,8 +391,8 @@ class StyleElement {
 	immutable String styleText;
 	
 	after constructor {		
-		style =new Element(ITagsConstants.style, parent!=null ? parent.getElement() : null);
-		style.addAttribute(new AttributeElement(IAttributesConstants.type, "text/css"));
+		style =new Element(ITagsConstants.STYLE, parent!=null ? parent.getElement() : null);
+		style.addAttribute(new AttributeElement(IAttributesConstants.TYPE, "text/css"));
 	}
 	
 	public Element getElement() {
@@ -415,9 +415,9 @@ class ParagraphElement {
 	
 	after constructor {		
 		if(aSmall) {
-			par = new Element(ITagsConstants.small, new Element(ITagsConstants.p, parent!=null ? parent.getElement() : null));
+			par = new Element(ITagsConstants.SMALL, new Element(ITagsConstants.P, parent!=null ? parent.getElement() : null));
 		} else {
-			par = new Element(ITagsConstants.p, parent!=null ? parent.getElement() : null);
+			par = new Element(ITagsConstants.P, parent!=null ? parent.getElement() : null);
 		}
 		par.appendTextContents(true,text);
 	}

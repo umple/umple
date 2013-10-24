@@ -19,7 +19,7 @@ public class Uigu2ElementGenerator
   // STATIC VARIABLES
   //------------------------
 
-  public static final String nl = System.getProperty("line.separator");
+  public static final String NL = System.getProperty("line.separator");
 
   //------------------------
   // MEMBER VARIABLES
@@ -63,11 +63,11 @@ public class Uigu2ElementGenerator
 
     if(uElement instanceof UmpleClass){
       UmpleClass aClass = (UmpleClass) uElement;
-      code.append("$ELEMENTS['" + name + "']['name'] = '"+name+"';").append(nl);
-      code.append("$ELEMENTS['" + name + "']['element_kind'] = 'Class';").append(nl);
+      code.append("$ELEMENTS['" + name + "']['name'] = '"+name+"';").append(NL);
+      code.append("$ELEMENTS['" + name + "']['element_kind'] = 'Class';").append(NL);
 
       if(aClass.getIsAbstract()){
-        code.append("$ELEMENTS['" + name + "']['abstract'] = 1;").append(nl);
+        code.append("$ELEMENTS['" + name + "']['abstract'] = 1;").append(NL);
       }
       this.appendAttributesCode(code, aClass);
       this.appendAssociationsCode(code, aClass);
@@ -80,7 +80,7 @@ public class Uigu2ElementGenerator
       //Use recursion to make sure classes with dependencies are generated last
       }else {
         UmpleClass parent = aClass.getExtendsClass();
-        code.append("$ELEMENTS['" + name + "']['parent'] = '" + parent.getName() + "';").append(nl);
+        code.append("$ELEMENTS['" + name + "']['parent'] = '" + parent.getName() + "';").append(NL);
         return this.getCode(model, parent) + code.toString();
       }
     //TODO else if(uElement instanceof UmpleInterface){
@@ -92,42 +92,42 @@ public class Uigu2ElementGenerator
   @umplesourcefile(line={61},file={"Generator_CodeUigu2.ump"},javaline={93},length={21})
    private void appendAttributesCode(StringBuilder code, UmpleClass uClass){
     List<Attribute> attributes = this.getAttributesSuperClasses(uClass);
-    code.append("$attributes = array();").append(nl);
+    code.append("$attributes = array();").append(NL);
     if(attributes.size() > 0){
       String name, value, type;
       for (Attribute att : attributes){
         name = att.getName();
         value = att.getValue();
         type = att.getType();
-        code.append("$a_attribute = array();").append(nl);
-        code.append("$a_attribute['name'] = '" + name + "';").append(nl);
-        code.append("$a_attribute['type'] = '" + type + "';").append(nl);
+        code.append("$a_attribute = array();").append(NL);
+        code.append("$a_attribute['name'] = '" + name + "';").append(NL);
+        code.append("$a_attribute['type'] = '" + type + "';").append(NL);
         if(value != null){
           value = value.replaceAll("\"", "");
-          code.append("$a_attribute['value'] = '" + value + "';").append(nl);
+          code.append("$a_attribute['value'] = '" + value + "';").append(NL);
         }
-        code.append("$attributes['" + name + "'] = $a_attribute;").append(nl);
+        code.append("$attributes['" + name + "'] = $a_attribute;").append(NL);
       }
     }
-    code.append("$ELEMENTS['" + uClass.getName() + "']['attributes'] = $attributes;").append(nl);
+    code.append("$ELEMENTS['" + uClass.getName() + "']['attributes'] = $attributes;").append(NL);
   }
 
   @umplesourcefile(line={83},file={"Generator_CodeUigu2.ump"},javaline={116},length={16})
    private void appendAssociationsCode(StringBuilder code, UmpleClass uClass){
     String className = uClass.getName();
     List<AssociationVariable> avs = this.getAssociationsSuperClasses(uClass);
-    code.append("$associations = array();").append(nl);
+    code.append("$associations = array();").append(NL);
     if(avs.size() > 0){
       for(AssociationVariable av : avs){
         String name = av.getName();
         String type = av.getType();
-        code.append("$a_association = array();").append(nl);
-        code.append("$a_association['name'] = '" + name + "';").append(nl);
-        code.append("$a_association['type'] = '" + type + "';").append(nl);
-        code.append("$associations['" + name + "'] = $a_association;").append(nl);
+        code.append("$a_association = array();").append(NL);
+        code.append("$a_association['name'] = '" + name + "';").append(NL);
+        code.append("$a_association['type'] = '" + type + "';").append(NL);
+        code.append("$associations['" + name + "'] = $a_association;").append(NL);
       }
     }
-    code.append("$ELEMENTS['" + className + "']['associations'] = $associations;").append(nl);
+    code.append("$ELEMENTS['" + className + "']['associations'] = $associations;").append(NL);
   }
 
   @umplesourcefile(line={100},file={"Generator_CodeUigu2.ump"},javaline={134},length={17})
@@ -135,7 +135,7 @@ public class Uigu2ElementGenerator
     String className = uClass.getName();
     GeneratedClass gc = uClass.getGeneratedClass();
     String constructorSignature = gc.getLookup("constructorSignature");
-    code.append("$constructor_params = array();").append(nl);
+    code.append("$constructor_params = array();").append(NL);
 
     if(!"".equals(constructorSignature)){
       String[] constructorParams = constructorSignature.split(", ");
@@ -143,10 +143,10 @@ public class Uigu2ElementGenerator
         //"$aAttributeName" => "attributeName"
         String param = constructorParams[i];
         param = Character.toLowerCase(param.charAt(2)) + param.substring(3); 
-        code.append("$constructor_params[] = '" + param + "';").append(nl);
+        code.append("$constructor_params[] = '" + param + "';").append(NL);
       }
     }
-    code.append("$ELEMENTS['" + className + "']['constructor_params'] = $constructor_params;").append(nl);
+    code.append("$ELEMENTS['" + className + "']['constructor_params'] = $constructor_params;").append(NL);
   }
 
 

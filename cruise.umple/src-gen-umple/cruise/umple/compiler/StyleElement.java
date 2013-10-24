@@ -36,8 +36,8 @@ public class StyleElement implements IHtmlElement
     styleText = aStyleText;
     canSetStyleText = false;
     // line 393 "../../../../src/Generator_Html.ump"
-    style =new Element(ITagsConstants.style, parent!=null ? parent.getElement() : null);
-    		style.addAttribute(new AttributeElement(IAttributesConstants.type, "text/css"));
+    style =new Element(ITagsConstants.STYLE, parent!=null ? parent.getElement() : null);
+    		style.addAttribute(new AttributeElement(IAttributesConstants.TYPE, "text/css"));
   }
 
   //------------------------

@@ -25,9 +25,9 @@ public class Uigu2Generator extends PhpGenerator
   // STATIC VARIABLES
   //------------------------
 
-  public static final String packageFilesPath = "/cruise/umple/compiler/uigu2/files/";
-  public static final Charset charset = StandardCharsets.UTF_8;
-  public static final String nl = System.getProperty("line.separator");
+  public static final String PACKAGES_FILE_PATH = "/cruise/umple/compiler/uigu2/files/";
+  public static final Charset CHARSET = StandardCharsets.UTF_8;
+  public static final String NL = System.getProperty("line.separator");
 
   //------------------------
   // MEMBER VARIABLES
@@ -216,7 +216,7 @@ public class Uigu2Generator extends PhpGenerator
   private void copyFileFromPackage (String fileName, Path destinationPath) throws IOException 
   {
     //File is obtained as a Resource from the Classpath, not as Path or File
-    InputStream from = this.getClass().getResourceAsStream(this.packageFilesPath + fileName);
+    InputStream from = this.getClass().getResourceAsStream(this.PACKAGES_FILE_PATH + fileName);
     Files.createDirectories(destinationPath.getParent());
     Files.copy(from, destinationPath, StandardCopyOption.REPLACE_EXISTING);
   }
@@ -228,20 +228,20 @@ public class Uigu2Generator extends PhpGenerator
     Path writePath = this.outputPath.resolve(Paths.get("index.php"));
     Path setupFilePath = getPreferredSharedFilesPath().resolve(Paths.get("setup.php")); 
 
-    String indexFile = "<?php" + nl + nl
-        + "ini_set('display_errors','On');" + nl
-        + "error_reporting(E_ALL);" + nl
-        + "require_once('" + setupFilePath + "');" + nl
-        + "define('WEB_DOMAIN', WEB_DOMAIN_ROOT . basename(dirname(__FILE__)));" + nl
-        + "define('WEB_FOLDER', WEB_FOLDER_ROOT . basename(dirname(__FILE__)) . '/');" + nl
-        + "require_once(APP_PATH.'kissmvc_uigu2.php');" + nl
-        + "session_start();" + nl + nl
-        + "function __autoload($classname) {" + nl
-        + "\t$filename = $classname.'.php';" + nl
-        + "\tif(file_exists($filename)){" + nl
-        + "\t\trequire_once($classname.'.php');" + nl
-        + "\t}" + nl
-        + "}" + nl
+    String indexFile = "<?php" + NL + NL
+        + "ini_set('display_errors','On');" + NL
+        + "error_reporting(E_ALL);" + NL
+        + "require_once('" + setupFilePath + "');" + NL
+        + "define('WEB_DOMAIN', WEB_DOMAIN_ROOT . basename(dirname(__FILE__)));" + NL
+        + "define('WEB_FOLDER', WEB_FOLDER_ROOT . basename(dirname(__FILE__)) . '/');" + NL
+        + "require_once(APP_PATH.'kissmvc_uigu2.php');" + NL
+        + "session_start();" + NL + NL
+        + "function __autoload($classname) {" + NL
+        + "\t$filename = $classname.'.php';" + NL
+        + "\tif(file_exists($filename)){" + NL
+        + "\t\trequire_once($classname.'.php');" + NL
+        + "\t}" + NL
+        + "}" + NL
         + "new Uigu2_Controller('main','index');";
     writeStringToFile(indexFile, writePath);
   }
@@ -256,20 +256,20 @@ public class Uigu2Generator extends PhpGenerator
     //setup.php carries user configurations and should change - so keep it if present
     if(!writePath.toFile().exists()){
       Path appPath = sharedFilesPath.resolve(Paths.get("app/"));
-      String setupFile = "<?php" + nl + nl
-          + "/*EDIT BELOW: parent URL of the folder where index.php is located" + nl
-          + " *eg. to access 'http://a/b/c/index.php', use 'http://a/b/' (with trailing slash) */" + nl
-          + "define('WEB_DOMAIN_ROOT','http://default/');" + nl + nl
+      String setupFile = "<?php" + NL + NL
+          + "/*EDIT BELOW: parent URL of the folder where index.php is located" + NL
+          + " *eg. to access 'http://a/b/c/index.php', use 'http://a/b/' (with trailing slash) */" + NL
+          + "define('WEB_DOMAIN_ROOT','http://default/');" + NL + NL
 
-          + "/*EDIT BELOW: parent path of the folder where index.php is located," + nl
-          + " *relative to the <DocumentRoot> element of the apache config file " + nl
-          + " *eg.  if <DocumentRoot> is '/var/www/' and the full path is '/var/www/a/b/index.php'" + nl
-          + " *use '/a/' (with trailing slash) */" + nl 
-          + "define('WEB_FOLDER_ROOT','/');" + nl + nl
+          + "/*EDIT BELOW: parent path of the folder where index.php is located," + NL
+          + " *relative to the <DocumentRoot> element of the apache config file " + NL
+          + " *eg.  if <DocumentRoot> is '/var/www/' and the full path is '/var/www/a/b/index.php'" + NL
+          + " *use '/a/' (with trailing slash) */" + NL 
+          + "define('WEB_FOLDER_ROOT','/');" + NL + NL
 
-          + "define('APP_PATH','" + appPath.toString() + "/');" + nl
-          + "define('VIEW_PATH',APP_PATH.'views/');" + nl
-          + "define('CONTROLLER_PATH',APP_PATH.'controllers/');" + nl;
+          + "define('APP_PATH','" + appPath.toString() + "/');" + NL
+          + "define('VIEW_PATH',APP_PATH.'views/');" + NL
+          + "define('CONTROLLER_PATH',APP_PATH.'controllers/');" + NL;
 
       writeStringToFile(setupFile, writePath);
     }
@@ -282,20 +282,20 @@ public class Uigu2Generator extends PhpGenerator
     //this file is never shared
     Path path = this.outputPath.resolve(Paths.get("initialize_model.php"));
 
-    StringBuilder initFile = new StringBuilder("<?php" + nl + nl
-            + "function initialize_model(){" + nl
-            + "$UMPLE_MODEL = array();" + nl
-            + "$UMPLE_MODEL['execution_id'] = '_'.basename(dirname(__FILE__));" + nl);
+    StringBuilder initFile = new StringBuilder("<?php" + NL + NL
+            + "function initialize_model(){" + NL
+            + "$UMPLE_MODEL = array();" + NL
+            + "$UMPLE_MODEL['execution_id'] = '_'.basename(dirname(__FILE__));" + NL);
 
     //$ELEMENTS associative array with info from each UmpleElement
     if (this.elements.size() > 0) {
       for (UmpleElement e : this.elements) {
         initFile.append(this.generator.getCode(super.getModel(), e));
       }
-      initFile.append("$UMPLE_MODEL['ELEMENTS'] = $ELEMENTS;").append(nl);
+      initFile.append("$UMPLE_MODEL['ELEMENTS'] = $ELEMENTS;").append(NL);
     }
 
-    initFile.append("return $UMPLE_MODEL;").append(nl).append("}");
+    initFile.append("return $UMPLE_MODEL;").append(NL).append("}");
     writeStringToFile(initFile.toString(), path);
   }
 
@@ -307,7 +307,7 @@ public class Uigu2Generator extends PhpGenerator
     BufferedWriter bw = null;
     try {
       //Replaces existing files
-      bw = Files.newBufferedWriter(filePath, charset);
+      bw = Files.newBufferedWriter(filePath, CHARSET);
       bw.write(text);
     }finally{
       if(bw != null){

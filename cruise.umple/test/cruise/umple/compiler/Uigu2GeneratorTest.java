@@ -34,7 +34,7 @@ public class Uigu2GeneratorTest
     Iterator iterator = files.entrySet().iterator();
     while (iterator.hasNext()) {
       Map.Entry<String, String> entry = (Map.Entry) iterator.next();
-      InputStream from = this.getClass().getResourceAsStream(Uigu2Generator.packageFilesPath + entry.getKey());
+      InputStream from = this.getClass().getResourceAsStream(Uigu2Generator.PACKAGES_FILE_PATH + entry.getKey());
       Assert.assertTrue(from != null && from.read() != -1);
     }
   }

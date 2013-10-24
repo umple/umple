@@ -28,7 +28,7 @@ public class DivElement implements IHtmlElement
   {
     div = null;
     // line 273 "../../../../src/Generator_Html.ump"
-    div = new Element(ITagsConstants.div, null);
+    div = new Element(ITagsConstants.DIV, null);
   }
 
   //------------------------

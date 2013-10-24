@@ -25,97 +25,97 @@ public class ITagsConstants
   /**
    * $NON-NLS-1$
    */
-  public static final String tagClass = "class";
+  public static final String TAG_CLASS = "class";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String tr = "tr";
+  public static final String TR = "tr";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String th = "th";
+  public static final String TH = "th";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String tfoot = "tfoot";
+  public static final String TFOOT = "tfoot";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String td = "td";
+  public static final String TD = "td";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String tbody = "tbody";
+  public static final String TBODY = "tbody";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String table = "table";
+  public static final String TABLE = "table";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String style = "style";
+  public static final String STYLE = "style";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String span = "span";
+  public static final String SPAN = "span";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String small = "small";
+  public static final String SMALL = "small";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String script = "script";
+  public static final String SCRIPT = "script";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String p = "p";
+  public static final String P = "p";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String img = "img";
+  public static final String IMG = "img";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String html = "html";
+  public static final String HTML = "html";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String head = "head";
+  public static final String HEAD = "head";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String font = "font";
+  public static final String FONT = "font";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String div = "div";
+  public static final String DIV = "div";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String body = "body";
+  public static final String BODY = "body";
 
   /**
    * $NON-NLS-1$
    */
-  public static final String a = "a";
+  public static final String A = "a";
 
   //------------------------
   // MEMBER VARIABLES

@@ -36,8 +36,8 @@ public class ScriptElement implements IHtmlElement
     scriptText = aScriptText;
     canSetScriptText = false;
     // line 370 "../../../../src/Generator_Html.ump"
-    script = new Element(ITagsConstants.script, parent!=null ? parent.getElement() : null);
-    		script.addAttribute( new AttributeElement(IAttributesConstants.type, "text/javascript"));
+    script = new Element(ITagsConstants.SCRIPT, parent!=null ? parent.getElement() : null);
+    		script.addAttribute( new AttributeElement(IAttributesConstants.TYPE, "text/javascript"));
   }
 
   //------------------------
