@@ -18,6 +18,8 @@ class Mentor
   MIN = -99;
   HELLO = "Hello";
   @@next_x = 1
+  class << self; attr_accessor :mentors_by_id end
+  @mentors_by_id = Hash.new
 
   #------------------------
   # MEMBER VARIABLES
@@ -47,7 +49,6 @@ class Mentor
     @d = a_d
     @t = new Time()
     @i = a_i
-    @id = a_id
     reset_p
     @q = "chicken"
     reset_r
@@ -59,6 +60,10 @@ class Mentor
     reset_w
     @x = @@next_x
     @@next_x += 1
+    @id = nil
+    if (!set_id(a_id))
+      raise ArgumentError, 'Cannot create due to duplicate id'
+    end
     @initialized = true
   end
 
@@ -119,8 +124,16 @@ class Mentor
 
   def set_id(a_id)
     was_set = false
+    an_old_id = get_id();
+    if (Mentor.has_with_id?(a_id))
+      return was_set
+    end
     @id = a_id
     was_set = true
+    if (an_old_id != nil)
+      Mentor.mentors_by_id[an_old_id] = nil
+    end
+    Mentor.mentors_by_id[a_id] = self
     was_set
   end
 
@@ -241,6 +254,12 @@ class Mentor
     @id
   end
 
+  def Mentor::get_with_id(a_id)
+    @mentors_by_id[a_id]
+  end
+  def Mentor::has_with_id?(a_id)
+    get_with_id(a_id) != nil
+  end
   def get_p
     @p
   end
@@ -299,6 +318,7 @@ class Mentor
 
   def delete
     @deleted = true
+    Mentor.mentors_by_id[get_id()] = nil
   end
 
 end
