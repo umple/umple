@@ -1,5 +1,7 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
-// This class is a placeholder for the Ruby implementation of the unique keyword.
-// The unique keyword will be implemented in the next few days as of October 7, 2013.
-// In the meantime, this class is included so that Ruby JET templates will build for those who need to work on them.
-%>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
+  def <%=av.getUmpleClass().getName()%>::<%=gen.translate("hasUniqueMethod",av)%>?(<%=gen.translate("parameterOne", av)%>)
+    <% if (customHasUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } %>
+<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+%>    <%=gen.translate("getUniqueMethod",av)%>(<%=gen.translate("parameterOne",av)%>) != nil
+  end
+  

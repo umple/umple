@@ -42,6 +42,8 @@ class RubyGenerator
     AsIsSingularLookupMap.put("parameterExisting", "existing_{0}");
     AsIsSingularLookupMap.put("parameterExistingSerialized", "existing_serialized_{0}");
     AsIsSingularLookupMap.put("parameterIsNew", "is_new_{0}");
+    AsIsSingularLookupMap.put("parameterGetUnique", "retrieved_by_{0}");
+    AsIsSingularLookupMap.put("parameterHasUnique", "has_unique_{0}");
     AsIsSingularLookupMap.put("associationNew", "new_{0}");
     AsIsSingularLookupMap.put("canSetMethod", "can_set_{0}");
     AsIsSingularLookupMap.put("parameterCurrent", "current_{0}");
@@ -93,7 +95,7 @@ class RubyGenerator
     OneOrManyLookup.add("parameter");
 
   }
-  
+    
   public void prepare()
   {
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
@@ -314,6 +316,18 @@ class RubyGenerator
         String actualLookup = attVar.getIsList() ? "attributeCanSetMany" : "attributeCanSetOne";
         return translate(actualLookup,av,isMany);
       }
+      else if ("hasUniqueMethod".equals(keyName)) 
+      {
+        return "has_with_" + attVar.getName();
+      } 
+      else if ("getUniqueMethod".equals(keyName))
+      {
+        return "get_with_" + attVar.getName();
+      }
+      else if ("uniqueMap".equals(keyName))
+      {
+        return attVar.getUmpleClass().getName().toLowerCase() + "s_by_" + attVar.getName();
+      }
     }    
     return "UNKNOWN ID: " + keyName;
   }
@@ -505,6 +519,30 @@ class RubyGenerator
     }
   }
   
+  private void injectIntoUnique(String method, String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    String code = StringFormatter.format(injection,
+      av.getName(),
+      translate("parameterOne", av),
+      translate("parameterOld", av),
+      translate("getMethod", av),
+      translate("hasUniqueMethod", av),
+      translate("uniqueMap", av),
+      av.getUmpleClass().getName());
+    CodeInjection set = new CodeInjection(when, method, code, aClass);
+    aClass.addCodeInjection(set);
+  }
+  
+  private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    injectIntoUnique(translate("setMethod", av), injection, when, av, aClass);
+  }
+  
+  private void injectIntoUniqueDelete(String injection, String when, Attribute av, UmpleClass aClass)
+  {
+    injectIntoUnique("delete", injection, when, av, aClass);
+  }
+  
   private void prepare(UmpleClass aClass)
   {
     if (aClass.getGeneratedClass() != null)
@@ -548,6 +586,22 @@ class RubyGenerator
         CodeInjection inject = new CodeInjection("before", methods, code, aClass);
         inject.setIsInternal(true);
         aClass.addCodeInjection(inject);
+      }
+      
+      if (av.getIsUnique())
+      {
+        injectIntoUniqueSet(
+          "{2} = {3}();" + "\n" +
+          "if ({6}.{4}?({1}))" + "\n" + 
+          "  return was_set" + "\n" +
+          "end", "before", av, aClass);
+        injectIntoUniqueSet(
+          "if ({2} != nil)" + "\n" +
+          "  {6}.{5}[{2}] = nil" + "\n" +
+          "end" + "\n" +
+          "{6}.{5}[{1}] = self", "after", av, aClass);
+        injectIntoUniqueDelete(
+          "{6}.{5}[{3}()] = nil", "before", av, aClass);
       }
     }
     
