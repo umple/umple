@@ -2095,16 +2095,27 @@ class UmpleInternalParser
     String value = attributeToken.getValue("value");
     String derivedValue = attributeToken.getValue("code");
     
-  if (isLazyRedundant(isLazy, value))
-  {
-    setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);
-  }
+    // check to see if type has angle brackets <>
+    if (type != null)
+    {
+      int lang_pos = type.lastIndexOf('<');
+      int rang_pos = type.lastIndexOf('>');
+      if (lang_pos > 0 && rang_pos > 0 && lang_pos < rang_pos)
+      {
+        setFailedPosition(attributeToken.getPosition(), 46, name, aClass.getName());
+      }
+    }
+    
+    if (isLazyRedundant(isLazy, value))
+    {
+      setFailedPosition(attributeToken.getPosition(), 3, aClass.getName(), name);
+    }
 
     for(Attribute aAttribute : aClass.getAttributes()){
       if (aAttribute.getName().equals(name)){
         setFailedPosition(attributeToken.getPosition(), 22, aClass.getName(), name);
       }
-  }
+    }
     CodeBlock languageSpecificCode = new CodeBlock();
     if (derivedValue != null)
     {
