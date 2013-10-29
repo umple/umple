@@ -941,6 +941,12 @@ public class UmpleParserTest
     Assert.assertEquals("name5", variable.getName());
     Assert.assertEquals("Double", variable.getType());
   }
+  
+  @Test
+  public void attribute_ContainerType()
+  {
+    assertHasWarningsParse("276_AttributeTypeAngleBrackets.ump", 46); 
+  }
 
   @Test
   public void attribute_Unique()

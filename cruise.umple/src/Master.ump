@@ -18,6 +18,7 @@ generate Ecore;
 strictness allow 1006;
 strictness allow 1007;
 strictness allow 1008;
+strictness allow 46;
 
 use Documenter.ump;
 use Generator.ump;

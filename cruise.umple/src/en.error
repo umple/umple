@@ -44,6 +44,7 @@
 
 44: 3, "http://umple.org/PageBeingDeveloped.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}'. ;
 45: 4, "http://umple.org/PageBeingDeveloped.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal. ;
+46: 4, "http://umple.org/PageBeingDeveloped.html", Attribute {0} in class {1} is declared using a collection template type. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions. ;
 
 # State-Machine related messages
 50: 4, "http://umple.org/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an end state ;
