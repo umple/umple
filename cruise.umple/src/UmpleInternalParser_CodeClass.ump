@@ -27,8 +27,8 @@ class UmpleInternalParser
   internal Map<UmpleClassifier,List<String>> unlinkedInterfaceExtends = new HashMap<UmpleClassifier,List<String>>();
 
   // List of comments populated by the parser to be added to the next class, attribute, association, method, etc.
-  internal List<Comment> lastComments = new ArrayList<Comment>();
-
+  internal Comment[] lastComments;
+  
   // last attribute made.
   internal Attribute lastattr = null;
 
