@@ -174,8 +174,8 @@ class Variant
 class VmlParser
 {
   internal Map<VariationPoint,List<String>> variationPointToRequiresListMap = null;
-  //internal List<VariationPoint> invokedVariations = new ArrayList<VariationPoint>();
   internal VariationPoint[] invokedVariations;
+  
   after constructor { init(); }
 
   private void init()
