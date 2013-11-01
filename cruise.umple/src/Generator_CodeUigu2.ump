@@ -154,8 +154,8 @@ class Uigu2Generator
   const String NL = System.getProperty("line.separator");
 
   internal Uigu2ElementGenerator generator = new Uigu2ElementGenerator();
-  //lazy internal List<UmpleElement> elements;
   lazy internal UmpleElement[] elements;
+  
   /*
   * Absolute path where the PhpGenerator will place the domain classes
   */

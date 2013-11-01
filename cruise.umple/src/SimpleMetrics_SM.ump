@@ -300,7 +300,6 @@ class CountSM{
 	int totalSelfCyclesPerClassMin= 0;	
 	int totalCyclesPerClassMin= 0;
 	
-	//List<State> visitedStates = new ArrayList<State>();
     State[] visitedStates;
 	Set<Transition> transitionsList = new HashSet<Transition>(); // keep transitions without repetition of an StM. Use method Load
 	Set<State> statesSet = new HashSet<State>(); 

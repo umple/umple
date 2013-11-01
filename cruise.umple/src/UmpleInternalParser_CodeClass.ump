@@ -2102,7 +2102,7 @@ class UmpleInternalParser
       int rang_pos = type.lastIndexOf('>');
       if (lang_pos > 0 && rang_pos > 0 && lang_pos < rang_pos)
       {
-        setFailedPosition(attributeToken.getPosition(), 46, name, aClass.getName());
+        setFailedPosition(attributeToken.getPosition(), 46, name, aClass.getName(), type);
       }
     }
     
