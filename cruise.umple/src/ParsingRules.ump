@@ -21,7 +21,10 @@ class ChoiceRule
   ChoiceRule[] rules;
   boolean dontDelete = false;
   boolean optional = false;
-  StringBuilder firstValueBuilder = null;
+  StringBuilder firstValueBuilder = null;  
+  boolean declared = false;
+  boolean reset = false;  
+  private String[] subrules = null;
 }
 
 /*
@@ -97,6 +100,16 @@ class Terminal
 
   //for determining whether "" is an acceptable parse
   boolean canBeNull = false;
+  
+  boolean strictRegex = false;
+  
+  boolean followingOptional = false;
+  
+  String following = null;
+  
+  boolean cannotHaveNewline = false;
+  
+  boolean mustHaveSpaceFollowing = false;
 
   //the grammar files care about \n while the umple files do not, this value reflects that difference, so when constructing rules for the grammar files " \\t" is used and when constructing rules for the umple files " \\t\\n" is used
   static String space = " \\t";

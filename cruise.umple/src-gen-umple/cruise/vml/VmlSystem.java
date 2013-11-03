@@ -15,11 +15,11 @@ import java.util.*;
  * It is the intention to integrate VML into the core Umple language
  * @umplesource Vml.ump 23
  * @umplesource Vml_Code.ump 67
- * @umplesource Vml_Code.ump 391
+ * @umplesource Vml_Code.ump 392
  */
 // line 23 "../../../src/Vml.ump"
 // line 67 "../../../src/Vml_Code.ump"
-// line 391 "../../../src/Vml_Code.ump"
+// line 392 "../../../src/Vml_Code.ump"
 public class VmlSystem
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

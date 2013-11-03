@@ -46,7 +46,10 @@ class RuleBasedParser
   depend cruise.umple.parser.rules.*;
 
   //the iteration of parsing done(there is a possibility to do two pass parsing, but for umple it is not implemented or neccessary yet)
-  public static int parsing = 0;
+  public static int parsing = 0; 
+  
+  public static HashMap<String,ChoiceRule> choicerules = new HashMap<String,ChoiceRule>();
+  private static HashMap<String,String> todeclare = new HashMap<String,String>();
 
   //the Root Token that will be contain the result of the parse of the umple file
   Token rootToken = null;
@@ -59,7 +62,6 @@ class RuleBasedParser
 
   //List of umple grammar files which will dictate the rule graph that is contructed.
   String[] grammarFiles;
-
 }
 
 /*
@@ -116,6 +118,9 @@ class ParserDataPackage
 
   //They keys for the different couples {} for example
   HashMap<String,String[]> keys = new HashMap<String,String[]>();
+  
+  //List of lines from the input
+  String[] lines;
 }
 
 external Thread { }
@@ -194,5 +199,7 @@ class GrammarAnalyzer
   
   //List of tokens of the form [~token], which are closed minded enough to only accept alphanumerics, but still need to know if there are keyswords following them which cannot be the token's value, such as sorted being a rolename for an association. 
   Terminal[] closeTerminal;
+  
+  Terminal[] optionalTerminal;
 }
 use GrammarParsing_Code.ump;

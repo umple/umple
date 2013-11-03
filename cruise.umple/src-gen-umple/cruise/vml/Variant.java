@@ -7,11 +7,11 @@ package cruise.vml;
  * A named code snippet within a variabt
  * @umplesource Vml.ump 71
  * @umplesource Vml_Code.ump 158
- * @umplesource Vml_Code.ump 384
+ * @umplesource Vml_Code.ump 385
  */
 // line 71 "../../../src/Vml.ump"
 // line 158 "../../../src/Vml_Code.ump"
-// line 384 "../../../src/Vml_Code.ump"
+// line 385 "../../../src/Vml_Code.ump"
 public class Variant
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

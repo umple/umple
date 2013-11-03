@@ -1,15 +1,6 @@
 namespace cruise.umple.parser.analysis;
 class Analyzer {
   /*
-    Given any analyzer, the analyze method will try to use the root token's sub tokens, where the name of the token defines which method to use.
-  */
-  after constructor {
-    for(Method method:getClass().getMethods())
-    {
-      handlers.put(method.getName(), method);
-    }
-  }
-  /*
     This funciton is used for putting things into the global hashmap that contains all objects
   */
   protected void set(String string, Object object)
@@ -70,6 +61,8 @@ class Analyzer {
 
 class RuleBasedParser 
 {
+  //This variable exists to speed up multiple passes through the parser, say in junit tests, because the grammar analysis only has to be performed once.
+  private static GrammarAnalyzer analyzer = null;
   /*
     Takes a root rule and uses it to start parsing. The result will be put into the root token passed. The parsing will be performed
     on the file. data is a DataPackage which needs to be initialized(using the init(Position)) before passing to this function.
@@ -79,6 +72,8 @@ class RuleBasedParser
   public void parse(ChoiceRule root, Token token, String filename, ParserDataPackage data)
   {
     parsing++;
+    data.setCouples(new HashMap<String,ParsingCouple>());
+    BalancedRule.initialize(data.getInput(),data);
     int parseResult = root.parse(token, 0,data.getInput().length(),data.getInput(),data);
     if(parseResult==data.getInput().length())
     {
@@ -91,69 +86,202 @@ class RuleBasedParser
     }
     parsing--;
   }
-  //This variable exists to speed up multiple passes through the parser, say in junit tests, because the grammar analysis only has to be performed once.
-  private static GrammarAnalyzer analyzer = null;
-  /*
-    After being passed all the grammar files by the UmpleInternalParser, this function is called to compute all the rules that are associated
-    to the umple language. For some reason this is computationally expensive, future implementations will hopefully be able to speed this up.
-  */
+
+  public void parse(ChoiceRule root, Token token, String filename,int line, ParserDataPackage data)
+  {
+    parsing++;
+    data.setCouples(new HashMap<String,ParsingCouple>());
+    BalancedRule.initialize(data.getLine(line),data);
+    int parseResult = root.parse(token, 0,data.getLine(line).length(),data.getLine(line),data);
+    if(parseResult==data.getInput().length())
+    {
+      setRootToken(token);
+    }
+    else
+    {
+      setRootToken(token);
+      setFailedPosition(data.getPosition());
+    }
+    parsing--;
+  }
+
+  /**
+   * After being passed all the grammar files by the UmpleInternalParser, this function is called to compute all the rules that are associated
+   * to the umple language. For some reason this is computationally expensive, future implementations will hopefully be able to speed this up.
+   */
   public void setupRules()
   {
-  Terminal.space(" \\t");
-  ChoiceRule rulename = new Terminal("rulename","[a-zA-Z0-9_]+",false);
-  ChoiceRule definition = new RepeatableRule("definition",0,Integer.MAX_VALUE);
-  ChoiceRule openbrace = new Terminal("openbrace","\\(",false).dontCare();
-  ChoiceRule closebrace = new Terminal("closebrace","\\)",false).dontCare();
-  ChoiceRule opencurl = new Terminal("opencurl","(\\{|\")",false);
-  ChoiceRule closecurl = new Terminal("closecurl","(\\}|\")",false);
-  ChoiceRule otherRule = new ChainRule("otherrule",new Terminal("open","\\Q[[\\E",false).dontCare(),rulename,new Terminal("close","\\Q]]\\E",false).dontCare()).dontCare();
-  ChoiceRule spaceSeparated = new BalancedRule("token","[",
-    new ChainRule("multi",
-    new Terminal("premodifier","[~!=*]?[*]?"),
-    new Terminal("tokenname","([|][|]|[a-zA-Z0-9_,-]+)"),
-    new Terminal("valuecolon","[:>]?",false),
-    new Terminal("value",".*",false)).dontCare(),"]").dontCare();
-    ChoiceRule options = new ChoiceRule("options",
-      new ChainRule("braced",opencurl,definition,closecurl),
-      new ChainRule("anonymousRule",openbrace,definition,closebrace, new Terminal("modifier","[*+?]?",false)),
-      new ChainRule("otherrule",otherRule,new Terminal("modifier","[*+?]?",false)),
-      new ChainRule("token",spaceSeparated,new Terminal("modifier","[*+?]?")),
-      new Terminal("separator","[|]",false),
-      new Terminal("spaces","",true).dontCare(),
-      new ChainRule("terminal",new Terminal("terminal","(\\Q-(\\E|\\Q-)\\E|[^ \\t\\n\"\\{\\(\\}\\)]+)",false))).dontCare();
-      
-  definition.add(options);
-    
-  ChoiceRule rule = new ChoiceRule("rule",
-    new ChainRule("layout",
-      rulename,
-      new Terminal("modifier","[-]?",false),
-      new Terminal("colon","[:]",false).dontCare(),
-      definition, new Terminal("newline", "[\\n]",false).dontCare()
-    ).dontCare()
-  );
-  
-  ChoiceRule root = new RepeatableRule("rules",0,Integer.MAX_VALUE,
-   new ChoiceRule("options",
-   new Terminal("comment","//[^\\n]*\\n",false).dontCare(),
-   new Terminal("newline2","\\n",false).dontCare(),
-   rule).dontCare()
-  ).dontCare();
-          
-  ParsingCouple.ignoreLevel = 1;
-  Token rootToken = new Token("ROOT","");
-  List<Thread> parsers = new ArrayList<Thread>();
-  String[] keys = new String[]{"[","]"};
-  for(String filename:grammarFiles)
+    BufferedReader reader = null;
+    InputStream resourceStream = null;
+    boolean mustParse = false;
+    try {
+      File rulesfile = new File(new File("cruise.umple").getAbsolutePath()+File.separator+"bin"+File.separator+"rules.grammar");
+
+      if(rulesfile.exists()&&rulesfile.canRead())
+      {
+        reader = new BufferedReader(new FileReader(rulesfile));
+      }
+      else
+      {
+        resourceStream = getClass().getResourceAsStream(File.separator+"rules.grammar");
+        if(resourceStream == null)
+        {
+          mustParse = true;
+          reader = null;
+        }
+        else
+        {
+          reader = new BufferedReader(new InputStreamReader(resourceStream));  
+        }          
+      }
+      if(mustParse)
+      {
+        Terminal.space(" \\t");
+        ChoiceRule rulename = new Terminal("rulename","[a-zA-Z0-9_]+",false);
+        ChoiceRule definition = new RepeatableRule("definition",0,Integer.MAX_VALUE);
+        ChoiceRule openbrace = new Terminal("openbrace","\\(",false).dontCare();
+        ChoiceRule closebrace = new Terminal("closebrace","\\)",false).dontCare();
+        ChoiceRule opencurl = new Terminal("opencurl","(\\{|\")",false);
+        ChoiceRule closecurl = new Terminal("closecurl","(\\}|\")",false);
+        ChoiceRule otherRule = new ChainRule("otherrule",new Terminal("open","\\Q[[\\E",false).dontCare(),rulename,new Terminal("close","\\Q]]\\E",false).dontCare()).dontCare();
+        ChoiceRule spaceSeparated = new BalancedRule("token","[",
+            new ChainRule("multi",
+                new Terminal("premodifier","[~!=*]?[*]?"),
+                new Terminal("tokenname","([|][|]|[a-zA-Z0-9_,-]+)"),
+                new Terminal("valuecolon","[:>]?",false),
+                new Terminal("value",".*",false)).dontCare(),"]").dontCare();
+        ChoiceRule options = new ChoiceRule("options",
+            new ChainRule("braced",opencurl,definition,closecurl),
+            new ChainRule("anonymousRule",openbrace,definition,closebrace, new Terminal("modifier","[*+?]?",false)),
+            new ChainRule("otherrule",otherRule,new Terminal("modifier","[*+?]?",false)),
+            new ChainRule("token",spaceSeparated,new Terminal("modifier","[*+?]?")),
+            new Terminal("separator","[|]",false),
+            new Terminal("spaces","",true).dontCare(),
+            new ChainRule("terminal",new Terminal("terminal","(\\Q-(\\E|\\Q-)\\E|[^ \\t\\n\"\\{\\(\\}\\)]+)",false))).dontCare();
+
+        definition.add(options);
+
+        ChoiceRule rule = new ChoiceRule("rule",
+            new ChainRule("layout",
+                rulename,
+                new Terminal("modifier","[-]?",false),
+                new Terminal("colon","[:]",false).dontCare(),
+                definition, new Terminal("newline", "[\\n]",false).dontCare()
+                ).dontCare()
+            );
+
+        ChoiceRule root = rule;
+
+        ParsingCouple.ignoreLevel = 1;
+        Token rootToken = new Token("ROOT","");
+        List<Thread> parsers = new ArrayList<Thread>();
+        String[] keys = new String[]{"[","]"};
+        rootToken = new Token("ROOT","");
+        for(String filename:grammarFiles)
+        {
+          ParserDataPackage data = new ParserDataPackage(filename);
+          data.getKeys().put("[]",keys);
+          data.init(null);
+          for(int i=0;i<data.numberOfLines();++i){
+            if(!data.getLine(i).startsWith("//")&&!data.getLine(i).startsWith("\n")){
+              parse(root,rootToken,filename,i, data);
+            }
+          }
+        }
+        analyzer = new GrammarAnalyzer();
+        analyzer.analyze(rootToken);
+        analyzer.setupTerminals();
+        if(rulesfile.exists()&&rulesfile.canWrite()){
+        	rulesfile.delete();
+        }
+        if(!rulesfile.exists())
+        {
+          if(new File("cruise.umple"+File.separator+"bin"+File.separator+"umple_core.grammar").canWrite())
+          {
+            rulesfile.createNewFile();
+          }
+          if(!rulesfile.canWrite()){
+        	  return;
+          }
+          BufferedWriter writer = new BufferedWriter(new FileWriter(rulesfile));
+          writer.write("");
+          writer.append(analyzer.getRules().get("$ROOT$").toDeclareString(new StringBuilder()));
+          writer.append("//END DECLARE\n");
+          analyzer.getRules().get("$ROOT$").resetDeclare();
+          writer.append(analyzer.getRules().get("$ROOT$").toCannotBeString(new StringBuilder()));
+          writer.append("//END CANNOTBE\n");
+          analyzer.getRules().get("$ROOT$").resetDeclare();
+          writer.append(analyzer.getRules().get("$ROOT$").toRedoRegexString(new StringBuilder()));
+          writer.append("//END REDOREGEX\n");
+          writer.close();
+
+          analyzer.getRules().get("$ROOT$").resetDeclare();
+        }
+      }
+      else if(reader!=null)
+      {
+        String program = null;
+        String currentLine = reader.readLine();
+        analyzer = new GrammarAnalyzer();
+
+        analyzer.getKeys().put("{}", new String[]{"{","}"});    
+        analyzer.getKeys().put("\"", new String[]{"\"","\""});
+
+        while(currentLine!=null){    
+          if(currentLine.equals("//END DECLARE")){
+            currentLine = reader.readLine();
+            break;
+          }
+          String value = reader.readLine();
+
+
+          todeclare.put(currentLine,value);
+          if(program==null){
+            program = currentLine;          
+          }
+          currentLine = reader.readLine();
+        }
+        while(currentLine!=null)
+        {
+          if(currentLine.equals("//END CANNOTBE"))
+          {
+            currentLine = reader.readLine();
+            break;
+          }
+          int colon = currentLine.indexOf(":");
+          String name = currentLine.substring(0,colon);
+          evaluate(name);
+          ((Terminal)choicerules.get(name)).setCannotBe(currentLine.substring(colon+1));
+          currentLine = reader.readLine();
+        }
+        while(currentLine!=null)
+        {
+          if(currentLine.equals("//END REDOREGEX"))
+          {
+            currentLine = reader.readLine();
+            break;
+          }
+          int colon = currentLine.indexOf(":");
+          String name = currentLine.substring(0,colon);
+          int colon2 = currentLine.indexOf(":",colon+1);
+          evaluate(name);
+          String regex =((Terminal)choicerules.get(name)).getRegex();
+          if(choicerules.get(name).getOptional())
+          {
+            regex = regex.substring(0,regex.length()-1);
+          }
+          ((Terminal)choicerules.get(name)).redoRegex(regex,currentLine.substring(colon2+1),Boolean.parseBoolean(currentLine.substring(colon+1,colon2)));
+          currentLine = reader.readLine();
+        }
+        evaluate(program);
+        analyzer.set("$ROOT$",choicerules.get(program));
+        reader.close();
+      }
+    } 
+    catch (IOException e)
     {
-    ParserDataPackage data = new ParserDataPackage(filename);
-    data.getKeys().put("[]",keys);
-    data.init(null);
-    parse(root,rootToken,filename, data);
-  }
-  analyzer = new GrammarAnalyzer();
-  analyzer.analyze(rootToken);
-  analyzer.setupTerminals();
+      e.printStackTrace();
+    }
   }
   /*
     Takes an umple file and parses it. It returns the ParseResult.
@@ -171,8 +299,9 @@ class RuleBasedParser
     return getParseResult();
   }
   
-  public ParseResult parse(String ruleName, String input) {
-	if(analyzer==null)
+  public ParseResult parse(String ruleName, String input)
+  {
+    if(analyzer==null)
     {
       setupRules();
     }
@@ -183,6 +312,89 @@ class RuleBasedParser
     return getParseResult();
   }
 
+  public static boolean evaluate(String hash)
+  {
+    String currentLine = todeclare.get(hash);
+    if(currentLine==null)
+    {
+      return false;
+    }
+    String[] args = currentLine.split("[:]");
+    String type = args[0];
+    String name = args[1];
+    if(type.equals("ChoiceRule"))
+    {
+      choicerules.put(hash,new ChoiceRule(name));
+      if(name.equals("useStatement"))
+      {
+        choicerules.get(hash).setAction(analyzer.getActionedTokens().get("useStatement"));
+      }
+    }
+    else if(type.equals("ChainRule"))
+    {
+      choicerules.put(hash,new ChainRule(name));
+      
+    }
+    else if(type.equals("RepeatableRule"))
+    {
+      choicerules.put(hash,new RepeatableRule(name,Integer.parseInt(args[6]),Integer.parseInt(args[7])));
+    }
+    else if(type.equals("BalancedRule"))
+    {
+      choicerules.put(hash,new BalancedRule(name,args[6],args[7]));
+    }
+    else if(type.equals("RootRule")){
+      choicerules.put(hash,new RootRule(name));
+    }
+    else if(type.equals("Terminal"))
+    {
+      String regex = currentLine.substring(
+        currentLine.indexOf(":",
+          currentLine.indexOf(":",
+            currentLine.indexOf(":",
+              currentLine.indexOf(":",
+                currentLine.indexOf(":",
+                  currentLine.indexOf(":",
+                    currentLine.indexOf(":",
+                      currentLine.indexOf(":",
+                        currentLine.indexOf(":",
+                          currentLine.indexOf(":",
+                            currentLine.indexOf(":")+1)+1)+1)+1)+1)+1)+1)+1)+1)+1)+1);
+      Terminal terminal = null;
+      if(args[9].equals("true"))
+      {
+        terminal = new Terminal(name,regex);
+      }
+      else
+      {
+        terminal = new Terminal(name,regex,args[10].equals("true"));
+      }
+      if(args[6].equals("true"))
+      {
+        terminal.onlyValue();
+      }
+      if(args[7].equals("true"))
+      {
+        terminal.setCanBeNull(true);
+      }
+      if(args[8].equals("true"))
+      {
+        terminal.cannotHaveNewline();
+      }
+      choicerules.put(hash,terminal);
+    }
+    choicerules.get(hash).setNegate(args[3].equals("true"));
+    choicerules.get(hash).setOptional(args[4].equals("true"));
+    try
+    {
+      choicerules.get(hash).setSubrules(args[5]);
+    }
+    catch(Exception e)
+    {
+
+    }
+    return true;
+  }
 }
 
 class ParserDataPackage
@@ -211,15 +423,17 @@ class ParserDataPackage
         reader = new BufferedReader(new InputStreamReader(resourceStream));
       }
       String line = reader.readLine();
+      StringBuilder input2 = new StringBuilder();
       while(line!=null)
       {
         linenumbers.put(offset, linenumber);
         offset+=line.length()+1;
         linenumber++;
-        input += line+"\n";
+        lines.add(line+"\n");
+        input2.append(line+"\n");
         line = reader.readLine();
       }
-
+      input = input2.toString();
     }
     catch(NullPointerException n)
     {
@@ -247,34 +461,32 @@ class ParserDataPackage
         e.printStackTrace();
       }
     }
-    couples = new HashMap<String,ParsingCouple>();    
-    BalancedRule.initialize(input,this);
   }
   
   public void init(String rawinput, Position usePosition){
-	String file = "temp";
-	int offset = 0;
-	int linenumber = 0;
-	linenumbers = new LinkedHashMap<Integer,Integer>();
-	try {
-	  for(String line:rawinput.split("\\n"))
-	  {
-	    linenumbers.put(offset, linenumber);
-	    offset+=line.length()+1;
-	    linenumber++;
-	    input += line+"\n";
-	  }
-    }
-    catch(NullPointerException n)
+  String file = "temp";
+  int offset = 0;
+  int linenumber = 0;
+  linenumbers = new LinkedHashMap<Integer,Integer>();
+  try {
+    for(String line:rawinput.split("\\n"))
     {
-	  if(this.getParseResult()==null)
-	  {
-	    this.setParseResult(new ParseResult(false));
-	  }
-	  this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
-	}
-	couples = new HashMap<String,ParsingCouple>();    
-	BalancedRule.initialize(input,this);
+      linenumbers.put(offset, linenumber);
+      offset+=line.length()+1;
+      linenumber++;
+      input += line+"\n";
+    }
+  }
+  catch(NullPointerException n)
+  {
+    if(this.getParseResult()==null)
+    {
+      this.setParseResult(new ParseResult(false));
+    }
+    this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
+  }
+  couples = new HashMap<String,ParsingCouple>();    
+  BalancedRule.initialize(input,this);
   }
 }
 
@@ -372,7 +584,7 @@ class GrammarAnalyzer {
     input = input2;
     setData(new ParserDataPackage("temp"));
     getData().setKeys(keys);
-    getData().init(input,null);	
+    getData().init(input,null);  
   }
 
   /*
@@ -537,7 +749,57 @@ class GrammarAnalyzer {
   {
     String value = getValue(token,"terminal");
     value = value.replace("-(","(").replace("-)",")").replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")");
-    stacks.get("stack").peek().add(new Terminal("anonymous_terminal_"+ints.get("anon_index"),"\\Q"+value+"\\E",false).onlyValue());
+    boolean following = false;
+    boolean mustSpace = false;
+    if(value.length()==0?false:(""+value.charAt(value.length()-1)).matches("[a-zA-Z]"))
+    {
+      int index = token.getParentToken().indexOfSubToken(token)+1;
+      mustSpace = true;
+    
+      if(index!=0&&index<token.getParentToken().numberOfSubTokens())
+      {
+        while(index<token.getParentToken().numberOfSubTokens())
+        {
+          if(token.getParentToken().getSubToken(index).getName().equals("token"))
+    	  {
+    	    String premodifier = token.getParentToken().getSubToken(index).getValue("premodifier");
+      	    if((premodifier!=null&&(premodifier.equals("")||premodifier.equals("~")))||premodifier==null)
+      	    {
+      	      following = true;
+      	    }      	  
+    	  }
+    	  String modifier = token.getParentToken().getSubToken(index).getValue("modifier");
+    	  if(modifier!=null&&(modifier.equals("*")||modifier.equals("?")))
+    	  {
+    		index++;
+    	  }
+    	  else
+    	  {
+    		break;
+    	  }
+        }
+        if(index>=token.getParentToken().numberOfSubTokens())
+        {
+          index = token.getParentToken().numberOfSubTokens()-1;
+        }
+  	    if(token.getParentToken().getSubToken(index).getName().equals("terminal"))
+  	    {
+  	      mustSpace = (""+token.getParentToken().getSubToken(index).getSubToken(0).getValue("terminal").charAt(0)).matches("[a-zA-Z]");
+  	    }
+  	    else if(token.getParentToken().getSubToken(index).getName().equals("braced"))
+	    {
+	      mustSpace = false;
+	    }
+      }
+    }
+    Terminal terminal = new Terminal("anonymous_terminal_"+ints.get("anon_index"),"\\Q"+value+"\\E",mustSpace);
+    if(following&&!mustSpace)
+    {
+      terminal.setCannotBe("\\Q"+value+"\\E"+"[a-zA-Z]+");
+      terminal.redoRegex("\\Q"+value+"\\E"+"[a-zA-Z]*");
+    }
+    stacks.get("stack").peek().add(terminal.onlyValue());
+    
     set("anon_index",ints.get("anon_index")+1);
   }
 
@@ -546,10 +808,12 @@ class GrammarAnalyzer {
   */
   public void token(Token token) 
   {
+    ChoiceRule terminal = null;
     String name = getValue(token,"tokenname");
     String premodifier = getValue(token,"premodifier");
     String modifier = getValue(token,"modifier");
     String value = getValue(token,"value");
+    boolean makeTerminal = true;
 
     modifier = modifier==null?"":modifier;
     premodifier = premodifier==null?"":premodifier;
@@ -568,8 +832,8 @@ class GrammarAnalyzer {
       String[] numbers = value.split(",");
       for(int i=0;i<names.length;i++)
       {
-        Terminal terminal = new Terminal(names[i],"("+regex+")"+(i<numbers.length?((numbers[i].equals("0"))?"":"?"):(i==0?"":"?")),false);
-        stacks.get("stack").peek().add(terminal);    
+        Terminal term = new Terminal(names[i],"("+regex+")"+(i<numbers.length?((numbers[i].equals("0"))?"":"?"):(i==0?"":"?")),false);
+        stacks.get("stack").peek().add(term);    
       }
       return;
     }
@@ -601,18 +865,110 @@ class GrammarAnalyzer {
               return o1.compareTo(o2);
            }
           });
+          boolean first = true;
+          boolean mustSpace = false;
+          boolean allOne = true;
           for(String val:regex.split("\\Q|\\E"))
           {
             sorted.add(val);
+            if(first)
+            {
+              mustSpace = val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]");
+              first = false;
+            }
+            else
+            {
+              if(mustSpace!=(val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]")))
+              {
+                allOne = false;
+              }
+            }
           }
-          String pipe = "";
-          regex = "";
-          for(String val:sorted)
+
+          int index = token.getParentToken().indexOfSubToken(token)+1;
+          boolean canBeNotSpace = false;
+          boolean following = false;
+          if(index!=0&&index<token.getParentToken().numberOfSubTokens())
           {
-            regex += pipe + val;
-            pipe = "|"; 
+            while(index<token.getParentToken().numberOfSubTokens())
+            {
+              if(token.getParentToken().getSubToken(index).getName().equals("token"))
+    	      {
+    	        String nextPremodifier = token.getParentToken().getSubToken(index).getValue("premodifier");
+      	        if((nextPremodifier!=null&&(nextPremodifier.equals("")||nextPremodifier.equals("~")))||nextPremodifier==null)
+      	        {
+      	          following = true;
+      	        }      	  
+    	      }
+    	      String nextModifier = token.getParentToken().getSubToken(index).getValue("modifier");
+    	      if(nextModifier!=null&&(nextModifier.equals("*")||nextModifier.equals("?")))
+    	      {
+    	        index++;
+    	      }
+    	      else
+    	      {
+    	        break;
+    	      }
+            }
+            if(index>=token.getParentToken().numberOfSubTokens())
+            {
+              index = token.getParentToken().numberOfSubTokens()-1;
+            }
+  	        if(token.getParentToken().getSubToken(index).getName().equals("terminal"))
+  	        {
+  	          canBeNotSpace = !(""+token.getParentToken().getSubToken(index).getSubToken(0).getValue("terminal").charAt(0)).matches("[a-zA-Z]");
+  	        }
+  	        else if(token.getParentToken().getSubToken(index).getName().equals("braced"))
+	        {
+	          canBeNotSpace = true;
+	        }
           }
-          regex = "\\Q"+regex.replace("|","\\E|\\Q")+"\\E";
+          else
+          {
+            canBeNotSpace = true;
+          }
+
+          regex = "";          
+          
+          if(!allOne)
+          {
+            terminal = new ChoiceRule(name).dontCare();
+            
+            for(String val:sorted)
+            {
+              if(!canBeNotSpace)
+              {
+                terminal.add(new Terminal(name,"\\Q"+val+"\\E",val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]")));
+              }
+              else
+              {
+                terminal.add(new Terminal(name,"\\Q"+val+"\\E",false));
+              }
+            }
+          }
+          else
+          {
+            String pipe = "";
+            for(String val:sorted)
+            {
+              regex += pipe + "\\Q"+val+"\\E";
+              pipe = "|";
+            }
+            if(!canBeNotSpace)
+            {
+              terminal = new Terminal(name,regex,mustSpace);
+            }
+            else
+            {
+              terminal = new Terminal(name,regex,false);
+              if(following)
+              {
+                ((Terminal)terminal).setCannotBe(regex+"[a-zA-Z]+");
+                ((Terminal)terminal).redoRegex(regex+"[a-zA-Z]*");
+              }
+            }            
+          }
+          makeTerminal = false;
         }
       }
       else if("~".equals(premodifier))
@@ -623,7 +979,7 @@ class GrammarAnalyzer {
       {
         regex = value;
       }
-      else 
+      else
       {
         regex = value;
         if(!"*".equals(premodifier)&&"".equals(value))
@@ -643,15 +999,17 @@ class GrammarAnalyzer {
       ChoiceRule rule = stacks.get("stack").peek();
       if(rule.size()>0&&rule.get(0) instanceof Terminal)
       {
-        Terminal terminal = (Terminal)rule.get(0);
-        terminal.removeFromAllRegex("\\n");
+        ((Terminal)rule.get(0)).cannotHaveNewline();
       }
     }
     if(!"".equals(modifier))
     {
       regex = "("+regex+")"+modifier;
     }
-    ChoiceRule terminal = new Terminal(name,regex,false);
+    if(makeTerminal)
+    {
+      terminal = new Terminal(name,regex,false);
+    }
     if("~".equals(premodifier))
     {
       closeTerminal.add((Terminal)terminal);
@@ -688,7 +1046,7 @@ class GrammarAnalyzer {
             start = 1;
             end = Integer.MAX_VALUE;
             break;
-        }
+      }
       if(start==0)
       {
         terminal.setOptional(true);
@@ -891,21 +1249,21 @@ class GrammarAnalyzer {
           
           if(parent.get(index+1).getFirstValue().equals(""))
           {
-        	  value = "";
+            value = "";
           }
           else if(parent.get(index+1).getFirstValue().charAt(parent.get(index+1).getFirstValue().length()-1)=='?')
           {
-    		value = parent.get(index+1).getFirstValue().substring(0,parent.get(index+1).getFirstValue().length()-1);
-    	  }
-    	  else
-    	  {
-    	    value = parent.get(index+1).getFirstValue();
-    	  }
-    	  /* 
-    	  Future developements: if you have a rule [rule1] [rule2]? [rule3]?
-    	                        then rule1 should be optionally delimited by rule2 and rule3
-    	                        currently it is only delimited by rule2
-    	                        the code below does this, except it does not work when the rule 3 is an alphanumeric
+        value = parent.get(index+1).getFirstValue().substring(0,parent.get(index+1).getFirstValue().length()-1);
+        }
+        else
+        {
+          value = parent.get(index+1).getFirstValue();
+        }
+        /* 
+        Future developements: if you have a rule [rule1] [rule2]? [rule3]?
+                              then rule1 should be optionally delimited by rule2 and rule3
+                              currently it is only delimited by rule2
+                              the code below does this, except it does not work when the rule 3 is an alphanumeric
           if(optional)
           {
             index++;
@@ -913,12 +1271,12 @@ class GrammarAnalyzer {
             {
               if(parent.get(index+1).getFirstValue().charAt(parent.get(index+1).getFirstValue().length()-1)=='?')
               {
-    		    value += "|"+parent.get(index+1).getFirstValue().substring(0,parent.get(index+1).getFirstValue().length()-1);
-    	      }
-    	      else
-    	      {
-    	        value += "|"+parent.get(index+1).getFirstValue();
-    	      }              
+            value += "|"+parent.get(index+1).getFirstValue().substring(0,parent.get(index+1).getFirstValue().length()-1);
+            }
+            else
+            {
+              value += "|"+parent.get(index+1).getFirstValue();
+            }              
               index++;
             }
           }*/
@@ -962,6 +1320,45 @@ class GrammarAnalyzer {
       else
       {
         terminal.redoRegex("[^\\s\\{\\}\\(\\);,]+");
+      }
+    }
+  }
+  
+  public void analyze(Token tokens)
+  {
+    for(Token token: tokens.getSubTokens())
+    {
+      if(token.is("rule"))
+      {
+        rule(token);
+      }
+      else if(token.is("definition"))
+      {
+        definition(token);
+      }
+      else if(token.is("otherrule"))
+      {
+        otherrule(token);
+      }
+      else if(token.is("anonymousRule"))
+      {
+        anonymousRule(token);
+      }
+      else if(token.is("token"))
+      {
+        this.token(token);
+      }
+      else if(token.is("separator"))
+      {
+        separator(token);
+      }
+      else if(token.is("terminal"))
+      {
+        terminal(token);
+      }
+      else if(token.is("braced"))
+      {
+        braced(token);
       }
     }
   }

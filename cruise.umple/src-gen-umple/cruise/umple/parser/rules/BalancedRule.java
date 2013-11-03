@@ -10,11 +10,11 @@ import java.util.*;
 /**
  * Balanced rules ensure that braces are balanced, that is, that the corresponding brace is matched.
  * For example {a {b }c }d 'a' is matched with 'd' and 'b' is matched 'c' instead of a with c
- * @umplesource ParsingRules.ump 119
- * @umplesource ParsingRules_Code.ump 621
+ * @umplesource ParsingRules.ump 132
+ * @umplesource ParsingRules_Code.ump 786
  */
-// line 119 "../../../../../src/ParsingRules.ump"
-// line 621 "../../../../../src/ParsingRules_Code.ump"
+// line 132 "../../../../../src/ParsingRules.ump"
+// line 786 "../../../../../src/ParsingRules_Code.ump"
 public class BalancedRule extends ChoiceRule
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -79,11 +79,18 @@ public class BalancedRule extends ChoiceRule
    * A balanced rule is of the form "open key" rule "close key", for example: { [[classDefinition]]* }
    * This constructor reflect's that form.
    */
-  @umplesourcefile(line={628},file={"ParsingRules_Code.ump"},javaline={78},length={5})
+  @umplesourcefile(line={793},file={"ParsingRules_Code.ump"},javaline={78},length={5})
    public  BalancedRule(String name, String open, ChoiceRule rule, String close){
     super(name, rule);
     key = open+close;
     spacesTerminal = new Terminal("spaces","",false).dontCare();
+  }
+
+  @umplesourcefile(line={800},file={"ParsingRules_Code.ump"},javaline={90},length={5})
+   public  BalancedRule(String name, String open, String close){
+    super(name);
+	key = open+close;
+	spacesTerminal = new Terminal("spaces","",false).dontCare();
   }
 
 
@@ -93,7 +100,7 @@ public class BalancedRule extends ChoiceRule
    * for example: "{ key }" would work, but " { key }" would not. trailing whitespace is accounted for.
    * This is the only rule that does not account for whitespace before it begins.
    */
-  @umplesourcefile(line={641},file={"ParsingRules_Code.ump"},javaline={90},length={49})
+  @umplesourcefile(line={813},file={"ParsingRules_Code.ump"},javaline={97},length={49})
    public int parse(Token token, int from, int to, String input, ParserDataPackage data){
     int index = data.getCouples().get(key).indexOfPositionFrom(from);
     if(index!=-1)
@@ -103,14 +110,14 @@ public class BalancedRule extends ChoiceRule
       int from2 = Terminal.space.equals(" \\t")?-1:spacesTerminal.parse(self, from+data.getCouples().get(key).getOpen().length(), to, input, data);
       if(from2==-1)
       {
-    	  from2 = from+data.getCouples().get(key).getOpen().length();
+        from2 = from+data.getCouples().get(key).getOpen().length();
       }
       Token open = new Token(data.getCouples().get(key).getOpen(),"STATIC");
       addToken(token,
-  			open,
-  			from,
-  			from+data.getCouples().get(key).getOpen().length(),
-  			data);
+        open,
+        from,
+        from+data.getCouples().get(key).getOpen().length(),
+        data);
       int parseResult = get(0).parse(self,
           from2,
           data.getCouples().get(key).getPositionTo(index),
@@ -118,19 +125,19 @@ public class BalancedRule extends ChoiceRule
           data);
       if(parseResult!=-1&&parseResult==data.getCouples().get(key).getPositionTo(index))
       {
-    	int result = parseResult;
-    	parseResult = Terminal.space.equals(" \\t")?-1:spacesTerminal.parse(self, parseResult+data.getCouples().get(key).getClose().length(), to, input, data);
-    	if(parseResult==-1)
-    	{
-    		parseResult = result+data.getCouples().get(key).getClose().length();
+      int result = parseResult;
+      parseResult = Terminal.space.equals(" \\t")?-1:spacesTerminal.parse(self, parseResult+data.getCouples().get(key).getClose().length(), to, input, data);
+      if(parseResult==-1)
+      {
+        parseResult = result+data.getCouples().get(key).getClose().length();
         }
-    	if(!getNegate())
+      if(!getNegate())
         {
           addToken(token,
-        		  self,
-        		  from+data.getCouples().get(key).getOpen().length(),
-        		  result,
-        		  data);
+              self,
+              from+data.getCouples().get(key).getOpen().length(),
+              result,
+              data);
         }
         else
         {
@@ -148,7 +155,7 @@ public class BalancedRule extends ChoiceRule
   /**
    * initializes the couples, and puts them into the data package
    */
-  @umplesourcefile(line={695},file={"ParsingRules_Code.ump"},javaline={148},length={7})
+  @umplesourcefile(line={867},file={"ParsingRules_Code.ump"},javaline={155},length={7})
    public static  void initialize(String input, ParserDataPackage data){
     data.setCouples(new HashMap<String,ParsingCouple>());
     for(String[] key:data.getKeys().values())
@@ -161,7 +168,7 @@ public class BalancedRule extends ChoiceRule
   /**
    * Balanced rules are never optional, the way to make them optional is to use a Repeatable rule as their parent.
    */
-  @umplesourcefile(line={707},file={"ParsingRules_Code.ump"},javaline={161},length={3})
+  @umplesourcefile(line={879},file={"ParsingRules_Code.ump"},javaline={168},length={3})
    public boolean isOptional(){
     return false;
   }
@@ -170,9 +177,29 @@ public class BalancedRule extends ChoiceRule
   /**
    * the first value of the balanced rule must always be the open key
    */
-  @umplesourcefile(line={715},file={"ParsingRules_Code.ump"},javaline={170},length={3})
+  @umplesourcefile(line={887},file={"ParsingRules_Code.ump"},javaline={177},length={3})
    public String getFirstValue(){
     return "\\Q"+key.charAt(0)+"\\E";
+  }
+
+  @umplesourcefile(line={892},file={"ParsingRules_Code.ump"},javaline={186},length={18})
+   public StringBuilder toDeclareString(StringBuilder builder){
+    if(getDeclared())
+    {
+      return builder;
+    }
+    setDeclared(true);
+    builder.append(getName()+hashCode()+"\n");
+    builder.append(getClass().getSimpleName()+":"+getName()+":"+getName()+hashCode()+":"+getNegate()+":"+isOptional()+":");
+    String pipe = "";
+    for(ChoiceRule rule:getRules())
+    {
+      builder.append(pipe+rule.getName()+rule.hashCode());
+      pipe = ",";
+    }
+    builder.append(":"+key.charAt(0)+":"+key.charAt(1)+"\n");
+    get(0).toDeclareString(builder);
+    return builder;
   }
 
 

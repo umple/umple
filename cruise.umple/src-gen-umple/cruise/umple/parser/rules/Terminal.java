@@ -12,11 +12,11 @@ import java.util.*;
  * Terminals are the only rules that actually don't use sub rules, instead, they use regex to compute whether there is a successful parse.
  * for example if the parse position is at "String name;" the terminal which was created with the ~ (alphanumeric) symbol, will parse the
  * String(excluding whitespace) and will return the position so that the next parse position will be "name;"
- * @umplesource ParsingRules.ump 65
- * @umplesource ParsingRules_Code.ump 479
+ * @umplesource ParsingRules.ump 68
+ * @umplesource ParsingRules_Code.ump 614
  */
-// line 65 "../../../../../src/ParsingRules.ump"
-// line 479 "../../../../../src/ParsingRules_Code.ump"
+// line 68 "../../../../../src/ParsingRules.ump"
+// line 614 "../../../../../src/ParsingRules_Code.ump"
 public class Terminal extends ChoiceRule
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -36,12 +36,17 @@ public class Terminal extends ChoiceRule
   private boolean optional;
   private boolean lookBack;
   private boolean canBeNull;
+  private boolean strictRegex;
+  private boolean followingOptional;
+  private String following;
+  private boolean cannotHaveNewline;
+  private boolean mustHaveSpaceFollowing;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={496},file={"ParsingRules_Code.ump"},javaline={58},length={1})
+  @umplesourcefile(line={632},file={"ParsingRules_Code.ump"},javaline={68},length={3})
   public Terminal(String aName, String aRegex)
   {
     super(aName);
@@ -54,8 +59,15 @@ public class Terminal extends ChoiceRule
     optional = false;
     lookBack = false;
     canBeNull = false;
-    // line 496 "../../../../../src/ParsingRules_Code.ump"
+    strictRegex = false;
+    followingOptional = false;
+    following = null;
+    cannotHaveNewline = false;
+    mustHaveSpaceFollowing = false;
+    // line 632 "../../../../../src/ParsingRules_Code.ump"
     pattern = Pattern.compile("(("+regex+")).*",Pattern.DOTALL);
+        strictRegex = true;
+        mustHaveSpaceFollowing = false;
   }
 
   //------------------------
@@ -70,13 +82,13 @@ public class Terminal extends ChoiceRule
     return wasSet;
   }
 
-  @umplesourcefile(line={501},file={"ParsingRules_Code.ump"},javaline={80},length={1})
+  @umplesourcefile(line={639},file={"ParsingRules_Code.ump"},javaline={92},length={1})
   public boolean setCannotBe(String aCannotBe)
   {
     boolean wasSet = false;
     cannotBe = aCannotBe;
     wasSet = true;
-    // line 501 "../../../../../src/ParsingRules_Code.ump"
+    // line 639 "../../../../../src/ParsingRules_Code.ump"
     cannotBePattern = Pattern.compile("["+space+"]*("+cannotBe+")["+space+"]*.*",Pattern.DOTALL);
     return wasSet;
   }
@@ -133,6 +145,46 @@ public class Terminal extends ChoiceRule
   {
     boolean wasSet = false;
     canBeNull = aCanBeNull;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setStrictRegex(boolean aStrictRegex)
+  {
+    boolean wasSet = false;
+    strictRegex = aStrictRegex;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setFollowingOptional(boolean aFollowingOptional)
+  {
+    boolean wasSet = false;
+    followingOptional = aFollowingOptional;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setFollowing(String aFollowing)
+  {
+    boolean wasSet = false;
+    following = aFollowing;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setCannotHaveNewline(boolean aCannotHaveNewline)
+  {
+    boolean wasSet = false;
+    cannotHaveNewline = aCannotHaveNewline;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setMustHaveSpaceFollowing(boolean aMustHaveSpaceFollowing)
+  {
+    boolean wasSet = false;
+    mustHaveSpaceFollowing = aMustHaveSpaceFollowing;
     wasSet = true;
     return wasSet;
   }
@@ -209,6 +261,31 @@ public class Terminal extends ChoiceRule
     return canBeNull;
   }
 
+  public boolean getStrictRegex()
+  {
+    return strictRegex;
+  }
+
+  public boolean getFollowingOptional()
+  {
+    return followingOptional;
+  }
+
+  public String getFollowing()
+  {
+    return following;
+  }
+
+  public boolean getCannotHaveNewline()
+  {
+    return cannotHaveNewline;
+  }
+
+  public boolean getMustHaveSpaceFollowing()
+  {
+    return mustHaveSpaceFollowing;
+  }
+
   public void delete()
   {
     super.delete();
@@ -218,19 +295,21 @@ public class Terminal extends ChoiceRule
   /**
    * mustSpace being true makes sure that there is a space after the regex, false means that there is optional space.
    */
-  @umplesourcefile(line={485},file={"ParsingRules_Code.ump"},javaline={218},length={6})
+  @umplesourcefile(line={620},file={"ParsingRules_Code.ump"},javaline={295},length={8})
    public  Terminal(String name, String regex, boolean mustSpace){
     super(name);
     this.regex = regex;
 
     pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]"+(mustSpace?"+":"*")+").*",Pattern.DOTALL);
+    strictRegex = false;
+    mustHaveSpaceFollowing = mustSpace;
   }
 
 
   /**
    * Returns the result of the regex matching the input string. Where the parseResult is the futurthest including spaces.
    */
-  @umplesourcefile(line={508},file={"ParsingRules_Code.ump"},javaline={230},length={46})
+  @umplesourcefile(line={646},file={"ParsingRules_Code.ump"},javaline={309},length={46})
    public int parse(Token token, int from, int max, String input, ParserDataPackage data){
     Matcher matcher = getPattern().matcher(input.substring(from,max));
     if(matcher.matches())
@@ -282,7 +361,7 @@ public class Terminal extends ChoiceRule
   /**
    * onlyValue is used for determining if the terminal is a token or a STATIC.
    */
-  @umplesourcefile(line={559},file={"ParsingRules_Code.ump"},javaline={282},length={4})
+  @umplesourcefile(line={697},file={"ParsingRules_Code.ump"},javaline={361},length={4})
    public ChoiceRule onlyValue(){
     onlyValue = true;
     return this;
@@ -292,7 +371,7 @@ public class Terminal extends ChoiceRule
   /**
    * to set the space (for the grammar it's " \t", for the UmpleGrammar " \t\n"
    */
-  @umplesourcefile(line={568},file={"ParsingRules_Code.ump"},javaline={292},length={3})
+  @umplesourcefile(line={706},file={"ParsingRules_Code.ump"},javaline={371},length={3})
    public static  void space(String string){
     space = string;
   }
@@ -301,12 +380,12 @@ public class Terminal extends ChoiceRule
   /**
    * returns optional
    */
-  @umplesourcefile(line={576},file={"ParsingRules_Code.ump"},javaline={301},length={3})
+  @umplesourcefile(line={714},file={"ParsingRules_Code.ump"},javaline={380},length={3})
    public boolean isOptional(){
     return optional;
   }
 
-  @umplesourcefile(line={581},file={"ParsingRules_Code.ump"},javaline={310},length={3})
+  @umplesourcefile(line={719},file={"ParsingRules_Code.ump"},javaline={389},length={3})
    public String getFirstValue(){
     return regex;
   }
@@ -315,23 +394,26 @@ public class Terminal extends ChoiceRule
   /**
    * re-initializes the regex
    */
-  @umplesourcefile(line={589},file={"ParsingRules_Code.ump"},javaline={315},length={4})
+  @umplesourcefile(line={727},file={"ParsingRules_Code.ump"},javaline={394},length={4})
    public void redoRegex(String regex){
     this.regex = (isOptional()?"(":"")+regex+(isOptional()?")?":"");
-    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*).*",Pattern.DOTALL);
+    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]"+(mustHaveSpaceFollowing?"+":"*")+").*",Pattern.DOTALL);
   }
 
 
   /**
    * re-initializes the regex with a given value that can follow the regex(this value should be commuted with getFirstValue).
    */
-  @umplesourcefile(line={599},file={"ParsingRules_Code.ump"},javaline={325},length={12})
+  @umplesourcefile(line={736},file={"ParsingRules_Code.ump"},javaline={404},length={15})
    public void redoRegex(String regex, String following, boolean optional){
+    followingOptional = optional;    
+    this.following = following;  
     this.regex = (isOptional()?"(":"")+regex+(isOptional()?")?":"");	
     if(optional)
     {
-    	pattern2 = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*).*",Pattern.DOTALL);
-    }
+      pattern2 = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*).*",Pattern.DOTALL);
+      	
+    }  
     pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*)("+following+").*",Pattern.DOTALL);	
 	if(isOptional())
 	{
@@ -343,10 +425,36 @@ public class Terminal extends ChoiceRule
   /**
    * This function removes the argument string from the regex
    */
-  @umplesourcefile(line={615},file={"ParsingRules_Code.ump"},javaline={343},length={4})
-   public void removeFromAllRegex(String replacement){
-    this.regex = regex.replace(replacement,"");
-    pattern = Pattern.compile("(["+space+"]*("+regex.replace(replacement,"")+")["+space.replace(replacement,"")+"]*).*",Pattern.DOTALL);
+  @umplesourcefile(line={756},file={"ParsingRules_Code.ump"},javaline={425},length={5})
+   public void cannotHaveNewline(){
+    this.regex = regex.replace("\\n","");
+    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space.replace("\\n","")+"]*).*",Pattern.DOTALL);
+    cannotHaveNewline = true;
+  }
+
+  @umplesourcefile(line={763},file={"ParsingRules_Code.ump"},javaline={436},length={5})
+   public StringBuilder toDeclareString(StringBuilder builder){
+    builder.append(getName()+hashCode()+"\n");
+    builder.append(getClass().getSimpleName()+":"+getName()+":"+getName()+hashCode()+":"+getNegate()+":"+isOptional()+": :"+onlyValue+":"+canBeNull+":"+cannotHaveNewline+":"+strictRegex+":"+mustHaveSpaceFollowing+":"+regex+"\n");
+    return builder;
+  }
+
+  @umplesourcefile(line={770},file={"ParsingRules_Code.ump"},javaline={443},length={7})
+   public StringBuilder toRedoRegexString(StringBuilder builder){
+    if(following!=null)
+    {
+      builder.append(getName()+hashCode()+":"+followingOptional+":"+following+"\n");
+    }
+    return builder;
+  }
+
+  @umplesourcefile(line={778},file={"ParsingRules_Code.ump"},javaline={452},length={7})
+   public StringBuilder toCannotBeString(StringBuilder builder){
+    if(cannotBe!=null)
+    {
+      builder.append(getName()+hashCode()+":"+cannotBe+"\n");
+    }
+    return builder;
   }
 
 
@@ -359,7 +467,12 @@ public class Terminal extends ChoiceRule
             "onlyValue" + ":" + getOnlyValue()+ "," +
             "optional" + ":" + getOptional()+ "," +
             "lookBack" + ":" + getLookBack()+ "," +
-            "canBeNull" + ":" + getCanBeNull()+ "]" + System.getProperties().getProperty("line.separator") +
+            "canBeNull" + ":" + getCanBeNull()+ "," +
+            "strictRegex" + ":" + getStrictRegex()+ "," +
+            "followingOptional" + ":" + getFollowingOptional()+ "," +
+            "following" + ":" + getFollowing()+ "," +
+            "cannotHaveNewline" + ":" + getCannotHaveNewline()+ "," +
+            "mustHaveSpaceFollowing" + ":" + getMustHaveSpaceFollowing()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "cannotBePattern" + "=" + (getCannotBePattern() != null ? !getCannotBePattern().equals(this)  ? getCannotBePattern().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "pattern" + "=" + (getPattern() != null ? !getPattern().equals(this)  ? getPattern().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "pattern2" + "=" + (getPattern2() != null ? !getPattern2().equals(this)  ? getPattern2().toString().replaceAll("  ","    ") : "this" : "null")
@@ -368,7 +481,7 @@ public class Terminal extends ChoiceRule
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={101},file={"ParsingRules.ump"},javaline={372},length={2})
+  //  @umplesourcefile(line={114},file={"ParsingRules.ump"},javaline={485},length={2})
   static String space = " \\t";
 
   

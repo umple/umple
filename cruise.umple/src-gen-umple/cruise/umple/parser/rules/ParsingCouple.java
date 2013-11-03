@@ -10,11 +10,11 @@ import java.util.*;
  * ParsingCouples are used by balanced rules to quickly find the corresponding brace. They are initialized at the begining of each file parsed
  * and are stored in the ParserDataPackage. They contain the character positions of each open brace and each close brace(when braces are the key)
  * so {{}} would have positionFrom = {1,2} and positionTo = {4,3}
- * @umplesource ParsingRules.ump 136
- * @umplesource ParsingRules_Code.ump 720
+ * @umplesource ParsingRules.ump 149
+ * @umplesource ParsingRules_Code.ump 912
  */
-// line 136 "../../../../../src/ParsingRules.ump"
-// line 720 "../../../../../src/ParsingRules_Code.ump"
+// line 149 "../../../../../src/ParsingRules.ump"
+// line 912 "../../../../../src/ParsingRules_Code.ump"
 public class ParsingCouple
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -185,7 +185,7 @@ public class ParsingCouple
    * 
    * The ignore level comes into play for instance if you have /*lvl0 /*lvl1 and you only want to hide lvl1 you would put the ignore level as 1
    */
-  @umplesourcefile(line={738},file={"ParsingRules_Code.ump"},javaline={173},length={95})
+  @umplesourcefile(line={930},file={"ParsingRules_Code.ump"},javaline={173},length={95})
    public ParsingCouple init(String input){
     int level = 0;
     boolean isQuote = false;
@@ -282,7 +282,7 @@ public class ParsingCouple
     return this;
   }
 
-  @umplesourcefile(line={835},file={"ParsingRules_Code.ump"},javaline={286},length={3})
+  @umplesourcefile(line={1027},file={"ParsingRules_Code.ump"},javaline={286},length={3})
    public int hashCode(){
     return open.hashCode()+close.hashCode();
   }
@@ -299,7 +299,7 @@ public class ParsingCouple
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={141},file={"ParsingRules.ump"},javaline={303},length={2})
+  //  @umplesourcefile(line={154},file={"ParsingRules.ump"},javaline={303},length={2})
   public static int ignoreLevel = 0 ;
 
   

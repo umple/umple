@@ -122,13 +122,12 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="CHARSET" eType="#//Charset"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generator" eType="#//Uigu2ElementGenerator"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="element" eType="#//List%3CUmpleElement%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elements" eType="#//UmpleElement" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputPath" eType="#//Path"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sharedFilesPath" eType="#//Path"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sharedFilesToCopy" eType="#//Map%3CString%2CString%3E"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Charset" instanceClassName="java.nio.charset.Charset"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="List&lt;UmpleElement>" instanceClassName="java.util.List"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Path" instanceClassName="java.nio.file.Path"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,String>" instanceClassName="java.util.Map"/>
   <eClassifiers xsi:type="ecore:EClass" name="RubyGenerator" eSuperTypes="#//SuperCodeGenerator">
@@ -141,7 +140,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Uigu2ElementGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="generatedElement" eType="#//List%3CUmpleElement%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="generatedElements" eType="#//UmpleElement" upperBound="-1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Format">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClassMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
@@ -223,17 +224,14 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalNestedStateMachinePerClassMin" eType="#//int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalSelfCyclesPerClassMin" eType="#//int"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="totalCyclesPerClassMin" eType="#//int"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="visitedState" eType="#//List%3CState%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="visitedStates" eType="#//State" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="transitionsList" eType="#//Set%3CTransition%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="statesSet" eType="#//Set%3CState%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="eventsSet" eType="#//Set%3CEvent%3E"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="List&lt;State>" instanceClassName="java.util.List"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;Transition>" instanceClassName="java.util.Set"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;State>" instanceClassName="java.util.Set"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;Event>" instanceClassName="java.util.Set"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Format">
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -532,6 +530,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="dontDelete" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="firstValueBuilder" eType="#//StringBuilder"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="declared" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="reset" eType="#//boolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ParserAction" instanceClassName="cruise.umple.parser.analysis.ParserAction"/>
   <eClassifiers xsi:type="ecore:EClass" name="ChainRule" eSuperTypes="#//ChoiceRule">
@@ -550,6 +550,11 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="optional" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lookBack" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="canBeNull" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="strictRegex" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="followingOptional" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="following" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cannotHaveNewline" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="mustHaveSpaceFollowing" eType="#//boolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Pattern" instanceClassName="java.util.regex.Pattern"/>
   <eClassifiers xsi:type="ecore:EClass" name="RootRule" eSuperTypes="#//ChoiceRule">
@@ -592,6 +597,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="linenumber" eType="#//LinkedHashMap%3CInteger%2CInteger%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasParsed" eType="#//List%3CString%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="#//HashMap%3CString%2CString[]%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lines" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="HashMap&lt;String,ParsingCouple>" instanceClassName="java.util.HashMap"/>
   <eClassifiers xsi:type="ecore:EDataType" name="LinkedHashMap&lt;Integer,Integer>" instanceClassName="java.util.LinkedHashMap"/>
@@ -619,6 +625,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parseResult" eType="#//ParseResult"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="openTerminals" eType="#//Terminal" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="closeTerminals" eType="#//Terminal" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="optionalTerminals" eType="#//Terminal" upperBound="-1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Getter&lt;ChoiceRule>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Getter&lt;Stack&lt;ChoiceRule>>"/>
@@ -1144,7 +1151,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtendsToken" eType="#//Map%3CUmpleClassifier%2CList%3CToken%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedExtendsTokensInterface" eType="#//Map%3CUmpleClassifier%2CList%3CToken%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="unlinkedInterfaceExtend" eType="#//Map%3CUmpleClassifier%2CList%3CString%3E%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastComment" eType="#//List%3CComment%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lastComments" eType="#//Comment" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lastattr" eType="#//Attribute"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lastassoc" eType="#//AssociationVariable"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="lastassocPosition" eType="#//Position"/>
@@ -1159,7 +1166,6 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;Position,String>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClassifier,List&lt;String>>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClassifier,List&lt;Token>>"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="List&lt;Comment>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,Token>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;State,List&lt;Token>>"/>
   <eClassifiers xsi:type="ecore:EClass" name="Pair">
@@ -1263,11 +1269,10 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VmlParser" eSuperTypes="#//Parser">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="variationPointToRequiresListMap" eType="#//Map%3CVariationPoint%2CList%3CString%3E%3E"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="invokedVariation" eType="#//List%3CVariationPoint%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="invokedVariations" eType="#//VariationPoint" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="system" lowerBound="0" upperBound="1" eType="#//VmlSystem" eOpposite="#//VmlSystem/vmlParser"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;VariationPoint,List&lt;String>>"/>
-  <eClassifiers xsi:type="ecore:EDataType" name="List&lt;VariationPoint>"/>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleConsoleMain">
