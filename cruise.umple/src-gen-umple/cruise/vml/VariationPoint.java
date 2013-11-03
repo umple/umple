@@ -9,11 +9,11 @@ import java.util.*;
  * from another.
  * @umplesource Vml.ump 57
  * @umplesource Vml_Code.ump 126
- * @umplesource Vml_Code.ump 375
+ * @umplesource Vml_Code.ump 376
  */
 // line 57 "../../../src/Vml.ump"
 // line 126 "../../../src/Vml_Code.ump"
-// line 375 "../../../src/Vml_Code.ump"
+// line 376 "../../../src/Vml_Code.ump"
 public class VariationPoint
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

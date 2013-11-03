@@ -38,7 +38,37 @@ class ChoiceRule
   */
   public ChoiceRule get(int index)
   {
-    return rules.get(index);
+	if(index<rules.size())
+	{
+      return rules.get(index);
+    }
+	if(subrules!=null)
+	{
+	  synchronized(RuleBasedParser.choicerules)
+	  {
+        if(RuleBasedParser.choicerules.get(subrules[index])!=null)
+        {
+          if(index==rules.size())
+          {
+            rules.add(RuleBasedParser.choicerules.get(subrules[index]));
+          }
+	      return RuleBasedParser.choicerules.get(subrules[index]);
+	    }
+	    else 
+	    {
+		  RuleBasedParser.evaluate(subrules[index]);
+		  if(index==rules.size())
+          {
+            rules.add(RuleBasedParser.choicerules.get(subrules[index]));
+          }
+		  return RuleBasedParser.choicerules.get(subrules[index]);
+	    }
+	  }
+	}
+	else
+	{
+	  return null;
+	}
   }
   /*
     Remove sub rule at specific index
@@ -66,7 +96,14 @@ class ChoiceRule
   */
   public int size()
   {
-    return rules.size();
+    if(subrules!=null)
+    {
+	  return subrules.length;
+	}
+	else 
+	{
+	  return rules.size();
+	}      
   }
   /*
     Adds the self token to the parent token with the proper positions set for the self token.
@@ -101,8 +138,8 @@ class ChoiceRule
     }
     if(linenumber==0)
     {
-    	linenumber = 1;
-    	offset = lookfor;
+      linenumber = 1;
+      offset = lookfor;
     }
     return new Position(
         data.getFilename(),
@@ -203,7 +240,7 @@ class ChoiceRule
       }
       else
       {
-	dontDelete = true;
+        dontDelete = true;
       }
     }
   }
@@ -222,18 +259,91 @@ class ChoiceRule
   */
   public String getFirstValue()
   {
-	  if(firstValueBuilder!=null)
-	  {
-		  return firstValueBuilder.toString();
-	  }
-	  firstValueBuilder = new StringBuilder();
-	  String pipe = "";
-	  for(int i=0;i<size();i++)
-	  {
-		  firstValueBuilder.append(pipe+get(i).getFirstValue());
-		  pipe = "|";
-	  }
-	  return firstValueBuilder.toString();
+    if(firstValueBuilder!=null)
+    {
+      return firstValueBuilder.toString();
+    }
+    firstValueBuilder = new StringBuilder();
+    String pipe = "";
+    for(int i=0;i<size();i++)
+    {
+      firstValueBuilder.append(pipe+get(i).getFirstValue());
+      pipe = "|";
+    }
+    return firstValueBuilder.toString();
+  }
+
+  public void resetDeclare()
+  {
+    if(reset)
+    {
+      return;
+    }
+    reset = true;
+    for(ChoiceRule rule:getRules())
+    {
+      rule.resetDeclare();
+    }
+    declared = false;
+    reset = false;
+  }
+  public StringBuilder toDeclareString(StringBuilder builder)
+  {
+    if(declared)
+    {
+      return builder;
+    }
+    declared = true;
+    builder.append(getName()+hashCode()+"\n");
+    builder.append(getClass().getSimpleName()+":"+getName()+":"+getName()+hashCode()+":"+getNegate()+":"+isOptional()+":");
+    String pipe = "";
+    for(ChoiceRule rule:rules)
+    {
+      builder.append(pipe+rule.getName()+rule.hashCode());
+      pipe = ",";
+    }
+    builder.append("\n");
+    for(int i=0;i<size();i++)
+    {
+      get(i).toDeclareString(builder);
+    }
+    return builder;
+  }
+  
+  public StringBuilder toRedoRegexString(StringBuilder builder)
+  {
+    if(declared)
+    {
+      return builder;
+    }
+    declared = true;
+    for(ChoiceRule rule:getRules())
+    {
+      rule.toRedoRegexString(builder);
+    }
+    return builder;
+  }
+  
+  public StringBuilder toCannotBeString(StringBuilder builder)
+  {
+    if(declared)
+    {
+      return builder;
+    }
+    declared = true;
+    for(ChoiceRule rule:getRules())
+    {
+      rule.toCannotBeString(builder);
+    }
+    return builder;
+  }
+  
+  public void setSubrules(String string)
+  {
+    if(string!=null)
+    {
+	  subrules = string.split(",");
+    }
   }
 }
 
@@ -330,25 +440,25 @@ class ChainRule
   */
   public String getFirstValue()
   {
-	if(getFirstValueBuilder()!=null)
-	{
-	  return getFirstValueBuilder().toString();
-	}
-	setFirstValueBuilder(new StringBuilder());
-	String pipe = "";
-	for(int i=0;i<size();i++)
-	{
+  if(getFirstValueBuilder()!=null)
+  {
+    return getFirstValueBuilder().toString();
+  }
+  setFirstValueBuilder(new StringBuilder());
+  String pipe = "";
+  for(int i=0;i<size();i++)
+  {
       getFirstValueBuilder().append(pipe+get(i).getFirstValue());
-	  if(!get(i).isOptional())
-	  {
-	    return getFirstValueBuilder().toString();
-	  }
-	  if(!getFirstValueBuilder().toString().equals(""))
-	  {
-		  pipe = "|";
-	  }
-	}
-	return getFirstValueBuilder().toString();
+    if(!get(i).isOptional())
+    {
+      return getFirstValueBuilder().toString();
+    }
+    if(!getFirstValueBuilder().toString().equals(""))
+    {
+      pipe = "|";
+    }
+  }
+  return getFirstValueBuilder().toString();
   }
 }
 
@@ -380,6 +490,10 @@ class RepeatableRule
   {
     Token self = getNegate()?token:new Token(getName(),"START_TOKEN");
     ChoiceRule rule = this.get(0);
+    if(rule==null)
+    {
+      System.out.println(getParent().getName()+";;"+getParent().getParent().getName());
+    }
     int start = from;
     int end = from;
     int i=0;
@@ -430,16 +544,37 @@ class RepeatableRule
   */
   public String getFirstValue()
   {
-	if(getFirstValueBuilder()!=null)
-	{
-	  return getFirstValueBuilder().toString();
-	}
-	setFirstValueBuilder(new StringBuilder());
-	for(int i=0;i<size();i++)
-	{
-	  getFirstValueBuilder().append(get(i).getFirstValue());
-	}
-	return getFirstValueBuilder().toString();
+  if(getFirstValueBuilder()!=null)
+  {
+    return getFirstValueBuilder().toString();
+  }
+  setFirstValueBuilder(new StringBuilder());
+  for(int i=0;i<size();i++)
+  {
+    getFirstValueBuilder().append(get(i).getFirstValue());
+  }
+  return getFirstValueBuilder().toString();
+  }
+  
+  public StringBuilder toDeclareString(StringBuilder builder)
+  {
+    if(getDeclared())
+    {
+      return builder;
+    }
+    setDeclared(true);
+
+    builder.append(getName()+hashCode()+"\n");
+    builder.append(getClass().getSimpleName()+":"+getName()+":"+getName()+hashCode()+":"+getNegate()+":"+isOptional()+":");
+    String pipe = "";
+    for(ChoiceRule rule:getRules())
+    {
+      builder.append(pipe+rule.getName()+rule.hashCode());
+      pipe = ",";
+    }
+    builder.append(":"+min+":"+max+"\n");
+    get(0).toDeclareString(builder);
+    return builder;
   }
 }
 
@@ -488,7 +623,8 @@ class Terminal
     this.regex = regex;
 
     pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]"+(mustSpace?"+":"*")+").*",Pattern.DOTALL);
-
+    strictRegex = false;
+    mustHaveSpaceFollowing = mustSpace;
   }
   /*
     sets up the regex without the space, just the plain regex.
@@ -496,6 +632,8 @@ class Terminal
   after constructor 
   {
     pattern = Pattern.compile("(("+regex+")).*",Pattern.DOTALL);
+    strictRegex = true;
+    mustHaveSpaceFollowing = false;
   }
 
   after setCannotBe
@@ -580,7 +718,7 @@ class Terminal
   
   public String getFirstValue()
   {
-	return regex;
+  return regex;
   }
 
   /*
@@ -589,19 +727,22 @@ class Terminal
   public void redoRegex(String regex)
   {
     this.regex = (isOptional()?"(":"")+regex+(isOptional()?")?":"");
-    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*).*",Pattern.DOTALL);
-
-  } 
+    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]"+(mustHaveSpaceFollowing?"+":"*")+").*",Pattern.DOTALL);
+  }
 
   /*
     re-initializes the regex with a given value that can follow the regex(this value should be commuted with getFirstValue).
   */
-  public void redoRegex(String regex, String following, boolean optional) {
-	this.regex = (isOptional()?"(":"")+regex+(isOptional()?")?":"");	
+  public void redoRegex(String regex, String following, boolean optional)
+  {
+    followingOptional = optional;    
+    this.following = following;  
+    this.regex = (isOptional()?"(":"")+regex+(isOptional()?")?":"");	
     if(optional)
     {
-    	pattern2 = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*).*",Pattern.DOTALL);
-    }
+      pattern2 = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*).*",Pattern.DOTALL);
+      	
+    }  
     pattern = Pattern.compile("(["+space+"]*("+regex+")["+space+"]*)("+following+").*",Pattern.DOTALL);	
 	if(isOptional())
 	{
@@ -612,10 +753,34 @@ class Terminal
   /*
     This function removes the argument string from the regex
   */
-  public void removeFromAllRegex(String replacement)
+  public void cannotHaveNewline()
   {
-    this.regex = regex.replace(replacement,"");
-    pattern = Pattern.compile("(["+space+"]*("+regex.replace(replacement,"")+")["+space.replace(replacement,"")+"]*).*",Pattern.DOTALL);
+    this.regex = regex.replace("\\n","");
+    pattern = Pattern.compile("(["+space+"]*("+regex+")["+space.replace("\\n","")+"]*).*",Pattern.DOTALL);
+    cannotHaveNewline = true;
+  }
+  
+  public StringBuilder toDeclareString(StringBuilder builder)
+  {
+    builder.append(getName()+hashCode()+"\n");
+    builder.append(getClass().getSimpleName()+":"+getName()+":"+getName()+hashCode()+":"+getNegate()+":"+isOptional()+": :"+onlyValue+":"+canBeNull+":"+cannotHaveNewline+":"+strictRegex+":"+mustHaveSpaceFollowing+":"+regex+"\n");
+    return builder;
+  }
+  
+  public StringBuilder toRedoRegexString(StringBuilder builder){
+    if(following!=null)
+    {
+      builder.append(getName()+hashCode()+":"+followingOptional+":"+following+"\n");
+    }
+    return builder;
+  }
+  
+  public StringBuilder toCannotBeString(StringBuilder builder){
+    if(cannotBe!=null)
+    {
+      builder.append(getName()+hashCode()+":"+cannotBe+"\n");
+    }
+    return builder;
   }
 }
 
@@ -630,6 +795,13 @@ class BalancedRule
     super(name, rule);
     key = open+close;
     spacesTerminal = new Terminal("spaces","",false).dontCare();
+  }
+  
+  public BalancedRule(String name, String open, String close) 
+  {
+	super(name);
+	key = open+close;
+	spacesTerminal = new Terminal("spaces","",false).dontCare();
   }
 
   /*
@@ -648,14 +820,14 @@ class BalancedRule
       int from2 = Terminal.space.equals(" \\t")?-1:spacesTerminal.parse(self, from+data.getCouples().get(key).getOpen().length(), to, input, data);
       if(from2==-1)
       {
-    	  from2 = from+data.getCouples().get(key).getOpen().length();
+        from2 = from+data.getCouples().get(key).getOpen().length();
       }
       Token open = new Token(data.getCouples().get(key).getOpen(),"STATIC");
       addToken(token,
-  			open,
-  			from,
-  			from+data.getCouples().get(key).getOpen().length(),
-  			data);
+        open,
+        from,
+        from+data.getCouples().get(key).getOpen().length(),
+        data);
       int parseResult = get(0).parse(self,
           from2,
           data.getCouples().get(key).getPositionTo(index),
@@ -663,19 +835,19 @@ class BalancedRule
           data);
       if(parseResult!=-1&&parseResult==data.getCouples().get(key).getPositionTo(index))
       {
-    	int result = parseResult;
-    	parseResult = Terminal.space.equals(" \\t")?-1:spacesTerminal.parse(self, parseResult+data.getCouples().get(key).getClose().length(), to, input, data);
-    	if(parseResult==-1)
-    	{
-    		parseResult = result+data.getCouples().get(key).getClose().length();
+      int result = parseResult;
+      parseResult = Terminal.space.equals(" \\t")?-1:spacesTerminal.parse(self, parseResult+data.getCouples().get(key).getClose().length(), to, input, data);
+      if(parseResult==-1)
+      {
+        parseResult = result+data.getCouples().get(key).getClose().length();
         }
-    	if(!getNegate())
+      if(!getNegate())
         {
           addToken(token,
-        		  self,
-        		  from+data.getCouples().get(key).getOpen().length(),
-        		  result,
-        		  data);
+              self,
+              from+data.getCouples().get(key).getOpen().length(),
+              result,
+              data);
         }
         else
         {
@@ -714,7 +886,27 @@ class BalancedRule
   */
   public String getFirstValue()
   {
-	return "\\Q"+key.charAt(0)+"\\E";
+  return "\\Q"+key.charAt(0)+"\\E";
+  }
+  
+  public StringBuilder toDeclareString(StringBuilder builder)
+  {
+    if(getDeclared())
+    {
+      return builder;
+    }
+    setDeclared(true);
+    builder.append(getName()+hashCode()+"\n");
+    builder.append(getClass().getSimpleName()+":"+getName()+":"+getName()+hashCode()+":"+getNegate()+":"+isOptional()+":");
+    String pipe = "";
+    for(ChoiceRule rule:getRules())
+    {
+      builder.append(pipe+rule.getName()+rule.hashCode());
+      pipe = ",";
+    }
+    builder.append(":"+key.charAt(0)+":"+key.charAt(1)+"\n");
+    get(0).toDeclareString(builder);
+    return builder;
   }
 }
 

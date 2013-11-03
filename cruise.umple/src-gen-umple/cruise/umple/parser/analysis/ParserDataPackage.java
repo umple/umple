@@ -6,16 +6,17 @@ import java.util.*;
 import java.io.*;
 import cruise.umple.compiler.*;
 import cruise.umple.parser.rules.*;
+import java.util.*;
 
 /**
  * ParserDataPackage is a structure which contains all the miscellaneous data during the parse. Most importantly it contains the linenumbers,
  * which are the linenumbers associated to the character numbers(or offsets) of a given \n. And couples which are initialized to be the character position
  * of the open and close of those couples, for example there is a couple for { and } which will matched {a {b }c }d 'a' with 'd' and 'b' with 'c'
- * @umplesource GrammarParsing.ump 82
- * @umplesource GrammarParsing_Code.ump 187
+ * @umplesource GrammarParsing.ump 84
+ * @umplesource GrammarParsing_Code.ump 399
  */
-// line 82 "../../../../../src/GrammarParsing.ump"
-// line 187 "../../../../../src/GrammarParsing_Code.ump"
+// line 84 "../../../../../src/GrammarParsing.ump"
+// line 399 "../../../../../src/GrammarParsing_Code.ump"
 public class ParserDataPackage
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -36,6 +37,7 @@ public class ParserDataPackage
   private LinkedHashMap<Integer,Integer> linenumbers;
   private List<String> hasParsed;
   private HashMap<String,String[]> keys;
+  private List<String> lines;
 
   //------------------------
   // CONSTRUCTOR
@@ -53,6 +55,7 @@ public class ParserDataPackage
     linenumbers = new LinkedHashMap<Integer,Integer>();
     hasParsed = new ArrayList<String>();
     keys = new HashMap<String,String[]>();
+    lines = new ArrayList<String>();
   }
 
   //------------------------
@@ -139,6 +142,20 @@ public class ParserDataPackage
     return wasSet;
   }
 
+  public boolean addLine(String aLine)
+  {
+    boolean wasAdded = false;
+    wasAdded = lines.add(aLine);
+    return wasAdded;
+  }
+
+  public boolean removeLine(String aLine)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = lines.remove(aLine);
+    return wasRemoved;
+  }
+
   /**
    * the filename of the file that is being parsed
    */
@@ -219,6 +236,36 @@ public class ParserDataPackage
     return keys;
   }
 
+  public String getLine(int index)
+  {
+    String aLine = lines.get(index);
+    return aLine;
+  }
+
+  public String[] getLines()
+  {
+    String[] newLines = lines.toArray(new String[lines.size()]);
+    return newLines;
+  }
+
+  public int numberOfLines()
+  {
+    int number = lines.size();
+    return number;
+  }
+
+  public boolean hasLines()
+  {
+    boolean has = lines.size() > 0;
+    return has;
+  }
+
+  public int indexOfLine(String aLine)
+  {
+    int index = lines.indexOf(aLine);
+    return index;
+  }
+
   public void delete()
   {}
 
@@ -227,7 +274,7 @@ public class ParserDataPackage
    * The passed Position can be null if this method was not invoked using a useStatement.
    * It takes a file and reads it, it also initializes the couples which will be used for this file.
    */
-  @umplesourcefile(line={194},file={"GrammarParsing_Code.ump"},javaline={226},length={58})
+  @umplesourcefile(line={406},file={"GrammarParsing_Code.ump"},javaline={273},length={58})
    public void init(Position usePosition){
     String file = filename;
     filename = file.split("\\Q"+File.separator+"\\E")[file.split("\\Q"+File.separator+"\\E").length-1];
@@ -247,15 +294,17 @@ public class ParserDataPackage
         reader = new BufferedReader(new InputStreamReader(resourceStream));
       }
       String line = reader.readLine();
+      StringBuilder input2 = new StringBuilder();
       while(line!=null)
       {
         linenumbers.put(offset, linenumber);
         offset+=line.length()+1;
         linenumber++;
-        input += line+"\n";
+        lines.add(line+"\n");
+        input2.append(line+"\n");
         line = reader.readLine();
       }
-
+      input = input2.toString();
     }
     catch(NullPointerException n)
     {
@@ -283,35 +332,33 @@ public class ParserDataPackage
         e.printStackTrace();
       }
     }
-    couples = new HashMap<String,ParsingCouple>();    
-    BalancedRule.initialize(input,this);
   }
 
-  @umplesourcefile(line={254},file={"GrammarParsing_Code.ump"},javaline={291},length={25})
+  @umplesourcefile(line={466},file={"GrammarParsing_Code.ump"},javaline={338},length={25})
    public void init(String rawinput, Position usePosition){
     String file = "temp";
-	int offset = 0;
-	int linenumber = 0;
-	linenumbers = new LinkedHashMap<Integer,Integer>();
-	try {
-	  for(String line:rawinput.split("\\n"))
-	  {
-	    linenumbers.put(offset, linenumber);
-	    offset+=line.length()+1;
-	    linenumber++;
-	    input += line+"\n";
-	  }
-    }
-    catch(NullPointerException n)
+  int offset = 0;
+  int linenumber = 0;
+  linenumbers = new LinkedHashMap<Integer,Integer>();
+  try {
+    for(String line:rawinput.split("\\n"))
     {
-	  if(this.getParseResult()==null)
-	  {
-	    this.setParseResult(new ParseResult(false));
-	  }
-	  this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
-	}
-	couples = new HashMap<String,ParsingCouple>();    
-	BalancedRule.initialize(input,this);
+      linenumbers.put(offset, linenumber);
+      offset+=line.length()+1;
+      linenumber++;
+      input += line+"\n";
+    }
+  }
+  catch(NullPointerException n)
+  {
+    if(this.getParseResult()==null)
+    {
+      this.setParseResult(new ParseResult(false));
+    }
+    this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
+  }
+  couples = new HashMap<String,ParsingCouple>();    
+  BalancedRule.initialize(input,this);
   }
 
 

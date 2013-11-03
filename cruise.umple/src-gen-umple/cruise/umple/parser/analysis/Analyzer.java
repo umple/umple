@@ -40,7 +40,6 @@ public class Analyzer
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={6},file={"GrammarParsing_Code.ump"},javaline={54},length={4})
   public Analyzer()
   {
     done = false;
@@ -50,11 +49,6 @@ public class Analyzer
     rootToken = null;
     data = null;
     failedPosition = null;
-    // line 6 "../../../../../src/GrammarParsing_Code.ump"
-    for(Method method:getClass().getMethods())
-        {
-          handlers.put(method.getName(), method);
-        }
   }
 
   //------------------------
@@ -174,7 +168,7 @@ public class Analyzer
   /**
    * This funciton is used for putting things into the global hashmap that contains all objects
    */
-  @umplesourcefile(line={15},file={"GrammarParsing_Code.ump"},javaline={174},length={3})
+  @umplesourcefile(line={6},file={"GrammarParsing_Code.ump"},javaline={168},length={3})
    protected void set(String string, Object object){
     global.put(string, object);
   }
@@ -183,7 +177,7 @@ public class Analyzer
   /**
    * This function goes through all the subtokens and invokes this analyzer's method(if it exists) which has the same name as the token
    */
-  @umplesourcefile(line={22},file={"GrammarParsing_Code.ump"},javaline={183},length={24})
+  @umplesourcefile(line={13},file={"GrammarParsing_Code.ump"},javaline={177},length={24})
    public void analyze(Token tokens){
     for(Token token: tokens.getSubTokens())
     {
@@ -213,7 +207,7 @@ public class Analyzer
   /**
    * abstract method for executing the rootrule onto the umplefile(for example)
    */
-  @umplesourcefile(line={50},file={"GrammarParsing_Code.ump"},javaline={213},length={3})
+  @umplesourcefile(line={41},file={"GrammarParsing_Code.ump"},javaline={207},length={3})
    public void execute(){
     
   }
@@ -235,15 +229,15 @@ public class Analyzer
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={56},file={"GrammarParsing_Code.ump"},javaline={239},length={12})
+  //  @umplesourcefile(line={47},file={"GrammarParsing_Code.ump"},javaline={233},length={12})
   public class Getter<T> 
   {
-  @umplesourcefile(line={59},file={"GrammarParsing_Code.ump"},javaline={242},length={3})
+  @umplesourcefile(line={50},file={"GrammarParsing_Code.ump"},javaline={236},length={3})
     public Getter()
     {
     }
     @SuppressWarnings("unchecked")
-  @umplesourcefile(line={63},file={"GrammarParsing_Code.ump"},javaline={247},length={4})
+  @umplesourcefile(line={54},file={"GrammarParsing_Code.ump"},javaline={241},length={4})
     public T get(String name)
     {
       return ((T)global.get(name));

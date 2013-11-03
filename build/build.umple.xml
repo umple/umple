@@ -33,6 +33,8 @@
   ``````````````````````````` -->
 
   <target name="umpleSelf">
+    <delete file="cruise.umple/src/rules.grammar"/>
+    <delete file="cruise.umple/bin/rules.grammar"/>
       <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
     </java>
@@ -119,6 +121,9 @@
     <copy todir="${bin.path}/cruise/umple/compiler/uigu2/files" overwrite="true">
 	<fileset dir="${project.path}/src-uigu2"></fileset>
     </copy>
+
+    <delete file="cruise.umple/src/rules.grammar"/>
+    <delete file="cruise.umple/bin/rules.grammar"/>
   </target>
 
   <!-- ```````````````````````````

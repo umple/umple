@@ -9,11 +9,11 @@ import java.util.*;
  * POSITION INFORMATION
  * @umplesource Vml.ump 45
  * @umplesource Vml_Code.ump 86
- * @umplesource Vml_Code.ump 368
+ * @umplesource Vml_Code.ump 369
  */
 // line 45 "../../../src/Vml.ump"
 // line 86 "../../../src/Vml_Code.ump"
-// line 368 "../../../src/Vml_Code.ump"
+// line 369 "../../../src/Vml_Code.ump"
 public class Concern
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

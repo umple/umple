@@ -11,11 +11,11 @@ import java.util.*;
  * name : [[rule]] [[rule]]*
  * Similar to the Choice rule, except all sub rules must be successful when parsing(similar to an 'and' being performed on a hypotheical "isSuccess" for each rule)
  * Because of the possibility for subrules to be optional, this Rule type must support back tracking, where after a failure, the rule will remove tokens from the growing return token when it needs to reconsider a sub rule as being parsable.
- * @umplesource ParsingRules.ump 31
- * @umplesource ParsingRules_Code.ump 239
+ * @umplesource ParsingRules.ump 34
+ * @umplesource ParsingRules_Code.ump 349
  */
-// line 31 "../../../../../src/ParsingRules.ump"
-// line 239 "../../../../../src/ParsingRules_Code.ump"
+// line 34 "../../../../../src/ParsingRules.ump"
+// line 349 "../../../../../src/ParsingRules_Code.ump"
 public class ChainRule extends ChoiceRule
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -47,7 +47,7 @@ public class ChainRule extends ChoiceRule
   /**
    * Overriding the corresponding constructor
    */
-  @umplesourcefile(line={245},file={"ParsingRules_Code.ump"},javaline={47},length={3})
+  @umplesourcefile(line={355},file={"ParsingRules_Code.ump"},javaline={47},length={3})
    public  ChainRule(String name, ChoiceRule... rules){
     super(name,rules);
   }
@@ -56,7 +56,7 @@ public class ChainRule extends ChoiceRule
   /**
    * If each of the subtokens positively parses then this method will return the result of the last parsed sub ruled.
    */
-  @umplesourcefile(line={253},file={"ParsingRules_Code.ump"},javaline={56},length={56})
+  @umplesourcefile(line={363},file={"ParsingRules_Code.ump"},javaline={56},length={56})
    public int parse(Token token, int from, int max, String input, ParserDataPackage data){
     if(size()==0)
     {
@@ -118,7 +118,7 @@ public class ChainRule extends ChoiceRule
   /**
    * If there exists a subrule that is not optional, this function will return false, otherwise it will return true(i.e. all sub tokens are optional)
    */
-  @umplesourcefile(line={314},file={"ParsingRules_Code.ump"},javaline={118},length={11})
+  @umplesourcefile(line={424},file={"ParsingRules_Code.ump"},javaline={118},length={11})
    public boolean isOptional(){
     //TODO cache this value
     for(ChoiceRule rule:getRules())
@@ -136,27 +136,27 @@ public class ChainRule extends ChoiceRule
    * Within the context of a chain rule this function means the very first rule's value, and if that rule is optional,
    * the or of the next one, and so on.
    */
-  @umplesourcefile(line={331},file={"ParsingRules_Code.ump"},javaline={135},length={21})
+  @umplesourcefile(line={441},file={"ParsingRules_Code.ump"},javaline={135},length={21})
    public String getFirstValue(){
     if(getFirstValueBuilder()!=null)
-	{
-	  return getFirstValueBuilder().toString();
-	}
-	setFirstValueBuilder(new StringBuilder());
-	String pipe = "";
-	for(int i=0;i<size();i++)
-	{
+  {
+    return getFirstValueBuilder().toString();
+  }
+  setFirstValueBuilder(new StringBuilder());
+  String pipe = "";
+  for(int i=0;i<size();i++)
+  {
       getFirstValueBuilder().append(pipe+get(i).getFirstValue());
-	  if(!get(i).isOptional())
-	  {
-	    return getFirstValueBuilder().toString();
-	  }
-	  if(!getFirstValueBuilder().toString().equals(""))
-	  {
-		  pipe = "|";
-	  }
-	}
-	return getFirstValueBuilder().toString();
+    if(!get(i).isOptional())
+    {
+      return getFirstValueBuilder().toString();
+    }
+    if(!getFirstValueBuilder().toString().equals(""))
+    {
+      pipe = "|";
+    }
+  }
+  return getFirstValueBuilder().toString();
   }
 
 }

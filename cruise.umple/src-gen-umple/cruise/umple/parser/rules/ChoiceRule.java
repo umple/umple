@@ -37,6 +37,8 @@ public class ChoiceRule
   private boolean dontDelete;
   private boolean optional;
   private StringBuilder firstValueBuilder;
+  private boolean declared;
+  private boolean reset;
 
   //------------------------
   // CONSTRUCTOR
@@ -52,6 +54,8 @@ public class ChoiceRule
     dontDelete = false;
     optional = false;
     firstValueBuilder = null;
+    declared = false;
+    reset = false;
   }
 
   //------------------------
@@ -128,6 +132,22 @@ public class ChoiceRule
     return wasSet;
   }
 
+  public boolean setDeclared(boolean aDeclared)
+  {
+    boolean wasSet = false;
+    declared = aDeclared;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setReset(boolean aReset)
+  {
+    boolean wasSet = false;
+    reset = aReset;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getName()
   {
     return name;
@@ -193,6 +213,16 @@ public class ChoiceRule
     return firstValueBuilder;
   }
 
+  public boolean getDeclared()
+  {
+    return declared;
+  }
+
+  public boolean getReset()
+  {
+    return reset;
+  }
+
   public void delete()
   {}
 
@@ -200,7 +230,7 @@ public class ChoiceRule
   /**
    * For ease of use the ... is used here to help the user to input sub rules
    */
-  @umplesourcefile(line={6},file={"ParsingRules_Code.ump"},javaline={200},length={7})
+  @umplesourcefile(line={6},file={"ParsingRules_Code.ump"},javaline={230},length={7})
    public  ChoiceRule(String name, ChoiceRule... rules){
     this(name);
     for(ChoiceRule rule:rules)
@@ -213,7 +243,7 @@ public class ChoiceRule
   /**
    * Add sub rule
    */
-  @umplesourcefile(line={17},file={"ParsingRules_Code.ump"},javaline={213},length={7})
+  @umplesourcefile(line={17},file={"ParsingRules_Code.ump"},javaline={243},length={7})
    public boolean add(ChoiceRule rule){
     if(rule.parent==null)
     {
@@ -226,7 +256,7 @@ public class ChoiceRule
   /**
    * Add sub rule at specific index
    */
-  @umplesourcefile(line={28},file={"ParsingRules_Code.ump"},javaline={226},length={7})
+  @umplesourcefile(line={28},file={"ParsingRules_Code.ump"},javaline={256},length={7})
    public void add(int i, ChoiceRule rule){
     if(rule.parent==null)
     {
@@ -239,16 +269,46 @@ public class ChoiceRule
   /**
    * Get sub rule
    */
-  @umplesourcefile(line={39},file={"ParsingRules_Code.ump"},javaline={239},length={3})
+  @umplesourcefile(line={39},file={"ParsingRules_Code.ump"},javaline={269},length={33})
    public ChoiceRule get(int index){
-    return rules.get(index);
+    if(index<rules.size())
+	{
+      return rules.get(index);
+    }
+	if(subrules!=null)
+	{
+	  synchronized(RuleBasedParser.choicerules)
+	  {
+        if(RuleBasedParser.choicerules.get(subrules[index])!=null)
+        {
+          if(index==rules.size())
+          {
+            rules.add(RuleBasedParser.choicerules.get(subrules[index]));
+          }
+	      return RuleBasedParser.choicerules.get(subrules[index]);
+	    }
+	    else 
+	    {
+		  RuleBasedParser.evaluate(subrules[index]);
+		  if(index==rules.size())
+          {
+            rules.add(RuleBasedParser.choicerules.get(subrules[index]));
+          }
+		  return RuleBasedParser.choicerules.get(subrules[index]);
+	    }
+	  }
+	}
+	else
+	{
+	  return null;
+	}
   }
 
 
   /**
    * Remove sub rule at specific index
    */
-  @umplesourcefile(line={46},file={"ParsingRules_Code.ump"},javaline={248},length={3})
+  @umplesourcefile(line={76},file={"ParsingRules_Code.ump"},javaline={308},length={3})
    public ChoiceRule remove(int index){
     return rules.remove(index);
   }
@@ -257,7 +317,7 @@ public class ChoiceRule
   /**
    * Index of sub rule
    */
-  @umplesourcefile(line={53},file={"ParsingRules_Code.ump"},javaline={257},length={3})
+  @umplesourcefile(line={83},file={"ParsingRules_Code.ump"},javaline={317},length={3})
    public int indexOf(ChoiceRule rule){
     return rules.indexOf(rule);
   }
@@ -266,7 +326,7 @@ public class ChoiceRule
   /**
    * Remove sub rule
    */
-  @umplesourcefile(line={60},file={"ParsingRules_Code.ump"},javaline={266},length={3})
+  @umplesourcefile(line={90},file={"ParsingRules_Code.ump"},javaline={326},length={3})
    public void remove(ChoiceRule rule){
     rules.remove(rule);
   }
@@ -275,16 +335,23 @@ public class ChoiceRule
   /**
    * Size of sub rules.
    */
-  @umplesourcefile(line={67},file={"ParsingRules_Code.ump"},javaline={275},length={3})
+  @umplesourcefile(line={97},file={"ParsingRules_Code.ump"},javaline={335},length={10})
    public int size(){
-    return rules.size();
+    if(subrules!=null)
+    {
+	  return subrules.length;
+	}
+	else 
+	{
+	  return rules.size();
+	}
   }
 
 
   /**
    * Adds the self token to the parent token with the proper positions set for the self token.
    */
-  @umplesourcefile(line={74},file={"ParsingRules_Code.ump"},javaline={284},length={6})
+  @umplesourcefile(line={111},file={"ParsingRules_Code.ump"},javaline={351},length={6})
    public void addToken(Token parent, Token self, int from, int end, ParserDataPackage data){
     parent.addSubToken(self);
     
@@ -296,7 +363,7 @@ public class ChoiceRule
   /**
    * Given an offset this function constructs the Position object using the ParserDataPackage's linenumbers hashmap
    */
-  @umplesourcefile(line={84},file={"ParsingRules_Code.ump"},javaline={296},length={29})
+  @umplesourcefile(line={121},file={"ParsingRules_Code.ump"},javaline={363},length={29})
    public Position findPosition(int lookfor, ParserDataPackage data){
     Set<Integer> keys = data.getLinenumbers().keySet();
     int offset = 0;
@@ -316,8 +383,8 @@ public class ChoiceRule
     }
     if(linenumber==0)
     {
-    	linenumber = 1;
-    	offset = lookfor;
+      linenumber = 1;
+      offset = lookfor;
     }
     return new Position(
         data.getFilename(),
@@ -331,7 +398,7 @@ public class ChoiceRule
   /**
    * For each sub token in the self token, this menthod adds it to the token Token
    */
-  @umplesourcefile(line={117},file={"ParsingRules_Code.ump"},javaline={331},length={8})
+  @umplesourcefile(line={154},file={"ParsingRules_Code.ump"},javaline={398},length={8})
    public void addAllTokens(Token token, Token self){
     for(int i=0;i<self.numberOfSubTokens();)
     {
@@ -347,7 +414,7 @@ public class ChoiceRule
    * was able to get to. So, if the parse started at 9 and parsed the word "word" it would then be at 13 and would return that value.
    * If there is no sub rule which can parse the input, this function will return -1 to indicate a failure.
    */
-  @umplesourcefile(line={131},file={"ParsingRules_Code.ump"},javaline={345},length={30})
+  @umplesourcefile(line={168},file={"ParsingRules_Code.ump"},javaline={412},length={30})
    public int parse(Token token, int from, int max, String input, ParserDataPackage data){
     if(size()==0)
     {
@@ -383,7 +450,7 @@ public class ChoiceRule
   /**
    * Don't cares are things like spaces and anonymous rules which are
    */
-  @umplesourcefile(line={165},file={"ParsingRules_Code.ump"},javaline={383},length={4})
+  @umplesourcefile(line={202},file={"ParsingRules_Code.ump"},javaline={450},length={4})
    public ChoiceRule dontCare(){
     negate = true;
     return this;
@@ -393,7 +460,7 @@ public class ChoiceRule
   /**
    * Computes whether this Rule is optional or not by checking if any of the optional sub rules are optional
    */
-  @umplesourcefile(line={173},file={"ParsingRules_Code.ump"},javaline={393},length={16})
+  @umplesourcefile(line={210},file={"ParsingRules_Code.ump"},javaline={460},length={16})
    public boolean isOptional(){
     if(optional)
     {
@@ -415,7 +482,7 @@ public class ChoiceRule
   /**
    * This function works, however it never called because the recursive decent into the
    */
-  @umplesourcefile(line={194},file={"ParsingRules_Code.ump"},javaline={415},length={15})
+  @umplesourcefile(line={231},file={"ParsingRules_Code.ump"},javaline={482},length={15})
    public void optimize(){
     if(!dontDelete&&negate&&optimizeCondition())
     {
@@ -427,7 +494,7 @@ public class ChoiceRule
       }
       else
       {
-	dontDelete = true;
+        dontDelete = true;
       }
     }
   }
@@ -436,7 +503,7 @@ public class ChoiceRule
   /**
    * This function is used in the optimize method to decide whether this rule should be deleted
    */
-  @umplesourcefile(line={214},file={"ParsingRules_Code.ump"},javaline={436},length={3})
+  @umplesourcefile(line={251},file={"ParsingRules_Code.ump"},javaline={503},length={3})
    public boolean optimizeCondition(){
     return size()==1;
   }
@@ -446,20 +513,94 @@ public class ChoiceRule
    * For finding the first value of the next terminal in the rule.
    * Within the context of a choice rule this means any of the choices are a possibility
    */
-  @umplesourcefile(line={223},file={"ParsingRules_Code.ump"},javaline={445},length={14})
+  @umplesourcefile(line={260},file={"ParsingRules_Code.ump"},javaline={512},length={14})
    public String getFirstValue(){
     if(firstValueBuilder!=null)
-	  {
-		  return firstValueBuilder.toString();
-	  }
-	  firstValueBuilder = new StringBuilder();
-	  String pipe = "";
-	  for(int i=0;i<size();i++)
-	  {
-		  firstValueBuilder.append(pipe+get(i).getFirstValue());
-		  pipe = "|";
-	  }
-	  return firstValueBuilder.toString();
+    {
+      return firstValueBuilder.toString();
+    }
+    firstValueBuilder = new StringBuilder();
+    String pipe = "";
+    for(int i=0;i<size();i++)
+    {
+      firstValueBuilder.append(pipe+get(i).getFirstValue());
+      pipe = "|";
+    }
+    return firstValueBuilder.toString();
+  }
+
+  @umplesourcefile(line={276},file={"ParsingRules_Code.ump"},javaline={533},length={13})
+   public void resetDeclare(){
+    if(reset)
+    {
+      return;
+    }
+    reset = true;
+    for(ChoiceRule rule:getRules())
+    {
+      rule.resetDeclare();
+    }
+    declared = false;
+    reset = false;
+  }
+
+  @umplesourcefile(line={290},file={"ParsingRules_Code.ump"},javaline={548},length={21})
+   public StringBuilder toDeclareString(StringBuilder builder){
+    if(declared)
+    {
+      return builder;
+    }
+    declared = true;
+    builder.append(getName()+hashCode()+"\n");
+    builder.append(getClass().getSimpleName()+":"+getName()+":"+getName()+hashCode()+":"+getNegate()+":"+isOptional()+":");
+    String pipe = "";
+    for(ChoiceRule rule:rules)
+    {
+      builder.append(pipe+rule.getName()+rule.hashCode());
+      pipe = ",";
+    }
+    builder.append("\n");
+    for(int i=0;i<size();i++)
+    {
+      get(i).toDeclareString(builder);
+    }
+    return builder;
+  }
+
+  @umplesourcefile(line={313},file={"ParsingRules_Code.ump"},javaline={571},length={12})
+   public StringBuilder toRedoRegexString(StringBuilder builder){
+    if(declared)
+    {
+      return builder;
+    }
+    declared = true;
+    for(ChoiceRule rule:getRules())
+    {
+      rule.toRedoRegexString(builder);
+    }
+    return builder;
+  }
+
+  @umplesourcefile(line={327},file={"ParsingRules_Code.ump"},javaline={585},length={12})
+   public StringBuilder toCannotBeString(StringBuilder builder){
+    if(declared)
+    {
+      return builder;
+    }
+    declared = true;
+    for(ChoiceRule rule:getRules())
+    {
+      rule.toCannotBeString(builder);
+    }
+    return builder;
+  }
+
+  @umplesourcefile(line={341},file={"ParsingRules_Code.ump"},javaline={599},length={6})
+   public void setSubrules(String string){
+    if(string!=null)
+    {
+	  subrules = string.split(",");
+    }
   }
 
 
@@ -470,10 +611,19 @@ public class ChoiceRule
             "name" + ":" + getName()+ "," +
             "negate" + ":" + getNegate()+ "," +
             "dontDelete" + ":" + getDontDelete()+ "," +
-            "optional" + ":" + getOptional()+ "]" + System.getProperties().getProperty("line.separator") +
+            "optional" + ":" + getOptional()+ "," +
+            "declared" + ":" + getDeclared()+ "," +
+            "reset" + ":" + getReset()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "action" + "=" + (getAction() != null ? !getAction().equals(this)  ? getAction().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "parent" + "=" + (getParent() != null ? !getParent().equals(this)  ? getParent().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "firstValueBuilder" + "=" + (getFirstValueBuilder() != null ? !getFirstValueBuilder().equals(this)  ? getFirstValueBuilder().toString().replaceAll("  ","    ") : "this" : "null")
      + outputString;
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  //  @umplesourcefile(line={26},file={"ParsingRules.ump"},javaline={626},length={2})
+  private String[] subrules = null ;
+
+  
 }

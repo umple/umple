@@ -307,7 +307,7 @@ $output = readTemporaryFile("ump/" . $filename);
     <?php if($showText) { ?> true  <?php } else { ?> false <?php } ?>,
     <?php if($showMenu) { ?> true  <?php } else { ?> false <?php } ?>,
     <?php if($readOnly) { ?> true  <?php } else { ?> false <?php } ?>,
-    "<?php echo $diagramType ?>"); // 
+    "<?php echo $diagramType ?>"); //
 </script>
 
 

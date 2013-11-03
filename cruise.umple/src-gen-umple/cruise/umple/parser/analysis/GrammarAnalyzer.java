@@ -12,11 +12,11 @@ import java.util.*;
 /**
  * The grammar analayzer deals with first analyzing the root token of the grammar files, and constructing the rule graph for the grammar
  * then it has a execute function which will use the rule graph in the parsing of the umple file.
- * @umplesource GrammarParsing.ump 153
- * @umplesource GrammarParsing_Code.ump 323
+ * @umplesource GrammarParsing.ump 158
+ * @umplesource GrammarParsing_Code.ump 535
  */
-// line 153 "../../../../../src/GrammarParsing.ump"
-// line 323 "../../../../../src/GrammarParsing_Code.ump"
+// line 158 "../../../../../src/GrammarParsing.ump"
+// line 535 "../../../../../src/GrammarParsing_Code.ump"
 public class GrammarAnalyzer extends Analyzer
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -40,12 +40,13 @@ public class GrammarAnalyzer extends Analyzer
   private ParseResult parseResult;
   private List<Terminal> openTerminal;
   private List<Terminal> closeTerminal;
+  private List<Terminal> optionalTerminal;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={328},file={"GrammarParsing_Code.ump"},javaline={66},length={29})
+  @umplesourcefile(line={540},file={"GrammarParsing_Code.ump"},javaline={68},length={29})
   public GrammarAnalyzer()
   {
     super();
@@ -62,7 +63,8 @@ public class GrammarAnalyzer extends Analyzer
     parseResult = null;
     openTerminal = new ArrayList<Terminal>();
     closeTerminal = new ArrayList<Terminal>();
-    // line 328 "../../../../../src/GrammarParsing_Code.ump"
+    optionalTerminal = new ArrayList<Terminal>();
+    // line 540 "../../../../../src/GrammarParsing_Code.ump"
     actionedTokens.put("useStatement", new ParserAction()
         {
           @Override
@@ -217,6 +219,20 @@ public class GrammarAnalyzer extends Analyzer
   {
     boolean wasRemoved = false;
     wasRemoved = closeTerminal.remove(aCloseTerminal);
+    return wasRemoved;
+  }
+
+  public boolean addOptionalTerminal(Terminal aOptionalTerminal)
+  {
+    boolean wasAdded = false;
+    wasAdded = optionalTerminal.add(aOptionalTerminal);
+    return wasAdded;
+  }
+
+  public boolean removeOptionalTerminal(Terminal aOptionalTerminal)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = optionalTerminal.remove(aOptionalTerminal);
     return wasRemoved;
   }
 
@@ -378,6 +394,36 @@ public class GrammarAnalyzer extends Analyzer
     return index;
   }
 
+  public Terminal getOptionalTerminal(int index)
+  {
+    Terminal aOptionalTerminal = optionalTerminal.get(index);
+    return aOptionalTerminal;
+  }
+
+  public Terminal[] getOptionalTerminal()
+  {
+    Terminal[] newOptionalTerminal = optionalTerminal.toArray(new Terminal[optionalTerminal.size()]);
+    return newOptionalTerminal;
+  }
+
+  public int numberOfOptionalTerminal()
+  {
+    int number = optionalTerminal.size();
+    return number;
+  }
+
+  public boolean hasOptionalTerminal()
+  {
+    boolean has = optionalTerminal.size() > 0;
+    return has;
+  }
+
+  public int indexOfOptionalTerminal(Terminal aOptionalTerminal)
+  {
+    int index = optionalTerminal.indexOf(aOptionalTerminal);
+    return index;
+  }
+
   public void delete()
   {
     super.delete();
@@ -387,7 +433,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Must be called before use with the execute function, this function sets up the file for parsing
    */
-  @umplesourcefile(line={362},file={"GrammarParsing_Code.ump"},javaline={387},length={7})
+  @umplesourcefile(line={574},file={"GrammarParsing_Code.ump"},javaline={433},length={7})
    public void init(UmpleFile file){
     setUmpleFile(file);
     input = file.getPath()+File.separator+file.getFileName();
@@ -396,7 +442,7 @@ public class GrammarAnalyzer extends Analyzer
     getData().init(null);
   }
 
-  @umplesourcefile(line={371},file={"GrammarParsing_Code.ump"},javaline={400},length={6})
+  @umplesourcefile(line={583},file={"GrammarParsing_Code.ump"},javaline={446},length={6})
    public void init(String ruleName, String input2){
     input = input2;
     setData(new ParserDataPackage("temp"));
@@ -408,7 +454,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Performs the parsing on the umple file.
    */
-  @umplesourcefile(line={381},file={"GrammarParsing_Code.ump"},javaline={408},length={43})
+  @umplesourcefile(line={593},file={"GrammarParsing_Code.ump"},javaline={454},length={43})
    public void execute(){
     setRootToken(new Token("ROOT",""));
     RuleBasedParser parser = new RuleBasedParser();
@@ -458,7 +504,7 @@ public class GrammarAnalyzer extends Analyzer
    * --Analyze Rule Methods
    * The rules token contains all the rules in a grammar file.
    */
-  @umplesourcefile(line={430},file={"GrammarParsing_Code.ump"},javaline={457},length={3})
+  @umplesourcefile(line={642},file={"GrammarParsing_Code.ump"},javaline={503},length={3})
    public void rules(Token token){
     analyze(token);
   }
@@ -467,7 +513,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * The rule token denotes the beginning of a rule definition.
    */
-  @umplesourcefile(line={437},file={"GrammarParsing_Code.ump"},javaline={467},length={24})
+  @umplesourcefile(line={649},file={"GrammarParsing_Code.ump"},javaline={513},length={24})
    public void rule(Token token){
     if(rules.get(getValue(token,"rulename"))==null)
     {
@@ -497,7 +543,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * The definition token is used both for the rule definition, and anonymous rules(rules containsed within paratheses).
    */
-  @umplesourcefile(line={466},file={"GrammarParsing_Code.ump"},javaline={497},length={8})
+  @umplesourcefile(line={678},file={"GrammarParsing_Code.ump"},javaline={543},length={8})
    public void definition(Token token){
     ChoiceRule self = new ChainRule("annoymous_multirule_"+ints.get("anon_index")).dontCare();
     set("anon_index",ints.get("anon_index")+1);
@@ -511,7 +557,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Otherrule tokens are for rule names within a definition, where the otherrule is defined elsewhere.
    */
-  @umplesourcefile(line={478},file={"GrammarParsing_Code.ump"},javaline={511},length={38})
+  @umplesourcefile(line={690},file={"GrammarParsing_Code.ump"},javaline={557},length={38})
    public void otherrule(Token token){
     String modifier = getValue(token,"modifier");
     if(modifier!=null&&modifier.length()>0)
@@ -555,7 +601,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Simple method to handle token values.
    */
-  @umplesourcefile(line={520},file={"GrammarParsing_Code.ump"},javaline={555},length={11})
+  @umplesourcefile(line={732},file={"GrammarParsing_Code.ump"},javaline={601},length={11})
    public String getValue(Token token, String name){
     String value = null;
     for(Token sub:token.getSubTokens())
@@ -572,11 +618,61 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Terminals are keywords or syntax.
    */
-  @umplesourcefile(line={536},file={"GrammarParsing_Code.ump"},javaline={572},length={6})
+  @umplesourcefile(line={748},file={"GrammarParsing_Code.ump"},javaline={618},length={56})
    public void terminal(Token token){
     String value = getValue(token,"terminal");
     value = value.replace("-(","(").replace("-)",")").replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")");
-    stacks.get("stack").peek().add(new Terminal("anonymous_terminal_"+ints.get("anon_index"),"\\Q"+value+"\\E",false).onlyValue());
+    boolean following = false;
+    boolean mustSpace = false;
+    if(value.length()==0?false:(""+value.charAt(value.length()-1)).matches("[a-zA-Z]"))
+    {
+      int index = token.getParentToken().indexOfSubToken(token)+1;
+      mustSpace = true;
+    
+      if(index!=0&&index<token.getParentToken().numberOfSubTokens())
+      {
+        while(index<token.getParentToken().numberOfSubTokens())
+        {
+          if(token.getParentToken().getSubToken(index).getName().equals("token"))
+    	  {
+    	    String premodifier = token.getParentToken().getSubToken(index).getValue("premodifier");
+      	    if((premodifier!=null&&(premodifier.equals("")||premodifier.equals("~")))||premodifier==null)
+      	    {
+      	      following = true;
+      	    }      	  
+    	  }
+    	  String modifier = token.getParentToken().getSubToken(index).getValue("modifier");
+    	  if(modifier!=null&&(modifier.equals("*")||modifier.equals("?")))
+    	  {
+    		index++;
+    	  }
+    	  else
+    	  {
+    		break;
+    	  }
+        }
+        if(index>=token.getParentToken().numberOfSubTokens())
+        {
+          index = token.getParentToken().numberOfSubTokens()-1;
+        }
+  	    if(token.getParentToken().getSubToken(index).getName().equals("terminal"))
+  	    {
+  	      mustSpace = (""+token.getParentToken().getSubToken(index).getSubToken(0).getValue("terminal").charAt(0)).matches("[a-zA-Z]");
+  	    }
+  	    else if(token.getParentToken().getSubToken(index).getName().equals("braced"))
+	    {
+	      mustSpace = false;
+	    }
+      }
+    }
+    Terminal terminal = new Terminal("anonymous_terminal_"+ints.get("anon_index"),"\\Q"+value+"\\E",mustSpace);
+    if(following&&!mustSpace)
+    {
+      terminal.setCannotBe("\\Q"+value+"\\E"+"[a-zA-Z]+");
+      terminal.redoRegex("\\Q"+value+"\\E"+"[a-zA-Z]*");
+    }
+    stacks.get("stack").peek().add(terminal.onlyValue());
+    
     set("anon_index",ints.get("anon_index")+1);
   }
 
@@ -584,12 +680,14 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Tokens are of the form [{premodifier}tokenname{:value}] and denote a Terminal rule where the a Token is created with the value specified by some premodifier
    */
-  @umplesourcefile(line={547},file={"GrammarParsing_Code.ump"},javaline={584},length={153})
+  @umplesourcefile(line={809},file={"GrammarParsing_Code.ump"},javaline={680},length={249})
    public void token(Token token){
+    ChoiceRule terminal = null;
     String name = getValue(token,"tokenname");
     String premodifier = getValue(token,"premodifier");
     String modifier = getValue(token,"modifier");
     String value = getValue(token,"value");
+    boolean makeTerminal = true;
 
     modifier = modifier==null?"":modifier;
     premodifier = premodifier==null?"":premodifier;
@@ -608,8 +706,8 @@ public class GrammarAnalyzer extends Analyzer
       String[] numbers = value.split(",");
       for(int i=0;i<names.length;i++)
       {
-        Terminal terminal = new Terminal(names[i],"("+regex+")"+(i<numbers.length?((numbers[i].equals("0"))?"":"?"):(i==0?"":"?")),false);
-        stacks.get("stack").peek().add(terminal);    
+        Terminal term = new Terminal(names[i],"("+regex+")"+(i<numbers.length?((numbers[i].equals("0"))?"":"?"):(i==0?"":"?")),false);
+        stacks.get("stack").peek().add(term);    
       }
       return;
     }
@@ -641,18 +739,110 @@ public class GrammarAnalyzer extends Analyzer
               return o1.compareTo(o2);
            }
           });
+          boolean first = true;
+          boolean mustSpace = false;
+          boolean allOne = true;
           for(String val:regex.split("\\Q|\\E"))
           {
             sorted.add(val);
+            if(first)
+            {
+              mustSpace = val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]");
+              first = false;
+            }
+            else
+            {
+              if(mustSpace!=(val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]")))
+              {
+                allOne = false;
+              }
+            }
           }
-          String pipe = "";
-          regex = "";
-          for(String val:sorted)
+
+          int index = token.getParentToken().indexOfSubToken(token)+1;
+          boolean canBeNotSpace = false;
+          boolean following = false;
+          if(index!=0&&index<token.getParentToken().numberOfSubTokens())
           {
-            regex += pipe + val;
-            pipe = "|"; 
+            while(index<token.getParentToken().numberOfSubTokens())
+            {
+              if(token.getParentToken().getSubToken(index).getName().equals("token"))
+    	      {
+    	        String nextPremodifier = token.getParentToken().getSubToken(index).getValue("premodifier");
+      	        if((nextPremodifier!=null&&(nextPremodifier.equals("")||nextPremodifier.equals("~")))||nextPremodifier==null)
+      	        {
+      	          following = true;
+      	        }      	  
+    	      }
+    	      String nextModifier = token.getParentToken().getSubToken(index).getValue("modifier");
+    	      if(nextModifier!=null&&(nextModifier.equals("*")||nextModifier.equals("?")))
+    	      {
+    	        index++;
+    	      }
+    	      else
+    	      {
+    	        break;
+    	      }
+            }
+            if(index>=token.getParentToken().numberOfSubTokens())
+            {
+              index = token.getParentToken().numberOfSubTokens()-1;
+            }
+  	        if(token.getParentToken().getSubToken(index).getName().equals("terminal"))
+  	        {
+  	          canBeNotSpace = !(""+token.getParentToken().getSubToken(index).getSubToken(0).getValue("terminal").charAt(0)).matches("[a-zA-Z]");
+  	        }
+  	        else if(token.getParentToken().getSubToken(index).getName().equals("braced"))
+	        {
+	          canBeNotSpace = true;
+	        }
           }
-          regex = "\\Q"+regex.replace("|","\\E|\\Q")+"\\E";
+          else
+          {
+            canBeNotSpace = true;
+          }
+
+          regex = "";          
+          
+          if(!allOne)
+          {
+            terminal = new ChoiceRule(name).dontCare();
+            
+            for(String val:sorted)
+            {
+              if(!canBeNotSpace)
+              {
+                terminal.add(new Terminal(name,"\\Q"+val+"\\E",val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]")));
+              }
+              else
+              {
+                terminal.add(new Terminal(name,"\\Q"+val+"\\E",false));
+              }
+            }
+          }
+          else
+          {
+            String pipe = "";
+            for(String val:sorted)
+            {
+              regex += pipe + "\\Q"+val+"\\E";
+              pipe = "|";
+            }
+            if(!canBeNotSpace)
+            {
+              terminal = new Terminal(name,regex,mustSpace);
+            }
+            else
+            {
+              terminal = new Terminal(name,regex,false);
+              if(following)
+              {
+                ((Terminal)terminal).setCannotBe(regex+"[a-zA-Z]+");
+                ((Terminal)terminal).redoRegex(regex+"[a-zA-Z]*");
+              }
+            }            
+          }
+          makeTerminal = false;
         }
       }
       else if("~".equals(premodifier))
@@ -663,7 +853,7 @@ public class GrammarAnalyzer extends Analyzer
       {
         regex = value;
       }
-      else 
+      else
       {
         regex = value;
         if(!"*".equals(premodifier)&&"".equals(value))
@@ -683,15 +873,17 @@ public class GrammarAnalyzer extends Analyzer
       ChoiceRule rule = stacks.get("stack").peek();
       if(rule.size()>0&&rule.get(0) instanceof Terminal)
       {
-        Terminal terminal = (Terminal)rule.get(0);
-        terminal.removeFromAllRegex("\\n");
+        ((Terminal)rule.get(0)).cannotHaveNewline();
       }
     }
     if(!"".equals(modifier))
     {
       regex = "("+regex+")"+modifier;
     }
-    ChoiceRule terminal = new Terminal(name,regex,false);
+    if(makeTerminal)
+    {
+      terminal = new Terminal(name,regex,false);
+    }
     if("~".equals(premodifier))
     {
       closeTerminal.add((Terminal)terminal);
@@ -728,7 +920,7 @@ public class GrammarAnalyzer extends Analyzer
             start = 1;
             end = Integer.MAX_VALUE;
             break;
-        }
+      }
       if(start==0)
       {
         terminal.setOptional(true);
@@ -743,7 +935,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * These are rules that are specified within brackets, and are therefore not Tokenized.
    */
-  @umplesourcefile(line={705},file={"GrammarParsing_Code.ump"},javaline={743},length={34})
+  @umplesourcefile(line={1063},file={"GrammarParsing_Code.ump"},javaline={935},length={34})
    public void anonymousRule(Token token){
     ChoiceRule rule = new ChoiceRule("annoymous_rule_"+ints.get("anon_index")).dontCare();
     set("anon_index",ints.get("anon_index")+1);
@@ -783,7 +975,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * {} and "" are special couple characters and are handled by making a BalancedRule which will ensure that the { is paired with the proper } and so on
    */
-  @umplesourcefile(line={744},file={"GrammarParsing_Code.ump"},javaline={783},length={28})
+  @umplesourcefile(line={1102},file={"GrammarParsing_Code.ump"},javaline={975},length={28})
    public void braced(Token token){
     ChoiceRule rule = new ChoiceRule("annoymous_rule_"+ints.get("anon_index")).dontCare();
     set("anon_index",ints.get("anon_index")+1);
@@ -819,7 +1011,7 @@ public class GrammarAnalyzer extends Analyzer
    * after the | is contained in a separate Rule. The parent to both of these rules is a ChoiceRule, meaning that each of the rules created
    * will be tried.
    */
-  @umplesourcefile(line={778},file={"GrammarParsing_Code.ump"},javaline={817},length={7})
+  @umplesourcefile(line={1136},file={"GrammarParsing_Code.ump"},javaline={1009},length={7})
    public void separator(Token token){
     stacks.get("stack").pop();
     ChoiceRule self = new ChainRule("annoymous_multirule_"+ints.get("anon_index")).dontCare();
@@ -833,7 +1025,7 @@ public class GrammarAnalyzer extends Analyzer
    * There are some terminals that need to use their surroundings to determine what they can and cannot take on as values
    * this function iterates through all such terminals
    */
-  @umplesourcefile(line={791},file={"GrammarParsing_Code.ump"},javaline={832},length={10})
+  @umplesourcefile(line={1149},file={"GrammarParsing_Code.ump"},javaline={1024},length={10})
    public void setupTerminals(){
     for(Terminal terminal:openTerminal)
     {
@@ -851,7 +1043,7 @@ public class GrammarAnalyzer extends Analyzer
    * for instance if an association looks like * -- 1 Student sorted { }; the rolename is student not sorted.
    * This works also for having * -- 1 Student sorted sorted { }; which will be a sorted list of students called sorted. (i.e. if the next one is accounted for then everything proceeds as normal)
    */
-  @umplesourcefile(line={807},file={"GrammarParsing_Code.ump"},javaline={849},length={51})
+  @umplesourcefile(line={1165},file={"GrammarParsing_Code.ump"},javaline={1041},length={51})
    public void setupAlphanumericTerminal(Terminal terminal){
     ChoiceRule child = null;
     ChoiceRule parent = terminal;
@@ -909,7 +1101,7 @@ public class GrammarAnalyzer extends Analyzer
    * Sets up the tokens with no premodifier to make sure they stop at the right place,
    * for instance [type] [=list[]]? should stop before the [], so the type only contains String, instead of String[]
    */
-  @umplesourcefile(line={865},file={"GrammarParsing_Code.ump"},javaline={908},length={102})
+  @umplesourcefile(line={1223},file={"GrammarParsing_Code.ump"},javaline={1100},length={102})
    public void setupTerminal(Terminal terminal){
     ChoiceRule child = null;
     ChoiceRule parent = terminal;
@@ -938,21 +1130,21 @@ public class GrammarAnalyzer extends Analyzer
           
           if(parent.get(index+1).getFirstValue().equals(""))
           {
-        	  value = "";
+            value = "";
           }
           else if(parent.get(index+1).getFirstValue().charAt(parent.get(index+1).getFirstValue().length()-1)=='?')
           {
-    		value = parent.get(index+1).getFirstValue().substring(0,parent.get(index+1).getFirstValue().length()-1);
-    	  }
-    	  else
-    	  {
-    	    value = parent.get(index+1).getFirstValue();
-    	  }
-    	  /* 
-    	  Future developements: if you have a rule [rule1] [rule2]? [rule3]?
-    	                        then rule1 should be optionally delimited by rule2 and rule3
-    	                        currently it is only delimited by rule2
-    	                        the code below does this, except it does not work when the rule 3 is an alphanumeric
+        value = parent.get(index+1).getFirstValue().substring(0,parent.get(index+1).getFirstValue().length()-1);
+        }
+        else
+        {
+          value = parent.get(index+1).getFirstValue();
+        }
+        /* 
+        Future developements: if you have a rule [rule1] [rule2]? [rule3]?
+                              then rule1 should be optionally delimited by rule2 and rule3
+                              currently it is only delimited by rule2
+                              the code below does this, except it does not work when the rule 3 is an alphanumeric
           if(optional)
           {
             index++;
@@ -960,12 +1152,12 @@ public class GrammarAnalyzer extends Analyzer
             {
               if(parent.get(index+1).getFirstValue().charAt(parent.get(index+1).getFirstValue().length()-1)=='?')
               {
-    		    value += "|"+parent.get(index+1).getFirstValue().substring(0,parent.get(index+1).getFirstValue().length()-1);
-    	      }
-    	      else
-    	      {
-    	        value += "|"+parent.get(index+1).getFirstValue();
-    	      }              
+            value += "|"+parent.get(index+1).getFirstValue().substring(0,parent.get(index+1).getFirstValue().length()-1);
+            }
+            else
+            {
+              value += "|"+parent.get(index+1).getFirstValue();
+            }              
               index++;
             }
           }*/
@@ -1009,6 +1201,45 @@ public class GrammarAnalyzer extends Analyzer
       else
       {
         terminal.redoRegex("[^\\s\\{\\}\\(\\);,]+");
+      }
+    }
+  }
+
+  @umplesourcefile(line={1327},file={"GrammarParsing_Code.ump"},javaline={1209},length={37})
+   public void analyze(Token tokens){
+    for(Token token: tokens.getSubTokens())
+    {
+      if(token.is("rule"))
+      {
+        rule(token);
+      }
+      else if(token.is("definition"))
+      {
+        definition(token);
+      }
+      else if(token.is("otherrule"))
+      {
+        otherrule(token);
+      }
+      else if(token.is("anonymousRule"))
+      {
+        anonymousRule(token);
+      }
+      else if(token.is("token"))
+      {
+        this.token(token);
+      }
+      else if(token.is("separator"))
+      {
+        separator(token);
+      }
+      else if(token.is("terminal"))
+      {
+        terminal(token);
+      }
+      else if(token.is("braced"))
+      {
+        braced(token);
       }
     }
   }

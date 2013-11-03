@@ -3,6 +3,7 @@
 
 package cruise.umple.compiler;
 import java.util.*;
+import java.util.*;
 
 /**
  * END OF CLASS StateMachineMetrics
@@ -467,12 +468,18 @@ public class CountSM
     return wasSet;
   }
 
-  public boolean setVisitedStates(List<State> aVisitedStates)
+  public boolean addVisitedState(State aVisitedState)
   {
-    boolean wasSet = false;
-    visitedStates = aVisitedStates;
-    wasSet = true;
-    return wasSet;
+    boolean wasAdded = false;
+    wasAdded = visitedStates.add(aVisitedState);
+    return wasAdded;
+  }
+
+  public boolean removeVisitedState(State aVisitedState)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = visitedStates.remove(aVisitedState);
+    return wasRemoved;
   }
 
   public boolean setTransitionsList(Set<Transition> aTransitionsList)
@@ -713,9 +720,34 @@ public class CountSM
     return totalCyclesPerClassMin;
   }
 
-  public List<State> getVisitedStates()
+  public State getVisitedState(int index)
   {
-    return visitedStates;
+    State aVisitedState = visitedStates.get(index);
+    return aVisitedState;
+  }
+
+  public State[] getVisitedStates()
+  {
+    State[] newVisitedStates = visitedStates.toArray(new State[visitedStates.size()]);
+    return newVisitedStates;
+  }
+
+  public int numberOfVisitedStates()
+  {
+    int number = visitedStates.size();
+    return number;
+  }
+
+  public boolean hasVisitedStates()
+  {
+    boolean has = visitedStates.size() > 0;
+    return has;
+  }
+
+  public int indexOfVisitedState(State aVisitedState)
+  {
+    int index = visitedStates.indexOf(aVisitedState);
+    return index;
   }
 
   /**
@@ -746,7 +778,7 @@ public class CountSM
    * a class.
    * 
    */
-  @umplesourcefile(line={312},file={"SimpleMetrics_SM.ump"},javaline={743},length={15})
+  @umplesourcefile(line={312},file={"SimpleMetrics_SM.ump"},javaline={775},length={15})
   public void incTotal(CountSM countPerClass){
     this.incTotalClass(1);	  	
 	  this.incTotalStateMachines(countPerClass.getTotalStateMachinesPerClass());
@@ -770,7 +802,7 @@ public class CountSM
    * MAX and MIN values.
    * 
    */
-  @umplesourcefile(line={332},file={"SimpleMetrics_SM.ump"},javaline={767},length={67})
+  @umplesourcefile(line={332},file={"SimpleMetrics_SM.ump"},javaline={799},length={67})
   public void calcMinMax(CountSM countPerClass){
     // calculating MAX
 	  
@@ -849,7 +881,7 @@ public class CountSM
    * @param  Umple Class under analysis
    * 
    */
-  @umplesourcefile(line={407},file={"SimpleMetrics_SM.ump"},javaline={843},length={9})
+  @umplesourcefile(line={407},file={"SimpleMetrics_SM.ump"},javaline={875},length={9})
   public void calculate(UmpleClass uClass){
     this.setTotalStateMachinesPerClass( uClass.getStateMachines().size() );
 	  
@@ -869,7 +901,7 @@ public class CountSM
    * @param  StateMachine under analysis
    * 
    */
-  @umplesourcefile(line={423},file={"SimpleMetrics_SM.ump"},javaline={864},length={11})
+  @umplesourcefile(line={423},file={"SimpleMetrics_SM.ump"},javaline={896},length={11})
   public void calculate(StateMachine sm){
     nestedSM (sm);	 
 	  
@@ -893,7 +925,7 @@ public class CountSM
    * @param  StateMachine under analysis
    * 
    */
-  @umplesourcefile(line={443},file={"SimpleMetrics_SM.ump"},javaline={886},length={38})
+  @umplesourcefile(line={443},file={"SimpleMetrics_SM.ump"},javaline={918},length={38})
   public void nestedSM(StateMachine sm){
     this.load(sm); // Load all transitions to SET  Java Structure
       // Look for states
@@ -943,7 +975,7 @@ public class CountSM
    * FALSE means there is NOT self cycle
    * 
    */
-  @umplesourcefile(line={490},file={"SimpleMetrics_SM.ump"},javaline={937},length={7})
+  @umplesourcefile(line={490},file={"SimpleMetrics_SM.ump"},javaline={969},length={7})
   public boolean hasSelfCycle(State state){
     List <Transition> TransitionsList= state.getTransitions();
 	  for( Transition transition : TransitionsList){
@@ -960,7 +992,7 @@ public class CountSM
    * @return The amount of transitions that represents Self Cycles 
    * 
    */
-  @umplesourcefile(line={503},file={"SimpleMetrics_SM.ump"},javaline={956},length={8})
+  @umplesourcefile(line={503},file={"SimpleMetrics_SM.ump"},javaline={988},length={8})
   public int getAmountSelfCycles(State state){
     int amount=0;
 	  List <Transition> TransitionsList= state.getTransitions();
@@ -980,7 +1012,7 @@ public class CountSM
    * Value -1 means a invalid NULL state was supplied as parameter.
    * 
    */
-  @umplesourcefile(line={519},file={"SimpleMetrics_SM.ump"},javaline={974},length={16})
+  @umplesourcefile(line={519},file={"SimpleMetrics_SM.ump"},javaline={1006},length={16})
   public int getAmountCycles(State state){
     this.resetVisitedStates();
 	  if (state==null) return -1;
@@ -1012,7 +1044,7 @@ public class CountSM
    * Value Zero means there is NOT cycle.
    * 
    */
-  @umplesourcefile(line={547},file={"SimpleMetrics_SM.ump"},javaline={1002},length={17})
+  @umplesourcefile(line={547},file={"SimpleMetrics_SM.ump"},javaline={1034},length={17})
   public int countCycles(State firstState, State currentState, int sum){
     int count=0;
 	  
@@ -1040,7 +1072,7 @@ public class CountSM
    * It must not be used directly. Use getAmountCycles(State)
    * 
    */
-  @umplesourcefile(line={571},file={"SimpleMetrics_SM.ump"},javaline={1035},length={6})
+  @umplesourcefile(line={571},file={"SimpleMetrics_SM.ump"},javaline={1067},length={6})
   public void load(List<StateMachine> stateMachinesList){
     loadStatesRecursively( stateMachinesList ); // load all states of list of StateMachines
 	  for(State state : statesSet){
@@ -1048,7 +1080,7 @@ public class CountSM
 	  }
   }
 
-  @umplesourcefile(line={578},file={"SimpleMetrics_SM.ump"},javaline={1052},length={8})
+  @umplesourcefile(line={578},file={"SimpleMetrics_SM.ump"},javaline={1084},length={8})
   public void load(StateMachine SM){
     if ( SM == null ) return;
 	  statesSet.addAll(SM.getStates());
@@ -1058,14 +1090,14 @@ public class CountSM
       }
   }
 
-  @umplesourcefile(line={587},file={"SimpleMetrics_SM.ump"},javaline={1062},length={5})
+  @umplesourcefile(line={587},file={"SimpleMetrics_SM.ump"},javaline={1094},length={5})
   public void loadStatesRecursively(List<StateMachine> stateMachinesList){
     for (StateMachine sm: stateMachinesList){
 	    loadStatesRecursively( sm );
 	  }
   }
 
-  @umplesourcefile(line={593},file={"SimpleMetrics_SM.ump"},javaline={1069},length={8})
+  @umplesourcefile(line={593},file={"SimpleMetrics_SM.ump"},javaline={1101},length={8})
   public void loadStatesRecursively(StateMachine SM){
     if ( SM == null ) return;
 	  statesSet.addAll(SM.getStates());
@@ -1075,67 +1107,67 @@ public class CountSM
       }
   }
 
-  @umplesourcefile(line={602},file={"SimpleMetrics_SM.ump"},javaline={1079},length={3})
+  @umplesourcefile(line={602},file={"SimpleMetrics_SM.ump"},javaline={1111},length={3})
   public void resetVisitedStates(){
     visitedStates.clear();
   }
 
-  @umplesourcefile(line={606},file={"SimpleMetrics_SM.ump"},javaline={1084},length={3})
+  @umplesourcefile(line={606},file={"SimpleMetrics_SM.ump"},javaline={1116},length={3})
   public void incTotalStateMachines(int a){
     this.totalStateMachines+=a;
   }
 
-  @umplesourcefile(line={609},file={"SimpleMetrics_SM.ump"},javaline={1089},length={3})
+  @umplesourcefile(line={609},file={"SimpleMetrics_SM.ump"},javaline={1121},length={3})
   public void incTotalStateMachinesPerClass(int a){
     this.totalStateMachinesPerClass+=a;
   }
 
-  @umplesourcefile(line={612},file={"SimpleMetrics_SM.ump"},javaline={1094},length={3})
+  @umplesourcefile(line={612},file={"SimpleMetrics_SM.ump"},javaline={1126},length={3})
   public void incTotalStatesPerClass(int a){
     this.totalStatesPerClass+=a;
   }
 
-  @umplesourcefile(line={615},file={"SimpleMetrics_SM.ump"},javaline={1099},length={3})
+  @umplesourcefile(line={615},file={"SimpleMetrics_SM.ump"},javaline={1131},length={3})
   public void incTotalStates(int a){
     this.totalStates+=a;
   }
 
-  @umplesourcefile(line={618},file={"SimpleMetrics_SM.ump"},javaline={1104},length={3})
+  @umplesourcefile(line={618},file={"SimpleMetrics_SM.ump"},javaline={1136},length={3})
   public void incTotalEvents(int a){
     this.totalEvents+=a;
   }
 
-  @umplesourcefile(line={621},file={"SimpleMetrics_SM.ump"},javaline={1109},length={3})
+  @umplesourcefile(line={621},file={"SimpleMetrics_SM.ump"},javaline={1141},length={3})
   public void incTotalEventsPerClass(int a){
     this.totalEventsPerClass+=a;
   }
 
-  @umplesourcefile(line={624},file={"SimpleMetrics_SM.ump"},javaline={1114},length={3})
+  @umplesourcefile(line={624},file={"SimpleMetrics_SM.ump"},javaline={1146},length={3})
   public void incTotalTransitions(int a){
     this.totalTransitions+=a;
   }
 
-  @umplesourcefile(line={627},file={"SimpleMetrics_SM.ump"},javaline={1119},length={3})
+  @umplesourcefile(line={627},file={"SimpleMetrics_SM.ump"},javaline={1151},length={3})
   public void incTotalTransitionsPerClass(int a){
     this.totalTransitionsPerClass+=a;
   }
 
-  @umplesourcefile(line={630},file={"SimpleMetrics_SM.ump"},javaline={1124},length={3})
+  @umplesourcefile(line={630},file={"SimpleMetrics_SM.ump"},javaline={1156},length={3})
   public void incTotalGuards(int a){
     this.totalGuards+=a;
   }
 
-  @umplesourcefile(line={633},file={"SimpleMetrics_SM.ump"},javaline={1129},length={3})
+  @umplesourcefile(line={633},file={"SimpleMetrics_SM.ump"},javaline={1161},length={3})
   public void incTotalGuardsPerClass(int a){
     this.totalGuardsPerClass+=a;
   }
 
-  @umplesourcefile(line={636},file={"SimpleMetrics_SM.ump"},javaline={1134},length={3})
+  @umplesourcefile(line={636},file={"SimpleMetrics_SM.ump"},javaline={1166},length={3})
   public void incTotalDifferentTransitions(int a){
     this.totalDifferentTransitions+=a;
   }
 
-  @umplesourcefile(line={639},file={"SimpleMetrics_SM.ump"},javaline={1139},length={3})
+  @umplesourcefile(line={639},file={"SimpleMetrics_SM.ump"},javaline={1171},length={3})
   public void incTotalDifferentTransitionsPerClass(int a){
     this.totalDifferentTransitionsPerClass+=a;
   }
@@ -1146,47 +1178,47 @@ public class CountSM
    * this.avgTransitionsPerClass+=a;
    * }
    */
-  @umplesourcefile(line={645},file={"SimpleMetrics_SM.ump"},javaline={1144},length={3})
+  @umplesourcefile(line={645},file={"SimpleMetrics_SM.ump"},javaline={1176},length={3})
   public void incTotalActions(int a){
     this.totalActions+=a;
   }
 
-  @umplesourcefile(line={648},file={"SimpleMetrics_SM.ump"},javaline={1155},length={3})
+  @umplesourcefile(line={648},file={"SimpleMetrics_SM.ump"},javaline={1187},length={3})
   public void incTotalActionsPerClass(int a){
     this.totalActionsPerClass+=a;
   }
 
-  @umplesourcefile(line={651},file={"SimpleMetrics_SM.ump"},javaline={1160},length={3})
+  @umplesourcefile(line={651},file={"SimpleMetrics_SM.ump"},javaline={1192},length={3})
   public void incTotalNestedStateMachine(int a){
     this.totalNestedStateMachine+=a;
   }
 
-  @umplesourcefile(line={654},file={"SimpleMetrics_SM.ump"},javaline={1165},length={3})
+  @umplesourcefile(line={654},file={"SimpleMetrics_SM.ump"},javaline={1197},length={3})
   public void incTotalNestedStateMachinePerClass(int a){
     this.totalNestedStateMachinePerClass+=a;
   }
 
-  @umplesourcefile(line={657},file={"SimpleMetrics_SM.ump"},javaline={1170},length={3})
+  @umplesourcefile(line={657},file={"SimpleMetrics_SM.ump"},javaline={1202},length={3})
   public void incTotalSelfCycles(int a){
     this.totalSelfCycles+=a;
   }
 
-  @umplesourcefile(line={660},file={"SimpleMetrics_SM.ump"},javaline={1175},length={3})
+  @umplesourcefile(line={660},file={"SimpleMetrics_SM.ump"},javaline={1207},length={3})
   public void incTotalSelfCyclesPerClass(int a){
     this.totalSelfCyclesPerClass+=a;
   }
 
-  @umplesourcefile(line={663},file={"SimpleMetrics_SM.ump"},javaline={1180},length={3})
+  @umplesourcefile(line={663},file={"SimpleMetrics_SM.ump"},javaline={1212},length={3})
   public void incTotalCycles(int a){
     this.totalCycles+=a;
   }
 
-  @umplesourcefile(line={666},file={"SimpleMetrics_SM.ump"},javaline={1185},length={3})
+  @umplesourcefile(line={666},file={"SimpleMetrics_SM.ump"},javaline={1217},length={3})
   public void incTotalCyclesPerClass(int a){
     this.totalCyclesPerClass+=a;
   }
 
-  @umplesourcefile(line={669},file={"SimpleMetrics_SM.ump"},javaline={1190},length={3})
+  @umplesourcefile(line={669},file={"SimpleMetrics_SM.ump"},javaline={1222},length={3})
   public void incTotalClass(int a){
     this.totalClass+=a;
   }
@@ -1200,7 +1232,7 @@ public class CountSM
    * @param  a CountSM class containing first values calculated   
    * 
    */
-  @umplesourcefile(line={680},file={"SimpleMetrics_SM.ump"},javaline={1195},length={25})
+  @umplesourcefile(line={680},file={"SimpleMetrics_SM.ump"},javaline={1227},length={25})
   public void setMinMax(CountSM count){
     // MAX ATTRIBUTES
       this.totalStateMachinesPerClassMax = count.getTotalStateMachinesPerClassMax();	
@@ -1273,7 +1305,6 @@ public class CountSM
             "totalNestedStateMachinePerClassMin" + ":" + getTotalNestedStateMachinePerClassMin()+ "," +
             "totalSelfCyclesPerClassMin" + ":" + getTotalSelfCyclesPerClassMin()+ "," +
             "totalCyclesPerClassMin" + ":" + getTotalCyclesPerClassMin()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "visitedStates" + "=" + (getVisitedStates() != null ? !getVisitedStates().equals(this)  ? getVisitedStates().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "transitionsList" + "=" + (getTransitionsList() != null ? !getTransitionsList().equals(this)  ? getTransitionsList().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "statesSet" + "=" + (getStatesSet() != null ? !getStatesSet().equals(this)  ? getStatesSet().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "eventsSet" + "=" + (getEventsSet() != null ? !getEventsSet().equals(this)  ? getEventsSet().toString().replaceAll("  ","    ") : "this" : "null")

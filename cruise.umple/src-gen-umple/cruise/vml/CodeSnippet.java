@@ -10,11 +10,11 @@ package cruise.vml;
  * selected.
  * @umplesource Vml.ump 84
  * @umplesource Vml_Code.ump 111
- * @umplesource Vml_Code.ump 407
+ * @umplesource Vml_Code.ump 408
  */
 // line 84 "../../../src/Vml.ump"
 // line 111 "../../../src/Vml_Code.ump"
-// line 407 "../../../src/Vml_Code.ump"
+// line 408 "../../../src/Vml_Code.ump"
 public class CodeSnippet
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
