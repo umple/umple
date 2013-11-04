@@ -749,54 +749,19 @@ class GrammarAnalyzer {
   {
     String value = getValue(token,"terminal");
     value = value.replace("-(","(").replace("-)",")").replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")");
-    boolean following = false;
-    boolean mustSpace = false;
+    
+    String regex = "\\Q"+value+"\\E";
+    
+    Terminal terminal = null;
+    
     if(value.length()==0?false:(""+value.charAt(value.length()-1)).matches("[a-zA-Z]"))
     {
-      int index = token.getParentToken().indexOfSubToken(token)+1;
-      mustSpace = true;
-    
-      if(index!=0&&index<token.getParentToken().numberOfSubTokens())
-      {
-        while(index<token.getParentToken().numberOfSubTokens())
-        {
-          if(token.getParentToken().getSubToken(index).getName().equals("token"))
-    	  {
-    	    String premodifier = token.getParentToken().getSubToken(index).getValue("premodifier");
-      	    if((premodifier!=null&&(premodifier.equals("")||premodifier.equals("~")))||premodifier==null)
-      	    {
-      	      following = true;
-      	    }      	  
-    	  }
-    	  String modifier = token.getParentToken().getSubToken(index).getValue("modifier");
-    	  if(modifier!=null&&(modifier.equals("*")||modifier.equals("?")))
-    	  {
-    		index++;
-    	  }
-    	  else
-    	  {
-    		break;
-    	  }
-        }
-        if(index>=token.getParentToken().numberOfSubTokens())
-        {
-          index = token.getParentToken().numberOfSubTokens()-1;
-        }
-  	    if(token.getParentToken().getSubToken(index).getName().equals("terminal"))
-  	    {
-  	      mustSpace = (""+token.getParentToken().getSubToken(index).getSubToken(0).getValue("terminal").charAt(0)).matches("[a-zA-Z]");
-  	    }
-  	    else if(token.getParentToken().getSubToken(index).getName().equals("braced"))
-	    {
-	      mustSpace = false;
-	    }
-      }
+      terminal = new Terminal("anonymous_terminal_"+ints.get("anon_index"),"("+regex+"[a-zA-Z]?)",false);
+      terminal.setCannotBe(regex+"[a-zA-Z]");
     }
-    Terminal terminal = new Terminal("anonymous_terminal_"+ints.get("anon_index"),"\\Q"+value+"\\E",mustSpace);
-    if(following&&!mustSpace)
+    else
     {
-      terminal.setCannotBe("\\Q"+value+"\\E"+"[a-zA-Z]+");
-      terminal.redoRegex("\\Q"+value+"\\E"+"[a-zA-Z]*");
+      terminal = new Terminal("anonymous_terminal_"+ints.get("anon_index"),regex,false);
     }
     stacks.get("stack").peek().add(terminal.onlyValue());
     
@@ -865,109 +830,35 @@ class GrammarAnalyzer {
               return o1.compareTo(o2);
            }
           });
-          boolean first = true;
-          boolean mustSpace = false;
-          boolean allOne = true;
           for(String val:regex.split("\\Q|\\E"))
           {
             sorted.add(val);
-            if(first)
+          }
+
+          regex = "";
+          String cannotBeRegex = "";
+          String pipe = "";
+          String pipe2 = "";
+          for(String val:sorted)
+          {
+            if(val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]"))
             {
-              mustSpace = val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]");
-              first = false;
+              regex += pipe + "\\Q"+val+"\\E"+"[a-zA-Z]?";
+              cannotBeRegex += pipe2 + "\\Q"+val+"\\E"+"[a-zA-Z]";
+              pipe2 = "|";
             }
             else
             {
-              if(mustSpace!=(val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]")))
-              {
-                allOne = false;
-              }
+              regex += pipe + "\\Q"+val+"\\E";              
             }
+            pipe = "|";
           }
-
-          int index = token.getParentToken().indexOfSubToken(token)+1;
-          boolean canBeNotSpace = false;
-          boolean following = false;
-          if(index!=0&&index<token.getParentToken().numberOfSubTokens())
+          terminal = new Terminal(name,"("+regex+")",false);
+          if(!cannotBeRegex.equals(""))
           {
-            while(index<token.getParentToken().numberOfSubTokens())
-            {
-              if(token.getParentToken().getSubToken(index).getName().equals("token"))
-    	      {
-    	        String nextPremodifier = token.getParentToken().getSubToken(index).getValue("premodifier");
-      	        if((nextPremodifier!=null&&(nextPremodifier.equals("")||nextPremodifier.equals("~")))||nextPremodifier==null)
-      	        {
-      	          following = true;
-      	        }      	  
-    	      }
-    	      String nextModifier = token.getParentToken().getSubToken(index).getValue("modifier");
-    	      if(nextModifier!=null&&(nextModifier.equals("*")||nextModifier.equals("?")))
-    	      {
-    	        index++;
-    	      }
-    	      else
-    	      {
-    	        break;
-    	      }
-            }
-            if(index>=token.getParentToken().numberOfSubTokens())
-            {
-              index = token.getParentToken().numberOfSubTokens()-1;
-            }
-  	        if(token.getParentToken().getSubToken(index).getName().equals("terminal"))
-  	        {
-  	          canBeNotSpace = !(""+token.getParentToken().getSubToken(index).getSubToken(0).getValue("terminal").charAt(0)).matches("[a-zA-Z]");
-  	        }
-  	        else if(token.getParentToken().getSubToken(index).getName().equals("braced"))
-	        {
-	          canBeNotSpace = true;
-	        }
-          }
-          else
-          {
-            canBeNotSpace = true;
-          }
-
-          regex = "";          
+            ((Terminal)terminal).setCannotBe(cannotBeRegex);
+          }            
           
-          if(!allOne)
-          {
-            terminal = new ChoiceRule(name).dontCare();
-            
-            for(String val:sorted)
-            {
-              if(!canBeNotSpace)
-              {
-                terminal.add(new Terminal(name,"\\Q"+val+"\\E",val.length()==0?false:(""+val.charAt(val.length()-1)).matches("[a-zA-Z]")));
-              }
-              else
-              {
-                terminal.add(new Terminal(name,"\\Q"+val+"\\E",false));
-              }
-            }
-          }
-          else
-          {
-            String pipe = "";
-            for(String val:sorted)
-            {
-              regex += pipe + "\\Q"+val+"\\E";
-              pipe = "|";
-            }
-            if(!canBeNotSpace)
-            {
-              terminal = new Terminal(name,regex,mustSpace);
-            }
-            else
-            {
-              terminal = new Terminal(name,regex,false);
-              if(following)
-              {
-                ((Terminal)terminal).setCannotBe(regex+"[a-zA-Z]+");
-                ((Terminal)terminal).redoRegex(regex+"[a-zA-Z]*");
-              }
-            }            
-          }
           makeTerminal = false;
         }
       }
