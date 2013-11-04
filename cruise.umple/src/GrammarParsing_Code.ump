@@ -809,7 +809,19 @@ class GrammarAnalyzer {
         if("".equals(value))
         {
           regex = "\\Q"+name+"\\E";
+          String cannotBeRegex = "";
           value = name;
+          if(value.length()==0?false:(""+value.charAt(value.length()-1)).matches("[a-zA-Z]"))
+          {
+        	cannotBeRegex = regex+"[a-zA-Z]";
+        	regex += "[a-zA-Z]?";
+          }
+          terminal = new Terminal(name,"("+regex+")",false);
+          if(!cannotBeRegex.equals(""))
+          {
+            ((Terminal)terminal).setCannotBe(cannotBeRegex);
+          }          
+          makeTerminal = false;
         }
         else
         {
