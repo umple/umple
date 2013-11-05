@@ -374,7 +374,7 @@ public class UmpleParserTest
   @Test
   public void classCanNotBeChangedToImmutableWithInvalidAssociations()
   {
-    assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22), 13);
+	  assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22), 13);
   }
   
   @Test
@@ -1886,11 +1886,13 @@ public class UmpleParserTest
   @Test
   public void reflexiveMandatoryAssociationMayNotBeImmutable()
   {
-    assertFailedParse("023_immutableReflexiveMandatoryAssociation.ump", new Position("023_immutableReflexiveMandatoryAssociation.ump",8,2,48), 18);
+	assertFailedParse("023_immutableReflexiveMandatoryAssociation.ump", 36, 0);
+    assertFailedParse("023_immutableReflexiveMandatoryAssociation.ump", new Position("023_immutableReflexiveMandatoryAssociation.ump",8,2,48), 18, 1);
     assertFailedParse("023_immutableReflexiveMandatoryAssociation2.ump", new Position("023_immutableReflexiveMandatoryAssociation2.ump",4,2,31), 18);
-    
-    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation.ump",8,2,48), 18);
-    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation2.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation2.ump",4,2,31), 18);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation.ump",8,2,48), 18, 1);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation.ump", 36, 0);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation2.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation2.ump",4,2,31), 18, 1);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation2.ump", 36, 0);
   }
   
   @Test
@@ -2042,12 +2044,18 @@ public class UmpleParserTest
 	  assertFailedParse("024_unidirectional_many_to_one.ump",23);
 	  assertFailedParse("024_unidirectional_many_to_some.ump",23);
 	  assertFailedParse("024_unidirectional_many_to_many.ump",23);
-	  assertFailedParse("024_unidirectional_some_to_one.ump",23);
-	  assertFailedParse("024_unidirectional_some_to_some.ump",23);
-	  assertFailedParse("024_unidirectional_some_to_many.ump",23);
-	  assertFailedParse("024_unidirectional_one_to_one.ump",23);
-	  assertFailedParse("024_unidirectional_one_to_some.ump",23);
-	  assertFailedParse("024_unidirectional_one_to_many.ump",23);
+	  assertFailedParse("024_unidirectional_some_to_one.ump",36,0);
+	  assertFailedParse("024_unidirectional_some_to_one.ump",23,1);
+	  assertFailedParse("024_unidirectional_some_to_some.ump",36,0);
+	  assertFailedParse("024_unidirectional_some_to_some.ump",23,1);
+	  assertFailedParse("024_unidirectional_some_to_many.ump",36,0);
+	  assertFailedParse("024_unidirectional_some_to_many.ump",23,1);
+	  assertFailedParse("024_unidirectional_one_to_one.ump",36,0);
+	  assertFailedParse("024_unidirectional_one_to_one.ump",23,1);
+	  assertFailedParse("024_unidirectional_one_to_some.ump",36,0);
+	  assertFailedParse("024_unidirectional_one_to_some.ump",23,1);
+	  assertFailedParse("024_unidirectional_one_to_many.ump",36,0);
+	  assertFailedParse("024_unidirectional_one_to_many.ump",23,1);
 	  
   }
   @Test
@@ -2056,20 +2064,28 @@ public class UmpleParserTest
 	  assertFailedParse("024_back_unidirectional_many_to_one.ump",23);
 	  assertFailedParse("024_back_unidirectional_many_to_some.ump",23);
 	  assertFailedParse("024_back_unidirectional_many_to_many.ump",23);
-	  assertFailedParse("024_back_unidirectional_some_to_one.ump",23);
-	  assertFailedParse("024_back_unidirectional_some_to_some.ump",23);
-	  assertFailedParse("024_back_unidirectional_some_to_many.ump",23);
-	  assertFailedParse("024_back_unidirectional_one_to_one.ump",23);
-	  assertFailedParse("024_back_unidirectional_one_to_some.ump",23);
-	  assertFailedParse("024_back_unidirectional_one_to_many.ump",23);
+	  assertFailedParse("024_back_unidirectional_some_to_one.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_some_to_one.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_some_to_some.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_some_to_some.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_some_to_many.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_some_to_many.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_one_to_one.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_one_to_one.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_one_to_some.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_one_to_some.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_one_to_many.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_one_to_many.ump",23,1);
 	  
   }
   @Test
   public void attributeAndAssociationNameClashingSeparate(){
   	  
-  	  assertFailedParse("024_separate_back_unidirectional.ump",23);
+  	  assertFailedParse("024_separate_back_unidirectional.ump",36,0);
+  	assertFailedParse("024_separate_back_unidirectional.ump",23,1);
 	  assertFailedParse("024_separate_bidirectional.ump",23);
-	  assertFailedParse("024_separate_unidirectional.ump",23);
+	  assertFailedParse("024_separate_unidirectional.ump",36,0);
+	  assertFailedParse("024_separate_unidirectional.ump",23,1);
 	  
   }  
   
@@ -2194,6 +2210,13 @@ public class UmpleParserTest
     Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
   }
   
+  // Assertion for case where we expect parse to fail and care about the position, the error and the error Index per issue347
+  public void assertFailedParse(String filename, Position expectedPosition, int expectedError, int expectedErrorIndex)
+  {
+    assertFailedParse(filename, expectedPosition);
+    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+  }
+  
   // Assertion for case where we expect parse to fail care about the error number but not the position
   public void assertFailedParse(String filename, int expectedError)
   {
@@ -2209,7 +2232,15 @@ public class UmpleParserTest
     Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
-
+  
+  // Assertion for case where we expect parse to fail and care about the error number and error index per issue347
+  public void assertFailedParse(String filename, int expectedError, int expectedErrorIndex)
+  {
+    boolean answer = parse(filename);
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(expectedError, model.getLastResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+  }
+  
   // Assertion case where we expect warnings and care about the position and the warning number
   public void assertHasWarningsParse(String filename, Position expectedPosition, int expectedError)
   {

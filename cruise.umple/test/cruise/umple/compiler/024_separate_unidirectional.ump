@@ -4,5 +4,5 @@ class X{
 class Y {}
 
 association{
-  1 X -> 1 Y a;
+  1..4 X -> 1 Y a;
 }

@@ -1,6 +1,6 @@
 class StudentF
 {
-	* <- 1 MentorF;
+	* <- * MentorF;
 }
 
 class MentorF

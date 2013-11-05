@@ -17,14 +17,14 @@ class Feature{
 
 class PointFeature{
   isA Feature;
-  1 -> 1 Point;
+  * -> 1 Point;
 }
 
 class Point{}
 
 class CurveFeature{
   isA Feature;
-  1 -> * Point;
+  * -> * Point;
 }
 
 class RegionalFeature{ isA CurveFeature; }
@@ -36,7 +36,7 @@ class FeatureType{
 
 class PointFeatureType { 
   isA FeatureType;
-  1 -> 1 Bitmap symbol;
+  * -> 1 Bitmap symbol;
 }
 
 class CurveFeatureType { 

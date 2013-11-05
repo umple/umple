@@ -6,7 +6,7 @@ class SuperClass
 class MutableClass
 {
 	isA SuperClass;
-	1 -> * OtherClass;	
+	* -> * OtherClass;	
 }
 
 class OtherClass

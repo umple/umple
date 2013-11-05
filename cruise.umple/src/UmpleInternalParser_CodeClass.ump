@@ -1893,6 +1893,11 @@ class UmpleInternalParser
     }
     model.addAssociation(association);
     if(!isInlineAssociation){ unlinkedAssociations.add(association); }
+    
+    //check for non-constraint side warning per issue347
+    if(isInlineAssociation || !isAssociationClass){
+      analyzeNonconstraintAssociationEndForWarning(associationToken, firstEnd, secondEnd);
+    }
     return association;
   }
 
@@ -2035,6 +2040,59 @@ class UmpleInternalParser
     }
   }
 
+  /*
+   * Set warning if non-constraint side of association is not many(*) or optional(0..1) association type per issue 347
+   * 
+   * @param Token The token is either inlineAssociationToken or associationDefinationToken.
+   * @param AssociationEnd the first associationEnd.
+   * @param AssociationEnd the second associationEnd.
+   */
+  private void analyzeNonconstraintAssociationEndForWarning(Token associationToken, AssociationEnd myEnd, AssociationEnd yourEnd)
+  {
+    AssociationEnd nonConstraintEnd = null;
+    boolean isUnidirection = true;
+    
+    //manual check as getIsLeftNavigatable() applies for "--" as well
+    Token arrowToken = associationToken.getSubToken("arrow");
+    boolean isLeftArrow = arrowToken.getValue().equals("<-");
+    boolean isRightArrow = arrowToken.getValue().equals("->");
+    
+    //determine the non-arrow side
+    if(isLeftArrow)
+    {
+      nonConstraintEnd = yourEnd;
+    }
+    else if(isRightArrow)
+    {
+      nonConstraintEnd = myEnd;
+    }
+    else
+    {
+      isUnidirection = false;
+    }
+    
+    if(isUnidirection)
+    {
+      String nonConstraintEndLower = nonConstraintEnd.getLowerBoundString();
+      String nonConstraintEndUpper = nonConstraintEnd.getUpperBoundString();
+        
+      //only allow optional and many constraint on non-arrow side
+      boolean isMany = (nonConstraintEndLower.equals("0")) && (nonConstraintEndUpper.equals("*"));
+      boolean isOptional = (nonConstraintEndLower.equals("0")) && (nonConstraintEndUpper.equals("1"));
+        
+      if(!isMany && !isOptional)
+      {
+        String bound = "";
+        //case of mandatory constraint
+    	if(nonConstraintEndLower.equals(nonConstraintEndUpper))
+    		bound = nonConstraintEndLower;
+    	else	
+    		bound = "[" +nonConstraintEndLower+", "+nonConstraintEndUpper+"]";
+        setFailedPosition(associationToken.getPosition(), 36, bound);
+      }
+    }
+  }
+  
   /*
    * Analyzes a token flagged to be an attribute within an Umple class to create an instance of one and add it to the class.
    * 
