@@ -6,5 +6,5 @@ class Mentor
 
 association
 {
-  immutable 6..9 Mentor myMentor <- 1 Student;
+  immutable 6..9 Mentor myMentor <- * Student;
 }

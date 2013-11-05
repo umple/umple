@@ -1,6 +1,6 @@
 class MutableClass
 {
-	1 -> * OtherClass;	
+	* -> * OtherClass;	
 }
 
 class OtherClass

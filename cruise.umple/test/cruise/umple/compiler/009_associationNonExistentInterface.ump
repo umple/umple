@@ -1,4 +1,4 @@
 // Test that this generates error 5
 class E {
-  1 -> * BadTestInterface;
+  * -> * BadTestInterface;
 }

@@ -1,6 +1,6 @@
 class Student
 {
-  immutable 1 -> * Mentor aMentor;
+  immutable * -> * Mentor aMentor;
 }
 
 class Mentor

@@ -9,5 +9,5 @@ class MentorF
 
 association
 {
-	* StudentF <- 1 MentorF;
+	* StudentF <- * MentorF;
 }
