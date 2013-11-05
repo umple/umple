@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sql.*;
 
 /**
- * @umplesource Generator.ump 294
+ * @umplesource Generator.ump 296
  * @umplesource Generator_CodeSql.ump 11
  */
-// line 294 "../../../../src/Generator.ump"
+// line 296 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeSql.ump"
 public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
 {

@@ -191,9 +191,6 @@ class UmpleModel
           generator.setModel(this);
 
           generator.setOutput(target.getPath());
-          if(generator instanceof Uigu2Generator){
-            ((Uigu2Generator)generator).setSharedFilesPath(target.getOption("sharedFilesPathname"));
-          }
           CodeBlock.languageUsed = target.getLanguage();
           generator.generate();
         }
@@ -2231,15 +2228,5 @@ class Comment
     }
 
     return output.trim();
-  }
-}
-
-class GenerateTarget{
-  public void setOption (String key, String value){
-    this.options.put(key, value);
-  }
-
-  public String getOption (String key){
-    return this.options.get(key);
   }
 }

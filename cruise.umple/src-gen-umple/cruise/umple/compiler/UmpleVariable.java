@@ -10,11 +10,11 @@ import java.util.*;
  * This class should go and instead AssociationEnd should be the member variable
  * 
  * @umplesource Umple.ump 452
- * @umplesource Umple_Code.ump 1152
+ * @umplesource Umple_Code.ump 1149
  * @umplesource Trace_Code.ump 15
  */
 // line 452 "../../../../src/Umple.ump"
-// line 1152 "../../../../src/Umple_Code.ump"
+// line 1149 "../../../../src/Umple_Code.ump"
 // line 15 "../../../../src/Trace_Code.ump"
 public class UmpleVariable
 {
@@ -244,7 +244,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1155},file={"Umple_Code.ump"},javaline={248},length={14})
+  @umplesourcefile(line={1152},file={"Umple_Code.ump"},javaline={248},length={14})
    public String getUpperCaseName(){
     if (name == null || name.length() == 0)
     {
@@ -260,7 +260,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1171},file={"Umple_Code.ump"},javaline={264},length={3})
+  @umplesourcefile(line={1168},file={"Umple_Code.ump"},javaline={264},length={3})
    public boolean isImmutable(){
     return "immutable".equals(modifier);
   }

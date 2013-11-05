@@ -10,10 +10,10 @@ import java.util.*;
  * Umple Methods are coded by the programmer in the language(s) of their choice
  * 
  * @umplesource Umple.ump 110
- * @umplesource Umple_Code.ump 419
+ * @umplesource Umple_Code.ump 416
  */
 // line 110 "../../../../src/Umple.ump"
-// line 419 "../../../../src/Umple_Code.ump"
+// line 416 "../../../../src/Umple_Code.ump"
 public class Method
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -372,7 +372,7 @@ public class Method
     comments.clear();
   }
 
-  @umplesourcefile(line={422},file={"Umple_Code.ump"},javaline={376},length={6})
+  @umplesourcefile(line={419},file={"Umple_Code.ump"},javaline={376},length={6})
    public boolean getExistsInLanguage(String lang){
     if(getMethodBody().getExtraCode(lang)==null)
       return isImplemented;
@@ -380,7 +380,7 @@ public class Method
       return true;
   }
 
-  @umplesourcefile(line={429},file={"Umple_Code.ump"},javaline={384},length={30})
+  @umplesourcefile(line={426},file={"Umple_Code.ump"},javaline={384},length={30})
    public String toString(){
     StringBuffer methodBuffer = new StringBuffer();
     methodBuffer.append(" " + this.getType()+ " " + this.getName());

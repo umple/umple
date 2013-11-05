@@ -8,9 +8,9 @@ import cruise.umple.compiler.exceptions.*;
 import java.util.*;
 
 /**
- * @umplesource Generator_CodeUigu2.ump 11
+ * @umplesource Generator_CodeUigu2.ump 147
  */
-// line 11 "../../../../../src/Generator_CodeUigu2.ump"
+// line 147 "../../../../../src/Generator_CodeUigu2.ump"
 public class Uigu2ElementGenerator
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -30,7 +30,6 @@ public class Uigu2ElementGenerator
 
   /**
    * keeps track of elements whose codes have already been generated
-   * internal List<UmpleElement> generatedElements = new ArrayList<UmpleElement>();
    */
   private List<UmpleElement> generatedElements;
 
@@ -55,7 +54,7 @@ public class Uigu2ElementGenerator
    * 
    * Returns the generated code specific to an UmpleElement.
    */
-  @umplesourcefile(line={25},file={"Generator_CodeUigu2.ump"},javaline={54},length={34})
+  @umplesourcefile(line={161},file={"Generator_CodeUigu2.ump"},javaline={53},length={34})
    public String getCode(UmpleModel model, UmpleElement uElement){
     if(this.generatedElements.contains(uElement)){
       return "";
@@ -91,7 +90,7 @@ public class Uigu2ElementGenerator
     }
   }
 
-  @umplesourcefile(line={61},file={"Generator_CodeUigu2.ump"},javaline={95},length={21})
+  @umplesourcefile(line={197},file={"Generator_CodeUigu2.ump"},javaline={94},length={21})
    private void appendAttributesCode(StringBuilder code, UmpleClass uClass){
     List<Attribute> attributes = this.getAttributesSuperClasses(uClass);
     code.append("$attributes = array();").append(NL);
@@ -114,7 +113,7 @@ public class Uigu2ElementGenerator
     code.append("$ELEMENTS['" + uClass.getName() + "']['attributes'] = $attributes;").append(NL);
   }
 
-  @umplesourcefile(line={83},file={"Generator_CodeUigu2.ump"},javaline={118},length={16})
+  @umplesourcefile(line={219},file={"Generator_CodeUigu2.ump"},javaline={117},length={16})
    private void appendAssociationsCode(StringBuilder code, UmpleClass uClass){
     String className = uClass.getName();
     List<AssociationVariable> avs = this.getAssociationsSuperClasses(uClass);
@@ -132,7 +131,7 @@ public class Uigu2ElementGenerator
     code.append("$ELEMENTS['" + className + "']['associations'] = $associations;").append(NL);
   }
 
-  @umplesourcefile(line={100},file={"Generator_CodeUigu2.ump"},javaline={136},length={17})
+  @umplesourcefile(line={236},file={"Generator_CodeUigu2.ump"},javaline={135},length={17})
    private void appendConstructorCode(StringBuilder code, UmpleClass uClass){
     String className = uClass.getName();
     GeneratedClass gc = uClass.getGeneratedClass();
@@ -157,7 +156,7 @@ public class Uigu2ElementGenerator
    * eg. if A is subclass of B, and B is subclass of C. Calling the method for A will return all
    * the attributes of A, B and C
    */
-  @umplesourcefile(line={123},file={"Generator_CodeUigu2.ump"},javaline={155},length={9})
+  @umplesourcefile(line={259},file={"Generator_CodeUigu2.ump"},javaline={154},length={9})
    private List<Attribute> getAttributesSuperClasses(UmpleClass uClass){
     List<Attribute> attributes = new ArrayList<Attribute>();
     attributes.addAll(uClass.getAttributes());
@@ -168,7 +167,7 @@ public class Uigu2ElementGenerator
     return attributes;
   }
 
-  @umplesourcefile(line={133},file={"Generator_CodeUigu2.ump"},javaline={172},length={9})
+  @umplesourcefile(line={269},file={"Generator_CodeUigu2.ump"},javaline={171},length={9})
    private List<AssociationVariable> getAssociationsSuperClasses(UmpleClass uClass){
     List<AssociationVariable> avs = new ArrayList<AssociationVariable>();
     avs.addAll(uClass.getAssociationVariables());

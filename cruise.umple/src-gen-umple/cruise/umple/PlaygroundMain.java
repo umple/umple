@@ -14,9 +14,9 @@ import java.io.*;
  * the text and vice versa
  * 
  * TODO: Code smell - rename?
- * @umplesource Main_Code.ump 315
+ * @umplesource Main_Code.ump 309
  */
-// line 315 "../../../src/Main_Code.ump"
+// line 309 "../../../src/Main_Code.ump"
 public class PlaygroundMain
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -40,7 +40,7 @@ public class PlaygroundMain
   public void delete()
   {}
 
-  @umplesourcefile(line={324},file={"Main_Code.ump"},javaline={44},length={103})
+  @umplesourcefile(line={318},file={"Main_Code.ump"},javaline={44},length={103})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -147,13 +147,13 @@ public class PlaygroundMain
         print(answer);
   }
 
-  @umplesourcefile(line={429},file={"Main_Code.ump"},javaline={151},length={4})
+  @umplesourcefile(line={423},file={"Main_Code.ump"},javaline={151},length={4})
    private static  void print(String output){
     console += output;
         System.out.print(output);
   }
 
-  @umplesourcefile(line={435},file={"Main_Code.ump"},javaline={157},length={54})
+  @umplesourcefile(line={429},file={"Main_Code.ump"},javaline={157},length={54})
    private static  SynchronizationAction action(String type, String deltaCode, String umpleCode){
     if ("-addClass".equals(type))
         {
@@ -212,7 +212,7 @@ public class PlaygroundMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={490},file={"Main_Code.ump"},javaline={216},length={2})
+  //  @umplesourcefile(line={484},file={"Main_Code.ump"},javaline={216},length={2})
   public static String console = "" ;
 
   
