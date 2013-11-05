@@ -2,15 +2,12 @@
 /*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
 
 package cruise.umple.compiler;
-import java.util.*;
 
 /**
  * Represents the generation target, such as what the generated output language will be.
  * @umplesource Umple.ump 685
- * @umplesource Umple_Code.ump 2236
  */
 // line 685 "../../../../src/Umple.ump"
-// line 2236 "../../../../src/Umple_Code.ump"
 public class GenerateTarget
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -25,11 +22,6 @@ public class GenerateTarget
   private String path;
   private boolean override;
   private boolean overrideAll;
-
-  /**
-   * optional parameters that may differ by instance, and not significant enough to warrant a Subclass (used in Uigu2Generator)
-   */
-  private Map<String,String> options;
 
   //Helper Variables
   private int cachedHashCode;
@@ -47,7 +39,6 @@ public class GenerateTarget
     path = aPath;
     override = false;
     overrideAll = false;
-    options = new HashMap<String,String>();
   }
 
   //------------------------
@@ -95,10 +86,10 @@ public class GenerateTarget
     return language;
   }
 
-  @umplesourcefile(line={700},file={"Umple.ump"},javaline={102},length={1})
+  @umplesourcefile(line={696},file={"Umple.ump"},javaline={93},length={1})
   public String getPath()
   {
-    // line 700 "../../../../src/Umple.ump"
+    // line 696 "../../../../src/Umple.ump"
     if(path == null) path = "";
     return path;
   }
@@ -164,16 +155,6 @@ public class GenerateTarget
 
   public void delete()
   {}
-
-  @umplesourcefile(line={2238},file={"Umple_Code.ump"},javaline={169},length={3})
-   public void setOption(String key, String value){
-    this.options.put(key, value);
-  }
-
-  @umplesourcefile(line={2242},file={"Umple_Code.ump"},javaline={174},length={3})
-   public String getOption(String key){
-    return this.options.get(key);
-  }
 
 
   public String toString()

@@ -8,10 +8,10 @@ import java.util.*;
  * Represents a comment, such as those found around classes, methods, attributes and associations.
  * 
  * @umplesource Umple.ump 674
- * @umplesource Umple_Code.ump 2104
+ * @umplesource Umple_Code.ump 2101
  */
 // line 674 "../../../../src/Umple.ump"
-// line 2104 "../../../../src/Umple_Code.ump"
+// line 2101 "../../../../src/Umple_Code.ump"
 public class Comment
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -88,7 +88,7 @@ public class Comment
    * 
    * @return The processed/formatted comment appropriate for use in generated code output.
    */
-  @umplesourcefile(line={2119},file={"Umple_Code.ump"},javaline={80},length={115})
+  @umplesourcefile(line={2116},file={"Umple_Code.ump"},javaline={80},length={115})
    public static  String format(String type, List<Comment> allComments){
     //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
 

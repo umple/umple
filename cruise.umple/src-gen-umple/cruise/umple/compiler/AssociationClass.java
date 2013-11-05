@@ -12,10 +12,10 @@ import java.util.*;
  * held by the links between those two classes.
  * 
  * @umplesource Umple.ump 441
- * @umplesource Umple_Code.ump 688
+ * @umplesource Umple_Code.ump 685
  */
 // line 441 "../../../../src/Umple.ump"
-// line 688 "../../../../src/Umple_Code.ump"
+// line 685 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -167,7 +167,7 @@ public class AssociationClass extends UmpleClass
     super.delete();
   }
 
-  @umplesourcefile(line={691},file={"Umple_Code.ump"},javaline={171},length={3})
+  @umplesourcefile(line={688},file={"Umple_Code.ump"},javaline={171},length={3})
    public  AssociationClass(String name){
     super(name);
   }

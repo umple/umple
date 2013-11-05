@@ -13,30 +13,42 @@ import cruise.umple.compiler.uigu2.*;
 import org.junit.*;
 import java.util.*;
 import java.io.*;
+import java.nio.file.*;
 
 public class Uigu2GeneratorTest
 {
   Uigu2Generator generator;
   UmpleModel model;
+  List<String> defaultFiles;
 
   @Before
   public void setUp()
   {
-    model = new UmpleModel(null);
-    generator = new Uigu2Generator();
-    generator.setModel(model);
+//  model = new UmpleModel(null);
+//  generator = new Uigu2Generator();
+//  generator.setModel(model);
+    defaultFiles = new ArrayList<String>();
+    defaultFiles.add("setup.php");
+    defaultFiles.add("app/kissmvc_core.php");
+    defaultFiles.add("app/kissmvc_uigu2.php");
+    defaultFiles.add("app/views/layout.php");
+    defaultFiles.add("app/views/layout.css");
+    defaultFiles.add("app/views/main/index.php");
+    defaultFiles.add("app/views/main/show_element.php");
+    defaultFiles.add("app/controllers/main/index.php");
+    defaultFiles.add("app/controllers/main/clear.php");
+    defaultFiles.add("app/controllers/main/show_element.php");
+    defaultFiles.add("app/controllers/main/new_instance.php");
   }
 
   @Test
-  public void filesToCopyPresent()throws IOException
+  public void defaultFilesPresent() throws IOException
   {
-    Map<String,String> files = generator.getSharedFilesToCopy();
-    Iterator iterator = files.entrySet().iterator();
-    while (iterator.hasNext()) {
-      Map.Entry<String, String> entry = (Map.Entry) iterator.next();
-      InputStream from = this.getClass().getResourceAsStream(Uigu2Generator.PACKAGES_FILE_PATH + entry.getKey());
-      Assert.assertTrue(from != null && from.read() != -1);
+    Path uigu2RootPath = Paths.get("../umpleonline/scripts/uigu2");
+    for(String filePath : defaultFiles){
+      Path p = uigu2RootPath.resolve(filePath);
+      //throws NoSuchFileException if file doesn't exist
+      p.toRealPath();
     }
   }
-
 } 

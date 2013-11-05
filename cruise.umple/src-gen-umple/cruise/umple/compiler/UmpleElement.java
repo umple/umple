@@ -10,10 +10,10 @@ import java.util.*;
  * Currently it has one subclass, UmpleClassifier
  * 
  * @umplesource Umple.ump 71
- * @umplesource Umple_Code.ump 650
+ * @umplesource Umple_Code.ump 647
  */
 // line 71 "../../../../src/Umple.ump"
-// line 650 "../../../../src/Umple_Code.ump"
+// line 647 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -415,12 +415,12 @@ public class UmpleElement
     endPositions.clear();
   }
 
-  @umplesourcefile(line={653},file={"Umple_Code.ump"},javaline={419},length={3})
+  @umplesourcefile(line={650},file={"Umple_Code.ump"},javaline={419},length={3})
    public void appendExtraCode(String newCode){
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={658},file={"Umple_Code.ump"},javaline={424},length={11})
+  @umplesourcefile(line={655},file={"Umple_Code.ump"},javaline={424},length={11})
    public void appendExtraCode(String newCode, boolean addNewline){
     if (newCode == null) 
     { 
@@ -433,17 +433,17 @@ public class UmpleElement
     extraCode.appendExtraCode(newCode);
   }
 
-  @umplesourcefile(line={671},file={"Umple_Code.ump"},javaline={437},length={3})
+  @umplesourcefile(line={668},file={"Umple_Code.ump"},javaline={437},length={3})
    public void appendExtraCode(boolean flag, CodeBlock cb){
     extraCode.appendExtraCode(cb);
   }
 
-  @umplesourcefile(line={676},file={"Umple_Code.ump"},javaline={442},length={3})
+  @umplesourcefile(line={673},file={"Umple_Code.ump"},javaline={442},length={3})
    public boolean hasExtraCode(){
     return extraCode.getHasCode();
   }
 
-  @umplesourcefile(line={681},file={"Umple_Code.ump"},javaline={447},length={3})
+  @umplesourcefile(line={678},file={"Umple_Code.ump"},javaline={447},length={3})
    public String getExtraCode(){
     return extraCode.getExtraCode();
   }

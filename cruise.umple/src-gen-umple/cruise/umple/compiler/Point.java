@@ -15,10 +15,10 @@ package cruise.umple.compiler;
  * diagram in Umple
  * 
  * @umplesource Umple.ump 642
- * @umplesource Umple_Code.ump 1983
+ * @umplesource Umple_Code.ump 1980
  */
 // line 642 "../../../../src/Umple.ump"
-// line 1983 "../../../../src/Umple_Code.ump"
+// line 1980 "../../../../src/Umple_Code.ump"
 public class Point
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -121,7 +121,7 @@ public class Point
   public void delete()
   {}
 
-  @umplesourcefile(line={1987},file={"Umple_Code.ump"},javaline={125},length={11})
+  @umplesourcefile(line={1984},file={"Umple_Code.ump"},javaline={125},length={11})
    public static  Point create(int n){
     int p = (int)Math.sqrt(n) + 1;
     if (n - (p-2)*p <= p)
@@ -134,7 +134,7 @@ public class Point
     }
   }
 
-  @umplesourcefile(line={2000},file={"Umple_Code.ump"},javaline={138},length={3})
+  @umplesourcefile(line={1997},file={"Umple_Code.ump"},javaline={138},length={3})
    public String toString(){
     return "(" + getX() + "," + getY() + ")";
   }

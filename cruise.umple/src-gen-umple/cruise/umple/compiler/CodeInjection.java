@@ -10,10 +10,10 @@ import java.util.*;
  * A block of code that can be injected into one or more methods, constructor, etc.
  * 
  * @umplesource Umple.ump 291
- * @umplesource Umple_Code.ump 532
+ * @umplesource Umple_Code.ump 529
  */
 // line 291 "../../../../src/Umple.ump"
-// line 532 "../../../../src/Umple_Code.ump"
+// line 529 "../../../../src/Umple_Code.ump"
 public class CodeInjection
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -159,17 +159,17 @@ public class CodeInjection
     constraint = null;
   }
 
-  @umplesourcefile(line={535},file={"Umple_Code.ump"},javaline={163},length={3})
+  @umplesourcefile(line={532},file={"Umple_Code.ump"},javaline={163},length={3})
    public  CodeInjection(String a, String b, String c, UmpleClass d){
     this(a,b,new CodeBlock(c), d);
   }
 
-  @umplesourcefile(line={539},file={"Umple_Code.ump"},javaline={168},length={3})
+  @umplesourcefile(line={536},file={"Umple_Code.ump"},javaline={168},length={3})
    public void setCode(String str){
     snippet.setCode(str);
   }
 
-  @umplesourcefile(line={543},file={"Umple_Code.ump"},javaline={173},length={34})
+  @umplesourcefile(line={540},file={"Umple_Code.ump"},javaline={173},length={34})
    public String getCode(){
     if(constraint == null)
   	{
@@ -205,12 +205,12 @@ public class CodeInjection
   	}
   }
 
-  @umplesourcefile(line={578},file={"Umple_Code.ump"},javaline={209},length={3})
+  @umplesourcefile(line={575},file={"Umple_Code.ump"},javaline={209},length={3})
    public void setCode(String lang, String code){
     snippet.setCode(lang, code);
   }
 
-  @umplesourcefile(line={582},file={"Umple_Code.ump"},javaline={214},length={3})
+  @umplesourcefile(line={579},file={"Umple_Code.ump"},javaline={214},length={3})
    public String getCode(String lang){
     return snippet.getCode(lang);
   }

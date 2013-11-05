@@ -158,7 +158,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={141},file={"Main_Code.ump"},javaline={162},length={22})
+  @umplesourcefile(line={141},file={"Main_Code.ump"},javaline={162},length={17})
    private static  boolean postModelOptionProcess(OptionSet optset, UmpleModel model){
     if (optset.has("generate")) {
             boolean override=false;
@@ -172,17 +172,12 @@ public class UmpleConsoleMain
             String lang = (String)optset.valueOf("generate");
             GenerateTarget gt = new GenerateTarget(lang, path);
             gt.setOverrideAll(override);
-
-            if (optset.has("uigu2files") && lang.equals("Uigu2")){
-              String sfiles = (String)optset.valueOf("uigu2files");
-              gt.setOption("sharedFilesPathname", sfiles);
-            }
             model.addGenerate(Arrays.asList(gt));
         }
         return false;
   }
 
-  @umplesourcefile(line={164},file={"Main_Code.ump"},javaline={186},length={24})
+  @umplesourcefile(line={159},file={"Main_Code.ump"},javaline={181},length={23})
    private static  OptionSet optParse(String [] args){
     optparser = new OptionParser();
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
@@ -190,7 +185,6 @@ public class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,RTCpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,GvStateDiagram,GvClassDiagram,Yuml,SimpleMetrics,Uigu2").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
-    optparser.acceptsAll(Arrays.asList("uigu2files"), "If '-g Uigu2' is used, this option indicates where shared files for UIGU2 are placed (optional)").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
 
     OptionSet optSet = null;
@@ -211,10 +205,10 @@ public class UmpleConsoleMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={189},file={"Main_Code.ump"},javaline={215},length={5})
+  //  @umplesourcefile(line={183},file={"Main_Code.ump"},javaline={209},length={5})
   public static String console ;
 
-//  @umplesourcefile(line={190},file={"Main_Code.ump"},javaline={218},length={2})
+//  @umplesourcefile(line={184},file={"Main_Code.ump"},javaline={212},length={2})
   private static OptionParser optparser ;
 
   

@@ -15,10 +15,8 @@
     </style>
   </head>
   <body>
-    <div id="div_heading_title" class="center">
+    <div id="heading">
       <h1>User Interface Generation for Umple</h1>
-    </div>
-    <div id="div_heading_bar">
       <table id="table_menu">
         <tr>
           <td>
@@ -43,8 +41,8 @@
         </tr>
       </table>
     </div>
-    <hr />
-    <div id="div_body">
+    <hr/>
+    <div id="view_body">
       <?php
       if (isset($messages) && is_array($messages)){
         foreach ($messages as $msg){
@@ -58,8 +56,9 @@
       }
       ?>
     </div>
-    <div id="div_bottom">
-      <hr/>//Here: link, contacts, license information
+    <div id="bottom">
+      <hr/>
+      //Here: link, contacts, license information
     </div>
   </body>
 </html>

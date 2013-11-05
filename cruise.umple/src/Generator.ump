@@ -273,11 +273,13 @@ class PhpGenerator
 class Uigu2Generator
 {
   isA PhpGenerator;
-  depend cruise.umple.compiler.exceptions.*;
   depend java.io.*;
   depend java.nio.charset.*;
   depend java.nio.file.*;
   depend java.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.uigu2.*;
 }
 
 class RubyGenerator

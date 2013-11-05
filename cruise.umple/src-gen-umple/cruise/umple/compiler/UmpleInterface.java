@@ -9,10 +9,10 @@ import java.util.*;
  * Like a class, but can't have any concrete methods, attributes or associations.
  * 
  * @umplesource Umple.ump 341
- * @umplesource Umple_Code.ump 619
+ * @umplesource Umple_Code.ump 616
  */
 // line 341 "../../../../src/Umple.ump"
-// line 619 "../../../../src/Umple_Code.ump"
+// line 616 "../../../../src/Umple_Code.ump"
 public class UmpleInterface extends UmpleClassifier
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -132,7 +132,7 @@ public class UmpleInterface extends UmpleClassifier
     super.delete();
   }
 
-  @umplesourcefile(line={622},file={"Umple_Code.ump"},javaline={136},length={24})
+  @umplesourcefile(line={619},file={"Umple_Code.ump"},javaline={136},length={24})
    public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;
     String methodName = comparedMethod.getName();

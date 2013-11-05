@@ -11,9 +11,9 @@ import java.io.*;
 
 /**
  * Main program for a jar that can inject calls to Umple at runtime
- * @umplesource Main_Code.ump 196
+ * @umplesource Main_Code.ump 190
  */
-// line 196 "../../../src/Main_Code.ump"
+// line 190 "../../../src/Main_Code.ump"
 public class UmpleRunMain
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -37,7 +37,7 @@ public class UmpleRunMain
   public void delete()
   {}
 
-  @umplesourcefile(line={207},file={"Main_Code.ump"},javaline={41},length={72})
+  @umplesourcefile(line={201},file={"Main_Code.ump"},javaline={41},length={72})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -113,7 +113,7 @@ public class UmpleRunMain
         }
   }
 
-  @umplesourcefile(line={281},file={"Main_Code.ump"},javaline={117},length={7})
+  @umplesourcefile(line={275},file={"Main_Code.ump"},javaline={117},length={7})
    private static  void print(String output){
     console += output;
         if (displayOutput)
@@ -122,12 +122,12 @@ public class UmpleRunMain
         }
   }
 
-  @umplesourcefile(line={291},file={"Main_Code.ump"},javaline={126},length={3})
+  @umplesourcefile(line={285},file={"Main_Code.ump"},javaline={126},length={3})
    private static  void println(String output){
     print(output + "\n");
   }
 
-  @umplesourcefile(line={296},file={"Main_Code.ump"},javaline={131},length={7})
+  @umplesourcefile(line={290},file={"Main_Code.ump"},javaline={131},length={7})
    private static  void printerr(String err){
     console += err;
         if (displayOutput)
@@ -139,10 +139,10 @@ public class UmpleRunMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={304},file={"Main_Code.ump"},javaline={143},length={5})
+  //  @umplesourcefile(line={298},file={"Main_Code.ump"},javaline={143},length={5})
   public static String console ;
 
-//  @umplesourcefile(line={305},file={"Main_Code.ump"},javaline={146},length={2})
+//  @umplesourcefile(line={299},file={"Main_Code.ump"},javaline={146},length={2})
   public static boolean displayOutput = true ;
 
   
