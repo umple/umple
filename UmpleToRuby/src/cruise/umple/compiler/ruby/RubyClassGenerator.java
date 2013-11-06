@@ -6579,14 +6579,14 @@ public class RubyClassGenerator implements ILang
       
       if(!"".equals(customPostconditionCode))
       {
-        if(!"".equals(methodType)||!"void".equals(methodType)){
+        if(!"".equals(methodType)&&!"void".equals(methodType)){
           append(stringBuffer, "    result = {0}_original({1})\n", methodName, finalParams);
         }
         else {
           append(stringBuffer, "    {0}_original({1})\n", methodName, finalParams);
         }
         appendln(stringBuffer, GeneratorHelper.doIndent(customPostconditionCode, "    "));
-        if(!"".equals(methodType)||!"void".equals(methodType)){
+        if(!"".equals(methodType)&&!"void".equals(methodType)){
           append(stringBuffer, "    return result\n");
         }          
         appendln(stringBuffer, "  end");

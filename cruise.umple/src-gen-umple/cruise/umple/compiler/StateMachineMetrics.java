@@ -68,7 +68,7 @@ public class StateMachineMetrics extends SimpleMetricsGenerator
     super.delete();
   }
 
-  @umplesourcefile(line={52},file={"SimpleMetrics_SM.ump"},javaline={72},length={177})
+  @umplesourcefile(line={53},file={"SimpleMetrics_SM.ump"},javaline={73},length={177})
   public void calculate(){
     // Output basic file header
       code.append( "\n\n\n");

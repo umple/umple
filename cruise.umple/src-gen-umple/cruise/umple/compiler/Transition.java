@@ -431,7 +431,7 @@ public class Transition
     }
   }
 
-  @umplesourcefile(line={437},file={"StateMachine_Code.ump"},javaline={435},length={5})
+  @umplesourcefile(line={439},file={"StateMachine_Code.ump"},javaline={436},length={5})
    public static  Transition createPlaceholder(State nextState){
     StateMachine nullSm = new StateMachine("null");
     State nullState = new State("null",nullSm);

@@ -71,7 +71,7 @@ public class YumlGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={15},file={"Generator_CodeYuml.ump"},javaline={75},length={62})
+  @umplesourcefile(line={17},file={"Generator_CodeYuml.ump"},javaline={76},length={62})
    public void generate(){
     StringBuilder yuml = new StringBuilder();
     for (UmpleClass aClass : model.getUmpleClasses())

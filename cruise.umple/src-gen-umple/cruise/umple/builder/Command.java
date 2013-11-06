@@ -204,7 +204,7 @@ public class Command
   public void delete()
   {}
 
-  @umplesourcefile(line={16},file={"Builder_Code.ump"},javaline={208},length={16})
+  @umplesourcefile(line={18},file={"Builder_Code.ump"},javaline={209},length={16})
    public void addAttributes(String input){
     if (input == null)
     {
@@ -222,14 +222,14 @@ public class Command
     }
   }
 
-  @umplesourcefile(line={34},file={"Builder_Code.ump"},javaline={226},length={5})
+  @umplesourcefile(line={36},file={"Builder_Code.ump"},javaline={227},length={5})
    public String[] popMessages(){
     String[] local = getMessages();
     messages = new ArrayList<String>();
     return local;
   }
 
-  @umplesourcefile(line={41},file={"Builder_Code.ump"},javaline={233},length={45})
+  @umplesourcefile(line={43},file={"Builder_Code.ump"},javaline={234},length={45})
    public Object exec(String rawInput){
     addHistory(rawInput);
     
@@ -276,7 +276,7 @@ public class Command
     return answer;
   }
 
-  @umplesourcefile(line={88},file={"Builder_Code.ump"},javaline={280},length={21})
+  @umplesourcefile(line={90},file={"Builder_Code.ump"},javaline={281},length={21})
    public Object newObject(String className){
     currentObject = null;
     try 
@@ -299,17 +299,17 @@ public class Command
     return currentObject;
   }
 
-  @umplesourcefile(line={111},file={"Builder_Code.ump"},javaline={303},length={3})
+  @umplesourcefile(line={113},file={"Builder_Code.ump"},javaline={304},length={3})
    public void runMethod(String methodName){
     callMethod(methodName,false,true);
   }
 
-  @umplesourcefile(line={116},file={"Builder_Code.ump"},javaline={308},length={3})
+  @umplesourcefile(line={118},file={"Builder_Code.ump"},javaline={309},length={3})
    public Object showResults(String methodName){
     return callMethod(methodName,true,false);
   }
 
-  @umplesourcefile(line={121},file={"Builder_Code.ump"},javaline={313},length={26})
+  @umplesourcefile(line={123},file={"Builder_Code.ump"},javaline={314},length={26})
    public boolean assertMethod(String methodName, String rawExpectedValue){
     String expectedValue = rawExpectedValue.trim();
     
@@ -337,7 +337,7 @@ public class Command
     }
   }
 
-  @umplesourcefile(line={149},file={"Builder_Code.ump"},javaline={341},length={23})
+  @umplesourcefile(line={151},file={"Builder_Code.ump"},javaline={342},length={23})
    private Object callMethod(String methodName, boolean showValue, boolean showExecuted){
     try 
     {
@@ -362,7 +362,7 @@ public class Command
     }
   }
 
-  @umplesourcefile(line={174},file={"Builder_Code.ump"},javaline={366},length={10})
+  @umplesourcefile(line={176},file={"Builder_Code.ump"},javaline={367},length={10})
    private void showValue(String methodName, Object answer){
     if (answer == null)
     {

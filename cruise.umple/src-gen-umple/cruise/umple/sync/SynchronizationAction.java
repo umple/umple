@@ -65,7 +65,7 @@ public class SynchronizationAction
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"UmpleSync_Code.ump"},javaline={69},length={3})
+  @umplesourcefile(line={20},file={"UmpleSync_Code.ump"},javaline={70},length={3})
    public void go(){
     
   }

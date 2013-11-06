@@ -40,7 +40,7 @@ public class UmpleConsoleMain
   public void delete()
   {}
 
-  @umplesourcefile(line={30},file={"Main_Code.ump"},javaline={44},length={70})
+  @umplesourcefile(line={33},file={"Main_Code.ump"},javaline={45},length={70})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -114,19 +114,19 @@ public class UmpleConsoleMain
         System.exit(0);
   }
 
-  @umplesourcefile(line={103},file={"Main_Code.ump"},javaline={118},length={4})
+  @umplesourcefile(line={105},file={"Main_Code.ump"},javaline={119},length={4})
    private static  void println(String output){
     console += output + "\n";
         System.out.println(output);
   }
 
-  @umplesourcefile(line={108},file={"Main_Code.ump"},javaline={124},length={4})
+  @umplesourcefile(line={110},file={"Main_Code.ump"},javaline={125},length={4})
    private static  void printerr(String err){
     console += err;
         System.err.print(err);
   }
 
-  @umplesourcefile(line={114},file={"Main_Code.ump"},javaline={130},length={7})
+  @umplesourcefile(line={115},file={"Main_Code.ump"},javaline={131},length={7})
    private static  void printUsage(){
     println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
         try{
@@ -142,7 +142,7 @@ public class UmpleConsoleMain
    * Argument: optSet - set of the options and corresponding arguments
    * Return: boolean - If application should terminate immediately after return
    */
-  @umplesourcefile(line={126},file={"Main_Code.ump"},javaline={139},length={14})
+  @umplesourcefile(line={127},file={"Main_Code.ump"},javaline={140},length={14})
    private static  boolean preModelOptionProcess(OptionSet optSet){
     if (optSet == null) {
             return true;
@@ -158,7 +158,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={141},file={"Main_Code.ump"},javaline={162},length={17})
+  @umplesourcefile(line={142},file={"Main_Code.ump"},javaline={163},length={17})
    private static  boolean postModelOptionProcess(OptionSet optset, UmpleModel model){
     if (optset.has("generate")) {
             boolean override=false;
@@ -177,7 +177,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={159},file={"Main_Code.ump"},javaline={181},length={23})
+  @umplesourcefile(line={161},file={"Main_Code.ump"},javaline={182},length={23})
    private static  OptionSet optParse(String [] args){
     optparser = new OptionParser();
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");

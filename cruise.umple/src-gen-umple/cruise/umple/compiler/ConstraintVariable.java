@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * Under Development
- * @umplesource Umple.ump 228
+ * @umplesource Umple.ump 229
  * @umplesource Umple_Code.ump 1319
  */
-// line 228 "../../../../src/Umple.ump"
+// line 229 "../../../../src/Umple.ump"
 // line 1319 "../../../../src/Umple_Code.ump"
 public class ConstraintVariable
 {
@@ -110,13 +110,13 @@ public class ConstraintVariable
     return value;
   }
 
-  @umplesourcefile(line={234},file={"Umple.ump"},javaline={117},length={2})
+  @umplesourcefile(line={235},file={"Umple.ump"},javaline={117},length={2})
   public boolean getIsAttribute()
   {
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
   }
 
-  @umplesourcefile(line={235},file={"Umple.ump"},javaline={122},length={2})
+  @umplesourcefile(line={236},file={"Umple.ump"},javaline={122},length={2})
   public boolean getIsOperator()
   {
     return "OPERATOR".equals(type);
@@ -137,7 +137,7 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
-  @umplesourcefile(line={239},file={"Umple.ump"},javaline={144},length={6})
+  @umplesourcefile(line={240},file={"Umple.ump"},javaline={144},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||
@@ -168,13 +168,13 @@ public class ConstraintVariable
     subConstraint = null;
   }
 
-  @umplesourcefile(line={1322},file={"Umple_Code.ump"},javaline={172},length={4})
+  @umplesourcefile(line={1323},file={"Umple_Code.ump"},javaline={173},length={4})
   public ConstraintVariable isNotPrimitive(){
     isPrimitive = false;
     return this;
   }
 
-  @umplesourcefile(line={1326},file={"Umple_Code.ump"},javaline={178},length={19})
+  @umplesourcefile(line={1327},file={"Umple_Code.ump"},javaline={179},length={19})
   public UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
@@ -195,7 +195,7 @@ public class ConstraintVariable
     return uv;
   }
 
-  @umplesourcefile(line={1346},file={"Umple_Code.ump"},javaline={199},length={15})
+  @umplesourcefile(line={1348},file={"Umple_Code.ump"},javaline={200},length={15})
    public boolean equals(Object object){
     if(object==null)
     {

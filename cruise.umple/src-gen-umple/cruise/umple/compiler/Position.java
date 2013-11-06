@@ -189,17 +189,17 @@ public class Position
   public void delete()
   {}
 
-  @umplesourcefile(line={325},file={"Parser_Code.ump"},javaline={193},length={3})
+  @umplesourcefile(line={327},file={"Parser_Code.ump"},javaline={194},length={3})
    public  Position(int aLineNumber, int aCharacterOffset, int aOffset){
     this(null, aLineNumber, aCharacterOffset, aOffset);
   }
 
-  @umplesourcefile(line={330},file={"Parser_Code.ump"},javaline={198},length={3})
+  @umplesourcefile(line={332},file={"Parser_Code.ump"},javaline={199},length={3})
    public Position copy(){
     return new Position(filename,lineNumber,characterOffset,offset);
   }
 
-  @umplesourcefile(line={335},file={"Parser_Code.ump"},javaline={203},length={4})
+  @umplesourcefile(line={337},file={"Parser_Code.ump"},javaline={204},length={4})
    public Position add(Position more){
     String tfile = filename == null ? more.getFilename() : filename;
     return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
@@ -209,17 +209,17 @@ public class Position
   /**
    * extract the line number of the position
    */
-  @umplesourcefile(line={342},file={"Parser_Code.ump"},javaline={209},length={3})
+  @umplesourcefile(line={343},file={"Parser_Code.ump"},javaline={210},length={3})
    public int getLineNum(){
     return getLineNumber();
   }
 
-  @umplesourcefile(line={346},file={"Parser_Code.ump"},javaline={218},length={3})
+  @umplesourcefile(line={348},file={"Parser_Code.ump"},javaline={219},length={3})
    public String toString(){
     return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
   }
 
-  @umplesourcefile(line={351},file={"Parser_Code.ump"},javaline={223},length={11})
+  @umplesourcefile(line={353},file={"Parser_Code.ump"},javaline={224},length={11})
    private int countChars(String str, char c){
     int count = 0;
     for (int i = 0; i < str.length(); i++)
@@ -232,7 +232,7 @@ public class Position
     return count;
   }
 
-  @umplesourcefile(line={364},file={"Parser_Code.ump"},javaline={236},length={3})
+  @umplesourcefile(line={366},file={"Parser_Code.ump"},javaline={237},length={3})
    private String deWindowsify(String str){
     return str.replace('\\','/');
   }
@@ -243,7 +243,7 @@ public class Position
    * It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
    * As a result, it has been replaced by the placeholder above, that simply returns the full path.
    */
-  @umplesourcefile(line={372},file={"Parser_Code.ump"},javaline={241},length={55})
+  @umplesourcefile(line={374},file={"Parser_Code.ump"},javaline={242},length={55})
    public String getRelativePath(UmpleClass parent, String language){
     if (filename == null)
     {

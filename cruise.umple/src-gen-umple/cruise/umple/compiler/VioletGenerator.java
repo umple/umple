@@ -251,7 +251,7 @@ public class VioletGenerator implements CodeGenerator
     violetAssociations.clear();
   }
 
-  @umplesourcefile(line={14},file={"Violet_Code.ump"},javaline={255},length={6})
+  @umplesourcefile(line={16},file={"Violet_Code.ump"},javaline={256},length={6})
    public void generate(){
     UmpleFile umpleFile = model.getUmpleFile();
     String filename = umpleFile.getPath() + File.separator + umpleFile.getFileName() + ".violet";
@@ -259,7 +259,7 @@ public class VioletGenerator implements CodeGenerator
     SampleFileWriter.createFile(filename, toXml());
   }
 
-  @umplesourcefile(line={22},file={"Violet_Code.ump"},javaline={263},length={19})
+  @umplesourcefile(line={25},file={"Violet_Code.ump"},javaline={264},length={19})
    public VioletClass newClass(String name){
     int elementOffset = numberOfVioletClasses();
   
@@ -280,14 +280,14 @@ public class VioletGenerator implements CodeGenerator
     return vClass;
   }
 
-  @umplesourcefile(line={44},file={"Violet_Code.ump"},javaline={284},length={5})
+  @umplesourcefile(line={46},file={"Violet_Code.ump"},javaline={285},length={5})
    public VioletAssociation newAssociation(String startLabel, String endLabel, VioletClass startClass, VioletClass endClass){
     VioletAssociation vAss = new VioletAssociation(startLabel,endLabel,startClass,endClass);
     addVioletAssociation(vAss);
     return vAss;
   }
 
-  @umplesourcefile(line={51},file={"Violet_Code.ump"},javaline={291},length={36})
+  @umplesourcefile(line={53},file={"Violet_Code.ump"},javaline={292},length={36})
    public void draw(UmpleModel model){
     Map<UmpleClass,VioletClass> classToVioletMap = new HashMap<UmpleClass,VioletClass>();
     
@@ -325,7 +325,7 @@ public class VioletGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={90},file={"Violet_Code.ump"},javaline={329},length={14})
+  @umplesourcefile(line={92},file={"Violet_Code.ump"},javaline={330},length={14})
    public String toXml(){
     VioletDiagram diagram = new VioletDiagram();
     

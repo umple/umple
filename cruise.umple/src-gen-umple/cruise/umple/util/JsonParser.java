@@ -41,7 +41,7 @@ public class JsonParser extends Parser
     super.delete();
   }
 
-  @umplesourcefile(line={16},file={"Json_Code.ump"},javaline={45},length={11})
+  @umplesourcefile(line={18},file={"Json_Code.ump"},javaline={46},length={11})
    private void init(){
     addCouple(new Couple("{", "}"));
     addRule("json : { } |  { [[json_entity]] ( , [[json_entity]] )* }");
@@ -54,12 +54,12 @@ public class JsonParser extends Parser
     addRule("value- : \" [**value] \" | [value] ");
   }
 
-  @umplesourcefile(line={29},file={"Json_Code.ump"},javaline={58},length={3})
+  @umplesourcefile(line={31},file={"Json_Code.ump"},javaline={59},length={3})
    public Json analyze(){
     return handleJson(null,getRootToken());
   }
 
-  @umplesourcefile(line={34},file={"Json_Code.ump"},javaline={63},length={60})
+  @umplesourcefile(line={36},file={"Json_Code.ump"},javaline={64},length={60})
    private Json handleJsonEntity(Json json, Token t){
     for(Token subT : t.getSubTokens())
     {
@@ -121,7 +121,7 @@ public class JsonParser extends Parser
     return json;
   }
 
-  @umplesourcefile(line={96},file={"Json_Code.ump"},javaline={125},length={15})
+  @umplesourcefile(line={98},file={"Json_Code.ump"},javaline={126},length={15})
    private Json handleJson(Json json, Token t){
     for(Token subT : t.getSubTokens())
     {
@@ -138,7 +138,7 @@ public class JsonParser extends Parser
     return json;
   }
 
-  @umplesourcefile(line={113},file={"Json_Code.ump"},javaline={142},length={10})
+  @umplesourcefile(line={115},file={"Json_Code.ump"},javaline={143},length={10})
    private String stripQuotes(String input){
     if (input == null)
     {

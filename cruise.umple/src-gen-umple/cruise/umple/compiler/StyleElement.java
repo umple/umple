@@ -65,12 +65,12 @@ public class StyleElement implements IHtmlElement
   public void delete()
   {}
 
-  @umplesourcefile(line={398},file={"Generator_Html.ump"},javaline={69},length={3})
+  @umplesourcefile(line={399},file={"Generator_Html.ump"},javaline={70},length={3})
    public Element getElement(){
     return style;
   }
 
-  @umplesourcefile(line={402},file={"Generator_Html.ump"},javaline={74},length={3})
+  @umplesourcefile(line={403},file={"Generator_Html.ump"},javaline={75},length={3})
    public String htmlString(){
     return style.toString();
   }

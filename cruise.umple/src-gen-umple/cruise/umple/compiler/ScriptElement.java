@@ -65,12 +65,12 @@ public class ScriptElement implements IHtmlElement
   public void delete()
   {}
 
-  @umplesourcefile(line={375},file={"Generator_Html.ump"},javaline={69},length={3})
+  @umplesourcefile(line={376},file={"Generator_Html.ump"},javaline={70},length={3})
   public Element getElement(){
     return script;
   }
 
-  @umplesourcefile(line={379},file={"Generator_Html.ump"},javaline={74},length={3})
+  @umplesourcefile(line={380},file={"Generator_Html.ump"},javaline={75},length={3})
   public String htmlString(){
     return script.toString();
   }

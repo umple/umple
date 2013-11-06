@@ -91,7 +91,7 @@ public class RepeatableRule extends ChoiceRule
   /**
    * Takes one rule and the minimum number of repeats as well as the maximum
    */
-  @umplesourcefile(line={471},file={"ParsingRules_Code.ump"},javaline={91},length={5})
+  @umplesourcefile(line={473},file={"ParsingRules_Code.ump"},javaline={92},length={5})
    public  RepeatableRule(String name, int min, int max, ChoiceRule rule){
     super(name,rule);
     this.setMin(min);
@@ -102,7 +102,7 @@ public class RepeatableRule extends ChoiceRule
   /**
    * Tries to parse the subrule min<=times<=max.
    */
-  @umplesourcefile(line={489},file={"ParsingRules_Code.ump"},javaline={102},length={35})
+  @umplesourcefile(line={491},file={"ParsingRules_Code.ump"},javaline={103},length={35})
    public int parse(Token token, int from, int stop, String input, ParserDataPackage data){
     Token self = getNegate()?token:new Token(getName(),"START_TOKEN");
     ChoiceRule rule = this.get(0);
@@ -143,7 +143,7 @@ public class RepeatableRule extends ChoiceRule
   /**
    * returns true if optional, i.e. if the min is 0 or the sub rule is optional
    */
-  @umplesourcefile(line={529},file={"ParsingRules_Code.ump"},javaline={143},length={3})
+  @umplesourcefile(line={531},file={"ParsingRules_Code.ump"},javaline={144},length={3})
    public boolean isOptional(){
     return (this.min == 0);
   }
@@ -152,7 +152,7 @@ public class RepeatableRule extends ChoiceRule
   /**
    * For optimization, this object will be removed if it has no sub rules.
    */
-  @umplesourcefile(line={537},file={"ParsingRules_Code.ump"},javaline={152},length={3})
+  @umplesourcefile(line={539},file={"ParsingRules_Code.ump"},javaline={153},length={3})
    public boolean optimizeCondition(){
     return size()==0;
   }
@@ -161,7 +161,7 @@ public class RepeatableRule extends ChoiceRule
   /**
    * The size of a repeatable rule can be 0 or 1 and, therefore can have the value of either "" or the value of it's one and only rule
    */
-  @umplesourcefile(line={545},file={"ParsingRules_Code.ump"},javaline={161},length={12})
+  @umplesourcefile(line={547},file={"ParsingRules_Code.ump"},javaline={162},length={12})
    public String getFirstValue(){
     if(getFirstValueBuilder()!=null)
   {
@@ -175,7 +175,7 @@ public class RepeatableRule extends ChoiceRule
   return getFirstValueBuilder().toString();
   }
 
-  @umplesourcefile(line={559},file={"ParsingRules_Code.ump"},javaline={179},length={19})
+  @umplesourcefile(line={561},file={"ParsingRules_Code.ump"},javaline={180},length={19})
    public StringBuilder toDeclareString(StringBuilder builder){
     if(getDeclared())
     {

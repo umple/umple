@@ -73,7 +73,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={20},file={"Generator_CodeGvClassDiagram.ump"},javaline={77},length={25})
+  @umplesourcefile(line={22},file={"Generator_CodeGvClassDiagram.ump"},javaline={78},length={25})
    public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder associations = new StringBuilder();
@@ -104,7 +104,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
   /**
    * Actually output the class contents
    */
-  @umplesourcefile(line={48},file={"Generator_CodeGvClassDiagram.ump"},javaline={104},length={110})
+  @umplesourcefile(line={50},file={"Generator_CodeGvClassDiagram.ump"},javaline={105},length={110})
    private void visitClass(UmpleClass uClass, Set visitedClasses, StringBuilder code, StringBuilder associations){
     // Ensure we only visit once
     if(visitedClasses.contains(uClass)) {
@@ -216,7 +216,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={160},file={"Generator_CodeGvClassDiagram.ump"},javaline={220},length={9})
+  @umplesourcefile(line={162},file={"Generator_CodeGvClassDiagram.ump"},javaline={221},length={9})
    private void terminateCode(StringBuilder code, StringBuilder associations){
     code.append("\n  // All associations\n");
     code.append(associations);
@@ -231,7 +231,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
   /**
    * Used to indent code
    */
-  @umplesourcefile(line={172},file={"Generator_CodeGvClassDiagram.ump"},javaline={231},length={5})
+  @umplesourcefile(line={173},file={"Generator_CodeGvClassDiagram.ump"},javaline={232},length={5})
    private void appendSpaces(StringBuilder code, int numSpaces){
     for(int i=0; i<numSpaces; i++) {
       code.append(" ");
@@ -242,7 +242,7 @@ public class GvClassDiagramGenerator implements CodeGenerator
   /**
    * Output the graphviz file to a file with the .gv suffix
    */
-  @umplesourcefile(line={179},file={"Generator_CodeGvClassDiagram.ump"},javaline={242},length={17})
+  @umplesourcefile(line={181},file={"Generator_CodeGvClassDiagram.ump"},javaline={243},length={17})
    private void writeModel(){
     try
     {

@@ -37,7 +37,8 @@ class UmpleInternalParser
     for(ConstraintVariable cv: cvs)
     {
     	postcondition.addExpression(cv);
-    }  
+    }
+    postcondition.setPosition(PostconditionToken.getPosition());
     aClass.addPostcondition(postcondition);
   }
     

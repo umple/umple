@@ -89,24 +89,24 @@ public class ParagraphElement implements IHtmlElement
   public void delete()
   {}
 
-  @umplesourcefile(line={425},file={"Generator_Html.ump"},javaline={93},length={5})
+  @umplesourcefile(line={426},file={"Generator_Html.ump"},javaline={94},length={5})
    private void appendText(String text){
     if(!isNull(text)) {
 			par.appendTextContents(true,text);
 		}
   }
 
-  @umplesourcefile(line={431},file={"Generator_Html.ump"},javaline={100},length={3})
+  @umplesourcefile(line={432},file={"Generator_Html.ump"},javaline={101},length={3})
    private boolean isNull(String attr){
     return attr == null || attr.length() == 0;
   }
 
-  @umplesourcefile(line={435},file={"Generator_Html.ump"},javaline={105},length={3})
+  @umplesourcefile(line={436},file={"Generator_Html.ump"},javaline={106},length={3})
   public Element getElement(){
     return par;
   }
 
-  @umplesourcefile(line={439},file={"Generator_Html.ump"},javaline={110},length={3})
+  @umplesourcefile(line={440},file={"Generator_Html.ump"},javaline={111},length={3})
   public String htmlString(){
     return par.toString();
   }

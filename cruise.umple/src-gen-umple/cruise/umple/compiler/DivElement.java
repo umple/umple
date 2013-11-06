@@ -38,12 +38,12 @@ public class DivElement implements IHtmlElement
   public void delete()
   {}
 
-  @umplesourcefile(line={277},file={"Generator_Html.ump"},javaline={42},length={3})
+  @umplesourcefile(line={278},file={"Generator_Html.ump"},javaline={43},length={3})
   public Element getElement(){
     return div;
   }
 
-  @umplesourcefile(line={281},file={"Generator_Html.ump"},javaline={47},length={3})
+  @umplesourcefile(line={282},file={"Generator_Html.ump"},javaline={48},length={3})
   public String htmlString(){
     return div.toString();
   }

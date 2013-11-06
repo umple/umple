@@ -150,13 +150,13 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
     super.delete();
   }
 
-  @umplesourcefile(line={196},file={"Generator_CodeAnalysis.ump"},javaline={154},length={4})
+  @umplesourcefile(line={197},file={"Generator_CodeAnalysis.ump"},javaline={155},length={4})
   public void done(){
     addTableEntry(null);
 		tbl.addRow(new String [] {"Total",String.valueOf(total_lloc),String.valueOf(total_comments),String.valueOf(total_lloc+total_comments)});
   }
 
-  @umplesourcefile(line={201},file={"Generator_CodeAnalysis.ump"},javaline={160},length={10})
+  @umplesourcefile(line={202},file={"Generator_CodeAnalysis.ump"},javaline={161},length={10})
   public void addTableEntry(UmpleElement element){
     if(cur_clazz != null) {
 			tbl.addRow(new String [] {cur_clazz,String.valueOf(cur_lloc),String.valueOf(cur_comments),String.valueOf(cur_lloc+cur_comments)});
@@ -172,7 +172,7 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Comment
    */
-  @umplesourcefile(line={213},file={"Generator_CodeAnalysis.ump"},javaline={172},length={3})
+  @umplesourcefile(line={214},file={"Generator_CodeAnalysis.ump"},javaline={173},length={3})
   public void visit(Comment comment){
     cur_comments++;
   }
@@ -181,19 +181,19 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Umple Classifiers
    */
-  @umplesourcefile(line={218},file={"Generator_CodeAnalysis.ump"},javaline={181},length={4})
+  @umplesourcefile(line={219},file={"Generator_CodeAnalysis.ump"},javaline={182},length={4})
   public void visit(UmpleClass umpleClass){
     addTableEntry(umpleClass);
 		cur_lloc+= 2;
   }
 
-  @umplesourcefile(line={222},file={"Generator_CodeAnalysis.ump"},javaline={191},length={4})
+  @umplesourcefile(line={223},file={"Generator_CodeAnalysis.ump"},javaline={192},length={4})
   public void visit(UmpleInterface umpleInterface){
     addTableEntry(umpleInterface);
 		cur_lloc+= 2;
   }
 
-  @umplesourcefile(line={226},file={"Generator_CodeAnalysis.ump"},javaline={197},length={4})
+  @umplesourcefile(line={227},file={"Generator_CodeAnalysis.ump"},javaline={198},length={4})
   public void visit(AssociationClass associationC){
     addTableEntry(associationC);
 		cur_lloc+= 2;
@@ -203,22 +203,22 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Dependency
    */
-  @umplesourcefile(line={232},file={"Generator_CodeAnalysis.ump"},javaline={203},length={3})
+  @umplesourcefile(line={233},file={"Generator_CodeAnalysis.ump"},javaline={204},length={3})
   public void visit(Depend dependE){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={235},file={"Generator_CodeAnalysis.ump"},javaline={212},length={3})
+  @umplesourcefile(line={236},file={"Generator_CodeAnalysis.ump"},javaline={213},length={3})
   public void visit(Package pkg){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={238},file={"Generator_CodeAnalysis.ump"},javaline={217},length={3})
+  @umplesourcefile(line={239},file={"Generator_CodeAnalysis.ump"},javaline={218},length={3})
   public void visit(ClassPattern ptrn){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={241},file={"Generator_CodeAnalysis.ump"},javaline={222},length={6})
+  @umplesourcefile(line={242},file={"Generator_CodeAnalysis.ump"},javaline={223},length={6})
   public void visit(Hierarchy hier){
     cur_lloc+= hier.getParentInterfaces().size();
 		if(hier.getParentClass() != null) {
@@ -230,12 +230,12 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Attributes
    */
-  @umplesourcefile(line={249},file={"Generator_CodeAnalysis.ump"},javaline={230},length={3})
+  @umplesourcefile(line={250},file={"Generator_CodeAnalysis.ump"},javaline={231},length={3})
   public void visit(Constant cnst){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={252},file={"Generator_CodeAnalysis.ump"},javaline={239},length={7})
+  @umplesourcefile(line={253},file={"Generator_CodeAnalysis.ump"},javaline={240},length={7})
   public void visit(Attribute attribute){
     if(attribute.isIsDerived()) {
 			cur_lloc+= 2;			
@@ -244,12 +244,12 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
 		}
   }
 
-  @umplesourcefile(line={259},file={"Generator_CodeAnalysis.ump"},javaline={248},length={3})
+  @umplesourcefile(line={260},file={"Generator_CodeAnalysis.ump"},javaline={249},length={3})
   public void visit(Key keyO){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={263},file={"Generator_CodeAnalysis.ump"},javaline={253},length={3})
+  @umplesourcefile(line={264},file={"Generator_CodeAnalysis.ump"},javaline={254},length={3})
   public void visit(UniqueIdentifier uid){
     cur_lloc++;
   }
@@ -258,7 +258,7 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Methods
    */
-  @umplesourcefile(line={268},file={"Generator_CodeAnalysis.ump"},javaline={258},length={7})
+  @umplesourcefile(line={269},file={"Generator_CodeAnalysis.ump"},javaline={259},length={7})
   public void visit(Method method){
     if(method.isIsImplemented()) {
 			cur_lloc+= 2;
@@ -271,12 +271,12 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Logical
    */
-  @umplesourcefile(line={277},file={"Generator_CodeAnalysis.ump"},javaline={271},length={3})
+  @umplesourcefile(line={278},file={"Generator_CodeAnalysis.ump"},javaline={272},length={3})
   public void visit(Precondition pre){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={280},file={"Generator_CodeAnalysis.ump"},javaline={280},length={3})
+  @umplesourcefile(line={281},file={"Generator_CodeAnalysis.ump"},javaline={281},length={3})
   public void visit(Constraint constraint){
     cur_lloc++;
   }
@@ -285,7 +285,7 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Aspect
    */
-  @umplesourcefile(line={285},file={"Generator_CodeAnalysis.ump"},javaline={285},length={3})
+  @umplesourcefile(line={286},file={"Generator_CodeAnalysis.ump"},javaline={286},length={3})
   public void visit(CodeInjection codeInjection){
     cur_lloc+= 2;
   }
@@ -294,7 +294,7 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Association
    */
-  @umplesourcefile(line={290},file={"Generator_CodeAnalysis.ump"},javaline={294},length={3})
+  @umplesourcefile(line={291},file={"Generator_CodeAnalysis.ump"},javaline={295},length={3})
   public void visit(Association associationE){
     cur_lloc++;
   }
@@ -306,12 +306,12 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
    * }
    * Statemachine
    */
-  @umplesourcefile(line={298},file={"Generator_CodeAnalysis.ump"},javaline={303},length={3})
+  @umplesourcefile(line={299},file={"Generator_CodeAnalysis.ump"},javaline={304},length={3})
   public void visit(StateMachine sm){
     cur_lloc+= 2;
   }
 
-  @umplesourcefile(line={301},file={"Generator_CodeAnalysis.ump"},javaline={315},length={3})
+  @umplesourcefile(line={302},file={"Generator_CodeAnalysis.ump"},javaline={316},length={3})
   public void visit(State state){
     cur_lloc+= 2;
   }
@@ -322,12 +322,12 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
    * cur_lloc++;
    * }
    */
-  @umplesourcefile(line={307},file={"Generator_CodeAnalysis.ump"},javaline={320},length={3})
+  @umplesourcefile(line={308},file={"Generator_CodeAnalysis.ump"},javaline={321},length={3})
   public void visit(Action action){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={310},file={"Generator_CodeAnalysis.ump"},javaline={331},length={3})
+  @umplesourcefile(line={311},file={"Generator_CodeAnalysis.ump"},javaline={332},length={3})
   public void visit(Event event){
     cur_lloc+= 2;
   }
@@ -338,7 +338,7 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
    * cur_lloc++;
    * }
    */
-  @umplesourcefile(line={316},file={"Generator_CodeAnalysis.ump"},javaline={336},length={3})
+  @umplesourcefile(line={317},file={"Generator_CodeAnalysis.ump"},javaline={337},length={3})
   public void visit(Activity activity){
     cur_lloc+= 2;
   }
@@ -347,32 +347,32 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * Trace
    */
-  @umplesourcefile(line={321},file={"Generator_CodeAnalysis.ump"},javaline={347},length={3})
+  @umplesourcefile(line={322},file={"Generator_CodeAnalysis.ump"},javaline={348},length={3})
   public void visit(Tracer tracer){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={324},file={"Generator_CodeAnalysis.ump"},javaline={356},length={3})
+  @umplesourcefile(line={325},file={"Generator_CodeAnalysis.ump"},javaline={357},length={3})
   public void visit(TraceItem traceItem){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={327},file={"Generator_CodeAnalysis.ump"},javaline={361},length={3})
+  @umplesourcefile(line={328},file={"Generator_CodeAnalysis.ump"},javaline={362},length={3})
   public void visit(TraceRecord traceRecord){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={330},file={"Generator_CodeAnalysis.ump"},javaline={366},length={3})
+  @umplesourcefile(line={331},file={"Generator_CodeAnalysis.ump"},javaline={367},length={3})
   public void visit(AttributeTraceItem attributeT){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={333},file={"Generator_CodeAnalysis.ump"},javaline={371},length={3})
+  @umplesourcefile(line={334},file={"Generator_CodeAnalysis.ump"},javaline={372},length={3})
   public void visit(MethodTraceEntity methodTraceEntity){
     cur_lloc++;
   }
 
-  @umplesourcefile(line={336},file={"Generator_CodeAnalysis.ump"},javaline={376},length={3})
+  @umplesourcefile(line={337},file={"Generator_CodeAnalysis.ump"},javaline={377},length={3})
   public void visit(StateMachineTraceItem stateMachineTraceItem){
     cur_lloc++;
   }
@@ -381,7 +381,7 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
   /**
    * User Code
    */
-  @umplesourcefile(line={342},file={"Generator_CodeAnalysis.ump"},javaline={381},length={7})
+  @umplesourcefile(line={343},file={"Generator_CodeAnalysis.ump"},javaline={382},length={7})
   public void visit(CodeBlock block){
     MeasurmentObject m;
 	  	try {
@@ -390,7 +390,7 @@ public class LLOCMetricVisitor extends UmpleModelVisitor
 	  	} catch (IOException e) {}
   }
 
-  @umplesourcefile(line={349},file={"Generator_CodeAnalysis.ump"},javaline={394},length={7})
+  @umplesourcefile(line={350},file={"Generator_CodeAnalysis.ump"},javaline={395},length={7})
   public void visit(UserCode userCode){
     MeasurmentObject m;
 	  	try {

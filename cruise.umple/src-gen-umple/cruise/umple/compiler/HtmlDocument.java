@@ -58,13 +58,13 @@ public class HtmlDocument
   public void delete()
   {}
 
-  @umplesourcefile(line={456},file={"Generator_Html.ump"},javaline={62},length={4})
+  @umplesourcefile(line={457},file={"Generator_Html.ump"},javaline={63},length={4})
    public TableElement createTable(int aColumns){
     TableElement tbl = new TableElement(parent, aColumns);
 		return tbl;
   }
 
-  @umplesourcefile(line={461},file={"Generator_Html.ump"},javaline={68},length={9})
+  @umplesourcefile(line={462},file={"Generator_Html.ump"},javaline={69},length={9})
    public ScriptElement createScript(String... aScriptTexts){
     StringBuffer stringBuffer = new StringBuffer(""); //$NON-NLS-1$
 		for(String text: aScriptTexts){
@@ -75,7 +75,7 @@ public class HtmlDocument
 		return script;
   }
 
-  @umplesourcefile(line={471},file={"Generator_Html.ump"},javaline={79},length={9})
+  @umplesourcefile(line={472},file={"Generator_Html.ump"},javaline={80},length={9})
    public StyleElement createStyle(String... aStyleTexts){
     StringBuffer stringBuffer = new StringBuffer(""); //$NON-NLS-1$
 		for(String text: aStyleTexts){
@@ -86,18 +86,18 @@ public class HtmlDocument
 		return style;
   }
 
-  @umplesourcefile(line={481},file={"Generator_Html.ump"},javaline={90},length={4})
+  @umplesourcefile(line={482},file={"Generator_Html.ump"},javaline={91},length={4})
   public ParagraphElement createParagraphElement(String aText, boolean aSmall){
     ParagraphElement p = new ParagraphElement(parent, aText, aSmall);
 		return p;
   }
 
-  @umplesourcefile(line={486},file={"Generator_Html.ump"},javaline={96},length={3})
+  @umplesourcefile(line={487},file={"Generator_Html.ump"},javaline={97},length={3})
   public String htmlString(){
     return parent.htmlString();
   }
 
-  @umplesourcefile(line={490},file={"Generator_Html.ump"},javaline={101},length={3})
+  @umplesourcefile(line={491},file={"Generator_Html.ump"},javaline={102},length={3})
   public String toString(){
     return this.htmlString();
   }

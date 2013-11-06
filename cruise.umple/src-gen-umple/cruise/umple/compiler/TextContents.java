@@ -35,7 +35,7 @@ public class TextContents extends Element
     super.delete();
   }
 
-  @umplesourcefile(line={243},file={"Generator_Html.ump"},javaline={39},length={3})
+  @umplesourcefile(line={244},file={"Generator_Html.ump"},javaline={40},length={3})
   public String htmlString(){
     return getTagName();
   }

@@ -122,6 +122,7 @@ class Method
   name;
   
   lazy Position position;
+  lazy Position codePosition;
   lazy Position endPosition;
 
   // The type of the method.
@@ -272,7 +273,7 @@ class Precondition{
 class Postcondition{  
   isA Constraint;
    * -> 1 Method ; // The method postcondition belongs to
-   
+   lazy Position position;
 }
 
 /*

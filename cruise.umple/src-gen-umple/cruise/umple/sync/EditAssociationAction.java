@@ -38,7 +38,7 @@ public class EditAssociationAction extends SynchronizationAction
     super.delete();
   }
 
-  @umplesourcefile(line={839},file={"UmpleSync_Code.ump"},javaline={42},length={171})
+  @umplesourcefile(line={841},file={"UmpleSync_Code.ump"},javaline={43},length={171})
    public void go(){
     try
     {
@@ -211,7 +211,7 @@ public class EditAssociationAction extends SynchronizationAction
     }
   }
 
-  @umplesourcefile(line={1012},file={"UmpleSync_Code.ump"},javaline={215},length={10})
+  @umplesourcefile(line={1014},file={"UmpleSync_Code.ump"},javaline={216},length={10})
    private boolean handleException(Exception e){
     String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
     

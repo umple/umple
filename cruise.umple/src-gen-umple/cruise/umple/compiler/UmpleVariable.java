@@ -9,11 +9,11 @@ import java.util.*;
  * TODO: Code smell because we have both an association variable and also an association
  * This class should go and instead AssociationEnd should be the member variable
  * 
- * @umplesource Umple.ump 452
+ * @umplesource Umple.ump 453
  * @umplesource Umple_Code.ump 1149
  * @umplesource Trace_Code.ump 15
  */
-// line 452 "../../../../src/Umple.ump"
+// line 453 "../../../../src/Umple.ump"
 // line 1149 "../../../../src/Umple_Code.ump"
 // line 15 "../../../../src/Trace_Code.ump"
 public class UmpleVariable
@@ -51,11 +51,11 @@ public class UmpleVariable
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={467},file={"Umple.ump"},javaline={59},length={1})
+  @umplesourcefile(line={468},file={"Umple.ump"},javaline={59},length={1})
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    // line 467 "../../../../src/Umple.ump"
+    // line 468 "../../../../src/Umple.ump"
     if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); }
     name = aName;
     wasSet = true;
@@ -106,10 +106,10 @@ public class UmpleVariable
    * The modifier associated with the Umple variable.
    * potential enum, 'settable'
    */
-  @umplesourcefile(line={469},file={"Umple.ump"},javaline={112},length={1})
+  @umplesourcefile(line={470},file={"Umple.ump"},javaline={112},length={1})
   public String getModifier()
   {
-    // line 469 "../../../../src/Umple.ump"
+    // line 470 "../../../../src/Umple.ump"
     if (modifier == null) { return "settable"; }
     return modifier;
   }
@@ -244,7 +244,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1152},file={"Umple_Code.ump"},javaline={248},length={14})
+  @umplesourcefile(line={1154},file={"Umple_Code.ump"},javaline={249},length={14})
    public String getUpperCaseName(){
     if (name == null || name.length() == 0)
     {
@@ -260,7 +260,7 @@ public class UmpleVariable
     }
   }
 
-  @umplesourcefile(line={1168},file={"Umple_Code.ump"},javaline={264},length={3})
+  @umplesourcefile(line={1170},file={"Umple_Code.ump"},javaline={265},length={3})
    public boolean isImmutable(){
     return "immutable".equals(modifier);
   }
@@ -272,7 +272,7 @@ public class UmpleVariable
    * @params uClass: the umple class to look within for the trace item
    * @return Attribute_Traceitem for this UmpleVariable(either association or attribute);
    */
-  @umplesourcefile(line={24},file={"Trace_Code.ump"},javaline={269},length={36})
+  @umplesourcefile(line={26},file={"Trace_Code.ump"},javaline={270},length={36})
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all of the trace directives from the passed umple class
     for(TraceDirective td: uClass.getTraceDirectives())

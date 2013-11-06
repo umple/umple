@@ -146,7 +146,7 @@ public class Group
     contents.clear();
   }
 
-  @umplesourcefile(line={346},file={"Documenter_Code.ump"},javaline={150},length={3})
+  @umplesourcefile(line={348},file={"Documenter_Code.ump"},javaline={151},length={3})
    public String getGroupIdName(){
     return name.replace(" ","");
   }

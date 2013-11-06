@@ -102,7 +102,7 @@ public class CodeSnippet
   public void delete()
   {}
 
-  @umplesourcefile(line={114},file={"Vml_Code.ump"},javaline={106},length={10})
+  @umplesourcefile(line={116},file={"Vml_Code.ump"},javaline={107},length={10})
    public String toString(){
     if (code == null)
     {

@@ -31,7 +31,7 @@ public class StatsMain
   public void delete()
   {}
 
-  @umplesourcefile(line={20},file={"UmpleStats_Code.ump"},javaline={35},length={30})
+  @umplesourcefile(line={22},file={"UmpleStats_Code.ump"},javaline={36},length={30})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -65,7 +65,7 @@ public class StatsMain
     println("Saved results to ["+ outputFilename +"]");
   }
 
-  @umplesourcefile(line={52},file={"UmpleStats_Code.ump"},javaline={69},length={4})
+  @umplesourcefile(line={54},file={"UmpleStats_Code.ump"},javaline={70},length={4})
    private static  void println(String output){
     console += output + "\n";
     System.out.println(output);

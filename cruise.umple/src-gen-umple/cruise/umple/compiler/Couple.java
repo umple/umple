@@ -207,7 +207,7 @@ public class Couple
     }
   }
 
-  @umplesourcefile(line={14},file={"Parser_Code.ump"},javaline={211},length={26})
+  @umplesourcefile(line={17},file={"Parser_Code.ump"},javaline={212},length={26})
    public boolean isBalanced(String input){
     if (input == null)
     {
@@ -235,7 +235,7 @@ public class Couple
     return numberOfOpen <= numberOfClosed;
   }
 
-  @umplesourcefile(line={44},file={"Parser_Code.ump"},javaline={239},length={32})
+  @umplesourcefile(line={46},file={"Parser_Code.ump"},javaline={240},length={32})
    public String removeIgnoredText(String input){
     String output = input;
 

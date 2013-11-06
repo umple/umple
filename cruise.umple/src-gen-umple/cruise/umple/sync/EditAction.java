@@ -38,7 +38,7 @@ public class EditAction extends SynchronizationAction
     super.delete();
   }
 
-  @umplesourcefile(line={340},file={"UmpleSync_Code.ump"},javaline={42},length={252})
+  @umplesourcefile(line={342},file={"UmpleSync_Code.ump"},javaline={43},length={252})
    public void go(){
     try
     {

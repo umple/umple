@@ -30,7 +30,7 @@ public class DocumenterMain
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"Documenter_Code.ump"},javaline={34},length={23})
+  @umplesourcefile(line={19},file={"Documenter_Code.ump"},javaline={35},length={23})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -57,7 +57,7 @@ public class DocumenterMain
     }
   }
 
-  @umplesourcefile(line={42},file={"Documenter_Code.ump"},javaline={61},length={4})
+  @umplesourcefile(line={44},file={"Documenter_Code.ump"},javaline={62},length={4})
    private static  void println(String output){
     console += output + "\n";
     System.out.println(output);

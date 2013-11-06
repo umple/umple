@@ -222,7 +222,7 @@ public class ParseResult
     errorMessages.clear();
   }
 
-  @umplesourcefile(line={1721},file={"Parser_Code.ump"},javaline={226},length={6})
+  @umplesourcefile(line={1723},file={"Parser_Code.ump"},javaline={227},length={6})
    public String toString(){
     String ret = "";
     for(ErrorMessage em : errorMessages)
@@ -230,7 +230,7 @@ public class ParseResult
     return ret;
   }
 
-  @umplesourcefile(line={1729},file={"Parser_Code.ump"},javaline={234},length={28})
+  @umplesourcefile(line={1731},file={"Parser_Code.ump"},javaline={235},length={28})
    public String toJSON(){
     String ret = "{ \"results\" : [ ";
     boolean hasOne = false;

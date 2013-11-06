@@ -51,7 +51,7 @@ public class Input
   public void delete()
   {}
 
-  @umplesourcefile(line={84},file={"Util_Code.ump"},javaline={55},length={11})
+  @umplesourcefile(line={86},file={"Util_Code.ump"},javaline={56},length={11})
    public String readUmpleFile(String [] args, PrintStream writer){
     if (args.length > 0)
     {
@@ -64,7 +64,7 @@ public class Input
     }
   }
 
-  @umplesourcefile(line={97},file={"Util_Code.ump"},javaline={68},length={7})
+  @umplesourcefile(line={99},file={"Util_Code.ump"},javaline={69},length={7})
    public String readLine(){
     try {
       return reader.readLine();

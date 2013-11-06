@@ -37,7 +37,7 @@ public class UmpleRunMain
   public void delete()
   {}
 
-  @umplesourcefile(line={201},file={"Main_Code.ump"},javaline={41},length={72})
+  @umplesourcefile(line={203},file={"Main_Code.ump"},javaline={42},length={72})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -113,7 +113,7 @@ public class UmpleRunMain
         }
   }
 
-  @umplesourcefile(line={275},file={"Main_Code.ump"},javaline={117},length={7})
+  @umplesourcefile(line={277},file={"Main_Code.ump"},javaline={118},length={7})
    private static  void print(String output){
     console += output;
         if (displayOutput)
@@ -122,12 +122,12 @@ public class UmpleRunMain
         }
   }
 
-  @umplesourcefile(line={285},file={"Main_Code.ump"},javaline={126},length={3})
+  @umplesourcefile(line={287},file={"Main_Code.ump"},javaline={127},length={3})
    private static  void println(String output){
     print(output + "\n");
   }
 
-  @umplesourcefile(line={290},file={"Main_Code.ump"},javaline={131},length={7})
+  @umplesourcefile(line={292},file={"Main_Code.ump"},javaline={132},length={7})
    private static  void printerr(String err){
     console += err;
         if (displayOutput)

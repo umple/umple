@@ -131,18 +131,18 @@ public class ErrorMessage
     position = null;
   }
 
-  @umplesourcefile(line={1762},file={"Parser_Code.ump"},javaline={135},length={4})
+  @umplesourcefile(line={1764},file={"Parser_Code.ump"},javaline={136},length={4})
    public  ErrorMessage(int errorCode, Position pos, String... parameters){
     this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
 
-  @umplesourcefile(line={1767},file={"Parser_Code.ump"},javaline={141},length={3})
+  @umplesourcefile(line={1769},file={"Parser_Code.ump"},javaline={142},length={3})
    public String getFormattedMessage(){
     return errorType.format(this.parameters);
   }
 
-  @umplesourcefile(line={1771},file={"Parser_Code.ump"},javaline={146},length={6})
+  @umplesourcefile(line={1773},file={"Parser_Code.ump"},javaline={147},length={6})
    public String toString(){
     String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
     String err = sev + " on line " + this.position.getLineNumber();

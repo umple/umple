@@ -6,13 +6,19 @@
       {
         if(!aMethod.getExistsInLanguage("Java"))
           continue;
+        int javaline = stringBuffer.toString().split("\\n").length;
           
-        Position p = aMethod.getPosition();
-        String positionHeader = "";
+        Position p = aMethod.getCodePosition();
+        String positionHeader = "";        
+        
         if (p != null) {
-          int javaline = stringBuffer.toString().split("\\n").length;
 //        use annotations instead
 //        positionHeader = "\n  // line " + p.getLineNumber() + " \"" + p.getRelativePath(uClass, "Java") + "\"";
+          positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+4)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";
+        }
+        else 
+        {
+          p = aMethod.getPosition();
           positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+3)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";
         }
         String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
@@ -57,26 +63,67 @@
         }
         
         if (aMethod.numberOfComments() > 0) { append(stringBuffer, "\n\n  {0}", Comment.format("Method Javadoc",aMethod.getComments())); }
-        if (p != null) { appendln(stringBuffer, positionHeader); }
         
-        append(stringBuffer,override);
-        append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
+        
         if(!"".equals(customPostconditionCode))
         {
+          StringBuilder lineNumbers = new StringBuilder();
+          StringBuilder javaLineNumbers = new StringBuilder();
+          StringBuilder filenames = new StringBuilder();
+          StringBuilder lengths = new StringBuilder();
+          String comma = "";
+          if(p!=null)
+          {
+            int previousConditionsFound = 0;
+            for(Postcondition condition:uClass.getPostconditions())
+            {
+              if(condition.getMethod().equals(aMethod)&&condition.getPosition()!=null)
+              {
+                lineNumbers.append(comma+(condition.getPosition().getLineNumber()));
+                filenames.append(comma+condition.getPosition().getFilename());
+                javaLineNumbers.append(comma+(javaline+7+3*previousConditionsFound));
+                lengths.append(comma+"1");
+                comma = ",";
+                previousConditionsFound++;
+              }
+            }
+          }
+          if(!"".equals(lineNumbers.toString())){
+            String positionEndHeader = "\n  @umplesourcefile(line={"+lineNumbers+"},file={\""+filenames.toString().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+javaLineNumbers+"},length={"+lengths+"})";
+            appendln(stringBuffer, positionEndHeader);
+          }
+          append(stringBuffer,override);
+          append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
+        
           appendln(stringBuffer, "{");
-          if(!"".equals(methodType)||!"void".equals(methodType)){
+          if(!"".equals(methodType)&&!"void".equals(methodType))
+          {
             append(stringBuffer, "    {0} result = {1}_Original({2});\n", methodType, methodName, finalParamsWithoutTypes);
           }
-          else {
-            append(stringBuffer, "    {0}_Original({1});\n", methodType, methodName, finalParamsWithoutTypes);
+          else
+          {
+            append(stringBuffer, "    {0}_Original({1});\n", methodName, finalParamsWithoutTypes);
           }
           appendln(stringBuffer, GeneratorHelper.doIndent(customPostconditionCode, "    "));
-          if(!"".equals(methodType)||!"void".equals(methodType)){
+          if(!"".equals(methodType)&&!"void".equals(methodType))
+          {
             append(stringBuffer, "    return result;\n");
+            javaline++;
           }          
           appendln(stringBuffer, "  }");
-          if (p != null) { appendln(stringBuffer, positionHeader); }
+          
+          javaline+= 5+customPostconditionCode.split("\\n").length;
+          if (p != null) {
+            positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+4)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";
+            appendln(stringBuffer, positionHeader);
+          }
           append(stringBuffer, "  {0}{1} {2} {3}_Original({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
+        }
+        else
+        {
+          if (p != null) { appendln(stringBuffer, positionHeader); }
+          append(stringBuffer,override);
+          append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
         }
         if(aMethod.getIsAbstract())
         {

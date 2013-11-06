@@ -35,7 +35,7 @@ public class CodeCompiler
   public void delete()
   {}
 
-  @umplesourcefile(line={24},file={"Compiler.ump"},javaline={39},length={19})
+  @umplesourcefile(line={25},file={"Compiler.ump"},javaline={40},length={19})
    public static  boolean compile(UmpleModel model, String entryClass, String... extraArgs){
     boolean error_flag = true;
     String extra = "";
@@ -56,7 +56,7 @@ public class CodeCompiler
     return error_flag;
   }
 
-  @umplesourcefile(line={44},file={"Compiler.ump"},javaline={60},length={27})
+  @umplesourcefile(line={45},file={"Compiler.ump"},javaline={61},length={27})
    private static  boolean compileJava(UmpleElement aClass, UmpleModel model, String args){
     String path="";
     for (GenerateTarget gt : model.getGenerates()) {
@@ -89,7 +89,7 @@ public class CodeCompiler
   /**
    * To do: Use model to determine generation path
    */
-  @umplesourcefile(line={73},file={"Compiler.ump"},javaline={89},length={43})
+  @umplesourcefile(line={74},file={"Compiler.ump"},javaline={90},length={43})
    private static  String translateLineToUmple(String line, UmpleModel model){
     String modifiedLine = line;
     StackTraceElement ust;
@@ -134,13 +134,13 @@ public class CodeCompiler
     return(ust.getFileName()+":"+ust.getLineNumber()+":"+lineParts[2]);
   }
 
-  @umplesourcefile(line={117},file={"Compiler.ump"},javaline={138},length={4})
+  @umplesourcefile(line={119},file={"Compiler.ump"},javaline={139},length={4})
    private static  void println(String output){
     console += output + "\n";
     System.out.println(output);
   }
 
-  @umplesourcefile(line={123},file={"Compiler.ump"},javaline={144},length={11})
+  @umplesourcefile(line={126},file={"Compiler.ump"},javaline={145},length={11})
    public static  String getSimpleFileName(String fileName){
     int lastIndex = fileName.lastIndexOf("/");
     if (lastIndex == -1)
@@ -153,7 +153,7 @@ public class CodeCompiler
     }
   }
 
-  @umplesourcefile(line={137},file={"Compiler.ump"},javaline={157},length={22})
+  @umplesourcefile(line={139},file={"Compiler.ump"},javaline={158},length={22})
    public static  List<UmpleClass> getMainClasses(UmpleModel model){
     List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();
     for(UmpleClass c:model.getUmpleClasses())

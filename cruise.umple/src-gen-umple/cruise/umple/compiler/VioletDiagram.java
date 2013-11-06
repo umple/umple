@@ -217,7 +217,7 @@ public class VioletDiagram
     violetAssociations.clear();
   }
 
-  @umplesourcefile(line={113},file={"Violet_Code.ump"},javaline={221},length={44})
+  @umplesourcefile(line={115},file={"Violet_Code.ump"},javaline={222},length={44})
    public String toXml(){
     StringBuffer answer = new StringBuffer();
     answer.append("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");

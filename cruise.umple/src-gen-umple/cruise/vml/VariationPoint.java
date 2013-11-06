@@ -410,7 +410,7 @@ public class VariationPoint
     }
   }
 
-  @umplesourcefile(line={129},file={"Vml_Code.ump"},javaline={414},length={10})
+  @umplesourcefile(line={131},file={"Vml_Code.ump"},javaline={415},length={10})
    public String toString(){
     if (codeSnippet == null)
     {
@@ -422,7 +422,7 @@ public class VariationPoint
     }
   }
 
-  @umplesourcefile(line={141},file={"Vml_Code.ump"},javaline={426},length={14})
+  @umplesourcefile(line={143},file={"Vml_Code.ump"},javaline={427},length={14})
    public Variant getVariant(String name){
     if (name == null)
     {

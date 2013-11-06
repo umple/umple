@@ -168,7 +168,7 @@ public class Variant
     }
   }
 
-  @umplesourcefile(line={161},file={"Vml_Code.ump"},javaline={172},length={10})
+  @umplesourcefile(line={163},file={"Vml_Code.ump"},javaline={173},length={10})
    public String toString(){
     if (name == null)
     {

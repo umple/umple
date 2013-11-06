@@ -73,7 +73,7 @@ public class EcoreGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={15},file={"Generator_CodeEcore.ump"},javaline={77},length={172})
+  @umplesourcefile(line={17},file={"Generator_CodeEcore.ump"},javaline={78},length={172})
    public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
@@ -247,7 +247,7 @@ public class EcoreGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={189},file={"Generator_CodeEcore.ump"},javaline={251},length={12})
+  @umplesourcefile(line={191},file={"Generator_CodeEcore.ump"},javaline={252},length={12})
    private String getFullyQualifiedName(String packageName, String className){
     try
     {
@@ -261,7 +261,7 @@ public class EcoreGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={203},file={"Generator_CodeEcore.ump"},javaline={265},length={10})
+  @umplesourcefile(line={204},file={"Generator_CodeEcore.ump"},javaline={266},length={10})
    private String getTargetNamespaceName(){
     if (model.getDefaultNamespace() != null){
       if (model.getDefaultNamespace().length() > 0 )
@@ -273,7 +273,7 @@ public class EcoreGenerator implements CodeGenerator
     return model.getUmpleFile().getSimpleFileName();
   }
 
-  @umplesourcefile(line={214},file={"Generator_CodeEcore.ump"},javaline={277},length={17})
+  @umplesourcefile(line={216},file={"Generator_CodeEcore.ump"},javaline={278},length={17})
    private void writeModel(){
     try
     {

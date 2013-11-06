@@ -266,7 +266,7 @@ public class Element
     }
   }
 
-  @umplesourcefile(line={103},file={"Generator_Html.ump"},javaline={270},length={9})
+  @umplesourcefile(line={104},file={"Generator_Html.ump"},javaline={271},length={9})
    private void setParentInternally(Element parent){
     if(parent== null|| parent.equals(getParent())){
 			return;
@@ -277,7 +277,7 @@ public class Element
 		setParent(parent);
   }
 
-  @umplesourcefile(line={114},file={"Generator_Html.ump"},javaline={281},length={8})
+  @umplesourcefile(line={115},file={"Generator_Html.ump"},javaline={282},length={8})
   public AttributeElement getAttributeElement(String name){
     for(AttributeElement attribute: getAttributes()){
 			if(attribute.getName().equals(name)){
@@ -287,18 +287,18 @@ public class Element
 		return null;
   }
 
-  @umplesourcefile(line={123},file={"Generator_Html.ump"},javaline={291},length={4})
+  @umplesourcefile(line={124},file={"Generator_Html.ump"},javaline={292},length={4})
   public String getAttribute(String name){
     AttributeElement attributeElement = getAttributeElement(name);
 		return attributeElement!= null?attributeElement.getValue(): null;
   }
 
-  @umplesourcefile(line={128},file={"Generator_Html.ump"},javaline={297},length={3})
+  @umplesourcefile(line={129},file={"Generator_Html.ump"},javaline={298},length={3})
   public Element appendText(String... texts){
     return appendTextContents(false, texts);
   }
 
-  @umplesourcefile(line={132},file={"Generator_Html.ump"},javaline={302},length={9})
+  @umplesourcefile(line={133},file={"Generator_Html.ump"},javaline={303},length={9})
   public Element appendTextContents(boolean newLine, String... texts){
     for(String text: texts){
 			addChild(new TextContents(text, null));
@@ -309,26 +309,26 @@ public class Element
 		return this;
   }
 
-  @umplesourcefile(line={142},file={"Generator_Html.ump"},javaline={313},length={5})
+  @umplesourcefile(line={143},file={"Generator_Html.ump"},javaline={314},length={5})
   public Element appendText(String text){
     Element child = new TextContents(text, null);
 	  	addChild(child);
 	  	return child;
   }
 
-  @umplesourcefile(line={148},file={"Generator_Html.ump"},javaline={320},length={4})
+  @umplesourcefile(line={149},file={"Generator_Html.ump"},javaline={321},length={4})
   public Element getChildByPath(String... path){
     List<Element> childrenByPath = getChildrenByPath(path);
 		return childrenByPath.isEmpty()? null: childrenByPath.get(0);
   }
 
-  @umplesourcefile(line={153},file={"Generator_Html.ump"},javaline={326},length={4})
+  @umplesourcefile(line={154},file={"Generator_Html.ump"},javaline={327},length={4})
   public Element getChildByPath(List<String> attributesObjects, String... path){
     List<Element> childByPath = getChildrenByPath(attributesObjects, path);
 		return childByPath.isEmpty()? null: childByPath.get(0);
   }
 
-  @umplesourcefile(line={158},file={"Generator_Html.ump"},javaline={332},length={19})
+  @umplesourcefile(line={159},file={"Generator_Html.ump"},javaline={333},length={19})
   public List<Element> getChildrenByPath(List<String> attributesObjects, String... path){
     List<String> asArray= new ArrayList<String>();
 		for(int index=0; index<path.length; index++){
@@ -349,7 +349,7 @@ public class Element
 		return filteredList;
   }
 
-  @umplesourcefile(line={178},file={"Generator_Html.ump"},javaline={353},length={7})
+  @umplesourcefile(line={179},file={"Generator_Html.ump"},javaline={354},length={7})
   public List<Element> getChildrenByPath(String... path){
     List<String> asArray= new ArrayList<String>();
 		for(int index=0; index<path.length; index++){
@@ -358,14 +358,14 @@ public class Element
 		return getChildrenByPath(asArray);
   }
 
-  @umplesourcefile(line={186},file={"Generator_Html.ump"},javaline={362},length={5})
+  @umplesourcefile(line={187},file={"Generator_Html.ump"},javaline={363},length={5})
   public List<Element> getChildrenByPath(List<String> path){
     ArrayList<Element> elements = new ArrayList<Element>();
 		getChildrenByPath(path, elements);
 		return elements;
   }
 
-  @umplesourcefile(line={192},file={"Generator_Html.ump"},javaline={369},length={20})
+  @umplesourcefile(line={193},file={"Generator_Html.ump"},javaline={370},length={20})
    private void getChildrenByPath(List<String> path, List<Element> retrieved){
     List<Element> elements= new ArrayList<Element>();
 		if(path.isEmpty()){
@@ -387,12 +387,12 @@ public class Element
 		}
   }
 
-  @umplesourcefile(line={213},file={"Generator_Html.ump"},javaline={391},length={3})
+  @umplesourcefile(line={214},file={"Generator_Html.ump"},javaline={392},length={3})
   public String toString(){
     return this.htmlString();
   }
 
-  @umplesourcefile(line={217},file={"Generator_Html.ump"},javaline={396},length={10})
+  @umplesourcefile(line={218},file={"Generator_Html.ump"},javaline={397},length={10})
    protected String htmlString(){
     StringBuffer b = new StringBuffer(openStatement());
 		if(getChildren() != null && getChildren().size() > 0){
@@ -404,7 +404,7 @@ public class Element
 		return b.toString();
   }
 
-  @umplesourcefile(line={228},file={"Generator_Html.ump"},javaline={408},length={7})
+  @umplesourcefile(line={229},file={"Generator_Html.ump"},javaline={409},length={7})
    private String openStatement(){
     StringBuffer b = new StringBuffer("<").append(getTagName()); //$NON-NLS-1$
 		for(AttributeElement attr: getAttributes()){
@@ -413,7 +413,7 @@ public class Element
 		return b.append(">").toString(); //$NON-NLS-1$
   }
 
-  @umplesourcefile(line={236},file={"Generator_Html.ump"},javaline={417},length={3})
+  @umplesourcefile(line={237},file={"Generator_Html.ump"},javaline={418},length={3})
    private String closeStatement(){
     return new StringBuffer("</").append(getTagName()).append(">").toString(); //$NON-NLS-1$ //$NON-NLS-2$
   }

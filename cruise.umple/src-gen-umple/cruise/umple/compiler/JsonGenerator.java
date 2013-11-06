@@ -70,7 +70,7 @@ public class JsonGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={15},file={"Generator_CodeJson.ump"},javaline={74},length={116})
+  @umplesourcefile(line={17},file={"Generator_CodeJson.ump"},javaline={75},length={116})
    public void generate(){
     String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");
     String jsonForInterfaces = StringFormatter.format("{0}umpleInterfaces{0}:[", "\"");

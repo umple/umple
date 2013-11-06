@@ -149,14 +149,14 @@ public class ErrorTypeSingleton
     errorTypes.clear();
   }
 
-  @umplesourcefile(line={1796},file={"Parser_Code.ump"},javaline={153},length={5})
+  @umplesourcefile(line={1798},file={"Parser_Code.ump"},javaline={154},length={5})
    private void init(){
     String filename = "/en.error";
     String input = readFile(filename);
     parse(new TextParser(filename, input));
   }
 
-  @umplesourcefile(line={1803},file={"Parser_Code.ump"},javaline={160},length={30})
+  @umplesourcefile(line={1805},file={"Parser_Code.ump"},javaline={161},length={30})
    public String readFile(String filenameOrResourcePath){
     InputStream resourceStream = null;
     BufferedReader reader = null;
@@ -192,7 +192,7 @@ public class ErrorTypeSingleton
   /**
    * Parse the error messages file (en.error etc.)
    */
-  @umplesourcefile(line={1836},file={"Parser_Code.ump"},javaline={192},length={49})
+  @umplesourcefile(line={1838},file={"Parser_Code.ump"},javaline={193},length={49})
    private boolean parse(TextParser textParser){
     while(textParser.peek() != null)
     {
@@ -243,18 +243,18 @@ public class ErrorTypeSingleton
     return true;
   }
 
-  @umplesourcefile(line={1887},file={"Parser_Code.ump"},javaline={247},length={3})
+  @umplesourcefile(line={1889},file={"Parser_Code.ump"},javaline={248},length={3})
    public void clear(){
     this.errorTypes = new ArrayList<ErrorType>();
   }
 
-  @umplesourcefile(line={1892},file={"Parser_Code.ump"},javaline={252},length={4})
+  @umplesourcefile(line={1894},file={"Parser_Code.ump"},javaline={253},length={4})
    public void reset(){
     clear();
     init();
   }
 
-  @umplesourcefile(line={1898},file={"Parser_Code.ump"},javaline={258},length={7})
+  @umplesourcefile(line={1900},file={"Parser_Code.ump"},javaline={259},length={7})
    public ErrorType getErrorTypeForCode(int code){
     for(ErrorType et : this.errorTypes)
       if(et.getErrorCode() == code)

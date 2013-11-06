@@ -274,7 +274,7 @@ public class ParserDataPackage
    * The passed Position can be null if this method was not invoked using a useStatement.
    * It takes a file and reads it, it also initializes the couples which will be used for this file.
    */
-  @umplesourcefile(line={406},file={"GrammarParsing_Code.ump"},javaline={273},length={58})
+  @umplesourcefile(line={408},file={"GrammarParsing_Code.ump"},javaline={274},length={58})
    public void init(Position usePosition){
     String file = filename;
     filename = file.split("\\Q"+File.separator+"\\E")[file.split("\\Q"+File.separator+"\\E").length-1];
@@ -334,7 +334,7 @@ public class ParserDataPackage
     }
   }
 
-  @umplesourcefile(line={466},file={"GrammarParsing_Code.ump"},javaline={338},length={25})
+  @umplesourcefile(line={467},file={"GrammarParsing_Code.ump"},javaline={339},length={25})
    public void init(String rawinput, Position usePosition){
     String file = "temp";
   int offset = 0;

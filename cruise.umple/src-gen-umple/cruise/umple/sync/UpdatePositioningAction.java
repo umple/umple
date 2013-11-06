@@ -51,7 +51,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     super.delete();
   }
 
-  @umplesourcefile(line={26},file={"UmpleSync_Code.ump"},javaline={55},length={32})
+  @umplesourcefile(line={28},file={"UmpleSync_Code.ump"},javaline={56},length={32})
    public void go(){
     try
     {
@@ -85,7 +85,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     }
   }
 
-  @umplesourcefile(line={60},file={"UmpleSync_Code.ump"},javaline={89},length={31})
+  @umplesourcefile(line={62},file={"UmpleSync_Code.ump"},javaline={90},length={31})
    private void verifySubClasses(Token root){
     try
     {
@@ -118,7 +118,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     }
   }
 
-  @umplesourcefile(line={93},file={"UmpleSync_Code.ump"},javaline={122},length={35})
+  @umplesourcefile(line={95},file={"UmpleSync_Code.ump"},javaline={123},length={35})
    private boolean classHasPositioning(Token root, Token t){
     boolean hasPositioning = false;
     try
@@ -155,7 +155,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     return hasPositioning;
   }
 
-  @umplesourcefile(line={131},file={"UmpleSync_Code.ump"},javaline={159},length={38})
+  @umplesourcefile(line={133},file={"UmpleSync_Code.ump"},javaline={160},length={38})
    private boolean classHasDefinition(Token root, Token t){
     try
     {
@@ -195,7 +195,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     return false;
   }
 
-  @umplesourcefile(line={171},file={"UmpleSync_Code.ump"},javaline={199},length={46})
+  @umplesourcefile(line={173},file={"UmpleSync_Code.ump"},javaline={200},length={46})
    private void addPositioning(Token classT){
     try
     {
@@ -243,7 +243,7 @@ public class UpdatePositioningAction extends SynchronizationAction
     }
   }
 
-  @umplesourcefile(line={219},file={"UmpleSync_Code.ump"},javaline={247},length={8})
+  @umplesourcefile(line={221},file={"UmpleSync_Code.ump"},javaline={248},length={8})
    private void handleException(Exception e, String message){
     String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
     for (StackTraceElement trace : e.getStackTrace())

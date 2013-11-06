@@ -32,7 +32,7 @@ public class UmpleParserFactory
   public void delete()
   {}
 
-  @umplesourcefile(line={127},file={"UmpleHelper_Code.ump"},javaline={36},length={23})
+  @umplesourcefile(line={130},file={"UmpleHelper_Code.ump"},javaline={37},length={23})
    public static  UmpleParser create(String className){
     //FAST THAN REFLECTION, LOAD THE KNOWN IMPLEMENTORS
     if ("cruise.umple.compiler.UmpleInternalParser".equals(className) || "UmpleInternalParser".equals(className))
@@ -57,17 +57,17 @@ public class UmpleParserFactory
     }
   }
 
-  @umplesourcefile(line={153},file={"UmpleHelper_Code.ump"},javaline={61},length={3})
+  @umplesourcefile(line={155},file={"UmpleHelper_Code.ump"},javaline={62},length={3})
    public static  UmpleParser create(String umpleParserName, UmpleModel model){
     return create(umpleParserName,model,false);
   }
 
-  @umplesourcefile(line={158},file={"UmpleHelper_Code.ump"},javaline={66},length={3})
+  @umplesourcefile(line={160},file={"UmpleHelper_Code.ump"},javaline={67},length={3})
    public static  UmpleParser create(String umpleParserName, boolean failHardIfInvalid){
     return create(umpleParserName,null,failHardIfInvalid);
   }
 
-  @umplesourcefile(line={163},file={"UmpleHelper_Code.ump"},javaline={71},length={12})
+  @umplesourcefile(line={165},file={"UmpleHelper_Code.ump"},javaline={72},length={12})
    public static  UmpleParser create(String umpleParserName, UmpleModel model, boolean failHardIfInvalid){
     UmpleParser p = create(umpleParserName);
     if (p == null && failHardIfInvalid)
