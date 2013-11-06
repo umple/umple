@@ -28,6 +28,7 @@ public class Method
   private String modifier;
   private String name;
   private Position position;
+  private Position codePosition;
   private Position endPosition;
   private String type;
   private boolean isImplemented;
@@ -88,6 +89,14 @@ public class Method
     return wasSet;
   }
 
+  public boolean setCodePosition(Position aCodePosition)
+  {
+    boolean wasSet = false;
+    codePosition = aCodePosition;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setEndPosition(Position aEndPosition)
   {
     boolean wasSet = false;
@@ -139,6 +148,11 @@ public class Method
   public Position getPosition()
   {
     return position;
+  }
+
+  public Position getCodePosition()
+  {
+    return codePosition;
   }
 
   public Position getEndPosition()
@@ -372,7 +386,7 @@ public class Method
     comments.clear();
   }
 
-  @umplesourcefile(line={419},file={"Umple_Code.ump"},javaline={376},length={6})
+  @umplesourcefile(line={421},file={"Umple_Code.ump"},javaline={391},length={6})
    public boolean getExistsInLanguage(String lang){
     if(getMethodBody().getExtraCode(lang)==null)
       return isImplemented;
@@ -380,7 +394,7 @@ public class Method
       return true;
   }
 
-  @umplesourcefile(line={426},file={"Umple_Code.ump"},javaline={384},length={30})
+  @umplesourcefile(line={428},file={"Umple_Code.ump"},javaline={399},length={30})
    public String toString(){
     StringBuffer methodBuffer = new StringBuffer();
     methodBuffer.append(" " + this.getType()+ " " + this.getName());

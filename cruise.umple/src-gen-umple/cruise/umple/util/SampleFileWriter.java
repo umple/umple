@@ -33,7 +33,7 @@ public class SampleFileWriter
   public void delete()
   {}
 
-  @umplesourcefile(line={574},file={"Util_Code.ump"},javaline={37},length={10})
+  @umplesourcefile(line={576},file={"Util_Code.ump"},javaline={38},length={10})
    public static  File[] getAllFiles(File inputDirectory){
     File[] allFiles = inputDirectory.listFiles();
     Arrays.sort(allFiles, new Comparator<File>(){
@@ -45,7 +45,7 @@ public class SampleFileWriter
     return allFiles;
   }
 
-  @umplesourcefile(line={586},file={"Util_Code.ump"},javaline={49},length={25})
+  @umplesourcefile(line={588},file={"Util_Code.ump"},javaline={50},length={25})
    public static  String readContent(File filename){
     BufferedReader reader = null;
     StringBuffer answer = new StringBuffer();
@@ -72,7 +72,7 @@ public class SampleFileWriter
     return answer.toString();
   }
 
-  @umplesourcefile(line={614},file={"Util_Code.ump"},javaline={76},length={10})
+  @umplesourcefile(line={616},file={"Util_Code.ump"},javaline={77},length={10})
    public static  void assertEitherFileContent(File expected1, File expected2, String actual){
     try
     {
@@ -84,7 +84,7 @@ public class SampleFileWriter
     }
   }
 
-  @umplesourcefile(line={626},file={"Util_Code.ump"},javaline={88},length={55})
+  @umplesourcefile(line={628},file={"Util_Code.ump"},javaline={89},length={55})
    public static  void assertPartialFileContent(File partial, String actual){
     BufferedReader expectedReader = null;
     BufferedReader actualReader = null;
@@ -141,12 +141,12 @@ public class SampleFileWriter
     if (!foundMatch) { Assert.fail("Did not find expected lines"); }
   }
 
-  @umplesourcefile(line={683},file={"Util_Code.ump"},javaline={145},length={3})
+  @umplesourcefile(line={685},file={"Util_Code.ump"},javaline={146},length={3})
    public static  void assertFileContent(File expected, String actual){
     assertFileContent(expected, actual, true);
   }
 
-  @umplesourcefile(line={688},file={"Util_Code.ump"},javaline={150},length={46})
+  @umplesourcefile(line={691},file={"Util_Code.ump"},javaline={151},length={46})
    public static  void assertFileContent(File expected, String actual, boolean ignoreLineComments){
     BufferedReader expectedReader = null;
     BufferedReader actualReader = null;
@@ -194,7 +194,7 @@ public class SampleFileWriter
     }
   }
 
-  @umplesourcefile(line={737},file={"Util_Code.ump"},javaline={198},length={13})
+  @umplesourcefile(line={739},file={"Util_Code.ump"},javaline={199},length={13})
    public static  void closeAsRequired(BufferedReader reader){
     if (reader != null)
     {
@@ -209,7 +209,7 @@ public class SampleFileWriter
     }
   }
 
-  @umplesourcefile(line={752},file={"Util_Code.ump"},javaline={213},length={13})
+  @umplesourcefile(line={754},file={"Util_Code.ump"},javaline={214},length={13})
    public static  void closeAsRequired(InputStream reader){
     if (reader != null)
     {
@@ -224,7 +224,7 @@ public class SampleFileWriter
     }
   }
 
-  @umplesourcefile(line={767},file={"Util_Code.ump"},javaline={228},length={18})
+  @umplesourcefile(line={769},file={"Util_Code.ump"},javaline={229},length={18})
    public static  String rationalize(String rawPath){
     String path = rawPath;
     File f = new File(path);
@@ -244,7 +244,7 @@ public class SampleFileWriter
     return path;
   }
 
-  @umplesourcefile(line={787},file={"Util_Code.ump"},javaline={248},length={15})
+  @umplesourcefile(line={789},file={"Util_Code.ump"},javaline={249},length={15})
    public static  void createFile(String filename, String input){
     File f = new File(filename);
     f.getAbsoluteFile().getParentFile().mkdirs();
@@ -261,7 +261,7 @@ public class SampleFileWriter
     }
   }
 
-  @umplesourcefile(line={804},file={"Util_Code.ump"},javaline={265},length={12})
+  @umplesourcefile(line={807},file={"Util_Code.ump"},javaline={266},length={12})
    public static  void destroy(String filename){
     File file = new File(filename);
     
@@ -275,7 +275,7 @@ public class SampleFileWriter
     }
   }
 
-  @umplesourcefile(line={819},file={"Util_Code.ump"},javaline={279},length={14})
+  @umplesourcefile(line={821},file={"Util_Code.ump"},javaline={280},length={14})
    private static  void destroy(File path){
     if( path.exists() ) {
       File[] files = path.listFiles();

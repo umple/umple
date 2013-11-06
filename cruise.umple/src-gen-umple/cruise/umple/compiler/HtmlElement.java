@@ -39,12 +39,12 @@ public class HtmlElement implements IHtmlElement
   public void delete()
   {}
 
-  @umplesourcefile(line={261},file={"Generator_Html.ump"},javaline={43},length={3})
+  @umplesourcefile(line={262},file={"Generator_Html.ump"},javaline={44},length={3})
   public Element getElement(){
     return html;
   }
 
-  @umplesourcefile(line={265},file={"Generator_Html.ump"},javaline={48},length={3})
+  @umplesourcefile(line={266},file={"Generator_Html.ump"},javaline={49},length={3})
   public String htmlString(){
     return html.toString();
   }

@@ -106,22 +106,22 @@ public class CountLines
   public void delete()
   {}
 
-  @umplesourcefile(line={230},file={"SimpleMetrics_CodeLines.ump"},javaline={110},length={3})
+  @umplesourcefile(line={231},file={"SimpleMetrics_CodeLines.ump"},javaline={111},length={3})
   public void incCountLines(){
     ++this.countLines;
   }
 
-  @umplesourcefile(line={233},file={"SimpleMetrics_CodeLines.ump"},javaline={115},length={3})
+  @umplesourcefile(line={234},file={"SimpleMetrics_CodeLines.ump"},javaline={116},length={3})
   public void incCountComments(){
     ++this.countComments;
   }
 
-  @umplesourcefile(line={236},file={"SimpleMetrics_CodeLines.ump"},javaline={120},length={3})
+  @umplesourcefile(line={237},file={"SimpleMetrics_CodeLines.ump"},javaline={121},length={3})
   public void incCountBlanks(){
     ++this.countBlanks;
   }
 
-  @umplesourcefile(line={239},file={"SimpleMetrics_CodeLines.ump"},javaline={125},length={3})
+  @umplesourcefile(line={240},file={"SimpleMetrics_CodeLines.ump"},javaline={126},length={3})
   public void incCountCode(){
     ++this.countCode;
   }

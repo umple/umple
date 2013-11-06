@@ -300,13 +300,13 @@ public class StateMachineStatsVisitor extends UmpleModelVisitor
     super.delete();
   }
 
-  @umplesourcefile(line={629},file={"Generator_CodeAnalysis.ump"},javaline={304},length={4})
+  @umplesourcefile(line={630},file={"Generator_CodeAnalysis.ump"},javaline={305},length={4})
   public void done(){
     addTableEntry(null);
 		tbl.addRow(new String [] {"Total",String.valueOf(total_stateMachines),String.valueOf(total_states),String.valueOf(total_transitions),String.valueOf(total_guards),String.valueOf(total_events),String.valueOf(total_actions),String.valueOf(total_activities)});
   }
 
-  @umplesourcefile(line={634},file={"Generator_CodeAnalysis.ump"},javaline={310},length={21})
+  @umplesourcefile(line={635},file={"Generator_CodeAnalysis.ump"},javaline={311},length={21})
   public void addTableEntry(UmpleElement element){
     if(cur_clazz != null) {
 			tbl.addRow(new String [] {cur_clazz,String.valueOf(cur_stateMachines),String.valueOf(cur_states),String.valueOf(cur_transitions),String.valueOf(cur_guards),String.valueOf(cur_events),String.valueOf(cur_actions),String.valueOf(cur_activities)});
@@ -333,52 +333,52 @@ public class StateMachineStatsVisitor extends UmpleModelVisitor
   /**
    * Umple Classifiers
    */
-  @umplesourcefile(line={657},file={"Generator_CodeAnalysis.ump"},javaline={333},length={3})
+  @umplesourcefile(line={658},file={"Generator_CodeAnalysis.ump"},javaline={334},length={3})
   public void visit(UmpleClass umpleClass){
     addTableEntry(umpleClass);
   }
 
-  @umplesourcefile(line={660},file={"Generator_CodeAnalysis.ump"},javaline={342},length={3})
+  @umplesourcefile(line={661},file={"Generator_CodeAnalysis.ump"},javaline={343},length={3})
   public void visit(UmpleInterface umpleInterface){
     addTableEntry(umpleInterface);
   }
 
-  @umplesourcefile(line={663},file={"Generator_CodeAnalysis.ump"},javaline={347},length={3})
+  @umplesourcefile(line={664},file={"Generator_CodeAnalysis.ump"},javaline={348},length={3})
   public void visit(AssociationClass associationC){
     addTableEntry(associationC);
   }
 
-  @umplesourcefile(line={667},file={"Generator_CodeAnalysis.ump"},javaline={352},length={3})
+  @umplesourcefile(line={668},file={"Generator_CodeAnalysis.ump"},javaline={353},length={3})
   public void visit(StateMachine sm){
     cur_stateMachines++;
   }
 
-  @umplesourcefile(line={670},file={"Generator_CodeAnalysis.ump"},javaline={357},length={3})
+  @umplesourcefile(line={671},file={"Generator_CodeAnalysis.ump"},javaline={358},length={3})
   public void visit(State state){
     cur_states++;
   }
 
-  @umplesourcefile(line={673},file={"Generator_CodeAnalysis.ump"},javaline={362},length={3})
+  @umplesourcefile(line={674},file={"Generator_CodeAnalysis.ump"},javaline={363},length={3})
   public void visit(Guard guard){
     cur_guards++;
   }
 
-  @umplesourcefile(line={676},file={"Generator_CodeAnalysis.ump"},javaline={367},length={3})
+  @umplesourcefile(line={677},file={"Generator_CodeAnalysis.ump"},javaline={368},length={3})
   public void visit(Action action){
     cur_actions++;
   }
 
-  @umplesourcefile(line={679},file={"Generator_CodeAnalysis.ump"},javaline={372},length={3})
+  @umplesourcefile(line={680},file={"Generator_CodeAnalysis.ump"},javaline={373},length={3})
   public void visit(Event event){
     cur_events++;
   }
 
-  @umplesourcefile(line={682},file={"Generator_CodeAnalysis.ump"},javaline={377},length={3})
+  @umplesourcefile(line={683},file={"Generator_CodeAnalysis.ump"},javaline={378},length={3})
   public void visit(Transition transition){
     cur_transitions++;
   }
 
-  @umplesourcefile(line={685},file={"Generator_CodeAnalysis.ump"},javaline={382},length={3})
+  @umplesourcefile(line={686},file={"Generator_CodeAnalysis.ump"},javaline={383},length={3})
   public void visit(Activity activity){
     cur_activities++;
   }

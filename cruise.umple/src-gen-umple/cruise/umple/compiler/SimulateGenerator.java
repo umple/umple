@@ -73,7 +73,7 @@ public class SimulateGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={15},file={"Generator_CodeSimulate.ump"},javaline={77},length={80})
+  @umplesourcefile(line={17},file={"Generator_CodeSimulate.ump"},javaline={78},length={80})
    public void generate(){
     StringBuilder code = new StringBuilder();
 
@@ -155,7 +155,7 @@ public class SimulateGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={97},file={"Generator_CodeSimulate.ump"},javaline={159},length={17})
+  @umplesourcefile(line={99},file={"Generator_CodeSimulate.ump"},javaline={160},length={17})
    private void writeModel(){
     try
     {

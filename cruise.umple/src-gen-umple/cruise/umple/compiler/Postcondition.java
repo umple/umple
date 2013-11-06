@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * The Postcondition object (special Constraint) related to Umple Classes
- * @umplesource Umple.ump 271
+ * @umplesource Umple.ump 272
  */
-// line 271 "../../../../src/Umple.ump"
+// line 272 "../../../../src/Umple.ump"
 public class Postcondition extends Constraint
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -17,6 +17,9 @@ public class Postcondition extends Constraint
   //------------------------
   // MEMBER VARIABLES
   //------------------------
+
+  //Postcondition Attributes
+  private Position position;
 
   //Postcondition Associations
   private Method method;
@@ -37,6 +40,19 @@ public class Postcondition extends Constraint
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setPosition(Position aPosition)
+  {
+    boolean wasSet = false;
+    position = aPosition;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public Position getPosition()
+  {
+    return position;
+  }
 
   public Method getMethod()
   {

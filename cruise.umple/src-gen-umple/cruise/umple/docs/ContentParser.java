@@ -136,7 +136,7 @@ public class ContentParser extends Parser
     super.delete();
   }
 
-  @umplesourcefile(line={356},file={"Documenter_Code.ump"},javaline={140},length={7})
+  @umplesourcefile(line={358},file={"Documenter_Code.ump"},javaline={141},length={7})
    private int init(){
     addRule("groupOrder : ( [**group] ; )*");
     addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@syntax [**syntax])? [[example]]*");
@@ -145,7 +145,7 @@ public class ContentParser extends Parser
     return init;
   }
 
-  @umplesourcefile(line={365},file={"Documenter_Code.ump"},javaline={149},length={12})
+  @umplesourcefile(line={367},file={"Documenter_Code.ump"},javaline={150},length={12})
    public Group getGroup(String name){
     for (Group g : getGroups())
     {
@@ -159,7 +159,7 @@ public class ContentParser extends Parser
     return newGroup;
   }
 
-  @umplesourcefile(line={379},file={"Documenter_Code.ump"},javaline={163},length={35})
+  @umplesourcefile(line={381},file={"Documenter_Code.ump"},javaline={164},length={35})
    public ParseResult analyze(){
     for (Token t : getRootToken().getSubTokens())
     {

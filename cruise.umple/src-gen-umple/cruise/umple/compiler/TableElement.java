@@ -213,7 +213,7 @@ public class TableElement implements IHtmlElement
   public void delete()
   {}
 
-  @umplesourcefile(line={333},file={"Generator_Html.ump"},javaline={217},length={8})
+  @umplesourcefile(line={334},file={"Generator_Html.ump"},javaline={218},length={8})
    public void addRow(String [] rowData){
     Element tableRow = new Element(ITagsConstants.TR, tableBody);
 		tableRow.addAttribute(new AttributeElement(IAttributesConstants.ID, "TableRow"+index));
@@ -223,17 +223,17 @@ public class TableElement implements IHtmlElement
 		}
   }
 
-  @umplesourcefile(line={349},file={"Generator_Html.ump"},javaline={227},length={3})
+  @umplesourcefile(line={350},file={"Generator_Html.ump"},javaline={228},length={3})
    private boolean isNull(String attr){
     return attr == null || attr.length() == 0;
   }
 
-  @umplesourcefile(line={353},file={"Generator_Html.ump"},javaline={232},length={3})
+  @umplesourcefile(line={354},file={"Generator_Html.ump"},javaline={233},length={3})
   public Element getElement(){
     return table;
   }
 
-  @umplesourcefile(line={357},file={"Generator_Html.ump"},javaline={237},length={3})
+  @umplesourcefile(line={358},file={"Generator_Html.ump"},javaline={238},length={3})
   public String htmlString(){
     return table.toString();
   }

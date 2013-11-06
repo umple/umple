@@ -88,7 +88,7 @@ public class SimpleMetricsGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={21},file={"Generator_CodeSimpleMetrics.ump"},javaline={92},length={26})
+  @umplesourcefile(line={23},file={"Generator_CodeSimpleMetrics.ump"},javaline={93},length={26})
    public void generate(){
     // Output basic file header
     code.append("      M E T R I C S    G E N E R A T E D    B Y    U M P L E    F R O M   <"+model.getUmpleFile().getSimpleFileName()+".ump>\n\n");
@@ -120,7 +120,7 @@ public class SimpleMetricsGenerator implements CodeGenerator
   /**
    * Output the metrics to a file
    */
-  @umplesourcefile(line={50},file={"Generator_CodeSimpleMetrics.ump"},javaline={120},length={17})
+  @umplesourcefile(line={52},file={"Generator_CodeSimpleMetrics.ump"},javaline={121},length={17})
   public void writeModel(){
     try
     {

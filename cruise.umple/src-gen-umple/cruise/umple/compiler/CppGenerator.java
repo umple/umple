@@ -73,7 +73,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     super.delete();
   }
 
-  @umplesourcefile(line={94},file={"Generator_CodeCpp.ump"},javaline={77},length={28})
+  @umplesourcefile(line={96},file={"Generator_CodeCpp.ump"},javaline={78},length={28})
    public void generate(){
     prepare();
     UmpleElement lastElement = null;
@@ -103,7 +103,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     GeneratorHelper.postpare(getModel());
   }
 
-  @umplesourcefile(line={125},file={"Generator_CodeCpp.ump"},javaline={107},length={25})
+  @umplesourcefile(line={127},file={"Generator_CodeCpp.ump"},javaline={108},length={25})
    public ILang getLanguageFor(UmpleElement aElement){
     if (aElement instanceof UmpleInterface)
     {
@@ -130,17 +130,17 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return null;
   }
 
-  @umplesourcefile(line={152},file={"Generator_CodeCpp.ump"},javaline={134},length={3})
+  @umplesourcefile(line={154},file={"Generator_CodeCpp.ump"},javaline={135},length={3})
    public boolean isNullable(UmpleVariable av){
     return !UmpleToPrimitiveMap.containsKey(av.getType());
   }
 
-  @umplesourcefile(line={157},file={"Generator_CodeCpp.ump"},javaline={139},length={3})
+  @umplesourcefile(line={159},file={"Generator_CodeCpp.ump"},javaline={140},length={3})
    public String relatedTranslate(String name, AssociationVariable av){
     return translate(name,av.getRelatedAssociation());
   }
 
-  @umplesourcefile(line={162},file={"Generator_CodeCpp.ump"},javaline={144},length={35})
+  @umplesourcefile(line={164},file={"Generator_CodeCpp.ump"},javaline={145},length={35})
    public String translate(String keyName, State state){
     String singularName = state.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -177,7 +177,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={199},file={"Generator_CodeCpp.ump"},javaline={181},length={44})
+  @umplesourcefile(line={201},file={"Generator_CodeCpp.ump"},javaline={182},length={44})
    public String translate(String keyName, StateMachine sm){
     String singularName = sm.getFullName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -223,7 +223,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={245},file={"Generator_CodeCpp.ump"},javaline={227},length={23})
+  @umplesourcefile(line={247},file={"Generator_CodeCpp.ump"},javaline={228},length={23})
    public String translate(String keyName, Event event){
     String singularName = event.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -248,7 +248,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={270},file={"Generator_CodeCpp.ump"},javaline={252},length={18})
+  @umplesourcefile(line={272},file={"Generator_CodeCpp.ump"},javaline={253},length={18})
    public String translate(String name, UmpleInterface aInterface){
     if ("packageDefinition".equals(name))
     {
@@ -268,7 +268,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return "";
   }
 
-  @umplesourcefile(line={290},file={"Generator_CodeCpp.ump"},javaline={272},length={30})
+  @umplesourcefile(line={292},file={"Generator_CodeCpp.ump"},javaline={273},length={30})
    public String translate(String methodType){
     if ("String".equals(methodType))
     {
@@ -300,7 +300,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return methodType;
   }
 
-  @umplesourcefile(line={322},file={"Generator_CodeCpp.ump"},javaline={304},length={23})
+  @umplesourcefile(line={324},file={"Generator_CodeCpp.ump"},javaline={305},length={23})
    public String translateReturnType(String methodType){
     if ("String".equals(methodType))
     {
@@ -325,7 +325,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return methodType;
   }
 
-  @umplesourcefile(line={347},file={"Generator_CodeCpp.ump"},javaline={329},length={26})
+  @umplesourcefile(line={349},file={"Generator_CodeCpp.ump"},javaline={330},length={26})
    public String translate(String name, UmpleClass aClass){
     if ("constructorMandatory".equals(name))
     {
@@ -353,7 +353,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + name;
   }
 
-  @umplesourcefile(line={375},file={"Generator_CodeCpp.ump"},javaline={357},length={15})
+  @umplesourcefile(line={377},file={"Generator_CodeCpp.ump"},javaline={358},length={15})
    private String getImplementsForInterfaces(UmpleInterface uInterface){
     String implementedInterfaces = "";
 
@@ -370,7 +370,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
       }
   }
 
-  @umplesourcefile(line={392},file={"Generator_CodeCpp.ump"},javaline={374},length={9})
+  @umplesourcefile(line={394},file={"Generator_CodeCpp.ump"},javaline={375},length={9})
    private String getExtendAndImplements(UmpleClass uClass){
     String extendsString = "";
       String implementsString = "";
@@ -381,7 +381,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
       return extendsString + implementsString;
   }
 
-  @umplesourcefile(line={403},file={"Generator_CodeCpp.ump"},javaline={385},length={10})
+  @umplesourcefile(line={405},file={"Generator_CodeCpp.ump"},javaline={386},length={10})
    private String getExtendClassesNames(UmpleClass uClass){
     UmpleClass parent = uClass.getExtendsClass();
       if (parent == null)
@@ -393,7 +393,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
       }
   }
 
-  @umplesourcefile(line={415},file={"Generator_CodeCpp.ump"},javaline={397},length={15})
+  @umplesourcefile(line={417},file={"Generator_CodeCpp.ump"},javaline={398},length={15})
    private String getImplementsInterfacesNames(UmpleClass uClass){
     String implementedInterfaces = "";
 
@@ -410,17 +410,17 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
       }
   }
 
-  @umplesourcefile(line={432},file={"Generator_CodeCpp.ump"},javaline={414},length={3})
+  @umplesourcefile(line={434},file={"Generator_CodeCpp.ump"},javaline={415},length={3})
    public String translate(String keyName, Attribute av){
     return translate(keyName,av,av.getIsList());
   }
 
-  @umplesourcefile(line={437},file={"Generator_CodeCpp.ump"},javaline={419},length={3})
+  @umplesourcefile(line={439},file={"Generator_CodeCpp.ump"},javaline={420},length={3})
    public String translate(String keyName, AssociationVariable av){
     return translate(keyName,av,av.isMany());
   }
 
-  @umplesourcefile(line={442},file={"Generator_CodeCpp.ump"},javaline={424},length={110})
+  @umplesourcefile(line={444},file={"Generator_CodeCpp.ump"},javaline={425},length={110})
    private String translate(String keyName, UmpleVariable av, boolean isMany){
     if (OneOrManyLookup.contains(keyName))
     {
@@ -532,7 +532,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={554},file={"Generator_CodeCpp.ump"},javaline={536},length={16})
+  @umplesourcefile(line={556},file={"Generator_CodeCpp.ump"},javaline={537},length={16})
    public void prepare(){
     List<UmpleClass> allClasses = new ArrayList<UmpleClass>(getModel().getUmpleClasses());
     for (UmpleClass aClass : allClasses)
@@ -550,7 +550,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     addRelatedImports();
   }
 
-  @umplesourcefile(line={572},file={"Generator_CodeCpp.ump"},javaline={554},length={22})
+  @umplesourcefile(line={574},file={"Generator_CodeCpp.ump"},javaline={555},length={22})
    public static  String typeOf(String aType){
     if (aType == null || aType.length() == 0)
     {
@@ -574,7 +574,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={596},file={"Generator_CodeCpp.ump"},javaline={578},length={16})
+  @umplesourcefile(line={598},file={"Generator_CodeCpp.ump"},javaline={579},length={16})
    public String nameOf(String name, boolean hasMultiple){
     if (name == null)
     {
@@ -598,12 +598,12 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
    * PRIVATE METHODS
    * ------------------------
    */
-  @umplesourcefile(line={619},file={"Generator_CodeCpp.ump"},javaline={596},length={3})
+  @umplesourcefile(line={621},file={"Generator_CodeCpp.ump"},javaline={597},length={3})
    private String getUpperCaseName(String name){
     return StringFormatter.toPascalCase(name);
   }
 
-  @umplesourcefile(line={624},file={"Generator_CodeCpp.ump"},javaline={607},length={86})
+  @umplesourcefile(line={626},file={"Generator_CodeCpp.ump"},javaline={608},length={86})
    private void prepare(UmpleClass aClass){
     if (aClass.getGeneratedClass() != null)
     {
@@ -691,7 +691,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={712},file={"Generator_CodeCpp.ump"},javaline={695},length={24})
+  @umplesourcefile(line={714},file={"Generator_CodeCpp.ump"},javaline={696},length={24})
    private boolean prepareTimedEvents(StateMachine sm){
     boolean hasTimedEvents = false;
     for (State s : sm.getStates())
@@ -717,7 +717,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     return hasTimedEvents;
   }
 
-  @umplesourcefile(line={738},file={"Generator_CodeCpp.ump"},javaline={721},length={28})
+  @umplesourcefile(line={740},file={"Generator_CodeCpp.ump"},javaline={722},length={28})
    private void prepareNestedStatesFor(StateMachine sm, int concurrentIndex){
     if (sm.getParentState() != null)
     {
@@ -747,7 +747,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={768},file={"Generator_CodeCpp.ump"},javaline={751},length={69})
+  @umplesourcefile(line={770},file={"Generator_CodeCpp.ump"},javaline={752},length={69})
    private void generateConstructorSignature(GeneratedClass genClass){
     StringBuffer signature = new StringBuffer();
     StringBuffer signatureCaller = new StringBuffer();
@@ -818,7 +818,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
   }
 
-  @umplesourcefile(line={839},file={"Generator_CodeCpp.ump"},javaline={822},length={36})
+  @umplesourcefile(line={841},file={"Generator_CodeCpp.ump"},javaline={823},length={36})
    private void generateSecondaryConstructorSignatures(GeneratedClass genClass){
     UmpleClass uClass = genClass.getUClass();
     
@@ -856,7 +856,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={877},file={"Generator_CodeCpp.ump"},javaline={860},length={34})
+  @umplesourcefile(line={879},file={"Generator_CodeCpp.ump"},javaline={861},length={34})
    private void addRelatedImports(){
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
@@ -892,7 +892,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={913},file={"Generator_CodeCpp.ump"},javaline={896},length={26})
+  @umplesourcefile(line={915},file={"Generator_CodeCpp.ump"},javaline={897},length={26})
    private void addAttributeImports(UmpleClass aClass, GeneratedClass genClass){
     String timeImport = "time.h";
     String dateImport = "time.h";
@@ -920,7 +920,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={941},file={"Generator_CodeCpp.ump"},javaline={924},length={24})
+  @umplesourcefile(line={943},file={"Generator_CodeCpp.ump"},javaline={925},length={24})
    private void addImports(UmpleClass aClass, GeneratedClass genClass){
     addAttributeImports(aClass,genClass);
       
@@ -946,18 +946,18 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={967},file={"Generator_CodeCpp.ump"},javaline={950},length={3})
+  @umplesourcefile(line={969},file={"Generator_CodeCpp.ump"},javaline={951},length={3})
    private String nameOf(Attribute av){
     return nameOf(av.getName(),av.getIsList());
   }
 
-  @umplesourcefile(line={972},file={"Generator_CodeCpp.ump"},javaline={955},length={4})
+  @umplesourcefile(line={974},file={"Generator_CodeCpp.ump"},javaline={956},length={4})
    private String nameOf(AssociationVariable av){
     boolean hasMultiple = av.isMany();
     return nameOf(av.getName(),hasMultiple);
   }
 
-  @umplesourcefile(line={978},file={"Generator_CodeCpp.ump"},javaline={961},length={8})
+  @umplesourcefile(line={980},file={"Generator_CodeCpp.ump"},javaline={962},length={8})
    private static  String typeOf(UmpleVariable var){
     String aType = var.getType();
     if (aType =="String")
@@ -971,7 +971,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * return applicable tracepoints arguments based on attribute type
    */
-  @umplesourcefile(line={989},file={"Generator_CodeCpp.ump"},javaline={971},length={9})
+  @umplesourcefile(line={991},file={"Generator_CodeCpp.ump"},javaline={972},length={9})
    private String getTpArguments(String t){
     if (t.equals("String"))
 			return "TP_ARGS(char *, text),\n";
@@ -986,7 +986,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * tracepoint message
    */
-  @umplesourcefile(line={1000},file={"Generator_CodeCpp.ump"},javaline={986},length={13})
+  @umplesourcefile(line={1002},file={"Generator_CodeCpp.ump"},javaline={987},length={13})
    private String getTpMessage(String t){
     if(t.equals("String"))		
 			return "message,\n"; 
@@ -1005,7 +1005,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * get TP field: n name, t type
    */
-  @umplesourcefile(line={1018},file={"Generator_CodeCpp.ump"},javaline={1005},length={13})
+  @umplesourcefile(line={1020},file={"Generator_CodeCpp.ump"},javaline={1006},length={13})
    private String getTpField(String t, String n){
     if(t.equals("String"))		
 		  return "ctf_string(message,"+ n+")";
@@ -1020,7 +1020,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
 	  return"";
   }
 
-  @umplesourcefile(line={1033},file={"Generator_CodeCpp.ump"},javaline={1024},length={14})
+  @umplesourcefile(line={1035},file={"Generator_CodeCpp.ump"},javaline={1025},length={14})
    private String getTpLogLevel(String t){
     String tp_loglevel = "\nTRACEPOINT_LOGLEVEL(\n";
 	  if(t .equals("String"))	
@@ -1036,7 +1036,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
 	  return tp_loglevel += "TRACE_WARNING)";
   }
 
-  @umplesourcefile(line={1050},file={"Generator_CodeCpp.ump"},javaline={1040},length={13})
+  @umplesourcefile(line={1052},file={"Generator_CodeCpp.ump"},javaline={1041},length={13})
    private String processLttngfile(Attribute att){
     String tp_code = null;
 	  String tp_arg = getTpArguments(att.getType());
@@ -1055,7 +1055,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * Process Lttng tracepoints for state machines, treating state as String.
    */
-  @umplesourcefile(line={1066},file={"Generator_CodeCpp.ump"},javaline={1055},length={24})
+  @umplesourcefile(line={1067},file={"Generator_CodeCpp.ump"},javaline={1056},length={24})
    private String processLttngFile(StateMachineTraceItem smti){
     String tp_code = null;
 	  String tp_arg = getTpArguments("String"); //passing states to TP as string
@@ -1081,7 +1081,7 @@ public class CppGenerator extends SuperCodeGenerator implements CodeTranslator
 	  return tp_code;
   }
 
-  @umplesourcefile(line={1189},file={"Generator_CodeCpp.ump"},javaline={1085},length={31})
+  @umplesourcefile(line={1190},file={"Generator_CodeCpp.ump"},javaline={1086},length={31})
    public void initializeLangaugeBasedVariables(){
     UmpleToPrimitiveMap.put("Integer","int");
    	UmpleToPrimitiveMap.put("Boolean","bool");

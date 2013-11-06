@@ -139,6 +139,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedElements" eType="#//UmpleElement" upperBound="-1"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Format">
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClassMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -227,8 +229,6 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;Transition>" instanceClassName="java.util.Set"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;State>" instanceClassName="java.util.Set"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;Event>" instanceClassName="java.util.Set"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Format">
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -775,6 +775,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modifier" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codePosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isImplemented" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -848,6 +849,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/preconditions"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Postcondition" eSuperTypes="#//Constraint">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/postconditions"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/postconditions"/>
   </eClassifiers>

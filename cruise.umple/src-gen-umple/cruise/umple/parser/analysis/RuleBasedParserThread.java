@@ -119,7 +119,7 @@ public class RuleBasedParserThread extends Thread
    * Each Thread will parse a separate file. When parsing is complete it will fill the useStatement token with the tokens computed from the
    * file which was parsed. This run method performs this function as well as initializes the data package which will be used during the parsing
    */
-  @umplesourcefile(line={505},file={"GrammarParsing_Code.ump"},javaline={118},length={22})
+  @umplesourcefile(line={507},file={"GrammarParsing_Code.ump"},javaline={119},length={22})
    public void run(){
     HashMap<String,String[]> keys = data.getKeys();
     List<String> hasParsed = data.getHasParsed();

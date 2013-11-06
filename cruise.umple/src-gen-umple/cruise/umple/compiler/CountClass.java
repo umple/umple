@@ -449,7 +449,7 @@ public class CountClass
   public void delete()
   {}
 
-  @umplesourcefile(line={226},file={"SimpleMetrics_Class.ump"},javaline={453},length={63})
+  @umplesourcefile(line={227},file={"SimpleMetrics_Class.ump"},javaline={454},length={63})
   public void countDataClass(UmpleClass uClass){
     int classCount=0;
       
@@ -518,14 +518,14 @@ public class CountClass
   /**
    * end of method
    */
-  @umplesourcefile(line={290},file={"SimpleMetrics_Class.ump"},javaline={518},length={5})
+  @umplesourcefile(line={291},file={"SimpleMetrics_Class.ump"},javaline={519},length={5})
   public int calcAmountSubclasses(UmpleClass Uclass){
     if (Uclass==null) return 0;
 	 this.setCountSubclasses(Uclass.getSubclasses().size());
      return this.getCountSubclasses();
   }
 
-  @umplesourcefile(line={296},file={"SimpleMetrics_Class.ump"},javaline={529},length={8})
+  @umplesourcefile(line={297},file={"SimpleMetrics_Class.ump"},javaline={530},length={8})
   public void calcMaxDeepth(UmpleClass Uclass){
     int level =0;
 	 if (Uclass==null) return;
@@ -535,7 +535,7 @@ public class CountClass
 	 }
   }
 
-  @umplesourcefile(line={305},file={"SimpleMetrics_Class.ump"},javaline={539},length={10})
+  @umplesourcefile(line={306},file={"SimpleMetrics_Class.ump"},javaline={540},length={10})
   public void searchDeepestSubclass(UmpleClass Uclass, int level){
     if (Uclass==null) return;
 	 level+=1;
@@ -547,7 +547,7 @@ public class CountClass
 	 }
   }
 
-  @umplesourcefile(line={316},file={"SimpleMetrics_Class.ump"},javaline={551},length={8})
+  @umplesourcefile(line={317},file={"SimpleMetrics_Class.ump"},javaline={552},length={8})
   public void incTotal(){
     this.incCountTotalStateMachines(this.getCountStateMachines());
     this.incCountTotalAssociations(this.getCountAssociations());
@@ -557,7 +557,7 @@ public class CountClass
     this.incCountTotalParameters(this.getCountParameters());
   }
 
-  @umplesourcefile(line={325},file={"SimpleMetrics_Class.ump"},javaline={561},length={9})
+  @umplesourcefile(line={326},file={"SimpleMetrics_Class.ump"},javaline={562},length={9})
   public void reset(){
     this.setCountStateMachines(0);
     this.setCountAssociations(0);
@@ -568,7 +568,7 @@ public class CountClass
     this.setCountParameters(0);
   }
 
-  @umplesourcefile(line={335},file={"SimpleMetrics_Class.ump"},javaline={572},length={19})
+  @umplesourcefile(line={336},file={"SimpleMetrics_Class.ump"},javaline={573},length={19})
   public void setMinMax(){
     // Setting MAX
 	this.setCountStateMachinesMax(this.getCountStateMachines());
@@ -589,7 +589,7 @@ public class CountClass
 	this.setCountParametersMin(this.getCountParameters());
   }
 
-  @umplesourcefile(line={356},file={"SimpleMetrics_Class.ump"},javaline={593},length={47})
+  @umplesourcefile(line={357},file={"SimpleMetrics_Class.ump"},javaline={594},length={47})
   public void calcMinMax(){
     // calculating MAX
     if( this.getCountStateMachines()>this.getCountStateMachinesMax()){
@@ -638,67 +638,67 @@ public class CountClass
 	}
   }
 
-  @umplesourcefile(line={405},file={"SimpleMetrics_Class.ump"},javaline={642},length={3})
+  @umplesourcefile(line={406},file={"SimpleMetrics_Class.ump"},javaline={643},length={3})
   public void incCountDeepestSubclass(int a){
     this.countDeepestSubclass+=a;
   }
 
-  @umplesourcefile(line={408},file={"SimpleMetrics_Class.ump"},javaline={647},length={3})
+  @umplesourcefile(line={409},file={"SimpleMetrics_Class.ump"},javaline={648},length={3})
   public void incStateMachines(int a){
     this.countStateMachines+=a;
   }
 
-  @umplesourcefile(line={411},file={"SimpleMetrics_Class.ump"},javaline={652},length={3})
+  @umplesourcefile(line={412},file={"SimpleMetrics_Class.ump"},javaline={653},length={3})
   public void incCountAssociations(int a){
     this.countAssociations+=a;
   }
 
-  @umplesourcefile(line={414},file={"SimpleMetrics_Class.ump"},javaline={657},length={3})
+  @umplesourcefile(line={415},file={"SimpleMetrics_Class.ump"},javaline={658},length={3})
   public void incCountSubclasses(int a){
     this.countSubclasses+=a;
   }
 
-  @umplesourcefile(line={417},file={"SimpleMetrics_Class.ump"},javaline={662},length={3})
+  @umplesourcefile(line={418},file={"SimpleMetrics_Class.ump"},javaline={663},length={3})
   public void incCountAttributes(int a){
     this.countAttributes+=a;
   }
 
-  @umplesourcefile(line={420},file={"SimpleMetrics_Class.ump"},javaline={667},length={3})
+  @umplesourcefile(line={421},file={"SimpleMetrics_Class.ump"},javaline={668},length={3})
   public void incCountMethods(int a){
     this.countMethods+=a;
   }
 
-  @umplesourcefile(line={423},file={"SimpleMetrics_Class.ump"},javaline={672},length={3})
+  @umplesourcefile(line={424},file={"SimpleMetrics_Class.ump"},javaline={673},length={3})
   public void incCountParameters(int a){
     this.countParameters+=a;
   }
 
-  @umplesourcefile(line={427},file={"SimpleMetrics_Class.ump"},javaline={677},length={3})
+  @umplesourcefile(line={428},file={"SimpleMetrics_Class.ump"},javaline={678},length={3})
   public void incCountTotalStateMachines(int a){
     this.countTotalStateMachines+=a;
   }
 
-  @umplesourcefile(line={430},file={"SimpleMetrics_Class.ump"},javaline={682},length={3})
+  @umplesourcefile(line={431},file={"SimpleMetrics_Class.ump"},javaline={683},length={3})
   public void incCountTotalAssociations(int a){
     this.countTotalAssociations+=a;
   }
 
-  @umplesourcefile(line={433},file={"SimpleMetrics_Class.ump"},javaline={687},length={3})
+  @umplesourcefile(line={434},file={"SimpleMetrics_Class.ump"},javaline={688},length={3})
   public void incCountTotalSubclasses(int a){
     this.countTotalSubclasses+=a;
   }
 
-  @umplesourcefile(line={436},file={"SimpleMetrics_Class.ump"},javaline={692},length={3})
+  @umplesourcefile(line={437},file={"SimpleMetrics_Class.ump"},javaline={693},length={3})
   public void incCountTotalAttributes(int a){
     this.countTotalAttributes+=a;
   }
 
-  @umplesourcefile(line={439},file={"SimpleMetrics_Class.ump"},javaline={697},length={3})
+  @umplesourcefile(line={440},file={"SimpleMetrics_Class.ump"},javaline={698},length={3})
   public void incCountTotalMethods(int a){
     this.countTotalMethods+=a;
   }
 
-  @umplesourcefile(line={442},file={"SimpleMetrics_Class.ump"},javaline={702},length={3})
+  @umplesourcefile(line={443},file={"SimpleMetrics_Class.ump"},javaline={703},length={3})
   public void incCountTotalParameters(int a){
     this.countTotalParameters+=a;
   }

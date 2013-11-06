@@ -185,7 +185,7 @@ public class ParsingCouple
    * 
    * The ignore level comes into play for instance if you have /*lvl0 /*lvl1 and you only want to hide lvl1 you would put the ignore level as 1
    */
-  @umplesourcefile(line={930},file={"ParsingRules_Code.ump"},javaline={173},length={95})
+  @umplesourcefile(line={932},file={"ParsingRules_Code.ump"},javaline={174},length={95})
    public ParsingCouple init(String input){
     int level = 0;
     boolean isQuote = false;
@@ -282,7 +282,7 @@ public class ParsingCouple
     return this;
   }
 
-  @umplesourcefile(line={1027},file={"ParsingRules_Code.ump"},javaline={286},length={3})
+  @umplesourcefile(line={1029},file={"ParsingRules_Code.ump"},javaline={287},length={3})
    public int hashCode(){
     return open.hashCode()+close.hashCode();
   }

@@ -32,7 +32,7 @@ public class VmlConsole
   public void delete()
   {}
 
-  @umplesourcefile(line={21},file={"Vml_Code.ump"},javaline={36},length={37})
+  @umplesourcefile(line={23},file={"Vml_Code.ump"},javaline={37},length={37})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -73,7 +73,7 @@ public class VmlConsole
     println("Successfully created ["+ outputFile +"]");
   }
 
-  @umplesourcefile(line={60},file={"Vml_Code.ump"},javaline={77},length={4})
+  @umplesourcefile(line={62},file={"Vml_Code.ump"},javaline={78},length={4})
    private static  void println(String output){
     console += output + "\n";
     System.out.println(output);

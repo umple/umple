@@ -44,7 +44,7 @@ public class Client
   public void delete()
   {}
 
-  @umplesourcefile(line={4},file={"BasicPostCondition1.ump"},javaline={49},length={4})
+  @umplesourcefile(line={6},file={"BasicPostCondition1.ump"},javaline={53},length={1})
   public int someMethod(Integer arg){
     int result = someMethod_Original(arg);
     if ( !(arg>5))
@@ -54,7 +54,7 @@ public class Client
     return result;
   }
 
-  @umplesourcefile(line={4},file={"BasicPostCondition1.ump"},javaline={49},length={4})
+  @umplesourcefile(line={7},file={"BasicPostCondition1.ump"},javaline={60},length={4})
   public int someMethod_Original(Integer arg){
     // rest of stuff that we don't interpret
    return 0;

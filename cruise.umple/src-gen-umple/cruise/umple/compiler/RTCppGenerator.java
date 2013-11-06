@@ -75,7 +75,7 @@ public class RTCppGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={15},file={"Generator_CodeRTCpp.ump"},javaline={79},length={21})
+  @umplesourcefile(line={17},file={"Generator_CodeRTCpp.ump"},javaline={80},length={21})
    public void generate(){
     try {
   		final StringBuilder code = new StringBuilder();

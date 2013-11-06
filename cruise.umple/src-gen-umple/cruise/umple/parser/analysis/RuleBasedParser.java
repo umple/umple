@@ -153,7 +153,7 @@ public class RuleBasedParser
    * The data package will contain miscellaneous data that will be computed throughout the parsing, such as FailPosition(if parsing fails)
    * and the location of couples(brackets and quotes).
    */
-  @umplesourcefile(line={72},file={"GrammarParsing_Code.ump"},javaline={150},length={16})
+  @umplesourcefile(line={74},file={"GrammarParsing_Code.ump"},javaline={151},length={16})
    public void parse(ChoiceRule root, Token token, String filename, ParserDataPackage data){
     parsing++;
     data.setCouples(new HashMap<String,ParsingCouple>());
@@ -171,7 +171,7 @@ public class RuleBasedParser
     parsing--;
   }
 
-  @umplesourcefile(line={90},file={"GrammarParsing_Code.ump"},javaline={175},length={16})
+  @umplesourcefile(line={92},file={"GrammarParsing_Code.ump"},javaline={176},length={16})
    public void parse(ChoiceRule root, Token token, String filename, int line, ParserDataPackage data){
     parsing++;
     data.setCouples(new HashMap<String,ParsingCouple>());
@@ -195,7 +195,7 @@ public class RuleBasedParser
    * After being passed all the grammar files by the UmpleInternalParser, this function is called to compute all the rules that are associated
    * to the umple language. For some reason this is computationally expensive, future implementations will hopefully be able to speed this up.
    */
-  @umplesourcefile(line={112},file={"GrammarParsing_Code.ump"},javaline={193},length={173})
+  @umplesourcefile(line={114},file={"GrammarParsing_Code.ump"},javaline={194},length={173})
    public void setupRules(){
     BufferedReader reader = null;
     InputStream resourceStream = null;
@@ -374,7 +374,7 @@ public class RuleBasedParser
   /**
    * Takes an umple file and parses it. It returns the ParseResult.
    */
-  @umplesourcefile(line={289},file={"GrammarParsing_Code.ump"},javaline={374},length={11})
+  @umplesourcefile(line={291},file={"GrammarParsing_Code.ump"},javaline={375},length={11})
    public ParseResult parse(UmpleFile file){
     if(analyzer==null)
     {
@@ -387,7 +387,7 @@ public class RuleBasedParser
     return getParseResult();
   }
 
-  @umplesourcefile(line={302},file={"GrammarParsing_Code.ump"},javaline={391},length={11})
+  @umplesourcefile(line={304},file={"GrammarParsing_Code.ump"},javaline={392},length={11})
    public ParseResult parse(String ruleName, String input){
     if(analyzer==null)
     {
@@ -400,7 +400,7 @@ public class RuleBasedParser
     return getParseResult();
   }
 
-  @umplesourcefile(line={315},file={"GrammarParsing_Code.ump"},javaline={404},length={82})
+  @umplesourcefile(line={317},file={"GrammarParsing_Code.ump"},javaline={405},length={82})
    public static  boolean evaluate(String hash){
     String currentLine = todeclare.get(hash);
     if(currentLine==null)

@@ -73,7 +73,7 @@ public class XmiGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={15},file={"Generator_CodeXmi.ump"},javaline={77},length={131})
+  @umplesourcefile(line={17},file={"Generator_CodeXmi.ump"},javaline={78},length={131})
    public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
@@ -206,7 +206,7 @@ public class XmiGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={148},file={"Generator_CodeXmi.ump"},javaline={210},length={17})
+  @umplesourcefile(line={150},file={"Generator_CodeXmi.ump"},javaline={211},length={17})
    private void writeModel(){
     try
     {

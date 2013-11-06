@@ -73,7 +73,7 @@ public class TextUmlGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={15},file={"Generator_CodeTextUml.ump"},javaline={77},length={116})
+  @umplesourcefile(line={17},file={"Generator_CodeTextUml.ump"},javaline={78},length={116})
    public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
@@ -191,7 +191,7 @@ public class TextUmlGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={133},file={"Generator_CodeTextUml.ump"},javaline={195},length={17})
+  @umplesourcefile(line={135},file={"Generator_CodeTextUml.ump"},javaline={196},length={17})
    private void writeModel(){
     try
     {

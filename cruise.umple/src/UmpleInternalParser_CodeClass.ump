@@ -1452,12 +1452,17 @@ class UmpleInternalParser
         if(langs.isEmpty())
         {
           cb.setCode(token.getValue());
-        }  
+          aMethod.setCodePosition(token.getPosition());
+        }
         else
         {
           for(String str: langs)
           {
             cb.setCode(str,(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+token.getValue());
+            if("Java".equals(str))
+            {
+              aMethod.setCodePosition(token.getPosition());
+            }
           }
         }
         canClear = true;

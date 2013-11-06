@@ -168,7 +168,7 @@ public class Analyzer
   /**
    * This funciton is used for putting things into the global hashmap that contains all objects
    */
-  @umplesourcefile(line={6},file={"GrammarParsing_Code.ump"},javaline={168},length={3})
+  @umplesourcefile(line={8},file={"GrammarParsing_Code.ump"},javaline={169},length={3})
    protected void set(String string, Object object){
     global.put(string, object);
   }
@@ -177,7 +177,7 @@ public class Analyzer
   /**
    * This function goes through all the subtokens and invokes this analyzer's method(if it exists) which has the same name as the token
    */
-  @umplesourcefile(line={13},file={"GrammarParsing_Code.ump"},javaline={177},length={24})
+  @umplesourcefile(line={15},file={"GrammarParsing_Code.ump"},javaline={178},length={24})
    public void analyze(Token tokens){
     for(Token token: tokens.getSubTokens())
     {
@@ -207,7 +207,7 @@ public class Analyzer
   /**
    * abstract method for executing the rootrule onto the umplefile(for example)
    */
-  @umplesourcefile(line={41},file={"GrammarParsing_Code.ump"},javaline={207},length={3})
+  @umplesourcefile(line={43},file={"GrammarParsing_Code.ump"},javaline={208},length={3})
    public void execute(){
     
   }

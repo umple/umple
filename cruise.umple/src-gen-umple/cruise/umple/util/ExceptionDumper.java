@@ -42,7 +42,7 @@ public class ExceptionDumper
   public void delete()
   {}
 
-  @umplesourcefile(line={1010},file={"Util_Code.ump"},javaline={46},length={22})
+  @umplesourcefile(line={1011},file={"Util_Code.ump"},javaline={47},length={22})
    public static  void dumpCompilerError(Exception ex){
     String generatedSourcePath = System.getenv("GeneratedSourcePath");
     if (generatedSourcePath == null) {
@@ -70,7 +70,7 @@ public class ExceptionDumper
   /**
    * Translate the java stack trace line information into the corresponding Umple line
    */
-  @umplesourcefile(line={1034},file={"Util_Code.ump"},javaline={70},length={93})
+  @umplesourcefile(line={1035},file={"Util_Code.ump"},javaline={71},length={93})
    public static  StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath){
     StackTraceElement newSt;
       String javaFileName = javaStack.getFileName();

@@ -179,7 +179,7 @@ public class Activity
     }
   }
 
-  @umplesourcefile(line={90},file={"StateMachine.ump"},javaline={183},length={8})
+  @umplesourcefile(line={92},file={"StateMachine.ump"},javaline={184},length={8})
   public void setActivityCode(String lang, String code){
     if(activityCode!=null){
   	  activityCode+= lang+code;

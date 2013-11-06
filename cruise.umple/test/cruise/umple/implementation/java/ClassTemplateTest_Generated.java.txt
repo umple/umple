@@ -26,7 +26,7 @@ public class Mentor
   public void delete()
   {}
 
-  @umplesourcefile(line={5},file={"ClassTemplateTest_Generated.ump"},javaline={31},length={3})
+  @umplesourcefile(line={6},file={"ClassTemplateTest_Generated.ump"},javaline={32},length={3})
    public static   main(){
     
   }

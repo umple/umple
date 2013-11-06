@@ -70,7 +70,7 @@ public class Guard extends Constraint
     super.delete();
   }
 
-  @umplesourcefile(line={485},file={"StateMachine_Code.ump"},javaline={74},length={3})
+  @umplesourcefile(line={486},file={"StateMachine_Code.ump"},javaline={75},length={3})
   public String getCondition(CodeTranslator gen){
     return gen.translate(":Open",this);
   }

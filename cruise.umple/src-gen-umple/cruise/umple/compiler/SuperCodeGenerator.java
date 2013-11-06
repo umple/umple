@@ -77,14 +77,14 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
   /**
    * This method is because of issue number 373;
    */
-  @umplesourcefile(line={14},file={"Generator_SuperCodeGenerator.ump"},javaline={77},length={3})
+  @umplesourcefile(line={16},file={"Generator_SuperCodeGenerator.ump"},javaline={78},length={3})
    public void generate(){
     
   }
 
   @umplesourcefile(line={18},file={"Generator_SuperCodeGenerator.ump"},javaline={86},length={3})
    public abstract void initializeLangaugeBasedVariables();
-  @umplesourcefile(line={20},file={"Generator_SuperCodeGenerator.ump"},javaline={89},length={15})
+  @umplesourcefile(line={21},file={"Generator_SuperCodeGenerator.ump"},javaline={90},length={15})
    public String getType(UmpleVariable av){
     String myType = av.getType();
     if (myType == null || myType.length() == 0)
@@ -101,7 +101,7 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
    	}
   }
 
-  @umplesourcefile(line={36},file={"Generator_SuperCodeGenerator.ump"},javaline={105},length={10})
+  @umplesourcefile(line={38},file={"Generator_SuperCodeGenerator.ump"},javaline={106},length={10})
    public String translate(String keyName, TraceItem ti){
     if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
 	{
@@ -113,7 +113,7 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
     }
   }
 
-  @umplesourcefile(line={48},file={"Generator_SuperCodeGenerator.ump"},javaline={117},length={128})
+  @umplesourcefile(line={49},file={"Generator_SuperCodeGenerator.ump"},javaline={118},length={128})
    public String translate(String format, Constraint constraint){
     if(constraint==null)
       return "{0}";
@@ -243,7 +243,7 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
   }
 
-  @umplesourcefile(line={177},file={"Generator_SuperCodeGenerator.ump"},javaline={247},length={23})
+  @umplesourcefile(line={179},file={"Generator_SuperCodeGenerator.ump"},javaline={248},length={23})
    public String getParameterFromConstraint(ConstraintVariable expr, Boolean plain){
     if(expr.getFoundAttribute()==null)
     {
@@ -268,7 +268,7 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
     return value;
   }
 
-  @umplesourcefile(line={202},file={"Generator_SuperCodeGenerator.ump"},javaline={272},length={80})
+  @umplesourcefile(line={204},file={"Generator_SuperCodeGenerator.ump"},javaline={273},length={80})
    public void prepareConstraints(UmpleClass aClass){
     Constraint constraint = new Constraint();
     constraint.setNegated(true);

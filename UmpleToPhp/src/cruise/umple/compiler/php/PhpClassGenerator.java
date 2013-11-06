@@ -7065,14 +7065,14 @@ public class PhpClassGenerator implements ILang
   	  if(!"".equals(customPostconditionCode))
       {
         appendln(stringBuffer, "\n  {");
-        if(!"".equals(aMethod.getType())||!"void".equals(aMethod.getType())){
+        if(!"".equals(aMethod.getType())&&!"void".equals(aMethod.getType())){
           append(stringBuffer, "    $result = {0}Original({1});\n", methodName, finalParams);
         }
         else {
           append(stringBuffer, "    $this->{0}Original({1});\n", methodName, finalParams);
         }
         appendln(stringBuffer, GeneratorHelper.doIndent(customPostconditionCode, "    "));
-        if(!"".equals(aMethod.getType())||!"void".equals(aMethod.getType())){
+        if(!"".equals(aMethod.getType())&&!"void".equals(aMethod.getType())){
           append(stringBuffer, "    return $result;\n");
         }          
         appendln(stringBuffer, "  }");

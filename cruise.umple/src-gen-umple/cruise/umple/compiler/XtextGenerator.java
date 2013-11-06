@@ -146,7 +146,7 @@ public class XtextGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={15},file={"Generator_CodeXtext.ump"},javaline={150},length={114})
+  @umplesourcefile(line={17},file={"Generator_CodeXtext.ump"},javaline={151},length={114})
    public void generate(){
     StringBuilder xtext = new StringBuilder();
     patterns.add(new PatternHandler("\\[=(.*):\\[\\]\\]"){
@@ -262,7 +262,7 @@ public class XtextGenerator implements CodeGenerator
     model.setCode(xtext.toString());
   }
 
-  @umplesourcefile(line={131},file={"Generator_CodeXtext.ump"},javaline={266},length={17})
+  @umplesourcefile(line={132},file={"Generator_CodeXtext.ump"},javaline={267},length={17})
    private String translate(Rule rule){
     StringBuilder xtext = new StringBuilder();
     xtext.append(getXtextRulename(rule.getName())+":\n\t");
@@ -281,7 +281,7 @@ public class XtextGenerator implements CodeGenerator
     return xtext.toString();
   }
 
-  @umplesourcefile(line={149},file={"Generator_CodeXtext.ump"},javaline={285},length={16})
+  @umplesourcefile(line={150},file={"Generator_CodeXtext.ump"},javaline={286},length={16})
    private String query(String fragment){
     if(fragment.equals("")){
       return "";
@@ -299,7 +299,7 @@ public class XtextGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={202},file={"Generator_CodeXtext.ump"},javaline={303},length={3})
+  @umplesourcefile(line={203},file={"Generator_CodeXtext.ump"},javaline={304},length={3})
    private String getXtextRulename(String rulename){
     return rulename.substring(0,1).toUpperCase()+rulename.substring(1).replace("::","_")+"_";
   }

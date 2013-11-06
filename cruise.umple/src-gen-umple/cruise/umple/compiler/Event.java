@@ -277,7 +277,7 @@ public class Event
     params.clear();
   }
 
-  @umplesourcefile(line={449},file={"StateMachine_Code.ump"},javaline={281},length={6})
+  @umplesourcefile(line={451},file={"StateMachine_Code.ump"},javaline={282},length={6})
    public static  Event createAutoTransition(){
     Event e = new Event("__autotransition" + Event.nextAutoTransitionId + "__");
     e.setAutoTransition(true);
@@ -285,7 +285,7 @@ public class Event
     return e;
   }
 
-  @umplesourcefile(line={457},file={"StateMachine_Code.ump"},javaline={289},length={24})
+  @umplesourcefile(line={459},file={"StateMachine_Code.ump"},javaline={290},length={24})
    public String getArgs(){
     String args="";
     String paramName="";

@@ -83,7 +83,7 @@ public class Glossary
   public void delete()
   {}
 
-  @umplesourcefile(line={855},file={"Util_Code.ump"},javaline={87},length={30})
+  @umplesourcefile(line={857},file={"Util_Code.ump"},javaline={88},length={30})
    private void init(){
     addWord(new Word("fish","fish"));
     addWord(new Word("sheep","sheep"));
@@ -115,7 +115,7 @@ public class Glossary
 	addWord(new Word("radius","radii"));
   }
 
-  @umplesourcefile(line={888},file={"Util_Code.ump"},javaline={119},length={52})
+  @umplesourcefile(line={890},file={"Util_Code.ump"},javaline={120},length={52})
    public String getSingular(String plural){
     if (plural == null || plural.length() == 0)
     {
@@ -169,7 +169,7 @@ public class Glossary
     }
   }
 
-  @umplesourcefile(line={942},file={"Util_Code.ump"},javaline={173},length={52})
+  @umplesourcefile(line={944},file={"Util_Code.ump"},javaline={174},length={52})
    public String getPlural(String singular){
     if (singular == null || singular.length() == 0)
     {

@@ -40,7 +40,7 @@ public class PlaygroundMain
   public void delete()
   {}
 
-  @umplesourcefile(line={318},file={"Main_Code.ump"},javaline={44},length={103})
+  @umplesourcefile(line={320},file={"Main_Code.ump"},javaline={45},length={103})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -147,13 +147,13 @@ public class PlaygroundMain
         print(answer);
   }
 
-  @umplesourcefile(line={423},file={"Main_Code.ump"},javaline={151},length={4})
+  @umplesourcefile(line={425},file={"Main_Code.ump"},javaline={152},length={4})
    private static  void print(String output){
     console += output;
         System.out.print(output);
   }
 
-  @umplesourcefile(line={429},file={"Main_Code.ump"},javaline={157},length={54})
+  @umplesourcefile(line={431},file={"Main_Code.ump"},javaline={158},length={54})
    private static  SynchronizationAction action(String type, String deltaCode, String umpleCode){
     if ("-addClass".equals(type))
         {

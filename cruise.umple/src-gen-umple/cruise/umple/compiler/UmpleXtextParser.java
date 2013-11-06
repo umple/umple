@@ -57,12 +57,12 @@ public class UmpleXtextParser implements UmpleParser
   public void delete()
   {}
 
-  @umplesourcefile(line={16},file={"UmpleXtextParser_Code.ump"},javaline={61},length={3})
+  @umplesourcefile(line={18},file={"UmpleXtextParser_Code.ump"},javaline={62},length={3})
    public String toGrammar(){
     return temp.toGrammar();
   }
 
-  @umplesourcefile(line={21},file={"UmpleXtextParser_Code.ump"},javaline={66},length={19})
+  @umplesourcefile(line={23},file={"UmpleXtextParser_Code.ump"},javaline={67},length={19})
    public ParseResult parse(String ruleName, String codeToParse){
     ParseResult tempResult = temp.parse(ruleName,codeToParse);
     return tempResult;
@@ -83,32 +83,32 @@ public class UmpleXtextParser implements UmpleParser
       }*/
   }
 
-  @umplesourcefile(line={43},file={"UmpleXtextParser_Code.ump"},javaline={87},length={3})
+  @umplesourcefile(line={45},file={"UmpleXtextParser_Code.ump"},javaline={88},length={3})
    public ParseResult analyze(boolean shouldGenerateCode){
     return temp.analyze(shouldGenerateCode);
   }
 
-  @umplesourcefile(line={48},file={"UmpleXtextParser_Code.ump"},javaline={92},length={3})
+  @umplesourcefile(line={50},file={"UmpleXtextParser_Code.ump"},javaline={93},length={3})
    public Token getRootToken(){
     return temp.getRootToken();
   }
 
-  @umplesourcefile(line={53},file={"UmpleXtextParser_Code.ump"},javaline={97},length={3})
+  @umplesourcefile(line={55},file={"UmpleXtextParser_Code.ump"},javaline={98},length={3})
    public UmpleModel getModel(){
     return temp.getModel();
   }
 
-  @umplesourcefile(line={58},file={"UmpleXtextParser_Code.ump"},javaline={102},length={3})
+  @umplesourcefile(line={60},file={"UmpleXtextParser_Code.ump"},javaline={103},length={3})
    public boolean setModel(UmpleModel model){
     return temp.setModel(model);
   }
 
-  @umplesourcefile(line={63},file={"UmpleXtextParser_Code.ump"},javaline={107},length={3})
+  @umplesourcefile(line={65},file={"UmpleXtextParser_Code.ump"},javaline={108},length={3})
    public ParseResult getParseResult(){
     return temp.getParseResult();
   }
 
-  @umplesourcefile(line={68},file={"UmpleXtextParser_Code.ump"},javaline={112},length={3})
+  @umplesourcefile(line={70},file={"UmpleXtextParser_Code.ump"},javaline={113},length={3})
    public boolean setFilename(String filename){
     return temp.setFilename(filename);
   }

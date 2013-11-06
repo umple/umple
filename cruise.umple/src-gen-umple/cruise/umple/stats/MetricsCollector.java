@@ -85,7 +85,7 @@ public class MetricsCollector
   public void delete()
   {}
 
-  @umplesourcefile(line={75},file={"UmpleStats_Code.ump"},javaline={89},length={6})
+  @umplesourcefile(line={77},file={"UmpleStats_Code.ump"},javaline={90},length={6})
    private void init(){
     _currentProject = null;
     _allProjectIds = new ArrayList<String>();
@@ -93,7 +93,7 @@ public class MetricsCollector
     _projectToMetricsMap = new Hashtable<String, Hashtable<String, Integer>>();
   }
 
-  @umplesourcefile(line={83},file={"UmpleStats_Code.ump"},javaline={97},length={27})
+  @umplesourcefile(line={85},file={"UmpleStats_Code.ump"},javaline={98},length={27})
    public boolean analyze(String projectName, String inputFilename){
     _currentProject = projectName;
     _allProjectIds.add(projectName);
@@ -122,12 +122,12 @@ public class MetricsCollector
     }
   }
 
-  @umplesourcefile(line={112},file={"UmpleStats_Code.ump"},javaline={126},length={3})
+  @umplesourcefile(line={114},file={"UmpleStats_Code.ump"},javaline={127},length={3})
    public void save(String outputFilename){
     FileManager.writeFileToDisk(outputFilename, toString());
   }
 
-  @umplesourcefile(line={117},file={"UmpleStats_Code.ump"},javaline={131},length={10})
+  @umplesourcefile(line={119},file={"UmpleStats_Code.ump"},javaline={132},length={10})
    public int numberOf(String projectId, String lowerBound, String upperBound){
     Hashtable<String,Integer> lookup = _projectToMetricsMap.get(projectId);
     if (lookup == null)
@@ -139,7 +139,7 @@ public class MetricsCollector
     return forward + backward;
   }
 
-  @umplesourcefile(line={129},file={"UmpleStats_Code.ump"},javaline={143},length={26})
+  @umplesourcefile(line={131},file={"UmpleStats_Code.ump"},javaline={144},length={26})
    public String toString(){
     StringBuilder header = new StringBuilder();
     StringBuilder body = new StringBuilder();
@@ -167,7 +167,7 @@ public class MetricsCollector
     return header.toString() + body.toString();
   }
 
-  @umplesourcefile(line={157},file={"UmpleStats_Code.ump"},javaline={171},length={10})
+  @umplesourcefile(line={159},file={"UmpleStats_Code.ump"},javaline={172},length={10})
    private int currentNumberOfAssociationType(String key, Hashtable<String,Integer> lookup){
     if (lookup.containsKey(key))
     {
@@ -179,12 +179,12 @@ public class MetricsCollector
     }
   }
 
-  @umplesourcefile(line={169},file={"UmpleStats_Code.ump"},javaline={183},length={3})
+  @umplesourcefile(line={171},file={"UmpleStats_Code.ump"},javaline={184},length={3})
    private void incrementAssociationType(String key){
     incrementAssociationType(key,_projectToMetricsMap.get(_currentProject));
   }
 
-  @umplesourcefile(line={174},file={"UmpleStats_Code.ump"},javaline={188},length={8})
+  @umplesourcefile(line={176},file={"UmpleStats_Code.ump"},javaline={189},length={8})
    private void incrementAssociationType(String key, Hashtable<String,Integer> lookup){
     if (!_allAssociationTypes.contains(key))
     {

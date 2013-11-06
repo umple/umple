@@ -7,10 +7,10 @@ import java.util.*;
 
 /**
  * The Constraint object related to Umple Classes
- * @umplesource Umple.ump 248
+ * @umplesource Umple.ump 249
  * @umplesource Umple_Code.ump 1363
  */
-// line 248 "../../../../src/Umple.ump"
+// line 249 "../../../../src/Umple.ump"
 // line 1363 "../../../../src/Umple_Code.ump"
 public class Constraint extends CodeBlock
 {
@@ -147,7 +147,7 @@ public class Constraint extends CodeBlock
     super.delete();
   }
 
-  @umplesourcefile(line={1366},file={"Umple_Code.ump"},javaline={151},length={42})
+  @umplesourcefile(line={1368},file={"Umple_Code.ump"},javaline={152},length={42})
    public String toString(){
     String out = "";
     if(numberOfExpressions()==1)
@@ -191,7 +191,7 @@ public class Constraint extends CodeBlock
     return out;
   }
 
-  @umplesourcefile(line={1410},file={"Umple_Code.ump"},javaline={195},length={23})
+  @umplesourcefile(line={1411},file={"Umple_Code.ump"},javaline={196},length={23})
   public void mergeWith(Constraint constraint){
     if(numberOfExpressions()>0)
     {
@@ -216,12 +216,12 @@ public class Constraint extends CodeBlock
     addExpression(new ConstraintVariable("SYNTAX",")"));
   }
 
-  @umplesourcefile(line={1434},file={"Umple_Code.ump"},javaline={220},length={3})
+  @umplesourcefile(line={1435},file={"Umple_Code.ump"},javaline={221},length={3})
   public String getCode(){
     return StringFormatter.format(gen.translate((getNegated()?"Not":"")+format,this),inject);
   }
 
-  @umplesourcefile(line={1438},file={"Umple_Code.ump"},javaline={225},length={23})
+  @umplesourcefile(line={1440},file={"Umple_Code.ump"},javaline={226},length={23})
    public boolean equals(Object object){
     if(object==null)
     {

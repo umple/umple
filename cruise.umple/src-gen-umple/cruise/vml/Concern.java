@@ -240,12 +240,12 @@ public class Concern
     }
   }
 
-  @umplesourcefile(line={89},file={"Vml_Code.ump"},javaline={244},length={3})
+  @umplesourcefile(line={91},file={"Vml_Code.ump"},javaline={245},length={3})
    public String toString(){
     return name + ":" + numberOfVariationPoints() + " variation points";
   }
 
-  @umplesourcefile(line={94},file={"Vml_Code.ump"},javaline={249},length={15})
+  @umplesourcefile(line={96},file={"Vml_Code.ump"},javaline={250},length={15})
    public VariationPoint getVariationPoint(String name){
     if (name == null)
     {

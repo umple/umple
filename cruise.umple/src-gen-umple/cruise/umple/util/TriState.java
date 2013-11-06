@@ -76,12 +76,12 @@ public class TriState
   public void delete()
   {}
 
-  @umplesourcefile(line={19},file={"Util_Code.ump"},javaline={80},length={3})
+  @umplesourcefile(line={19},file={"Util_Code.ump"},javaline={81},length={3})
    public boolean isTrue(){
     return isSet && status;
   }
 
-  @umplesourcefile(line={20},file={"Util_Code.ump"},javaline={85},length={3})
+  @umplesourcefile(line={20},file={"Util_Code.ump"},javaline={86},length={3})
    public boolean isFalse(){
     return isSet && !status;
   }

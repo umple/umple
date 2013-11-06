@@ -157,7 +157,7 @@ public class UmletDiagram
     }
   }
 
-  @umplesourcefile(line={143},file={"Umlet_Code.ump"},javaline={161},length={19})
+  @umplesourcefile(line={145},file={"Umlet_Code.ump"},javaline={162},length={19})
    public String toXml(){
     StringBuffer answer = new StringBuffer();
     answer.append("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>");

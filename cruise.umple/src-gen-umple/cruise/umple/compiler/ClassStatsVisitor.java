@@ -240,13 +240,13 @@ public class ClassStatsVisitor extends UmpleModelVisitor
     super.delete();
   }
 
-  @umplesourcefile(line={544},file={"Generator_CodeAnalysis.ump"},javaline={244},length={4})
+  @umplesourcefile(line={545},file={"Generator_CodeAnalysis.ump"},javaline={245},length={4})
   public void done(){
     addTableEntry(null);
 		tbl.addRow(new String [] {"Total",String.valueOf(total_attributes),String.valueOf(total_assoc),String.valueOf(total_subclass),String.valueOf(total_classMethods),String.valueOf(total_classMethodParams)});
   }
 
-  @umplesourcefile(line={549},file={"Generator_CodeAnalysis.ump"},javaline={250},length={17})
+  @umplesourcefile(line={550},file={"Generator_CodeAnalysis.ump"},javaline={251},length={17})
   public void addTableEntry(UmpleElement element){
     if(cur_clazz != null) {
 			tbl.addRow(new String [] {cur_clazz,String.valueOf(cur_attributes),String.valueOf(cur_assoc),String.valueOf(cur_subclass),String.valueOf(cur_classMethods),String.valueOf(cur_classMethodParams)});
@@ -269,13 +269,13 @@ public class ClassStatsVisitor extends UmpleModelVisitor
   /**
    * Umple Classifiers
    */
-  @umplesourcefile(line={568},file={"Generator_CodeAnalysis.ump"},javaline={269},length={4})
+  @umplesourcefile(line={569},file={"Generator_CodeAnalysis.ump"},javaline={270},length={4})
   public void visit(UmpleClass umpleClass){
     addTableEntry(umpleClass);
 		cur_subclass = umpleClass.getSubclasses().size();
   }
 
-  @umplesourcefile(line={573},file={"Generator_CodeAnalysis.ump"},javaline={279},length={4})
+  @umplesourcefile(line={574},file={"Generator_CodeAnalysis.ump"},javaline={280},length={4})
   public void visit(AssociationClass associationC){
     addTableEntry(associationC);
 		cur_subclass = associationC.getSubclasses().size();
@@ -285,7 +285,7 @@ public class ClassStatsVisitor extends UmpleModelVisitor
   /**
    * Attributes
    */
-  @umplesourcefile(line={579},file={"Generator_CodeAnalysis.ump"},javaline={285},length={3})
+  @umplesourcefile(line={580},file={"Generator_CodeAnalysis.ump"},javaline={286},length={3})
   public void visit(Attribute attribute){
     cur_attributes++;
   }
@@ -294,7 +294,7 @@ public class ClassStatsVisitor extends UmpleModelVisitor
   /**
    * Methods
    */
-  @umplesourcefile(line={584},file={"Generator_CodeAnalysis.ump"},javaline={294},length={4})
+  @umplesourcefile(line={585},file={"Generator_CodeAnalysis.ump"},javaline={295},length={4})
   public void visit(Method method){
     cur_classMethods++;
 		cur_classMethods = Math.max(cur_classMethods, method.getMethodParameters().size());
@@ -304,7 +304,7 @@ public class ClassStatsVisitor extends UmpleModelVisitor
   /**
    * Association
    */
-  @umplesourcefile(line={590},file={"Generator_CodeAnalysis.ump"},javaline={304},length={3})
+  @umplesourcefile(line={591},file={"Generator_CodeAnalysis.ump"},javaline={305},length={3})
   public void visit(Association associationE){
     cur_assoc++;
   }

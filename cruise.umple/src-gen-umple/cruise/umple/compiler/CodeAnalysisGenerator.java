@@ -88,7 +88,7 @@ public class CodeAnalysisGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={25},file={"Generator_CodeAnalysis.ump"},javaline={92},length={11})
+  @umplesourcefile(line={26},file={"Generator_CodeAnalysis.ump"},javaline={93},length={11})
   public void generate(){
     doc.createParagraphElement("Code Analysis from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
     UmpleModelWalker walker = new UmpleModelWalker(model);
@@ -105,7 +105,7 @@ public class CodeAnalysisGenerator implements CodeGenerator
   /**
    * Output the metrics to a file
    */
-  @umplesourcefile(line={38},file={"Generator_CodeAnalysis.ump"},javaline={105},length={17})
+  @umplesourcefile(line={40},file={"Generator_CodeAnalysis.ump"},javaline={106},length={17})
   public void writeModel(){
     try
     {

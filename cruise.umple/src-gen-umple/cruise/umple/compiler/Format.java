@@ -30,7 +30,7 @@ public class Format
   public void delete()
   {}
 
-  @umplesourcefile(line={30},file={"SimpleMetrics_Util.ump"},javaline={34},length={7})
+  @umplesourcefile(line={31},file={"SimpleMetrics_Util.ump"},javaline={35},length={7})
    public static  String repeat(String string, int quantidade){
     StringBuffer retorno = new StringBuffer();   
     for (int j=0; j<quantidade; j++){   

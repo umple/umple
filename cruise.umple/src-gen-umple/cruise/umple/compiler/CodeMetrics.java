@@ -66,7 +66,7 @@ public class CodeMetrics extends SimpleMetricsGenerator
     super.delete();
   }
 
-  @umplesourcefile(line={64},file={"SimpleMetrics_CodeLines.ump"},javaline={70},length={85})
+  @umplesourcefile(line={65},file={"SimpleMetrics_CodeLines.ump"},javaline={71},length={85})
   public void calculate(){
     int totalLineCount = 0; //count lines per file
       int totalLoc = 0;

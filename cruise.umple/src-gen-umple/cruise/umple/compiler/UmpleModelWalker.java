@@ -51,7 +51,7 @@ public class UmpleModelWalker implements IWalker
   public void delete()
   {}
 
-  @umplesourcefile(line={155},file={"Generator_UmpleModelWalker.ump"},javaline={55},length={209})
+  @umplesourcefile(line={156},file={"Generator_UmpleModelWalker.ump"},javaline={56},length={209})
   public void accept(UmpleModelVisitor visitor){
     List<UmpleElement> umpleElements = model.getUmpleElements();
 		

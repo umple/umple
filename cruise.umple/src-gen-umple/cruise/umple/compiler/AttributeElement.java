@@ -63,7 +63,7 @@ public class AttributeElement
   public void delete()
   {}
 
-  @umplesourcefile(line={69},file={"Generator_Html.ump"},javaline={67},length={8})
+  @umplesourcefile(line={70},file={"Generator_Html.ump"},javaline={68},length={8})
   public String toString(){
     StringBuffer stringBuffer = new StringBuffer(" "); //$NON-NLS-1$
 		stringBuffer.append(getName());

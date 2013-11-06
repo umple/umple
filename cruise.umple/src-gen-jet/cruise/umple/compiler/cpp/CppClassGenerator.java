@@ -8115,14 +8115,14 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
         if(!"".equals(customPostconditionCode))
         {
           appendln(stringBuffer, "{");
-          if(!"".equals(methodType)||!"void".equals(methodType)){
+          if(!"".equals(methodType)&&!"void".equals(methodType)){
             append(stringBuffer, "    {0} result = {1}_Original({2});\n", methodType, methodName, finalParamsWithoutTypes);
           }
           else {
-            append(stringBuffer, "    {0}_Original({1});\n", methodType, methodName, finalParamsWithoutTypes);
+            append(stringBuffer, "    {0}_Original({1});\n", methodName, finalParamsWithoutTypes);
           }
           appendln(stringBuffer, GeneratorHelper.doIndent(customPostconditionCode, "    "));
-          if(!"".equals(methodType)||!"void".equals(methodType)){
+          if(!"".equals(methodType)&&!"void".equals(methodType)){
             append(stringBuffer, "    return result;\n");
           }          
           appendln(stringBuffer, "  }");

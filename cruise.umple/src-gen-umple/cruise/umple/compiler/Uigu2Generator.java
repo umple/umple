@@ -79,7 +79,7 @@ public class Uigu2Generator extends PhpGenerator
     super.delete();
   }
 
-  @umplesourcefile(line={127},file={"Generator_CodeUigu2.ump"},javaline={83},length={5})
+  @umplesourcefile(line={128},file={"Generator_CodeUigu2.ump"},javaline={84},length={5})
    private void setOutputPath(String pathname){
     if(pathname != null){
       this.outputPath = Paths.get(pathname).toAbsolutePath();

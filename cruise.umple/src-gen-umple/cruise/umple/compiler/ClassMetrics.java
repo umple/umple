@@ -68,7 +68,7 @@ public class ClassMetrics extends SimpleMetricsGenerator
     super.delete();
   }
 
-  @umplesourcefile(line={47},file={"SimpleMetrics_Class.ump"},javaline={72},length={139})
+  @umplesourcefile(line={48},file={"SimpleMetrics_Class.ump"},javaline={73},length={139})
   public void calculate(){
     CountClass cc = new CountClass();	
       int smCount = 0;
