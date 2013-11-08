@@ -1,0 +1,11 @@
+class A
+{
+ 1 -- 1 BbbB;
+ key {BbbB};
+}
+
+class BbbB
+{
+ Integer id;
+ key {id};
+}
