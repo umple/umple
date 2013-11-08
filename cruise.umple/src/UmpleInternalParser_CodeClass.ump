@@ -1690,28 +1690,29 @@ class UmpleInternalParser
     for(Token token : keyToken.getSubTokens())
     {
       tokenMatch = false;
-      
+      String finalTokenVal = token.getValue();
+      String tokenVal = token.getValue();      
       if (!token.is("keyId"))
       {
         continue;
       }
  
       //Checks for duplicate attributes/associations/stateMachines
-      if(tokensAdded.contains(token.getValue()))
+      if(tokensAdded.contains(tokenVal))
       {
-        setFailedPosition(keyToken.getPosition(), 26, token.getValue(), keyToken.getParentToken().getValue("name"));
+        setFailedPosition(keyToken.getPosition(), 26, tokenVal, keyToken.getParentToken().getValue("name"));
       }
    
     if(!aClass.hasAttributes() && !aClass.hasAssociations() && !aClass.hasStateMachines())
       {
-        setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+        setFailedPosition(keyToken.getPosition(), 27, tokenVal, keyToken.getParentToken().getValue("name"));
       }
       else{
         if(aClass.hasAttributes())
         {
           for(Attribute aAttribute : aClass.getAttributes())
           {
-            if(aAttribute.getName().equals(token.getValue()))
+            if(aAttribute.getName().equals(tokenVal))
             {
               tokenMatch = true;
               // throw warning if attribute is initialized
@@ -1734,9 +1735,13 @@ class UmpleInternalParser
             secondEnd = aAssociation.getEnd(1);
             firstEndName =  firstEnd.getRoleName();
             secondEndName = secondEnd.getRoleName();        
+            
+            // tokenVal with a lower-case first letter.
+            String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
                       
-            if(firstEndName.equals(token.getValue()) || secondEndName.equals(token.getValue()))
+            if(firstEndName.equals(firstLower) || secondEndName.equals(firstLower))
             {
+              finalTokenVal = firstLower;
               tokenMatch = true;
             }
           }
@@ -1744,22 +1749,22 @@ class UmpleInternalParser
 
         if(aClass.hasStateMachines())  
         {
-        for(StateMachine aStateMachine : aClass.getStateMachines())
-        {
-          if(aStateMachine.getName().equals(token.getValue()))
+          for(StateMachine aStateMachine : aClass.getStateMachines())
           {
-            tokenMatch = true;
-          }      
-        }
-      }      
+            if(aStateMachine.getName().equals(tokenVal))
+            {
+              tokenMatch = true;
+            }      
+          }
+        }      
 
-      if(!tokenMatch)
-      {
-        setFailedPosition(keyToken.getPosition(), 27, token.getValue(), keyToken.getParentToken().getValue("name"));
+        if(!tokenMatch)
+        {
+          setFailedPosition(keyToken.getPosition(), 27, tokenVal, keyToken.getParentToken().getValue("name"));
+        }
       }
-    }
-      aClass.getKey().addMember(token.getValue());
-      tokensAdded.add(token.getValue()); 
+      aClass.getKey().addMember(finalTokenVal);
+      tokensAdded.add(finalTokenVal); 
     }
   }
 

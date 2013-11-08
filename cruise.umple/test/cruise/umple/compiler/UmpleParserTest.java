@@ -1736,6 +1736,18 @@ public class UmpleParserTest
   }
 
   @Test
+  public void upperCaseAssociationKey()
+  {
+	assertSimpleParse("284_keyAssociationUpper.ump");
+	
+	UmpleClass A = model.getUmpleClass("A");
+	Key key = A.getKey();
+	Assert.assertEquals(1,key.numberOfMembers());
+	Assert.assertEquals("bbbB", key.getMember(0));
+  }
+  
+  
+  @Test
   public void enumAttributeEmpty()
   {
     assertParse("020_enumEmpty.ump");
