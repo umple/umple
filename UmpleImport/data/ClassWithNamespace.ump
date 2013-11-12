@@ -1,0 +1,9 @@
+namespace cruise.example.base;
+
+class Student
+{
+}
+
+class Mentor
+{
+}
