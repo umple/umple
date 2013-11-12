@@ -1731,15 +1731,13 @@ class UmpleInternalParser
     
           for(Association aAssociation : aClass.getAssociations())
           { 
-            firstEnd = aAssociation.getEnd(0);
             secondEnd = aAssociation.getEnd(1);
-            firstEndName =  firstEnd.getRoleName();
             secondEndName = secondEnd.getRoleName();        
             
             // tokenVal with a lower-case first letter.
             String firstLower = Character.toLowerCase(tokenVal.charAt(0)) + (tokenVal.length() > 1 ? tokenVal.substring(1) : "");
                       
-            if(firstEndName.equals(firstLower) || secondEndName.equals(firstLower))
+            if(secondEndName.equals(firstLower))
             {
               finalTokenVal = firstLower;
               tokenMatch = true;
