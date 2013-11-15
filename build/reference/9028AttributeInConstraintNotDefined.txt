@@ -4,9 +4,9 @@ noreferences
 
 @@description
 
-<h2>Umple semantic error reported when am identifier (attribute, etc.) in a constraint cannot be found</h2>
+<h2>Umple semantic error reported when an identifier (attribute, etc.) in a constraint cannot be found</h2>
 
-<p>Constraints can refer to attributes in the current class currently; in the future they will be able to refer to other model elements. This message indicates that an identifier referenced in the constraint was not found. This is often just due to a typographical error, but it might be due to the current limitations of constraints.</p>
+<p>Currently, constraints can refer to attributes in the current class; in the future they will be able to refer to other model elements. This message indicates that an identifier referenced in the constraint was not found. This is often just due to a typographical error, but it might be due to the current limitations of constraints.</p>
 
 
 @@example

@@ -1,0 +1,40 @@
+W046 Attribute Has Template Type
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple syntactic warning reported when an attribute has a template type, characterized by brackets "<...>".</h2>
+
+<p>Template types do not follow Umple modelling conventions. Umple encourages users to take full advantage of associations in their modelling, which in almost all contexts replace the need for template types. Multivalued attributes can also be used.
+
+</p>
+
+
+@@example
+// This example generates the message
+class A {
+  List<OtherClass> otherClassGroup;
+}
+class OtherClass {}
+
+@@endexample
+
+
+@@example
+// The following shows how to avoid the message using a multivalued attribute
+class A {
+  OtherClass[] otherClassGroup;
+}
+class OtherClass {}
+
+@@endexample
+
+@@example
+// The following shows how to avoid the message using an association
+class A {
+  0..1 -- * OtherClass;
+}
+class OtherClass {}
+
+@@endexample

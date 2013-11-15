@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<h2>Umple semantic error reported when an association has the same name as an attribute r vice versa,</h2>
+<h2>Umple semantic error reported when an association has the same name as an attribute or vice versa,</h2>
 
 <p>An association generates a variable and methods that would clash with an attributes of the same name. If a role name is used, then it must be distinct from all attributes. If no role name is used then the class name (with first character converted to lower case) at the 'other end' of the association must be distinct from all attributes. </p>
 
