@@ -1,0 +1,38 @@
+W044 Attribute Duplicated in Superclass
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when an attribute in a class is a duplicate of an attribute in a superclass.</h2>
+
+<p>The purpose of this warning is to alert the developer that they have to resolve the issue by changing the name of the duplicated attribute in either the superclass or subclass, or else remove one of them entirely. This warning will soon be changed to an
+error.
+</p>
+
+
+@@example
+// This example generates the warning message
+class A {
+  attr;
+}
+
+class B {
+  isA A;
+  attr;
+}
+
+@@endexample
+
+@@example
+//This example solves the problem
+class A {
+  attr;
+}
+
+class B {
+  isA A;
+  differentAttr;
+}
+
+@@endexample

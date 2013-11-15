@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<h2>Umple semantic error reported when an class is given two associations with the same name.</h2>
+<h2>Umple semantic error reported when a class is given two associations with the same name.</h2>
 
 <p>Associations between the same classes must be given different names. This error can occur when two associations have the same role name; the solution is to change one of the role names. The error can also occur when two associations are created without any role name at all. In that case the default name is generated from the associated class. The solution is to add a role name to one of the associations.
 

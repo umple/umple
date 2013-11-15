@@ -1,0 +1,29 @@
+W045 Initialized Value in Key
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when an attribute in the key is given an initial value</h2>
+
+<p>If an attribute is given an initial value and is part of a key, then there is potential for keys of all instances of a class to be the same, meaning that they would be treated as equal and would have the same hash value. It is unlikely that a developer intends for this to be the case, so a warning is thrown to inform them of this behaviour.
+</p>
+
+
+@@example
+// This example generates the message
+class X {
+  Integer z = 1;
+  key { z }
+}
+
+@@endexample
+
+@@example
+// The following shows how to avoid the message
+class X {
+  Integer z;
+  key { z  }
+}
+
+@@endexample

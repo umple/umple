@@ -4,9 +4,9 @@ noreferences
 
 @@description
 
-<h2> Umple reports this error when an specific role named is used </h2>
+<h2> Umple reports this error when a specific role name is used </h2>
 
-<p>In order to define a reflexive association, it is necessary to specify role names. There is a situation which it is possible to define a reflexive association with one role name. When this happens, Umple uses an implicit name for the second role name which is plural form of the class name (e.g. if class name be Computer, plural form would be computers). Therefore, if a user uses plural form of the class name as role name, Umple produces an error.</p>
+<p>In order to define a reflexive association, it is necessary to specify role names. There is a situation where it is possible to define a reflexive association with one role name. When this happens, Umple uses an implicit name for the second role name which is the plural form of the class name (e.g. if the class name is Computer, plural form would be computers). Therefore, if a user uses plural form of the class name as role name, Umple produces an error.</p>
 
 @@example
 // This example generates the error message

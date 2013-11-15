@@ -6,7 +6,7 @@ noreferences
 
 <h2>Umple warning reported when embedded code is found in a native language like Java, PHP or C++, yet 'strictness' has been set indicating this should not occur.</h2>
 
-<p>If <a href="StrictnessDirective.html">strictness</a> is set to 'modelOnly', this means that the developer intends to only include classes, associations, state machines and other modeling elements, but no embedded code in another programming language, <a href="MethodDefinition.html">not even method bodies.</a></p>
+<p>If <a href="StrictnessDirective.html">strictness</a> is set to 'modelOnly', this means that the developer intends to only include classes, associations, state machines and other modeling elements, but not embedded code in another programming language, <a href="MethodDefinition.html">not even method bodies.</a></p>
 
 <p>If <a href="StrictnessDirective.html">strictness</a> is set to 'noExtraCode', it is the same as the above, except that <a href="MethodDefinition.html">method bodies</a> are allowed.</p>
 
