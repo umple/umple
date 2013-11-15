@@ -208,6 +208,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Client.java");
     SampleFileWriter.destroy(pathToInput + "/client.rb");
     SampleFileWriter.destroy(pathToInput + "/Client.php");
+    SampleFileWriter.destroy(pathToInput + "/Client.h");
     SampleFileWriter.destroy(pathToInput + "/Client.cpp");
   }
 
