@@ -1,0 +1,20 @@
+class Person
+{
+  Date birthday;
+}
+
+class Player 
+{
+  isA Person;
+}
+
+class Goalie
+{
+  Time t;
+  isA Player;
+}
+
+class SadGoalie
+{
+  isA Goalie;
+}

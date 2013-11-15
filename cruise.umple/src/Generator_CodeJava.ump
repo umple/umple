@@ -1083,7 +1083,14 @@ class JavaGenerator
         {
           genClass.addMultiLookup("import", aClass.getExtendsClass().getPackageName() + ".*");  
         }
-        addImports(aClass.getExtendsClass(),genClass);
+        
+        //add related imports in multilevel
+        UmpleClass rootUClass = aClass;
+		while (!rootUClass.isRoot()) 
+		{
+			addImports(rootUClass.getExtendsClass(), genClass);
+			rootUClass = rootUClass.getExtendsClass();
+		}
       }
       
       for (AssociationVariable av : aClass.getAssociationVariables()) 
