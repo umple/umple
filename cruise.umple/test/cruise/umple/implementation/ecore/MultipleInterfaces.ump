@@ -1,0 +1,11 @@
+generate Ecore;
+interface Ione
+{}
+
+interface Itwo
+{}
+
+class A
+{
+  isA Ione, Itwo;
+}

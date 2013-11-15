@@ -73,7 +73,7 @@ public class EcoreGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"Generator_CodeEcore.ump"},javaline={78},length={172})
+  @umplesourcefile(line={17},file={"Generator_CodeEcore.ump"},javaline={78},length={189})
    public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
@@ -105,15 +105,32 @@ public class EcoreGenerator implements CodeGenerator
         superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uClass.getExtendsClass().getName()); 
       }
       else if (uClass.hasParentInterface()){
-        UmpleInterface uInterface = uClass.getParentInterface(0);
-        superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uInterface.getName()); 
-        interfaceFlag =   " interface=\"true\"" ; 
-        abstractFlag =   "abstract=\"true\"" ; 
-        if (!(interfacesProcessed.contains(uInterface.getName()))){
-          interfacesProcessed.add(uInterface.getName());
-          code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",uInterface.getName(),interfaceFlag,abstractFlag));
-          code.append("  </eClassifiers>\n");
-        }
+        // add class element attributes
+		List<UmpleInterface> uInterfaces = uClass.getParentInterface();
+		StringBuilder interfacesToken = new StringBuilder();
+		interfacesToken.append(" eSuperTypes=\"");
+		for (UmpleInterface uInterface : uInterfaces) {
+			if (interfacesToken.toString().contains("#//"))
+				interfacesToken.append(" ");
+			interfacesToken.append("#//" + uInterface.getName());
+		}
+		interfacesToken.append("\"");
+		
+		superStructureFlag = interfacesToken.toString();
+		interfaceFlag = " interface=\"true\"";
+		abstractFlag = "abstract=\"true\"";
+
+		// add interfaces
+		for (UmpleInterface uInterface : uInterfaces) {
+			if (!(interfacesProcessed.contains(uInterface.getName()))) {
+				interfacesProcessed.add(uInterface.getName());
+				code.append(StringFormatter
+						.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",
+								uInterface.getName(), interfaceFlag,
+								abstractFlag));
+				code.append("  </eClassifiers>\n");
+			}
+		}
       }
 
       code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1}>\n",uClass.getName(),superStructureFlag));
@@ -247,7 +264,7 @@ public class EcoreGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={191},file={"Generator_CodeEcore.ump"},javaline={252},length={12})
+  @umplesourcefile(line={208},file={"Generator_CodeEcore.ump"},javaline={269},length={12})
    private String getFullyQualifiedName(String packageName, String className){
     try
     {
@@ -261,7 +278,7 @@ public class EcoreGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={204},file={"Generator_CodeEcore.ump"},javaline={266},length={10})
+  @umplesourcefile(line={221},file={"Generator_CodeEcore.ump"},javaline={283},length={10})
    private String getTargetNamespaceName(){
     if (model.getDefaultNamespace() != null){
       if (model.getDefaultNamespace().length() > 0 )
@@ -273,7 +290,7 @@ public class EcoreGenerator implements CodeGenerator
     return model.getUmpleFile().getSimpleFileName();
   }
 
-  @umplesourcefile(line={216},file={"Generator_CodeEcore.ump"},javaline={278},length={17})
+  @umplesourcefile(line={233},file={"Generator_CodeEcore.ump"},javaline={295},length={17})
    private void writeModel(){
     try
     {

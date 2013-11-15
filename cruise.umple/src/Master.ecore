@@ -37,7 +37,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeGenerator" interface="true" abstract="true">
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SuperCodeGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="CodeTranslator" interface="true" abstract="true">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SuperCodeGenerator" eSuperTypes="#//CodeGenerator #//CodeTranslator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
@@ -131,7 +133,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SqlGenerator" eSuperTypes="#//SuperCodeGenerator">
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SDLGenerator" eSuperTypes="#//CodeGenerator">
+  <eClassifiers xsi:type="ecore:EClass" name="SDLGenerator" eSuperTypes="#//CodeGenerator #//CodeTranslator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>

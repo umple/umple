@@ -29,6 +29,7 @@ public class EcoreGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/ecore/Associations.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/NoNamespace.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/Namespace.ecore");
+    SampleFileWriter.destroy(pathToInput + "/ecore/MultipleInterfaces.ecore");
   }
 
   @Test
@@ -61,6 +62,14 @@ public class EcoreGeneratorTest extends TemplateTest
     language = null;
     assertUmpleTemplateFor("ecore/NoNamespace.ump","ecore/NoNamespace.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/NoNamespace.ecore")).exists());
+  }  
+  
+  @Test
+  public void Multiple_Interfaces()
+  {
+    language = null;
+    assertUmpleTemplateFor("ecore/MultipleInterfaces.ump","ecore/MultipleInterfaces.ecore.txt");
+    Assert.assertEquals(true, (new File(pathToInput + "/ecore/MultipleInterfaces.ecore")).exists());
   }  
   
 }

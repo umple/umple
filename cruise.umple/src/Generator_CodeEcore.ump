@@ -44,15 +44,32 @@ class EcoreGenerator
         superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uClass.getExtendsClass().getName()); 
       }
       else if (uClass.hasParentInterface()){
-        UmpleInterface uInterface = uClass.getParentInterface(0);
-        superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uInterface.getName()); 
-        interfaceFlag =   " interface=\"true\"" ; 
-        abstractFlag =   "abstract=\"true\"" ; 
-        if (!(interfacesProcessed.contains(uInterface.getName()))){
-          interfacesProcessed.add(uInterface.getName());
-          code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",uInterface.getName(),interfaceFlag,abstractFlag));
-          code.append("  </eClassifiers>\n");
-        }
+        // add class element attributes
+		List<UmpleInterface> uInterfaces = uClass.getParentInterface();
+		StringBuilder interfacesToken = new StringBuilder();
+		interfacesToken.append(" eSuperTypes=\"");
+		for (UmpleInterface uInterface : uInterfaces) {
+			if (interfacesToken.toString().contains("#//"))
+				interfacesToken.append(" ");
+			interfacesToken.append("#//" + uInterface.getName());
+		}
+		interfacesToken.append("\"");
+		
+		superStructureFlag = interfacesToken.toString();
+		interfaceFlag = " interface=\"true\"";
+		abstractFlag = "abstract=\"true\"";
+
+		// add interfaces
+		for (UmpleInterface uInterface : uInterfaces) {
+			if (!(interfacesProcessed.contains(uInterface.getName()))) {
+				interfacesProcessed.add(uInterface.getName());
+				code.append(StringFormatter
+						.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",
+								uInterface.getName(), interfaceFlag,
+								abstractFlag));
+				code.append("  </eClassifiers>\n");
+			}
+		}
       }
 
       code.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1}>\n",uClass.getName(),superStructureFlag));
