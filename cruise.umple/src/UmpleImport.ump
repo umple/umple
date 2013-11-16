@@ -1,0 +1,78 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Model for the subsystem used to syncronize elements in UmpleOnline
+
+*/
+
+namespace cruise.umple.compiler;
+
+external DefaultHandler{}
+
+class ECoreImportHandler
+{	
+	depend java.io.File;
+	depend java.io.IOException;
+	depend java.util.ArrayList;
+	depend javax.xml.parsers.ParserConfigurationException;
+	depend javax.xml.parsers.SAXParser;
+	depend javax.xml.parsers.SAXParserFactory;
+	depend org.xml.sax.Attributes;
+	depend org.xml.sax.SAXException;
+	depend org.xml.sax.helpers.DefaultHandler;
+
+	isA DefaultHandler;
+}
+
+class UmpleImportElement
+{
+	abstract;
+	
+	id;
+	name;
+	StringBuilder umpleBuilder = new StringBuilder();
+	
+	abstract String generateUmple();
+}
+
+class UmpleImportModel
+{   
+	depend java.util.ArrayList;
+    depend java.util.List;
+    
+	currentPackageName;
+}
+
+class UmpleImportPackage
+{
+	isA UmpleImportElement;
+}
+
+class UmpleImportClass
+{
+	depend java.util.*;
+	
+	isA UmpleImportElement;
+	
+	packageName;
+	boolean isAbstract;
+	boolean isInterface;
+	ArrayList<String> superTypes;
+}
+
+class UmpleImportAssociation
+{
+	isA UmpleImportElement;
+}
+
+class UmpleImportConstants
+{
+}
+
+use UmpleImport_CodeHandlers.ump;
+use UmpleImport_CodeModels.ump;
+

@@ -1,0 +1,84 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Model for the subsystem used to syncronize elements in UmpleOnline
+
+*/
+
+namespace cruise.umple.compiler;
+
+class ECoreImportHandler
+{	
+	internal UmpleImportModel model = new UmpleImportModel("");
+	internal currentElement = "";
+	
+	public UmpleImportModel readDataFromXML(String filename) throws SAXException,
+			IOException, ParserConfigurationException {
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+		factory.setNamespaceAware(true);
+		SAXParser parser = factory.newSAXParser();
+		parser.parse(new File(filename), this);
+		return model;
+	}
+
+	public void startDocument() throws SAXException {
+		model = new UmpleImportModel("");
+	}
+
+	public void endDocument() throws SAXException {
+		// System.out.println("end document");
+	}
+
+	public void startElement(String uri, String localName, String qName,
+			Attributes attributes) throws SAXException {
+		currentElement = localName;
+		if (currentElement.equals("EPackage")) {
+			UmpleImportPackage umplePackage = new UmpleImportPackage(UmpleImportConstants.ECOREPACKAGE, "");
+			String nameSpace = attributes.getValue(UmpleImportConstants.XMI_PACKAGENAME);
+			if (nameSpace != null && !nameSpace.isEmpty()) {
+				umplePackage.setName(nameSpace);
+				model.addComponet(umplePackage);
+			}
+		} else if (currentElement.equals("eClassifiers")) {
+			String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
+			boolean checkIsClass = attrType.equals(UmpleImportConstants.ECORECLASS);
+			if (checkIsClass) {
+				boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
+				boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
+				String currentPackageName = model.getCurrentPackageName();
+				String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
+				UmpleImportClass umpleClass = new UmpleImportClass(
+						UmpleImportConstants.ECORECLASS, className,
+						currentPackageName, isAbstract, isInterface, new ArrayList<String>());
+
+				// note that it's possible that a class can have multiple
+				// interfaces
+				String superType = attributes.getValue(UmpleImportConstants.XMI_SUPERTYPE);
+				if (superType != null) {
+					String delims = "#//";
+					String[] tokens = superType.split(delims);
+					for (String string : tokens) {
+						if (string != null) {
+							umpleClass.addSuperType(string);
+						}
+					}
+				}
+				model.addComponet(umpleClass);
+			}
+		}
+	}
+	
+	public void endElement(String uri, String localName, String qName)
+			throws SAXException {
+		// System.out.println("end element");
+	}
+
+	public void characters(char[] ch, int start, int length)
+			throws SAXException {
+		// System.out.println("characters");
+	}
+}

@@ -1,0 +1,10 @@
+namespace cruise.example.base;
+
+interface ICart
+{
+}
+
+class Cart
+{
+  isA ICart;
+}
