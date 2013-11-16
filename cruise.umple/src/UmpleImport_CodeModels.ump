@@ -1,0 +1,86 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Model for the subsystem used to syncronize elements in UmpleOnline
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleImportModel
+{
+	internal StringBuilder umpleBuilder = new StringBuilder();
+	internal List<UmpleImportElement> components =  new ArrayList<UmpleImportElement>();
+	
+	public void addComponet(UmpleImportElement component) {
+		components.add(component);
+		if (isPackage(component)) {
+			currentPackageName = component.getName();
+		}
+	}
+	
+	public String generateUmple() {
+		umpleBuilder = new StringBuilder();
+		for (UmpleImportElement component : components) {
+			umpleBuilder.append(component.generateUmple());
+		}
+		return umpleBuilder.toString();
+	}
+	
+	private static boolean isPackage(UmpleImportElement component) {
+		return component.getId().equals(UmpleImportConstants.ECOREPACKAGE);
+	}
+}
+
+class UmpleImportPackage
+{
+	public String generateUmple() {
+		StringBuilder umpleBuilder = this.getUmpleBuilder();
+		umpleBuilder.append("namespace " + this.getName() + ";");
+		return umpleBuilder.toString();
+	}
+}
+
+class UmpleImportClass
+{
+	String generateUmple() {
+	    StringBuilder umpleBuilder = this.getUmpleBuilder();
+		umpleBuilder.append("\n\n");
+		if(isInterface){
+			umpleBuilder.append("interface "+this.getName() +"\n{");
+		}else{
+			umpleBuilder.append("class "+ this.getName() +"\n{");
+			if(superTypes.size()!=0){
+				for (String superType : superTypes) {
+					umpleBuilder.append("\n  isA "+ superType+";");
+				}
+			}
+		}
+		umpleBuilder.append("\n}");
+		return umpleBuilder.toString();
+	}
+	
+	public void addSuperType(String superType) {
+		if (superType != null && !superType.isEmpty()) {
+			superTypes.add(superType);
+		}
+	}
+}
+
+class UmpleImportConstants
+{
+	public final static String 
+		XMI_TYPE="xsi:type",
+		XMI_NAME="name",
+		XMI_PACKAGENAME="nsURI",
+		XMI_INTERFACE="interface",
+		XMI_ABSTRACT="abstract",
+		XMI_SUPERTYPE="eSuperTypes",
+	    DATADIR = "../UmpleImport/data/",
+		ECOREPACKAGE = "ecore:EPackage",
+		ECORECLASS = "ecore:EClass";
+}

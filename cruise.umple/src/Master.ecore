@@ -1276,6 +1276,36 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;VariationPoint,List&lt;String>>"/>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DefaultHandler">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ECoreImportHandler" eSuperTypes="#//DefaultHandler">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleImportModel"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentElement" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleImportElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleBuilder" eType="#//StringBuilder"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleImportModel">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentPackageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleBuilder" eType="#//StringBuilder"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="component" eType="#//List%3CUmpleImportElement%3E"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="List&lt;UmpleImportElement>" instanceClassName="java.util.List"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleImportPackage" eSuperTypes="#//UmpleImportElement">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleImportClass" eSuperTypes="#//UmpleImportElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInterface" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="superType" eType="#//ArrayList%3CString%3E"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="ArrayList&lt;String>" instanceClassName="java.util.ArrayList"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleImportAssociation" eSuperTypes="#//UmpleImportElement">
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleImportConstants">
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleConsoleMain">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleRunMain">

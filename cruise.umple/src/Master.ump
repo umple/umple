@@ -41,6 +41,7 @@ use UmpleXtextParser.ump;
 use UmpleSync.ump;
 use Violet.ump;
 use Vml.ump;
+use UmpleImport.ump;
 //use Plugin.ump;
 
 use Main_Code.ump;
