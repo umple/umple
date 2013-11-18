@@ -38,10 +38,10 @@
 30: 4, "http://umple.org/W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1};
 31: 4, "http://umple.org/W031NamespaceNotUsed.html", Declared namespace {0} was not used before declaring {1};
 32: 1, "http://umple.org/E032ReservedRoleName.html", The role name '{0}' has a conflict. Please don't use plural form of class name as a role name.;
-33: 3, "http://umple.org/PageBeingDeveloped.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system. ;
-34: 2, "http://umple.org/PageBeingDeveloped.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface. ;
-35: 3, "http://umple.org/PageBeingDeveloped.html", 'const' variable '{0}' was not initialized and its value was thus set to 'null' ;
-36: 3, "http://umple.org/PageBeingDeveloped.html", The specific multiplicity bounds {0} cannot be managed by generated code, since this is a directed association ;
+33: 3, "http://umple.org/W033MissingSuperclass.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system. ;
+34: 2, "http://umple.org/E034MultipleInheritance.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface. ;
+35: 3, "http://umple.org/W035UninitializedConstant.html", 'const' variable '{0}' was not initialized and its value was thus set to 'null' ;
+36: 3, "http://umple.org/W036UnmanagedMultiplicity.html", The specific multiplicity bounds {0} cannot be managed by generated code, since this is a directed association ;
 
 44: 3, "http://umple.org/W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}'. ;
 45: 4, "http://umple.org/W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal. ;
@@ -69,7 +69,7 @@
 132: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute name '{0}' contains special characters. Association declaration must be separated by spaces ;
 
 140: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Attribute type name '{0}' must be alphanumeric, starting with a letter ;
-141: 4, "http://umple.org/PageBeingDeveloped.html", Mismatch between type '{0}' and value {1} ;
+141: 4, "http://umple.org/W141ValueTypeMismatch.html", Mismatch between type '{0}' and value {1} ;
 
 150: 2, "http://umple.org/WE1xxIdentifierInvalid.html", State machine name '{0}' must be alphanumeric and start with a letter ;
 152: 2, "http://umple.org/WE1xxIdentifierInvalid.html", State name '{0}' must be alphanumeric and start with a letter ;
@@ -86,8 +86,8 @@
 1004: 2, "http://umple.org/E1004-5MessagesnotasExpected.html", Expected message '{0}' not found ;
 1005: 2, "http://umple.org/E1004-5MessagesnotasExpected.html", Disallowed warning message '{0}' encountered ;
 1006: 3, "http://umple.org/W1006StateMachineNotParsed.html", State machine syntax could not be processed. It has been considered as Extra Code ;
-1007: 3, "http://umple.org/PageBeingDeveloped.html", Attribute or Association syntax could not be processed. It has been considered as Extra Code ;
-1008: 3, "http://umple.org/PageBeingDeveloped.html", Method syntax could not be processed. It has been considered as Extra Code ;
+1007: 3, "http://umple.org/W1007ElementNotParsed.html", Attribute or Association syntax could not be processed. It has been considered as Extra Code ;
+1008: 3, "http://umple.org/W1008MethodNotParsed.html", Method syntax could not be processed. It has been considered as Extra Code ;
 
 1500 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 

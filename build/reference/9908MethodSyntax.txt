@@ -1,0 +1,26 @@
+W1008 Method Not Parsed
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a method could not be fully parsed and is treated as 'extra code'. The method will still be emitted and can be called, but Umple cannot analyse it.</h2>
+
+<p>In Umple, elements of a class not recognized as valid Umple are assumed to be elements of the target programming language that are embedded in the Umple. However, this warning is raised when the Umple compiler has reason to believe that the developer might have been trying to specify a method, but omitted some aspect.
+</p>
+
+<p>
+Note that currently, Java main methods generate this warning. It can be safely ignored in that context, and the warning will eventually be removed.
+</p>
+
+
+@@example
+// This example generates the warning because there is a missing return type
+class X {
+  m() {}
+}
+
+@@endexample
+
+
+

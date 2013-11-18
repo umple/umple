@@ -1,0 +1,22 @@
+W1007 Element Not Parsed
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a when Umple finds an un-parsable element in a class, which is likely a malformed attribute or association declaration.</h2>
+
+<p>Umple emits such elements 'as is' as 'extra code' in its generated code, in case they are some part of the base language that Umple cannot understand
+</p>
+
+@@example
+// The following will generate two such warnings
+class X {
+  blah blah blah;
+  1 - * X;
+}
+
+@@endexample
+
+
+

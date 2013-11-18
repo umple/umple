@@ -1,0 +1,51 @@
+E034 Multiple Inheritance
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error generated when multiple inheritance is encountered</h2>
+
+<p>Umple does not currently support multiple inheritance, in order to be consistent with code generated in Java, and also to make models simpler.</p>
+
+<p>
+</p>
+
+@@example
+// The following will generate this error
+
+class P1 {}
+class P2 {}
+
+class Sub {
+  isA P1, P2;
+}
+@@endexample
+
+@@example
+// The following is another way of formulating the same declarations, also resulting in the error
+
+class P1 {}
+class P2 {}
+
+class Sub {
+  isA P1;
+  isA P2;
+}
+
+
+@@endexample
+
+@@example
+// If all but one of the parents is declared as an Interface, the problem is solved
+
+interface P1 {}
+class P2 {}
+
+class Sub {
+  isA P1;
+  isA P2;
+}
+
+
+@@endexample
