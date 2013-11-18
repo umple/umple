@@ -1,0 +1,30 @@
+W035 Uninitialized Constant
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic warning generated when a constant is not initialized</h2>
+
+<p>It makes little sense to have a constant unless it is given a value.</p>
+
+<p>
+</p>
+
+@@example
+// The following will generate this warnbing
+
+class X {
+  const a;
+}
+@@endexample
+
+@@example
+// The following will resolve the issue
+
+class X {
+  const a = "something";
+}
+
+
+@@endexample
