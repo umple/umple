@@ -1,13 +1,15 @@
-span.dropbox-options {
-  margin-right: 10px;
-}
-
-ul.dropbox-options {
+.dropbox-option {
   text-align: center;
 }
 
-ul.dropbox-options li {
+.dropbox-option li {
   display: inline-block;
+}
+
+.dropbox-add-chooser .dropbox-dropin-btn:link {
+  /* Manual sizing workaround to fix issues with overflow. */
+  height: 2em;
+  width: 100px;
 }
 
 .dropbox-chooser {

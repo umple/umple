@@ -16,6 +16,7 @@ DropboxSaver.init = function() {
 
 DropboxSaver.getAbsoluteLink = function() {
   var a = document.createElement('a');
+  var path = Page.getFilename().replace(/^\.\.\//, "");
   a.href = Page.getFilename();
   return a.href;
 }
