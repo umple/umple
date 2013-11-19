@@ -2119,47 +2119,48 @@ class UmpleInternalParser
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
     
+    String modifier = attributeToken.getValue("modifier");
+    String type = attributeToken.getValue("type");
+    String name = attributeToken.getValue("name");
+    String value = attributeToken.getValue("value");
+    String derivedValue = attributeToken.getValue("code");
+    
     if(!validName)
     {
       if(looksLikeAssociation){
-        setFailedPosition(attributeToken.getPosition(), 132, attributeToken.getValue("name"));
+        setFailedPosition(attributeToken.getPosition(), 132, name);
       } 
       else if(isConstant){
-        setFailedPosition(attributeToken.getPosition(), 160, attributeToken.getValue("name"));
+        setFailedPosition(attributeToken.getPosition(), 160, name);
       }
       else {
-        setFailedPosition(attributeToken.getPosition(), 130, attributeToken.getValue("name"));
+        setFailedPosition(attributeToken.getPosition(), 130, name);
       }
       
       return;
     }
     
     if(!properName && !isConstant){
-      setFailedPosition(attributeToken.getPosition(), 131, attributeToken.getValue("name"));
+      setFailedPosition(attributeToken.getPosition(), 131, name);
     }
     else if(properName && isConstant){
-      setFailedPosition(attributeToken.getPosition(), 161, attributeToken.getValue("name"));
+      setFailedPosition(attributeToken.getPosition(), 161, name);
     }
     
-    if (aClass.getIsSingleton() && !isLazy) 
+    //allow singleton with constant and predefined variables
+    if (aClass.getIsSingleton() && !isConstant && !isLazy && (value == null)) 
     {
       isLazy = true;
-      setFailedPosition(attributeToken.getPosition(), 1, attributeToken.getValue("name"));
+      setFailedPosition(attributeToken.getPosition(), 1, name);
     }
 
-    if(attributeToken.getValue("modifier") != null)
+    if(modifier != null)
     {
-      if((attributeToken.getValue("modifier").contains("const")) && (attributeToken.getValue("value") == null))
+      if(modifier.contains("const") && value == null)
       {
-        setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"));
+        setFailedPosition(attributeToken.getPosition(), 35, name);
       }
-     }
-
-    String modifier = attributeToken.getValue("modifier");
-    String type = attributeToken.getValue("type");
-    String name = attributeToken.getValue("name");
-    String value = attributeToken.getValue("value");
-    String derivedValue = attributeToken.getValue("code");
+    }
     
     // check to see if type has angle brackets <>
     if (type != null)
