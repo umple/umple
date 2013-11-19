@@ -1,0 +1,15 @@
+span.dropbox-options {
+  margin-right: 10px;
+}
+
+ul.dropbox-options {
+  text-align: center;
+}
+
+ul.dropbox-options li {
+  display: inline-block;
+}
+
+.dropbox-chooser {
+  visibility: hidden; /* The chooser is initially hidden and will be displayed once Dropbox has loaded. */
+}
