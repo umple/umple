@@ -99,8 +99,6 @@ $output = readTemporaryFile("ump/" . $filename);
 
 <span id=linetext>Line=<input size=2 id=linenum value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span> 
 
-<span class="dropbox-options"></span>
-
 <?php if (isBookmark($filename)) { ?>
   <a id="topBookmarkable" href="umple.php?model=<?php echo extractModelId($filename) ?>">Changes at this URL are saved</a>
 <?php } else { ?>
@@ -145,7 +143,7 @@ $output = readTemporaryFile("ump/" . $filename);
           <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
         </ul>
         
-        <ul class="dropbox-options"></ul>
+        <ul class="dropbox-add-saver"></ul>
         
         <ul class="second">
           <li class="subtitle">RESET</li>
@@ -219,7 +217,7 @@ $output = readTemporaryFile("ump/" . $filename);
 
           </select>
         </li>
-       
+        
         <li id="itemLoadExamples2">
           <select id="inputExample2" name="inputExample2" class="button" size = "1">
             <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
@@ -237,8 +235,9 @@ $output = readTemporaryFile("ump/" . $filename);
             <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic</option>
           </select>
         </li>
+      </ul>
         
-        </ul>
+      <ul class="dropbox-add-chooser"></ul>
       
       <ul id="mainDrawMenu" class = "second toggle">
         <li class="subtitle"> Draw </li>
