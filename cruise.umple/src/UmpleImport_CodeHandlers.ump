@@ -15,13 +15,17 @@ class ECoreImportHandler
 {	
 	internal UmpleImportModel model = new UmpleImportModel("");
 	internal currentElement = "";
+	internal UmpleImportClass currentClass = null;
 	
-	public UmpleImportModel readDataFromXML(String filename) throws SAXException,
-			IOException, ParserConfigurationException {
+	public UmpleImportModel readDataFromXML(String filename) throws IOException, ParserConfigurationException {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setNamespaceAware(true);
-		SAXParser parser = factory.newSAXParser();
-		parser.parse(new File(filename), this);
+		try {
+			SAXParser parser = factory.newSAXParser();
+			parser.parse(new File(filename), this);
+		} catch (SAXException e) {
+			System.out.println(e.getMessage());
+		}
 		return model;
 	}
 
@@ -33,30 +37,39 @@ class ECoreImportHandler
 		// System.out.println("end document");
 	}
 
-	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException {
-		currentElement = localName;
+	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+		currentElement = localName;		
+		//load package object
 		if (currentElement.equals("EPackage")) {
-			UmpleImportPackage umplePackage = new UmpleImportPackage(UmpleImportConstants.ECOREPACKAGE, "");
+			UmpleImportPackage umplePackage = new UmpleImportPackage(UmpleImportConstants.ECORE_PACKAGE, "");
 			String nameSpace = attributes.getValue(UmpleImportConstants.XMI_PACKAGENAME);
 			if (nameSpace != null && !nameSpace.isEmpty()) {
 				umplePackage.setName(nameSpace);
-				model.addComponet(umplePackage);
+				model.addUmpleImportElement(umplePackage);
 			}
-		} else if (currentElement.equals("eClassifiers")) {
+		} 
+		//load class/interface/dataType object
+		else if (currentElement.equals("eClassifiers")) {
 			String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
-			boolean checkIsClass = attrType.equals(UmpleImportConstants.ECORECLASS);
-			if (checkIsClass) {
+			boolean checkIsClass = attrType.equals(UmpleImportConstants.ECORE_CLASS);
+			boolean checkIsDataType = attrType.equals(UmpleImportConstants.ECORE_DATATYPE);
+			boolean checkDataTypeIsExtraClass = false;
+			if (checkIsDataType){
+				String dataTypeName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+				//exclude umple default date and time dataType
+				boolean checkIsDate = dataTypeName.equals("Date");
+				boolean checkIsTime = dataTypeName.equals("Time");
+				checkDataTypeIsExtraClass = !(checkIsDate||checkIsTime);
+			}
+			if (checkIsClass || checkDataTypeIsExtraClass) {
 				boolean isInterface = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_INTERFACE));
 				boolean isAbstract = Boolean.parseBoolean(attributes.getValue(UmpleImportConstants.XMI_ABSTRACT));
 				String currentPackageName = model.getCurrentPackageName();
 				String className = attributes.getValue(UmpleImportConstants.XMI_NAME);
-				UmpleImportClass umpleClass = new UmpleImportClass(
-						UmpleImportConstants.ECORECLASS, className,
-						currentPackageName, isAbstract, isInterface, new ArrayList<String>());
-
-				// note that it's possible that a class can have multiple
-				// interfaces
+				UmpleImportClass umpleClass = new UmpleImportClass(UmpleImportConstants.ECORE_CLASS, className, currentPackageName, isAbstract, isInterface);
+	            currentClass = umpleClass;
+	            
+				// note that it's possible that a class can have multiple interfaces
 				String superType = attributes.getValue(UmpleImportConstants.XMI_SUPERTYPE);
 				if (superType != null) {
 					String delims = "#//";
@@ -67,18 +80,49 @@ class ECoreImportHandler
 						}
 					}
 				}
-				model.addComponet(umpleClass);
+				model.addUmpleImportElement(umpleClass);
+			}
+		} 
+		//load class attributes
+		else if (currentElement.equals("eStructuralFeatures")) {
+			String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
+			boolean checkIsAttribute = attrType.equals(UmpleImportConstants.ECORE_ATTRIBUTE);
+			if(checkIsAttribute)
+			{
+				String attrName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+				String classAttrTypeRaw = attributes.getValue(UmpleImportConstants.ECORE_TYPE);
+				String classAttrType = classAttrTypeRaw.split("#//")[1];
+				String currentClassName = currentClass.getName();
+				UmpleImportAttribute umpleAttribute = new UmpleImportAttribute(UmpleImportConstants.ECORE_ATTRIBUTE, attrName, currentClassName, classAttrType);
+				String attrUpper = attributes.getValue(UmpleImportConstants.XMI_UPPER);
+				if(attrUpper!=null)
+					umpleAttribute.setUpperBound(Integer.parseInt(attrUpper));
+				currentClass.addUmpleImportAttribute(umpleAttribute);
 			}
 		}
 	}
 	
-	public void endElement(String uri, String localName, String qName)
-			throws SAXException {
-		// System.out.println("end element");
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+	    // reset internal values for next round of parsing
+	    boolean checkIsClassifiers = currentElement.equals(currentElement.equals("eClassifiers"));
+		if (checkIsClassifiers && currentClass != null)
+			currentClass = null;
+		currentElement = "";
 	}
 
-	public void characters(char[] ch, int start, int length)
-			throws SAXException {
+	public void characters(char[] ch, int start, int length) throws SAXException {
 		// System.out.println("characters");
+	}
+		
+	public void warning(SAXParseException e) throws SAXException {
+		System.out.println("Warning");
+	}
+
+	public void error(SAXParseException e) throws SAXException {
+		System.out.println("Error");
+	}
+
+	public void fatalError(SAXParseException e) throws SAXException {
+		System.out.println("Fatal Error");
 	}
 }

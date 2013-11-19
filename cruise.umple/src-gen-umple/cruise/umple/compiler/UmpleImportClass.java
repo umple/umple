@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource UmpleImport.ump 54
- * @umplesource UmpleImport_CodeModels.ump 47
+ * @umplesource UmpleImport.ump 55
+ * @umplesource UmpleImport_CodeModels.ump 35
  */
-// line 54 "../../../../src/UmpleImport.ump"
-// line 47 "../../../../src/UmpleImport_CodeModels.ump"
+// line 55 "../../../../src/UmpleImport.ump"
+// line 35 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportClass extends UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -23,19 +23,23 @@ public class UmpleImportClass extends UmpleImportElement
   private String packageName;
   private boolean isAbstract;
   private boolean isInterface;
-  private ArrayList<String> superTypes;
+  private List<String> superTypes;
+
+  //UmpleImportClass Associations
+  private List<UmpleImportAttribute> umpleImportAttributes;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public UmpleImportClass(String aId, String aName, String aPackageName, boolean aIsAbstract, boolean aIsInterface, ArrayList<String> aSuperTypes)
+  public UmpleImportClass(String aId, String aName, String aPackageName, boolean aIsAbstract, boolean aIsInterface)
   {
     super(aId, aName);
     packageName = aPackageName;
     isAbstract = aIsAbstract;
     isInterface = aIsInterface;
-    superTypes = aSuperTypes;
+    superTypes = new ArrayList<String>();
+    umpleImportAttributes = new ArrayList<UmpleImportAttribute>();
   }
 
   //------------------------
@@ -66,12 +70,18 @@ public class UmpleImportClass extends UmpleImportElement
     return wasSet;
   }
 
-  public boolean setSuperTypes(ArrayList<String> aSuperTypes)
+  public boolean addSuperType(String aSuperType)
   {
-    boolean wasSet = false;
-    superTypes = aSuperTypes;
-    wasSet = true;
-    return wasSet;
+    boolean wasAdded = false;
+    wasAdded = superTypes.add(aSuperType);
+    return wasAdded;
+  }
+
+  public boolean removeSuperType(String aSuperType)
+  {
+    boolean wasRemoved = false;
+    wasRemoved = superTypes.remove(aSuperType);
+    return wasRemoved;
   }
 
   public String getPackageName()
@@ -89,17 +99,130 @@ public class UmpleImportClass extends UmpleImportElement
     return isInterface;
   }
 
-  public ArrayList<String> getSuperTypes()
+  public String getSuperType(int index)
   {
-    return superTypes;
+    String aSuperType = superTypes.get(index);
+    return aSuperType;
+  }
+
+  public String[] getSuperTypes()
+  {
+    String[] newSuperTypes = superTypes.toArray(new String[superTypes.size()]);
+    return newSuperTypes;
+  }
+
+  public int numberOfSuperTypes()
+  {
+    int number = superTypes.size();
+    return number;
+  }
+
+  public boolean hasSuperTypes()
+  {
+    boolean has = superTypes.size() > 0;
+    return has;
+  }
+
+  public int indexOfSuperType(String aSuperType)
+  {
+    int index = superTypes.indexOf(aSuperType);
+    return index;
+  }
+
+  public UmpleImportAttribute getUmpleImportAttribute(int index)
+  {
+    UmpleImportAttribute aUmpleImportAttribute = umpleImportAttributes.get(index);
+    return aUmpleImportAttribute;
+  }
+
+  public List<UmpleImportAttribute> getUmpleImportAttributes()
+  {
+    List<UmpleImportAttribute> newUmpleImportAttributes = Collections.unmodifiableList(umpleImportAttributes);
+    return newUmpleImportAttributes;
+  }
+
+  public int numberOfUmpleImportAttributes()
+  {
+    int number = umpleImportAttributes.size();
+    return number;
+  }
+
+  public boolean hasUmpleImportAttributes()
+  {
+    boolean has = umpleImportAttributes.size() > 0;
+    return has;
+  }
+
+  public int indexOfUmpleImportAttribute(UmpleImportAttribute aUmpleImportAttribute)
+  {
+    int index = umpleImportAttributes.indexOf(aUmpleImportAttribute);
+    return index;
+  }
+
+  public static int minimumNumberOfUmpleImportAttributes()
+  {
+    return 0;
+  }
+
+  public boolean addUmpleImportAttribute(UmpleImportAttribute aUmpleImportAttribute)
+  {
+    boolean wasAdded = false;
+    if (umpleImportAttributes.contains(aUmpleImportAttribute)) { return false; }
+    umpleImportAttributes.add(aUmpleImportAttribute);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeUmpleImportAttribute(UmpleImportAttribute aUmpleImportAttribute)
+  {
+    boolean wasRemoved = false;
+    if (umpleImportAttributes.contains(aUmpleImportAttribute))
+    {
+      umpleImportAttributes.remove(aUmpleImportAttribute);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addUmpleImportAttributeAt(UmpleImportAttribute aUmpleImportAttribute, int index)
+  {  
+    boolean wasAdded = false;
+    if(addUmpleImportAttribute(aUmpleImportAttribute))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleImportAttributes()) { index = numberOfUmpleImportAttributes() - 1; }
+      umpleImportAttributes.remove(aUmpleImportAttribute);
+      umpleImportAttributes.add(index, aUmpleImportAttribute);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveUmpleImportAttributeAt(UmpleImportAttribute aUmpleImportAttribute, int index)
+  {
+    boolean wasAdded = false;
+    if(umpleImportAttributes.contains(aUmpleImportAttribute))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleImportAttributes()) { index = numberOfUmpleImportAttributes() - 1; }
+      umpleImportAttributes.remove(aUmpleImportAttribute);
+      umpleImportAttributes.add(index, aUmpleImportAttribute);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addUmpleImportAttributeAt(aUmpleImportAttribute, index);
+    }
+    return wasAdded;
   }
 
   public void delete()
   {
+    umpleImportAttributes.clear();
     super.delete();
   }
 
-  @umplesourcefile(line={51},file={"UmpleImport_CodeModels.ump"},javaline={104},length={16})
+  @umplesourcefile(line={39},file={"UmpleImport_CodeModels.ump"},javaline={227},length={20})
   public String generateUmple(){
     StringBuilder umpleBuilder = this.getUmpleBuilder();
 		umpleBuilder.append("\n\n");
@@ -109,19 +232,16 @@ public class UmpleImportClass extends UmpleImportElement
 			umpleBuilder.append("class "+ this.getName() +"\n{");
 			if(superTypes.size()!=0){
 				for (String superType : superTypes) {
-					umpleBuilder.append("\n  isA "+ superType+";");
+				    if(!superType.isEmpty())
+						umpleBuilder.append("\n  isA "+ superType+";");
 				}
 			}
 		}
+		for (UmpleImportAttribute umpleImportAttribute : umpleImportAttributes) {
+			umpleBuilder.append(umpleImportAttribute.generateUmple());
+		}
 		umpleBuilder.append("\n}");
 		return umpleBuilder.toString();
-  }
-
-  @umplesourcefile(line={68},file={"UmpleImport_CodeModels.ump"},javaline={122},length={5})
-   public void addSuperType(String superType){
-    if (superType != null && !superType.isEmpty()) {
-			superTypes.add(superType);
-		}
   }
 
 
@@ -131,8 +251,7 @@ public class UmpleImportClass extends UmpleImportElement
     return super.toString() + "["+
             "packageName" + ":" + getPackageName()+ "," +
             "isAbstract" + ":" + getIsAbstract()+ "," +
-            "isInterface" + ":" + getIsInterface()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "superTypes" + "=" + (getSuperTypes() != null ? !getSuperTypes().equals(this)  ? getSuperTypes().toString().replaceAll("  ","    ") : "this" : "null")
+            "isInterface" + ":" + getIsInterface()+ "]"
      + outputString;
   }
 }

@@ -1,0 +1,26 @@
+namespace model;
+
+class Product1
+{
+	description;
+	Integer available;
+	Double price;
+	Date createdDate;
+	Time createdTime;
+	Boolean isActive;
+	Address addr;
+}
+
+class Address
+{
+}
+
+class Product2
+{
+	Integer[] allAvailables;
+	Double[] allPrices;
+	Date[] allCreatedDates;
+	Time[] allCreatedTimes;
+	Boolean[] allIsActives;
+	Address[] allAddrs;
+}
