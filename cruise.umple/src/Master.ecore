@@ -1281,30 +1281,50 @@
   <eClassifiers xsi:type="ecore:EClass" name="ECoreImportHandler" eSuperTypes="#//DefaultHandler">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleImportModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentElement" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="currentClass" eType="#//UmpleImportClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleBuilder" eType="#//StringBuilder"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportModel" lowerBound="0" upperBound="1" eType="#//UmpleImportModel" eOpposite="#//UmpleImportModel/umpleImportElements"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportModel">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentPackageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleBuilder" eType="#//StringBuilder"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="component" eType="#//List%3CUmpleImportElement%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportElements" lowerBound="0" upperBound="-1" eType="#//UmpleImportElement" eOpposite="#//UmpleImportElement/umpleImportModel"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="List&lt;UmpleImportElement>" instanceClassName="java.util.List"/>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportPackage" eSuperTypes="#//UmpleImportElement">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportClass" eSuperTypes="#//UmpleImportElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInterface" eType="#//boolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="superType" eType="#//ArrayList%3CString%3E"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="superTypes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportAttributes" lowerBound="0" upperBound="-1" eType="#//UmpleImportAttribute" eOpposite="#//UmpleImportAttribute/umpleImportClass"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EDataType" name="ArrayList&lt;String>" instanceClassName="java.util.ArrayList"/>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleImportAttribute" eSuperTypes="#//UmpleImportElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportClass" lowerBound="0" upperBound="1" eType="#//UmpleImportClass" eOpposite="#//UmpleImportClass/umpleImportAttributes"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportAssociation" eSuperTypes="#//UmpleImportElement">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportConstants">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XMI_TYPE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XMI_NAME" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XMI_PACKAGENAME" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XMI_INTERFACE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XMI_ABSTRACT" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XMI_SUPERTYPE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="XMI_UPPER" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_PACKAGE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_CLASS" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_ATTRIBUTE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_TYPE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_DATATYPE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleConsoleMain">
   </eClassifiers>

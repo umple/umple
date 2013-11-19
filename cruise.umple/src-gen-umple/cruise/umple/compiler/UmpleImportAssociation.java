@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource UmpleImport.ump 66
+ * @umplesource UmpleImport.ump 78
  */
-// line 66 "../../../../src/UmpleImport.ump"
+// line 78 "../../../../src/UmpleImport.ump"
 public abstract class UmpleImportAssociation extends UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

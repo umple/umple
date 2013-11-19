@@ -2,14 +2,14 @@
 /*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
 
 package cruise.umple.compiler;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
- * @umplesource UmpleImport.ump 41
+ * integration of all elements as a model
+ * @umplesource UmpleImport.ump 43
  * @umplesource UmpleImport_CodeModels.ump 13
  */
-// line 41 "../../../../src/UmpleImport.ump"
+// line 43 "../../../../src/UmpleImport.ump"
 // line 13 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportModel
 {
@@ -23,7 +23,9 @@ public class UmpleImportModel
   //UmpleImportModel Attributes
   private String currentPackageName;
   private StringBuilder umpleBuilder;
-  private List<UmpleImportElement> components;
+
+  //UmpleImportModel Associations
+  private List<UmpleImportElement> umpleImportElements;
 
   //------------------------
   // CONSTRUCTOR
@@ -33,7 +35,7 @@ public class UmpleImportModel
   {
     currentPackageName = aCurrentPackageName;
     umpleBuilder = new StringBuilder();
-    components = new ArrayList<UmpleImportElement>();
+    umpleImportElements = new ArrayList<UmpleImportElement>();
   }
 
   //------------------------
@@ -53,29 +55,105 @@ public class UmpleImportModel
     return currentPackageName;
   }
 
-  public void delete()
-  {}
-
-  @umplesourcefile(line={20},file={"UmpleImport_CodeModels.ump"},javaline={61},length={6})
-   public void addComponet(UmpleImportElement component){
-    components.add(component);
-		if (isPackage(component)) {
-			currentPackageName = component.getName();
-		}
+  public UmpleImportElement getUmpleImportElement(int index)
+  {
+    UmpleImportElement aUmpleImportElement = umpleImportElements.get(index);
+    return aUmpleImportElement;
   }
 
-  @umplesourcefile(line={27},file={"UmpleImport_CodeModels.ump"},javaline={69},length={7})
+  public List<UmpleImportElement> getUmpleImportElements()
+  {
+    List<UmpleImportElement> newUmpleImportElements = Collections.unmodifiableList(umpleImportElements);
+    return newUmpleImportElements;
+  }
+
+  public int numberOfUmpleImportElements()
+  {
+    int number = umpleImportElements.size();
+    return number;
+  }
+
+  public boolean hasUmpleImportElements()
+  {
+    boolean has = umpleImportElements.size() > 0;
+    return has;
+  }
+
+  public int indexOfUmpleImportElement(UmpleImportElement aUmpleImportElement)
+  {
+    int index = umpleImportElements.indexOf(aUmpleImportElement);
+    return index;
+  }
+
+  public static int minimumNumberOfUmpleImportElements()
+  {
+    return 0;
+  }
+
+  public boolean addUmpleImportElement(UmpleImportElement aUmpleImportElement)
+  {
+    boolean wasAdded = false;
+    if (umpleImportElements.contains(aUmpleImportElement)) { return false; }
+    umpleImportElements.add(aUmpleImportElement);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeUmpleImportElement(UmpleImportElement aUmpleImportElement)
+  {
+    boolean wasRemoved = false;
+    if (umpleImportElements.contains(aUmpleImportElement))
+    {
+      umpleImportElements.remove(aUmpleImportElement);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addUmpleImportElementAt(UmpleImportElement aUmpleImportElement, int index)
+  {  
+    boolean wasAdded = false;
+    if(addUmpleImportElement(aUmpleImportElement))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleImportElements()) { index = numberOfUmpleImportElements() - 1; }
+      umpleImportElements.remove(aUmpleImportElement);
+      umpleImportElements.add(index, aUmpleImportElement);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveUmpleImportElementAt(UmpleImportElement aUmpleImportElement, int index)
+  {
+    boolean wasAdded = false;
+    if(umpleImportElements.contains(aUmpleImportElement))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleImportElements()) { index = numberOfUmpleImportElements() - 1; }
+      umpleImportElements.remove(aUmpleImportElement);
+      umpleImportElements.add(index, aUmpleImportElement);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addUmpleImportElementAt(aUmpleImportElement, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    umpleImportElements.clear();
+  }
+
+  @umplesourcefile(line={19},file={"UmpleImport_CodeModels.ump"},javaline={152},length={7})
    public String generateUmple(){
     umpleBuilder = new StringBuilder();
-		for (UmpleImportElement component : components) {
-			umpleBuilder.append(component.generateUmple());
+		for (UmpleImportElement umpleImportElement : umpleImportElements) {
+			umpleBuilder.append(umpleImportElement.generateUmple());
 		}
 		return umpleBuilder.toString();
-  }
-
-  @umplesourcefile(line={35},file={"UmpleImport_CodeModels.ump"},javaline={78},length={3})
-   private static  boolean isPackage(UmpleImportElement component){
-    return component.getId().equals(UmpleImportConstants.ECOREPACKAGE);
   }
 
 

@@ -4,15 +4,30 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource UmpleImport.ump 71
- * @umplesource UmpleImport_CodeModels.ump 73
+ * @umplesource UmpleImport.ump 83
  */
-// line 71 "../../../../src/UmpleImport.ump"
-// line 73 "../../../../src/UmpleImport_CodeModels.ump"
+// line 83 "../../../../src/UmpleImport.ump"
 public class UmpleImportConstants
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final String XMI_TYPE = "xsi:type";
+  public static final String XMI_NAME = "name";
+  public static final String XMI_PACKAGENAME = "nsURI";
+  public static final String XMI_INTERFACE = "interface";
+  public static final String XMI_ABSTRACT = "abstract";
+  public static final String XMI_SUPERTYPE = "eSuperTypes";
+  public static final String XMI_UPPER = "upperBound";
+  public static final String ECORE_PACKAGE = "ecore:EPackage";
+  public static final String ECORE_CLASS = "ecore:EClass";
+  public static final String ECORE_ATTRIBUTE = "ecore:EAttribute";
+  public static final String ECORE_TYPE = "eType";
+  public static final String ECORE_DATATYPE = "ecore:EDataType";
 
   //------------------------
   // MEMBER VARIABLES
@@ -31,21 +46,12 @@ public class UmpleImportConstants
 
   public void delete()
   {}
-  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  //  @umplesourcefile(line={75},file={"UmpleImport_CodeModels.ump"},javaline={39},length={11})
-  public final static String 
-		XMI_TYPE="xsi:type",
-		XMI_NAME="name",
-		XMI_PACKAGENAME="nsURI",
-		XMI_INTERFACE="interface",
-		XMI_ABSTRACT="abstract",
-		XMI_SUPERTYPE="eSuperTypes",
-	    DATADIR = "../UmpleImport/data/",
-		ECOREPACKAGE = "ecore:EPackage",
-		ECORECLASS = "ecore:EClass" ;
 
-  
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]"
+     + outputString;
+  }
 }

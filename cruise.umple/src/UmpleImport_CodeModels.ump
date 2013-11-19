@@ -14,31 +14,19 @@ namespace cruise.umple.compiler;
 class UmpleImportModel
 {
 	internal StringBuilder umpleBuilder = new StringBuilder();
-	internal List<UmpleImportElement> components =  new ArrayList<UmpleImportElement>();
-	
-	public void addComponet(UmpleImportElement component) {
-		components.add(component);
-		if (isPackage(component)) {
-			currentPackageName = component.getName();
-		}
-	}
 	
 	public String generateUmple() {
 		umpleBuilder = new StringBuilder();
-		for (UmpleImportElement component : components) {
-			umpleBuilder.append(component.generateUmple());
+		for (UmpleImportElement umpleImportElement : umpleImportElements) {
+			umpleBuilder.append(umpleImportElement.generateUmple());
 		}
 		return umpleBuilder.toString();
-	}
-	
-	private static boolean isPackage(UmpleImportElement component) {
-		return component.getId().equals(UmpleImportConstants.ECOREPACKAGE);
 	}
 }
 
 class UmpleImportPackage
 {
-	public String generateUmple() {
+	String generateUmple() {
 		StringBuilder umpleBuilder = this.getUmpleBuilder();
 		umpleBuilder.append("namespace " + this.getName() + ";");
 		return umpleBuilder.toString();
@@ -56,31 +44,49 @@ class UmpleImportClass
 			umpleBuilder.append("class "+ this.getName() +"\n{");
 			if(superTypes.size()!=0){
 				for (String superType : superTypes) {
-					umpleBuilder.append("\n  isA "+ superType+";");
+				    if(!superType.isEmpty())
+						umpleBuilder.append("\n  isA "+ superType+";");
 				}
 			}
+		}
+		for (UmpleImportAttribute umpleImportAttribute : umpleImportAttributes) {
+			umpleBuilder.append(umpleImportAttribute.generateUmple());
 		}
 		umpleBuilder.append("\n}");
 		return umpleBuilder.toString();
 	}
-	
-	public void addSuperType(String superType) {
-		if (superType != null && !superType.isEmpty()) {
-			superTypes.add(superType);
-		}
-	}
 }
 
-class UmpleImportConstants
+class UmpleImportAttribute
 {
-	public final static String 
-		XMI_TYPE="xsi:type",
-		XMI_NAME="name",
-		XMI_PACKAGENAME="nsURI",
-		XMI_INTERFACE="interface",
-		XMI_ABSTRACT="abstract",
-		XMI_SUPERTYPE="eSuperTypes",
-	    DATADIR = "../UmpleImport/data/",
-		ECOREPACKAGE = "ecore:EPackage",
-		ECORECLASS = "ecore:EClass";
+	String generateUmple() {
+		StringBuilder builder = this.getUmpleBuilder();
+    	String umpleType = getUmpleTypeFromEcoreType(this.dataType);
+    	builder.append("\n\t" + umpleType + this.getName()+";");
+    	return builder.toString();
+    }
+    
+    private String getUmpleTypeFromEcoreType(String uType)
+  	{
+		String ret="";
+		if(uType.equals("EInt"))
+			ret = "Integer";
+		else if(uType.equals("EDouble"))
+			ret = "Double";
+		else if(uType.equals("EDate"))
+			ret = "Date";
+		else if(uType.equals("EBoolean"))
+			ret = "Boolean";
+		else if(uType.equals("EString")){
+			if(upperBound!=1)
+				ret = "String";
+		}
+		else
+			ret = uType;
+		if(upperBound!=1)
+    		ret +="[]";
+		if(!ret.isEmpty())
+			ret += " ";
+		return ret;
+  	}
 }

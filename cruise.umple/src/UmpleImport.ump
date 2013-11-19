@@ -17,17 +17,18 @@ class ECoreImportHandler
 {	
 	depend java.io.File;
 	depend java.io.IOException;
-	depend java.util.ArrayList;
 	depend javax.xml.parsers.ParserConfigurationException;
 	depend javax.xml.parsers.SAXParser;
 	depend javax.xml.parsers.SAXParserFactory;
 	depend org.xml.sax.Attributes;
 	depend org.xml.sax.SAXException;
+	depend org.xml.sax.SAXParseException;
 	depend org.xml.sax.helpers.DefaultHandler;
 
 	isA DefaultHandler;
 }
 
+//prototype of package, class, interface, associations and so on. 
 class UmpleImportElement
 {
 	abstract;
@@ -39,12 +40,12 @@ class UmpleImportElement
 	abstract String generateUmple();
 }
 
+//integration of all elements as a model
 class UmpleImportModel
 {   
-	depend java.util.ArrayList;
-    depend java.util.List;
-    
-	currentPackageName;
+	0..1 -> * UmpleImportElement;
+	
+	currentPackageName;	
 }
 
 class UmpleImportPackage
@@ -54,14 +55,25 @@ class UmpleImportPackage
 
 class UmpleImportClass
 {
-	depend java.util.*;
-	
 	isA UmpleImportElement;
+	
+	0..1 -> * UmpleImportAttribute;
 	
 	packageName;
 	boolean isAbstract;
 	boolean isInterface;
-	ArrayList<String> superTypes;
+	String[] superTypes;
+}
+
+class UmpleImportAttribute
+{
+	isA UmpleImportElement;
+	
+	className;
+	dataType;
+	//primitive type as default
+	Integer lowerBound=0;
+	Integer upperBound=1;
 }
 
 class UmpleImportAssociation
@@ -71,8 +83,19 @@ class UmpleImportAssociation
 
 class UmpleImportConstants
 {
+	const XMI_TYPE="xsi:type";
+	const XMI_NAME="name";
+	const XMI_PACKAGENAME="nsURI";
+	const XMI_INTERFACE="interface";
+	const XMI_ABSTRACT="abstract";
+	const XMI_SUPERTYPE="eSuperTypes";
+	const XMI_UPPER = "upperBound";
+	const ECORE_PACKAGE = "ecore:EPackage";
+	const ECORE_CLASS = "ecore:EClass";
+	const ECORE_ATTRIBUTE = "ecore:EAttribute";
+	const ECORE_TYPE = "eType";
+	const ECORE_DATATYPE = "ecore:EDataType";
 }
 
 use UmpleImport_CodeHandlers.ump;
 use UmpleImport_CodeModels.ump;
-

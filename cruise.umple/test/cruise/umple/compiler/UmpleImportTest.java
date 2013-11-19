@@ -40,6 +40,15 @@ public class UmpleImportTest {
 
 		assertEquals(expectedText, actualText);
 	}
+	
+	@Test
+	public void EcoreClassAttributesParsingTest() throws Exception {
+		
+		String expectedText = loadUmpleFile("ECoreImport_ClassAttributes.ump");
+		String actualText = loadECoreFile("ECoreImport_ClassAttributes.ecore");
+        System.out.println(actualText);
+		assertEquals(expectedText, actualText);
+	}
 
 	private static String loadECoreFile(String name) throws Exception {
 		String filename = getFullFilePath(name);

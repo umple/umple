@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="model" nsURI="model" nsPrefix="model">
+  <eClassifiers xsi:type="ecore:EDataType" name="Time" instanceClassName="java.sql.Time"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Product1">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="description" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="available" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="price" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="createdTime" eType="#//Time"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isActive" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="addr" eType="#//Address"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EDataType" name="Address"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Product2">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allAvailables" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt" upperBound="-1"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allPrices" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allCreatedDates" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allCreatedTimes" eType="#//Time" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allIsActives" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="allAddrs" eType="#//Address" upperBound="-1"/>
+  </eClassifiers>
+</ecore:EPackage>
