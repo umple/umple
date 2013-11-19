@@ -99,6 +99,8 @@ $output = readTemporaryFile("ump/" . $filename);
 
 <span id=linetext>Line=<input size=2 id=linenum value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span> 
 
+<span class="dropbox-options"></span>
+
 <?php if (isBookmark($filename)) { ?>
   <a id="topBookmarkable" href="umple.php?model=<?php echo extractModelId($filename) ?>">Changes at this URL are saved</a>
 <?php } else { ?>
@@ -142,6 +144,8 @@ $output = readTemporaryFile("ump/" . $filename);
           <li id="buttonCopy" class="copy"><img src="scripts/copy.png" title="Copy" /> Source</li>
           <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
         </ul>
+        
+        <ul class="dropbox-options"></ul>
         
         <ul class="second">
           <li class="subtitle">RESET</li>

@@ -70,6 +70,12 @@ document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/codem
 document.write('<script type="text/javascript" src="scripts/CodeMirror/mode/clike/clike.js"><\/script>');  // contains C-like mode
 document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/foldcode.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/searchcursor.js"><\/script>');
-
-
 document.write('<link href="scripts/CodeMirror/lib/codemirror.css" rel="stylesheet" type="text/css" />');
+
+// DROPBOX
+document.write('<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="akix6305j3tm11i"></script>');
+document.write('<script type="text/javascript" src="scripts/dropbox/dropbox.js"></script>');
+document.write('<script type="text/javascript" src="scripts/dropbox/chooser.js"></script>');
+document.write('<script type="text/javascript" src="scripts/dropbox/saver.js"></script>');
+document.write('<link href="scripts/dropbox/dropbox.css" rel="stylesheet" type="text/css"/>');
+
