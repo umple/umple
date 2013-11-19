@@ -816,23 +816,28 @@ public class UmpleParserTest
     UmpleClass aClass = model.getUmpleClass("Airline");
     Assert.assertEquals(true,aClass.getIsSingleton());
   }
-
+  
   @Test 
   public void is_A_NonExistingExtendsClass(){
-	
-		assertHasWarningsParse("007_isANonExistingSuperClass.ump", 33);
+	assertHasWarningsParse("007_isANonExistingSuperClass.ump", 33);
   }
 
   @Test
   public void singletonAttributeNotLazy()
   {
-	  assertHasWarningsParse("007_singletonAttributeNotLazy.ump", new Position("007_singletonAttributeNotLazy.ump",3,1,29));
+	assertHasWarningsParse("007_singletonAttributeNotLazy.ump", new Position("007_singletonAttributeNotLazy.ump",3,1,29));
+  }
+  
+  @Test
+  public void singletonWithConst()
+  {
+	assertNoWarningsParse("007_singletonWithConst.ump");
   }
   
   @Test
   public void isAttributeLazyRedundant()
   {
-	  assertHasWarningsParse("007_isAttributeLazyRedundant.ump", 3);
+	assertHasWarningsParse("007_isAttributeLazyRedundant.ump", 3);
   }
   
   @Test
@@ -2266,6 +2271,22 @@ public class UmpleParserTest
     boolean answer = parseWarnings(filename);
     Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+  
+  //Assertion case where we expect warnings and care about the  warning number but not the position
+  public void assertHasWarningsParse(String filename, int expectedError, int expectedErrorIndex)
+  {
+    boolean answer = parseWarnings(filename);
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+  }
+  
+  //Assertion case where we expect no warnings generated
+  public void assertNoWarningsParse(String filename)
+  {
+	boolean answer = parseWarnings(filename);
+	Assert.assertEquals(true, answer);
+	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
   
 }
