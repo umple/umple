@@ -70,7 +70,7 @@ public class JsonGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"Generator_CodeJson.ump"},javaline={75},length={116})
+  @umplesourcefile(line={17},file={"Generator_CodeJson.ump"},javaline={75},length={145})
    public void generate(){
     String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");
     String jsonForInterfaces = StringFormatter.format("{0}umpleInterfaces{0}:[", "\"");
@@ -93,14 +93,43 @@ public class JsonGenerator implements CodeGenerator
         displayColor=displayColor.substring(0,displayColor.length()-1);
 
       String jsonForAttributes = "";
+      String jsonForMethods = "";
       for (Attribute attribute : aClass.getAttributes())
       {
         if (jsonForAttributes.length() > 0)
         {
           jsonForAttributes += ", "; 
         }
-        String attributeType = attribute.getType() == null ? "String" : attribute.getType();
+        String attributeType = attribute.getFullType();
         jsonForAttributes += StringFormatter.format("{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0} }","\"",attributeType,attribute.getName());
+      }
+      for(Method method : aClass.getMethods())
+      {
+        if(jsonForMethods.length() > 0)
+        {
+          jsonForMethods += ", ";
+        }
+        String methodModifier = method.getModifier();
+        String methodReturnType = method.getType();
+
+        String visibility="";
+        if(methodModifier.matches(".*public.*"))
+          visibility = "public";
+        else if(methodModifier.matches(".*private.*"))
+          visibility = "private";
+        else if(methodModifier.matches(".*protected.*"))
+          visibility = "protected";
+
+        String methodParams = "";
+        for(MethodParameter param : method.getMethodParameters())
+        {
+          if(methodParams.length() > 0)
+          {
+            methodParams += ",";
+          }
+          methodParams += param.getFullType().trim();
+        }
+        jsonForMethods += StringFormatter.format("{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, {0}parameters{0} : {0}{3}{0}, {0}visibility{0} : {0}{4}{0}}","\"",methodReturnType,method.getName(),methodParams,visibility);
       }
 
       if (!isFirst)
@@ -115,7 +144,7 @@ public class JsonGenerator implements CodeGenerator
         extendsJson = StringFormatter.format(", {0}extendsClass{0}: {0}{1}{0}","\"",extendsClassName);
       }
 
-      jsonForClasses += StringFormatter.format("{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, {0}height{0}: {4}}, {0}attributes{0}: [{7}], {0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}displayColor{0}: {0}{9}{0} {8}}", "\"", x, y, width, height, name, name, jsonForAttributes,extendsJson, displayColor);
+      jsonForClasses += StringFormatter.format("{{0}position{0}: {{0}x{0}: {1}, {0}y{0}: {2}, {0}width{0}: {3}, {0}height{0}: {4}}, {0}attributes{0}: [{7}],{0}methods{0}: [{8}], {0}id{0}: {0}{5}{0}, {0}name{0}: {0}{6}{0}, {0}displayColor{0}: {0}{10}{0} {9}}", "\"", x, y, width, height, name, name, jsonForAttributes,jsonForMethods,extendsJson, displayColor);
       isFirst = false;
     }
 

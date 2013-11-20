@@ -38,7 +38,7 @@ public class EditAction extends SynchronizationAction
     super.delete();
   }
 
-  @umplesourcefile(line={342},file={"UmpleSync_Code.ump"},javaline={43},length={252})
+  @umplesourcefile(line={342},file={"UmpleSync_Code.ump"},javaline={43},length={322})
    public void go(){
     try
     {
@@ -65,6 +65,7 @@ public class EditAction extends SynchronizationAction
       Json json = jsonParser.analyze();
       Json position = json.getAttribute("position");
       Json[] attributes = json.getArray("attributes");
+      Json[] methods = json.getArray("methods");
       
       String newClassName = json.getValue("name");
       String oldClassName = json.getValue("oldname");
@@ -72,6 +73,7 @@ public class EditAction extends SynchronizationAction
       
       boolean didEditName = false;
       boolean didEditAttributes = false;
+      boolean didEditMethods = false;
       boolean didEditId = false;
       
 
@@ -213,6 +215,8 @@ public class EditAction extends SynchronizationAction
                 {
                   addBefore = subT;
                 }
+                if(subT.is("concreteMethodDeclaration"))
+                  break;
               }
               
               String type = "String".equals(attr.getValue("newType")) ? "" : StringFormatter.format("{0} ",attr.getValue("newType"));
@@ -224,10 +228,13 @@ public class EditAction extends SynchronizationAction
               }
               else
               {
-                attribute = StringFormatter.format("{0}{1};\n  ",type,attr.getValue("newName"));
+                attribute = StringFormatter.format("{0}{1};\n",type,attr.getValue("newName"));
               }
-              
-              textParser.insertAfter(addAfterLastAttribute, attribute);
+
+              if(addAfterLastAttribute.is("concreteMethodDeclaration"))
+                textParser.insertAfter(addBefore, attribute);
+              else
+                textParser.insertAfter(addAfterLastAttribute, attribute);
             }
             else if (attr.getValue("oldName") != null)
             {
@@ -255,6 +262,69 @@ public class EditAction extends SynchronizationAction
                     textParser.replace(type,"");
                   }
                   textParser.replace(name,attr.getValue("name"));
+                }
+              }
+            }
+          }
+        }
+        if (!didEditMethods && methods != null)
+        {
+          didEditMethods = true;
+          for (Json attr : methods)
+          {
+
+            if (attr.getValue("deleteName") != null)
+            {
+              for(Token subT : t.getSubTokens())
+              {
+                if (subT.is("concreteMethodDeclaration") && attr.getValue("deleteName").equals(subT.getSubToken("methodDeclarator").getValue("methodName")) && parametersMatch(attr,subT,"deleteParameters"))
+                {
+                  textParser.replace(subT,"");
+                  break;
+                }
+              }
+            }
+
+            else if (attr.getValue("newName") != null)
+            {
+              Token addAfterLastMethod = null;
+              Token addAfterLastAttribute = null;
+              for (Token subT : t.getSubTokens())
+              {
+                if (addAfterLastAttribute == null || subT.isStatic("{") || subT.is("attribute"))
+                {
+                  addAfterLastAttribute = subT;
+                }
+                if(subT.is("concreteMethodDeclaration"))
+                {
+                  addAfterLastMethod = subT;
+                }
+              }
+              String method = StringFormatter.format("{0} {1} {2}({3}){\n\n}\n",attr.getValue("newVisibility"),attr.getValue("newType"),attr.getValue("newName"),mergeParameters(attr,"newParameters",true));
+              if(addAfterLastMethod != null)
+                textParser.insertAfter(addAfterLastMethod, method);
+              else
+                textParser.insertAfter(addAfterLastAttribute, method);
+            }
+
+            else if (attr.getValue("oldName") != null)
+            {
+              
+              for(Token subT : t.getSubTokens())
+              {
+                if (subT.is("concreteMethodDeclaration") && attr.getValue("oldName").equals(subT.getSubToken("methodDeclarator").getValue("methodName")) && parametersMatch(attr,subT,"oldParameters"))
+                {
+                  Token visibility = subT.getSubToken("modifier");
+                  Token parameters = subT.getSubToken("methodDeclarator").getSubToken("parameterList");
+                  Token type = subT.getSubToken("type");
+                  Token name = subT.getSubToken("methodDeclarator").getSubToken("methodName");
+
+                  
+                  textParser.replace(parameters, "(" + mergeParameters(attr,"parameters",true) + ")"); //TODO properly sync method parameters instead of overwriting
+                  textParser.replace(name, attr.getValue("name"));
+                  textParser.replace(type, attr.getValue("type"));
+                  textParser.replace(visibility, attr.getValue("visibility"));
+                  break;
                 }
               }
             }
@@ -290,6 +360,63 @@ public class EditAction extends SynchronizationAction
       }
       setUmpleCode(output);
     }
+  }
+
+  @umplesourcefile(line={666},file={"UmpleSync_Code.ump"},javaline={367},length={23})
+   private String mergeParameters(Json token, String variable, boolean addArg){
+    StringBuffer allParameters = new StringBuffer();
+    int counter = 0;
+    for(Json params : token.getArray(variable))
+    {
+      if(counter > 0)
+        allParameters.append(",");
+      StringBuffer param = new StringBuffer();
+      for(Json str : params.getComposites())
+      {
+        param.append(str.getValue());
+      }
+      if(!param.toString().trim().equals(""))
+      {
+        allParameters.append(param.toString());
+        if(addArg)
+          allParameters.append(" arg"+(counter++));
+        else
+          counter++;
+      }
+    }
+    return allParameters.toString();
+  }
+
+  @umplesourcefile(line={691},file={"UmpleSync_Code.ump"},javaline={392},length={30})
+   private boolean parametersMatch(Json attr, Token subT, String variable){
+    Token paramList = subT.getSubToken("methodDeclarator").getSubToken("parameterList");  
+    StringBuffer paramTypes = new StringBuffer();
+    int counter = 0;
+    for(Token paramToken : paramList.getSubTokens())
+    {
+      if(paramToken.is("parameter"))
+      {
+        if(counter > 0)
+          paramTypes.append(",");
+        if(paramToken.getSubToken("type") !=null)
+        {
+          paramTypes.append(paramToken.getSubToken("type").getValue());
+          counter++;
+        }
+      }
+    }
+    String[] Lparams = paramTypes.toString().split(",");
+    String[] Rparams = mergeParameters(attr,variable,false).split(",");
+    if(Lparams.length != Rparams.length)
+      return false;
+    for(int i = 0; i<Lparams.length;++i)
+    {
+      if(!Lparams[i].equals(Rparams[i]))
+      {  
+        return false;
+      }
+    }
+    return true;
   }
 
 }

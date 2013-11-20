@@ -152,6 +152,14 @@ Action.clicked = function(event)
   {
   	Action.photoReady();
   }
+  else if (action == "ToggleAttributes")
+  {
+       Action.toggleAttributes();
+  }
+  else if (action == "ToggleMethods")
+  {
+       Action.toggleMethods();
+  }
 }
 
 Action.focusOn = function(id, gained)
@@ -1960,7 +1968,7 @@ Action.associationMoved = function(dragDivSelector, addToQueue)
 
 Action.classNameChanged = function(diagramId,oldName,newName)
 {
-  if(newName.length=0 || !newName.match(/^[_a-zA-Z1-8]+$/))
+  if(newName.length=0 || !newName.match(/^[_a-zA-Z0-9]+$/))
   {
 
     Action.updateUmpleDiagram();
@@ -1987,9 +1995,15 @@ Action.classNameChanged = function(diagramId,oldName,newName)
 Action.validateAttributeName = function(newAttribute)
 {
   return newAttribute.length!=0  && (
-     newAttribute.match(/^[_a-zA-Z1-8]+$/) ||
-     newAttribute.match(/^[_a-zA-Z1-8]+[\u0020]*:[\u0020]*[_a-zA-Z1-8]+$/)
-     )
+     newAttribute.match(/^[_a-zA-Z0-9]+$/) ||
+     newAttribute.match(/^[_a-zA-Z0-9]+[\u0020]*:[\u0020]*[_a-zA-Z0-9]+(\[\])?$/)
+     );
+}
+
+Action.validateMethodName = function(newMethod)
+{
+  return newMethod.length!=0 &&
+     newMethod.match(/^[-+#]?\s*[_a-zA-Z0-9]+\s*\(([_a-zA-Z0-9]+(\[\])?(,\s*[_a-zA-Z0-9]+(\[\])?)*)?\)(\s*:\s*[_a-zA-Z0-9]+(\[\])?)?$/);
 }
 
 Action.attributeNameChanged = function(diagramId,index,oldName,newAttribute)
@@ -2039,6 +2053,78 @@ Action.attributeNew = function(diagramId,attributeInput)
   }
 }
 
+Action.methodNew = function(diagramId, methodInput)
+{
+  if(!Action.validateMethodName(methodInput))
+  {
+    Action.updateUmpleDiagram();
+    setTimeout(function() {Page.setFeedbackMessage("Invalid UML Method. &lt;"+(methodInput.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.");},2000);
+    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
+  }
+  else
+  {
+    var umpleClass = UmpleSystem.find(diagramId);
+    var methodIndex = umpleClass.addMethod(methodInput);
+    var editClass = Json.toString(umpleClass);
+    Page.showModelLoading();
+    Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
+    umpleClass.resetMethod(methodIndex);
+    UmpleSystem.updateClass(umpleClass);
+    UmpleSystem.redrawGeneralizationsTo(umpleClass);
+    UmpleSystem.trimOverlappingAssociations(umpleClass); 
+  }
+}
+
+Action.methodChanged = function(diagramId,index,oldName,newMethod)
+{
+  if(!Action.validateMethodName(newMethod))
+  {
+    Action.updateUmpleDiagram();
+    setTimeout(function() {Page.setFeedbackMessage("Invalid UML Method. &lt;"+(newMethod.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.");},2000);
+    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
+  }
+  else
+  {
+    var umpleClass = UmpleSystem.find(diagramId);
+    umpleClass.methods[index].set(newMethod);
+    UmpleSystem.redraw(umpleClass);
+    var editClass = Json.toString(umpleClass);
+    Page.showModelLoading();
+    Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
+    umpleClass.resetMethod(index);
+  }
+}
+
+
+Action.methodDelete = function(diagramId,index)
+{
+  var umpleClass = UmpleSystem.find(diagramId);
+  umpleClass.removeMethod(index);
+  // Reset height and width to sensible values
+  var classObj = jQuery("#" + umpleClass.id);
+  //  umpleClass.position.height = Math.round(classObj.height());
+  //  umpleClass.position.width = Math.round(classObj.width());
+
+  umpleClass.position.height = 28+17*umpleClass.methods.size();
+// This needs fixing so it picks up the correct width
+// Look trimOverlap, which seems to know the correct width
+  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
+
+//  umpleClass.position.height = UmpleClassFactory.defaultSize.height;
+//  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
+
+  var editClass = Json.toString(umpleClass);
+  Page.showModelLoading();
+  Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
+
+  umpleClass.resetMethod(index);
+  UmpleSystem.updateClass(umpleClass);
+  UmpleSystem.redrawGeneralizationsTo(umpleClass);
+  UmpleSystem.trimOverlappingAssociations(umpleClass);
+}
+
+
+
 Action.attributeDelete = function(diagramId,index)
 {
   var umpleClass = UmpleSystem.find(diagramId);
@@ -2066,6 +2152,20 @@ Action.attributeDelete = function(diagramId,index)
   UmpleSystem.trimOverlappingAssociations(umpleClass);
 }
 
+Action.toggleAttributes = function()
+{
+  Page.showAttributes = !Page.showAttributes;
+  UmpleSystem.redrawCanvas();
+}
+  
+Action.toggleMethods = function()
+{
+  Page.showMethods = !Page.showMethods;
+  UmpleSystem.redrawCanvas(); 
+}
+
+
+
 InlineEditor.elementChanged = function(obj, oldVal, newVal)
 {
   var editType = obj.attr("name");
@@ -2082,10 +2182,21 @@ InlineEditor.elementChanged = function(obj, oldVal, newVal)
     var id = objId.substr(0,objId.length - "_attribute_".length - index.length);
     Action.attributeNameChanged(id,index,oldVal,newVal);
   }
+  else if(editType == "methodEdit")
+  {
+    var index = objId.substr(objId.lastIndexOf("_") + 1);
+    var id = objId.substr(0,objId.length - "_method_".length - index.length);
+    Action.methodChanged(id,index,oldVal,newVal);
+  }
   else if (editType == "attributeNew")
   {
     var id = objId.substr(0,objId.length - "_newAttribute".length);
     Action.attributeNew(id,newVal);
+  }
+  else if(editType == "methodNew")
+  {
+    var id = objId.substr(0,objId.length - "_newMethod".length);
+    Action.methodNew(id,newVal);
   }
 }
 

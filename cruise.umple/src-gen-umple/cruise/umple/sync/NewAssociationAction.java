@@ -7,10 +7,10 @@ import cruise.umple.util.*;
 
 /**
  * @umplesource UmpleSync.ump 58
- * @umplesource UmpleSync_Code.ump 656
+ * @umplesource UmpleSync_Code.ump 784
  */
 // line 58 "../../../../src/UmpleSync.ump"
-// line 656 "../../../../src/UmpleSync_Code.ump"
+// line 784 "../../../../src/UmpleSync_Code.ump"
 public class NewAssociationAction extends SynchronizationAction
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -38,7 +38,7 @@ public class NewAssociationAction extends SynchronizationAction
     super.delete();
   }
 
-  @umplesourcefile(line={662},file={"UmpleSync_Code.ump"},javaline={43},length={13})
+  @umplesourcefile(line={790},file={"UmpleSync_Code.ump"},javaline={43},length={13})
    public void go(){
     boolean shouldContinue = true;
     
@@ -53,7 +53,7 @@ public class NewAssociationAction extends SynchronizationAction
     }
   }
 
-  @umplesourcefile(line={677},file={"UmpleSync_Code.ump"},javaline={58},length={90})
+  @umplesourcefile(line={805},file={"UmpleSync_Code.ump"},javaline={58},length={90})
    private boolean addAssociationPosition(){
     try
     {
@@ -145,7 +145,7 @@ public class NewAssociationAction extends SynchronizationAction
     }
   }
 
-  @umplesourcefile(line={769},file={"UmpleSync_Code.ump"},javaline={150},length={53})
+  @umplesourcefile(line={897},file={"UmpleSync_Code.ump"},javaline={150},length={53})
    private boolean addAssociationDescription(){
     try
     {
@@ -200,7 +200,7 @@ public class NewAssociationAction extends SynchronizationAction
     }
   }
 
-  @umplesourcefile(line={824},file={"UmpleSync_Code.ump"},javaline={205},length={10})
+  @umplesourcefile(line={952},file={"UmpleSync_Code.ump"},javaline={205},length={10})
    private boolean handleException(Exception e){
     String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
     

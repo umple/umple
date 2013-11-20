@@ -24,6 +24,10 @@ UmpleClassFactory.create = function(data)
   for (var i = 0; i < data.attributes.length; i++)
   {
     umpleClass.attributes.push(UmpleAttributeFactory.create(data.attributes[i]));
+  }
+  for (var i = 0; i < data.methods.length; i++)
+  {
+    umpleClass.methods.push(UmpleMethodFactory.create(data.methods[i]));
   }  
   return umpleClass;
 }
@@ -77,8 +81,9 @@ function UmpleClass()
   this.displayColor = "transparent";
   this.position = new UmplePosition(0,0,109,41);
   this.attributes = [];
+  this.methods = [];
   this.extendsClass;
- 
+
   this.addAttribute = function(typeAndName)
   {
     var attribute = new UmpleAttribute("","");
@@ -105,7 +110,41 @@ function UmpleClass()
       this.attributes[index] = this.attributes[index].copy();
     }
   }
- 
+
+  this.resetMethod = function(index)
+  {
+    if(this.methods[index].deleteName != null)
+    {
+      this.methods.splice(index,1);
+    }
+    else
+    {
+      this.methods[index] = this.methods[index].copy();
+    }
+  }
+
+
+  this.addMethod = function(data)
+  {
+    var method = new UmpleMethod("","","","");
+    method.set(data);
+    this.methods.push(method);
+    return this.methods.length - 1;
+  }
+
+  this.removeMethod = function(index)
+  {
+    var method = this.methods[index];
+    method.deleteType = method.type;
+    method.deleteVisibility = method.visibility;
+    method.deleteName = method.name;
+    method.deleteParameters = method.parameters;
+  }
+
+
+
+
+
   this.setExtendsClass = function(umpleClassId)
   {
   	this.extendsClass = umpleClassId;
@@ -172,6 +211,7 @@ function UmpleClass()
     var bottomOffset = -3;
      
     var attributesInnerHtml = '';
+    var methodsInnerHtml = '';
     var classInnerHtml = '';
 
     if (this.attributes.length > 0)
@@ -191,7 +231,39 @@ function UmpleClass()
       }
     } // End of loop adding attributes
     
+
+    if(this.methods.length > 0)
+    {
+      for(var i = 0; i<this.methods.length;i++)
+      {
+        var method = this.methods[i];
+
+        var visibility="";
+        if(method.visibility == "public")
+          visibility = "+ ";
+        else if(method.visibility == "private")
+          visibility = "- ";
+        else if(method.visibility == "protected")
+          visibility = "# ";
+        else
+          visibility = "+ "; 	//set default visibility to public
+
+        var methodtype = (method.type == "" ?  "void" : method.type)
+   
+        if(Page.isPhotoReady())
+        {
+          methodsInnerHtml += format('<div class="umpleMethod">{3}{1}({2}) : {0}</div>',methodtype,method.name,method.parameters,visibility);
+        }
+        else
+          methodsInnerHtml += format('<div class="umpleMethod"><span id="{4}_method_{5}" name="methodEdit" class="editable editableDoubleClick">{3}{1}({2}) : {0}</span> <img src="scripts/delete2.jpg" onclick="Action.methodDelete({6}{4}{6},{6}{5}{6})" /></div>',methodtype,method.name,method.parameters,visibility,this.id,i,"'");
+
+      }
+    }
+    
     attributesInnerHtml += format('<div class="umpleAttributeNew"><span id="{0}_newAttribute" name="attributeNew" class="editable editableSingleClick">{1}</span></div>',this.id,Page.isPhotoReady() ? '&nbsp;' : '-- Add More --');
+
+    methodsInnerHtml += format('<div class="umpleMethodNew"><span id="{0}_newMethod" name="methodNew" class="editable editableSingleClick">{1}</span></div>',this.id,Page.isPhotoReady() ? '&nbsp;' : '-- Add More --');
+
     if (!Page.isPhotoReady())
     {
 // The following commented out to remove unneeded hovers that are not selectable anyway
@@ -217,7 +289,11 @@ function UmpleClass()
       this.anchorDivHtml("hover",7);
 */
     }
-
+    
+    if(Page.modifiedDiagrams == true)
+    {
+      this.position.height=0;
+    }
 	    
     classInnerHtml +=
       format(
@@ -239,22 +315,54 @@ function UmpleClass()
     {
       classInnerHtml += format('<span id="{0}_name" name="className" class="editable editableDoubleClick" >{1}</span>',this.id,this.name);
     }
-      
-    classInnerHtml += 
-      '    </td>' +
-      '  </tr>' + 
-      format(
-      '  <tr class="attributeArea">' +
-      '    <td class="attributes">{0}' +
-      '    </td>' +
-      '  </tr>',attributesInnerHtml) +
-      format(
-      '  <tr class="width">' +
-      '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
-      '    </td>' +
-      '  </tr>',this.id,this.position.width) + 
-      '</table>';
     
+    classInnerHtml += ('</td> ' + '</tr>');
+
+    if(Page.showAttributes == true)
+    {  
+        classInnerHtml += 
+        format(
+        '  <tr class="attributeArea">' +
+        '    <td class="attributes">{0}' +
+        '    </td>' +
+        '  </tr>',attributesInnerHtml);
+
+	if(Page.showMethods == false)
+        {
+          width_added=true;
+          classInnerHtml +=
+          format(
+          '  <tr class="width">' +
+          '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
+          '    </td>' +
+          '  </tr>',this.id,this.position.width);
+        }
+
+      }
+      
+      if(Page.showMethods == true)
+      {
+        classInnerHtml +=
+        format(
+        '  <tr class="methodArea">' +
+        '    <td class="methods">{0}' +
+        '    </td>' +
+        '  </tr>',methodsInnerHtml);
+ 
+        if(Page.showAttributes == false)
+        {
+          width_added=true;
+          classInnerHtml +=
+          format(
+          '  <tr class="width">' +
+          '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
+          '    </td>' +
+          '  </tr>',this.id,this.position.width);
+        }
+      }   
+      classInnerHtml += '</table>';
+      Page.modifiedDiagrams = true;
+ 
     var existing = classDiv.html();
     classDiv.html(classInnerHtml + existing);
 	

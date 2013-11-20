@@ -63,6 +63,7 @@ document.write('<script type="text/javascript" src="scripts/umple_class.js"><\/s
 document.write('<script type="text/javascript" src="scripts/umple_association.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_generalization.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_attribute.js"><\/script>');
+document.write('<script type="text/javascript" src="scripts/umple_method.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_history.js"><\/script>');
 
 // Code mirror

@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * @umplesource Umple.ump 306
- * @umplesource Umple_Code.ump 584
+ * @umplesource Umple_Code.ump 593
  */
 // line 306 "../../../../src/Umple.ump"
-// line 584 "../../../../src/Umple_Code.ump"
+// line 593 "../../../../src/Umple_Code.ump"
 public class ExtraCode
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -53,19 +53,19 @@ public class ExtraCode
   public void delete()
   {}
 
-  @umplesourcefile(line={589},file={"Umple_Code.ump"},javaline={58},length={4})
+  @umplesourcefile(line={598},file={"Umple_Code.ump"},javaline={58},length={4})
    public void appendExtraCode(String newCode){
     code.add(new CodeBlock(newCode));
     setHasCode(true);
   }
 
-  @umplesourcefile(line={595},file={"Umple_Code.ump"},javaline={64},length={4})
+  @umplesourcefile(line={604},file={"Umple_Code.ump"},javaline={64},length={4})
    public void appendExtraCode(CodeBlock cb){
     code.add(cb);
     setHasCode(true);
   }
 
-  @umplesourcefile(line={601},file={"Umple_Code.ump"},javaline={70},length={12})
+  @umplesourcefile(line={610},file={"Umple_Code.ump"},javaline={70},length={12})
    public String getExtraCode(){
     String returnCode = "";
     if(getHasCode())
