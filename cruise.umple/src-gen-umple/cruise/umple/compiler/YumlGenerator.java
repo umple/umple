@@ -71,9 +71,16 @@ public class YumlGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"Generator_CodeYuml.ump"},javaline={76},length={62})
+  @umplesourcefile(line={17},file={"Generator_CodeYuml.ump"},javaline={76},length={76})
    public void generate(){
     StringBuilder yuml = new StringBuilder();
+    for (UmpleInterface uInterface: model.getUmpleInterfaces()) {
+    	yuml.append("[<<");
+    	//there is a known bug that yUML interface cannot take attributes
+        yuml.append(uInterface.getName());
+        yuml.append(">>],");
+	}
+	
     for (UmpleClass aClass : model.getUmpleClasses())
     {
       yuml.append("[");
@@ -100,6 +107,13 @@ public class YumlGenerator implements CodeGenerator
       {
         UmpleClass parent = aClass.getExtendsClass();
         yuml.append(StringFormatter.format("[{0}]^-[{1}],",parent.getName(),aClass.getName()));
+      }
+      
+      if (aClass.getParentInterface().size()!=0)
+      {
+    	  for (UmpleInterface uInterface : aClass.getParentInterface()) {
+    		  yuml.append(StringFormatter.format("[<<{0}>>]^-.-[{1}],",uInterface.getName(),aClass.getName()));
+		}
       }
 
     }
@@ -140,7 +154,7 @@ public class YumlGenerator implements CodeGenerator
    * Allows independent code generation tools
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={21},file={"Generator.ump"},javaline={139},length={2})
+  @umplesourcefile(line={21},file={"Generator.ump"},javaline={153},length={2})
   @Override
   public boolean setOutput(String aString){
           return false;
