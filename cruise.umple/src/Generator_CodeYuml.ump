@@ -15,6 +15,13 @@ class YumlGenerator
   public void generate()
   {
     StringBuilder yuml = new StringBuilder();
+    for (UmpleInterface uInterface: model.getUmpleInterfaces()) {
+    	yuml.append("[<<");
+    	//there is a known bug that yUML interface cannot take attributes
+        yuml.append(uInterface.getName());
+        yuml.append(">>],");
+	}
+	
     for (UmpleClass aClass : model.getUmpleClasses())
     {
       yuml.append("[");
@@ -41,6 +48,13 @@ class YumlGenerator
       {
         UmpleClass parent = aClass.getExtendsClass();
         yuml.append(StringFormatter.format("[{0}]^-[{1}],",parent.getName(),aClass.getName()));
+      }
+      
+      if (aClass.getParentInterface().size()!=0)
+      {
+    	  for (UmpleInterface uInterface : aClass.getParentInterface()) {
+    		  yuml.append(StringFormatter.format("[<<{0}>>]^-.-[{1}],",uInterface.getName(),aClass.getName()));
+		}
       }
 
     }
