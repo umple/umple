@@ -1,0 +1,255 @@
+#!/bin/bash
+
+_ME=`basename $0`                                               # Program Name
+_CMD=$1; shift;                                                 # Command
+IFS=', ' read -a _ARGV <<< "$@"                                 # Command Arguments
+IFS=':' read -e _AVAILABLE_CWDS <<< "$UMPLE_WORKSPACES"         # Set of registered workspaces (envvar UMPLE_WORKSPACES)
+_CWD=''                                                         # Current Workspace Directory
+_BUILD_DIR='build'                                              # Umple Build Directory
+_CRUISE_DIR='cruise.umple'                                      # Umple Cruise Directory
+_DIST_DIR='dist'                                                # Umple Dist Directory
+
+bold="\033[1m"                                                  # String Modifiers
+normal="\033[0m"
+
+########################### PRINT FUNCTIONS ###########################
+function print_description()
+{
+  echo -e "${bold}-- Description --${normal}"
+  echo -e "$_ME is a tool for building and debugging Umple."
+  echo -e "Multiple Umple workspaces are supported; see below for details."
+}
+
+function print_usage()
+{
+    echo -e "${bold}-- $_ME --${normal}"
+    echo -e "Compile various components of Umple:              ${bold}build [all|compiler|jet|online|quick|version]${normal}"
+    echo -e "Revert generated files:                           ${bold}clean [all|compiler|jet]${normal}"
+    echo -e "Download latest version of umple.jar:             ${bold}update [umple.jar]${normal}"
+    echo -e "Display debug info for latest build:              ${bold}debug${normal}"
+    echo -e "Print current workspace directory:                ${bold}cwd${normal}"
+    echo -e "Description, print_usage and compatibility:       ${bold}info${normal}"
+    echo -e "Help:                                             ${bold}help${normal}"
+}
+
+function print_workspace_howto()
+{
+    echo -e "${bold}-- Adding an Umple Workspace --${normal}"
+    echo -e "- Store workspaces in the the environment variable, 'UMPLE_WORKSPACES'"
+    echo -e "- UMPLE_WORKSPACES is a colon-separated list, ex: 'dir1:dir2:dirN'"
+    echo -e "- $_ME determines which workspace to perform an action on by looking at your working directory (pwd)"
+    echo -e "- Workspaces should not be nested"
+}
+
+function print_compatibility()
+{
+  echo -e "${bold}-- Compatibility --${normal}"
+  echo -e "Tested on the following platforms:"
+  echo -e "- Mac OS X 10.8.5"
+  echo -e "\nTested with the following applications:"
+  echo -e "- curl 7.24.0"
+  echo -e "- Lynx Version 2.8.7rel.2" 
+  echo -e "- Wget 1.13.4"
+  echo -e "- w3m 0.5.3"
+}
+
+########################### INPUT CHECKING/PARSING ###########################
+function check_command()
+{
+  if [[ $_CMD == "" ]];  then
+    _CMD="info"
+  fi
+
+  err=0
+  case "$_CMD" in
+    "build")  [ ${#_ARGV[@]} == 1 ] ;;
+    "clean")  [ ${#_ARGV[@]} == 1 ] ;;
+    "update") [ ${#_ARGV[@]} == 1 ] ;;
+    "debug")  [ ${#_ARGV[@]} == 0 ] ;;
+    "cwd")    [ ${#_ARGV[@]} == 0 ] ;;
+    "info")   ( exit 0 ) ;;
+    "help")   ( exit 0 ) ;;
+    *)        ( exit 2 )
+  esac; err=$?
+
+  if [ $err -ne 0 ]; then
+    { 
+      case "$err" in
+        "1") echo -e "${bold}$_CMD: Incompatibile argument list; Given: ${normal}[${_ARGV[@]}]" ;;
+        "2") echo -e "${bold}Unrecognized Command '$_CMD'${normal}" ;;
+        *)   echo -e "${bold}Unknown Error${normal}"
+      esac
+    } >&2
+
+    return 1
+  fi
+}
+
+function get_workspace()
+{
+  if [[ ${#_AVAILABLE_CWDS[@]} == 0 ]]; then
+    echo -e "${bold}There are no workspaces in the current environment.${normal}"
+    print_workspace_howto
+    return 1
+  fi
+
+  # Workspaces should be a colon-separated list, ex: 'dir1:dir2:dirN'
+  dir=`pwd`
+  bakifs=$IFS; IFS=':'
+  for workspace in IFS=':' ${_AVAILABLE_CWDS[@]}; do
+    if [[ "$dir" =~ "$workspace" ]]; then # First fit
+      _CWD=$workspace
+      break
+    fi
+  done
+  IFS=$bakifs
+
+  if [[ $_CWD == "" ]]; then
+    echo -e "${bold}You do not appear to be in a registered Umple workspace. Registered Workspaces:${normal}"
+    echo -e ${_AVAILABLE_CWDS[@]//':'/\\n}
+    echo -e "\n"
+    print_workspace_howto
+    return 1
+  fi
+}
+
+function initialize()
+{
+  check_command && get_workspace && return 0
+  return 1
+}
+
+########################### COMMAND HANDLERS ###########################
+function build()
+{
+  build_command=''
+  case "${_ARGV[0]}" in
+    "all") 
+      build_command='ant -Dmyenv=local -f build.umple.xml build'
+      ;;
+    "compiler")
+      build_command='ant -Dmyenv=local -f build.umple.xml umpleSelf compile packageMainJar'
+      ;;
+    "jet")
+      build_command='ant -f build.umple.xml -Dmyenv=local codegen'
+      ;;
+    "online")
+      build_command='ant -DshouldPackageUmpleOnline=true -Dmyenv=local -f build.umple.xml packageUmpleonline' 
+      ;;
+    "quick")
+      build_command='ant -Dmyenv=local -f build.umple.xml pre_build'
+      ;;
+    "version")
+      build_command='ant -Dmyenv=local -f build.umple.xml template.resetVersion compile'
+      ;;
+    *)
+      echo -e "${bold}build: Unrecognized build type, '${_ARGV[0]}'${normal}" >&2
+      return 1
+  esac
+
+  ( cd $_CWD && cd $_BUILD_DIR && $build_command ) || return 1
+}
+
+function clean()
+{
+  clean_command=''
+  case "${_ARGV[0]}" in
+    "all") 
+      clean_command='svn revert -R src-gen-jet src-gen-umple'
+      ;;
+    "compiler")
+      clean_command='svn revert -R src-gen-umple'
+      ;;
+    "jet")
+      clean_command='svn revert -R src-gen-jet'
+      ;;
+    *)
+      echo -e "${bold}clean: Unrecognized clean type, '${_ARGV[0]}'${normal}" >&2
+      return 1
+  esac
+
+  ( cd $_CWD && cd $_CRUISE_DIR && echo "cleaning.." && $clean_command && echo "done!" ) || return 1
+}
+
+function update()
+{
+  update_link=''
+  update_file=''
+  update_command=''
+  case "${_ARGV[0]}" in
+   "umple.jar")
+      update_file='umple.jar'
+      update_link='http://try.umple.org/scripts/umple.jar' 
+      ;;
+    *) 
+      echo -e "${bold}update: Unknown file, '${_ARGV[0]}'" >&2 
+      return 1
+  esac
+
+  if [[ `which curl` != "" ]]; then
+    update_command="curl -L ${update_link} -o $update_file" 
+  elif [[ `which wget` != "" ]]; then
+    update_command="wget -N $update_link -o $update_file"   
+  else
+    echo -e "${bold}update: Could not find 'curl' or 'wget'${normal}" >&2
+    return 2
+  fi
+
+  ( cd $_CWD && cd $_DIST_DIR && echo "updating.." && $update_command && echo "done!" ) || return 1
+}
+
+function debug()
+{
+  debug_file='qa/cruise.umple/index.html'  
+
+  if [[ `which w3m` != "" ]]; then
+    debug_command="w3m -F $debug_file"
+  elif [[ `which lynx` != "" ]]; then
+    debug_command="lynx $debug_file"
+  else
+    {
+      echo -e "${bold}debug: Could not find 'lynx' or 'w3m'${normal}"
+      echo -e "${bold}debug: Open ${debug_file} in an alternate web browser${normal}"
+    }>&2
+    return 2
+  fi
+
+  ( cd $_CWD && cd $_DIST_DIR && $debug_command ) || return 1
+} 
+
+function cwd()
+{
+  echo -e "${bold}$_CWD${normal}"
+}
+
+function help()
+{
+  print_usage
+}
+
+function info()
+{
+  print_description
+  echo -e 
+  print_usage
+  echo -e
+  print_workspace_howto
+  echo -e
+  print_compatibility
+}
+
+########################### DRIVER ###########################
+function run()
+{
+  ( initialize && $_CMD ) || return $?
+}
+
+run
+status=$?
+case $status in
+  0)   ;;
+  2)   ;; 
+  1|*) echo -e "\n" && print_usage 
+esac
+
+exit $status
