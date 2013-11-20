@@ -7,10 +7,10 @@ import cruise.umple.util.*;
 
 /**
  * @umplesource UmpleSync.ump 90
- * @umplesource UmpleSync_Code.ump 1241
+ * @umplesource UmpleSync_Code.ump 1369
  */
 // line 90 "../../../../src/UmpleSync.ump"
-// line 1241 "../../../../src/UmpleSync_Code.ump"
+// line 1369 "../../../../src/UmpleSync_Code.ump"
 public class NewGeneralizationAction extends SynchronizationAction
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -38,7 +38,7 @@ public class NewGeneralizationAction extends SynchronizationAction
     super.delete();
   }
 
-  @umplesourcefile(line={1247},file={"UmpleSync_Code.ump"},javaline={43},length={69})
+  @umplesourcefile(line={1375},file={"UmpleSync_Code.ump"},javaline={43},length={69})
    public void go(){
     try
     {

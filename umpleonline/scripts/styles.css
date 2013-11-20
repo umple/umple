@@ -76,6 +76,12 @@ div.umpleAttribute img { cursor:pointer; }
 div.umpleAttributeNew  { margin:1px 1px 0 2px; }
 div.umpleAttributeNew span { color:grey; cursor:text; }
 
+div.umpleMethod { margin:1px 1px 0 2px; }
+div.umpleMethod span { cursor:text; }
+div.umpleMethod img { cursor:pointer; }
+div.umpleMethodNew  { margin:1px 1px 0 2px; }
+div.umpleMethodNew span { color:grey; cursor:text; }
+
 div.umpleAssociation { background-color:black; cursor: pointer; z-index: 2; }
 div.multiplicity { background-color:transparent; position: absolute; font-size:8pt; z-index:2; padding:0; margin:0; border:0;}
 div.role { background-color:transparent; position: absolute; font-size:8pt; z-index:2; }

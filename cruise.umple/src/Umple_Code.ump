@@ -478,6 +478,15 @@ class MethodBody
   }
 }
 
+
+class MethodParameter
+{
+  public String getFullType()
+  {
+    return this.getType() + (this.getIsList() ? "[]" : "");
+  }
+}
+
 /*
  */
 class CodeBlock
@@ -1203,6 +1212,12 @@ class Attribute
   {
     codeblock.setCode(lang,code);
   }
+
+  public String getFullType()
+  {
+    return this.getType() + (this.getIsList() ? "[]" : "");
+  }
+  
 }
 
 /*

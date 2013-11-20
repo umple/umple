@@ -210,8 +210,8 @@ public class EditActionTest extends ActionTest
     action.go();
 
     
-    String expected = "class One { username;\n  position 105 81 81 41;  }";
-    Assert.assertEquals(expected, action.getUmpleCode());
+    String expected = "class One { username;\nposition 105 81 81 41;  }";
+    Assert.assertEquals(action.getUmpleCode(),expected);
   }  
 
   @Test
@@ -223,7 +223,7 @@ public class EditActionTest extends ActionTest
     EditAction action = new EditAction(json,umple);
     action.go();
     
-    String expected = "class One\n{\n  Integer username;\n  position 105 81 81 41;\n}";
+    String expected = "class One\n{\n  Integer username;\nposition 105 81 81 41;\n}";
     Assert.assertEquals(expected, action.getUmpleCode());
   } 
   
@@ -236,7 +236,7 @@ public class EditActionTest extends ActionTest
     EditAction action = new EditAction(json,umple);
     action.go();
     
-    String expected = "class One\n{\n  name;\n  Integer username;\n  position 105 81 81 41;\n}";
+    String expected = "class One\n{\n  name;\n  Integer username;\nposition 105 81 81 41;\n}";
     Assert.assertEquals(expected, action.getUmpleCode());
   }   
   
@@ -249,7 +249,7 @@ public class EditActionTest extends ActionTest
     EditAction action = new EditAction(json,umple);
     action.go();
     
-    String expected = "class One { Integer username;\n  position 105 81 81 41;  }";
+    String expected = "class One { Integer username;\nposition 105 81 81 41;  }";
     Assert.assertEquals(expected, action.getUmpleCode());
   }  
 

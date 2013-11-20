@@ -8,10 +8,10 @@ import java.util.*;
  * A block of code in an arbitrary language to be injected into generated code
  * 
  * @umplesource Umple.ump 281
- * @umplesource Umple_Code.ump 482
+ * @umplesource Umple_Code.ump 491
  */
 // line 281 "../../../../src/Umple.ump"
-// line 482 "../../../../src/Umple_Code.ump"
+// line 491 "../../../../src/Umple_Code.ump"
 public class CodeBlock
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -40,19 +40,19 @@ public class CodeBlock
   public void delete()
   {}
 
-  @umplesourcefile(line={488},file={"Umple_Code.ump"},javaline={45},length={4})
+  @umplesourcefile(line={497},file={"Umple_Code.ump"},javaline={45},length={4})
    public  CodeBlock(String add){
     this();
     codes.put("",add);
   }
 
-  @umplesourcefile(line={493},file={"Umple_Code.ump"},javaline={51},length={4})
+  @umplesourcefile(line={502},file={"Umple_Code.ump"},javaline={51},length={4})
    public  CodeBlock(String lang, String add){
     this();
     codes.put(lang,add);
   }
 
-  @umplesourcefile(line={498},file={"Umple_Code.ump"},javaline={57},length={6})
+  @umplesourcefile(line={507},file={"Umple_Code.ump"},javaline={57},length={6})
    public void setCode(String add){
     if(add!=null)
       codes.put("",add);
@@ -60,7 +60,7 @@ public class CodeBlock
       codes.put("","");
   }
 
-  @umplesourcefile(line={505},file={"Umple_Code.ump"},javaline={65},length={6})
+  @umplesourcefile(line={514},file={"Umple_Code.ump"},javaline={65},length={6})
    public void setCode(String lang, String add){
     if(add!=null)
       codes.put(lang,add);
@@ -68,17 +68,17 @@ public class CodeBlock
       codes.put(lang,"");
   }
 
-  @umplesourcefile(line={512},file={"Umple_Code.ump"},javaline={73},length={3})
+  @umplesourcefile(line={521},file={"Umple_Code.ump"},javaline={73},length={3})
    public String getCode(){
     return !codes.containsKey(languageUsed) ? "".equals(languageUsed) ? null : codes.get("") : codes.get(languageUsed);
   }
 
-  @umplesourcefile(line={516},file={"Umple_Code.ump"},javaline={78},length={3})
+  @umplesourcefile(line={525},file={"Umple_Code.ump"},javaline={78},length={3})
    public String getCode(String lang){
     return codes.containsKey(lang)? codes.get(lang) : codes.get("");
   }
 
-  @umplesourcefile(line={519},file={"Umple_Code.ump"},javaline={83},length={8})
+  @umplesourcefile(line={528},file={"Umple_Code.ump"},javaline={83},length={8})
    public String toString(){
     String out = "";
     for(String next:codes.values())

@@ -28,6 +28,9 @@ Page.readOnly = false; // initially allow editing
 Page.useEditableClassDiagram = true;
 Page.useGvClassDiagram = false;
 Page.useGvStateDiagram = false;
+Page.showAttributes = true;
+Page.showMethods = false;
+Page.modifiedDiagrams = false;
 
 // The following is set called from umple.php
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramType)
@@ -84,6 +87,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonLarger");
   Page.initHighlighter("buttonSyncCode");
   Page.initHighlighter("buttonSyncDiagram");
+  Page.initHighlighter("buttonToggleMethods");
+  Page.initHighlighter("buttonToggleAttributes");
 
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
@@ -120,10 +125,13 @@ Page.initPaletteArea = function()
   Page.initAction("buttonLarger");
   Page.initAction("buttonSyncCode");
   Page.initAction("buttonSyncDiagram");
-  
+  Page.initAction("buttonToggleMethods");
+  Page.initAction("buttonToggleAttributes");
+
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
+
   jQuery("#genstatus").hide();
   jQuery("#buttonViewComplete").hide();
   
@@ -159,6 +167,7 @@ Page.initOptions = function()
   jQuery("#buttonShowHideLayoutEditor").attr('checked', false);
   jQuery("#buttonShowHideTextEditor").attr('checked', Page.showText);
   jQuery("#buttonShowHideCanvas").attr('checked', Page.showDiagram);
+  jQuery("#buttonToggleAttributes").attr('checked',true);
 
 if(Page.useEditableClassDiagram)
  jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
