@@ -8,7 +8,7 @@
 2: 4, "http://umple.org/W002SingletonWithRequiredObject.html", Association is referencing a singleton class with multiplicity 1 '{0}' ; 
 3: 4, "http://umple.org/W003RedundantLazyWithInitialization.html", The lazy keyword is redundant when the attribute is being initialized - in class '{0}' ;
 4: 1, "http://umple.org/E004InvalidMultiplicity.html", Invalid multiplicity '{0}' ; 
-5: 1, "http://umple.org/E005UndefinedClassinAssociation.html", Association end '{0}' is not a class or interface; 
+5: 1, "http://umple.org/E005UndefinedClassinAssociation.html", Association end '{0}' is not a class or interface ; 
 6: 2, "http://umple.org/E006MissingDefault.html", No default value is specified for a defaulted attribute '{0}' ; 
 7: 3, "http://umple.org/W007KeyAlreadySpecified.html", Key already specified in class '{0}' ; 
 8: 1, "http://umple.org/E008AssociationClassMissingEnd.html", Association class '{0}' is missing an end ; 
@@ -23,7 +23,7 @@
 17: 2, "http://umple.org/E017NonImmutableBidirectionality.html", Two-way associations may not be immutable ;
 18: 2, "http://umple.org/E018ReflexiveImmutable.html", Reflexive immutable associations may not be mandatory ;
 19: 2, "http://umple.org/E019DuplicateAssociation.html", Class '{0}' may not have multiple associations with the same name '{1}' ;
-20: 1, "http://umple.org/E020InterfaceAssociationNotOneWay.html", The class-interface association declared in '{0}' must have the '->' arrow;
+20: 1, "http://umple.org/E020InterfaceAssociationNotOneWay.html", The class-interface association declared in '{0}' must have the '->' arrow ;
 
 21: 2, "http://umple.org/E021InvalidReflexiveAssociation.html", Reflexive association to class '{0}' must use a role name or else self ;
 22: 2, "http://umple.org/E022DuplicateAttribute.html", Class '{0}' has duplicate attribute name {1} ;
@@ -31,22 +31,22 @@
 24: 2, "http://umple.org/E024SortKeyNotofUmpleType.html", Sort key attribute '{0}' in class {1} must be of type Integer, Short, Long, Double, Float or String ;
 25: 2, "http://umple.org/E025SortKeyNotFound.html", Class '{0}' does not contain attribute {1} that is used as sort key ;
 26: 2, "http://umple.org/E026DuplicateKeyItem.html", Duplicate item '{0}' in key statement(s) in class '{1}' ;
-27: 3, "http://umple.org/W027KeyIdentifierIncorrect.html", Item '{0}' in key statement is not defined in class '{1}';
-28: 3, "http://umple.org/E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}';
-29: 2, "http://umple.org/E029ConstraintTypeMismatch.html", Attribute '{0}' in constraint must be of type '{1}';
+27: 3, "http://umple.org/W027KeyIdentifierIncorrect.html", Item '{0}' in key statement is not defined in class '{1}' ;
+28: 3, "http://umple.org/E028ConstraintIdentifierIncorrect.html", Attribute '{0}' in constraint is not defined in class '{1}' ;
+29: 2, "http://umple.org/E029ConstraintTypeMismatch.html", Attribute '{0}' in constraint must be of type '{1}' ;
 
-30: 4, "http://umple.org/W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1};
-31: 4, "http://umple.org/W031NamespaceNotUsed.html", Declared namespace {0} was not used before declaring {1};
-32: 1, "http://umple.org/E032ReservedRoleName.html", The role name '{0}' has a conflict. Please don't use plural form of class name as a role name.;
-33: 3, "http://umple.org/W033MissingSuperclass.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system. ;
-34: 2, "http://umple.org/E034MultipleInheritance.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface. ;
+30: 4, "http://umple.org/W030RedefinedNamespace.html", Redefining the namespace of class {0} to {1} ;
+31: 4, "http://umple.org/W031NamespaceNotUsed.html", Declared namespace {0} was not used before declaring {1} ;
+32: 1, "http://umple.org/E032ReservedRoleName.html", The role name '{0}' has a conflict. Please don't use plural form of class name as a role name ;
+33: 3, "http://umple.org/W033MissingSuperclass.html", The indicated superclass {0} of class {1} does not exist and has been ignored. Declare {0} to be external if it is defined outside this Umple system ;
+34: 2, "http://umple.org/E034MultipleInheritance.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface ;
 35: 3, "http://umple.org/W035UninitializedConstant.html", 'const' variable '{0}' was not initialized and its value was thus set to 'null' ;
 36: 3, "http://umple.org/W036UnmanagedMultiplicity.html", The specific multiplicity bounds {0} cannot be managed by generated code, since this is a directed association ;
 
-44: 3, "http://umple.org/W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}'. ;
-45: 4, "http://umple.org/W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal. ;
-46: 4, "http://umple.org/W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions. ;
-47: 4, "W047EmptyKeyStatement.html", Empty key statement in class {0}. ;
+44: 3, "http://umple.org/W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}' ;
+45: 4, "http://umple.org/W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal ;
+46: 4, "http://umple.org/W046AttributeHasTemplateType.html", Attribute {0} in class {1} is declared using a collection template type {2}. Use a directed association (->) or multi-valued attribute([]) to follow proper modelling conventions ;
+47: 4, "W047EmptyKeyStatement.html", Empty key statement in class {0} ;
 
 # State-Machine related messages
 50: 4, "http://umple.org/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an end state ;
