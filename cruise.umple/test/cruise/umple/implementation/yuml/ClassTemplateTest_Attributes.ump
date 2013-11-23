@@ -4,6 +4,9 @@ namespace example;
 class NewClass
 {
   name;
-  Integer id;
+  internal Integer id;
   position 193 66 0 0;
+  String getRecords(){}
+  private getInternalRecord(){}
+  public String getMethod(){}
 }

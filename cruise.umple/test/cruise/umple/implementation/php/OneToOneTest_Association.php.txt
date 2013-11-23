@@ -11,6 +11,7 @@ class Mentor
 
   //Mentor Attributes
   private $name;
+  private $id;
 
   //Mentor Associations
   private $student;
@@ -24,6 +25,7 @@ class Mentor
     if (func_num_args() == 0) { return; }
 
     $this->name = $aName;
+    $this->id = NULL;
     if ($aStudent == null || $aStudent->getMentor() != null)
     {
       throw new Exception("Unable to create Mentor due to aStudent");
@@ -34,6 +36,7 @@ class Mentor
   {
     $thisInstance = new Mentor();
     $thisInstance->name = $aName;
+    $thisInstance->id = NULL;
     $thisInstance->student = new Student($aNameForStudent, $aNumberForStudent, $thisInstance);
     return $thisInstance;
   }
@@ -50,9 +53,22 @@ class Mentor
     return $wasSet;
   }
 
+  public function setId($aId)
+  {
+    $wasSet = false;
+    $this->id = $aId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
   public function getName()
   {
     return $this->name;
+  }
+
+  public function getId()
+  {
+    return $this->id;
   }
 
   public function getStudent()

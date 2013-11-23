@@ -14,6 +14,7 @@ public class Mentor
 
   //Mentor Attributes
   private String name;
+  private String id;
 
   //Mentor Associations
   private Student student;
@@ -25,6 +26,7 @@ public class Mentor
   public Mentor(String aName, Student aStudent)
   {
     name = aName;
+    id = null;
     if (aStudent == null || aStudent.getMentor() != null)
     {
       throw new RuntimeException("Unable to create Mentor due to aStudent");
@@ -35,6 +37,7 @@ public class Mentor
   public Mentor(String aName, String aNameForStudent, int aNumberForStudent)
   {
     name = aName;
+    id = null;
     student = new Student(aNameForStudent, aNumberForStudent, this);
   }
 
@@ -50,9 +53,22 @@ public class Mentor
     return wasSet;
   }
 
+  public boolean setId(String aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getName()
   {
     return name;
+  }
+
+  public String getId()
+  {
+    return id;
   }
 
   public Student getStudent()
@@ -75,7 +91,8 @@ public class Mentor
   {
 	  String outputString = "";
     return super.toString() + "["+
-            "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
+            "name" + ":" + getName()+ "," +
+            "id" + ":" + getId()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "student = "+(getStudent()!=null?Integer.toHexString(System.identityHashCode(getStudent())):"null")
      + outputString;
   }

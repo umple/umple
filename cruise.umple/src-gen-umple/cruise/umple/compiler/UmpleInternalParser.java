@@ -2900,7 +2900,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
     if (keyToken.is("defaultKey"))
     {
       aClass.getKey().setIsDefault(true);
-      setFailedPosition(keyToken.getPosition(), 47);
+      setFailedPosition(keyToken.getPosition(), 47, aClass.getName());
       return;
     }
 

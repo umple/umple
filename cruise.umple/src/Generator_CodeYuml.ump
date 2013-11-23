@@ -31,16 +31,28 @@ class YumlGenerator
         yuml.append("|");
         for (Attribute aVar : aClass.getAttributes())
         {
+          String modifier = aVar.getModifier();
+          String name = aVar.getName();
+          String type = aVar.getType();
+          if (modifier.equals("settable"))
+        	  name = "+"+name;
+          else if (modifier.equals("internal"))
+        	  name = "-"+name;
           if (aVar.getType() == null)
-          {
-            yuml.append(StringFormatter.format("{0};",aVar.getName(),aVar.getType()));  
-
-          }
+            yuml.append(StringFormatter.format("{0};", name, type));  
           else
-          {
-            yuml.append(StringFormatter.format("{0}:{1};",aVar.getName(),aVar.getType()));  
-          }
+            yuml.append(StringFormatter.format("{0}:{1};", name, type));  
         }
+      }
+      if (aClass.numberOfMethods() > 0)
+      {
+    	yuml.append("|");
+    	for (Method method : aClass.getMethods()) {
+          String methodModifier = method.getModifier();
+    	  String methodName = method.getName();
+    	  methodName = methodModifier.contains("private")?"-"+methodName:"+"+methodName;
+    	  yuml.append(StringFormatter.format("{0}();", methodName));
+    	}
       }
       yuml.append("],");
 
@@ -49,14 +61,9 @@ class YumlGenerator
         UmpleClass parent = aClass.getExtendsClass();
         yuml.append(StringFormatter.format("[{0}]^-[{1}],",parent.getName(),aClass.getName()));
       }
-      
-      if (aClass.getParentInterface().size()!=0)
-      {
-    	  for (UmpleInterface uInterface : aClass.getParentInterface()) {
-    		  yuml.append(StringFormatter.format("[<<{0}>>]^-.-[{1}],",uInterface.getName(),aClass.getName()));
-		}
+      for (UmpleInterface uInterface : aClass.getParentInterface()) {
+        yuml.append(StringFormatter.format("[<<{0}>>]^-.-[{1}],",uInterface.getName(),aClass.getName()));
       }
-
     }
 
     for (Association aAssoc : model.getAssociations())

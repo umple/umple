@@ -71,7 +71,7 @@ public class YumlGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"Generator_CodeYuml.ump"},javaline={76},length={76})
+  @umplesourcefile(line={17},file={"Generator_CodeYuml.ump"},javaline={76},length={83})
    public void generate(){
     StringBuilder yuml = new StringBuilder();
     for (UmpleInterface uInterface: model.getUmpleInterfaces()) {
@@ -90,16 +90,28 @@ public class YumlGenerator implements CodeGenerator
         yuml.append("|");
         for (Attribute aVar : aClass.getAttributes())
         {
+          String modifier = aVar.getModifier();
+          String name = aVar.getName();
+          String type = aVar.getType();
+          if (modifier.equals("settable"))
+        	  name = "+"+name;
+          else if (modifier.equals("internal"))
+        	  name = "-"+name;
           if (aVar.getType() == null)
-          {
-            yuml.append(StringFormatter.format("{0};",aVar.getName(),aVar.getType()));  
-
-          }
+            yuml.append(StringFormatter.format("{0};", name, type));  
           else
-          {
-            yuml.append(StringFormatter.format("{0}:{1};",aVar.getName(),aVar.getType()));  
-          }
+            yuml.append(StringFormatter.format("{0}:{1};", name, type));  
         }
+      }
+      if (aClass.numberOfMethods() > 0)
+      {
+    	yuml.append("|");
+    	for (Method method : aClass.getMethods()) {
+          String methodModifier = method.getModifier();
+    	  String methodName = method.getName();
+    	  methodName = methodModifier.contains("private")?"-"+methodName:"+"+methodName;
+    	  yuml.append(StringFormatter.format("{0}();", methodName));
+    	}
       }
       yuml.append("],");
 
@@ -108,14 +120,9 @@ public class YumlGenerator implements CodeGenerator
         UmpleClass parent = aClass.getExtendsClass();
         yuml.append(StringFormatter.format("[{0}]^-[{1}],",parent.getName(),aClass.getName()));
       }
-      
-      if (aClass.getParentInterface().size()!=0)
-      {
-    	  for (UmpleInterface uInterface : aClass.getParentInterface()) {
-    		  yuml.append(StringFormatter.format("[<<{0}>>]^-.-[{1}],",uInterface.getName(),aClass.getName()));
-		}
+      for (UmpleInterface uInterface : aClass.getParentInterface()) {
+        yuml.append(StringFormatter.format("[<<{0}>>]^-.-[{1}],",uInterface.getName(),aClass.getName()));
       }
-
     }
 
     for (Association aAssoc : model.getAssociations())
@@ -154,7 +161,7 @@ public class YumlGenerator implements CodeGenerator
    * Allows independent code generation tools
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={21},file={"Generator.ump"},javaline={153},length={2})
+  @umplesourcefile(line={21},file={"Generator.ump"},javaline={160},length={2})
   @Override
   public boolean setOutput(String aString){
           return false;
