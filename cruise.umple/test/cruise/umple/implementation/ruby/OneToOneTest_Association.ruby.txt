@@ -13,7 +13,7 @@ class Mentor
   #------------------------
 
   #Mentor Attributes - for documentation purposes
-  #attr_reader :name
+  #attr_reader :name, :id
 
   #Mentor Associations - for documentation purposes
   #attr_reader :student
@@ -26,6 +26,7 @@ class Mentor
     @initialized = false
     @deleted = false
     @name = a_name
+    @id = nil
     @student = nil
     unless a_student.nil?
       @student = a_student
@@ -46,9 +47,22 @@ class Mentor
     was_set
   end
 
+  def set_id(a_id)
+    was_set = false
+    raise "Mandatory relationship with student not satisfied" if (@initialized and !@deleted and @student.nil?)
+    @id = a_id
+    was_set = true
+    was_set
+  end
+
   def get_name
     raise "Mandatory relationship with student not satisfied" if (@initialized and !@deleted and @student.nil?)
     @name
+  end
+
+  def get_id
+    raise "Mandatory relationship with student not satisfied" if (@initialized and !@deleted and @student.nil?)
+    @id
   end
 
   def get_student

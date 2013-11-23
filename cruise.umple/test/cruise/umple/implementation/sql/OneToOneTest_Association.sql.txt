@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `example`.`mentor`
   
   /*mentor Attributes*/
   name VARCHAR(255),
+  id VARCHAR(255),
   PRIMARY KEY(name)
 
 );

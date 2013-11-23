@@ -27,6 +27,11 @@
     {
       %><%@ include file="constructor_AttributeAssignDefaulted.jet"%><% 
     }
+    else if (av.getIsLazy())
+    {
+      hasBody = true;
+      %><%@ include file="constructor_AttributeAssignLazy.jet"%><%
+    }
     else
     {
       %><%@ include file="constructor_AttributeAssign.jet"%><%
