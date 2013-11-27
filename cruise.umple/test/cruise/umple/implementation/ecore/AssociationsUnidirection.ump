@@ -1,0 +1,16 @@
+generate Ecore;
+namespace example;
+
+class Student
+{
+  * b -> 1 Mentor n;    
+}
+
+class Mentor
+{
+  * c <- 1 Boss t;
+}
+
+class Boss
+{
+}

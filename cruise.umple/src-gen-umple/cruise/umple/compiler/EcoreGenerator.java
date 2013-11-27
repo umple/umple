@@ -73,7 +73,7 @@ public class EcoreGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"Generator_CodeEcore.ump"},javaline={78},length={189})
+  @umplesourcefile(line={17},file={"Generator_CodeEcore.ump"},javaline={78},length={192})
    public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
@@ -207,13 +207,11 @@ public class EcoreGenerator implements CodeGenerator
       ArrayList<Association> internalAssociations = new ArrayList<Association>();
       for(Association as : uClass.getAssociations())
       {
-        AssociationEnd myEnd = as.getEnd(0);
-        AssociationEnd theirEnd = as.getEnd(1);
+        AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+        AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
 
         if (internalAssociations.contains(as))
-        {
           continue;
-        }
 
         if (myEnd.getClassName().equals(theirEnd.getClassName()))
         {
@@ -223,12 +221,17 @@ public class EcoreGenerator implements CodeGenerator
         }
         else
         {
-          if (theirEnd.getClassName().equals(uClass.getName()))
+          boolean isBidirectional = as.getIsLeftNavigable()&&as.getIsRightNavigable();
+          boolean isTheirEndClass = theirEnd.getClassName().equals(uClass.getName());
+          //auto-link if bidirectional
+          if (isTheirEndClass && isBidirectional)
           {
             myEnd = as.getEnd(1);
             theirEnd = as.getEnd(0);
           }
-          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+          //add ERef if MyEnd or bidirectional
+          if(!isTheirEndClass || isBidirectional)
+        	  code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
         }
       }
 
@@ -264,7 +267,7 @@ public class EcoreGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={208},file={"Generator_CodeEcore.ump"},javaline={269},length={12})
+  @umplesourcefile(line={211},file={"Generator_CodeEcore.ump"},javaline={272},length={12})
    private String getFullyQualifiedName(String packageName, String className){
     try
     {
@@ -278,7 +281,7 @@ public class EcoreGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={221},file={"Generator_CodeEcore.ump"},javaline={283},length={10})
+  @umplesourcefile(line={224},file={"Generator_CodeEcore.ump"},javaline={286},length={10})
    private String getTargetNamespaceName(){
     if (model.getDefaultNamespace() != null){
       if (model.getDefaultNamespace().length() > 0 )
@@ -290,7 +293,7 @@ public class EcoreGenerator implements CodeGenerator
     return model.getUmpleFile().getSimpleFileName();
   }
 
-  @umplesourcefile(line={233},file={"Generator_CodeEcore.ump"},javaline={295},length={17})
+  @umplesourcefile(line={236},file={"Generator_CodeEcore.ump"},javaline={298},length={17})
    private void writeModel(){
     try
     {

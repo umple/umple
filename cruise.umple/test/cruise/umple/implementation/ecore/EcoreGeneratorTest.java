@@ -30,6 +30,7 @@ public class EcoreGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/ecore/NoNamespace.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/Namespace.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/MultipleInterfaces.ecore");
+    SampleFileWriter.destroy(pathToInput + "/ecore/AssociationsUnidirection.ecore");
   }
 
   @Test
@@ -46,6 +47,14 @@ public class EcoreGeneratorTest extends TemplateTest
     language = null;
     assertUmpleTemplateFor("ecore/Associations.ump","ecore/Associations.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/Associations.ecore")).exists());
+  }
+  
+  @Test
+  public void UnidirectionalAssocaitions()
+  {
+    language = null;
+    assertUmpleTemplateFor("ecore/AssociationsUnidirection.ump","ecore/AssociationsUnidirection.ecore.txt");
+    Assert.assertEquals(true, (new File(pathToInput + "/ecore/AssociationsUnidirection.ecore")).exists());
   }  
   
   @Test
@@ -70,6 +79,5 @@ public class EcoreGeneratorTest extends TemplateTest
     language = null;
     assertUmpleTemplateFor("ecore/MultipleInterfaces.ump","ecore/MultipleInterfaces.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/MultipleInterfaces.ecore")).exists());
-  }  
-  
+  }
 }
