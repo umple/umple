@@ -1616,6 +1616,11 @@ class UmpleInternalParser
       }
     }  
 
+    if(aConstant.getValue() == null || aConstant.getValue() == "")
+    {
+      aConstant.setValue(defaultConstantValue(aConstant.getType(), constantToken));
+    }
+
     // Add constant to Class or Interface
     if (uElement instanceof UmpleClass)
     {
@@ -1627,6 +1632,67 @@ class UmpleInternalParser
       UmpleInterface uInterface = (UmpleInterface) uElement;
       uInterface.addConstant(aConstant);
     }  
+  }
+
+  private String defaultConstantValue(String type, Token attributeToken)
+  {
+    String value = "";
+    if(type.equals("Float") || type.equals("float"))
+    {
+      try{
+        String lang = this.getModel().getGenerate(0).getLanguage();
+        if(lang.equals("Java"))
+        {
+          //This call is made when Java is explicitly declared as the target language
+          value = "0.0f";
+          setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, "0.0f");
+        }
+        else{
+          value = "0.0";
+          setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, "0.0");
+        }
+      }catch(java.lang.IndexOutOfBoundsException e){
+        //This call is made when Java is defaulted as the target language
+        value = "0.0f";
+        setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, "0.0f");
+      }
+    }
+    else if(type.equals("Double") || type.equals("double"))
+    {
+      value = "0.0";
+      setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, "0.0");
+    }
+    else if(type.equals("int") || type.equals("Integer"))
+    {
+      value = "0";
+      setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, "0");
+    }
+    else if(type.equals("boolean") || type.equals("Boolean"))
+    {
+      value = "false";
+      setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, "false");
+    }
+    else if(type.equals("String"))
+    {
+      value = "\"\"";
+      setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, "empty String (\"\")");
+    }
+    else if(type.equals("Time"))
+    {
+      value = "\"00:00:00\"";
+      setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, "00:00:00");
+    }
+    else if(type.equals("Date"))
+    {
+      java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+      value = "\"" + currentDate.toString() + "\"";
+      setFailedPosition(attributeToken.getPosition(), 35, attributeToken.getValue("name"), type, currentDate.toString());
+    }
+    else
+    {
+      setFailedPosition(attributeToken.getPosition(), 37, attributeToken.getValue("name"), type);
+    }
+    return value;
   }
 
   private void analyzeInjectionCode(Token injectToken, UmpleClass aClass)
@@ -2154,14 +2220,6 @@ class UmpleInternalParser
       isLazy = true;
       setFailedPosition(attributeToken.getPosition(), 1, name);
     }
-
-    if(modifier != null)
-    {
-      if(modifier.contains("const") && value == null)
-      {
-        setFailedPosition(attributeToken.getPosition(), 35, name);
-      }
-    }
     
     // check to see if type has angle brackets <>
     if (type != null)
@@ -2250,6 +2308,15 @@ class UmpleInternalParser
     else if(type == null)
     {
       type = "String";
+    }
+
+
+    if(attributeToken.getValue("modifier") != null)
+    {
+      if((attributeToken.getValue("modifier").contains("const")) && (attributeToken.getValue("value") == null))
+      {
+        value = defaultConstantValue(type, attributeToken);
+      }
     }
 
     Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aClass);
