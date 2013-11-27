@@ -26,9 +26,10 @@ function print_usage()
     echo -e "Compile various components of Umple:              ${bold}build [all|compiler|jet|online|quick|version]${normal}"
     echo -e "Revert generated files:                           ${bold}clean [all|compiler|jet]${normal}"
     echo -e "Download latest version of umple.jar:             ${bold}update [umple.jar]${normal}"
+    echo -e "Generate code from umple files:                   ${bold}generate [output language] [File1 File2 File3...]${normal}"
     echo -e "Display debug info for latest build:              ${bold}debug${normal}"
     echo -e "Print current workspace directory:                ${bold}cwd${normal}"
-    echo -e "Description, print_usage and compatibility:       ${bold}info${normal}"
+    echo -e "Description, usage and compatibility:             ${bold}info${normal}"
     echo -e "Help:                                             ${bold}help${normal}"
 }
 
@@ -62,14 +63,15 @@ function check_command()
 
   err=0
   case "$_CMD" in
-    "build")  [ ${#_ARGV[@]} == 1 ] ;;
-    "clean")  [ ${#_ARGV[@]} == 1 ] ;;
-    "update") [ ${#_ARGV[@]} == 1 ] ;;
-    "debug")  [ ${#_ARGV[@]} == 0 ] ;;
-    "cwd")    [ ${#_ARGV[@]} == 0 ] ;;
-    "info")   ( exit 0 ) ;;
-    "help")   ( exit 0 ) ;;
-    *)        ( exit 2 )
+    "build")     [ ${#_ARGV[@]} -eq 1 ] ;;
+    "clean")     [ ${#_ARGV[@]} -eq 1 ] ;;
+    "update")    [ ${#_ARGV[@]} -eq 1 ] ;;
+    "generate")  [ ${#_ARGV[@]} -ge 2 ] ;;
+    "debug")     [ ${#_ARGV[@]} -eq 0 ] ;;
+    "cwd")       [ ${#_ARGV[@]} -eq 0 ] ;;
+    "info")      ( exit 0 ) ;;
+    "help")      ( exit 0 ) ;;
+    *)           ( exit 2 )
   esac; err=$?
 
   if [ $err -ne 0 ]; then
@@ -196,6 +198,15 @@ function update()
   fi
 
   ( cd $_CWD && cd $_DIST_DIR && echo "updating.." && $update_command && echo "done!" ) || return 1
+}
+
+function generate()
+{
+  language=${_ARGV[0]}
+  input_files=${_ARGV[@]:1}
+  umple_jar=`echo "$_CWD/$_DIST_DIR/umple.jar" | sed -e 's#//#/#g'` # In case CWD or DIST_DIR has closing '/'
+
+  ( java -jar "$umple_jar" -generate "$language" $input_files ) || return 2
 }
 
 function debug()
