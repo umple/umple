@@ -146,13 +146,11 @@ class EcoreGenerator
       ArrayList<Association> internalAssociations = new ArrayList<Association>();
       for(Association as : uClass.getAssociations())
       {
-        AssociationEnd myEnd = as.getEnd(0);
-        AssociationEnd theirEnd = as.getEnd(1);
+        AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+        AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
 
         if (internalAssociations.contains(as))
-        {
           continue;
-        }
 
         if (myEnd.getClassName().equals(theirEnd.getClassName()))
         {
@@ -162,12 +160,17 @@ class EcoreGenerator
         }
         else
         {
-          if (theirEnd.getClassName().equals(uClass.getName()))
+          boolean isBidirectional = as.getIsLeftNavigable()&&as.getIsRightNavigable();
+          boolean isTheirEndClass = theirEnd.getClassName().equals(uClass.getName());
+          //auto-link if bidirectional
+          if (isTheirEndClass && isBidirectional)
           {
             myEnd = as.getEnd(1);
             theirEnd = as.getEnd(0);
           }
-          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+          //add ERef if MyEnd or bidirectional
+          if(!isTheirEndClass || isBidirectional)
+        	  code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
         }
       }
 
