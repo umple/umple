@@ -95,3 +95,18 @@ class MoreTypeInference
 class ItemWithUniqueId {
   unique id;
 }
+
+class ConstDefault
+{
+  const int I1;
+  const Integer I2;
+  const double D1;
+  const Double D2;
+  const float F1;
+  const Float F2;
+  const boolean B1;
+  const Boolean B2;
+  const String STR;
+  const Date DATE;
+  const Time TIME;
+}

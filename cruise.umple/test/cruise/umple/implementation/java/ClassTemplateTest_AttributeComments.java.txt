@@ -16,7 +16,7 @@ public class Student
   /**
    * Comment for a const attribute
    */
-  public static final String a = null;
+  public static final String a = "";
 
   //------------------------
   // MEMBER VARIABLES
@@ -33,7 +33,7 @@ public class Student
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aA, String aB)
+  public Student(String aB)
   {
     b = aB;
   }
