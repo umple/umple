@@ -1,0 +1,15 @@
+namespace example;
+
+class QueuedWithConcurrentStateMachines
+{ 
+  queued sm 
+  {
+    s1 {e1 -> s2; }
+    s2 
+    {
+      s2a { e2 -> s2b; }
+      ||
+      s2b { e2 -> s1; }
+    }
+  }
+}

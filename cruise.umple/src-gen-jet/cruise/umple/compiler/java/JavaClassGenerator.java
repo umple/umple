@@ -2423,10 +2423,17 @@ for (StateMachine smq : uClass.getStateMachines())
     {
       append(stringBuffer,"\n  ");
       append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-      append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm)); 
+      if (!sm.getNestedStateMachines().isEmpty())
+      {
+        append(stringBuffer, "\n  enum MessageType { {0}, {1} }", gen.translate("listEvents",sm), gen.translate("listEventsNSM",sm));
+      }
+      else
+      {
+        append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm));
+      }
       append(stringBuffer,"\n  ");
       append(stringBuffer,"\n  MessagePool pool;");
-      append(stringBuffer,"\n  Thread removal;");
+      append(stringBuffer,"\n  Thread removal;");      
     }
   }
 }
@@ -4504,7 +4511,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_428);
     stringBuffer.append( scope );
     stringBuffer.append(TEXT_429);
-    for (StateMachine sm : uClass.getStateMachines()){if(sm.isQueued()) {append(stringBuffer,"_");}}
+    for (StateMachine sm : uClass.getStateMachines()){if(sm.isQueued() && e.getIsInternal() == false) {append(stringBuffer,"_");}}
     stringBuffer.append(gen.translate("eventMethod",e));
     stringBuffer.append(TEXT_430);
     stringBuffer.append( (e.getArgs()==null?"":e.getArgs()));
@@ -9314,8 +9321,7 @@ if (p != null) {
   
   for (StateMachine sm : uClass.getStateMachines())
   {
-    if (sm.isQueued())
-    {
+    if(sm.isQueued()) { 
       for(Event event : sm.getEvents())
       { 
         append(stringBuffer,"\n");
@@ -9340,6 +9346,37 @@ if (p != null) {
         }
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
+      }
+      for (StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for (Event e : nsm.getEvents())
+        {
+          if(e.getIsInternal() == false)
+          {
+          append(stringBuffer,"\n");
+          append(stringBuffer,"  public void ");
+          append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
+          append(stringBuffer,"\n  {");
+        
+          if (!e.getArgs().equals(""))
+          {
+            append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
+            for ( int i=0; i < e.getParams().size(); i++)
+            {
+              append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
+            }
+	        append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+	        append(stringBuffer,"_M, v));");
+          }
+          else
+          {
+            append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+            append(stringBuffer,"_M, null));");
+          }
+          append(stringBuffer,"\n  }");
+          append(stringBuffer,"\n");
+          }
+        }
       }
     }
   }
@@ -9369,6 +9406,38 @@ if (p != null) {
                append(stringBuffer,"();");
              }
              append(stringBuffer,"\n          break;");
+             
+             for (StateMachine nsm : smq.getNestedStateMachines())
+             {
+               for (Event e : nsm.getEvents())
+               {
+                 if(e.getIsInternal() == false)
+                 {
+                   append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",e));
+                   append(stringBuffer,"_M:");
+                   if (!e.getArgs().equals(""))
+                   {
+                     append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",e));
+                     String allParameters="";
+                     for ( int i=0; i < e.getParams().size(); i++)
+                     {
+                       if (allParameters.length() > 0)
+                       {
+                         allParameters += ", ";
+                       }
+                       allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
+                     }
+                     append(stringBuffer,"{0});",allParameters);
+                   }
+                   else
+                   {
+                     append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",e));
+                     append(stringBuffer,"();");
+                   }
+                   append(stringBuffer,"\n          break;");
+                 }
+               }
+             }
            }
     stringBuffer.append(TEXT_2102);
     }

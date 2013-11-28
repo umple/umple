@@ -303,5 +303,17 @@ public class StateMachineTest extends StateMachineTemplateTest
   public void queuedStateMachine_withParameters_1()
   {
     assertUmpleTemplateFor("queuedStateMachine_withParameters_1.ump",languagePath + "/queuedStateMachine_withParameters_1."+ languagePath +".txt","LightFixture");
-  }  
+  }
+  
+  @Test
+  public void queuedWithNestingStateMachines()
+  {
+    assertUmpleTemplateFor("queuedWithNestedStateMachines.ump",languagePath + "/queuedWithNestedStateMachines."+ languagePath +".txt","QueuedWithNestedStateMachines");
+  }
+  
+  @Test
+  public void queuedWithConcurrentStateMachines()
+  {
+    assertUmpleTemplateFor("queuedWithConcurrentStateMachines.ump",languagePath + "/queuedWithConcurrentStateMachines."+ languagePath +".txt","QueuedWithConcurrentStateMachines");
+  }
 }
