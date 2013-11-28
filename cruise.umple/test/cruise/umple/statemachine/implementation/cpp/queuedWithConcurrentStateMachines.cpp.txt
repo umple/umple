@@ -1,0 +1,216 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "QueuedWithConcurrentStateMachines.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ QueuedWithConcurrentStateMachines::QueuedWithConcurrentStateMachines()
+  {
+    if (smS2a == Null) { setSmS2a(Null); }
+    if (smS2b == Null) { setSmS2b(Null); }
+    setSm(s1);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ QueuedWithConcurrentStateMachines::QueuedWithConcurrentStateMachines(const QueuedWithConcurrentStateMachines & queuedwithconcurrentstatemachines)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ QueuedWithConcurrentStateMachines QueuedWithConcurrentStateMachines::operator=(const QueuedWithConcurrentStateMachines & queuedwithconcurrentstatemachines)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string QueuedWithConcurrentStateMachines::getSmFullName()
+  {
+    string answer = getSmStringName(sm);
+    if (smS2a != Null) { answer += "." + getSmS2aStringName(smS2a); }
+    if (smS2b != Null) { answer += "." + getSmS2bStringName(smS2b); }
+    return answer;
+  }
+  
+  QueuedWithConcurrentStateMachines::Sm QueuedWithConcurrentStateMachines::getSm()
+  {
+    return sm;
+  }
+
+  string QueuedWithConcurrentStateMachines::getSmStringName (Sm sm)
+  {
+    switch (sm)  {
+      case 0 : {return "s1"; break;}
+      case 1 : {return "s2"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  QueuedWithConcurrentStateMachines::SmS2a QueuedWithConcurrentStateMachines::getSmS2a()
+  {
+    return smS2a;
+  }
+
+  string QueuedWithConcurrentStateMachines::getSmS2aStringName (SmS2a smS2a)
+  {
+    switch (smS2a)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "s2a"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  QueuedWithConcurrentStateMachines::SmS2b QueuedWithConcurrentStateMachines::getSmS2b()
+  {
+    return smS2b;
+  }
+
+  string QueuedWithConcurrentStateMachines::getSmS2bStringName (SmS2b smS2b)
+  {
+    switch (smS2b)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "s2b"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool QueuedWithConcurrentStateMachines::e1()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s1:
+        setSm(s2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool QueuedWithConcurrentStateMachines::enterS2()
+  {
+    bool wasEventProcessed = false;
+
+    switch (smS2a)
+    {
+      case Null:
+        setSmS2a(s2a);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (smS2b)
+    {
+      case Null:
+        setSmS2b(s2b);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool QueuedWithConcurrentStateMachines::exitS2()
+  {
+    bool wasEventProcessed = false;
+
+    switch (smS2a)
+    {
+      case s2a:
+        setSmS2a(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (smS2b)
+    {
+      case s2b:
+        setSmS2b(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool QueuedWithConcurrentStateMachines::e2()
+  {
+    bool wasEventProcessed = false;
+
+    switch (smS2a)
+    {
+      case s2a:
+        setSmS2b(s2b);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (smS2b)
+    {
+      case s2b:
+        setSm(s1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void QueuedWithConcurrentStateMachines::exitSm()
+  {
+    switch(sm)
+    {
+      case s2:
+        exitS2();
+        break;
+    }
+  }
+
+  void QueuedWithConcurrentStateMachines::setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s2:
+        if (smS2a == Null) { setSmS2a(s2a); }
+        if (smS2b == Null) { setSmS2b(s2b); }
+        break;
+    }
+  }
+  
+
+  void QueuedWithConcurrentStateMachines::setSmS2a(SmS2a aSmS2a)
+  {
+    smS2a = aSmS2a;
+    if (sm != s2 && aSmS2a != Null) { setSm(s2); }
+  }
+  
+
+  void QueuedWithConcurrentStateMachines::setSmS2b(SmS2b aSmS2b)
+  {
+    smS2b = aSmS2b;
+    if (sm != s2 && aSmS2b != Null) { setSm(s2); }
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+QueuedWithConcurrentStateMachines::~QueuedWithConcurrentStateMachines()
+  {}

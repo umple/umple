@@ -1,0 +1,303 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.18.0.3239 modeling language!*/
+
+package example;
+import java.util.*;
+import java.lang.Thread;
+
+public class QueuedWithConcurrentStateMachines implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //QueuedWithConcurrentStateMachines State Machines
+  enum Sm { s1, s2 }
+  enum SmS2a { Null, s2a }
+  enum SmS2b { Null, s2b }
+  private Sm sm;
+  private SmS2a smS2a;
+  private SmS2b smS2b;
+  
+  //enumeration type of messages accepted by QueuedWithConcurrentStateMachines
+  enum MessageType { e1_M, e2_M, e2_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public QueuedWithConcurrentStateMachines()
+  {
+    setSmS2a(SmS2a.Null);
+    setSmS2b(SmS2b.Null);
+    setSm(Sm.s1);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of QueuedWithConcurrentStateMachines
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smS2a != SmS2a.Null) { answer += "." + smS2a.toString(); }
+    if (smS2b != SmS2b.Null) { answer += "." + smS2b.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmS2a getSmS2a()
+  {
+    return smS2a;
+  }
+
+  public SmS2b getSmS2b()
+  {
+    return smS2b;
+  }
+
+  public boolean _e1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterS2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2a aSmS2a = smS2a;
+    SmS2b aSmS2b = smS2b;
+    switch (aSmS2a)
+    {
+      case Null:
+        setSmS2a(SmS2a.s2a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS2b)
+    {
+      case Null:
+        setSmS2b(SmS2b.s2b);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitS2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2a aSmS2a = smS2a;
+    SmS2b aSmS2b = smS2b;
+    switch (aSmS2a)
+    {
+      case s2a:
+        setSmS2a(SmS2a.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS2b)
+    {
+      case s2b:
+        setSmS2b(SmS2b.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _e2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2a aSmS2a = smS2a;
+    SmS2b aSmS2b = smS2b;
+    switch (aSmS2a)
+    {
+      case s2a:
+        setSmS2b(SmS2b.s2b);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmS2b)
+    {
+      case s2b:
+        exitSm();
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s2:
+        exitS2();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s2:
+        if (smS2a == SmS2a.Null) { setSmS2a(SmS2a.s2a); }
+        if (smS2b == SmS2b.Null) { setSmS2b(SmS2b.s2b); }
+        break;
+    }
+  }
+
+  private void setSmS2a(SmS2a aSmS2a)
+  {
+    smS2a = aSmS2a;
+    if (sm != Sm.s2 && aSmS2a != SmS2a.Null) { setSm(Sm.s2); }
+  }
+
+  private void setSmS2b(SmS2b aSmS2b)
+  {
+    smS2b = aSmS2b;
+    if (sm != Sm.s2 && aSmS2b != SmS2b.Null) { setSm(Sm.s2); }
+  }
+
+  public void delete()
+  {}
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void e1 ()
+  {
+    pool.put(new Message(MessageType.e1_M, null));
+  }
+
+  public void e2 ()
+  {
+    pool.put(new Message(MessageType.e2_M, null));
+  }
+
+  public void e2 ()
+  {
+    pool.put(new Message(MessageType.e2_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case e1_M:
+          status = _e1();
+          break;
+        case e2_M:
+          status = _e2();
+          break;
+        case e2_M:
+          status = _e2();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+}

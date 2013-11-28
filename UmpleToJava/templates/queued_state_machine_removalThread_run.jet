@@ -34,6 +34,38 @@
                append(stringBuffer,"();");
              }
              append(stringBuffer,"\n          break;");
+             
+             for (StateMachine nsm : smq.getNestedStateMachines())
+             {
+               for (Event e : nsm.getEvents())
+               {
+                 if(e.getIsInternal() == false)
+                 {
+                   append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",e));
+                   append(stringBuffer,"_M:");
+                   if (!e.getArgs().equals(""))
+                   {
+                     append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",e));
+                     String allParameters="";
+                     for ( int i=0; i < e.getParams().size(); i++)
+                     {
+                       if (allParameters.length() > 0)
+                       {
+                         allParameters += ", ";
+                       }
+                       allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
+                     }
+                     append(stringBuffer,"{0});",allParameters);
+                   }
+                   else
+                   {
+                     append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",e));
+                     append(stringBuffer,"();");
+                   }
+                   append(stringBuffer,"\n          break;");
+                 }
+               }
+             }
            }%> 
         default:
       }

@@ -246,6 +246,26 @@ class JavaGenerator
       }
       return allEnums;
     }
+    else if ("listEventsNSM".equals(keyName))
+    {
+      String allEnums = "";
+      for (StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for (Event event : nsm.getEvents())
+        {
+          if(event.getIsInternal() == false)
+          {
+        	  if (allEnums.length() > 0)
+              {
+                allEnums += ", ";
+              }
+              allEnums += translate("eventMethod",event);
+              allEnums += "_M";  
+          }
+        }
+      }
+      return allEnums;
+    }
         
     return "UNKNOWN ID: " + keyName;
   }

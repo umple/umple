@@ -1,0 +1,275 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.18.0.3239 modeling language!*/
+
+package example;
+import java.util.*;
+import java.lang.Thread;
+
+public class QueuedWithNestedStateMachines implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //QueuedWithNestedStateMachines State Machines
+  enum Sm { s1, s2 }
+  enum SmS2 { Null, s2a, s2b }
+  private Sm sm;
+  private SmS2 smS2;
+  
+  //enumeration type of messages accepted by QueuedWithNestedStateMachines
+  enum MessageType { e1_M, e2_M, e3_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public QueuedWithNestedStateMachines()
+  {
+    setSmS2(SmS2.Null);
+    setSm(Sm.s1);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of QueuedWithNestedStateMachines
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smS2 != SmS2.Null) { answer += "." + smS2.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmS2 getSmS2()
+  {
+    return smS2;
+  }
+
+  public boolean _e1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterS2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2 aSmS2 = smS2;
+    switch (aSmS2)
+    {
+      case Null:
+        setSmS2(SmS2.s2a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitS2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2 aSmS2 = smS2;
+    switch (aSmS2)
+    {
+      case s2a:
+        setSmS2(SmS2.Null);
+        wasEventProcessed = true;
+        break;
+      case s2b:
+        setSmS2(SmS2.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _e2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2 aSmS2 = smS2;
+    switch (aSmS2)
+    {
+      case s2a:
+        setSmS2(SmS2.s2b);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _e3()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2 aSmS2 = smS2;
+    switch (aSmS2)
+    {
+      case s2b:
+        setSmS2(SmS2.s2a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s2:
+        exitS2();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s2:
+        if (smS2 == SmS2.Null) { setSmS2(SmS2.s2a); }
+        break;
+    }
+  }
+
+  private void setSmS2(SmS2 aSmS2)
+  {
+    smS2 = aSmS2;
+    if (sm != Sm.s2 && aSmS2 != SmS2.Null) { setSm(Sm.s2); }
+  }
+
+  public void delete()
+  {}
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void e1 ()
+  {
+    pool.put(new Message(MessageType.e1_M, null));
+  }
+
+  public void e2 ()
+  {
+    pool.put(new Message(MessageType.e2_M, null));
+  }
+
+  public void e3 ()
+  {
+    pool.put(new Message(MessageType.e3_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case e1_M:
+          status = _e1();
+          break;
+        case e2_M:
+          status = _e2();
+          break;
+        case e3_M:
+          status = _e3();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+}

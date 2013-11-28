@@ -115,7 +115,7 @@
     actionLengths.toString().substring(1)):"";
   
 %><%= umpleSourceFile %>
-  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if(sm.isQueued()) {append(stringBuffer,"_");}}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
+  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if(sm.isQueued() && e.getIsInternal() == false) {append(stringBuffer,"_");}}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
   {
     boolean wasEventProcessed = false;
     <%= eventOutput %>

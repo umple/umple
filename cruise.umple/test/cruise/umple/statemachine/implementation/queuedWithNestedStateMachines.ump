@@ -1,0 +1,17 @@
+namespace example;
+	
+class QueuedWithNestedStateMachines {
+  queued sm {
+     s1 {
+        e1 -> s2;
+     }
+     s2 {
+        s2a {
+          e2 -> s2b;
+        }
+        s2b {
+          e3 -> s2a;
+        }
+     }
+  }
+}

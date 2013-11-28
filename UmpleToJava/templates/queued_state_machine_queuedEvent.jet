@@ -8,8 +8,7 @@
   
   for (StateMachine sm : uClass.getStateMachines())
   {
-    if (sm.isQueued())
-    {
+    if(sm.isQueued()) { 
       for(Event event : sm.getEvents())
       { 
         append(stringBuffer,"\n");
@@ -34,6 +33,37 @@
         }
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
+      }
+      for (StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for (Event e : nsm.getEvents())
+        {
+          if(e.getIsInternal() == false)
+          {
+          append(stringBuffer,"\n");
+          append(stringBuffer,"  public void ");
+          append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
+          append(stringBuffer,"\n  {");
+        
+          if (!e.getArgs().equals(""))
+          {
+            append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
+            for ( int i=0; i < e.getParams().size(); i++)
+            {
+              append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
+            }
+	        append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+	        append(stringBuffer,"_M, v));");
+          }
+          else
+          {
+            append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+            append(stringBuffer,"_M, null));");
+          }
+          append(stringBuffer,"\n  }");
+          append(stringBuffer,"\n");
+          }
+        }
       }
     }
   }
