@@ -1,0 +1,15 @@
+namespace model;
+
+class A
+{
+	1..5 a -- 1..* B b;
+}
+
+class B
+{
+	0..1 -> * C c;
+}
+
+class C
+{
+}

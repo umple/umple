@@ -4,9 +4,9 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource UmpleImport.ump 83
+ * @umplesource UmpleImport.ump 111
  */
-// line 83 "../../../../src/UmpleImport.ump"
+// line 111 "../../../../src/UmpleImport.ump"
 public class UmpleImportConstants
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -28,6 +28,7 @@ public class UmpleImportConstants
   public static final String ECORE_ATTRIBUTE = "ecore:EAttribute";
   public static final String ECORE_TYPE = "eType";
   public static final String ECORE_DATATYPE = "ecore:EDataType";
+  public static final String ECORE_REFERENCE = "ecore:EReference";  private static UmpleImportConstants theInstance = null;
 
   //------------------------
   // MEMBER VARIABLES
@@ -37,8 +38,17 @@ public class UmpleImportConstants
   // CONSTRUCTOR
   //------------------------
 
-  public UmpleImportConstants()
+  private UmpleImportConstants()
   {}
+
+  public static UmpleImportConstants getInstance()
+  {
+    if(theInstance == null)
+    {
+      theInstance = new UmpleImportConstants();
+    }
+    return theInstance;
+  }
 
   //------------------------
   // INTERFACE

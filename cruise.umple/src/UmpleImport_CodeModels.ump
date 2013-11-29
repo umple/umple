@@ -15,12 +15,44 @@ class UmpleImportModel
 {
 	internal StringBuilder umpleBuilder = new StringBuilder();
 	
-	public String generateUmple() {
+	String generateUmple() {
 		umpleBuilder = new StringBuilder();
 		for (UmpleImportElement umpleImportElement : umpleImportElements) {
-			umpleBuilder.append(umpleImportElement.generateUmple());
+			if(umpleImportElement.getId()!=UmpleImportConstants.ECORE_REFERENCE)
+				umpleBuilder.append(umpleImportElement.generateUmple());
 		}
 		return umpleBuilder.toString();
+	}
+	
+	//resolve assoications by global lookup
+	UmpleImportAssociation checkIfOppositeExist(UmpleImportAssociation currEnd){
+	  this.addUmpleImportElement(currEnd);
+	  UmpleImportAssociation oppoEnd = null;
+	  for (UmpleImportElement umpleImportElement : umpleImportElements) {
+		  if(umpleImportElement.getId() == UmpleImportConstants.ECORE_REFERENCE){
+			  UmpleImportAssociation tempEnd = (UmpleImportAssociation)umpleImportElement;
+			  String oppoStartClass = tempEnd.getStartClass();
+			  String oppoEndClass = tempEnd.getEndClass();
+			  String currStartClass = currEnd.getStartClass();
+			  String currEndClass = currEnd.getEndClass();
+			  if(currStartClass.equals(oppoEndClass) && currEndClass.equals(oppoStartClass))
+				  oppoEnd = tempEnd;
+		  }
+	  }
+	  //update existing association with crrEnd info
+	  if(oppoEnd!=null)
+	  {
+		  for (UmpleImportElement umpleImportElement : umpleImportElements) {
+			  if(umpleImportElement.getName() == oppoEnd.getStartClass()){
+				  UmpleImportClass umpleClass = (UmpleImportClass)umpleImportElement;
+				  umpleClass.removeUmpleImportAssociation(oppoEnd);
+				  oppoEnd.setOtherLowerBound(currEnd.getLowerBound());
+				  oppoEnd.setOtherUpperBound(currEnd.getUpperBound());
+				  umpleClass.addUmpleImportAssociation(oppoEnd);
+			  }
+		  }  
+	  }
+	  return oppoEnd;
 	}
 }
 
@@ -51,6 +83,10 @@ class UmpleImportClass
 		}
 		for (UmpleImportAttribute umpleImportAttribute : umpleImportAttributes) {
 			umpleBuilder.append(umpleImportAttribute.generateUmple());
+		}
+		//inline associations
+		for (UmpleImportAssociation association : umpleImportAssociations) {
+			umpleBuilder.append(association.generateUmple());
 		}
 		umpleBuilder.append("\n}");
 		return umpleBuilder.toString();
@@ -89,4 +125,38 @@ class UmpleImportAttribute
 			ret += " ";
 		return ret;
   	}
+}
+
+class UmpleImportAssociation
+{	
+	String generateUmple() {
+		StringBuilder builder = this.getUmpleBuilder();
+    	builder.append("\n\t");
+		boolean isUniDirection = this.getEndClassName() == null;
+		if (isUniDirection)
+			builder.append("0..1 -> ");
+		else {
+			builder.append(this.generateMultiplicityBound(
+					this.getOtherLowerBound(), this.getOtherUpperBound())
+					+ " " + this.getEndClassName() + " -- ");
+		}
+		builder.append(this.generateMultiplicityBound(this.getLowerBound(),
+				this.getUpperBound()) + " " + this.getEndClass() + " " + this.getName() + ";");
+    	return builder.toString();
+    }
+    
+    private String generateMultiplicityBound(int lowerBound, int upperBound) {
+		String rtn = "";
+		if (upperBound == -1) {
+			if (lowerBound == 0)
+				rtn = "*";
+			else
+				rtn = StringFormatter.format("{0}..*", lowerBound);
+		} else if (lowerBound == upperBound) {
+			rtn = StringFormatter.format("{0}", lowerBound);
+		} else {
+			rtn = StringFormatter.format("{0}..{1}", lowerBound, upperBound);
+		}
+		return rtn;
+	}
 }

@@ -4,10 +4,11 @@
 package cruise.umple.compiler;
 
 /**
- * prototype of package, class, interface, associations and so on.
- * @umplesource UmpleImport.ump 31
+ * Defines import prototype for package, class, interface 
+ * and associations
+ * @umplesource UmpleImport.ump 40
  */
-// line 31 "../../../../src/UmpleImport.ump"
+// line 40 "../../../../src/UmpleImport.ump"
 public abstract class UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -61,11 +62,17 @@ public abstract class UmpleImportElement
     return wasSet;
   }
 
+  /**
+   * identifier from xmi
+   */
   public String getId()
   {
     return id;
   }
 
+  /**
+   * name attribute from xmi
+   */
   public String getName()
   {
     return name;
@@ -79,7 +86,7 @@ public abstract class UmpleImportElement
   public void delete()
   {}
 
-  @umplesourcefile(line={40},file={"UmpleImport.ump"},javaline={83},length={3})
+  @umplesourcefile(line={51},file={"UmpleImport.ump"},javaline={90},length={3})
   public abstract String generateUmple();
 
   public String toString()

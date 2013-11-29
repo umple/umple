@@ -83,21 +83,37 @@ class ECoreImportHandler
 				model.addUmpleImportElement(umpleClass);
 			}
 		} 
-		//load class attributes
+		//load class attributes and associations
 		else if (currentElement.equals("eStructuralFeatures")) {
 			String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
 			boolean checkIsAttribute = attrType.equals(UmpleImportConstants.ECORE_ATTRIBUTE);
+			boolean checkIsReference = attrType.equals(UmpleImportConstants.ECORE_REFERENCE);
+			String attrName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+			String classAttrTypeRaw = attributes.getValue(UmpleImportConstants.ECORE_TYPE);
+			String classAttrType = classAttrTypeRaw.split("#//")[1];
+			String currentClassName = currentClass.getName();
 			if(checkIsAttribute)
-			{
-				String attrName = attributes.getValue(UmpleImportConstants.XMI_NAME);
-				String classAttrTypeRaw = attributes.getValue(UmpleImportConstants.ECORE_TYPE);
-				String classAttrType = classAttrTypeRaw.split("#//")[1];
-				String currentClassName = currentClass.getName();
+			{				
 				UmpleImportAttribute umpleAttribute = new UmpleImportAttribute(UmpleImportConstants.ECORE_ATTRIBUTE, attrName, currentClassName, classAttrType);
 				String attrUpper = attributes.getValue(UmpleImportConstants.XMI_UPPER);
 				if(attrUpper!=null)
 					umpleAttribute.setUpperBound(Integer.parseInt(attrUpper));
 				currentClass.addUmpleImportAttribute(umpleAttribute);
+			}
+			if(checkIsReference)
+			{
+				String endClassName = null;
+				String endClassNameRaw = attributes.getValue("eOpposite");
+				int lowerBound = Integer.parseInt(attributes.getValue("lowerBound"));
+				int upperBound = Integer.parseInt(attributes.getValue("upperBound"));
+				if(endClassNameRaw!=null)
+					endClassName = endClassNameRaw.split(classAttrTypeRaw+"/")[1];
+				UmpleImportAssociation umpleAssociation = new UmpleImportAssociation(UmpleImportConstants.ECORE_REFERENCE, attrName, currentClassName, classAttrType, endClassName);
+				umpleAssociation.setLowerBound(lowerBound);
+				umpleAssociation.setUpperBound(upperBound);
+				UmpleImportAssociation oppoEnd = model.checkIfOppositeExist(umpleAssociation);
+				if(oppoEnd==null)
+					currentClass.addUmpleImportAssociation(umpleAssociation);
 			}
 		}
 	}

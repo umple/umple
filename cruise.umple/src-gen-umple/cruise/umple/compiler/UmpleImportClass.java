@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource UmpleImport.ump 55
- * @umplesource UmpleImport_CodeModels.ump 35
+ * @umplesource UmpleImport.ump 68
+ * @umplesource UmpleImport_CodeModels.ump 67
  */
-// line 55 "../../../../src/UmpleImport.ump"
-// line 35 "../../../../src/UmpleImport_CodeModels.ump"
+// line 68 "../../../../src/UmpleImport.ump"
+// line 67 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportClass extends UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -27,6 +27,7 @@ public class UmpleImportClass extends UmpleImportElement
 
   //UmpleImportClass Associations
   private List<UmpleImportAttribute> umpleImportAttributes;
+  private List<UmpleImportAssociation> umpleImportAssociations;
 
   //------------------------
   // CONSTRUCTOR
@@ -40,6 +41,7 @@ public class UmpleImportClass extends UmpleImportElement
     isInterface = aIsInterface;
     superTypes = new ArrayList<String>();
     umpleImportAttributes = new ArrayList<UmpleImportAttribute>();
+    umpleImportAssociations = new ArrayList<UmpleImportAssociation>();
   }
 
   //------------------------
@@ -129,6 +131,16 @@ public class UmpleImportClass extends UmpleImportElement
     return index;
   }
 
+  public boolean isIsAbstract()
+  {
+    return isAbstract;
+  }
+
+  public boolean isIsInterface()
+  {
+    return isInterface;
+  }
+
   public UmpleImportAttribute getUmpleImportAttribute(int index)
   {
     UmpleImportAttribute aUmpleImportAttribute = umpleImportAttributes.get(index);
@@ -156,6 +168,36 @@ public class UmpleImportClass extends UmpleImportElement
   public int indexOfUmpleImportAttribute(UmpleImportAttribute aUmpleImportAttribute)
   {
     int index = umpleImportAttributes.indexOf(aUmpleImportAttribute);
+    return index;
+  }
+
+  public UmpleImportAssociation getUmpleImportAssociation(int index)
+  {
+    UmpleImportAssociation aUmpleImportAssociation = umpleImportAssociations.get(index);
+    return aUmpleImportAssociation;
+  }
+
+  public List<UmpleImportAssociation> getUmpleImportAssociations()
+  {
+    List<UmpleImportAssociation> newUmpleImportAssociations = Collections.unmodifiableList(umpleImportAssociations);
+    return newUmpleImportAssociations;
+  }
+
+  public int numberOfUmpleImportAssociations()
+  {
+    int number = umpleImportAssociations.size();
+    return number;
+  }
+
+  public boolean hasUmpleImportAssociations()
+  {
+    boolean has = umpleImportAssociations.size() > 0;
+    return has;
+  }
+
+  public int indexOfUmpleImportAssociation(UmpleImportAssociation aUmpleImportAssociation)
+  {
+    int index = umpleImportAssociations.indexOf(aUmpleImportAssociation);
     return index;
   }
 
@@ -216,13 +258,71 @@ public class UmpleImportClass extends UmpleImportElement
     return wasAdded;
   }
 
+  public static int minimumNumberOfUmpleImportAssociations()
+  {
+    return 0;
+  }
+
+  public boolean addUmpleImportAssociation(UmpleImportAssociation aUmpleImportAssociation)
+  {
+    boolean wasAdded = false;
+    if (umpleImportAssociations.contains(aUmpleImportAssociation)) { return false; }
+    umpleImportAssociations.add(aUmpleImportAssociation);
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeUmpleImportAssociation(UmpleImportAssociation aUmpleImportAssociation)
+  {
+    boolean wasRemoved = false;
+    if (umpleImportAssociations.contains(aUmpleImportAssociation))
+    {
+      umpleImportAssociations.remove(aUmpleImportAssociation);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addUmpleImportAssociationAt(UmpleImportAssociation aUmpleImportAssociation, int index)
+  {  
+    boolean wasAdded = false;
+    if(addUmpleImportAssociation(aUmpleImportAssociation))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleImportAssociations()) { index = numberOfUmpleImportAssociations() - 1; }
+      umpleImportAssociations.remove(aUmpleImportAssociation);
+      umpleImportAssociations.add(index, aUmpleImportAssociation);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveUmpleImportAssociationAt(UmpleImportAssociation aUmpleImportAssociation, int index)
+  {
+    boolean wasAdded = false;
+    if(umpleImportAssociations.contains(aUmpleImportAssociation))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfUmpleImportAssociations()) { index = numberOfUmpleImportAssociations() - 1; }
+      umpleImportAssociations.remove(aUmpleImportAssociation);
+      umpleImportAssociations.add(index, aUmpleImportAssociation);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addUmpleImportAssociationAt(aUmpleImportAssociation, index);
+    }
+    return wasAdded;
+  }
+
   public void delete()
   {
     umpleImportAttributes.clear();
+    umpleImportAssociations.clear();
     super.delete();
   }
 
-  @umplesourcefile(line={39},file={"UmpleImport_CodeModels.ump"},javaline={227},length={20})
+  @umplesourcefile(line={71},file={"UmpleImport_CodeModels.ump"},javaline={327},length={24})
   public String generateUmple(){
     StringBuilder umpleBuilder = this.getUmpleBuilder();
 		umpleBuilder.append("\n\n");
@@ -239,6 +339,10 @@ public class UmpleImportClass extends UmpleImportElement
 		}
 		for (UmpleImportAttribute umpleImportAttribute : umpleImportAttributes) {
 			umpleBuilder.append(umpleImportAttribute.generateUmple());
+		}
+		//inline associations
+		for (UmpleImportAssociation association : umpleImportAssociations) {
+			umpleBuilder.append(association.generateUmple());
 		}
 		umpleBuilder.append("\n}");
 		return umpleBuilder.toString();

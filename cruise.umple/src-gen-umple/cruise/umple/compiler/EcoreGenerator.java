@@ -73,7 +73,7 @@ public class EcoreGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"Generator_CodeEcore.ump"},javaline={78},length={192})
+  @umplesourcefile(line={17},file={"Generator_CodeEcore.ump"},javaline={78},length={194})
    public void generate(){
     StringBuilder code = new StringBuilder();
     StringBuilder subCode;
@@ -229,9 +229,11 @@ public class EcoreGenerator implements CodeGenerator
             myEnd = as.getEnd(1);
             theirEnd = as.getEnd(0);
           }
-          //add ERef if MyEnd or bidirectional
-          if(!isTheirEndClass || isBidirectional)
+          //add ERef if MyEnd or bidirectional, uniDirectional Ref doesn't hv eOpposite field
+          if(isBidirectional)
         	  code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+          else if(!isTheirEndClass)
+        	  code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName()));
         }
       }
 
@@ -267,7 +269,7 @@ public class EcoreGenerator implements CodeGenerator
     writeModel();
   }
 
-  @umplesourcefile(line={211},file={"Generator_CodeEcore.ump"},javaline={272},length={12})
+  @umplesourcefile(line={213},file={"Generator_CodeEcore.ump"},javaline={274},length={12})
    private String getFullyQualifiedName(String packageName, String className){
     try
     {
@@ -281,7 +283,7 @@ public class EcoreGenerator implements CodeGenerator
     }
   }
 
-  @umplesourcefile(line={224},file={"Generator_CodeEcore.ump"},javaline={286},length={10})
+  @umplesourcefile(line={226},file={"Generator_CodeEcore.ump"},javaline={288},length={10})
    private String getTargetNamespaceName(){
     if (model.getDefaultNamespace() != null){
       if (model.getDefaultNamespace().length() > 0 )
@@ -293,7 +295,7 @@ public class EcoreGenerator implements CodeGenerator
     return model.getUmpleFile().getSimpleFileName();
   }
 
-  @umplesourcefile(line={236},file={"Generator_CodeEcore.ump"},javaline={298},length={17})
+  @umplesourcefile(line={238},file={"Generator_CodeEcore.ump"},javaline={300},length={17})
    private void writeModel(){
     try
     {

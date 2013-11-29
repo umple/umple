@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * integration of all elements as a model
- * @umplesource UmpleImport.ump 43
+ * integration of all importElements as a model
+ * @umplesource UmpleImport.ump 56
  * @umplesource UmpleImport_CodeModels.ump 13
  */
-// line 43 "../../../../src/UmpleImport.ump"
+// line 56 "../../../../src/UmpleImport.ump"
 // line 13 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportModel
 {
@@ -147,13 +147,49 @@ public class UmpleImportModel
     umpleImportElements.clear();
   }
 
-  @umplesourcefile(line={19},file={"UmpleImport_CodeModels.ump"},javaline={152},length={7})
-   public String generateUmple(){
+  @umplesourcefile(line={19},file={"UmpleImport_CodeModels.ump"},javaline={152},length={8})
+  public String generateUmple(){
     umpleBuilder = new StringBuilder();
 		for (UmpleImportElement umpleImportElement : umpleImportElements) {
-			umpleBuilder.append(umpleImportElement.generateUmple());
+			if(umpleImportElement.getId()!=UmpleImportConstants.ECORE_REFERENCE)
+				umpleBuilder.append(umpleImportElement.generateUmple());
 		}
 		return umpleBuilder.toString();
+  }
+
+
+  /**
+   * resolve assoications by global lookup
+   */
+  @umplesourcefile(line={29},file={"UmpleImport_CodeModels.ump"},javaline={162},length={29})
+  public UmpleImportAssociation checkIfOppositeExist(UmpleImportAssociation currEnd){
+    this.addUmpleImportElement(currEnd);
+	  UmpleImportAssociation oppoEnd = null;
+	  for (UmpleImportElement umpleImportElement : umpleImportElements) {
+		  if(umpleImportElement.getId() == UmpleImportConstants.ECORE_REFERENCE){
+			  UmpleImportAssociation tempEnd = (UmpleImportAssociation)umpleImportElement;
+			  String oppoStartClass = tempEnd.getStartClass();
+			  String oppoEndClass = tempEnd.getEndClass();
+			  String currStartClass = currEnd.getStartClass();
+			  String currEndClass = currEnd.getEndClass();
+			  if(currStartClass.equals(oppoEndClass) && currEndClass.equals(oppoStartClass))
+				  oppoEnd = tempEnd;
+		  }
+	  }
+	  //update existing association with crrEnd info
+	  if(oppoEnd!=null)
+	  {
+		  for (UmpleImportElement umpleImportElement : umpleImportElements) {
+			  if(umpleImportElement.getName() == oppoEnd.getStartClass()){
+				  UmpleImportClass umpleClass = (UmpleImportClass)umpleImportElement;
+				  umpleClass.removeUmpleImportAssociation(oppoEnd);
+				  oppoEnd.setOtherLowerBound(currEnd.getLowerBound());
+				  oppoEnd.setOtherUpperBound(currEnd.getUpperBound());
+				  umpleClass.addUmpleImportAssociation(oppoEnd);
+			  }
+		  }  
+	  }
+	  return oppoEnd;
   }
 
 

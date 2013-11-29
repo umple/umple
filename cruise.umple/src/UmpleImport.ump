@@ -11,8 +11,14 @@ Model for the subsystem used to syncronize elements in UmpleOnline
 
 namespace cruise.umple.compiler;
 
+/* 
+ * SAX, streamed-base push JAXP API
+ */
 external DefaultHandler{}
 
+/* 
+ * Parse ECore by extend SAX handler callbacks
+ */
 class ECoreImportHandler
 {	
 	depend java.io.File;
@@ -28,19 +34,26 @@ class ECoreImportHandler
 	isA DefaultHandler;
 }
 
-//prototype of package, class, interface, associations and so on. 
+/* 
+ * Defines import prototype for package, class, interface 
+ * and associations
+ */ 
 class UmpleImportElement
 {
 	abstract;
 	
+	//identifier from xmi
 	id;
+	//name attribute from xmi
 	name;
 	StringBuilder umpleBuilder = new StringBuilder();
 	
 	abstract String generateUmple();
 }
 
-//integration of all elements as a model
+/* 
+ * integration of all importElements as a model
+ */ 
 class UmpleImportModel
 {   
 	0..1 -> * UmpleImportElement;
@@ -58,10 +71,11 @@ class UmpleImportClass
 	isA UmpleImportElement;
 	
 	0..1 -> * UmpleImportAttribute;
+	0..1 -> * UmpleImportAssociation;
 	
 	packageName;
-	boolean isAbstract;
-	boolean isInterface;
+	Boolean isAbstract;
+	Boolean isInterface;
 	String[] superTypes;
 }
 
@@ -72,17 +86,33 @@ class UmpleImportAttribute
 	className;
 	dataType;
 	//primitive type as default
-	Integer lowerBound=0;
+	lazy Integer lowerBound;
+	//primitive type as default
 	Integer upperBound=1;
 }
 
 class UmpleImportAssociation
 {
+	depend cruise.umple.util.StringFormatter;
+	
 	isA UmpleImportElement;
+	
+	//root class
+	startClass;
+	//eType
+	endClass;
+	//eOpposite
+	endClassName;
+    lazy Integer lowerBound;
+	Integer upperBound = 1;
+	lazy Integer otherLowerBound;
+	Integer otherUpperBound = 1;
 }
 
 class UmpleImportConstants
 {
+	singleton;
+	
 	const XMI_TYPE="xsi:type";
 	const XMI_NAME="name";
 	const XMI_PACKAGENAME="nsURI";
@@ -95,6 +125,7 @@ class UmpleImportConstants
 	const ECORE_ATTRIBUTE = "ecore:EAttribute";
 	const ECORE_TYPE = "eType";
 	const ECORE_DATATYPE = "ecore:EDataType";
+	const ECORE_REFERENCE = "ecore:EReference";
 }
 
 use UmpleImport_CodeHandlers.ump;
