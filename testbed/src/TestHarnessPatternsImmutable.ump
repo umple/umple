@@ -1,5 +1,7 @@
 namespace cruise.patterns.test;
 
+// Ignore warnings about multiplicity bounds on directed association
+strictness ignore 36;
 
 class WidgetImmutableA
 {

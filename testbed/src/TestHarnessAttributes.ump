@@ -1,6 +1,9 @@
 
 namespace cruise.attributes.test;
 
+// Ignore warnings about lack of initialization of constants and setting to default
+strictness ignore 36;
+
 class DoorA
 {
   immutable id = "1";

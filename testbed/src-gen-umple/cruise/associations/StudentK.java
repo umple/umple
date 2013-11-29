@@ -3,7 +3,7 @@
 
 package cruise.associations;
 
-// line 158 "../../../src/TestHarnessAssociations.ump"
+// line 161 "../../../src/TestHarnessAssociations.ump"
 public class StudentK
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

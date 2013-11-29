@@ -5,7 +5,7 @@ package cruise.attributes.test;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 98 "../../../../src/TestHarnessAttributes.ump"
+// line 101 "../../../../src/TestHarnessAttributes.ump"
 public class ConstDefault
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

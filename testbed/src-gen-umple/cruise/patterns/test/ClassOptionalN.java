@@ -4,7 +4,7 @@
 package cruise.patterns.test;
 import java.util.*;
 
-// line 60 "../../../../src/TestHarnessPatternsImmutable.ump"
+// line 62 "../../../../src/TestHarnessPatternsImmutable.ump"
 public class ClassOptionalN
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

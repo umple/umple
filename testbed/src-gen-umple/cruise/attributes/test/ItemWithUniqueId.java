@@ -4,7 +4,7 @@
 package cruise.attributes.test;
 import java.util.*;
 
-// line 94 "../../../../src/TestHarnessAttributes.ump"
+// line 97 "../../../../src/TestHarnessAttributes.ump"
 public class ItemWithUniqueId
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
