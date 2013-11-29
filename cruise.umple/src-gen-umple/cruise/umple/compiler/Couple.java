@@ -195,9 +195,9 @@ public class Couple
 
   public void delete()
   {
-    for(Couple aIgnore : ignores)
+    while( !ignores.isEmpty() )
     {
-      aIgnore.setCouple(null);
+      ignores.get(0).setCouple(null);
     }
     if (couple != null)
     {

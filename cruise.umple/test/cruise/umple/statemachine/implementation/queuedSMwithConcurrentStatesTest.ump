@@ -1,0 +1,25 @@
+namespace example;
+
+class QueuedSMwithConcurrentStates{
+   queued sm {
+     state1 {
+       subState1 {
+         transit -> state2;
+       }
+       
+       ||
+         
+       subState2 {
+         transit -> state3;
+       }
+     }
+     
+     state2 {
+       do { doTransition1();}
+     }
+     
+     state3 {
+       do { doTransition2();}
+     }
+   }
+}

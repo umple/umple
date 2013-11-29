@@ -1,0 +1,257 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+
+#include "QueuedSMwithConcurrentStates.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ QueuedSMwithConcurrentStates::QueuedSMwithConcurrentStates()
+  {
+    if (smSubState1 == Null) { setSmSubState1(Null); }
+    if (smSubState2 == Null) { setSmSubState2(Null); }
+    setSm(state1);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ QueuedSMwithConcurrentStates::QueuedSMwithConcurrentStates(const QueuedSMwithConcurrentStates & queuedsmwithconcurrentstates)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ QueuedSMwithConcurrentStates QueuedSMwithConcurrentStates::operator=(const QueuedSMwithConcurrentStates & queuedsmwithconcurrentstates)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string QueuedSMwithConcurrentStates::getSmFullName()
+  {
+    string answer = getSmStringName(sm);
+    if (smSubState1 != Null) { answer += "." + getSmSubState1StringName(smSubState1); }
+    if (smSubState2 != Null) { answer += "." + getSmSubState2StringName(smSubState2); }
+    return answer;
+  }
+  
+  QueuedSMwithConcurrentStates::Sm QueuedSMwithConcurrentStates::getSm()
+  {
+    return sm;
+  }
+
+  string QueuedSMwithConcurrentStates::getSmStringName (Sm sm)
+  {
+    switch (sm)  {
+      case 0 : {return "state1"; break;}
+      case 1 : {return "state2"; break;}
+      case 2 : {return "state3"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  QueuedSMwithConcurrentStates::SmSubState1 QueuedSMwithConcurrentStates::getSmSubState1()
+  {
+    return smSubState1;
+  }
+
+  string QueuedSMwithConcurrentStates::getSmSubState1StringName (SmSubState1 smSubState1)
+  {
+    switch (smSubState1)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "subState1"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  QueuedSMwithConcurrentStates::SmSubState2 QueuedSMwithConcurrentStates::getSmSubState2()
+  {
+    return smSubState2;
+  }
+
+  string QueuedSMwithConcurrentStates::getSmSubState2StringName (SmSubState2 smSubState2)
+  {
+    switch (smSubState2)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "subState2"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool QueuedSMwithConcurrentStates::enterState1()
+  {
+    bool wasEventProcessed = false;
+
+    switch (smSubState1)
+    {
+      case Null:
+        setSmSubState1(subState1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (smSubState2)
+    {
+      case Null:
+        setSmSubState2(subState2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool QueuedSMwithConcurrentStates::exitState1()
+  {
+    bool wasEventProcessed = false;
+
+    switch (smSubState1)
+    {
+      case subState1:
+        setSmSubState1(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (smSubState2)
+    {
+      case subState2:
+        setSmSubState2(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool QueuedSMwithConcurrentStates::transit()
+  {
+    bool wasEventProcessed = false;
+
+    switch (smSubState1)
+    {
+      case subState1:
+        setSm(state2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (smSubState2)
+    {
+      case subState2:
+        setSm(state3);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void QueuedSMwithConcurrentStates::exitSm()
+  {
+    switch(sm)
+    {
+      case state1:
+        exitState1();
+        break;
+    }
+  }
+
+  void QueuedSMwithConcurrentStates::setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case state1:
+        if (smSubState1 == Null) { setSmSubState1(subState1); }
+        if (smSubState2 == Null) { setSmSubState2(subState2); }
+        break;
+      case state2:
+        doActivitySmState2Thread = new DoActivityThread(this,"doActivitySmState2");
+        break;
+      case state3:
+        doActivitySmState3Thread = new DoActivityThread(this,"doActivitySmState3");
+        break;
+    }
+  }
+  
+
+  void QueuedSMwithConcurrentStates::setSmSubState1(SmSubState1 aSmSubState1)
+  {
+    smSubState1 = aSmSubState1;
+    if (sm != state1 && aSmSubState1 != Null) { setSm(state1); }
+  }
+  
+
+  void QueuedSMwithConcurrentStates::setSmSubState2(SmSubState2 aSmSubState2)
+  {
+    smSubState2 = aSmSubState2;
+    if (sm != state1 && aSmSubState2 != Null) { setSm(state1); }
+  }
+  
+
+   void QueuedSMwithConcurrentStates::doActivitySmState2()
+  {
+     try
+     {
+       doTransition1();
+     }
+     catch (InterruptedException e)
+     {
+ 
+     }
+  }
+
+   void QueuedSMwithConcurrentStates::doActivitySmState3()
+  {
+     try
+     {
+       doTransition2();
+     }
+     catch (InterruptedException e)
+     {
+ 
+     }
+  }
+
+  private static class DoActivityThread extends Thread
+  {
+    QueuedSMwithConcurrentStates controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(QueuedSMwithConcurrentStates aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      if ("doActivitySmState2".equals(doActivityMethodName))
+      {
+        controller.doActivitySmState2();
+      }
+        else if ("doActivitySmState3".equals(doActivityMethodName))
+      {
+        controller.doActivitySmState3();
+      }
+    }
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+QueuedSMwithConcurrentStates::~QueuedSMwithConcurrentStates()
+  {}

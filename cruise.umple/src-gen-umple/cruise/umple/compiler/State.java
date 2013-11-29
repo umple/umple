@@ -748,9 +748,9 @@ public class State
     StateMachine placeholderStateMachine = stateMachine;
     this.stateMachine = null;
     placeholderStateMachine.removeState(this);
-    for(StateMachine aNestedStateMachine : nestedStateMachines)
+    while( !nestedStateMachines.isEmpty() )
     {
-      aNestedStateMachine.setParentState(null);
+      nestedStateMachines.get(0).setParentState(null);
     }
     for(int i=transitions.size(); i > 0; i--)
     {
@@ -762,9 +762,9 @@ public class State
       Transition aNextTransition = nextTransition.get(i - 1);
       aNextTransition.delete();
     }
-    for(StateMachineTraceItem aStateMachineTraceItem : stateMachineTraceItems)
+    while( !stateMachineTraceItems.isEmpty() )
     {
-      aStateMachineTraceItem.setState(null);
+      stateMachineTraceItems.get(0).setState(null);
     }
   }
 

@@ -2419,11 +2419,32 @@ for (StateMachine smq : uClass.getStateMachines())
 
     if (sm.isQueued())
     {
+      boolean nestedSMhasEvent=false;
       append(stringBuffer,"\n  ");
       append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-      if (!sm.getNestedStateMachines().isEmpty())
+      if (!sm.getNestedStateMachines().isEmpty() && !sm.getEvents().isEmpty())
       {
-        append(stringBuffer, "\n  enum MessageType { {0}, {1} }", gen.translate("listEvents",sm), gen.translate("listEventsNSM",sm));
+        for(StateMachine nestedSm : allNested){
+           for (Event event : nestedSm.getEvents())
+           {
+        	    if(event.getIsInternal() == false && event != null){
+        			nestedSMhasEvent=true; 
+        		}
+        	}
+    	}
+    	
+    	if (nestedSMhasEvent == true){
+    	  append(stringBuffer, "\n  enum MessageType { {0}, {1} }", gen.translate("listEvents",sm), gen.translate("listEventsNSM",sm));
+    	  nestedSMhasEvent=false;
+    	}
+    	else
+    	{
+    	  append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm));
+    	}  
+      }
+      else if (!sm.getNestedStateMachines().isEmpty() && sm.getEvents().isEmpty())
+      {
+        append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsNSM",sm));
       }
       else
       {
@@ -9400,7 +9421,7 @@ if (p != null) {
                append(stringBuffer,"();");
              }
              append(stringBuffer,"\n          break;");
-             
+             }
              for (StateMachine nsm : smq.getNestedStateMachines())
              {
                for (Event e : nsm.getEvents())
@@ -9432,7 +9453,7 @@ if (p != null) {
                  }
                }
              }
-           }
+           
     stringBuffer.append(TEXT_2100);
     }
      }

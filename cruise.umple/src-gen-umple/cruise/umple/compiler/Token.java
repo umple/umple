@@ -243,9 +243,9 @@ public class Token
 
   public void delete()
   {
-    for(Token aSubToken : subTokens)
+    while( !subTokens.isEmpty() )
     {
-      aSubToken.setParentToken(null);
+      subTokens.get(0).setParentToken(null);
     }
     position = null;
     endPosition = null;

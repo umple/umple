@@ -1,0 +1,347 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.18.0.3247 modeling language!*/
+
+package example;
+import java.util.*;
+import java.lang.Thread;
+
+public class QueuedSMwithConcurrentStates implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //QueuedSMwithConcurrentStates State Machines
+  enum Sm { state1, state2, state3 }
+  enum SmSubState1 { Null, subState1 }
+  enum SmSubState2 { Null, subState2 }
+  private Sm sm;
+  private SmSubState1 smSubState1;
+  private SmSubState2 smSubState2;
+  
+  //enumeration type of messages accepted by QueuedSMwithConcurrentStates
+  enum MessageType { transit_M, transit_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  //QueuedSMwithConcurrentStates Do Activity Threads
+  Thread doActivitySmState2Thread = null;
+  Thread doActivitySmState3Thread = null;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public QueuedSMwithConcurrentStates()
+  {
+    setSmSubState1(SmSubState1.Null);
+    setSmSubState2(SmSubState2.Null);
+    setSm(Sm.state1);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of QueuedSMwithConcurrentStates
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smSubState1 != SmSubState1.Null) { answer += "." + smSubState1.toString(); }
+    if (smSubState2 != SmSubState2.Null) { answer += "." + smSubState2.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmSubState1 getSmSubState1()
+  {
+    return smSubState1;
+  }
+
+  public SmSubState2 getSmSubState2()
+  {
+    return smSubState2;
+  }
+
+  private boolean enterState1()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmSubState1 aSmSubState1 = smSubState1;
+    SmSubState2 aSmSubState2 = smSubState2;
+    switch (aSmSubState1)
+    {
+      case Null:
+        setSmSubState1(SmSubState1.subState1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmSubState2)
+    {
+      case Null:
+        setSmSubState2(SmSubState2.subState2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitState1()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmSubState1 aSmSubState1 = smSubState1;
+    SmSubState2 aSmSubState2 = smSubState2;
+    switch (aSmSubState1)
+    {
+      case subState1:
+        setSmSubState1(SmSubState1.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmSubState2)
+    {
+      case subState2:
+        setSmSubState2(SmSubState2.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _transit()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmSubState1 aSmSubState1 = smSubState1;
+    SmSubState2 aSmSubState2 = smSubState2;
+    switch (aSmSubState1)
+    {
+      case subState1:
+        exitSm();
+        setSm(Sm.state2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmSubState2)
+    {
+      case subState2:
+        exitSm();
+        setSm(Sm.state3);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case state1:
+        exitState1();
+        break;
+      case state2:
+        if (doActivitySmState2Thread != null) { doActivitySmState2Thread.interrupt(); }
+        break;
+      case state3:
+        if (doActivitySmState3Thread != null) { doActivitySmState3Thread.interrupt(); }
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case state1:
+        if (smSubState1 == SmSubState1.Null) { setSmSubState1(SmSubState1.subState1); }
+        if (smSubState2 == SmSubState2.Null) { setSmSubState2(SmSubState2.subState2); }
+        break;
+      case state2:
+        doActivitySmState2Thread = new DoActivityThread(this,"doActivitySmState2");
+        break;
+      case state3:
+        doActivitySmState3Thread = new DoActivityThread(this,"doActivitySmState3");
+        break;
+    }
+  }
+
+  private void setSmSubState1(SmSubState1 aSmSubState1)
+  {
+    smSubState1 = aSmSubState1;
+    if (sm != Sm.state1 && aSmSubState1 != SmSubState1.Null) { setSm(Sm.state1); }
+  }
+
+  private void setSmSubState2(SmSubState2 aSmSubState2)
+  {
+    smSubState2 = aSmSubState2;
+    if (sm != Sm.state1 && aSmSubState2 != SmSubState2.Null) { setSm(Sm.state1); }
+  }
+
+  @umplesourcefile(line={18},file={"queuedSMwithConcurrentStatesTest.ump"},javaline={220},length={1})
+  private void doActivitySmState2()
+  {
+    try
+    {
+      doTransition1();
+      Thread.sleep(1);
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  @umplesourcefile(line={22},file={"queuedSMwithConcurrentStatesTest.ump"},javaline={234},length={1})
+  private void doActivitySmState3()
+  {
+    try
+    {
+      doTransition2();
+      Thread.sleep(1);
+    }
+    catch (InterruptedException e)
+    {
+
+    }
+  }
+
+  private static class DoActivityThread extends Thread
+  {
+    QueuedSMwithConcurrentStates controller;
+    String doActivityMethodName;
+    
+    public DoActivityThread(QueuedSMwithConcurrentStates aController,String aDoActivityMethodName)
+    {
+      controller = aController;
+      doActivityMethodName = aDoActivityMethodName;
+      start();
+    }
+    
+    public void run()
+    {
+      if ("doActivitySmState2".equals(doActivityMethodName))
+      {
+        controller.doActivitySmState2();
+      }
+        else if ("doActivitySmState3".equals(doActivityMethodName))
+      {
+        controller.doActivitySmState3();
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void transit ()
+  {
+    pool.put(new Message(MessageType.transit_M, null));
+  }
+
+  public void transit ()
+  {
+    pool.put(new Message(MessageType.transit_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case transit_M:
+          status = _transit();
+          break;
+        case transit_M:
+          status = _transit();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+}

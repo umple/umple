@@ -228,9 +228,9 @@ public class Concern
 
   public void delete()
   {
-    for(VariationPoint aVariationPoint : variationPoints)
+    while( !variationPoints.isEmpty() )
     {
-      aVariationPoint.setConcern(null);
+      variationPoints.get(0).setConcern(null);
     }
     if (vmlSystem != null)
     {

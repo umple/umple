@@ -1490,26 +1490,26 @@ public class UmpleClass extends UmpleClassifier
       Attribute aAttribute = attributes.get(i - 1);
       aAttribute.delete();
     }
-    for(AssociationVariable aAssociationVariable : associationVariables)
+    while( !associationVariables.isEmpty() )
     {
-      aAssociationVariable.setUmpleClass(null);
+      associationVariables.get(0).setUmpleClass(null);
     }
     comments.clear();
-    for(TraceDirective aTraceDirective : traceDirectives)
+    while( !traceDirectives.isEmpty() )
     {
-      aTraceDirective.setUmpleClass(null);
+      traceDirectives.get(0).setUmpleClass(null);
     }
-    for(TraceCase aTraceCase : traceCases)
+    while( !traceCases.isEmpty() )
     {
-      aTraceCase.setUmpleClass(null);
+      traceCases.get(0).setUmpleClass(null);
     }
-    for(StateMachine aStateMachine : stateMachines)
+    while( !stateMachines.isEmpty() )
     {
-      aStateMachine.setUmpleClass(null);
+      stateMachines.get(0).setUmpleClass(null);
     }
-    for(UmpleClass aSubclass : subclasses)
+    while( !subclasses.isEmpty() )
     {
-      aSubclass.setExtendsClass(null);
+      subclasses.get(0).setExtendsClass(null);
     }
     super.delete();
   }
