@@ -253,9 +253,9 @@ public class Mentor
     {
       main.setMentorMain(null);
     }
-    for(Course aSecondary : secondaries)
+    while( !secondaries.isEmpty() )
     {
-      aSecondary.setMentorSecondary(null);
+      secondaries.get(0).setMentorSecondary(null);
     }
   }
 
