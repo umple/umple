@@ -46,7 +46,16 @@ public class UmpleImportTest {
 		
 		String expectedText = loadUmpleFile("ECoreImport_ClassAttributes.ump");
 		String actualText = loadECoreFile("ECoreImport_ClassAttributes.ecore");
-        System.out.println(actualText);
+
+		assertEquals(expectedText, actualText);
+	}
+	
+	@Test
+	public void EcoreClassAssociationParsingTest() throws Exception {
+		
+		String expectedText = loadUmpleFile("ECoreImport_Association.ump");
+		String actualText = loadECoreFile("ECoreImport_Association.ecore");
+
 		assertEquals(expectedText, actualText);
 	}
 
@@ -70,7 +79,6 @@ public class UmpleImportTest {
 			builder.append((char) content);
 		}
 		reader.close();
-
 		return builder.toString();
 	}
 

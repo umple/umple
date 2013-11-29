@@ -168,9 +168,11 @@ class EcoreGenerator
             myEnd = as.getEnd(1);
             theirEnd = as.getEnd(0);
           }
-          //add ERef if MyEnd or bidirectional
-          if(!isTheirEndClass || isBidirectional)
+          //add ERef if MyEnd or bidirectional, uniDirectional Ref doesn't hv eOpposite field
+          if(isBidirectional)
         	  code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\" eOpposite=\"#//{4}/{5}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+          else if(!isTheirEndClass)
+        	  code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName()));
         }
       }
 

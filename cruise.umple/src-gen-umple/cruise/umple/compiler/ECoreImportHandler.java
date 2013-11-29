@@ -13,10 +13,11 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * @umplesource UmpleImport.ump 15
+ * Parse ECore by extend SAX handler callbacks
+ * @umplesource UmpleImport.ump 21
  * @umplesource UmpleImport_CodeHandlers.ump 13
  */
-// line 15 "../../../../src/UmpleImport.ump"
+// line 21 "../../../../src/UmpleImport.ump"
 // line 13 "../../../../src/UmpleImport_CodeHandlers.ump"
 public class ECoreImportHandler extends DefaultHandler
 {
@@ -61,8 +62,8 @@ public class ECoreImportHandler extends DefaultHandler
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={19},file={"UmpleImport_CodeHandlers.ump"},javaline={65},length={126})
-  @umplesourcefile(line={20},file={"UmpleImport_CodeHandlers.ump"},javaline={66},length={12})
+  //  @umplesourcefile(line={19},file={"UmpleImport_CodeHandlers.ump"},javaline={66},length={142})
+  @umplesourcefile(line={20},file={"UmpleImport_CodeHandlers.ump"},javaline={67},length={12})
   public UmpleImportModel readDataFromXML (String filename) throws IOException, ParserConfigurationException 
   {
     SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -76,22 +77,22 @@ public class ECoreImportHandler extends DefaultHandler
 		return model;
   }
 
-//  @umplesourcefile(line={31},file={"UmpleImport_CodeHandlers.ump"},javaline={80},length={112})
-  @umplesourcefile(line={32},file={"UmpleImport_CodeHandlers.ump"},javaline={81},length={4})
+//  @umplesourcefile(line={31},file={"UmpleImport_CodeHandlers.ump"},javaline={81},length={128})
+  @umplesourcefile(line={32},file={"UmpleImport_CodeHandlers.ump"},javaline={82},length={4})
   public void startDocument () throws SAXException 
   {
     model = new UmpleImportModel("");
   }
 
-//  @umplesourcefile(line={35},file={"UmpleImport_CodeHandlers.ump"},javaline={87},length={106})
-  @umplesourcefile(line={36},file={"UmpleImport_CodeHandlers.ump"},javaline={88},length={4})
+//  @umplesourcefile(line={35},file={"UmpleImport_CodeHandlers.ump"},javaline={88},length={122})
+  @umplesourcefile(line={36},file={"UmpleImport_CodeHandlers.ump"},javaline={89},length={4})
   public void endDocument () throws SAXException 
   {
     // System.out.println("end document");
   }
 
-//  @umplesourcefile(line={39},file={"UmpleImport_CodeHandlers.ump"},javaline={94},length={100})
-  @umplesourcefile(line={40},file={"UmpleImport_CodeHandlers.ump"},javaline={95},length={65})
+//  @umplesourcefile(line={39},file={"UmpleImport_CodeHandlers.ump"},javaline={95},length={116})
+  @umplesourcefile(line={40},file={"UmpleImport_CodeHandlers.ump"},javaline={96},length={81})
   public void startElement (String uri, String localName, String qName, Attributes attributes) throws SAXException 
   {
     currentElement = localName;		
@@ -139,27 +140,43 @@ public class ECoreImportHandler extends DefaultHandler
 				model.addUmpleImportElement(umpleClass);
 			}
 		} 
-		//load class attributes
+		//load class attributes and associations
 		else if (currentElement.equals("eStructuralFeatures")) {
 			String attrType = attributes.getValue(UmpleImportConstants.XMI_TYPE);
 			boolean checkIsAttribute = attrType.equals(UmpleImportConstants.ECORE_ATTRIBUTE);
+			boolean checkIsReference = attrType.equals(UmpleImportConstants.ECORE_REFERENCE);
+			String attrName = attributes.getValue(UmpleImportConstants.XMI_NAME);
+			String classAttrTypeRaw = attributes.getValue(UmpleImportConstants.ECORE_TYPE);
+			String classAttrType = classAttrTypeRaw.split("#//")[1];
+			String currentClassName = currentClass.getName();
 			if(checkIsAttribute)
-			{
-				String attrName = attributes.getValue(UmpleImportConstants.XMI_NAME);
-				String classAttrTypeRaw = attributes.getValue(UmpleImportConstants.ECORE_TYPE);
-				String classAttrType = classAttrTypeRaw.split("#//")[1];
-				String currentClassName = currentClass.getName();
+			{				
 				UmpleImportAttribute umpleAttribute = new UmpleImportAttribute(UmpleImportConstants.ECORE_ATTRIBUTE, attrName, currentClassName, classAttrType);
 				String attrUpper = attributes.getValue(UmpleImportConstants.XMI_UPPER);
 				if(attrUpper!=null)
 					umpleAttribute.setUpperBound(Integer.parseInt(attrUpper));
 				currentClass.addUmpleImportAttribute(umpleAttribute);
 			}
+			if(checkIsReference)
+			{
+				String endClassName = null;
+				String endClassNameRaw = attributes.getValue("eOpposite");
+				int lowerBound = Integer.parseInt(attributes.getValue("lowerBound"));
+				int upperBound = Integer.parseInt(attributes.getValue("upperBound"));
+				if(endClassNameRaw!=null)
+					endClassName = endClassNameRaw.split(classAttrTypeRaw+"/")[1];
+				UmpleImportAssociation umpleAssociation = new UmpleImportAssociation(UmpleImportConstants.ECORE_REFERENCE, attrName, currentClassName, classAttrType, endClassName);
+				umpleAssociation.setLowerBound(lowerBound);
+				umpleAssociation.setUpperBound(upperBound);
+				UmpleImportAssociation oppoEnd = model.checkIfOppositeExist(umpleAssociation);
+				if(oppoEnd==null)
+					currentClass.addUmpleImportAssociation(umpleAssociation);
+			}
 		}
   }
 
-//  @umplesourcefile(line={104},file={"UmpleImport_CodeHandlers.ump"},javaline={162},length={33})
-  @umplesourcefile(line={105},file={"UmpleImport_CodeHandlers.ump"},javaline={163},length={8})
+//  @umplesourcefile(line={120},file={"UmpleImport_CodeHandlers.ump"},javaline={179},length={33})
+  @umplesourcefile(line={121},file={"UmpleImport_CodeHandlers.ump"},javaline={180},length={8})
   public void endElement (String uri, String localName, String qName) throws SAXException 
   {
     // reset internal values for next round of parsing
@@ -169,29 +186,29 @@ public class ECoreImportHandler extends DefaultHandler
 		currentElement = "";
   }
 
-//  @umplesourcefile(line={112},file={"UmpleImport_CodeHandlers.ump"},javaline={173},length={23})
-  @umplesourcefile(line={113},file={"UmpleImport_CodeHandlers.ump"},javaline={174},length={4})
+//  @umplesourcefile(line={128},file={"UmpleImport_CodeHandlers.ump"},javaline={190},length={23})
+  @umplesourcefile(line={129},file={"UmpleImport_CodeHandlers.ump"},javaline={191},length={4})
   public void characters (char[] ch, int start, int length) throws SAXException 
   {
     // System.out.println("characters");
   }
 
-//  @umplesourcefile(line={116},file={"UmpleImport_CodeHandlers.ump"},javaline={180},length={17})
-  @umplesourcefile(line={117},file={"UmpleImport_CodeHandlers.ump"},javaline={181},length={4})
+//  @umplesourcefile(line={132},file={"UmpleImport_CodeHandlers.ump"},javaline={197},length={17})
+  @umplesourcefile(line={133},file={"UmpleImport_CodeHandlers.ump"},javaline={198},length={4})
   public void warning (SAXParseException e) throws SAXException 
   {
     System.out.println("Warning");
   }
 
-//  @umplesourcefile(line={120},file={"UmpleImport_CodeHandlers.ump"},javaline={187},length={11})
-  @umplesourcefile(line={121},file={"UmpleImport_CodeHandlers.ump"},javaline={188},length={4})
+//  @umplesourcefile(line={136},file={"UmpleImport_CodeHandlers.ump"},javaline={204},length={11})
+  @umplesourcefile(line={137},file={"UmpleImport_CodeHandlers.ump"},javaline={205},length={4})
   public void error (SAXParseException e) throws SAXException 
   {
     System.out.println("Error");
   }
 
-//  @umplesourcefile(line={124},file={"UmpleImport_CodeHandlers.ump"},javaline={194},length={5})
-  @umplesourcefile(line={125},file={"UmpleImport_CodeHandlers.ump"},javaline={195},length={4})
+//  @umplesourcefile(line={140},file={"UmpleImport_CodeHandlers.ump"},javaline={211},length={5})
+  @umplesourcefile(line={141},file={"UmpleImport_CodeHandlers.ump"},javaline={212},length={4})
   public void fatalError (SAXParseException e) throws SAXException 
   {
     System.out.println("Fatal Error");

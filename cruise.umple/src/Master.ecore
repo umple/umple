@@ -5,7 +5,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="inputPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="outputPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="messages" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parser" lowerBound="0" upperBound="1" eType="#//ContentParser" eOpposite="#//ContentParser/documenter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parser" lowerBound="0" upperBound="1" eType="#//ContentParser"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Content">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="title" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -16,11 +16,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Group">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" lowerBound="0" upperBound="-1" eType="#//Content" eOpposite="#//Content/group"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="contents" lowerBound="0" upperBound="-1" eType="#//Content"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ContentParser" eSuperTypes="#//Parser">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="init" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" lowerBound="0" upperBound="-1" eType="#//Group" eOpposite="#//Group/contentParser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" lowerBound="0" upperBound="-1" eType="#//Group"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Template">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="HtmlTemplate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -341,8 +341,8 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Hierarchy">
     <eStructuralFeatures xsi:type="ecore:EReference" name="element" eType="#//UmpleClassifier"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parentClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/hierarchies"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parentInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/hierarchies"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentClass" lowerBound="0" upperBound="1" eType="#//UmpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleModelVisitor">
   </eClassifiers>
@@ -427,13 +427,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="wasSuccess" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasWarning" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="_acceptsError" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/parseResults"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="errorMessages" lowerBound="0" upperBound="-1" eType="#//ErrorMessage" eOpposite="#//ErrorMessage/parseResults"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errorMessages" lowerBound="0" upperBound="-1" eType="#//ErrorMessage"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ErrorMessage">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="parameters" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="errorType" lowerBound="1" upperBound="1" eType="#//ErrorType" eOpposite="#//ErrorType/errorMessages"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="1" upperBound="1" eType="#//Position" eOpposite="#//Position/errorMessages"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errorType" lowerBound="1" upperBound="1" eType="#//ErrorType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="1" upperBound="1" eType="#//Position"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ErrorType">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
@@ -442,15 +442,15 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ErrorTypeSingleton">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="errorTypes" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/errorTypeSingleton"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errorTypes" lowerBound="0" upperBound="-1" eType="#//ErrorType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Token">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/subTokens"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subTokens" lowerBound="0" upperBound="-1" eType="#//Token" eOpposite="#//Token/parentToken"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Position">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -466,7 +466,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="RulePartValue">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/rulePartValues"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RulePart">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -487,15 +487,15 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="parseResult" eType="#//ParseResult"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="_curParsePo" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootToken" eType="#//Token"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" lowerBound="0" upperBound="-1" eType="#//Rule" eOpposite="#//Rule/parsers"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="couples" lowerBound="0" upperBound="-1" eType="#//Couple" eOpposite="#//Couple/parsers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" lowerBound="0" upperBound="-1" eType="#//Rule"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="couples" lowerBound="0" upperBound="-1" eType="#//Couple"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RuleInstance">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stopAts" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="updateIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rulePartsIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ruleParts" lowerBound="0" upperBound="-1" eType="#//RulePart" eOpposite="#//RulePart/ruleInstances"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parser" lowerBound="1" upperBound="1" eType="#//Parser" eOpposite="#//Parser/ruleInstances"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ruleParts" lowerBound="0" upperBound="-1" eType="#//RulePart"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parser" lowerBound="1" upperBound="1" eType="#//Parser"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ChoiceRule">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -560,7 +560,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="rootToken" eType="#//Token"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parseResult" eType="#//ParseResult"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="grammarFiles" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="failedPosition" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/ruleBasedParser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="failedPosition" lowerBound="0" upperBound="1" eType="#//Position"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ParserDataPackage">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -628,7 +628,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDeepHistoryState" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="finalState" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="activity" lowerBound="0" upperBound="1" eType="#//Activity" eOpposite="#//Activity/state"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" lowerBound="0" upperBound="-1" eType="#//Action" eOpposite="#//Action/state"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="actions" lowerBound="0" upperBound="-1" eType="#//Action"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachine" lowerBound="1" upperBound="1" eType="#//StateMachine" eOpposite="#//StateMachine/states"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="nestedStateMachines" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/parentState"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="transitions" lowerBound="0" upperBound="-1" eType="#//Transition" eOpposite="#//Transition/fromState"/>
@@ -640,17 +640,17 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="activityCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeblock" eType="#//CodeBlock"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="onCompletionEvent" lowerBound="0" upperBound="1" eType="#//Event" eOpposite="#//Event/activities"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="onCompletionEvent" lowerBound="0" upperBound="1" eType="#//Event"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="state" lowerBound="1" upperBound="1" eType="#//State" eOpposite="#//State/activity"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Transition">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="autoTransition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="event" lowerBound="0" upperBound="1" eType="#//Event" eOpposite="#//Event/transitions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="event" lowerBound="0" upperBound="1" eType="#//Event"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="fromState" lowerBound="1" upperBound="1" eType="#//State" eOpposite="#//State/transitions"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="nextState" lowerBound="1" upperBound="1" eType="#//State" eOpposite="#//State/nextTransition"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="0" upperBound="1" eType="#//Guard" eOpposite="#//Guard/transitions"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="0" upperBound="1" eType="#//Action" eOpposite="#//Action/transition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="guard" lowerBound="0" upperBound="1" eType="#//Guard"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="action" lowerBound="0" upperBound="1" eType="#//Action"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachineTraceItem" eOpposite="#//StateMachineTraceItem/transition"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Action">
@@ -667,7 +667,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="autoTransition" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timerInSecond" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="params" lowerBound="0" upperBound="-1" eType="#//MethodParameter" eOpposite="#//MethodParameter/event"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="params" lowerBound="0" upperBound="-1" eType="#//MethodParameter"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Guard" eSuperTypes="#//Constraint">
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
@@ -686,8 +686,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="UmletGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="classElements" lowerBound="0" upperBound="-1" eType="#//UmletElement" eOpposite="#//UmletElement/umletGenerators"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="associationElements" lowerBound="0" upperBound="-1" eType="#//UmletElement" eOpposite="#//UmletElement/umletGenerators"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="classElements" lowerBound="0" upperBound="-1" eType="#//UmletElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="associationElements" lowerBound="0" upperBound="-1" eType="#//UmletElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmletDiagram">
     <eStructuralFeatures xsi:type="ecore:EReference" name="umletElements" lowerBound="0" upperBound="-1" eType="#//UmletElement" eOpposite="#//UmletElement/umletDiagrams"/>
@@ -696,7 +696,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="panelAttribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="additionalAttribute" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="coordinate" lowerBound="1" upperBound="1" eType="#//Coordinate" eOpposite="#//Coordinate/umletElements"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="coordinate" lowerBound="1" upperBound="1" eType="#//Coordinate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umletDiagrams" lowerBound="0" upperBound="-1" eType="#//UmletDiagram" eOpposite="#//UmletDiagram/umletElements"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Runnable" interface="true" abstract="true">
@@ -721,10 +721,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="versionNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tracer" eType="#//Tracer"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="associations" lowerBound="0" upperBound="-1" eType="#//Association" eOpposite="#//Association/umpleModel"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/umpleModel"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineDefinitions" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/umpleModel"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/umpleModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="associations" lowerBound="0" upperBound="-1" eType="#//Association"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineDefinitions" lowerBound="0" upperBound="-1" eType="#//StateMachine"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;String,String>"/>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleElement">
@@ -737,8 +737,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="coordinate" eType="#//Coordinate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="displayColor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="positions" lowerBound="0" upperBound="-1" eType="#//Position" eOpposite="#//Position/umpleElement"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="endPositions" lowerBound="0" upperBound="-1" eType="#//Position" eOpposite="#//Position/umpleElement"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="positions" lowerBound="0" upperBound="-1" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPositions" lowerBound="0" upperBound="-1" eType="#//Position"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Method">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
@@ -749,9 +749,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isImplemented" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="methodParameters" lowerBound="0" upperBound="-1" eType="#//MethodParameter" eOpposite="#//MethodParameter/method"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="methodBody" lowerBound="0" upperBound="1" eType="#//MethodBody" eOpposite="#//MethodBody/method"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/method"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methodParameters" lowerBound="0" upperBound="-1" eType="#//MethodParameter"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methodBody" lowerBound="0" upperBound="1" eType="#//MethodBody"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Modifier">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="names" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
@@ -780,8 +780,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="typeName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ReferenceType" eSuperTypes="#//Type">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/referenceTypes"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterface" lowerBound="0" upperBound="1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/referenceTypes"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterface" lowerBound="0" upperBound="1" eType="#//UmpleInterface"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConstraintVariable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -793,7 +793,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isPrimitive" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isNumeric" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="foundAttribute" eType="#//UmpleVariable"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subConstraint" lowerBound="0" upperBound="1" eType="#//Constraint" eOpposite="#//Constraint/constraintVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subConstraint" lowerBound="0" upperBound="1" eType="#//Constraint"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Constraint" eSuperTypes="#//CodeBlock">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="format" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -804,11 +804,11 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="CodeTranslator"/>
   <eClassifiers xsi:type="ecore:EClass" name="Precondition" eSuperTypes="#//Constraint">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/preconditions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Postcondition" eSuperTypes="#//Constraint">
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method" eOpposite="#//Method/postconditions"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="method" lowerBound="1" upperBound="1" eType="#//Method"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeBlock">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//HashMap%3CString%2CString%3E"/>
@@ -820,8 +820,8 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="snippet" eType="#//CodeBlock"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/codeInjections"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" lowerBound="0" upperBound="1" eType="#//Constraint" eOpposite="#//Constraint/codeInjection"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" lowerBound="0" upperBound="1" eType="#//Constraint"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ExtraCode">
     <eStructuralFeatures xsi:type="ecore:EReference" name="codes" eType="#//CodeBlock" upperBound="-1"/>
@@ -832,10 +832,10 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="members" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleClassifier" eSuperTypes="#//UmpleElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" lowerBound="0" upperBound="-1" eType="#//Method" eOpposite="#//Method/umpleClassifier"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend" eOpposite="#//Depend/umpleClassifiers"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="0" upperBound="-1" eType="#//Constant" eOpposite="#//Constant/umpleClassifier"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/umpleClassifiers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="methods" lowerBound="0" upperBound="-1" eType="#//Method"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="depends" lowerBound="0" upperBound="-1" eType="#//Depend"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" lowerBound="0" upperBound="-1" eType="#//Constant"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsToken" lowerBound="0" upperBound="1" eType="#//Token"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleInterface" eSuperTypes="#//UmpleClassifier">
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/extendsInterface"/>
@@ -850,17 +850,17 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="iAmImmutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ancestorIsImmutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sourceModel" eType="#//UmpleModel"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjections" lowerBound="0" upperBound="-1" eType="#//CodeInjection" eOpposite="#//CodeInjection/umpleClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="preconditions" lowerBound="0" upperBound="-1" eType="#//Precondition" eOpposite="#//Precondition/umpleClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="postconditions" lowerBound="0" upperBound="-1" eType="#//Postcondition" eOpposite="#//Postcondition/umpleClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" lowerBound="0" upperBound="-1" eType="#//Constraint" eOpposite="#//Constraint/umpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjections" lowerBound="0" upperBound="-1" eType="#//CodeInjection"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preconditions" lowerBound="0" upperBound="-1" eType="#//Precondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="postconditions" lowerBound="0" upperBound="-1" eType="#//Postcondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" lowerBound="0" upperBound="-1" eType="#//Constraint"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subclasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extendsClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/subclasses"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parentInterface" lowerBound="0" upperBound="-1" eType="#//UmpleInterface" eOpposite="#//UmpleInterface/umpleClasses"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="uniqueIdentifier" lowerBound="0" upperBound="1" eType="#//UniqueIdentifier" eOpposite="#//UniqueIdentifier/umpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentInterface" lowerBound="0" upperBound="-1" eType="#//UmpleInterface"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="uniqueIdentifier" lowerBound="0" upperBound="1" eType="#//UniqueIdentifier"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" lowerBound="0" upperBound="-1" eType="#//Attribute" eOpposite="#//Attribute/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associationVariables" lowerBound="0" upperBound="-1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/umpleClass"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/umpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirectives" lowerBound="0" upperBound="-1" eType="#//TraceDirective" eOpposite="#//TraceDirective/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceCases" lowerBound="0" upperBound="-1" eType="#//TraceCase" eOpposite="#//TraceCase/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachines" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/umpleClass"/>
@@ -870,7 +870,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInternal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssociationClass" eSuperTypes="#//UmpleClass">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="associatedTo" lowerBound="0" upperBound="2" eType="#//Association" eOpposite="#//Association/associationClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="associatedTo" lowerBound="0" upperBound="2" eType="#//Association"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleVariable">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -886,9 +886,9 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isDerived" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="codeblock" eType="#//CodeBlock"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isLazy" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/attribute"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/attribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/attributes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceRecords" lowerBound="0" upperBound="-1" eType="#//TraceRecord" eOpposite="#//TraceRecord/attributes"/>
   </eClassifiers>
@@ -918,7 +918,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="priority" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="" lowerBound="0" upperBound="1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/relatedAssociation"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="relatedAssociation" lowerBound="0" upperBound="1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment" eOpposite="#//Comment/associationVariable"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/associationVariables"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="0" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/associationVariable"/>
   </eClassifiers>
@@ -930,8 +930,8 @@
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedElement">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedClass" eSuperTypes="#//GeneratedElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="model" lowerBound="1" upperBound="1" eType="#//UmpleModel" eOpposite="#//UmpleModel/generatedClasses"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="uClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/generatedClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" lowerBound="1" upperBound="1" eType="#//UmpleModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="uClass" lowerBound="1" upperBound="1" eType="#//UmpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedClass" lowerBound="0" upperBound="1" eType="#//GeneratedClass" eOpposite="#//GeneratedClass/parentClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentClass" lowerBound="0" upperBound="1" eType="#//GeneratedClass" eOpposite="#//GeneratedClass/generatedClass"/>
   </eClassifiers>
@@ -971,7 +971,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="preCondition" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="postCondition" eType="#//boolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lh" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" upperBound="1" eType="#//ConditionRhs" eOpposite="#//ConditionRhs/traceCondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rhs" lowerBound="1" upperBound="1" eType="#//ConditionRhs"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ConditionRhs">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="rh" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -993,12 +993,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="TraceDirective">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="tracerType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="tracer" lowerBound="1" upperBound="1" eType="#//Tracer" eOpposite="#//Tracer/traceDirective"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="tracer" lowerBound="1" upperBound="1" eType="#//Tracer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributeTraceItems" lowerBound="0" upperBound="-1" eType="#//AttributeTraceItem" eOpposite="#//AttributeTraceItem/traceDirective"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineTraceItems" lowerBound="0" upperBound="-1" eType="#//StateMachineTraceItem" eOpposite="#//StateMachineTraceItem/traceDirective"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="methodTraceEntities" lowerBound="0" upperBound="-1" eType="#//MethodTraceEntity" eOpposite="#//MethodTraceEntity/traceDirectives"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associationVariable" lowerBound="0" upperBound="1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/traceDirective"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" lowerBound="0" upperBound="-1" eType="#//TraceCondition" eOpposite="#//TraceCondition/traceDirective"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="condition" lowerBound="0" upperBound="-1" eType="#//TraceCondition"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceRecord" lowerBound="0" upperBound="1" eType="#//TraceRecord" eOpposite="#//TraceRecord/traceDirective"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceCases" lowerBound="0" upperBound="-1" eType="#//TraceCase" eOpposite="#//TraceCase/traceDirectives"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/traceDirectives"/>
@@ -1095,8 +1095,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="stateMachineNameToToken" eType="#//Map%3CString%2CToken%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="possiblyUnknownState" eType="#//Map%3CState%2CList%3CToken%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="traceFlagId" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EReference" name="messagesToExpect" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/umpleInternalParser"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="warningsToIgnore" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/umpleInternalParser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="messagesToExpect" lowerBound="0" upperBound="-1" eType="#//ErrorType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="warningsToIgnore" lowerBound="0" upperBound="-1" eType="#//ErrorType"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;Position,String>"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;UmpleClassifier,List&lt;String>>"/>
@@ -1143,12 +1143,12 @@
   <eClassifiers xsi:type="ecore:EClass" name="VioletGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="violetClasses" lowerBound="0" upperBound="-1" eType="#//VioletClass" eOpposite="#//VioletClass/violetGenerators"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="violetAssociations" lowerBound="0" upperBound="-1" eType="#//VioletAssociation" eOpposite="#//VioletAssociation/violetGenerators"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="violetClasses" lowerBound="0" upperBound="-1" eType="#//VioletClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="violetAssociations" lowerBound="0" upperBound="-1" eType="#//VioletAssociation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VioletDiagram">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="violetClasses" lowerBound="0" upperBound="-1" eType="#//VioletClass" eOpposite="#//VioletClass/violetDiagram"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="violetAssociations" lowerBound="0" upperBound="-1" eType="#//VioletAssociation" eOpposite="#//VioletAssociation/violetDiagram"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="violetClasses" lowerBound="0" upperBound="-1" eType="#//VioletClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="violetAssociations" lowerBound="0" upperBound="-1" eType="#//VioletAssociation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VioletClass">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -1160,11 +1160,11 @@
   <eClassifiers xsi:type="ecore:EClass" name="VioletAssociation">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="startLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endLabel" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="violetClasses" lowerBound="1" upperBound="2" eType="#//VioletClass" eOpposite="#//VioletClass/violetAssociations"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="violetClasses" lowerBound="1" upperBound="2" eType="#//VioletClass"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VmlSystem">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="codeSnippets" lowerBound="0" upperBound="-1" eType="#//CodeSnippet" eOpposite="#//CodeSnippet/vmlSystem"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codeSnippets" lowerBound="0" upperBound="-1" eType="#//CodeSnippet"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="concerns" lowerBound="0" upperBound="-1" eType="#//Concern" eOpposite="#//Concern/vmlSystem"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Concern">
@@ -1174,7 +1174,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="VariationPoint">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="codeSnippet" lowerBound="0" upperBound="1" eType="#//CodeSnippet" eOpposite="#//CodeSnippet/variationPoint"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codeSnippet" lowerBound="0" upperBound="1" eType="#//CodeSnippet"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variants" lowerBound="0" upperBound="-1" eType="#//Variant" eOpposite="#//Variant/variationPoint"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variationPoints" lowerBound="0" upperBound="-1" eType="#//VariationPoint" eOpposite="#//VariationPoint/requires"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="requires" lowerBound="0" upperBound="-1" eType="#//VariationPoint" eOpposite="#//VariationPoint/variationPoints"/>
@@ -1187,7 +1187,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Variant">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="codeSnippet" lowerBound="0" upperBound="1" eType="#//CodeSnippet" eOpposite="#//CodeSnippet/variant"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codeSnippet" lowerBound="0" upperBound="1" eType="#//CodeSnippet"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="variationPoint" lowerBound="0" upperBound="1" eType="#//VariationPoint" eOpposite="#//VariationPoint/variants"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeSnippet">
@@ -1196,7 +1196,7 @@
   <eClassifiers xsi:type="ecore:EClass" name="VmlParser" eSuperTypes="#//Parser">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="variationPointToRequiresListMap" eType="#//Map%3CVariationPoint%2CList%3CString%3E%3E"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="invokedVariations" eType="#//VariationPoint" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="system" lowerBound="0" upperBound="1" eType="#//VmlSystem" eOpposite="#//VmlSystem/vmlParser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="system" lowerBound="0" upperBound="1" eType="#//VmlSystem"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="Map&lt;VariationPoint,List&lt;String>>"/>
   <eClassifiers xsi:type="ecore:EClass" name="VmlConsole">
@@ -1216,16 +1216,17 @@
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportModel">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="currentPackageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="umpleBuilder" eType="#//StringBuilder"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportElements" lowerBound="0" upperBound="-1" eType="#//UmpleImportElement" eOpposite="#//UmpleImportElement/umpleImportModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportElements" lowerBound="0" upperBound="-1" eType="#//UmpleImportElement"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportPackage" eSuperTypes="#//UmpleImportElement">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportClass" eSuperTypes="#//UmpleImportElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="packageName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" eType="#//boolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInterface" eType="#//boolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInterface" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="superTypes" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportAttributes" lowerBound="0" upperBound="-1" eType="#//UmpleImportAttribute" eOpposite="#//UmpleImportAttribute/umpleImportClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportAttributes" lowerBound="0" upperBound="-1" eType="#//UmpleImportAttribute"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleImportAssociations" lowerBound="0" upperBound="-1" eType="#//UmpleImportAssociation"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportAttribute" eSuperTypes="#//UmpleImportElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -1234,6 +1235,13 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportAssociation" eSuperTypes="#//UmpleImportElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endClass" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="endClassName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lowerBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="upperBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="otherLowerBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="otherUpperBound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleImportConstants">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="XMI_TYPE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -1248,6 +1256,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_ATTRIBUTE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_TYPE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_DATATYPE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ECORE_REFERENCE" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="UmpleConsoleMain">
   </eClassifiers>
