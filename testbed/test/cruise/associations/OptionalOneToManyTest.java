@@ -105,6 +105,24 @@ public class OptionalOneToManyTest
     
   }  
 
-  
+  @Test
+  public void deleteMentor()
+  {
+    MentorC m = new MentorC("m1");
+    StudentC s1 = new StudentC(1);
+    StudentC s2 = new StudentC(2);
+    StudentC s3 = new StudentC(3);
+    s1.setMentor(m);
+    s2.setMentor(m);
+    s3.setMentor(m);
+
+    m.delete();
+
+    Assert.assertEquals(0,m.numberOfStudents());
+    Assert.assertEquals(null, s1.getMentor());
+    Assert.assertEquals(null, s2.getMentor());
+    Assert.assertEquals(null, s3.getMentor());
+  }
+ 
   
 }
