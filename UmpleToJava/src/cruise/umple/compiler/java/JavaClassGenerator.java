@@ -9362,10 +9362,12 @@ if (p != null) {
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
       }
+      String eveName="";
       for (StateMachine nsm : sm.getNestedStateMachines())
       {
         for (Event e : nsm.getEvents())
         {
+          if(eveName != e.getName()){
           if(e.getIsInternal() == false)
           {
           append(stringBuffer,"\n");
@@ -9382,14 +9384,17 @@ if (p != null) {
             }
 	        append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
 	        append(stringBuffer,"_M, v));");
+	        eveName=e.getName();
           }
           else
           {
             append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
             append(stringBuffer,"_M, null));");
+            eveName=e.getName();
           }
           append(stringBuffer,"\n  }");
           append(stringBuffer,"\n");
+          }
           }
         }
       }
@@ -9422,10 +9427,12 @@ if (p != null) {
              }
              append(stringBuffer,"\n          break;");
              }
+             String eveName="";
              for (StateMachine nsm : smq.getNestedStateMachines())
              {
                for (Event e : nsm.getEvents())
                {
+                 if(eveName != e.getName()){
                  if(e.getIsInternal() == false)
                  {
                    append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",e));
@@ -9443,13 +9450,16 @@ if (p != null) {
                        allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
                      }
                      append(stringBuffer,"{0});",allParameters);
+                     eveName=e.getName();
                    }
                    else
                    {
                      append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",e));
                      append(stringBuffer,"();");
+                     eveName=e.getName();
                    }
                    append(stringBuffer,"\n          break;");
+                 }
                  }
                }
              }

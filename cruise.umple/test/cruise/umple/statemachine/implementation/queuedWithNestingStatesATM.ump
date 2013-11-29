@@ -1,0 +1,39 @@
+namespace example;
+
+class AutomatedTellerMachine{
+  
+  queued sm{
+    
+    idle {
+      cardInserted -> active;
+      maintain -> maintenance;
+    }
+    
+    maintenance {
+      isMaintained -> idle;
+    }
+    
+    active {
+      entry /{readCard();}
+      exit /{ejectCard();}
+      validating {
+        validated -> selecting;
+      }
+      
+      selecting {
+        select -> processing;
+      }
+      
+      processing {
+        selectAnotherTransiction -> selecting;
+        finish -> printing; 
+      }
+      
+      printing {
+        receiptPrinted -> idle;
+      }
+      cancel -> idle;
+    }
+    
+  }
+}

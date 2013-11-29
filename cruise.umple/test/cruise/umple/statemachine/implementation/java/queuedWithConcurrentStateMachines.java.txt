@@ -23,7 +23,7 @@ public class QueuedWithConcurrentStateMachines implements Runnable
   private SmS2b smS2b;
   
   //enumeration type of messages accepted by QueuedWithConcurrentStateMachines
-  enum MessageType { e1_M, e2_M, e2_M }
+  enum MessageType { e1_M, e2_M }
   
   MessagePool pool;
   Thread removal;
@@ -267,11 +267,6 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     pool.put(new Message(MessageType.e2_M, null));
   }
 
-  public void e2 ()
-  {
-    pool.put(new Message(MessageType.e2_M, null));
-  }
-
   
   @Override
   public void run ()
@@ -285,9 +280,6 @@ public class QueuedWithConcurrentStateMachines implements Runnable
       {
         case e1_M:
           status = _e1();
-          break;
-        case e2_M:
-          status = _e2();
           break;
         case e2_M:
           status = _e2();

@@ -23,7 +23,7 @@ public class QueuedSMwithConcurrentStates implements Runnable
   private SmSubState2 smSubState2;
   
   //enumeration type of messages accepted by QueuedSMwithConcurrentStates
-  enum MessageType { transit_M, transit_M }
+  enum MessageType { transit_M }
   
   MessagePool pool;
   Thread removal;
@@ -314,11 +314,6 @@ public class QueuedSMwithConcurrentStates implements Runnable
     pool.put(new Message(MessageType.transit_M, null));
   }
 
-  public void transit ()
-  {
-    pool.put(new Message(MessageType.transit_M, null));
-  }
-
   
   @Override
   public void run ()
@@ -330,9 +325,6 @@ public class QueuedSMwithConcurrentStates implements Runnable
       
       switch (m.type)
       {
-        case transit_M:
-          status = _transit();
-          break;
         case transit_M:
           status = _transit();
           break; 

@@ -328,4 +328,16 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("queuedSMwithConcurrentStatesTest_2.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
   }
+  
+  @Test
+  public void queuedWithConcurrensStatesCourseAttempt()
+  {
+    assertUmpleTemplateFor("queuedWithConcurrensStatesCourseAttempt.ump",languagePath + "/queuedWithConcurrensStatesCourseAttempt."+ languagePath +".txt","CourseAttempt");
+  }
+  
+  @Test
+  public void queuedWithNestingStatesATM()
+  {
+    assertUmpleTemplateFor("queuedWithNestingStatesATM.ump",languagePath + "/queuedWithNestingStatesATM."+ languagePath +".txt","AutomatedTellerMachine");
+  }
 }
