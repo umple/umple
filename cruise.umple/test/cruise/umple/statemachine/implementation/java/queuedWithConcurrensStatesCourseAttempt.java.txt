@@ -1,0 +1,387 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.18.0.3250 modeling language!*/
+
+package example;
+import java.util.*;
+import java.lang.Thread;
+
+public class CourseAttempt implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //CourseAttempt State Machines
+  enum CourseAttemptSM { studying, failed, passed }
+  enum CourseAttemptSMLab1 { Null, lab1, lab2 }
+  enum CourseAttemptSMTermProject { Null, termProject }
+  enum CourseAttemptSMFinalExam { Null, finalExam }
+  private CourseAttemptSM courseAttemptSM;
+  private CourseAttemptSMLab1 courseAttemptSMLab1;
+  private CourseAttemptSMTermProject courseAttemptSMTermProject;
+  private CourseAttemptSMFinalExam courseAttemptSMFinalExam;
+  
+  //enumeration type of messages accepted by CourseAttempt
+  enum MessageType { __autotransition2___M, lab1Done_M, fail_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public CourseAttempt()
+  {
+    setCourseAttemptSMLab1(CourseAttemptSMLab1.Null);
+    setCourseAttemptSMTermProject(CourseAttemptSMTermProject.Null);
+    setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.Null);
+    setCourseAttemptSM(CourseAttemptSM.studying);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of CourseAttempt
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getCourseAttemptSMFullName()
+  {
+    String answer = courseAttemptSM.toString();
+    if (courseAttemptSMLab1 != CourseAttemptSMLab1.Null) { answer += "." + courseAttemptSMLab1.toString(); }
+    if (courseAttemptSMTermProject != CourseAttemptSMTermProject.Null) { answer += "." + courseAttemptSMTermProject.toString(); }
+    if (courseAttemptSMFinalExam != CourseAttemptSMFinalExam.Null) { answer += "." + courseAttemptSMFinalExam.toString(); }
+    return answer;
+  }
+
+  public CourseAttemptSM getCourseAttemptSM()
+  {
+    return courseAttemptSM;
+  }
+
+  public CourseAttemptSMLab1 getCourseAttemptSMLab1()
+  {
+    return courseAttemptSMLab1;
+  }
+
+  public CourseAttemptSMTermProject getCourseAttemptSMTermProject()
+  {
+    return courseAttemptSMTermProject;
+  }
+
+  public CourseAttemptSMFinalExam getCourseAttemptSMFinalExam()
+  {
+    return courseAttemptSMFinalExam;
+  }
+
+  private boolean ___autotransition2__()
+  {
+    boolean wasEventProcessed = false;
+    
+    CourseAttemptSM aCourseAttemptSM = courseAttemptSM;
+    switch (aCourseAttemptSM)
+    {
+      case studying:
+        exitCourseAttemptSM();
+        setCourseAttemptSM(CourseAttemptSM.passed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterStudying()
+  {
+    boolean wasEventProcessed = false;
+    
+    CourseAttemptSMLab1 aCourseAttemptSMLab1 = courseAttemptSMLab1;
+    CourseAttemptSMTermProject aCourseAttemptSMTermProject = courseAttemptSMTermProject;
+    CourseAttemptSMFinalExam aCourseAttemptSMFinalExam = courseAttemptSMFinalExam;
+    switch (aCourseAttemptSMLab1)
+    {
+      case Null:
+        setCourseAttemptSMLab1(CourseAttemptSMLab1.lab1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aCourseAttemptSMTermProject)
+    {
+      case Null:
+        setCourseAttemptSMTermProject(CourseAttemptSMTermProject.termProject);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aCourseAttemptSMFinalExam)
+    {
+      case Null:
+        setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.finalExam);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitStudying()
+  {
+    boolean wasEventProcessed = false;
+    
+    CourseAttemptSMLab1 aCourseAttemptSMLab1 = courseAttemptSMLab1;
+    CourseAttemptSMTermProject aCourseAttemptSMTermProject = courseAttemptSMTermProject;
+    CourseAttemptSMFinalExam aCourseAttemptSMFinalExam = courseAttemptSMFinalExam;
+    switch (aCourseAttemptSMLab1)
+    {
+      case lab1:
+        setCourseAttemptSMLab1(CourseAttemptSMLab1.Null);
+        wasEventProcessed = true;
+        break;
+      case lab2:
+        setCourseAttemptSMLab1(CourseAttemptSMLab1.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aCourseAttemptSMTermProject)
+    {
+      case termProject:
+        setCourseAttemptSMTermProject(CourseAttemptSMTermProject.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aCourseAttemptSMFinalExam)
+    {
+      case finalExam:
+        setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _lab1Done()
+  {
+    boolean wasEventProcessed = false;
+    
+    CourseAttemptSMLab1 aCourseAttemptSMLab1 = courseAttemptSMLab1;
+    switch (aCourseAttemptSMLab1)
+    {
+      case lab1:
+        setCourseAttemptSMLab1(CourseAttemptSMLab1.lab2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _fail()
+  {
+    boolean wasEventProcessed = false;
+    
+    CourseAttemptSMFinalExam aCourseAttemptSMFinalExam = courseAttemptSMFinalExam;
+    switch (aCourseAttemptSMFinalExam)
+    {
+      case finalExam:
+        exitCourseAttemptSMFinalExam();
+        setCourseAttemptSM(CourseAttemptSM.failed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitCourseAttemptSM()
+  {
+    switch(courseAttemptSM)
+    {
+      case studying:
+        exitStudying();
+        break;
+    }
+  }
+
+  private void setCourseAttemptSM(CourseAttemptSM aCourseAttemptSM)
+  {
+    courseAttemptSM = aCourseAttemptSM;
+
+    // entry actions and do activities
+    switch(courseAttemptSM)
+    {
+      case studying:
+        if (courseAttemptSMLab1 == CourseAttemptSMLab1.Null) { setCourseAttemptSMLab1(CourseAttemptSMLab1.lab1); }
+        if (courseAttemptSMTermProject == CourseAttemptSMTermProject.Null) { setCourseAttemptSMTermProject(CourseAttemptSMTermProject.termProject); }
+        if (courseAttemptSMFinalExam == CourseAttemptSMFinalExam.Null) { setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.finalExam); }
+        __autotransition2__();
+        break;
+    }
+  }
+
+  @umplesourcefile(line={12}, file={"queuedWithConcurrensStatesCourseAttempt.ump"}, javaline={256}, length={1})
+  private void exitCourseAttemptSMLab1()
+  {
+    switch(courseAttemptSMLab1)
+    {
+      case lab2:
+        lab2Done();
+        break;
+    }
+  }
+
+  private void setCourseAttemptSMLab1(CourseAttemptSMLab1 aCourseAttemptSMLab1)
+  {
+    courseAttemptSMLab1 = aCourseAttemptSMLab1;
+    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMLab1 != CourseAttemptSMLab1.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
+  }
+
+  @umplesourcefile(line={18}, file={"queuedWithConcurrensStatesCourseAttempt.ump"}, javaline={274}, length={1})
+  private void exitCourseAttemptSMTermProject()
+  {
+    switch(courseAttemptSMTermProject)
+    {
+      case termProject:
+        projectDone();
+        break;
+    }
+  }
+
+  private void setCourseAttemptSMTermProject(CourseAttemptSMTermProject aCourseAttemptSMTermProject)
+  {
+    courseAttemptSMTermProject = aCourseAttemptSMTermProject;
+    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMTermProject != CourseAttemptSMTermProject.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
+  }
+
+  @umplesourcefile(line={25}, file={"queuedWithConcurrensStatesCourseAttempt.ump"}, javaline={292}, length={1})
+  private void exitCourseAttemptSMFinalExam()
+  {
+    switch(courseAttemptSMFinalExam)
+    {
+      case finalExam:
+        pass();
+        break;
+    }
+  }
+
+  private void setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam aCourseAttemptSMFinalExam)
+  {
+    courseAttemptSMFinalExam = aCourseAttemptSMFinalExam;
+    if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMFinalExam != CourseAttemptSMFinalExam.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
+  }
+
+  public void delete()
+  {}
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void __autotransition2__ ()
+  {
+    pool.put(new Message(MessageType.__autotransition2___M, null));
+  }
+
+  public void lab1Done ()
+  {
+    pool.put(new Message(MessageType.lab1Done_M, null));
+  }
+
+  public void fail ()
+  {
+    pool.put(new Message(MessageType.fail_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case __autotransition2___M:
+          status = ___autotransition2__();
+          break;
+        case lab1Done_M:
+          status = _lab1Done();
+          break;
+        case fail_M:
+          status = _fail();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+}

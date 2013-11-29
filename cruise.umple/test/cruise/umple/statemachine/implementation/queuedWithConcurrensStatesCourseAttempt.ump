@@ -1,0 +1,36 @@
+namespace example;
+
+class CourseAttempt{
+  
+  queued courseAttemptSM{
+    
+    studying {
+      lab1 {
+        lab1Done -> lab2;
+      }
+      lab2 {
+        exit /{lab2Done();}
+      }
+      
+      ||
+        
+      termProject {
+        exit /{projectDone();}
+      }
+      
+      ||
+        
+      finalExam {
+        
+        exit /{pass();}
+        fail -> failed;
+      } 
+       -> passed;
+    }
+    
+    failed {}
+    
+    passed {}
+    
+  }
+}

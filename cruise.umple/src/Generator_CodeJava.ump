@@ -249,18 +249,22 @@ class JavaGenerator
     else if ("listEventsNSM".equals(keyName))
     {
       String allEnums = "";
+      String eveName="";
       for (StateMachine nsm : sm.getNestedStateMachines())
       {
         for (Event event : nsm.getEvents())
         {
           if(event.getIsInternal() == false)
           {
-        	  if (allEnums.length() > 0)
+              if( eveName != event.getName()){
+        	  if (allEnums.length() > 0 )
               {
                 allEnums += ", ";
               }
               allEnums += translate("eventMethod",event);
-              allEnums += "_M";  
+              allEnums += "_M"; 
+              eveName=event.getName();
+              } 
           }
         }
       }

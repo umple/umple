@@ -1,0 +1,304 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+
+#include "CourseAttempt.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ CourseAttempt::CourseAttempt()
+  {
+    if (courseAttemptSMLab1 == Null) { setCourseAttemptSMLab1(Null); }
+    if (courseAttemptSMTermProject == Null) { setCourseAttemptSMTermProject(Null); }
+    if (courseAttemptSMFinalExam == Null) { setCourseAttemptSMFinalExam(Null); }
+    setCourseAttemptSM(studying);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ CourseAttempt::CourseAttempt(const CourseAttempt & courseattempt)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ CourseAttempt CourseAttempt::operator=(const CourseAttempt & courseattempt)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string CourseAttempt::getCourseAttemptSMFullName()
+  {
+    string answer = getCourseAttemptSMStringName(courseAttemptSM);
+    if (courseAttemptSMLab1 != Null) { answer += "." + getCourseAttemptSMLab1StringName(courseAttemptSMLab1); }
+    if (courseAttemptSMTermProject != Null) { answer += "." + getCourseAttemptSMTermProjectStringName(courseAttemptSMTermProject); }
+    if (courseAttemptSMFinalExam != Null) { answer += "." + getCourseAttemptSMFinalExamStringName(courseAttemptSMFinalExam); }
+    return answer;
+  }
+  
+  CourseAttempt::CourseAttemptSM CourseAttempt::getCourseAttemptSM()
+  {
+    return courseAttemptSM;
+  }
+
+  string CourseAttempt::getCourseAttemptSMStringName (CourseAttemptSM courseAttemptSM)
+  {
+    switch (courseAttemptSM)  {
+      case 0 : {return "studying"; break;}
+      case 1 : {return "failed"; break;}
+      case 2 : {return "passed"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  CourseAttempt::CourseAttemptSMLab1 CourseAttempt::getCourseAttemptSMLab1()
+  {
+    return courseAttemptSMLab1;
+  }
+
+  string CourseAttempt::getCourseAttemptSMLab1StringName (CourseAttemptSMLab1 courseAttemptSMLab1)
+  {
+    switch (courseAttemptSMLab1)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "lab1"; break;}
+      case 2 : {return "lab2"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  CourseAttempt::CourseAttemptSMTermProject CourseAttempt::getCourseAttemptSMTermProject()
+  {
+    return courseAttemptSMTermProject;
+  }
+
+  string CourseAttempt::getCourseAttemptSMTermProjectStringName (CourseAttemptSMTermProject courseAttemptSMTermProject)
+  {
+    switch (courseAttemptSMTermProject)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "termProject"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  CourseAttempt::CourseAttemptSMFinalExam CourseAttempt::getCourseAttemptSMFinalExam()
+  {
+    return courseAttemptSMFinalExam;
+  }
+
+  string CourseAttempt::getCourseAttemptSMFinalExamStringName (CourseAttemptSMFinalExam courseAttemptSMFinalExam)
+  {
+    switch (courseAttemptSMFinalExam)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "finalExam"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool CourseAttempt::__autotransition2__()
+  {
+    bool wasEventProcessed = false;
+
+    switch (courseAttemptSM)
+    {
+      case studying:
+        exitCourseAttemptSM();
+        setCourseAttemptSM(passed);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool CourseAttempt::enterStudying()
+  {
+    bool wasEventProcessed = false;
+
+    switch (courseAttemptSMLab1)
+    {
+      case Null:
+        setCourseAttemptSMLab1(lab1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (courseAttemptSMTermProject)
+    {
+      case Null:
+        setCourseAttemptSMTermProject(termProject);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (courseAttemptSMFinalExam)
+    {
+      case Null:
+        setCourseAttemptSMFinalExam(finalExam);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool CourseAttempt::exitStudying()
+  {
+    bool wasEventProcessed = false;
+
+    switch (courseAttemptSMLab1)
+    {
+      case lab1:
+        setCourseAttemptSMLab1(Null);
+        wasEventProcessed = true;
+        break;
+      case lab2:
+        exitCourseAttemptSMLab1();
+        setCourseAttemptSMLab1(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (courseAttemptSMTermProject)
+    {
+      case termProject:
+        exitCourseAttemptSMTermProject();
+        setCourseAttemptSMTermProject(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (courseAttemptSMFinalExam)
+    {
+      case finalExam:
+        exitCourseAttemptSMFinalExam();
+        setCourseAttemptSMFinalExam(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool CourseAttempt::lab1Done()
+  {
+    bool wasEventProcessed = false;
+
+    switch (courseAttemptSMLab1)
+    {
+      case lab1:
+        setCourseAttemptSMLab1(lab2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool CourseAttempt::fail()
+  {
+    bool wasEventProcessed = false;
+
+    switch (courseAttemptSMFinalExam)
+    {
+      case finalExam:
+        exitCourseAttemptSMFinalExam();
+        setCourseAttemptSM(failed);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void CourseAttempt::exitCourseAttemptSM()
+  {
+    switch(courseAttemptSM)
+    {
+      case studying:
+        exitStudying();
+        break;
+    }
+  }
+
+  void CourseAttempt::setCourseAttemptSM(CourseAttemptSM aCourseAttemptSM)
+  {
+    courseAttemptSM = aCourseAttemptSM;
+
+    // entry actions and do activities
+    switch(courseAttemptSM)
+    {
+      case studying:
+        if (courseAttemptSMLab1 == Null) { setCourseAttemptSMLab1(lab1); }
+        if (courseAttemptSMTermProject == Null) { setCourseAttemptSMTermProject(termProject); }
+        if (courseAttemptSMFinalExam == Null) { setCourseAttemptSMFinalExam(finalExam); }
+        break;
+    }
+  }
+  
+
+  void CourseAttempt::exitCourseAttemptSMLab1()
+  {
+    switch(courseAttemptSMLab1)
+    {
+      case lab2:
+        lab2Done();
+        break;
+    }
+  }
+
+  void CourseAttempt::setCourseAttemptSMLab1(CourseAttemptSMLab1 aCourseAttemptSMLab1)
+  {
+    courseAttemptSMLab1 = aCourseAttemptSMLab1;
+    if (courseAttemptSM != studying && aCourseAttemptSMLab1 != Null) { setCourseAttemptSM(studying); }
+  }
+  
+
+  void CourseAttempt::exitCourseAttemptSMTermProject()
+  {
+    switch(courseAttemptSMTermProject)
+    {
+      case termProject:
+        projectDone();
+        break;
+    }
+  }
+
+  void CourseAttempt::setCourseAttemptSMTermProject(CourseAttemptSMTermProject aCourseAttemptSMTermProject)
+  {
+    courseAttemptSMTermProject = aCourseAttemptSMTermProject;
+    if (courseAttemptSM != studying && aCourseAttemptSMTermProject != Null) { setCourseAttemptSM(studying); }
+  }
+  
+
+  void CourseAttempt::exitCourseAttemptSMFinalExam()
+  {
+    switch(courseAttemptSMFinalExam)
+    {
+      case finalExam:
+        pass();
+        break;
+    }
+  }
+
+  void CourseAttempt::setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam aCourseAttemptSMFinalExam)
+  {
+    courseAttemptSMFinalExam = aCourseAttemptSMFinalExam;
+    if (courseAttemptSM != studying && aCourseAttemptSMFinalExam != Null) { setCourseAttemptSM(studying); }
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+CourseAttempt::~CourseAttempt()
+  {}
