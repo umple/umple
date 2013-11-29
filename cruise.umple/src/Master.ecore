@@ -30,6 +30,86 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NavigationItemTemplate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NavigationItemTemplateNoAnchor" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Couple">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="open" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="close" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="couple" lowerBound="0" upperBound="1" eType="#//Couple" eOpposite="#//Couple/ignores"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ignores" lowerBound="0" upperBound="-1" eType="#//Couple" eOpposite="#//Couple/couple"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ParseResult">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="wasSuccess" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasWarning" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="_acceptsError" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/parseResults"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errorMessages" lowerBound="0" upperBound="-1" eType="#//ErrorMessage" eOpposite="#//ErrorMessage/parseResults"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ErrorMessage">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parameters" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errorType" lowerBound="1" upperBound="1" eType="#//ErrorType" eOpposite="#//ErrorType/errorMessages"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="1" upperBound="1" eType="#//Position" eOpposite="#//Position/errorMessages"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ErrorType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="severity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorFormat" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ErrorTypeSingleton">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="errorTypes" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/errorTypeSingleton"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Token">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parentToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/subTokens"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subTokens" lowerBound="0" upperBound="-1" eType="#//Token" eOpposite="#//Token/parentToken"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Position">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lineNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="characterOffset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Rule">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shouldHide" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="definitions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RulePartValue">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/rulePartValues"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RulePart">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiplicity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextIdentifiers" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumPartsFound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//Type" />
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="Type">
+    <eLiterals name="Static" value="0"/>
+    <eLiterals name="Variable" value="1"/>
+    <eLiterals name="Rule" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Parser">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="grammarRules" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parseResult" eType="#//ParseResult"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="_curParsePo" eType="#//Position"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rootToken" eType="#//Token"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" lowerBound="0" upperBound="-1" eType="#//Rule" eOpposite="#//Rule/parsers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="couples" lowerBound="0" upperBound="-1" eType="#//Couple" eOpposite="#//Couple/parsers"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RuleInstance">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stopAts" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="updateIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rulePartsIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
+    <eStructuralFeatures xsi:type="ecore:EReference" name="ruleParts" lowerBound="0" upperBound="-1" eType="#//RulePart" eOpposite="#//RulePart/ruleInstances"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="parser" lowerBound="1" upperBound="1" eType="#//Parser" eOpposite="#//Parser/ruleInstances"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DocumenterMain">
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeGenerator" interface="true" abstract="true">
@@ -416,86 +496,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="composites" eType="#//Json" upperBound="-1"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="arrays" eType="#//Json" upperBound="-1"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Couple">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="open" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="close" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="couple" lowerBound="0" upperBound="1" eType="#//Couple" eOpposite="#//Couple/ignores"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ignores" lowerBound="0" upperBound="-1" eType="#//Couple" eOpposite="#//Couple/couple"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ParseResult">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="wasSuccess" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasWarning" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="_acceptsError" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/parseResults"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="errorMessages" lowerBound="0" upperBound="-1" eType="#//ErrorMessage" eOpposite="#//ErrorMessage/parseResults"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ErrorMessage">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parameters" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="errorType" lowerBound="1" upperBound="1" eType="#//ErrorType" eOpposite="#//ErrorType/errorMessages"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="1" upperBound="1" eType="#//Position" eOpposite="#//Position/errorMessages"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ErrorType">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="severity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorFormat" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="errorUrl" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ErrorTypeSingleton">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="errorTypes" lowerBound="0" upperBound="-1" eType="#//ErrorType" eOpposite="#//ErrorType/errorTypeSingleton"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Token">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parentToken" lowerBound="0" upperBound="1" eType="#//Token" eOpposite="#//Token/subTokens"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="subTokens" lowerBound="0" upperBound="-1" eType="#//Token" eOpposite="#//Token/parentToken"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/tokens"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Position">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lineNumber" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="characterOffset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Rule">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="shouldHide" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="definitions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RulePartValue">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position" eOpposite="#//Position/rulePartValues"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RulePart">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="multiplicity" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nextIdentifiers" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximumPartsFound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="#//Type" />
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EEnum" name="Type">
-    <eLiterals name="Static" value="0"/>
-    <eLiterals name="Variable" value="1"/>
-    <eLiterals name="Rule" value="2"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Parser">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="grammarRules" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parseResult" eType="#//ParseResult"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="_curParsePo" eType="#//Position"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rootToken" eType="#//Token"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="rules" lowerBound="0" upperBound="-1" eType="#//Rule" eOpposite="#//Rule/parsers"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="couples" lowerBound="0" upperBound="-1" eType="#//Couple" eOpposite="#//Couple/parsers"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="RuleInstance">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="stopAts" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString" upperBound="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="updateIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rulePartsIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>`
-    <eStructuralFeatures xsi:type="ecore:EReference" name="ruleParts" lowerBound="0" upperBound="-1" eType="#//RulePart" eOpposite="#//RulePart/ruleInstances"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="parser" lowerBound="1" upperBound="1" eType="#//Parser" eOpposite="#//Parser/ruleInstances"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ChoiceRule">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

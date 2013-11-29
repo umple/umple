@@ -2084,12 +2084,12 @@ public class ParserTest
 
 	  ErrorMessage em = new ErrorMessage(1002, new Position("filename",0,0,0), "zero", "one");
 
-	  Assert.assertEquals("Warning on line 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
+	  Assert.assertEquals("Warning 1002 on line 0 of file \"filename\":\nThis is a test error zero, one", em.toString());
 	  
 
 	  ets.addErrorType(new ErrorType(1003, 2, "This is a test error {0}, {1}", "url"));	  
 	  em = new ErrorMessage(1003, new Position("filename",0,0,0), "zero", "one");
-  	  Assert.assertEquals("Error on line 0 of file \"filename\":\nThis is a test error zero, one",em.toString());
+  	  Assert.assertEquals("Error 1003 on line 0 of file \"filename\":\nThis is a test error zero, one",em.toString());
 
   }
   @Test 
