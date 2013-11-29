@@ -254,9 +254,9 @@ public class Element
 
   public void delete()
   {
-    for(Element aChild : children)
+    while( !children.isEmpty() )
     {
-      aChild.setElement(null);
+      children.get(0).setElement(null);
     }
     if (element != null)
     {

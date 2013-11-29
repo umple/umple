@@ -425,9 +425,9 @@ public class Transition
     placeholderNextState.removeNextTransition(this);
     guard = null;
     action = null;
-    for(StateMachineTraceItem aStateMachineTraceItem : stateMachineTraceItems)
+    while( !stateMachineTraceItems.isEmpty() )
     {
-      aStateMachineTraceItem.setTransition(null);
+      stateMachineTraceItems.get(0).setTransition(null);
     }
   }
 

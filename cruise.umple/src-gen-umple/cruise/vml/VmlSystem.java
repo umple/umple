@@ -263,9 +263,9 @@ public class VmlSystem
   public void delete()
   {
     codeSnippets.clear();
-    for(Concern aConcern : concerns)
+    while( !concerns.isEmpty() )
     {
-      aConcern.setVmlSystem(null);
+      concerns.get(0).setVmlSystem(null);
     }
   }
 

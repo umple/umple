@@ -397,9 +397,9 @@ public class VariationPoint
   public void delete()
   {
     codeSnippet = null;
-    for(Variant aVariant : variants)
+    while( !variants.isEmpty() )
     {
-      aVariant.setVariationPoint(null);
+      variants.get(0).setVariationPoint(null);
     }
     requires.clear();
     if (concern != null)

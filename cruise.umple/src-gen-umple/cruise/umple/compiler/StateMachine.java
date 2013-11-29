@@ -550,9 +550,9 @@ public class StateMachine
     {
       aTraceRecord.removeStateMachine(this);
     }
-    for(StateMachineTraceItem aStateMachineTraceItem : stateMachineTraceItems)
+    while( !stateMachineTraceItems.isEmpty() )
     {
-      aStateMachineTraceItem.setStateMachine(null);
+      stateMachineTraceItems.get(0).setStateMachine(null);
     }
   }
 

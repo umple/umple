@@ -199,9 +199,9 @@ public class MentorY
 
   public void delete()
   {
-    for(StudentY aStudent : students)
+    while( !students.isEmpty() )
     {
-      aStudent.setMentor(null);
+      students.get(0).setMentor(null);
     }
     if (program != null)
     {

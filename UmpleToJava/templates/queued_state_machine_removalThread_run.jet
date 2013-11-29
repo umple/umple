@@ -34,7 +34,7 @@
                append(stringBuffer,"();");
              }
              append(stringBuffer,"\n          break;");
-             
+             }
              for (StateMachine nsm : smq.getNestedStateMachines())
              {
                for (Event e : nsm.getEvents())
@@ -66,7 +66,7 @@
                  }
                }
              }
-           }%> 
+           %> 
         default:
       }
       if(!status)

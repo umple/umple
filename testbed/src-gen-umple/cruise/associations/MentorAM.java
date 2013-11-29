@@ -150,9 +150,9 @@ public class MentorAM
 
   public void delete()
   {
-    for(StudentAM aStudent : students)
+    while( !students.isEmpty() )
     {
-      aStudent.setMentor(null);
+      students.get(0).setMentor(null);
     }
   }
 
