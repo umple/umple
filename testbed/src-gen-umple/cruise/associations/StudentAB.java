@@ -4,7 +4,7 @@
 package cruise.associations;
 import java.util.*;
 
-// line 431 "../../../src/TestHarnessAssociations.ump"
+// line 434 "../../../src/TestHarnessAssociations.ump"
 public class StudentAB
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

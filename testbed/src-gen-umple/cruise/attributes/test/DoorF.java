@@ -4,7 +4,7 @@
 package cruise.attributes.test;
 import java.sql.Time;
 
-// line 43 "../../../../src/TestHarnessAttributes.ump"
+// line 46 "../../../../src/TestHarnessAttributes.ump"
 // line 22 "../../../../src/LocalHarness.ump"
 public class DoorF
 {

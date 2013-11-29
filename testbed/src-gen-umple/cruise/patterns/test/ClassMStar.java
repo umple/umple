@@ -4,7 +4,7 @@
 package cruise.patterns.test;
 import java.util.*;
 
-// line 42 "../../../../src/TestHarnessPatternsImmutable.ump"
+// line 44 "../../../../src/TestHarnessPatternsImmutable.ump"
 public class ClassMStar
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

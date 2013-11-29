@@ -3,7 +3,7 @@
 
 package cruise.patterns.test;
 
-// line 11 "../../../../src/TestHarnessPatternsImmutable.ump"
+// line 13 "../../../../src/TestHarnessPatternsImmutable.ump"
 public class WidgetImmutableB
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

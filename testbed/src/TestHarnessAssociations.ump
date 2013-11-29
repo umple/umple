@@ -1,5 +1,8 @@
 namespace cruise.associations;
 
+// Ignore warnings about multiplicity bounds on directed association
+strictness ignore 36;
+
 class MentorA
 {
   0..1 mentor -- 0..1 StudentA student;

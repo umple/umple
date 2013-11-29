@@ -3,7 +3,7 @@
 
 package cruise.associations;
 
-// line 642 "../../../src/TestHarnessAssociations.ump"
+// line 645 "../../../src/TestHarnessAssociations.ump"
 public class ClassThatWillHaveSortedAssociationOne
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
