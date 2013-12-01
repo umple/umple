@@ -270,6 +270,20 @@ class PhpGenerator
   depend cruise.umple.compiler.php.*;  
 }
 
+class UmpleGenerator
+{
+  isA SuperCodeGenerator;
+  isA CodeTranslator;
+  depend java.util.*;
+  depend java.io.*;
+  depend cruise.umple.util.*;
+
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.parser.analysis.*;
+  depend cruise.umple.parser.rules.*;
+  // depend cruise.umple.compiler.umple.*;  
+}
+
 class Uigu2Generator
 {
   isA PhpGenerator;
@@ -328,6 +342,7 @@ use Umple.ump;
 use StateMachine.ump;
 use GeneratorHelper_Code.ump;
 use Generator_Code.ump;
+use Generator_CodeUmple.ump;
 use Generator_CodeRuby.ump;
 use Generator_CodeJava.ump;
 use Generator_CodeRTCpp.ump;

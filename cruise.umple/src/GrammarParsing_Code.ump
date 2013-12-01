@@ -63,6 +63,18 @@ class RuleBasedParser
 {
   //This variable exists to speed up multiple passes through the parser, say in junit tests, because the grammar analysis only has to be performed once.
   private static GrammarAnalyzer analyzer = null;
+  private Token grootToken = null;
+
+  public static GrammarAnalyzer getAnalyzer()
+  {
+    return analyzer;
+  }
+
+  public Token getGRootToken()
+  {
+    return grootToken;
+  }
+
   /*
     Takes a root rule and uses it to start parsing. The result will be put into the root token passed. The parsing will be performed
     on the file. data is a DataPackage which needs to be initialized(using the init(Position)) before passing to this function.
@@ -105,11 +117,16 @@ class RuleBasedParser
     parsing--;
   }
 
+  public void setupRules()
+  {
+    setupRules(false);
+  }
+
   /**
    * After being passed all the grammar files by the UmpleInternalParser, this function is called to compute all the rules that are associated
    * to the umple language. For some reason this is computationally expensive, future implementations will hopefully be able to speed this up.
    */
-  public void setupRules()
+  public void setupRules(boolean forceParse)
   {
     BufferedReader reader = null;
     InputStream resourceStream = null;
@@ -134,7 +151,7 @@ class RuleBasedParser
           reader = new BufferedReader(new InputStreamReader(resourceStream));  
         }          
       }
-      if(mustParse)
+      if(mustParse || forceParse)
       {
         Terminal.space(" \\t");
         ChoiceRule rulename = new Terminal("rulename","[a-zA-Z0-9_]+",false);
@@ -173,10 +190,10 @@ class RuleBasedParser
         ChoiceRule root = rule;
 
         ParsingCouple.ignoreLevel = 1;
-        Token rootToken = new Token("ROOT","");
+        grootToken = new Token("ROOT","");
         List<Thread> parsers = new ArrayList<Thread>();
         String[] keys = new String[]{"[","]"};
-        rootToken = new Token("ROOT","");
+        grootToken = new Token("ROOT","");
         for(String filename:grammarFiles)
         {
           ParserDataPackage data = new ParserDataPackage(filename);
@@ -184,12 +201,12 @@ class RuleBasedParser
           data.init(null);
           for(int i=0;i<data.numberOfLines();++i){
             if(!data.getLine(i).startsWith("//")&&!data.getLine(i).startsWith("\n")){
-              parse(root,rootToken,filename,i, data);
+              parse(root,grootToken,filename,i, data);
             }
           }
         }
         analyzer = new GrammarAnalyzer();
-        analyzer.analyze(rootToken);
+        analyzer.analyze(grootToken);
         analyzer.setupTerminals();
         if(rulesfile.exists()&&rulesfile.canWrite()){
         	rulesfile.delete();

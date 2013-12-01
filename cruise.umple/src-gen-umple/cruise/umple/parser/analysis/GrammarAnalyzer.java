@@ -13,10 +13,10 @@ import java.util.*;
  * The grammar analayzer deals with first analyzing the root token of the grammar files, and constructing the rule graph for the grammar
  * then it has a execute function which will use the rule graph in the parsing of the umple file.
  * @umplesource GrammarParsing.ump 158
- * @umplesource GrammarParsing_Code.ump 535
+ * @umplesource GrammarParsing_Code.ump 552
  */
 // line 158 "../../../../../src/GrammarParsing.ump"
-// line 535 "../../../../../src/GrammarParsing_Code.ump"
+// line 552 "../../../../../src/GrammarParsing_Code.ump"
 public class GrammarAnalyzer extends Analyzer
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -46,7 +46,7 @@ public class GrammarAnalyzer extends Analyzer
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={540},file={"GrammarParsing_Code.ump"},javaline={68},length={29})
+  @umplesourcefile(line={557},file={"GrammarParsing_Code.ump"},javaline={68},length={29})
   public GrammarAnalyzer()
   {
     super();
@@ -64,7 +64,7 @@ public class GrammarAnalyzer extends Analyzer
     openTerminal = new ArrayList<Terminal>();
     closeTerminal = new ArrayList<Terminal>();
     optionalTerminal = new ArrayList<Terminal>();
-    // line 540 "../../../../../src/GrammarParsing_Code.ump"
+    // line 557 "../../../../../src/GrammarParsing_Code.ump"
     actionedTokens.put("useStatement", new ParserAction()
         {
           @Override
@@ -433,7 +433,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Must be called before use with the execute function, this function sets up the file for parsing
    */
-  @umplesourcefile(line={576},file={"GrammarParsing_Code.ump"},javaline={434},length={7})
+  @umplesourcefile(line={593},file={"GrammarParsing_Code.ump"},javaline={434},length={7})
    public void init(UmpleFile file){
     setUmpleFile(file);
     input = file.getPath()+File.separator+file.getFileName();
@@ -442,7 +442,7 @@ public class GrammarAnalyzer extends Analyzer
     getData().init(null);
   }
 
-  @umplesourcefile(line={584},file={"GrammarParsing_Code.ump"},javaline={447},length={6})
+  @umplesourcefile(line={601},file={"GrammarParsing_Code.ump"},javaline={447},length={6})
    public void init(String ruleName, String input2){
     input = input2;
     setData(new ParserDataPackage("temp"));
@@ -454,7 +454,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Performs the parsing on the umple file.
    */
-  @umplesourcefile(line={595},file={"GrammarParsing_Code.ump"},javaline={455},length={43})
+  @umplesourcefile(line={612},file={"GrammarParsing_Code.ump"},javaline={455},length={43})
    public void execute(){
     setRootToken(new Token("ROOT",""));
     RuleBasedParser parser = new RuleBasedParser();
@@ -504,7 +504,7 @@ public class GrammarAnalyzer extends Analyzer
    * --Analyze Rule Methods
    * The rules token contains all the rules in a grammar file.
    */
-  @umplesourcefile(line={643},file={"GrammarParsing_Code.ump"},javaline={504},length={3})
+  @umplesourcefile(line={660},file={"GrammarParsing_Code.ump"},javaline={504},length={3})
    public void rules(Token token){
     analyze(token);
   }
@@ -513,7 +513,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * The rule token denotes the beginning of a rule definition.
    */
-  @umplesourcefile(line={651},file={"GrammarParsing_Code.ump"},javaline={514},length={24})
+  @umplesourcefile(line={668},file={"GrammarParsing_Code.ump"},javaline={514},length={24})
    public void rule(Token token){
     if(rules.get(getValue(token,"rulename"))==null)
     {
@@ -543,7 +543,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * The definition token is used both for the rule definition, and anonymous rules(rules containsed within paratheses).
    */
-  @umplesourcefile(line={679},file={"GrammarParsing_Code.ump"},javaline={544},length={8})
+  @umplesourcefile(line={696},file={"GrammarParsing_Code.ump"},javaline={544},length={8})
    public void definition(Token token){
     ChoiceRule self = new ChainRule("annoymous_multirule_"+ints.get("anon_index")).dontCare();
     set("anon_index",ints.get("anon_index")+1);
@@ -557,7 +557,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Otherrule tokens are for rule names within a definition, where the otherrule is defined elsewhere.
    */
-  @umplesourcefile(line={692},file={"GrammarParsing_Code.ump"},javaline={558},length={38})
+  @umplesourcefile(line={709},file={"GrammarParsing_Code.ump"},javaline={558},length={38})
    public void otherrule(Token token){
     String modifier = getValue(token,"modifier");
     if(modifier!=null&&modifier.length()>0)
@@ -601,7 +601,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Simple method to handle token values.
    */
-  @umplesourcefile(line={734},file={"GrammarParsing_Code.ump"},javaline={602},length={11})
+  @umplesourcefile(line={751},file={"GrammarParsing_Code.ump"},javaline={602},length={11})
    public String getValue(Token token, String name){
     String value = null;
     for(Token sub:token.getSubTokens())
@@ -618,7 +618,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Terminals are keywords or syntax.
    */
-  @umplesourcefile(line={750},file={"GrammarParsing_Code.ump"},javaline={619},length={21})
+  @umplesourcefile(line={767},file={"GrammarParsing_Code.ump"},javaline={619},length={21})
    public void terminal(Token token){
     String value = getValue(token,"terminal");
     value = value.replace("-(","(").replace("-)",")").replace("OPEN_ROUND_BRACKET","(").replace("CLOSE_ROUND_BRACKET",")");
@@ -645,7 +645,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * Tokens are of the form [{premodifier}tokenname{:value}] and denote a Terminal rule where the a Token is created with the value specified by some premodifier
    */
-  @umplesourcefile(line={776},file={"GrammarParsing_Code.ump"},javaline={646},length={187})
+  @umplesourcefile(line={793},file={"GrammarParsing_Code.ump"},javaline={646},length={187})
    public void token(Token token){
     ChoiceRule terminal = null;
     String name = getValue(token,"tokenname");
@@ -838,7 +838,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * These are rules that are specified within brackets, and are therefore not Tokenized.
    */
-  @umplesourcefile(line={968},file={"GrammarParsing_Code.ump"},javaline={839},length={34})
+  @umplesourcefile(line={985},file={"GrammarParsing_Code.ump"},javaline={839},length={34})
    public void anonymousRule(Token token){
     ChoiceRule rule = new ChoiceRule("annoymous_rule_"+ints.get("anon_index")).dontCare();
     set("anon_index",ints.get("anon_index")+1);
@@ -878,7 +878,7 @@ public class GrammarAnalyzer extends Analyzer
   /**
    * {} and "" are special couple characters and are handled by making a BalancedRule which will ensure that the { is paired with the proper } and so on
    */
-  @umplesourcefile(line={1007},file={"GrammarParsing_Code.ump"},javaline={879},length={28})
+  @umplesourcefile(line={1024},file={"GrammarParsing_Code.ump"},javaline={879},length={28})
    public void braced(Token token){
     ChoiceRule rule = new ChoiceRule("annoymous_rule_"+ints.get("anon_index")).dontCare();
     set("anon_index",ints.get("anon_index")+1);
@@ -914,7 +914,7 @@ public class GrammarAnalyzer extends Analyzer
    * after the | is contained in a separate Rule. The parent to both of these rules is a ChoiceRule, meaning that each of the rules created
    * will be tried.
    */
-  @umplesourcefile(line={1041},file={"GrammarParsing_Code.ump"},javaline={913},length={7})
+  @umplesourcefile(line={1058},file={"GrammarParsing_Code.ump"},javaline={913},length={7})
    public void separator(Token token){
     stacks.get("stack").pop();
     ChoiceRule self = new ChainRule("annoymous_multirule_"+ints.get("anon_index")).dontCare();
@@ -928,7 +928,7 @@ public class GrammarAnalyzer extends Analyzer
    * There are some terminals that need to use their surroundings to determine what they can and cannot take on as values
    * this function iterates through all such terminals
    */
-  @umplesourcefile(line={1054},file={"GrammarParsing_Code.ump"},javaline={928},length={10})
+  @umplesourcefile(line={1071},file={"GrammarParsing_Code.ump"},javaline={928},length={10})
    public void setupTerminals(){
     for(Terminal terminal:openTerminal)
     {
@@ -946,7 +946,7 @@ public class GrammarAnalyzer extends Analyzer
    * for instance if an association looks like * -- 1 Student sorted { }; the rolename is student not sorted.
    * This works also for having * -- 1 Student sorted sorted { }; which will be a sorted list of students called sorted. (i.e. if the next one is accounted for then everything proceeds as normal)
    */
-  @umplesourcefile(line={1070},file={"GrammarParsing_Code.ump"},javaline={945},length={51})
+  @umplesourcefile(line={1087},file={"GrammarParsing_Code.ump"},javaline={945},length={51})
    public void setupAlphanumericTerminal(Terminal terminal){
     ChoiceRule child = null;
     ChoiceRule parent = terminal;
@@ -1004,7 +1004,7 @@ public class GrammarAnalyzer extends Analyzer
    * Sets up the tokens with no premodifier to make sure they stop at the right place,
    * for instance [type] [=list[]]? should stop before the [], so the type only contains String, instead of String[]
    */
-  @umplesourcefile(line={1128},file={"GrammarParsing_Code.ump"},javaline={1004},length={102})
+  @umplesourcefile(line={1145},file={"GrammarParsing_Code.ump"},javaline={1004},length={102})
    public void setupTerminal(Terminal terminal){
     ChoiceRule child = null;
     ChoiceRule parent = terminal;
@@ -1108,7 +1108,7 @@ public class GrammarAnalyzer extends Analyzer
     }
   }
 
-  @umplesourcefile(line={1232},file={"GrammarParsing_Code.ump"},javaline={1113},length={37})
+  @umplesourcefile(line={1249},file={"GrammarParsing_Code.ump"},javaline={1113},length={37})
    public void analyze(Token tokens){
     for(Token token: tokens.getSubTokens())
     {
