@@ -839,20 +839,20 @@ class Parser
             // Colour all named identifiers such as [name] green
             cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E~?)([a-zA-Z_]+)\\Q]\\E", "$1<font color=\"green\">$2</font>]");
             
-            // Colour all named identifiers such as "bound" in [!bound:\d+] green
-            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E!)([a-zA-Z_]+)\\Q:\\d+]\\E", "$1<font color=\"green\">$2</font>:\\\\d+]");
+            // Colour all named identifiers such as "bound" in [!bound:\d+|[*]] green
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E!)([a-zA-Z_]+)\\Q:\\d+|[*]]\\E", "$1<font color=\"green\">$2</font>:\\\\d+|[*]]");       
+            // Colour all named identifiers such as "bound" in [=bound:*] green
+            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E=)([a-zA-Z_]+)\\Q:*\\E", "$1<font color=\"green\">$2</font>:*");
             
             // Colour pairs of identifiers green (where one or both may be supplied
             cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E)([a-zA-Z_]+),([a-zA-Z_]+)", "$1<font color=\"green\">$2</font>,<font color=\"green\">$3</font>");
-            
             
             // Colour constant strings (i.e. keywords) and explicit special characters red
             cleanedUpRule = cleanedUpRule.replaceAll("([(]|\\s)([a-zA-Z_{}.,:;\\-\\\"<>]+|/|//|/\\*|\\*/|\\[|\\])(\\s|$|[)])", "$1<font color=\"red\">$2</font>$3");
 
             // There are a couple of places with parens that need making red
             cleanedUpRule = cleanedUpRule.replaceAll("(\\s)([{}]|OPEN_ROUND_BRACKET)(\\s)", "$1<font color=\"red\">$2</font>$3");
-
-            
+           
             // Colour constant strings sets such as [=modifier:immutable|settable] red
             cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:|[|])([A-Za-z\\-+<>*]+)", "$1<font color=\"red\">$2</font>");
                         
