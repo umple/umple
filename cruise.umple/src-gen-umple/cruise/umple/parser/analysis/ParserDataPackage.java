@@ -13,10 +13,10 @@ import java.util.*;
  * which are the linenumbers associated to the character numbers(or offsets) of a given \n. And couples which are initialized to be the character position
  * of the open and close of those couples, for example there is a couple for { and } which will matched {a {b }c }d 'a' with 'd' and 'b' with 'c'
  * @umplesource GrammarParsing.ump 84
- * @umplesource GrammarParsing_Code.ump 399
+ * @umplesource GrammarParsing_Code.ump 416
  */
 // line 84 "../../../../../src/GrammarParsing.ump"
-// line 399 "../../../../../src/GrammarParsing_Code.ump"
+// line 416 "../../../../../src/GrammarParsing_Code.ump"
 public class ParserDataPackage
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -274,7 +274,7 @@ public class ParserDataPackage
    * The passed Position can be null if this method was not invoked using a useStatement.
    * It takes a file and reads it, it also initializes the couples which will be used for this file.
    */
-  @umplesourcefile(line={408},file={"GrammarParsing_Code.ump"},javaline={274},length={58})
+  @umplesourcefile(line={425},file={"GrammarParsing_Code.ump"},javaline={274},length={58})
    public void init(Position usePosition){
     String file = filename;
     filename = file.split("\\Q"+File.separator+"\\E")[file.split("\\Q"+File.separator+"\\E").length-1];
@@ -334,7 +334,7 @@ public class ParserDataPackage
     }
   }
 
-  @umplesourcefile(line={467},file={"GrammarParsing_Code.ump"},javaline={339},length={25})
+  @umplesourcefile(line={484},file={"GrammarParsing_Code.ump"},javaline={339},length={25})
    public void init(String rawinput, Position usePosition){
     String file = "temp";
   int offset = 0;

@@ -149,7 +149,7 @@ function build()
       return 1
   esac
 
-  ( cd $_CWD && cd $_BUILD_DIR && $build_command ) || return 1
+  ( cd $_CWD && cd $_BUILD_DIR && $build_command ) || return 2
 }
 
 function clean()
@@ -170,7 +170,7 @@ function clean()
       return 1
   esac
 
-  ( cd $_CWD && cd $_CRUISE_DIR && echo "cleaning.." && $clean_command && echo "done!" ) || return 1
+  ( cd $_CWD && cd $_CRUISE_DIR && echo "cleaning.." && $clean_command && echo "done!" ) || return 2
 }
 
 function update()
@@ -197,7 +197,7 @@ function update()
     return 2
   fi
 
-  ( cd $_CWD && cd $_DIST_DIR && echo "updating.." && $update_command && echo "done!" ) || return 1
+  ( cd $_CWD && cd $_DIST_DIR && echo "updating.." && $update_command && echo "done!" ) || return 2
 }
 
 function generate()
@@ -225,7 +225,7 @@ function debug()
     return 2
   fi
 
-  ( cd $_CWD && cd $_DIST_DIR && $debug_command ) || return 1
+  ( cd $_CWD && cd $_DIST_DIR && $debug_command ) || return 2
 } 
 
 function cwd()
