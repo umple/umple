@@ -9377,7 +9377,7 @@ if (p != null) {
           
           if(sameEventName == false)
           {
-            if(eveName != e.getName())
+            if(!(eveName.equals(e.getName())))
             {
               if(e.getIsInternal() == false)
               {
@@ -9456,7 +9456,7 @@ if (p != null) {
           
                  if(sameEventName == false)
                  {
-                   if(eveName != e.getName())
+          		   if(!(eveName.equals(e.getName())))
                    {
                      if(e.getIsInternal() == false)
                      {
