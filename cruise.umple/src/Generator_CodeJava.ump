@@ -250,22 +250,36 @@ class JavaGenerator
     {
       String allEnums = "";
       String eveName="";
+      boolean sameEventName=false;
+      List<String> eveList=new ArrayList<String>();
       for (StateMachine nsm : sm.getNestedStateMachines())
       {
         for (Event event : nsm.getEvents())
         {
-          if(event.getIsInternal() == false)
-          {
-              if( eveName != event.getName()){
-        	  if (allEnums.length() > 0 )
-              {
-                allEnums += ", ";
-              }
-              allEnums += translate("eventMethod",event);
-              allEnums += "_M"; 
-              eveName=event.getName();
-              } 
+          for(int i=0; i<eveList.size(); i++){
+            if(eveList.get(i)== event.getName()){
+              sameEventName=true;
+            }
           }
+          
+          if(sameEventName == false)
+          {
+            if(event.getIsInternal() == false)
+            {
+              if( eveName != event.getName()){
+                eveList.add(event.getName());
+              
+        	    if (allEnums.length() > 0 )
+                {
+                  allEnums += ", ";
+                }
+                allEnums += translate("eventMethod",event);
+                allEnums += "_M"; 
+                eveName=event.getName();
+              } 
+            }
+          }
+          sameEventName=false;
         }
       }
       return allEnums;

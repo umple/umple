@@ -9363,39 +9363,53 @@ if (p != null) {
         append(stringBuffer,"\n");
       }
       String eveName="";
+      boolean sameEventName=false;
+      List<String> eveList=new ArrayList<String>();
       for (StateMachine nsm : sm.getNestedStateMachines())
       {
         for (Event e : nsm.getEvents())
         {
-          if(eveName != e.getName()){
-          if(e.getIsInternal() == false)
+          for(int i=0; i<eveList.size(); i++){
+            if(eveList.get(i)== e.getName())
+              //break;
+              sameEventName=true;
+          }
+          
+          if(sameEventName == false)
           {
-          append(stringBuffer,"\n");
-          append(stringBuffer,"  public void ");
-          append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
-          append(stringBuffer,"\n  {");
-        
-          if (!e.getArgs().equals(""))
-          {
-            append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
-            for ( int i=0; i < e.getParams().size(); i++)
+            if(eveName != e.getName())
             {
-              append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
+              if(e.getIsInternal() == false)
+              {
+                eveList.add(e.getName());
+                append(stringBuffer,"\n");
+                append(stringBuffer,"  public void ");
+                append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
+                append(stringBuffer,"\n  {");
+        
+                if (!e.getArgs().equals(""))
+                {
+                  append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
+                  for ( int i=0; i < e.getParams().size(); i++)
+                  {
+                    append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
+                  }
+                  append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+	              append(stringBuffer,"_M, v));");
+	              eveName=e.getName(); 
+                }
+                else
+                {
+                  append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                  append(stringBuffer,"_M, null));");
+                  eveName=e.getName();
+                }
+                append(stringBuffer,"\n  }");
+                append(stringBuffer,"\n");
+              }
             }
-	        append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-	        append(stringBuffer,"_M, v));");
-	        eveName=e.getName();
           }
-          else
-          {
-            append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-            append(stringBuffer,"_M, null));");
-            eveName=e.getName();
-          }
-          append(stringBuffer,"\n  }");
-          append(stringBuffer,"\n");
-          }
-          }
+          sameEventName=false;
         }
       }
     }
@@ -9428,39 +9442,53 @@ if (p != null) {
              append(stringBuffer,"\n          break;");
              }
              String eveName="";
+             boolean sameEventName=false;
+             List<String> eveList=new ArrayList<String>();
              for (StateMachine nsm : smq.getNestedStateMachines())
              {
                for (Event e : nsm.getEvents())
                {
-                 if(eveName != e.getName()){
-                 if(e.getIsInternal() == false)
+                 for(int i=0; i<eveList.size(); i++){
+                   if(eveList.get(i)== e.getName()){
+                     sameEventName=true;
+                   }
+                 }
+          
+                 if(sameEventName == false)
                  {
-                   append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",e));
-                   append(stringBuffer,"_M:");
-                   if (!e.getArgs().equals(""))
+                   if(eveName != e.getName())
                    {
-                     append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",e));
-                     String allParameters="";
-                     for ( int i=0; i < e.getParams().size(); i++)
+                     if(e.getIsInternal() == false)
                      {
-                       if (allParameters.length() > 0)
+                       eveList.add(e.getName());
+                       append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",e));
+                       append(stringBuffer,"_M:");
+                       if (!e.getArgs().equals(""))
                        {
-                         allParameters += ", ";
+                         append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",e));
+                         String allParameters="";
+                         for ( int i=0; i < e.getParams().size(); i++)
+                         {
+                           if (allParameters.length() > 0)
+                           {
+                             allParameters += ", ";
+                           }
+                           allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
+                         }
+                         append(stringBuffer,"{0});",allParameters);
+                         eveName=e.getName();
                        }
-                       allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
+                       else
+                       {
+                         append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",e));
+                         append(stringBuffer,"();");
+                         eveName=e.getName();
+                       }
+                       append(stringBuffer,"\n          break;");
                      }
-                     append(stringBuffer,"{0});",allParameters);
-                     eveName=e.getName();
                    }
-                   else
-                   {
-                     append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",e));
-                     append(stringBuffer,"();");
-                     eveName=e.getName();
-                   }
-                   append(stringBuffer,"\n          break;");
                  }
-                 }
+                 sameEventName=false;
                }
              }
            
