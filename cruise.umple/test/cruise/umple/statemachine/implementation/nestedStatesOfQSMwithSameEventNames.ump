@@ -1,0 +1,23 @@
+namespace example;
+
+class NestedStatesWthSameEventNames{
+  queued sm{
+    nestedState1{
+      state1 {
+        moveTo ->state2;
+      }
+      state2{
+        transit -> state5;
+      }
+    }
+    nestedState2{
+      state3{
+        moveTo ->state4;
+      }
+      state4{
+        transit -> state5;
+      }
+    }
+    state5{}
+  }
+}

@@ -1,0 +1,334 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.18.0.3254 modeling language!*/
+
+package example;
+import java.util.*;
+import java.lang.Thread;
+
+public class NestedStatesWthSameEventNames implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //NestedStatesWthSameEventNames State Machines
+  enum Sm { nestedState1, nestedState2, state5 }
+  enum SmNestedState1 { Null, state1, state2 }
+  enum SmNestedState2 { Null, state3, state4 }
+  private Sm sm;
+  private SmNestedState1 smNestedState1;
+  private SmNestedState2 smNestedState2;
+  
+  //enumeration type of messages accepted by NestedStatesWthSameEventNames
+  enum MessageType { moveTo_M, transit_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public NestedStatesWthSameEventNames()
+  {
+    setSmNestedState1(SmNestedState1.Null);
+    setSmNestedState2(SmNestedState2.Null);
+    setSm(Sm.nestedState1);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of NestedStatesWthSameEventNames
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    if (smNestedState1 != SmNestedState1.Null) { answer += "." + smNestedState1.toString(); }
+    if (smNestedState2 != SmNestedState2.Null) { answer += "." + smNestedState2.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public SmNestedState1 getSmNestedState1()
+  {
+    return smNestedState1;
+  }
+
+  public SmNestedState2 getSmNestedState2()
+  {
+    return smNestedState2;
+  }
+
+  private boolean enterNestedState1()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmNestedState1 aSmNestedState1 = smNestedState1;
+    switch (aSmNestedState1)
+    {
+      case Null:
+        setSmNestedState1(SmNestedState1.state1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitNestedState1()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmNestedState1 aSmNestedState1 = smNestedState1;
+    switch (aSmNestedState1)
+    {
+      case state1:
+        setSmNestedState1(SmNestedState1.Null);
+        wasEventProcessed = true;
+        break;
+      case state2:
+        setSmNestedState1(SmNestedState1.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _moveTo()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmNestedState1 aSmNestedState1 = smNestedState1;
+    SmNestedState2 aSmNestedState2 = smNestedState2;
+    switch (aSmNestedState1)
+    {
+      case state1:
+        setSmNestedState1(SmNestedState1.state2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmNestedState2)
+    {
+      case state3:
+        setSmNestedState2(SmNestedState2.state4);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _transit()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmNestedState1 aSmNestedState1 = smNestedState1;
+    SmNestedState2 aSmNestedState2 = smNestedState2;
+    switch (aSmNestedState1)
+    {
+      case state2:
+        exitSm();
+        setSm(Sm.state5);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSmNestedState2)
+    {
+      case state4:
+        exitSm();
+        setSm(Sm.state5);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterNestedState2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmNestedState2 aSmNestedState2 = smNestedState2;
+    switch (aSmNestedState2)
+    {
+      case Null:
+        setSmNestedState2(SmNestedState2.state3);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitNestedState2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmNestedState2 aSmNestedState2 = smNestedState2;
+    switch (aSmNestedState2)
+    {
+      case state3:
+        setSmNestedState2(SmNestedState2.Null);
+        wasEventProcessed = true;
+        break;
+      case state4:
+        setSmNestedState2(SmNestedState2.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case nestedState1:
+        exitNestedState1();
+        break;
+      case nestedState2:
+        exitNestedState2();
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case nestedState1:
+        if (smNestedState1 == SmNestedState1.Null) { setSmNestedState1(SmNestedState1.state1); }
+        break;
+      case nestedState2:
+        if (smNestedState2 == SmNestedState2.Null) { setSmNestedState2(SmNestedState2.state3); }
+        break;
+    }
+  }
+
+  private void setSmNestedState1(SmNestedState1 aSmNestedState1)
+  {
+    smNestedState1 = aSmNestedState1;
+    if (sm != Sm.nestedState1 && aSmNestedState1 != SmNestedState1.Null) { setSm(Sm.nestedState1); }
+  }
+
+  private void setSmNestedState2(SmNestedState2 aSmNestedState2)
+  {
+    smNestedState2 = aSmNestedState2;
+    if (sm != Sm.nestedState2 && aSmNestedState2 != SmNestedState2.Null) { setSm(Sm.nestedState2); }
+  }
+
+  public void delete()
+  {}
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void moveTo ()
+  {
+    pool.put(new Message(MessageType.moveTo_M, null));
+  }
+
+  public void transit ()
+  {
+    pool.put(new Message(MessageType.transit_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case moveTo_M:
+          status = _moveTo();
+          break;
+        case transit_M:
+          status = _transit();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+}
