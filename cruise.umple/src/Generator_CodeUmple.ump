@@ -442,8 +442,7 @@ class UmpleGenerator
    */
   public void prepare()
   {
-    // Create root scope (an unnamed, or 'anonymous', scope) 
-    enterScope(RuleName.NIL.toInt(), false);
+    // do nothing
   }
 
   /*
@@ -459,6 +458,7 @@ class UmpleGenerator
         {
           continue;
         }
+        resetScopeStack();
         writeFile(currentElement);
       }
     }
@@ -729,6 +729,17 @@ class UmpleGenerator
     } 
 
     return recursing;
+  }
+
+  /*
+   * Reset stack of scopes
+   */ 
+  private void resetScopeStack()
+  {
+    this.scopes = new ArrayDeque<Scope>();
+
+    // Create root scope (an unnamed, or 'anonymous', scope) 
+    enterScope(RuleName.NIL.toInt(), false);
   }
 
   /*
