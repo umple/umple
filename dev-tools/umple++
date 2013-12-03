@@ -8,6 +8,7 @@ _CWD=''                                                         # Current Worksp
 _BUILD_DIR='build'                                              # Umple Build Directory
 _CRUISE_DIR='cruise.umple'                                      # Umple Cruise Directory
 _DIST_DIR='dist'                                                # Umple Dist Directory
+_TEST_BASEDIR='/tmp/umple_tests'
 
 bold="\033[1m"                                                  # String Modifiers
 normal="\033[0m"
@@ -23,10 +24,11 @@ function print_description()
 function print_usage()
 {
     echo -e "${bold}-- $_ME --${normal}"
-    echo -e "Compile various components of Umple:              ${bold}build [all|compiler|jet|online|quick|version]${normal}"
-    echo -e "Revert generated files:                           ${bold}clean [all|compiler|jet]${normal}"
-    echo -e "Download latest version of umple.jar:             ${bold}update [umple.jar]${normal}"
+    echo -e "Compile various components of Umple:              ${bold}build    [all|compiler|jet|online|quick|version]${normal}"
+    echo -e "Revert generated files:                           ${bold}clean    [all|compiler|jet]${normal}"
+    echo -e "Download latest version of umple.jar:             ${bold}update   [umple.jar]${normal}"
     echo -e "Generate code from umple files:                   ${bold}generate [output language] [File1 File2 File3...]${normal}"
+    echo -e "Test modifications with deployed codebase:        ${bold}test${normal}"
     echo -e "Display debug info for latest build:              ${bold}debug${normal}"
     echo -e "Print current workspace directory:                ${bold}cwd${normal}"
     echo -e "Description, usage and compatibility:             ${bold}info${normal}"
@@ -67,6 +69,7 @@ function check_command()
     "clean")     [ ${#_ARGV[@]} -eq 1 ] ;;
     "update")    [ ${#_ARGV[@]} -eq 1 ] ;;
     "generate")  [ ${#_ARGV[@]} -ge 2 ] ;;
+    "test")      [ ${#_ARGV[@]} -eq 0 ] ;;
     "debug")     [ ${#_ARGV[@]} -eq 0 ] ;;
     "cwd")       [ ${#_ARGV[@]} -eq 0 ] ;;
     "info")      ( exit 0 ) ;;
@@ -207,6 +210,44 @@ function generate()
   umple_jar=`echo "$_CWD/$_DIST_DIR/umple.jar" | sed -e 's#//#/#g'` # In case CWD or DIST_DIR has closing '/'
 
   ( java -jar "$umple_jar" -generate "$language" $input_files ) || return 2
+}
+
+function test()
+{
+  stamp=`date +%s`
+  testdir=`echo "$_TEST_BASEDIR/$stamp/" | sed -e 's#//#/#g'` # Remove '//'
+  test_workspace=`echo "$testdir/umple/" | sed -e 's#//#/#g'` # Remove '//'
+  diffpath=`echo "$testdir/PATCH"        | sed -e 's#//#/#g'` # Remove '//'
+  
+  echo -e "${bold}Testing $_CWD${normal}\n----------------------------"                               
+  (
+    # Create Test Workspace 
+    mkdir -p "$testdir"                                                                 &&\
+    echo -e "Checking out source code..."                                               &&\
+    svn checkout http://umple.googlecode.com/svn/trunk/ "$test_workspace">/dev/null     &&\
+    #
+    # Create Diff of Current Workspace
+    cd $_CWD                                                                  &&\
+    echo -e "Generating diff of current workspace.."                          &&\
+    svn diff -x --ignore-eol-style > "$diffpath"                              &&\
+    # 
+    # Setup Temp Params 
+    real_cwd=$_CWD                                                            &&\
+    real_args=$_ARGV                                                          &&\
+    _CWD="$test_workspace"                                                    &&\
+    _ARGV=("all")                                                             &&\
+    #
+    # Apply Diff & Test Build 
+    echo -e "Building Umple.."                                                &&\
+    cd "$test_workspace"                                                      &&\
+    patch -p0 -i $diffpath                                                    &&\
+    build                                                                     &&\
+    #
+    # Revert Test Params
+    _CWD=real_cwd                                                             &&\
+    _ARGV=real_args                                                           &&\
+    echo -e "${bold}Test Compilation Succeeded!${normal}"
+  ) || return 2
 }
 
 function debug()
