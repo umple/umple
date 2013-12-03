@@ -5,7 +5,7 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
-Model for the subsystem used to syncronize elements in UmpleOnline
+Model for importing XMI and generating Umple code
 
 */
 
@@ -53,6 +53,12 @@ class UmpleImportModel
 		  }  
 	  }
 	  return oppoEnd;
+	}
+	
+	void generateUmpleFile(String filename) {
+		String input = this.generateUmple();
+		if (input != null && !input.isEmpty())
+			SampleFileWriter.createFile(filename, input);
 	}
 }
 

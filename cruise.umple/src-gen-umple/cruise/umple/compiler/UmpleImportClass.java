@@ -5,11 +5,11 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource UmpleImport.ump 68
- * @umplesource UmpleImport_CodeModels.ump 67
+ * @umplesource UmpleImport.ump 70
+ * @umplesource UmpleImport_CodeModels.ump 73
  */
-// line 68 "../../../../src/UmpleImport.ump"
-// line 67 "../../../../src/UmpleImport_CodeModels.ump"
+// line 70 "../../../../src/UmpleImport.ump"
+// line 73 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportClass extends UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -322,7 +322,7 @@ public class UmpleImportClass extends UmpleImportElement
     super.delete();
   }
 
-  @umplesourcefile(line={71},file={"UmpleImport_CodeModels.ump"},javaline={327},length={24})
+  @umplesourcefile(line={77},file={"UmpleImport_CodeModels.ump"},javaline={327},length={24})
   public String generateUmple(){
     StringBuilder umpleBuilder = this.getUmpleBuilder();
 		umpleBuilder.append("\n\n");

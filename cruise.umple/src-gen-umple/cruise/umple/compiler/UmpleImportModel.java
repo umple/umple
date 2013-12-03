@@ -2,6 +2,7 @@
 /*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
 
 package cruise.umple.compiler;
+import cruise.umple.util.SampleFileWriter;
 import java.util.*;
 
 /**
@@ -147,7 +148,7 @@ public class UmpleImportModel
     umpleImportElements.clear();
   }
 
-  @umplesourcefile(line={19},file={"UmpleImport_CodeModels.ump"},javaline={152},length={8})
+  @umplesourcefile(line={19},file={"UmpleImport_CodeModels.ump"},javaline={153},length={8})
   public String generateUmple(){
     umpleBuilder = new StringBuilder();
 		for (UmpleImportElement umpleImportElement : umpleImportElements) {
@@ -161,7 +162,7 @@ public class UmpleImportModel
   /**
    * resolve assoications by global lookup
    */
-  @umplesourcefile(line={29},file={"UmpleImport_CodeModels.ump"},javaline={162},length={29})
+  @umplesourcefile(line={29},file={"UmpleImport_CodeModels.ump"},javaline={163},length={29})
   public UmpleImportAssociation checkIfOppositeExist(UmpleImportAssociation currEnd){
     this.addUmpleImportElement(currEnd);
 	  UmpleImportAssociation oppoEnd = null;
@@ -190,6 +191,13 @@ public class UmpleImportModel
 		  }  
 	  }
 	  return oppoEnd;
+  }
+
+  @umplesourcefile(line={59},file={"UmpleImport_CodeModels.ump"},javaline={198},length={5})
+  public void generateUmpleFile(String filename){
+    String input = this.generateUmple();
+		if (input != null && !input.isEmpty())
+			SampleFileWriter.createFile(filename, input);
   }
 
 

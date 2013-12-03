@@ -5,7 +5,7 @@ Copyright: All contributers to the Umple Project
 This file is made available subject to the open source license found at:
 http://umple.org/license
 
-Model for the subsystem used to syncronize elements in UmpleOnline
+Model for importing XMI and generating Umple code
 
 */
 
@@ -131,14 +131,14 @@ class ECoreImportHandler
 	}
 		
 	public void warning(SAXParseException e) throws SAXException {
-		System.out.println("Warning");
+		System.out.println("Warning: " + e.getMessage());
 	}
 
 	public void error(SAXParseException e) throws SAXException {
-		System.out.println("Error");
+		System.out.println("Error: " + e.getMessage());
 	}
 
 	public void fatalError(SAXParseException e) throws SAXException {
-		System.out.println("Fatal Error");
+		System.out.println("Fatal Error: " + e.getMessage());
 	}
 }

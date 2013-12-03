@@ -4,11 +4,11 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource UmpleImport.ump 81
- * @umplesource UmpleImport_CodeModels.ump 95
+ * @umplesource UmpleImport.ump 83
+ * @umplesource UmpleImport_CodeModels.ump 101
  */
-// line 81 "../../../../src/UmpleImport.ump"
-// line 95 "../../../../src/UmpleImport_CodeModels.ump"
+// line 83 "../../../../src/UmpleImport.ump"
+// line 101 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportAttribute extends UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -104,7 +104,7 @@ public class UmpleImportAttribute extends UmpleImportElement
     super.delete();
   }
 
-  @umplesourcefile(line={99},file={"UmpleImport_CodeModels.ump"},javaline={109},length={6})
+  @umplesourcefile(line={105},file={"UmpleImport_CodeModels.ump"},javaline={109},length={6})
   public String generateUmple(){
     StringBuilder builder = this.getUmpleBuilder();
     	String umpleType = getUmpleTypeFromEcoreType(this.dataType);
@@ -112,7 +112,7 @@ public class UmpleImportAttribute extends UmpleImportElement
     	return builder.toString();
   }
 
-  @umplesourcefile(line={107},file={"UmpleImport_CodeModels.ump"},javaline={117},length={22})
+  @umplesourcefile(line={113},file={"UmpleImport_CodeModels.ump"},javaline={117},length={22})
    private String getUmpleTypeFromEcoreType(String uType){
     String ret="";
 		if(uType.equals("EInt"))

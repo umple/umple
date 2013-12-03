@@ -4,11 +4,11 @@
 package cruise.umple.compiler;
 
 /**
- * @umplesource UmpleImport.ump 63
- * @umplesource UmpleImport_CodeModels.ump 58
+ * @umplesource UmpleImport.ump 65
+ * @umplesource UmpleImport_CodeModels.ump 64
  */
-// line 63 "../../../../src/UmpleImport.ump"
-// line 58 "../../../../src/UmpleImport_CodeModels.ump"
+// line 65 "../../../../src/UmpleImport.ump"
+// line 64 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportPackage extends UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -36,7 +36,7 @@ public class UmpleImportPackage extends UmpleImportElement
     super.delete();
   }
 
-  @umplesourcefile(line={62},file={"UmpleImport_CodeModels.ump"},javaline={41},length={5})
+  @umplesourcefile(line={68},file={"UmpleImport_CodeModels.ump"},javaline={41},length={5})
   public String generateUmple(){
     StringBuilder umpleBuilder = this.getUmpleBuilder();
 		umpleBuilder.append("namespace " + this.getName() + ";");
