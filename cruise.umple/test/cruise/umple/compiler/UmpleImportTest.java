@@ -58,6 +58,24 @@ public class UmpleImportTest {
 
 		assertEquals(expectedText, actualText);
 	}
+	
+	@Test
+	public void EcoreLargeScaleACGParsingTest() throws Exception {
+		
+		String expectedText = loadUmpleFile("ECoreImport_largeScale_ACG.ump");
+		String actualText = loadECoreFile("ECoreImport_largeScale_ACG.ecore");
+
+		assertEquals(expectedText, actualText);
+	}
+	
+	@Test
+	public void EcoreLargeScaleACMEParsingTest() throws Exception {
+		
+		String expectedText = loadUmpleFile("ECoreImport_largeScale_ACME.ump");
+		String actualText = loadECoreFile("ECoreImport_largeScale_ACME.ecore");
+
+		assertEquals(expectedText, actualText);
+	}
 
 	private static String loadECoreFile(String name) throws Exception {
 		String filename = getFullFilePath(name);

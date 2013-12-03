@@ -55,10 +55,14 @@ class UmpleImportModel
 	  return oppoEnd;
 	}
 	
-	void generateUmpleFile(String filename) {
+	boolean generateUmpleFile(String filename) {
 		String input = this.generateUmple();
-		if (input != null && !input.isEmpty())
+		boolean isSuccess = false;
+		if (input != null && !input.isEmpty()) {
 			SampleFileWriter.createFile(filename, input);
+			isSuccess = true;
+		}
+		return isSuccess;
 	}
 }
 
@@ -83,7 +87,7 @@ class UmpleImportClass
 			if(superTypes.size()!=0){
 				for (String superType : superTypes) {
 				    if(!superType.isEmpty())
-						umpleBuilder.append("\n  isA "+ superType+";");
+						umpleBuilder.append("\n\tisA "+ superType+";");
 				}
 			}
 		}

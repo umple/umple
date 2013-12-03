@@ -135,16 +135,20 @@ public class UmpleConsoleMain
         }
   }
 
-  @umplesourcefile(line={123},file={"Main_Code.ump"},javaline={140},length={10})
+  @umplesourcefile(line={123},file={"Main_Code.ump"},javaline={140},length={14})
    private static  void generateUmple(String xmi){
-    try {
+    boolean isSuccess = false;
+	  try {    
 		ECoreImportHandler handler = new ECoreImportHandler();
 		UmpleImportModel umple = handler.readDataFromXML(xmi);
-		umple.generateUmpleFile(xmi+".ump");
+		isSuccess = umple.generateUmpleFile(xmi+".ump");
 	  } catch (Exception e) {
 		printerr(e.getMessage());
 	  } 
-	  println("Success! Processed "+ xmi + ".");
+	  if(isSuccess)
+	    println("Success! Processed "+ xmi + ".");
+	  else
+	    printerr("No file generated, parsing error.");
   }
 
 
@@ -154,7 +158,7 @@ public class UmpleConsoleMain
    * Argument: optSet - set of the options and corresponding arguments
    * Return: boolean - If application should terminate immediately after return
    */
-  @umplesourcefile(line={139},file={"Main_Code.ump"},javaline={152},length={19})
+  @umplesourcefile(line={143},file={"Main_Code.ump"},javaline={156},length={19})
    private static  boolean preModelOptionProcess(OptionSet optSet){
     if (optSet == null) {
             return true;
@@ -175,7 +179,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={159},file={"Main_Code.ump"},javaline={180},length={17})
+  @umplesourcefile(line={163},file={"Main_Code.ump"},javaline={184},length={17})
    private static  boolean postModelOptionProcess(OptionSet optset, UmpleModel model){
     if (optset.has("generate")) {
             boolean override=false;
@@ -194,7 +198,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={178},file={"Main_Code.ump"},javaline={199},length={24})
+  @umplesourcefile(line={182},file={"Main_Code.ump"},javaline={203},length={24})
    private static  OptionSet optParse(String [] args){
     optparser = new OptionParser();
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
@@ -223,10 +227,10 @@ public class UmpleConsoleMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={201},file={"Main_Code.ump"},javaline={227},length={5})
+  //  @umplesourcefile(line={205},file={"Main_Code.ump"},javaline={231},length={5})
   public static String console ;
 
-//  @umplesourcefile(line={202},file={"Main_Code.ump"},javaline={230},length={2})
+//  @umplesourcefile(line={206},file={"Main_Code.ump"},javaline={234},length={2})
   private static OptionParser optparser ;
 
   
