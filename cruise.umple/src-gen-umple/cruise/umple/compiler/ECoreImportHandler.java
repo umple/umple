@@ -197,21 +197,21 @@ public class ECoreImportHandler extends DefaultHandler
   @umplesourcefile(line={133},file={"UmpleImport_CodeHandlers.ump"},javaline={198},length={4})
   public void warning (SAXParseException e) throws SAXException 
   {
-    System.out.println("Warning");
+    System.out.println("Warning: " + e.getMessage());
   }
 
 //  @umplesourcefile(line={136},file={"UmpleImport_CodeHandlers.ump"},javaline={204},length={11})
   @umplesourcefile(line={137},file={"UmpleImport_CodeHandlers.ump"},javaline={205},length={4})
   public void error (SAXParseException e) throws SAXException 
   {
-    System.out.println("Error");
+    System.out.println("Error: " + e.getMessage());
   }
 
 //  @umplesourcefile(line={140},file={"UmpleImport_CodeHandlers.ump"},javaline={211},length={5})
   @umplesourcefile(line={141},file={"UmpleImport_CodeHandlers.ump"},javaline={212},length={4})
   public void fatalError (SAXParseException e) throws SAXException 
   {
-    System.out.println("Fatal Error");
+    System.out.println("Fatal Error: " + e.getMessage());
   }
 
   

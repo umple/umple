@@ -118,6 +118,18 @@ class UmpleConsoleMain
         } catch (IOException e) {
         }
     }
+    
+    private static void generateUmple(String xmi) {
+	  try {
+		ECoreImportHandler handler = new ECoreImportHandler();
+		UmpleImportModel umple = handler.readDataFromXML(xmi);
+		umple.generateUmpleFile(xmi+".ump");
+	  } catch (Exception e) {
+		printerr(e.getMessage());
+	  } 
+	  println("Success! Processed "+ xmi + ".");
+    }
+  
     /**
      * optionProcess: process the option arguments which does not require UmpleModel
      * Argument: optSet - set of the options and corresponding arguments
@@ -134,6 +146,11 @@ class UmpleConsoleMain
         if (optSet.has("help")) {
             printUsage();
             return true;
+        }
+        if (optSet.has("import")) {
+        	String xmi = (String)optSet.valueOf("import");
+        	generateUmple(xmi);
+        	return true;
         }
         return false;
     }
@@ -165,7 +182,8 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
-
+    optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
+    
     OptionSet optSet = null;
 
     try 

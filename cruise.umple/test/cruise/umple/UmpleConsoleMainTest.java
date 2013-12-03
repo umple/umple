@@ -10,6 +10,7 @@
 package cruise.umple;
 
 import java.io.*;
+
 import org.junit.*;
 import cruise.umple.util.SampleFileWriter;
 
@@ -31,6 +32,7 @@ public class UmpleConsoleMainTest
     SampleFileWriter.destroy("myfile.ump");
     SampleFileWriter.destroy("myfile.cmd");
     SampleFileWriter.destroy("test_package");
+    SampleFileWriter.destroy("testclass.ecore");
   }
   
   @Test @Ignore
@@ -175,6 +177,34 @@ UmpleConsoleMain.console);
 		} catch (IOException e) {
 			Assert.fail();
 		}   
+   }
+   @Test 
+   public void UmpleImportTest() {
+	   
+	   String[] args = new String[] {"-import", "testclass.ecore"};
+	   try {
+		BufferedWriter in = new BufferedWriter(new FileWriter("testclass.ecore"));
+		//load simple ECore
+		in.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+		in.write("<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"base\" nsURI=\"cruise.example.base\" nsPrefix=\"base\">\n");
+		in.write("<eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>\n");
+		in.write("<eClassifiers xsi:type=\"ecore:EClass\" name=\"ICart\" interface=\"true\" abstract=\"true\">\n");
+		in.write("</eClassifiers>\n");
+		in.write("<eClassifiers xsi:type=\"ecore:EClass\" name=\"Cart\" eSuperTypes=\"#//ICart\">\n");
+		in.write("</eClassifiers>\n");
+		in.write("</ecore:EPackage>\n");
+		in.close();
+		
+		UmpleConsoleMain.main(args);
+		Assert.assertEquals("Success! Processed testclass.ecore.\n", UmpleConsoleMain.console);
+		
+		File fileOut = new File("testclass.ecore.ump");
+	    Assert.assertEquals(true, fileOut.exists());
+		fileOut.delete();
+		
+	} catch (IOException e) {
+		Assert.fail();
+	}
    }
    
 }

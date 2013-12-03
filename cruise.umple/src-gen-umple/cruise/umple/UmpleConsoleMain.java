@@ -135,6 +135,18 @@ public class UmpleConsoleMain
         }
   }
 
+  @umplesourcefile(line={123},file={"Main_Code.ump"},javaline={140},length={10})
+   private static  void generateUmple(String xmi){
+    try {
+		ECoreImportHandler handler = new ECoreImportHandler();
+		UmpleImportModel umple = handler.readDataFromXML(xmi);
+		umple.generateUmpleFile(xmi+".ump");
+	  } catch (Exception e) {
+		printerr(e.getMessage());
+	  } 
+	  println("Success! Processed "+ xmi + ".");
+  }
+
 
   /**
    * 
@@ -142,7 +154,7 @@ public class UmpleConsoleMain
    * Argument: optSet - set of the options and corresponding arguments
    * Return: boolean - If application should terminate immediately after return
    */
-  @umplesourcefile(line={127},file={"Main_Code.ump"},javaline={140},length={14})
+  @umplesourcefile(line={139},file={"Main_Code.ump"},javaline={152},length={19})
    private static  boolean preModelOptionProcess(OptionSet optSet){
     if (optSet == null) {
             return true;
@@ -155,10 +167,15 @@ public class UmpleConsoleMain
             printUsage();
             return true;
         }
+        if (optSet.has("import")) {
+        	String xmi = (String)optSet.valueOf("import");
+        	generateUmple(xmi);
+        	return true;
+        }
         return false;
   }
 
-  @umplesourcefile(line={142},file={"Main_Code.ump"},javaline={163},length={17})
+  @umplesourcefile(line={159},file={"Main_Code.ump"},javaline={180},length={17})
    private static  boolean postModelOptionProcess(OptionSet optset, UmpleModel model){
     if (optset.has("generate")) {
             boolean override=false;
@@ -177,7 +194,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={161},file={"Main_Code.ump"},javaline={182},length={23})
+  @umplesourcefile(line={178},file={"Main_Code.ump"},javaline={199},length={24})
    private static  OptionSet optParse(String [] args){
     optparser = new OptionParser();
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
@@ -186,7 +203,8 @@ public class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("override"), "If a output language <lang> is specified using option -g, output will only generate language <lang>");
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
-
+    optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
+    
     OptionSet optSet = null;
 
     try 
@@ -205,10 +223,10 @@ public class UmpleConsoleMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={183},file={"Main_Code.ump"},javaline={209},length={5})
+  //  @umplesourcefile(line={201},file={"Main_Code.ump"},javaline={227},length={5})
   public static String console ;
 
-//  @umplesourcefile(line={184},file={"Main_Code.ump"},javaline={212},length={2})
+//  @umplesourcefile(line={202},file={"Main_Code.ump"},javaline={230},length={2})
   private static OptionParser optparser ;
 
   
