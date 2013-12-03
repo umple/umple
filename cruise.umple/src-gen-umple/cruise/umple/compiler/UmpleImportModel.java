@@ -193,11 +193,15 @@ public class UmpleImportModel
 	  return oppoEnd;
   }
 
-  @umplesourcefile(line={59},file={"UmpleImport_CodeModels.ump"},javaline={198},length={5})
-  public void generateUmpleFile(String filename){
+  @umplesourcefile(line={59},file={"UmpleImport_CodeModels.ump"},javaline={198},length={9})
+  public boolean generateUmpleFile(String filename){
     String input = this.generateUmple();
-		if (input != null && !input.isEmpty())
+		boolean isSuccess = false;
+		if (input != null && !input.isEmpty()) {
 			SampleFileWriter.createFile(filename, input);
+			isSuccess = true;
+		}
+		return isSuccess;
   }
 
 

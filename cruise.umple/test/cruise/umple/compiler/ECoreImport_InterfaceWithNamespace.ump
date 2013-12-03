@@ -6,5 +6,5 @@ interface ICart
 
 class Cart
 {
-  isA ICart;
+	isA ICart;
 }

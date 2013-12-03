@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * @umplesource UmpleImport.ump 70
- * @umplesource UmpleImport_CodeModels.ump 73
+ * @umplesource UmpleImport_CodeModels.ump 77
  */
 // line 70 "../../../../src/UmpleImport.ump"
-// line 73 "../../../../src/UmpleImport_CodeModels.ump"
+// line 77 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportClass extends UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -322,7 +322,7 @@ public class UmpleImportClass extends UmpleImportElement
     super.delete();
   }
 
-  @umplesourcefile(line={77},file={"UmpleImport_CodeModels.ump"},javaline={327},length={24})
+  @umplesourcefile(line={81},file={"UmpleImport_CodeModels.ump"},javaline={327},length={24})
   public String generateUmple(){
     StringBuilder umpleBuilder = this.getUmpleBuilder();
 		umpleBuilder.append("\n\n");
@@ -333,7 +333,7 @@ public class UmpleImportClass extends UmpleImportElement
 			if(superTypes.size()!=0){
 				for (String superType : superTypes) {
 				    if(!superType.isEmpty())
-						umpleBuilder.append("\n  isA "+ superType+";");
+						umpleBuilder.append("\n\tisA "+ superType+";");
 				}
 			}
 		}

@@ -1,0 +1,421 @@
+
+
+class LocatedElement
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class ACG
+{
+	isA LocatedElement;
+	String metamodel;
+	String startsWith;
+	1..* acg -- * ACGElement elements;
+}
+
+class ACGElement
+{
+	isA LocatedElement;
+}
+
+class Function
+{
+	isA ACGElement;
+	String context;
+	String name;
+	0..1 -> * Parameter parameters;
+	0..1 -> 1..* Expression body;
+}
+
+class Attribute
+{
+	isA ACGElement;
+	String context;
+	String name;
+	0..1 -> 1..* Expression body;
+}
+
+class Parameter
+{
+	isA VariableDecl;
+}
+
+class Node
+{
+	isA ACGElement ;
+	String element;
+	String mode;
+	0..1 -> * Expression guard;
+}
+
+class ASMNode
+{
+	isA Node;
+	0..1 -> 1..* Expression name;
+}
+
+class CodeNode
+{
+	isA Node;
+}
+
+class SimpleNode
+{
+	isA Node;
+}
+
+class StatementBlock
+{
+	isA LocatedElement;
+	0..1 -> * Statement statements;
+}
+
+class Statement
+{
+	isA LocatedElement;
+}
+
+class CompoundStat
+{
+	isA Statement ;
+}
+
+class ForEachStat
+{
+	isA CompoundStat;
+	0..1 -> 1..* VariableDecl iterator;
+	0..1 -> 1..* Expression collection;
+}
+
+class OnceStat
+{
+	isA CompoundStat;
+}
+
+class VariableStat
+{
+	isA CompoundStat;
+	0..1 -> 1..* Expression definition;
+	0..1 -> 1..* Expression name;
+}
+
+class OperationStat
+{
+	isA CompoundStat;
+	0..1 -> 1..* Expression context;
+	0..1 -> 1..* Expression name;
+}
+
+class ConditionalStat
+{
+	isA CompoundStat;
+	0..1 -> 1..* Expression condition;
+	0..1 -> * Statement elseStatements;
+}
+
+class LetStat
+{
+	isA CompoundStat;
+	0..1 -> 1..* VariableDecl variable;
+	0..1 -> 1..* Expression value;
+}
+
+class AnalyzeStat
+{
+	isA CompoundStat;
+	String mode;
+	0..1 -> 1..* Expression target;
+}
+
+class ReportStat
+{
+	isA Statement;
+	Severity severity;
+	0..1 -> 1..* Expression message;
+}
+
+class FieldStat
+{
+	isA Statement;
+	0..1 -> 1..* Expression name;
+	0..1 -> 1..* Expression type;
+}
+
+class ParamStat
+{
+	isA Statement;
+	0..1 -> 1..* Expression name;
+	0..1 -> 1..* Expression type;
+}
+
+class EmitStat
+{
+	isA Statement;
+}
+
+class LabelStat
+{
+	isA EmitStat;
+	String name;
+	0..1 -> * Expression id;
+}
+
+class NewStat
+{
+	isA EmitStat;
+}
+
+class DupStat
+{
+	isA EmitStat;
+}
+
+class DupX1Stat
+{
+	isA EmitStat;
+}
+
+class PopStat
+{
+	isA EmitStat;
+}
+
+class SwapStat
+{
+	isA EmitStat;
+}
+
+class IterateStat
+{
+	isA EmitStat;
+}
+
+class EndIterateStat
+{
+	isA EmitStat;
+}
+
+class GetAsmStat
+{
+	isA EmitStat;
+}
+
+class FindMEStat
+{
+	isA EmitStat;
+}
+
+class PushTStat
+{
+	isA EmitStat;
+}
+
+class PushFStat
+{
+	isA EmitStat;
+}
+
+class EmitWithOperandStat
+{
+	isA EmitStat;
+	0..1 -> 1..* Expression operand;
+}
+
+class PushStat
+{
+	isA EmitWithOperandStat;
+}
+
+class PushIStat
+{
+	isA EmitWithOperandStat;
+}
+
+class PushDStat
+{
+	isA EmitWithOperandStat;
+}
+
+class LoadStat
+{
+	isA EmitWithOperandStat;
+}
+
+class StoreStat
+{
+	isA EmitWithOperandStat;
+}
+
+class CallStat
+{
+	isA EmitWithOperandStat;
+}
+
+class PCallStat
+{
+	isA EmitWithOperandStat;
+}
+
+class SuperCallStat
+{
+	isA EmitWithOperandStat;
+}
+
+class GetStat
+{
+	isA EmitWithOperandStat;
+}
+
+class SetStat
+{
+	isA EmitWithOperandStat;
+}
+
+class EmitWithLabelRefStat
+{
+	isA EmitStat;
+	0..1 -> 1..* LabelStat label;
+}
+
+class IfStat
+{
+	isA EmitWithLabelRefStat;
+}
+
+class GotoStat
+{
+	isA EmitWithLabelRefStat;
+}
+
+class VariableDecl
+{
+	isA LocatedElement;
+	String name;
+}
+
+class Expression
+{
+	isA LocatedElement;
+}
+
+class VariableExp
+{
+	isA Expression;
+	0..1 -> 1..* VariableDecl variable;
+}
+
+class SelfExp
+{
+	isA Expression;
+}
+
+class LastExp
+{
+	isA Expression;
+}
+
+class IfExp
+{
+	isA Expression;
+	0..1 -> 1..* Expression condition;
+	0..1 -> 1..* Expression thenExp;
+	0..1 -> 1..* Expression elseExp;
+}
+
+class IsAExp
+{
+	isA Expression;
+	String type;
+	0..1 -> 1..* Expression source;
+}
+
+class LetExp
+{
+	isA Expression;
+	0..1 -> 1..* VariableDecl variable;
+	0..1 -> 1..* Expression value;
+	0..1 -> 1..* Expression in;
+}
+
+class PropertyCallExp
+{
+	isA Expression;
+	String name;
+	0..1 -> 1..* Expression source;
+}
+
+class NavigationExp
+{
+	isA PropertyCallExp;
+}
+
+class IteratorExp
+{
+	isA PropertyCallExp;
+	0..1 -> 1..* VariableDecl iterator;
+	0..1 -> 1..* Expression body;
+}
+
+class OperationCallExp
+{
+	isA PropertyCallExp;
+	0..1 -> * Expression arguments;
+}
+
+class OperatorCallExp
+{
+	isA OperationCallExp;
+}
+
+class LiteralExp
+{
+	isA Expression;
+}
+
+class OclUndefinedExp
+{
+	isA LiteralExp;
+}
+
+class CollectionExp
+{
+	isA LiteralExp;
+	0..1 -> * Expression elements;
+}
+
+class SequenceExp
+{
+	isA CollectionExp;
+}
+
+class BooleanExp
+{
+	isA LiteralExp;
+	Boolean value;
+}
+
+class IntegerExp
+{
+	isA LiteralExp;
+	Integer value;
+}
+
+class StringExp
+{
+	isA LiteralExp;
+	String value;
+}
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}

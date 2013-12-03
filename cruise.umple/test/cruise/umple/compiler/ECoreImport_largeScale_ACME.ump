@@ -1,0 +1,110 @@
+
+
+class ACMEFile
+{
+	0..1 -> * ACMEEntry entries;
+}
+
+class ACMEEntry
+{
+}
+
+class Element
+{
+	String name;
+	0..1 -> * Representation representations;
+	0..1 -> * Property property;
+}
+
+class Type
+{
+	isA Element;
+}
+
+class System
+{
+	isA Element ;
+	0..1 -> * ComponentInstance componentDeclaration;
+	0..1 systemAttachment -- * Link attachments;
+	1..* system -- * Connector connectorDeclaration;
+	1..* systemBinding -- * Link bindings;
+}
+
+class Representation
+{
+	0..1 -> * System systems;
+}
+
+class Component
+{
+	isA Element;
+	0..1 -> * Port ports;
+}
+
+class ComponentInstance
+{
+	isA Component;
+	String instanceOf;
+}
+
+class ComponentType
+{
+	isA Component ;
+	String extend;
+}
+
+class Port
+{
+	isA Element;
+}
+
+class Connector
+{
+	isA Element;
+	0..1 -> * Role roles;
+}
+
+class Role
+{
+	isA Element;
+}
+
+class Property
+{
+	String name;
+	String val;
+}
+
+class Link
+{
+}
+
+class Attachment
+{
+	isA Link;
+	String comp;
+	String port;
+	String con;
+	String role;
+}
+
+class Binding
+{
+	isA Link;
+	String compSrc;
+	String portSrc;
+	String compDest;
+	String portDest;
+}
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}

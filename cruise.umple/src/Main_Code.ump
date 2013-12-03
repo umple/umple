@@ -120,14 +120,18 @@ class UmpleConsoleMain
     }
     
     private static void generateUmple(String xmi) {
-	  try {
+	  boolean isSuccess = false;
+	  try {    
 		ECoreImportHandler handler = new ECoreImportHandler();
 		UmpleImportModel umple = handler.readDataFromXML(xmi);
-		umple.generateUmpleFile(xmi+".ump");
+		isSuccess = umple.generateUmpleFile(xmi+".ump");
 	  } catch (Exception e) {
 		printerr(e.getMessage());
 	  } 
-	  println("Success! Processed "+ xmi + ".");
+	  if(isSuccess)
+	    println("Success! Processed "+ xmi + ".");
+	  else
+	    printerr("No file generated, parsing error.");
     }
   
     /**

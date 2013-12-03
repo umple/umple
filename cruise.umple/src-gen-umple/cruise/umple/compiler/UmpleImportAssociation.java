@@ -6,10 +6,10 @@ import cruise.umple.util.StringFormatter;
 
 /**
  * @umplesource UmpleImport.ump 95
- * @umplesource UmpleImport_CodeModels.ump 135
+ * @umplesource UmpleImport_CodeModels.ump 139
  */
 // line 95 "../../../../src/UmpleImport.ump"
-// line 135 "../../../../src/UmpleImport_CodeModels.ump"
+// line 139 "../../../../src/UmpleImport_CodeModels.ump"
 public class UmpleImportAssociation extends UmpleImportElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -153,7 +153,7 @@ public class UmpleImportAssociation extends UmpleImportElement
     super.delete();
   }
 
-  @umplesourcefile(line={139},file={"UmpleImport_CodeModels.ump"},javaline={158},length={15})
+  @umplesourcefile(line={143},file={"UmpleImport_CodeModels.ump"},javaline={158},length={15})
   public String generateUmple(){
     StringBuilder builder = this.getUmpleBuilder();
     	builder.append("\n\t");
@@ -170,7 +170,7 @@ public class UmpleImportAssociation extends UmpleImportElement
     	return builder.toString();
   }
 
-  @umplesourcefile(line={155},file={"UmpleImport_CodeModels.ump"},javaline={175},length={14})
+  @umplesourcefile(line={159},file={"UmpleImport_CodeModels.ump"},javaline={175},length={14})
    private String generateMultiplicityBound(int lowerBound, int upperBound){
     String rtn = "";
 		if (upperBound == -1) {
