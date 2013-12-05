@@ -330,7 +330,7 @@ public class GvStateDiagramGenerator implements CodeGenerator
         if (guard == null) guardString = "";
         else {
           guardString = event.isAutoTransition() ? "[" : " ["
-            + guard.getCondition(new JavaGenerator())+"]";
+            + guard.getCondition()+"]";
         }
 
         appendSpaces(transitions,  indentLevel+2);

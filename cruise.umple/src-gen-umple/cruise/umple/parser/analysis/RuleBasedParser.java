@@ -293,7 +293,7 @@ public class RuleBasedParser
         analyzer.analyze(grootToken);
         analyzer.setupTerminals();
         if(rulesfile.exists()&&rulesfile.canWrite()){
-        	rulesfile.delete();
+          rulesfile.delete();
         }
         if(!rulesfile.exists())
         {
@@ -302,7 +302,7 @@ public class RuleBasedParser
             rulesfile.createNewFile();
           }
           if(!rulesfile.canWrite()){
-        	  return;
+            return;
           }
           BufferedWriter writer = new BufferedWriter(new FileWriter(rulesfile));
           writer.write("");
@@ -499,6 +499,65 @@ public class RuleBasedParser
     return true;
   }
 
+  @umplesourcefile(line={418},file={"GrammarParsing_Code.ump"},javaline={504},length={57})
+  public void readGrammarFiles(){
+    Terminal.space(" \\t");
+    ChoiceRule rulename = new Terminal("rulename","[a-zA-Z0-9_]+",false);
+    ChoiceRule definition = new RepeatableRule("definition",0,Integer.MAX_VALUE);
+    ChoiceRule openbrace = new Terminal("openbrace","\\(",false).dontCare();
+    ChoiceRule closebrace = new Terminal("closebrace","\\)",false).dontCare();
+    ChoiceRule opencurl = new Terminal("opencurl","(\\{|\")",false);
+    ChoiceRule closecurl = new Terminal("closecurl","(\\}|\")",false);
+    ChoiceRule otherRule = new ChainRule("otherrule",new Terminal("open","\\Q[[\\E",false).dontCare(),rulename,new Terminal("close","\\Q]]\\E",false).dontCare()).dontCare();
+    ChoiceRule spaceSeparated = new BalancedRule("token","[",
+        new ChainRule("multi",
+        new Terminal("premodifier","[~!=*]?[*]?"),
+        new Terminal("tokenname","([|][|]|[a-zA-Z0-9_,-]+)"),
+        new Terminal("valuecolon","[:>]?",false),
+        new Terminal("value",".*",false)).dontCare(),"]").dontCare();
+    ChoiceRule options = new ChoiceRule("options",
+        new ChainRule("braced",opencurl,definition,closecurl),
+        new ChainRule("anonymousRule",openbrace,definition,closebrace, new Terminal("modifier","[*+?]?",false)),
+        new ChainRule("otherrule",otherRule,new Terminal("modifier","[*+?]?",false)),
+        new ChainRule("token",spaceSeparated,new Terminal("modifier","[*+?]?")),
+        new Terminal("separator","[|]",false),
+        new Terminal("spaces","",true).dontCare(),
+        new ChainRule("terminal",new Terminal("terminal","(\\Q-(\\E|\\Q-)\\E|[^ \\t\\n\"\\{\\(\\}\\)]+)",false))).dontCare();
+
+    definition.add(options);
+
+    ChoiceRule rule = new ChoiceRule("rule",
+        new ChainRule("layout",
+            rulename,
+            new Terminal("modifier","[-]?",false),
+            new Terminal("colon","[:]",false).dontCare(),
+            definition, new Terminal("newline", "[\\n]",false).dontCare()
+            ).dontCare()
+    );
+
+    ChoiceRule root = rule;
+
+    ParsingCouple.ignoreLevel = 1;
+    Token rootToken = new Token("ROOT","");
+    List<Thread> parsers = new ArrayList<Thread>();
+    String[] keys = new String[]{"[","]"};
+    rootToken = new Token("ROOT","");
+    for(String filename:getGrammarFiles())
+    {
+      ParserDataPackage data = new ParserDataPackage(filename);
+      data.getKeys().put("[]",keys);
+      data.init(null);
+      for(int i=0;i<data.numberOfLines();++i){
+        if(!data.getLine(i).startsWith("//")&&!data.getLine(i).startsWith("\n")){
+          parse(root,rootToken,filename,i, data);
+        }
+      }
+    }
+    analyzer = new GrammarAnalyzer();
+    analyzer.analyze(rootToken);
+    analyzer.setupTerminals();
+  }
+
 
   public String toString()
   {
@@ -512,21 +571,21 @@ public class RuleBasedParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={48},file={"GrammarParsing.ump"},javaline={516},length={14})
+  //  @umplesourcefile(line={48},file={"GrammarParsing.ump"},javaline={575},length={14})
   public static int parsing = 0 ;
 
-//  @umplesourcefile(line={50},file={"GrammarParsing.ump"},javaline={519},length={11})
-  @umplesourcefile(line={51},file={"GrammarParsing.ump"},javaline={520},length={10})
+//  @umplesourcefile(line={50},file={"GrammarParsing.ump"},javaline={578},length={11})
+  @umplesourcefile(line={51},file={"GrammarParsing.ump"},javaline={579},length={10})
   public static HashMap<String,ChoiceRule> choicerules = new HashMap<String,ChoiceRule>() ;
 
-//  @umplesourcefile(line={51},file={"GrammarParsing.ump"},javaline={523},length={8})
-  @umplesourcefile(line={52},file={"GrammarParsing.ump"},javaline={524},length={7})
+//  @umplesourcefile(line={51},file={"GrammarParsing.ump"},javaline={582},length={8})
+  @umplesourcefile(line={52},file={"GrammarParsing.ump"},javaline={583},length={7})
   private static HashMap<String,String> todeclare = new HashMap<String,String>() ;
 
-//  @umplesourcefile(line={64},file={"GrammarParsing_Code.ump"},javaline={527},length={5})
+//  @umplesourcefile(line={64},file={"GrammarParsing_Code.ump"},javaline={586},length={5})
   private static GrammarAnalyzer analyzer = null ;
 
-//  @umplesourcefile(line={65},file={"GrammarParsing_Code.ump"},javaline={530},length={2})
+//  @umplesourcefile(line={65},file={"GrammarParsing_Code.ump"},javaline={589},length={2})
   private Token grootToken = null ;
 
   

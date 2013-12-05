@@ -107,6 +107,9 @@ class UmpleInternalParser
         else if (sub.is("negativeConstraint")){
         	rawLine.addAll(analyzeNegativeConstraint(sub, aClass));
         }
+        else if (sub.is("fakeContraint")){
+        	rawLine.add(new ConstraintVariable("STATIC",sub.getValue()));
+        }
         else
         {
           rawLine.addAll(analyzeConstraint(sub,aClass));
@@ -428,6 +431,10 @@ class UmpleInternalParser
       {
         rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double"));
       }
+      else if(sub.is("arithmeticCall"))
+      {
+        rawLine.addAll(analyzeArithmeticCall(sub,aClass));
+      }
       else if(sub.is("number"))
       {
         rawLine.add(analyzeConstraintNumber(sub));
@@ -458,6 +465,37 @@ class UmpleInternalParser
         ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
         rawLine.add(cv); 
       } 
+    }
+    return rawLine;
+  }
+  
+  private List<ConstraintVariable> analyzeArithmeticCall(Token numberExpressionToken, UmpleClass aClass)
+  {
+	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
+    for(Token sub : numberExpressionSubtokens)
+    {
+      if (sub.getValue().equals("STATIC"))
+      {
+      	if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      } 
+      else if(sub.is("constraintName"))
+      {
+        rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double"));
+      }
+      else if(sub.is("number"))
+      {
+        rawLine.add(analyzeConstraintNumber(sub));
+      }
+      else if(sub.is("operator"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR",sub.getValue()));
+      }
+      else if(sub.is("arithmeticCall")||sub.is("lowArithmeticOperatorCall")||sub.is("highArithmeticOperatorCall"))
+      {
+        rawLine.addAll(analyzeArithmeticCall(sub,aClass));
+      }
     }
     return rawLine;
   }

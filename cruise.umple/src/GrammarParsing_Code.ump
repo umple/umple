@@ -209,7 +209,7 @@ class RuleBasedParser
         analyzer.analyze(grootToken);
         analyzer.setupTerminals();
         if(rulesfile.exists()&&rulesfile.canWrite()){
-        	rulesfile.delete();
+          rulesfile.delete();
         }
         if(!rulesfile.exists())
         {
@@ -218,7 +218,7 @@ class RuleBasedParser
             rulesfile.createNewFile();
           }
           if(!rulesfile.canWrite()){
-        	  return;
+            return;
           }
           BufferedWriter writer = new BufferedWriter(new FileWriter(rulesfile));
           writer.write("");
@@ -412,6 +412,65 @@ class RuleBasedParser
     }
     return true;
   }
+  
+  void readGrammarFiles()
+  {
+    Terminal.space(" \\t");
+    ChoiceRule rulename = new Terminal("rulename","[a-zA-Z0-9_]+",false);
+    ChoiceRule definition = new RepeatableRule("definition",0,Integer.MAX_VALUE);
+    ChoiceRule openbrace = new Terminal("openbrace","\\(",false).dontCare();
+    ChoiceRule closebrace = new Terminal("closebrace","\\)",false).dontCare();
+    ChoiceRule opencurl = new Terminal("opencurl","(\\{|\")",false);
+    ChoiceRule closecurl = new Terminal("closecurl","(\\}|\")",false);
+    ChoiceRule otherRule = new ChainRule("otherrule",new Terminal("open","\\Q[[\\E",false).dontCare(),rulename,new Terminal("close","\\Q]]\\E",false).dontCare()).dontCare();
+    ChoiceRule spaceSeparated = new BalancedRule("token","[",
+        new ChainRule("multi",
+        new Terminal("premodifier","[~!=*]?[*]?"),
+        new Terminal("tokenname","([|][|]|[a-zA-Z0-9_,-]+)"),
+        new Terminal("valuecolon","[:>]?",false),
+        new Terminal("value",".*",false)).dontCare(),"]").dontCare();
+    ChoiceRule options = new ChoiceRule("options",
+        new ChainRule("braced",opencurl,definition,closecurl),
+        new ChainRule("anonymousRule",openbrace,definition,closebrace, new Terminal("modifier","[*+?]?",false)),
+        new ChainRule("otherrule",otherRule,new Terminal("modifier","[*+?]?",false)),
+        new ChainRule("token",spaceSeparated,new Terminal("modifier","[*+?]?")),
+        new Terminal("separator","[|]",false),
+        new Terminal("spaces","",true).dontCare(),
+        new ChainRule("terminal",new Terminal("terminal","(\\Q-(\\E|\\Q-)\\E|[^ \\t\\n\"\\{\\(\\}\\)]+)",false))).dontCare();
+
+    definition.add(options);
+
+    ChoiceRule rule = new ChoiceRule("rule",
+        new ChainRule("layout",
+            rulename,
+            new Terminal("modifier","[-]?",false),
+            new Terminal("colon","[:]",false).dontCare(),
+            definition, new Terminal("newline", "[\\n]",false).dontCare()
+            ).dontCare()
+    );
+
+    ChoiceRule root = rule;
+
+    ParsingCouple.ignoreLevel = 1;
+    Token rootToken = new Token("ROOT","");
+    List<Thread> parsers = new ArrayList<Thread>();
+    String[] keys = new String[]{"[","]"};
+    rootToken = new Token("ROOT","");
+    for(String filename:getGrammarFiles())
+    {
+      ParserDataPackage data = new ParserDataPackage(filename);
+      data.getKeys().put("[]",keys);
+      data.init(null);
+      for(int i=0;i<data.numberOfLines();++i){
+        if(!data.getLine(i).startsWith("//")&&!data.getLine(i).startsWith("\n")){
+          parse(root,rootToken,filename,i, data);
+        }
+      }
+    }
+    analyzer = new GrammarAnalyzer();
+    analyzer.analyze(rootToken);
+    analyzer.setupTerminals();
+  }
 }
 
 class ParserDataPackage
@@ -481,29 +540,29 @@ class ParserDataPackage
   }
   
   public void init(String rawinput, Position usePosition){
-  String file = "temp";
-  int offset = 0;
-  int linenumber = 0;
-  linenumbers = new LinkedHashMap<Integer,Integer>();
-  try {
-    for(String line:rawinput.split("\\n"))
-    {
-      linenumbers.put(offset, linenumber);
-      offset+=line.length()+1;
-      linenumber++;
-      input += line+"\n";
+    String file = "temp";
+    int offset = 0;
+    int linenumber = 0;
+    linenumbers = new LinkedHashMap<Integer,Integer>();
+    try {
+      for(String line:rawinput.split("\\n"))
+      {
+        linenumbers.put(offset, linenumber);
+        offset+=line.length()+1;
+        linenumber++;
+        input += line+"\n";
+      }
     }
-  }
-  catch(NullPointerException n)
-  {
-    if(this.getParseResult()==null)
+    catch(NullPointerException n)
     {
-      this.setParseResult(new ParseResult(false));
+      if(this.getParseResult()==null)
+      {
+        this.setParseResult(new ParseResult(false));
+      }
+      this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
     }
-    this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
-  }
-  couples = new HashMap<String,ParsingCouple>();    
-  BalancedRule.initialize(input,this);
+    couples = new HashMap<String,ParsingCouple>();    
+    BalancedRule.initialize(input,this);
   }
 }
 
@@ -830,8 +889,8 @@ class GrammarAnalyzer {
           value = name;
           if(value.length()==0?false:(""+value.charAt(value.length()-1)).matches("[a-zA-Z]"))
           {
-        	cannotBeRegex = regex+"[a-zA-Z]";
-        	regex += "[a-zA-Z]?";
+            cannotBeRegex = regex+"[a-zA-Z]";
+            regex += "[a-zA-Z]?";
           }
           terminal = new Terminal(name,"("+regex+")",false);
           if(!cannotBeRegex.equals(""))

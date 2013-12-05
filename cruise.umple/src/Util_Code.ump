@@ -1000,12 +1000,7 @@ class ExceptionDumper {
   depend java.util.regex.*;
   depend java.util.List;
   depend java.util.ArrayList;
-  depend java.io.*;
-  
-  
-  const openBrace = (""+(char)123);
-  const closeBrace = (""+(char)125);
-  
+  depend java.io.*;  
 
   public static void dumpCompilerError(Exception ex) {
      String generatedSourcePath = System.getenv("GeneratedSourcePath");
@@ -1082,8 +1077,8 @@ class ExceptionDumper {
         }
     	if(isInMain)
     	{
-    	  braces += (line.length()-line.replace(openBrace, "").length()) - (line.length()-line.replace(closeBrace, "").length());
-    	  if(!firstBraceFound && (line.length()-line.replace(openBrace, "").length())>0)
+    	  braces += (line.length()-line.replace("{", "").length()) - (line.length()-line.replace("}", "").length());
+    	  if(!firstBraceFound && (line.length()-line.replace("{", "").length())>0)
     	  {
     	    firstBraceFound = true;
     	  }
