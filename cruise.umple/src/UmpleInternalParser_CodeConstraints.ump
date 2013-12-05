@@ -383,8 +383,14 @@ class UmpleInternalParser
   
   private List<ConstraintVariable> analyzeStringConstraintExpression(Token stringExpressionToken , UmpleClass aClass)
   {
-  	List<Token> stringExpressionSubtokens = stringExpressionToken.getSubTokens();
-  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+    Token innerTokens = stringExpressionToken.getSubToken(0);
+    String[] mustBeTypes = new String[]{"string"}; 
+    if(innerTokens.is("stringExprOperator"))
+    {
+      mustBeTypes = new String[]{"string","integer","float","double"}; 
+    }
+  	List<Token> stringExpressionSubtokens = innerTokens.getSubTokens();
+  	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();  	
   	for(Token sub : stringExpressionSubtokens)
     {
       if (sub.getValue().equals("STATIC"))
@@ -398,7 +404,11 @@ class UmpleInternalParser
       }
       else if(sub.is("constraintName"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,"string"));
+        rawLine.add(analyzeConstraintName(sub,aClass,true,mustBeTypes));
+      }
+      else if(sub.is("operator"))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR",sub.getValue()));
       }
       else if(sub.is("equalsOp"))
       {
