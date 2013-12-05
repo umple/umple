@@ -1,18 +1,27 @@
 DropboxSaver = {};
 
 DropboxSaver.init = function() {
-  jQuery(".dropbox-saver").each(function() {
-    var link = DropboxSaver.getAbsoluteLink(Page.getFilename());
-    console.log(link);
-    var saver = Dropbox.createSaveButton({
-      files: [{url: link}],
-      error: function(err) {
-        console.log(err);
-        Page.setFeedbackMessage("Cannot save to the chosen Dropbox location.");
-      },
-    });
-    jQuery(this).append(saver);
+  jQuery(".dropbox-button-saver").each(function() {
+    DropboxSaver.createSaverIn(this);
   });
+}
+
+DropboxSaver.createSaverIn = function(parent) {
+  var link = DropboxSaver.getAbsoluteLink(Page.getFilename());
+  var saver = Dropbox.createSaveButton({
+    files: [{url: link}],
+    success: function() {
+      window.setTimeout(function() {
+        jQuery(parent).children(".dropbox-dropin-btn").remove();
+        DropboxSaver.createSaverIn(parent);
+      }, DropboxMaster.resetTimeout);
+    },
+    error: function(err) {
+      console.log(err);
+      Page.setFeedbackMessage("Cannot save to the chosen Dropbox location.");
+    },
+  });
+  jQuery(parent).append(saver);
 }
 
 DropboxSaver.getAbsoluteLink = function(relativeLink) {

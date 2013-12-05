@@ -1,9 +1,10 @@
 DropboxChooser = {};
 
 DropboxChooser.init = function() {
-  jQuery(".dropbox-chooser").each(function() {
+  jQuery(".dropbox-button-chooser").each(function() {
     this.setAttribute("data-link-type", "direct");
     this.setAttribute("data-extensions", ".ump");
+    var button = this;
     this.addEventListener("DbxChooserSuccess", function(e) {
       DropboxChooser.load(e.files[0].link);
     }, false);
