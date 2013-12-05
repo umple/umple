@@ -13,10 +13,10 @@ import java.util.*;
  * which are the linenumbers associated to the character numbers(or offsets) of a given \n. And couples which are initialized to be the character position
  * of the open and close of those couples, for example there is a couple for { and } which will matched {a {b }c }d 'a' with 'd' and 'b' with 'c'
  * @umplesource GrammarParsing.ump 84
- * @umplesource GrammarParsing_Code.ump 416
+ * @umplesource GrammarParsing_Code.ump 475
  */
 // line 84 "../../../../../src/GrammarParsing.ump"
-// line 416 "../../../../../src/GrammarParsing_Code.ump"
+// line 475 "../../../../../src/GrammarParsing_Code.ump"
 public class ParserDataPackage
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -274,7 +274,7 @@ public class ParserDataPackage
    * The passed Position can be null if this method was not invoked using a useStatement.
    * It takes a file and reads it, it also initializes the couples which will be used for this file.
    */
-  @umplesourcefile(line={425},file={"GrammarParsing_Code.ump"},javaline={274},length={58})
+  @umplesourcefile(line={484},file={"GrammarParsing_Code.ump"},javaline={274},length={58})
    public void init(Position usePosition){
     String file = filename;
     filename = file.split("\\Q"+File.separator+"\\E")[file.split("\\Q"+File.separator+"\\E").length-1];
@@ -334,31 +334,31 @@ public class ParserDataPackage
     }
   }
 
-  @umplesourcefile(line={484},file={"GrammarParsing_Code.ump"},javaline={339},length={25})
+  @umplesourcefile(line={543},file={"GrammarParsing_Code.ump"},javaline={339},length={25})
    public void init(String rawinput, Position usePosition){
     String file = "temp";
-  int offset = 0;
-  int linenumber = 0;
-  linenumbers = new LinkedHashMap<Integer,Integer>();
-  try {
-    for(String line:rawinput.split("\\n"))
-    {
-      linenumbers.put(offset, linenumber);
-      offset+=line.length()+1;
-      linenumber++;
-      input += line+"\n";
+    int offset = 0;
+    int linenumber = 0;
+    linenumbers = new LinkedHashMap<Integer,Integer>();
+    try {
+      for(String line:rawinput.split("\\n"))
+      {
+        linenumbers.put(offset, linenumber);
+        offset+=line.length()+1;
+        linenumber++;
+        input += line+"\n";
+      }
     }
-  }
-  catch(NullPointerException n)
-  {
-    if(this.getParseResult()==null)
+    catch(NullPointerException n)
     {
-      this.setParseResult(new ParseResult(false));
+      if(this.getParseResult()==null)
+      {
+        this.setParseResult(new ParseResult(false));
+      }
+      this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
     }
-    this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
-  }
-  couples = new HashMap<String,ParsingCouple>();    
-  BalancedRule.initialize(input,this);
+    couples = new HashMap<String,ParsingCouple>();    
+    BalancedRule.initialize(input,this);
   }
 
 

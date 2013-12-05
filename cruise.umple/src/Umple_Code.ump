@@ -151,7 +151,8 @@ class UmpleModel
 /*
  * Creates a new parser, loads the input, parses, then analyses 
  */
-  public void run(){
+  public void run()
+  {
     boolean failed = false;
     String input;
     cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();

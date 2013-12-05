@@ -18,13 +18,6 @@ public class ExceptionDumper
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  public static final String openBrace = (""+(char)123);
-  public static final String closeBrace = (""+(char)125);
-
-  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
@@ -42,7 +35,7 @@ public class ExceptionDumper
   public void delete()
   {}
 
-  @umplesourcefile(line={1011},file={"Util_Code.ump"},javaline={47},length={22})
+  @umplesourcefile(line={1006},file={"Util_Code.ump"},javaline={40},length={22})
    public static  void dumpCompilerError(Exception ex){
     String generatedSourcePath = System.getenv("GeneratedSourcePath");
     if (generatedSourcePath == null) {
@@ -70,7 +63,7 @@ public class ExceptionDumper
   /**
    * Translate the java stack trace line information into the corresponding Umple line
    */
-  @umplesourcefile(line={1035},file={"Util_Code.ump"},javaline={71},length={93})
+  @umplesourcefile(line={1030},file={"Util_Code.ump"},javaline={64},length={93})
    public static  StackTraceElement javaToUmpleStackTrace(StackTraceElement javaStack, String generatedSourcePath){
     StackTraceElement newSt;
       String javaFileName = javaStack.getFileName();
@@ -122,8 +115,8 @@ public class ExceptionDumper
         }
     	if(isInMain)
     	{
-    	  braces += (line.length()-line.replace(openBrace, "").length()) - (line.length()-line.replace(closeBrace, "").length());
-    	  if(!firstBraceFound && (line.length()-line.replace(openBrace, "").length())>0)
+    	  braces += (line.length()-line.replace("{", "").length()) - (line.length()-line.replace("}", "").length());
+    	  if(!firstBraceFound && (line.length()-line.replace("{", "").length())>0)
     	  {
     	    firstBraceFound = true;
     	  }
@@ -165,11 +158,4 @@ public class ExceptionDumper
       return javaStack;
   }
 
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+ "]"
-     + outputString;
-  }
 }

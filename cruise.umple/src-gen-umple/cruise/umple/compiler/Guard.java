@@ -75,4 +75,9 @@ public class Guard extends Constraint
     return gen.translate(":Open",this);
   }
 
+  @umplesourcefile(line={490},file={"StateMachine_Code.ump"},javaline={80},length={3})
+  public String getCondition(){
+    return (new JavaGenerator()).translate(":Plain",this);
+  }
+
 }

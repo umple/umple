@@ -9,10 +9,10 @@
 stateMachineDefinition : statemachine [=queued]? [name] { [[state]]* }
 stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] | [[activeDefinition]] 
 
-activeDefinition : [=active] [name]? { [**code] }
+activeDefinition : [=active] [name]? [[moreCode]]+
 
-inlineStateMachine : [=queued]? [~name:key] { ( [[comment]] | [[state]] | [[trace]] | [=-||] )* }
-referencedStateMachine : [name] as [definitionName] ; | [name] as [definitionName] { [[extendedStateMachine]] }
+inlineStateMachine : [=queued]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] )* }
+referencedStateMachine : [name] as [definitionName] ( { [[extendedStateMachine]] } | ; )
 
 extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
 
@@ -25,27 +25,26 @@ state : [=final]? [stateName] { [[stateInternal]]* }
 stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]]
 stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]] | ;
 
-autoTransition : [[autoTransitionBlock]] | [[activity]] [[autoTransitionBlock]]
-
+autoTransition : [[activity]]? [[autoTransitionBlock]]
 
 // Autotransitions have no event. The transition is immediately taken
-// or taken after the do activity ends
+// or taken after the do activity ends[[guard]]? -> [[action]]?
 // The action can come before or after the arrow
-autoTransitionBlock- : [[guard]]? -> [[action]]? [stateName] ; |  [[guard]]? [[action]]? -> [stateName] ;
+autoTransitionBlock- : [[guard]]? ( [[action]] -> | -> [[action]] | -> ) [stateName] ;
 
 // A transition guard can come before or after the arrow
 // The order of guard and event definition can also be interchanged
-transition : [[guard]]? [[eventDefinition]]? -> [[action]]? [stateName] ; | [[guard]]? [[eventDefinition]]? [[action]]? -> [stateName] ; | [[eventDefinition]]? [[guard]]? -> [[action]]? [stateName] ; | [[eventDefinition]]? [[guard]]? [[action]]? -> [stateName] ; 
+transition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [[guard]] | [[eventDefinition]])? ( [[action]] -> | -> [[action]] | -> ) [stateName] ; 
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event] ( [[parameterList]] )?
 afterEveryEvent- : afterEvery -( [timer] -)
 afterEvent- : after -( [timer] -)
 
 // An action can be executed on a transition, or on entry or exit
-action : / ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
-entryOrExitAction : [=type:entry|exit] / ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+action : / [[moreCode]]+
+entryOrExitAction : [=type:entry|exit] / [[moreCode]]+
 
 // A do activity is long-lasting and can be interrupted
-activity : do ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+activity : do [[moreCode]]+
 
 guard : [ [[constraint]] ]

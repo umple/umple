@@ -44,18 +44,16 @@ constantDeclaration : const [[typedName]] (= [**value])? ;
 //TODO Should we use modifier for concrete methods [=modifier:public|protected|private]?
 //TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
 
-moreCode- : ([[codeLang]] [[codeLangs]])? { [**code] }
-codeLangs- : ( , [[codeLang]] )*
-codeLang- : [=codeLang:Java|RTCpp|Cpp|Php|Ruby]
+moreCode- : [[codeLangs]] { [**code] }
+codeLangs- : ([=codeLang:Java|RTCpp|Cpp|Php|Ruby] ( , [=codeLang:Java|RTCpp|Cpp|Php|Ruby] )* )?
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]
-concreteMethodDeclaration : [=modifier:public|protected|private] [=static]? [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )* | [=modifier:public|protected|private]? [=static]? [type] [[methodDeclarator]] ([[codeLang]] [[codeLangs]])? { [[methodBody]] } ( [[moreCode]] )* | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] 
+concreteMethodDeclaration : [=modifier:public|protected|private]? [=static]? [type]? [[methodDeclarator]] [[methodBody]] | [=modifier:public|protected]? [=abstract] [type]? [[methodDeclarator]] 
 abstractMethodDeclaration :  [type] [[methodDeclarator]] ; 
-methodBody- : ( [[precondition]] | [[postcondition]] )* [**code] 
+methodBody- : ( [[codeLangs]] { ( [[precondition]] | [[postcondition]] )* [**code] } )+ 
 methodDeclarator : [methodName] [[parameterList]]
-parameterList : OPEN_ROUND_BRACKET [[parameters]]? CLOSE_ROUND_BRACKET
-parameters- : [[parameter]] ( , [[parameter]] )*
+parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
 parameter : [[typedName]]
 
 // Details of associations: See manual page [*AssociationDefinition*]
@@ -65,14 +63,14 @@ inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|-
 inlineAssociationEnd : [[multiplicity]] [~roleName]? [[isSorted]]?
 singleAssociationEnd : [[multiplicity]] [type] [~roleName]? ;
 associationEnd : [[multiplicity]] [type] [~roleName]? [[isSorted]]?
-multiplicity- : [=bound:*] | [!lowerBound:\d+|[*]] .. [!upperBound:\d+|[*]] | [!bound:\d+|[*]]
+multiplicity- : [!lowerBound:\d+|[*]] .. [!upperBound:\d+|[*]] | [!bound:\d+|[*]]
 isSorted- : sorted { [priority] }
 
 // Details of attributes. See user manual page [*AttributeDefinition*]
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
 simpleAttribute- : [~name] ;
 autouniqueAttribute- : [=autounique] [~name] ;
-derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? [[typedName]] = ([[codeLang]] [[codeLangs]])? { [**code] } ( [[moreCode]] )*
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? [[typedName]] = ( [[moreCode]] )+
 complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? [[typedName]] (= [**value])? ;
 
 
@@ -89,4 +87,4 @@ depend- : depend [depend] ;
 extraCode- : [**extraCode]
 
 list- : [!list:\[\s*\]]
-typedName- : [type]? [!list:\[\s*\]]? [~name]
+typedName- : [type]? [[list]]? [~name]

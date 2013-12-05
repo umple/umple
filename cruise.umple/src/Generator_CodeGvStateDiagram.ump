@@ -259,7 +259,7 @@ class GvStateDiagramGenerator
         if (guard == null) guardString = "";
         else {
           guardString = event.isAutoTransition() ? "[" : " ["
-            + guard.getCondition(new JavaGenerator())+"]";
+            + guard.getCondition()+"]";
         }
 
         appendSpaces(transitions,  indentLevel+2);

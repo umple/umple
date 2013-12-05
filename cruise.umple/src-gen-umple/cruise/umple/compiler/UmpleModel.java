@@ -797,7 +797,7 @@ public class UmpleModel implements Runnable
   /**
    * Creates a new parser, loads the input, parses, then analyses
    */
-  @umplesourcefile(line={155},file={"Umple_Code.ump"},javaline={798},length={18})
+  @umplesourcefile(line={156},file={"Umple_Code.ump"},javaline={798},length={18})
    public void run(){
     boolean failed = false;
     String input;
@@ -821,7 +821,7 @@ public class UmpleModel implements Runnable
   /**
    * Generates the actual code for each generation target
    */
-  @umplesourcefile(line={177},file={"Umple_Code.ump"},javaline={822},length={33})
+  @umplesourcefile(line={178},file={"Umple_Code.ump"},javaline={822},length={33})
    public void generate(){
     boolean foundGenerator;
     Class<?> classDefinition = null;
@@ -856,7 +856,7 @@ public class UmpleModel implements Runnable
     }
   }
 
-  @umplesourcefile(line={213},file={"Umple_Code.ump"},javaline={861},length={13})
+  @umplesourcefile(line={214},file={"Umple_Code.ump"},javaline={861},length={13})
    public Coordinate getDefaultClassPosition(int numDefaults){
     int xIndex  = 0;
     int yIndex = 0;
@@ -871,7 +871,7 @@ public class UmpleModel implements Runnable
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
 
-  @umplesourcefile(line={228},file={"Umple_Code.ump"},javaline={876},length={91})
+  @umplesourcefile(line={229},file={"Umple_Code.ump"},javaline={876},length={91})
    public Coordinate[] getDefaultAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     int offsetY = offsetFromEdge.getX();
@@ -964,7 +964,7 @@ public class UmpleModel implements Runnable
     return defaults;
   }
 
-  @umplesourcefile(line={321},file={"Umple_Code.ump"},javaline={969},length={59})
+  @umplesourcefile(line={322},file={"Umple_Code.ump"},javaline={969},length={59})
    private Coordinate[] getDefaultReflexiveAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();

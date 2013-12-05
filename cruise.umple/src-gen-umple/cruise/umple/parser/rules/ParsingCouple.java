@@ -11,10 +11,10 @@ import java.util.*;
  * and are stored in the ParserDataPackage. They contain the character positions of each open brace and each close brace(when braces are the key)
  * so {{}} would have positionFrom = {1,2} and positionTo = {4,3}
  * @umplesource ParsingRules.ump 149
- * @umplesource ParsingRules_Code.ump 912
+ * @umplesource ParsingRules_Code.ump 920
  */
 // line 149 "../../../../../src/ParsingRules.ump"
-// line 912 "../../../../../src/ParsingRules_Code.ump"
+// line 920 "../../../../../src/ParsingRules_Code.ump"
 public class ParsingCouple
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -185,7 +185,7 @@ public class ParsingCouple
    * 
    * The ignore level comes into play for instance if you have /*lvl0 /*lvl1 and you only want to hide lvl1 you would put the ignore level as 1
    */
-  @umplesourcefile(line={932},file={"ParsingRules_Code.ump"},javaline={174},length={95})
+  @umplesourcefile(line={939},file={"ParsingRules_Code.ump"},javaline={174},length={117})
    public ParsingCouple init(String input){
     int level = 0;
     boolean isQuote = false;
@@ -218,6 +218,10 @@ public class ParsingCouple
               positionFrom.add(levels.get(level));
               positionTo.add(new Integer(i));
             }
+            if("\"".equals(close))
+            {
+              isQuote = false;
+            }
           }            
           else if((open.length()==1&&open.charAt(0)==(chars[i]))||open.length()>1&&(i+open.length()<input.length()?input.substring(i,i+open.length()).matches("\\Q"+open+"\\E"):false))
           {
@@ -230,6 +234,10 @@ public class ParsingCouple
               levels.set(level, i);
             }
             level++;
+            if("\"".equals(open))
+            {
+              isQuote = true;
+            }
           }            
           else if (level>ParsingCouple.ignoreLevel)
           {
@@ -258,6 +266,20 @@ public class ParsingCouple
         else if(isQuote&&chars[i]=='\"')
         {
           isQuote = false;
+          
+          if("\"".equals(close))
+          {
+        	level--;
+            if(level<0)
+            {
+              level=0;
+            }
+            else
+            {
+              positionFrom.add(levels.get(level));
+              positionTo.add(new Integer(i));
+            }
+          }
         }
         else if(isSingleQuote&&chars[i]=='\'')
         {
@@ -282,7 +304,7 @@ public class ParsingCouple
     return this;
   }
 
-  @umplesourcefile(line={1029},file={"ParsingRules_Code.ump"},javaline={287},length={3})
+  @umplesourcefile(line={1058},file={"ParsingRules_Code.ump"},javaline={309},length={3})
    public int hashCode(){
     return open.hashCode()+close.hashCode();
   }
@@ -299,7 +321,7 @@ public class ParsingCouple
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={154},file={"ParsingRules.ump"},javaline={303},length={2})
+  //  @umplesourcefile(line={154},file={"ParsingRules.ump"},javaline={325},length={2})
   public static int ignoreLevel = 0 ;
 
   
