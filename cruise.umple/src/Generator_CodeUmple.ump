@@ -195,7 +195,8 @@ class UmpleGenerator
   private enum RuleModifier {
     NIL(0, ""),
     ZERO_TO_MANY(1,"*"),
-    OPTIONAL(2,"?");
+    OPTIONAL(2,"?"),
+    EXTERNAL(3, "external");
 
     private int id;
     private String value;
@@ -246,9 +247,16 @@ class UmpleGenerator
     ANONYMOUS(1, "anonymousRule"), // Implicit definition; Not defined in the grammar
     NAME(100,"name"),
     ABSTRACT(101,"abstract"),
+    VALUE(102,"value"),
     CLASS_DEFINITION(200,"classDefinition"),
     CLASS_CONTENT(201, "classContent"),
+    EXTENDS_NAME(202, "extendsName"),
+    SOFTWARE_PATTERN(250, "softwarePattern"), 
+    IS_A(251, "isA"),
+    IS_A_SINGLE(252, "singleIsA"),
+    EXTERNAL_DEFINITION(210, "externalDefinition"),
     INTERFACE_DEFINITION(300,"interfaceDefinition"),
+    INTERFACE_MEMBER_DEFINITION(301, "interfaceMemberDeclaration"),
     CONCRETE_METHOD_DECLARATION(400, "concreteMethodDeclaration"),
     METHOD_DECLARATOR(401, "methodDeclarator"),
     METHOD_NAME(404, "methodName"),
@@ -260,7 +268,24 @@ class UmpleGenerator
     TYPE(577, "type"),
     EXTRA_CODE(578, "extraCode"),
     CODE(579, "code"),
-    METHOD_BODY(580, "methodBody");
+    METHOD_BODY(580, "methodBody"),
+    ASSOCIATION(600, "association"),
+    ASSOCIATION_DEFINITION(610, "associationDefinition"),
+    ASSOCIATION_CLASS_DEFINITION(611, "associationClassDefinition"),
+    INLINE_ASSOCIATION(620, "inlineAssociation"),
+    INLINE_ASSOCIATION_END(621, "inlineAssociationEnd"),
+    ASSOCIATION_END(622, "associationEnd"),
+    SINGLE_ASSOCIATION_END(623, "singleAssociationEnd"),
+    MULTIPLICITY(630, "multiplicity"),
+    BOUND(650, "bound"),
+    LOWER_BOUND(651, "lowerBound"),
+    UPPER_BOUND(652, "upperBound"),
+    ROLE_NAME(653, "roleName"),
+    ARROW(654, "arrow"),
+    INTERFACE(655, "interface"),
+    ATTRIBUTE(700, "attribute"),
+    SIMPLE_ATTRIBUTE(701, "simpleAttribute"),
+    COMPLEX_ATTRIBUTE(702, "complexAttribute");
 
     private int id;
     private String value;
@@ -317,22 +342,38 @@ class UmpleGenerator
     public int id = 0; 
     public double candidateRulesSatisfied = 0;
     public StringBuilder candidateCode = new StringBuilder();
-    public double acceptedRulesSatisfied = this.candidateRulesSatisfied;
+    public double acceptedRulesSatisfied = 0;
     public StringBuilder acceptedCode = this.candidateCode; 
     public HashMap<String,Object> state = new HashMap<String,Object>(); // Additional state
     public boolean isOptional = false;
+    public boolean candidateFailed = false;
+    public boolean acceptedFailed = true; // true by default
+
+    // The following iterators are for traversing UmpleElement properties of the same type
+    // For example, Methods and Attributes
+    public HashMap<String,Integer> candidateIterators;
+    public HashMap<String,Integer> acceptedIterators;
 
     public Scope(int id, boolean isOptional) // scope for a grammar rule
     {
-        this.id = id;
-        this.isOptional = isOptional;
+      this.id = id;
+      this.isOptional = isOptional;
+
+      candidateIterators = new HashMap<String,Integer>();
+      candidateIterators.put("Method", 0);
+      candidateIterators.put("Parameter", 0);
+      candidateIterators.put("Association", 0);
+      candidateIterators.put("AssociationEnd", 0);
+      candidateIterators.put("Attribute", 0);
+      candidateIterators.put("Extends", 0);
+      acceptedIterators = new HashMap<String, Integer>(candidateIterators);
     }
   }
 
   private Deque<Scope> scopes = new ArrayDeque<Scope>();
   private int indent = 0;
-  private int curMethod = 0;
-  private int curParam = 0;
+  private String rootElementName = "";
+  private String lastNamedRule = "";
 
   private Scope getScope()
   {
@@ -341,6 +382,15 @@ class UmpleGenerator
     }
 
     return scopes.peekFirst();
+  }
+
+  private Scope getParentScope()
+  {
+    if(this.scopes.size() < 2) {
+      return null;
+    }
+
+    return (Scope)this.scopes.toArray()[1];
   }
 
   /*
@@ -450,14 +500,12 @@ class UmpleGenerator
    */
   public void generate()
   {
-    prepare();
     try{
       for (UmpleElement currentElement : getModel().getUmpleElements())
       {
-        if ("external".equals(currentElement.getModifier()))
-        {
-          continue;
-        }
+        prepare();
+
+        this.rootElementName = currentElement.getName();
         resetScopeStack();
         writeFile(currentElement);
       }
@@ -564,7 +612,9 @@ class UmpleGenerator
   {
     String elementRootRuleName = null;
 
-    if(uElement instanceof UmpleClass) {
+    if(uElement.getModifier().equals(RuleModifier.EXTERNAL.toString())) {
+      elementRootRuleName = RuleName.EXTERNAL_DEFINITION.toString();
+    } else if(uElement instanceof UmpleClass) {
       elementRootRuleName = RuleName.CLASS_DEFINITION.toString();
     } else if(uElement instanceof UmpleInterface) {
       elementRootRuleName = RuleName.INTERFACE_DEFINITION.toString();
@@ -573,7 +623,7 @@ class UmpleGenerator
     }       
 
     if(!ruleCache.containsKey(elementRootRuleName)) {
-      ruleCache.put(elementRootRuleName, getRuleByName(elementRootRuleName));
+      ruleCache.put(elementRootRuleName, getRuleByName(this.rootRule, elementRootRuleName));
     }
 
     return ruleCache.get(elementRootRuleName);
@@ -588,7 +638,9 @@ class UmpleGenerator
   {
     String elementRootTokenName = null;
 
-    if(uElement instanceof UmpleClass) {
+    if(RuleModifier.EXTERNAL.toString().equals(uElement.getModifier())) {
+      elementRootTokenName = RuleName.EXTERNAL_DEFINITION.toString();
+    } else if(uElement instanceof UmpleClass) {
       elementRootTokenName = RuleName.CLASS_DEFINITION.toString();
     } else if(uElement instanceof UmpleInterface) {
       elementRootTokenName = RuleName.INTERFACE_DEFINITION.toString();
@@ -608,18 +660,18 @@ class UmpleGenerator
    * for a token higher in the Rule graph, for example Interface, Class or Method; rather than leaf tokens.
    * - Assumptions are made about naming in grammars, such as the name of a class declaration token: concreteClassDeclaration
    */
-  private ChoiceRule getRuleByName(String name)
+  private ChoiceRule getRuleByName(ChoiceRule relativeRootRule, String name)
   {
     Map<String,SearchState> visited = new HashMap<String,SearchState>();    // NULL => Unvisited, 0 => Recorded, 1 => Processed
     Queue<ChoiceRule> rules = new LinkedList<ChoiceRule>();
     ChoiceRule outputRule = null;
 
-    if(name.equals(rootRule.getName())) { // base case
-      return rootRule;
+    if(name.equals(relativeRootRule.getName())) { // base case
+      return relativeRootRule;
     }
 
-    rules.add(rootRule);
-    visited.put(rootRule.getName(), SearchState.RECORDED);
+    rules.add(relativeRootRule);
+    visited.put(relativeRootRule.getName(), SearchState.RECORDED);
 
     SEARCH: 
     while(!rules.isEmpty()) {
@@ -643,7 +695,7 @@ class UmpleGenerator
         }
       } 
 
-      visited.put(rootRule.getName(), SearchState.PROCESSED);
+      visited.put(relativeRootRule.getName(), SearchState.PROCESSED);
     } 
 
     if(outputRule == null) {
@@ -652,6 +704,24 @@ class UmpleGenerator
 
     return outputRule;
   }
+
+  /*
+   * Given a rule
+   */
+  private Terminal getTerminalRuleToken(String terminalName)
+  {
+    ChoiceRule relativeRootRule = this.rootRule;
+
+    if(!this.lastNamedRule.isEmpty()) {
+      relativeRootRule = this.getRuleByName(this.rootRule, this.lastNamedRule);
+      if(relativeRootRule == null) {
+        relativeRootRule = this.rootRule;
+      }
+    }
+
+    return (Terminal)this.getRuleByName(relativeRootRule, terminalName); 
+  }
+
 
   /*
    * Perform breadth-first search to find token with input name. The reason for breadth-first is that we're usually searching
@@ -725,6 +795,7 @@ class UmpleGenerator
 
       default:
         recursing = enterScope(ruleNameToken.getValue().hashCode(), isOptional);
+        if(!recursing) this.lastNamedRule = ruleNameToken.getValue(); 
         break;
     } 
 
@@ -750,6 +821,11 @@ class UmpleGenerator
     if(isRecursing(id)) return false; // Don't create scope if in cycle
 
     scopes.addFirst(new Scope(id, isOptional));
+    Scope parentScope = this.getParentScope();
+    if(parentScope != null) {
+      this.getScope().candidateIterators = new HashMap<String,Integer>(parentScope.candidateIterators);
+      this.getScope().acceptedIterators = new HashMap<String,Integer>(parentScope.candidateIterators);
+    }
     return true;
   }
 
@@ -771,6 +847,7 @@ class UmpleGenerator
     if(poppedScope.acceptedRulesSatisfied > 0 || poppedScope.isOptional == false) {
       topScope.candidateCode.append(poppedScope.acceptedCode.toString());
       topScope.candidateRulesSatisfied += poppedScope.acceptedRulesSatisfied;
+      topScope.candidateIterators = new HashMap<String,Integer>(poppedScope.acceptedIterators);
     } 
 
     return poppedScope.acceptedRulesSatisfied;
@@ -796,8 +873,28 @@ class UmpleGenerator
 
     switch(ruleModifier) {
       case ZERO_TO_MANY:
-        while(generateRuleOutput(ruleNameToken,ruleModifier,model,uElement) > 0) {};
-        break; 
+          double numSatisfied = 0;
+          double lastNumSatisfied = 0;
+          StringBuilder candidateCode = this.getScope().candidateCode;
+          double candidateRulesSatisfied = this.getScope().candidateRulesSatisfied;
+          this.getScope().candidateCode = new StringBuilder();
+          this.getScope().candidateRulesSatisfied = 0;
+          String lastCandidateCode = "";
+
+          for(;;) { // Execute until no progress is made
+            numSatisfied = generateRuleOutput(ruleNameToken,ruleModifier,model,uElement);
+            if(lastCandidateCode.equals(this.getScope().candidateCode.toString()) || numSatisfied <= 0) break;
+
+            lastNumSatisfied = numSatisfied;
+            lastCandidateCode = this.getScope().candidateCode.toString();
+            candidateCode.append(lastCandidateCode);
+            candidateRulesSatisfied += lastNumSatisfied;
+            this.getScope().candidateCode = new StringBuilder();
+            this.getScope().candidateRulesSatisfied = 0;
+          } 
+          this.getScope().candidateCode = candidateCode;
+          this.getScope().candidateRulesSatisfied = candidateRulesSatisfied;
+          break; 
 
       case OPTIONAL:
         generateRuleOutput(ruleNameToken,ruleModifier,model,uElement);
@@ -816,7 +913,7 @@ class UmpleGenerator
    * A new scope is created for the rule, but only if the scope isn't already on the Queue stack, in 
    * which case there is a cycle and we simply backtrack. 
    */
-  private double generateRuleOutput(Token ruleNameToken, RuleModifier ruleModifier, UmpleModel model, Object uElement)
+  private double generateRuleOutput(Token ruleNameToken, RuleModifier ruleModifier, UmpleModel model, Object uContainer)
   { 
     if(enterScope(ruleNameToken, (ruleModifier == RuleModifier.OPTIONAL)) == false) { // false => we're in a cycle; exit to avoid reprocessing
       return 0;
@@ -824,32 +921,118 @@ class UmpleGenerator
 
     if(RuleTokenType.fromToken(ruleNameToken) == RuleTokenType.ANONYMOUS_RULE) {
         for(Token subToken : ruleNameToken.getSubTokens()) {
-          generateRuleTokenOutput(subToken, model, uElement);
+          generateRuleTokenOutput(subToken, model, uContainer);
         }
         return exitScope();    
     } 
 
-    switch(RuleName.fromString(ruleNameToken.getValue())) {
+    RuleName ruleName = RuleName.fromString(ruleNameToken.getValue());
+    this.getScope().candidateCode.append(pad_l(ruleName));
+    switch(ruleName) {
       case CONCRETE_METHOD_DECLARATION:
-          if(curMethod < ((UmpleClass)uElement).getMethods().size()) {
-            generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((UmpleClass)uElement).getMethods().get(curMethod));
-            curMethod += 1;
-          } else {
-            curMethod = 0;
-          } 
+          int curMethod = this.getScope().candidateIterators.get("Method");
+          if(curMethod < ((UmpleClass)uContainer).getMethods().size()) {
+            this.getParentScope().candidateIterators.put("Method", curMethod+1);
+            generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((UmpleClass)uContainer).getMethods().get(curMethod));
+          }
         break;
 
       case PARAMETER:
-        if(curParam < ((Method)uElement).getMethodParameters().size()) {
-          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((Method)uElement).getMethodParameters().get(curParam)); 
-          curParam++;
-        } else {
-          curParam = 0;
+        int curParam = this.getScope().candidateIterators.get("Parameter");
+        if(curParam < ((Method)uContainer).getMethodParameters().size()) {
+          this.getScope().candidateIterators.put("Parameter", curParam+1);
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((Method)uContainer).getMethodParameters().get(curParam)); 
         }
         break;
 
-      case PARAMETERS:
+      case ASSOCIATION:
+      case INLINE_ASSOCIATION:
+        Association[] associations = ((UmpleClass)uContainer).getAssociations();
+        HashSet<Integer> processedAssociations = new HashSet<Integer>();
+        int curAssoc = this.getScope().candidateIterators.get("Association");
+      
+        // Avoid duplicate associations variables, which result from associations between a class and itself
+        for(int i = 0; i < curAssoc; ++i) {
+           processedAssociations.add(associations[i].getName().hashCode());
+        }
+        int size = processedAssociations.size();
+
+        for(; curAssoc < associations.length; ++curAssoc) {
+          if(!this.rootElementName.equals(associations[curAssoc].getEnds().get(0).getClassName())) continue; // declared in other class
+
+          processedAssociations.add(associations[curAssoc].getName().hashCode());
+          if(processedAssociations.size() > size) break;
+        }
+        
+        if(curAssoc < associations.length) {
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, associations[curAssoc]);
+          this.getScope().candidateIterators.put("Association", curAssoc + 1);
+        }         
+        break;
+
+      case SINGLE_ASSOCIATION_END:
+      case INLINE_ASSOCIATION_END:
+      case ASSOCIATION_END:
+        int curAssocEnd = this.getScope().candidateIterators.get("AssociationEnd"); 
+        switch(curAssocEnd) {
+          case 0:
+            generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((Association)uContainer).getEnds().get(curAssocEnd));
+            this.getScope().candidateIterators.put("AssociationEnd", curAssocEnd+1);
+            break;
+
+          case 1:
+            generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((Association)uContainer).getEnds().get(curAssocEnd));
+            this.getScope().candidateIterators.put("AssociationEnd", 0);
+            break;
+      
+          default:
+            // do nothing
+        }
+        break;
+
+      case EXTERNAL_DEFINITION:
+        if(this.getParentScope().id != RuleName.EXTERNAL_DEFINITION.toString().hashCode()) {
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
+        } else {
+          for(UmpleClass uSubclass : ((UmpleClass)uContainer).getSubclasses()) {
+            generateRuleTokenOutput(getRuleTokenByName(RuleName.CLASS_DEFINITION.toString()), model, uSubclass);
+          } 
+        }
+        break;
+
+      case CLASS_DEFINITION:
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
+        if(this.getParentScope().id != RuleName.CLASS_DEFINITION.toString().hashCode()) {
+        } else {
+          for(UmpleClass uSubclass : ((UmpleClass)uContainer).getSubclasses()) {
+            generateRuleTokenOutput(getRuleTokenByName(RuleName.CLASS_DEFINITION.toString()), model, uSubclass);
+          } 
+        }
+        break;
+
       case CLASS_CONTENT:
+        if(this.getParentScope().id != RuleName.EXTERNAL_DEFINITION.toString().hashCode()) {
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
+        }
+        break;
+
+      case ATTRIBUTE:
+        int curAttribute = this.getScope().candidateIterators.get("Attribute");
+        if(curAttribute < ((UmpleClass)uContainer).getAttributes().size()) {
+          this.getParentScope().candidateIterators.put("Attribute", curAttribute+1);
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((UmpleClass)uContainer).getAttributes().get(curAttribute)); 
+        }
+        break;
+
+      case SIMPLE_ATTRIBUTE:
+      case COMPLEX_ATTRIBUTE:
+      case SOFTWARE_PATTERN:
+      case IS_A:
+      case IS_A_SINGLE:
+      case ASSOCIATION_DEFINITION:
+      case ASSOCIATION_CLASS_DEFINITION:
+      case MULTIPLICITY:
+      case PARAMETERS:
       case TYPED_NAME:
       case PARAMETER_LIST:
       case EXTRA_CODE:
@@ -857,8 +1040,7 @@ class UmpleGenerator
       case METHOD_DECLARATOR:
       case METHOD_BODY:
       case ABSTRACT:
-      case CLASS_DEFINITION:
-        generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uElement);
+        generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
         break;
 
       default:
@@ -866,6 +1048,7 @@ class UmpleGenerator
         break;
     }
 
+    this.getScope().candidateCode.append(pad_r(ruleName));
     return exitScope(); // exit scope and return the # of rules satisfied by the scope (acceptedRulesSatisfied)
   }
 
@@ -880,11 +1063,15 @@ class UmpleGenerator
       // Current scope's candidate state replaces the scope's accepted state if  
       scope.acceptedRulesSatisfied = scope.candidateRulesSatisfied;
       scope.acceptedCode = scope.candidateCode; 
-    }
+      scope.acceptedIterators = new HashMap<String,Integer>(scope.candidateIterators);
+      scope.acceptedFailed = false;
+    } 
 
     // Reset state for next iteration
     scope.candidateRulesSatisfied = 0;
     scope.candidateCode = new StringBuilder();
+    scope.candidateIterators = new HashMap<String,Integer>(this.getParentScope().candidateIterators);
+    scope.candidateFailed = false;
   } 
 
   /*
@@ -963,11 +1150,22 @@ class UmpleGenerator
       elementProperty = getMethodProperty(property, elementRootRuleToken, (Method)uContainer);
     } else if(uContainer instanceof MethodParameter) {
       elementProperty = getMethodParameterProperty(property, elementRootRuleToken, (MethodParameter)uContainer);
+    } else if(uContainer instanceof AssociationVariable) {
+      elementProperty = getAssociationVariableProperty(property, elementRootRuleToken, (AssociationVariable)uContainer);
+    } else if(uContainer instanceof Multiplicity) {
+      elementProperty = getMultiplicityProperty(property, elementRootRuleToken, (Multiplicity)uContainer);
+    } else if(uContainer instanceof Association) {
+      elementProperty = getAssociationProperty(property, elementRootRuleToken, (Association)uContainer);
+    } else if(uContainer instanceof AssociationEnd) {
+      elementProperty = getAssociationEndProperty(property, elementRootRuleToken, (AssociationEnd)uContainer);
+    } else if(uContainer instanceof Attribute) {
+      elementProperty = getAttributeProperty(property, elementRootRuleToken, (Attribute)uContainer);
     } 
 
     if(!(elementProperty == null || elementProperty.length() == 0)) {
       // A property was successfully retrieved, and hence the current rule has been satisfied.
       this.getScope().candidateRulesSatisfied += 1;
+    } else if(!this.getScope().isOptional) {
     } 
 
     return elementProperty;
@@ -988,8 +1186,25 @@ class UmpleGenerator
         }
         break; 
 
+      case EXTRA_CODE:
+        buffer.append(uClass.getExtraCode());
+        break;
+
+      case INTERFACE:
+        // ignore. This is not an interface. This is for 'externalDefinition'
+        break;
+
+      case EXTENDS_NAME:
+        int curExtends = this.getScope().candidateIterators.get("Extends");
+        if(curExtends == 0 && uClass.getExtendsClass() != null) {
+          buffer.append(uClass.getExtendsClass().getName());
+          this.getScope().candidateIterators.put("Extends", curExtends+1); //  currently, only 0..1 extensions are allowed
+        }
+        break;
+
       default:
         // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
         break;
     }
 
@@ -999,6 +1214,26 @@ class UmpleGenerator
   private String getInterfaceProperty(String property, Token elementRootRuleToken, UmpleInterface uInterface)
   {
     StringBuilder buffer = new StringBuilder();
+    RuleName ruleName = RuleName.fromString(property);
+    
+    switch(ruleName) {
+      case NAME:
+        buffer.append(pad(uInterface.getName(), ruleName, uInterface));    
+        break;
+
+      case EXTRA_CODE:
+        buffer.append(uInterface.getExtraCode());
+        break;
+
+      case INTERFACE:
+        buffer.append(elementRootRuleToken.getValue()); // Append interface keyword
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        break;
+    }
+
     return buffer.toString();
   }
 
@@ -1031,6 +1266,7 @@ class UmpleGenerator
 
       default:
         // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
         break;
     }
 
@@ -1052,6 +1288,141 @@ class UmpleGenerator
 
       default:
         // Property unimplemented; ignore.
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  private String getAssociationProperty(String property, Token elementRootRuleToken, Association uAssociation)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case NAME:
+        buffer.append(pad(uAssociation.getName(), RuleName.NAME, uAssociation));
+        break;
+
+      case ARROW:
+        buffer.append(pad(uAssociation.getArrowString(), RuleName.ARROW, uAssociation)); /* This would be translated for different languages */
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  private String getAssociationVariableProperty(String property, Token elementRootRuleToken, AssociationVariable uAssociationVariable)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case NAME:
+        buffer.append(pad(uAssociationVariable.getName(), RuleName.NAME, uAssociationVariable));
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  private String getAssociationEndProperty(String property, Token elementRootRuleToken, AssociationEnd uAssociationEnd)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case TYPE:
+        buffer.append(pad(uAssociationEnd.getClassName(), RuleName.TYPE, uAssociationEnd));
+        break;
+
+      case BOUND:
+        if(uAssociationEnd.getMultiplicity().getBound() == null ) {
+          break;
+        }
+
+        buffer.append(pad(uAssociationEnd.getMultiplicity().getBound().toString(), RuleName.BOUND, uAssociationEnd));
+        break;
+
+      case LOWER_BOUND:
+        if(uAssociationEnd.getMultiplicity().getLowerBound() != uAssociationEnd.getMultiplicity().getUpperBound()) {
+          buffer.append(pad(uAssociationEnd.getMultiplicity().getRangeParts()[0], RuleName.TYPE, uAssociationEnd));
+        }
+        break;
+
+      case UPPER_BOUND:
+        if(uAssociationEnd.getMultiplicity().getLowerBound() != uAssociationEnd.getMultiplicity().getUpperBound()) {
+          buffer.append(pad(uAssociationEnd.getMultiplicity().getRangeParts()[1], RuleName.TYPE, uAssociationEnd));
+        }
+        break;
+
+      case ROLE_NAME:
+        buffer.append(pad(uAssociationEnd.getRoleName(), RuleName.TYPE, uAssociationEnd));
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  private String getMultiplicityProperty(String property, Token elementRootRuleToken, Multiplicity uMultiplicity)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case LOWER_BOUND:
+        buffer.append(pad(uMultiplicity.getRangeParts()[0], RuleName.TYPE, uMultiplicity));
+        break;
+
+      case UPPER_BOUND:
+        buffer.append(pad(uMultiplicity.getRangeParts()[1], RuleName.TYPE, uMultiplicity));
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  private String getAttributeProperty(String property, Token elementRootRuleToken, Attribute uAttribute)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case TYPE:
+        buffer.append(pad(uAttribute.getType(), RuleName.TYPE, uAttribute));
+        break;
+
+      case MODIFIER:
+        buffer.append(pad(uAttribute.getModifier(), RuleName.MODIFIER, uAttribute));
+        break;
+
+      case NAME:
+        buffer.append(pad(uAttribute.getName(), RuleName.NAME, uAttribute));
+        break;
+
+      case VALUE:
+        buffer.append(pad(uAttribute.getValue(), RuleName.VALUE, uAttribute));
+        break;
+
+      default:
+        //this.getScope().candidateFailed = true;
         break;
     }
 
@@ -1086,10 +1457,10 @@ class UmpleGenerator
         rpad = Whitespace.NL.toString();
         break;
 
-      case NAME:
-        if(uContainer instanceof MethodParameter) {
-          //rpad = Terminal.COMMA.getTranslation();
-        }
+      case ATTRIBUTE:
+        rpad = Whitespace.NL.toString();
+        break;
+
       default:
         lpad += Whitespace.NIL.toString();
         rpad += Whitespace.SPACE.toString();
@@ -1136,6 +1507,47 @@ class UmpleGenerator
 
     return buffer.toString();
   }
+
+  protected String pad_l(RuleName ruleName)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    switch(ruleName) {
+      case ATTRIBUTE:
+      case SOFTWARE_PATTERN:
+      case EXTERNAL_DEFINITION:
+      case CLASS_DEFINITION:
+      case INTERFACE_DEFINITION:
+      case INLINE_ASSOCIATION:
+        for(int i = 0; i < this.indent; ++i) buffer.append(Whitespace.TAB.toString());  // Add indents for current frame of reference
+        break;
+
+      default:
+        // do nothing
+    }
+
+    return buffer.toString();
+  }
+
+  protected String pad_r(RuleName ruleName)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    switch(ruleName) {
+      case IS_A_SINGLE:
+      case ASSOCIATION:
+      case INLINE_ASSOCIATION:
+      case SIMPLE_ATTRIBUTE:
+      case COMPLEX_ATTRIBUTE:
+        buffer.append(Whitespace.NL.toString());
+        break;
+      default:
+        // do nothing
+    }
+
+    return buffer.toString();
+  }
+
 
   /*
    * Translates terminals using the TokenType catalogue
