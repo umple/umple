@@ -42,7 +42,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     super.delete();
   }
 
-  @umplesourcefile(line={339},file={"Generator_CodeUmple.ump"},javaline={47},length={7})
+  @umplesourcefile(line={380},file={"Generator_CodeUmple.ump"},javaline={47},length={7})
    private Scope getScope(){
     if(this.scopes.isEmpty()) {
       throw new UmpleCompilerException("Tried to get scope from empty stack.", null);
@@ -51,87 +51,96 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     return scopes.peekFirst();
   }
 
+  @umplesourcefile(line={389},file={"Generator_CodeUmple.ump"},javaline={56},length={7})
+   private Scope getParentScope(){
+    if(this.scopes.size() < 2) {
+      return null;
+    }
+
+    return (Scope)this.scopes.toArray()[1];
+  }
+
 
   /**
    * Implementation of CodeTranslator. The following methods are not used, but are present 
    * so that the module can share the same superclasses as other generators/translators.
    */
-  @umplesourcefile(line={353},file={"Generator_CodeUmple.ump"},javaline={56},length={3})
+  @umplesourcefile(line={403},file={"Generator_CodeUmple.ump"},javaline={65},length={3})
    public String translate(String id, Attribute attribute){
     return "";
   }
 
-  @umplesourcefile(line={358},file={"Generator_CodeUmple.ump"},javaline={66},length={3})
+  @umplesourcefile(line={408},file={"Generator_CodeUmple.ump"},javaline={75},length={3})
    public String translate(String id, StateMachine stm){
     return "";
   }
 
-  @umplesourcefile(line={363},file={"Generator_CodeUmple.ump"},javaline={71},length={3})
+  @umplesourcefile(line={413},file={"Generator_CodeUmple.ump"},javaline={80},length={3})
    public String translate(String keyName, State state){
     return "";
   }
 
-  @umplesourcefile(line={373},file={"Generator_CodeUmple.ump"},javaline={76},length={3})
+  @umplesourcefile(line={423},file={"Generator_CodeUmple.ump"},javaline={85},length={3})
    public String translate(String id, Event e){
     return "";
   }
 
-  @umplesourcefile(line={378},file={"Generator_CodeUmple.ump"},javaline={81},length={3})
+  @umplesourcefile(line={428},file={"Generator_CodeUmple.ump"},javaline={90},length={3})
    public String translate(String id, AssociationVariable aVar){
     return "";
   }
 
-  @umplesourcefile(line={383},file={"Generator_CodeUmple.ump"},javaline={86},length={3})
+  @umplesourcefile(line={433},file={"Generator_CodeUmple.ump"},javaline={95},length={3})
    public String translate(String id, Constraint constraint){
     return "";
   }
 
-  @umplesourcefile(line={388},file={"Generator_CodeUmple.ump"},javaline={91},length={3})
+  @umplesourcefile(line={438},file={"Generator_CodeUmple.ump"},javaline={100},length={3})
    public String translate(String id, TraceItem traceItem){
     return "";
   }
 
-  @umplesourcefile(line={393},file={"Generator_CodeUmple.ump"},javaline={96},length={3})
+  @umplesourcefile(line={443},file={"Generator_CodeUmple.ump"},javaline={105},length={3})
    public String translate(String keyName, UmpleClass aClass0){
     return "";
   }
 
-  @umplesourcefile(line={398},file={"Generator_CodeUmple.ump"},javaline={101},length={3})
+  @umplesourcefile(line={448},file={"Generator_CodeUmple.ump"},javaline={110},length={3})
    public String translate(String methodType){
     return "";
   }
 
-  @umplesourcefile(line={403},file={"Generator_CodeUmple.ump"},javaline={106},length={3})
+  @umplesourcefile(line={453},file={"Generator_CodeUmple.ump"},javaline={115},length={3})
    public String translate(String name, UmpleInterface aInterface){
     return "";
   }
 
-  @umplesourcefile(line={408},file={"Generator_CodeUmple.ump"},javaline={111},length={3})
+  @umplesourcefile(line={458},file={"Generator_CodeUmple.ump"},javaline={120},length={3})
    public String relatedTranslate(String name, AssociationVariable av){
     return "";
   }
 
-  @umplesourcefile(line={413},file={"Generator_CodeUmple.ump"},javaline={116},length={3})
+  @umplesourcefile(line={463},file={"Generator_CodeUmple.ump"},javaline={125},length={3})
    public boolean isNullable(UmpleVariable av){
     return false;
   }
 
-  @umplesourcefile(line={418},file={"Generator_CodeUmple.ump"},javaline={121},length={3})
+  @umplesourcefile(line={468},file={"Generator_CodeUmple.ump"},javaline={130},length={3})
    public String nameOf(String name, boolean hasMultiple){
     return "";
   }
 
-  @umplesourcefile(line={423},file={"Generator_CodeUmple.ump"},javaline={126},length={3})
+  @umplesourcefile(line={473},file={"Generator_CodeUmple.ump"},javaline={135},length={3})
    public ILang getLanguageFor(UmpleElement aElement){
     return null;
   }
 
-  @umplesourcefile(line={428},file={"Generator_CodeUmple.ump"},javaline={131},length={3})
+  @umplesourcefile(line={478},file={"Generator_CodeUmple.ump"},javaline={140},length={3})
    public static  String typeOf(String aType){
     return "";
   }
 
-  @umplesourcefile(line={433},file={"Generator_CodeUmple.ump"},javaline={136},length={3})
+  @umplesourcefile(line={483},file={"Generator_CodeUmple.ump"},javaline={145},length={3})
    public void initializeLangaugeBasedVariables(){
     // do nothing
   }
@@ -141,7 +150,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * End of CodeTranslator implementation.
    * prepare: Setup for code generation
    */
-  @umplesourcefile(line={445},file={"Generator_CodeUmple.ump"},javaline={141},length={3})
+  @umplesourcefile(line={495},file={"Generator_CodeUmple.ump"},javaline={150},length={3})
    public void prepare(){
     // do nothing
   }
@@ -150,16 +159,14 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * Implementation of SuperCodeGenerator (CodeGenerator)
    */
-  @umplesourcefile(line={453},file={"Generator_CodeUmple.ump"},javaline={151},length={19})
+  @umplesourcefile(line={503},file={"Generator_CodeUmple.ump"},javaline={160},length={17})
    public void generate(){
-    prepare();
     try{
       for (UmpleElement currentElement : getModel().getUmpleElements())
       {
-        if ("external".equals(currentElement.getModifier()))
-        {
-          continue;
-        }
+        prepare();
+
+        this.rootElementName = currentElement.getName();
         resetScopeStack();
         writeFile(currentElement);
       }
@@ -177,7 +184,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * Implementation of: None. This is a local help function
    * Input: Expects a class or interface
    */
-  @umplesourcefile(line={479},file={"Generator_CodeUmple.ump"},javaline={176},length={26})
+  @umplesourcefile(line={527},file={"Generator_CodeUmple.ump"},javaline={183},length={26})
    private void writeFile(UmpleElement aElement){
     if(!(aElement instanceof UmpleClass || aElement instanceof UmpleInterface)) {
       throw new UmpleCompilerException("Expected an UmpleClass or UmpleInterface.", null);
@@ -209,7 +216,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * Generate code for the input model and element.
    */
-  @umplesourcefile(line={510},file={"Generator_CodeUmple.ump"},javaline={210},length={6})
+  @umplesourcefile(line={558},file={"Generator_CodeUmple.ump"},javaline={217},length={6})
    public void getCode(UmpleModel model, UmpleElement uElement){
     initializeParser();
 
@@ -222,7 +229,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * Configure the parser and analyzer, plus acquire the root rule and root rule for
    * the input grammar.
    */
-  @umplesourcefile(line={522},file={"Generator_CodeUmple.ump"},javaline={222},length={36})
+  @umplesourcefile(line={570},file={"Generator_CodeUmple.ump"},javaline={229},length={36})
    private void initializeParser(){
     if(parser != null) { // Parser is shared data, we need only generate once.
       return;
@@ -266,11 +273,13 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * this method acts as a wapper for getRuleByName, which traverses the Rule graph (produced by Analyzer)
    * Note: UmpleElement can be an UmpleClassifier, which is currently a Class or Interface
    */
-  @umplesourcefile(line={565},file={"Generator_CodeUmple.ump"},javaline={265},length={17})
+  @umplesourcefile(line={613},file={"Generator_CodeUmple.ump"},javaline={272},length={19})
    private ChoiceRule getElementRootRule(UmpleModel model, UmpleElement uElement){
     String elementRootRuleName = null;
 
-    if(uElement instanceof UmpleClass) {
+    if(uElement.getModifier().equals(RuleModifier.EXTERNAL.toString())) {
+      elementRootRuleName = RuleName.EXTERNAL_DEFINITION.toString();
+    } else if(uElement instanceof UmpleClass) {
       elementRootRuleName = RuleName.CLASS_DEFINITION.toString();
     } else if(uElement instanceof UmpleInterface) {
       elementRootRuleName = RuleName.INTERFACE_DEFINITION.toString();
@@ -279,7 +288,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     }       
 
     if(!ruleCache.containsKey(elementRootRuleName)) {
-      ruleCache.put(elementRootRuleName, getRuleByName(elementRootRuleName));
+      ruleCache.put(elementRootRuleName, getRuleByName(this.rootRule, elementRootRuleName));
     }
 
     return ruleCache.get(elementRootRuleName);
@@ -291,11 +300,13 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * this method acts as a wapper for getRuleTokenByName, which traverses the RuleToken gaph (produced by RuleBasedParser)
    * Note: UmpleElement can be an UmpleClassifier, which is currently a Class or Interface
    */
-  @umplesourcefile(line={589},file={"Generator_CodeUmple.ump"},javaline={290},length={17})
+  @umplesourcefile(line={639},file={"Generator_CodeUmple.ump"},javaline={299},length={19})
    private Token getElementRootRuleToken(UmpleModel model, UmpleElement uElement){
     String elementRootTokenName = null;
 
-    if(uElement instanceof UmpleClass) {
+    if(RuleModifier.EXTERNAL.toString().equals(uElement.getModifier())) {
+      elementRootTokenName = RuleName.EXTERNAL_DEFINITION.toString();
+    } else if(uElement instanceof UmpleClass) {
       elementRootTokenName = RuleName.CLASS_DEFINITION.toString();
     } else if(uElement instanceof UmpleInterface) {
       elementRootTokenName = RuleName.INTERFACE_DEFINITION.toString();
@@ -316,18 +327,18 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * for a token higher in the Rule graph, for example Interface, Class or Method; rather than leaf tokens.
    * - Assumptions are made about naming in grammars, such as the name of a class declaration token: concreteClassDeclaration
    */
-  @umplesourcefile(line={613},file={"Generator_CodeUmple.ump"},javaline={315},length={43})
-   private ChoiceRule getRuleByName(String name){
+  @umplesourcefile(line={665},file={"Generator_CodeUmple.ump"},javaline={326},length={43})
+   private ChoiceRule getRuleByName(ChoiceRule relativeRootRule, String name){
     Map<String,SearchState> visited = new HashMap<String,SearchState>();    // NULL => Unvisited, 0 => Recorded, 1 => Processed
     Queue<ChoiceRule> rules = new LinkedList<ChoiceRule>();
     ChoiceRule outputRule = null;
 
-    if(name.equals(rootRule.getName())) { // base case
-      return rootRule;
+    if(name.equals(relativeRootRule.getName())) { // base case
+      return relativeRootRule;
     }
 
-    rules.add(rootRule);
-    visited.put(rootRule.getName(), SearchState.RECORDED);
+    rules.add(relativeRootRule);
+    visited.put(relativeRootRule.getName(), SearchState.RECORDED);
 
     SEARCH: 
     while(!rules.isEmpty()) {
@@ -351,7 +362,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }
       } 
 
-      visited.put(rootRule.getName(), SearchState.PROCESSED);
+      visited.put(relativeRootRule.getName(), SearchState.PROCESSED);
     } 
 
     if(outputRule == null) {
@@ -363,11 +374,29 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 
 
   /**
+   * Given a rule
+   */
+  @umplesourcefile(line={713},file={"Generator_CodeUmple.ump"},javaline={377},length={12})
+   private Terminal getTerminalRuleToken(String terminalName){
+    ChoiceRule relativeRootRule = this.rootRule;
+
+    if(!this.lastNamedRule.isEmpty()) {
+      relativeRootRule = this.getRuleByName(this.rootRule, this.lastNamedRule);
+      if(relativeRootRule == null) {
+        relativeRootRule = this.rootRule;
+      }
+    }
+
+    return (Terminal)this.getRuleByName(relativeRootRule, terminalName);
+  }
+
+
+  /**
    * Perform breadth-first search to find token with input name. The reason for breadth-first is that we're usually searching
    * for a token higher in the RuleToken graph, for example Interface, Class or Method; rather than leaf tokens.
    * - Assumptions are made about naming in grammars, such as the name of a class declaration token: concreteClassDeclaration
    */
-  @umplesourcefile(line={663},file={"Generator_CodeUmple.ump"},javaline={366},length={38})
+  @umplesourcefile(line={733},file={"Generator_CodeUmple.ump"},javaline={395},length={38})
    private Token getRuleTokenByName(String name){
     Map<Integer,SearchState> visited = new HashMap<Integer,SearchState>();    // NULL => Unvisited, 0 => Recorded, 1 => Processed
     Queue<Token> tokens = new LinkedList<Token>();
@@ -411,7 +440,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * Detects potential cycle in the Scope stack if 'id' is added.
    */
-  @umplesourcefile(line={706},file={"Generator_CodeUmple.ump"},javaline={412},length={8})
+  @umplesourcefile(line={776},file={"Generator_CodeUmple.ump"},javaline={441},length={8})
    private boolean isRecursing(int id){
     Iterator<Scope> it = scopes.iterator();
     while(it.hasNext()) {
@@ -426,7 +455,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * Wrapper for enterScope below; handles different entries into a new scope depending on whether a 
    * rule is anonymous or not.
    */
-  @umplesourcefile(line={720},file={"Generator_CodeUmple.ump"},javaline={426},length={14})
+  @umplesourcefile(line={790},file={"Generator_CodeUmple.ump"},javaline={455},length={15})
    private boolean enterScope(Token ruleNameToken, boolean isOptional){
     boolean recursing = false;
     switch(RuleTokenType.fromToken(ruleNameToken)) {
@@ -436,6 +465,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 
       default:
         recursing = enterScope(ruleNameToken.getValue().hashCode(), isOptional);
+        if(!recursing) this.lastNamedRule = ruleNameToken.getValue(); 
         break;
     } 
 
@@ -446,7 +476,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * Reset stack of scopes
    */
-  @umplesourcefile(line={739},file={"Generator_CodeUmple.ump"},javaline={447},length={6})
+  @umplesourcefile(line={810},file={"Generator_CodeUmple.ump"},javaline={477},length={6})
    private void resetScopeStack(){
     this.scopes = new ArrayDeque<Scope>();
 
@@ -458,11 +488,16 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * Push new scope to Scope Stack
    */
-  @umplesourcefile(line={750},file={"Generator_CodeUmple.ump"},javaline={459},length={6})
+  @umplesourcefile(line={821},file={"Generator_CodeUmple.ump"},javaline={489},length={11})
    private boolean enterScope(int id, boolean isOptional){
     if(isRecursing(id)) return false; // Don't create scope if in cycle
 
     scopes.addFirst(new Scope(id, isOptional));
+    Scope parentScope = this.getParentScope();
+    if(parentScope != null) {
+      this.getScope().candidateIterators = new HashMap<String,Integer>(parentScope.candidateIterators);
+      this.getScope().acceptedIterators = new HashMap<String,Integer>(parentScope.candidateIterators);
+    }
     return true;
   }
 
@@ -470,7 +505,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * Exit current scope and combine exiting accepted state with new top-level state in the Scope stack.
    */
-  @umplesourcefile(line={761},file={"Generator_CodeUmple.ump"},javaline={471},length={18})
+  @umplesourcefile(line={837},file={"Generator_CodeUmple.ump"},javaline={506},length={19})
    private double exitScope(){
     handleMutexClause(); // Exiting scope is implicit mutex clause, so we must try to transfer the candidate state to the accepted state
 
@@ -485,6 +520,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     if(poppedScope.acceptedRulesSatisfied > 0 || poppedScope.isOptional == false) {
       topScope.candidateCode.append(poppedScope.acceptedCode.toString());
       topScope.candidateRulesSatisfied += poppedScope.acceptedRulesSatisfied;
+      topScope.candidateIterators = new HashMap<String,Integer>(poppedScope.acceptedIterators);
     } 
 
     return poppedScope.acceptedRulesSatisfied;
@@ -496,7 +532,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * Note: Each RuleToken has an associated RuleName SubToken, generated by the RuleBasedParser. The 
    * exception to this is an Anonymous Rule.
    */
-  @umplesourcefile(line={786},file={"Generator_CodeUmple.ump"},javaline={495},length={28})
+  @umplesourcefile(line={863},file={"Generator_CodeUmple.ump"},javaline={531},length={48})
    private void generateRuleOutput(Token elementRootRuleToken, UmpleModel model, Object uElement){
     Token ruleNameToken = elementRootRuleToken;
     RuleModifier ruleModifier = RuleModifier.NIL;
@@ -511,8 +547,28 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 
     switch(ruleModifier) {
       case ZERO_TO_MANY:
-        while(generateRuleOutput(ruleNameToken,ruleModifier,model,uElement) > 0) {};
-        break; 
+          double numSatisfied = 0;
+          double lastNumSatisfied = 0;
+          StringBuilder candidateCode = this.getScope().candidateCode;
+          double candidateRulesSatisfied = this.getScope().candidateRulesSatisfied;
+          this.getScope().candidateCode = new StringBuilder();
+          this.getScope().candidateRulesSatisfied = 0;
+          String lastCandidateCode = "";
+
+          for(;;) { // Execute until no progress is made
+            numSatisfied = generateRuleOutput(ruleNameToken,ruleModifier,model,uElement);
+            if(lastCandidateCode.equals(this.getScope().candidateCode.toString()) || numSatisfied <= 0) break;
+
+            lastNumSatisfied = numSatisfied;
+            lastCandidateCode = this.getScope().candidateCode.toString();
+            candidateCode.append(lastCandidateCode);
+            candidateRulesSatisfied += lastNumSatisfied;
+            this.getScope().candidateCode = new StringBuilder();
+            this.getScope().candidateRulesSatisfied = 0;
+          } 
+          this.getScope().candidateCode = candidateCode;
+          this.getScope().candidateRulesSatisfied = candidateRulesSatisfied;
+          break; 
 
       case OPTIONAL:
         generateRuleOutput(ruleNameToken,ruleModifier,model,uElement);
@@ -532,40 +588,126 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * A new scope is created for the rule, but only if the scope isn't already on the Queue stack, in 
    * which case there is a cycle and we simply backtrack.
    */
-  @umplesourcefile(line={821},file={"Generator_CodeUmple.ump"},javaline={531},length={51})
-   private double generateRuleOutput(Token ruleNameToken, RuleModifier ruleModifier, UmpleModel model, Object uElement){
+  @umplesourcefile(line={918},file={"Generator_CodeUmple.ump"},javaline={587},length={137})
+   private double generateRuleOutput(Token ruleNameToken, RuleModifier ruleModifier, UmpleModel model, Object uContainer){
     if(enterScope(ruleNameToken, (ruleModifier == RuleModifier.OPTIONAL)) == false) { // false => we're in a cycle; exit to avoid reprocessing
       return 0;
     }
 
     if(RuleTokenType.fromToken(ruleNameToken) == RuleTokenType.ANONYMOUS_RULE) {
         for(Token subToken : ruleNameToken.getSubTokens()) {
-          generateRuleTokenOutput(subToken, model, uElement);
+          generateRuleTokenOutput(subToken, model, uContainer);
         }
         return exitScope();    
     } 
 
-    switch(RuleName.fromString(ruleNameToken.getValue())) {
+    RuleName ruleName = RuleName.fromString(ruleNameToken.getValue());
+    this.getScope().candidateCode.append(pad_l(ruleName));
+    switch(ruleName) {
       case CONCRETE_METHOD_DECLARATION:
-          if(curMethod < ((UmpleClass)uElement).getMethods().size()) {
-            generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((UmpleClass)uElement).getMethods().get(curMethod));
-            curMethod += 1;
-          } else {
-            curMethod = 0;
-          } 
+          int curMethod = this.getScope().candidateIterators.get("Method");
+          if(curMethod < ((UmpleClass)uContainer).getMethods().size()) {
+            this.getParentScope().candidateIterators.put("Method", curMethod+1);
+            generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((UmpleClass)uContainer).getMethods().get(curMethod));
+          }
         break;
 
       case PARAMETER:
-        if(curParam < ((Method)uElement).getMethodParameters().size()) {
-          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((Method)uElement).getMethodParameters().get(curParam)); 
-          curParam++;
-        } else {
-          curParam = 0;
+        int curParam = this.getScope().candidateIterators.get("Parameter");
+        if(curParam < ((Method)uContainer).getMethodParameters().size()) {
+          this.getScope().candidateIterators.put("Parameter", curParam+1);
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((Method)uContainer).getMethodParameters().get(curParam)); 
         }
         break;
 
-      case PARAMETERS:
+      case ASSOCIATION:
+      case INLINE_ASSOCIATION:
+        Association[] associations = ((UmpleClass)uContainer).getAssociations();
+        HashSet<Integer> processedAssociations = new HashSet<Integer>();
+        int curAssoc = this.getScope().candidateIterators.get("Association");
+      
+        // Avoid duplicate associations variables, which result from associations between a class and itself
+        for(int i = 0; i < curAssoc; ++i) {
+           processedAssociations.add(associations[i].getName().hashCode());
+        }
+        int size = processedAssociations.size();
+
+        for(; curAssoc < associations.length; ++curAssoc) {
+          if(!this.rootElementName.equals(associations[curAssoc].getEnds().get(0).getClassName())) continue; // declared in other class
+
+          processedAssociations.add(associations[curAssoc].getName().hashCode());
+          if(processedAssociations.size() > size) break;
+        }
+        
+        if(curAssoc < associations.length) {
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, associations[curAssoc]);
+          this.getScope().candidateIterators.put("Association", curAssoc + 1);
+        }         
+        break;
+
+      case SINGLE_ASSOCIATION_END:
+      case INLINE_ASSOCIATION_END:
+      case ASSOCIATION_END:
+        int curAssocEnd = this.getScope().candidateIterators.get("AssociationEnd"); 
+        switch(curAssocEnd) {
+          case 0:
+            generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((Association)uContainer).getEnds().get(curAssocEnd));
+            this.getScope().candidateIterators.put("AssociationEnd", curAssocEnd+1);
+            break;
+
+          case 1:
+            generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((Association)uContainer).getEnds().get(curAssocEnd));
+            this.getScope().candidateIterators.put("AssociationEnd", 0);
+            break;
+      
+          default:
+            // do nothing
+        }
+        break;
+
+      case EXTERNAL_DEFINITION:
+        if(this.getParentScope().id != RuleName.EXTERNAL_DEFINITION.toString().hashCode()) {
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
+        } else {
+          for(UmpleClass uSubclass : ((UmpleClass)uContainer).getSubclasses()) {
+            generateRuleTokenOutput(getRuleTokenByName(RuleName.CLASS_DEFINITION.toString()), model, uSubclass);
+          } 
+        }
+        break;
+
+      case CLASS_DEFINITION:
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
+        if(this.getParentScope().id != RuleName.CLASS_DEFINITION.toString().hashCode()) {
+        } else {
+          for(UmpleClass uSubclass : ((UmpleClass)uContainer).getSubclasses()) {
+            generateRuleTokenOutput(getRuleTokenByName(RuleName.CLASS_DEFINITION.toString()), model, uSubclass);
+          } 
+        }
+        break;
+
       case CLASS_CONTENT:
+        if(this.getParentScope().id != RuleName.EXTERNAL_DEFINITION.toString().hashCode()) {
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
+        }
+        break;
+
+      case ATTRIBUTE:
+        int curAttribute = this.getScope().candidateIterators.get("Attribute");
+        if(curAttribute < ((UmpleClass)uContainer).getAttributes().size()) {
+          this.getParentScope().candidateIterators.put("Attribute", curAttribute+1);
+          generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, ((UmpleClass)uContainer).getAttributes().get(curAttribute)); 
+        }
+        break;
+
+      case SIMPLE_ATTRIBUTE:
+      case COMPLEX_ATTRIBUTE:
+      case SOFTWARE_PATTERN:
+      case IS_A:
+      case IS_A_SINGLE:
+      case ASSOCIATION_DEFINITION:
+      case ASSOCIATION_CLASS_DEFINITION:
+      case MULTIPLICITY:
+      case PARAMETERS:
       case TYPED_NAME:
       case PARAMETER_LIST:
       case EXTRA_CODE:
@@ -573,8 +715,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
       case METHOD_DECLARATOR:
       case METHOD_BODY:
       case ABSTRACT:
-      case CLASS_DEFINITION:
-        generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uElement);
+        generateRuleTokenOutput(getRuleTokenByName(ruleNameToken.getValue()), model, uContainer);
         break;
 
       default:
@@ -582,6 +723,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         break;
     }
 
+    this.getScope().candidateCode.append(pad_r(ruleName));
     return exitScope(); // exit scope and return the # of rules satisfied by the scope (acceptedRulesSatisfied)
   }
 
@@ -589,7 +731,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   /**
    * Selects a best fit output between two mutually exclusive clauses
    */
-  @umplesourcefile(line={877},file={"Generator_CodeUmple.ump"},javaline={590},length={13})
+  @umplesourcefile(line={1060},file={"Generator_CodeUmple.ump"},javaline={732},length={17})
    private void handleMutexClause(){
     Scope scope = this.getScope();
 
@@ -597,18 +739,22 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
       // Current scope's candidate state replaces the scope's accepted state if  
       scope.acceptedRulesSatisfied = scope.candidateRulesSatisfied;
       scope.acceptedCode = scope.candidateCode; 
-    }
+      scope.acceptedIterators = new HashMap<String,Integer>(scope.candidateIterators);
+      scope.acceptedFailed = false;
+    } 
 
     // Reset state for next iteration
     scope.candidateRulesSatisfied = 0;
     scope.candidateCode = new StringBuilder();
+    scope.candidateIterators = new HashMap<String,Integer>(this.getParentScope().candidateIterators);
+    scope.candidateFailed = false;
   }
 
 
   /**
    * Generate output for Umple Element's using Rule Tokens that are generated by a RuleBasedParser.
    */
-  @umplesourcefile(line={895},file={"Generator_CodeUmple.ump"},javaline={609},length={49})
+  @umplesourcefile(line={1082},file={"Generator_CodeUmple.ump"},javaline={755},length={49})
    private void generateRuleTokenOutput(Token elementRootRuleToken, UmpleModel model, Object uContainer){
     RuleTokenType ruleTokenType = RuleTokenType.fromToken(elementRootRuleToken);
     StringBuilder buffer = this.getScope().candidateCode;
@@ -666,7 +812,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * Note: These 'property' methods can be reduced/eliminated if we just hashed properties
    * during the parse stage, rather than creating getters/setters for every property.
    */
-  @umplesourcefile(line={952},file={"Generator_CodeUmple.ump"},javaline={664},length={24})
+  @umplesourcefile(line={1139},file={"Generator_CodeUmple.ump"},javaline={810},length={35})
    private String getElementProperty(String property, Token elementRootRuleToken, Object uContainer){
     String elementProperty = null;
 
@@ -682,17 +828,28 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
       elementProperty = getMethodProperty(property, elementRootRuleToken, (Method)uContainer);
     } else if(uContainer instanceof MethodParameter) {
       elementProperty = getMethodParameterProperty(property, elementRootRuleToken, (MethodParameter)uContainer);
+    } else if(uContainer instanceof AssociationVariable) {
+      elementProperty = getAssociationVariableProperty(property, elementRootRuleToken, (AssociationVariable)uContainer);
+    } else if(uContainer instanceof Multiplicity) {
+      elementProperty = getMultiplicityProperty(property, elementRootRuleToken, (Multiplicity)uContainer);
+    } else if(uContainer instanceof Association) {
+      elementProperty = getAssociationProperty(property, elementRootRuleToken, (Association)uContainer);
+    } else if(uContainer instanceof AssociationEnd) {
+      elementProperty = getAssociationEndProperty(property, elementRootRuleToken, (AssociationEnd)uContainer);
+    } else if(uContainer instanceof Attribute) {
+      elementProperty = getAttributeProperty(property, elementRootRuleToken, (Attribute)uContainer);
     } 
 
     if(!(elementProperty == null || elementProperty.length() == 0)) {
       // A property was successfully retrieved, and hence the current rule has been satisfied.
       this.getScope().candidateRulesSatisfied += 1;
+    } else if(!this.getScope().isOptional) {
     } 
 
     return elementProperty;
   }
 
-  @umplesourcefile(line={978},file={"Generator_CodeUmple.ump"},javaline={697},length={21})
+  @umplesourcefile(line={1176},file={"Generator_CodeUmple.ump"},javaline={854},length={38})
    private String getClassProperty(String property, Token elementRootRuleToken, UmpleClass uClass){
     StringBuilder buffer = new StringBuilder();
     
@@ -707,6 +864,49 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }
         break; 
 
+      case EXTRA_CODE:
+        buffer.append(uClass.getExtraCode());
+        break;
+
+      case INTERFACE:
+        // ignore. This is not an interface. This is for 'externalDefinition'
+        break;
+
+      case EXTENDS_NAME:
+        int curExtends = this.getScope().candidateIterators.get("Extends");
+        if(curExtends == 0 && uClass.getExtendsClass() != null) {
+          buffer.append(uClass.getExtendsClass().getName());
+          this.getScope().candidateIterators.put("Extends", curExtends+1); //  currently, only 0..1 extensions are allowed
+        }
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  @umplesourcefile(line={1216},file={"Generator_CodeUmple.ump"},javaline={894},length={24})
+   private String getInterfaceProperty(String property, Token elementRootRuleToken, UmpleInterface uInterface){
+    StringBuilder buffer = new StringBuilder();
+    RuleName ruleName = RuleName.fromString(property);
+    
+    switch(ruleName) {
+      case NAME:
+        buffer.append(pad(uInterface.getName(), ruleName, uInterface));    
+        break;
+
+      case EXTRA_CODE:
+        buffer.append(uInterface.getExtraCode());
+        break;
+
+      case INTERFACE:
+        buffer.append(elementRootRuleToken.getValue()); // Append interface keyword
+        break;
+
       default:
         // Property unimplemented; ignore.
         break;
@@ -715,13 +915,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     return buffer.toString();
   }
 
-  @umplesourcefile(line={1001},file={"Generator_CodeUmple.ump"},javaline={720},length={4})
-   private String getInterfaceProperty(String property, Token elementRootRuleToken, UmpleInterface uInterface){
-    StringBuilder buffer = new StringBuilder();
-    return buffer.toString();
-  }
-
-  @umplesourcefile(line={1007},file={"Generator_CodeUmple.ump"},javaline={726},length={33})
+  @umplesourcefile(line={1242},file={"Generator_CodeUmple.ump"},javaline={920},length={34})
    private String getMethodProperty(String property, Token elementRootRuleToken, Method uMethod){
     StringBuilder buffer = new StringBuilder();
 
@@ -750,13 +944,14 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 
       default:
         // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
         break;
     }
 
     return buffer.toString();
   }
 
-  @umplesourcefile(line={1042},file={"Generator_CodeUmple.ump"},javaline={761},length={19})
+  @umplesourcefile(line={1278},file={"Generator_CodeUmple.ump"},javaline={956},length={19})
    private String getMethodParameterProperty(String property, Token elementRootRuleToken, MethodParameter uMethodParameter){
     StringBuilder buffer = new StringBuilder();
 
@@ -777,13 +972,148 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     return buffer.toString();
   }
 
+  @umplesourcefile(line={1299},file={"Generator_CodeUmple.ump"},javaline={977},length={20})
+   private String getAssociationProperty(String property, Token elementRootRuleToken, Association uAssociation){
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case NAME:
+        buffer.append(pad(uAssociation.getName(), RuleName.NAME, uAssociation));
+        break;
+
+      case ARROW:
+        buffer.append(pad(uAssociation.getArrowString(), RuleName.ARROW, uAssociation)); /* This would be translated for different languages */
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  @umplesourcefile(line={1321},file={"Generator_CodeUmple.ump"},javaline={999},length={16})
+   private String getAssociationVariableProperty(String property, Token elementRootRuleToken, AssociationVariable uAssociationVariable){
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case NAME:
+        buffer.append(pad(uAssociationVariable.getName(), RuleName.NAME, uAssociationVariable));
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  @umplesourcefile(line={1339},file={"Generator_CodeUmple.ump"},javaline={1017},length={41})
+   private String getAssociationEndProperty(String property, Token elementRootRuleToken, AssociationEnd uAssociationEnd){
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case TYPE:
+        buffer.append(pad(uAssociationEnd.getClassName(), RuleName.TYPE, uAssociationEnd));
+        break;
+
+      case BOUND:
+        if(uAssociationEnd.getMultiplicity().getBound() == null ) {
+          break;
+        }
+
+        buffer.append(pad(uAssociationEnd.getMultiplicity().getBound().toString(), RuleName.BOUND, uAssociationEnd));
+        break;
+
+      case LOWER_BOUND:
+        if(uAssociationEnd.getMultiplicity().getLowerBound() != uAssociationEnd.getMultiplicity().getUpperBound()) {
+          buffer.append(pad(uAssociationEnd.getMultiplicity().getRangeParts()[0], RuleName.TYPE, uAssociationEnd));
+        }
+        break;
+
+      case UPPER_BOUND:
+        if(uAssociationEnd.getMultiplicity().getLowerBound() != uAssociationEnd.getMultiplicity().getUpperBound()) {
+          buffer.append(pad(uAssociationEnd.getMultiplicity().getRangeParts()[1], RuleName.TYPE, uAssociationEnd));
+        }
+        break;
+
+      case ROLE_NAME:
+        buffer.append(pad(uAssociationEnd.getRoleName(), RuleName.TYPE, uAssociationEnd));
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  @umplesourcefile(line={1382},file={"Generator_CodeUmple.ump"},javaline={1060},length={21})
+   private String getMultiplicityProperty(String property, Token elementRootRuleToken, Multiplicity uMultiplicity){
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case LOWER_BOUND:
+        buffer.append(pad(uMultiplicity.getRangeParts()[0], RuleName.TYPE, uMultiplicity));
+        break;
+
+      case UPPER_BOUND:
+        buffer.append(pad(uMultiplicity.getRangeParts()[1], RuleName.TYPE, uMultiplicity));
+        break;
+
+      default:
+        // Property unimplemented; ignore.
+        this.getScope().candidateFailed = true;
+
+        break;
+    }
+
+    return buffer.toString();
+  }
+
+  @umplesourcefile(line={1405},file={"Generator_CodeUmple.ump"},javaline={1083},length={27})
+   private String getAttributeProperty(String property, Token elementRootRuleToken, Attribute uAttribute){
+    StringBuilder buffer = new StringBuilder();
+
+    switch(RuleName.fromString(property)) {
+      case TYPE:
+        buffer.append(pad(uAttribute.getType(), RuleName.TYPE, uAttribute));
+        break;
+
+      case MODIFIER:
+        buffer.append(pad(uAttribute.getModifier(), RuleName.MODIFIER, uAttribute));
+        break;
+
+      case NAME:
+        buffer.append(pad(uAttribute.getName(), RuleName.NAME, uAttribute));
+        break;
+
+      case VALUE:
+        buffer.append(pad(uAttribute.getValue(), RuleName.VALUE, uAttribute));
+        break;
+
+      default:
+        //this.getScope().candidateFailed = true;
+        break;
+    }
+
+    return buffer.toString();
+  }
+
 
   /**
    * Pad token value with whitespace
    * - Note: This is implementation allows whitespace to be easily configurable to address different coding practices/languages.
    * - Note: Protected so that space-delimited languages can override.
    */
-  @umplesourcefile(line={1068},file={"Generator_CodeUmple.ump"},javaline={782},length={37})
+  @umplesourcefile(line={1439},file={"Generator_CodeUmple.ump"},javaline={1112},length={37})
    protected String pad(String input, RuleName ruleName, Object uContainer){
     StringBuilder buffer = new StringBuilder();
     String lpad = "", rpad = "";  
@@ -806,10 +1136,10 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         rpad = Whitespace.NL.toString();
         break;
 
-      case NAME:
-        if(uContainer instanceof MethodParameter) {
-          //rpad = Terminal.COMMA.getTranslation();
-        }
+      case ATTRIBUTE:
+        rpad = Whitespace.NL.toString();
+        break;
+
       default:
         lpad += Whitespace.NIL.toString();
         rpad += Whitespace.SPACE.toString();
@@ -827,7 +1157,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
    * Padding for token types, as generated by the RuleBasedProcessor
    * Note: Protected so that space-delimited languages can override.
    */
-  @umplesourcefile(line={1111},file={"Generator_CodeUmple.ump"},javaline={827},length={29})
+  @umplesourcefile(line={1482},file={"Generator_CodeUmple.ump"},javaline={1157},length={29})
    protected String pad(String input, RuleTokenType ruleTokenType){
     StringBuilder buffer = new StringBuilder();
     String lpad, rpad; 
@@ -858,11 +1188,51 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     return buffer.toString();
   }
 
+  @umplesourcefile(line={1513},file={"Generator_CodeUmple.ump"},javaline={1193},length={19})
+   protected String pad_l(RuleName ruleName){
+    StringBuilder buffer = new StringBuilder();
+
+    switch(ruleName) {
+      case ATTRIBUTE:
+      case SOFTWARE_PATTERN:
+      case EXTERNAL_DEFINITION:
+      case CLASS_DEFINITION:
+      case INTERFACE_DEFINITION:
+      case INLINE_ASSOCIATION:
+        for(int i = 0; i < this.indent; ++i) buffer.append(Whitespace.TAB.toString());  // Add indents for current frame of reference
+        break;
+
+      default:
+        // do nothing
+    }
+
+    return buffer.toString();
+  }
+
+  @umplesourcefile(line={1534},file={"Generator_CodeUmple.ump"},javaline={1214},length={17})
+   protected String pad_r(RuleName ruleName){
+    StringBuilder buffer = new StringBuilder();
+
+    switch(ruleName) {
+      case IS_A_SINGLE:
+      case ASSOCIATION:
+      case INLINE_ASSOCIATION:
+      case SIMPLE_ATTRIBUTE:
+      case COMPLEX_ATTRIBUTE:
+        buffer.append(Whitespace.NL.toString());
+        break;
+      default:
+        // do nothing
+    }
+
+    return buffer.toString();
+  }
+
 
   /**
    * Translates terminals using the TokenType catalogue
    */
-  @umplesourcefile(line={1145},file={"Generator_CodeUmple.ump"},javaline={863},length={4})
+  @umplesourcefile(line={1557},file={"Generator_CodeUmple.ump"},javaline={1233},length={4})
    private String translateTerminal(String terminal){
     TerminalType translation = TerminalType.fromString(terminal);
     return translation != TerminalType.NIL ? translation.getTranslation() : terminal;
@@ -871,27 +1241,27 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={36},file={"Generator_CodeUmple.ump"},javaline={875},length={284})
-  @umplesourcefile(line={37},file={"Generator_CodeUmple.ump"},javaline={876},length={46})
+  //  @umplesourcefile(line={36},file={"Generator_CodeUmple.ump"},javaline={1245},length={309})
+  @umplesourcefile(line={37},file={"Generator_CodeUmple.ump"},javaline={1246},length={46})
   private static Map<String,ChoiceRule> ruleCache = new HashMap<String,ChoiceRule>() ;
 
-//  @umplesourcefile(line={37},file={"Generator_CodeUmple.ump"},javaline={879},length={281})
-  @umplesourcefile(line={38},file={"Generator_CodeUmple.ump"},javaline={880},length={43})
+//  @umplesourcefile(line={37},file={"Generator_CodeUmple.ump"},javaline={1249},length={306})
+  @umplesourcefile(line={38},file={"Generator_CodeUmple.ump"},javaline={1250},length={43})
   private static Map<String,Token> tokenCache = new HashMap<String,Token>() ;
 
-//  @umplesourcefile(line={38},file={"Generator_CodeUmple.ump"},javaline={883},length={278})
+//  @umplesourcefile(line={38},file={"Generator_CodeUmple.ump"},javaline={1253},length={303})
   private static RuleBasedParser parser = null ;
 
-//  @umplesourcefile(line={39},file={"Generator_CodeUmple.ump"},javaline={886},length={275})
+//  @umplesourcefile(line={39},file={"Generator_CodeUmple.ump"},javaline={1256},length={300})
   private static GrammarAnalyzer analyzer = null ;
 
-//  @umplesourcefile(line={40},file={"Generator_CodeUmple.ump"},javaline={889},length={272})
+//  @umplesourcefile(line={40},file={"Generator_CodeUmple.ump"},javaline={1259},length={297})
   private static Token rootRuleToken = null ;
 
-//  @umplesourcefile(line={41},file={"Generator_CodeUmple.ump"},javaline={892},length={269})
+//  @umplesourcefile(line={41},file={"Generator_CodeUmple.ump"},javaline={1262},length={294})
   private static ChoiceRule rootRule = null ;
 
-//  @umplesourcefile(line={46},file={"Generator_CodeUmple.ump"},javaline={895},length={266})
+//  @umplesourcefile(line={46},file={"Generator_CodeUmple.ump"},javaline={1265},length={291})
   private enum Whitespace 
   {
     NIL(0, ""),
@@ -904,27 +1274,27 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     private int id;
     private String value;
   
-  @umplesourcefile(line={59},file={"Generator_CodeUmple.ump"},javaline={908},length={5})
+  @umplesourcefile(line={59},file={"Generator_CodeUmple.ump"},javaline={1278},length={5})
     private Whitespace(int id, String value)
     {
       this.id = id;
       this.value = value;
     }
 
-  @umplesourcefile(line={65},file={"Generator_CodeUmple.ump"},javaline={915},length={4})
+  @umplesourcefile(line={65},file={"Generator_CodeUmple.ump"},javaline={1285},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={70},file={"Generator_CodeUmple.ump"},javaline={921},length={4})
+  @umplesourcefile(line={70},file={"Generator_CodeUmple.ump"},javaline={1291},length={4})
     public String toString()
     {
       return this.value;
     }
   }
 
-//  @umplesourcefile(line={77},file={"Generator_CodeUmple.ump"},javaline={928},length={236})
+//  @umplesourcefile(line={77},file={"Generator_CodeUmple.ump"},javaline={1298},length={261})
   private enum TerminalType 
   {
     NIL(0, "", ""),
@@ -935,7 +1305,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     private int id;
     private String value;
     private String translation;
-  @umplesourcefile(line={88},file={"Generator_CodeUmple.ump"},javaline={939},length={11})
+  @umplesourcefile(line={88},file={"Generator_CodeUmple.ump"},javaline={1309},length={11})
     private static final Map<String,TerminalType> strDict = new HashMap<String,TerminalType>();
 
     /*
@@ -948,13 +1318,13 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }   
     } 
 
-  @umplesourcefile(line={100},file={"Generator_CodeUmple.ump"},javaline={952},length={4})
+  @umplesourcefile(line={100},file={"Generator_CodeUmple.ump"},javaline={1322},length={4})
     public static TerminalType fromString(String t)
     {
       return strDict.containsKey(t) ? strDict.get(t) : NIL; 
     }
   
-  @umplesourcefile(line={105},file={"Generator_CodeUmple.ump"},javaline={958},length={6})
+  @umplesourcefile(line={105},file={"Generator_CodeUmple.ump"},javaline={1328},length={6})
     private TerminalType(int id, String value, String translation)
     {
       this.id = id;
@@ -962,26 +1332,26 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
       this.translation = translation;
     }
 
-  @umplesourcefile(line={112},file={"Generator_CodeUmple.ump"},javaline={966},length={4})
+  @umplesourcefile(line={112},file={"Generator_CodeUmple.ump"},javaline={1336},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={117},file={"Generator_CodeUmple.ump"},javaline={972},length={4})
+  @umplesourcefile(line={117},file={"Generator_CodeUmple.ump"},javaline={1342},length={4})
     public String toString()
     {
       return this.value;
     } 
 
-  @umplesourcefile(line={122},file={"Generator_CodeUmple.ump"},javaline={978},length={4})
+  @umplesourcefile(line={122},file={"Generator_CodeUmple.ump"},javaline={1348},length={4})
     public String getTranslation()
     {
       return this.translation;
     }
   }
 
-//  @umplesourcefile(line={129},file={"Generator_CodeUmple.ump"},javaline={985},length={185})
+//  @umplesourcefile(line={129},file={"Generator_CodeUmple.ump"},javaline={1355},length={210})
   private enum RuleTokenType 
   {
     NIL(0, ""),
@@ -1006,7 +1376,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 
     private int id;
     private String value;
-  @umplesourcefile(line={154},file={"Generator_CodeUmple.ump"},javaline={1010},length={11})
+  @umplesourcefile(line={154},file={"Generator_CodeUmple.ump"},javaline={1380},length={11})
     private static final Map<String,RuleTokenType> strDict = new HashMap<String,RuleTokenType>();
 
     /*
@@ -1019,48 +1389,49 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }   
     } 
 
-  @umplesourcefile(line={166},file={"Generator_CodeUmple.ump"},javaline={1023},length={4})
+  @umplesourcefile(line={166},file={"Generator_CodeUmple.ump"},javaline={1393},length={4})
     public static RuleTokenType fromToken(Token t)
     {
       return strDict.containsKey(t.getName()) ? strDict.get(t.getName()) : NIL; 
     }
   
-  @umplesourcefile(line={171},file={"Generator_CodeUmple.ump"},javaline={1029},length={5})
+  @umplesourcefile(line={171},file={"Generator_CodeUmple.ump"},javaline={1399},length={5})
     private RuleTokenType(int id, String value)
     {
       this.id = id;
       this.value = value;
     }
 
-  @umplesourcefile(line={177},file={"Generator_CodeUmple.ump"},javaline={1036},length={4})
+  @umplesourcefile(line={177},file={"Generator_CodeUmple.ump"},javaline={1406},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={182},file={"Generator_CodeUmple.ump"},javaline={1042},length={4})
+  @umplesourcefile(line={182},file={"Generator_CodeUmple.ump"},javaline={1412},length={4})
     public String toString()
     {
       return this.value;
     } 
 
-  @umplesourcefile(line={187},file={"Generator_CodeUmple.ump"},javaline={1048},length={4})
+  @umplesourcefile(line={187},file={"Generator_CodeUmple.ump"},javaline={1418},length={4})
     public boolean equals(Token t)
     {
       return this.value.equals(t.getName());
     }
   }
 
-//  @umplesourcefile(line={194},file={"Generator_CodeUmple.ump"},javaline={1055},length={121})
+//  @umplesourcefile(line={194},file={"Generator_CodeUmple.ump"},javaline={1425},length={146})
   private enum RuleModifier 
   {
     NIL(0, ""),
     ZERO_TO_MANY(1,"*"),
-    OPTIONAL(2,"?");
+    OPTIONAL(2,"?"),
+    EXTERNAL(3, "external");
 
     private int id;
     private String value;
-  @umplesourcefile(line={203},file={"Generator_CodeUmple.ump"},javaline={1064},length={11})
+  @umplesourcefile(line={204},file={"Generator_CodeUmple.ump"},javaline={1435},length={11})
     private static final Map<String,RuleModifier> strDict = new HashMap<String,RuleModifier>();
 
     /*
@@ -1073,42 +1444,49 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }   
     } 
 
-  @umplesourcefile(line={215},file={"Generator_CodeUmple.ump"},javaline={1077},length={4})
+  @umplesourcefile(line={216},file={"Generator_CodeUmple.ump"},javaline={1448},length={4})
     public static RuleModifier fromToken(Token t)
     {
       return strDict.containsKey(t.getValue()) ? strDict.get(t.getValue()) : NIL; 
     }
   
-  @umplesourcefile(line={220},file={"Generator_CodeUmple.ump"},javaline={1083},length={5})
+  @umplesourcefile(line={221},file={"Generator_CodeUmple.ump"},javaline={1454},length={5})
     private RuleModifier(int id, String value)
     {
       this.id = id;
       this.value = value;
     }
 
-  @umplesourcefile(line={226},file={"Generator_CodeUmple.ump"},javaline={1090},length={4})
+  @umplesourcefile(line={227},file={"Generator_CodeUmple.ump"},javaline={1461},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={231},file={"Generator_CodeUmple.ump"},javaline={1096},length={4})
+  @umplesourcefile(line={232},file={"Generator_CodeUmple.ump"},javaline={1467},length={4})
     public String toString()
     {
       return this.value;
     }
   }
 
-//  @umplesourcefile(line={243},file={"Generator_CodeUmple.ump"},javaline={1103},length={78})
+//  @umplesourcefile(line={244},file={"Generator_CodeUmple.ump"},javaline={1474},length={102})
   private enum RuleName 
   {
     NIL(0, ""),
     ANONYMOUS(1, "anonymousRule"), // Implicit definition; Not defined in the grammar
     NAME(100,"name"),
     ABSTRACT(101,"abstract"),
+    VALUE(102,"value"),
     CLASS_DEFINITION(200,"classDefinition"),
     CLASS_CONTENT(201, "classContent"),
+    EXTENDS_NAME(202, "extendsName"),
+    SOFTWARE_PATTERN(250, "softwarePattern"), 
+    IS_A(251, "isA"),
+    IS_A_SINGLE(252, "singleIsA"),
+    EXTERNAL_DEFINITION(210, "externalDefinition"),
     INTERFACE_DEFINITION(300,"interfaceDefinition"),
+    INTERFACE_MEMBER_DEFINITION(301, "interfaceMemberDeclaration"),
     CONCRETE_METHOD_DECLARATION(400, "concreteMethodDeclaration"),
     METHOD_DECLARATOR(401, "methodDeclarator"),
     METHOD_NAME(404, "methodName"),
@@ -1120,11 +1498,28 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     TYPE(577, "type"),
     EXTRA_CODE(578, "extraCode"),
     CODE(579, "code"),
-    METHOD_BODY(580, "methodBody");
+    METHOD_BODY(580, "methodBody"),
+    ASSOCIATION(600, "association"),
+    ASSOCIATION_DEFINITION(610, "associationDefinition"),
+    ASSOCIATION_CLASS_DEFINITION(611, "associationClassDefinition"),
+    INLINE_ASSOCIATION(620, "inlineAssociation"),
+    INLINE_ASSOCIATION_END(621, "inlineAssociationEnd"),
+    ASSOCIATION_END(622, "associationEnd"),
+    SINGLE_ASSOCIATION_END(623, "singleAssociationEnd"),
+    MULTIPLICITY(630, "multiplicity"),
+    BOUND(650, "bound"),
+    LOWER_BOUND(651, "lowerBound"),
+    UPPER_BOUND(652, "upperBound"),
+    ROLE_NAME(653, "roleName"),
+    ARROW(654, "arrow"),
+    INTERFACE(655, "interface"),
+    ATTRIBUTE(700, "attribute"),
+    SIMPLE_ATTRIBUTE(701, "simpleAttribute"),
+    COMPLEX_ATTRIBUTE(702, "complexAttribute");
 
     private int id;
     private String value;
-  @umplesourcefile(line={268},file={"Generator_CodeUmple.ump"},javaline={1128},length={11})
+  @umplesourcefile(line={293},file={"Generator_CodeUmple.ump"},javaline={1523},length={11})
     private static final Map<String,RuleName> strDict = new HashMap<String,RuleName>();
 
     /*
@@ -1137,53 +1532,53 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }   
     } 
   
-  @umplesourcefile(line={280},file={"Generator_CodeUmple.ump"},javaline={1141},length={5})
+  @umplesourcefile(line={305},file={"Generator_CodeUmple.ump"},javaline={1536},length={5})
     private RuleName(int id, String value)
     {
       this.id = id;
       this.value = value;
     }
 
-  @umplesourcefile(line={286},file={"Generator_CodeUmple.ump"},javaline={1148},length={4})
+  @umplesourcefile(line={311},file={"Generator_CodeUmple.ump"},javaline={1543},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={291},file={"Generator_CodeUmple.ump"},javaline={1154},length={4})
+  @umplesourcefile(line={316},file={"Generator_CodeUmple.ump"},javaline={1549},length={4})
     public String toString()
     {
       return this.value; 
     } 
 
-  @umplesourcefile(line={296},file={"Generator_CodeUmple.ump"},javaline={1160},length={4})
+  @umplesourcefile(line={321},file={"Generator_CodeUmple.ump"},javaline={1555},length={4})
     public boolean equals(String testVal)
     {
       return this.value.equals(testVal);
     }
 
-  @umplesourcefile(line={301},file={"Generator_CodeUmple.ump"},javaline={1166},length={4})
+  @umplesourcefile(line={326},file={"Generator_CodeUmple.ump"},javaline={1561},length={4})
     public static RuleName fromString(String s)
     {
       return strDict.containsKey(s) ? strDict.get(s) : NIL; 
     }
   }
 
-//  @umplesourcefile(line={308},file={"Generator_CodeUmple.ump"},javaline={1173},length={14})
+//  @umplesourcefile(line={333},file={"Generator_CodeUmple.ump"},javaline={1568},length={14})
   private enum SearchState {RECORDED, PROCESSED};
 
-//  @umplesourcefile(line={331},file={"Generator_CodeUmple.ump"},javaline={1176},length={11})
-  @umplesourcefile(line={332},file={"Generator_CodeUmple.ump"},javaline={1177},length={10})
+//  @umplesourcefile(line={372},file={"Generator_CodeUmple.ump"},javaline={1571},length={11})
+  @umplesourcefile(line={373},file={"Generator_CodeUmple.ump"},javaline={1572},length={10})
   private Deque<Scope> scopes = new ArrayDeque<Scope>() ;
 
-//  @umplesourcefile(line={332},file={"Generator_CodeUmple.ump"},javaline={1180},length={8})
+//  @umplesourcefile(line={373},file={"Generator_CodeUmple.ump"},javaline={1575},length={8})
   private int indent = 0 ;
 
-//  @umplesourcefile(line={333},file={"Generator_CodeUmple.ump"},javaline={1183},length={5})
-  private int curMethod = 0 ;
+//  @umplesourcefile(line={374},file={"Generator_CodeUmple.ump"},javaline={1578},length={5})
+  private String rootElementName = "" ;
 
-//  @umplesourcefile(line={334},file={"Generator_CodeUmple.ump"},javaline={1186},length={2})
-  private int curParam = 0 ;
+//  @umplesourcefile(line={375},file={"Generator_CodeUmple.ump"},javaline={1581},length={2})
+  private String lastNamedRule = "" ;
 
   
 }
