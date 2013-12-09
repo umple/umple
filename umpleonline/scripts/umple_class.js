@@ -60,6 +60,7 @@ UmpleClassFactory.perimeterPosition = function(umpleClass, currentPosition, offs
   var deltaX = Math.min(minXDelta,maxXDelta);
   var deltaY = Math.min(minYDelta,maxYDelta);
   
+
   if (deltaX < deltaY)
   {
     realX = minXDelta < maxXDelta ? minX : maxX;
@@ -155,7 +156,7 @@ function UmpleClass()
   	this.extendsClass = null;
   }
   
-  // Used by triOverlap to enable associations to line up properly
+  // Used by trimOverlap to enable associations to line up properly
   this.borderLines = function()
   {
   	var classObj = jQuery("#" + this.id);
@@ -231,7 +232,6 @@ function UmpleClass()
       }
     } // End of loop adding attributes
     
-
     if(this.methods.length > 0)
     {
       for(var i = 0; i<this.methods.length;i++)
@@ -290,10 +290,13 @@ function UmpleClass()
 */
     }
     
-    if(Page.modifiedDiagrams == true)
-    {
-      this.position.height=0;
-    }
+
+
+    rowspan = 3;
+    if(Page.showAttributes)
+     rowspan+=1;
+    if(Page.showMethods)
+     rowspan+=1;
 	    
     classInnerHtml +=
       format(
@@ -301,9 +304,9 @@ function UmpleClass()
       '" class="classTable" border="0">', this.id) +
       format(
       '  <tr class="height">' +
-      '    <td rowspan="4"> <img id="{0}_height" src="scripts/_.gif" style="width:0px;height:{1}px;display:block;"  />' +
+      '    <td rowspan="{2}"> <img id="{0}_height" src="scripts/_.gif" style="width:0px;height:{1}px;display:block;"  />' +
       '    </td>' +
-      '  </tr>',this.id,this.position.height) + 
+      '  </tr>',this.id,this.position.height,rowspan) + 
       '  <tr class="classArea">' +
       '    <td > <img src="scripts/class.png" title="Class" /> ';
       
@@ -318,6 +321,7 @@ function UmpleClass()
     
     classInnerHtml += ('</td> ' + '</tr>');
 
+
     if(Page.showAttributes == true)
     {  
         classInnerHtml += 
@@ -326,17 +330,6 @@ function UmpleClass()
         '    <td class="attributes">{0}' +
         '    </td>' +
         '  </tr>',attributesInnerHtml);
-
-	if(Page.showMethods == false)
-        {
-          width_added=true;
-          classInnerHtml +=
-          format(
-          '  <tr class="width">' +
-          '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
-          '    </td>' +
-          '  </tr>',this.id,this.position.width);
-        }
 
       }
       
@@ -348,20 +341,16 @@ function UmpleClass()
         '    <td class="methods">{0}' +
         '    </td>' +
         '  </tr>',methodsInnerHtml);
- 
-        if(Page.showAttributes == false)
-        {
-          width_added=true;
+      }
+
           classInnerHtml +=
           format(
           '  <tr class="width">' +
           '    <td> <img id="{0}_width" src="scripts/_.gif" style="width:{1}px;height:0px;display:block;"  />' +
           '    </td>' +
-          '  </tr>',this.id,this.position.width);
-        }
-      }   
+          '  </tr>',this.id,this.position.width); 
+ 
       classInnerHtml += '</table>';
-      Page.modifiedDiagrams = true;
  
     var existing = classDiv.html();
     classDiv.html(classInnerHtml + existing);

@@ -333,6 +333,46 @@ UmpleSystem.redrawGeneralizationsTo = function(parent)
   }
 }
 
+UmpleSystem.update = function()
+{
+  for(var i = 0; i<this.umpleClasses.length;++i)
+  {
+    var umpleClass = this.umpleClasses[i];
+    umpleClass.position.height = 28;
+    if(UmpleSystem.showAttributes)
+      umpleClass.position.height += 17*(umpleClass.attributes.size());
+    if(UmpleSystem.showMethods)
+      umpleClass.position.height += 17*(umpleClass.methods.size());
+    UmpleSystem.updateClass(umpleClass);
+
+  }
+
+  for(var i = 0; i<this.umpleAssociations.length;++i)
+  {
+    var umpleClass1 = UmpleSystem.find(this.umpleAssociations[i].classOneId);
+    var x = this.umpleAssociations[i].offsetOnePosition.x+umpleClass1.position.x+UmpleSystem.position().x;
+    var y = this.umpleAssociations[i].offsetOnePosition.y+umpleClass1.position.y+UmpleSystem.position().y;
+    var xys1 =  Action.associationSnapClassReady(x,y,umpleClass1);
+
+    var umpleClass2 = UmpleSystem.find(this.umpleAssociations[i].classTwoId);
+    x = this.umpleAssociations[i].offsetTwoPosition.x+umpleClass2.position.x+UmpleSystem.position().x;
+    y = this.umpleAssociations[i].offsetTwoPosition.y+umpleClass2.position.y+UmpleSystem.position().y;
+    var xys2 =  Action.associationSnapClassReady(x,y,umpleClass2);
+
+    var screenPosition1 = new UmplePosition(xys1[0],xys1[1],0,0);
+    var screenPosition2 = new UmplePosition(xys2[0],xys2[1],0,0);
+
+    this.umpleAssociations[i].setOffsetOnePosition(screenPosition1);
+    this.umpleAssociations[i].setOffsetTwoPosition(screenPosition2);
+    UmpleSystem.redrawAssociation(this.umpleAssociations[i]);
+  }
+  for(var i = 0; i<this.umpleClasses.length;++i)
+  {
+    UmpleSystem.trimOverlappingAssociations(this.umpleClasses[i]);
+  }
+
+}
+
 UmpleSystem.redraw = function(umpleClass)
 {
   var screenX = umpleClass.position.x + UmpleSystem.position().x;
