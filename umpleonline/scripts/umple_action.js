@@ -1194,8 +1194,7 @@ Action.loadExample = function loadExample()
   else if (sel=="CanalLockStateMachine.ump"){Page.setUmpleCanvasSize(700,550);}
   else if (sel=="CanalSystem.ump"){Page.setUmpleCanvasSize(790,600);}  
   else if (sel=="RoutesAndLocations.ump"){Page.setUmpleCanvasSize(700,680);}
-  
-          
+         
   jQuery("#inputExample").blur();
 }
 
@@ -1698,6 +1697,8 @@ Action.updateUmpleDiagramCallback = function(response)
     if(Page.useEditableClassDiagram) {
       var newSystem = Json.toObject(umpleJson);
       UmpleSystem.merge(newSystem);
+      if(Page.showMethods || !Page.showAttributes)
+       UmpleSystem.update(); 
     }
 
     if (Page.readOnly) {
@@ -1839,6 +1840,12 @@ Action.associationSnap = function(x, y, dragDivSel)
   var index = id.substr(id.lastIndexOf("_") + "anchor".length + 1);
   var association = UmpleSystem.findAssociation(elementId);
   var umpleClass = association.getClass(index);
+  var perimeter = UmpleClassFactory.perimeterPosition(umpleClass,new UmplePosition(x,y,0,0),UmpleSystem.position());
+  return [perimeter.x, perimeter.y];
+}
+
+Action.associationSnapClassReady = function(x,y,umpleClass)
+{
   var perimeter = UmpleClassFactory.perimeterPosition(umpleClass,new UmplePosition(x,y,0,0),UmpleSystem.position());
   return [perimeter.x, perimeter.y];
 }
@@ -2105,7 +2112,7 @@ Action.methodDelete = function(diagramId,index)
   //  umpleClass.position.height = Math.round(classObj.height());
   //  umpleClass.position.width = Math.round(classObj.width());
 
-  umpleClass.position.height = 28+17*umpleClass.methods.size();
+  umpleClass.position.height = 28+17*(umpleClass.attributes.size()+umpleClass.methods.size());
 // This needs fixing so it picks up the correct width
 // Look trimOverlap, which seems to know the correct width
   umpleClass.position.width = UmpleClassFactory.defaultSize.width;
@@ -2134,7 +2141,7 @@ Action.attributeDelete = function(diagramId,index)
 //  umpleClass.position.height = Math.round(classObj.height());
 //  umpleClass.position.width = Math.round(classObj.width());
 
-  umpleClass.position.height = 28+17*umpleClass.attributes.size();
+  umpleClass.position.height = 28+17*(umpleClass.attributes.size()+umpleClass.methods.size());
 // This needs fixing so it picks up the correct width
 // Look trimOverlap, which seems to know the correct width
   umpleClass.position.width = UmpleClassFactory.defaultSize.width;
@@ -2155,13 +2162,13 @@ Action.attributeDelete = function(diagramId,index)
 Action.toggleAttributes = function()
 {
   Page.showAttributes = !Page.showAttributes;
-  UmpleSystem.redrawCanvas();
+  UmpleSystem.update();
 }
   
 Action.toggleMethods = function()
 {
   Page.showMethods = !Page.showMethods;
-  UmpleSystem.redrawCanvas(); 
+  UmpleSystem.update();
 }
 
 
