@@ -62,6 +62,7 @@
 
 110: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Interface name '{0}' must be alphanumeric and start with an alpha character or _ ;
 111: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;
+112: 2, "http://umple.org/PageBeingDeveloped.html", Interface '{0}' has duplicate constant name {1} ;
 
 # [TODO - issue 337] 120: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Association role name '{0}' must be alphanumeric and start with a letter ;
 # [TODO - issue 337] 121: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Association role name '{0}' should start with a lower-case letter ;

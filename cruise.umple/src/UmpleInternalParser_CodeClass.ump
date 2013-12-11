@@ -1586,10 +1586,13 @@ class UmpleInternalParser
     boolean validName = Token.isValidIdentifier(constantToken.getValue("name"));
     boolean properName = Token.isValidIdentifier(constantToken.getValue("name"), "[A-Z]");
 
+    // Throws an error if the name of the constant is not valid
     if(validName != true){
       setFailedPosition(constantToken.getPosition(), 160, constantToken.getValue("name"));
       return;
     }
+    // Throws a warning if the name of the constant does not start with an uppercase
+    // as some languages may depend on constants being uppercase
     if(properName != true){
       setFailedPosition(constantToken.getPosition(), 161, constantToken.getValue("name"));
     }
@@ -1616,10 +1619,25 @@ class UmpleInternalParser
       }
     }  
 
+    // Sets the default value of a constant that has not been initialized
     if(aConstant.getValue() == null || aConstant.getValue() == "")
     {
       aConstant.setValue(defaultConstantValue(aConstant.getType(), constantToken));
     }
+
+    // Checks to see if another constant shares the name of the current constant
+    for(Constant tmpConst : ((UmpleClassifier)uElement).getConstants()){
+      if (tmpConst.getName().equals(aConstant.getName())){
+        if (uElement instanceof UmpleClass)
+        {
+          setFailedPosition(constantToken.getPosition(), 22, uElement.getName(), aConstant.getName());
+        }
+        else if (uElement instanceof UmpleInterface)
+        { 
+          setFailedPosition(constantToken.getPosition(), 112, uElement.getName(), aConstant.getName());
+        }
+      }
+    }  
 
     // Add constant to Class or Interface
     if (uElement instanceof UmpleClass)

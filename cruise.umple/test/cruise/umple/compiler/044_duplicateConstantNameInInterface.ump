@@ -1,0 +1,4 @@
+interface DuplicateConstantNameInInterface{
+  const Integer I = 1;
+  const double I = 4.5;
+}
