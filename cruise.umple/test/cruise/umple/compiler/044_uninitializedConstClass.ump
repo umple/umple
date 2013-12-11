@@ -1,0 +1,3 @@
+class UninitializedConst{
+  const Double A;
+}

@@ -660,6 +660,42 @@ public class UmpleParserTest
   { // Test to make sure a warning is generated when an interface name does not start with a capital letter
     assertHasWarningsParse("043_warningInterfaceNameNotCapital.ump", 111);
   }
+
+  @Test
+  public void duplicateConstantNameInterface()
+  { // Test to make sure that a duplicate constant name in an interface throws a warning
+    assertFailedParse("044_duplicateConstantNameInInterface.ump", 112);
+  }
+
+  @Test
+  public void warningConstantDeprecated()
+  { // Ensures that a warning is thrown when deprecated keyword constant is used in an interface
+    assertHasWarningsParse("044_constantDeprecatedInterface.ump", 901);
+  }
+
+  @Test
+  public void warningUninitializedConstInterface()
+  { // Ensures that a warning is thrown when a constant isn't initialized in an interface
+    assertHasWarningsParse("044_uninitializedConstInterface.ump", 35);
+  }
+
+  @Test
+  public void warningUninitializedConstClass()
+  { // Ensures that a warning is thrown when deprecated keyword constant isn't initialized in a class
+    assertHasWarningsParse("044_uninitializedConstClass.ump", 35);
+  }
+
+  @Test
+  public void warningUninitializedConstObjectInterface()
+  { // Ensures an error is thrown when a constant that isn't of a default Umple data type isn't initialized in an interface
+    assertFailedParse("044_uninitializedConstObjectInterface.ump", 37);
+  }
+
+  @Test
+  public void warningUninitializedConstObjectClass()
+  { // Ensures an error is thrown when a constant that isn't of a default Umple data type isn't initialized in a class
+    assertFailedParse("044_uninitializedConstObjectClass.ump", 37);
+  }
   
   @Test
   public void referencedPackages()
