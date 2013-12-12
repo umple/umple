@@ -104,12 +104,11 @@ public class GeneratedElement
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1926},file={"Umple_Code.ump"},javaline={108},length={5})
-  @umplesourcefile(line={1927},file={"Umple_Code.ump"},javaline={109},length={4})
+  //  @umplesourcefile(line={1926},file={"Umple_Code.ump"},javaline={108},length={4})
+  @umplesourcefile(line={1927},file={"Umple_Code.ump"},javaline={109},length={3})
   private Map<String, String> lookups = new HashMap<String, String>() ;
-
-//  @umplesourcefile(line={1927},file={"Umple_Code.ump"},javaline={112},length={2})
-  @umplesourcefile(line={1928},file={"Umple_Code.ump"},javaline={113},length={1})
+//  @umplesourcefile(line={1927},file={"Umple_Code.ump"},javaline={111},length={2})
+  @umplesourcefile(line={1928},file={"Umple_Code.ump"},javaline={112},length={1})
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>() ;
 
   

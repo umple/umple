@@ -571,21 +571,17 @@ public class RuleBasedParser
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={48},file={"GrammarParsing.ump"},javaline={575},length={14})
+  //  @umplesourcefile(line={48},file={"GrammarParsing.ump"},javaline={575},length={10})
   public static int parsing = 0 ;
-
-//  @umplesourcefile(line={50},file={"GrammarParsing.ump"},javaline={578},length={11})
-  @umplesourcefile(line={51},file={"GrammarParsing.ump"},javaline={579},length={10})
+//  @umplesourcefile(line={50},file={"GrammarParsing.ump"},javaline={577},length={8})
+  @umplesourcefile(line={51},file={"GrammarParsing.ump"},javaline={578},length={7})
   public static HashMap<String,ChoiceRule> choicerules = new HashMap<String,ChoiceRule>() ;
-
-//  @umplesourcefile(line={51},file={"GrammarParsing.ump"},javaline={582},length={8})
-  @umplesourcefile(line={52},file={"GrammarParsing.ump"},javaline={583},length={7})
+//  @umplesourcefile(line={51},file={"GrammarParsing.ump"},javaline={580},length={6})
+  @umplesourcefile(line={52},file={"GrammarParsing.ump"},javaline={581},length={5})
   private static HashMap<String,String> todeclare = new HashMap<String,String>() ;
-
-//  @umplesourcefile(line={64},file={"GrammarParsing_Code.ump"},javaline={586},length={5})
+//  @umplesourcefile(line={64},file={"GrammarParsing_Code.ump"},javaline={583},length={4})
   private static GrammarAnalyzer analyzer = null ;
-
-//  @umplesourcefile(line={65},file={"GrammarParsing_Code.ump"},javaline={589},length={2})
+//  @umplesourcefile(line={65},file={"GrammarParsing_Code.ump"},javaline={585},length={2})
   private Token grootToken = null ;
 
   

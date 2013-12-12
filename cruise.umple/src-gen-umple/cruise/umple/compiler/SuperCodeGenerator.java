@@ -386,16 +386,14 @@ public abstract class SuperCodeGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={8},file={"Generator_SuperCodeGenerator.ump"},javaline={390},length={8})
-  @umplesourcefile(line={9},file={"Generator_SuperCodeGenerator.ump"},javaline={391},length={7})
+  //  @umplesourcefile(line={8},file={"Generator_SuperCodeGenerator.ump"},javaline={390},length={6})
+  @umplesourcefile(line={9},file={"Generator_SuperCodeGenerator.ump"},javaline={391},length={5})
   protected Map<String,String> UmpleToPrimitiveMap = new HashMap<String,String>() ;
-
-//  @umplesourcefile(line={9},file={"Generator_SuperCodeGenerator.ump"},javaline={394},length={5})
-  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={395},length={4})
+//  @umplesourcefile(line={9},file={"Generator_SuperCodeGenerator.ump"},javaline={393},length={4})
+  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={394},length={3})
   protected Map<String,String> TraceLookupMap = new HashMap<String,String>() ;
-
-//  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={398},length={2})
-  @umplesourcefile(line={11},file={"Generator_SuperCodeGenerator.ump"},javaline={399},length={1})
+//  @umplesourcefile(line={10},file={"Generator_SuperCodeGenerator.ump"},javaline={396},length={2})
+  @umplesourcefile(line={11},file={"Generator_SuperCodeGenerator.ump"},javaline={397},length={1})
   protected Map<String,String> ConstraintLookupMap = new HashMap<String,String>() ;
 
   

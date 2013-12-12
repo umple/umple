@@ -197,16 +197,13 @@ public class MetricsCollector
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={69},file={"UmpleStats_Code.ump"},javaline={201},length={11})
+  //  @umplesourcefile(line={69},file={"UmpleStats_Code.ump"},javaline={201},length={8})
   private Hashtable<String, Hashtable<String, Integer>> _projectToMetricsMap ;
-
-//  @umplesourcefile(line={70},file={"UmpleStats_Code.ump"},javaline={204},length={8})
+//  @umplesourcefile(line={70},file={"UmpleStats_Code.ump"},javaline={203},length={6})
   private String _currentProject ;
-
-//  @umplesourcefile(line={71},file={"UmpleStats_Code.ump"},javaline={207},length={5})
+//  @umplesourcefile(line={71},file={"UmpleStats_Code.ump"},javaline={205},length={4})
   private ArrayList<String> _allProjectIds ;
-
-//  @umplesourcefile(line={72},file={"UmpleStats_Code.ump"},javaline={210},length={2})
+//  @umplesourcefile(line={72},file={"UmpleStats_Code.ump"},javaline={207},length={2})
   private ArrayList<String> _allAssociationTypes ;
 
   

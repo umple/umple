@@ -1064,22 +1064,18 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodePhp.ump"},javaline={1068},length={93})
+  //  @umplesourcefile(line={14},file={"Generator_CodePhp.ump"},javaline={1068},length={89})
   private static Map<String,String> UpperCaseSingularLookupMap ;
-
-//  @umplesourcefile(line={15},file={"Generator_CodePhp.ump"},javaline={1071},length={90})
+//  @umplesourcefile(line={15},file={"Generator_CodePhp.ump"},javaline={1070},length={87})
   private static Map<String,String> UpperCasePluralLookupMap ;
-
-//  @umplesourcefile(line={16},file={"Generator_CodePhp.ump"},javaline={1074},length={87})
+//  @umplesourcefile(line={16},file={"Generator_CodePhp.ump"},javaline={1072},length={85})
   private static Map<String,String> AsIsSingularLookupMap ;
-
-//  @umplesourcefile(line={17},file={"Generator_CodePhp.ump"},javaline={1077},length={84})
+//  @umplesourcefile(line={17},file={"Generator_CodePhp.ump"},javaline={1074},length={83})
   private static Map<String,String> AsIsPluralLookupMap ;
-
-//  @umplesourcefile(line={18},file={"Generator_CodePhp.ump"},javaline={1080},length={81})
+//  @umplesourcefile(line={18},file={"Generator_CodePhp.ump"},javaline={1076},length={81})
   private static List<String> OneOrManyLookup ;
 
-//  @umplesourcefile(line={19},file={"Generator_CodePhp.ump"},javaline={1083},length={78})
+//  @umplesourcefile(line={19},file={"Generator_CodePhp.ump"},javaline={1079},length={78})
   static 
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();

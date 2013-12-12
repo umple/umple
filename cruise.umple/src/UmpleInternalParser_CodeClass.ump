@@ -2513,8 +2513,17 @@ class UmpleInternalParser
       {
         extraCode += ";";
       }
-      aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+
+      CodeBlock cb = new CodeBlock();
+      String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+      String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
+
+      cb.setCode(otherComment);
+      cb.setCode("Ruby", rubyComment);
+
+      aClass.appendExtraCode(true,cb);
       aClass.appendExtraCode("  "+extraCode+"\n");
+
       setFailedPosition(sub.getPosition(), 1007, sub.getValue("name"));
     }
     else if(sub.is("malformedStatemachine1")||sub.is("malformedStatemachine2"))

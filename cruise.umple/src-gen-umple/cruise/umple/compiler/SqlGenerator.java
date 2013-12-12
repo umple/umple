@@ -1034,31 +1034,24 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeSql.ump"},javaline={1038},length={95})
+  //  @umplesourcefile(line={14},file={"Generator_CodeSql.ump"},javaline={1038},length={88})
   private static Map<String,String> UpperCaseSingularLookupMap ;
-
-//  @umplesourcefile(line={15},file={"Generator_CodeSql.ump"},javaline={1041},length={92})
+//  @umplesourcefile(line={15},file={"Generator_CodeSql.ump"},javaline={1040},length={86})
   private static Map<String,String> UpperCasePluralLookupMap ;
-
-//  @umplesourcefile(line={16},file={"Generator_CodeSql.ump"},javaline={1044},length={89})
+//  @umplesourcefile(line={16},file={"Generator_CodeSql.ump"},javaline={1042},length={84})
   private static Map<String,String> AsIsSingularLookupMap ;
-
-//  @umplesourcefile(line={17},file={"Generator_CodeSql.ump"},javaline={1047},length={86})
+//  @umplesourcefile(line={17},file={"Generator_CodeSql.ump"},javaline={1044},length={82})
   private static Map<String,String> AsIsPluralLookupMap ;
-
-//  @umplesourcefile(line={18},file={"Generator_CodeSql.ump"},javaline={1050},length={83})
+//  @umplesourcefile(line={18},file={"Generator_CodeSql.ump"},javaline={1046},length={80})
   private static List<String> OneOrManyLookup ;
-
-//  @umplesourcefile(line={19},file={"Generator_CodeSql.ump"},javaline={1053},length={80})
+//  @umplesourcefile(line={19},file={"Generator_CodeSql.ump"},javaline={1048},length={78})
   private static List<String> SqlPrimitives ;
-
-//  @umplesourcefile(line={20},file={"Generator_CodeSql.ump"},javaline={1056},length={77})
+//  @umplesourcefile(line={20},file={"Generator_CodeSql.ump"},javaline={1050},length={76})
   private static String beforeCode ;
-
-//  @umplesourcefile(line={21},file={"Generator_CodeSql.ump"},javaline={1059},length={74})
+//  @umplesourcefile(line={21},file={"Generator_CodeSql.ump"},javaline={1052},length={74})
   private static String afterCode ;
 
-//  @umplesourcefile(line={23},file={"Generator_CodeSql.ump"},javaline={1062},length={71})
+//  @umplesourcefile(line={23},file={"Generator_CodeSql.ump"},javaline={1055},length={71})
   static 
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();

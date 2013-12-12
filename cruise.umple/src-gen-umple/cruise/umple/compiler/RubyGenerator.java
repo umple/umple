@@ -980,22 +980,18 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeRuby.ump"},javaline={984},length={91})
+  //  @umplesourcefile(line={14},file={"Generator_CodeRuby.ump"},javaline={984},length={87})
   private static Map<String,String> UpperCaseSingularLookupMap ;
-
-//  @umplesourcefile(line={15},file={"Generator_CodeRuby.ump"},javaline={987},length={88})
+//  @umplesourcefile(line={15},file={"Generator_CodeRuby.ump"},javaline={986},length={85})
   private static Map<String,String> UpperCasePluralLookupMap ;
-
-//  @umplesourcefile(line={16},file={"Generator_CodeRuby.ump"},javaline={990},length={85})
+//  @umplesourcefile(line={16},file={"Generator_CodeRuby.ump"},javaline={988},length={83})
   private static Map<String,String> AsIsSingularLookupMap ;
-
-//  @umplesourcefile(line={17},file={"Generator_CodeRuby.ump"},javaline={993},length={82})
+//  @umplesourcefile(line={17},file={"Generator_CodeRuby.ump"},javaline={990},length={81})
   private static Map<String,String> AsIsPluralLookupMap ;
-
-//  @umplesourcefile(line={18},file={"Generator_CodeRuby.ump"},javaline={996},length={79})
+//  @umplesourcefile(line={18},file={"Generator_CodeRuby.ump"},javaline={992},length={79})
   private static List<String> OneOrManyLookup ;
 
-//  @umplesourcefile(line={20},file={"Generator_CodeRuby.ump"},javaline={999},length={76})
+//  @umplesourcefile(line={20},file={"Generator_CodeRuby.ump"},javaline={995},length={76})
   static 
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();

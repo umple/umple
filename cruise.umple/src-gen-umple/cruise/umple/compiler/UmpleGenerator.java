@@ -1241,27 +1241,22 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={36},file={"Generator_CodeUmple.ump"},javaline={1245},length={309})
-  @umplesourcefile(line={37},file={"Generator_CodeUmple.ump"},javaline={1246},length={46})
+  //  @umplesourcefile(line={36},file={"Generator_CodeUmple.ump"},javaline={1245},length={299})
+  @umplesourcefile(line={37},file={"Generator_CodeUmple.ump"},javaline={1246},length={41})
   private static Map<String,ChoiceRule> ruleCache = new HashMap<String,ChoiceRule>() ;
-
-//  @umplesourcefile(line={37},file={"Generator_CodeUmple.ump"},javaline={1249},length={306})
-  @umplesourcefile(line={38},file={"Generator_CodeUmple.ump"},javaline={1250},length={43})
+//  @umplesourcefile(line={37},file={"Generator_CodeUmple.ump"},javaline={1248},length={297})
+  @umplesourcefile(line={38},file={"Generator_CodeUmple.ump"},javaline={1249},length={39})
   private static Map<String,Token> tokenCache = new HashMap<String,Token>() ;
-
-//  @umplesourcefile(line={38},file={"Generator_CodeUmple.ump"},javaline={1253},length={303})
+//  @umplesourcefile(line={38},file={"Generator_CodeUmple.ump"},javaline={1251},length={295})
   private static RuleBasedParser parser = null ;
-
-//  @umplesourcefile(line={39},file={"Generator_CodeUmple.ump"},javaline={1256},length={300})
+//  @umplesourcefile(line={39},file={"Generator_CodeUmple.ump"},javaline={1253},length={293})
   private static GrammarAnalyzer analyzer = null ;
-
-//  @umplesourcefile(line={40},file={"Generator_CodeUmple.ump"},javaline={1259},length={297})
+//  @umplesourcefile(line={40},file={"Generator_CodeUmple.ump"},javaline={1255},length={291})
   private static Token rootRuleToken = null ;
-
-//  @umplesourcefile(line={41},file={"Generator_CodeUmple.ump"},javaline={1262},length={294})
+//  @umplesourcefile(line={41},file={"Generator_CodeUmple.ump"},javaline={1257},length={289})
   private static ChoiceRule rootRule = null ;
 
-//  @umplesourcefile(line={46},file={"Generator_CodeUmple.ump"},javaline={1265},length={291})
+//  @umplesourcefile(line={46},file={"Generator_CodeUmple.ump"},javaline={1260},length={286})
   private enum Whitespace 
   {
     NIL(0, ""),
@@ -1274,27 +1269,27 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     private int id;
     private String value;
   
-  @umplesourcefile(line={59},file={"Generator_CodeUmple.ump"},javaline={1278},length={5})
+  @umplesourcefile(line={59},file={"Generator_CodeUmple.ump"},javaline={1273},length={5})
     private Whitespace(int id, String value)
     {
       this.id = id;
       this.value = value;
     }
 
-  @umplesourcefile(line={65},file={"Generator_CodeUmple.ump"},javaline={1285},length={4})
+  @umplesourcefile(line={65},file={"Generator_CodeUmple.ump"},javaline={1280},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={70},file={"Generator_CodeUmple.ump"},javaline={1291},length={4})
+  @umplesourcefile(line={70},file={"Generator_CodeUmple.ump"},javaline={1286},length={4})
     public String toString()
     {
       return this.value;
     }
   }
 
-//  @umplesourcefile(line={77},file={"Generator_CodeUmple.ump"},javaline={1298},length={261})
+//  @umplesourcefile(line={77},file={"Generator_CodeUmple.ump"},javaline={1293},length={256})
   private enum TerminalType 
   {
     NIL(0, "", ""),
@@ -1305,7 +1300,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     private int id;
     private String value;
     private String translation;
-  @umplesourcefile(line={88},file={"Generator_CodeUmple.ump"},javaline={1309},length={11})
+  @umplesourcefile(line={88},file={"Generator_CodeUmple.ump"},javaline={1304},length={11})
     private static final Map<String,TerminalType> strDict = new HashMap<String,TerminalType>();
 
     /*
@@ -1318,13 +1313,13 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }   
     } 
 
-  @umplesourcefile(line={100},file={"Generator_CodeUmple.ump"},javaline={1322},length={4})
+  @umplesourcefile(line={100},file={"Generator_CodeUmple.ump"},javaline={1317},length={4})
     public static TerminalType fromString(String t)
     {
       return strDict.containsKey(t) ? strDict.get(t) : NIL; 
     }
   
-  @umplesourcefile(line={105},file={"Generator_CodeUmple.ump"},javaline={1328},length={6})
+  @umplesourcefile(line={105},file={"Generator_CodeUmple.ump"},javaline={1323},length={6})
     private TerminalType(int id, String value, String translation)
     {
       this.id = id;
@@ -1332,26 +1327,26 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
       this.translation = translation;
     }
 
-  @umplesourcefile(line={112},file={"Generator_CodeUmple.ump"},javaline={1336},length={4})
+  @umplesourcefile(line={112},file={"Generator_CodeUmple.ump"},javaline={1331},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={117},file={"Generator_CodeUmple.ump"},javaline={1342},length={4})
+  @umplesourcefile(line={117},file={"Generator_CodeUmple.ump"},javaline={1337},length={4})
     public String toString()
     {
       return this.value;
     } 
 
-  @umplesourcefile(line={122},file={"Generator_CodeUmple.ump"},javaline={1348},length={4})
+  @umplesourcefile(line={122},file={"Generator_CodeUmple.ump"},javaline={1343},length={4})
     public String getTranslation()
     {
       return this.translation;
     }
   }
 
-//  @umplesourcefile(line={129},file={"Generator_CodeUmple.ump"},javaline={1355},length={210})
+//  @umplesourcefile(line={129},file={"Generator_CodeUmple.ump"},javaline={1350},length={205})
   private enum RuleTokenType 
   {
     NIL(0, ""),
@@ -1376,7 +1371,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 
     private int id;
     private String value;
-  @umplesourcefile(line={154},file={"Generator_CodeUmple.ump"},javaline={1380},length={11})
+  @umplesourcefile(line={154},file={"Generator_CodeUmple.ump"},javaline={1375},length={11})
     private static final Map<String,RuleTokenType> strDict = new HashMap<String,RuleTokenType>();
 
     /*
@@ -1389,39 +1384,39 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }   
     } 
 
-  @umplesourcefile(line={166},file={"Generator_CodeUmple.ump"},javaline={1393},length={4})
+  @umplesourcefile(line={166},file={"Generator_CodeUmple.ump"},javaline={1388},length={4})
     public static RuleTokenType fromToken(Token t)
     {
       return strDict.containsKey(t.getName()) ? strDict.get(t.getName()) : NIL; 
     }
   
-  @umplesourcefile(line={171},file={"Generator_CodeUmple.ump"},javaline={1399},length={5})
+  @umplesourcefile(line={171},file={"Generator_CodeUmple.ump"},javaline={1394},length={5})
     private RuleTokenType(int id, String value)
     {
       this.id = id;
       this.value = value;
     }
 
-  @umplesourcefile(line={177},file={"Generator_CodeUmple.ump"},javaline={1406},length={4})
+  @umplesourcefile(line={177},file={"Generator_CodeUmple.ump"},javaline={1401},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={182},file={"Generator_CodeUmple.ump"},javaline={1412},length={4})
+  @umplesourcefile(line={182},file={"Generator_CodeUmple.ump"},javaline={1407},length={4})
     public String toString()
     {
       return this.value;
     } 
 
-  @umplesourcefile(line={187},file={"Generator_CodeUmple.ump"},javaline={1418},length={4})
+  @umplesourcefile(line={187},file={"Generator_CodeUmple.ump"},javaline={1413},length={4})
     public boolean equals(Token t)
     {
       return this.value.equals(t.getName());
     }
   }
 
-//  @umplesourcefile(line={194},file={"Generator_CodeUmple.ump"},javaline={1425},length={146})
+//  @umplesourcefile(line={194},file={"Generator_CodeUmple.ump"},javaline={1420},length={141})
   private enum RuleModifier 
   {
     NIL(0, ""),
@@ -1431,7 +1426,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 
     private int id;
     private String value;
-  @umplesourcefile(line={204},file={"Generator_CodeUmple.ump"},javaline={1435},length={11})
+  @umplesourcefile(line={204},file={"Generator_CodeUmple.ump"},javaline={1430},length={11})
     private static final Map<String,RuleModifier> strDict = new HashMap<String,RuleModifier>();
 
     /*
@@ -1444,33 +1439,33 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }   
     } 
 
-  @umplesourcefile(line={216},file={"Generator_CodeUmple.ump"},javaline={1448},length={4})
+  @umplesourcefile(line={216},file={"Generator_CodeUmple.ump"},javaline={1443},length={4})
     public static RuleModifier fromToken(Token t)
     {
       return strDict.containsKey(t.getValue()) ? strDict.get(t.getValue()) : NIL; 
     }
   
-  @umplesourcefile(line={221},file={"Generator_CodeUmple.ump"},javaline={1454},length={5})
+  @umplesourcefile(line={221},file={"Generator_CodeUmple.ump"},javaline={1449},length={5})
     private RuleModifier(int id, String value)
     {
       this.id = id;
       this.value = value;
     }
 
-  @umplesourcefile(line={227},file={"Generator_CodeUmple.ump"},javaline={1461},length={4})
+  @umplesourcefile(line={227},file={"Generator_CodeUmple.ump"},javaline={1456},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={232},file={"Generator_CodeUmple.ump"},javaline={1467},length={4})
+  @umplesourcefile(line={232},file={"Generator_CodeUmple.ump"},javaline={1462},length={4})
     public String toString()
     {
       return this.value;
     }
   }
 
-//  @umplesourcefile(line={244},file={"Generator_CodeUmple.ump"},javaline={1474},length={102})
+//  @umplesourcefile(line={244},file={"Generator_CodeUmple.ump"},javaline={1469},length={97})
   private enum RuleName 
   {
     NIL(0, ""),
@@ -1519,7 +1514,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 
     private int id;
     private String value;
-  @umplesourcefile(line={293},file={"Generator_CodeUmple.ump"},javaline={1523},length={11})
+  @umplesourcefile(line={293},file={"Generator_CodeUmple.ump"},javaline={1518},length={11})
     private static final Map<String,RuleName> strDict = new HashMap<String,RuleName>();
 
     /*
@@ -1532,52 +1527,47 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
         }   
     } 
   
-  @umplesourcefile(line={305},file={"Generator_CodeUmple.ump"},javaline={1536},length={5})
+  @umplesourcefile(line={305},file={"Generator_CodeUmple.ump"},javaline={1531},length={5})
     private RuleName(int id, String value)
     {
       this.id = id;
       this.value = value;
     }
 
-  @umplesourcefile(line={311},file={"Generator_CodeUmple.ump"},javaline={1543},length={4})
+  @umplesourcefile(line={311},file={"Generator_CodeUmple.ump"},javaline={1538},length={4})
     public int toInt()
     {
       return this.id;
     }
 
-  @umplesourcefile(line={316},file={"Generator_CodeUmple.ump"},javaline={1549},length={4})
+  @umplesourcefile(line={316},file={"Generator_CodeUmple.ump"},javaline={1544},length={4})
     public String toString()
     {
       return this.value; 
     } 
 
-  @umplesourcefile(line={321},file={"Generator_CodeUmple.ump"},javaline={1555},length={4})
+  @umplesourcefile(line={321},file={"Generator_CodeUmple.ump"},javaline={1550},length={4})
     public boolean equals(String testVal)
     {
       return this.value.equals(testVal);
     }
 
-  @umplesourcefile(line={326},file={"Generator_CodeUmple.ump"},javaline={1561},length={4})
+  @umplesourcefile(line={326},file={"Generator_CodeUmple.ump"},javaline={1556},length={4})
     public static RuleName fromString(String s)
     {
       return strDict.containsKey(s) ? strDict.get(s) : NIL; 
     }
   }
-
-//  @umplesourcefile(line={333},file={"Generator_CodeUmple.ump"},javaline={1568},length={14})
+//  @umplesourcefile(line={333},file={"Generator_CodeUmple.ump"},javaline={1562},length={10})
   private enum SearchState {RECORDED, PROCESSED};
-
-//  @umplesourcefile(line={372},file={"Generator_CodeUmple.ump"},javaline={1571},length={11})
-  @umplesourcefile(line={373},file={"Generator_CodeUmple.ump"},javaline={1572},length={10})
+//  @umplesourcefile(line={372},file={"Generator_CodeUmple.ump"},javaline={1564},length={8})
+  @umplesourcefile(line={373},file={"Generator_CodeUmple.ump"},javaline={1565},length={7})
   private Deque<Scope> scopes = new ArrayDeque<Scope>() ;
-
-//  @umplesourcefile(line={373},file={"Generator_CodeUmple.ump"},javaline={1575},length={8})
+//  @umplesourcefile(line={373},file={"Generator_CodeUmple.ump"},javaline={1567},length={6})
   private int indent = 0 ;
-
-//  @umplesourcefile(line={374},file={"Generator_CodeUmple.ump"},javaline={1578},length={5})
+//  @umplesourcefile(line={374},file={"Generator_CodeUmple.ump"},javaline={1569},length={4})
   private String rootElementName = "" ;
-
-//  @umplesourcefile(line={375},file={"Generator_CodeUmple.ump"},javaline={1581},length={2})
+//  @umplesourcefile(line={375},file={"Generator_CodeUmple.ump"},javaline={1571},length={2})
   private String lastNamedRule = "" ;
 
   

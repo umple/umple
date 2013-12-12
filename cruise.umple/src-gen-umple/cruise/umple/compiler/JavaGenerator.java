@@ -1353,22 +1353,18 @@ public class JavaGenerator extends SuperCodeGenerator implements CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={15},file={"Generator_CodeJava.ump"},javaline={1357},length={121})
+  //  @umplesourcefile(line={15},file={"Generator_CodeJava.ump"},javaline={1357},length={117})
   private static Map<String,String> UpperCaseSingularLookupMap ;
-
-//  @umplesourcefile(line={16},file={"Generator_CodeJava.ump"},javaline={1360},length={118})
+//  @umplesourcefile(line={16},file={"Generator_CodeJava.ump"},javaline={1359},length={115})
   private static Map<String,String> UpperCasePluralLookupMap ;
-
-//  @umplesourcefile(line={17},file={"Generator_CodeJava.ump"},javaline={1363},length={115})
+//  @umplesourcefile(line={17},file={"Generator_CodeJava.ump"},javaline={1361},length={113})
   private static Map<String,String> AsIsSingularLookupMap ;
-
-//  @umplesourcefile(line={18},file={"Generator_CodeJava.ump"},javaline={1366},length={112})
+//  @umplesourcefile(line={18},file={"Generator_CodeJava.ump"},javaline={1363},length={111})
   private static Map<String,String> AsIsPluralLookupMap ;
-
-//  @umplesourcefile(line={19},file={"Generator_CodeJava.ump"},javaline={1369},length={109})
+//  @umplesourcefile(line={19},file={"Generator_CodeJava.ump"},javaline={1365},length={109})
   private static List<String> OneOrManyLookup ;
 
-//  @umplesourcefile(line={21},file={"Generator_CodeJava.ump"},javaline={1372},length={106})
+//  @umplesourcefile(line={21},file={"Generator_CodeJava.ump"},javaline={1368},length={106})
   static 
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();
@@ -1447,8 +1443,8 @@ public class JavaGenerator extends SuperCodeGenerator implements CodeTranslator
     OneOrManyLookup.add("parameter");
   }
 
-//  @umplesourcefile(line={1231},file={"Generator_CodeJava.ump"},javaline={1451},length={27})
-  @umplesourcefile(line={1232},file={"Generator_CodeJava.ump"},javaline={1452},length={26})
+//  @umplesourcefile(line={1231},file={"Generator_CodeJava.ump"},javaline={1447},length={27})
+  @umplesourcefile(line={1232},file={"Generator_CodeJava.ump"},javaline={1448},length={26})
   private void writeFile (UmpleElement aClass) throws IOException 
   {
     ILang language = getLanguageFor(aClass);
