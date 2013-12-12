@@ -518,13 +518,11 @@ public class GeneratorHelper
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={30},file={"GeneratorHelper_CodeTrace.ump"},javaline={522},length={8})
+  //  @umplesourcefile(line={30},file={"GeneratorHelper_CodeTrace.ump"},javaline={522},length={6})
   static private boolean generateConsole = true ;
-
-//  @umplesourcefile(line={31},file={"GeneratorHelper_CodeTrace.ump"},javaline={525},length={5})
+//  @umplesourcefile(line={31},file={"GeneratorHelper_CodeTrace.ump"},javaline={524},length={4})
   static private boolean generateFile = true ;
-
-//  @umplesourcefile(line={32},file={"GeneratorHelper_CodeTrace.ump"},javaline={528},length={2})
+//  @umplesourcefile(line={32},file={"GeneratorHelper_CodeTrace.ump"},javaline={526},length={2})
   static private boolean generateString = true ;
 
   

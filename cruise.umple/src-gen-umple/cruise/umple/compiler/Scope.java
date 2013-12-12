@@ -39,43 +39,33 @@ public class Scope extends UmpleGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={341},file={"Generator_CodeUmple.ump"},javaline={43},length={48})
+  //  @umplesourcefile(line={341},file={"Generator_CodeUmple.ump"},javaline={43},length={38})
   public int id = 0 ;
-
-//  @umplesourcefile(line={342},file={"Generator_CodeUmple.ump"},javaline={46},length={45})
+//  @umplesourcefile(line={342},file={"Generator_CodeUmple.ump"},javaline={45},length={36})
   public double candidateRulesSatisfied = 0 ;
-
-//  @umplesourcefile(line={343},file={"Generator_CodeUmple.ump"},javaline={49},length={42})
-  @umplesourcefile(line={344},file={"Generator_CodeUmple.ump"},javaline={50},length={41})
+//  @umplesourcefile(line={343},file={"Generator_CodeUmple.ump"},javaline={47},length={34})
+  @umplesourcefile(line={344},file={"Generator_CodeUmple.ump"},javaline={48},length={33})
   public StringBuilder candidateCode = new StringBuilder() ;
-
-//  @umplesourcefile(line={344},file={"Generator_CodeUmple.ump"},javaline={53},length={39})
+//  @umplesourcefile(line={344},file={"Generator_CodeUmple.ump"},javaline={50},length={32})
   public double acceptedRulesSatisfied = 0 ;
-
-//  @umplesourcefile(line={345},file={"Generator_CodeUmple.ump"},javaline={56},length={36})
+//  @umplesourcefile(line={345},file={"Generator_CodeUmple.ump"},javaline={52},length={30})
   public StringBuilder acceptedCode = this.candidateCode ;
-
-//  @umplesourcefile(line={346},file={"Generator_CodeUmple.ump"},javaline={59},length={33})
-  @umplesourcefile(line={347},file={"Generator_CodeUmple.ump"},javaline={60},length={32})
+//  @umplesourcefile(line={346},file={"Generator_CodeUmple.ump"},javaline={54},length={28})
+  @umplesourcefile(line={347},file={"Generator_CodeUmple.ump"},javaline={55},length={27})
   public HashMap<String,Object> state = new HashMap<String,Object>() ;
-
-//  @umplesourcefile(line={347},file={"Generator_CodeUmple.ump"},javaline={63},length={30})
+//  @umplesourcefile(line={347},file={"Generator_CodeUmple.ump"},javaline={57},length={26})
   public boolean isOptional = false ;
-
-//  @umplesourcefile(line={348},file={"Generator_CodeUmple.ump"},javaline={66},length={27})
+//  @umplesourcefile(line={348},file={"Generator_CodeUmple.ump"},javaline={59},length={24})
   public boolean candidateFailed = false ;
-
-//  @umplesourcefile(line={349},file={"Generator_CodeUmple.ump"},javaline={69},length={24})
+//  @umplesourcefile(line={349},file={"Generator_CodeUmple.ump"},javaline={61},length={22})
   public boolean acceptedFailed = true ;
-
-//  @umplesourcefile(line={353},file={"Generator_CodeUmple.ump"},javaline={72},length={21})
+//  @umplesourcefile(line={353},file={"Generator_CodeUmple.ump"},javaline={63},length={20})
   public HashMap<String,Integer> candidateIterators ;
-
-//  @umplesourcefile(line={354},file={"Generator_CodeUmple.ump"},javaline={75},length={18})
+//  @umplesourcefile(line={354},file={"Generator_CodeUmple.ump"},javaline={65},length={18})
   public HashMap<String,Integer> acceptedIterators ;
 
-//  @umplesourcefile(line={356},file={"Generator_CodeUmple.ump"},javaline={78},length={15})
-  @umplesourcefile(line={357},file={"Generator_CodeUmple.ump"},javaline={79},length={14})
+//  @umplesourcefile(line={356},file={"Generator_CodeUmple.ump"},javaline={68},length={15})
+  @umplesourcefile(line={357},file={"Generator_CodeUmple.ump"},javaline={69},length={14})
   public Scope (int id, boolean isOptional) // scope for a grammar rule 
   {
     this.id = id;

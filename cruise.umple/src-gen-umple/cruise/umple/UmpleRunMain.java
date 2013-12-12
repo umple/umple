@@ -139,10 +139,9 @@ public class UmpleRunMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={320},file={"Main_Code.ump"},javaline={143},length={5})
+  //  @umplesourcefile(line={320},file={"Main_Code.ump"},javaline={143},length={4})
   public static String console ;
-
-//  @umplesourcefile(line={321},file={"Main_Code.ump"},javaline={146},length={2})
+//  @umplesourcefile(line={321},file={"Main_Code.ump"},javaline={145},length={2})
   public static boolean displayOutput = true ;
 
   

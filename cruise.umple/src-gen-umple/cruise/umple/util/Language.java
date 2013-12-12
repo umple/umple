@@ -95,10 +95,9 @@ public class Language
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={30},file={"Util_Code.ump"},javaline={99},length={5})
+  //  @umplesourcefile(line={30},file={"Util_Code.ump"},javaline={99},length={4})
   private static final boolean default_strictness = false ;
-
-//  @umplesourcefile(line={31},file={"Util_Code.ump"},javaline={102},length={2})
+//  @umplesourcefile(line={31},file={"Util_Code.ump"},javaline={101},length={2})
   private Hashtable<String, String> _allEnglish ;
 
   
