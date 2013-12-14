@@ -67,7 +67,7 @@ appendln(stringBuffer, "");
  for (Constant aConstant : uInterface.getConstants()) 
  {
  	String constantName = aConstant.getName();
- 	String constantValue =  aConstant.getValue();
+ 	String constantValue =  gen.translateInterfaceValue(aConstant.getValue(), aConstant.getType());
 
  	append(stringBuffer, " const {0} = {1};", constantName, constantValue);
   	appendln(stringBuffer, "");

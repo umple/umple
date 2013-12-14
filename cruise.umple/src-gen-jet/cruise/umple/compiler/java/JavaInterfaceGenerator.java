@@ -1,5 +1,5 @@
 package cruise.umple.compiler.java;
-
+//
 import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.util.*;
@@ -66,6 +66,32 @@ public class JavaInterfaceGenerator implements ILang
     appendln(stringBuffer, "");
     append(stringBuffer, "import {0};",depend.getName());
   }
+
+  Boolean hasDate = false;
+  Boolean hasTime = false;
+  for(Constant aConstant : uInterface.getConstants())
+  {
+    if(aConstant.getType().equals("Time"))
+    {
+      hasTime = true;
+    }
+    else if(aConstant.getType().equals("Date"))
+    {
+      hasDate = true;
+    }
+  }
+
+  if(hasDate == true)
+  {
+    appendln(stringBuffer, "");
+    append(stringBuffer, "import java.sql.Date;");
+  }
+
+  if(hasTime == true)
+  {
+    appendln(stringBuffer, "");
+    append(stringBuffer, "import java.sql.Time;");
+  }
   
   // TODO: No test failed from removing this
   // for (String anImport : gInterface.getMultiLookup("import"))
@@ -88,8 +114,8 @@ appendln(stringBuffer,"  // CONSTANT MEMBERS  ");
  {
  	String constantName = aConstant.getName();
  	String constantModifier = "public static final";
- 	String constantType =  aConstant.getType();
- 	String constantValue =  aConstant.getValue();
+ 	String constantType =  gen.translateInterfaceType(aConstant.getType());
+ 	String constantValue =  gen.translateInterfaceValue(aConstant.getValue(), constantType);
  
  if (!(constantValue.equals(""))){
  	appendln(stringBuffer, "");

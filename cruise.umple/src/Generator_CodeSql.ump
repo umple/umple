@@ -436,6 +436,39 @@ class SqlGenerator
     boolean isMany = av.isMany();
     return translate(keyName,av,isMany);
   }  
+
+        
+  // Translates Date, Time and String const to SQL value, has to be used for interfaces as they do not use attributes. 
+  public String translateInterfaceValue(String value, String type){
+    if (value == null)
+    {
+      return "null";
+    }
+      
+    boolean isString = value.startsWith("\"") && value.endsWith("\"");
+    if (isString && "Date".equals(type))
+    {
+      return StringFormatter.format("Date.parse({0})", value);
+    }
+    else if (isString && "Time".equals(type))
+    {
+      return StringFormatter.format("Time.parse({0})", value);
+    }
+    else if (isString)
+    {
+      return value.substring(1, value.length() - 1);
+    }
+    else
+    {
+      return value;
+    }
+  }
+
+  // Translates primitive data types to their SQL equivalent. Used for interfaces as they do not use attributes.
+  public String translateInterfaceType(String type)
+  {
+      return typeOf(type);
+  }
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
@@ -698,6 +731,10 @@ class SqlGenerator
     else if (aType.equals("Double"))
     {
       return "double";
+    }
+    else if(aType.equals("Float"))
+    {
+      return "float";
     }
     else if (aType.equals("Boolean"))
     {

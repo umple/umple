@@ -220,6 +220,28 @@ class RubyGenerator
     boolean isMany = av.isMany();
     return translate(keyName,av,isMany);
   }  
+
+  // Translates Date and Time values, has to be used for interfaces as they do not use attributes. 
+  public String translateInterfaceValue(String value, String type){
+    if (value == null)
+    {
+      return "null";
+    }
+      
+    boolean isString = value.startsWith("\"") && value.endsWith("\"");
+    if (isString && "Date".equals(type))
+    {
+      return StringFormatter.format("Date.parse({0})",value);
+    }
+    else if (isString && "Time".equals(type))
+    {
+      return StringFormatter.format("Time.parse({0})",value);
+    }
+    else
+    {
+      return value;
+    }
+  }
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {

@@ -438,6 +438,36 @@ class CppGenerator
   {
     return translate(keyName,av,av.isMany());
   }
+
+  // This method currently returns the String value of a Date or Time object to stay consistent with how C++ code is generated for classes
+  public String translateInterfaceValue(String value, String type){
+    if (value == null)
+    {
+      return "null";
+    }
+      
+    boolean isString = value.startsWith("\"") && value.endsWith("\"");
+    if (isString && "Date".equals(type))
+    {
+      //return "Date.valueOf("+ value +")";   
+      return value;   
+    }
+    else if (isString && "Time".equals(type))
+    {
+      //return "Time.valueOf("+ value +")";
+      return value;
+    }
+    else
+    {
+      return value;
+    }
+  }
+
+  // Translates primitive data types to their C++ equivalent. Used for interfaces as they do not use attributes.
+  public String translateInterfaceType(String type)
+  {
+      return typeOf(type);
+  }
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
@@ -575,6 +605,10 @@ class CppGenerator
     {
       return "string";
     }
+    else if (aType.equals("String"))
+    {
+      return "string";
+    }
     else if (aType.equals("Integer"))
     {
       return "int";
@@ -583,9 +617,21 @@ class CppGenerator
     {
       return "double";
     }
+    else if (aType.equals("Float"))
+    {
+      return "float";
+    }
     else if (aType.equals("Boolean"))
     {
       return "bool";
+    }
+    else if(aType.equals("Date"))
+    {
+      return "string";
+    }
+    else if(aType.equals("Time"))
+    {
+      return "time_t*";
     }
     else
     {

@@ -3797,7 +3797,7 @@ public class UmpleInternalParser extends Parser implements UmpleParser
 	    rubyComment = System.getProperty("line.separator") + rubyComment;
 	    otherComment = System.getProperty("line.separator") + otherComment;
 	  }
-	  CodeBlock cb = new CodeBlock();
+      CodeBlock cb = new CodeBlock();
       cb.setCode(otherComment);
       cb.setCode("Ruby", rubyComment);
       aClass.appendExtraCode(true,cb);

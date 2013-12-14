@@ -8,7 +8,7 @@ public interface ISomething
   // CONSTANT MEMBERS  
 
  public static final String aVariable = aValue;
- public static final Integer MAX = 3;
+ public static final int MAX = 3;
   // ABSTRACT METHODS 
 
  public String getCode(String [] aParam, Integer anotherParam);

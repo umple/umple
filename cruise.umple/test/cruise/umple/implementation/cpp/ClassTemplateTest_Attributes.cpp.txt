@@ -9,7 +9,7 @@
   // CONSTRUCTOR
   //------------------------
   
- Mentor::Mentor(const String & aStr, const Date & aD, const int & aI, const string & aId)
+ Mentor::Mentor(const string & aStr, const string & aD, const int & aI, const string & aId)
   {
     str = aStr;
     canSetStr = false;

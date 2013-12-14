@@ -166,7 +166,33 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     return translate(keyName,av,isMany);
   }
 
-  @umplesourcefile(line={226},file={"Generator_CodeRuby.ump"},javaline={171},length={109})
+
+  /**
+   * Translates Date and Time values, has to be used for interfaces as they do not use attributes.
+   */
+  @umplesourcefile(line={226},file={"Generator_CodeRuby.ump"},javaline={171},length={20})
+   public String translateInterfaceValue(String value, String type){
+    if (value == null)
+    {
+      return "null";
+    }
+      
+    boolean isString = value.startsWith("\"") && value.endsWith("\"");
+    if (isString && "Date".equals(type))
+    {
+      return StringFormatter.format("Date.parse({0})",value);
+    }
+    else if (isString && "Time".equals(type))
+    {
+      return StringFormatter.format("Time.parse({0})",value);
+    }
+    else
+    {
+      return value;
+    }
+  }
+
+  @umplesourcefile(line={248},file={"Generator_CodeRuby.ump"},javaline={197},length={109})
    private String translate(String keyName, UmpleVariable av, boolean isMany){
     if (OneOrManyLookup.contains(keyName))
     {
@@ -277,7 +303,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={337},file={"Generator_CodeRuby.ump"},javaline={282},length={36})
+  @umplesourcefile(line={359},file={"Generator_CodeRuby.ump"},javaline={308},length={36})
    public String translate(String keyName, State state){
     String singularName = state.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -315,7 +341,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={375},file={"Generator_CodeRuby.ump"},javaline={320},length={22})
+  @umplesourcefile(line={397},file={"Generator_CodeRuby.ump"},javaline={346},length={22})
    public String translate(String keyName, StateMachine sm){
     String singularName = sm.getFullName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -339,7 +365,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={399},file={"Generator_CodeRuby.ump"},javaline={344},length={23})
+  @umplesourcefile(line={421},file={"Generator_CodeRuby.ump"},javaline={370},length={23})
    public String translate(String keyName, Event event){
     String singularName = event.getName();
     String pluralName = getModel().getGlossary().getPlural(singularName);
@@ -364,7 +390,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     return "UNKNOWN ID: " + keyName;
   }
 
-  @umplesourcefile(line={424},file={"Generator_CodeRuby.ump"},javaline={369},length={12})
+  @umplesourcefile(line={446},file={"Generator_CodeRuby.ump"},javaline={395},length={12})
    public void generate(){
     prepare();
     for (UmpleElement currentElement : getModel().getUmpleElements())
@@ -378,7 +404,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     GeneratorHelper.postpare(getModel());
   }
 
-  @umplesourcefile(line={438},file={"Generator_CodeRuby.ump"},javaline={383},length={16})
+  @umplesourcefile(line={460},file={"Generator_CodeRuby.ump"},javaline={409},length={16})
    public String nameOf(String name, boolean hasMultiple){
     if (name == null)
     {
@@ -396,7 +422,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={456},file={"Generator_CodeRuby.ump"},javaline={401},length={22})
+  @umplesourcefile(line={478},file={"Generator_CodeRuby.ump"},javaline={427},length={22})
    public static  String typeOf(String aType){
     if (aType == null || aType.length() == 0)
     {
@@ -420,7 +446,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={480},file={"Generator_CodeRuby.ump"},javaline={425},length={26})
+  @umplesourcefile(line={502},file={"Generator_CodeRuby.ump"},javaline={451},length={26})
    private void writeFile(UmpleElement aElement){
     try
     {
@@ -448,7 +474,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={508},file={"Generator_CodeRuby.ump"},javaline={453},length={14})
+  @umplesourcefile(line={530},file={"Generator_CodeRuby.ump"},javaline={479},length={14})
    private String getUpperCaseName(String name){
     if (name == null || name.length() == 0)
     {
@@ -464,7 +490,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={524},file={"Generator_CodeRuby.ump"},javaline={469},length={12})
+  @umplesourcefile(line={546},file={"Generator_CodeRuby.ump"},javaline={495},length={12})
    private void injectIntoUnique(String method, String injection, String when, Attribute av, UmpleClass aClass){
     String code = StringFormatter.format(injection,
       av.getName(),
@@ -478,17 +504,17 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     aClass.addCodeInjection(set);
   }
 
-  @umplesourcefile(line={538},file={"Generator_CodeRuby.ump"},javaline={483},length={3})
+  @umplesourcefile(line={560},file={"Generator_CodeRuby.ump"},javaline={509},length={3})
    private void injectIntoUniqueSet(String injection, String when, Attribute av, UmpleClass aClass){
     injectIntoUnique(translate("setMethod", av), injection, when, av, aClass);
   }
 
-  @umplesourcefile(line={543},file={"Generator_CodeRuby.ump"},javaline={488},length={3})
+  @umplesourcefile(line={565},file={"Generator_CodeRuby.ump"},javaline={514},length={3})
    private void injectIntoUniqueDelete(String injection, String when, Attribute av, UmpleClass aClass){
     injectIntoUnique("delete", injection, when, av, aClass);
   }
 
-  @umplesourcefile(line={548},file={"Generator_CodeRuby.ump"},javaline={493},length={129})
+  @umplesourcefile(line={570},file={"Generator_CodeRuby.ump"},javaline={519},length={129})
    private void prepare(UmpleClass aClass){
     if (aClass.getGeneratedClass() != null)
     {
@@ -619,7 +645,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     //GeneratorHelper.prepareAllStringTracers(this,getModel(),aClass,lookups);
   }
 
-  @umplesourcefile(line={680},file={"Generator_CodeRuby.ump"},javaline={624},length={65})
+  @umplesourcefile(line={702},file={"Generator_CodeRuby.ump"},javaline={650},length={65})
    private void generateConstructorSignature(GeneratedClass genClass){
     StringBuffer signature = new StringBuffer();
     StringBuffer signatureCaller = new StringBuffer();
@@ -686,18 +712,18 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     genClass.setLookup("constructorSignature_caller", signatureCaller.toString());
   }
 
-  @umplesourcefile(line={747},file={"Generator_CodeRuby.ump"},javaline={691},length={3})
+  @umplesourcefile(line={769},file={"Generator_CodeRuby.ump"},javaline={717},length={3})
    public String nameOf(Attribute av){
     return nameOf(av.getName(),false);
   }
 
-  @umplesourcefile(line={752},file={"Generator_CodeRuby.ump"},javaline={696},length={4})
+  @umplesourcefile(line={774},file={"Generator_CodeRuby.ump"},javaline={722},length={4})
    public String nameOf(AssociationVariable av){
     boolean hasMultiple = av.isMany();
     return nameOf(av.getName(),hasMultiple);
   }
 
-  @umplesourcefile(line={758},file={"Generator_CodeRuby.ump"},javaline={702},length={36})
+  @umplesourcefile(line={780},file={"Generator_CodeRuby.ump"},javaline={728},length={36})
    private void generateSecondaryConstructorSignatures(GeneratedClass genClass){
     UmpleClass uClass = genClass.getUClass();
     
@@ -735,24 +761,24 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={796},file={"Generator_CodeRuby.ump"},javaline={740},length={4})
+  @umplesourcefile(line={818},file={"Generator_CodeRuby.ump"},javaline={766},length={4})
    private void generateNullableConstructorSignature(GeneratedClass genClass){
     String currentConstructor = genClass.getLookup("constructorSignature");
     genClass.setLookup("constructorSignature_nulled", StringFormatter.appendParameter(currentConstructor, " = null"));
   }
 
-  @umplesourcefile(line={803},file={"Generator_CodeRuby.ump"},javaline={746},length={4})
+  @umplesourcefile(line={825},file={"Generator_CodeRuby.ump"},javaline={772},length={4})
    private void addImports(UmpleClass aClass, GeneratedClass genClass){
     addAttributeImports(aClass,genClass);
     addAssociationImports(aClass,genClass);
   }
 
-  @umplesourcefile(line={810},file={"Generator_CodeRuby.ump"},javaline={752},length={3})
+  @umplesourcefile(line={832},file={"Generator_CodeRuby.ump"},javaline={778},length={3})
    private void addAssociationImports(UmpleClass aClass, GeneratedClass genClass){
     
   }
 
-  @umplesourcefile(line={814},file={"Generator_CodeRuby.ump"},javaline={757},length={17})
+  @umplesourcefile(line={836},file={"Generator_CodeRuby.ump"},javaline={783},length={17})
    private void addAttributeImports(UmpleClass aClass, GeneratedClass genClass){
     String timeImport = "time";
     String dateImport = "date";
@@ -771,7 +797,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={833},file={"Generator_CodeRuby.ump"},javaline={776},length={33})
+  @umplesourcefile(line={855},file={"Generator_CodeRuby.ump"},javaline={802},length={33})
    private void addRelatedImports(){
     for (UmpleClass aClass : getModel().getUmpleClasses())
     {
@@ -806,7 +832,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     }
   }
 
-  @umplesourcefile(line={867},file={"Generator_CodeRuby.ump"},javaline={811},length={27})
+  @umplesourcefile(line={889},file={"Generator_CodeRuby.ump"},javaline={837},length={27})
    public void initializeLangaugeBasedVariables(){
     UmpleToPrimitiveMap.put("String","String");
 	//
@@ -835,7 +861,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     ConstraintLookupMap.put("cardinality<",".length<{0}");
   }
 
-  @umplesourcefile(line={31},file={"Generator.ump"},javaline={839},length={128})
+  @umplesourcefile(line={31},file={"Generator.ump"},javaline={865},length={128})
   public String translate(String format, Constraint constraint){
     if(constraint==null)
       return "{0}";
@@ -965,7 +991,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
   }
 
-  @umplesourcefile(line={32},file={"Generator.ump"},javaline={969},length={10})
+  @umplesourcefile(line={32},file={"Generator.ump"},javaline={995},length={10})
   public String translate(String keyName, TraceItem ti){
     if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
 	{
@@ -980,18 +1006,18 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeRuby.ump"},javaline={984},length={87})
+  //  @umplesourcefile(line={14},file={"Generator_CodeRuby.ump"},javaline={1010},length={87})
   private static Map<String,String> UpperCaseSingularLookupMap ;
-//  @umplesourcefile(line={15},file={"Generator_CodeRuby.ump"},javaline={986},length={85})
+//  @umplesourcefile(line={15},file={"Generator_CodeRuby.ump"},javaline={1012},length={85})
   private static Map<String,String> UpperCasePluralLookupMap ;
-//  @umplesourcefile(line={16},file={"Generator_CodeRuby.ump"},javaline={988},length={83})
+//  @umplesourcefile(line={16},file={"Generator_CodeRuby.ump"},javaline={1014},length={83})
   private static Map<String,String> AsIsSingularLookupMap ;
-//  @umplesourcefile(line={17},file={"Generator_CodeRuby.ump"},javaline={990},length={81})
+//  @umplesourcefile(line={17},file={"Generator_CodeRuby.ump"},javaline={1016},length={81})
   private static Map<String,String> AsIsPluralLookupMap ;
-//  @umplesourcefile(line={18},file={"Generator_CodeRuby.ump"},javaline={992},length={79})
+//  @umplesourcefile(line={18},file={"Generator_CodeRuby.ump"},javaline={1018},length={79})
   private static List<String> OneOrManyLookup ;
 
-//  @umplesourcefile(line={20},file={"Generator_CodeRuby.ump"},javaline={995},length={76})
+//  @umplesourcefile(line={20},file={"Generator_CodeRuby.ump"},javaline={1021},length={76})
   static 
   {
     UpperCaseSingularLookupMap = new HashMap<String, String>();

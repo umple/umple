@@ -88,8 +88,8 @@ appendln(stringBuffer,"  // CONSTANT MEMBERS  ");
  {
  	String constantName = aConstant.getName();
  	String constantModifier = "static const";
- 	String constantType =  aConstant.getType();
- 	String constantValue =  aConstant.getValue();
+ 	String constantType =  gen.translateInterfaceType(aConstant.getType());
+ 	String constantValue =  gen.translateInterfaceValue(aConstant.getValue(), constantType);
  
  if (!(constantValue.equals(""))){
  	appendln(stringBuffer, "");
