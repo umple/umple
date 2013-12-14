@@ -7,4 +7,9 @@ module Example
 
 class ISomething
   
+  # CONSTANT MEMBERS  
+
+ AVariable = aValue;
+ MAX = 3;
+  
 end

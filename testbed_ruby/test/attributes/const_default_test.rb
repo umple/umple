@@ -23,6 +23,8 @@ class ConstTest < Test::Unit::TestCase
     assert_equal("00:00:00", ConstDefault::TIME.strftime("%H:%M:%S"))
     assert_equal(todayStr, ConstDefault::DATE.strftime("%Y-%m-%d"))
   end
-  
+   
 end
+
+
 end

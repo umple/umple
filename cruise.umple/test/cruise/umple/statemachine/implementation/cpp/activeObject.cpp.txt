@@ -9,7 +9,7 @@
   // CONSTRUCTOR
   //------------------------
   
- Lamp::Lamp(const String & aLog)
+ Lamp::Lamp(const string & aLog)
   {
     log = aLog;
     if (stateMachine1TopLevel == Null) { setStateMachine1TopLevel(Null); }

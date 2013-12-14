@@ -439,6 +439,35 @@ class JavaGenerator
   {
     return translate(keyName,av,av.isMany());
   }
+
+  // Translates Date and Time values, has to be used for interfaces as they do not use attributes. 
+  public String translateInterfaceValue(String value, String type)
+  {
+    if (value == null)
+    {
+      return "null";
+    }
+      
+    boolean isString = value.startsWith("\"") && value.endsWith("\"");
+    if (isString && "Date".equals(type))
+    {
+      return "Date.valueOf("+ value +")";      
+    }
+    else if (isString && "Time".equals(type))
+    {
+      return "Time.valueOf("+ value +")";
+    }
+    else
+    {
+      return value;
+    }
+  }
+
+  // Translates primitive data types to their Java equivalent. Used for interfaces as they do not use attributes.
+  public String translateInterfaceType(String type)
+  {
+      return typeOf(type);
+  }
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
@@ -583,6 +612,10 @@ class JavaGenerator
     else if (aType.equals("Double"))
     {
       return "double";
+    }
+    else if(aType.equals("Float"))
+    {
+      return "float";
     }
     else if (aType.equals("Boolean"))
     {

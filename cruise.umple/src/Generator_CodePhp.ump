@@ -236,6 +236,29 @@ class PhpGenerator
     boolean isMany = av.isMany();
     return translate(keyName,av,isMany);
   }  
+
+  // Translates Date and Time values, has to be used for interfaces as they do not use attributes. 
+  public String translateInterfaceValue(String value, String type)
+  {
+    if (value == null)
+    {
+      return "null";
+    }
+      
+    boolean isString = value.startsWith("\"") && value.endsWith("\"");
+    if (isString && "Date".equals(type))
+    {
+      return "date(\"y-m-d\", strtotime("+ value +"))";      
+    }
+    else if (isString && "Time".equals(type))
+    {
+      return "date(\"h:i:s\", strtotime("+ value +"))";
+    }
+    else
+    {
+      return value;
+    }
+  }
   
   private String translate(String keyName, UmpleVariable av, boolean isMany)
   {
@@ -515,6 +538,10 @@ class PhpGenerator
     else if (aType.equals("Double"))
     {
       return "double";
+    }
+    else if (aType.equals("Float"))
+    {
+      return "float";
     }
     else if (aType.equals("Boolean"))
     {
