@@ -1619,6 +1619,28 @@ class UmpleInternalParser
       }
     }  
 
+    Boolean typeIsNull = ((constantToken.getValue("type") == null) || (constantToken.getValue("type").equals("")));
+    Boolean valueIsNull = ((constantToken.getValue("value") == null) || (constantToken.getValue("value").equals("")));
+    if((typeIsNull != true) && (valueIsNull != true))
+    {
+      if(!compareTypeToValue(constantToken.getValue("type"), constantToken.getValue("value")))
+      {
+        setFailedPosition(constantToken.getPosition(),141,constantToken.getValue("type"),constantToken.getValue("value"));  
+      }
+    }
+    else if ((typeIsNull == true) && (valueIsNull != true))
+    {
+      aConstant.setType(inferType(constantToken.getValue("value"), constantToken.getValue("type")));
+    }
+    else if(typeIsNull == true)
+    {
+      aConstant.setType("String");
+      if(valueIsNull == true)
+      {
+        aConstant.setValue(null);
+      }
+    }
+
     // Sets the default value of a constant that has not been initialized
     if(aConstant.getValue() == null || aConstant.getValue() == "")
     {
