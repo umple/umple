@@ -1,0 +1,27 @@
+W901 Deprecated Keyword Constant
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple warning reported when deprecated keyword "constant" is used.</h2>
+
+<p>The keyword "constant" is still supported in Umple interfaces due to legacy reasons. However, there is no guarantee that this keyword will be supported in the future. The keyword "const" should be used instead.
+</p>
+
+
+@@example
+// This causes the warning
+interface Y {
+  constant A=5;
+}
+@@endexample
+
+@@example
+// This does not causes the warning
+interface Y {
+  const A=5;
+}
+@@endexample
+
+

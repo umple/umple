@@ -42,7 +42,7 @@
 34: 2, "http://umple.org/E034MultipleInheritance.html", Multiple inheritance not allowed in Umple so  code can be generated for languages that do not permit it. So class {0} cannot be a subclass of class {1} as well as other classes. Consider using multiple implementations of an interface ;
 35: 4, "http://umple.org/W035UninitializedConstant.html", 'const' variable '{0}' of type '{1}' was not initialized and its value was thus set to '{2}' ;
 36: 3, "http://umple.org/W036UnmanagedMultiplicity.html", The specific multiplicity bounds {0} cannot be managed by generated code, since this is a directed association ;
-37: 2, "http://umple.org/PageBeingDeveloped.html", 'const' variable '{0}' of type '{1}' was not initialized. Since '{1}' is not a built-in Umple data type no default value could be found. '{0}' must be initialized. ;
+37: 2, "http://umple.org/E037UninitializedConstantObject.html", 'const' variable '{0}' of type '{1}' was not initialized. Since '{1}' is not a built-in Umple data type no default value could be found. '{0}' must be initialized. ;
 
 44: 3, "http://umple.org/W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}' ;
 45: 4, "http://umple.org/W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal ;
@@ -62,7 +62,7 @@
 
 110: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Interface name '{0}' must be alphanumeric and start with an alpha character or _ ;
 111: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;
-112: 2, "http://umple.org/PageBeingDeveloped.html", Interface '{0}' has duplicate constant name {1} ;
+112: 2, "http://umple.org/E112DuplicateConstantsinInterface.html", Interface '{0}' has duplicate constant name {1} ;
 
 # [TODO - issue 337] 120: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Association role name '{0}' must be alphanumeric and start with a letter ;
 # [TODO - issue 337] 121: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Association role name '{0}' should start with a lower-case letter ;
@@ -81,7 +81,7 @@
 161: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Constant name '{0}' should start with a upper-case letter ;
 
 # Messages relating to deprecated features
-901: 4, "http://umple.org/PageBeingDeveloped.html", Keyword "constant" deprecated, please use "const" ;
+901: 4, "http://umple.org/W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;
 
 # Messages relating to general parsing issues
 1002: 5, "http://umple.org/W1002-3UnexpectedEmbeddedCode.html", Embedded method with code or unparsed code found when strictness is 'modelOnly' ;

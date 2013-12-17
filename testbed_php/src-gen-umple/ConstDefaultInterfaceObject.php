@@ -2,24 +2,8 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
 
-class ConstDefault
+class ConstDefaultInterfaceObject implements ConstDefaultInterface
 {
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  public static $I1 = 0;
-  public static $I2 = 0;
-  public static $D1 = 0.0;
-  public static $D2 = 0.0;
-  public static $F1 = 0.0;
-  public static $F2 = 0.0;
-  public static $B1 = false;
-  public static $B2 = false;
-  public static $STR = "";
-  public static $DATE = date("y-m-d", strtotime("2013-12-16"));
-  public static $TIME = date("h:i:s", strtotime("00:00:00"));
 
   //------------------------
   // MEMBER VARIABLES

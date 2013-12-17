@@ -4,27 +4,25 @@ noreferences
 
 @@description
 
-<h2>Umple semantic warning generated when a constant is not initialized</h2>
+<h2>Umple semantic warning generated when a Umple builtin data type constant is not initialized</h2>
 
-<p>It makes little sense to have a constant unless it is given a value.</p>
+<p>It makes little sense to have a constant unless it is given a value. If a constant is of one of the built-in Umple data types we will set it to a default value: Integer, Double and Float will be set to zero, String will be set to an empty String, Boolean will be set to false, Date will be set to the date where the code was generated and Time will be set to midnight (00:00:00). However, the warning is issued since forgetting to initialize a constant is a common source of errors.</p>
 
-<p>
-</p>
 
 @@example
-// The following will generate this warnbing
+// The following will generate this warning
 
 class X {
-  const a;
+  const String A; //same as const String a = "";
 }
 @@endexample
 
 @@example
+
 // The following will resolve the issue
 
 class X {
-  const a = "something";
+  const String A = "Something Interesting";
 }
-
 
 @@endexample

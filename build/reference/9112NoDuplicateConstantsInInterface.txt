@@ -1,0 +1,21 @@
+E112 Duplicate Constants in Interface
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error reported when an interface is given two or more constants with the same name.</h2>
+
+<p>Constants in an attribute must have distinct names. The solution to this error is to rename or delete one of the constants.
+</p>
+
+
+@@example
+// The following example shows how to generate this error.
+interface X {
+  const A="dog";
+  const A="cat";
+}
+@@endexample
+
+
