@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 class CourseG
 {

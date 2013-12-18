@@ -1,5 +1,5 @@
 # PLEASE DO NOT EDIT THIS CODE
-# This code was generated using the UMPLE 1.18.0.3036 modeling language!
+# This code was generated using the UMPLE ${last.version} modeling language!
 # NOTE: Ruby generator is experimental and is missing some features available in
 # in other Umple generated languages like Java or PHP
 
@@ -23,7 +23,7 @@ class ConstDefault
   B1 = false;
   B2 = false;
   STR = "";
-  DATE = Date.parse("2013-12-16");
+  DATE = Date.parse("2013-12-17");
   TIME = Time.parse("00:00:00");
 
   #------------------------

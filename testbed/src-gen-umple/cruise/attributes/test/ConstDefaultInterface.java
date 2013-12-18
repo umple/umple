@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 package cruise.attributes.test;
 import java.sql.Date;
 import java.sql.Time;
@@ -18,6 +18,6 @@ public interface ConstDefaultInterface
  public static final boolean B1 = false;
  public static final boolean B2 = false;
  public static final String STR = "";
- public static final Date DATE = Date.valueOf("2013-12-16");
+ public static final Date DATE = Date.valueOf("2013-12-17");
  public static final Time TIME = Time.valueOf("00:00:00");
 }
