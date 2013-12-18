@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 class ConstDefault
 {
@@ -18,7 +18,7 @@ class ConstDefault
   public static $B1 = false;
   public static $B2 = false;
   public static $STR = "";
-  public static $DATE = date("y-m-d", strtotime("2013-12-16"));
+  public static $DATE = date("y-m-d", strtotime("2013-12-17"));
   public static $TIME = date("h:i:s", strtotime("00:00:00"));
 
   //------------------------
