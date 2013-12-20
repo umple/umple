@@ -4,7 +4,7 @@ noreferences
 
 @@description
 <p>
-MOTL allows the manipulation of attributes tracing timeline. "until" keyword triggers tracing and continue tracing of attribute until given condition is satisfied. In the other hand, "after" keyword provides the opposite behaviour. Tracing will start once given condition is satisfied and then continues indefinitely without any interruption.  
+MOTL allows the manipulation of attributes tracing timeline. The "until" keyword triggers tracing and continues tracing of the attribute until the given condition is satisfied. On the other hand, the "after" keyword provides the opposite behaviour. Tracing will start once the given condition is satisfied and then continues indefinitely without any interruption.  
 </p>
 
 @@syntax

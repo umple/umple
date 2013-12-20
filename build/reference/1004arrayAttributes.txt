@@ -6,7 +6,7 @@ noreferences
 <p>As in UML, you can have attribute with multiple values.</p>
 
 <p>We encourage the use of association notation in this context, however
-the attribute notation can be useful sometimes</p>
+the attribute notation can be useful sometimes.</p>
 
 @@syntax
 

@@ -4,13 +4,13 @@ noreferences
 
 @@description
 
-<p>In Umple, the body of a method will by default be emitted unchanged. This ties the model to the particular programming language. However it is possible to provide alternative implementations for different programming languages by preceding the method body with the language name</p>
+<p>In Umple, the body of a method will by default be emitted unchanged. This ties the model to the particular programming language. However it is possible to provide alternative implementations for different programming languages by preceding the method body with the language name.</p>
 
-<p>This multi-lingual capability also works for other places where native code is injected such as in <a href="StateMachineActionsandDoActivities.html">state machine guards and actions</a>, or in <a href="DerivedAttributes.html">derived attributes</a></p>
+<p>This multi-lingual capability also works for other places where native code is injected such as in <a href="StateMachineActionsandDoActivities.html">state machine guards and actions</a>, or in <a href="DerivedAttributes.html">derived attributes.</a></p>
 
 @@example
 // Generating Java and Php the following will result in the appropriate 
-// method body being selected
+// method body being selected.
 class LanguageSpecific {
   int m1() Java {
     // Return 1 if the model is compiled into Java
@@ -25,8 +25,8 @@ class LanguageSpecific {
 
 
 @@example
-// A method body may work for several languages
-// If no language is specified it is taken as the default
+// A method body may work for several languages.
+// If no language is specified it is taken as the default.
 class LanguageSpecific {
   int m1()
   Java,Php {

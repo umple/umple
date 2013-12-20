@@ -5,13 +5,13 @@ noreferences
 @@description
 <p>You can specify at arbitrary expression after the equals sign to create
 an attribute that will be computed. There will be no set method on such
-an attribute</p>
+an attribute.</p>
 
 <p>Note that unless you use the simplest of expressions, you will be limited'
 to only being able to generate code for the language of the expression.</p>
 
 <p>You should make sure you call the 'get' methods provided in the Umple-generated
-API (rather than directly accessing variables) and avoid having any side-effects in your expressions. Currently this is not enforced, but may be in the future</p>
+API (rather than directly accessing variables) and avoid having any side-effects in your expressions. Currently this is not enforced, but may be in the future.</p>
 
 <p>For other examples of derived attributes see the sections on the <a href="DelegationPattern.html">Delegation pattern</a> and <a href="SortedAssociations.html">sorted associations</a>.</p>
 

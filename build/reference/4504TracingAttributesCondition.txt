@@ -7,7 +7,7 @@ noreferences
 MOTL allows developers to have control over attributes tracing using conditions. Injected trace code will not be activated unless the condition is satisfied. <br> 
 Conditions can be a precondition or postcondition. <br>
 <b> Precondition </b> <br>
-Using "where" keyword, tracing code is injected with a precondition. 
+Using "where" keyword, tracing code is injected with a precondition. <br> 
 <b> Postcondition </b> <br>
 Using "giving" keyword, tracing code is injected with a postcondition. 
 </p>

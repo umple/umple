@@ -79,7 +79,7 @@ graphical pane, as described later.
 
 &nbsp;<br/>
 
-<li><b>To load Umple code into UmpleOnline do one of the following:</b>
+<li><b>To load Umple code into UmpleOnline </b> do one of the following:
   <ol>
     <li><b>Load a URL you saved using one of the saving methods 1 and 2 above.</b><br /></li>
     <li><b>Put a .ump file on the web (saved from Eclipse or using saving method 3 above), and load it using the filename argument to Umpleonline.</b> The filename
@@ -89,7 +89,7 @@ graphical pane, as described later.
     InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump</a>. This can be loaded into Umple using the following URL: <a href="http://cruise.site.uottawa.ca/umpleonline/?filename=umple.googlecode.com/svn/trunk/cruise.umple/test/data/InventoryAndOrders/ClientOrder/MailOrderSystemClientOrder.ump">http://cruise.site.uottawa.ca/umpleonline/?filename=umple.googlecode.com/svn/trunk/
 cruise.umple/test/data/InventoryAndOrders/ClientOrder/
 MailOrderSystemClientOrder.ump</a><br /></li> 
-    <li>Paste Umple code into UmpleOnline</b> Note however, that you have to make
+    <li><b>Paste Umple code into UmpleOnline.</b> Note however, that you have to make
     sure the pasted file contains the layout information, as described under the saving methods above.
   </ol>
    <br>Note that in most of these cases, the user can edit the Umple, without affecting the 

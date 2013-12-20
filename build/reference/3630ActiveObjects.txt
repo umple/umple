@@ -4,9 +4,9 @@ noreferences
 
 @@description
 
-<p>An active object is an object that, when constructed runs its own thread. This is indicated in Umple by the 'active' keyword followed by a block of code. A collection of active objects, working together, constitute a concurrent system.</p>
+<p>An active object is an object that, when constructed, runs its own thread. This is indicated in Umple by the 'active' keyword followed by a block of code. A collection of active objects, working together, constitute a concurrent system.</p>
 
-<p>Additional Umple features are under development to allow for sending signals to and from concurrent objects</p>
+<p>Additional Umple features are under development to allow for sending signals to and from concurrent objects.</p>
 
 @@syntax
 [[activeDefinition]]

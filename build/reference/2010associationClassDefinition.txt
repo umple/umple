@@ -4,11 +4,11 @@ noreferences
 
 @@description
 <p>      
-An association class defines an object-oriented pattern to manage * to * (many to many) associations when data needs to be stored about each link of that association.
+An association class defines an object-oriented pattern to manage * -- * (many to many) associations when data needs to be stored about each link of that association.
 </p>
 
 <p>An association class is a class and can have most of the items found in an ordinary class. However it
-always has two or more 1..many associations to other classes. These are syntactually shown as just a multiplicity (usually *, but 1..* and similar cases are allowed) followed by the name of the participating class (and an optional role name). </p>
+always has two or more 1..many associations to other classes. These are syntactically shown as just a multiplicity (usually *, but 1..* and similar cases are allowed) followed by the name of the participating class (and an optional role name). </p>
 
 </p>
 

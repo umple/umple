@@ -8,7 +8,7 @@ noreferences
 
 <p>Constraints are specified within square brackets, in the same manner as guards on state machines.</p>
 
-<p>Additional capabilities are being developed in Umple to allow other types of constraints</p>
+<p>Additional capabilities are being developed in Umple to allow other types of constraints.</p>
 
 @@syntax
 [[constraint]] [[constraintBody]] [[constraintExpr]] [[linkingOp]] [[negativeConstraint]] [[stringExpr]] [[stringLit]] [[genExpr]] [[numExpr]] [[equalityOp]] [[equalsOp]] [[notequalsOp]] [[ordinalOp]] [[greaterOp]] [[lessOp]] [[moreOp]] [[smallerOp]]

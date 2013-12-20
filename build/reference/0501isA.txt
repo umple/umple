@@ -3,7 +3,7 @@ Classes and Interfaces
 noreferences
 
 @@description
-<p>The isA keyword is ysed to denote an inheritance relationship (generalization) between two classes, or a class and the interfaces it implements.</p>
+<p>The isA keyword is used to denote an inheritance relationship (generalization) between two classes, or a class and the interfaces it implements.</p>
 
 <p>This corresponds to keywords such as 'extends', 'subclass', etc. in other languages. The isA keyword was chosen so as to be independent of other languages.</p>
 

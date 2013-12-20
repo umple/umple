@@ -3,27 +3,27 @@ UmpleOnline
 noreferences
 
 @@description
-<p>UmpleOnline allows you to append various options to its URL enabling
+<p>UmpleOnline allows you to append various options to its URLi, enabling
 startup in a certain state. These are preceded by an ampersand, except the first
 in a list which would be preceded by a question mark.</p>
 
 <ul>
 
-<li>?nochrome: Hide the header of the UmpleOnline page (sometimes called the chrome) so the model only is visible<p>
+<li>?nochrome: Hide the header of the UmpleOnline page (sometimes called the chrome) so only the model is visible.<p>
 
-<li>?nodiagram: Don't show any diagram, in order to show the text only<p>
+<li>?nodiagram: Don't show any diagram, in order to show the text only.<p>
 
-<li>?diagramtype=GvClass: By default show graphviz class diagrams instead of editable diagrams<p>
+<li>?diagramtype=GvClass: By default show graphviz class diagrams instead of editable diagrams.<p>
 
-<li>?diagramtype=state: By default show graphviz state diagrams instead of editable class diagrams<p>
+<li>?diagramtype=state: By default show graphviz state diagrams instead of editable class diagrams.<p>
 
-<li>?notext: Don't show Umple text (doesn't have any effect if the diagram is also hidden)<p>
+<li>?notext: Don't show Umple text (doesn't have any effect if the diagram is also hidden).<p>
 
-<li>?nomenu: Hide the middle menu. Either ?notext or ?nodiagram must also be present<p>
+<li>?nomenu: Hide the middle menu. Either ?notext or ?nodiagram must also be present.<p>
 
-<li>?readonly: Turn off editing capability - use for display only<p>
+<li>?readonly: Turn off editing capability - use for display only.<p>
 
-<li>?filename=xxxxx: Load the model xxxxx. xxxxx is a URL with the leading http:// left off<p>
+<li>?filename=xxxxx: Load the model xxxxx. xxxxx is a URL with the leading http:// left off.<p>
 
 <ul>
 

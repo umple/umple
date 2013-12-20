@@ -17,7 +17,7 @@ Model Oriented Tracing Language (MOTL) allows developers to specify tracing at t
 
 <li>Using a tool Like <a href="http://dtrace.org/blogs/about/">DTrace</a> (also <a href="http://hub.opensolaris.org/bin/view/Community+Group+dtrace/WebHome">see here</a>) that specifies a trace script to dynamically patch live running code.</li>
 
-<li>Using a tool like <a href="http://lttng.org/">LTTNG</a> to insert tracepoints</li>
+<li>Using a tool like <a href="http://lttng.org/">LTTNG</a> to insert tracepoints.</li>
 
 </ul>
 
