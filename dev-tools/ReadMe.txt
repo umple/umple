@@ -25,3 +25,8 @@ For Unix, Mac and Linux users:
 
  mumple
   - packages the user manual
+  
+ umple++
+   - A bash script to assist developers do various command line development tasks when
+   they have multiple trunks open
+   
