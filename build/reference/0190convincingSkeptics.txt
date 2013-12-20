@@ -10,7 +10,7 @@ noreferences
 
 <ol>
 
-<li><b>Model-code duality:</b> Umple means you no longer have to maintain models separately from the code. Your code and model become the same thing. Your models therefore dont get out of date and your volume of separately-maintained documentation becomes less. Model elements in the Umple code, along with their comments, become the design documentation.</li><br/>
+<li><b>Model-code duality:</b> Umple means you no longer have to maintain models separately from the code. Your code and model become the same thing. Your models therefore don't get out of date and your volume of separately-maintained documentation becomes less. Model elements in the Umple code, along with their comments, become the design documentation.</li><br/>
 
 <li><b>Rapid application development:</b> Models containing the essential structure of a system can be developed extremely fast, and modified extremely rapidly. This is because most people can edit Umple text faster than they can use a drawing tool. But the ability to use a drawing tool is not sacrificed  you can still draw an Umple model as a diagram with <a href="UsingUmpleOnline.html">UmpleOnline</a>!</li><br/>
 
@@ -18,7 +18,7 @@ noreferences
 
 <li><b>Fewer bugs:</b> It is extremely difficult to consistently write bug-free code for complex constructs like <a href="BasicStateMachines.html">state machines</a>, or <a href="AssociationDefinition.html">associations</a> that maintain referential integrity and respect <a href="Multiplicity.html">multiplicity</a> constraints. Umple does this for you.</li><br/>
 
-<li><b>The full power of UML features:</b> Unlike Umple, most other code generators do not generate code that enforces multiplicity in class diagrams, or allows unlimited levels of nesting of state machines. Umple has incorporates the research of several PhD and masters thesis to deliver state-of-the-art code generation.</li><br/>
+<li><b>The full power of UML features:</b> Unlike Umple, most other code generators do not generate code that enforces multiplicity in class diagrams, or allows unlimited levels of nesting of state machines. Umple has incorporated the research of several PhD and masters theses to deliver state-of-the-art code generation.</li><br/>
 
 <li><b>Text-diagram duality:</b> Umple allows visualization of key aspects of your code with UmpleOnline. Furthermore the diagram can be edited to change the code, or the code can be edited to change the diagram. Both of these occur in real time.</li><br/>
 
@@ -49,7 +49,7 @@ noreferences
 <u>Not true for Umple, because:</u>
 <ul>
   <li>Umple is just a set of small extensions to well-known languages like Java, PhP, Ruby and (coming soon) C++.</li>
-  <li>Umple acts just like a preprocessor:: traditional code is still there either embedded in the umple, or with Umple embedded in the traditional code.</li>
+  <li>Umple acts just like a preprocessor: traditional code is still there either embedded in the Umple, or with Umple embedded in the traditional code.</li>
   <li>Umple can be used incrementally. You can use just a few pieces of it here and there to gain substantial advantages.</li>
   <li>There is an easy-to-access user manual, with examples for all constructs and messages.</li>
   <li>Umple will save a lot of coding and maintenance of boilerplate code, code for patterns, and code for constructs such as state machines.</li>
@@ -82,7 +82,7 @@ noreferences
 <li><b>Process:</b> Our testing and building processes are likely to only work for well-known technologies:<br/>
 <u>Not true for Umple, because:</u>
 <ul>
-  <li>The Umple compiler works just like compilers of other languages can is tested and built in the same manner.</li>
+  <li>The Umple compiler works just like compilers of other languages and is tested and built in the same manner.</li>
 </ul></li><br/>
 
 

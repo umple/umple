@@ -4,7 +4,7 @@ noreferences
 
 @@description
 
-<p>Multiple concurrent blocks that become active when in a particular state can accomplished in Umple using a state machine with two substates separated by the || symbol, each with a do activity. Both do activities will run concurrently</p>
+<p>Multiple concurrent blocks that become active when in a particular state can accomplished in Umple using a state machine with two substates separated by the || symbol, each with a do activity. Both do activities will run concurrently.</p>
 
 @@example
 class X {

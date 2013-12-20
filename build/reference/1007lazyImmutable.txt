@@ -5,7 +5,7 @@ noreferences
 @@description
 <p>If you want to avoid having an attribute change after it is initially
 set, but do not want to have an argument in the constructor, then use the
-combination of keywords 'lazy immutable'</p>
+combination of keywords 'lazy immutable'.</p>
 
 <p>You can call the set method just once on such an attribute. The set method
 will return false if you try again. This is useful for interacting with

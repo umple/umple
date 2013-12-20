@@ -11,7 +11,7 @@ The strictness directive is used to control certain messages that the Umple comp
 The first two are 'modelOnly' or 'noExtraCode'. These are used when the programmer or modeller intends not to include base language code, and wants a warning to appear if base language code is found. Base language code is code in a language like Java or PhP that is discovered by Umple but not interpreted in any way. One example is the code in the bodies of methods; however, when parsing a class, any time Umple can't parse what it finds, it assumes it must be base language code. It just emits the base language code for the base language compiler to deal with. However there are circumstances when the developer does not want this: The developer may be creating a pure model or may want intend that the only base language code would in the body of methods. It is advantageous therefore to tell the compiler to raise a warning if it thinks it has found base language code in some other context, since otherwise, and ordinary Umple syntax error may go undetected, until the base language compiler is run on the code.</p>
 <ul>
 <li>'strictness modelOnly;' means be very strict and issue a warning if base language code is found.</li>
-<li>'strictness noExtraCode;' means that base language code is allowed in method bodies, but if found anywhere else to issue a warning/</li>
+<li>'strictness noExtraCode;' means that base language code is allowed in method bodies, but if found anywhere else to issue a warning.</li>
 </ul>
 </p>
 

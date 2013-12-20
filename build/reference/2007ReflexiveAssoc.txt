@@ -12,7 +12,7 @@ are semantically different from each other, even though the associated
 class is the same. Examples include parent-child, supervisor-subordinate and predecessor-successor.</p>
 
 <p>The 
-first and second example below shows courses having prerequisites that are 
+first and second examples below show courses having prerequisites that are 
 other courses. It is necessary to specify a <a href="RoleNames.html">role 
 name</a> at one or both ends of the association to distinguish the ends. 
 Also it is necessary to ensure that the lower bound is always zero on both 
