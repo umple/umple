@@ -697,7 +697,7 @@ class SqlGenerator
   {
     prepare();
     writeFile();
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
 
   public String nameOf(String name, boolean hasMultiple)

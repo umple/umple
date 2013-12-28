@@ -504,7 +504,7 @@ class PhpGenerator
     {
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
 
   public String nameOf(String name, boolean hasMultiple)

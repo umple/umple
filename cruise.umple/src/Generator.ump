@@ -20,6 +20,8 @@ interface CodeGenerator
   boolean setModel(UmpleModel aUmpleModel);
   boolean setOutput(String aString);
   void generate();
+  void prepare();
+  void postpare();
 }
 
 interface CodeTranslator
@@ -43,6 +45,9 @@ class SuperCodeGenerator {
 	isA CodeTranslator;
 	UmpleModel model = null;
 	String output = "";
+
+  public void prepare() {}
+  public void postpare() { GeneratorHelper.postpare(getModel()); }
 }
 class GeneratorHelper
 {

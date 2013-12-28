@@ -118,7 +118,7 @@ class CppGenerator
       message += "Check the first line statement for probable cause.";
       throw new UmpleCompilerException(message,null);
     }
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
   
   
