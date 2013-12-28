@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 import cruise.umple.util.*;
 
 /**
- * @umplesource Generator.ump 221
+ * @umplesource Generator.ump 226
  * @umplesource Generator_CodeJson.ump 11
  */
-// line 221 "../../../../src/Generator.ump"
+// line 226 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeJson.ump"
 public class JsonGenerator implements CodeGenerator
 {
@@ -215,6 +215,28 @@ public class JsonGenerator implements CodeGenerator
     //String json = "{" + jsonForClasses + ", " + jsonForInterfaces + ", " + jsonForAssociations + " }";
     String json = "{" + jsonForClasses  + ", " + jsonForAssociations + " }";
     model.setCode(json);
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={221},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={232},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

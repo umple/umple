@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.ruby.*;
 
 /**
- * @umplesource Generator.ump 312
+ * @umplesource Generator.ump 317
  * @umplesource Generator_CodeRuby.ump 11
  */
-// line 312 "../../../../src/Generator.ump"
+// line 317 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeRuby.ump"
 public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
 {
@@ -401,7 +401,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
       }
       writeFile(currentElement);
     }
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
 
   @umplesourcefile(line={460},file={"Generator_CodeRuby.ump"},javaline={409},length={16})
@@ -861,7 +861,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     ConstraintLookupMap.put("cardinality<",".length<{0}");
   }
 
-  @umplesourcefile(line={31},file={"Generator.ump"},javaline={865},length={128})
+  @umplesourcefile(line={33},file={"Generator.ump"},javaline={865},length={128})
   public String translate(String format, Constraint constraint){
     if(constraint==null)
       return "{0}";
@@ -991,7 +991,7 @@ public class RubyGenerator extends SuperCodeGenerator implements CodeTranslator
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
   }
 
-  @umplesourcefile(line={32},file={"Generator.ump"},javaline={995},length={10})
+  @umplesourcefile(line={34},file={"Generator.ump"},javaline={995},length={10})
   public String translate(String keyName, TraceItem ti){
     if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
 	{

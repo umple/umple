@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 149
+ * @umplesource Generator.ump 154
  * @umplesource Generator_CodeSimpleMetrics.ump 17
  */
-// line 149 "../../../../src/Generator.ump"
+// line 154 "../../../../src/Generator.ump"
 // line 17 "../../../../src/Generator_CodeSimpleMetrics.ump"
 public class SimpleMetricsGenerator implements CodeGenerator
 {
@@ -137,6 +137,28 @@ public class SimpleMetricsGenerator implements CodeGenerator
     {
       throw new UmpleCompilerException("There was a problem with generating simple metrics." + e, e);
     }
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={143},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={154},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

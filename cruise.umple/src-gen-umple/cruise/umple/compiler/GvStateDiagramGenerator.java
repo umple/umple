@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 121
+ * @umplesource Generator.ump 126
  * @umplesource Generator_CodeGvStateDiagram.ump 25
  */
-// line 121 "../../../../src/Generator.ump"
+// line 126 "../../../../src/Generator.ump"
 // line 25 "../../../../src/Generator_CodeGvStateDiagram.ump"
 public class GvStateDiagramGenerator implements CodeGenerator
 {
@@ -396,6 +396,28 @@ public class GvStateDiagramGenerator implements CodeGenerator
     {
       throw new UmpleCompilerException("There was a problem with generating GraphViz State Machine code." + e, e);
     }
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={402},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={413},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

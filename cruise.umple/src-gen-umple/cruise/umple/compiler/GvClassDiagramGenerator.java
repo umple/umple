@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 163
+ * @umplesource Generator.ump 168
  * @umplesource Generator_CodeGvClassDiagram.ump 17
  */
-// line 163 "../../../../src/Generator.ump"
+// line 168 "../../../../src/Generator.ump"
 // line 17 "../../../../src/Generator_CodeGvClassDiagram.ump"
 public class GvClassDiagramGenerator implements CodeGenerator
 {
@@ -259,6 +259,28 @@ public class GvClassDiagramGenerator implements CodeGenerator
     {
       throw new UmpleCompilerException("There was a problem with generating GraphViz Class Diagram code." + e, e);
     }
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={265},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={276},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

@@ -10,10 +10,10 @@ import cruise.umple.parser.analysis.*;
 import cruise.umple.parser.rules.*;
 
 /**
- * @umplesource Generator.ump 286
+ * @umplesource Generator.ump 291
  * @umplesource Generator_CodeUmple.ump 31
  */
-// line 286 "../../../../src/Generator.ump"
+// line 291 "../../../../src/Generator.ump"
 // line 31 "../../../../src/Generator_CodeUmple.ump"
 public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 {
@@ -175,7 +175,7 @@ public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
     {
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
 
 

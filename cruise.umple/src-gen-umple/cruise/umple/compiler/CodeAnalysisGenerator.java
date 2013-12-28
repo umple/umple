@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 135
+ * @umplesource Generator.ump 140
  * @umplesource Generator_CodeAnalysis.ump 20
  */
-// line 135 "../../../../src/Generator.ump"
+// line 140 "../../../../src/Generator.ump"
 // line 20 "../../../../src/Generator_CodeAnalysis.ump"
 public class CodeAnalysisGenerator implements CodeGenerator
 {
@@ -122,6 +122,28 @@ public class CodeAnalysisGenerator implements CodeGenerator
     {
       throw new UmpleCompilerException("Code Analysis Exception: " + e, e);
     }
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={128},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={139},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

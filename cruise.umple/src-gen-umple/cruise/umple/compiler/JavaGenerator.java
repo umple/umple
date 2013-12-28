@@ -10,10 +10,10 @@ import cruise.umple.compiler.java.*;
 import cruise.umple.util.StringFormatter;
 
 /**
- * @umplesource Generator.ump 232
+ * @umplesource Generator.ump 237
  * @umplesource Generator_CodeJava.ump 11
  */
-// line 232 "../../../../src/Generator.ump"
+// line 237 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeJava.ump"
 public class JavaGenerator extends SuperCodeGenerator implements CodeTranslator
 {
@@ -69,7 +69,7 @@ public class JavaGenerator extends SuperCodeGenerator implements CodeTranslator
       message += "Check the first line statement for probable cause.";
       throw new UmpleCompilerException(message,null);
     }
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
 
   @umplesourcefile(line={133},file={"Generator_CodeJava.ump"},javaline={77},length={13})
@@ -1247,7 +1247,7 @@ public class JavaGenerator extends SuperCodeGenerator implements CodeTranslator
     ConstraintLookupMap.put("cardinality<",".size()<{0}");
   }
 
-  @umplesourcefile(line={31},file={"Generator.ump"},javaline={1251},length={128})
+  @umplesourcefile(line={33},file={"Generator.ump"},javaline={1251},length={128})
   public String translate(String format, Constraint constraint){
     if(constraint==null)
       return "{0}";
@@ -1377,7 +1377,7 @@ public class JavaGenerator extends SuperCodeGenerator implements CodeTranslator
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
   }
 
-  @umplesourcefile(line={32},file={"Generator.ump"},javaline={1381},length={10})
+  @umplesourcefile(line={34},file={"Generator.ump"},javaline={1381},length={10})
   public String translate(String keyName, TraceItem ti){
     if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
 	{

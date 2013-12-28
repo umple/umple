@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 65
+ * @umplesource Generator.ump 70
  * @umplesource Generator_CodeUmpleSelf.ump 11
  */
-// line 65 "../../../../src/Generator.ump"
+// line 70 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeUmpleSelf.ump"
 public class UmpleSelfGenerator implements CodeGenerator
 {
@@ -73,9 +73,14 @@ public class UmpleSelfGenerator implements CodeGenerator
   public void delete()
   {}
 
-  @umplesourcefile(line={17},file={"Generator_CodeUmpleSelf.ump"},javaline={78},length={36})
+  @umplesourcefile(line={17},file={"Generator_CodeUmpleSelf.ump"},javaline={78},length={61})
    public void generate(){
+    CodeGenerator internalGen = generateBasedOn();
+    internalGen.prepare();
+
     StringBuilder code = new StringBuilder();
+    ArrayList<Association> externalAssociations = new ArrayList<Association>();
+    
     for (UmpleClass uClass : model.getUmpleClasses())
     {
       code.append(StringFormatter.format("\nclass {0}\n{\n",uClass.getName()));
@@ -104,14 +109,34 @@ public class UmpleSelfGenerator implements CodeGenerator
         code.append(";\n");
       }
 
+      for(Association as : uClass.getAssociations())
+      {
+        AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+        AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
+        
+        if (!myEnd.getClassName().equals(uClass.getName())) {continue;}
+        if (as.isNamed()) { externalAssociations.add(as); continue; }
+        code.append(StringFormatter.format("  {0} {1} -- {3} {4} {2};\n",myEnd.getMultiplicity().getParserable(),myEnd.getRoleName(),theirEnd.getRoleName(),theirEnd.getMultiplicity().getParserable(),theirEnd.getClassName()));
+      }
       code.append("}\n");
+    }
+
+    for(Association as : externalAssociations)
+    {
+      AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+      AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
+      
+      code.append(StringFormatter.format("\nassociation {0}\n{\n",as.getName()));
+      code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n",myEnd.getMultiplicity().getParserable(),myEnd.getRoleName(),myEnd.getClassName(),theirEnd.getRoleName(),theirEnd.getMultiplicity().getParserable(),theirEnd.getClassName()));
+      code.append("}");
     }
     
     model.setCode(code.toString());
     writeModel();
+    internalGen.postpare();
   }
 
-  @umplesourcefile(line={55},file={"Generator_CodeUmpleSelf.ump"},javaline={116},length={17})
+  @umplesourcefile(line={80},file={"Generator_CodeUmpleSelf.ump"},javaline={141},length={17})
    private void writeModel(){
     try
     {
@@ -128,6 +153,43 @@ public class UmpleSelfGenerator implements CodeGenerator
     {
       throw new UmpleCompilerException("There was a problem with generating UmpleSelf code." + e, e);
     }
+  }
+
+  @umplesourcefile(line={99},file={"Generator_CodeUmpleSelf.ump"},javaline={160},length={13})
+   private CodeGenerator generateBasedOn(){
+    String targetLanguage = "Java";
+    for (GenerateTarget target : model.getGenerates())
+    {
+      if (target.getLanguage().equals("UmpleSelf"))
+      {
+        continue;
+      }
+      targetLanguage = target.getLanguage();
+      break;
+    }
+    return model.newGenerator(targetLanguage);
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={174},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={185},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

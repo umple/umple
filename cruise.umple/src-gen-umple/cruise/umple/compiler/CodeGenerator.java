@@ -10,4 +10,6 @@ public interface CodeGenerator
  public boolean setModel(UmpleModel aUmpleModel);
  public boolean setOutput(String aString);
  public void generate();
+ public void prepare();
+ public void postpare();
 }
