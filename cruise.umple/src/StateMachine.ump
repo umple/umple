@@ -126,7 +126,7 @@ class Action
 {
   depend cruise.umple.compiler.Position;
   
-  actionType = null;
+  lazy actionType;
   lazy Position position;
   lazy Position endPosition;
   actionCode;  // target language code
