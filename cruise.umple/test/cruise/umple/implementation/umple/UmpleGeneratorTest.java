@@ -32,15 +32,15 @@ public class UmpleGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/umple/X2.ump");
   }
 
-  // @Test
-  // public void Attributes()
-  // {
-  //   language = null;
-  //   createUmpleSystem(pathToInput, "umple/Attributes.ump");
+  @Test
+  public void Attributes()
+  {
+    language = null;
+    createUmpleSystem(pathToInput, "umple/Attributes.ump");
     
-  //   assertGeneratedCodeEquals(pathToInput,"/umple/X.ump");
-  //   assertGeneratedCodeEquals(pathToInput,"/umple/X1.ump");
-  //   assertGeneratedCodeEquals(pathToInput,"/umple/X2.ump");
-  // }  
+    assertGeneratedCodeEquals(pathToInput,"/umple/X.ump");
+    assertGeneratedCodeEquals(pathToInput,"/umple/X1.ump");
+    assertGeneratedCodeEquals(pathToInput,"/umple/X2.ump");
+  }  
 
 }

@@ -1,4 +1,4 @@
-generate Umple;
+generate UmpleSelf;
 
 class X
 {
