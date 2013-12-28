@@ -34,6 +34,18 @@ public class AssociationTest
     Assert.assertTrue(as.isImmutable());
   }
   
+//  @Test
+//  public void isNamed_defaulted()
+//  {
+//    Association as = new Association(true,true,new AssociationEnd("R2","C1","M1","C2",createMultiplicity(3,4)), new AssociationEnd("R1","C2","M2","C1",createMultiplicity(1,2)));    
+//    Assert.assertEquals(false, as.isNamed());
+//    as.setName("SomeName");
+//    Assert.assertEquals(true, as.isNamed());
+//    as.setName(as.deriveName());
+//    Assert.assertEquals(true, as.isNamed());
+//  }
+  
+  
   @Test
   public void CheckAssociations()
   {

@@ -30,6 +30,9 @@ public class UmpleGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/umple/X.ump");
     SampleFileWriter.destroy(pathToInput + "/umple/X1.ump");
     SampleFileWriter.destroy(pathToInput + "/umple/X2.ump");
+
+    SampleFileWriter.destroy(pathToInput + "/umple/Student.ump");
+    SampleFileWriter.destroy(pathToInput + "/umple/Mentor.ump");
   }
 
   @Test
@@ -41,6 +44,17 @@ public class UmpleGeneratorTest extends TemplateTest
     assertGeneratedCodeEquals(pathToInput,"/umple/X.ump");
     assertGeneratedCodeEquals(pathToInput,"/umple/X1.ump");
     assertGeneratedCodeEquals(pathToInput,"/umple/X2.ump");
-  }  
+  }
+
+  @Test
+  public void Associations()
+  {
+    language = null;
+    createUmpleSystem(pathToInput, "umple/Associations.ump");
+    
+    assertGeneratedCodeEquals(pathToInput,"/umple/Student.ump");
+    assertGeneratedCodeEquals(pathToInput,"/umple/Mentor.ump");
+  }
+
 
 }

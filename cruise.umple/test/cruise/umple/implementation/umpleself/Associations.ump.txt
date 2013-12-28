@@ -1,0 +1,16 @@
+
+class Student
+{
+  * b -- 1 Mentor n;
+  1 c -- 3 Mentor o;
+  3..5 d -- * Mentor p;
+}
+
+class Mentor
+{
+}
+
+association Supervisor
+{
+  0..1 a Student -- 0..4 Mentor m;
+}

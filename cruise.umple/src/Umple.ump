@@ -529,8 +529,9 @@ class Association
   Position tokenPosition = null;
   Position tokenEndPosition = null;
   internal Boolean immutable = false;
+  Boolean named = { name != null && !"".equals(name) }
 
-  before getName { if (name == null || "".equals(name)) { return this.deriveName(); } }
+  before getName { if (!isNamed()) { return this.deriveName(); } }
   after constructor { this.setLeftAndRight(); }
 }
 
@@ -599,6 +600,8 @@ class Multiplicity
   bound = null; // used when minimum=maximum; 
   minimum = null;
   maximum = null;
+
+  parserable = { getBound() != null ? getBound() : getMinimum().equals("0") && getMaximum().equals("*") ? "*" : getMinimum() + ".." + getMaximum() }
 
   key { bound, minimum, maximum } 
 
