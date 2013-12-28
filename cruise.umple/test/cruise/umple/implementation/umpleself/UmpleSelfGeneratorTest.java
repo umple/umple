@@ -29,12 +29,12 @@ public class UmpleSelfGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/umpleself/Attributes.umpself");
   }
 
-//  @Test
-//  public void Attributes()
-//  {
-//    language = null;
-//    assertUmpleTemplateFor("umpleself/Attributes.ump","umpleself/Attributes.ump.txt");
-//    Assert.assertEquals(true, (new File(pathToInput + "/umpleself/Attributes.umpself")).exists());
-//  }  
+ @Test
+ public void Attributes()
+ {
+   language = null;
+   assertUmpleTemplateFor("umpleself/Attributes.ump","umpleself/Attributes.ump.txt");
+   Assert.assertEquals(true, (new File(pathToInput + "/umpleself/Attributes.umpself")).exists());
+ }  
 
 }
