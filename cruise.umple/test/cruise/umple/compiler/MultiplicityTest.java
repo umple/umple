@@ -200,6 +200,28 @@ public class MultiplicityTest
     Assert.assertEquals("[4,4]",m.getRange());
   }
   
+//  @Test
+//  public void getParserable()
+//  {
+//    Multiplicity m = new Multiplicity();
+//    
+//    m.setBound("*");
+//    Assert.assertEquals("*", m.getParserable());
+//    
+//    m.setBound(null);
+//    m.setRange("3", "5");
+//    Assert.assertEquals("3..5",m.getParserable());
+//    
+//    m.setRange("3", "*");
+//    Assert.assertEquals("3..*",m.getParserable());
+//
+//    m.setRange("0", "*");
+//    Assert.assertEquals("*",m.getParserable());
+//
+//    m.setBound("4");
+//    Assert.assertEquals("4",m.getParserable());
+//  }  
+  
   @Test
   public void getRangeParts()
   {

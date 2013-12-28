@@ -15,6 +15,8 @@ class UmpleSelfGenerator
   public void generate()
   {
     StringBuilder code = new StringBuilder();
+    ArrayList<Association> externalAssociations = new ArrayList<Association>();
+    
     for (UmpleClass uClass : model.getUmpleClasses())
     {
       code.append(StringFormatter.format("\nclass {0}\n{\n",uClass.getName()));
@@ -43,7 +45,26 @@ class UmpleSelfGenerator
         code.append(";\n");
       }
 
+      for(Association as : uClass.getAssociations())
+      {
+        AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+        AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
+        
+        if (!myEnd.getClassName().equals(uClass.getName())) {continue;}
+        if (as.isNamed()) { externalAssociations.add(as); continue; }
+        code.append(StringFormatter.format("  {0} {1} -- {3} {4} {2};\n",myEnd.getMultiplicity().getParserable(),myEnd.getRoleName(),theirEnd.getRoleName(),theirEnd.getMultiplicity().getParserable(),theirEnd.getClassName()));
+      }
       code.append("}\n");
+    }
+
+    for(Association as : externalAssociations)
+    {
+      AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+      AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
+      
+      code.append(StringFormatter.format("\nassociation {0}\n{\n",as.getName()));
+      code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n",myEnd.getMultiplicity().getParserable(),myEnd.getRoleName(),myEnd.getClassName(),theirEnd.getRoleName(),theirEnd.getMultiplicity().getParserable(),theirEnd.getClassName()));
+      code.append("}");
     }
     
     model.setCode(code.toString());

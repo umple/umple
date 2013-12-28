@@ -1,0 +1,7 @@
+class Student {
+    0 .. * b -- 1 Mentor n ; 
+    1 c -- 3 Mentor o ; 
+    3 .. 5 d -- 0 .. * Mentor p ; 
+    0 .. 1 a -- 0 .. 4 Mentor m ; 
+}
+

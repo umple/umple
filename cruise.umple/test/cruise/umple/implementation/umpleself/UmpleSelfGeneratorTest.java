@@ -27,6 +27,7 @@ public class UmpleSelfGeneratorTest extends TemplateTest
   {
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/umpleself/Attributes.umpself");
+    SampleFileWriter.destroy(pathToInput + "/umpleself/Associations.umpself");
   }
 
  @Test
@@ -35,6 +36,14 @@ public class UmpleSelfGeneratorTest extends TemplateTest
    language = null;
    assertUmpleTemplateFor("umpleself/Attributes.ump","umpleself/Attributes.ump.txt");
    Assert.assertEquals(true, (new File(pathToInput + "/umpleself/Attributes.umpself")).exists());
+ }  
+
+ @Test
+ public void Associations()
+ {
+   language = null;
+   assertUmpleTemplateFor("umpleself/Associations.ump","umpleself/Associations.ump.txt");
+   Assert.assertEquals(true, (new File(pathToInput + "/umpleself/Associations.umpself")).exists());
  }  
 
 }
