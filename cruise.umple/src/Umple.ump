@@ -597,9 +597,9 @@ class Multiplicity
 {
   depend cruise.umple.util.*;
 
-  bound = null; // used when minimum=maximum; 
-  minimum = null;
-  maximum = null;
+  lazy bound; // used when minimum=maximum; 
+  lazy minimum;
+  lazy maximum;
 
   parserable = { getBound() != null ? getBound() : getMinimum().equals("0") && getMaximum().equals("*") ? "*" : getMinimum() + ".." + getMaximum() }
 
