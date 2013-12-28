@@ -1,0 +1,25 @@
+class X2 {
+    const Integer MAX = 100 ; 
+    const Integer MIN = -99 ; 
+    const String HELLO = "Hello" ; 
+    immutable String str = null ; 
+    immutable String str2 = null ; 
+    settable String someName = null ; 
+    settable Double lDoub = null ; 
+    settable Boolean lBool = null ; 
+    settable String name = "Johannes" ; 
+    settable Date d = null ; 
+    internal Time t = new Time() ; 
+    settable Integer i = null ; 
+    settable Integer derivedTwiceI = i*2 ; 
+    settable Integer x = null ; 
+    defaulted String p = "robot" ; 
+    settable String q = "chicken" ; 
+    defaulted String r = "" ; 
+    immutable String s = "123" ; 
+    settable Date tt = "1978-12-25" ; 
+    settable Time u = "12:13:14" ; 
+    defaulted Date v = "1978-12-26" ; 
+    defaulted Time w = "12:59:59" ; 
+}
+

@@ -63,6 +63,20 @@ class EcoreGenerator
   String output = "";
 }
 
+class UmpleSelfGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+}
+
 class PapyrusGenerator
 {
   isA CodeGenerator;
@@ -351,6 +365,7 @@ use Generator_CodeUigu2.ump;
 use Generator_CodeCpp.ump;
 use Generator_CodeSql.ump;
 use Generator_CodeSDL.ump;
+use Generator_CodeUmpleSelf.ump;
 use Generator_CodeEcore.ump;
 use Generator_CodePapyrus.ump;
 use Generator_CodeXmi.ump;

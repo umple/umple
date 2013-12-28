@@ -1,0 +1,73 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleSelfGenerator
+{
+
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      code.append(StringFormatter.format("\nclass {0}\n{\n",uClass.getName()));
+
+      if (uClass.getExtendsClass() != null)
+      {
+        code.append(StringFormatter.format("  isA {0};\n",uClass.getExtendsClass().getName()));
+      }
+
+      for(Attribute av : uClass.getAttributes())
+      {
+        String typeName = av.getType() == null ? "String" : av.getType();
+        String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
+        
+        code.append(" ");
+        if (av.isIsLazy()) { code.append(" lazy"); } 
+        
+        if (!av.getModifier().equals("settable")) { code.append(StringFormatter.format(" {0}",av.getModifier())); }
+        
+        if (av.isIsAutounique()) { code.append(" autounique"); } 
+        else if (!typeName.equals("String") || av.isImmutable() || av.isIsLazy()) { code.append(StringFormatter.format(" {0}",typeName)); }
+        code.append(StringFormatter.format(" {0}",attrName));
+
+        if (av.getValue() != null) { code.append(StringFormatter.format(" = {0}",av.getValue())); }
+        
+        code.append(";\n");
+      }
+
+      code.append("}\n");
+    }
+    
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".umpself";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating UmpleSelf code." + e, e);
+    }
+  }
+}
+
+
