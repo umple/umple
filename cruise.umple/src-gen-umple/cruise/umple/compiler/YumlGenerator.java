@@ -6,10 +6,10 @@ import java.util.*;
 import cruise.umple.util.*;
 
 /**
- * @umplesource Generator.ump 191
+ * @umplesource Generator.ump 196
  * @umplesource Generator_CodeYuml.ump 11
  */
-// line 191 "../../../../src/Generator.ump"
+// line 196 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeYuml.ump"
 public class YumlGenerator implements CodeGenerator
 {
@@ -165,6 +165,28 @@ public class YumlGenerator implements CodeGenerator
   @Override
   public boolean setOutput(String aString){
           return false;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={171},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={182},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

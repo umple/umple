@@ -146,6 +146,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedElements" eType="#//UmpleElement" upperBound="-1"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Format">
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClassMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -234,8 +236,6 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;Transition>" instanceClassName="java.util.Set"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;State>" instanceClassName="java.util.Set"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;Event>" instanceClassName="java.util.Set"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Format">
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -908,6 +908,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="tokenPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="tokenEndPosition" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="immutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="named" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="ends" lowerBound="2" upperBound="2" eType="#//AssociationEnd" eOpposite="#//AssociationEnd/association"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="AssociationEnd">
@@ -934,6 +935,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="bound" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="minimum" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maximum" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="parserable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GeneratedElement">
   </eClassifiers>

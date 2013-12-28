@@ -819,33 +819,42 @@ public class UmpleModel implements Runnable
 
 
   /**
+   * Creates a generator for you based on the provided Language
+   */
+  @umplesourcefile(line={179},file={"Umple_Code.ump"},javaline={822},length={17})
+   public CodeGenerator newGenerator(String language){
+    boolean foundGenerator;
+    String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",language); 
+    Class<?> classDefinition = null;
+    try {
+      classDefinition = Class.forName(className);
+      CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
+      generator.setModel(this);
+      return generator;
+    }
+    catch (ClassNotFoundException cnf) {
+      throw new RuntimeException("Code generator "+language+ " not found. Check spelling.",cnf);
+    }
+    catch (Exception ex2) {
+      throw new RuntimeException("Unable to instantiate "+language+ ".",ex2);
+    }
+  }
+
+
+  /**
    * Generates the actual code for each generation target
    */
-  @umplesourcefile(line={178},file={"Umple_Code.ump"},javaline={822},length={33})
+  @umplesourcefile(line={202},file={"Umple_Code.ump"},javaline={845},length={19})
    public void generate(){
     boolean foundGenerator;
-    Class<?> classDefinition = null;
     try
     {
       for (GenerateTarget target : getGenerates())
       {
-        // Set the proper code generator for the target language.  (the "{0}" gets replaced by the language, so it could be "JavaGenerator")
-        String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",target.getLanguage());
-    
-        try {
-          classDefinition = Class.forName(className);
-          CodeGenerator generator = (CodeGenerator) classDefinition.newInstance();
-
-          // Since the model contains everything that needs to be translated into generated code (such as Java or Cpp) set the model to use.
-          generator.setModel(this);
-
-          generator.setOutput(target.getPath());
-          CodeBlock.languageUsed = target.getLanguage();
-          generator.generate();
-        }
-        catch (ClassNotFoundException cnf) {
-          System.err.println("Code generator "+target.getLanguage()+ " not found. Check spelling.");
-        }
+        CodeGenerator generator = newGenerator(target.getLanguage());
+        generator.setOutput(target.getPath());
+        CodeBlock.languageUsed = target.getLanguage();
+        generator.generate();
       }
     }
     catch (Exception ex)
@@ -856,7 +865,7 @@ public class UmpleModel implements Runnable
     }
   }
 
-  @umplesourcefile(line={214},file={"Umple_Code.ump"},javaline={861},length={13})
+  @umplesourcefile(line={224},file={"Umple_Code.ump"},javaline={870},length={13})
    public Coordinate getDefaultClassPosition(int numDefaults){
     int xIndex  = 0;
     int yIndex = 0;
@@ -871,7 +880,7 @@ public class UmpleModel implements Runnable
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
 
-  @umplesourcefile(line={229},file={"Umple_Code.ump"},javaline={876},length={91})
+  @umplesourcefile(line={239},file={"Umple_Code.ump"},javaline={885},length={91})
    public Coordinate[] getDefaultAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     int offsetY = offsetFromEdge.getX();
@@ -964,7 +973,7 @@ public class UmpleModel implements Runnable
     return defaults;
   }
 
-  @umplesourcefile(line={322},file={"Umple_Code.ump"},javaline={969},length={59})
+  @umplesourcefile(line={332},file={"Umple_Code.ump"},javaline={978},length={59})
    private Coordinate[] getDefaultReflexiveAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();
@@ -1046,8 +1055,8 @@ public class UmpleModel implements Runnable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={77},file={"Umple_Code.ump"},javaline={1050},length={5})
-  @umplesourcefile(line={78},file={"Umple_Code.ump"},javaline={1051},length={4})
+  //  @umplesourcefile(line={77},file={"Umple_Code.ump"},javaline={1059},length={5})
+  @umplesourcefile(line={78},file={"Umple_Code.ump"},javaline={1060},length={4})
   public void addGenerate (Collection <?extends GenerateTarget> c) 
   {
     generates.addAll(c);

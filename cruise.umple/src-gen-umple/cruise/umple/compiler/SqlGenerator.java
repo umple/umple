@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sql.*;
 
 /**
- * @umplesource Generator.ump 324
+ * @umplesource Generator.ump 329
  * @umplesource Generator_CodeSql.ump 11
  */
-// line 324 "../../../../src/Generator.ump"
+// line 329 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeSql.ump"
 public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
 {
@@ -650,7 +650,7 @@ public class SqlGenerator extends SuperCodeGenerator implements CodeTranslator
    public void generate(){
     prepare();
     writeFile();
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
 
   @umplesourcefile(line={705},file={"Generator_CodeSql.ump"},javaline={658},length={16})

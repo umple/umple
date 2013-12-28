@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 177
+ * @umplesource Generator.ump 182
  * @umplesource Generator_CodeSimulate.ump 11
  */
-// line 177 "../../../../src/Generator.ump"
+// line 182 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeSimulate.ump"
 public class SimulateGenerator implements CodeGenerator
 {
@@ -172,6 +172,28 @@ public class SimulateGenerator implements CodeGenerator
     {
       throw new UmpleCompilerException("There was a problem with generating simulate code." + e, e);
     }
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={178},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={189},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

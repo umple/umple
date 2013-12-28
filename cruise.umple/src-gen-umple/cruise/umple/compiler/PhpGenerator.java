@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.php.*;
 
 /**
- * @umplesource Generator.ump 274
+ * @umplesource Generator.ump 279
  * @umplesource Generator_CodePhp.ump 11
  */
-// line 274 "../../../../src/Generator.ump"
+// line 279 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodePhp.ump"
 public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
 {
@@ -452,7 +452,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     {
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
     }
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
 
   @umplesourcefile(line={512},file={"Generator_CodePhp.ump"},javaline={460},length={16})
@@ -949,7 +949,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     ConstraintLookupMap.put("cardinality<","count({1})<{0}");
   }
 
-  @umplesourcefile(line={31},file={"Generator.ump"},javaline={953},length={128})
+  @umplesourcefile(line={33},file={"Generator.ump"},javaline={953},length={128})
   public String translate(String format, Constraint constraint){
     if(constraint==null)
       return "{0}";
@@ -1079,7 +1079,7 @@ public class PhpGenerator extends SuperCodeGenerator implements CodeTranslator
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
   }
 
-  @umplesourcefile(line={32},file={"Generator.ump"},javaline={1083},length={10})
+  @umplesourcefile(line={34},file={"Generator.ump"},javaline={1083},length={10})
   public String translate(String keyName, TraceItem ti){
     if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
 	{

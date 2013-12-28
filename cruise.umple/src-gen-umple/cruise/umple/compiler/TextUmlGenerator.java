@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 107
+ * @umplesource Generator.ump 112
  * @umplesource Generator_CodeTextUml.ump 11
  */
-// line 107 "../../../../src/Generator.ump"
+// line 112 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeTextUml.ump"
 public class TextUmlGenerator implements CodeGenerator
 {
@@ -208,6 +208,28 @@ public class TextUmlGenerator implements CodeGenerator
     {
       throw new UmpleCompilerException("There was a problem with generating TextUml code." + e, e);
     }
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={214},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={225},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

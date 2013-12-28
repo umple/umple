@@ -8,10 +8,10 @@ import cruise.umple.util.*;
 import cruise.umple.compiler.exceptions.*;
 
 /**
- * @umplesource Generator.ump 79
+ * @umplesource Generator.ump 84
  * @umplesource Generator_CodePapyrus.ump 11
  */
-// line 79 "../../../../src/Generator.ump"
+// line 84 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodePapyrus.ump"
 public class PapyrusGenerator implements CodeGenerator
 {
@@ -608,6 +608,28 @@ public class PapyrusGenerator implements CodeGenerator
     {
       throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
     }
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={614},length={2})
+  @Override
+  public void prepare(){
+          return ;
+  }
+
+
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={625},length={2})
+  @Override
+  public void postpare(){
+          return ;
   }
 
 

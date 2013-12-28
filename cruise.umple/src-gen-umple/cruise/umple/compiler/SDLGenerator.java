@@ -9,10 +9,10 @@ import cruise.umple.compiler.exceptions.*;
 import cruise.umple.compiler.sdl.*;
 
 /**
- * @umplesource Generator.ump 336
+ * @umplesource Generator.ump 341
  * @umplesource Generator_CodeSDL.ump 11
  */
-// line 336 "../../../../src/Generator.ump"
+// line 341 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeSDL.ump"
 public class SDLGenerator implements CodeGenerator,CodeTranslator
 {
@@ -313,6 +313,17 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
   }
 
 
+  /**
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
+   */
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={316},length={2})
+  @Override
+  public void postpare(){
+          return ;
+  }
+
+
   public String toString()
   {
 	  String outputString = "";
@@ -324,10 +335,10 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={14},file={"Generator_CodeSDL.ump"},javaline={328},length={17})
+  //  @umplesourcefile(line={14},file={"Generator_CodeSDL.ump"},javaline={339},length={17})
   private static List<String> SdlPrimitives ;
 
-//  @umplesourcefile(line={16},file={"Generator_CodeSDL.ump"},javaline={331},length={14})
+//  @umplesourcefile(line={16},file={"Generator_CodeSDL.ump"},javaline={342},length={14})
   static 
   {
     SdlPrimitives = new ArrayList<String>();
@@ -335,9 +346,9 @@ public class SDLGenerator implements CodeGenerator,CodeTranslator
     SdlPrimitives.add("TINYTEXT");
   }
 
-//  @umplesourcefile(line={207},file={"Generator_CodeSDL.ump"},javaline={339},length={6})
+//  @umplesourcefile(line={207},file={"Generator_CodeSDL.ump"},javaline={350},length={6})
   @Override
-  @umplesourcefile(line={209},file={"Generator_CodeSDL.ump"},javaline={341},length={4})
+  @umplesourcefile(line={209},file={"Generator_CodeSDL.ump"},javaline={352},length={4})
 public String translate (String id, AssociationVariable aVar) 
   {
     return null;
