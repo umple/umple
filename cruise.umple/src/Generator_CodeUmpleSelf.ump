@@ -14,6 +14,9 @@ class UmpleSelfGenerator
 
   public void generate()
   {
+    CodeGenerator internalGen = generateBasedOn();
+    internalGen.prepare();
+
     StringBuilder code = new StringBuilder();
     ArrayList<Association> externalAssociations = new ArrayList<Association>();
     
@@ -69,6 +72,7 @@ class UmpleSelfGenerator
     
     model.setCode(code.toString());
     writeModel();
+    internalGen.postpare();
   }
 
   private void writeModel()
@@ -89,6 +93,22 @@ class UmpleSelfGenerator
       throw new UmpleCompilerException("There was a problem with generating UmpleSelf code." + e, e);
     }
   }
+
+  private CodeGenerator generateBasedOn()
+  {
+    String targetLanguage = "Java";
+    for (GenerateTarget target : model.getGenerates())
+    {
+      if (target.getLanguage().equals("UmpleSelf"))
+      {
+        continue;
+      }
+      targetLanguage = target.getLanguage();
+      break;
+    }
+    return model.newGenerator(targetLanguage);
+  }
+
 }
 
 

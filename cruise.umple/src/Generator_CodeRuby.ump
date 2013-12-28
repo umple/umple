@@ -452,7 +452,7 @@ class RubyGenerator
       }
       writeFile(currentElement);
     }
-    GeneratorHelper.postpare(getModel());
+    postpare();
   }
 
   public String nameOf(String name, boolean hasMultiple)
