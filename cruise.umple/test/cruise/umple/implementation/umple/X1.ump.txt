@@ -1,0 +1,4 @@
+class X1 {
+    isA X; 
+}
+

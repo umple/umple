@@ -249,6 +249,13 @@ public class TemplateTest
   {
 	  assertUmpleTemplateFor(umpleFile, codeFile, className, isFullMatch, true);
   }
+
+  // public void assertGeneratedCodeEquals(String pathToInput,String actualFilename)
+  // {
+  //   String expectedFilename = actualFilename + ".txt";
+  //   SampleFileWriter.assertFileContent(new File(pathToInput + expectedFilename), new File(pathToInput + actualFilename), false);
+  // }
+  
   
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className, boolean isFullMatch, boolean ignoreLineComments)
   {

@@ -685,17 +685,32 @@ class SampleFileWriter
     assertFileContent(expected, actual, true);
   }
   
-  public static void assertFileContent(File expected, String actual, boolean ignoreLineComments)
-  {
-    
-    BufferedReader expectedReader = null;
-    BufferedReader actualReader = null;
-    
+  public static void assertFileContent(File expected, String actual, boolean ignoreLineComments){
     try
     {
-      expectedReader = new BufferedReader(new FileReader(expected));
-      actualReader = new BufferedReader(new StringReader(actual));
+      assertFileContent(new BufferedReader(new FileReader(expected)),new BufferedReader(new StringReader(actual)),ignoreLineComments);
+    }
+    catch (FileNotFoundException e)
+    {
+      Assert.fail(e.getMessage());
+    }
+  }
+  
+  public static void assertFileContent(File expected, File actual, boolean ignoreLineComments){
+    try
+    {
+      assertFileContent(new BufferedReader(new FileReader(expected)),new BufferedReader(new FileReader(actual)),ignoreLineComments);
+    }
+    catch (FileNotFoundException e)
+    {
+      Assert.fail(e.getMessage());
+    }
+  }
 
+  public static void assertFileContent(BufferedReader expectedReader, BufferedReader actualReader, boolean ignoreLineComments)
+  {
+    try
+    {
       String expectedLine = null;
       String actualLine = null;
       
@@ -705,12 +720,12 @@ class SampleFileWriter
         actualLine = actualReader.readLine();
         if (ignoreLineComments)
         {
-	        // HACK: To deal with // line # comments
-	        while (actualLine != null && actualLine.indexOf("// line") != -1)
-	        { //Ignore the line, go to next
-	          actualLine = actualReader.readLine();
-	        }
-	    }
+          // HACK: To deal with // line # comments
+          while (actualLine != null && actualLine.indexOf("// line") != -1)
+          { //Ignore the line, go to next
+            actualLine = actualReader.readLine();
+          }
+      }
         expectedLine = expectedReader.readLine();
         
         line++;
@@ -868,20 +883,21 @@ class Glossary
     addWord(new Word("move","moves"));
 
 
-	addWord(new Word("shoe","shoes"));
-	addWord(new Word("axis","axes"));
-	addWord(new Word("testis","testes"));
-	addWord(new Word("crisis","crises"));
-	addWord(new Word("virus","viruses")); 
-	addWord(new Word("octopus","octopi"));
-	addWord(new Word("status","statuses"));
-	addWord(new Word("alias","aliases"));
-	addWord(new Word("ox","oxen"));
-	addWord(new Word("index","indices"));
-	addWord(new Word("vertex","vertices"));
-	addWord(new Word("quiz","quizzes"));
-	addWord(new Word("matrix","matrices"));
-	addWord(new Word("radius","radii"));
+  	addWord(new Word("shoe","shoes"));
+  	addWord(new Word("axis","axes"));
+  	addWord(new Word("testis","testes"));
+  	addWord(new Word("crisis","crises"));
+  	addWord(new Word("virus","viruses")); 
+  	addWord(new Word("octopus","octopi"));
+  	addWord(new Word("status","statuses"));
+  	addWord(new Word("alias","aliases"));
+  	addWord(new Word("ox","oxen"));
+  	addWord(new Word("index","indices"));
+  	addWord(new Word("vertex","vertices"));
+  	addWord(new Word("quiz","quizzes"));
+  	addWord(new Word("matrix","matrices"));
+  	addWord(new Word("radius","radii"));
+    addWord(new Word("s","ses"));
   }
   
   
@@ -895,7 +911,7 @@ class Glossary
     {
       for(Word w : getWords())
       {
-        if (w.getPlural().equals(plural))
+        if (w.getPlural().equals(plural) || w.getSingular().equals(plural))
         {
           return w.getSingular();
         }

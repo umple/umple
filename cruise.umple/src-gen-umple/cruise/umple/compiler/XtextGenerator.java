@@ -9,10 +9,10 @@ import cruise.umple.util.*;
 import java.util.*;
 
 /**
- * @umplesource Generator.ump 189
+ * @umplesource Generator.ump 203
  * @umplesource Generator_CodeXtext.ump 11
  */
-// line 189 "../../../../src/Generator.ump"
+// line 203 "../../../../src/Generator.ump"
 // line 11 "../../../../src/Generator_CodeXtext.ump"
 public class XtextGenerator implements CodeGenerator
 {

@@ -5,9 +5,9 @@ package cruise.umple.util;
 import java.util.*;
 
 /**
- * @umplesource Util_Code.ump 846
+ * @umplesource Util_Code.ump 861
  */
-// line 846 "../../../../src/Util_Code.ump"
+// line 861 "../../../../src/Util_Code.ump"
 public class Glossary
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -24,11 +24,11 @@ public class Glossary
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={851},file={"Util_Code.ump"},javaline={32},length={1})
+  @umplesourcefile(line={866},file={"Util_Code.ump"},javaline={32},length={1})
   public Glossary()
   {
     words = new ArrayList<Word>();
-    // line 851 "../../../../src/Util_Code.ump"
+    // line 866 "../../../../src/Util_Code.ump"
     init();
   }
 
@@ -83,7 +83,7 @@ public class Glossary
   public void delete()
   {}
 
-  @umplesourcefile(line={857},file={"Util_Code.ump"},javaline={88},length={30})
+  @umplesourcefile(line={872},file={"Util_Code.ump"},javaline={88},length={31})
    private void init(){
     addWord(new Word("fish","fish"));
     addWord(new Word("sheep","sheep"));
@@ -99,23 +99,24 @@ public class Glossary
     addWord(new Word("move","moves"));
 
 
-	addWord(new Word("shoe","shoes"));
-	addWord(new Word("axis","axes"));
-	addWord(new Word("testis","testes"));
-	addWord(new Word("crisis","crises"));
-	addWord(new Word("virus","viruses")); 
-	addWord(new Word("octopus","octopi"));
-	addWord(new Word("status","statuses"));
-	addWord(new Word("alias","aliases"));
-	addWord(new Word("ox","oxen"));
-	addWord(new Word("index","indices"));
-	addWord(new Word("vertex","vertices"));
-	addWord(new Word("quiz","quizzes"));
-	addWord(new Word("matrix","matrices"));
-	addWord(new Word("radius","radii"));
+  	addWord(new Word("shoe","shoes"));
+  	addWord(new Word("axis","axes"));
+  	addWord(new Word("testis","testes"));
+  	addWord(new Word("crisis","crises"));
+  	addWord(new Word("virus","viruses")); 
+  	addWord(new Word("octopus","octopi"));
+  	addWord(new Word("status","statuses"));
+  	addWord(new Word("alias","aliases"));
+  	addWord(new Word("ox","oxen"));
+  	addWord(new Word("index","indices"));
+  	addWord(new Word("vertex","vertices"));
+  	addWord(new Word("quiz","quizzes"));
+  	addWord(new Word("matrix","matrices"));
+  	addWord(new Word("radius","radii"));
+    addWord(new Word("s","ses"));
   }
 
-  @umplesourcefile(line={890},file={"Util_Code.ump"},javaline={120},length={52})
+  @umplesourcefile(line={906},file={"Util_Code.ump"},javaline={121},length={52})
    public String getSingular(String plural){
     if (plural == null || plural.length() == 0)
     {
@@ -125,7 +126,7 @@ public class Glossary
     {
       for(Word w : getWords())
       {
-        if (w.getPlural().equals(plural))
+        if (w.getPlural().equals(plural) || w.getSingular().equals(plural))
         {
           return w.getSingular();
         }
@@ -169,7 +170,7 @@ public class Glossary
     }
   }
 
-  @umplesourcefile(line={944},file={"Util_Code.ump"},javaline={174},length={52})
+  @umplesourcefile(line={960},file={"Util_Code.ump"},javaline={175},length={52})
    public String getPlural(String singular){
     if (singular == null || singular.length() == 0)
     {

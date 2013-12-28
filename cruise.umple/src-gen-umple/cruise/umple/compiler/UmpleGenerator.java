@@ -10,10 +10,10 @@ import cruise.umple.parser.analysis.*;
 import cruise.umple.parser.rules.*;
 
 /**
- * @umplesource Generator.ump 272
+ * @umplesource Generator.ump 286
  * @umplesource Generator_CodeUmple.ump 31
  */
-// line 272 "../../../../src/Generator.ump"
+// line 286 "../../../../src/Generator.ump"
 // line 31 "../../../../src/Generator_CodeUmple.ump"
 public class UmpleGenerator extends SuperCodeGenerator implements CodeTranslator
 {

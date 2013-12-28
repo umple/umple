@@ -33,6 +33,16 @@ public class GlossaryTest
   }
   
   @Test
+  public void handle_s()
+  {
+    Assert.assertEquals("s",g.getSingular("s"));
+    Assert.assertEquals("ses",g.getPlural("s"));
+
+    Assert.assertEquals("s",g.getSingular("ses"));
+    Assert.assertEquals("ses",g.getPlural("ses"));
+  }
+  
+  @Test
   public void getSingular_unknownEntry()
   {
     Assert.assertEquals("",g.getSingular(""));
@@ -65,7 +75,7 @@ public class GlossaryTest
   @Test
   public void getPlural_unknownEntryButAlreadyPlural()
   {
-    Assert.assertEquals("s",g.getPlural("s"));
+    Assert.assertEquals("ses",g.getPlural("s"));
     Assert.assertEquals("names",g.getPlural("names"));
     Assert.assertEquals("persons",g.getPlural("persons"));
     Assert.assertEquals("garbles",g.getPlural("garbles"));

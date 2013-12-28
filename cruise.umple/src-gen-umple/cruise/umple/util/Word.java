@@ -4,9 +4,9 @@
 package cruise.umple.util;
 
 /**
- * @umplesource Util_Code.ump 840
+ * @umplesource Util_Code.ump 855
  */
-// line 840 "../../../../src/Util_Code.ump"
+// line 855 "../../../../src/Util_Code.ump"
 public class Word
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
