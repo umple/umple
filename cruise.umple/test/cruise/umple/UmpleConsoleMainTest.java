@@ -51,14 +51,12 @@ public class UmpleConsoleMainTest
     String[] args = new String[] { "--version"};
 
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.versionNumber +"\n",
-UmpleConsoleMain.console);
+   Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.versionNumber +"\n",UmpleConsoleMain.console);
 
    args = new String[] { "-v"};
 
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.versionNumber +"\n",
-UmpleConsoleMain.console);
+   Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.versionNumber +"\n", UmpleConsoleMain.console);
   }
 
 
