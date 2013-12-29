@@ -4,10 +4,15 @@ class Student
   * b -- 1 Mentor n;
   1 c -- 3 Mentor o;
   3..5 d -- * Mentor p;
+  before addO { if (o.contains(aO)) { return false; } }
+  before addP { if (p.contains(aP)) { return false; } }
+  before addM { if (m.contains(aM)) { return false; } }
 }
 
 class Mentor
 {
+  before addB { if (b.contains(aB)) { return false; } }
+  before addD { if (d.contains(aD)) { return false; } }
 }
 
 association Supervisor
