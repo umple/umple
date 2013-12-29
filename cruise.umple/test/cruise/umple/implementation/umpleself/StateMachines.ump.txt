@@ -1,0 +1,255 @@
+
+class X0
+{
+  Bulb {
+  }
+}
+
+class X
+{
+  Status {
+    A {    }
+    B {    }
+    C {    }
+  }
+}
+
+class X2
+{
+  Status {
+    On {
+      e -> Off;
+    }
+    Off {    }
+  }
+}
+
+class X4
+{
+  Status {
+    On {
+      press -> Off;
+    }
+    Off {
+      exit / { if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); } }
+      do { keepDoing };
+    }
+  }
+}
+
+class X5
+{
+  Bulb {
+    On {
+      push -> / { blabla } On;
+    }
+  }
+}
+
+class X7
+{
+  Bulb {
+    On {
+      entry / { doOn }
+      exit / { "a"; }
+    }
+  }
+
+  public void doOn() {
+  }
+}
+
+class X8
+{
+  Integer dimmer = 0;
+  Integer brightness = 0;
+  Bulb {
+    Off {
+      turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Off;
+      flipSwitch -> Dimmed;
+    }
+    Dimmed {
+      [dimmer>99] entry -> On;
+      flipSwitch -> Off;
+      turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Dimmed;
+    }
+    On {
+      flipSwitch -> Off;
+      turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Dimmed;
+    }
+  }
+}
+
+class X9
+{
+  Integer brightness = 0;
+  Bulb {
+    On {
+      [brightness<1] push -> Off;
+    }
+    Off {    }
+  }
+}
+
+class X10
+{
+  Integer brightness = 0;
+  Bulb {
+    On {
+      [brightness<1] push -> Off;
+    }
+    Off {    }
+  }
+}
+
+class X11
+{
+  Status {
+    On {
+      press -> Off;
+    }
+    Off {
+      exit / { if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); } }
+      do { keepDoing; } -> On;
+    }
+  }
+}
+
+class X12
+{
+  Bulb {
+    On {
+      entry / { blahblah }
+      entry / { blahblah2 }
+      exit / { blahblahexit }
+    }
+  }
+}
+
+class X14
+{
+  Bulb {
+    On {
+      flip -> Off;
+    }
+    Off {
+      flip -> On;
+    }
+  }
+  AnotherBulb {
+    On {
+      flip -> Off;
+    }
+    Off {
+      flip -> On;
+    }
+  }
+}
+
+class X15
+{
+  Integer brightness = 0;
+  Bulb {
+    On {
+      [brightness<1] push -> / { blabla } Off;
+    }
+    Off {    }
+  }
+}
+
+class X3
+{
+  Status {
+    On {
+      exit / { exitOn(); }
+      entry / { if (statusOn == StatusOn.Null) { setStatusOn(StatusOn.Play); } }
+      off -> Off;
+      StatusOn {
+        Null {
+          enterOn -> Play;
+        }
+        Play {
+          exitOn -> Null;
+          p -> Pause;
+        }
+        Pause {
+          exitOn -> Null;
+          p -> Play;
+        }
+      }
+    }
+    Off {    }
+  }
+}
+
+class X16
+{
+  Fixture {
+    On {
+      push -> Off;
+    }
+    Off {
+      push -> On;
+    }
+  }
+}
+
+class X17
+{
+  Status {
+    S1 {
+      exit / { exitS1(); }
+      entry / { if (statusS1 == StatusS1.Null) { setStatusS1(StatusS1.S1A); } }
+      e1 -> S1A;
+      StatusS1 {
+        Null {
+          enterS1 -> S1A;
+        }
+        S1A {
+          exitS1 -> Null;
+          e1 -> S1;
+        }
+      }
+    }
+  }
+}
+
+class X18
+{
+  Status {
+    Off {
+      turnOn -> On;
+    }
+    On {
+      exit / { exitOn(); }
+      entry / { if (statusMotorIdle == StatusMotorIdle.Null) { setStatusMotorIdle(StatusMotorIdle.MotorIdle); } }
+      entry / { if (statusFanIdle == StatusFanIdle.Null) { setStatusFanIdle(StatusFanIdle.FanIdle); } }
+      StatusMotorIdle {
+        Null {
+          enterOn -> MotorIdle;
+        }
+        MotorIdle {
+          exitOn -> Null;
+          flip -> MotorRunning;
+        }
+        MotorRunning {
+          exitOn -> Null;
+          flip -> MotorIdle;
+        }
+      }
+      StatusFanIdle {
+        Null {
+          enterOn -> FanIdle;
+        }
+        FanIdle {
+          exitOn -> Null;
+          flop -> FanRunning;
+        }
+        FanRunning {
+          exitOn -> Null;
+          flop -> FanIdle;
+        }
+      }
+    }
+  }
+}

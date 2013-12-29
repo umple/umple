@@ -1418,6 +1418,7 @@ class UmpleInternalParser
     {
       if (token.is("modifier"))
       {
+        // TODO: Why the extra space?  Means we have to remove later
         modifier += " " + (token.getValue());
         aMethod.setModifier(modifier);
       }
