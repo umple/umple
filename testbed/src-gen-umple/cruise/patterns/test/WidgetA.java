@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.19.0.3287 modeling language!*/
 
 package cruise.patterns.test;
 import java.sql.Date;
