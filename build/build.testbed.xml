@@ -156,6 +156,7 @@
     <antcall target="init" />
     <antcall target="compile" />
     <antcall target="test" />
+    <antcall target="template.resetVersion" />
   </target>
 
   <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
