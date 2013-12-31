@@ -527,13 +527,19 @@ class UmpleInternalParser
   	      if(param.is("constraintParameter"))
   	      {
   	        Token value = param.getSubToken(0);
+  	        int i=1;
+  	        while(value.getValue().equals("STATIC"))
+  	        {
+  	          value = param.getSubToken(i);
+  	          ++i;
+  	        }
   	        if(value.is("boolLit"))
   	        {
-  	          cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",sub.getValue()));
+  	          cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",value.getValue()));
   	        }
   	        else if(value.is("quote"))
   	        {
-  	          cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
+  	          cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","\""+value.getValue()+"\""));
   	        }
   	        else if(value.is("number"))
   	        {
