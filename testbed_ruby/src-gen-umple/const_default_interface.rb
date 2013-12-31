@@ -20,7 +20,7 @@ class ConstDefaultInterface
  B1 = false;
  B2 = false;
  STR = "";
- DATE = Date.parse("2013-12-28");
+ DATE = Date.parse("2013-12-30");
  TIME = Time.parse("00:00:00");
   
 end

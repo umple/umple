@@ -194,6 +194,15 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Bar4.php");
     SampleFileWriter.destroy(pathToInput + "/Foo.php");
 
+    SampleFileWriter.destroy(pathToInput + "/QueuedSMwithConcurrentStates.php");
+    SampleFileWriter.destroy(pathToInput + "/NestedStatesWthSameEventNames.php");
+    SampleFileWriter.destroy(pathToInput + "/QueuedWithConcurrentStateMachines.php");
+    SampleFileWriter.destroy(pathToInput + "/QueuedWithNestedStateMachines.php");
+    SampleFileWriter.destroy(pathToInput + "/AutomatedTellerMachine.php");
+    SampleFileWriter.destroy(pathToInput + "/QueuedSMwithConcurrentStates_2.php");
+    SampleFileWriter.destroy(pathToInput + "/CourseAttempt.php");
+
+
     //
     // Tear down abstract class tests.
     //
