@@ -204,13 +204,9 @@ class UmpleInternalParser
         if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
           rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
       }
-      else if (sub.getValue().equals("true"))
+      else if(sub.is("boolLiteral"))
       {
-        rawLine.add(new ConstraintVariable("OPERATOR","true"));
-      } 
-      else if (sub.getValue().equals("false"))
-      {
-        rawLine.add(new ConstraintVariable("OPERATOR","false"));
+        rawLine.add(new ConstraintVariable("OPERATOR",sub.getValue("literal")));
       }
       else if(sub.is("constraintName"))
       {
