@@ -24,7 +24,7 @@ public class ConstDefault
   public static final boolean B1 = false;
   public static final boolean B2 = false;
   public static final String STR = "";
-  public static final Date DATE = Date.valueOf("2013-12-30");
+  public static final Date DATE = Date.valueOf("2014-01-15");
   public static final Time TIME = Time.valueOf("00:00:00");
 
   //------------------------

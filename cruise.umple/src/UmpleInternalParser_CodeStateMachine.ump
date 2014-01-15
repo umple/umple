@@ -464,7 +464,15 @@ class UmpleInternalParser
     
     for(Token subToken : stateToken.getSubTokens())
     {
-      if (subToken.is("changeType"))
+      
+      if (subToken.is("extraCode"))
+      {
+        if(!subToken.getValue().trim().equals(""))
+        {
+          setFailedPosition(subToken.getPosition(),1006, subToken.getValue() );
+        }
+      }
+      else if (subToken.is("changeType"))
       {
         changeType = subToken.getValue();
       }

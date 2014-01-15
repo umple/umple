@@ -904,14 +904,14 @@ public class UmpleParserStateMachineTest
  
   @Test
   public void malformedStateMachine(){
-	  assertHasWarning("107_badStateMachineSyntaxBrokenArrow.ump", 0, 1006, new Position("107_badStateMachineSyntaxBrokenArrow.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxBrokenArrow.ump", 0, 1006, new Position("107_badStateMachineSyntaxBrokenArrow.ump", 8, 6, 106));
 	//  assertHasWarning("107_badStateMachineSyntaxEmptyCodeBlock.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyCodeBlock.ump", 4, 2, 45));
 	//  assertHasWarning("107_badStateMachineSyntaxEmptyGuard.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyGuard.ump", 4, 2, 45));
 	  assertHasWarning("107_badStateMachineSyntaxMisplacedAttribute.ump", 0, 1006, new Position("107_badStateMachineSyntaxMisplacedAttribute.ump", 3, 2, 16));
-	  assertHasWarning("107_badStateMachineSyntaxMisplacedGuard.ump", 0, 1006, new Position("107_badStateMachineSyntaxMisplacedGuard.ump", 4, 2, 45));
-	  assertHasWarning("107_badStateMachineSyntaxMissingForwardSlash.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissingForwardSlash.ump", 4, 2, 45));
-	  assertHasWarning("107_badStateMachineSyntaxMissingSemiColon.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissingSemiColon.ump", 4, 2, 45));
-	  assertHasWarning("107_badStateMachineSyntaxMissmatchedBrackets.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissmatchedBrackets.ump", 4, 2, 45));
+	  assertHasWarning("107_badStateMachineSyntaxMisplacedGuard.ump", 0, 1006, new Position("107_badStateMachineSyntaxMisplacedGuard.ump", 13, 6, 191));
+	  assertHasWarning("107_badStateMachineSyntaxMissingForwardSlash.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissingForwardSlash.ump", 7, 13, 79));
+	  assertHasWarning("107_badStateMachineSyntaxMissingSemiColon.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissingSemiColon.ump", 8, 6, 106));
+	  assertHasWarning("107_badStateMachineSyntaxMissmatchedBrackets.ump", 0, 1006, new Position("107_badStateMachineSyntaxMissmatchedBrackets.ump", 13, 6, 191));
   }
   @Test
 	public void semicolonStateMachine() {
@@ -978,6 +978,7 @@ public class UmpleParserStateMachineTest
 	  Assert.assertEquals(true, parser.getParseResult().getHasWarnings());
 	  Assert.assertNotNull(parser.getParseResult().getErrorMessage(expectedWarningIndex));
 	  Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedWarningIndex).getErrorType().getErrorCode());
+	  System.out.println(">>"+parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition().getOffset());
 	  Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition());
   }
   
