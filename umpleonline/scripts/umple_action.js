@@ -1193,6 +1193,8 @@ Action.loadExample = function loadExample()
   else if (sel=="OhHellWhist.ump"){Page.setUmpleCanvasSize(700,550);}
   else if (sel=="CanalLockStateMachine.ump"){Page.setUmpleCanvasSize(700,550);}
   else if (sel=="CanalSystem.ump"){Page.setUmpleCanvasSize(790,600);}  
+  else if (sel=="DigitalWatchNested.ump"){Page.setUmpleCanvasSize(1100,700);}  
+  else if (sel=="DigitalWatchFlat.ump"){Page.setUmpleCanvasSize(1000,800);}  
   else if (sel=="RoutesAndLocations.ump"){Page.setUmpleCanvasSize(700,680);}
          
   jQuery("#inputExample").blur();
