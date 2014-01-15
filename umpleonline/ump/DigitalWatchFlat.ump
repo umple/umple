@@ -1,0 +1,110 @@
+// Xholon Digital Watch state machine
+// From Empir Software Eng (2009) 14:685–719 DOI 10.1007/s10664-009-9106-z
+// By Cruz-Lemus, Genero, Manso, Morasca and Piattini
+// This is the flat version of the state machine
+class DigitalWatch {
+  //  sx indicates that button X has been pressed
+  // notSx indicates button x has been released 
+  sm {
+    // Main state displaying time
+    time {
+      s1 -> date;
+      s2 -> bothOff;
+      s3 -> paused;
+      s3during2Secs -> alarmTime;
+    }
+    date {
+      notS1 -> time;
+    }
+    
+    // States related to timer
+    paused {
+      s1 -> running;
+      s2 / {zero();} -> paused;
+      s3 -> time;
+    }
+    running {
+      s1 -> paused;
+      s2 -> lapRunning;
+      s3 -> time;
+    }
+    lapRunning {
+      s1 -> lapPaused;
+      s2 -> running;
+      s3 -> time;
+    }
+    lapPaused {
+      s1 -> lapRunning;
+      s2 -> paused;
+      s3 -> time;
+    }
+    
+    
+    // States related to turning on and off charm or chime
+    bothOff {
+      notS2 -> time;
+      s1 -> chimeOn;
+    }
+    chimeOn {
+      notS2 -> time;
+      s1 -> bothOn;
+    }
+    bothOn {
+      notS2 -> time;
+      s1 -> alarmOn;
+    }
+    alarmOn {
+      s1 -> bothOff;
+      notS2 -> time;
+    }
+    
+    // States related to alarm update
+    alarmTime {
+      s1 -> alarmMinute;
+      s2 / {alarmHour++;} -> alarmHour;
+      s3 -> second;
+    }
+    alarmHour {
+      s1 -> alarmMinute;
+      s2 /  {alarmHour++;} -> alarmHour;
+      s3 -> second;
+    }
+    alarmMinute {
+      s1 -> alarmHour;
+      s2 /  {alarmMinute++;} -> alarmMinute;
+      s3 -> second;
+    }   
+    
+    // States related to time update
+    second {
+     s1 -> minute;
+     s2 / {secondzero();} -> second;
+     s3 -> time;
+    }
+    minute {
+     s1 -> hour;
+     s2 / {minute++;} -> minute;
+     s3 -> time;
+    }
+    hour {
+     s1 -> month;
+     s2 / {hour++;} -> hour;
+     s3 -> time;
+    }
+    month {
+     s1 -> day;
+     s2 / {month++;} -> month;
+     s3 -> time;
+    }
+    day {
+     s1 -> year;
+     s2 / {day++;} -> day;
+     s3 -> time;
+    }
+    year {
+     s1 -> second;
+     s2 / {year++;} -> year;
+     s3 -> time;
+    } 
+  }
+}

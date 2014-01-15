@@ -237,6 +237,10 @@
     <copy tofile="cruise.umple/test/data/CardGames/OhHellWhist.ump" file="umpleonline/ump/OhHellWhist.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Canal/CanalLockStateMachine.ump" file="umpleonline/ump/CanalLockStateMachine.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/Canal/CanalSystem.ump" file="umpleonline/ump/CanalSystem.ump" overwrite="true" />
+
+    <copy tofile="cruise.umple/test/data/digitalwatch/DigitalWatchFlat.ump" file="umpleonline/ump/DigitalWatchFlat.ump" overwrite="true" />
+    <copy tofile="cruise.umple/test/data/digitalwatch/DigitalWatchNested.ump" file="umpleonline/ump/DigitalWatchNested.ump" overwrite="true" />
+
     <copy tofile="cruise.umple/test/data/bCMS/RoutesAndLocations.ump" file="umpleonline/ump/RoutesAndLocations.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/bCMS/CoordinationStateMachine.ump" file="umpleonline/ump/CoordinationStateMachine.ump" overwrite="true" />
     <copy tofile="cruise.umple/test/data/2DShapes/2DShapes.ump" file="umpleonline/ump/2DShapes.ump" overwrite="true" />
@@ -286,6 +290,10 @@
     <copy file="cruise.umple/test/data/Election/ElectionSystem.ump" tofile="umpleonline/ump/ElectionSystem.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Elevator/a/ElevatorSystemA.ump" tofile="umpleonline/ump/ElevatorSystemA.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Elevator/b/ElevatorSystemB.ump" tofile="umpleonline/ump/ElevatorSystemB.ump" overwrite="true" />
+
+    <copy file="cruise.umple/test/data/digitalwatch/DigitalWatchFlat.ump" tofile="umpleonline/ump/DigitalWatchFlat.ump" overwrite="true" />
+    <copy file="cruise.umple/test/data/digitalwatch/DigitalWatchNested.ump" tofile="umpleonline/ump/DigitalWatchNested.ump" overwrite="true" />
+
     <copy file="cruise.umple/test/data/Genealogy/a/GenealogyA.ump" tofile="umpleonline/ump/GenealogyA.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Genealogy/b/GenealogyB.ump" tofile="umpleonline/ump/GenealogyB.ump" overwrite="true" />
     <copy file="cruise.umple/test/data/Genealogy/c/GenealogyC.ump" tofile="umpleonline/ump/GenealogyC.ump" overwrite="true" />
