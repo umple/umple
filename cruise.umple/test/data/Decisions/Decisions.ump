@@ -63,7 +63,7 @@ class DecisionByBody {
   0..1 previous -- 0..1 DecisionByBody next; 
  
   // The requests the body has made
-  1 -> * ChangeRequest;
+  0..1 -> * ChangeRequest;
   
   // Conditional approval
   * -- * Decision onlyApprovedConditionalOnDecision;
@@ -96,7 +96,7 @@ class Annotation {
 
 class ChangeRequest {
   isA Annotation;
-  1 -> * Comment;
+  0..1 -> * Comment;
 }
 
 // A comment can just be applied to a ChangeRequest

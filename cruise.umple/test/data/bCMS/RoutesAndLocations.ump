@@ -20,10 +20,10 @@ has the necessary classes.
  */
 class CityMap {
   singleton;
-  1 -> * Landmark fireStn;
-  1 -> * Landmark policeStn;
-  1 -> * Landmark otherLm;
-  1 -> * NamedRoad;
+  0..1 -> * Landmark fireStn;
+  0..1 -> * Landmark policeStn;
+  0..1 -> * Landmark otherLm;
+  0..1 -> * NamedRoad;
 }
   
 /*
@@ -66,9 +66,9 @@ class RoadNode {
 class Intersection {
   isA RoadNode;
   // illegal, but possible turns for police and fire
-  1 -> * Turn illegalTurns;
+  0..1 -> * Turn illegalTurns;
   // Impossible turns , e.g. because of barriers, turning radius
-  1 -> * Turn impossibleTurns;
+  0..1 -> * Turn impossibleTurns;
 }
 
 /* 
@@ -120,7 +120,7 @@ class RoadSegment {
  */
 class Route {
    // Ordered list of segments
-   1 -> 1..* RoadSegment;
+   0..1 -> 1..* RoadSegment;
 
    // Time seconds at current flow speeds
    Integer estimatedTime; 
