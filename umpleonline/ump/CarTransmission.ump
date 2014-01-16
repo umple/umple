@@ -1,5 +1,7 @@
 class CarTransmission {
 
+  Boolean driveSelected;
+
   state {
     neutral {
       selectReverse -> reverse;

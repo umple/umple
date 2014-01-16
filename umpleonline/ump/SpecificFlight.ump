@@ -1,6 +1,9 @@
 // State machine for an airline flight with nested state
 
 class SpecificFlight {
+  Boolean finished;
+  Boolean empty;
+
   state {
     planned {
       assignPlane -> planeAssigned;

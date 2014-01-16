@@ -243,7 +243,7 @@ else if (isset($_REQUEST["umpleCode"]))
       exec($command);
       $svgcode= readTemporaryFile("{$thedir}/stateDiagram.svg");      
       $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/stateDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
-      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"1000\">";
+      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;      
       echo $svgcode;
       echo "</svg>"; 
@@ -256,7 +256,7 @@ else if (isset($_REQUEST["umpleCode"]))
       exec($command);
       $svgcode= readTemporaryFile("{$thedir}/classDiagram.svg");
       $html = "<a href=\"umpleonline/$thedir/modelcd.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/classDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
-      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"1000\">";
+      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       echo $svgcode;
       echo "</svg>";      

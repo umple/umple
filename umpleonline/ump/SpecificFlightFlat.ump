@@ -2,6 +2,9 @@
 // Avoids the use of nested states.
 
 class SpecificFlight {
+  Boolean finished;
+  Boolean empty;
+  
   state {
     planned {
       assignPlane -> planeAssigned;

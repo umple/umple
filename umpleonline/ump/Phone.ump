@@ -67,10 +67,10 @@ class PhoneLine {
   0..1 self otherParty;
   
   trace waitForHook, ringing record id;
-  const String click="click";
-  const String dial="dial";
-  const String beep="beep";
-  const String hello="hello";
+  const String Click="click";
+  const String Dial="dial";
+  const String Beep="beep";
+  const String Hello="hello";
   state {
     onHook {
       entry / {
@@ -89,30 +89,30 @@ class PhoneLine {
       autoPickup -> / {getOtherParty().otherPartyPickUp();} communicating;
     }
     communicating {
-      entry / {say(hello+getOtherParty().getId());}
-      hangUp -> / {say(click);} onHook;
+      entry / {say(Hello+getOtherParty().getId());}
+      hangUp -> / {say(Click);} onHook;
       otherPartyHangUp -> waitForHook;
       putOnHold -> onHold;
     }
     onHold {
-      hangUp -> / {say(click);} onHook;
+      hangUp -> / {say(Click);} onHook;
       otherPartyHangUp -> waitForHook;
       takeOffHold -> communicating;
     }
     dialing {
-      entry / {say(dial);} 
+      entry / {say(Dial);} 
       completeNumber -> waitingForConnection;
-      hangUp -> / {say(click);} onHook;
+      hangUp -> / {say(Click);} onHook;
     }
     waitingForConnection {
       entry / {getOtherParty().incomingCall();}
       otherPartyPickUp -> communicating;
-      hangUp -> / {say(click);} onHook;
+      hangUp -> / {say(Click);} onHook;
       timeOut -> onHook;
     }
     waitForHook {
-      entry / {say(beep);}
-      hangUp -> / {say(click);} onHook;
+      entry / {say(Beep);}
+      hangUp -> / {say(Click);} onHook;
     }
   }
   
@@ -140,3 +140,5 @@ class PhoneLine {
     }
   }
 }
+
+strictness ignore 1007;
