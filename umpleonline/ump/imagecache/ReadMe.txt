@@ -1,0 +1,1 @@
+This directory is to store images of the umpleonline examples for the purposes of web crawlers so that umple diagrams can be found in image searches performed by search engines.
