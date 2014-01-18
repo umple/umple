@@ -255,6 +255,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_VISIBILITY) String normalizedVisibility,
 			@GenerationProcedureParameter(id = IModelingConstants.MULTILINE_COMMENTS_STRING) String commentsString,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String operationName,
+			@GenerationElementParameter(id = IModelingElementDefinitions.IS_STATIC) boolean isStatic,
 			@GenerationProcedureParameter(id = IModelingElementDefinitions.OPERATION_BODY) String operationCodeBody,
 			@GenerationBaseElement Object element,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object interfaceObject,
@@ -312,6 +313,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_OBJECT, element),
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_VIRTUAL, Boolean.valueOf(isPureVirtual)),
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_PURE, Boolean.valueOf(isPureVirtual)),
+				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_STATIC, Boolean.valueOf(isStatic)),
 				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_DEFAULTED_IMPLEMENTATION, Boolean.valueOf(isDefaultedImplementation)));
 		
 	}
@@ -973,7 +975,8 @@ public class CppCustomGetterFunctionsPointsHandler{
 			@GenerationArgument(id= IModelingConstants.METHOD_VISIBILITY_ARGUMENT) String visibility, 
 			@GenerationArgument(id= IModelingConstants.METHOD_GROUP) String groupId, 
 			@GenerationArgument(id= IModelingConstants.METHOD_COMMENT) String comment, 
-			@GenerationArgument(id= ICppDefinitions.METHOD_CONST) boolean isConstant, 
+			@GenerationArgument(id= ICppDefinitions.METHOD_CONST) boolean isConstant,
+			@GenerationArgument(id= ICppDefinitions.METHOD_STATIC) boolean isStatic, 
 			@GenerationArgument(id= IModelingConstants.METHOD_IDENTIFIER) String identifier, 
 			@GenerationArgument(id= ICppDefinitions.METHOD_VIRTUAL) boolean isVirtual, 
 			@GenerationArgument(id= ICppDefinitions.METHOD_PURE) boolean isPure, 
@@ -987,6 +990,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 		map.put(IModelingConstants.METHOD_ID, identifier);
 		map.put(IModelingConstants.METHOD_GROUP, groupId);
 		map.put(IModelingConstants.METHOD_OBJECT, element);
+		map.put(ICppDefinitions.METHOD_STATIC, Boolean.valueOf(isStatic));
 		map.put(ICppDefinitions.METHOD_CONST, Boolean.valueOf(isConstant));
 		map.put(IModelingConstants.METHOD_DEFAULTED_IMPLEMENTATION, Boolean.valueOf(isDefaultedImplementation));
 		map.put(ICppDefinitions.METHOD_VIRTUAL, Boolean.valueOf(isVirtual));

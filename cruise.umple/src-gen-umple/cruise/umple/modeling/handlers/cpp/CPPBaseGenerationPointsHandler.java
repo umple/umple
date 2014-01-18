@@ -359,8 +359,7 @@ public class CPPBaseGenerationPointsHandler{
 		Iterator<Object> namespacesIterator = generationValueGetter.getAllValues(IModelingConstants.NAMESPACES_TRACKER, model).iterator();
 		while(namespacesIterator.hasNext()){
 			String object = namespacesIterator.next().toString();
-			object= object.replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX).
-					replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+			object = normalizeNamespace(object);
 			useAllNamespaces= useAllNamespaces+ generationValueGetter.use(ICppDefinitions.USE_NAMESPACE, CPPCommonConstants.DECLARATION_COMMON_PREFIX+object);
 			
 			if(namespacesIterator.hasNext()){
@@ -379,12 +378,90 @@ public class CPPBaseGenerationPointsHandler{
 		
 		implementationDetails = bundleMain(filePath, modelPath, fileName, implementationDetails);
 		
+		Map<Object, List<String>> mainBlocks = getMainBlocks(generationValueGetter, model);
+		
+		if(!mainBlocks.isEmpty()){
+			String mainCalls= CommonConstants.BLANK;
+			for(Object umpleClass: mainBlocks.keySet()){
+				List<String> list = mainBlocks.get(umpleClass);
+				if(list.isEmpty()){	//Impossible to happen
+					continue;
+				}
+				String string = generationValueGetter.getString(umpleClass, IModelingElementDefinitions.NAMESPACE);
+				string = normalizeNamespace(string);
+				mainCalls= mainCalls+ generationValueGetter.generate(ICppDefinitions.MAIN_METHOD_CALL, umpleClass, string);
+				
+			}
+			
+			generationValueGetter.addUniqueValue(ICppDefinitions.MAIN_CONTENTS, mainCalls);
+		}
+		
 		String mainContents = GenerationUtil.getImplementationDetails(generationValueGetter, ICppDefinitions.MAIN_CONTENTS);
 		
 		String generate = generationValueGetter.generate(ICppDefinitions.MAIN, model, implementationDetails, mainContents);
 		
 		ContentsDescriptor contentsDescriptor = new ContentsDescriptor(generate, fileName, modelPath);
 		generationValueGetter.addValue(IGenerationCommonConstants.CONTENTS_DESCRIPTORS, contentsDescriptor);
+	}
+
+	private static String normalizeNamespace(String object) {
+		return object.replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX).
+				replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+	}
+
+	private static Map<Object, List<String>> getMainBlocks(GenerationPolicyRegistry generationValueGetter, Object model) {
+		Map<Object, List<String>> mainMap= new HashMap<Object, List<String>>();
+		for(Object umpleClass: generationValueGetter.getList(model, IModelingElementDefinitions.CLASSES)){
+			for(Object operation: generationValueGetter.getList(umpleClass, IModelingElementDefinitions.OPERATIONS)){
+				
+				String methodName = generationValueGetter.getString(operation, IModelingElementDefinitions.NAME);
+				if("main".equals(methodName)){ //$NON-NLS-1$
+					List<?> methodParameters = generationValueGetter.getList(operation, IModelingElementDefinitions.OPERATION_PARAMETERS);
+	    			if(methodParameters.size()!= 2){
+	    				continue;
+	    			}
+	    			
+	    			Object parameter1 = methodParameters.get(0);
+	    			
+	    			String parameter1Type = generationValueGetter.getString(parameter1, IModelingElementDefinitions.TYPE_NAME);
+	    			if(!"int".equals(parameter1Type)){ //$NON-NLS-1$
+						continue;
+					}
+	    			
+	    			String parameter1Name = generationValueGetter.getString(parameter1, IModelingElementDefinitions.NAME);
+	    			
+					if(parameter1Name== null|| parameter1Name.trim().startsWith("*")){ //$NON-NLS-1$
+						continue;
+					}
+					
+					Object parameter2 = methodParameters.get(1);
+					
+					String parameter2Type = generationValueGetter.getString(parameter2, IModelingElementDefinitions.TYPE_NAME);
+	    			if(!"char".equals(parameter2Type)){ //$NON-NLS-1$
+						continue;
+					}
+	    			
+	    			String parameter2Name = generationValueGetter.getString(parameter2, IModelingElementDefinitions.NAME);
+	    			
+					if(parameter2Name== null|| !parameter2Name.trim().startsWith("*")){ //$NON-NLS-1$
+						continue;
+					}
+					
+					
+					String code = generationValueGetter.getString(operation, IModelingElementDefinitions.OPERATION_BODY, CPPCommonConstants.CPP_LANGUAGE);
+					if(!CommonConstants.BLANK.equals(code.trim())){
+						List<String> list = mainMap.get(umpleClass);
+						if(list== null){
+							list= new ArrayList<String>();
+							mainMap.put(umpleClass, list);
+						}
+						list.add(code);
+					}
+	    		}
+			}
+		}
+		
+		return mainMap;
 	}
 
 	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
@@ -1217,6 +1294,7 @@ public class CPPBaseGenerationPointsHandler{
 		Object isConstant = map.get(ICppDefinitions.METHOD_CONST);
 		Object isVirtual = map.get(ICppDefinitions.METHOD_VIRTUAL);
 		Object isPure = map.get(ICppDefinitions.METHOD_PURE);
+		Object isStatic = map.get(ICppDefinitions.METHOD_STATIC);
 		
 		
 		if(complete.contains(new MethodDes((String)returnType, (String)parametersString, (String)name, map))|| isConcluded){
@@ -1259,6 +1337,7 @@ public class CPPBaseGenerationPointsHandler{
 		}
 		
 		String declaration = generationValueGetter.use(ICppDefinitions.METHOD_DECLARATION, returnType, name, parametersString,
+				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_STATIC, isStatic),
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_PURE, isPure),
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_VIRTUAL, isVirtual),
 				GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_CONST, isConstant));
