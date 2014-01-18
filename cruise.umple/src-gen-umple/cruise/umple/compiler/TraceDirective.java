@@ -68,7 +68,6 @@ public class TraceDirective
     return id;
   }
 
-  @umplesourcefile(line={74},file={"Trace.ump"},javaline={75},length={2})
   public String getTracerType()
   {
     return getTracer().getName();

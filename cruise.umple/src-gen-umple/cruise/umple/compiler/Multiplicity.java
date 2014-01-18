@@ -99,7 +99,6 @@ public class Multiplicity
     return maximum;
   }
 
-  @umplesourcefile(line={604},file={"Umple.ump"},javaline={106},length={2})
   public String getParserable()
   {
     return getBound() != null ? getBound() : getMinimum().equals("0") && getMaximum().equals("*") ? "*" : getMinimum() + ".." + getMaximum();
@@ -185,27 +184,27 @@ public class Multiplicity
   public void delete()
   {}
 
-  @umplesourcefile(line={1796},file={"Umple_Code.ump"},javaline={190},length={4})
+  @umplesourcefile(line={1796},file={"Umple_Code.ump"},javaline={189},length={4})
    public void setRange(String lowerBound, String upperBound){
     minimum = lowerBound;
     maximum = upperBound;
   }
 
-  @umplesourcefile(line={1802},file={"Umple_Code.ump"},javaline={196},length={5})
+  @umplesourcefile(line={1802},file={"Umple_Code.ump"},javaline={195},length={5})
    public String getRange(){
     String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
     String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
     return StringFormatter.format("[{0},{1}]",lowerBound,upperBound);
   }
 
-  @umplesourcefile(line={1809},file={"Umple_Code.ump"},javaline={203},length={5})
+  @umplesourcefile(line={1809},file={"Umple_Code.ump"},javaline={202},length={5})
    public String[] getRangeParts(){
     String lowerBound = getLowerBound() == -1 ? "*" : getLowerBound() + ""; 
     String upperBound = getUpperBound() == -1 ? "*" : getUpperBound() + "";
     return new String[] { lowerBound, upperBound };
   }
 
-  @umplesourcefile(line={1816},file={"Umple_Code.ump"},javaline={210},length={30})
+  @umplesourcefile(line={1816},file={"Umple_Code.ump"},javaline={209},length={30})
    public boolean isValid(){
     if ("*".equals(getMinimum()))
     {
@@ -237,7 +236,7 @@ public class Multiplicity
     return true;
   }
 
-  @umplesourcefile(line={1848},file={"Umple_Code.ump"},javaline={242},length={10})
+  @umplesourcefile(line={1848},file={"Umple_Code.ump"},javaline={241},length={10})
    public void minimizeRange(Multiplicity compareTo){
     if (compareTo.getLowerBound() > getLowerBound() && compareTo.minimum != null)
     {
@@ -249,7 +248,7 @@ public class Multiplicity
     }
   }
 
-  @umplesourcefile(line={1860},file={"Umple_Code.ump"},javaline={254},length={10})
+  @umplesourcefile(line={1860},file={"Umple_Code.ump"},javaline={253},length={10})
    public int getLowerBound(){
     if (getBound() != null)
     {
@@ -261,7 +260,7 @@ public class Multiplicity
     }
   }
 
-  @umplesourcefile(line={1872},file={"Umple_Code.ump"},javaline={266},length={10})
+  @umplesourcefile(line={1872},file={"Umple_Code.ump"},javaline={265},length={10})
    public int getUpperBound(){
     if (getBound() != null)
     {
@@ -273,37 +272,37 @@ public class Multiplicity
     }
   }
 
-  @umplesourcefile(line={1884},file={"Umple_Code.ump"},javaline={278},length={3})
+  @umplesourcefile(line={1884},file={"Umple_Code.ump"},javaline={277},length={3})
    public boolean isLowerBoundMany(){
     return getLowerBound() == -1;
   }
 
-  @umplesourcefile(line={1889},file={"Umple_Code.ump"},javaline={283},length={3})
+  @umplesourcefile(line={1889},file={"Umple_Code.ump"},javaline={282},length={3})
    public boolean isUpperBoundMany(){
     return getUpperBound() == -1;
   }
 
-  @umplesourcefile(line={1894},file={"Umple_Code.ump"},javaline={288},length={3})
+  @umplesourcefile(line={1894},file={"Umple_Code.ump"},javaline={287},length={3})
    public boolean isLowerBoundNumeric(){
     return getLowerBound() >= -1;
   }
 
-  @umplesourcefile(line={1899},file={"Umple_Code.ump"},javaline={293},length={3})
+  @umplesourcefile(line={1899},file={"Umple_Code.ump"},javaline={292},length={3})
    public boolean isUpperBoundNumeric(){
     return getUpperBound() >= -1;
   }
 
-  @umplesourcefile(line={1904},file={"Umple_Code.ump"},javaline={298},length={3})
+  @umplesourcefile(line={1904},file={"Umple_Code.ump"},javaline={297},length={3})
    public boolean isMany(){
     return getUpperBound() > 1 || getUpperBound() == -1;
   }
 
-  @umplesourcefile(line={1909},file={"Umple_Code.ump"},javaline={303},length={3})
+  @umplesourcefile(line={1909},file={"Umple_Code.ump"},javaline={302},length={3})
    public boolean isOne(){
     return getUpperBound() == 1;
   }
 
-  @umplesourcefile(line={1914},file={"Umple_Code.ump"},javaline={308},length={17})
+  @umplesourcefile(line={1914},file={"Umple_Code.ump"},javaline={307},length={17})
    private int parseInt(String input, int defaultIfStar){
     try
     {
