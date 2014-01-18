@@ -24,6 +24,8 @@ public interface ICppDefinitions {
 	public final static String DEEP_COPY_METHOD_DECLARATION= "cpp.deepCopy.method.declaration"; //$NON-NLS-1$
 	public final static String DEEP_COPY_METHOD_IMPLEMENTATION= "cpp.deepCopy.method.implementation"; //$NON-NLS-1$
 	
+	public final static String MAIN_METHOD_CALL= "main.method.call"; //$NON-NLS-1$
+	
 	public final static String METHOD_CONST= "method.const"; //$NON-NLS-1$
 	public final static String METHOD_STATIC= "method.static"; //$NON-NLS-1$
 	public final static String METHOD_INLINE= "method.inline"; //$NON-NLS-1$
