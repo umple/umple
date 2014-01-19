@@ -12,6 +12,9 @@ import java.util.*;
  * ParserDataPackage is a structure which contains all the miscellaneous data during the parse. Most importantly it contains the linenumbers,
  * which are the linenumbers associated to the character numbers(or offsets) of a given \n. And couples which are initialized to be the character position
  * of the open and close of those couples, for example there is a couple for { and } which will matched {a {b }c }d 'a' with 'd' and 'b' with 'c'
+ * ParserDataPackage is a structure which contains all the miscellaneous data during the parse. Most importantly it contains the linenumbers,
+ * which are the linenumbers associated to the character numbers(or offsets) of a given \n. And couples which are initialized to be the character position
+ * of the open and close of those couples, for example there is a couple for { and } which will matched {a {b }c }d 'a' with 'd' and 'b' with 'c'
  * @umplesource GrammarParsing.ump 84
  * @umplesource GrammarParsing_Code.ump 475
  */
@@ -274,7 +277,7 @@ public class ParserDataPackage
    * The passed Position can be null if this method was not invoked using a useStatement.
    * It takes a file and reads it, it also initializes the couples which will be used for this file.
    */
-  @umplesourcefile(line={484},file={"GrammarParsing_Code.ump"},javaline={274},length={58})
+  @umplesourcefile(line={484},file={"GrammarParsing_Code.ump"},javaline={277},length={58})
    public void init(Position usePosition){
     String file = filename;
     filename = file.split("\\Q"+File.separator+"\\E")[file.split("\\Q"+File.separator+"\\E").length-1];
@@ -334,7 +337,7 @@ public class ParserDataPackage
     }
   }
 
-  @umplesourcefile(line={543},file={"GrammarParsing_Code.ump"},javaline={339},length={25})
+  @umplesourcefile(line={543},file={"GrammarParsing_Code.ump"},javaline={342},length={25})
    public void init(String rawinput, Position usePosition){
     String file = "temp";
     int offset = 0;

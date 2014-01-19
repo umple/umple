@@ -6,6 +6,7 @@ import java.util.*;
 
 /**
  * Used to persist hirarchy information for given elemnts (owner, and children)
+ * Used to persist hirarchy information for given elemnts (owner, and children)
  * @umplesource Generator_UmpleModelWalker.ump 50
  */
 // line 50 "../../../../src/Generator_UmpleModelWalker.ump"

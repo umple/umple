@@ -8,6 +8,8 @@ import java.util.*;
 /**
  * A boolean condition that is checked when an event method is called
  * If the result is true the transition may be taken
+ * A boolean condition that is checked when an event method is called
+ * If the result is true the transition may be taken
  * @umplesource StateMachine.ump 183
  * @umplesource StateMachine_Code.ump 483
  */
@@ -70,12 +72,12 @@ public class Guard extends Constraint
     super.delete();
   }
 
-  @umplesourcefile(line={486},file={"StateMachine_Code.ump"},javaline={75},length={3})
+  @umplesourcefile(line={486},file={"StateMachine_Code.ump"},javaline={77},length={3})
   public String getCondition(CodeTranslator gen){
     return gen.translate(":Open",this);
   }
 
-  @umplesourcefile(line={490},file={"StateMachine_Code.ump"},javaline={80},length={3})
+  @umplesourcefile(line={490},file={"StateMachine_Code.ump"},javaline={82},length={3})
   public String getCondition(){
     return (new JavaGenerator()).translate(":Plain",this);
   }

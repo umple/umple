@@ -101,6 +101,8 @@ public class RTCppGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
   @umplesourcefile(line={23},file={"Generator.ump"},javaline={102},length={2})
@@ -112,9 +114,11 @@ public class RTCppGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={24},file={"Generator.ump"},javaline={113},length={2})
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={115},length={2})
   @Override
   public void postpare(){
           return ;
@@ -132,8 +136,8 @@ public class RTCppGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={37},file={"Generator_CodeRTCpp.ump"},javaline={136},length={26})
-  @umplesourcefile(line={38},file={"Generator_CodeRTCpp.ump"},javaline={137},length={25})
+  //  @umplesourcefile(line={37},file={"Generator_CodeRTCpp.ump"},javaline={140},length={26})
+  @umplesourcefile(line={38},file={"Generator_CodeRTCpp.ump"},javaline={141},length={25})
   protected void generateContents (UmpleModel model ,StringBuilder model_code, String filename, String content, String owingFolder) throws IOException 
   {
     String path = model.getUmpleFile().getPath() + "/";

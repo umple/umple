@@ -8,6 +8,8 @@ import java.util.*;
 /**
  * An element of a trace directive that indicates to trace one or more state machines
  * or transitions
+ * An element of a trace directive that indicates to trace one or more state machines
+ * or transitions
  * @umplesource Trace.ump 121
  * @umplesource Trace_Code.ump 284
  */
@@ -367,12 +369,12 @@ public class StateMachineTraceItem implements TraceItem
     placeholderTraceDirective.removeStateMachineTraceItem(this);
   }
 
-  @umplesourcefile(line={294},file={"Trace_Code.ump"},javaline={372},length={3})
+  @umplesourcefile(line={294},file={"Trace_Code.ump"},javaline={374},length={3})
    public Boolean getIsPre(){
     return conditionallyWhere;
   }
 
-  @umplesourcefile(line={297},file={"Trace_Code.ump"},javaline={377},length={3})
+  @umplesourcefile(line={297},file={"Trace_Code.ump"},javaline={379},length={3})
    public Boolean getIsPost(){
     return !conditionallyWhere;
   }
@@ -386,7 +388,7 @@ public class StateMachineTraceItem implements TraceItem
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace
    */
-  @umplesourcefile(line={309},file={"Trace_Code.ump"},javaline={382},length={59})
+  @umplesourcefile(line={309},file={"Trace_Code.ump"},javaline={384},length={59})
    public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
     String name = "";
     String extra = "";
@@ -452,7 +454,7 @@ public class StateMachineTraceItem implements TraceItem
    * Gets and returns the if statement enclosing this trace item. The name is not used, but is required from the signature of TraceItem
    * @return the if statement for the trace if one exists
    */
-  @umplesourcefile(line={372},file={"Trace_Code.ump"},javaline={452},length={3})
+  @umplesourcefile(line={372},file={"Trace_Code.ump"},javaline={454},length={3})
    public String getExtremities(CodeTranslator gen, String name){
     return gen.translate("Closed",constraint);
   }

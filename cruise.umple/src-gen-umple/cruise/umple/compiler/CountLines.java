@@ -5,6 +5,7 @@ package cruise.umple.compiler;
 
 /**
  * This class is used like a structure to help keep values about lines
+ * This class is used like a structure to help keep values about lines
  * @umplesource SimpleMetrics_CodeLines.ump 224
  */
 // line 224 "../../../../src/SimpleMetrics_CodeLines.ump"
@@ -106,22 +107,22 @@ public class CountLines
   public void delete()
   {}
 
-  @umplesourcefile(line={231},file={"SimpleMetrics_CodeLines.ump"},javaline={111},length={3})
+  @umplesourcefile(line={231},file={"SimpleMetrics_CodeLines.ump"},javaline={112},length={3})
   public void incCountLines(){
     ++this.countLines;
   }
 
-  @umplesourcefile(line={234},file={"SimpleMetrics_CodeLines.ump"},javaline={116},length={3})
+  @umplesourcefile(line={234},file={"SimpleMetrics_CodeLines.ump"},javaline={117},length={3})
   public void incCountComments(){
     ++this.countComments;
   }
 
-  @umplesourcefile(line={237},file={"SimpleMetrics_CodeLines.ump"},javaline={121},length={3})
+  @umplesourcefile(line={237},file={"SimpleMetrics_CodeLines.ump"},javaline={122},length={3})
   public void incCountBlanks(){
     ++this.countBlanks;
   }
 
-  @umplesourcefile(line={240},file={"SimpleMetrics_CodeLines.ump"},javaline={126},length={3})
+  @umplesourcefile(line={240},file={"SimpleMetrics_CodeLines.ump"},javaline={127},length={3})
   public void incCountCode(){
     ++this.countCode;
   }
