@@ -9,6 +9,10 @@ import java.util.*;
  * Normally the state machine will go to a new state after executing various actions and
  * activities.
  * The guard is a boolean condition that may prevent triggering the transition
+ * Specifies, within a state, what happens with a certain event (method call) occurs
+ * Normally the state machine will go to a new state after executing various actions and
+ * activities.
+ * The guard is a boolean condition that may prevent triggering the transition
  * @umplesource StateMachine.ump 105
  * @umplesource StateMachine_Code.ump 434
  */
@@ -431,7 +435,7 @@ public class Transition
     }
   }
 
-  @umplesourcefile(line={439},file={"StateMachine_Code.ump"},javaline={436},length={5})
+  @umplesourcefile(line={439},file={"StateMachine_Code.ump"},javaline={440},length={5})
    public static  Transition createPlaceholder(State nextState){
     StateMachine nullSm = new StateMachine("null");
     State nullState = new State("null",nullSm);

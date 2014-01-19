@@ -6,6 +6,8 @@ import java.util.*;
 
 /**
  * A named group of VariationPoints.
+ * A named group of VariationPoints.
+ * POSITION INFORMATION
  * POSITION INFORMATION
  * @umplesource Vml.ump 45
  * @umplesource Vml_Code.ump 86
@@ -240,12 +242,12 @@ public class Concern
     }
   }
 
-  @umplesourcefile(line={91},file={"Vml_Code.ump"},javaline={245},length={3})
+  @umplesourcefile(line={91},file={"Vml_Code.ump"},javaline={247},length={3})
    public String toString(){
     return name + ":" + numberOfVariationPoints() + " variation points";
   }
 
-  @umplesourcefile(line={96},file={"Vml_Code.ump"},javaline={250},length={15})
+  @umplesourcefile(line={96},file={"Vml_Code.ump"},javaline={252},length={15})
    public VariationPoint getVariationPoint(String name){
     if (name == null)
     {

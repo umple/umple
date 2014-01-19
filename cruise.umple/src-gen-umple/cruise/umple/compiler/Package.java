@@ -6,6 +6,8 @@ package cruise.umple.compiler;
 /**
  * A root class elemnt. It is used to backtrack the parent package when walking through
  * an elemnt (@see IWalker, UmpleModelVisitor)
+ * A root class elemnt. It is used to backtrack the parent package when walking through
+ * an elemnt (@see IWalker, UmpleModelVisitor)
  * @umplesource Generator_UmpleModelWalker.ump 23
  */
 // line 23 "../../../../src/Generator_UmpleModelWalker.ump"

@@ -7,6 +7,7 @@ import cruise.umple.compiler.*;
 
 /**
  * Specialist parser for parsing VML
+ * Specialist parser for parsing VML
  * @umplesource Vml.ump 94
  * @umplesource Vml_Code.ump 173
  * @umplesource Vml_Code.ump 401
@@ -34,7 +35,7 @@ public class VmlParser extends Parser
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={179},file={"Vml_Code.ump"},javaline={44},length={1})
+  @umplesourcefile(line={179},file={"Vml_Code.ump"},javaline={45},length={1})
   public VmlParser(String aName)
   {
     super(aName);
@@ -67,7 +68,7 @@ public class VmlParser extends Parser
     super.delete();
   }
 
-  @umplesourcefile(line={183},file={"Vml_Code.ump"},javaline={72},length={22})
+  @umplesourcefile(line={183},file={"Vml_Code.ump"},javaline={73},length={22})
    private void init(){
     addCouple(new Couple("\"","\""));
     addCouple(new Couple("{","}"));
@@ -91,7 +92,7 @@ public class VmlParser extends Parser
     system = new VmlSystem();
   }
 
-  @umplesourcefile(line={207},file={"Vml_Code.ump"},javaline={96},length={18})
+  @umplesourcefile(line={207},file={"Vml_Code.ump"},javaline={97},length={18})
    public ParseResult analyze(){
     for(Token t : getRootToken().getSubTokens())
     {
@@ -111,7 +112,7 @@ public class VmlParser extends Parser
     return getParseResult();
   }
 
-  @umplesourcefile(line={227},file={"Vml_Code.ump"},javaline={116},length={25})
+  @umplesourcefile(line={227},file={"Vml_Code.ump"},javaline={117},length={25})
    private void handleConcern(Token concernToken){
     variationPointToRequiresListMap = new HashMap<VariationPoint,List<String>>();
 
@@ -138,7 +139,7 @@ public class VmlParser extends Parser
     system.addConcern(c);
   }
 
-  @umplesourcefile(line={254},file={"Vml_Code.ump"},javaline={143},length={58})
+  @umplesourcefile(line={254},file={"Vml_Code.ump"},javaline={144},length={58})
    private void handleInvoke(Token invokeToken){
     String concernName = invokeToken.getValue("concern");
     String variationPointName = invokeToken.getValue("variationPoint");
@@ -198,7 +199,7 @@ public class VmlParser extends Parser
     }
   }
 
-  @umplesourcefile(line={314},file={"Vml_Code.ump"},javaline={203},length={43})
+  @umplesourcefile(line={314},file={"Vml_Code.ump"},javaline={204},length={43})
    private void handleVariationPoint(Token variationToken, Concern c){
     VariationPoint vp = new VariationPoint(variationToken.getValue("name"));
     
@@ -243,7 +244,7 @@ public class VmlParser extends Parser
     variationPointToRequiresListMap.put(vp,allRequires);
   }
 
-  @umplesourcefile(line={359},file={"Vml_Code.ump"},javaline={248},length={8})
+  @umplesourcefile(line={359},file={"Vml_Code.ump"},javaline={249},length={8})
    private void handleVariant(VariationPoint vp, Token variantToken){
     Variant v = new Variant(variantToken.getValue("name"));
     if (variantToken.getValue("codeSnippet") != null)

@@ -6,6 +6,8 @@ package cruise.umple.compiler;
 /**
  * Designed to be implemnted ny metric classes. IT is used as an abstract representation for
  * any type of Maasurment vistors (@see LLOCMetricVisitor).
+ * Designed to be implemnted ny metric classes. IT is used as an abstract representation for
+ * any type of Maasurment vistors (@see LLOCMetricVisitor).
  * @umplesource Generator_CodeAnalysis.ump 62
  */
 // line 62 "../../../../src/Generator_CodeAnalysis.ump"

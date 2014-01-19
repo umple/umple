@@ -13,6 +13,14 @@ import java.util.*;
  * An online tool is available at
  * http://try.umple.org/vml.php
  * It is the intention to integrate VML into the core Umple language
+ * VML (Variability Modeling Language) is an Umple add-on that
+ * allows you co construct and Umple model from a variety of
+ * CodeSnippets that are put together to create different
+ * versions of a product line or product family, by invoking
+ * one or more Variants of a variationPoint within a concern
+ * An online tool is available at
+ * http://try.umple.org/vml.php
+ * It is the intention to integrate VML into the core Umple language
  * @umplesource Vml.ump 23
  * @umplesource Vml_Code.ump 67
  * @umplesource Vml_Code.ump 392
@@ -59,7 +67,7 @@ public class VmlSystem
     return wasSet;
   }
 
-  @umplesourcefile(line={31},file={"Vml.ump"},javaline={66},length={6})
+  @umplesourcefile(line={31},file={"Vml.ump"},javaline={74},length={6})
   public String getCode()
   {
     // line 31 "../../../src/Vml.ump"
@@ -269,7 +277,7 @@ public class VmlSystem
     }
   }
 
-  @umplesourcefile(line={72},file={"Vml_Code.ump"},javaline={274},length={14})
+  @umplesourcefile(line={72},file={"Vml_Code.ump"},javaline={282},length={14})
    public Concern getConcern(String concernName){
     if (concernName == null)
     {

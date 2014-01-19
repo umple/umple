@@ -7,6 +7,8 @@ import java.util.*;
 /**
  * To be done. A group of trace directives that can be switched on or off by other
  * trace directives
+ * To be done. A group of trace directives that can be switched on or off by other
+ * trace directives
  * @umplesource Trace.ump 152
  */
 // line 152 "../../../../src/Trace.ump"

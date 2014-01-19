@@ -5,11 +5,13 @@ package cruise.umple.compiler;
 
 /**
  * A depend relationship indicates a package on which this class depends
+ * A depend relationship indicates a package on which this class depends
  * 
- * @umplesource Umple.ump 427
+ * 
+ * @umplesource Umple.ump 500
  * @umplesource Umple_Code.ump 412
  */
-// line 427 "../../../../src/Umple.ump"
+// line 500 "../../../../src/Umple.ump"
 // line 412 "../../../../src/Umple_Code.ump"
 public class Depend
 {
@@ -118,7 +120,7 @@ public class Depend
   public void delete()
   {}
 
-  @umplesourcefile(line={417},file={"Umple_Code.ump"},javaline={123},length={8})
+  @umplesourcefile(line={417},file={"Umple_Code.ump"},javaline={125},length={8})
    public String getPackageName(){
     if (name == null || "".equals(name))
     {

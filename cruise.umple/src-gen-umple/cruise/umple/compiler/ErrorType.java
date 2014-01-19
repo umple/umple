@@ -8,6 +8,8 @@ import java.util.List;
 /**
  * Represents an error type, which contains an error code, the severity of the error, etc.
  * Error data is read from the en.error file
+ * Represents an error type, which contains an error code, the severity of the error, etc.
+ * Error data is read from the en.error file
  * @umplesource Parser.ump 66
  * @umplesource Parser_Code.ump 1780
  */
@@ -140,7 +142,7 @@ public class ErrorType
   public void delete()
   {}
 
-  @umplesourcefile(line={1788},file={"Parser_Code.ump"},javaline={145},length={3})
+  @umplesourcefile(line={1788},file={"Parser_Code.ump"},javaline={147},length={3})
    public String format(List<String> arguments){
     return StringFormatter.format(errorFormat, arguments.toArray());
   }

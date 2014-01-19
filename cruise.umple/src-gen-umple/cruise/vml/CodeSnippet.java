@@ -8,6 +8,10 @@ package cruise.vml;
  * selected to be added to a product line if
  * a certain variant within a variation point is
  * selected.
+ * A piece of code (typically umple) that will be
+ * selected to be added to a product line if
+ * a certain variant within a variation point is
+ * selected.
  * @umplesource Vml.ump 84
  * @umplesource Vml_Code.ump 111
  * @umplesource Vml_Code.ump 408
@@ -102,7 +106,7 @@ public class CodeSnippet
   public void delete()
   {}
 
-  @umplesourcefile(line={116},file={"Vml_Code.ump"},javaline={107},length={10})
+  @umplesourcefile(line={116},file={"Vml_Code.ump"},javaline={111},length={10})
    public String toString(){
     if (code == null)
     {
