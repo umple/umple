@@ -1904,5 +1904,3 @@ class ErrorTypeSingleton
     return new ErrorType(-1, 0, "Unknown Umple Error #" + code + " : {0}", "");
   }
 }
-
-use Parser_Code_Trait.ump;

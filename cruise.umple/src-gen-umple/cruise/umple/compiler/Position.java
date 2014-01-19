@@ -9,11 +9,9 @@ import java.nio.file.*;
  * filename, the line number and the corresponding offset on that line number.
  * @umplesource Parser.ump 121
  * @umplesource Parser_Code.ump 320
- * @umplesource Parser_Code_Trait.ump 2
  */
 // line 121 "../../../../src/Parser.ump"
 // line 320 "../../../../src/Parser_Code.ump"
-// line 2 "../../../../src/Parser_Code_Trait.ump"
 public class Position
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -191,17 +189,17 @@ public class Position
   public void delete()
   {}
 
-  @umplesourcefile(line={327},file={"Parser_Code.ump"},javaline={196},length={3})
+  @umplesourcefile(line={327},file={"Parser_Code.ump"},javaline={194},length={3})
    public  Position(int aLineNumber, int aCharacterOffset, int aOffset){
     this(null, aLineNumber, aCharacterOffset, aOffset);
   }
 
-  @umplesourcefile(line={332},file={"Parser_Code.ump"},javaline={201},length={3})
+  @umplesourcefile(line={332},file={"Parser_Code.ump"},javaline={199},length={3})
    public Position copy(){
     return new Position(filename,lineNumber,characterOffset,offset);
   }
 
-  @umplesourcefile(line={337},file={"Parser_Code.ump"},javaline={206},length={4})
+  @umplesourcefile(line={337},file={"Parser_Code.ump"},javaline={204},length={4})
    public Position add(Position more){
     String tfile = filename == null ? more.getFilename() : filename;
     return new Position(filename, getLineNumber() + more.getLineNumber() - 1, getCharacterOffset() + more.getCharacterOffset(), getOffset() + more.getOffset());
@@ -211,17 +209,17 @@ public class Position
   /**
    * extract the line number of the position
    */
-  @umplesourcefile(line={343},file={"Parser_Code.ump"},javaline={212},length={3})
+  @umplesourcefile(line={343},file={"Parser_Code.ump"},javaline={210},length={3})
    public int getLineNum(){
     return getLineNumber();
   }
 
-  @umplesourcefile(line={348},file={"Parser_Code.ump"},javaline={221},length={3})
+  @umplesourcefile(line={348},file={"Parser_Code.ump"},javaline={219},length={3})
    public String toString(){
     return cruise.umple.util.StringFormatter.format("[{0},{1}]", getLineNumber(), getCharacterOffset());
   }
 
-  @umplesourcefile(line={353},file={"Parser_Code.ump"},javaline={226},length={11})
+  @umplesourcefile(line={353},file={"Parser_Code.ump"},javaline={224},length={11})
    private int countChars(String str, char c){
     int count = 0;
     for (int i = 0; i < str.length(); i++)
@@ -234,7 +232,7 @@ public class Position
     return count;
   }
 
-  @umplesourcefile(line={366},file={"Parser_Code.ump"},javaline={239},length={3})
+  @umplesourcefile(line={366},file={"Parser_Code.ump"},javaline={237},length={3})
    private String deWindowsify(String str){
     return str.replace('\\','/');
   }
@@ -245,65 +243,8 @@ public class Position
    * It was written by mistake, the author not knowing that Java 7 was not supported on the build server.
    * As a result, it has been replaced by the placeholder above, that simply returns the full path.
    */
-  @umplesourcefile(line={374},file={"Parser_Code.ump"},javaline={244},length={55})
+  @umplesourcefile(line={374},file={"Parser_Code.ump"},javaline={242},length={55})
    public String getRelativePath(UmpleClass parent, String language){
-    if (filename == null)
-    {
-      return "";
-    }
-    if (parent == null)
-    { //No parent class? This might happen with state machines
-      return Paths.get(filename).getFileName().toString();
-    }
-    
-    //Find path relative to namespace folders
-    String packageName = parent.getPackageName();
-    if (packageName == null || packageName.equals(""))
-    { //No package, file is output in current directory
-      return Paths.get(filename).getFileName().toString();
-    } 
-    else
-    { //Has a package, add appropriate number of ..
-      int pathCount = countChars(packageName, '.') + 1;
-      StringBuilder build = new StringBuilder();
-      for (int i = 0; i < pathCount; i++)
-      {
-        build.append("../");
-      }
-      
-      //Add on relative path from generator location
-      if (parent.getSourceModel() == null)
-      {
-        build.append(Paths.get(filename).getFileName());
-        return deWindowsify(build.toString());
-      }
-      Path currentPath = Paths.get(parent.getSourceModel().getUmpleFile().getPath()).toAbsolutePath();
-      Path generatesPath = null;
-      GenerateTarget [] generates = parent.getSourceModel().getGenerates();
-      for (int i = 0; i < generates.length; i++)
-      {
-        if (generates[i].getLanguage().equals(language))
-        {
-          generatesPath = currentPath.resolve(Paths.get(generates[i].getPath())).normalize();
-        }
-      }
-      if (generatesPath != null)
-      {
-      	Path result = generatesPath.relativize(currentPath);
-      	if (!result.equals(Paths.get("")))
-      	{
-      	  result = result.normalize();
-      	  build.append(result.toString() + '/');
-      	}
-      }
-      
-      build.append(Paths.get(filename).getFileName());
-      return deWindowsify(build.toString());
-    }
-  }
-
-  @umplesourcefile(line={7},file={"Parser_Code_Trait.ump"},javaline={307},length={55})
-   public String getRelativePath(UmpleTrait parent, String language){
     if (filename == null)
     {
       return "";
