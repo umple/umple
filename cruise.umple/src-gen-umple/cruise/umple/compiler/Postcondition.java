@@ -6,9 +6,9 @@ import java.util.*;
 
 /**
  * The Postcondition object (special Constraint) related to Umple Classes
- * @umplesource Umple.ump 276
+ * @umplesource Umple.ump 272
  */
-// line 276 "../../../../src/Umple.ump"
+// line 272 "../../../../src/Umple.ump"
 public class Postcondition extends Constraint
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
