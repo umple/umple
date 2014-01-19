@@ -12,11 +12,11 @@ import java.util.*;
  * patterns, such as 'singleton', meaning that there can only be one instance,
  * and abstract, meaning it can't have any instances.
  * In Umple_Code.ump: Methods for computing complex properties
- * @umplesource Umple.ump 360
+ * @umplesource Umple.ump 364
  * @umplesource Umple_Code.ump 716
  * @umplesource Trace.ump 158
  */
-// line 360 "../../../../src/Umple.ump"
+// line 364 "../../../../src/Umple.ump"
 // line 716 "../../../../src/Umple_Code.ump"
 // line 158 "../../../../src/Trace.ump"
 public class UmpleClass extends UmpleClassifier
@@ -48,6 +48,7 @@ public class UmpleClass extends UmpleClassifier
   private List<Postcondition> postconditions;
   private List<Constraint> constraints;
   private UmpleClass extendsClass;
+  private List<UmpleTrait> extendsTraits;
   private List<UmpleInterface> parentInterface;
   private UniqueIdentifier uniqueIdentifier;
   private List<Attribute> attributes;
@@ -77,6 +78,7 @@ public class UmpleClass extends UmpleClassifier
     preconditions = new ArrayList<Precondition>();
     postconditions = new ArrayList<Postcondition>();
     constraints = new ArrayList<Constraint>();
+    extendsTraits = new ArrayList<UmpleTrait>();
     parentInterface = new ArrayList<UmpleInterface>();
     attributes = new ArrayList<Attribute>();
     associationVariables = new ArrayList<AssociationVariable>();
@@ -379,6 +381,36 @@ public class UmpleClass extends UmpleClassifier
   public UmpleClass getExtendsClass()
   {
     return extendsClass;
+  }
+
+  public UmpleTrait getExtendsTrait(int index)
+  {
+    UmpleTrait aExtendsTrait = extendsTraits.get(index);
+    return aExtendsTrait;
+  }
+
+  public List<UmpleTrait> getExtendsTraits()
+  {
+    List<UmpleTrait> newExtendsTraits = Collections.unmodifiableList(extendsTraits);
+    return newExtendsTraits;
+  }
+
+  public int numberOfExtendsTraits()
+  {
+    int number = extendsTraits.size();
+    return number;
+  }
+
+  public boolean hasExtendsTraits()
+  {
+    boolean has = extendsTraits.size() > 0;
+    return has;
+  }
+
+  public int indexOfExtendsTrait(UmpleTrait aExtendsTrait)
+  {
+    int index = extendsTraits.indexOf(aExtendsTrait);
+    return index;
   }
 
   public UmpleInterface getParentInterface(int index)
@@ -864,11 +896,11 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={420, 720},file={"Umple.ump", "Umple_Code.ump"},javaline={874, 887},length={1, 25})
+  @umplesourcefile(line={425, 720},file={"Umple.ump", "Umple_Code.ump"},javaline={906, 919},length={1, 25})
   public boolean setExtendsClass(UmpleClass aExtendsClass)
   {
     boolean wasSet = false;
-    // line 420 "../../../../src/Umple.ump"
+    // line 425 "../../../../src/Umple.ump"
     if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; }
     UmpleClass existingExtendsClass = extendsClass;
     extendsClass = aExtendsClass;
@@ -908,6 +940,88 @@ public class UmpleClass extends UmpleClassifier
           }
         }
     return wasSet;
+  }
+
+  public static int minimumNumberOfExtendsTraits()
+  {
+    return 0;
+  }
+
+  public boolean addExtendsTrait(UmpleTrait aExtendsTrait)
+  {
+    boolean wasAdded = false;
+    if (extendsTraits.contains(aExtendsTrait)) { return false; }
+    extendsTraits.add(aExtendsTrait);
+    if (aExtendsTrait.indexOfSubClass(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aExtendsTrait.addSubClass(this);
+      if (!wasAdded)
+      {
+        extendsTraits.remove(aExtendsTrait);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeExtendsTrait(UmpleTrait aExtendsTrait)
+  {
+    boolean wasRemoved = false;
+    if (!extendsTraits.contains(aExtendsTrait))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = extendsTraits.indexOf(aExtendsTrait);
+    extendsTraits.remove(oldIndex);
+    if (aExtendsTrait.indexOfSubClass(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aExtendsTrait.removeSubClass(this);
+      if (!wasRemoved)
+      {
+        extendsTraits.add(oldIndex,aExtendsTrait);
+      }
+    }
+    return wasRemoved;
+  }
+
+  public boolean addExtendsTraitAt(UmpleTrait aExtendsTrait, int index)
+  {  
+    boolean wasAdded = false;
+    if(addExtendsTrait(aExtendsTrait))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfExtendsTraits()) { index = numberOfExtendsTraits() - 1; }
+      extendsTraits.remove(aExtendsTrait);
+      extendsTraits.add(index, aExtendsTrait);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveExtendsTraitAt(UmpleTrait aExtendsTrait, int index)
+  {
+    boolean wasAdded = false;
+    if(extendsTraits.contains(aExtendsTrait))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfExtendsTraits()) { index = numberOfExtendsTraits() - 1; }
+      extendsTraits.remove(aExtendsTrait);
+      extendsTraits.add(index, aExtendsTrait);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addExtendsTraitAt(aExtendsTrait, index);
+    }
+    return wasAdded;
   }
 
   public static int minimumNumberOfParentInterface()
@@ -1052,11 +1166,11 @@ public class UmpleClass extends UmpleClassifier
     return 0;
   }
 
-  @umplesourcefile(line={418},file={"Umple.ump"},javaline={1061},length={2})
+  @umplesourcefile(line={423},file={"Umple.ump"},javaline={1175},length={2})
   public boolean addAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasAdded = false;
-    // line 418 "../../../../src/Umple.ump"
+    // line 423 "../../../../src/Umple.ump"
     if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; }
     if (associationVariables.contains(aAssociationVariable)) { return false; }
     UmpleClass existingUmpleClass = aAssociationVariable.getUmpleClass();
@@ -1077,7 +1191,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={418},file={"Umple.ump"},javaline={1061},length={2})
+  @umplesourcefile(line={423},file={"Umple.ump"},javaline={1175},length={2})
   public boolean removeAssociationVariable(AssociationVariable aAssociationVariable)
   {
     boolean wasRemoved = false;
@@ -1090,7 +1204,7 @@ public class UmpleClass extends UmpleClassifier
     return wasRemoved;
   }
 
-  @umplesourcefile(line={418},file={"Umple.ump"},javaline={1061},length={2})
+  @umplesourcefile(line={423},file={"Umple.ump"},javaline={1175},length={2})
   public boolean addAssociationVariableAt(AssociationVariable aAssociationVariable, int index)
   {  
     boolean wasAdded = false;
@@ -1105,7 +1219,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={418},file={"Umple.ump"},javaline={1061},length={2})
+  @umplesourcefile(line={423},file={"Umple.ump"},javaline={1175},length={2})
   public boolean addOrMoveAssociationVariableAt(AssociationVariable aAssociationVariable, int index)
   {
     boolean wasAdded = false;
@@ -1328,11 +1442,11 @@ public class UmpleClass extends UmpleClassifier
     return 0;
   }
 
-  @umplesourcefile(line={422},file={"Umple.ump"},javaline={1333},length={2})
+  @umplesourcefile(line={427},file={"Umple.ump"},javaline={1447},length={2})
   public boolean addStateMachine(StateMachine aStateMachine)
   {
     boolean wasAdded = false;
-    // line 422 "../../../../src/Umple.ump"
+    // line 427 "../../../../src/Umple.ump"
     if (isImmutable()) { return false; }
     if (stateMachines.contains(aStateMachine)) { return false; }
     UmpleClass existingUmpleClass = aStateMachine.getUmpleClass();
@@ -1353,7 +1467,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={422},file={"Umple.ump"},javaline={1333},length={2})
+  @umplesourcefile(line={427},file={"Umple.ump"},javaline={1447},length={2})
   public boolean removeStateMachine(StateMachine aStateMachine)
   {
     boolean wasRemoved = false;
@@ -1366,7 +1480,7 @@ public class UmpleClass extends UmpleClassifier
     return wasRemoved;
   }
 
-  @umplesourcefile(line={422},file={"Umple.ump"},javaline={1333},length={2})
+  @umplesourcefile(line={427},file={"Umple.ump"},javaline={1447},length={2})
   public boolean addStateMachineAt(StateMachine aStateMachine, int index)
   {  
     boolean wasAdded = false;
@@ -1381,7 +1495,7 @@ public class UmpleClass extends UmpleClassifier
     return wasAdded;
   }
 
-  @umplesourcefile(line={422},file={"Umple.ump"},javaline={1333},length={2})
+  @umplesourcefile(line={427},file={"Umple.ump"},javaline={1447},length={2})
   public boolean addOrMoveStateMachineAt(StateMachine aStateMachine, int index)
   {
     boolean wasAdded = false;
@@ -1483,6 +1597,12 @@ public class UmpleClass extends UmpleClassifier
       this.extendsClass = null;
       placeholderExtendsClass.removeSubclass(this);
     }
+    ArrayList<UmpleTrait> copyOfExtendsTraits = new ArrayList<UmpleTrait>(extendsTraits);
+    extendsTraits.clear();
+    for(UmpleTrait aExtendsTrait : copyOfExtendsTraits)
+    {
+      aExtendsTrait.removeSubClass(this);
+    }
     parentInterface.clear();
     uniqueIdentifier = null;
     for(int i=attributes.size(); i > 0; i--)
@@ -1514,12 +1634,12 @@ public class UmpleClass extends UmpleClassifier
     super.delete();
   }
 
-  @umplesourcefile(line={750},file={"Umple_Code.ump"},javaline={1519},length={3})
+  @umplesourcefile(line={750},file={"Umple_Code.ump"},javaline={1639},length={3})
    public  UmpleClass(String name){
     this(name, null);
   }
 
-  @umplesourcefile(line={755},file={"Umple_Code.ump"},javaline={1524},length={9})
+  @umplesourcefile(line={755},file={"Umple_Code.ump"},javaline={1644},length={9})
    public List<StateMachine> getAllStateMachines(){
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();
     all.addAll(getStateMachines());
@@ -1530,7 +1650,7 @@ public class UmpleClass extends UmpleClassifier
     return all;
   }
 
-  @umplesourcefile(line={766},file={"Umple_Code.ump"},javaline={1535},length={59})
+  @umplesourcefile(line={766},file={"Umple_Code.ump"},javaline={1655},length={59})
    public List<CodeInjection> getApplicableCodeInjections(String type, String method){
     ArrayList<CodeInjection> all = new ArrayList<CodeInjection>();
     if (type == null || method == null)
@@ -1591,7 +1711,7 @@ public class UmpleClass extends UmpleClassifier
     return all;
   }
 
-  @umplesourcefile(line={827},file={"Umple_Code.ump"},javaline={1596},length={12})
+  @umplesourcefile(line={827},file={"Umple_Code.ump"},javaline={1716},length={12})
    public List<StateMachine> getStateMachines(Event e){
     List<StateMachine> allStateMachines = new ArrayList<StateMachine>();
     for (StateMachine sm : getAllStateMachines())
@@ -1605,7 +1725,7 @@ public class UmpleClass extends UmpleClassifier
     return allStateMachines;
   }
 
-  @umplesourcefile(line={841},file={"Umple_Code.ump"},javaline={1610},length={17})
+  @umplesourcefile(line={841},file={"Umple_Code.ump"},javaline={1730},length={17})
    public List<Event> getEvents(){
     List<Event> allEvents = new ArrayList<Event>();
     for (StateMachine sm : getAllStateMachines())
@@ -1624,7 +1744,7 @@ public class UmpleClass extends UmpleClassifier
     return allUniqueEvents;
   }
 
-  @umplesourcefile(line={860},file={"Umple_Code.ump"},javaline={1629},length={18})
+  @umplesourcefile(line={860},file={"Umple_Code.ump"},javaline={1749},length={18})
    public Event findOrCreateEvent(String aName){
     if (aName == null)
     {
@@ -1644,7 +1764,7 @@ public class UmpleClass extends UmpleClassifier
     return new Event(aName);
   }
 
-  @umplesourcefile(line={880},file={"Umple_Code.ump"},javaline={1649},length={10})
+  @umplesourcefile(line={880},file={"Umple_Code.ump"},javaline={1769},length={10})
    public StateMachine getStateMachine(String name){
     for (StateMachine sm : stateMachines)
     {
@@ -1656,7 +1776,7 @@ public class UmpleClass extends UmpleClassifier
     return null;
   }
 
-  @umplesourcefile(line={892},file={"Umple_Code.ump"},javaline={1661},length={6})
+  @umplesourcefile(line={892},file={"Umple_Code.ump"},javaline={1781},length={6})
    public void addReferencedPackage(String aNamespace){
     if (indexOfNamespace(aNamespace) == -1 && !aNamespace.equals(getPackageName()))
     {
@@ -1664,7 +1784,7 @@ public class UmpleClass extends UmpleClassifier
     }
   }
 
-  @umplesourcefile(line={900},file={"Umple_Code.ump"},javaline={1669},length={10})
+  @umplesourcefile(line={900},file={"Umple_Code.ump"},javaline={1789},length={10})
    public AssociationVariable getAssociationVariable(String name){
     for (AssociationVariable av : associationVariables)
     {
@@ -1676,7 +1796,7 @@ public class UmpleClass extends UmpleClassifier
     return null;
   }
 
-  @umplesourcefile(line={912},file={"Umple_Code.ump"},javaline={1681},length={10})
+  @umplesourcefile(line={912},file={"Umple_Code.ump"},javaline={1801},length={10})
    public AssociationVariable getAssociationVariableFor(UmpleClass uClass){
     for (AssociationVariable av : associationVariables)
     {
@@ -1688,7 +1808,7 @@ public class UmpleClass extends UmpleClassifier
     return null;
   }
 
-  @umplesourcefile(line={924},file={"Umple_Code.ump"},javaline={1693},length={27})
+  @umplesourcefile(line={924},file={"Umple_Code.ump"},javaline={1813},length={27})
    public boolean hasMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();
     int numberOfParams = comparedMethod.getMethodParameters().size();
@@ -1717,7 +1837,7 @@ public class UmpleClass extends UmpleClassifier
     return false;
   }
 
-  @umplesourcefile(line={952},file={"Umple_Code.ump"},javaline={1722},length={27})
+  @umplesourcefile(line={952},file={"Umple_Code.ump"},javaline={1842},length={27})
    public Method getMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();
     int numberOfParams = comparedMethod.getMethodParameters().size();
@@ -1746,7 +1866,7 @@ public class UmpleClass extends UmpleClassifier
     return null;
   }
 
-  @umplesourcefile(line={981},file={"Umple_Code.ump"},javaline={1751},length={10})
+  @umplesourcefile(line={981},file={"Umple_Code.ump"},javaline={1871},length={10})
    public Attribute getAttribute(String name){
     for (Attribute av : attributes)
     {
@@ -1758,17 +1878,17 @@ public class UmpleClass extends UmpleClassifier
     return null;
   }
 
-  @umplesourcefile(line={993},file={"Umple_Code.ump"},javaline={1763},length={3})
+  @umplesourcefile(line={993},file={"Umple_Code.ump"},javaline={1883},length={3})
    public boolean isRoot(){
     return extendsClass == null;
   }
 
-  @umplesourcefile(line={999},file={"Umple_Code.ump"},javaline={1768},length={3})
+  @umplesourcefile(line={999},file={"Umple_Code.ump"},javaline={1888},length={3})
    public GeneratedClass getGeneratedClass(){
     return gClass;
   }
 
-  @umplesourcefile(line={1004},file={"Umple_Code.ump"},javaline={1773},length={8})
+  @umplesourcefile(line={1004},file={"Umple_Code.ump"},javaline={1893},length={8})
    public GeneratedClass createGeneratedClass(UmpleModel model){
     gClass = new GeneratedClass(model, this);
     if (getExtendsClass() != null)
@@ -1778,12 +1898,12 @@ public class UmpleClass extends UmpleClassifier
     return getGeneratedClass();
   }
 
-  @umplesourcefile(line={1016},file={"Umple_Code.ump"},javaline={1783},length={3})
+  @umplesourcefile(line={1016},file={"Umple_Code.ump"},javaline={1903},length={3})
    public boolean hasUniqueIdentifier(){
     return getUniqueIdentifier() != null;
   }
 
-  @umplesourcefile(line={1021},file={"Umple_Code.ump"},javaline={1788},length={10})
+  @umplesourcefile(line={1021},file={"Umple_Code.ump"},javaline={1908},length={10})
    public boolean isAttributeClass(){
     for (AssociationVariable association : getAssociationVariables())
     {
@@ -1801,12 +1921,12 @@ public class UmpleClass extends UmpleClassifier
    * because an ancestor class is immutable; false if this class neither has the "immutable" modifier 
    * nor an immutable ancestor.
    */
-  @umplesourcefile(line={1037},file={"Umple_Code.ump"},javaline={1800},length={3})
+  @umplesourcefile(line={1037},file={"Umple_Code.ump"},javaline={1920},length={3})
    public boolean isImmutable(){
     return (iAmImmutable || ancestorIsImmutable);
   }
 
-  @umplesourcefile(line={1042},file={"Umple_Code.ump"},javaline={1811},length={11})
+  @umplesourcefile(line={1042},file={"Umple_Code.ump"},javaline={1931},length={11})
    public boolean setImmutable(){
     boolean wasSet = false;
     if (extendsClass != null && !ancestorIsImmutable) { return wasSet; }
@@ -1819,7 +1939,7 @@ public class UmpleClass extends UmpleClassifier
     return wasSet;
   }
 
-  @umplesourcefile(line={1055},file={"Umple_Code.ump"},javaline={1824},length={13})
+  @umplesourcefile(line={1055},file={"Umple_Code.ump"},javaline={1944},length={13})
    private boolean propagateImmutabilityToAllRelationships(boolean isImmutable){
     if (isImmutable)
     {
@@ -1834,7 +1954,7 @@ public class UmpleClass extends UmpleClassifier
     return notifySubclassesAncestorImmutable(isImmutable);
   }
 
-  @umplesourcefile(line={1070},file={"Umple_Code.ump"},javaline={1839},length={17})
+  @umplesourcefile(line={1070},file={"Umple_Code.ump"},javaline={1959},length={17})
    private boolean notifySubclassesAncestorImmutable(boolean isImmutable){
     boolean notified = true;
     List<UmpleClass> wereSet = new ArrayList<UmpleClass>();
@@ -1853,7 +1973,7 @@ public class UmpleClass extends UmpleClassifier
     return notified;
   }
 
-  @umplesourcefile(line={1089},file={"Umple_Code.ump"},javaline={1858},length={13})
+  @umplesourcefile(line={1089},file={"Umple_Code.ump"},javaline={1978},length={13})
    protected boolean setAncestorIsImmutable(boolean isImmutable){
     if (iAmImmutable)
     {
@@ -1868,7 +1988,7 @@ public class UmpleClass extends UmpleClassifier
     }
   }
 
-  @umplesourcefile(line={1104},file={"Umple_Code.ump"},javaline={1873},length={6})
+  @umplesourcefile(line={1104},file={"Umple_Code.ump"},javaline={1993},length={6})
    private boolean enforceImmutabilityInheritanceRules(UmpleClass newSuperClass){
     // A subclass may not be immutable if the superclass is not immutable
     if (iAmImmutable && newSuperClass != null && !newSuperClass.isImmutable()) { return false; }
@@ -1876,7 +1996,7 @@ public class UmpleClass extends UmpleClassifier
     return setAncestorIsImmutable(ancestorImmutable);
   }
 
-  @umplesourcefile(line={1113},file={"Umple_Code.ump"},javaline={1881},length={44})
+  @umplesourcefile(line={1113},file={"Umple_Code.ump"},javaline={2001},length={44})
    protected static  boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleClass myClass, boolean myClassImmutable, AssociationVariable yourAV, UmpleClass yourClass, boolean yourClassImmutable){
     boolean satisfied = false;
     if (myAV == null || yourAV == null)
@@ -1922,7 +2042,7 @@ public class UmpleClass extends UmpleClassifier
     return satisfied;
   }
 
-  @umplesourcefile(line={1159},file={"Umple_Code.ump"},javaline={1927},length={7})
+  @umplesourcefile(line={1159},file={"Umple_Code.ump"},javaline={2047},length={7})
    protected boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, boolean myClassImmutable){
     AssociationVariable relatedAV = myAV.getRelatedAssociation();
     UmpleClass relatedClass = (relatedAV == null) ? null : relatedAV.getUmpleClass();
@@ -1946,7 +2066,7 @@ public class UmpleClass extends UmpleClassifier
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={995},file={"Umple_Code.ump"},javaline={1950},length={2})
+  //  @umplesourcefile(line={995},file={"Umple_Code.ump"},javaline={2070},length={2})
   protected GeneratedClass gClass = null ;
 
   

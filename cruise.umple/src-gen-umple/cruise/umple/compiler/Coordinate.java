@@ -7,10 +7,10 @@ package cruise.umple.compiler;
  * A Coordinate is used in  the layout of classes
  * It represents the shape of a class box in a diagram
  * 
- * @umplesource Umple.ump 658
+ * @umplesource Umple.ump 731
  * @umplesource Umple_Code.ump 2030
  */
-// line 658 "../../../../src/Umple.ump"
+// line 731 "../../../../src/Umple.ump"
 // line 2030 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
@@ -42,7 +42,7 @@ public class Coordinate
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={667},file={"Umple.ump"},javaline={59},length={1})
+  @umplesourcefile(line={740},file={"Umple.ump"},javaline={59},length={1})
   public Coordinate(int aX, int aY, int aWidth, int aHeight)
   {
     cachedHashCode = -1;
@@ -55,7 +55,7 @@ public class Coordinate
     width = aWidth;
     height = aHeight;
     setStatus(Status.Explicit);
-    // line 667 "../../../../src/Umple.ump"
+    // line 740 "../../../../src/Umple.ump"
     updateStatus();
   }
 
@@ -63,50 +63,50 @@ public class Coordinate
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={668},file={"Umple.ump"},javaline={74},length={1})
+  @umplesourcefile(line={741},file={"Umple.ump"},javaline={74},length={1})
   public boolean setX(int aX)
   {
     boolean wasSet = false;
     if (!canSetX) { return false; }
     x = aX;
     wasSet = true;
-    // line 668 "../../../../src/Umple.ump"
+    // line 741 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
 
-  @umplesourcefile(line={669},file={"Umple.ump"},javaline={85},length={1})
+  @umplesourcefile(line={742},file={"Umple.ump"},javaline={85},length={1})
   public boolean setY(int aY)
   {
     boolean wasSet = false;
     if (!canSetY) { return false; }
     y = aY;
     wasSet = true;
-    // line 669 "../../../../src/Umple.ump"
+    // line 742 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
 
-  @umplesourcefile(line={670},file={"Umple.ump"},javaline={96},length={1})
+  @umplesourcefile(line={743},file={"Umple.ump"},javaline={96},length={1})
   public boolean setWidth(int aWidth)
   {
     boolean wasSet = false;
     if (!canSetWidth) { return false; }
     width = aWidth;
     wasSet = true;
-    // line 670 "../../../../src/Umple.ump"
+    // line 743 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
 
-  @umplesourcefile(line={671},file={"Umple.ump"},javaline={107},length={1})
+  @umplesourcefile(line={744},file={"Umple.ump"},javaline={107},length={1})
   public boolean setHeight(int aHeight)
   {
     boolean wasSet = false;
     if (!canSetHeight) { return false; }
     height = aHeight;
     wasSet = true;
-    // line 671 "../../../../src/Umple.ump"
+    // line 744 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }

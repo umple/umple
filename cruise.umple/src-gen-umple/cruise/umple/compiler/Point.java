@@ -14,10 +14,10 @@ package cruise.umple.compiler;
  * A point in cartesian coordinates, used in representing the layout of a
  * diagram in Umple
  * 
- * @umplesource Umple.ump 646
+ * @umplesource Umple.ump 719
  * @umplesource Umple_Code.ump 2006
  */
-// line 646 "../../../../src/Umple.ump"
+// line 719 "../../../../src/Umple.ump"
 // line 2006 "../../../../src/Umple_Code.ump"
 public class Point
 {
