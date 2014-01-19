@@ -19,7 +19,7 @@
 package cruise.umple.modeling.handlers;
 
 public interface IModelingConstants {
-
+	
 	public final static String COPY_RIGHT= "copy.right";  //$NON-NLS-1$
 	public final static String ROOT_PATH= "rootPath"; //$NON-NLS-1$
 	public final static String ROOT_NAME= "rootName"; //$NON-NLS-1$
