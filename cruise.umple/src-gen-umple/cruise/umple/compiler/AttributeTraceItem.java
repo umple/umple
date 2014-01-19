@@ -8,7 +8,6 @@ import java.util.*;
 
 /**
  * An element of a trace directive that indicates to trace one or more attributes
- * An element of a trace directive that indicates to trace one or more attributes
  * @umplesource Trace.ump 96
  * @umplesource Trace_Code.ump 172
  */
@@ -162,6 +161,7 @@ public class AttributeTraceItem implements TraceItem
     return constraint;
   }
 
+  @umplesourcefile(line={101},file={"Trace.ump"},javaline={168},length={2})
   public String getTracerType()
   {
     return getTraceDirective().getTracerType();

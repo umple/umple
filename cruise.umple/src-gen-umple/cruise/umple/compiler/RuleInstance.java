@@ -6,7 +6,6 @@ import java.util.*;
 
 /**
  * Data captured during parsing when a certain rule matches
- * Data captured during parsing when a certain rule matches
  * @umplesource Parser.ump 214
  * @umplesource Parser_Code.ump 1465
  */
@@ -203,7 +202,7 @@ public class RuleInstance
     parser = null;
   }
 
-  @umplesourcefile(line={1471},file={"Parser_Code.ump"},javaline={208},length={15})
+  @umplesourcefile(line={1471},file={"Parser_Code.ump"},javaline={207},length={15})
    public void configureDefinition(String definition, String... allStopAts){
     stopAts.clear();
     for(String stopAt : allStopAts)
@@ -220,17 +219,17 @@ public class RuleInstance
     updateNextIdentifier();
   }
 
-  @umplesourcefile(line={1488},file={"Parser_Code.ump"},javaline={225},length={3})
+  @umplesourcefile(line={1488},file={"Parser_Code.ump"},javaline={224},length={3})
    public boolean hasMoreRuleParts(){
     return rulePartsIndex < ruleParts.size();
   }
 
-  @umplesourcefile(line={1493},file={"Parser_Code.ump"},javaline={230},length={3})
+  @umplesourcefile(line={1493},file={"Parser_Code.ump"},javaline={229},length={3})
    public void resetRulePart(){
     rulePartsIndex = 0;
   }
 
-  @umplesourcefile(line={1498},file={"Parser_Code.ump"},javaline={235},length={7})
+  @umplesourcefile(line={1498},file={"Parser_Code.ump"},javaline={234},length={7})
    public RulePart nextRulePart(){
     if (rulePartsIndex >= numberOfRuleParts() || rulePartsIndex < 0)
     {
@@ -239,7 +238,7 @@ public class RuleInstance
     return getRulePart(rulePartsIndex++);
   }
 
-  @umplesourcefile(line={1507},file={"Parser_Code.ump"},javaline={244},length={24})
+  @umplesourcefile(line={1507},file={"Parser_Code.ump"},javaline={243},length={24})
    public boolean nextCombination(){
     if (updateIndex == -1)
     {
@@ -265,7 +264,7 @@ public class RuleInstance
     return didChange;
   }
 
-  @umplesourcefile(line={1533},file={"Parser_Code.ump"},javaline={270},length={6})
+  @umplesourcefile(line={1533},file={"Parser_Code.ump"},javaline={269},length={6})
    public void updateNextIdentifier(){
     for (int i = 0; i < numberOfRuleParts(); i++)
     {
@@ -273,7 +272,7 @@ public class RuleInstance
     }
   }
 
-  @umplesourcefile(line={1541},file={"Parser_Code.ump"},javaline={278},length={83})
+  @umplesourcefile(line={1541},file={"Parser_Code.ump"},javaline={277},length={83})
    private void updateNextPart(int i){
     RulePart currentPart = getRulePart(i);
     currentPart.removeNextIdentifiers();
@@ -358,7 +357,7 @@ public class RuleInstance
     }
   }
 
-  @umplesourcefile(line={1626},file={"Parser_Code.ump"},javaline={363},length={6})
+  @umplesourcefile(line={1626},file={"Parser_Code.ump"},javaline={362},length={6})
    private void updateLastNextPart(RulePart part){
     for (String stop : stopAts)
     {
@@ -366,7 +365,7 @@ public class RuleInstance
     }
   }
 
-  @umplesourcefile(line={1634},file={"Parser_Code.ump"},javaline={371},length={12})
+  @umplesourcefile(line={1634},file={"Parser_Code.ump"},javaline={370},length={12})
    public boolean removeOptionalPart(){
     for (int i=0; i<numberOfRuleParts(); i++)
     {
@@ -380,7 +379,7 @@ public class RuleInstance
     return false;
   }
 
-  @umplesourcefile(line={1648},file={"Parser_Code.ump"},javaline={385},length={13})
+  @umplesourcefile(line={1648},file={"Parser_Code.ump"},javaline={384},length={13})
    private void addNextIdentifierFor(RulePart currentPart, RulePart nextPart){
     if (nextPart.isStatic())
     {
@@ -395,7 +394,7 @@ public class RuleInstance
     }
   }
 
-  @umplesourcefile(line={1663},file={"Parser_Code.ump"},javaline={400},length={28})
+  @umplesourcefile(line={1663},file={"Parser_Code.ump"},javaline={399},length={28})
    private RulePart analyzeRule(String input){
     RulePart part = new RulePart(input, null);
 

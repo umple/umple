@@ -8,14 +8,11 @@ import java.util.*;
 /**
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
- * An UmpleElement is one of the top-level items found in an Umple model
- * Currently it has one subclass, UmpleClassifier
  * 
- * 
- * @umplesource Umple.ump 75
+ * @umplesource Umple.ump 71
  * @umplesource Umple_Code.ump 667
  */
-// line 75 "../../../../src/Umple.ump"
+// line 71 "../../../../src/Umple.ump"
 // line 667 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
@@ -106,11 +103,11 @@ public class UmpleElement
     return wasRemoved;
   }
 
-  @umplesourcefile(line={108},file={"Umple.ump"},javaline={114},length={1})
+  @umplesourcefile(line={104},file={"Umple.ump"},javaline={111},length={1})
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
-    // line 108 "../../../../src/Umple.ump"
+    // line 104 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;
@@ -418,12 +415,12 @@ public class UmpleElement
     endPositions.clear();
   }
 
-  @umplesourcefile(line={672},file={"Umple_Code.ump"},javaline={423},length={3})
+  @umplesourcefile(line={672},file={"Umple_Code.ump"},javaline={420},length={3})
    public void appendExtraCode(String newCode){
     appendExtraCode(newCode,true);
   }
 
-  @umplesourcefile(line={677},file={"Umple_Code.ump"},javaline={428},length={11})
+  @umplesourcefile(line={677},file={"Umple_Code.ump"},javaline={425},length={11})
    public void appendExtraCode(String newCode, boolean addNewline){
     if (newCode == null) 
     { 
@@ -436,17 +433,17 @@ public class UmpleElement
     extraCode.appendExtraCode(newCode);
   }
 
-  @umplesourcefile(line={690},file={"Umple_Code.ump"},javaline={441},length={3})
+  @umplesourcefile(line={690},file={"Umple_Code.ump"},javaline={438},length={3})
    public void appendExtraCode(boolean flag, CodeBlock cb){
     extraCode.appendExtraCode(cb);
   }
 
-  @umplesourcefile(line={695},file={"Umple_Code.ump"},javaline={446},length={3})
+  @umplesourcefile(line={695},file={"Umple_Code.ump"},javaline={443},length={3})
    public boolean hasExtraCode(){
     return extraCode.getHasCode();
   }
 
-  @umplesourcefile(line={700},file={"Umple_Code.ump"},javaline={451},length={3})
+  @umplesourcefile(line={700},file={"Umple_Code.ump"},javaline={448},length={3})
    public String getExtraCode(){
     return extraCode.getExtraCode();
   }

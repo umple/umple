@@ -6,7 +6,6 @@ import java.util.*;
 
 /**
  * One of the values in which a state machine can be at any given point in time
- * One of the values in which a state machine can be at any given point in time
  * @umplesource StateMachine.ump 36
  * @umplesource StateMachine_Code.ump 302
  * @umplesource Trace_Code.ump 63
@@ -121,6 +120,7 @@ public class State
     return name;
   }
 
+  @umplesourcefile(line={40, 40},file={"StateMachine.ump", "StateMachine.ump"},javaline={127, 160},length={2, 2})
   public boolean getIsConcurrent()
   {
     return numberOfNestedStateMachines() > 1;
@@ -179,7 +179,7 @@ public class State
     return isDeepHistoryState;
   }
 
-  @umplesourcefile(line={52},file={"StateMachine.ump"},javaline={186},length={1})
+  @umplesourcefile(line={52},file={"StateMachine.ump"},javaline={185},length={1})
   public boolean isFinalState()
   {
     // line 52 "../../../../src/StateMachine.ump"

@@ -7,8 +7,6 @@ import java.util.*;
 /**
  * Identifies where one product line member may differ
  * from another.
- * Identifies where one product line member may differ
- * from another.
  * @umplesource Vml.ump 57
  * @umplesource Vml_Code.ump 126
  * @umplesource Vml_Code.ump 376
@@ -412,7 +410,7 @@ public class VariationPoint
     }
   }
 
-  @umplesourcefile(line={131},file={"Vml_Code.ump"},javaline={417},length={10})
+  @umplesourcefile(line={131},file={"Vml_Code.ump"},javaline={415},length={10})
    public String toString(){
     if (codeSnippet == null)
     {
@@ -424,7 +422,7 @@ public class VariationPoint
     }
   }
 
-  @umplesourcefile(line={143},file={"Vml_Code.ump"},javaline={429},length={14})
+  @umplesourcefile(line={143},file={"Vml_Code.ump"},javaline={427},length={14})
    public Variant getVariant(String name){
     if (name == null)
     {

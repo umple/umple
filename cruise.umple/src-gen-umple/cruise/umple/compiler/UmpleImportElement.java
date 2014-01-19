@@ -6,8 +6,6 @@ package cruise.umple.compiler;
 /**
  * Defines import prototype for package, class, interface 
  * and associations
- * Defines import prototype for package, class, interface 
- * and associations
  * @umplesource UmpleImport.ump 40
  */
 // line 40 "../../../../src/UmpleImport.ump"
@@ -88,7 +86,7 @@ public abstract class UmpleImportElement
   public void delete()
   {}
 
-  @umplesourcefile(line={51},file={"UmpleImport.ump"},javaline={92},length={3})
+  @umplesourcefile(line={51},file={"UmpleImport.ump"},javaline={90},length={3})
   public abstract String generateUmple();
 
   public String toString()

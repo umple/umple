@@ -7,8 +7,6 @@ import java.util.*;
 /**
  * A statement found in Umple that directs code to be generated
  * to trace a model element and generate output using some tracing tool
- * A statement found in Umple that directs code to be generated
- * to trace a model element and generate output using some tracing tool
  * @umplesource Trace.ump 70
  */
 // line 70 "../../../../src/Trace.ump"
@@ -70,6 +68,7 @@ public class TraceDirective
     return id;
   }
 
+  @umplesourcefile(line={74},file={"Trace.ump"},javaline={75},length={2})
   public String getTracerType()
   {
     return getTracer().getName();

@@ -6,7 +6,6 @@ import java.util.*;
 
 /**
  * Data to record in a trace directive
- * Data to record in a trace directive
  * @umplesource Trace.ump 51
  */
 // line 51 "../../../../src/Trace.ump"

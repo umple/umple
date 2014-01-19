@@ -5,7 +5,6 @@ package cruise.umple.compiler;
 
 /**
  * It is used to track user code when processing objects information
- * It is used to track user code when processing objects information
  * @umplesource Generator_UmpleModelWalker.ump 28
  */
 // line 28 "../../../../src/Generator_UmpleModelWalker.ump"

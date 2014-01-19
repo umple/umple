@@ -7,7 +7,6 @@ import java.io.IOException;
 
 /**
  * A common util for the implemented Measurment objects (@see MeasurmentObject).
- * A common util for the implemented Measurment objects (@see MeasurmentObject).
  * @umplesource Generator_CodeAnalysis.ump 70
  */
 // line 70 "../../../../src/Generator_CodeAnalysis.ump"
@@ -52,7 +51,7 @@ public class UmpleModelHelper
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={75},file={"Generator_CodeAnalysis.ump"},javaline={56},length={100})
+  //  @umplesourcefile(line={75},file={"Generator_CodeAnalysis.ump"},javaline={55},length={100})
   MeasurmentObject countLOC (String contents) throws java.io.IOException 
   {
     if(contents == null){
@@ -65,7 +64,7 @@ public class UmpleModelHelper
   	return object;
   }
 
-//  @umplesourcefile(line={86},file={"Generator_CodeAnalysis.ump"},javaline={69},length={87})
+//  @umplesourcefile(line={86},file={"Generator_CodeAnalysis.ump"},javaline={68},length={87})
   MeasurmentObject countFileLOC (String filePath) throws java.io.IOException 
   {
     java.io.FileReader reader = new java.io.FileReader(filePath);
@@ -74,8 +73,8 @@ public class UmpleModelHelper
   	return object;
   }
 
-//  @umplesourcefile(line={93},file={"Generator_CodeAnalysis.ump"},javaline={78},length={78})
-  @umplesourcefile(line={94},file={"Generator_CodeAnalysis.ump"},javaline={79},length={77})
+//  @umplesourcefile(line={93},file={"Generator_CodeAnalysis.ump"},javaline={77},length={78})
+  @umplesourcefile(line={94},file={"Generator_CodeAnalysis.ump"},javaline={78},length={77})
   private MeasurmentObject doCount (Reader reader)throws IOException 
   {
     int commentIndex;

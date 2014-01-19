@@ -307,8 +307,6 @@ public class XtextGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
   @umplesourcefile(line={23},file={"Generator.ump"},javaline={308},length={2})
@@ -320,11 +318,9 @@ public class XtextGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={24},file={"Generator.ump"},javaline={321},length={2})
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={319},length={2})
   @Override
   public void postpare(){
           return ;
@@ -344,27 +340,27 @@ public class XtextGenerator implements CodeGenerator
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={165},file={"Generator_CodeXtext.ump"},javaline={348},length={60})
+  //  @umplesourcefile(line={165},file={"Generator_CodeXtext.ump"},javaline={344},length={60})
   public abstract class PatternHandler 
   {
     private Pattern pattern;
 	private Matcher matcher;
-  @umplesourcefile(line={170},file={"Generator_CodeXtext.ump"},javaline={353},length={4})
+  @umplesourcefile(line={170},file={"Generator_CodeXtext.ump"},javaline={349},length={4})
 	protected HashMap<String,Integer> frequency = new HashMap<String,Integer>();
-  @umplesourcefile(line={171},file={"Generator_CodeXtext.ump"},javaline={355},length={3})
+  @umplesourcefile(line={171},file={"Generator_CodeXtext.ump"},javaline={351},length={3})
     public PatternHandler(String regex){
       pattern = Pattern.compile("(.*)"+regex+"(.*)");
     }
-  @umplesourcefile(line={174},file={"Generator_CodeXtext.ump"},javaline={359},length={4})
+  @umplesourcefile(line={174},file={"Generator_CodeXtext.ump"},javaline={355},length={4})
     public boolean canHandle(String input){
       matcher = pattern.matcher(input);
       return matcher.matches();
     }
-  @umplesourcefile(line={178},file={"Generator_CodeXtext.ump"},javaline={364},length={3})
+  @umplesourcefile(line={178},file={"Generator_CodeXtext.ump"},javaline={360},length={3})
     public void reset(){
       frequency.clear();
     }
-  @umplesourcefile(line={181},file={"Generator_CodeXtext.ump"},javaline={368},length={19})
+  @umplesourcefile(line={181},file={"Generator_CodeXtext.ump"},javaline={364},length={19})
     public String handle(){
       String[] groups = new String[matcher.groupCount()-2];
       String middle = "";
@@ -384,12 +380,12 @@ public class XtextGenerator implements CodeGenerator
       String last = matcher.group(matcher.groupCount());
       return first +"("+manipulate(groups,frequency.get(middle))+")"+last;
     }
-  @umplesourcefile(line={200},file={"Generator_CodeXtext.ump"},javaline={388},length={25})
+  @umplesourcefile(line={200},file={"Generator_CodeXtext.ump"},javaline={384},length={25})
     public abstract String manipulate(String[] groups, Integer middle);
   }
 
-//  @umplesourcefile(line={205},file={"Generator_CodeXtext.ump"},javaline={392},length={22})
-  @umplesourcefile(line={206},file={"Generator_CodeXtext.ump"},javaline={393},length={21})
+//  @umplesourcefile(line={205},file={"Generator_CodeXtext.ump"},javaline={388},length={22})
+  @umplesourcefile(line={206},file={"Generator_CodeXtext.ump"},javaline={389},length={21})
   private void writeFile (String contents) throws IOException 
   {
     String path = StringFormatter.addPathOrAbsolute( 

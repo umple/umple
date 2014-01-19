@@ -33,7 +33,7 @@ class TraceRecord extends TraceStm
   public function setNumber1($aNumber1)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",../../testbed/src/TestHarnessTracer.ump,107,TraceRecord,".spl_object_hash( $this ).",at_s,number1,".$this->number1.",".(""+$aNumber1)null.",TracingNumber1" );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",TestHarnessTracer.ump,107,TraceRecord,".spl_object_hash( $this ).",at_s,number1,".$this->number1.",".(""+$aNumber1)null.",TracingNumber1" );
     $this->number1 = $aNumber1;
     $wasSet = true;
     return $wasSet;
@@ -42,7 +42,7 @@ class TraceRecord extends TraceStm
   public function setNumber2($aNumber2)
   {
     $wasSet = false;
-    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",../../testbed/src/TestHarnessTracer.ump,108,TraceRecord,".spl_object_hash( $this ).",at_s,number2,".$this->number2.",".(""+$aNumber2)null.",".str );
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",TestHarnessTracer.ump,108,TraceRecord,".spl_object_hash( $this ).",at_s,number2,".$this->number2.",".(""+$aNumber2)null.",".str );
     $this->number2 = $aNumber2;
     $wasSet = true;
     return $wasSet;
