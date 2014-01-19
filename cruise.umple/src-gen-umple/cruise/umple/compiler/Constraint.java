@@ -7,10 +7,10 @@ import java.util.*;
 
 /**
  * The Constraint object related to Umple Classes
- * @umplesource Umple.ump 249
+ * @umplesource Umple.ump 253
  * @umplesource Umple_Code.ump 1389
  */
-// line 249 "../../../../src/Umple.ump"
+// line 253 "../../../../src/Umple.ump"
 // line 1389 "../../../../src/Umple_Code.ump"
 public class Constraint extends CodeBlock
 {

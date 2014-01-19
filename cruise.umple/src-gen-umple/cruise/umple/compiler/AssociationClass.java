@@ -11,10 +11,10 @@ import java.util.*;
  * relationship. Instances of the AssociationClass represent data 
  * held by the links between those two classes.
  * 
- * @umplesource Umple.ump 442
+ * @umplesource Umple.ump 515
  * @umplesource Umple_Code.ump 705
  */
-// line 442 "../../../../src/Umple.ump"
+// line 515 "../../../../src/Umple.ump"
 // line 705 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {

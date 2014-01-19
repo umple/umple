@@ -91,6 +91,7 @@ class UmpleInternalParser
     setRootToken(parser.getRootToken());
     analyzeAllTokens(getRootToken());
     postTokenAnalysis();
+    applyTraits();
     if (shouldGenerate && getParseResult().getWasSuccess())
     {
       model.generate();
@@ -162,6 +163,7 @@ class UmpleInternalParser
   {
     analyzeCoreToken(t,analysisStep);
     analyzeClassToken(t,analysisStep);
+    analyzeTraitToken(t,analysisStep);
     analyzeStateMachineToken(t,analysisStep);
     analyzeTraceToken(t,analysisStep);
     analyzeLayoutToken(t,analysisStep);
@@ -352,6 +354,7 @@ class UmpleInternalParser
 
 use UmpleInternalParser_CodeCore.ump;
 use UmpleInternalParser_CodeClass.ump;
+use UmpleInternalParser_CodeTrait.ump;
 use UmpleInternalParser_CodeConstraints.ump;
 use UmpleInternalParser_CodeStateMachine.ump;
 use UmpleInternalParser_CodeTrace.ump;

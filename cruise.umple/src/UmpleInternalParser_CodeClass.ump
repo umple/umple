@@ -603,7 +603,7 @@ class UmpleInternalParser
     // Add special position comment at the end if @outputumplesource had been 
     // detected earlier in a comment
     if(outputUmpleSource == true) {  
-      aClass.addComment(new Comment("@umplesource " + thePosition.getRelativePath(null,"Java")+" "+thePosition.getLineNumber()));
+      aClass.addComment(new Comment("@umplesource " + thePosition.getRelativePath((UmpleClass)null,"Java")+" "+thePosition.getLineNumber()));
     }
 
   // If the "abstract" keyword is parsed, make the Umple class an abstract class.
@@ -976,27 +976,55 @@ class UmpleInternalParser
         String extendName= extendsNames.get(i);
         if (isUmpleClass(extendName))
         {
-          UmpleClass parent = model.getUmpleClass(extendName);     
-          boolean wasSet = child.setExtendsClass(parent);
-          if (!wasSet)
-          {
-            Position pos;
-            try
-            {
-              pos = extendsToken.get(i).getPosition();
-            }
-            catch(Exception e)
-            {
-              pos = new Position("",0,0,0);
-            }
-            setFailedPosition(pos, 16, child.getName(), parent.getName());
-            return;
+          if (isUmpleTrait(extendName) ) {
+	          UmpleTrait parent = model.getUmpleTrait(extendName);     
+	          boolean wasSet = child.addExtendsTrait(parent);
+	          if (!wasSet)
+	          {
+	            Position pos;
+	            try
+	            {
+	              pos = extendsToken.get(i).getPosition();
+	            }
+	            catch(Exception e)
+	            {
+	              pos = new Position("",0,0,0);
+	            }
+	// TODO 1: the error code should be chnaged.            
+	            setFailedPosition(pos, 16, child.getName(), parent.getName());
+	            return;
+	          }
+	          //---
+	          /*
+	          try
+	          {
+	            child.setExtendsToken(extendsToken.get(i));
+	          }
+	          catch(Exception e){}   
+	          */          
+          } else {
+	          UmpleClass parent = model.getUmpleClass(extendName);     
+	          boolean wasSet = child.setExtendsClass(parent);
+	          if (!wasSet)
+	          {
+	            Position pos;
+	            try
+	            {
+	              pos = extendsToken.get(i).getPosition();
+	            }
+	            catch(Exception e)
+	            {
+	              pos = new Position("",0,0,0);
+	            }
+	            setFailedPosition(pos, 16, child.getName(), parent.getName());
+	            return;
+	          }
+	          try
+	          {
+	            child.setExtendsToken(extendsToken.get(i));
+	          }
+	          catch(Exception e){}
           }
-          try
-          {
-            child.setExtendsToken(extendsToken.get(i));
-          }
-          catch(Exception e){}
         }
         else {
           UmpleInterface uInterface=  model.getUmpleInterface(extendName);
@@ -1517,6 +1545,31 @@ class UmpleInternalParser
         uClass.addUnimplementedMethod(aMethod);
       }
     }
+     else if (uElement instanceof UmpleTrait)
+    {
+        UmpleTrait uTrait = (UmpleTrait) uElement;
+        
+        // Add Getter/Setter/Constructor to Class
+     //   boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
+        if (!uTrait.hasMethod(aMethod)) // && shouldAddMethod)
+        {
+        	uTrait.addMethod(aMethod); 
+        } 
+
+        // Make class abstract if an abstract method was added
+        if(uTrait.hasMethod(aMethod) && aMethod.getIsAbstract()) 
+        {
+        	uTrait.setIsAbstract(true);
+        	uTrait.addUnimplementedMethod(aMethod);
+        }
+
+        // If method not added to class, add it to list of
+        // unimplemented methods
+        if(!uTrait.hasMethod(aMethod)) 
+        {
+        	uTrait.addUnimplementedMethod(aMethod);
+        }    	
+    }   
     else if (uElement instanceof UmpleInterface)
     {
       UmpleInterface uInterface = (UmpleInterface) uElement;
