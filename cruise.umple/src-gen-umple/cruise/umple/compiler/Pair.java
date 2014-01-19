@@ -5,7 +5,6 @@ package cruise.umple.compiler;
 
 /**
  * Simple name-value pair used in the Umple Parser
- * Simple name-value pair used in the Umple Parser
  * @umplesource UmpleInternalParser.ump 81
  */
 // line 81 "../../../../src/UmpleInternalParser.ump"

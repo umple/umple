@@ -7,7 +7,6 @@ import java.util.*;
 
 /**
  * Represents an error message, typically used with parsing.
- * Represents an error message, typically used with parsing.
  * @umplesource Parser.ump 50
  * @umplesource Parser_Code.ump 1759
  */
@@ -132,18 +131,18 @@ public class ErrorMessage
     position = null;
   }
 
-  @umplesourcefile(line={1764},file={"Parser_Code.ump"},javaline={137},length={4})
+  @umplesourcefile(line={1764},file={"Parser_Code.ump"},javaline={136},length={4})
    public  ErrorMessage(int errorCode, Position pos, String... parameters){
     this(ErrorTypeSingleton.getInstance().getErrorTypeForCode(errorCode), pos);
     this.parameters = Arrays.asList(parameters);
   }
 
-  @umplesourcefile(line={1769},file={"Parser_Code.ump"},javaline={143},length={3})
+  @umplesourcefile(line={1769},file={"Parser_Code.ump"},javaline={142},length={3})
    public String getFormattedMessage(){
     return errorType.format(this.parameters);
   }
 
-  @umplesourcefile(line={1773},file={"Parser_Code.ump"},javaline={148},length={6})
+  @umplesourcefile(line={1773},file={"Parser_Code.ump"},javaline={147},length={6})
    public String toString(){
     String sev = errorType.getSeverity() <= 2 ? "Error" : "Warning";
     String err = sev + " " + errorType.getErrorCode() + " on line " + this.position.getLineNumber();

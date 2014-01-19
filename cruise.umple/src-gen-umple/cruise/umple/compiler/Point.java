@@ -5,29 +5,19 @@ package cruise.umple.compiler;
 
 /**
  * class GeneratedInterface
- * class GeneratedInterface
- * {
  * {
  * isA GeneratedElement;
- * isA GeneratedElement;
- * //code = null;
  * //code = null;
  * -> 1 UmpleModel model;
- * -> 1 UmpleModel model;
  * 0..1 -> 1 UmpleInterface uInterface;
- * 0..1 -> 1 UmpleInterface uInterface;
- * }
  * }
  * A point in cartesian coordinates, used in representing the layout of a
  * diagram in Umple
- * A point in cartesian coordinates, used in representing the layout of a
- * diagram in Umple
  * 
- * 
- * @umplesource Umple.ump 719
+ * @umplesource Umple.ump 646
  * @umplesource Umple_Code.ump 2006
  */
-// line 719 "../../../../src/Umple.ump"
+// line 646 "../../../../src/Umple.ump"
 // line 2006 "../../../../src/Umple_Code.ump"
 public class Point
 {
@@ -131,7 +121,7 @@ public class Point
   public void delete()
   {}
 
-  @umplesourcefile(line={2012},file={"Umple_Code.ump"},javaline={136},length={11})
+  @umplesourcefile(line={2012},file={"Umple_Code.ump"},javaline={126},length={11})
    public static  Point create(int n){
     int p = (int)Math.sqrt(n) + 1;
     if (n - (p-2)*p <= p)
@@ -144,7 +134,7 @@ public class Point
     }
   }
 
-  @umplesourcefile(line={2025},file={"Umple_Code.ump"},javaline={149},length={3})
+  @umplesourcefile(line={2025},file={"Umple_Code.ump"},javaline={139},length={3})
    public String toString(){
     return "(" + getX() + "," + getY() + ")";
   }

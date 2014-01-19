@@ -6,8 +6,6 @@ package cruise.umple.compiler;
 /**
  * Used to associated condition patern for an umple elemnt. Designed to be generic so, this elemnt
  * can be of different types
- * Used to associated condition patern for an umple elemnt. Designed to be generic so, this elemnt
- * can be of different types
  * @umplesource Generator_UmpleModelWalker.ump 44
  */
 // line 44 "../../../../src/Generator_UmpleModelWalker.ump"
