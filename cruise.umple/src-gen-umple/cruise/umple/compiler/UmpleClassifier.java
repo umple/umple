@@ -6,10 +6,9 @@ import java.util.*;
 
 /**
  * Represents an Umple classifier: a Class or Interface
- * Represents an Umple classifier: a Class or Interface
- * @umplesource Umple.ump 329
+ * @umplesource Umple.ump 325
  */
-// line 329 "../../../../src/Umple.ump"
+// line 325 "../../../../src/Umple.ump"
 public class UmpleClassifier extends UmpleElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

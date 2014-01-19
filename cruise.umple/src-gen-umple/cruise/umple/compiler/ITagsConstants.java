@@ -8,11 +8,6 @@ package cruise.umple.compiler;
  * It provides the required utils to generate HTML elements at the level of Umple, which means
  * that it can be used by a given target langauge. 
  * 
- * Generator HTML utils are designed to proivde a standlone HTML elements generation using Umple.
- * It provides the required utils to generate HTML elements at the level of Umple, which means
- * that it can be used by a given target langauge. 
- * 
- * TODO: Should be interface instead. We need to update the parser to accept constatns for the iterfaces
  * TODO: Should be interface instead. We need to update the parser to accept constatns for the iterfaces
  * @umplesource Generator_Html.ump 28
  */

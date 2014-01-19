@@ -58,10 +58,6 @@ class UmpleModel
   // The Umple Classes contained within the model.
   1 -> * UmpleClass;
 
-  // The Umple Traits contained within the model.
-  1 -> * UmpleTrait;
-
-
   // The State Machines contained within the model.
   1 -> * StateMachine stateMachineDefinitions;
 
@@ -399,7 +395,6 @@ class UmpleClass
   // The Umple Class's super class (if there is one).
   * subclasses -- 0..1 UmpleClass extendsClass;
 
-  * subClasses -- * UmpleTrait extendsTraits;
 
   * -> 0..* UmpleInterface parentInterface;
 
@@ -425,74 +420,6 @@ class UmpleClass
   before setExtendsClass { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
   
   before addStateMachine { if (isImmutable()) { return false; } }
-}
-
-/*
- * An UmpleTrait can contain attributes, associations, state machines and methods.
- * It can also have various other information such as a key (to identify uniqueness),
- * code to inject into generated code, and comments. It can be tagged with various
- * patterns.
- */
-
-class UmpleTrait {
-  depend cruise.umple.util.*;
-
-  isA UmpleClassifier;
-
-  // Specifies whether or not the Umple class is an abstract class.
-  Boolean isAbstract = false;
-  
-  // Specifies whether or not the Umple trait is a singleton.
-  Boolean isSingleton = false;
-
-  Association[] associations;
-
-  // List of candidate methods that were not added to the Trait
-  Method[] unimplementedMethods;
-
-  Key key = new Key();
-
-  // Specifies whether or not the Umple trait is immutable.
-  internal Boolean iAmImmutable = false;
-  internal Boolean ancestorIsImmutable = false;
-
-  1 -> * CodeInjection;
-  
-  //The possible Preconditions related to the Umple Trait
-  1 -> 0..* Precondition;
-  
-  //The possible Preconditions related to the Umple Trait
-  1 -> 0..* Postcondition;
-
-  // The possible Constraints related to the Umple Trait
-  1 -> 0..* Constraint;
-  
-  // The Umple Trait's super Traits (if there are ones).
-  * subTraits -- 0..* UmpleTrait extendsTraits;
-
-  1 -> 0..1 UniqueIdentifier;
-
-  // The attributes contained within the Umple trait.
-  0..1 -- * Attribute;
-
-  // The associations contained within the Umple trait.
-  0..1 -- * AssociationVariable;
-
-  // The comments associated with the Umple Trait (such as the Javadoc above it).
-  1 -> * Comment;
-  
-  UmpleModel sourceModel;
-
-  //--- before addDepend { if (depends.contains(aDepend)) { return false; } }  
-
-  //--- before setImmutable { if (!canBeImmutable()) { return false; } }
-
-  //--- before addAssociationVariable { if (!immutabilityAssociationRulesSatisfied(aAssociationVariable, this.isImmutable())) { return false; } }
- 
-  //--- before setExtendsTraits { if (!enforceImmutabilityInheritanceRules(aExtendsClass)) { return false; } }
-  
-  //--- before addStateMachine { if (isImmutable()) { return false; } }
-  
 }
 
 /*

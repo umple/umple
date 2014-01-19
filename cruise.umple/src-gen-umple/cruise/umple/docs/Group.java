@@ -7,8 +7,6 @@ import java.util.*;
 /**
  * A section of the Umple user manual
  * Defined in the build/references/order.group
- * A section of the Umple user manual
- * Defined in the build/references/order.group
  * @umplesource Documenter.ump 58
  * @umplesource Documenter_Code.ump 343
  */
@@ -148,7 +146,7 @@ public class Group
     contents.clear();
   }
 
-  @umplesourcefile(line={348},file={"Documenter_Code.ump"},javaline={153},length={3})
+  @umplesourcefile(line={348},file={"Documenter_Code.ump"},javaline={151},length={3})
    public String getGroupIdName(){
     return name.replace(" ","");
   }

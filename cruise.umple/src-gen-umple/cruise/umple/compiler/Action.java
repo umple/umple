@@ -6,7 +6,6 @@ import cruise.umple.compiler.Position;
 
 /**
  * A quickly-executed block of code that is run upon entry or exit from a state
- * A quickly-executed block of code that is run upon entry or exit from a state
  * @umplesource StateMachine.ump 124
  */
 // line 124 "../../../../src/StateMachine.ump"
@@ -36,7 +35,7 @@ public class Action
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={136},file={"StateMachine.ump"},javaline={50},length={1})
+  @umplesourcefile(line={136},file={"StateMachine.ump"},javaline={49},length={1})
   public Action(String aActionCode)
   {
     cachedHashCode = -1;
@@ -79,7 +78,7 @@ public class Action
     return wasSet;
   }
 
-  @umplesourcefile(line={137},file={"StateMachine.ump"},javaline={87},length={2})
+  @umplesourcefile(line={137},file={"StateMachine.ump"},javaline={86},length={2})
   public boolean setActionCode(String aActionCode)
   {
     boolean wasSet = false;
@@ -99,7 +98,7 @@ public class Action
     return wasSet;
   }
 
-  @umplesourcefile(line={144},file={"StateMachine.ump"},javaline={108},length={5})
+  @umplesourcefile(line={144},file={"StateMachine.ump"},javaline={107},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
@@ -129,7 +128,7 @@ public class Action
     return endPosition;
   }
 
-  @umplesourcefile(line={138},file={"StateMachine.ump"},javaline={135},length={3})
+  @umplesourcefile(line={138},file={"StateMachine.ump"},javaline={134},length={3})
   public String getActionCode()
   {
     String aActionCode = actionCode;
@@ -216,7 +215,7 @@ public class Action
   public void delete()
   {}
 
-  @umplesourcefile(line={153},file={"StateMachine.ump"},javaline={221},length={8})
+  @umplesourcefile(line={153},file={"StateMachine.ump"},javaline={220},length={8})
   public void setActionCode(String lang, String code){
     if(actionCode!=null){
   	  actionCode+= lang+code;

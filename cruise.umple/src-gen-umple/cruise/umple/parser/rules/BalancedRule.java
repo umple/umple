@@ -10,8 +10,6 @@ import java.util.*;
 /**
  * Balanced rules ensure that braces are balanced, that is, that the corresponding brace is matched.
  * For example {a {b }c }d 'a' is matched with 'd' and 'b' is matched 'c' instead of a with c
- * Balanced rules ensure that braces are balanced, that is, that the corresponding brace is matched.
- * For example {a {b }c }d 'a' is matched with 'd' and 'b' is matched 'c' instead of a with c
  * @umplesource ParsingRules.ump 132
  * @umplesource ParsingRules_Code.ump 794
  */
@@ -81,14 +79,14 @@ public class BalancedRule extends ChoiceRule
    * A balanced rule is of the form "open key" rule "close key", for example: { [[classDefinition]]* }
    * This constructor reflect's that form.
    */
-  @umplesourcefile(line={803},file={"ParsingRules_Code.ump"},javaline={81},length={5})
+  @umplesourcefile(line={803},file={"ParsingRules_Code.ump"},javaline={79},length={5})
    public  BalancedRule(String name, String open, ChoiceRule rule, String close){
     super(name, rule);
     key = open+close;
     spacesTerminal = new Terminal("spaces","",false).dontCare();
   }
 
-  @umplesourcefile(line={810},file={"ParsingRules_Code.ump"},javaline={93},length={5})
+  @umplesourcefile(line={810},file={"ParsingRules_Code.ump"},javaline={91},length={5})
    public  BalancedRule(String name, String open, String close){
     super(name);
 	key = open+close;
@@ -102,7 +100,7 @@ public class BalancedRule extends ChoiceRule
    * for example: "{ key }" would work, but " { key }" would not. trailing whitespace is accounted for.
    * This is the only rule that does not account for whitespace before it begins.
    */
-  @umplesourcefile(line={823},file={"ParsingRules_Code.ump"},javaline={100},length={49})
+  @umplesourcefile(line={823},file={"ParsingRules_Code.ump"},javaline={98},length={49})
    public int parse(Token token, int from, int to, String input, ParserDataPackage data){
     int index = data.getCouples().get(key).indexOfPositionFrom(from);
     if(index!=-1)
@@ -157,7 +155,7 @@ public class BalancedRule extends ChoiceRule
   /**
    * initializes the couples, and puts them into the data package
    */
-  @umplesourcefile(line={877},file={"ParsingRules_Code.ump"},javaline={158},length={7})
+  @umplesourcefile(line={877},file={"ParsingRules_Code.ump"},javaline={156},length={7})
    public static  void initialize(String input, ParserDataPackage data){
     data.setCouples(new HashMap<String,ParsingCouple>());
     for(String[] key:data.getKeys().values())
@@ -170,7 +168,7 @@ public class BalancedRule extends ChoiceRule
   /**
    * Balanced rules are never optional, the way to make them optional is to use a Repeatable rule as their parent.
    */
-  @umplesourcefile(line={889},file={"ParsingRules_Code.ump"},javaline={171},length={3})
+  @umplesourcefile(line={889},file={"ParsingRules_Code.ump"},javaline={169},length={3})
    public boolean isOptional(){
     return false;
   }
@@ -179,12 +177,12 @@ public class BalancedRule extends ChoiceRule
   /**
    * the first value of the balanced rule must always be the open key
    */
-  @umplesourcefile(line={897},file={"ParsingRules_Code.ump"},javaline={180},length={3})
+  @umplesourcefile(line={897},file={"ParsingRules_Code.ump"},javaline={178},length={3})
    public String getFirstValue(){
     return "\\Q"+key.charAt(0)+"\\E";
   }
 
-  @umplesourcefile(line={902},file={"ParsingRules_Code.ump"},javaline={189},length={18})
+  @umplesourcefile(line={902},file={"ParsingRules_Code.ump"},javaline={187},length={18})
    public StringBuilder toDeclareString(StringBuilder builder){
     if(getDeclared())
     {

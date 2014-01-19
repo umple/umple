@@ -344,8 +344,6 @@ public class VioletGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
   @umplesourcefile(line={21},file={"Generator.ump"},javaline={345},length={2})
@@ -357,11 +355,9 @@ public class VioletGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={23},file={"Generator.ump"},javaline={358},length={2})
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={356},length={2})
   @Override
   public void prepare(){
           return ;
@@ -370,11 +366,9 @@ public class VioletGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={24},file={"Generator.ump"},javaline={371},length={2})
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={367},length={2})
   @Override
   public void postpare(){
           return ;

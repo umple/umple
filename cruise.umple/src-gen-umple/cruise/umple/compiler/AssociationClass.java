@@ -10,17 +10,11 @@ import java.util.*;
  * It associates two other classes that would otherwise have a many-many
  * relationship. Instances of the AssociationClass represent data 
  * held by the links between those two classes.
- * A combination of Class and Association (as defined in UML)
- * An AssociationClass is a full-fledged class, but at the same time
- * It associates two other classes that would otherwise have a many-many
- * relationship. Instances of the AssociationClass represent data 
- * held by the links between those two classes.
  * 
- * 
- * @umplesource Umple.ump 515
+ * @umplesource Umple.ump 442
  * @umplesource Umple_Code.ump 705
  */
-// line 515 "../../../../src/Umple.ump"
+// line 442 "../../../../src/Umple.ump"
 // line 705 "../../../../src/Umple_Code.ump"
 public class AssociationClass extends UmpleClass
 {
@@ -173,7 +167,7 @@ public class AssociationClass extends UmpleClass
     super.delete();
   }
 
-  @umplesourcefile(line={710},file={"Umple_Code.ump"},javaline={178},length={3})
+  @umplesourcefile(line={710},file={"Umple_Code.ump"},javaline={172},length={3})
    public  AssociationClass(String name){
     super(name);
   }

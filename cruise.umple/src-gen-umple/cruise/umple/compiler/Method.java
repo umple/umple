@@ -8,14 +8,11 @@ import java.util.*;
 /**
  * A method in an Umple class or interface
  * Umple Methods are coded by the programmer in the language(s) of their choice
- * A method in an Umple class or interface
- * Umple Methods are coded by the programmer in the language(s) of their choice
  * 
- * 
- * @umplesource Umple.ump 114
+ * @umplesource Umple.ump 110
  * @umplesource Umple_Code.ump 427
  */
-// line 114 "../../../../src/Umple.ump"
+// line 110 "../../../../src/Umple.ump"
 // line 427 "../../../../src/Umple_Code.ump"
 public class Method
 {
@@ -389,7 +386,7 @@ public class Method
     comments.clear();
   }
 
-  @umplesourcefile(line={432},file={"Umple_Code.ump"},javaline={394},length={6})
+  @umplesourcefile(line={432},file={"Umple_Code.ump"},javaline={391},length={6})
    public boolean getExistsInLanguage(String lang){
     if(getMethodBody().getExtraCode(lang)==null)
       return isImplemented;
@@ -397,7 +394,7 @@ public class Method
       return true;
   }
 
-  @umplesourcefile(line={439},file={"Umple_Code.ump"},javaline={402},length={30})
+  @umplesourcefile(line={439},file={"Umple_Code.ump"},javaline={399},length={30})
    public String toString(){
     StringBuffer methodBuffer = new StringBuffer();
     methodBuffer.append(" " + this.getType()+ " " + this.getName());

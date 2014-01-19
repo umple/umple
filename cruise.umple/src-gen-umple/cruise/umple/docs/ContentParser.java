@@ -8,8 +8,6 @@ import cruise.umple.compiler.*;
 /**
  * Specialist parser for the Umple user manual
  * Parses files in build/reference/*
- * Specialist parser for the Umple user manual
- * Parses files in build/reference/*
  * @umplesource Documenter.ump 68
  * @umplesource Documenter_Code.ump 351
  */
@@ -138,7 +136,7 @@ public class ContentParser extends Parser
     super.delete();
   }
 
-  @umplesourcefile(line={358},file={"Documenter_Code.ump"},javaline={143},length={7})
+  @umplesourcefile(line={358},file={"Documenter_Code.ump"},javaline={141},length={7})
    private int init(){
     addRule("groupOrder : ( [**group] ; )*");
     addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@syntax [**syntax])? [[example]]*");
@@ -147,7 +145,7 @@ public class ContentParser extends Parser
     return init;
   }
 
-  @umplesourcefile(line={367},file={"Documenter_Code.ump"},javaline={152},length={12})
+  @umplesourcefile(line={367},file={"Documenter_Code.ump"},javaline={150},length={12})
    public Group getGroup(String name){
     for (Group g : getGroups())
     {
@@ -161,7 +159,7 @@ public class ContentParser extends Parser
     return newGroup;
   }
 
-  @umplesourcefile(line={381},file={"Documenter_Code.ump"},javaline={166},length={35})
+  @umplesourcefile(line={381},file={"Documenter_Code.ump"},javaline={164},length={35})
    public ParseResult analyze(){
     for (Token t : getRootToken().getSubTokens())
     {

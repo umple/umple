@@ -10,9 +10,6 @@ import java.util.*;
  * ParsingCouples are used by balanced rules to quickly find the corresponding brace. They are initialized at the begining of each file parsed
  * and are stored in the ParserDataPackage. They contain the character positions of each open brace and each close brace(when braces are the key)
  * so {{}} would have positionFrom = {1,2} and positionTo = {4,3}
- * ParsingCouples are used by balanced rules to quickly find the corresponding brace. They are initialized at the begining of each file parsed
- * and are stored in the ParserDataPackage. They contain the character positions of each open brace and each close brace(when braces are the key)
- * so {{}} would have positionFrom = {1,2} and positionTo = {4,3}
  * @umplesource ParsingRules.ump 149
  * @umplesource ParsingRules_Code.ump 920
  */
@@ -188,7 +185,7 @@ public class ParsingCouple
    * 
    * The ignore level comes into play for instance if you have /*lvl0 /*lvl1 and you only want to hide lvl1 you would put the ignore level as 1
    */
-  @umplesourcefile(line={939},file={"ParsingRules_Code.ump"},javaline={177},length={117})
+  @umplesourcefile(line={939},file={"ParsingRules_Code.ump"},javaline={174},length={117})
    public ParsingCouple init(String input){
     int level = 0;
     boolean isQuote = false;
@@ -307,7 +304,7 @@ public class ParsingCouple
     return this;
   }
 
-  @umplesourcefile(line={1058},file={"ParsingRules_Code.ump"},javaline={312},length={3})
+  @umplesourcefile(line={1058},file={"ParsingRules_Code.ump"},javaline={309},length={3})
    public int hashCode(){
     return open.hashCode()+close.hashCode();
   }
@@ -324,7 +321,7 @@ public class ParsingCouple
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={154},file={"ParsingRules.ump"},javaline={328},length={2})
+  //  @umplesourcefile(line={154},file={"ParsingRules.ump"},javaline={325},length={2})
   public static int ignoreLevel = 0 ;
 
   
