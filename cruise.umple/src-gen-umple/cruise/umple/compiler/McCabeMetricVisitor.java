@@ -5,8 +5,12 @@ package cruise.umple.compiler;
 
 /**
  * McCabe = Edges - Nodes + 2 * ExitNodes
+ * McCabe = Edges - Nodes + 2 * ExitNodes
+ * McCabe = Edges - Nodes + ExitNodes
  * McCabe = Edges - Nodes + ExitNodes
  * McCabe = Number of logical points + 1
+ * McCabe = Number of logical points + 1
+ * @see LLOCMetricVisitor
  * @see LLOCMetricVisitor
  * @umplesource Generator_CodeAnalysis.ump 362
  */
@@ -33,7 +37,7 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={376},file={"Generator_CodeAnalysis.ump"},javaline={48},length={4})
+  @umplesourcefile(line={376},file={"Generator_CodeAnalysis.ump"},javaline={52},length={4})
   public McCabeMetricVisitor(HtmlDocument aDoc)
   {
     super();
@@ -151,14 +155,14 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
     super.delete();
   }
 
-  @umplesourcefile(line={384},file={"Generator_CodeAnalysis.ump"},javaline={156},length={5})
+  @umplesourcefile(line={384},file={"Generator_CodeAnalysis.ump"},javaline={160},length={5})
   public void done(){
     addTableEntry(null);
 		int mcabe = total_conditions + total_iteration + 1;
 		tbl.addRow(new String [] {"Total",String.valueOf(total_conditions),String.valueOf(total_iteration),String.valueOf(mcabe)});
   }
 
-  @umplesourcefile(line={390},file={"Generator_CodeAnalysis.ump"},javaline={163},length={11})
+  @umplesourcefile(line={390},file={"Generator_CodeAnalysis.ump"},javaline={167},length={11})
   public void addTableEntry(UmpleElement element){
     if(cur_clazz != null) {
 			int mcabe = cur_conditions + cur_iterations + 1;
@@ -175,17 +179,17 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
   /**
    * Umple Classifiers
    */
-  @umplesourcefile(line={403},file={"Generator_CodeAnalysis.ump"},javaline={176},length={3})
+  @umplesourcefile(line={403},file={"Generator_CodeAnalysis.ump"},javaline={180},length={3})
   public void visit(UmpleClass umpleClass){
     addTableEntry(umpleClass);
   }
 
-  @umplesourcefile(line={406},file={"Generator_CodeAnalysis.ump"},javaline={185},length={3})
+  @umplesourcefile(line={406},file={"Generator_CodeAnalysis.ump"},javaline={189},length={3})
   public void visit(UmpleInterface umpleInterface){
     addTableEntry(umpleInterface);
   }
 
-  @umplesourcefile(line={409},file={"Generator_CodeAnalysis.ump"},javaline={190},length={3})
+  @umplesourcefile(line={409},file={"Generator_CodeAnalysis.ump"},javaline={194},length={3})
   public void visit(AssociationClass associationC){
     addTableEntry(associationC);
   }
@@ -194,24 +198,24 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
   /**
    * Attributes
    */
-  @umplesourcefile(line={414},file={"Generator_CodeAnalysis.ump"},javaline={195},length={5})
+  @umplesourcefile(line={414},file={"Generator_CodeAnalysis.ump"},javaline={199},length={5})
   public void visit(Attribute attribute){
     if(attribute.isIsDerived()) {
 			cur_conditions++;			
 		}
   }
 
-  @umplesourcefile(line={419},file={"Generator_CodeAnalysis.ump"},javaline={206},length={3})
+  @umplesourcefile(line={419},file={"Generator_CodeAnalysis.ump"},javaline={210},length={3})
   public void visit(Key keyO){
     cur_conditions++;
   }
 
-  @umplesourcefile(line={422},file={"Generator_CodeAnalysis.ump"},javaline={211},length={3})
+  @umplesourcefile(line={422},file={"Generator_CodeAnalysis.ump"},javaline={215},length={3})
   public void visit(ConstraintVariable cnstVar){
     cur_conditions++;
   }
 
-  @umplesourcefile(line={425},file={"Generator_CodeAnalysis.ump"},javaline={216},length={3})
+  @umplesourcefile(line={425},file={"Generator_CodeAnalysis.ump"},javaline={220},length={3})
   public void visit(UniqueIdentifier uid){
     cur_conditions++;
   }
@@ -220,17 +224,17 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
   /**
    * Logical
    */
-  @umplesourcefile(line={430},file={"Generator_CodeAnalysis.ump"},javaline={221},length={3})
+  @umplesourcefile(line={430},file={"Generator_CodeAnalysis.ump"},javaline={225},length={3})
   public void visit(Condition cond){
     cur_conditions++;
   }
 
-  @umplesourcefile(line={433},file={"Generator_CodeAnalysis.ump"},javaline={230},length={3})
+  @umplesourcefile(line={433},file={"Generator_CodeAnalysis.ump"},javaline={234},length={3})
   public void visit(Precondition pre){
     cur_conditions++;
   }
 
-  @umplesourcefile(line={436},file={"Generator_CodeAnalysis.ump"},javaline={235},length={3})
+  @umplesourcefile(line={436},file={"Generator_CodeAnalysis.ump"},javaline={239},length={3})
   public void visit(Constraint constraint){
     cur_conditions++;
   }
@@ -239,7 +243,7 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
   /**
    * Aspect
    */
-  @umplesourcefile(line={441},file={"Generator_CodeAnalysis.ump"},javaline={240},length={3})
+  @umplesourcefile(line={441},file={"Generator_CodeAnalysis.ump"},javaline={244},length={3})
   public void visit(CodeInjection codeInjection){
     cur_conditions++;
   }
@@ -248,7 +252,7 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
   /**
    * Association
    */
-  @umplesourcefile(line={446},file={"Generator_CodeAnalysis.ump"},javaline={249},length={3})
+  @umplesourcefile(line={446},file={"Generator_CodeAnalysis.ump"},javaline={253},length={3})
   public void visit(Association associationE){
     cur_conditions++;
   }
@@ -260,29 +264,29 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
    * }
    * Statemachine
    */
-  @umplesourcefile(line={454},file={"Generator_CodeAnalysis.ump"},javaline={258},length={3})
+  @umplesourcefile(line={454},file={"Generator_CodeAnalysis.ump"},javaline={262},length={3})
   public void visit(StateMachine sm){
     cur_conditions++; // Default case
   }
 
-  @umplesourcefile(line={457},file={"Generator_CodeAnalysis.ump"},javaline={270},length={3})
+  @umplesourcefile(line={457},file={"Generator_CodeAnalysis.ump"},javaline={274},length={3})
   public void visit(State state){
     cur_conditions++; // Each state is a case statement
   }
 
-  @umplesourcefile(line={460},file={"Generator_CodeAnalysis.ump"},javaline={275},length={5})
+  @umplesourcefile(line={460},file={"Generator_CodeAnalysis.ump"},javaline={279},length={5})
   public void visit(Event event){
     if(event.isIsTimer()) {
 			cur_iterations++; // While statement			
 		}
   }
 
-  @umplesourcefile(line={465},file={"Generator_CodeAnalysis.ump"},javaline={282},length={3})
+  @umplesourcefile(line={465},file={"Generator_CodeAnalysis.ump"},javaline={286},length={3})
   public void visit(Guard guard){
     cur_conditions++;
   }
 
-  @umplesourcefile(line={468},file={"Generator_CodeAnalysis.ump"},javaline={287},length={24})
+  @umplesourcefile(line={468},file={"Generator_CodeAnalysis.ump"},javaline={291},length={24})
   public void visit(Transition transition){
     State nextState = transition.getNextState();
 		State fromState = transition.getFromState();
@@ -308,7 +312,7 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
 		}
   }
 
-  @umplesourcefile(line={492},file={"Generator_CodeAnalysis.ump"},javaline={313},length={3})
+  @umplesourcefile(line={492},file={"Generator_CodeAnalysis.ump"},javaline={317},length={3})
   public void visit(Activity activity){
     cur_iterations++; // Concurrent Iterative statement
   }
@@ -317,7 +321,7 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
   /**
    * Trace
    */
-  @umplesourcefile(line={497},file={"Generator_CodeAnalysis.ump"},javaline={318},length={11})
+  @umplesourcefile(line={497},file={"Generator_CodeAnalysis.ump"},javaline={322},length={11})
   public void visit(AttributeTraceItem attributeT){
     if(attributeT.isConditionallyWhere()) {
 			cur_conditions++;
@@ -330,12 +334,12 @@ public class McCabeMetricVisitor extends UmpleModelVisitor
 		}
   }
 
-  @umplesourcefile(line={508},file={"Generator_CodeAnalysis.ump"},javaline={335},length={3})
+  @umplesourcefile(line={508},file={"Generator_CodeAnalysis.ump"},javaline={339},length={3})
   public void visit(TraceCase traceCase){
     cur_conditions++;
   }
 
-  @umplesourcefile(line={511},file={"Generator_CodeAnalysis.ump"},javaline={340},length={3})
+  @umplesourcefile(line={511},file={"Generator_CodeAnalysis.ump"},javaline={344},length={3})
   public void visit(TraceCondition traceCondition){
     cur_conditions++;
   }

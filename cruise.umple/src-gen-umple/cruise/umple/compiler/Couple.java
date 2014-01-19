@@ -7,6 +7,8 @@ import java.util.*;
 /**
  * An open-close pair, such as open curly brackets and close curly brackets
  * Used to identify block start and end while parsing
+ * An open-close pair, such as open curly brackets and close curly brackets
+ * Used to identify block start and end while parsing
  * @umplesource Parser.ump 17
  * @umplesource Parser_Code.ump 10
  */
@@ -207,7 +209,7 @@ public class Couple
     }
   }
 
-  @umplesourcefile(line={17},file={"Parser_Code.ump"},javaline={212},length={26})
+  @umplesourcefile(line={17},file={"Parser_Code.ump"},javaline={214},length={26})
    public boolean isBalanced(String input){
     if (input == null)
     {
@@ -235,7 +237,7 @@ public class Couple
     return numberOfOpen <= numberOfClosed;
   }
 
-  @umplesourcefile(line={46},file={"Parser_Code.ump"},javaline={240},length={32})
+  @umplesourcefile(line={46},file={"Parser_Code.ump"},javaline={242},length={32})
    public String removeIgnoredText(String input){
     String output = input;
 

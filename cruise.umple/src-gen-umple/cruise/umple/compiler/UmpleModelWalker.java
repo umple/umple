@@ -7,6 +7,8 @@ import java.util.List;
 /**
  * A generic walker that is designed to parse different types of umple elements. It receives
  * an umple model, and recrusively walks through different contained nodes.
+ * A generic walker that is designed to parse different types of umple elements. It receives
+ * an umple model, and recrusively walks through different contained nodes.
  * @umplesource Generator_UmpleModelWalker.ump 150
  */
 // line 150 "../../../../src/Generator_UmpleModelWalker.ump"
@@ -51,7 +53,7 @@ public class UmpleModelWalker implements IWalker
   public void delete()
   {}
 
-  @umplesourcefile(line={156},file={"Generator_UmpleModelWalker.ump"},javaline={56},length={209})
+  @umplesourcefile(line={156},file={"Generator_UmpleModelWalker.ump"},javaline={58},length={209})
   public void accept(UmpleModelVisitor visitor){
     List<UmpleElement> umpleElements = model.getUmpleElements();
 		

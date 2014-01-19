@@ -6,9 +6,11 @@ package cruise.umple.compiler;
 /**
  * NOT used right now
  * Type is a simple string
- * @umplesource Umple.ump 206
+ * NOT used right now
+ * Type is a simple string
+ * @umplesource Umple.ump 210
  */
-// line 206 "../../../../src/Umple.ump"
+// line 210 "../../../../src/Umple.ump"
 public class Type
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)

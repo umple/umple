@@ -10,6 +10,9 @@ import cruise.umple.parser.rules.*;
  * This class is for parsing multiple files at the same time. What happens is that when a useStatement is found, a RuleBasedParserThread is
  * created. This thread then parses that file in parallel. Ordering is preserved by having the result of the parse being put within the
  * useStatement. So, in effect, a useStatement is the root to a file's tokens.
+ * This class is for parsing multiple files at the same time. What happens is that when a useStatement is found, a RuleBasedParserThread is
+ * created. This thread then parses that file in parallel. Ordering is preserved by having the result of the parse being put within the
+ * useStatement. So, in effect, a useStatement is the root to a file's tokens.
  * @umplesource GrammarParsing.ump 133
  * @umplesource GrammarParsing_Code.ump 574
  */
@@ -119,7 +122,7 @@ public class RuleBasedParserThread extends Thread
    * Each Thread will parse a separate file. When parsing is complete it will fill the useStatement token with the tokens computed from the
    * file which was parsed. This run method performs this function as well as initializes the data package which will be used during the parsing
    */
-  @umplesourcefile(line={583},file={"GrammarParsing_Code.ump"},javaline={119},length={22})
+  @umplesourcefile(line={583},file={"GrammarParsing_Code.ump"},javaline={122},length={22})
    public void run(){
     HashMap<String,String[]> keys = data.getKeys();
     List<String> hasParsed = data.getHasParsed();

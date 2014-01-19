@@ -5,6 +5,7 @@ package cruise.vml;
 
 /**
  * A named code snippet within a variabt
+ * A named code snippet within a variabt
  * @umplesource Vml.ump 71
  * @umplesource Vml_Code.ump 158
  * @umplesource Vml_Code.ump 385
@@ -168,7 +169,7 @@ public class Variant
     }
   }
 
-  @umplesourcefile(line={163},file={"Vml_Code.ump"},javaline={173},length={10})
+  @umplesourcefile(line={163},file={"Vml_Code.ump"},javaline={174},length={10})
    public String toString(){
     if (name == null)
     {

@@ -1,0 +1,98 @@
+namespace cruise.umple.compiler;
+
+//----------------------------------------------------------
+class UmpleModel {
+ 
+  public UmpleTrait getUmpleTrait(String name){
+    for (UmpleTrait aTrait : getUmpleTraits())
+    {
+      if (aTrait.getName().equals(name))
+      {
+        return aTrait;
+      }
+    }
+    return null;
+  }
+  
+   public UmpleTrait addUmpleTrait(String name)
+  {
+    UmpleTrait newTrait = getUmpleTrait(name);
+    if (newTrait == null)
+    {
+      newTrait = new UmpleTrait(name, this);
+      addUmpleTrait(newTrait);
+    }
+    return newTrait;
+  }
+}
+
+//----------------------------------------------------------
+class UmpleTrait {
+
+	public boolean setImmutable() {
+    
+   		boolean wasSet = false;
+    	/*
+    	if (extendsTraits != null && !ancestorIsImmutable) { return wasSet; }
+    
+    	if (propagateImmutabilityToAllRelationships(true)) 
+    	{ 
+      	iAmImmutable = true;
+      	wasSet = true;
+    	}	
+    	*/
+    	return wasSet;
+ 	}
+   public boolean hasMethod(Method comparedMethod){
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){  
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size())
+        {
+          boolean allSame = true;
+          for (int i = 0; i < numberOfParams; i++)
+          {
+            if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
+            {
+              allSame = false;
+              break;
+            }
+          }
+          if(allSame)
+          {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  } 	
+}
+
+//----------------------------------------------------------
+class Attribute {
+
+  public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleTrait aUmpleTrait)
+  {
+    super(aName, aType, aModifier, aValue);
+    isAutounique = aIsAutounique;
+    isUnique = false;
+    isList = false;
+    isDerived = false;
+    codeblock = null;
+    isLazy = false;
+    comments = new ArrayList<Comment>();
+    boolean didAddUmpleTrait = setUmpleTrait(aUmpleTrait);
+    if (!didAddUmpleTrait)
+    {
+      throw new RuntimeException("Unable to create attribute due to umpleTrait");
+    }
+    traceRecords = new ArrayList<TraceRecord>();
+    // line 569 "../../../../src/Umple.ump"
+    codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
+  }
+}
+
