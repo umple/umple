@@ -213,8 +213,6 @@ public class TextUmlGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
   @umplesourcefile(line={23},file={"Generator.ump"},javaline={214},length={2})
@@ -226,11 +224,9 @@ public class TextUmlGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
-   * Allows independent code generation tools
-   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={24},file={"Generator.ump"},javaline={227},length={2})
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={225},length={2})
   @Override
   public void postpare(){
           return ;

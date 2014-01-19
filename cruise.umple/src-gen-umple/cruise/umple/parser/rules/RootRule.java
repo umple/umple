@@ -9,7 +9,6 @@ import java.util.*;
 
 /**
  * The only difference between a root rule and a choice rule is that after parsing the parse position must be at the end of the file for this rule to pass
- * The only difference between a root rule and a choice rule is that after parsing the parse position must be at the end of the file for this rule to pass
  * @umplesource ParsingRules.ump 120
  * @umplesource ParsingRules_Code.ump 580
  */
@@ -46,7 +45,7 @@ public class RootRule extends ChoiceRule
   /**
    * For passing to super constructor.
    */
-  @umplesourcefile(line={588},file={"ParsingRules_Code.ump"},javaline={47},length={3})
+  @umplesourcefile(line={588},file={"ParsingRules_Code.ump"},javaline={46},length={3})
    public  RootRule(String name, ChoiceRule... rules){
     super(name,rules);
   }
@@ -55,7 +54,7 @@ public class RootRule extends ChoiceRule
   /**
    * Does exactly the same as the ChoiceRule, except it will return -1 if the parseResult was not the same as the input's length, i.e. it will fail if some of the file was not parsed.
    */
-  @umplesourcefile(line={596},file={"ParsingRules_Code.ump"},javaline={56},length={18})
+  @umplesourcefile(line={596},file={"ParsingRules_Code.ump"},javaline={55},length={18})
    public int parse(Token token, int from, int max, String input, ParserDataPackage data){
     Token self = new Token(getName(),"START_TOKEN");
     for(int i=0;i<this.size();++i)

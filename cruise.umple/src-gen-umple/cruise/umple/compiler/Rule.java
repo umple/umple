@@ -8,9 +8,6 @@ import java.util.*;
  * Represents a grammar rule, which has a name and contains definitions that describe it.
  * 
  * Examples of this are a class definition.
- * Represents a grammar rule, which has a name and contains definitions that describe it.
- * 
- * Examples of this are a class definition.
  * @umplesource Parser.ump 143
  */
 // line 143 "../../../../src/Parser.ump"

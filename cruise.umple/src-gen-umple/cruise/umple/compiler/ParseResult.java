@@ -8,8 +8,6 @@ import java.util.*;
 /**
  * Represents the results of parsing, such as if it was successful,
  * whether it had warnings, etc.
- * Represents the results of parsing, such as if it was successful,
- * whether it had warnings, etc.
  * @umplesource Parser.ump 28
  * @umplesource Parser_Code.ump 1692
  */
@@ -142,7 +140,7 @@ public class ParseResult
     return 0;
   }
 
-  @umplesourcefile(line={1695, 1701},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={152, 158},length={3, 16})
+  @umplesourcefile(line={1695, 1701},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean addErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasAdded = false;
@@ -172,7 +170,7 @@ public class ParseResult
     return wasAdded;
   }
 
-  @umplesourcefile(line={1695, 1701},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={152, 158},length={3, 16})
+  @umplesourcefile(line={1695, 1701},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean removeErrorMessage(ErrorMessage aErrorMessage)
   {
     boolean wasRemoved = false;
@@ -184,7 +182,7 @@ public class ParseResult
     return wasRemoved;
   }
 
-  @umplesourcefile(line={1695, 1701},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={152, 158},length={3, 16})
+  @umplesourcefile(line={1695, 1701},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean addErrorMessageAt(ErrorMessage aErrorMessage, int index)
   {  
     boolean wasAdded = false;
@@ -199,7 +197,7 @@ public class ParseResult
     return wasAdded;
   }
 
-  @umplesourcefile(line={1695, 1701},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={152, 158},length={3, 16})
+  @umplesourcefile(line={1695, 1701},file={"Parser_Code.ump", "Parser_Code.ump"},javaline={150, 156},length={3, 16})
   public boolean addOrMoveErrorMessageAt(ErrorMessage aErrorMessage, int index)
   {
     boolean wasAdded = false;
@@ -224,7 +222,7 @@ public class ParseResult
     errorMessages.clear();
   }
 
-  @umplesourcefile(line={1723},file={"Parser_Code.ump"},javaline={229},length={6})
+  @umplesourcefile(line={1723},file={"Parser_Code.ump"},javaline={227},length={6})
    public String toString(){
     String ret = "";
     for(ErrorMessage em : errorMessages)
@@ -232,7 +230,7 @@ public class ParseResult
     return ret;
   }
 
-  @umplesourcefile(line={1731},file={"Parser_Code.ump"},javaline={237},length={28})
+  @umplesourcefile(line={1731},file={"Parser_Code.ump"},javaline={235},length={28})
    public String toJSON(){
     String ret = "{ \"results\" : [ ";
     boolean hasOne = false;

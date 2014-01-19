@@ -25,7 +25,6 @@ import java.util.List;
 import cruise.umple.compiler.Action;
 import cruise.umple.compiler.Activity;
 import cruise.umple.compiler.Constraint;
-import cruise.umple.compiler.ConstraintVariable;
 import cruise.umple.compiler.Event;
 import cruise.umple.compiler.Guard;
 import cruise.umple.compiler.Position;

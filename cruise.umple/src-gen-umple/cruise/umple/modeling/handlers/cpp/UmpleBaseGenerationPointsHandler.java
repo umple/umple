@@ -25,6 +25,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
@@ -38,8 +40,11 @@ import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationCallback.GenerationStringSegment;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.GenerationPolicyRegistryPriorities;
 import cruise.umple.core.IGenerationPointPriorityConstants;
 import cruise.umple.core.LoopProcessorAnnotation;
+import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
+import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
 import cruise.umple.cpp.utils.CPPCommonConstants;
 import cruise.umple.cpp.utils.CPPTypesConstants;
 import cruise.umple.cpp.utils.GenerationUtil;
@@ -64,6 +69,121 @@ public class UmpleBaseGenerationPointsHandler{
 		buffer.append(CommonConstants.NEW_LINE);
 		return buffer.toString();
 	}
+	
+	//////////////////////////////////TODO Must be moved to other specific handler////////////////////////////////////////////////////////////////////////////////////////////////
+	private static final String MAIN_EXTRACTOR_REGULAR_EXPRESSION = ".*(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(int)[ |\\t]+[a-z|A-Z|0-9|_]+(,)[ |\\t]*(char)[ |\\t]*(\\*).*"; //$NON-NLS-1$
+	
+	@LoopProcessorAnnotation(aspect= LoopAspectConstants.TERMINATE, priority= GenerationPolicyRegistryPriorities.HIEGHEST, aspectGroup= 400)
+	public static void modelPathsAfterProcessor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationBaseElement Object model){
+		
+		Map<Object, String> mainMap= new HashMap<Object, String>();
+		for(Object umpleClass: generationValueGetter.getList(model, IModelingElementDefinitions.CLASSES)){
+			String regularExpression= MAIN_EXTRACTOR_REGULAR_EXPRESSION;
+			String generate = generationValueGetter.generationPointString(umpleClass, "extractMain", regularExpression); //$NON-NLS-1$
+			if(generate!= null&& !generate.isEmpty()){
+				mainMap.put(umpleClass, generate);
+			}
+		}
+		
+		
+		if(!mainMap.isEmpty()){
+			String mainCalls= CommonConstants.BLANK;
+			for(Object umpleClass: mainMap.keySet()){
+				String string = generationValueGetter.getString(umpleClass, IModelingElementDefinitions.NAMESPACE);
+				string = normalizeNamespace(string);
+				mainCalls= mainCalls+ generationValueGetter.generate(ICppDefinitions.MAIN_METHOD_CALL, umpleClass, string);
+				
+			}
+			generationValueGetter.addUniqueValue(ICppDefinitions.MAIN_CONTENTS, mainCalls);
+		}
+	}
+	
+	@LoopProcessorAnnotations(loopProcessorAnnotations ={ 
+			/*Operations path*/
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
+	}, aspect= LoopAspectConstants.POST)
+	public static void searchAndRegisterExtraMains(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element){
+		
+		String generate = generationValueGetter.generationPointString(element, "extractMain", MAIN_EXTRACTOR_REGULAR_EXPRESSION); //$NON-NLS-1$
+		if(generate!= null&& !generate.isEmpty()){
+			generationValueGetter.generationPointString(element, IModelingConstants.METHOD_REGISTER,
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_RETURN_TYPE, CPPTypesConstants.VOID),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_PARAMETERS_STRING, "int argc, char *argv[]"), //$NON-NLS-1$
+					GenerationArgumentDescriptor.arg(IModelingConstants.CODY_BODY, generate),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_NAME, "main"), //$NON-NLS-1$
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_VISIBILITY_ARGUMENT, VisibilityConstants.PUBLIC),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_COMMENT, CommonConstants.BLANK),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_ID, IModelingConstants.OPERATIONS_IMPLEMENTATION),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_IDENTIFIER, "main"), //$NON-NLS-1$
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_GROUP, IModelingConstants.METHOD_OPERATIONS_GROUP),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_OBJECT, element),
+					GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_VIRTUAL, Boolean.FALSE),
+					GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_PURE, Boolean.FALSE),
+					GenerationArgumentDescriptor.arg(ICppDefinitions.METHOD_STATIC, Boolean.TRUE),
+					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_DEFAULTED_IMPLEMENTATION, Boolean.FALSE));
+		}
+	}
+	
+	private static String normalizeNamespace(String object) {
+		return object.replace(CommonConstants.UNDERSCORE, CPPCommonConstants.DECLARATION_COMMON_PREFIX).
+				replace(CommonConstants.DOT, CPPCommonConstants.DECLARATION_COMMON_PREFIX);
+	}
+	
+	@GenerationPoint(generationPoint = "extractMain")
+	public static String extractMain(@GenerationArgument String regularExpression, @GenerationElementParameter(id = IModelingElementDefinitions.CODE) String code){
+		StringBuilder sb = new StringBuilder();
+		final Pattern openBrace = Pattern.compile("\\{"); //$NON-NLS-1$
+		final Pattern closeBrace = Pattern.compile("\\}"); //$NON-NLS-1$
+		int brkCnt = 0;
+		boolean mainClass = false;
+		String processingString = code.replace("{", "{\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		processingString= processingString.replace("}", "}\n"); //$NON-NLS-1$ //$NON-NLS-2$
+		for(String line:processingString.split("\n")){ //$NON-NLS-1$
+	        if(mainClass) {
+	        	for(Matcher mtch=openBrace.matcher(line);mtch.find();brkCnt++);
+	        	for(Matcher mtch=closeBrace.matcher(line);mtch.find();brkCnt--);
+	        	if(brkCnt <= 0 )  {mainClass = false;} else {
+	        	sb.append(line);
+	        	sb.append("\n"); //$NON-NLS-1$
+	        	}
+	        }
+	        if(line.matches(regularExpression))
+	        {
+	        	mainClass = true;
+	        	brkCnt++;
+	        }
+		}
+		String string = sb.toString();
+		if(string.isEmpty()){
+			return null;
+		}
+		
+		String trim = string.trim();
+		if(trim.startsWith("{")){ //$NON-NLS-1$
+			trim= trim.substring(1);
+		}
+		
+		if(trim.endsWith("}")){ //$NON-NLS-1$
+			trim= trim.substring(0, trim.length()-2);
+		}
+		
+		return trim.trim();
+	}
+	
+	//TODO: Still needs better job than this
+	@GenerationPoint(generationPoint = ICppDefinitions.VISIBILITY_BASED_CONTENTS,  
+			priority= IGenerationPointPriorityConstants.LOWEST, group= IModelingPriorityHandler.PUBLIC_DETAILS)
+	public static String extraCode(@GenerationElementParameter(id = IModelingElementDefinitions.CODE) String code){
+		if(code== null|| code.isEmpty()|| extractMain(MAIN_EXTRACTOR_REGULAR_EXPRESSION, code)!= null){
+			return null;
+		}
+		
+		return StringUtil.indent(CommonConstants.NEW_LINE+ code+ CommonConstants.NEW_LINE, 1);
+	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	@GenerationPoint(generationPoint = IModelingConstants.MULTILINE_COMMENTS_STRING, priority= IGenerationPointPriorityConstants.LOWEST)
 	public static String lineNumbers(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
@@ -219,16 +339,6 @@ public class UmpleBaseGenerationPointsHandler{
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		//Filter singelton;
 		calls.add(generationValueGetter.generate(ICppUmpleDefinitions.SINGLETON_CALL, parent));
-	}
-	
-	//TODO: Still needs better job than this
-	@GenerationPoint(generationPoint = ICppDefinitions.VISIBILITY_BASED_CONTENTS,  
-			priority= IGenerationPointPriorityConstants.LOWEST, group= IModelingPriorityHandler.PUBLIC_DETAILS)
-	public static String extraCode(@GenerationElementParameter(id = IModelingElementDefinitions.CODE) String code){
-		if(code== null|| code.isEmpty()){
-			return null;
-		}
-		return StringUtil.indent(CommonConstants.NEW_LINE+ code+ CommonConstants.NEW_LINE, 1);
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.METHOD_IMPLEMENTATION_BEFORE)

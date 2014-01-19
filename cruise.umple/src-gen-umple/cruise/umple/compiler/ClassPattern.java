@@ -6,8 +6,6 @@ package cruise.umple.compiler;
 /**
  * A pattern object is used to persist Patentable information for a class elemnt such as
  * abstract, delegate, immutable, etc.
- * A pattern object is used to persist Patentable information for a class elemnt such as
- * abstract, delegate, immutable, etc.
  * @umplesource Generator_UmpleModelWalker.ump 36
  */
 // line 36 "../../../../src/Generator_UmpleModelWalker.ump"

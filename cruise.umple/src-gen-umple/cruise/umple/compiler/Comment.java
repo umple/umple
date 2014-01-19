@@ -6,13 +6,11 @@ import java.util.*;
 
 /**
  * Represents a comment, such as those found around classes, methods, attributes and associations.
- * Represents a comment, such as those found around classes, methods, attributes and associations.
  * 
- * 
- * @umplesource Umple.ump 751
+ * @umplesource Umple.ump 678
  * @umplesource Umple_Code.ump 2127
  */
-// line 751 "../../../../src/Umple.ump"
+// line 678 "../../../../src/Umple.ump"
 // line 2127 "../../../../src/Umple_Code.ump"
 public class Comment
 {
@@ -90,7 +88,7 @@ public class Comment
    * 
    * @return The processed/formatted comment appropriate for use in generated code output.
    */
-  @umplesourcefile(line={2144},file={"Umple_Code.ump"},javaline={83},length={115})
+  @umplesourcefile(line={2144},file={"Umple_Code.ump"},javaline={81},length={115})
    public static  String format(String type, List<Comment> allComments){
     //String commentDelimiter = type == "Hash" ? "# " : (type == "Javadoc") ? " * " : (type == "Attribute Javadoc") ? "   * " : (type == "Association Javadoc") ? "   * " : (type == "Method Javadoc") ? "   * " : (type == "RubyMultiline") ? "  " : (type == "Multiline") ? "" : "// ";
 

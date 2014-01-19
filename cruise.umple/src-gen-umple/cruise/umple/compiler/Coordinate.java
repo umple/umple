@@ -6,14 +6,11 @@ package cruise.umple.compiler;
 /**
  * A Coordinate is used in  the layout of classes
  * It represents the shape of a class box in a diagram
- * A Coordinate is used in  the layout of classes
- * It represents the shape of a class box in a diagram
  * 
- * 
- * @umplesource Umple.ump 731
+ * @umplesource Umple.ump 658
  * @umplesource Umple_Code.ump 2030
  */
-// line 731 "../../../../src/Umple.ump"
+// line 658 "../../../../src/Umple.ump"
 // line 2030 "../../../../src/Umple_Code.ump"
 public class Coordinate
 {
@@ -45,7 +42,7 @@ public class Coordinate
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={740},file={"Umple.ump"},javaline={62},length={1})
+  @umplesourcefile(line={667},file={"Umple.ump"},javaline={59},length={1})
   public Coordinate(int aX, int aY, int aWidth, int aHeight)
   {
     cachedHashCode = -1;
@@ -58,7 +55,7 @@ public class Coordinate
     width = aWidth;
     height = aHeight;
     setStatus(Status.Explicit);
-    // line 740 "../../../../src/Umple.ump"
+    // line 667 "../../../../src/Umple.ump"
     updateStatus();
   }
 
@@ -66,50 +63,50 @@ public class Coordinate
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={741},file={"Umple.ump"},javaline={77},length={1})
+  @umplesourcefile(line={668},file={"Umple.ump"},javaline={74},length={1})
   public boolean setX(int aX)
   {
     boolean wasSet = false;
     if (!canSetX) { return false; }
     x = aX;
     wasSet = true;
-    // line 741 "../../../../src/Umple.ump"
+    // line 668 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
 
-  @umplesourcefile(line={742},file={"Umple.ump"},javaline={88},length={1})
+  @umplesourcefile(line={669},file={"Umple.ump"},javaline={85},length={1})
   public boolean setY(int aY)
   {
     boolean wasSet = false;
     if (!canSetY) { return false; }
     y = aY;
     wasSet = true;
-    // line 742 "../../../../src/Umple.ump"
+    // line 669 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
 
-  @umplesourcefile(line={743},file={"Umple.ump"},javaline={99},length={1})
+  @umplesourcefile(line={670},file={"Umple.ump"},javaline={96},length={1})
   public boolean setWidth(int aWidth)
   {
     boolean wasSet = false;
     if (!canSetWidth) { return false; }
     width = aWidth;
     wasSet = true;
-    // line 743 "../../../../src/Umple.ump"
+    // line 670 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
 
-  @umplesourcefile(line={744},file={"Umple.ump"},javaline={110},length={1})
+  @umplesourcefile(line={671},file={"Umple.ump"},javaline={107},length={1})
   public boolean setHeight(int aHeight)
   {
     boolean wasSet = false;
     if (!canSetHeight) { return false; }
     height = aHeight;
     wasSet = true;
-    // line 744 "../../../../src/Umple.ump"
+    // line 671 "../../../../src/Umple.ump"
     if(wasSet) updateStatus();
     return wasSet;
   }
@@ -206,47 +203,47 @@ public class Coordinate
   public void delete()
   {}
 
-  @umplesourcefile(line={2036},file={"Umple_Code.ump"},javaline={211},length={3})
+  @umplesourcefile(line={2036},file={"Umple_Code.ump"},javaline={208},length={3})
    public Point getTopLeft(){
     return new Point(x,y);
   }
 
-  @umplesourcefile(line={2041},file={"Umple_Code.ump"},javaline={216},length={3})
+  @umplesourcefile(line={2041},file={"Umple_Code.ump"},javaline={213},length={3})
    public Point getTopRight(){
     return new Point(x+width,y);
   }
 
-  @umplesourcefile(line={2046},file={"Umple_Code.ump"},javaline={221},length={3})
+  @umplesourcefile(line={2046},file={"Umple_Code.ump"},javaline={218},length={3})
    public Point getBottomLeft(){
     return new Point(x,y+height);
   }
 
-  @umplesourcefile(line={2051},file={"Umple_Code.ump"},javaline={226},length={3})
+  @umplesourcefile(line={2051},file={"Umple_Code.ump"},javaline={223},length={3})
    public Point getBottomRight(){
     return new Point(x+width,y+height);
   }
 
-  @umplesourcefile(line={2056},file={"Umple_Code.ump"},javaline={231},length={3})
+  @umplesourcefile(line={2056},file={"Umple_Code.ump"},javaline={228},length={3})
    public Point getTopMiddle(){
     return new Point(x+width/2,y);
   }
 
-  @umplesourcefile(line={2061},file={"Umple_Code.ump"},javaline={236},length={3})
+  @umplesourcefile(line={2061},file={"Umple_Code.ump"},javaline={233},length={3})
    public Point getBottomMiddle(){
     return new Point(x+width/2,y+height);
   }
 
-  @umplesourcefile(line={2066},file={"Umple_Code.ump"},javaline={241},length={3})
+  @umplesourcefile(line={2066},file={"Umple_Code.ump"},javaline={238},length={3})
    public Point getRightMiddle(){
     return new Point(x+width,y+height/2);
   }
 
-  @umplesourcefile(line={2071},file={"Umple_Code.ump"},javaline={246},length={3})
+  @umplesourcefile(line={2071},file={"Umple_Code.ump"},javaline={243},length={3})
    public Point getLeftMiddle(){
     return new Point(x,y+height/2);
   }
 
-  @umplesourcefile(line={2076},file={"Umple_Code.ump"},javaline={251},length={24})
+  @umplesourcefile(line={2076},file={"Umple_Code.ump"},javaline={248},length={24})
    public String whereIs(Coordinate neighbour){
     int topDeltaY = getTopMiddle().getY() - neighbour.getBottomMiddle().getY();
     int topDeltaX = getTopMiddle().getX() - neighbour.getBottomMiddle().getX();
@@ -272,7 +269,7 @@ public class Coordinate
     }
   }
 
-  @umplesourcefile(line={2102},file={"Umple_Code.ump"},javaline={277},length={6})
+  @umplesourcefile(line={2102},file={"Umple_Code.ump"},javaline={274},length={6})
    public int distanceTo(Coordinate other){
     int a = other.getX() - getX();
     int b = other.getY() - getY();
@@ -280,12 +277,12 @@ public class Coordinate
     return c;
   }
 
-  @umplesourcefile(line={2110},file={"Umple_Code.ump"},javaline={285},length={3})
+  @umplesourcefile(line={2110},file={"Umple_Code.ump"},javaline={282},length={3})
    public String toString(){
     return "(" + getX() + "," + getY() + "," + getWidth() + "," + getHeight() + ")";
   }
 
-  @umplesourcefile(line={2115},file={"Umple_Code.ump"},javaline={290},length={10})
+  @umplesourcefile(line={2115},file={"Umple_Code.ump"},javaline={287},length={10})
    private void updateStatus(){
     if (x == -1 && y == -1 && width == -1 && height == -1)
     {
