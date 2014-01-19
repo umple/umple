@@ -1,0 +1,729 @@
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+   private boolean isUmpleTrait(String elementName){
+    return (model.getUmpleTrait(elementName) != null) ? true: false;
+  }
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+  private void analyzeTraitToken(Token t, int analysisStep)
+  {
+   if (analysisStep != 2)
+    {
+      shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
+      return;
+    }
+
+    // Only need to clear comments if there actually was comments.
+    boolean shouldConsumeComment = lastComments.size() > 0;
+
+    // Determine what the current token is primarily, and based on that the analysis procedure is determined.
+    if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
+    {
+      shouldConsumeComment = false;
+    }
+    else if (t.is("inlineComment"))
+    {
+      analyzeComment(t);
+      shouldConsumeComment = addToLastAttributeOrAssociation(t);
+    } 
+    else if (t.is("multilineComment"))
+    {
+      analyzeMultilineComment(t);
+      shouldConsumeComment = false;
+    }
+    else if (t.is("traitDefinition"))
+    {
+      analyzeTrait(t);
+    }
+
+    // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
+    // classes, traits, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
+    if (shouldConsumeComment)
+    {
+      lastComments.clear();
+    }
+  }
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+  private UmpleTrait analyzeTrait (Token traitToken) {
+   String traitName = traitToken.getValue("name").split(" ")[traitToken.getValue("name").split(" ").length-1];
+    //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
+    if (Token.isValidIdentifier(traitName, "[A-Za-z]") != true) {
+//TODO 1 I should change the code of error
+      setFailedPosition(traitToken.getPosition(), 100, traitName);
+    }
+    else if ( traitName.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.
+//TODO 2 I should change the code of error    
+      setFailedPosition(traitToken.getPosition(), 101, traitName);
+    }  
+    UmpleTrait aTrait;
+    aTrait = model.addUmpleTrait(traitToken.getValue("name"));
+    
+    Position thePosition = traitToken.getPosition();
+    Position endPosition = traitToken.getEndPosition();
+
+    // Set the original .ump file and line number
+    aTrait.addPosition(thePosition);
+    aTrait.addEndPosition(endPosition);
+    
+    // Add all the comments in the comment list to the Umple Trait.
+    // But add them before any umplesource special comments
+    int regularCommentCountEnd = 0;
+    for (Comment c : aTrait.getComments()) {
+      if(c.getText().startsWith("@umplesource")) break;
+      regularCommentCountEnd++;
+    }
+
+    for (Comment c : lastComments)
+    {
+      aTrait.addCommentAt(c,regularCommentCountEnd);
+      regularCommentCountEnd++;
+    }
+
+    // Add special position comment at the end if @outputumplesource had been 
+    // detected earlier in a comment
+    if(outputUmpleSource == true) {  
+      aTrait.addComment(new Comment("@umplesource " + thePosition.getRelativePath((UmpleTrait)null,"Java")+" "+thePosition.getLineNumber()));
+    }
+    
+  	// If the "abstract" keyword is parsed, make the Umple trait an abstract trait.
+    if (traitToken.getValue("abstract") != null)
+    {
+      boolean wasSet = aTrait.setIsAbstract(true);
+      
+      // Ensure the value was set.
+      if (wasSet == false)
+      {
+//TODO 3 I should change the code of error
+        setFailedPosition(traitToken.getPosition(), 0, "Unable to make class abstract!");
+      }
+    }
+    
+	addExtendsTo(traitToken, aTrait, unlinkedExtends, unlinkedExtendsTokens);
+
+    // If the "singleton" keyword is parsed, make the Umple class a singleton.
+    if (traitToken.getValue("singleton") != null)
+    {
+      aTrait.setIsSingleton(true);
+    }
+    
+    if("".equals(aTrait.getPackageName())){
+      aTrait.setPackageName(currentPackageName);
+  	}
+  	
+ 	packageNameUsed = true;
+    if (aTrait.getIsSingleton()) 
+    {
+      traitToken.setName(traitToken.getName());  
+    }  
+	
+    if (traitToken.getValue("immutable") != null)
+    {
+      boolean wasSet = aTrait.setImmutable();
+      if (!wasSet)
+      {
+        // Future-proofing: currently all paths cause wasSet to be true
+//TODO 3 I should change the code of error    
+        setFailedPosition(traitToken.getPosition(), 14, traitToken.getName());
+      }
+    }
+	
+    analyzeAllTokens(traitToken,aTrait);
+         
+    return aTrait; 
+  }
+
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+  private void analyzeAllTokens(Token rootToken, UmpleTrait aTrait){
+    int analysisStep = 0;
+    shouldProcessClassAgain = true;
+    do
+    {
+      analysisStep += 1;
+      shouldProcessClassAgain = false;
+      for(Token token : rootToken.getSubTokens())
+      {
+        analyzeToken(token,aTrait,analysisStep);
+        if (!getParseResult().getWasSuccess())
+        {
+          return;
+        }
+      }
+    }
+    while (shouldProcessClassAgain);
+  }
+
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+  private void analyzeToken(Token t, UmpleTrait aTrait, int analysisStep){
+
+  	analyzeCoreToken(t,aTrait,analysisStep);
+    analyzeTraitToken(t,aTrait,analysisStep);
+//    analyzeStateMachineToken(t,aTrait,analysisStep);
+//    analyzeDependentTokens(t,aTrait,analysisStep);
+  }
+
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------  
+  private void analyzeCoreToken(Token t, UmpleTrait aTrait, int analysisStep){
+    
+  } 
+
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+  private void analyzeTraitToken(Token token, UmpleTrait aTrait, int analysisStep){
+    if (analysisStep != 1)
+    {
+      return;
+    }
+
+    // Only need to clear comments if there actually was comments.
+    boolean shouldConsumeComment = lastComments.size() > 0;
+    
+    // Determine what the current token is primarily, and based on that the analysis procedure is determined.
+    if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
+    {
+      shouldConsumeComment = false;
+    }
+    else if (token.is("inlineComment"))
+    {
+      analyzeComment(token);
+      shouldConsumeComment = addToLastAttributeOrAssociation(token);
+    }
+    else if (token.is("multilineComment"))
+    {
+      analyzeMultilineComment(token);
+      shouldConsumeComment = false;
+    }
+    // TODO Under development
+    
+    else if (token.is("traitDefinition"))
+    {
+      UmpleTrait childTrait = analyzeTrait(token);
+      boolean wasSet = childTrait.addExtendsTrait(aTrait);
+      if (!wasSet)
+      {
+//TODO 4 I should change the code of error      
+        setFailedPosition(token.getPosition(), 16, childTrait.getName(), aTrait.getName());
+      }
+    }
+    else if (token.is("constantDeclaration"))
+    {
+      analyzeConstant(token,aTrait);
+    }
+    else if(token.is("constantDeclarationDeprecated"))
+    {
+//TODO 5 I should change the code of error    
+      setFailedPosition(token.getPosition(), 901);
+      analyzeConstant(token,aTrait);
+    }
+    else if (token.is("attribute"))
+    {
+      analyzeAttribute(token,aTrait);
+    }
+    else if (token.is("extraCode"))
+    {
+      analyzeExtraCode(token,aTrait);
+    }
+
+    else if (token.is("concreteMethodDeclaration"))
+    {
+      analyzeMethod(token,aTrait);
+    }
+    else if (token.is("depend"))
+    {
+      Depend d = new Depend(token.getValue());
+      aTrait.addDepend(d);
+    }
+    else if (token.is("inlineAssociation"))
+    {
+      analyzeinlineAssociation(token,aTrait);
+    }
+    else if (token.is("symmetricReflexiveAssociation"))
+    {
+      analyzeSymmetricReflexiveAssociation(token,aTrait);
+    }    
+    else if (token.is("exception"))
+    {
+      analyzeException(token,aTrait);
+    }
+
+    // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
+    // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
+    if (shouldConsumeComment)
+    {
+      lastComments.clear();
+    }
+  }
+  
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+   private void analyzeAttribute(Token attributeToken, UmpleTrait aTrait){
+    boolean isAutounique = attributeToken.getValue("autounique") != null;
+    boolean isUnique = attributeToken.getValue("unique") != null;
+    boolean isLazy = attributeToken.getValue("lazy") != null;
+    boolean isConstant = "const".equals(attributeToken.getValue("modifier"));
+    boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
+    boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
+    boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
+    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
+    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
+    
+    String modifier = attributeToken.getValue("modifier");
+    String type = attributeToken.getValue("type");
+    String name = attributeToken.getValue("name");
+    String value = attributeToken.getValue("value");
+    String derivedValue = attributeToken.getValue("code");
+    
+    if(!validName)
+    {
+      if(looksLikeAssociation){      
+        setFailedPosition(attributeToken.getPosition(), 132, name);
+      } 
+      else if(isConstant){
+        setFailedPosition(attributeToken.getPosition(), 160, name);
+      }
+      else {
+        setFailedPosition(attributeToken.getPosition(), 130, name);
+      }
+      
+      return;
+    }
+    
+    if(!properName && !isConstant){
+      setFailedPosition(attributeToken.getPosition(), 131, name);
+    }
+    else if(properName && isConstant){
+      setFailedPosition(attributeToken.getPosition(), 161, name);
+    }
+    
+    //allow singleton with constant and predefined variables
+    if (aTrait.getIsSingleton() && !isConstant && !isLazy && (value == null)) 
+    {
+      isLazy = true;
+      setFailedPosition(attributeToken.getPosition(), 1, name);
+    }
+    
+    // check to see if type has angle brackets <>
+    if (type != null)
+    {
+      int lang_pos = type.lastIndexOf('<');
+      int rang_pos = type.lastIndexOf('>');
+      if (lang_pos > 0 && rang_pos > 0 && lang_pos < rang_pos)
+      {
+//TODO 6 I should change the code of error      
+        setFailedPosition(attributeToken.getPosition(), 46, name, aTrait.getName(), type);
+      }
+    }
+    
+    if (isLazyRedundant(isLazy, value))
+    {
+//TODO 7 I should change the code of error
+      setFailedPosition(attributeToken.getPosition(), 3, aTrait.getName(), name);
+    }
+
+    for(Attribute aAttribute : aTrait.getAttributes()){
+      if (aAttribute.getName().equals(name)){
+//TODO 8 I should change the code of error    
+        setFailedPosition(attributeToken.getPosition(), 22, aTrait.getName(), name);
+      }
+    }
+    CodeBlock languageSpecificCode = new CodeBlock();
+    if (derivedValue != null)
+    {
+      value = "";
+      List<String> codelangs = new ArrayList<String>();
+      for(Token tkn: attributeToken.getSubTokens())
+      {
+      if(tkn.is("codeLang"))
+      {
+        codelangs.add(tkn.getValue());
+      } else if(tkn.is("code")) {
+        if(codelangs.isEmpty())
+        {
+          languageSpecificCode.setCode(tkn.getValue());
+        } else {
+          for(String lang: codelangs)
+          {
+            languageSpecificCode.setCode(lang, tkn.getValue());
+          }
+          codelangs.clear();
+        }
+      }
+      }
+    }
+
+    if ("defaulted".equals(modifier) && value == null)
+    {
+      setFailedPosition(attributeToken.getPosition(), 6, attributeToken.getValue("name"));
+      return;
+    }
+
+    if (isUnique)
+    {
+      UniqueIdentifier uniqueIdentifier = new UniqueIdentifier(name,type,modifier,value);
+      aTrait.setUniqueIdentifier(uniqueIdentifier);
+    }
+
+    if (isAutounique)
+    {
+      type = "Integer";
+    }
+
+    if(type != null)
+    { 
+      Matcher m = Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*(<(.*)>)?)").matcher(type);
+      if(!m.matches()) 
+      {
+        setFailedPosition(attributeToken.getPosition(), 140, type);
+        return;
+      }
+    }
+        
+    if(type != null && value != null)
+    {
+      if(!compareTypeToValue(type,value))
+      {
+        setFailedPosition(attributeToken.getPosition(),141,type,value);  
+      }
+    }
+    else if (type == null && value != null)
+    {
+      type = inferType(value, type);
+    }
+    else if(type == null)
+    {
+      type = "String";
+    }
+
+
+    if(attributeToken.getValue("modifier") != null)
+    {
+      if((attributeToken.getValue("modifier").contains("const")) && (attributeToken.getValue("value") == null))
+      {
+        value = defaultConstantValue(type, attributeToken);
+      }
+    }
+
+    Attribute attribute = new Attribute(name,type,modifier,value,isAutounique,aTrait);
+    attribute.setIsUnique(isUnique);
+    attribute.setIsLazy(isLazy);
+    boolean isList = attributeToken.getValue("list") != null;
+
+    if (name == null)
+    {
+      String rawName = StringFormatter.toCamelCase(type); 
+      name = isList ? model.getGlossary().getPlural(rawName) : rawName;
+    }
+
+    if (derivedValue != null)
+    {
+      attribute.setEndPosition(attributeToken.getEndPosition());
+      attribute.setIsDerived(true);
+      attribute.setCodeblock(languageSpecificCode);
+    }
+
+    // set position regardless of derivedValue    
+    attribute.setPosition(attributeToken.getPosition());
+
+    attribute.setIsList(isList);
+
+    // Add comments above the attribute to the attribute.
+    for (Comment c : lastComments)
+    {
+      attribute.addComment(c);
+    }
+    
+    // set the last attribute made to be attribute, clear lastassoc
+    lastattr = attribute;
+    lastassoc = null;
+  }  
+
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+   private void analyzeExtraCode(Token token, UmpleTrait aTrait){
+    //This is a catch all and will be used less often as the grammar gets updated.
+    
+    if(extraCodeIsMalformedStateMachine(token)) setFailedPosition(token.getPosition(), 1006, "");
+    //Append #line comment to indicate line and position of source
+    if (token.getPosition() != null)
+    {
+      String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + token.getPosition().getRelativePath(aTrait, "Java");
+	  String rubyComment = "#" + extraCodeLineNumberComment;
+	  String otherComment = "//" + extraCodeLineNumberComment;
+ 	  if(aTrait.hasExtraCode())
+	  {
+	    rubyComment = System.getProperty("line.separator") + rubyComment;
+	    otherComment = System.getProperty("line.separator") + otherComment;
+	  }
+      CodeBlock cb = new CodeBlock();
+      cb.setCode(otherComment);
+      cb.setCode("Ruby", rubyComment);
+      aTrait.appendExtraCode(true,cb);
+      aTrait.appendExtraCode("  " + token.getValue());
+    }
+    else
+    {
+      aTrait.appendExtraCode(token.getValue());
+    }
+  }
+  
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+   private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleTrait aTrait){
+    /*
+    Association association = analyzeAssociation(inlineAssociationToken,aClass.getName());
+
+    if (!getParseResult().getWasSuccess())
+    {
+      return;
+    }
+
+    AssociationEnd myEnd = association.getEnd(0);
+    AssociationEnd yourEnd = association.getEnd(1);
+
+    AssociationVariable myAs = new AssociationVariable(myEnd.getRoleName(),myEnd.getClassName(),myEnd.getModifier(),null,myEnd.getMultiplicity(),association.getIsLeftNavigable());
+    AssociationVariable yourAs = new AssociationVariable(yourEnd.getRoleName(),yourEnd.getClassName(),yourEnd.getModifier(),null,yourEnd.getMultiplicity(),association.getIsRightNavigable());
+    myAs.setRelatedAssociation(yourAs);
+    
+    if(!"".equals(myEnd.getPriority())) { myAs.setPriority(myEnd.getPriority()); }
+    if(!"".equals(yourEnd.getPriority())) { yourAs.setPriority(yourEnd.getPriority()); }
+    
+    if (association.isImmutable())
+    {
+      boolean set = myAs.setImmutable();
+      if (set)
+      {
+        yourAs.setImmutable();
+      }
+      else
+      {
+        setFailedPosition(inlineAssociationToken.getPosition(),17);
+      }
+    }
+
+    // Add comments above the association to the association.
+    for (Comment c : lastComments)
+    {
+      yourAs.addComment(c);
+    }
+    
+    // set last association made to be yourAs. clear lastattr.
+    lastassoc = yourAs;
+    lastassocPosition = inlineAssociationToken.getPosition();
+    lastattr = null;
+    
+
+    boolean added = aClass.addAssociationVariable(yourAs);
+    if (added)
+    {
+      unlinkedAssociationVariables.add(yourAs);
+      aClass.addAssociation(association);
+    }
+    else
+    {
+      if (aClass.isImmutable()) { setFailedPosition(inlineAssociationToken.getPosition(),17); }
+      
+      else { setFailedPosition(inlineAssociationToken.getPosition(),13); }
+    }
+    */
+  }
+
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+   private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleTrait aTrait){
+    /*
+    String myName = symmetricReflexiveAssociationToken.getValue("roleName");
+    String myType = aClass.getName();
+    String myModifier = "symmetricreflexive";
+    String myBound = symmetricReflexiveAssociationToken.getValue("bound");
+    String myLowerBound = symmetricReflexiveAssociationToken.getValue("lowerBound");
+    String myUpperBound = symmetricReflexiveAssociationToken.getValue("upperBound");
+    Multiplicity myMult = new Multiplicity();
+    myMult.setBound(myBound);
+    myMult.setRange(myLowerBound,myUpperBound);
+
+    AssociationVariable myAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
+    AssociationVariable yourAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
+
+    myAs.setRelatedAssociation(yourAs);
+    aClass.addAssociationVariable(yourAs);
+    
+    AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
+    AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
+    Association assoc = new Association(false, true, leftEnd, rightEnd);
+    aClass.addAssociation(assoc);
+    */
+  } 
+
+
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+  private void analyzeException(Token exception, UmpleTrait aTrait){
+    Token sub = exception.getSubToken(0);
+    if(sub.is("misnamedAttribute"))
+    {
+      if(!Token.isValidIdentifier(sub.getValue("name")))
+      {
+        boolean looksLikeAssociation = sub.getValue("name").contains("--") || sub.getValue("name").contains("->");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
+        if(looksLikeAssociation)
+        {
+          setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));
+        }
+        else 
+        {
+          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+        }
+        return;
+      }
+      if(Token.isValidIdentifier(sub.getValue("name"), "[A-Z]"))
+      {
+        setFailedPosition(sub.getPosition(), 131, sub.getValue("name"));
+      }
+      String type = sub.getValue("type");
+      if(type!=null)
+      {
+        if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
+        {
+          setFailedPosition(sub.getPosition(), 140, type);
+        }
+      }
+    }
+    else if(sub.is("malformedStatement1")||sub.is("malformedStatement2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      if(sub.getValue("innerstuff")!=null)
+      {
+        extraCode += "{"+sub.getValue("innerstuff")+"};";
+      }
+      else
+      {
+        extraCode += ";";
+      }
+
+      CodeBlock cb = new CodeBlock();
+      String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aTrait, "Java"));
+      String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aTrait, "Java"));
+
+      cb.setCode(otherComment);
+      cb.setCode("Ruby", rubyComment);
+
+      aTrait.appendExtraCode(true,cb);
+      aTrait.appendExtraCode("  "+extraCode+"\n");
+
+      setFailedPosition(sub.getPosition(), 1007, sub.getValue("name"));
+    }
+    else if(sub.is("malformedStatemachine1")||sub.is("malformedStatemachine2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          if(!"".equals(token.getValue())&&!token.getValue().contains(" ")&&!Token.isValidIdentifier(token.getValue()))
+          {
+            setFailedPosition(token.getPosition(), 150, token.getValue("name"));
+          }
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      aTrait.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aTrait, "Java"));
+      aTrait.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
+    }
+    else if(sub.is("malformedMethod"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      aTrait.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aTrait, "Java"));
+      aTrait.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
+    }
+  }
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+	private void applyTraits() {
+		for (UmpleClass uClass : getModel().getUmpleClasses()) {
+			if (uClass.hasExtendsTraits()) {
+				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
+					//set the singleton pattern
+					if (! uClass.getIsSingleton()) uClass.setIsSingleton(uTrait.getIsSingleton());
+					
+					//set abstract keyword
+					if (! uClass.getIsAbstract())	uClass.setIsAbstract(uTrait.getIsAbstract());
+					
+					//set the comments
+					for(Comment aComment : uTrait.getComments()) {
+						uClass.addComment(aComment);
+					}		
+					
+					//set the dependens
+					for(Depend aDepend : uTrait.getDepends()) {
+						uClass.addDepend(aDepend);
+					}		
+					
+										
+					// copy methods
+					for(Method aMethod : uTrait.getMethods()) {
+						uClass.addMethod(aMethod);
+					}
+										
+					// copy Precondition
+					for(Precondition aPrecondition : uTrait.getPreconditions()) {
+						uClass.addPrecondition(aPrecondition);
+					}	
+					
+					// copy Postcondition
+					for(Postcondition aPostcondition : uTrait.getPostconditions()) {
+						uClass.addPostcondition(aPostcondition);
+					}						
+					
+					// copy Constraint
+					for(Constraint aConstraint : uTrait.getConstraints()) {
+						uClass.addConstraint(aConstraint);
+					}						
+														
+					//copy attributes
+					for(Attribute aAttribute : uTrait.getAttributes()) {
+						//check for attributes which have already existed.
+						uClass.addAttribute(aAttribute);
+					}
+					
+				}
+			}
+		}
+	}
+
+}

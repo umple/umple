@@ -6,6 +6,8 @@ package cruise.umple.compiler;
 /**
  * An element of Boolean logic determining whether a trace directive
  * when encountered, will result in trace output
+ * An element of Boolean logic determining whether a trace directive
+ * when encountered, will result in trace output
  * @umplesource Trace.ump 32
  */
 // line 32 "../../../../src/Trace.ump"

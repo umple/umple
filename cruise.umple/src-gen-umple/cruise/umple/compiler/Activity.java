@@ -10,6 +10,11 @@ import cruise.umple.compiler.Position;
  * The code is executed in a separate threat, and can be terminated by
  * an outgoing transition. Upon completion of the activity, any
  * autotransition will be taken
+ * Some code to execute for an extended period while in a state
+ * This code is found after they keyword 'do' in Umple
+ * The code is executed in a separate threat, and can be terminated by
+ * an outgoing transition. Upon completion of the activity, any
+ * autotransition will be taken
  * @umplesource StateMachine.ump 62
  */
 // line 62 "../../../../src/StateMachine.ump"
@@ -36,7 +41,7 @@ public class Activity
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={75},file={"StateMachine.ump"},javaline={50},length={1})
+  @umplesourcefile(line={75},file={"StateMachine.ump"},javaline={55},length={1})
   public Activity(String aActivityCode, State aState)
   {
     activityCode = aActivityCode;
@@ -70,7 +75,7 @@ public class Activity
     return wasSet;
   }
 
-  @umplesourcefile(line={76},file={"StateMachine.ump"},javaline={78},length={1})
+  @umplesourcefile(line={76},file={"StateMachine.ump"},javaline={83},length={1})
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
@@ -81,7 +86,7 @@ public class Activity
     return wasSet;
   }
 
-  @umplesourcefile(line={83},file={"StateMachine.ump"},javaline={90},length={5})
+  @umplesourcefile(line={83},file={"StateMachine.ump"},javaline={95},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
@@ -106,7 +111,7 @@ public class Activity
     return endPosition;
   }
 
-  @umplesourcefile(line={77},file={"StateMachine.ump"},javaline={112},length={3})
+  @umplesourcefile(line={77},file={"StateMachine.ump"},javaline={117},length={3})
   public String getActivityCode()
   {
     String aActivityCode = activityCode;
@@ -179,7 +184,7 @@ public class Activity
     }
   }
 
-  @umplesourcefile(line={92},file={"StateMachine.ump"},javaline={184},length={8})
+  @umplesourcefile(line={92},file={"StateMachine.ump"},javaline={189},length={8})
   public void setActivityCode(String lang, String code){
     if(activityCode!=null){
   	  activityCode+= lang+code;

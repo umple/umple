@@ -378,6 +378,8 @@ public class UmletGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
   @umplesourcefile(line={21},file={"Generator.ump"},javaline={379},length={2})
@@ -389,9 +391,11 @@ public class UmletGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={23},file={"Generator.ump"},javaline={390},length={2})
+  @umplesourcefile(line={23},file={"Generator.ump"},javaline={392},length={2})
   @Override
   public void prepare(){
           return ;
@@ -400,9 +404,11 @@ public class UmletGenerator implements CodeGenerator
 
   /**
    * Allows independent code generation tools
+   * Allows independent code generation tools
+   * Different generators will do different things regarding where the files are put, etc.
    * Different generators will do different things regarding where the files are put, etc.
    */
-  @umplesourcefile(line={24},file={"Generator.ump"},javaline={401},length={2})
+  @umplesourcefile(line={24},file={"Generator.ump"},javaline={405},length={2})
   @Override
   public void postpare(){
           return ;

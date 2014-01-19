@@ -11,6 +11,7 @@ import java.io.*;
 
 /**
  * Main program for a jar that can inject calls to Umple at runtime
+ * Main program for a jar that can inject calls to Umple at runtime
  * @umplesource Main_Code.ump 212
  */
 // line 212 "../../../src/Main_Code.ump"
@@ -37,7 +38,7 @@ public class UmpleRunMain
   public void delete()
   {}
 
-  @umplesourcefile(line={225},file={"Main_Code.ump"},javaline={42},length={72})
+  @umplesourcefile(line={225},file={"Main_Code.ump"},javaline={43},length={72})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -113,7 +114,7 @@ public class UmpleRunMain
         }
   }
 
-  @umplesourcefile(line={299},file={"Main_Code.ump"},javaline={118},length={7})
+  @umplesourcefile(line={299},file={"Main_Code.ump"},javaline={119},length={7})
    private static  void print(String output){
     console += output;
         if (displayOutput)
@@ -122,12 +123,12 @@ public class UmpleRunMain
         }
   }
 
-  @umplesourcefile(line={309},file={"Main_Code.ump"},javaline={127},length={3})
+  @umplesourcefile(line={309},file={"Main_Code.ump"},javaline={128},length={3})
    private static  void println(String output){
     print(output + "\n");
   }
 
-  @umplesourcefile(line={314},file={"Main_Code.ump"},javaline={132},length={7})
+  @umplesourcefile(line={314},file={"Main_Code.ump"},javaline={133},length={7})
    private static  void printerr(String err){
     console += err;
         if (displayOutput)
@@ -139,9 +140,9 @@ public class UmpleRunMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={320},file={"Main_Code.ump"},javaline={143},length={4})
+  //  @umplesourcefile(line={320},file={"Main_Code.ump"},javaline={144},length={4})
   public static String console ;
-//  @umplesourcefile(line={321},file={"Main_Code.ump"},javaline={145},length={2})
+//  @umplesourcefile(line={321},file={"Main_Code.ump"},javaline={146},length={2})
   public static boolean displayOutput = true ;
 
   

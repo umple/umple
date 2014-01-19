@@ -14,6 +14,9 @@ import java.io.*;
  * Main program for the command line Umple compiler
  * Run java -jar umple.jar --help for details 
  * Takes an umple file as an argument, which can in turn use (include) other
+ * Main program for the command line Umple compiler
+ * Run java -jar umple.jar --help for details 
+ * Takes an umple file as an argument, which can in turn use (include) other
  * @umplesource Main_Code.ump 18
  */
 // line 18 "../../../src/Main_Code.ump"
@@ -40,7 +43,7 @@ public class UmpleConsoleMain
   public void delete()
   {}
 
-  @umplesourcefile(line={33},file={"Main_Code.ump"},javaline={45},length={70})
+  @umplesourcefile(line={33},file={"Main_Code.ump"},javaline={48},length={70})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -114,19 +117,19 @@ public class UmpleConsoleMain
         System.exit(0);
   }
 
-  @umplesourcefile(line={105},file={"Main_Code.ump"},javaline={119},length={4})
+  @umplesourcefile(line={105},file={"Main_Code.ump"},javaline={122},length={4})
    private static  void println(String output){
     console += output + "\n";
         System.out.println(output);
   }
 
-  @umplesourcefile(line={110},file={"Main_Code.ump"},javaline={125},length={4})
+  @umplesourcefile(line={110},file={"Main_Code.ump"},javaline={128},length={4})
    private static  void printerr(String err){
     console += err;
         System.err.print(err);
   }
 
-  @umplesourcefile(line={115},file={"Main_Code.ump"},javaline={131},length={7})
+  @umplesourcefile(line={115},file={"Main_Code.ump"},javaline={134},length={7})
    private static  void printUsage(){
     println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
         try{
@@ -135,7 +138,7 @@ public class UmpleConsoleMain
         }
   }
 
-  @umplesourcefile(line={123},file={"Main_Code.ump"},javaline={140},length={14})
+  @umplesourcefile(line={123},file={"Main_Code.ump"},javaline={143},length={14})
    private static  void generateUmple(String xmi){
     boolean isSuccess = false;
 	  try {    
@@ -158,7 +161,7 @@ public class UmpleConsoleMain
    * Argument: optSet - set of the options and corresponding arguments
    * Return: boolean - If application should terminate immediately after return
    */
-  @umplesourcefile(line={143},file={"Main_Code.ump"},javaline={156},length={19})
+  @umplesourcefile(line={143},file={"Main_Code.ump"},javaline={159},length={19})
    private static  boolean preModelOptionProcess(OptionSet optSet){
     if (optSet == null) {
             return true;
@@ -179,7 +182,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={163},file={"Main_Code.ump"},javaline={184},length={17})
+  @umplesourcefile(line={163},file={"Main_Code.ump"},javaline={187},length={17})
    private static  boolean postModelOptionProcess(OptionSet optset, UmpleModel model){
     if (optset.has("generate")) {
             boolean override=false;
@@ -198,7 +201,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={182},file={"Main_Code.ump"},javaline={203},length={24})
+  @umplesourcefile(line={182},file={"Main_Code.ump"},javaline={206},length={24})
    private static  OptionSet optParse(String [] args){
     optparser = new OptionParser();
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
@@ -227,9 +230,9 @@ public class UmpleConsoleMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={205},file={"Main_Code.ump"},javaline={231},length={4})
+  //  @umplesourcefile(line={205},file={"Main_Code.ump"},javaline={234},length={4})
   public static String console ;
-//  @umplesourcefile(line={206},file={"Main_Code.ump"},javaline={233},length={2})
+//  @umplesourcefile(line={206},file={"Main_Code.ump"},javaline={236},length={2})
   private static OptionParser optparser ;
 
   

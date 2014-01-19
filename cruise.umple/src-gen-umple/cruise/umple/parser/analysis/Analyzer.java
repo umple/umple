@@ -13,6 +13,11 @@ import cruise.umple.compiler.*;
  * it also contains a method called analyze which performs analysis on a token by taking all of its subtokens and finding a method name
  * corresponding to the token's name, and then calling that function with the subtoken as parameter.
  * The hashmap of objects is mainly estetic, where the idea is that you get and set and nothing else from this hashmap
+ * Abstract class which gives has two major components:
+ * a hashmap of Methods and a hashmap of Objects
+ * it also contains a method called analyze which performs analysis on a token by taking all of its subtokens and finding a method name
+ * corresponding to the token's name, and then calling that function with the subtoken as parameter.
+ * The hashmap of objects is mainly estetic, where the idea is that you get and set and nothing else from this hashmap
  * @umplesource GrammarParsing.ump 8
  * @umplesource GrammarParsing_Code.ump 1
  */
@@ -168,7 +173,7 @@ public class Analyzer
   /**
    * This funciton is used for putting things into the global hashmap that contains all objects
    */
-  @umplesourcefile(line={8},file={"GrammarParsing_Code.ump"},javaline={169},length={3})
+  @umplesourcefile(line={8},file={"GrammarParsing_Code.ump"},javaline={174},length={3})
    protected void set(String string, Object object){
     global.put(string, object);
   }
@@ -177,7 +182,7 @@ public class Analyzer
   /**
    * This function goes through all the subtokens and invokes this analyzer's method(if it exists) which has the same name as the token
    */
-  @umplesourcefile(line={15},file={"GrammarParsing_Code.ump"},javaline={178},length={24})
+  @umplesourcefile(line={15},file={"GrammarParsing_Code.ump"},javaline={183},length={24})
    public void analyze(Token tokens){
     for(Token token: tokens.getSubTokens())
     {
@@ -207,7 +212,7 @@ public class Analyzer
   /**
    * abstract method for executing the rootrule onto the umplefile(for example)
    */
-  @umplesourcefile(line={43},file={"GrammarParsing_Code.ump"},javaline={208},length={3})
+  @umplesourcefile(line={43},file={"GrammarParsing_Code.ump"},javaline={213},length={3})
    public void execute(){
     
   }
@@ -229,15 +234,15 @@ public class Analyzer
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={47},file={"GrammarParsing_Code.ump"},javaline={233},length={12})
+  //  @umplesourcefile(line={47},file={"GrammarParsing_Code.ump"},javaline={238},length={12})
   public class Getter<T> 
   {
-  @umplesourcefile(line={50},file={"GrammarParsing_Code.ump"},javaline={236},length={3})
+  @umplesourcefile(line={50},file={"GrammarParsing_Code.ump"},javaline={241},length={3})
     public Getter()
     {
     }
     @SuppressWarnings("unchecked")
-  @umplesourcefile(line={54},file={"GrammarParsing_Code.ump"},javaline={241},length={4})
+  @umplesourcefile(line={54},file={"GrammarParsing_Code.ump"},javaline={246},length={4})
     public T get(String name)
     {
       return ((T)global.get(name));

@@ -7,6 +7,7 @@ import java.util.*;
 
 /**
  * integration of all importElements as a model
+ * integration of all importElements as a model
  * @umplesource UmpleImport.ump 56
  * @umplesource UmpleImport_CodeModels.ump 13
  */
@@ -148,7 +149,7 @@ public class UmpleImportModel
     umpleImportElements.clear();
   }
 
-  @umplesourcefile(line={19},file={"UmpleImport_CodeModels.ump"},javaline={153},length={8})
+  @umplesourcefile(line={19},file={"UmpleImport_CodeModels.ump"},javaline={154},length={8})
   public String generateUmple(){
     umpleBuilder = new StringBuilder();
 		for (UmpleImportElement umpleImportElement : umpleImportElements) {
@@ -162,7 +163,7 @@ public class UmpleImportModel
   /**
    * resolve assoications by global lookup
    */
-  @umplesourcefile(line={29},file={"UmpleImport_CodeModels.ump"},javaline={163},length={29})
+  @umplesourcefile(line={29},file={"UmpleImport_CodeModels.ump"},javaline={164},length={29})
   public UmpleImportAssociation checkIfOppositeExist(UmpleImportAssociation currEnd){
     this.addUmpleImportElement(currEnd);
 	  UmpleImportAssociation oppoEnd = null;
@@ -193,7 +194,7 @@ public class UmpleImportModel
 	  return oppoEnd;
   }
 
-  @umplesourcefile(line={59},file={"UmpleImport_CodeModels.ump"},javaline={198},length={9})
+  @umplesourcefile(line={59},file={"UmpleImport_CodeModels.ump"},javaline={199},length={9})
   public boolean generateUmpleFile(String filename){
     String input = this.generateUmple();
 		boolean isSuccess = false;

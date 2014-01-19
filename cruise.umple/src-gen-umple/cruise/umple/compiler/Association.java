@@ -10,11 +10,17 @@ import java.util.*;
  * where instances of one class reference the other, and (if bidirectional) instance
  * of the other class reference the first cass.
  * The number of references is governed by the Multiplicity at each AssociationEnd
+ * Represents an association, typically between two Umple classes (1-1, 1-*, *-1, etc).
+ * An association in UML/Umple represents a relationship that exists at run time
+ * where instances of one class reference the other, and (if bidirectional) instance
+ * of the other class reference the first cass.
+ * The number of references is governed by the Multiplicity at each AssociationEnd
  * 
- * @umplesource Umple.ump 520
+ * 
+ * @umplesource Umple.ump 593
  * @umplesource Umple_Code.ump 1235
  */
-// line 520 "../../../../src/Umple.ump"
+// line 593 "../../../../src/Umple.ump"
 // line 1235 "../../../../src/Umple_Code.ump"
 public class Association
 {
@@ -41,7 +47,7 @@ public class Association
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={535},file={"Umple.ump"},javaline={61},length={1})
+  @umplesourcefile(line={608},file={"Umple.ump"},javaline={67},length={1})
   public Association(boolean aIsLeftNavigable, boolean aIsRightNavigable, AssociationEnd... allEnds)
   {
     name = null;
@@ -57,7 +63,7 @@ public class Association
     {
       throw new RuntimeException("Unable to create Association, must have 2 ends");
     }
-    // line 535 "../../../../src/Umple.ump"
+    // line 608 "../../../../src/Umple.ump"
     this.setLeftAndRight();
   }
 
@@ -122,10 +128,10 @@ public class Association
   /**
    * The name of the association.
    */
-  @umplesourcefile(line={534},file={"Umple.ump"},javaline={129},length={1})
+  @umplesourcefile(line={607},file={"Umple.ump"},javaline={135},length={1})
   public String getName()
   {
-    // line 534 "../../../../src/Umple.ump"
+    // line 607 "../../../../src/Umple.ump"
     if (!isNamed()) { return this.deriveName(); }
     return name;
   }
@@ -180,7 +186,6 @@ public class Association
     return tokenEndPosition;
   }
 
-  @umplesourcefile(line={532, 532},file={"Umple.ump", "Umple.ump"},javaline={186, 201},length={2, 2})
   public boolean getNamed()
   {
     return name != null && !"".equals(name);
@@ -307,7 +312,7 @@ public class Association
     ends.clear();
   }
 
-  @umplesourcefile(line={1241},file={"Umple_Code.ump"},javaline={312},length={12})
+  @umplesourcefile(line={1241},file={"Umple_Code.ump"},javaline={317},length={12})
    public void setLeftAndRight(){
     String name = this.getName();
 
@@ -321,7 +326,7 @@ public class Association
     }
   }
 
-  @umplesourcefile(line={1256},file={"Umple_Code.ump"},javaline={326},length={19})
+  @umplesourcefile(line={1256},file={"Umple_Code.ump"},javaline={331},length={19})
    public int whoIsInvalid(){
     if (!getIsLeftNavigable() || !getIsRightNavigable())
     {
@@ -342,12 +347,12 @@ public class Association
     return -1;
   }
 
-  @umplesourcefile(line={1277},file={"Umple_Code.ump"},javaline={347},length={3})
+  @umplesourcefile(line={1277},file={"Umple_Code.ump"},javaline={352},length={3})
    public boolean isValid(){
     return whoIsInvalid() == -1;
   }
 
-  @umplesourcefile(line={1282},file={"Umple_Code.ump"},javaline={352},length={16})
+  @umplesourcefile(line={1282},file={"Umple_Code.ump"},javaline={357},length={16})
    public String getArrowString(){
     String arrow = "--";
     if (getIsLeftNavigable() && !getIsRightNavigable())
@@ -365,7 +370,7 @@ public class Association
     return arrow;
   }
 
-  @umplesourcefile(line={1300},file={"Umple_Code.ump"},javaline={370},length={14})
+  @umplesourcefile(line={1300},file={"Umple_Code.ump"},javaline={375},length={14})
    public String toGenericString(){
     String leftSide = getEnd(0).toGenericString();
     String rightSide = getEnd(1).toGenericString();
@@ -381,7 +386,7 @@ public class Association
     }
   }
 
-  @umplesourcefile(line={1316},file={"Umple_Code.ump"},javaline={386},length={19})
+  @umplesourcefile(line={1316},file={"Umple_Code.ump"},javaline={391},length={19})
    public String deriveName(){
     AssociationEnd firstEnd = this.getEnd(0);
     AssociationEnd secondEnd = this.getEnd(1);
@@ -402,12 +407,12 @@ public class Association
     }
   }
 
-  @umplesourcefile(line={1337},file={"Umple_Code.ump"},javaline={407},length={3})
+  @umplesourcefile(line={1337},file={"Umple_Code.ump"},javaline={412},length={3})
    public void setImmutable(){
     this.immutable = true;
   }
 
-  @umplesourcefile(line={1342},file={"Umple_Code.ump"},javaline={412},length={3})
+  @umplesourcefile(line={1342},file={"Umple_Code.ump"},javaline={417},length={3})
    public boolean isImmutable(){
     return this.immutable;
   }

@@ -7,6 +7,8 @@ import java.util.*;
 /**
  * Data for the user manual taken from one of the files in 
  * build/reference
+ * Data for the user manual taken from one of the files in 
+ * build/reference
  * @umplesource Documenter.ump 34
  * @umplesource Documenter_Code.ump 334
  */
@@ -162,7 +164,7 @@ public class Content
   public void delete()
   {}
 
-  @umplesourcefile(line={340},file={"Documenter_Code.ump"},javaline={167},length={3})
+  @umplesourcefile(line={340},file={"Documenter_Code.ump"},javaline={169},length={3})
    public String getTitleFilename(){
     return title.replace(" ","") + ".html";
   }
