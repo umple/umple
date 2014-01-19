@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cruise.umple.compiler.AssociationEnd;
@@ -115,50 +114,6 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CODE)
 	public static String getExtraCode(@GenerationBaseElement UmpleElement element){
 		return element.getExtraCode();
-	}
-	
-	@GenerationValueAnnotation(fieldName= "mainFunctions")
-	public static List<String> getExtraCode(@GenerationBaseElement UmpleModel model, String language){
-		return tika(model, language);
-	}
-
-	private static List<String> tika(UmpleModel model, String language) {
-		List<Method> methodsToBeRemoved= new ArrayList<Method>();
-		List<String> mains= new ArrayList<String>();
-	    for(UmpleClass c:model.getUmpleClasses()){
-	    	
-	    	for(Method method: c.getMethods()){
-	    		if("main".equals(method.getName())){
-	    			List<MethodParameter> methodParameters = method.getMethodParameters();
-	    			if(methodParameters.size()!= 2){
-	    				continue;
-	    			}
-	    			
-	    			MethodParameter parameter1 = methodParameters.get(0);
-					if(parameter1.getName().trim().startsWith("*")|| !"int".equals(parameter1.getType())){
-						continue;
-					}
-					
-					MethodParameter parameter2 = methodParameters.get(1);
-					if(!parameter2.getName().trim().startsWith("*")|| !"char".equals(parameter2.getType())){
-						continue;
-					}
-					String code = method.getMethodBody().getCodeblock().getCode(language);
-					if(!CommonConstants.BLANK.equals(code.trim())){
-						mains.add(code);
-						methodsToBeRemoved.add(method);
-					}
-	    		}
-	    		
-	    		for(Method extraMethod: methodsToBeRemoved){
-	    			c.removeMethod(extraMethod);
-	    		}
-	    	}
-	    	
-	    	
-	    }
-	    
-		return mains;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CODE_INJECTION)
