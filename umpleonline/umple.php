@@ -16,6 +16,16 @@ if (isset($_REQUEST["model"])) {
     exit();
   }
 }
+
+$imageoutput="";
+if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
+  $cachedimage= "ump/imagecache/".htmlspecialchars($_REQUEST['example']).".svg";
+  if (file_exists($cachedimage))
+  {
+    $imageoutput = "<br/><iframe src=\"http://try.umple.org/".$cachedimage."\"></iframe><br\>";
+  }
+}
+
 $filename = extractFilename();
 
 // Core options after ? and between &. One of the first four is allowed
@@ -86,7 +96,8 @@ $output = readTemporaryFile("ump/" . $filename);
   </table>
 
   <noscript>
-    <br/><font color="red">Since you have JavaScript disabled this page will not work. To use Umple, download the command line compiler or use Eclipse.</font>
+    <br/><font color="red">JavaScript is disabled so the dynamic features of this page will not work. To use UmpleOnline, turn Javascript on. Otherwise you can download the command-line Umple compiler or use Eclipse.</font>
+<?php echo $imageoutput ?>
     <pre>
 <?php echo $output ?>
     </pre>
