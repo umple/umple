@@ -10,9 +10,7 @@ import org.eclipse.jdt.core.IImportDeclaration;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-
 import cruise.umple.compiler.*;
-import cruise.umple.umplificator.core.analyzer.ContructorAnalyzer;
 import cruise.umple.umplificator.core.analyzer.FieldAnalyzer;
 
 
@@ -35,7 +33,7 @@ public class JavaMetamodelConverter {
 			addIsAbstract(unit);
 			extraCode.append(addJavaFields(unit));
 			extraCode.append(addJavaMethods(unit));
-			uClass.setExtraCode(extraCode.toString());
+			uClass.appendExtraCode(extraCode.toString());
 			logger.info("Umplification Level 0 successfully completed for class:" + className);
 		}
 		if (level == 1 ) {
@@ -58,7 +56,7 @@ public class JavaMetamodelConverter {
 			addImplementedInterfaces(unit);
 			extraCode.append(addJavaFields(unit));
 			extraCode.append(addJavaMethods(unit));
-			uInterface.setExtraCode(extraCode.toString());
+			uInterface.appendExtraCode(extraCode.toString());
 			logger.info("Umplification Level 0 successfully completed for class:" + interfaceName);
 		}
 		if (level == 1 ) {
@@ -152,7 +150,6 @@ public class JavaMetamodelConverter {
 		if (method.getElementName().equals(javaClassName)) 
 		{
 			if (nb == 0 ){
-				ContructorAnalyzer.handleEmptyConstructor(method, uClass);
 				return true;
 			}
 			return false;
@@ -268,7 +265,7 @@ public class JavaMetamodelConverter {
 			String type = FieldAnalyzer.getUmpleType(field);
 			String value = FieldAnalyzer.getValue(field);
 			boolean isAutonique = false;
-			Attribute uAttribute  = new Attribute(name, type, "", value, isAutonique, null);
+			Attribute uAttribute  = new Attribute(name, type, "", value, isAutonique, uClass);
 			return uAttribute;
 		}
 		else{

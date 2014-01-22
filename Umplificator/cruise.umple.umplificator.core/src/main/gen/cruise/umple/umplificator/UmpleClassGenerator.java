@@ -57,7 +57,7 @@ public class UmpleClassGenerator
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_3);
     
-  	 if (uClass.isIsAbstract()) {
+  	 if (uClass.getIsAbstract()) {
   	 	appendln(stringBuffer, "");
    	    append(stringBuffer, "abstract;");
     }
@@ -116,11 +116,9 @@ public class UmpleClassGenerator
 	}			
   }
 
-    
-
-    stringBuffer.append(TEXT_5);
-    
   if (uClass.hasCodeInjections()){
+	stringBuffer.append(TEXT_5);
+
 	  for (CodeInjection ci : uClass.getCodeInjections())
 	  {
 		  if (ci != null) {
