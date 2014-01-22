@@ -15,7 +15,7 @@ interface ConstDefaultInterface
  const B1 = false;
  const B2 = false;
  const STR = "";
- const DATE = date("y-m-d", strtotime("2014-01-19"));
+ const DATE = date("y-m-d", strtotime("2014-01-22"));
  const TIME = date("h:i:s", strtotime("00:00:00"));
 
   

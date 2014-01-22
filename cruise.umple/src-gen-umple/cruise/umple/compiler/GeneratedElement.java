@@ -10,10 +10,10 @@ import java.util.*;
  * Should be abolished
  * 
  * @umplesource Umple.ump 612
- * @umplesource Umple_Code.ump 1933
+ * @umplesource Umple_Code.ump 1935
  */
 // line 612 "../../../../src/Umple.ump"
-// line 1933 "../../../../src/Umple_Code.ump"
+// line 1935 "../../../../src/Umple_Code.ump"
 public class GeneratedElement
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -37,12 +37,12 @@ public class GeneratedElement
   public void delete()
   {}
 
-  @umplesourcefile(line={1942},file={"Umple_Code.ump"},javaline={42},length={3})
+  @umplesourcefile(line={1944},file={"Umple_Code.ump"},javaline={42},length={3})
    public void setLookup(String aKey, String aValue){
     lookups.put(aKey, aValue);
   }
 
-  @umplesourcefile(line={1947},file={"Umple_Code.ump"},javaline={47},length={10})
+  @umplesourcefile(line={1949},file={"Umple_Code.ump"},javaline={47},length={10})
    public String getLookup(String aKey){
     if (aKey == null)
     {
@@ -54,7 +54,7 @@ public class GeneratedElement
     }
   }
 
-  @umplesourcefile(line={1959},file={"Umple_Code.ump"},javaline={59},length={20})
+  @umplesourcefile(line={1961},file={"Umple_Code.ump"},javaline={59},length={20})
    public boolean addMultiLookup(String aKey, String aValue){
     List<String> oldList = null;
     if (multiLookups.containsKey(aKey))
@@ -76,7 +76,7 @@ public class GeneratedElement
     return true;
   }
 
-  @umplesourcefile(line={1981},file={"Umple_Code.ump"},javaline={81},length={12})
+  @umplesourcefile(line={1983},file={"Umple_Code.ump"},javaline={81},length={12})
    public String[] getMultiLookup(String aKey){
     if (aKey == null || !multiLookups.containsKey(aKey))
     {
@@ -90,7 +90,7 @@ public class GeneratedElement
     }
   }
 
-  @umplesourcefile(line={1995},file={"Umple_Code.ump"},javaline={95},length={9})
+  @umplesourcefile(line={1997},file={"Umple_Code.ump"},javaline={95},length={9})
    public String toString(){
     String answer = "<<";
     for (String aKey : lookups.keySet())
@@ -104,11 +104,11 @@ public class GeneratedElement
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={1936},file={"Umple_Code.ump"},javaline={108},length={4})
-  @umplesourcefile(line={1937},file={"Umple_Code.ump"},javaline={109},length={3})
+  //  @umplesourcefile(line={1938},file={"Umple_Code.ump"},javaline={108},length={4})
+  @umplesourcefile(line={1939},file={"Umple_Code.ump"},javaline={109},length={3})
   private Map<String, String> lookups = new HashMap<String, String>() ;
-//  @umplesourcefile(line={1937},file={"Umple_Code.ump"},javaline={111},length={2})
-  @umplesourcefile(line={1938},file={"Umple_Code.ump"},javaline={112},length={1})
+//  @umplesourcefile(line={1939},file={"Umple_Code.ump"},javaline={111},length={2})
+  @umplesourcefile(line={1940},file={"Umple_Code.ump"},javaline={112},length={1})
   private Map<String, List<String>> multiLookups = new HashMap<String,List<String>>() ;
 
   

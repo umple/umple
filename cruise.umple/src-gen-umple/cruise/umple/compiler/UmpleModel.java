@@ -821,7 +821,7 @@ public class UmpleModel implements Runnable
   /**
    * Creates a generator for you based on the provided Language
    */
-  @umplesourcefile(line={179},file={"Umple_Code.ump"},javaline={822},length={17})
+  @umplesourcefile(line={179},file={"Umple_Code.ump"},javaline={822},length={19})
    public CodeGenerator newGenerator(String language){
     boolean foundGenerator;
     String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",language); 
@@ -833,7 +833,9 @@ public class UmpleModel implements Runnable
       return generator;
     }
     catch (ClassNotFoundException cnf) {
-      throw new RuntimeException("Code generator "+language+ " not found. Check spelling.",cnf);
+      System.err.println("Code generator "+language+ " not found. Check spelling. Specify --help.");
+      System.exit(-1);
+      throw new RuntimeException(cnf);
     }
     catch (Exception ex2) {
       throw new RuntimeException("Unable to instantiate "+language+ ".",ex2);
@@ -844,7 +846,7 @@ public class UmpleModel implements Runnable
   /**
    * Generates the actual code for each generation target
    */
-  @umplesourcefile(line={202},file={"Umple_Code.ump"},javaline={845},length={19})
+  @umplesourcefile(line={204},file={"Umple_Code.ump"},javaline={847},length={19})
    public void generate(){
     boolean foundGenerator;
     try
@@ -865,7 +867,7 @@ public class UmpleModel implements Runnable
     }
   }
 
-  @umplesourcefile(line={224},file={"Umple_Code.ump"},javaline={870},length={13})
+  @umplesourcefile(line={226},file={"Umple_Code.ump"},javaline={872},length={13})
    public Coordinate getDefaultClassPosition(int numDefaults){
     int xIndex  = 0;
     int yIndex = 0;
@@ -880,7 +882,7 @@ public class UmpleModel implements Runnable
     return new Coordinate(xOffset,yOffset,classSize.getWidth(),classSize.getHeight());
   }
 
-  @umplesourcefile(line={239},file={"Umple_Code.ump"},javaline={885},length={91})
+  @umplesourcefile(line={241},file={"Umple_Code.ump"},javaline={887},length={91})
    public Coordinate[] getDefaultAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     int offsetY = offsetFromEdge.getX();
@@ -973,7 +975,7 @@ public class UmpleModel implements Runnable
     return defaults;
   }
 
-  @umplesourcefile(line={332},file={"Umple_Code.ump"},javaline={978},length={59})
+  @umplesourcefile(line={334},file={"Umple_Code.ump"},javaline={980},length={59})
    private Coordinate[] getDefaultReflexiveAssociationPosition(Association a){
     Coordinate[] defaults = new Coordinate[2];
     String name  = a.getEnd(0).getClassName();
@@ -1055,8 +1057,8 @@ public class UmpleModel implements Runnable
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={77},file={"Umple_Code.ump"},javaline={1059},length={5})
-  @umplesourcefile(line={78},file={"Umple_Code.ump"},javaline={1060},length={4})
+  //  @umplesourcefile(line={77},file={"Umple_Code.ump"},javaline={1061},length={5})
+  @umplesourcefile(line={78},file={"Umple_Code.ump"},javaline={1062},length={4})
   public void addGenerate (Collection <?extends GenerateTarget> c) 
   {
     generates.addAll(c);

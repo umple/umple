@@ -12,10 +12,10 @@ import java.util.*;
  * after construction), etc.
  * 
  * @umplesource Umple.ump 481
- * @umplesource Umple_Code.ump 1196
+ * @umplesource Umple_Code.ump 1198
  */
 // line 481 "../../../../src/Umple.ump"
-// line 1196 "../../../../src/Umple_Code.ump"
+// line 1198 "../../../../src/Umple_Code.ump"
 public class Attribute extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -457,17 +457,17 @@ public class Attribute extends UmpleVariable
     super.delete();
   }
 
-  @umplesourcefile(line={1201},file={"Umple_Code.ump"},javaline={462},length={3})
+  @umplesourcefile(line={1203},file={"Umple_Code.ump"},javaline={462},length={3})
    public boolean isConstant(){
     return "const".equals(getModifier());
   }
 
-  @umplesourcefile(line={1206},file={"Umple_Code.ump"},javaline={467},length={3})
+  @umplesourcefile(line={1208},file={"Umple_Code.ump"},javaline={467},length={3})
    public boolean isPrimitive(){
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
-  @umplesourcefile(line={1212},file={"Umple_Code.ump"},javaline={472},length={6})
+  @umplesourcefile(line={1214},file={"Umple_Code.ump"},javaline={472},length={6})
    public boolean isImmutable(){
     boolean varIsImmutable = super.isImmutable();
     boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
@@ -475,17 +475,17 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
 
-  @umplesourcefile(line={1220},file={"Umple_Code.ump"},javaline={480},length={3})
+  @umplesourcefile(line={1222},file={"Umple_Code.ump"},javaline={480},length={3})
    public String getValue(){
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
 
-  @umplesourcefile(line={1224},file={"Umple_Code.ump"},javaline={485},length={3})
+  @umplesourcefile(line={1226},file={"Umple_Code.ump"},javaline={485},length={3})
    public void setValue(String lang, String code){
     codeblock.setCode(lang,code);
   }
 
-  @umplesourcefile(line={1229},file={"Umple_Code.ump"},javaline={490},length={3})
+  @umplesourcefile(line={1231},file={"Umple_Code.ump"},javaline={490},length={3})
    public String getFullType(){
     return this.getType() + (this.getIsList() ? "[]" : "");
   }
