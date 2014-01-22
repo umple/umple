@@ -18,6 +18,6 @@ public interface ConstDefaultInterface
  public static final boolean B1 = false;
  public static final boolean B2 = false;
  public static final String STR = "";
- public static final Date DATE = Date.valueOf("2014-01-19");
+ public static final Date DATE = Date.valueOf("2014-01-22");
  public static final Time TIME = Time.valueOf("00:00:00");
 }

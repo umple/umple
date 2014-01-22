@@ -186,7 +186,9 @@ class UmpleModel
       return generator;
     }
     catch (ClassNotFoundException cnf) {
-      throw new RuntimeException("Code generator "+language+ " not found. Check spelling.",cnf);
+      System.err.println("Code generator "+language+ " not found. Check spelling. Specify --help.");
+      System.exit(-1);
+      throw new RuntimeException(cnf);
     }
     catch (Exception ex2) {
       throw new RuntimeException("Unable to instantiate "+language+ ".",ex2);
