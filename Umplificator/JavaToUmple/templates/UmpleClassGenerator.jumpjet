@@ -11,7 +11,7 @@
 class <%=uClass.getName()%> 
 {
 <%
-  	 if (uClass.isIsAbstract()) {
+  	 if (uClass.getIsAbstract()) {
   	 	appendln(stringBuffer, "");
    	    append(stringBuffer, "abstract;");
     }

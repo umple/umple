@@ -1,11 +1,34 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the Java Umplificator!*/
-
-namespace net.n3.nanoxml ;
+/*This code was generated using the Java Umplificator 1.0.0!*/
+namespace net.n3.nanoxml;
 
 class XMLParseException 
-{
-  isA XMLException;
+{	
+isA XMLException;
 
-  
+/* CODE INJECTIONS */
+/**
+    * Creates a new exception.
+    *
+    * @param msg the message of the exception.
+    */
+   public XMLParseException(String msg)
+   {
+      super(msg);
+   }
+/**
+    * Creates a new exception.
+    *
+    * @param systemID the system ID from where the data came
+    * @param lineNr   the line number in the XML data where the exception
+    *                 occurred.
+    * @param msg      the message of the exception.
+    */
+   public XMLParseException(String systemID,
+                            int    lineNr,
+                            String msg)
+   {
+      super(systemID, lineNr, null, msg, true);
+   }
+
 }

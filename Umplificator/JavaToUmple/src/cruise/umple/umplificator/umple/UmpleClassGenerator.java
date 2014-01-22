@@ -57,7 +57,7 @@ public class UmpleClassGenerator
     stringBuffer.append(uClass.getName());
     stringBuffer.append(TEXT_3);
     
-  	 if (uClass.isIsAbstract()) {
+  	 if (uClass.getIsAbstract()) {
   	 	appendln(stringBuffer, "");
    	    append(stringBuffer, "abstract;");
     }

@@ -31,7 +31,7 @@ depend org.jhotdraw.gui.URIChooser;
 depend org.jhotdraw.util.prefs.PreferencesUtil;
   isA AbstractBean;
 
-  private LinkedList<View> views = new LinkedList<View>();
+private LinkedList<View> views = new LinkedList<View>();
 private Collection<View> unmodifiableViews;
 private boolean isEnabled = true;
 protected ResourceBundleUtil labels;

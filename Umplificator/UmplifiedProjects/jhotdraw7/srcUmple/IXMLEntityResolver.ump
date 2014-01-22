@@ -1,15 +1,15 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the Java Umplificator!*/
+/*This code was generated using the Java Umplificator 1.0.0!*/
+namespace net.n3.nanoxml;
 
-namespace net.n3.nanoxml ;
-
-class IXMLEntityResolver 
+interface IXMLEntityResolver 
 {
 depend java.util.Hashtable;
 depend java.io.Reader;
 depend java.io.StringReader;
 
-  /**
+
+/**
     * Adds an internal entity.
     *
     * @param name  the name of the entity.
