@@ -1,3 +1,5 @@
+// Umple class diagram representing card games in the Oh Hell and Whist family
+
 class Card {
   suit;  // "hearts", "clubs", "diamonds", "spades" 
   rank;  // A23456789JQK

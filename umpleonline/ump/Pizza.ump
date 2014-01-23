@@ -1,3 +1,5 @@
+// UML Class diagram representing a system for taking online orders for Pizza
+
 class Account
 {
   emailAddress;

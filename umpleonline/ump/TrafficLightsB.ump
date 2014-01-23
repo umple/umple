@@ -1,3 +1,4 @@
+// UML state machine diagram of a traffic light system, written in Umple
 class Intersection_timerDriven_noPedestrian {
   
   Integer directionOneGoTime;

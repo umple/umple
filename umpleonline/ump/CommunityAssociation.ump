@@ -1,3 +1,6 @@
+// UML class diagram in Umple showing a simple system for managing the data
+// maintained by a community association
+
 class Facility
 {
   id;

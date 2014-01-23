@@ -1,4 +1,4 @@
-
+// UML state machine diagram for a DVD state machine written in Umple
 class DVD_Player_UI {
   
   DVD_Panel {

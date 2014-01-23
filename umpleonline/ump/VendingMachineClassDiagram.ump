@@ -1,3 +1,4 @@
+// UML class diagram of a vending machine
 class VendingMachine {
    singleton;
    1 -- * Dispenser slots;

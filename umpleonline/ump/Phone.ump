@@ -1,6 +1,8 @@
+// Umple/UML system representing simulation of telephone calls between several parties
+// This system actually runs and contains a state machine of a phone call.
+// It runs best on a Mac since it calls a Mac system function for simulated voices
+// Compile it using Umple and then run it using java
 
-
-// The class representing the telephone system
 class PhoneSystemSimulation {
   singleton;
   // lazy PhoneLine[] lines;

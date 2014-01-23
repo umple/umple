@@ -1,3 +1,5 @@
+// Hospital system - sample UML class diagram in Umple
+
 class Hospital
 {
      1 -- * Employee;

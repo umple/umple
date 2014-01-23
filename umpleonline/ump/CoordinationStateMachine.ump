@@ -1,5 +1,8 @@
 // CoordinationStateMachine.ump
-//
+// This UML state machine diagram in Umple is for the
+// bCMS car crash management system
+// See http://cserg0.site.uottawa.ca/cma2012/CaseStudy.pdf
+// and http://www.cs.colostate.edu/remodd/v1/content/repository-model-driven-development-remodd-overview
 // Author: Timothy C. Lethbridge
 
 /* 

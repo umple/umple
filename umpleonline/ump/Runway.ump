@@ -1,3 +1,4 @@
+// UML state diagram representing an airport runway, written in Umple
 class Runway {
 
   runwayStateMachine {

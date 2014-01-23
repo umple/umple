@@ -1,3 +1,4 @@
+// UML class diagram for a system for managing elections, written in Umple
 namespace electorial;
 
 // association should be ->

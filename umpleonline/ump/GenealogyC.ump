@@ -1,5 +1,9 @@
 /*
-  Geneology - sample system (C)
+  Genealogy system (C) - sample UML class diagram in Umple
+  From Book by Lethbridge and Laganiere, McGraw Hill 2004
+  Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+  See http://www.lloseng.com
+  This version properly accounts for adoptions and multiple marriages.
   Last updated: June 8, 2010
 */
 //Namespace for core of the system.

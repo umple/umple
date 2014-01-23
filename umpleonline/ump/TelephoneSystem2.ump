@@ -1,3 +1,5 @@
+// UML state machine diagram showing several modes of a telephone
+// See also a separate example showing a diagram of a phone call
 class Phone {
   ringerSound {
     Off{

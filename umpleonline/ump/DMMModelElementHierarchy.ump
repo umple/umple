@@ -11,6 +11,8 @@
 // re-adjusted, as the example has been made to display the diagrams 
 // as separate entities.
 
+// This is a UML class diagram written in Umple
+
 class ModelElement{
   visibility;
 }

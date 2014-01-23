@@ -1,3 +1,4 @@
+// Simple UML class diagram for data managed by a school
 namespace education;
 
 class School {

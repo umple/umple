@@ -1,3 +1,5 @@
+// UML state machine diagram written in Umple representing a game involving balls
+
 namespace generatedCode;
 
 class Ball_Game {

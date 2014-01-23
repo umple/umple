@@ -1,5 +1,8 @@
 /*
-  Geneology - sample system (A)
+  Genealogy system (A) - sample UML class diagram in Umple
+  From Book by Lethbridge and Laganiere, McGraw Hill 2004
+  Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+  See http://www.lloseng.com
   Last updated: June 8, 2010
 */
 //Namespace for core of the system.
