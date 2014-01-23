@@ -334,7 +334,16 @@ public class ParserDataPackage
     }
   }
 
-  @umplesourcefile(line={543},file={"GrammarParsing_Code.ump"},javaline={339},length={25})
+
+  /**
+   * This is used to have multiple Umple files in command line;
+   */
+  @umplesourcefile(line={543},file={"GrammarParsing_Code.ump"},javaline={339},length={3})
+   public void AddExtraFiles(UmpleFile file){
+    input = input+file.getLinkedFiles();
+  }
+
+  @umplesourcefile(line={547},file={"GrammarParsing_Code.ump"},javaline={348},length={25})
    public void init(String rawinput, Position usePosition){
     String file = "temp";
     int offset = 0;
