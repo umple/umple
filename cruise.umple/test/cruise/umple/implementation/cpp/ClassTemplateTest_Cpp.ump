@@ -1,4 +1,4 @@
-generate Cpp;
+generate SimpleCpp;
 namespace example;
 
 class Mentor 

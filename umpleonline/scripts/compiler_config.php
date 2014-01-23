@@ -35,6 +35,10 @@ function generateMenu($buttonSuffix)
   //   - becomes second argument to Page.showGeneratedCode
   // Second is what generate argument to pass to the compiler
   //   - may be modified in compiler.php if special output needed
+  //  The following have been deactivated since they don't work. A developer
+  //  working on these can reactivate them in their local version
+  //  <option value=\"uigu:uigu\">JSF GUI (under development)</option>
+  //  <option value=\"cpp:Cpp\">Simple C++ (under development)</option>
   $generatemenu = "<ul class=\"second\">
         <li class=\"subtitle\"> Generate".$buttonSuffix."</li>
         <li>
@@ -42,20 +46,18 @@ function generateMenu($buttonSuffix)
             <option value=\"java:Java\">Java Code</option>
             <option value=\"javadoc:javadoc\">Java API Doc</option>
             <option value=\"php:Php\">PHP Code</option>
-            <option value=\"cpp:RTCpp\">Real Time C++ Code</option>
+            <option value=\"cpp:RTCpp\">C++ Code</option>
             <option value=\"ruby:Ruby\">Ruby Code</option>
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
             <option value=\"yumlDiagram:yumlDiagram\">Yuml Class Diagram</option>
-            <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram</option>
-            <option value=\"stateDiagram:stateDiagram\">State Diagram</option>                        
+            <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram (SVG)</option>
+            <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>                        
             <option value=\"java:Json\">Json</option>
             <option value=\"sql:Sql\">Sql</option>
             <option value=\"java:SimpleMetrics\">Simple metrics</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
-            <option value=\"uigu:uigu\">JSF GUI (under development)</option>
-            <option value=\"cpp:Cpp\">C++ (under development)</option>
           </select>
         </li>
         <li><div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div></li>

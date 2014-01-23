@@ -21,7 +21,7 @@ public class CppClassTemplateTest extends ClassTemplateTest
   public void setUp()
   {
     super.setUp();
-    language = "Cpp";
+    language = "SimpleCpp";
     languagePath = "cpp";
   }
   
