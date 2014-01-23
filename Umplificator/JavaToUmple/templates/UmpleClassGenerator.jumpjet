@@ -1,4 +1,4 @@
-<%@ jet package="cruise.umple.umplificator.umple" class="UmpleClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
+<%@ jet package="cruise.umple.umplificator" class="UmpleClassGenerator" imports="cruise.umple.compiler.* cruise.umple.util.* java.util.*" skeleton="generator.skeleton"%>
 <%@ include file="UmpleNotice.jet" %>
 <%
     UmpleClass uClass = (UmpleClass) uElement;

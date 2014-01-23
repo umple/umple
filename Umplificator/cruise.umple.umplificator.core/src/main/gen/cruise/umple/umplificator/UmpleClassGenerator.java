@@ -116,9 +116,11 @@ public class UmpleClassGenerator
 	}			
   }
 
-  if (uClass.hasCodeInjections()){
-	stringBuffer.append(TEXT_5);
+    
 
+    stringBuffer.append(TEXT_5);
+    
+  if (uClass.hasCodeInjections()){
 	  for (CodeInjection ci : uClass.getCodeInjections())
 	  {
 		  if (ci != null) {
