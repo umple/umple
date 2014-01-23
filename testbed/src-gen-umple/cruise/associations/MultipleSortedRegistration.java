@@ -43,11 +43,13 @@ public class MultipleSortedRegistration
   // INTERFACE
   //------------------------
 
+  @umplesourcefile(line={674},file={"TestHarnessAssociations.ump"},javaline={50},length={2})
   public String getName()
   {
     return getMultipleSortedStudent().getName();
   }
 
+  @umplesourcefile(line={676},file={"TestHarnessAssociations.ump"},javaline={55},length={2})
   public String getCode()
   {
     return getMultipleSortedCourse().getCode();
