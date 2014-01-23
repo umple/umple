@@ -50,13 +50,8 @@ class UmpleConsoleMain
         UmpleFile umpleFile = new UmpleFile(filename);
         //this loop is used to add command-based linked umple files and to show names of them.
         for (int i=1;i<nonOpt.size(); i++) {
-        	if (new File(nonOpt.get(i)).exists()) {
-                umpleFile.addLinkedFiles(nonOpt.get(i));
-                println(nonOpt.get(i)); 		
-        	} else {
-                println("The file "+nonOpt.get(i)+" doesn't exist."); 		
-        		
-        	}
+          umpleFile.addLinkedFiles(nonOpt.get(i));
+          println(nonOpt.get(i));
         }
 
         UmpleModel model = new UmpleModel(umpleFile);
@@ -89,9 +84,7 @@ class UmpleConsoleMain
 
           String successWord = compileSuccess ? "Success! " : "";
           for (int i=0;i<nonOpt.size(); i++) {
-        	  if (new File(nonOpt.get(i)).exists()) {
-        		  println(successWord + "Processed "+ nonOpt.get(i) +".");
-        	  }
+			println(successWord + "Processed "+ nonOpt.get(i) +".");
 		  }
 		  if(compileSuccess)
 		  {

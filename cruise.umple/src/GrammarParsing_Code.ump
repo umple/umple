@@ -538,10 +538,6 @@ class ParserDataPackage
       }
     }
   }
-  //This is used to have multiple Umple files in command line;
-  public void AddExtraFiles(UmpleFile file){
-	  input = input+file.getLinkedFiles();
-  }
   
   public void init(String rawinput, Position usePosition){
     String file = "temp";
@@ -658,7 +654,6 @@ class GrammarAnalyzer {
     setData(new ParserDataPackage(input));
     getData().setKeys(keys);
     getData().init(null);
-	getData().AddExtraFiles(file);
   }
   
   public void init(String ruleName, String input2) {
