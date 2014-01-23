@@ -45,7 +45,7 @@ constantDeclaration : const [[typedName]] (= [**value])? ;
 //TODO Should we use modifier for abstract methods [=modifier:public|protected|abstract|final]?
 
 moreCode- : [[codeLangs]] { [**code] }
-codeLangs- : ([=codeLang:Java|RTCpp|Cpp|Php|Ruby|UmpleSelf] ( , [=codeLang:Java|RTCpp|Cpp|Php|Ruby|UmpleSelf] )* )?
+codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|UmpleSelf] ( , [=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|UmpleSelf] )* )?
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]

@@ -23,7 +23,7 @@ class ConstDefault
   B1 = false;
   B2 = false;
   STR = "";
-  DATE = Date.parse("2014-01-22");
+  DATE = Date.parse("2014-01-23");
   TIME = Time.parse("00:00:00");
 
   #------------------------

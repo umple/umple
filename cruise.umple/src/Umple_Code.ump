@@ -177,7 +177,12 @@ class UmpleModel
   public CodeGenerator newGenerator(String language)
   {
     boolean foundGenerator;
-    String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",language); 
+    
+    String realLanguage = language;
+    if (language.equals("Cpp")) realLanguage="RTCpp";
+    else if (language.equals("SimpleCpp")) realLanguage="Cpp";
+    
+    String className = StringFormatter.format("cruise.umple.compiler.{0}Generator",realLanguage); 
     Class<?> classDefinition = null;
     try {
       classDefinition = Class.forName(className);
@@ -186,12 +191,12 @@ class UmpleModel
       return generator;
     }
     catch (ClassNotFoundException cnf) {
-      System.err.println("Code generator "+language+ " not found. Check spelling. Specify --help.");
+      System.err.println("Code generator "+realLanguage+ " not found. Check spelling. Specify --help.");
       System.exit(-1);
       throw new RuntimeException(cnf);
     }
     catch (Exception ex2) {
-      throw new RuntimeException("Unable to instantiate "+language+ ".",ex2);
+      throw new RuntimeException("Unable to instantiate "+realLanguage+ ".",ex2);
     }
   }
 

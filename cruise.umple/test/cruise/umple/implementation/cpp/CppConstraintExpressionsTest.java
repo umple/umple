@@ -11,7 +11,7 @@ public class CppConstraintExpressionsTest extends ConstraintExpressionsTest {
 	public void setUp()
 	{
 	  super.setUp();
-	  language = "Cpp";
+	  language = "SimpleCpp";
 	  languagePath = "cpp";
 	}
 

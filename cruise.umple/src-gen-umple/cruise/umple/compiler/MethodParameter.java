@@ -7,10 +7,10 @@ import java.util.*;
 /**
  * Represents a parameter in a method and its various forms.
  * @umplesource Umple.ump 185
- * @umplesource Umple_Code.ump 494
+ * @umplesource Umple_Code.ump 499
  */
 // line 185 "../../../../src/Umple.ump"
-// line 494 "../../../../src/Umple_Code.ump"
+// line 499 "../../../../src/Umple_Code.ump"
 public class MethodParameter extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -133,7 +133,7 @@ public class MethodParameter extends UmpleVariable
     super.delete();
   }
 
-  @umplesourcefile(line={499},file={"Umple_Code.ump"},javaline={138},length={3})
+  @umplesourcefile(line={504},file={"Umple_Code.ump"},javaline={138},length={3})
    public String getFullType(){
     return this.getType() + (this.getIsList() ? "[]" : "");
   }

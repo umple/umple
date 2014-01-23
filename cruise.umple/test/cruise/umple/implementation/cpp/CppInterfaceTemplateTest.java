@@ -11,7 +11,7 @@ public class CppInterfaceTemplateTest extends InterfaceTemplateTest
 	public void setUp()
 	{
 		super.setUp();
-		language = "Cpp";
+		language = "SimpleCpp";
 		languagePath = "cpp";
 	}
 	

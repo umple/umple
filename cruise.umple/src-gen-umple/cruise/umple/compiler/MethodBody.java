@@ -7,10 +7,10 @@ package cruise.umple.compiler;
  * The contents of a method, such as the code within it.
  * 
  * @umplesource Umple.ump 155
- * @umplesource Umple_Code.ump 473
+ * @umplesource Umple_Code.ump 478
  */
 // line 155 "../../../../src/Umple.ump"
-// line 473 "../../../../src/Umple_Code.ump"
+// line 478 "../../../../src/Umple_Code.ump"
 public class MethodBody
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -62,22 +62,22 @@ public class MethodBody
   public void delete()
   {}
 
-  @umplesourcefile(line={478},file={"Umple_Code.ump"},javaline={67},length={3})
+  @umplesourcefile(line={483},file={"Umple_Code.ump"},javaline={67},length={3})
    public  MethodBody(String aValue){
     this(new CodeBlock(aValue!=null ? aValue : ""));
   }
 
-  @umplesourcefile(line={482},file={"Umple_Code.ump"},javaline={72},length={3})
+  @umplesourcefile(line={487},file={"Umple_Code.ump"},javaline={72},length={3})
    public String getExtraCode(String lang){
     return codeblock.getCode(lang);
   }
 
-  @umplesourcefile(line={486},file={"Umple_Code.ump"},javaline={77},length={3})
+  @umplesourcefile(line={491},file={"Umple_Code.ump"},javaline={77},length={3})
    public void setExtraCode(String code){
     codeblock.setCode(code);
   }
 
-  @umplesourcefile(line={490},file={"Umple_Code.ump"},javaline={82},length={3})
+  @umplesourcefile(line={495},file={"Umple_Code.ump"},javaline={82},length={3})
    public void setExtraCode(String lang, String code){
     codeblock.setCode(lang,code);
   }
