@@ -1,3 +1,5 @@
+// Sample UML class diagram for a banking system, written in Umple
+
 namespace BankingSystem;
 
 //Namespace for core of the system.

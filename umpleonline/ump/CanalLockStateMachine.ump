@@ -1,3 +1,5 @@
+// UML state machine diagram for a canal lock, represented in UML 
+
 class Lock
 {
   Boolean boatGoingDown = false;

@@ -1,3 +1,4 @@
+// UML class diagram of a system for managing a warehouse
 namespace warehouse;
 
 class MovementLocation{}

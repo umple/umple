@@ -1,3 +1,7 @@
+// UML class diagram in Umple representing design of a system
+// for managing surveys of rainfall in Afghanistan
+// We are seeking the original source of the design for this system
+
 namespace afghan_rainfall;
 
 class Watershed

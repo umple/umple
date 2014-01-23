@@ -206,7 +206,7 @@ $output = readTemporaryFile("ump/" . $filename);
             <option name = "optionExample" value="BankingSystemA.ump">Banking System A</option>
             <option name = "optionExample" value="BankingSystemB.ump">Banking System B</option>
             <option name = "optionExample" value="CanalSystem.ump">Canal</option>
-            <option name = "optionExample" value="Decisions.ump">Decisions</option>            
+            <option name = "optionExample" value="Decisions.ump">Decisions</option>
             <option name = "optionExample" value="OhHellWhist.ump">Card Games</option>
             <option name = "optionExample" value="Claim.ump">Claim (Insurance)</option>
             <option name = "optionExample" value="CommunityAssociation.ump">Community Association</option>
@@ -230,7 +230,7 @@ $output = readTemporaryFile("ump/" . $filename);
             <option name = "optionExample" value="InventoryManagement.ump">Inventory Management</option>
             <option name = "optionExample" value="Library.ump">Library</option>
             <option name = "optionExample" value="MailOrderSystemClientOrder.ump">Mail Order System- Client Order</option>
-            <option name = "optionExample" value="ManufactoringPlantController.ump">Manufacturing Plant Controller</option>   
+            <option name = "optionExample" value="ManufacturingPlantController.ump">Manufacturing Plant Controller</option>   
             <option name = "optionExample" value="Pizza.ump">Pizza System</option>  
             <option name = "optionExample" value="PoliceSystem.ump">Police System</option>
             <option name = "optionExample" value="PoliticalEntities.ump">Political Entities</option>
@@ -248,7 +248,7 @@ $output = readTemporaryFile("ump/" . $filename);
         <li id="itemLoadExamples2">
           <select id="inputExample2" name="inputExample2" class="button" size = "1">
             <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
-            <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>            
+            <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>
             <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
             <option name = "optionExample" value="CarTransmission.ump">Car Transmission</option>
             <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic</option>

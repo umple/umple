@@ -1,5 +1,9 @@
 /* BcmsBaseConfiguration.ump
  *
+ * This UML class diagram in Umple is for the
+ * bCMS car crash management system
+ * See http://cserg0.site.uottawa.ca/cma2012/CaseStudy.pdf
+ * and http://www.cs.colostate.edu/remodd/v1/content/repository-model-driven-development-remodd-overview
  *
  * Master file to build the base version of
  * bCMS that has just one crisis and one

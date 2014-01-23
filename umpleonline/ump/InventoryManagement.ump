@@ -1,5 +1,6 @@
 /*
-  Mail Order System , Inventory Management - sample system 
+  Mail Order System , Inventory Management - sample UML class diagram in Umple
+  See also the separate diagram for the client order part of this system 
   Last updated: June 8, 2010
 */
 //Namespace for core of the system.

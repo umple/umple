@@ -1,4 +1,4 @@
-// State machine for an airline flight with nested state
+// UML State machine for an airline flight with nested state, written in Umple
 
 class SpecificFlight {
   Boolean finished;
@@ -37,5 +37,7 @@ class SpecificFlight {
     completed {}
     cancelled {}
   }
+
+
 }
     

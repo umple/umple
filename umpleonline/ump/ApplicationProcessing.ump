@@ -1,3 +1,6 @@
+// UML state machine diagram written in Umple representing the
+// steps in processing an application for a grant
+
 class Application {
 
   status {

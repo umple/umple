@@ -1,3 +1,5 @@
+// UML class diagram representing insurance claims
+
 namespace insurance.core;
 
 class Claim {

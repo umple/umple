@@ -1,3 +1,6 @@
+// UML class diagram in Umple representing a system for managing
+// access to facilities
+
 namespace access_control;
 
 

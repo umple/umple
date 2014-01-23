@@ -1,3 +1,5 @@
+// UML state diagram representing a Messenger with a message
+
 namespace generatedCode;
 
 class Messenger {

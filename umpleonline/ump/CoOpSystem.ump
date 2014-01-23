@@ -1,3 +1,6 @@
+// UML class diagram in Umple showing the data managed by
+// a co-operative education system that has to place students with employers
+
 class Program
 {
   name;

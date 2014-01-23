@@ -1,3 +1,8 @@
+// Airline system - sample UML class diagram in Umple
+// From Book by Lethbridge and Laganiere, McGraw Hill 2004
+// Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+// See http://www.lloseng.com
+
 namespace Airline;
 
 class Airline{

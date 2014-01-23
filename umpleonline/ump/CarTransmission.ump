@@ -1,3 +1,8 @@
+// UML state machine diagram in Umple representing an automatic transmission
+//  From Book by Lethbridge and Laganiere, McGraw Hill 2004
+//  Object-Oriented Software Engineering: Practical Software Engineering using UML and Java
+//  See http://www.lloseng.com
+
 class CarTransmission {
 
   Boolean driveSelected;

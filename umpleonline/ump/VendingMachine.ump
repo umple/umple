@@ -1,4 +1,5 @@
-
+// UML state machine diagram of a vending machine
+// There is also a class diagram example separately
 class VendingMachine
 {
   controlUnit {
