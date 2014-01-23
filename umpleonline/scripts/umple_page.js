@@ -740,6 +740,11 @@ Page.setFeedbackMessage = function(feedbackMessage)
   document.getElementById('feedbackMessage').innerHTML=feedbackMessage;
 }
 
+Page.setExampleMessage = function(exampleMessage)
+{
+  document.getElementById('exampleMessage').innerHTML=exampleMessage;
+}
+
 Page.getFeedbackMessage = function()
 {
   return document.getElementById('feedbackMessage').innerHTML;

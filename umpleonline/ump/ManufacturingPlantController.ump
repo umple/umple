@@ -1,0 +1,153 @@
+/*
+  Manufactoring Plant Controller- sample system 
+  Last updated: June 8, 2010
+*/
+//Namespace for core of the system.
+namespace MFP.core.green;
+
+class BillOfMaterialsLineItem{ 
+ numberRequired; 
+ 0..1 -- * BillOfMaterialsLineItem bill;
+ * bill -- 1 ProductType;
+ * -- 1 ProductType consistsOf;
+}
+class Bin { number; }
+
+class Supplier {
+ name;
+ * -- * ProductType;
+ 0..1 -- * Product;
+}
+
+class Product {
+ serialNumber;
+ 0..1 -- * Product packagedWith;
+}
+
+namespace MFP.core.red;
+class AssemblyStep {
+ description;
+ 1 -- * BillOfMaterialsLineItem;
+}
+
+class Robot{ number; }
+
+class RobotAllocation {
+ timePeriod;
+ * -- 1 AssemblyStep;
+ * -- 1 Robot;
+}
+
+namespace MFP.core.black;
+class ProductType{
+ description;
+
+ 1 -- * AssemblyStep;//ordered association
+ 1 -- * Bin keptIn;
+ 1 -- * Product;
+}
+class AssemblyLine{ number; }
+
+class ProductRun{
+ timePeriod;
+ numUnits;
+ * -- 1 ProductType;
+ * -- 1 AssemblyLine;
+ 0..1 -- * Product;
+}
+
+namespace MFP.core.blue;
+class OrderLineItem {
+ 1 -- * Product;
+}
+
+//Associations classes taken out and substituted with basic classes and associations on May 26, 2008
+// because of lack of implementations for associations classes in current Umple 2.0
+/*association ProductRun{
+ timePeriod;
+ numUnits;
+ * ProductType;
+ * AssemblyLine;
+}*/
+/*association BillOfMaterialsLineItem{ 
+ numberRequired; 
+ reflexive;
+ * ProductType;
+ * ProductType consistsOf;
+}*/
+/*association RobotAllocation {
+ timePeriod;
+ * AssemblyStep;
+ * Robot;
+}*/
+//$?[End_of_model]$?
+
+class ProductRun
+{
+  position 33 49 145 79;
+  position.association ProductRun__ProductType 145,79 0,0;
+  position.association AssemblyLine__ProductRun 70,79 62,0;
+  position.association Product__ProductRun 145,11 0,10;
+}
+
+class AssemblyLine
+{
+  position 41 185 125 60;
+}
+
+class ProductType
+{
+  position 266 188 149 62;
+  position.association AssemblyStep__ProductType 0,58 149,0;
+  position.association Bin:keptIn__ProductType 149,58 0,0;
+  position.association Product__ProductType 70,0 80,79;
+}
+
+class RobotAllocation
+{
+  position 39 440 145 58;
+  position.association AssemblyStep__RobotAllocation 70,0 73,58;
+  position.association Robot__RobotAllocation 145,15 0,13;
+}
+
+class OrderLineItem
+{
+  position 501 60 109 41;
+  position.association OrderLineItem__Product 0,12 160,22;
+}
+
+class BillOfMaterialsLineItem
+{
+  position 255 316 181 74;
+  position.association BillOfMaterialsLineItem__BillOfMaterialsLineItem:bill 0,62 9,74;
+  position.association BillOfMaterialsLineItem:bill__ProductType 61,0 50,62;
+  position.association BillOfMaterialsLineItem__ProductType:consistsOf 110,0 99,58;
+}
+
+class Product
+{
+  position 256 50 160 79;
+  position.association Product__Product:packagedWith 0,64 11,79;
+}
+class AssemblyStep
+{
+  position 36 317 149 62;
+  position.association AssemblyStep__BillOfMaterialsLineItem 149,15 0,17;
+}
+
+class Robot
+{
+  position 291 442 125 58;
+}
+
+class Supplier
+{
+  position 497 185 112 62;
+  position.association ProductType__Supplier 0,32 150,28;
+  position.association Product__Supplier 0,0 160,79;
+}
+
+class Bin
+{
+  position 493 315 125 58;
+}
