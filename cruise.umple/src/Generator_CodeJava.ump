@@ -120,9 +120,7 @@ class JavaGenerator
 
     if (lastElement == null)
     {
-      String message = "There was a problem with generating classes.\nNo clases were compiled.\n";
-      message += "Check the first line statement for probable cause.";
-      throw new UmpleCompilerException(message,null);
+      System.err.println("No classes were compiled. It is likely the source .ump file(s) contained no compilable code.");
     }
     postpare();
   }

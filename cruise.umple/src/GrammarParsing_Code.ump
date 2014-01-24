@@ -538,6 +538,10 @@ class ParserDataPackage
       }
     }
   }
+  //This is used to have multiple Umple files in command line;
+  public void AddExtraFiles(UmpleFile file){
+	  input = input+file.getLinkedFiles();
+  }
   
   public void init(String rawinput, Position usePosition){
     String file = "temp";
@@ -654,6 +658,7 @@ class GrammarAnalyzer {
     setData(new ParserDataPackage(input));
     getData().setKeys(keys);
     getData().init(null);
+	getData().AddExtraFiles(file);
   }
   
   public void init(String ruleName, String input2) {
@@ -705,6 +710,11 @@ class GrammarAnalyzer {
       }
       else if("class".equals(badWord) || "association".equals(badWord) || "interface".equals(badWord) || "external".equals(badWord) || "associationClass".equals(badWord) || "stateMachine".equals(badWord)) {
         messageNumber=1502;
+      }
+      else if ("".equals(badWord)) // empty system, which is silly but ok
+      {
+        setParseResult(new ParseResult(true));
+        return;
       }
       setParseResult(new ParseResult(false));
       getParseResult().addErrorMessage(new ErrorMessage(messageNumber,getFailedPosition(),badWord));
