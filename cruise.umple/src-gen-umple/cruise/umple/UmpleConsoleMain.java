@@ -40,7 +40,7 @@ public class UmpleConsoleMain
   public void delete()
   {}
 
-  @umplesourcefile(line={33},file={"Main_Code.ump"},javaline={45},length={70})
+  @umplesourcefile(line={33},file={"Main_Code.ump"},javaline={45},length={77})
    public static  void main(String [] args){
     Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
     Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
@@ -64,8 +64,13 @@ public class UmpleConsoleMain
         UmpleFile umpleFile = new UmpleFile(filename);
         //this loop is used to add command-based linked umple files and to show names of them.
         for (int i=1;i<nonOpt.size(); i++) {
-          umpleFile.addLinkedFiles(nonOpt.get(i));
-          println(nonOpt.get(i));
+        	if (new File(nonOpt.get(i)).exists()) {
+                umpleFile.addLinkedFiles(nonOpt.get(i));
+                println(nonOpt.get(i)); 		
+        	} else {
+                println("The file "+nonOpt.get(i)+" doesn't exist."); 		
+        		
+        	}
         }
 
         UmpleModel model = new UmpleModel(umpleFile);
@@ -98,7 +103,9 @@ public class UmpleConsoleMain
 
           String successWord = compileSuccess ? "Success! " : "";
           for (int i=0;i<nonOpt.size(); i++) {
-			println(successWord + "Processed "+ nonOpt.get(i) +".");
+        	  if (new File(nonOpt.get(i)).exists()) {
+        		  println(successWord + "Processed "+ nonOpt.get(i) +".");
+        	  }
 		  }
 		  if(compileSuccess)
 		  {
@@ -114,19 +121,19 @@ public class UmpleConsoleMain
         System.exit(0);
   }
 
-  @umplesourcefile(line={105},file={"Main_Code.ump"},javaline={119},length={4})
+  @umplesourcefile(line={112},file={"Main_Code.ump"},javaline={126},length={4})
    private static  void println(String output){
     console += output + "\n";
         System.out.println(output);
   }
 
-  @umplesourcefile(line={110},file={"Main_Code.ump"},javaline={125},length={4})
+  @umplesourcefile(line={117},file={"Main_Code.ump"},javaline={132},length={4})
    private static  void printerr(String err){
     console += err;
         System.err.print(err);
   }
 
-  @umplesourcefile(line={115},file={"Main_Code.ump"},javaline={131},length={7})
+  @umplesourcefile(line={122},file={"Main_Code.ump"},javaline={138},length={7})
    private static  void printUsage(){
     println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
         try{
@@ -135,7 +142,7 @@ public class UmpleConsoleMain
         }
   }
 
-  @umplesourcefile(line={123},file={"Main_Code.ump"},javaline={140},length={14})
+  @umplesourcefile(line={130},file={"Main_Code.ump"},javaline={147},length={14})
    private static  void generateUmple(String xmi){
     boolean isSuccess = false;
 	  try {    
@@ -158,7 +165,7 @@ public class UmpleConsoleMain
    * Argument: optSet - set of the options and corresponding arguments
    * Return: boolean - If application should terminate immediately after return
    */
-  @umplesourcefile(line={143},file={"Main_Code.ump"},javaline={156},length={19})
+  @umplesourcefile(line={150},file={"Main_Code.ump"},javaline={163},length={19})
    private static  boolean preModelOptionProcess(OptionSet optSet){
     if (optSet == null) {
             return true;
@@ -179,7 +186,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={163},file={"Main_Code.ump"},javaline={184},length={17})
+  @umplesourcefile(line={170},file={"Main_Code.ump"},javaline={191},length={17})
    private static  boolean postModelOptionProcess(OptionSet optset, UmpleModel model){
     if (optset.has("generate")) {
             boolean override=false;
@@ -198,7 +205,7 @@ public class UmpleConsoleMain
         return false;
   }
 
-  @umplesourcefile(line={182},file={"Main_Code.ump"},javaline={203},length={24})
+  @umplesourcefile(line={189},file={"Main_Code.ump"},javaline={210},length={24})
    private static  OptionSet optParse(String [] args){
     optparser = new OptionParser();
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
@@ -227,9 +234,9 @@ public class UmpleConsoleMain
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
-  //  @umplesourcefile(line={205},file={"Main_Code.ump"},javaline={231},length={4})
+  //  @umplesourcefile(line={212},file={"Main_Code.ump"},javaline={238},length={4})
   public static String console ;
-//  @umplesourcefile(line={206},file={"Main_Code.ump"},javaline={233},length={2})
+//  @umplesourcefile(line={213},file={"Main_Code.ump"},javaline={240},length={2})
   private static OptionParser optparser ;
 
   
