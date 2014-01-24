@@ -35,21 +35,21 @@
 <path fill="none" stroke="black" d="M432.598,-295.379C432.449,-295.318 432.297,-295.256 432.144,-295.193"/>
 <polygon fill="black" stroke="black" points="434.348,-292.314 423.768,-291.764 431.696,-298.792 434.348,-292.314"/>
 </g>
-<!-- start_BigStateMachineTest_Zxab -->
-<g id="node2" class="node"><title>start_BigStateMachineTest_Zxab</title>
+<!-- start_BigStateMachineTest_sm_Zxab -->
+<g id="node2" class="node"><title>start_BigStateMachineTest_sm_Zxab</title>
 <ellipse fill="black" stroke="black" cx="231" cy="-299" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_BigStateMachineTest_Zxab&#45;&gt;BigStateMachineTest_smZxabZx_Z -->
-<g id="edge2" class="edge"><title>start_BigStateMachineTest_Zxab&#45;&gt;BigStateMachineTest_smZxabZx_Z</title>
+<!-- start_BigStateMachineTest_sm_Zxab&#45;&gt;BigStateMachineTest_smZxabZx_Z -->
+<g id="edge2" class="edge"><title>start_BigStateMachineTest_sm_Zxab&#45;&gt;BigStateMachineTest_smZxabZx_Z</title>
 <path fill="none" stroke="black" d="M235.63,-293.213C236.635,-292.174 237.778,-290.992 239.035,-289.693"/>
 <polygon fill="black" stroke="black" points="241.71,-291.962 246.146,-282.34 236.678,-287.095 241.71,-291.962"/>
 </g>
-<!-- start_BigStateMachineTest_Zx -->
-<g id="node3" class="node"><title>start_BigStateMachineTest_Zx</title>
+<!-- start_BigStateMachineTest_sm_Zxab_Zx -->
+<g id="node3" class="node"><title>start_BigStateMachineTest_sm_Zxab_Zx</title>
 <ellipse fill="black" stroke="black" cx="290" cy="-299" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_BigStateMachineTest_Zx&#45;&gt;BigStateMachineTest_smZxabZx_Z -->
-<g id="edge3" class="edge"><title>start_BigStateMachineTest_Zx&#45;&gt;BigStateMachineTest_smZxabZx_Z</title>
+<!-- start_BigStateMachineTest_sm_Zxab_Zx&#45;&gt;BigStateMachineTest_smZxabZx_Z -->
+<g id="edge3" class="edge"><title>start_BigStateMachineTest_sm_Zxab_Zx&#45;&gt;BigStateMachineTest_smZxabZx_Z</title>
 <path fill="none" stroke="black" d="M290,-291.472C290,-284.902 290,-274.324 290,-264.229"/>
 <polygon fill="black" stroke="black" points="293.5,-264.073 290,-254.073 286.5,-264.073 293.5,-264.073"/>
 </g>
@@ -143,12 +143,12 @@
 <polygon fill="black" stroke="black" points="56.8893,-151.638 52.3533,-142.063 49.9284,-152.377 56.8893,-151.638"/>
 <text text-anchor="middle" x="79.6069" y="-185.4" font-family="Times,serif" font-size="14.00">e2</text>
 </g>
-<!-- start_BigStateMachineTest_Ge -->
-<g id="node9" class="node"><title>start_BigStateMachineTest_Ge</title>
+<!-- start_BigStateMachineTest_sm_Ge -->
+<g id="node9" class="node"><title>start_BigStateMachineTest_sm_Ge</title>
 <ellipse fill="black" stroke="black" cx="113" cy="-124" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_BigStateMachineTest_Ge&#45;&gt;BigStateMachineTest_smGe_G -->
-<g id="edge12" class="edge"><title>start_BigStateMachineTest_Ge&#45;&gt;BigStateMachineTest_smGe_G</title>
+<!-- start_BigStateMachineTest_sm_Ge&#45;&gt;BigStateMachineTest_smGe_G -->
+<g id="edge12" class="edge"><title>start_BigStateMachineTest_sm_Ge&#45;&gt;BigStateMachineTest_smGe_G</title>
 <path fill="none" stroke="black" d="M112.443,-116.633C111.415,-106.51 108.777,-86.232 103,-70 101.967,-67.0973 100.718,-64.1446 99.3592,-61.2473"/>
 <polygon fill="black" stroke="black" points="102.454,-59.6113 94.7763,-52.31 96.2248,-62.8053 102.454,-59.6113"/>
 </g>

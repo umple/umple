@@ -72,8 +72,8 @@
 <polygon fill="black" stroke="black" points="527.294,-41.7602 518.369,-36.0504 521.785,-46.0794 527.294,-41.7602"/>
 <text text-anchor="middle" x="563.873" y="-57.4" font-family="Times,serif" font-size="14.00">cancel</text>
 </g>
-<!-- start_SpecificFlight_activeWithPassengers -->
-<g id="node4" class="node"><title>start_SpecificFlight_activeWithPassengers</title>
+<!-- start_SpecificFlight_state_activeWithPassengers -->
+<g id="node4" class="node"><title>start_SpecificFlight_state_activeWithPassengers</title>
 <ellipse fill="black" stroke="black" cx="274" cy="-621" rx="7.2" ry="7.2"/>
 </g>
 <!-- SpecificFlight_stateActiveWithPassengers_waitingForNextLeg -->
@@ -81,8 +81,8 @@
 <path fill="none" stroke="black" d="M325.316,-576C325.316,-576 222.684,-576 222.684,-576 216.684,-576 210.684,-570 210.684,-564 210.684,-564 210.684,-552 210.684,-552 210.684,-546 216.684,-540 222.684,-540 222.684,-540 325.316,-540 325.316,-540 331.316,-540 337.316,-546 337.316,-552 337.316,-552 337.316,-564 337.316,-564 337.316,-570 331.316,-576 325.316,-576"/>
 <text text-anchor="middle" x="274" y="-552.4" font-family="Times,serif" font-size="14.00">waitingForNextLeg</text>
 </g>
-<!-- start_SpecificFlight_activeWithPassengers&#45;&gt;SpecificFlight_stateActiveWithPassengers_waitingForNextLeg -->
-<g id="edge5" class="edge"><title>start_SpecificFlight_activeWithPassengers&#45;&gt;SpecificFlight_stateActiveWithPassengers_waitingForNextLeg</title>
+<!-- start_SpecificFlight_state_activeWithPassengers&#45;&gt;SpecificFlight_stateActiveWithPassengers_waitingForNextLeg -->
+<g id="edge5" class="edge"><title>start_SpecificFlight_state_activeWithPassengers&#45;&gt;SpecificFlight_stateActiveWithPassengers_waitingForNextLeg</title>
 <path fill="none" stroke="black" d="M274,-613.472C274,-606.902 274,-596.324 274,-586.229"/>
 <polygon fill="black" stroke="black" points="277.5,-586.073 274,-576.073 270.5,-586.073 277.5,-586.073"/>
 </g>
