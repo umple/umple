@@ -61,12 +61,12 @@
 <polygon fill="black" stroke="black" points="200.053,-288.611 189.669,-286.511 196.477,-294.628 200.053,-288.611"/>
 <text text-anchor="middle" x="215.107" y="-264.4" font-family="Times,serif" font-size="14.00">downRequest</text>
 </g>
-<!-- start_Elevator_PrepareUp -->
-<g id="node3" class="node"><title>start_Elevator_PrepareUp</title>
+<!-- start_Elevator_elevator_state_machine_PrepareUp -->
+<g id="node3" class="node"><title>start_Elevator_elevator_state_machine_PrepareUp</title>
 <ellipse fill="black" stroke="black" cx="711" cy="-315" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_Elevator_PrepareUp&#45;&gt;Elevator_elevator_state_machinePrepareUp_DoorClosingMovingUp -->
-<g id="edge5" class="edge"><title>start_Elevator_PrepareUp&#45;&gt;Elevator_elevator_state_machinePrepareUp_DoorClosingMovingUp</title>
+<!-- start_Elevator_elevator_state_machine_PrepareUp&#45;&gt;Elevator_elevator_state_machinePrepareUp_DoorClosingMovingUp -->
+<g id="edge5" class="edge"><title>start_Elevator_elevator_state_machine_PrepareUp&#45;&gt;Elevator_elevator_state_machinePrepareUp_DoorClosingMovingUp</title>
 <path fill="none" stroke="black" d="M711,-307.504C711,-294.492 711,-264.565 711,-242.253"/>
 <polygon fill="black" stroke="black" points="714.5,-242.019 711,-232.019 707.5,-242.019 714.5,-242.019"/>
 </g>
@@ -87,12 +87,12 @@
 <polygon fill="black" stroke="black" points="843.266,-152.834 842.829,-142.249 836.569,-150.796 843.266,-152.834"/>
 <text text-anchor="middle" x="855.659" y="-163.4" font-family="Times,serif" font-size="14.00">started</text>
 </g>
-<!-- start_Elevator_PrepareDown -->
-<g id="node5" class="node"><title>start_Elevator_PrepareDown</title>
+<!-- start_Elevator_elevator_state_machine_PrepareDown -->
+<g id="node5" class="node"><title>start_Elevator_elevator_state_machine_PrepareDown</title>
 <ellipse fill="black" stroke="black" cx="99" cy="-315" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_Elevator_PrepareDown&#45;&gt;Elevator_elevator_state_machinePrepareDown_DoorClosingMovingDown -->
-<g id="edge8" class="edge"><title>start_Elevator_PrepareDown&#45;&gt;Elevator_elevator_state_machinePrepareDown_DoorClosingMovingDown</title>
+<!-- start_Elevator_elevator_state_machine_PrepareDown&#45;&gt;Elevator_elevator_state_machinePrepareDown_DoorClosingMovingDown -->
+<g id="edge8" class="edge"><title>start_Elevator_elevator_state_machine_PrepareDown&#45;&gt;Elevator_elevator_state_machinePrepareDown_DoorClosingMovingDown</title>
 <path fill="none" stroke="black" d="M99,-307.504C99,-294.492 99,-264.565 99,-242.253"/>
 <polygon fill="black" stroke="black" points="102.5,-242.019 99,-232.019 95.5001,-242.019 102.5,-242.019"/>
 </g>
@@ -108,12 +108,12 @@
 <polygon fill="black" stroke="black" points="800.046,-129.943 809.916,-126.091 799.798,-122.947 800.046,-129.943"/>
 <text text-anchor="middle" x="383.659" y="-163.4" font-family="Times,serif" font-size="14.00">started</text>
 </g>
-<!-- start_Elevator_InMotion -->
-<g id="node7" class="node"><title>start_Elevator_InMotion</title>
+<!-- start_Elevator_elevator_state_machine_InMotion -->
+<g id="node7" class="node"><title>start_Elevator_elevator_state_machine_InMotion</title>
 <ellipse fill="black" stroke="black" cx="889" cy="-214" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_Elevator_InMotion&#45;&gt;Elevator_elevator_state_machineInMotion_Moving -->
-<g id="edge11" class="edge"><title>start_Elevator_InMotion&#45;&gt;Elevator_elevator_state_machineInMotion_Moving</title>
+<!-- start_Elevator_elevator_state_machine_InMotion&#45;&gt;Elevator_elevator_state_machineInMotion_Moving -->
+<g id="edge11" class="edge"><title>start_Elevator_elevator_state_machine_InMotion&#45;&gt;Elevator_elevator_state_machineInMotion_Moving</title>
 <path fill="none" stroke="black" d="M889.796,-206.734C890.815,-196.401 891.636,-175.402 884,-160 882.118,-156.203 879.636,-152.615 876.839,-149.289"/>
 <polygon fill="black" stroke="black" points="879.325,-146.825 869.879,-142.027 874.271,-151.668 879.325,-146.825"/>
 </g>
@@ -145,12 +145,12 @@
 <polygon fill="black" stroke="black" points="511.375,-590.14 501.476,-593.918 511.57,-597.137 511.375,-590.14"/>
 <text text-anchor="middle" x="1200.82" y="-309.4" font-family="Times,serif" font-size="14.00">stopped / openDoor();</text>
 </g>
-<!-- start_Elevator_OnFloor -->
-<g id="node10" class="node"><title>start_Elevator_OnFloor</title>
+<!-- start_Elevator_elevator_state_machine_OnFloor -->
+<g id="node10" class="node"><title>start_Elevator_elevator_state_machine_OnFloor</title>
 <ellipse fill="black" stroke="black" cx="455" cy="-659" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_Elevator_OnFloor&#45;&gt;Elevator_elevator_state_machineOnFloor_DoorOpening -->
-<g id="edge16" class="edge"><title>start_Elevator_OnFloor&#45;&gt;Elevator_elevator_state_machineOnFloor_DoorOpening</title>
+<!-- start_Elevator_elevator_state_machine_OnFloor&#45;&gt;Elevator_elevator_state_machineOnFloor_DoorOpening -->
+<g id="edge16" class="edge"><title>start_Elevator_elevator_state_machine_OnFloor&#45;&gt;Elevator_elevator_state_machineOnFloor_DoorOpening</title>
 <path fill="none" stroke="black" d="M455,-651.472C455,-644.902 455,-634.324 455,-624.229"/>
 <polygon fill="black" stroke="black" points="458.5,-624.073 455,-614.073 451.5,-624.073 458.5,-624.073"/>
 </g>

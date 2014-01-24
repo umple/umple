@@ -43,12 +43,12 @@
 <path fill="none" stroke="black" d="M8.24649,-212.844C9.25923,-208.892 10.994,-203.674 15.3109,-197.834"/>
 <polygon fill="black" stroke="black" points="18.1586,-199.905 22.3,-190.153 12.9811,-195.194 18.1586,-199.905"/>
 </g>
-<!-- start_Runway_Open -->
-<g id="node2" class="node"><title>start_Runway_Open</title>
+<!-- start_Runway_runwayStateMachine_Open -->
+<g id="node2" class="node"><title>start_Runway_runwayStateMachine_Open</title>
 <ellipse fill="black" stroke="black" cx="194" cy="-220" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_Runway_Open&#45;&gt;Runway_runwayStateMachineOpen_Free -->
-<g id="edge4" class="edge"><title>start_Runway_Open&#45;&gt;Runway_runwayStateMachineOpen_Free</title>
+<!-- start_Runway_runwayStateMachine_Open&#45;&gt;Runway_runwayStateMachineOpen_Free -->
+<g id="edge4" class="edge"><title>start_Runway_runwayStateMachine_Open&#45;&gt;Runway_runwayStateMachineOpen_Free</title>
 <path fill="none" stroke="black" d="M194,-212.671C194,-201.484 194,-177.597 194,-158.531"/>
 <polygon fill="black" stroke="black" points="197.5,-158.271 194,-148.271 190.5,-158.271 197.5,-158.271"/>
 </g>
@@ -91,12 +91,12 @@
 <polygon fill="black" stroke="black" points="168.682,-106.797 178.043,-111.759 173.819,-102.042 168.682,-106.797"/>
 <text text-anchor="middle" x="196.978" y="-73.4" font-family="Times,serif" font-size="14.00">planeTakesOff</text>
 </g>
-<!-- start_Runway_Closed -->
-<g id="node5" class="node"><title>start_Runway_Closed</title>
+<!-- start_Runway_runwayStateMachine_Closed -->
+<g id="node5" class="node"><title>start_Runway_runwayStateMachine_Closed</title>
 <ellipse fill="black" stroke="black" cx="294" cy="-294" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_Runway_Closed&#45;&gt;Runway_runwayStateMachineClosed_Emergency -->
-<g id="edge7" class="edge"><title>start_Runway_Closed&#45;&gt;Runway_runwayStateMachineClosed_Emergency</title>
+<!-- start_Runway_runwayStateMachine_Closed&#45;&gt;Runway_runwayStateMachineClosed_Emergency -->
+<g id="edge7" class="edge"><title>start_Runway_runwayStateMachine_Closed&#45;&gt;Runway_runwayStateMachineClosed_Emergency</title>
 <path fill="none" stroke="black" d="M294,-286.355C294,-277.7 294,-262.04 294,-248.219"/>
 <polygon fill="black" stroke="black" points="297.5,-248.154 294,-238.154 290.5,-248.154 297.5,-248.154"/>
 </g>
@@ -117,21 +117,21 @@
 <polygon fill="black" stroke="black" points="242.518,-81.8021 237.54,-91.1542 247.264,-86.9482 242.518,-81.8021"/>
 <text text-anchor="middle" x="273.607" y="-73.4" font-family="Times,serif" font-size="14.00">open</text>
 </g>
-<!-- start_Runway_Restoration -->
-<g id="node8" class="node"><title>start_Runway_Restoration</title>
+<!-- start_Runway_runwayStateMachine_Closed_Restoration -->
+<g id="node8" class="node"><title>start_Runway_runwayStateMachine_Closed_Restoration</title>
 <ellipse fill="black" stroke="black" cx="357" cy="-294" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_Runway_Restoration&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_1_Repair -->
-<g id="edge11" class="edge"><title>start_Runway_Restoration&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_1_Repair</title>
+<!-- start_Runway_runwayStateMachine_Closed_Restoration&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_1_Repair -->
+<g id="edge11" class="edge"><title>start_Runway_runwayStateMachine_Closed_Restoration&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_1_Repair</title>
 <path fill="none" stroke="black" d="M361.58,-287.913C362.728,-286.63 364.038,-285.158 365.447,-283.564"/>
 <polygon fill="black" stroke="black" points="368.115,-285.829 372.06,-275.996 362.844,-281.223 368.115,-285.829"/>
 </g>
-<!-- start_Runway_Restoration_1 -->
-<g id="node9" class="node"><title>start_Runway_Restoration_1</title>
+<!-- start_Runway_runwayStateMachine_Closed_Restoration_Restoration_1 -->
+<g id="node9" class="node"><title>start_Runway_runwayStateMachine_Closed_Restoration_Restoration_1</title>
 <ellipse fill="black" stroke="black" cx="416" cy="-294" rx="7.2" ry="7.2"/>
 </g>
-<!-- start_Runway_Restoration_1&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_1_Repair -->
-<g id="edge12" class="edge"><title>start_Runway_Restoration_1&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_1_Repair</title>
+<!-- start_Runway_runwayStateMachine_Closed_Restoration_Restoration_1&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_1_Repair -->
+<g id="edge12" class="edge"><title>start_Runway_runwayStateMachine_Closed_Restoration_Restoration_1&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_1_Repair</title>
 <path fill="none" stroke="black" d="M416,-286.355C416,-277.7 416,-262.04 416,-248.219"/>
 <polygon fill="black" stroke="black" points="419.5,-248.154 416,-238.154 412.5,-248.154 419.5,-248.154"/>
 </g>
@@ -158,8 +158,8 @@
 <polygon fill="black" stroke="black" points="398.39,-194.064 405.655,-201.776 404.785,-191.217 398.39,-194.064"/>
 <text text-anchor="middle" x="445.057" y="-169.4" font-family="Times,serif" font-size="14.00">check [!success]</text>
 </g>
-<!-- start_Runway_Restoration_2 -->
-<g id="node12" class="node"><title>start_Runway_Restoration_2</title>
+<!-- start_Runway_runwayStateMachine_Closed_Restoration_Restoration_2 -->
+<g id="node12" class="node"><title>start_Runway_runwayStateMachine_Closed_Restoration_Restoration_2</title>
 <ellipse fill="black" stroke="black" cx="675" cy="-294" rx="7.2" ry="7.2"/>
 </g>
 <!-- Runway_runwayStateMachineClosedRestorationRestoration_2_Maintenance -->
@@ -167,8 +167,8 @@
 <path fill="none" stroke="black" d="M707.223,-238C707.223,-238 642.777,-238 642.777,-238 636.777,-238 630.777,-232 630.777,-226 630.777,-226 630.777,-214 630.777,-214 630.777,-208 636.777,-202 642.777,-202 642.777,-202 707.223,-202 707.223,-202 713.223,-202 719.223,-208 719.223,-214 719.223,-214 719.223,-226 719.223,-226 719.223,-232 713.223,-238 707.223,-238"/>
 <text text-anchor="middle" x="675" y="-214.4" font-family="Times,serif" font-size="14.00">Maintenance</text>
 </g>
-<!-- start_Runway_Restoration_2&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_2_Maintenance -->
-<g id="edge15" class="edge"><title>start_Runway_Restoration_2&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_2_Maintenance</title>
+<!-- start_Runway_runwayStateMachine_Closed_Restoration_Restoration_2&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_2_Maintenance -->
+<g id="edge15" class="edge"><title>start_Runway_runwayStateMachine_Closed_Restoration_Restoration_2&#45;&gt;Runway_runwayStateMachineClosedRestorationRestoration_2_Maintenance</title>
 <path fill="none" stroke="black" d="M675,-286.355C675,-277.7 675,-262.04 675,-248.219"/>
 <polygon fill="black" stroke="black" points="678.5,-248.154 675,-238.154 671.5,-248.154 678.5,-248.154"/>
 </g>
