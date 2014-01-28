@@ -8,10 +8,10 @@ import java.util.*;
  * 
  * A key in a class is a set of attributes associations used to uniquely identify an object
  * 
- * @umplesource Umple.ump 316
+ * @umplesource Umple.ump 319
  * @umplesource Umple_Code.ump 400
  */
-// line 316 "../../../../src/Umple.ump"
+// line 319 "../../../../src/Umple.ump"
 // line 400 "../../../../src/Umple_Code.ump"
 public class Key
 {

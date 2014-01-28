@@ -22,12 +22,15 @@ class StateMachine
   name;
   * -- 0..1 UmpleClass;
   
+  * -- 0..1 UmpleTrait;
+  
   * nestedStateMachines -- 0..1 State parentState;
   
   key { parentState, name } 
   
   before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
-
+  before setUmpleTrait { if (aUmpleTrait != null && aUmpleTrait.isImmutable()) { return false; } }
+  
   Boolean queued = false;
 }
 

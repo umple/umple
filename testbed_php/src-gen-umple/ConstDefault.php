@@ -18,7 +18,7 @@ class ConstDefault
   public static $B1 = false;
   public static $B2 = false;
   public static $STR = "";
-  public static $DATE = date("y-m-d", strtotime("2014-01-23"));
+  public static $DATE = date("y-m-d", strtotime("2014-01-28"));
   public static $TIME = date("h:i:s", strtotime("00:00:00"));
 
   //------------------------

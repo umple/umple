@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * Represents a parameter in a method and its various forms.
- * @umplesource Umple.ump 185
+ * @umplesource Umple.ump 188
  * @umplesource Umple_Code.ump 499
  */
-// line 185 "../../../../src/Umple.ump"
+// line 188 "../../../../src/Umple.ump"
 // line 499 "../../../../src/Umple_Code.ump"
 public class MethodParameter extends UmpleVariable
 {

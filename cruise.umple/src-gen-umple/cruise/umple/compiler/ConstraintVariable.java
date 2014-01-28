@@ -6,10 +6,10 @@ import java.util.*;
 
 /**
  * Under Development
- * @umplesource Umple.ump 229
+ * @umplesource Umple.ump 232
  * @umplesource Umple_Code.ump 1352
  */
-// line 229 "../../../../src/Umple.ump"
+// line 232 "../../../../src/Umple.ump"
 // line 1352 "../../../../src/Umple_Code.ump"
 public class ConstraintVariable
 {
@@ -110,13 +110,13 @@ public class ConstraintVariable
     return value;
   }
 
-  @umplesourcefile(line={235},file={"Umple.ump"},javaline={117},length={2})
+  @umplesourcefile(line={238},file={"Umple.ump"},javaline={117},length={2})
   public boolean getIsAttribute()
   {
     return !"SYNTAX".equals(type)&&!"OPERATOR".equals(type);
   }
 
-  @umplesourcefile(line={236},file={"Umple.ump"},javaline={122},length={2})
+  @umplesourcefile(line={239},file={"Umple.ump"},javaline={122},length={2})
   public boolean getIsOperator()
   {
     return "OPERATOR".equals(type);
@@ -137,7 +137,7 @@ public class ConstraintVariable
     return isPrimitive;
   }
 
-  @umplesourcefile(line={240},file={"Umple.ump"},javaline={144},length={6})
+  @umplesourcefile(line={243},file={"Umple.ump"},javaline={144},length={6})
   public boolean getIsNumeric()
   {
     return "integer".equals(type.toLowerCase())||

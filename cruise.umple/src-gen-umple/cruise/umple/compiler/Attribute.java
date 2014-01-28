@@ -11,11 +11,14 @@ import java.util.*;
  * initialized, lazy (does not appear in constructor and must be initialized
  * after construction), etc.
  * 
- * @umplesource Umple.ump 481
+ * ----------------------------------------------------------
+ * @umplesource Umple.ump 553
  * @umplesource Umple_Code.ump 1203
+ * @umplesource Umple_Code_Trait.ump 260
  */
-// line 481 "../../../../src/Umple.ump"
+// line 553 "../../../../src/Umple.ump"
 // line 1203 "../../../../src/Umple_Code.ump"
+// line 260 "../../../../src/Umple_Code_Trait.ump"
 public class Attribute extends UmpleVariable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -38,13 +41,14 @@ public class Attribute extends UmpleVariable
   private Position position;
   private Position endPosition;
   private UmpleClass umpleClass;
+  private UmpleTrait umpleTrait;
   private List<TraceRecord> traceRecords;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={500},file={"Umple.ump"},javaline={65},length={1})
+  @umplesourcefile(line={572},file={"Umple.ump"},javaline={69},length={1})
   public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleClass aUmpleClass)
   {
     super(aName, aType, aModifier, aValue);
@@ -61,7 +65,7 @@ public class Attribute extends UmpleVariable
       throw new RuntimeException("Unable to create attribute due to umpleClass");
     }
     traceRecords = new ArrayList<TraceRecord>();
-    // line 500 "../../../../src/Umple.ump"
+    // line 572 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 
@@ -236,6 +240,11 @@ public class Attribute extends UmpleVariable
     return umpleClass;
   }
 
+  public UmpleTrait getUmpleTrait()
+  {
+    return umpleTrait;
+  }
+
   public TraceRecord getTraceRecord(int index)
   {
     TraceRecord aTraceRecord = traceRecords.get(index);
@@ -358,6 +367,23 @@ public class Attribute extends UmpleVariable
     return wasSet;
   }
 
+  public boolean setUmpleTrait(UmpleTrait aUmpleTrait)
+  {
+    boolean wasSet = false;
+    UmpleTrait existingUmpleTrait = umpleTrait;
+    umpleTrait = aUmpleTrait;
+    if (existingUmpleTrait != null && !existingUmpleTrait.equals(aUmpleTrait))
+    {
+      existingUmpleTrait.removeAttribute(this);
+    }
+    if (aUmpleTrait != null)
+    {
+      aUmpleTrait.addAttribute(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
   public static int minimumNumberOfTraceRecords()
   {
     return 0;
@@ -448,6 +474,12 @@ public class Attribute extends UmpleVariable
     UmpleClass placeholderUmpleClass = umpleClass;
     this.umpleClass = null;
     placeholderUmpleClass.removeAttribute(this);
+    if (umpleTrait != null)
+    {
+      UmpleTrait placeholderUmpleTrait = umpleTrait;
+      this.umpleTrait = null;
+      placeholderUmpleTrait.removeAttribute(this);
+    }
     ArrayList<TraceRecord> copyOfTraceRecords = new ArrayList<TraceRecord>(traceRecords);
     traceRecords.clear();
     for(TraceRecord aTraceRecord : copyOfTraceRecords)
@@ -457,17 +489,17 @@ public class Attribute extends UmpleVariable
     super.delete();
   }
 
-  @umplesourcefile(line={1208},file={"Umple_Code.ump"},javaline={462},length={3})
+  @umplesourcefile(line={1208},file={"Umple_Code.ump"},javaline={494},length={3})
    public boolean isConstant(){
     return "const".equals(getModifier());
   }
 
-  @umplesourcefile(line={1213},file={"Umple_Code.ump"},javaline={467},length={3})
+  @umplesourcefile(line={1213},file={"Umple_Code.ump"},javaline={499},length={3})
    public boolean isPrimitive(){
     return getType() == null || "String".equals(getType()) || "Integer".equals(getType()) || "Double".equals(getType()) || "Boolean".equals(getType()) || "Date".equals(getType()) || "Time".equals(getType());
   }
 
-  @umplesourcefile(line={1219},file={"Umple_Code.ump"},javaline={472},length={6})
+  @umplesourcefile(line={1219},file={"Umple_Code.ump"},javaline={504},length={6})
    public boolean isImmutable(){
     boolean varIsImmutable = super.isImmutable();
     boolean classIsImmutable = (this.getUmpleClass() == null) ? false : getUmpleClass().isImmutable();
@@ -475,19 +507,40 @@ public class Attribute extends UmpleVariable
     return (varIsImmutable || classIsImmutable);
   }
 
-  @umplesourcefile(line={1227},file={"Umple_Code.ump"},javaline={480},length={3})
+  @umplesourcefile(line={1227},file={"Umple_Code.ump"},javaline={512},length={3})
    public String getValue(){
     return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
   }
 
-  @umplesourcefile(line={1231},file={"Umple_Code.ump"},javaline={485},length={3})
+  @umplesourcefile(line={1231},file={"Umple_Code.ump"},javaline={517},length={3})
    public void setValue(String lang, String code){
     codeblock.setCode(lang,code);
   }
 
-  @umplesourcefile(line={1236},file={"Umple_Code.ump"},javaline={490},length={3})
+  @umplesourcefile(line={1236},file={"Umple_Code.ump"},javaline={522},length={3})
    public String getFullType(){
     return this.getType() + (this.getIsList() ? "[]" : "");
+  }
+
+  @umplesourcefile(line={265},file={"Umple_Code_Trait.ump"},javaline={527},length={19})
+   public  Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleTrait aUmpleTrait){
+    super(aName, aType, aModifier, aValue);
+    isAutounique = aIsAutounique;
+    isUnique = false;
+    isList = false;
+    isDerived = false;
+    codeblock = null;
+    isLazy = false;
+    comments = new ArrayList<Comment>();
+    boolean didAddUmpleTrait = setUmpleTrait(aUmpleTrait);
+    if (!didAddUmpleTrait)
+    {
+      throw new RuntimeException("Unable to create attribute due to umpleTrait");
+    }
+    traceRecords = new ArrayList<TraceRecord>();
+    //TODO The following lines should be removed or used correctly for UmpleTrait;
+    // line 569 "../../../../src/Umple.ump"
+    codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 
 
@@ -503,7 +556,8 @@ public class Attribute extends UmpleVariable
             "  " + "codeblock" + "=" + (getCodeblock() != null ? !getCodeblock().equals(this)  ? getCodeblock().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "position = "+(getPosition()!=null?Integer.toHexString(System.identityHashCode(getPosition())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "endPosition = "+(getEndPosition()!=null?Integer.toHexString(System.identityHashCode(getEndPosition())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "umpleClass = "+(getUmpleClass()!=null?Integer.toHexString(System.identityHashCode(getUmpleClass())):"null")
+            "  " + "umpleClass = "+(getUmpleClass()!=null?Integer.toHexString(System.identityHashCode(getUmpleClass())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleTrait = "+(getUmpleTrait()!=null?Integer.toHexString(System.identityHashCode(getUmpleTrait())):"null")
      + outputString;
   }
 }

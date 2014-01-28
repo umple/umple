@@ -5,10 +5,10 @@ package cruise.umple.compiler;
 import java.util.*;
 
 /**
- * @umplesource StateMachine.ump 163
+ * @umplesource StateMachine.ump 166
  * @umplesource StateMachine_Code.ump 444
  */
-// line 163 "../../../../src/StateMachine.ump"
+// line 166 "../../../../src/StateMachine.ump"
 // line 444 "../../../../src/StateMachine_Code.ump"
 public class Event
 {

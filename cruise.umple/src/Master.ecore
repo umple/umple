@@ -180,6 +180,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="countParametersMin" eType="#//int"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="int"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Format">
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StateMachineMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -234,8 +236,6 @@
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;Transition>" instanceClassName="java.util.Set"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;State>" instanceClassName="java.util.Set"/>
   <eClassifiers xsi:type="ecore:EDataType" name="Set&lt;Event>" instanceClassName="java.util.Set"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Format">
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="CodeMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -622,6 +622,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="queued" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/stateMachines"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleTrait" lowerBound="0" upperBound="1" eType="#//UmpleTrait" eOpposite="#//UmpleTrait/stateMachines"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentState" lowerBound="0" upperBound="1" eType="#//State" eOpposite="#//State/nestedStateMachines"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="states" lowerBound="0" upperBound="-1" eType="#//State" eOpposite="#//State/stateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceRecords" lowerBound="0" upperBound="-1" eType="#//TraceRecord" eOpposite="#//TraceRecord/stateMachines"/>
@@ -731,6 +732,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="tracer" eType="#//Tracer"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="associations" lowerBound="0" upperBound="-1" eType="#//Association"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleTraits" lowerBound="0" upperBound="-1" eType="#//UmpleTrait"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachineDefinitions" lowerBound="0" upperBound="-1" eType="#//StateMachine"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleInterfaces" lowerBound="0" upperBound="-1" eType="#//UmpleInterface"/>
   </eClassifiers>
@@ -864,6 +866,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" lowerBound="0" upperBound="-1" eType="#//Constraint"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="subclasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="extendsClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/subclasses"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsTraits" lowerBound="0" upperBound="-1" eType="#//UmpleTrait" eOpposite="#//UmpleTrait/subClasses"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="parentInterface" lowerBound="0" upperBound="-1" eType="#//UmpleInterface"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="uniqueIdentifier" lowerBound="0" upperBound="1" eType="#//UniqueIdentifier"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" lowerBound="0" upperBound="-1" eType="#//Attribute" eOpposite="#//Attribute/umpleClass"/>
@@ -872,6 +875,28 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirectives" lowerBound="0" upperBound="-1" eType="#//TraceDirective" eOpposite="#//TraceDirective/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceCases" lowerBound="0" upperBound="-1" eType="#//TraceCase" eOpposite="#//TraceCase/umpleClass"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachines" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/umpleClass"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="UmpleTrait" eSuperTypes="#//UmpleClassifier">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isAbstract" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isSingleton" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="associations" eType="#//Association" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="unimplementedMethods" eType="#//Method" upperBound="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="key" eType="#//Key"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="iAmImmutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ancestorIsImmutable" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceModel" eType="#//UmpleModel"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="codeInjections" lowerBound="0" upperBound="-1" eType="#//CodeInjection"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="preconditions" lowerBound="0" upperBound="-1" eType="#//Precondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="postconditions" lowerBound="0" upperBound="-1" eType="#//Postcondition"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraints" lowerBound="0" upperBound="-1" eType="#//Constraint"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subTraits" lowerBound="0" upperBound="-1" eType="#//UmpleTrait" eOpposite="#//UmpleTrait/extendsTraits"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extendsTraits" lowerBound="0" upperBound="-1" eType="#//UmpleTrait" eOpposite="#//UmpleTrait/subTraits"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="uniqueIdentifier" lowerBound="0" upperBound="1" eType="#//UniqueIdentifier"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="attributes" lowerBound="0" upperBound="-1" eType="#//Attribute" eOpposite="#//Attribute/umpleTrait"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="associationVariables" lowerBound="0" upperBound="-1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/umpleTrait"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="stateMachines" lowerBound="0" upperBound="-1" eType="#//StateMachine" eOpposite="#//StateMachine/umpleTrait"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subClasses" lowerBound="0" upperBound="-1" eType="#//UmpleClass" eOpposite="#//UmpleClass/extendsTraits"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Depend">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -898,6 +923,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="position" lowerBound="0" upperBound="1" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="endPosition" lowerBound="0" upperBound="1" eType="#//Position"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="1" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/attributes"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleTrait" lowerBound="0" upperBound="1" eType="#//UmpleTrait" eOpposite="#//UmpleTrait/attributes"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceRecords" lowerBound="0" upperBound="-1" eType="#//TraceRecord" eOpposite="#//TraceRecord/attributes"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Association">
@@ -929,6 +955,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="relatedAssociation" lowerBound="0" upperBound="1" eType="#//AssociationVariable" eOpposite="#//AssociationVariable/"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="comments" lowerBound="0" upperBound="-1" eType="#//Comment"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="umpleClass" lowerBound="0" upperBound="1" eType="#//UmpleClass" eOpposite="#//UmpleClass/associationVariables"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="umpleTrait" lowerBound="0" upperBound="1" eType="#//UmpleTrait" eOpposite="#//UmpleTrait/associationVariables"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="traceDirective" lowerBound="0" upperBound="1" eType="#//TraceDirective" eOpposite="#//TraceDirective/associationVariable"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Multiplicity">
