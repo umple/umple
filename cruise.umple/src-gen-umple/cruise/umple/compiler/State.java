@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * One of the values in which a state machine can be at any given point in time
- * @umplesource StateMachine.ump 36
+ * @umplesource StateMachine.ump 39
  * @umplesource StateMachine_Code.ump 302
  * @umplesource Trace_Code.ump 63
  */
-// line 36 "../../../../src/StateMachine.ump"
+// line 39 "../../../../src/StateMachine.ump"
 // line 302 "../../../../src/StateMachine_Code.ump"
 // line 63 "../../../../src/Trace_Code.ump"
 public class State
@@ -120,7 +120,7 @@ public class State
     return name;
   }
 
-  @umplesourcefile(line={40, 40},file={"StateMachine.ump", "StateMachine.ump"},javaline={127, 160},length={2, 2})
+  @umplesourcefile(line={43, 43},file={"StateMachine.ump", "StateMachine.ump"},javaline={127, 160},length={2, 2})
   public boolean getIsConcurrent()
   {
     return numberOfNestedStateMachines() > 1;
@@ -179,10 +179,10 @@ public class State
     return isDeepHistoryState;
   }
 
-  @umplesourcefile(line={52},file={"StateMachine.ump"},javaline={185},length={1})
+  @umplesourcefile(line={55},file={"StateMachine.ump"},javaline={185},length={1})
   public boolean isFinalState()
   {
-    // line 52 "../../../../src/StateMachine.ump"
+    // line 55 "../../../../src/StateMachine.ump"
     if ("Final".equals(name)) { finalState = true; }
     return finalState;
   }

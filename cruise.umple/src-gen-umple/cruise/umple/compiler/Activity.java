@@ -10,9 +10,9 @@ import cruise.umple.compiler.Position;
  * The code is executed in a separate threat, and can be terminated by
  * an outgoing transition. Upon completion of the activity, any
  * autotransition will be taken
- * @umplesource StateMachine.ump 62
+ * @umplesource StateMachine.ump 65
  */
-// line 62 "../../../../src/StateMachine.ump"
+// line 65 "../../../../src/StateMachine.ump"
 public class Activity
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
@@ -36,7 +36,7 @@ public class Activity
   // CONSTRUCTOR
   //------------------------
 
-  @umplesourcefile(line={75},file={"StateMachine.ump"},javaline={50},length={1})
+  @umplesourcefile(line={78},file={"StateMachine.ump"},javaline={50},length={1})
   public Activity(String aActivityCode, State aState)
   {
     activityCode = aActivityCode;
@@ -46,7 +46,7 @@ public class Activity
     {
       throw new RuntimeException("Unable to create activity due to state");
     }
-    // line 75 "../../../../src/StateMachine.ump"
+    // line 78 "../../../../src/StateMachine.ump"
     codeblock = aActivityCode!=null ? new CodeBlock(aActivityCode) : new CodeBlock();
   }
 
@@ -70,24 +70,24 @@ public class Activity
     return wasSet;
   }
 
-  @umplesourcefile(line={76},file={"StateMachine.ump"},javaline={78},length={1})
+  @umplesourcefile(line={79},file={"StateMachine.ump"},javaline={78},length={1})
   public boolean setActivityCode(String aActivityCode)
   {
     boolean wasSet = false;
-    // line 76 "../../../../src/StateMachine.ump"
+    // line 79 "../../../../src/StateMachine.ump"
     codeblock.setCode(aActivityCode);
     activityCode = aActivityCode;
     wasSet = true;
     return wasSet;
   }
 
-  @umplesourcefile(line={83},file={"StateMachine.ump"},javaline={90},length={5})
+  @umplesourcefile(line={86},file={"StateMachine.ump"},javaline={90},length={5})
   public boolean setCodeblock(CodeBlock aCodeblock)
   {
     boolean wasSet = false;
     codeblock = aCodeblock;
     wasSet = true;
-    // line 83 "../../../../src/StateMachine.ump"
+    // line 86 "../../../../src/StateMachine.ump"
     if(activityCode!=null){
       	  activityCode+= aCodeblock.getCode();
       	}
@@ -106,11 +106,11 @@ public class Activity
     return endPosition;
   }
 
-  @umplesourcefile(line={77},file={"StateMachine.ump"},javaline={112},length={3})
+  @umplesourcefile(line={80},file={"StateMachine.ump"},javaline={112},length={3})
   public String getActivityCode()
   {
     String aActivityCode = activityCode;
-    // line 77 "../../../../src/StateMachine.ump"
+    // line 80 "../../../../src/StateMachine.ump"
     if (codeblock.getCode()!=null)
       	  return codeblock.getCode();
       	  else
@@ -179,7 +179,7 @@ public class Activity
     }
   }
 
-  @umplesourcefile(line={92},file={"StateMachine.ump"},javaline={184},length={8})
+  @umplesourcefile(line={95},file={"StateMachine.ump"},javaline={184},length={8})
   public void setActivityCode(String lang, String code){
     if(activityCode!=null){
   	  activityCode+= lang+code;

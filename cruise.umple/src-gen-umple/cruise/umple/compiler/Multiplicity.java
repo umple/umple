@@ -10,10 +10,10 @@ import cruise.umple.util.*;
  * 
  * TODO: extract derived attributes from Umple_Code.ump (getLowerBound etc.)
  * In Umple_Code.ump: Methods for querying various propertiies of a Multiplicit
- * @umplesource Umple.ump 595
+ * @umplesource Umple.ump 667
  * @umplesource Umple_Code.ump 1797
  */
-// line 595 "../../../../src/Umple.ump"
+// line 667 "../../../../src/Umple.ump"
 // line 1797 "../../../../src/Umple_Code.ump"
 public class Multiplicity
 {
@@ -99,7 +99,7 @@ public class Multiplicity
     return maximum;
   }
 
-  @umplesourcefile(line={604},file={"Umple.ump"},javaline={106},length={2})
+  @umplesourcefile(line={676},file={"Umple.ump"},javaline={106},length={2})
   public String getParserable()
   {
     return getBound() != null ? getBound() : getMinimum().equals("0") && getMaximum().equals("*") ? "*" : getMinimum() + ".." + getMaximum();

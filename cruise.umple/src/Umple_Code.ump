@@ -2263,3 +2263,4 @@ class Comment
     return output.trim();
   }
 }
+use Umple_Code_Trait.ump;

@@ -29,20 +29,205 @@ class UmpleModel {
 //----------------------------------------------------------
 class UmpleTrait {
 
+    public boolean isImmutable(){
+    	return (iAmImmutable || ancestorIsImmutable);
+ 	}
+
 	public boolean setImmutable() {
     
    		boolean wasSet = false;
-    	/*
+    	
     	if (extendsTraits != null && !ancestorIsImmutable) { return wasSet; }
-    
+    	
     	if (propagateImmutabilityToAllRelationships(true)) 
     	{ 
       	iAmImmutable = true;
       	wasSet = true;
     	}	
-    	*/
+    	
     	return wasSet;
  	}
+ //**************************
+	private boolean propagateImmutabilityToAllRelationships(boolean isImmutable){
+	    if (isImmutable)
+	    {
+	      if (this.hasStateMachines()) { return false; }
+	
+	      for (AssociationVariable av : associationVariables)
+	      {
+	        if (!immutabilityAssociationRulesSatisfied(av, true)) { return false; }
+	      }
+	    }	    
+	    return notifySubclassesAncestorImmutable(isImmutable);
+	}
+
+   protected boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, boolean myTraitImmutable){
+    AssociationVariable relatedAV = myAV.getRelatedAssociation();
+    UmpleTrait relatedTrait = (relatedAV == null) ? null : relatedAV.getUmpleTrait();
+    boolean relatedTraitImmutable = (relatedTrait == null) ? false : ((relatedTrait == this) ? myTraitImmutable : relatedTrait.isImmutable());
+
+    return immutabilityAssociationRulesSatisfied(myAV, this, myTraitImmutable, relatedAV, relatedTrait, relatedTraitImmutable);
+  } 	
+
+   protected static  boolean immutabilityAssociationRulesSatisfied(AssociationVariable myAV, UmpleTrait myTrait, boolean myTraitImmutable, AssociationVariable yourAV, UmpleTrait yourTrait, boolean yourTraitImmutable){
+    boolean satisfied = false;
+    if (myAV == null || yourAV == null)
+    {
+      satisfied = true;
+    }
+    else if (!myTraitImmutable && !yourTraitImmutable && !"immutable".equals(myAV.getModifier()) && !"immutable".equals(yourAV.getModifier()))
+    {
+      satisfied = true;
+    } 
+    else if (myAV.getIsNavigable() && yourAV.getIsNavigable())
+    {
+      //satisfied = false;
+    }
+    else if (myTrait == null && yourTrait == null)
+    {
+      satisfied = true;
+    }
+    else if (!yourAV.getIsNavigable() && (yourTrait == null || yourTraitImmutable))
+    {
+      if (yourTrait != null && yourTrait == myTrait && myAV.isMandatory())
+      {
+        // reflexive associations may not be mandatory:
+        //satisfied = false
+      }
+      else
+      {
+        satisfied = true;
+      }
+    }
+    else if (!myAV.getIsNavigable() && (myTrait == null || myTraitImmutable))
+    {
+      if (myTrait != null && yourTrait == myTrait && yourAV.isMandatory())
+      {
+        // reflexive associations may not be mandatory:
+        //satisfied = false
+      }
+      else
+      {
+        satisfied = true;
+      }
+    }
+    return satisfied;
+  }
+
+   private boolean notifySubclassesAncestorImmutable(boolean isImmutable){
+    boolean notified = true;
+    List<UmpleTrait> wereSet = new ArrayList<UmpleTrait>();
+    for (UmpleTrait subtrait : getSubTraits())
+    {
+      notified = subtrait.setAncestorIsImmutable(isImmutable);
+      if (!notified)
+      {
+        for (UmpleTrait wasSet : wereSet)
+        {
+          wasSet.setAncestorIsImmutable(!isImmutable);
+        }
+        return notified;
+      }
+    }
+    return notified;
+  }
+
+   protected boolean setAncestorIsImmutable(boolean isImmutable){
+    if (iAmImmutable)
+    {
+      ancestorIsImmutable = isImmutable;
+      return true;
+    }
+    else
+    {
+      boolean success = propagateImmutabilityToAllRelationships(isImmutable);
+      if (success) { ancestorIsImmutable = isImmutable; }
+      return success;
+    }
+  } 
+  
+  private boolean enforceImmutabilityInheritanceRules(UmpleTrait newSuperTrait){
+    // A subclass may not be immutable if the superclass is not immutable
+    if (iAmImmutable && newSuperTrait != null && !newSuperTrait.isImmutable()) { return false; }
+    boolean ancestorImmutable = (newSuperTrait == null) ? false : newSuperTrait.isImmutable();
+    return setAncestorIsImmutable(ancestorImmutable);
+  } 	
+  
+  public boolean setExtendsTrait(UmpleTrait aExtendsTrait)
+  {
+    boolean wasSet = false;
+    
+    if (!enforceImmutabilityInheritanceRules(aExtendsTrait)) { return false; }
+    //TODO I changed original code in order to run the program. Later, I should provide multi inheritance checking.
+    UmpleTrait existingExtendsTrait = extendsTraits.get(0);
+    extendsTraits.add(0, aExtendsTrait);
+    if (existingExtendsTrait != null && !existingExtendsTrait.equals(aExtendsTrait))
+    {
+      existingExtendsTrait.removeSubTrait(this);
+    }
+    if (aExtendsTrait != null)
+    {
+      aExtendsTrait.addSubTrait(this);
+    }
+    wasSet = true;
+    // line 727 "../../../../src/Umple_Code.ump"
+    if(aExtendsTrait!=null&&aExtendsTrait.getMethods()!=null)
+        for(Method method:aExtendsTrait.getMethods())
+        {
+          if(this.hasMethod(method))
+          {
+            Method aMethod = this.getMethod(method);
+            
+            if(aMethod.getMethodBody().getExtraCode("")==null||"".equals(aMethod.getMethodBody().getExtraCode("")))
+            {
+              aMethod.getMethodBody().setExtraCode("",method.getMethodBody().getExtraCode(""));
+              while(aMethod.hasMethodParameters())
+              {
+                aMethod.removeMethodParameter(aMethod.getMethodParameter(0));
+              }
+              for(MethodParameter mp:method.getMethodParameters())
+              {
+                aMethod.addMethodParameter(mp);
+              }
+              if(!"".equals(aMethod.getMethodBody().getExtraCode("")))
+              {
+                aMethod.setIsImplemented(false);
+              }
+            }
+          }
+        }
+    return wasSet;
+  }  
+
+   public Method getMethod(Method comparedMethod){
+    String methodName = comparedMethod.getName();
+    int numberOfParams = comparedMethod.getMethodParameters().size();
+    for (Method aMethod : this.getMethods()){
+      // Compare method names
+      if (aMethod.getName().equals(methodName)){  
+        // Now compare parameters
+        if (numberOfParams == aMethod.getMethodParameters().size())
+        {
+          boolean allSame = true;
+          for (int i = 0; i < numberOfParams; i++)
+          {
+            if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
+            {
+              allSame = false;
+              break;
+            }
+          }
+          if(allSame)
+          {
+            return aMethod;
+          }
+        }
+      }
+    }
+    return null;
+  }
+  
+ //**************************	
    public boolean hasMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();
     int numberOfParams = comparedMethod.getMethodParameters().size();
@@ -91,6 +276,7 @@ class Attribute {
       throw new RuntimeException("Unable to create attribute due to umpleTrait");
     }
     traceRecords = new ArrayList<TraceRecord>();
+    //TODO The following lines should be removed or used correctly for UmpleTrait;
     // line 569 "../../../../src/Umple.ump"
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }

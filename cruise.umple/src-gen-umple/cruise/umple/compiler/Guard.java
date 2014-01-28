@@ -8,10 +8,10 @@ import java.util.*;
 /**
  * A boolean condition that is checked when an event method is called
  * If the result is true the transition may be taken
- * @umplesource StateMachine.ump 183
+ * @umplesource StateMachine.ump 186
  * @umplesource StateMachine_Code.ump 483
  */
-// line 183 "../../../../src/StateMachine.ump"
+// line 186 "../../../../src/StateMachine.ump"
 // line 483 "../../../../src/StateMachine_Code.ump"
 public class Guard extends Constraint
 {

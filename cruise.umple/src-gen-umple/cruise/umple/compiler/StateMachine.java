@@ -29,6 +29,7 @@ public class StateMachine
 
   //StateMachine Associations
   private UmpleClass umpleClass;
+  private UmpleTrait umpleTrait;
   private State parentState;
   private List<State> states;
   private List<TraceRecord> traceRecords;
@@ -108,6 +109,11 @@ public class StateMachine
   public UmpleClass getUmpleClass()
   {
     return umpleClass;
+  }
+
+  public UmpleTrait getUmpleTrait()
+  {
+    return umpleTrait;
   }
 
   public State getParentState()
@@ -205,11 +211,11 @@ public class StateMachine
     return index;
   }
 
-  @umplesourcefile(line={29},file={"StateMachine.ump"},javaline={215},length={1})
+  @umplesourcefile(line={31},file={"StateMachine.ump"},javaline={221},length={1})
   public boolean setUmpleClass(UmpleClass aUmpleClass)
   {
     boolean wasSet = false;
-    // line 29 "../../../../src/StateMachine.ump"
+    // line 31 "../../../../src/StateMachine.ump"
     if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; }
     UmpleClass existingUmpleClass = umpleClass;
     umpleClass = aUmpleClass;
@@ -220,6 +226,26 @@ public class StateMachine
     if (aUmpleClass != null)
     {
       aUmpleClass.addStateMachine(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  @umplesourcefile(line={32},file={"StateMachine.ump"},javaline={240},length={1})
+  public boolean setUmpleTrait(UmpleTrait aUmpleTrait)
+  {
+    boolean wasSet = false;
+    // line 32 "../../../../src/StateMachine.ump"
+    if (aUmpleTrait != null && aUmpleTrait.isImmutable()) { return false; }
+    UmpleTrait existingUmpleTrait = umpleTrait;
+    umpleTrait = aUmpleTrait;
+    if (existingUmpleTrait != null && !existingUmpleTrait.equals(aUmpleTrait))
+    {
+      existingUmpleTrait.removeStateMachine(this);
+    }
+    if (aUmpleTrait != null)
+    {
+      aUmpleTrait.addStateMachine(this);
     }
     wasSet = true;
     return wasSet;
@@ -533,6 +559,12 @@ public class StateMachine
       this.umpleClass = null;
       placeholderUmpleClass.removeStateMachine(this);
     }
+    if (umpleTrait != null)
+    {
+      UmpleTrait placeholderUmpleTrait = umpleTrait;
+      this.umpleTrait = null;
+      placeholderUmpleTrait.removeStateMachine(this);
+    }
     if (parentState != null)
     {
       State placeholderParentState = parentState;
@@ -556,17 +588,17 @@ public class StateMachine
     }
   }
 
-  @umplesourcefile(line={19},file={"StateMachine_Code.ump"},javaline={561},length={3})
+  @umplesourcefile(line={19},file={"StateMachine_Code.ump"},javaline={593},length={3})
    public boolean getHasExitAction(){
     return getHasAction("exit");
   }
 
-  @umplesourcefile(line={24},file={"StateMachine_Code.ump"},javaline={566},length={3})
+  @umplesourcefile(line={24},file={"StateMachine_Code.ump"},javaline={598},length={3})
    public boolean getHasEntryAction(){
     return getHasAction("entry");
   }
 
-  @umplesourcefile(line={29},file={"StateMachine_Code.ump"},javaline={571},length={13})
+  @umplesourcefile(line={29},file={"StateMachine_Code.ump"},javaline={603},length={13})
    private boolean getHasAction(String actionType){
     for(State state : getStates())
     {
@@ -581,7 +613,7 @@ public class StateMachine
     return false;
   }
 
-  @umplesourcefile(line={44},file={"StateMachine_Code.ump"},javaline={586},length={19})
+  @umplesourcefile(line={44},file={"StateMachine_Code.ump"},javaline={618},length={19})
    public Event getEvent(String eventName){
     if (eventName == null)
     {
@@ -602,7 +634,7 @@ public class StateMachine
     return null;
   }
 
-  @umplesourcefile(line={65},file={"StateMachine_Code.ump"},javaline={607},length={35})
+  @umplesourcefile(line={65},file={"StateMachine_Code.ump"},javaline={639},length={35})
    public List<Event> getAllEvents(){
     ArrayList<Event> allEvents = new ArrayList<Event>();
     ArrayList<StateMachine> allSearch = new ArrayList<StateMachine>();
@@ -639,7 +671,7 @@ public class StateMachine
     return allEvents;
   }
 
-  @umplesourcefile(line={102},file={"StateMachine_Code.ump"},javaline={644},length={17})
+  @umplesourcefile(line={102},file={"StateMachine_Code.ump"},javaline={676},length={17})
    public List<Event> getEvents(){
     ArrayList<Event> allEvents = new ArrayList<Event>();
     
@@ -658,7 +690,7 @@ public class StateMachine
     return allEvents;
   }
 
-  @umplesourcefile(line={121},file={"StateMachine_Code.ump"},javaline={663},length={6})
+  @umplesourcefile(line={121},file={"StateMachine_Code.ump"},javaline={695},length={6})
    public State findState(String aName){
     boolean isFinal = "Final".equals(aName);
     boolean searchNestedStateMachines = !isFinal;
@@ -666,7 +698,7 @@ public class StateMachine
     return findState(aName,searchNestedStateMachines,isAtRoot);
   }
 
-  @umplesourcefile(line={129},file={"StateMachine_Code.ump"},javaline={671},length={6})
+  @umplesourcefile(line={129},file={"StateMachine_Code.ump"},javaline={703},length={6})
    public State findState(String aName, boolean searchNestedStateMachines){
     boolean isFinal = "Final".equals(aName);
     searchNestedStateMachines = !isFinal && searchNestedStateMachines;
@@ -674,19 +706,19 @@ public class StateMachine
     return findState(aName,searchNestedStateMachines,isAtRoot);
   }
 
-  @umplesourcefile(line={137},file={"StateMachine_Code.ump"},javaline={679},length={5})
+  @umplesourcefile(line={137},file={"StateMachine_Code.ump"},javaline={711},length={5})
    public List<State> getFinalStates(){
     List<StateMachine> all = new ArrayList<StateMachine>();
     all.addAll(getNestedStateMachines());
     return getFinalStatesIn(all);
   }
 
-  @umplesourcefile(line={144},file={"StateMachine_Code.ump"},javaline={686},length={3})
+  @umplesourcefile(line={144},file={"StateMachine_Code.ump"},javaline={718},length={3})
    public boolean hasFinalStates(){
     return !getFinalStates().isEmpty();
   }
 
-  @umplesourcefile(line={149},file={"StateMachine_Code.ump"},javaline={691},length={15})
+  @umplesourcefile(line={149},file={"StateMachine_Code.ump"},javaline={723},length={15})
    private List<State> getFinalStatesIn(List<StateMachine> allStateMachines){
     List<State> all = new ArrayList<State>();
     for (StateMachine sm : allStateMachines)
@@ -703,7 +735,7 @@ public class StateMachine
     return all;
   }
 
-  @umplesourcefile(line={166},file={"StateMachine_Code.ump"},javaline={708},length={10})
+  @umplesourcefile(line={166},file={"StateMachine_Code.ump"},javaline={740},length={10})
    public Event findOrCreateEvent(String aName){
     for (Event aEvent : getAllEvents())
     {
@@ -715,7 +747,7 @@ public class StateMachine
     return new Event(aName);
   }
 
-  @umplesourcefile(line={178},file={"StateMachine_Code.ump"},javaline={720},length={10})
+  @umplesourcefile(line={178},file={"StateMachine_Code.ump"},javaline={752},length={10})
    public State getStartState(){
     for (State aState : states)
     {
@@ -727,7 +759,7 @@ public class StateMachine
     return null;
   }
 
-  @umplesourcefile(line={190},file={"StateMachine_Code.ump"},javaline={732},length={10})
+  @umplesourcefile(line={190},file={"StateMachine_Code.ump"},javaline={764},length={10})
    public String getType(){
     for (State aState : states)
     {
@@ -739,29 +771,29 @@ public class StateMachine
     return "Simple";
   }
 
-  @umplesourcefile(line={202},file={"StateMachine_Code.ump"},javaline={744},length={3})
+  @umplesourcefile(line={202},file={"StateMachine_Code.ump"},javaline={776},length={3})
    public List<StateMachine> getNestedStateMachines(){
     return getNestedStateMachines(true); // original - do it recursively
   }
 
-  @umplesourcefile(line={207},file={"StateMachine_Code.ump"},javaline={749},length={3})
+  @umplesourcefile(line={207},file={"StateMachine_Code.ump"},javaline={781},length={3})
    public List<StateMachine> getImmediateNestedStateMachines(){
     return getNestedStateMachines(false); // just next level
   }
 
-  @umplesourcefile(line={212},file={"StateMachine_Code.ump"},javaline={754},length={5})
+  @umplesourcefile(line={212},file={"StateMachine_Code.ump"},javaline={786},length={5})
    private List<StateMachine> getNestedStateMachines(boolean recursive){
     ArrayList<StateMachine> all = new ArrayList<StateMachine>();
     addNestedStateMachinesTo(all,this, recursive);
     return all;
   }
 
-  @umplesourcefile(line={219},file={"StateMachine_Code.ump"},javaline={761},length={3})
+  @umplesourcefile(line={219},file={"StateMachine_Code.ump"},javaline={793},length={3})
    private void addNestedStateMachinesTo(List<StateMachine> all, StateMachine sm){
     addNestedStateMachinesTo(all, sm, true);
   }
 
-  @umplesourcefile(line={224},file={"StateMachine_Code.ump"},javaline={766},length={10})
+  @umplesourcefile(line={224},file={"StateMachine_Code.ump"},javaline={798},length={10})
    private void addNestedStateMachinesTo(List<StateMachine> all, StateMachine sm, boolean recursive){
     for (State s : sm.states)
     {
@@ -773,7 +805,7 @@ public class StateMachine
     }
   }
 
-  @umplesourcefile(line={237},file={"StateMachine_Code.ump"},javaline={778},length={30})
+  @umplesourcefile(line={237},file={"StateMachine_Code.ump"},javaline={810},length={30})
    private State findState(String aName, boolean searchNestedStateMachines, boolean didFindRoot){
     StateMachine root = this;
     if (!didFindRoot && searchNestedStateMachines)
@@ -805,7 +837,7 @@ public class StateMachine
     return null;
   }
 
-  @umplesourcefile(line={269},file={"StateMachine_Code.ump"},javaline={810},length={12})
+  @umplesourcefile(line={269},file={"StateMachine_Code.ump"},javaline={842},length={12})
    public StateMachine getRootStateMachine(){
     StateMachine root = this;
     
@@ -819,7 +851,7 @@ public class StateMachine
     return root;
   }
 
-  @umplesourcefile(line={283},file={"StateMachine_Code.ump"},javaline={824},length={10})
+  @umplesourcefile(line={283},file={"StateMachine_Code.ump"},javaline={856},length={10})
    public String getFullName(){
     if (getParentState() == null)
     {
@@ -831,7 +863,7 @@ public class StateMachine
     }
   }
 
-  @umplesourcefile(line={295},file={"StateMachine_Code.ump"},javaline={836},length={6})
+  @umplesourcefile(line={295},file={"StateMachine_Code.ump"},javaline={868},length={6})
    public State addState(String aName, int index){
     State newState = new State(aName,this);
     states.remove(newState);
@@ -848,6 +880,7 @@ public class StateMachine
             "recentSearchDepth" + ":" + getRecentSearchDepth()+ "," +
             "queued" + ":" + getQueued()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "umpleClass = "+(getUmpleClass()!=null?Integer.toHexString(System.identityHashCode(getUmpleClass())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "umpleTrait = "+(getUmpleTrait()!=null?Integer.toHexString(System.identityHashCode(getUmpleTrait())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "parentState = "+(getParentState()!=null?Integer.toHexString(System.identityHashCode(getParentState())):"null")
      + outputString;
   }

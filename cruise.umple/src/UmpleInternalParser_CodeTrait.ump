@@ -15,36 +15,11 @@ class UmpleInternalParser
       shouldProcessAgain = shouldProcessAgain || (analysisStep == 1);
       return;
     }
-
-    // Only need to clear comments if there actually was comments.
-    boolean shouldConsumeComment = lastComments.size() > 0;
-
-    // Determine what the current token is primarily, and based on that the analysis procedure is determined.
-    if (t.isStatic("//") || t.isStatic("/*") || t.isStatic("*/"))
-    {
-      shouldConsumeComment = false;
-    }
-    else if (t.is("inlineComment"))
-    {
-      analyzeComment(t);
-      shouldConsumeComment = addToLastAttributeOrAssociation(t);
-    } 
-    else if (t.is("multilineComment"))
-    {
-      analyzeMultilineComment(t);
-      shouldConsumeComment = false;
-    }
-    else if (t.is("traitDefinition"))
+    if (t.is("traitDefinition"))
     {
       analyzeTrait(t);
     }
-
-    // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
-    // classes, traits, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
-    if (shouldConsumeComment)
-    {
-      lastComments.clear();
-    }
+    
   }
 //----------------------------------------------------------------------------  
 //---------------------------------the Method---------------------------------
@@ -709,17 +684,19 @@ class UmpleInternalParser
 					for(Postcondition aPostcondition : uTrait.getPostconditions()) {
 						uClass.addPostcondition(aPostcondition);
 					}						
+
+					//copy attributes
+					for(Attribute aAttribute : uTrait.getAttributes()) {
+						//check for attributes which have already existed.
+						uClass.addAttribute(aAttribute);
+					}
 					
 					// copy Constraint
 					for(Constraint aConstraint : uTrait.getConstraints()) {
 						uClass.addConstraint(aConstraint);
 					}						
 														
-					//copy attributes
-					for(Attribute aAttribute : uTrait.getAttributes()) {
-						//check for attributes which have already existed.
-						uClass.addAttribute(aAttribute);
-					}
+
 					
 				}
 			}

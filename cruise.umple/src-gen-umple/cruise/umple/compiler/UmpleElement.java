@@ -9,10 +9,10 @@ import java.util.*;
  * An UmpleElement is one of the top-level items found in an Umple model
  * Currently it has one subclass, UmpleClassifier
  * 
- * @umplesource Umple.ump 71
+ * @umplesource Umple.ump 74
  * @umplesource Umple_Code.ump 674
  */
-// line 71 "../../../../src/Umple.ump"
+// line 74 "../../../../src/Umple.ump"
 // line 674 "../../../../src/Umple_Code.ump"
 public class UmpleElement
 {
@@ -103,11 +103,11 @@ public class UmpleElement
     return wasRemoved;
   }
 
-  @umplesourcefile(line={104},file={"Umple.ump"},javaline={111},length={1})
+  @umplesourcefile(line={107},file={"Umple.ump"},javaline={111},length={1})
   public boolean setPackageName(String aPackageName)
   {
     boolean wasSet = false;
-    // line 104 "../../../../src/Umple.ump"
+    // line 107 "../../../../src/Umple.ump"
     if (aPackageName == null) { return false; }
     packageName = aPackageName;
     wasSet = true;
