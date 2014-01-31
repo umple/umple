@@ -11,7 +11,7 @@ Directives appear as the 'main' entries in an Umple file.</p>
 
 <br />
 
-<li><b>Entity declarations</b> define the top level model or code elements including <a href="ClassDefinition.html">classes</a>, <a href="InterfaceDefinition.html">interfaces</a>, <a href="AssociationDefinition.html">associations</a> and <a href="AssociationClassDefinition.html">association classes</a>. Other model or code elements, such as <a href="MethodDefinition.html">methods</a> or <a href="AttributeDefinition.html">attributes</a> must be placed <i>inside</i> these entities.</li>
+<li><b>Entity declarations</b> define the top level model or code elements including <a href="ClassDefinition.html">classes</a>, <a href="interfaceDefinition.html">interfaces</a>, <a href="AssociationDefinition.html">associations</a> and <a href="AssociationClassDefinition.html">association classes</a>. Other model or code elements, such as <a href="MethodDefinition.html">methods</a> or <a href="AttributeDefinition.html">attributes</a> must be placed <i>inside</i> these entities.</li>
 
 <br />
 
