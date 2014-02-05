@@ -28,12 +28,10 @@ class UmpleInternalParser
    String traitName = traitToken.getValue("name").split(" ")[traitToken.getValue("name").split(" ").length-1];
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(traitName, "[A-Za-z]") != true) {
-//TODO 1 I should change the code of error
-      setFailedPosition(traitToken.getPosition(), 100, traitName);
+      setFailedPosition(traitToken.getPosition(), 2500, traitName);
     }
-    else if ( traitName.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.
-//TODO 2 I should change the code of error    
-      setFailedPosition(traitToken.getPosition(), 101, traitName);
+    else if ( traitName.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.    
+      setFailedPosition(traitToken.getPosition(), 2501, traitName);
     }  
     UmpleTrait aTrait;
     aTrait = model.addUmpleTrait(traitToken.getValue("name"));
@@ -703,4 +701,101 @@ class UmpleInternalParser
 		}
 	}
 
+	private void postTokenTraitAnalysis() {
+		addUnlinkedExtendTraits();
+		if ( getParseResult().getWasSuccess() ) {
+			checkTraitsNames();
+			checkTheSameAttributes();
+		}
+	}
+
+  private void addUnlinkedExtendTraits()
+  {  
+    for (UmpleClassifier c : unlinkedExtends.keySet())
+    {
+      UmpleTrait child = null; // unlinkedExtends guaranteed to contain only UmpleTraits
+      if (c instanceof UmpleTrait){
+        child = (UmpleTrait) c;
+      }  
+    
+      List<String> extendsNames = unlinkedExtends.get(child);    
+      List<Token>  extendsToken = unlinkedExtendsTokens.get(child);
+
+      if (extendsNames == null)
+      {
+        continue;
+      }
+
+      for (int i=0; i < extendsNames.size();i++){
+        String extendName= extendsNames.get(i);
+        Position pos;
+		try
+		{
+			pos = extendsToken.get(i).getPosition();
+		}
+		catch(Exception e)
+		{
+			pos = new Position("",0,0,0);
+		}
+        if (isUmpleTrait(extendName) ) {
+			
+			//checking cyclically
+			if (child.getName().equals(extendName)) {
+				setFailedPosition(pos, 2551, child.getName());
+			    return;
+			}
+			
+			UmpleTrait parent = model.getUmpleTrait(extendName);
+		     
+		    boolean wasSet = child.addExtendsTrait(parent);
+		    if (!wasSet) {
+				// TODO 1: the error code should be chnaged.            
+			    setFailedPosition(pos, 16, child.getName(), parent.getName());
+			    return;
+		    }
+		    /*
+		    try
+		    {
+		    	child.setExtendsToken(extendsToken.get(i));
+		    }
+		    catch(Exception e){}   	  
+		    */     
+
+		} else {
+			setFailedPosition(pos, 2502, child.getName());
+			return;
+		}
+      }
+    }
+  }  
+	
+	//Check traits to have unique names;
+	private void checkTraitsNames() {
+		for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+			for(UmpleClass uClass : getModel().getUmpleClasses()) {
+				if (uTrait.getName().equals(uClass.getName())) {
+          			getParseResult().addErrorMessage(new ErrorMessage(2550,uTrait.getPosition(0),uTrait.getName()));
+          			return;
+				}
+			}
+		}
+	}
+  private void checkTheSameAttributes() {
+	  for(UmpleClass uClass : getModel().getUmpleClasses()) {
+		  if (uClass.hasExtendsTraits()) {
+			  for(UmpleTrait uTrait : uClass.getExtendsTraits())  {
+				  for (Attribute utAtt : uTrait.getAttributes() ) {
+					  for(Attribute ucAtt : uClass.getAttributes()) {
+						  if (utAtt.getName().equals(ucAtt.getName())) {
+							getParseResult().addErrorMessage(new ErrorMessage(2552,utAtt.getPosition(),utAtt.getName(),uClass.getName(),uTrait.getName()));
+			          		return;
+						  }
+					  }
+				  }
+			  }
+				  
+		  }
+	  }
+  }	
+	
 }
