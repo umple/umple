@@ -28,7 +28,7 @@ public class UmpleTraitTest {
 			uMode.run();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}		
+		}	
 	}	
 	@After
 	public void tearDown()
@@ -75,7 +75,7 @@ public class UmpleTraitTest {
 	}	
 	
 	@Test
-	public void ConstraintTest() {
+	public void constraintTest() {
 	//	Assert.assertEquals(1,uMode.getUmpleTrait("T").numberOfConstraints());
 	//	Assert.assertEquals(1,uMode.getUmpleClass("A").numberOfConstraints());
 	}	
