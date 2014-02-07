@@ -1,42 +1,53 @@
-// UML state machine diagram showing several modes of a telephone
+// UML state machine diagrams showing several modes of a telephone
 // See also a separate example showing a diagram of a phone call
+
 class Phone {
+  Boolean permanentMute = false;
+  Boolean callInProgress = false;
+  
   ringerSound {
     Off{
-      callReceived -> On ;
+      callReceived [!permanentMute] -> On ;
     }
     
     On{
       silentButton -> Off ;
-      pickUp -> / {setVibration(Vibration.Off);} Off ;
-      rejectCall -> / { setVibration(Vibration.Off);} Off ;    
+      pickUp ->  Off ;
+      rejectCall -> Off ;    
+      unanswered -> Off;
     }
   }
 
   screenLight {
     Off{
       callReceived -> On ; 
+      pickUp -> On;
+      dial -> On;
     }
 
     On{
-      callReceived -> / {resetTimer();} On ;
+      after(30000) -> Dimmed;
+      hangUp -> Off;
     }
  
     Dimmed{
-      callReceived -> On ;
-      after(t) -> Off;
+      callReceived -> On;
+      pickUp -> On;
+      dial -> On;
+      hangUp -> Off;
+      after(60000) [!callInProgress] -> Off;
     }
   }
 
   vibration {
     Off {
       callReceived -> On ;
-      }
+     }
 
     On{
-      turnOffVibration -> Off ;
-      continuousMode {}
-      pulseMode {}
+      pickUp -> Off;
+      rejectCall -> Off;
+      unanswered -> Off;
     }
   }
 }

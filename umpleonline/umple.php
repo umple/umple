@@ -248,18 +248,48 @@ $output = readTemporaryFile("ump/" . $filename);
         <li id="itemLoadExamples2">
           <select id="inputExample2" name="inputExample2" class="button" size = "1">
             <option name = "optionExample2" id = "defaultExampleOption2" value="">Select Example</option>
+
+          <option name = "optionExample" value="AgentsCommunication.ump">Agents Communicating</option>
+          <option name = "optionExample" value="ApplicationProcessing.ump">Application for a Grant</option>
+
+            
             <option name = "optionExample" value="Booking.ump">Booking (Airline)</option>
             <option name = "optionExample" value="CanalLockStateMachine.ump">Canal Lock</option>
             <option name = "optionExample" value="CarTransmission.ump">Car Transmission</option>
             <option name = "optionExample" value="ComplexStateMachine.ump">Complex Symbolic</option>
+
+          <option name = "optionExample" value="CourseSectionFlat.ump">Course Section</option>
+          <option name = "optionExample" value="CourseSectionNested.ump">Course Section (Nested)</option>
+
+
             <option name = "optionExample" value="DigitalWatchNested.ump">Digital Watch Nested</option>
             <option name = "optionExample" value="DigitalWatchFlat.ump">Digital Watch (Flat)</option>
             <option name = "optionExample" value="Elevator_State_Machine.ump">Elevator</option>
             <option name = "optionExample" value="GarageDoor.ump">Garage Door</option>
+
+          <option name = "optionExample" value="LibraryLoanStateMachine.ump">Library Loan</option>
+          <option name = "optionExample" value="Lights.ump">Light (3 alternatives)</option>
+          <option name = "optionExample" value="MicrowaveOven2.ump">Microwave Oven</option>
+          <option name = "optionExample" value="Ovens.ump">Oven (3 alternatives)</option>
+          <option name = "optionExample" value="ParliamentBill.ump">Parliament Bill</option>
+
+
             <option name = "optionExample" value="Phone.ump">Phone and Lines</option>
+
+          <option name = "optionExample" value="Runway.ump">Runway</option>
+          <option name = "optionExample" value="SecurityLight.ump">Security Light</option>
+
             <option name = "optionExample" value="SpecificFlight.ump">Specific Flight (Airline)</option>
             <option name = "optionExample" value="SpecificFlightFlat.ump">Specific Flight (Airline - Flat)</option>
-            <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights</option>
+
+          <option name = "optionExample" value="TcpIpSimulation.ump">TCP/IP Simulation</option>
+          <option name = "optionExample" value="TelephoneSystem2.ump">Telephone Set Modes</option>
+          <option name = "optionExample" value="TicTacToe.ump">Tic Tac Toe or Noughts and Crosses</option>
+          <option name = "optionExample" value="TollBooth.ump">Toll Booth</option>
+
+            <option name = "optionExample" value="TrafficLightsA.ump">Traffic Lights A</option>
+
+          <option name = "optionExample" value="TrafficLightsB.ump">Traffic Lights B</option>
           </select>
         </li>
       </ul>

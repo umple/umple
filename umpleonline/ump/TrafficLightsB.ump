@@ -1,46 +1,46 @@
 // UML state machine diagram of a traffic light system, written in Umple
-class Intersection_timerDriven_noPedestrian {
+class IntersectionTimerDriven {
   
-  Integer directionOneGoTime;
-  Integer directionTwoGoTime;
-  Integer yellowTime;
-  
-  direction_One_Light;
-  direction_Two_Light;
-  
-  Integer P1GoTime;
-  Integer P2GoTime;
-  
+  // Traffic lights are green for 25s in one direction
+  // and 20s in the other. 
+  Integer directionOneGoTime=25000;
+  Integer directionTwoGoTime=20000;
+
+  // Lights are yellow for 5s
+  Integer yellowTime=5000;
+
+  // Pedestrians have 10s extra warning
+  Integer extraPedestrianWarning=10000;  
   
   flow {
     FourWayStop 
     {
-      entry / {direction_One_Light = "FlashingRed"; direction_Two_Light = "FlashingRed"; }
+      entry / {direction_One_Light = DirectionOneLight.FlashingRed; direction_Two_Light = directionOneLight.FlashingRed; }
       initiateRegularOperation -> DirectionOneGo;    
     }
     DirectionOneGo
     {
       entry / {directionOneLight = directionOneLight.Green; directionTwoLight = directionTwoLight.Red; }
-      Wait_DirectionOneGo -> DirectionOneHalting;
-      detectMalfunction_DirectionOneGo -> FourWayStop;
+      after(directionOneGoTime) -> DirectionOneHalting;
+      detectMalfunction -> FourWayStop;
     }
     DirectionOneHalting
     {
       entry / {directionOneLight = directionOneLight.Yellow; }
-      WaitDirectionOneHalting -> DirectionTwoGo;
-      detectMalfunction_DirectionOneaHalting -> FourWayStop;
+      after(yellowTime) -> DirectionTwoGo;
+      detectMalfunction -> FourWayStop;
     }
     DirectionTwoGo
     {
       entry / {directionOneLight = directionOneLight.Red; directionTwoLight = directionTwoLight.Green; }
-      WaitDirectionTwoGo -> DirectionTwoHalting;
-      detectMalfunction_DirectionTwoGo -> FourWayStop;
+      after(directionOneGoTime) -> DirectionTwoHalting;
+      detectMalfunction -> FourWayStop;
     }
     DirectionTwoHalting 
     {
       entry / {directionTwoLight = directionTwoLight.Yellow; }
-      Wait_DirectionTwoGo -> DirectionOneGo;
-      detectMalfunction_DirectionTwoHalting -> FourWayStop;
+      after(yellowTime) -> DirectionOneGo;
+      detectMalfunction -> FourWayStop;
     }        
   }
   
@@ -49,31 +49,31 @@ class Intersection_timerDriven_noPedestrian {
     FourWayStop
     {
       entry / {P1Light = P1Light.DoNotWalk;  P2Light = P2Light.DoNotWalk;}
-      initiateRegularOperation_Pedestrian -> P2Go;
+      initiateRegularOperation -> P2Go;
     }
     P1Go
     {
       entry / {P1Light = P1Light.Walk;}
-      Wait_P1GO -> P1Halting;
-      detectMalfunction_P1GO -> FourWayStop;
+      after(directionOneGoTime-extraPedestrianWarning)-> P1Halting;
+      detectMalfunction -> FourWayStop;
     }
-    P1halting
+    P1Halting
     {
       entry / {P1Light = P1Light.FlashingP1Light;}
-      Wait_P1Halting -> P2Go;
-      detectMalfunction_P1Halting -> FourWayStop;
+      after(extraPedestrianWarning+yellowTime) -> P2Go;
+      detectMalfunction -> FourWayStop;
     }
     P2Go
     {
       entry / {P2Light = P2Light.Walk;}
-      Wait_P2GO -> P2Halting;
-      detectMalfunction_P2GO -> FourWayStop;
+      after(directionTwoGoTime-extraPedestrianWarning) -> P2Halting;
+      detectMalfunction -> FourWayStop;
     }
     P2Halting
     {
       entry / {P2Light = P2Light.Flashing;}
-      Wait_P2Halting -> P1Go;
-      detectMalfunction_P2Halting -> FourWayStop;
+      after(extraPedestrianWarning+yellowTime)  -> P1Go;
+      detectMalfunction -> FourWayStop;
     }
   }
   
