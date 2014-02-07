@@ -1,5 +1,7 @@
 // UML state diagram representing an airport runway, written in Umple
 class Runway {
+  Boolean noPlaneOnRunway = false;
+  Boolean inspectionSuccess = false;
 
   runwayStateMachine {
   
@@ -10,11 +12,13 @@ class Runway {
         entry / {turnOnGreenLight();}
         exit / {turnOffGreenLight();}
         planeLanding -> Occupied;
+        planeTakingOff -> Occupied;
         repair -> Restoration;
       }
       
       Occupied {
         planeTakesOff -> Free;
+        landingComplete -> Free;
       }
     }
   
@@ -22,25 +26,27 @@ class Runway {
       entry / {closeRunway();}
           
       Emergency {
-        clear -> Open;
+        emergencyOver -> ReadyToOpen;
       }
       
-      Ready {
-        open -> Open;
+      ReadyToOpen {
+        open [noPlaneOnRunway] -> Open;
       }
       
       Restoration {
         Restoration_1 {
           Repair {
-            repairCompleted -> Inspection;
+            repairCompleted -> InspectRepairs;
           }
-          Inspection { 
-            check [success] -> Ready;
-            check [!success] -> Repair; 
+          InspectRepairs { 
+            check [inspectionSuccess] -> ReadyToOpen;
+            check [!inspectionSuccess] -> Repair; 
           }
-        }  
+        }
+        ||
         Restoration_2 {
+          // Do other maintenhance while repair is going on
           Maintenance {
-            do { performMaintananceWork();}
+            do { performMaintenanceWork();}
           }
 } } } } }

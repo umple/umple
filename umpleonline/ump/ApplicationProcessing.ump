@@ -1,53 +1,61 @@
 // UML state machine diagram written in Umple representing the
 // steps in processing an application for a grant
 
-class Application {
+class GrantApplication {
+  Boolean adminCheckOk=false;
 
   status {
-    Initial_state {
+    Planned {
       createApplication -> InProgress;
     }
   
+    // Application being worked on by researcher
     InProgress {
-      set_as_complete -> CompletedByResearcher;
+      researcherDeclaresComplete -> EvaluationByInstitution;
+      editByResearcher -> InProgress;
     }
   
-    CompletedByResearcher {
-      ReturnToResearcher -> InProgress;
-      Verify -> VerifiedByInstitution;
-      check -> CompletedByResearcher;
+    EvaluationByInstitution {
+      returnToResearcher -> InProgress;
+      verified -> VerifiedByInstitution;
+      editByInstitution -> EvaluationByInstitution;
     }
   
     VerifiedByInstitution {
-      reOpen -> CompletedByResearcher;
+      reOpen -> EvaluationByInstitution;
       submit -> SubmittedByInstitution;
     }
   
     SubmittedByInstitution {
       withdraw -> Withdrawn;
-      accept -> UnderAdminReview;
-      SubmissionCheck -> SubmittedByInstitution;
+      acceptForReview -> UnderAdministrativeReview;
+      submissionCheck [adminCheckOk] -> SubmittedByInstitution;
+      submissionCheck [!adminCheckOk] -> EvaluationByInstitution;
     }
   
-    UnderAdminReview {
-      ReturnForCorrections -> ReturnedForCorrections_Institution;
-      Accept -> UnderExpertReview;
+    UnderAdministrativeReview {
+      acceptForExpertReview -> UnderExpertReview;
+      bypassExpertReviewDueToMinorChanges -> AwaitingFinalDecision;
+      returnToInstitition -> EvaluationByInstitution;
+      withdraw -> Withdrawn;      
     }
   
-    UnderExpertReview {}
+    UnderExpertReview {
+      expertReviewsReturned -> AwaitingFinalDecision;
+      withdraw -> Withdrawn;      
+    }
  
-    ReturnedForCorrections_Institution {
-      returnToResearcher -> ReturnedForCorrections_Researcher;
-      Verify -> VerifiedByInstitutionAfterCorrections;
+    AwaitingFinalDecision {
+      finalAccept -> Accepted;
+      minorRevisionsNeeded -> EvaluationByInstitution;
+      reject -> Rejected;
     }
-  
-    VerifiedByInstitutionAfterCorrections {
-      ReOpen -> ReturnedForCorrections_Institution;
-      submit -> SubmitedByInstitution; 
+    Accepted {}
+    Rejected {
+      tryAgain -> InProgress;
     }
-    
-    ReturnedForCorrections_Researcher {
-      verify -> ReturnedForCorrections_Institution;
+    Withdrawn {
+      tryAgain -> InProgress;
     }
   }
 }

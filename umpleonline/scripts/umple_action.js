@@ -1221,7 +1221,8 @@ Action.loadExample = function loadExample()
     else if (sel=="Phone.ump"){Page.setUmpleCanvasSize(1000,600);}
     else if (sel=="SpecificFlight.ump"){Page.setUmpleCanvasSize(900,800);}  
     else if (sel=="SpecificFlightFlat.ump"){Page.setUmpleCanvasSize(900,800);}  
-    else if (sel=="TrafficLightsA.ump"){Page.setUmpleCanvasSize(1100,700);}    
+    else if (sel=="TrafficLightsA.ump"){Page.setUmpleCanvasSize(1100,700);}
+    else {Page.setUmpleCanvasSize(1100,900);}
   }
   
   var newURL="?example="+exampleName+diagramType;

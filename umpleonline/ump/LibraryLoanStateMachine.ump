@@ -1,0 +1,55 @@
+// UML State diagram for a library loan, represented in Umple
+class Loan
+{
+  // Loan due in 14 days; can be extended for 7; fines when late each 2 days
+  Integer loanTime = {1000*60*60*24*14};
+  Integer extensionTime = {1000*60*60*24*7};
+  Integer fineIncrementInterval = {1000*60*60*24*2};
+
+  // Timestamp in ms when the load was initiated
+  Integer loanStartTime;
+
+  // Number of ms to the loan becoming due from entry to current state
+  Integer deadline;
+
+  state {
+    initial {
+      entry / {
+        deadline = loanTime;
+        loanStartTime = currentTime();
+      };
+      -> outstanding;
+    }
+    outstanding {
+      // regular loan, can be extended
+      extend -> / {deadline = extensionTime;} outstanding;
+      return -> returned;
+      recall -> / {sendRecallNotice();} recalled;
+      after(deadline) -> overdue;
+      declareLost -> lost;
+    }
+    recalled {
+      // Not overdue, but cannot extend
+      entry / {deadline = deadline - (currentTime() - loanStartTime);}
+      return -> returned;
+      after(deadline) -> overdue;
+      declareLost -> lost;      
+    }
+    overdue {
+      entry / {assessFine(); sendOverdueNotice();}
+      afterEvery(fineIncrementInterval) -> overdue;
+      return -> returned;
+      declareLost -> lost;      
+    }
+    returned {
+      // Normal End state
+    }
+    
+    lost {
+      entry / {assessReplacementCost();}
+      
+      // Perhaps found later ...
+      return / {refundReplacementCost();} -> returned;
+    }
+  }
+}
