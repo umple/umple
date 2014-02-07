@@ -827,7 +827,16 @@ public class UmpleParserStateMachineTest
   
   @Test
   public void eventsWithInconsistentArguments(){
-	  assertFailedParse("100_eventWithInconsistentArguments.ump", new Position("100_eventWithInconsistentArguments.ump", 13,8,248), 51);
+		assertFailedParse("100_eventWithInconsistentArguments.ump", new Position("100_eventWithInconsistentArguments.ump", 13,8,248), 51);
+  }
+  
+  @Test
+  public void duplicateEvents(){
+		//right now only aasserts that a warning is raised if a guardless event comes before the same event
+		assertHasWarning("485_duplicateEventsNoGuards.ump",  0, 54, new Position("485_duplicateEventsNoGuards.ump",8,6,95));
+ 		assertHasWarning("485_duplicateEventsGuardlessBeforeGuarded.ump",  0, 54, new Position("485_duplicateEventsGuardlessBeforeGuarded.ump",9,6,111));
+		//A guardless event is allowed to come after a guarded one to act as a default case
+		assertParse("485_duplicateEventsGuardedBeforeGuardless.ump","[classDefinition][name:X][attribute][type:Integer][name:b][value:0][stateMachine][inlineStateMachine][name:sm][state][stateName:state1][transition][event:e1][stateName:state2][state][stateName:state2][transition][event:e2][guard][numExpr][constraintName][name:b][smallerOp:<][number:1][stateName:state1][transition][event:e2][stateName:state1]");
   }
   
   @Test

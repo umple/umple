@@ -1,0 +1,12 @@
+class X {
+	Integer b = 0;
+  sm {
+    state1 {
+      e1 -> state2;
+    }
+    state2 {
+      e2 -> state1;
+      e2 [b < 1] -> state1;
+    }
+  }
+}

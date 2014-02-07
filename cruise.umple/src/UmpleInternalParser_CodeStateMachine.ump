@@ -533,7 +533,33 @@ class UmpleInternalParser
         analyzeState(subToken, s);
       }
     }
+		checkStateForDuplicateEvents(stateToken, fromState);
   }
+
+	//Telmer
+	private void checkStateForDuplicateEvents(Token stateToken, State fromState)
+	{
+		List<Token> pastTransitionTokens = new ArrayList<Token>();
+		Token newTransitionToken;
+		String newEventName, pastEventName;
+		for(Token subToken : stateToken.getSubTokens()){
+			if (subToken.is("transition")){
+				newTransitionToken = subToken;
+				//if we have past transitions 
+				if (!pastTransitionTokens.isEmpty()){
+					newEventName = newTransitionToken.getValue("event");
+					for(Token pastTransitionToken: pastTransitionTokens){
+						pastEventName = pastTransitionToken.getValue("event");
+						if ((pastTransitionToken.getSubToken("guard") == null) && (pastEventName.equals(newEventName))){
+							setFailedPosition(newTransitionToken.getPosition(), 54, newEventName);
+						}
+					}	
+				}
+				pastTransitionTokens.add(newTransitionToken);
+			}
+		}
+	}
+	//End Telmer
 
   private Activity analyzeActivity(Token activityToken, State fromState)
   {
