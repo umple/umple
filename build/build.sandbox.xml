@@ -18,6 +18,16 @@
   </path>
 
   <!-- ```````````````````````````
+    Clean up and initialize any potential byproduct
+  ``````````````````````````` -->
+
+  <target name="umpleSandbox">
+    <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="sandbox/src/sandbox.ump"/>
+    </java>
+  </target>
+
+  <!-- ```````````````````````````
     Compile the application
   ``````````````````````````` -->
 
@@ -42,6 +52,7 @@
     <echo>A sample build file for the Sandbox</echo>
     <antcall target="template.clean" />
     <antcall target="template.init" />
+    <antcall target="umpleSandbox" />
     <antcall target="compile" />
     <antcall target="template.test" />
   </target>
