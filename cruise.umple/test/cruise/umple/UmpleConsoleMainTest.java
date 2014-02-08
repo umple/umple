@@ -97,28 +97,28 @@ public class UmpleConsoleMainTest
   }
   
   // Ignore the following - currently does exit
-  // @Test  @Ignore
-  // public void generatePath() {
-		// String[] cppargs = new String[] {"-g", "Cpp", "--path", "/tmp", "testclass.ump"};
+  @Test  @Ignore
+  public void generatePath() {
+		String[] cppargs = new String[] {"-g", "Cpp", "--path", "/tmp", "testclass.ump"};
 		
-		// try {
-		// 	BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
-		//     out.write("class testclass {}");
-		//     out.close();
+		try {
+			BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
+		    out.write("class testclass {}");
+		    out.close();
 		    
-		//     UmpleConsoleMain.main(cppargs);
-		//     File cppout = new File("/tmp/testclass.cpp");
-		//     File chout = new File("/tmp/testclass.h");
-		//     Assert.assertEquals(true, cppout.exists());
-		//     Assert.assertEquals(true, chout.exists()); 
-		//     cppout.delete();
-		//     chout.delete();
+		    UmpleConsoleMain.main(cppargs);
+		    File cppout = new File("/tmp/testclass.cpp");
+		    File chout = new File("/tmp/testclass.h");
+		    Assert.assertEquals(true, cppout.exists());
+		    Assert.assertEquals(true, chout.exists()); 
+		    cppout.delete();
+		    chout.delete();
 		    
-		//     new File("testclass.ump").delete();
-		// } catch (IOException e) {
-		// 	Assert.fail();
-		// }
-  // }
+		    new File("testclass.ump").delete();
+		} catch (IOException e) {
+			Assert.fail();
+		}
+  }
   
    // Ignore the following - currently does exit
    @Test  @Ignore

@@ -593,7 +593,14 @@ class StudentAM
   Integer id;
 }
 
+class MentorAR
+{
+  0..1 -- 1..* StudentAR;
+}
 
+class StudentAR
+{
+}
 
 class ClassManyAssociation
 {

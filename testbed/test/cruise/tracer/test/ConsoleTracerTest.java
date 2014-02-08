@@ -6,8 +6,6 @@ import java.util.Arrays;
 
 import org.junit.*;
 
-import cruise.util.StringTracer;
-
 
 public class ConsoleTracerTest
 {
