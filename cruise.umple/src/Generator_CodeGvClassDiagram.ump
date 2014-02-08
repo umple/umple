@@ -75,8 +75,9 @@ class GvClassDiagramGenerator
     for (Attribute uAttribute : uClass.getAttributes()) {
       if(isFirst) code.append("|"); // attribute block starter
       else code.append("\\\n"); // separator between attributes
+      String isList = uAttribute.getIsList() ? "[]" : ""; //Hello
       String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
-      code.append(""+uAttribute.getName()+"\\ :\\ "+type+"\\l");
+      code.append(""+uAttribute.getName()+"\\ :\\ "+type+isList+"\\l");
       isFirst = false;
     }
 
