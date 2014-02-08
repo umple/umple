@@ -101,7 +101,7 @@
   <target name="compile">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.7" target="1.7">
 	<src path="${xtext.project.path}/src"/>
       <src path="${xtext.project.path}/src-gen"/>
       <src path="${project.path}/src"/>
@@ -364,8 +364,6 @@
     <antcall target="codegen" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
-    <antcall target="compile" />
-    <antcall target="package" />
     <antcall target="umpleSelf" />
     <antcall target="compile" />
     <antcall target="template.test" />
