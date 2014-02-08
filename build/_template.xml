@@ -87,7 +87,7 @@
     <replace file="cruise.umple/src/UmpleVersion.ump" token="@UMPLE_VERSION@" value="${umple.version}" />
     <replace file="cruise.umple/test/cruise/umple/UmpleConsoleMainTest.java" token="@UMPLE_VERSION@" value="${umple.version}" />
     <replace file="cruise.umple/test/cruise/umple/compiler/UmpleModelTest.java" token="@UMPLE_VERSION@" value="${umple.version}" />
-    <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="@UMPLE_VERSION@" value="${umple.version}" />
+    <!-- <replace file="cruise.umple/src-gen-umple/cruise/umple/compiler/UmpleModel.java" token="@UMPLE_VERSION@" value="${umple.version}" /> -->
     <replace file="cruise.umple.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
     <replace file="cruise.umple.xtext.ui/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
   </target>

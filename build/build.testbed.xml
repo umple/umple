@@ -50,7 +50,7 @@
       <arg value="testbed/src/TestHarness.ump"/>
     </java>
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.6" target="1.6">
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.7" target="1.7">
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
