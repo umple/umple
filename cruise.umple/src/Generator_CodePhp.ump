@@ -875,6 +875,13 @@ class PhpGenerator
     return nameOf(av.getName(),hasMultiple);
   }
   
+  public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
+  	if(expr.getFoundAttribute().getType().toLowerCase().equals("date")) {
+      name = "strtotime(" + name + ")";
+    }
+    return name;
+  }
+  
   private void generateSecondaryConstructorSignatures(GeneratedClass genClass)
   {
     UmpleClass uClass = genClass.getUClass();

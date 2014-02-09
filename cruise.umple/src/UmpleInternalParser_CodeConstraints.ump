@@ -435,7 +435,7 @@ class UmpleInternalParser
       } 
       else if(sub.is("constraintName"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double"));
+        rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double", "date"));
       }
       else if(sub.is("arithmeticCall"))
       {

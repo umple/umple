@@ -371,6 +371,13 @@ class JavaGenerator
     return "UNKNOWN ID: " + keyName;
   }
   
+  public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
+  	if(expr.getFoundAttribute().getType().toLowerCase().equals("date")) {
+      name = name + ".getTime()";
+    }
+    return name;
+  }
+  
   private String getImplementsForInterfaces(UmpleInterface uInterface)
   {
       String implementedInterfaces = "";

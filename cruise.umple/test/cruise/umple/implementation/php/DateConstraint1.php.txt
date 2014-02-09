@@ -1,0 +1,75 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3424 modeling language!*/
+
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+  private $d;
+  private $e;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aD, $aE)
+  {
+    $this->d = $aD;
+    $this->e = $aE;
+    if ( !((strtotime($aD)>strtotime($aE))))
+    {
+      throw new RuntimeException("Please provide a valid d and e");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setD($aD)
+  {
+    $wasSet = false;
+    if (strtotime($aD)>strtotime($e))
+    {
+    $this->d = $aD;
+    $wasSet = true;
+    }
+    return $wasSet;
+  }
+
+  public function setE($aE)
+  {
+    $wasSet = false;
+    if (strtotime($d)>strtotime($aE))
+    {
+    $this->e = $aE;
+    $wasSet = true;
+    }
+    return $wasSet;
+  }
+
+  public function getD()
+  {
+    return $this->d;
+  }
+
+  public function getE()
+  {
+    return $this->e;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

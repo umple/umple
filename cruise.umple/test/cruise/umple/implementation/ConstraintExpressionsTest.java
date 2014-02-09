@@ -53,6 +53,11 @@ public class ConstraintExpressionsTest extends TemplateTest{
 		assertUmpleTemplateFor("BasicPostCondition1.ump", languagePath + "/BasicPostcondition1."+ languagePath +".txt", "Client");
 	}
 	
+	@Test
+	public void DateConstraint1() {
+		assertUmpleTemplateFor("DateConstraint1.ump", languagePath + "/DateConstraint1." + languagePath + ".txt", "X");
+	}
+	
 //	@Test
 //	public void BasicConstraint2()
 //	{

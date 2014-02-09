@@ -1,0 +1,82 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3426 modeling language!*/
+
+
+import java.sql.Date;
+
+public class X
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+  private Date d;
+  private Date e;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X(Date aD, Date aE)
+  {
+    d = aD;
+    e = aE;
+    if ( !((aD.getTime()>aE.getTime())))
+    {
+      throw new RuntimeException("Please provide a valid d and e");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setD(Date aD)
+  {
+    boolean wasSet = false;
+    if (aD.getTime()>e.getTime())
+    {
+    d = aD;
+    wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public boolean setE(Date aE)
+  {
+    boolean wasSet = false;
+    if (d.getTime()>aE.getTime())
+    {
+    e = aE;
+    wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public Date getD()
+  {
+    return d;
+  }
+
+  public Date getE()
+  {
+    return e;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "d" + "=" + (getD() != null ? !getD().equals(this)  ? getD().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "e" + "=" + (getE() != null ? !getE().equals(this)  ? getE().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
+}
