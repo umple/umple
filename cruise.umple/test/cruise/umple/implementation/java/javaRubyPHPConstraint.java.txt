@@ -1,0 +1,82 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3443 modeling language!*/
+
+
+
+// line 4 "javaRubyPHPConstraint.ump"
+public class Range
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Range Attributes
+  private int start;
+  private int end;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Range(int aStart, int aEnd)
+  {
+    start = aStart;
+    end = aEnd;
+    if ( !((aStart<aEnd)))
+    {
+      throw new RuntimeException("Please provide a valid start and end");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStart(int aStart)
+  {
+    boolean wasSet = false;
+    if (aStart<end)
+    {
+    start = aStart;
+    wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public boolean setEnd(int aEnd)
+  {
+    boolean wasSet = false;
+    if (start<aEnd)
+    {
+    end = aEnd;
+    wasSet = true;
+    }
+    return wasSet;
+  }
+
+  public int getStart()
+  {
+    return start;
+  }
+
+  public int getEnd()
+  {
+    return end;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "start" + ":" + getStart()+ "," +
+            "end" + ":" + getEnd()+ "]"
+     + outputString;
+  }
+}

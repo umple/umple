@@ -624,7 +624,7 @@ class PhpGenerator
   {
     if (aClass.getGeneratedClass() != null)
     {
-      return;
+      //return;
     }
     else if (aClass.isRoot())
     {

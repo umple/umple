@@ -1,0 +1,67 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.19.0.3446 modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Range
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Range Attributes - for documentation purposes
+  #attr_reader :start, :end
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize($aStart, $aEnd)
+    @initialized = false
+    @deleted = false
+    @start = a_start
+    @end = a_end
+    if  !((a_start<a_end)) then
+      raise RuntimeError, 'Please provide a valid start and end'
+    end
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_start(a_start)
+    was_set = false
+    if a_start<@end then
+    @start = a_start
+    was_set = true
+    end
+    was_set
+  end
+
+  def set_end(a_end)
+    was_set = false
+    if @start<a_end then
+    @end = a_end
+    was_set = true
+    end
+    was_set
+  end
+
+  def get_start
+    @start
+  end
+
+  def get_end
+    @end
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end
