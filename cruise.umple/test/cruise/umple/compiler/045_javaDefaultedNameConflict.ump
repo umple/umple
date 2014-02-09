@@ -5,3 +5,10 @@ class Student
   defaulted name = "5";
   String defaultName;
 }
+generate Java;
+
+class Student
+{
+  defaulted name = "5";
+  String defaultName;
+}
