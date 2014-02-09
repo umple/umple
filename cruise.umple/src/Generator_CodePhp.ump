@@ -876,10 +876,14 @@ class PhpGenerator
   }
   
   public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
-  	if(expr.getFoundAttribute().getType().toLowerCase().equals("date")) {
-      name = "strtotime(" + name + ")";
+    if ("Date".equals(expr.getAttributeType()))
+    {
+      return "strtotime(" + name + ")";
     }
-    return name;
+    else
+    {
+      return name;
+    }
   }
   
   private void generateSecondaryConstructorSignatures(GeneratedClass genClass)
