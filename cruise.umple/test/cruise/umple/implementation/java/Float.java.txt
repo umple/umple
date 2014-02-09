@@ -1,0 +1,71 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+
+public class Student
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private float f1;
+  private float f2;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student()
+  {
+    f1 = 1.1f;
+    f2 = 1.2f;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setF1(float aF1)
+  {
+    boolean wasSet = false;
+    f1 = aF1;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setF2(float aF2)
+  {
+    boolean wasSet = false;
+    f2 = aF2;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public float getF1()
+  {
+    return f1;
+  }
+
+  public float getF2()
+  {
+    return f2;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    String outputString = "";
+    return super.toString() + "["+
+            "f1" + ":" + getF1()+ "," +
+            "f2" + ":" + getF2()+ "]"
+     + outputString;
+  }
+}

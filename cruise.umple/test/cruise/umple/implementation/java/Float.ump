@@ -1,0 +1,7 @@
+namespace example;
+
+class Student
+{
+  Float f1 = 1.1;
+  Float f2 = 1.2f;
+}

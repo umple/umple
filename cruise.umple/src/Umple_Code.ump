@@ -1195,8 +1195,23 @@ class UmpleVariable
   public boolean isImmutable()
   {
     return "immutable".equals(modifier);
-  }  
-
+  }
+  
+  public String normalizeValue(String aType, String aValue)
+  {
+    if (aType == null || aValue == null || aValue.length() == 0)
+    {
+      return aValue;
+    }
+    else if (("Float".equals(aType)) && ("f".equals(aValue.substring(aValue.length()-1))))
+    {
+      return aValue.substring(0, aValue.length()-1);
+    }
+    else
+    {
+      return aValue;
+    }
+  }
 }
 
 /*
@@ -1224,11 +1239,28 @@ class Attribute
   
   public String getValue()
   {
-    return codeblock.getCode()!=null ? codeblock.getCode() : super.getValue();
+    String possibleValue = codeblock.getCode(); 
+    return "".equals(possibleValue) ? super.getValue() : possibleValue;
   }
-  public void setValue(String lang, String code)
+
+  public boolean setType(String aType)
+  {
+    boolean answer = super.setType(aType);
+    setValue(getValue());
+    return answer;
+  }
+
+  public boolean setValue(String aValue)
+  {
+    aValue = normalizeValue(getType(),aValue);
+    codeblock.setCode(aValue);
+    return super.setValue(aValue);
+  }
+
+  public boolean setValue(String lang, String code)
   {
     codeblock.setCode(lang,code);
+    return true;
   }
 
   public String getFullType()
