@@ -1402,28 +1402,15 @@ class ConstraintVariable
       isAssociation = ((Attribute)uv).getIsList();
       return uv;
     }
-    uv = aClass.getAssociationVariable(this.getValue());
-    setFoundAttribute(uv);
-    isAssociation = uv!=null;
-    return uv;
-  }
-  
-  public boolean equals(Object object)
-  {
-    if(object==null)
-    {
-      return false;
-    }
-    ConstraintVariable cv = (ConstraintVariable)object;
-    if(cv.getSubConstraint()!=null&&getSubConstraint()!=null)
-    {
-      return cv.getValue().equals(getValue())&&cv.getSubConstraint().equals(getSubConstraint());
-    }
     else
     {
-      return cv.getValue().equals(getValue());
+      uv = aClass.getAssociationVariable(this.getValue());
+      setFoundAttribute(uv);
+      isAssociation = uv!=null;
+      return uv;
     }
   }
+  
 }
 
 class Constraint

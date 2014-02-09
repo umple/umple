@@ -211,18 +211,18 @@ public class CommandTest
     Assert.assertEquals("",(String)obj);
   }
 
-  @Test
-  public void runMethod()
-  {
-    cmd.exec("new cruise.umple.builder.TestClass");
-    TestClass obj = (TestClass)cmd.getCurrentObject();
-
-    cmd.runMethod("inc");
-    Assert.assertEquals(1,obj.i());
-
-    cmd.runMethod("inc");
-    Assert.assertEquals(2,obj.i());
-  }
+//  @Test
+//  public void runMethod()
+//  {
+//    cmd.exec("new cruise.umple.builder.TestClass");
+//    TestClass obj = (TestClass)cmd.getCurrentObject();
+//
+//    cmd.runMethod("inc");
+//    Assert.assertEquals(1,obj.i());
+//
+//    cmd.runMethod("inc");
+//    Assert.assertEquals(2,obj.i());
+//  }
 
   @Test
   public void showResults()
