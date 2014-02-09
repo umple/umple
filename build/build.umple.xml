@@ -91,9 +91,6 @@
     <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sql" overwrite="true">
       <fileset dir="UmpleToSql/src/cruise/umple/compiler/sql" excludes="*.svn" />
     </copy> 	
-    <copy todir="cruise.umple/src-gen-jet/cruise/umple/compiler/sdl" overwrite="true">
-      <fileset dir="UmpleToSDL/cruise/umple/compiler/sdl" excludes="*.svn" />
-    </copy>   
   </target>
 
   <!-- Move RTCpp cpde to cruise.umple -->
@@ -333,12 +330,19 @@
   <target name="deploy" if="${shouldDeploy}">
     <echo message="Deploying Version: ${umple.version}" />
     <antcall target="deployUmpleonlineJars" />
+    <antcall target="deployUpdatedLib" />
   </target>
   
   <target name="deployUmpleonlineJars" >
     <copy file="dist/umplesync.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="dist/umple.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar" overwrite="true" />
     <copy file="dist/vml.jar" tofile="/h/ralph/sites/www/html/umpleonline/scripts/vml.jar" overwrite="true" />
+  </target>
+
+  <target name="deployUpdatedLib">
+    <copy file="dist/umplesync.jar" tofile="lib/umplesync.jar" overwrite="true" />
+    <copy file="dist/umple.jar" tofile="lib/umple.jar" overwrite="true" />
+    <copy file="dist/vml.jar" tofile="lib/vml.jar" overwrite="true" />
   </target>
 
   <target name="deployUmpleonline" >
@@ -370,7 +374,7 @@
     and generate a 
   -->
   <target name="first-build">
-    <antcall target="template.clean" />
+    <antcall target="clean" />
     <antcall target="template.init" />
     <antcall target="codegen" />
     <antcall target="rtcpp" />
@@ -392,7 +396,7 @@
     <antcall target="codegen" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
-    <antcall target="umpleSelf" />
+    <antcall target="resetUmpleSelf" />
     <antcall target="compile" />
     <antcall target="template.test" />
     <antcall target="package" />
