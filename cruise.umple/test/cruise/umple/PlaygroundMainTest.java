@@ -42,6 +42,7 @@ public class PlaygroundMainTest
     SampleFileWriter.destroy("myfile.zip");
     SampleFileWriter.destroy("myfile/model.notation");
     SampleFileWriter.destroy("myfile/model.di");
+    SampleFileWriter.destroy("/myfile");
     SampleFileWriter.destroy("One.java");
     SampleFileWriter.destroy("Two.java");
   }

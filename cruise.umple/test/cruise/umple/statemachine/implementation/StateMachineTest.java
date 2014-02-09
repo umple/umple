@@ -84,8 +84,9 @@ public class StateMachineTest extends StateMachineTemplateTest
   
   // Spacing of state transaction actions
   
-  @Test //Test the spacing problems in issue 155
+  @Test // Test the spacing problems in issue 155
   public void guardSpacing() {
+    
 	  assertUmpleTemplateFor("guardSpacing.ump",languagePath + "/guardSpacing."+ languagePath +".txt","Garage");
   }
   
@@ -190,7 +191,7 @@ public class StateMachineTest extends StateMachineTemplateTest
     assertUmpleTemplateFor("entryExitTransitionAction.ump",languagePath + "/entryExitTransitionAction."+ languagePath +".txt","LightFixture");
   }
 
-  @Test 
+  @Test
   public void entryExitTransitionActionWithGuard()
   {
     assertUmpleTemplateFor("entryExitTransitionActionWithGuard.ump",languagePath + "/entryExitTransitionActionWithGuard."+ languagePath +".txt","LightFixture");
