@@ -9,7 +9,10 @@
 
 package cruise.umple.compiler;
 
-import org.junit.*;
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class ConstraintVariableTest
 {
@@ -25,51 +28,69 @@ public class ConstraintVariableTest
   @Test
   public void getAttributeType()
   {
-    Assert.assertEquals(null,expr.getAttributeType());
+    assertEquals(null,expr.getAttributeType());
     UmpleClass clazz = new UmpleClass("xx");
     expr.setFoundAttribute(new Attribute("x","MyType","","",false,clazz));
-    Assert.assertEquals("MyType",expr.getAttributeType());
+    assertEquals("MyType",expr.getAttributeType());
   }
 
   @Test
   public void equals_null()
   {
     ConstraintVariable compareTo = new ConstraintVariable(null,null);
-    Assert.assertEquals(false,expr.equals("donkey"));
-    Assert.assertEquals(false,expr.equals(null));
+    assertEquals(false,expr.equals("donkey"));
+    assertEquals(false,expr.equals(null));
   }
 
   @Test
   public void equals_empty()
   {
     ConstraintVariable compareTo = new ConstraintVariable(null,null);
-    Assert.assertEquals(true,expr.equals(compareTo));
-    Assert.assertEquals(true,compareTo.equals(expr));
+    assertEquals(true,expr.equals(compareTo));
+    assertEquals(true,compareTo.equals(expr));
   }
 
   @Test
   public void equals_valueAndSubConstraint()
   {
     ConstraintVariable compareTo = new ConstraintVariable(null,"aval");
-    Assert.assertEquals(false,expr.equals(compareTo));
-    Assert.assertEquals(false,compareTo.equals(expr));
+    assertEquals(false,expr.equals(compareTo));
+    assertEquals(false,compareTo.equals(expr));
 
     expr.setValue("notval");
-    Assert.assertEquals(false,expr.equals(compareTo));
-    Assert.assertEquals(false,compareTo.equals(expr));
+    assertEquals(false,expr.equals(compareTo));
+    assertEquals(false,compareTo.equals(expr));
 
     expr.setValue("aval");
-    Assert.assertEquals(true,expr.equals(compareTo));
-    Assert.assertEquals(true,compareTo.equals(expr));
+    assertEquals(true,expr.equals(compareTo));
+    assertEquals(true,compareTo.equals(expr));
 
     Constraint con = new Constraint();
     expr.setSubConstraint(con);
-    Assert.assertEquals(false,expr.equals(compareTo));
-    Assert.assertEquals(false,compareTo.equals(expr));
+    assertEquals(false,expr.equals(compareTo));
+    assertEquals(false,compareTo.equals(expr));
 
     compareTo.setSubConstraint(con);
-    Assert.assertEquals(true,expr.equals(compareTo));
-    Assert.assertEquals(true,compareTo.equals(expr));
+    assertEquals(true,expr.equals(compareTo));
+    assertEquals(true,compareTo.equals(expr));
   }
   
+  @Test
+  public void isPrimitive_defaultToTrue() {
+    assertEquals(true,expr.getIsPrimitive());
+  }
+  
+  @Test
+  public void setIsPrimitive_true() {
+    expr.setIsPrimitive(true);
+    assertEquals(true,expr.getIsPrimitive());
+    assertEquals(false,expr.getIsNotPrimitive());
+  }
+  
+  @Test
+  public void setIsPrimitive_false() {
+    expr.setIsPrimitive(false);
+    assertEquals(false,expr.getIsPrimitive());
+    assertEquals(true,expr.getIsNotPrimitive());
+  }
 }

@@ -558,7 +558,9 @@ class UmpleInternalParser
   	  else if(sub.is("new"))
   	  {  	    
   	    isNew = true;
-        cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","initialise").isNotPrimitive());
+  	    ConstraintVariable newCV = new ConstraintVariable("OPERATOR","initialise");
+  	    newCV.setIsPrimitive(false);
+        cv.getSubConstraint().addExpression(newCV);
   	  }
   	  else if(sub.is("constraintScopeOperator"))
   	  {
