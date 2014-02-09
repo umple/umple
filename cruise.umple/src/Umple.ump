@@ -240,6 +240,7 @@ class ConstraintVariable{
   boolean isAssociation = false;
   Integer index = -1;
   boolean isPrimitive = true;
+  boolean isNotPrimitive = { !isPrimitive };
   boolean isNumeric = {"integer".equals(type.toLowerCase())||
     "float".equals(type.toLowerCase())||
      "double".equals(type.toLowerCase())};

@@ -1384,10 +1384,6 @@ class Association
 
 class ConstraintVariable
 {
-  ConstraintVariable isNotPrimitive(){
-    isPrimitive = false;
-    return this;
-  }
   UmpleVariable getAttribute(UmpleClass aClass){
     if(!getIsAttribute()) {
       return null;
