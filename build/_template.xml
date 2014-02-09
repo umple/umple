@@ -71,7 +71,6 @@
   <target name="template.clean">
     <delete dir="${bin.path}" failonerror="false" />
     <delete dir="${dist.path}" failonerror="false" />
-    <delete dir="${project.path}/src-gen-umple" failonerror="false" />
   </target>
 
   <target name="template.init">
