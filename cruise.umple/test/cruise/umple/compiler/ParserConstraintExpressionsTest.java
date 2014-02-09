@@ -7,6 +7,10 @@ import cruise.umple.util.SampleFileWriter;
 
 public class ParserConstraintExpressionsTest extends UmpleParserTest {
 	
+	@Test
+	public void canHandleDateConstraints() {
+		assertParse("700_DateConstraint.ump");
+	}
 	
 	@Test
 	public void BasicConstraint2(){ // [agedfd > 12]

@@ -1,0 +1,68 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE 1.19.0.3424 modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+require 'date'
+
+class X
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #X Attributes - for documentation purposes
+  #attr_reader :d, :e
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_d, a_e)
+    @initialized = false
+    @deleted = false
+    @d = a_d
+    @e = a_e
+    if  !((a_d.to_time.to_i>a_e.to_time.to_i)) then
+      raise RuntimeError, 'Please provide a valid d and e'
+    end
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_d(a_d)
+    was_set = false
+    if a_d.to_time.to_i>@e.to_time.to_i then
+    @d = a_d
+    was_set = true
+    end
+    was_set
+  end
+
+  def set_e(a_e)
+    was_set = false
+    if @d.to_time.to_i>a_e.to_time.to_i then
+    @e = a_e
+    was_set = true
+    end
+    was_set
+  end
+
+  def get_d
+    @d
+  end
+
+  def get_e
+    @e
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end

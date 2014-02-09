@@ -44,6 +44,10 @@ class SuperCodeGenerator {
       return "INVALID KEYNAME IN TRANSLATE";
     }
   }
+  
+  public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
+  	return name;
+  }
   	
   public String translate(String format, Constraint constraint){
     if(constraint==null)
@@ -65,6 +69,7 @@ class SuperCodeGenerator {
           String name = //(!plain?ConstraintLookupMap.get("accessor"):"")+
         		                      translate(format+":Plain"+(strictNext?"$strict$":""),expr.getSubConstraint());
           expression = StringFormatter.format(expression,name,previousName);
+          name = umpleCVarToLanguagePrimitive(name, expr);
           previousName = name;
           insertNext = false;
         }
@@ -72,6 +77,7 @@ class SuperCodeGenerator {
         {
           String name = //(!plain?ConstraintLookupMap.get("accessor"):"")+
         		                      translate(format+":Plain"+(strictNext?"$strict$":""),expr.getSubConstraint());
+          name = umpleCVarToLanguagePrimitive(name, expr);
           expression+=name;
           previousName = name;
         }

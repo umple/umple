@@ -140,6 +140,13 @@ class RubyGenerator
     }
   }
   
+  public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
+  	if(expr.getFoundAttribute().getType().toLowerCase().equals("date")) {
+      name = name + ".to_time.to_i";
+    }
+    return name;
+  }
+  
   public String translate(String name, UmpleInterface aInterface)
   {
     if ("packageDefinition".equals(name))

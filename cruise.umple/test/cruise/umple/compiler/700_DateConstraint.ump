@@ -1,0 +1,6 @@
+
+class TwoDates {
+  Date d1;
+  Date d2;
+  [ d1 < d2 ];
+}
