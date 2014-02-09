@@ -580,7 +580,7 @@ class RubyGenerator
   {
     if (aClass.getGeneratedClass() != null)
     {
-      return;
+      //return;
     }
     else if (aClass.isRoot())
     {

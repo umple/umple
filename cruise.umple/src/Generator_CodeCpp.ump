@@ -671,7 +671,7 @@ class CppGenerator
   {
     if (aClass.getGeneratedClass() != null)
     {
-      return;
+      //return;
     }
     else if (aClass.isRoot())
     {

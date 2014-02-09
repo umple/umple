@@ -697,7 +697,7 @@ class JavaGenerator
   {
     if (aClass.getGeneratedClass() != null)
     {
-      return;
+      //return;
     }
     else if (aClass.isRoot())
     {

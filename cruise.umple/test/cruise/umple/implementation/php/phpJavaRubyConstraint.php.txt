@@ -1,0 +1,75 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3446 modeling language!*/
+
+class Range
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Range Attributes
+  private $start;
+  private $end;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aStart, $aEnd)
+  {
+    $this->start = $aStart;
+    $this->end = $aEnd;
+    if ( !(($aStart<$aEnd)))
+    {
+      throw new RuntimeException("Please provide a valid start and end");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setStart($aStart)
+  {
+    $wasSet = false;
+    if ($aStart<$end)
+    {
+    $this->start = $aStart;
+    $wasSet = true;
+    }
+    return $wasSet;
+  }
+
+  public function setEnd($aEnd)
+  {
+    $wasSet = false;
+    if ($start<$aEnd)
+    {
+    $this->end = $aEnd;
+    $wasSet = true;
+    }
+    return $wasSet;
+  }
+
+  public function getStart()
+  {
+    return $this->start;
+  }
+
+  public function getEnd()
+  {
+    return $this->end;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

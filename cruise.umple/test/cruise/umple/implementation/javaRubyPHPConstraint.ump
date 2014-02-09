@@ -1,0 +1,9 @@
+generate Java;
+generate Ruby;
+generate Php;
+
+class Range {
+	Integer start;
+	Integer end;
+	[start < end];
+}
