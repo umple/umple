@@ -25,11 +25,15 @@ public class PlaygroundMainTest
 {
 
   String pathToInput;
+  String pathToRoot;
+  String pathToBuild;
   
   @Before
   public void setUp()
   {
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/sync");
+    pathToRoot = SampleFileWriter.rationalize("../cruise.umple");
+    pathToBuild = SampleFileWriter.rationalize("../build");
   }
   
   @After
@@ -42,7 +46,8 @@ public class PlaygroundMainTest
     SampleFileWriter.destroy("myfile.zip");
     SampleFileWriter.destroy("myfile/model.notation");
     SampleFileWriter.destroy("myfile/model.di");
-    SampleFileWriter.destroy("/myfile");
+    SampleFileWriter.destroy(pathToRoot + "/myfile");
+    SampleFileWriter.destroy(pathToBuild + "/myfile");
     SampleFileWriter.destroy("One.java");
     SampleFileWriter.destroy("Two.java");
   }
