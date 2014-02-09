@@ -33,21 +33,10 @@ public class PapyrusGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.di");
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/Garage_GarageDoor.notation");    
     SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus/.project");
-    File destroyDirPap = new File(pathToInput + "/papyrus/Papyrus");
-    destroyDirPap.delete();
-    
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations/model.uml");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations/model.di");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations/model.notation");
-    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations/.project");
-    File destroyDirAss = new File(pathToInput + "/papyrus/Associations");
-    destroyDirAss.delete();
-    
-    SampleFileWriter.destroy("/myfile/model.di");
-    SampleFileWriter.destroy("/myfile/model.notation");
-    SampleFileWriter.destroy("/myfile/model.uml");
-    SampleFileWriter.destroy("/myfile/model");
-    SampleFileWriter.destroy("/myfile");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Papyrus");
+    SampleFileWriter.destroy(pathToInput + "/papyrus/Associations");
+
+    SampleFileWriter.destroy("myfile");
   }
 
   @Test
