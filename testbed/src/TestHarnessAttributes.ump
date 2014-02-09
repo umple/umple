@@ -51,6 +51,14 @@ class DoorF
   defaulted Time d3 = "12:53:53";
 }
 
+class DoorG
+{
+  Float floatNoF = 1.1;
+  Float floatWithF = 1.2f;
+  Double doubleNoF = 1.3;
+  Double doubleWithF = 1.4;    	
+}
+
 class ManyAttribute
 {
   Integer[] works;

@@ -538,9 +538,8 @@ class UmpleVariable
 
   // The value of the Umple variable.
   value;
-
+    
   before setName { if (aName == null) { throw new RuntimeException("Name must be set, cannot be null"); } }
-
   before getModifier { if (modifier == null) { return "settable"; } }
 
   class UniqueIdentifier { }  
@@ -570,9 +569,10 @@ class Attribute
   // Specifies whether or not the method parameter is derived.
   Boolean isDerived = false;
   
-  CodeBlock codeblock = null;
-  after constructor {codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();}
-  before setValue {codeblock.setCode(aValue);}
+  CodeBlock codeblock = new CodeBlock();
+
+  after constructor { codeblock.setCode(normalizeValue(aType,aValue)); }
+  before setType { codeblock.setCode(normalizeValue(aType,getValue())); }
 
   // Specifies whether or not the method parameter is lazy.
   Boolean isLazy = false;
