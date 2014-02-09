@@ -5,3 +5,10 @@ class Student
   defaulted name = "5";
   String default_name;
 }
+generate Ruby;
+
+class Student
+{
+  defaulted name = "5";
+  String default_name;
+}

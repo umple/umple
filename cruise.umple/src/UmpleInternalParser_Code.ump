@@ -92,65 +92,11 @@ class UmpleInternalParser
     analyzeAllTokens(getRootToken());
     postTokenAnalysis();
     applyTraits();
-    checkDefaultedNameConflict();
-    
     if (shouldGenerate && getParseResult().getWasSuccess())
     {
       model.generate();
     }
     return getParseResult();
-  }
-  
-  boolean addToGeneratedMethodMap(HashSet<String> generatedMethods, String langName, CodeTranslator t, String translatingLabel, Attribute aAttr){
-    String generateMethodName = t.translate(translatingLabel, aAttr);
-    
-    if(generateMethodName != null && !"".equals(generateMethodName) && !generateMethodName.startsWith("UNKNOWN ID")){
-      
-      boolean success = generatedMethods.add(generateMethodName);
-      
-      if(!success){
-        getParseResult().addErrorMessage(new ErrorMessage(52,aAttr.getPosition()));
-        System.out.printf("MethodNameConflict - Lang: %s, Attr Name: %s, Conflict Method: %s\n", langName, aAttr.getName(), generateMethodName);
-        return false;
-      }
-      
-    }
-    return true;
-  }
-  
-  void checkDefaultedNameConflict(){
-    
-    Map<String, CodeTranslator> allTranslators = new HashMap<String, CodeTranslator>();
-    CodeGenerator tempCodeGen = null;
-    for(GenerateTarget t : model.getGenerates())
-    {
-      if((tempCodeGen = model.newGenerator(t.getLanguage())) instanceof CodeTranslator){        
-        allTranslators.put(t.getLanguage(), (CodeTranslator)tempCodeGen);
-      }
-    }
-        
-    HashSet<String> generatedMethods = new HashSet<String>();
-    for(String langName : allTranslators.keySet()){
-      CodeTranslator t = allTranslators.get(langName);
-      
-      for(UmpleClass aClass : model.getUmpleClasses()){
-        generatedMethods.clear();
-        
-        for(Attribute aAttr : aClass.getAttributes()){
-          String modifier = aAttr.getModifier();
-          
-          // Can add more!
-          if(!"internal".equals(modifier)){
-            addToGeneratedMethodMap(generatedMethods, langName, t, "getMethod", aAttr);
-            addToGeneratedMethodMap(generatedMethods, langName, t, "setMethod", aAttr);
-          }
-          
-          if("defaulted".equals(modifier)){
-            addToGeneratedMethodMap(generatedMethods, langName, t, "getDefaultMethod", aAttr);
-          }
-        }
-      }
-    }
   }
 
   //------------------------
