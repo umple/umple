@@ -115,16 +115,16 @@ public class CommandTest
     Assert.assertArrayEquals(new String[] { "Unable to create Garble" },cmd.popMessages());
   }
 
-  @Test
-  public void exec_runMethod()
-  {
-    cmd.exec("new cruise.umple.builder.TestClass");
-    TestClass obj = (TestClass)cmd.getCurrentObject();
-    Assert.assertEquals(0,obj.i());
-    cmd.exec("inc");
-    cmd.exec("inc");
-    Assert.assertEquals(2,obj.i());
-  }
+//  @Test
+//  public void exec_runMethod()
+//  {
+//    cmd.exec("new cruise.umple.builder.TestClass");
+//    TestClass obj = (TestClass)cmd.getCurrentObject();
+//    Assert.assertEquals(0,obj.i());
+//    cmd.exec("inc");
+//    cmd.exec("inc");
+//    Assert.assertEquals(2,obj.i());
+//  }
 
   @Test
   public void exec_runMethod_message_ok()

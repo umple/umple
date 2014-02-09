@@ -372,10 +372,14 @@ class JavaGenerator
   }
   
   public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
-  	if(expr.getFoundAttribute().getType().toLowerCase().equals("date")) {
-      name = name + ".getTime()";
+    if ("Date".equals(expr.getAttributeType()))
+    {
+      return name + ".getTime()";
     }
-    return name;
+    else
+    {
+      return name;
+    }
   }
   
   private String getImplementsForInterfaces(UmpleInterface uInterface)

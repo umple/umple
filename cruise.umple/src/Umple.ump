@@ -228,7 +228,7 @@ class ReferenceType{
 }
 
 /*
- * Under Development
+ * Under Development --> commited code needs Specs, Andrew and Miguel not happy!
  */
 class ConstraintVariable{
   type;//NOT USED: One order of parsing list each type of Umple Variable (Including the Constrained Variable).
@@ -245,6 +245,8 @@ class ConstraintVariable{
      "double".equals(type.toLowerCase())};
   UmpleVariable foundAttribute = null;
   
+  attributeType = { (getFoundAttribute() == null) ? null : getFoundAttribute().getType() }
+
 }
 
 /*

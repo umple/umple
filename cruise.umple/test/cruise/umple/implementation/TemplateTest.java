@@ -79,7 +79,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/LightFixture.java");
     SampleFileWriter.destroy(pathToInput + "/LightFixture.cpp");
     SampleFileWriter.destroy(pathToInput + "/LightFixture.h");
-    
+    SampleFileWriter.destroy(pathToInput + "/Tracer.java");
     SampleFileWriter.destroy(pathToInput + "/X.java");
     SampleFileWriter.destroy(pathToInput + "/X.php");
     SampleFileWriter.destroy(pathToInput + "/x.ruby");
