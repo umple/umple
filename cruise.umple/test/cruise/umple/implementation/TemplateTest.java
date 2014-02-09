@@ -5,7 +5,7 @@
  This file is made available subject to the open source license found at:
  http://umple.org/license
 
-*/
+ */
 
 package cruise.umple.implementation;
 
@@ -85,7 +85,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/x.ruby");
     SampleFileWriter.destroy(pathToInput + "/X.h");
     SampleFileWriter.destroy(pathToInput + "/X.cpp");
-    
+
     SampleFileWriter.destroy(pathToInput + "/StrobeLight.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
@@ -95,9 +95,9 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/example.rb");
     SampleFileWriter.destroy(pathToInput + "/Example.java");
     SampleFileWriter.destroy(pathToInput + "/GarageDoor.php");
-    
+
     SampleFileWriter.destroy(pathToInput + "/student.cpp");
-    SampleFileWriter.destroy(pathToInput + "/student.h");   
+    SampleFileWriter.destroy(pathToInput + "/student.h");
 
     SampleFileWriter.destroy(pathToInput + "/ICodeTranslator.php");
     SampleFileWriter.destroy(pathToInput + "/IFirstChild.php");
@@ -138,16 +138,15 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/exception.rb");
     SampleFileWriter.destroy(pathToInput + "/course.rb");
     SampleFileWriter.destroy(pathToInput + "/light.rb");
-    SampleFileWriter.destroy(pathToRoot + "/x.rb");
-    SampleFileWriter.destroy(pathToRoot + "/x.rb");
-    SampleFileWriter.destroy(pathToRoot + "/one.rb");
-    SampleFileWriter.destroy(pathToRoot + "/two.rb");
+    SampleFileWriter.destroy(pathToInput + "/x.rb");
+    SampleFileWriter.destroy(pathToInput + "/one.rb");
+    SampleFileWriter.destroy(pathToInput + "/two.rb");
 
     SampleFileWriter.destroy(pathToInput + "/i_code_translator.rb");
     SampleFileWriter.destroy(pathToInput + "/i_first_child.rb");
     SampleFileWriter.destroy(pathToInput + "/code_translator.rb");
     SampleFileWriter.destroy(pathToInput + "/i_second_child.rb");
-    
+
     SampleFileWriter.destroy(pathToInput + "/NToNTest.sql");
     SampleFileWriter.destroy(pathToInput + "/OneToNTest.sql");
     SampleFileWriter.destroy(pathToInput + "/OneToOneTest.sql");
@@ -157,25 +156,25 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/ruby/ruby_code");
     SampleFileWriter.destroy(pathToInput + "/java/java_code");
     SampleFileWriter.destroy(pathToInput + "/php/php_code");
-    
+
     //
     // Tear down missing comment detection tests.
     //
-    
+
     SampleFileWriter.destroy(pathToInput + "/Foo.java");
-    
+
     SampleFileWriter.destroy(pathToInput + "/Bar.java");
     SampleFileWriter.destroy(pathToInput + "/Bar1.java");
     SampleFileWriter.destroy(pathToInput + "/Bar2.java");
     SampleFileWriter.destroy(pathToInput + "/Bar3.java");
     SampleFileWriter.destroy(pathToInput + "/Bar4.java");
-    
+
     SampleFileWriter.destroy(pathToInput + "/Bar.cpp");
     SampleFileWriter.destroy(pathToInput + "/Bar1.cpp");
     SampleFileWriter.destroy(pathToInput + "/Bar2.cpp");
     SampleFileWriter.destroy(pathToInput + "/Bar3.cpp");
     SampleFileWriter.destroy(pathToInput + "/Bar4.cpp");
-    
+
     SampleFileWriter.destroy(pathToInput + "/Foo.cpp");
     SampleFileWriter.destroy(pathToInput + "/Foo.h");
 
@@ -184,14 +183,13 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Bar2.h");
     SampleFileWriter.destroy(pathToInput + "/Bar3.h");
     SampleFileWriter.destroy(pathToInput + "/Bar4.h");
-    
+
     SampleFileWriter.destroy(pathToInput + "/bar_1.rb");
     SampleFileWriter.destroy(pathToInput + "/bar_2.rb");
     SampleFileWriter.destroy(pathToInput + "/bar_3.rb");
     SampleFileWriter.destroy(pathToInput + "/bar_4.rb");
     SampleFileWriter.destroy(pathToInput + "/foo.rb");
     SampleFileWriter.destroy(pathToInput + "/bar.rb");
-
 
     SampleFileWriter.destroy(pathToInput + "/Bar.php");
     SampleFileWriter.destroy(pathToInput + "/Bar1.php");
@@ -208,17 +206,16 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/QueuedSMwithConcurrentStates_2.php");
     SampleFileWriter.destroy(pathToInput + "/CourseAttempt.php");
 
-
     //
     // Tear down abstract class tests.
     //
-    
+
     SampleFileWriter.destroy(pathToInput + "/Person.java");
     SampleFileWriter.destroy(pathToInput + "/Student.java");
     SampleFileWriter.destroy(pathToInput + "/student.java");
     SampleFileWriter.destroy(pathToInput + "/Teacher.java");
     SampleFileWriter.destroy(pathToInput + "/Mentor.java");
-    
+
     // Tear down Client
     SampleFileWriter.destroy(pathToInput + "/Client.java");
     SampleFileWriter.destroy(pathToInput + "/client.rb");
@@ -262,15 +259,15 @@ public class TemplateTest
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className, boolean isFullMatch)
   {
-	  assertUmpleTemplateFor(umpleFile, codeFile, className, isFullMatch, true);
+    assertUmpleTemplateFor(umpleFile, codeFile, className, isFullMatch, true);
   }
 
-  public void assertGeneratedCodeEquals(String pathToInput,String actualFilename)
+  public void assertGeneratedCodeEquals(String pathToInput, String actualFilename)
   {
     String expectedFilename = actualFilename + ".txt";
     SampleFileWriter.assertFileContent(new File(pathToInput + expectedFilename), new File(pathToInput + actualFilename), false);
   }
-  
+
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className, boolean isFullMatch, boolean ignoreLineComments)
   {
     UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
@@ -297,37 +294,37 @@ public class TemplateTest
 
     File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
-    
+
     if (isFullMatch)
     {
       if (ignoreLineComments)
-    	  SampleFileWriter.assertFileContent(expected, actual, true); 
+        SampleFileWriter.assertFileContent(expected, actual, true);
       else
-    	  SampleFileWriter.assertFileContent(expected, actual, false);
-      
+        SampleFileWriter.assertFileContent(expected, actual, false);
+
     }
     else
     {
       SampleFileWriter.assertPartialFileContent(expected, actual);
     }
-    
+
   }
 
   public UmpleModel createUmpleSystem(String path, String filename)
   {
-	UmpleFile file = new UmpleFile(pathToInput,filename);
-	UmpleModel model = new UmpleModel(file);
-	model.setShouldGenerate(false);
-	RuleBasedParser rbp = new RuleBasedParser();
-	UmpleParser parser = new UmpleInternalParser(umpleParserName,model,rbp);
-	ParseResult result = rbp.parse(file);
-	model.setLastResult(result);
+    UmpleFile file = new UmpleFile(pathToInput, filename);
+    UmpleModel model = new UmpleModel(file);
+    model.setShouldGenerate(false);
+    RuleBasedParser rbp = new RuleBasedParser();
+    UmpleParser parser = new UmpleInternalParser(umpleParserName, model, rbp);
+    ParseResult result = rbp.parse(file);
+    model.setLastResult(result);
 
     if (!result.getWasSuccess())
     {
       Assert.fail("Syntax Failed at:" + result.getPosition());
     }
-    
+
     model.setUmpleFile(new UmpleFile(new File(path, filename)));
 
     if (language != null)
