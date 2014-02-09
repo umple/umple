@@ -80,6 +80,12 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/LightFixture.cpp");
     SampleFileWriter.destroy(pathToInput + "/LightFixture.h");
     
+    SampleFileWriter.destroy(pathToInput + "/X.java");
+    SampleFileWriter.destroy(pathToInput + "/X.php");
+    SampleFileWriter.destroy(pathToInput + "/x.ruby");
+    SampleFileWriter.destroy(pathToInput + "/X.h");
+    SampleFileWriter.destroy(pathToInput + "/X.cpp");
+    
     SampleFileWriter.destroy(pathToInput + "/StrobeLight.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
