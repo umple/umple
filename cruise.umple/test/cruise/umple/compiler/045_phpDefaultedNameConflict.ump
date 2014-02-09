@@ -1,0 +1,7 @@
+generate Php;
+
+class Student
+{
+  defaulted name = "5";
+  String defaultName;
+}

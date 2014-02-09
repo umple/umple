@@ -1,3 +1,5 @@
 .metadata
 ignore
 dist
+svn.properties
+.project
