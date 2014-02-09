@@ -2181,7 +2181,7 @@ public class UmpleParserTest
     Assert.assertEquals(2,x.numberOfAttributes());
   }
   
-   @Test
+  @Test
   public void externalDefinitionAndClassDefinitionCodeGeneration_externalLast()
   {
     assertParse("026_externalDefinitionAndClassDefinition_last.ump");
@@ -2189,6 +2189,15 @@ public class UmpleParserTest
     UmpleClass x = model.getUmpleClass("X");
     Assert.assertEquals(1,x.numberOfAttributes());
   }
+  
+  @Test
+  public void nameConflictUsingDefaulted()
+  {
+    assertFailedParse("045_javaDefaultedNameConflict.ump", 52);  
+    assertFailedParse("045_phpDefaultedNameConflict.ump", 52);  
+    assertFailedParse("045_rubyDefaultedNameConflict.ump", 52);  
+  }
+  
   
   
   // Test for issue 412 by F.K
