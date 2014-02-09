@@ -50,6 +50,10 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="USEGenerator" eSuperTypes="#//CodeGenerator">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PapyrusGenerator" eSuperTypes="#//CodeGenerator">
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="output" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -142,6 +146,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="NL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="generatedElements" eType="#//UmpleElement" upperBound="-1"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Format">
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="ClassMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>
@@ -176,8 +182,6 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="countParametersMin" eType="#//int"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="int"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Format">
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="StateMachineMetrics" eSuperTypes="#//SimpleMetricsGenerator">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="code" eType="#//StringBuilder"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="model" eType="#//UmpleModel"/>

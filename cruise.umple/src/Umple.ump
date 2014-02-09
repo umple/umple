@@ -247,6 +247,8 @@ class ConstraintVariable{
   
   attributeType = { (getFoundAttribute() == null) ? null : getFoundAttribute().getType() }
 
+  key { value, subConstraint }
+
 }
 
 /*

@@ -82,6 +82,18 @@ class UmpleSelfGenerator
   String output = "";
 }
 
+class USEGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+  String output = "";
+}
+
 class PapyrusGenerator
 {
   isA CodeGenerator;
