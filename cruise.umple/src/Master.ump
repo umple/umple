@@ -13,7 +13,6 @@ The following instructs the system to inject comments on every class point to th
 */
 
 generate Java "../src-gen-umple";
-generate Ecore;
 
 strictness allow 1006;
 strictness allow 1007;
