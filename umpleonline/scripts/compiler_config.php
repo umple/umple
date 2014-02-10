@@ -58,6 +58,8 @@ function generateMenu($buttonSuffix)
             <option value=\"sql:Sql\">Sql</option>
             <option value=\"java:SimpleMetrics\">Simple metrics</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
+            <!-- <option value=\"java:USE\">USE Model</option> -->
+            <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
           </select>
         </li>
         <li><div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div></li>

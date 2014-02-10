@@ -7,6 +7,7 @@
   <property name="shouldDeploy" value="false"/>
   <property name="showJunitSummary" value="false"/>
   <property name="showJunitOutput" value="false"/>  
+  <property name="junit" value="*Test"/> 
   <property name="rake_cmd" value="rake"/>  
 
   <import file="_versionNew.xml" />
