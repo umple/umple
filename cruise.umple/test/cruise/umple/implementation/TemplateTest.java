@@ -11,6 +11,7 @@ package cruise.umple.implementation;
 
 import java.io.File;
 
+import org.apache.tools.ant.util.FileUtils;
 import org.junit.*;
 
 import cruise.umple.compiler.*;
@@ -270,6 +271,19 @@ public class TemplateTest
 
   public void assertUmpleTemplateFor(String umpleFile, String codeFile, String className, boolean isFullMatch, boolean ignoreLineComments)
   {
+    
+    String checkFile = pathToInput + "/" + umpleFile;
+    if (!(new File(checkFile).exists()))
+    {
+      Assert.fail("Unable to locate umple file: " + checkFile);
+    }
+
+    checkFile = pathToInput + "/" + codeFile;
+    if (!(new File(pathToInput + "/" + codeFile).exists()))
+    {
+      Assert.fail("Unable to locate code file: " + checkFile);
+    }
+    
     UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
 
     String actual = null;

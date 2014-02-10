@@ -1,0 +1,123 @@
+/*
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+*/
+
+namespace cruise.umple.compiler;
+
+class USEGenerator
+{
+
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    ArrayList<Association> externalAssociations = new ArrayList<Association>();
+
+    code.append(StringFormatter.format("model {0}\n", model.getUmpleFile().getSimpleFileName()));
+
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+  
+      code.append(StringFormatter.format("\nclass {0}", uClass.getName()));
+
+      if (uClass.getExtendsClass() != null)
+      {
+        code.append(StringFormatter.format(" < {0}", uClass.getExtendsClass().getName()));
+      }
+      code.append("\n");
+
+      List<Attribute> allAttributes = uClass.getAttributes();
+      if (allAttributes.size() > 0)
+      {
+        code.append("  attributes\n");
+      }
+
+      for (Attribute av : uClass.getAttributes())
+      {
+        String typeName = av.getType() == null ? "String" : av.getType();
+        if ("Date".equals(typeName) || "Time".equals(typeName))
+        {
+          typeName = "String";
+        }
+        else if ("Double".equals(typeName) || "Float".equals(typeName))
+        {
+          typeName = "Real";
+        }
+
+        String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
+        code.append(StringFormatter.format("    {0} : {1}\n", attrName, typeName));
+      }
+
+      for (Association as : uClass.getAssociations())
+      {
+        AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
+        AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
+
+        if (!myEnd.getClassName().equals(uClass.getName()))
+        {
+          continue;
+        }
+        if (as.isNamed())
+        {
+          externalAssociations.add(as);
+          continue;
+        }
+        code.append(StringFormatter.format("  {0} {1} -- {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
+      }
+
+      for (CodeInjection ci : uClass.getCodeInjections())
+      {
+        code.append(StringFormatter.format("  {0} {1} { {2} }\n", ci.getType(), ci.getOperation(), ci.getCode()));
+      }
+
+      for (Method m : uClass.getMethods())
+      {
+        generateMethod(m, code);
+      }
+
+      code.append("end\n");
+    }
+
+    for (Association as : externalAssociations)
+    {
+      AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
+      AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
+
+      code.append(StringFormatter.format("\nassociation {0}\n{\n", as.getName()));
+      code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
+      code.append("}");
+    }
+
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  private void generateMethod(Method m, StringBuilder code)
+  {
+  
+  }
+
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".use";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating USE code." + e, e);
+    }
+  }
+
+}
+
+
