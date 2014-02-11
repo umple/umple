@@ -3,3 +3,5 @@ ignore
 dist
 svn.properties
 .project
+.classpath
+httpd.conf
