@@ -1,0 +1,33 @@
+model Attributes
+
+class X
+end
+
+class X1 < X
+end
+
+class X2
+  attributes
+    MAX : Integer
+    MIN : Integer
+    HELLO : String
+    str : String
+    str2 : String
+    someName : String
+    lDoub : Real
+    lBool : Boolean
+    name : String
+    d : String
+    t : String
+    i : Integer
+    derivedTwiceI : Integer
+    x : Integer
+    p : String
+    q : String
+    r : String
+    s : String
+    tt : String
+    u : String
+    v : String
+    w : String
+end

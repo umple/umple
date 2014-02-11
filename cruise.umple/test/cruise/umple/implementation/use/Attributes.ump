@@ -1,0 +1,37 @@
+generate USE;
+
+class X
+{
+}
+
+class X1
+{
+  isA X;
+}
+
+class X2
+{
+  const Integer MAX = 100;
+  const Integer MIN = -99;
+  const HELLO = "Hello";
+
+  immutable String str;
+  lazy immutable String str2;
+  lazy String someName;
+  lazy Double lDoub;
+  lazy Boolean lBool;
+  lazy String name = "Johannes";
+  Date d;
+  internal Time t = new Time();
+  Integer i;
+  Integer derivedTwiceI = i*2;
+  autounique x;
+  defaulted String p = "robot";
+  q = "chicken";
+  defaulted String r = "";
+  immutable s = "123";
+  Date tt = "1978-12-25";
+  Time u = "12:13:14";
+  defaulted Date v = "1978-12-26";
+  defaulted Time w = "12:59:59";
+}
