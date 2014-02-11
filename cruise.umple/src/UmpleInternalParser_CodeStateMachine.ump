@@ -65,10 +65,10 @@ class UmpleInternalParser
     return code.getValue();
   }
   
-  private void analyzeActiveObject(Token activeToken, UmpleClass aClass)
+  private void analyzeActiveObject(Token activeToken, UmpleClassifier uClassifier)
   {
-    analyzeStateMachine(generateActiveStateMachineToken(activeToken), aClass);
-    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), aClass))
+    analyzeStateMachine(generateActiveStateMachineToken(activeToken), uClassifier);
+    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), uClassifier))
     {
       numberOfActiveObjects++;
     }
@@ -127,7 +127,7 @@ class UmpleInternalParser
   
 
   // Analyze state machine related tokens within the context of an Umple class
-  private void analyzeStateMachineToken(Token token, UmpleClass aClass, int analysisStep)
+  private void analyzeStateMachineToken(Token token, UmpleClassifier uClassifier, int analysisStep)
   {
     if (analysisStep != 1)
     {
@@ -136,31 +136,40 @@ class UmpleInternalParser
     
     if (token.is("stateMachine"))
     {
-      if (aClass.isImmutable())
-      {
-    	  setFailedPosition(token.getPosition(), 15, aClass.getName());
-    	  return;
-      }
+      if (uClassifier instanceof UmpleClass) {
+	  	if (((UmpleClass)uClassifier).isImmutable())
+		{
+			setFailedPosition(token.getPosition(), 15, uClassifier.getName());
+		    return;
+		}
+	  } else if (uClassifier instanceof UmpleTrait) {
+	  	if (((UmpleTrait)uClassifier).isImmutable())
+	  	{
+	  		//TODO--- trait's code	
+	  	    setFailedPosition(token.getPosition(), 15, uClassifier.getName());
+	  	    return;
+	  	}	
+	  }
       
       Token subToken = token.getSubToken(0);
       if (subToken.is("activeDefinition"))
       {
-        analyzeActiveObject(subToken, aClass);
+        analyzeActiveObject(subToken, uClassifier);
       }
       
       if (subToken.is("enum") || subToken.is("inlineStateMachine"))
       {
-        analyzeStateMachine(subToken,aClass);
+        analyzeStateMachine(subToken,uClassifier);
       }
       
       if (subToken.is("referencedStateMachine"))
       {
-        analyzedReferencedStateMachine(subToken,aClass);
+        analyzedReferencedStateMachine(subToken,uClassifier);
       }
     }
   }
 
-  private int numberOfActiveObjectsInClass(Token token, UmpleClass aClass)
+  private int numberOfActiveObjectsInClass(Token token, UmpleClassifier uClassifier)
   {
     int activeObjects = 0;
     
@@ -286,7 +295,7 @@ class UmpleInternalParser
     model.addStateMachineDefinition(smd);
   }
 
-  private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClass aClass)
+  private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClassifier uClassifier)
   {
     String name = stateMachineToken.getValue("name");
 
@@ -303,23 +312,36 @@ class UmpleInternalParser
     }
 
     StateMachine sm = new StateMachine(name);
-    boolean wasSet = sm.setUmpleClass(aClass);
+    //------------
+    boolean wasSet = true;
+    if (uClassifier instanceof UmpleClass) {
+    	wasSet = sm.setUmpleClass((UmpleClass)uClassifier);
+    } else if (uClassifier instanceof UmpleTrait) {
+    	wasSet = sm.setUmpleTrait((UmpleTrait)uClassifier);
+    }
+    //------------
     if (!wasSet)
     {
     	// Future-proofing: currently all paths cause wasSet to be true
-    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
+
+    	if (uClassifier instanceof UmpleClass) {
+	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+	    } else if (uClassifier instanceof UmpleTrait) {
+	    	//TODO --Trait's code
+	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+	    } 
     }
     
-    populateStateMachine(stateMachineDefinitionToken,sm, aClass);
+    populateStateMachine(stateMachineDefinitionToken,sm, uClassifier);
     Token extendedStateMachineTokens = stateMachineToken.getSubToken("extendedStateMachine");
     if (extendedStateMachineTokens != null)
     {
-      populateStateMachine(extendedStateMachineTokens, sm, aClass);
+      populateStateMachine(extendedStateMachineTokens, sm, uClassifier);
     }
 
   }
 
-  private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClass aClass)
+  private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClassifier uClassifier)
   {
     placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
@@ -331,11 +353,21 @@ class UmpleInternalParser
     stateMachineNameToToken.put(name,stateMachineToken);
     
     StateMachine sm = new StateMachine(name);
-    boolean wasSet = sm.setUmpleClass(aClass);
+    boolean wasSet = true;
+    if (uClassifier instanceof UmpleClass) {
+    	wasSet = sm.setUmpleClass((UmpleClass)uClassifier);
+    } else if (uClassifier instanceof UmpleTrait) {
+    	wasSet = sm.setUmpleTrait((UmpleTrait)uClassifier);
+    }
     if (!wasSet)
     {
     	// Future-proofing: currently all paths cause wasSet to be true
-    	setFailedPosition(stateMachineToken.getPosition(), 15, aClass.getName());
+    	if (uClassifier instanceof UmpleClass) {
+	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+	    } else if (uClassifier instanceof UmpleTrait) {
+	    	//TODO --Trait's code
+	    	setFailedPosition(stateMachineToken.getPosition(), 15, uClassifier.getName());
+	    } 
     }
       
     if(stateMachineToken.is("queued"))
@@ -343,7 +375,7 @@ class UmpleInternalParser
       sm.setQueued(true);
     } 
 
-    populateStateMachine(stateMachineToken, sm, aClass);
+    populateStateMachine(stateMachineToken, sm, uClassifier);
 
     while (placeholderStateMachine.numberOfStates() > 0)
     {
@@ -404,7 +436,7 @@ class UmpleInternalParser
     return s;
   }
 
-  private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClass aClass)
+  private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClassifier uClassifier)
   {
     boolean isFirst = true;
     boolean isFinalState = false;
@@ -425,7 +457,11 @@ class UmpleInternalParser
       
       if(stateToken.is("trace"))
       {
-    	analyzeTraceStatement(aClass,stateToken);
+      	if (uClassifier instanceof UmpleClass) {
+    		analyzeTraceStatement((UmpleClass)uClassifier,stateToken); 
+    	} else {
+    		//TODO--- trait's functionality for trace;
+    	}
       }
       
       if (!stateToken.is("state") && !stateToken.is("stateName"))

@@ -92,6 +92,7 @@ public class UmpleScanner extends RuleBasedScanner {
 		// IRule[] rules = new IRule[21];
 		// Add rule for processing instructions
 		rules.add(new ClassRule("class", structIdentifierToken));
+		rules.add(new ClassRule("trait", structIdentifierToken));
 		rules.add(new ClassRule("interface", structIdentifierToken));
 		rules.add(new ClassRule("association", structIdentifierToken));
 		rules.add(new EndOfLineRuleRule("//", commentToken));
