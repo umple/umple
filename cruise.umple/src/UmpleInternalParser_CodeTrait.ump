@@ -139,7 +139,7 @@ class UmpleInternalParser
 
   	analyzeCoreToken(t,aTrait,analysisStep);
     analyzeTraitToken(t,aTrait,analysisStep);
-//    analyzeStateMachineToken(t,aTrait,analysisStep);
+    analyzeStateMachineToken(t,aTrait,analysisStep);
 //    analyzeDependentTokens(t,aTrait,analysisStep);
   }
 
@@ -647,65 +647,88 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------  
 //---------------------------------the Method---------------------------------
 //----------------------------------------------------------------------------
-	private void applyTraits() {
-		for (UmpleClass uClass : getModel().getUmpleClasses()) {
+  private void applyTraits(){
+  	if (getParseResult().getWasSuccess()) {
+	    for (UmpleClass uClass : getModel().getUmpleClasses()) {
 			if (uClass.hasExtendsTraits()) {
 				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
-					//set the singleton pattern
-					if (! uClass.getIsSingleton()) uClass.setIsSingleton(uTrait.getIsSingleton());
-					
-					//set abstract keyword
-					if (! uClass.getIsAbstract())	uClass.setIsAbstract(uTrait.getIsAbstract());
-					
-					//set the comments
-					for(Comment aComment : uTrait.getComments()) {
-						uClass.addComment(aComment);
-					}		
-					
-					//set the dependens
-					for(Depend aDepend : uTrait.getDepends()) {
-						uClass.addDepend(aDepend);
-					}		
-					
-										
-					// copy methods
-					for(Method aMethod : uTrait.getMethods()) {
-						uClass.addMethod(aMethod);
-					}
-										
-					// copy Precondition
-					for(Precondition aPrecondition : uTrait.getPreconditions()) {
-						uClass.addPrecondition(aPrecondition);
-					}	
-					
-					// copy Postcondition
-					for(Postcondition aPostcondition : uTrait.getPostconditions()) {
-						uClass.addPostcondition(aPostcondition);
-					}						
-
-					//copy attributes
-					for(Attribute aAttribute : uTrait.getAttributes()) {
-						//check for attributes which have already existed.
-						uClass.addAttribute(aAttribute);
-					}
-					
-					// copy Constraint
-					for(Constraint aConstraint : uTrait.getConstraints()) {
-						uClass.addConstraint(aConstraint);
-					}						
-														
-
-					
+					recursiveApplyTraits(uClass,uTrait);
 				}
 			}
 		}
-	}
+	}	
+  }
 
+  private void recursiveApplyTraits(UmpleClass inClass, UmpleTrait inTrait) {
+	  if (inTrait.hasExtendsTraits()) {
+		  applyTraitProperties(inClass, inTrait);
+		  for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+			  recursiveApplyTraits(inClass,uTrait);
+		  }
+	  } else {
+		  applyTraitProperties(inClass, inTrait);
+	  }
+  }
+  
+  private void applyTraitProperties(UmpleClass inClass, UmpleTrait inTrait) {
+		//set the singleton pattern
+		if (! inClass.getIsSingleton()) inClass.setIsSingleton(inTrait.getIsSingleton());
+		
+		//set abstract keyword
+		if (! inClass.getIsAbstract())	inClass.setIsAbstract(inTrait.getIsAbstract());
+		
+		//set the comments
+		for(Comment aComment : inTrait.getComments()) {
+			inClass.addComment(aComment);
+		}		
+		
+		//set the dependens
+		for(Depend aDepend : inTrait.getDepends()) {
+			inClass.addDepend(aDepend);
+		}		
+		
+							
+		// copy methods
+		for(Method aMethod : inTrait.getMethods()) {
+			inClass.addMethod(aMethod);
+		}
+							
+		// copy Precondition
+		for(Precondition aPrecondition : inTrait.getPreconditions()) {
+			inClass.addPrecondition(aPrecondition);
+		}	
+		
+		// copy Postcondition
+		for(Postcondition aPostcondition : inTrait.getPostconditions()) {
+			inClass.addPostcondition(aPostcondition);
+		}						
+
+		//copy attributes
+		for(Attribute aAttribute : inTrait.getAttributes()) {
+			//check for attributes which have already existed.
+			inClass.addAttribute(aAttribute);
+		}
+		
+		// copy Constraints
+		for(Constraint aConstraint : inTrait.getConstraints()) {
+			inClass.addConstraint(aConstraint);
+		}	
+		
+		// copy StateMachines
+		for (StateMachine st : inTrait.getStateMachines()) {
+			st.setUmpleClass(inClass);
+		}
+		
+	  
+  }
+  
 	private void postTokenTraitAnalysis() {
 		addUnlinkedExtendTraits();
 		if ( getParseResult().getWasSuccess() ) {
-			checkTraitsNames();
+			checkTraitsNamesWithClasses();
+			checkTraitsNameWithInterfaces();
 			checkTheSameAttributes();
+			checkCyclicTraitInheritance();
 		}
 	}
 
@@ -770,7 +793,7 @@ class UmpleInternalParser
   }  
 	
 	//Check traits to have unique names;
-	private void checkTraitsNames() {
+	private void checkTraitsNamesWithClasses() {
 		for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
 			for(UmpleClass uClass : getModel().getUmpleClasses()) {
 				if (uTrait.getName().equals(uClass.getName())) {
@@ -780,6 +803,18 @@ class UmpleInternalParser
 			}
 		}
 	}
+	
+  private void checkTraitsNameWithInterfaces() {
+	  for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+		  for (UmpleInterface uInterface : getModel().getUmpleInterfaces()) {
+			  if (uTrait.getName().equals(uInterface.getName())) {
+        			getParseResult().addErrorMessage(new ErrorMessage(2551,uTrait.getPosition(0),uTrait.getName()));
+        			return;
+				}
+		  }
+	  }
+  }
+	
   private void checkTheSameAttributes() {
 	  for(UmpleClass uClass : getModel().getUmpleClasses()) {
 		  if (uClass.hasExtendsTraits()) {
@@ -797,5 +832,26 @@ class UmpleInternalParser
 		  }
 	  }
   }	
+
+	private void checkCyclicTraitInheritance() {
+		 for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+			if (uTrait.hasExtendsTraits()) {
+				checkCyclicTraitInheritance(uTrait,uTrait);
+			}
+		}
+	 }
+	  
+	 private void checkCyclicTraitInheritance(UmpleTrait base, UmpleTrait root) {
+		 if (base.getExtendsTraits().contains(root)) {
+			 getParseResult().addErrorMessage(new ErrorMessage(2553,base.getPosition(0),base.getName(), root.getName()));
+			 return;
+		 } else {
+			 for (UmpleTrait uTrait :base.getExtendsTraits()) {
+				 checkCyclicTraitInheritance(uTrait,root);
+				 return;
+			 }
+		 }
+	 }
+  
 	
 }
