@@ -51,6 +51,12 @@ public class ConstraintVariableTest
   }
 
   @Test
+  public void equals_concernAboutHash()
+  {
+    assertEquals(true,new ConstraintVariable("OPERATOR","+").equals(new ConstraintVariable("OPERATOR","+")));
+  }
+
+  @Test
   public void equals_valueAndSubConstraint()
   {
     ConstraintVariable compareTo = new ConstraintVariable(null,"aval");
