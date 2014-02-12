@@ -1,6 +1,6 @@
-package cruise.umple.validator;
+namespace cruise.umple.validator;
 
-public class CodeGenValidatorMain {
+class CodeGenValidatorMain {
 
 	public static void main(String[] args) {
 		JavaCodeGenValidator validator = new JavaCodeGenValidator();

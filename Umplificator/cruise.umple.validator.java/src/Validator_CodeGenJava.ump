@@ -1,18 +1,19 @@
-package cruise.umple.validator;
+namespace cruise.umple.validator;
 
-import java.util.List;
+class JavaCodeGenValidator {
 
-import org.eclipse.jdt.core.compiler.IProblem;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.CompilationUnit;
+depend java.util.List;
+depend org.eclipse.jdt.core.compiler.IProblem;
+depend org.eclipse.jdt.core.dom.AST;
+depend org.eclipse.jdt.core.dom.ASTParser;
+depend org.eclipse.jdt.core.dom.CompilationUnit;
+depend cruise.umple.compiler.UmpleClass;
+depend cruise.umple.compiler.UmpleFile;
+depend cruise.umple.compiler.UmpleModel;
+depend cruise.umple.compiler.java.JavaClassGenerator;
 
-import cruise.umple.compiler.UmpleClass;
-import cruise.umple.compiler.UmpleFile;
-import cruise.umple.compiler.UmpleModel;
-import cruise.umple.compiler.java.JavaClassGenerator;
 
-public class JavaCodeGenValidator implements CodeGenValidator {
+isA CodeGenValidator;
 
 	@Override
 	public  boolean validateGeneratedCode(String uFilename) {
