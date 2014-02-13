@@ -26,6 +26,7 @@
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
     <pathelement location="cruise.umple/bin"/>
+    <pathelement location="lib/velocity-1.7-dep.jar"/>
     <path refid="eclipse.classpath"/>
     <path refid="umple.classpath"/>
     <path refid="xtext_core.classpath"/>

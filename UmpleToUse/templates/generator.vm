@@ -1,0 +1,41 @@
+model $model.UmpleFile.SimpleFileName
+#macro( useAttributeType $av )
+#if( !$av.Type || $av.Type == "Date" || $av.Type == "Time" )String#{elseif}( $av.Type == "Float" || $av.Type == "Double" )Real#{else}$av.Type#{end}
+#end
+#macro( useAttributeName $av )
+#if( $av.IsList )$model.Glossary.getPlural( $av.Name )#{else}$model.Glossary.getSingular( $av.Name )#{end}
+#end
+#set( $externalAssociations = [] )
+#foreach( $uClass in $model.UmpleClasses )
+
+class $uClass.Name #if( $uClass.ExtendsClass ) < $uClass.ExtendsClass #end
+
+#if( $uClass.Attributes.size() > 0 )
+  attributes
+#end
+#foreach( $av in $uClass.Attributes )
+    #useAttributeName( $av ) : #useAttributeType( $av )
+
+#end
+#foreach( $as in $uClass.Associations )
+#if( $as.IsRightNavigable )#set( $myEnd = $as.getEnd(0) )#{else}#set( $myEnd = $as.getEnd(1) )#end
+#if( $as.IsRightNavigable )#set( $theirEnd = $as.getEnd(1) )#{else}#set( $theirEnd = $as.getEnd(0) )#end
+#if( $myEnd.ClassName == $uClass.Name && !$as.Named )
+  $myEnd.Multiplicity.Parserable $myEnd.RoleName -- $theirEnd.Multiplicity.Parserable $theirEnd.ClassName $theirEnd.RoleName 
+#elseif( $as.isNamed() ) $externalAssociations.add( $as ) #end
+#end
+#foreach( $ci in $uClass.CodeInjections )
+$ci.Type $ci.Operation $ci.Code
+#end
+#foreach( $m in $uClass.Methods )
+#generateMethod( $m )
+#end
+end
+#end
+#foreach( $as in $externalAssociations )
+#if( $as.IsRightNavigable )#set( $myEnd = $as.getEnd(0) )#{else}#set( $myEnd = $as.getEnd(1) )#end
+#if( $as.IsRightNavigable )#set( $theirEnd = $as.getEnd(1) )#{else}#set( $theirEnd = $as.getEnd(0) )#end
+association $as.Name {
+  $myEnd.Multiplicity.Parserable $myEnd.RoleName $myEnd.ClassName -- $theirEnd.Multiplicity.Parserable $theirEnd.ClassName $theirEnd.RoleName
+}
+#end
