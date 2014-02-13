@@ -16,7 +16,6 @@
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
-    <pathelement location="lib/velocity-1.7-dep.jar"/>
     <path refid="umple.classpath"/>
     <path refid="junit4.classpath"/>
     <path refid="xtext_core.classpath"/>
@@ -77,18 +76,6 @@
     </copy>
     <copy todir="UmpleToCpp/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
-    </copy>
-  </target>
-  
-  <!-- Unzip velocity into the jar construction folder -->
-  <target name="velocityjar">
-    <unjar src="lib/velocity-1.7-dep.jar" dest="cruise.umple/bin/" overwrite="true"/>
-  </target>
-  
-  <!-- Move the velocity templates into an accessible folder -->
-  <target name="velocitytemplates">
-    <copy todir="cruise.umple/bin/templates/use" overwrite="true">
-      <fileset dir="UmpleToUse/templates" excludes="*.svn" />
     </copy>
   </target>
   
@@ -170,11 +157,9 @@
   </target>
 
   <target name="packageMainJar">
-    <antcall target="velocitytemplates"/>
-    <antcall target="velocityjar"/>
     <echo message="Package: Main command line jar" />
     <property name="umple_classpath" value=" " />
-    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error templates/** org/apache/**" excludes="**/*Test.class">
+    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error" excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
