@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src-gen-umple"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="/lib/umple.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/commons-collections-3.2.1.jar"/>
@@ -13,7 +14,8 @@
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.core.runtime_3.5.0.v20090525.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.equinox.preferences_3.2.301.R35x_v20091117.jar"/>
-	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.jdt.core_3.5.2.v_981_R35x.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.jdt.core_3.8.3.v20130121-145325.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

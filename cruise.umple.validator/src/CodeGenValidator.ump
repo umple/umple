@@ -5,7 +5,5 @@ interface CodeGenValidator {
 	depend java.util.List;
 
 	public boolean validateGeneratedCode (String uFile);
-	
 	public boolean validateGeneratedCode (List<String> uFiles);
-
 }
