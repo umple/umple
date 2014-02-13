@@ -17,14 +17,19 @@ class JavaCodeGenValidator {
 	internal JavaClassGenerator generator = new JavaClassGenerator();
 
 	@Override
-	public  boolean validateGeneratedCode(String uFilename) {
-       	boolean isValid = false;
-	  	UmpleFile umpleFile = new UmpleFile(uFilename);
-	    UmpleModel model = new UmpleModel(umpleFile);
-	    model.run();
-	    model.generate();
-	    
-	    for (UmpleClass uClass : model.getUmpleClasses()){
+	public  boolean validateGeneratedCode(UmpleFile uFile) {
+       	boolean isValid = true;
+	    UmpleModel model = new UmpleModel(uFile);
+	    try{
+		    model.run();
+		    model.generate();
+		 }
+	     catch (Exception e1)
+	     {
+	       System.err.println(e1.getMessage());
+	     }
+	     
+	for (UmpleClass uClass : model.getUmpleClasses()){
 	    	String code = generator.getCode(model,uClass);
 	    	CompilationUnit unit = parse(code);
 	    	IProblem[] problems = unit.getProblems();
@@ -32,15 +37,14 @@ class JavaCodeGenValidator {
 			for (IProblem problem : problems ){
 				System.out.print(problem);	
 			}
-			isValid = false;
-			return isValid;
-		}
+			return false;
+			}
 	    }
 	    return isValid;
 	}
 
 	@Override
-	public boolean validateGeneratedCode(List<String> uFiles) {
+	public boolean validateGeneratedCode(List<UmpleFile> uFiles) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -1,0 +1,15 @@
+class A {
+   
+     
+  private Frame _frame;
+
+  //`````````````````````
+  // CONSTRUCTOR
+  //`````````````````````   
+  
+  public AwtDialog(Frame aFrame)
+  {
+    _frame = aFrame;
+  }
+
+}

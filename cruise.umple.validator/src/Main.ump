@@ -2,10 +2,13 @@ namespace cruise.umple.validator;
 
 class CodeGenValidatorMainConsole {
 
+	depend cruise.umple.compiler.UmpleFile;
+
 	public static void main(String[] args) {
 		JavaCodeGenValidator validator = new JavaCodeGenValidator();
 		if (args != null && args.length <  0){ 
-			String result = validator.validateGeneratedCode(args[0]) ? "Success!":"Error" ;
+			UmpleFile uFile = new UmpleFile(args[0]);
+			String result = validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
 			System.out.print(result);
 		}
 	}
