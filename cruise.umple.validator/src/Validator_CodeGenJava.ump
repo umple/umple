@@ -18,24 +18,25 @@ class JavaCodeGenValidator {
 
 	@Override
 	public  boolean validateGeneratedCode(String uFilename) {
-        UmpleFile umpleFile = new UmpleFile(uFilename);
+       	boolean isValid = false;
+	  	UmpleFile umpleFile = new UmpleFile(uFilename);
 	    UmpleModel model = new UmpleModel(umpleFile);
 	    model.run();
 	    model.generate();
 	    
-	    UmpleClass hasTime = model.getUmpleClass("Test");
-	    String code = generator.getCode(model,hasTime);
-		CompilationUnit unit = parse(code);
-		IProblem[] problems = unit.getProblems();
-		if( problems == null || problems.length > 0){
+	    for (UmpleClass uClass : model.getUmpleClasses()){
+	    	String code = generator.getCode(model,uClass);
+	    	CompilationUnit unit = parse(code);
+	    	IProblem[] problems = unit.getProblems();
+	    	if( problems == null || problems.length > 0){
 			for (IProblem problem : problems ){
 				System.out.print(problem);	
 			}
-			return false;
+			isValid = false;
+			return isValid;
 		}
-		else {
-			return true;
-		}
+	    }
+	    return isValid;
 	}
 
 	@Override
@@ -45,7 +46,7 @@ class JavaCodeGenValidator {
 	}
 
 	protected static CompilationUnit parse(String source) {
-		ASTParser parser = ASTParser.newParser(AST.JLS3); 
+		ASTParser parser = ASTParser.newParser(AST.JLS4); 
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(source.toCharArray()); // set source
 		parser.setResolveBindings(true); // we need bindings later on
