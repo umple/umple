@@ -94,22 +94,6 @@ class USEGenerator
   String output = "";
 }
 
-class USEVelocityGenerator
-{
-	isA CodeGenerator;
-	depend java.io.*;
-	depend java.util.*;
-	depend cruise.umple.util.*;
-	depend cruise.umple.compiler.exceptions.*;
-  depend org.apache.velocity.app.*;
-  depend org.apache.velocity.*;
-  depend org.apache.velocity.runtime.*;
-  depend org.apache.velocity.runtime.resource.loader.*;
-	
-	UmpleModel model = null;
-	String output = "";
-}
-
 class PapyrusGenerator
 {
   isA CodeGenerator;
@@ -381,7 +365,6 @@ use Generator_CodeCpp.ump;
 use Generator_CodeSql.ump;
 use Generator_CodeUmpleSelf.ump;
 use Generator_CodeUSE.ump;
-use Generator_CodeUSEVelocity.ump;
 use Generator_CodeEcore.ump;
 use Generator_CodePapyrus.ump;
 use Generator_CodeXmi.ump;
