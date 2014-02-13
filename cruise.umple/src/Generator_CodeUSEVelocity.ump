@@ -1,0 +1,70 @@
+/*
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+*/
+
+namespace cruise.umple.compiler;
+
+class USEVelocityGenerator
+{
+  
+
+  public void generate()
+  {
+    // Based off of http://stackoverflow.com/questions/2931516/loading-velocity-template-inside-a-jar-file
+    VelocityEngine ve = new VelocityEngine();
+    ve.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+    ve.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+    
+    ve.init();
+    
+    final String templatePath = "templates/use/";
+    InputStream input = this.getClass().getClassLoader().getResourceAsStream(templatePath + "generator.vm");
+    if (input == null) {
+      throw new RuntimeException("Template file doesn't exist");
+    }
+    
+    InputStreamReader reader = new InputStreamReader(input);
+    
+    VelocityContext context = new VelocityContext();
+    context.put("model", model);
+    
+    Template template = ve.getTemplate(templatePath, "UTF-8");
+    
+    StringWriter writer = new StringWriter();
+    
+    if (!ve.evaluate(context, writer, templatePath + "generator.vm", reader)) {
+      throw new RuntimeException("Failed to convert the template into html.");
+    }
+    
+    model.setCode(writer.toString());
+    writeModel();
+  }
+  private void generateMethod(Method m, StringBuilder code)
+  {
+    
+  }
+
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".use";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating USE code." + e, e);
+    }
+  }
+
+}
+

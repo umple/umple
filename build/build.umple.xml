@@ -16,6 +16,7 @@
 
   <path id="project.classpath">
     <pathelement location="${bin.path}"/>
+    <pathelement location="lib/velocity-1.7-dep.jar"/>
     <path refid="umple.classpath"/>
     <path refid="junit4.classpath"/>
     <path refid="xtext_core.classpath"/>
@@ -76,6 +77,18 @@
     </copy>
     <copy todir="UmpleToCpp/templates" overwrite="true">
       <fileset dir="UmpleToTemplate/templates" excludes="*.svn" />
+    </copy>
+  </target>
+  
+  <!-- Unzip velocity into the jar construction folder -->
+  <target name="velocityjar">
+    <unjar src="lib/velocity-1.7-dep.jar" dest="cruise.umple/bin/" overwrite="true"/>
+  </target>
+  
+  <!-- Move the velocity templates into an accessible folder -->
+  <target name="velocitytemplates">
+    <copy todir="cruise.umple/bin/templates/use" overwrite="true">
+      <fileset dir="UmpleToUse/templates" excludes="*.svn" />
     </copy>
   </target>
   
@@ -157,9 +170,11 @@
   </target>
 
   <target name="packageMainJar">
+    <antcall target="velocitytemplates"/>
+    <antcall target="velocityjar"/>
     <echo message="Package: Main command line jar" />
     <property name="umple_classpath" value=" " />
-    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error" excludes="**/*Test.class">
+    <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error templates/** org/apache/**" excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -173,7 +188,7 @@
     <antcall target="packageMainJar" />
 
     <echo message="Package: Umple statistics jar" />
-    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error">
+    <jar destfile="dist/umplestats.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error templates/** org/apache/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -183,7 +198,7 @@
     </jar>
 
     <echo message="Package: Umple documenter jar used to build the user manual" />
-    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error">
+    <jar destfile="dist/umpledocs.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error templates/** org/apache/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -193,7 +208,7 @@
     </jar>
 
     <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygrounMain" />
-    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/apache/tools/ant/** *.grammar *.error">
+    <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -207,7 +222,7 @@
       <fileset dir="lib/umplerun"/>
     </copy>
 
-    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/** *.grammar *.error">
+    <jar destfile="dist/umplerun.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -217,7 +232,7 @@
     </jar>
 
     <echo message="Package: VML - Tool for variability modeling" />
-    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error cruise/vml/** *.grammar *.error">
+    <jar destfile="dist/vml.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error cruise/vml/** *.grammar *.error templates/** org/apache/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
