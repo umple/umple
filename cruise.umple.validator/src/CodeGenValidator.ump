@@ -2,9 +2,7 @@ namespace cruise.umple.validator;
 
 interface CodeGenValidator {
 
-	depend java.util.List;
 	depend cruise.umple.compiler.UmpleFile;
 
 	public boolean validateGeneratedCode (UmpleFile uFile);
-	public boolean validateGeneratedCode (List<UmpleFile> uFiles);
 }
