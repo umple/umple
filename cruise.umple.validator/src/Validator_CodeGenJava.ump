@@ -2,7 +2,6 @@ namespace cruise.umple.validator;
 
 class JavaCodeGenValidator {
 
-	depend java.util.List;
 	depend org.eclipse.jdt.core.compiler.IProblem;
 	depend org.eclipse.jdt.core.dom.AST;
 	depend org.eclipse.jdt.core.dom.ASTParser;
@@ -35,7 +34,7 @@ class JavaCodeGenValidator {
 	    	IProblem[] problems = unit.getProblems();
 	    	if( problems == null || problems.length > 0){
 			for (IProblem problem : problems ){
-				System.out.print(problem);	
+				System.out.print(getOutputString(problem));	
 			}
 			return false;
 			}
@@ -43,10 +42,14 @@ class JavaCodeGenValidator {
 	    return isValid;
 	}
 
-	@Override
-	public boolean validateGeneratedCode(List<UmpleFile> uFiles) {
-		// TODO Auto-generated method stub
-		return false;
+	public String getOutputString(IProblem problem){
+		StringBuffer outMessage = new StringBuffer();
+		outMessage.append("Error in generated code");
+		outMessage.append("ID: " + problem.getID() );
+		outMessage.append("Line number: " +problem.getSourceLineNumber());
+		outMessage.append("Message:" + problem.getMessage());
+		outMessage.append("-----------------------");
+		return 	outMessage.toString();
 	}
 
 	protected static CompilationUnit parse(String source) {
