@@ -9,6 +9,7 @@
 
   <property name="project.path" value="cruise.umple"/>
   <property name="xtext.project.path" value="cruise.umple.xtext"/>
+  <property name="validator.project.path" value="cruise.umple.validator"/>
   <property name="jopt-simple.project.path" value="jopt-simple"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple"/>
@@ -27,6 +28,13 @@
     <path refid="umple.classpath"/>
     <path refid="junit4.classpath"/>
     <path refid="xtext_core.classpath"/>
+  </path>
+
+ <path id="validator.project.classpath">
+    <pathelement location="${bin.path}"/>
+    <path refid="umple.classpath"/>
+    <path refid="junit4.classpath"/>
+    <path refid="validator_core.classpath"/>
   </path>
 
   <!-- ```````````````````````````
@@ -51,6 +59,7 @@
     <delete file="cruise.umple/bin/rules.grammar"/>
       <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
+      <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
   </target>
 
@@ -134,6 +143,7 @@
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
+      <src path="${validator.project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
       <src path="${jopt-simple.project.path}/src/main/java"/>
       <exclude name="**/.svn"/>
@@ -216,6 +226,18 @@
         <attribute name="Class-Path" value="${umple_classpath}"/>
       </manifest>
     </jar>
+
+    <!--  To be fully tested before it goes into production
+    <echo message="Package: Umple validator jar used in Umple " />
+    <jar destfile="dist/umplevalidator.jar" basedir="${bin.path}" includes="cruise/umple/** cruise/umple/validator** ">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.validator.CodeGenValidatorMainConsole"/>
+        <attribute name="Class-Path" value="${validator_classpath}"/>
+      </manifest>
+    </jar>
+   -->
 
     <echo message="Package: Umplerun jar - tool for dynamically calling Umple API" />
     <copy todir="${bin.path}">
