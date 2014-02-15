@@ -20,8 +20,8 @@ class JavaCodeGenValidator {
        	boolean isValid = true;
 	    UmpleModel model = new UmpleModel(uFile);
 	    try{
+	   	 System.out.print("Running Umple model.");
 		    model.run();
-		    model.generate();
 		 }
 	     catch (Exception e1)
 	     {
@@ -30,6 +30,7 @@ class JavaCodeGenValidator {
 	     
 	for (UmpleClass uClass : model.getUmpleClasses()){
 	    	String code = generator.getCode(model,uClass);
+	    	System.out.print("Parsing generated code for class" +uClass.getName());
 	    	CompilationUnit unit = parse(code);
 	    	IProblem[] problems = unit.getProblems();
 	    	if( problems == null || problems.length > 0){
