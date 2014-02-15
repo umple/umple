@@ -31,7 +31,7 @@
   </path>
 
  <path id="validator.project.classpath">
-    <pathelement location="${bin.path}"/>
+    <pathelement location="${validator.project.path}/bin"/>
     <path refid="umple.classpath"/>
     <path refid="junit4.classpath"/>
     <path refid="validator_core.classpath"/>
@@ -44,6 +44,7 @@
   <target name="clean">
     <antcall target="template.clean" />
     <delete dir="${project.path}/src-gen-umple" failonerror="false" />
+    <delete dir="${validator.project.path}/src-gen-umple" failonerror="false" />
   </target>
 
   <target name="resetUmpleSelf">
@@ -62,7 +63,6 @@
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
   </target>
-
 
   <!-- ```````````````````````````
     Generate JET Templates
@@ -93,6 +93,19 @@
   <target name="velocityjar">
     <unjar src="lib/velocity-1.7-dep.jar" dest="cruise.umple/bin/" overwrite="true"/>
   </target>
+
+  <!-- Unzip JDT libraries into the jar construction folder -->
+  <target name="jdtJar">
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.1.R35x_v20090826-0451.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.jobs_3.4.100.v20090429-1800.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.resources_3.5.2.R35x_v20091203-1235.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.runtime_3.5.0.v20090525.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.2.301.R35x_v20091117.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+  </target>
+  
   
   <!-- Move the velocity templates into an accessible folder -->
   <target name="velocitytemplates">
@@ -150,8 +163,34 @@
       <exclude name="**/*.ump" />
       <exclude name="**/data" />
       <classpath refid="project.classpath"/>
+      <classpath refid="validator.project.classpath"/>
     </javac>
     <copy todir="${bin.path}" overwrite="true">
+	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
+	<fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
+    </copy>
+    <delete file="cruise.umple/src/rules.grammar"/>
+    <delete file="cruise.umple/bin/rules.grammar"/>
+  </target>
+
+  <target name="compileValidator">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${validator.project.path}/bin" source="1.7" target="1.7">
+      <src path="${project.path}/src"/>
+      <src path="${project.path}/src-gen-jet"/>
+      <src path="${project.path}/src-gen-umple"/>
+      <src path="${project.path}/test"/>
+      <src path="${validator.project.path}/src-gen-umple"/>
+      <src path="${validator.project.path}/test"/>
+      <src path="${jopt-simple.project.path}/src/main/java"/>
+      <exclude name="**/.svn"/>
+      <exclude name="**/*.ump" />
+      <exclude name="**/data" />
+      <classpath refid="project.classpath"/>
+      <classpath refid="validator.project.classpath"/>
+    </javac>
+    <copy todir="${validator.project.path}/bin" overwrite="true">
 	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
 	<fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
     </copy>
@@ -182,6 +221,7 @@
   <target name="packageMainJar">
     <antcall target="velocitytemplates"/>
     <antcall target="velocityjar"/>
+    <antcall target="jdtJar"/>
     <echo message="Package: Main command line jar" />
     <property name="umple_classpath" value=" " />
     <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error templates/** org/apache/**" excludes="**/*Test.class">
@@ -227,18 +267,17 @@
       </manifest>
     </jar>
 
-    <!--  To be fully tested before it goes into production
+    <!-- The validator jar-->
     <echo message="Package: Umple validator jar used in Umple " />
-    <jar destfile="dist/umplevalidator.jar" basedir="${bin.path}" includes="cruise/umple/** cruise/umple/validator** ">
+    <jar destfile="dist/umplevalidator.jar" basedir="${validator.project.path}/bin" includes="cruise/umple/** cruise/umple/validator** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.umple.validator.CodeGenValidatorMainConsole"/>
-        <attribute name="Class-Path" value="${validator_classpath}"/>
+        <attribute name="Main-Class" value="cruise.umple.CodeGenValidatorMainConsole"/>
+        <attribute name="Class-Path" value="${validator.project.classpath}"/>
       </manifest>
     </jar>
-   -->
-
+ 
     <echo message="Package: Umplerun jar - tool for dynamically calling Umple API" />
     <copy todir="${bin.path}">
       <fileset dir="lib/umplerun"/>
