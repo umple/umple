@@ -59,8 +59,6 @@
     <delete file="cruise.umple/bin/rules.grammar"/>
      <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umple/src/Master.ump"/>
-    </java>
-     <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
   </target>
@@ -462,7 +460,6 @@
     <antcall target="template.setVersion" />
     <antcall target="resetUmpleSelf" />
     <antcall target="compile" />
-    <antcall target="compileValidator" />
     <antcall target="package" />
     <antcall target="template.resetVersion" />
   </target>
@@ -480,7 +477,6 @@
     <antcall target="template.setVersion" />
     <antcall target="resetUmpleSelf" />
     <antcall target="compile" />
-    <antcall target="compileValidator" />
     <antcall target="template.test" />
     <antcall target="package" />
     <antcall target="deploy" />
@@ -497,7 +493,6 @@
   <target name="local" >
     <antcall target="umpleSelf" />
     <antcall target="compile" />
-    <antcall target="compileValidator" />
     <!-- <antcall target="template.test" /> -->
   </target>
 
