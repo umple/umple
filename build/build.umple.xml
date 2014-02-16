@@ -95,14 +95,14 @@
 
   <!-- Unzip JDT libraries into the jar construction folder -->
   <target name="jdtJar">
-    <unjar src="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.1.R35x_v20090826-0451.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
-    <unjar src="lib/umplificatorplugins/org.eclipse.core.jobs_3.4.100.v20090429-1800.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
-    <unjar src="lib/umplificatorplugins/org.eclipse.core.resources_3.5.2.R35x_v20091203-1235.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
-    <unjar src="lib/umplificatorplugins/org.eclipse.core.runtime_3.5.0.v20090525.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
-    <unjar src="lib/umplificatorplugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
-    <unjar src="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.2.301.R35x_v20091117.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.200.v20130326-1255.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.jobs_3.5.300.v20130429-1813.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.resources_3.8.100.v20130521-2026.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.5.100.v20130422-1538.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
     <unjar src="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
-    <unjar src="lib/umplificatorplugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
   </target>
   
   

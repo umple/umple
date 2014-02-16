@@ -18,15 +18,15 @@
   <path id="validator_core.classpath">
     <pathelement location="lib/junit.jar"/>
     <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/> 
-    <pathelement location="lib/umplificatorplugins/commons-collections-3.2.1.jar"/>
+    <pathelement location="lib/umplificatorplugins/commons-collections4-4.0.jar"/>
     <pathelement location="lib/umplificatorplugins/commons-lang-2.5.jar"/> 
-    <pathelement location="lib/umplificatorplugins/commons-logging-1.1.1.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.1.R35x_v20090826-0451.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.core.jobs_3.4.100.v20090429-1800.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.2.301.R35x_v20091117.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.osgi_3.5.2.R35x_v20100126.jar"/>
-    <pathelement location="lib/umplificatorplugins/org.eclipse.jdt.core_3.8.3.v20130121-145325.jar"/>
+    <pathelement location="lib/umplificatorplugins/commons-logging-1.1.3.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.200.v20130326-1255.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.core.jobs_3.5.300.v20130429-1813.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.5.100.v20130422-1538.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar"/>
   </path>
 
   <path id="umple.classpath">
