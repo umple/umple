@@ -1,7 +1,15 @@
 class A {
 name;
 }
-class C {
 
+class C
+{
+  Integer id;
+  Integer access_count;
+  name;
+  description;
+  other_details;
+  
+  key {id}
 
 }
