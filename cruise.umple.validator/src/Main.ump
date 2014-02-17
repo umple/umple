@@ -8,7 +8,6 @@ class CodeGenValidatorMainConsole {
 	public static void main(String[] args) {
 		JavaCodeGenValidator validator = new JavaCodeGenValidator();
 		if (args != null && args.length >  0){ 
-			System.out.println("Input file : "+ args[0]);
 			UmpleFile uFile = new UmpleFile(args[0]);
 			String result = validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
 			System.out.print(result);
