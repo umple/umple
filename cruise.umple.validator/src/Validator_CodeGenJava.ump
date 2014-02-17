@@ -7,6 +7,8 @@ class JavaCodeGenValidator {
 	depend org.eclipse.jdt.core.dom.ASTParser;
 	depend org.eclipse.jdt.core.dom.CompilationUnit;
 	depend cruise.umple.compiler.UmpleClass;
+	depend java.util.Map;
+	depend org.eclipse.jdt.core.JavaCore;
 	depend cruise.umple.compiler.UmpleFile;
 	depend cruise.umple.compiler.UmpleModel;
 	depend cruise.umple.compiler.java.JavaClassGenerator;
@@ -14,13 +16,15 @@ class JavaCodeGenValidator {
 	isA CodeGenValidator;
 
 	internal JavaClassGenerator generator = new JavaClassGenerator();
-
+	final String separator = System.getProperty("line.separator");
+	
 	@Override
 	public  boolean validateGeneratedCode(UmpleFile uFile) {
        	boolean isValid = true;
 	    UmpleModel model = new UmpleModel(uFile);
 	    try{
-	   	 System.out.print("Running Umple model.");
+	     System.out.print(separator);
+	   	 System.out.print("Running Umple model. ");
 		    model.run();
 		 }
 	     catch (Exception e1)
@@ -30,6 +34,7 @@ class JavaCodeGenValidator {
 	     
 	for (UmpleClass uClass : model.getUmpleClasses()){
 	    	String code = generator.getCode(model,uClass);
+	    	System.out.print(separator);
 	    	System.out.print("Parsing generated code for class" +uClass.getName());
 	    	CompilationUnit unit = parse(code);
 	    	IProblem[] problems = unit.getProblems();
@@ -45,10 +50,15 @@ class JavaCodeGenValidator {
 
 	public String getOutputString(IProblem problem){
 		StringBuffer outMessage = new StringBuffer();
+		outMessage.append(separator);
 		outMessage.append("Error in generated code");
+		outMessage.append(separator);
 		outMessage.append("ID: " + problem.getID() );
+		outMessage.append(separator);
 		outMessage.append("Line number: " +problem.getSourceLineNumber());
+		outMessage.append(separator);
 		outMessage.append("Message:" + problem.getMessage());
+		outMessage.append(separator);
 		outMessage.append("-----------------------");
 		return 	outMessage.toString();
 	}
@@ -57,6 +67,11 @@ class JavaCodeGenValidator {
 		ASTParser parser = ASTParser.newParser(AST.JLS4); 
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(source.toCharArray()); // set source
+	    // In order to parse 1.7 code, some compiler options need to be set to 1.7
+	    // Annotations were not available prior 1.6
+		Map<?, ?> options = JavaCore.getOptions();
+		JavaCore.setComplianceOptions(JavaCore.VERSION_1_7, options);
+		parser.setCompilerOptions(options);
 		parser.setResolveBindings(true); // we need bindings later on
 		return (CompilationUnit) parser.createAST(null);
 	}

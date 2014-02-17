@@ -27,6 +27,7 @@
     <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.5.100.v20130422-1538.jar"/>
     <pathelement location="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar"/>
     <pathelement location="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar"/>
   </path>
 
   <path id="umple.classpath">
@@ -148,7 +149,7 @@
       <formatter type="xml" unless="${showJunitOutput}"/>
       <formatter usefile="false" type="brief" if="${showJunitOutput}"/>
       <batchtest fork="yes" todir="${test.output.path}">
-        <fileset dir="${project.path}/test">
+         <fileset dir="${project.path}/test">
           <include name="**/${junit}.java"/>
           <exclude name="**/AllTests.java"/>
         </fileset>
