@@ -6,9 +6,15 @@ class JavaCodeGenValidator {
 	depend org.eclipse.jdt.core.dom.AST;
 	depend org.eclipse.jdt.core.dom.ASTParser;
 	depend org.eclipse.jdt.core.dom.CompilationUnit;
-	depend cruise.umple.compiler.UmpleClass;
-	depend java.util.Map;
 	depend org.eclipse.jdt.core.JavaCore;
+
+	depend java.util.Map;
+	depend java.util.Scanner;
+	depend java.util.regex.Matcher;
+	depend java.util.regex.Pattern;
+	
+	depend cruise.umple.compiler.exceptions.UmpleCompilerException;
+	depend cruise.umple.compiler.UmpleClass;
 	depend cruise.umple.compiler.UmpleFile;
 	depend cruise.umple.compiler.UmpleModel;
 	depend cruise.umple.compiler.java.JavaClassGenerator;
@@ -23,57 +29,79 @@ class JavaCodeGenValidator {
        	boolean isValid = true;
 	    UmpleModel model = new UmpleModel(uFile);
 	    try{
-	     System.out.print(separator);
-	   	 System.out.print("Running Umple model. ");
 		    model.run();
+		   	for (UmpleClass uClass : model.getUmpleClasses()){
+	    		String code = generator.getCode(model,uClass);
+	    		CompilationUnit unit = parse(code);
+	    		IProblem[] problems = unit.getProblems();
+	    		if( problems != null && problems.length > 0){
+	    			for (IProblem problem : problems ){
+	    				int umpleSourceLine = getUmpleSourceLine(problem.getSourceLineNumber(),code);
+	    				System.out.print(getOutputString(problem, umpleSourceLine , uFile.getFileName()));	
+	    			}
+	    		return false;
+	    		}
+	  	     }
 		 }
-	     catch (Exception e1)
+	     catch (UmpleCompilerException ex)
 	     {
-	       System.err.println(e1.getMessage());
+	       System.err.println(ex.getMessage());
+	       return false;
 	     }
-	     
-	for (UmpleClass uClass : model.getUmpleClasses()){
-	    	String code = generator.getCode(model,uClass);
-	    	System.out.print(separator);
-	    	System.out.print("Parsing generated code for class" +uClass.getName());
-	    	CompilationUnit unit = parse(code);
-	    	IProblem[] problems = unit.getProblems();
-	    	if( problems == null || problems.length > 0){
-			for (IProblem problem : problems ){
-				System.out.print(getOutputString(problem));	
-			}
-			return false;
-			}
-	    }
-	    return isValid;
+	     return isValid;
 	}
 
-	public String getOutputString(IProblem problem){
-		StringBuffer outMessage = new StringBuffer();
+   public String getOutputString(IProblem problem, int umpleSourceLine, String umpleFileName ){
+    StringBuffer outMessage = new StringBuffer();
 		outMessage.append(separator);
 		outMessage.append("Error in generated code");
 		outMessage.append(separator);
-		outMessage.append("ID: " + problem.getID() );
+		outMessage.append("Error on line " + umpleSourceLine + " of umple file: " + umpleFileName);
 		outMessage.append(separator);
-		outMessage.append("Line number: " +problem.getSourceLineNumber());
+		outMessage.append("Line number in Java File: " +problem.getSourceLineNumber());
 		outMessage.append(separator);
 		outMessage.append("Message:" + problem.getMessage());
 		outMessage.append(separator);
 		outMessage.append("-----------------------");
 		return 	outMessage.toString();
-	}
+  }
 
-	protected static CompilationUnit parse(String source) {
-		ASTParser parser = ASTParser.newParser(AST.JLS4); 
+	 protected static  CompilationUnit parse(String source){
+    ASTParser parser = ASTParser.newParser(AST.JLS4); 
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setSource(source.toCharArray()); // set source
 	    // In order to parse 1.7 code, some compiler options need to be set to 1.7
 	    // Annotations were not available prior 1.6
 		Map<?, ?> options = JavaCore.getOptions();
-		JavaCore.setComplianceOptions(JavaCore.VERSION_1_7, options);
+		JavaCore.setComplianceOptions(JavaCore.VERSION_1_7, options);		
 		parser.setCompilerOptions(options);
 		parser.setResolveBindings(true); // we need bindings later on
 		return (CompilationUnit) parser.createAST(null);
-	}
-
+  }
+  
+   private int getUmpleSourceLine(int javaLineNumber, String code) {
+	  String toSearch = "javaline={"+ javaLineNumber+"}";
+	  Scanner scanner = new Scanner(code);
+	  String currentLine;
+	  try {
+		  // Read generated code, line by line
+		  while((currentLine = scanner.nextLine()) != null)
+		  {   
+			  // Search for string javaline={xxx}
+			  if(currentLine.contains(toSearch))
+			  {
+				  // Gets the corresponding umple file line number
+				  Pattern pattern = Pattern.compile("\\d+");
+				  Matcher matcher = pattern.matcher(currentLine);
+				  if (matcher.find())
+				  {
+					  return Integer.parseInt(matcher.group());
+				  }
+			  }
+		  }
+	  } finally {
+		  scanner.close();
+	  }
+	return -1;
+  }
 }
