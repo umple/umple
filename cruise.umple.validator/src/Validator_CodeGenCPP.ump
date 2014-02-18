@@ -1,0 +1,77 @@
+namespace cruise.umple.validator;
+
+class CPPCodeGenValidator {
+
+	depend java.util.*;
+		
+	depend cruise.umple.compiler.*;
+	depend cruise.umple.compiler.exceptions.UmpleCompilerException;
+	
+	depend org.eclipse.cdt.core.dom.ast.*;
+	depend org.eclipse.cdt.core.dom.ast.gnu.cpp.GPPLanguage;
+	depend org.eclipse.cdt.core.index.IIndex;
+	depend org.eclipse.cdt.core.model.ILanguage;
+	depend org.eclipse.cdt.core.parser.*;
+
+	isA CodeGenValidator;
+
+	final String separator = System.getProperty("line.separator");
+	
+  public  boolean validateGeneratedCode(UmpleFile uFile) {
+       	boolean isValid = true;
+	    UmpleModel model = new UmpleModel(uFile);
+	    try{
+		    model.run();
+		   	for (UmpleClass uClass : model.getUmpleClasses()){
+		   		String code = model.getGeneratedCode().get(uClass.getName()+".cpp");
+				IASTTranslationUnit unit = parse(code.toCharArray());
+	    		IASTProblem[] problems = unit.getPreprocessorProblems();
+	    		if( problems != null && problems.length > 0){
+	    			for (IASTProblem problem : problems ){
+	    				System.out.print(getOutputString(problem, 0 , uFile.getFileName()));	
+	    			}
+	    		return false;
+	    		}
+	  	     }
+		 }
+	     catch (UmpleCompilerException umpleException)
+	     {
+	       System.err.println(umpleException.getMessage());
+	       return false;
+	     }
+	      catch (Exception cppException) {
+		  System.err.println(cppException.getMessage());
+		  return false;
+		 }
+	     return isValid;
+	}
+
+   public String getOutputString(IASTProblem problem, int umpleSourceLine, String umpleFileName ){
+    StringBuffer outMessage = new StringBuffer();
+		outMessage.append(separator);
+		outMessage.append("Error in generated code");
+		outMessage.append(separator);
+		outMessage.append("Error on line " + umpleSourceLine + " of umple file: " + umpleFileName);
+		outMessage.append(separator);
+		outMessage.append("Line number in Java File: " +problem.getSourceLineNumber());
+		outMessage.append(separator);
+		outMessage.append("Message:" + problem.getMessage());
+		outMessage.append(separator);
+		outMessage.append("-----------------------");
+		return 	outMessage.toString();
+  }
+
+	private static IASTTranslationUnit parse(char[] code) throws Exception {
+		FileContent fc = FileContent.create("/Path/ToResolveIncludePaths.cpp", code);
+		Map<String, String> macroDefinitions = new HashMap<String, String>();
+		String[] includeSearchPaths = new String[0];
+		IScannerInfo si = new ScannerInfo(macroDefinitions, includeSearchPaths);
+		IncludeFileContentProvider ifcp = IncludeFileContentProvider.getEmptyFilesProvider();
+		IIndex idx = null;
+		int options = ILanguage.OPTION_IS_SOURCE_UNIT;
+		IParserLogService log = new DefaultLogService();
+		return GPPLanguage.getDefault().getASTTranslationUnit(fc, si, ifcp, idx, options, log);
+	}
+  
+}
+

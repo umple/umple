@@ -1,0 +1,7 @@
+generate RTCpp;
+
+class A {
+name;
+Integer age;
+
+}

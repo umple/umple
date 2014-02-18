@@ -108,6 +108,8 @@
     <unjar src="lib/umplificatorplugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
     <unjar src="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
     <unjar src="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
   </target>
   
   

@@ -1,0 +1,14 @@
+generate RTCpp;
+
+class A
+{
+  Integer id;
+  Integer access_count;
+  name;
+  description;
+  other_details;
+  
+  key {id}
+  
+  PUBLIC INT
+}
