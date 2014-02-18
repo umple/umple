@@ -13,25 +13,21 @@ class JavaCodeGenValidator {
 	depend java.util.regex.Matcher;
 	depend java.util.regex.Pattern;
 	
+	depend cruise.umple.compiler.*;
 	depend cruise.umple.compiler.exceptions.UmpleCompilerException;
-	depend cruise.umple.compiler.UmpleClass;
-	depend cruise.umple.compiler.UmpleFile;
-	depend cruise.umple.compiler.UmpleModel;
-	depend cruise.umple.compiler.java.JavaClassGenerator;
 
 	isA CodeGenValidator;
 
-	internal JavaClassGenerator generator = new JavaClassGenerator();
 	final String separator = System.getProperty("line.separator");
 	
-	@Override
 	public  boolean validateGeneratedCode(UmpleFile uFile) {
        	boolean isValid = true;
 	    UmpleModel model = new UmpleModel(uFile);
 	    try{
 		    model.run();
 		   	for (UmpleClass uClass : model.getUmpleClasses()){
-	    		String code = generator.getCode(model,uClass);
+		   	    ILang language = getLanguageFor(uClass);
+	    		String code = language.getCode(model, uClass);
 	    		CompilationUnit unit = parse(code);
 	    		IProblem[] problems = unit.getProblems();
 	    		if( problems != null && problems.length > 0){

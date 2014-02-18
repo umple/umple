@@ -15,3 +15,4 @@ generate Java "../src-gen-umple";
 use Main.ump;
 use CodeGenValidator.ump;
 use Validator_CodeGenJava.ump;
+use Validator_CodeGenCPP.ump;

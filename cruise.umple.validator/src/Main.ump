@@ -6,11 +6,26 @@ class CodeGenValidatorMainConsole {
 	depend cruise.umple.validator.*;
 
 	public static void main(String[] args) {
-		JavaCodeGenValidator validator = new JavaCodeGenValidator();
-		if (args != null && args.length >  0){ 
+		if (args != null && args.length== 2){ 
 			UmpleFile uFile = new UmpleFile(args[0]);
-			String result = validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
+			boolean isJava = (args[1].contains("java")) ? true : false;
+			String result;
+			if (isJava) {
+				JavaCodeGenValidator java_validator = new JavaCodeGenValidator();
+			    result = java_validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
+			}
+			else {
+				CPPCodeGenValidator cpp_validator = new CPPCodeGenValidator();
+			 	result = cpp_validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
+			}
 			System.out.print(result);
 		}
+		else {
+		    printUsage();
+		}
+	}
+	
+	private static  void printUsage(){
+    	System.out.println("Usage: java -jar umplevalidator.jar [-java |-cpp] <umple_file>\nExample: java -jar umplevalidator.jar -j test.ump");
 	}
 }

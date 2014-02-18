@@ -1,0 +1,17 @@
+generate RTCpp;
+
+class A {
+name;
+}
+
+class C
+{
+  Integer id;
+  Integer access_count;
+  name;
+  description;
+  other_details;
+  
+  key {id}
+
+}
