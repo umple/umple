@@ -4,21 +4,23 @@ class CodeGenValidatorMainConsole {
 
 	depend cruise.umple.compiler.UmpleFile;
 	depend cruise.umple.validator.*;
+	
+	public static String console ;
 
 	public static void main(String[] args) {
 		if (args != null && args.length== 2){ 
-			UmpleFile uFile = new UmpleFile(args[0]);
-			boolean isJava = (args[1].contains("java")) ? true : false;
-			String result;
+			UmpleFile uFile = new UmpleFile(args[1]);
+			String lang = args[0];
+			boolean isJava = lang.contains("java") ? true : false;
 			if (isJava) {
 				JavaCodeGenValidator java_validator = new JavaCodeGenValidator();
-			    result = java_validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
+			    console = java_validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
 			}
 			else {
 				CPPCodeGenValidator cpp_validator = new CPPCodeGenValidator();
-			 	result = cpp_validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
+			 	console = cpp_validator.validateGeneratedCode(uFile) ? "Success!":"Error" ;
 			}
-			System.out.print(result);
+			System.out.print(console);
 		}
 		else {
 		    printUsage();
@@ -26,6 +28,7 @@ class CodeGenValidatorMainConsole {
 	}
 	
 	private static  void printUsage(){
-    	System.out.println("Usage: java -jar umplevalidator.jar [-java |-cpp] <umple_file>\nExample: java -jar umplevalidator.jar -j test.ump");
+		console = "Usage: java -jar umplevalidator.jar [-java |-cpp] <umple_file>\nExample: java -jar umplevalidator.jar -j test.ump";
+    	System.out.println(console);
 	}
 }
