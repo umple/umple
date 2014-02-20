@@ -919,6 +919,7 @@ public class UmpleParserStateMachineTest
     UmpleClass c = model.getUmpleClass("PooledSM");
     StateMachine sm = c.getStateMachine(0);
     
+    Assert.assertEquals(true,sm.isPooled());
     Assert.assertEquals("sm", sm.getName());
    
     Assert.assertEquals(2, sm.numberOfStates());
