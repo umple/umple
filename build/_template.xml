@@ -86,13 +86,13 @@
   ``````````````````````````` -->
 
   <target name="template.clean">
-    <delete dir="${validator.project.path}/bin" failonerror="false" />
+    <delete dir="cruise.umple.validator/bin" failonerror="false" />
     <delete dir="${bin.path}" failonerror="false" />
     <delete dir="${dist.path}" failonerror="false" />
   </target>
 
   <target name="template.init">
-    <mkdir dir="${validator.project.path}/bin"/>
+    <mkdir dir="cruise.umple.validator/bin"/>
     <mkdir dir="${bin.path}"/>
     <mkdir dir="${dist.path}"/>
     <mkdir dir="${test.output.path}"/>

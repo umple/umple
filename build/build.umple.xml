@@ -9,7 +9,6 @@
 
   <property name="project.path" value="cruise.umple"/>
   <property name="xtext.project.path" value="cruise.umple.xtext"/>
-  <property name="validator.project.path" value="cruise.umple.validator"/>
   <property name="jopt-simple.project.path" value="jopt-simple"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umple"/>
@@ -31,7 +30,7 @@
   </path>
 
  <path id="validator.project.classpath">
-    <pathelement location="${validator.project.path}/bin"/>
+    <pathelement location="cruise.umple.validator/bin"/>
     <path refid="umple.classpath"/>
     <path refid="junit4.classpath"/>
     <path refid="validator_core.classpath"/>
@@ -181,7 +180,7 @@
   <target name="compileValidator">
     <echo message="${ant.project.name}: ${ant.file}"/>
 
-    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${validator.project.path}/bin" source="1.7" target="1.7">
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="cruise.umple.validator/bin" source="1.7" target="1.7">
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
