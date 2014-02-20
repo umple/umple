@@ -1,0 +1,223 @@
+/** 
+Umple system including a state machine and class diagram for access control
+ * References:
+ * http://time.sintef9013.com/uml/mainuml.htm
+ * http://hal.archives-ouvertes.fr/docs/00/05/02/85/PS/main.ps
+ *vhttp://time.sintef9013.com/property/property_t01.htm#28592
+**/
+
+namespace accessControlSystem;
+
+//User: a person with known identity and authorization "correct access right" to enter specific access zone
+//User Name: a user name
+class User{
+  1..* mayEnterThrough -- 1..* AccessPoint;
+  1..* mayEnter -- 1..* AccessZone mayAccept;
+  1 owns -- 0..1 Card;
+  
+  name;
+  
+  public void insertCard(String cardId){
+    System.out.println("User [" getName() "] is inserting his/her card"  getCard().getCardId());
+  }
+
+  public List enterPIN( int no1, int no2, int no3, int no4){
+    getCard().addPin(no1);
+    getCard().addPin(no2);
+    getCard().addPin(no3);
+    getCard().addPin(no4);
+    
+    return Arrays.asList(getCard().getPin());
+  }
+  
+  public void cardOut(){
+    System.out.println("User [" getName() "] is taking his/her card out"  getCard());
+  }  
+}
+
+//Access Point: each direction of passage through a door is considered as an access point. 
+class AccessPoint{
+  1 controls -- 1 Door;
+  0..1 Autorizer -> * AccessPoint;
+  
+  lazy String cardIdentification;
+ 
+  AccessPointSm{
+    waitingCardID{
+      cardId(String cardID)  /{setCardIdentification(cardID); if(hasMayEnterThrough()){ for(User user: getMayEnterThrough()){ if(user.getCard().getCardId().toString()==getCardIdentification()){ user.insertCard(cardID);}}}} ->waitingPIN;
+      pin ->waitingCardID;
+    }
+    waitingPIN{
+      pin(int no1, int no2, int no3, int no4) /{if(hasMayEnterThrough()){ for(User user: getMayEnterThrough()){ if(user.getCard().getCardId().toString()==getCardIdentification()){ user.enterPIN(no1, no2, no3, no4);  if (user.getCard().hasPin() || user.getCard().numberOfPin() <=4) { controls.ok(); List pinList = Arrays.asList(user.getCard().getPin()); controls.validatePIN(user.getCard().getCardId().toString(),pinList ); controls.setIsValid(true);} else{controls.nOk(); controls.setIsValid(false);}}}}} ->waitingPIN;
+      after(5) ->waitingCardID;
+    }
+  }
+}
+
+//Access Zone: a physical zone where a user is present, accessible through doors
+class AccessZone{
+  //1..2 boundedBy -- 1..* AccessPoint;
+  1 accessedThrough -- 1..* Door;
+}
+
+//Authentication: to establish the identity of the user
+//Authorization: to establish the right of a user to enter access zone
+class Authorizer{
+  1 controls -- * AccessPoint;
+  1 hasKnowledge -- * AccessZone;
+  
+  Boolean isValid;
+  
+  validatingPINSM {
+    validatingPIN{
+      validatePIN(String cardID, List pin) ->waitingForDigit;
+    }
+    waitingForDigit{
+      waitingDigit{
+        digit(List d) /{authenticate(d);} ->waitingForAuthentication;
+      }
+      after(10) /{System.out.println("TIMEOUT");} ->waitingForDigit;
+    }
+    waitingForAuthentication{
+      authenticate(List PIN ) /{authorize(PIN);} ->waitingForAuthorization;
+    }
+    waitingForAuthorization{
+      [isValid] /{ok();} ->validatingPIN;
+      [!isValid] /{nOk();} ->validatingPIN;
+    }
+    
+  }
+  
+  public void ok(){
+    System.out.println("PIN is OK");
+  }
+  public void nOk(){
+    System.out.println("PIN is NOK");
+  }
+  public void error(){
+    System.out.println("Error is detected");
+  }
+  public void authorize(List PIN){
+    System.out.println("User carries Card has a valid PIN [" PIN "]");
+  }
+}
+
+//Door: controlled passage from one access zone to another 
+class Door{
+  boolean lock=false;
+
+  public void unLock(){
+    setLock(false);
+    System.out.println("Door is unLocked  Lock= " getLock());
+  }
+  public void lock(){
+    setLock(true);
+    System.out.println("Door is Locked Lock= " getLock());
+  }
+  public void pushDoor(){
+    System.out.println("User pushes the door");
+  } 
+}
+
+class ACSystem{
+  0..1 mayAcceptAndValidate -- 1..* User mayUse;
+  1 exitControls -- 1 AccessZone exiting;
+  1 entryControls -- 1 AccessZone enteriing;
+  
+  Integer doorTime=10;
+
+  accessControlSystemSM{
+    waitingForCardEntry{
+      cardIn ->validatingAccessCode;
+    }
+    validatingAccessCode{
+      pin[enteriing.getHasKnowledge().getIsValid()] /{enteriing.getHasKnowledge().ok(); setDoorTimer(1000); getMayUse(0).cardOut(); enteriing.getDoor(0).unLock();} ->unLock;
+      pin[!enteriing.getHasKnowledge().getIsValid()] /{enteriing.getHasKnowledge().nOk(); getMayUse(0).cardOut();} ->waitingForCardEntry;
+    }
+    unLock{
+      opened /{reSetDoorTimer(1000);} -> opened;
+      after (doorTime) /{exiting.getDoor(0).lock();} ->waitingForCardEntry;
+    }
+    opened{
+      closed  /{exiting.getDoor(0).lock(); reSetDoorTimer(1000);} -> waitingForCardEntry;
+      after(doorTime) /{exiting.getHasKnowledge().error();} ->waitingForCardEntry;
+    } 
+  } 
+  
+  public void setDoorTimer(Integer time){
+    time=doorTime;
+  }
+  
+  public Integer doorTimeout(){
+    return getDoorTime();
+  }
+  
+  public void reSetDoorTimer(Integer time){
+    setDoorTimer(doorTime);
+  }
+}
+
+//Magnetic stripe card holding a card code and a secrete personal identification number PIN entered by users
+class Card{
+  1 -- 1 Code cardId;
+  //PIN: a unique PIN belonging to only one user. A kind of password
+  Integer[] pin;
+}
+
+//Card code: a unique identification of a card stored in a machine-readable form on the card
+class Code{
+  String userID;
+}
+
+
+
+
+//$?[End_of_model]$?
+
+class Code
+{
+  position 565 182 109 60;
+}
+
+class Card
+{
+  position.association Card__Code:cardId 49,63 30,0;
+  position 510 35 109 60;
+}
+
+class User
+{
+  position.association Card__User:owns 111,11 0,10;
+  position.association AccessPoint__User:mayEnterThrough 104,40 30,0;
+  position.association AccessZone:mayAccept__User:mayEnter 32,63 30,0;
+}
+
+class ACSystem
+{
+  position 381 181 136 60;
+  position.association ACSystem:mayAcceptAndValidate__User:mayUse 29,0 111,10;
+  position.association ACSystem:exitControls__AccessZone:exiting 0,10 110,9;
+  position.association ACSystem:entryControls__AccessZone:enteriing 0,30 110,29;
+}
+
+class Authorizer
+{
+  position.association AccessPoint__Authorizer:controls 129,56 0,28;
+}
+
+class AccessPoint
+{
+  position 434 369 181 60;
+  position.association AccessPoint:controls__Door 0,51 112,8;
+}
+
+class Door
+{
+  position 243 305 109 60;
+}
+
+class AccessZone
+{
+  position.association AccessZone:accessedThrough__Door 36,46 30,0;
+  position 83 230 109 45;
+}
