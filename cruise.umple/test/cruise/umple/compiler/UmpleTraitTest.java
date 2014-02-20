@@ -19,9 +19,9 @@ public class UmpleTraitTest {
 				+ "trait T {"
 				+ "depend cruise.umple.util.*;"
 				+ " tName;"
-				+ " tAge;"
+				+ " Integer tAge;"
 				+ " abstract; singleton; void xFun() {} "
-				+ "[tage>=18]"
+				+ "[tAge>=18]"
 				+ "}"; 	
 		uMode = getRunModel(code);
 	}	
@@ -71,8 +71,8 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void constraintTest() {
-	//	Assert.assertEquals(1,uMode.getUmpleTrait("T").numberOfConstraints());
-	//	Assert.assertEquals(1,uMode.getUmpleClass("A").numberOfConstraints());
+		Assert.assertEquals(1,uMode.getUmpleTrait("T").numberOfConstraints());
+		Assert.assertEquals(1,uMode.getUmpleClass("A").numberOfConstraints());
 	}
 	
 	@Test

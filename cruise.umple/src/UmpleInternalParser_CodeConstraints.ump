@@ -16,22 +16,27 @@ namespace cruise.umple.compiler;
 
 class UmpleInternalParser
 {  
-
-  private void analyzePrecondition (Token preconditionToken, UmpleClass aClass, Method method)
+	//TODO I changed the parameter's type. please remove this comment;		
+  private void analyzePrecondition (Token preconditionToken, UmpleClassifier uClassifier, Method method)
   {
-    List<ConstraintVariable> cvs = analyzeConstraint(preconditionToken, aClass); //adds all identifiers to constraints
+    List<ConstraintVariable> cvs = analyzeConstraint(preconditionToken, uClassifier); //adds all identifiers to constraints
     Precondition precondition = new Precondition(method);
     
     for(ConstraintVariable cv: cvs)
     {
     	precondition.addExpression(cv);
     }  
-    aClass.addPrecondition(precondition);
+	if (uClassifier instanceof UmpleClass) {
+		((UmpleClass)(uClassifier)).addPrecondition(precondition);
+	} else if (uClassifier instanceof UmpleTrait){
+		((UmpleTrait)(uClassifier)).addPrecondition(precondition);  
+	}
   }
   
-  private void analyzePostcondition (Token PostconditionToken, UmpleClass aClass, Method method)
+  //TODO I changed the parameter's type. please remove this comment;
+  private void analyzePostcondition (Token PostconditionToken, UmpleClassifier uClassifier, Method method)
   {
-    List<ConstraintVariable> cvs = analyzeConstraint(PostconditionToken, aClass); //adds all identifiers to constraints
+    List<ConstraintVariable> cvs = analyzeConstraint(PostconditionToken, uClassifier); //adds all identifiers to constraints
     Postcondition postcondition = new Postcondition(method);
     
     for(ConstraintVariable cv: cvs)
@@ -39,7 +44,11 @@ class UmpleInternalParser
     	postcondition.addExpression(cv);
     }
     postcondition.setPosition(PostconditionToken.getPosition());
-    aClass.addPostcondition(postcondition);
+    if (uClassifier instanceof UmpleClass) {
+    	((UmpleClass)(uClassifier)).addPostcondition(postcondition);
+  	} else if (uClassifier instanceof UmpleTrait){
+  		((UmpleTrait)(uClassifier)).addPostcondition(postcondition);  
+  	}
   }
     
   /*
@@ -48,20 +57,26 @@ class UmpleInternalParser
    * @param invariantToken The token containting the constraintsub.
    * @param aClass The Umple class for which an attribute is being constrained.
    */
-  private void analyzeInvariant (Token invariantToken, UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment; 
+  private void analyzeInvariant (Token invariantToken, UmpleClassifier uClassifier)
   {
-    List<ConstraintVariable> cvs = analyzeConstraint(invariantToken, aClass); //adds all identifiers to constraints
+    List<ConstraintVariable> cvs = analyzeConstraint(invariantToken, uClassifier); //adds all identifiers to constraints
     Constraint constraint = new Constraint();
     
     for(ConstraintVariable cv: cvs)
     {
     	constraint.addExpression(cv);
     }  
-    aClass.addConstraint(constraint);
+    if (uClassifier instanceof UmpleClass) {
+    	((UmpleClass)(uClassifier)).addConstraint(constraint);
+  	} else if (uClassifier instanceof UmpleTrait){
+  		((UmpleTrait)(uClassifier)).addConstraint(constraint);  
+  	}
   }
   
-   //This recursive function parses the expression. It's very broken down to allow new features to be added easily.
-  private List<ConstraintVariable> analyzeConstraint(Token invariantToken, UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment;
+   //This recursive function parses the expression. It's very broken down to allow new features to be added easily.  
+  private List<ConstraintVariable> analyzeConstraint(Token invariantToken, UmpleClassifier uClassifier)
   {
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
     List<Token> subs = invariantToken.getSubTokens();
@@ -75,51 +90,52 @@ class UmpleInternalParser
       { 
         if (sub.is("genExpr"))
         {
-          rawLine.addAll(analyzeGeneralConstraintExpression(sub,aClass));  
+          rawLine.addAll(analyzeGeneralConstraintExpression(sub,uClassifier));  
         }        
         else if (sub.is("boolExpr"))
         {
-          rawLine.addAll(analyzeBooleanConstraintExpression(sub,aClass));
+          rawLine.addAll(analyzeBooleanConstraintExpression(sub,uClassifier));
         } 
         else if (sub.is("stringExpr"))
         {
-          rawLine.addAll(analyzeStringConstraintExpression(sub,aClass));
+          rawLine.addAll(analyzeStringConstraintExpression(sub,uClassifier));
         }
         else if (sub.is("numExpr"))
         {
-          rawLine.addAll(analyzeNumberConstraintExpression(sub,aClass));
+          rawLine.addAll(analyzeNumberConstraintExpression(sub,uClassifier));
         }
         else if (sub.is("numExpr2"))
         {
-          rawLine.addAll(analyzeNumberConstraintExpression(sub,aClass));
+          rawLine.addAll(analyzeNumberConstraintExpression(sub,uClassifier));
         }
         else if (sub.is("associationExpr"))
         {
-          rawLine.addAll(analyzeAssociationConstraintExpression(sub,aClass));
+          rawLine.addAll(analyzeAssociationConstraintExpression(sub,uClassifier));
         }
         else if(sub.is("loneBoolean"))
         {
-          rawLine.add(analyzeConstraintName(sub.getSubToken(0),aClass,true));
+          rawLine.add(analyzeConstraintName(sub.getSubToken(0),uClassifier,true));
         }
         else if (sub.is("linkingOp")){
-        	rawLine.addAll(analyzeLinkingOpExpression(sub,aClass));
+        	rawLine.addAll(analyzeLinkingOpExpression(sub,uClassifier));
         }
         else if (sub.is("negativeConstraint")){
-        	rawLine.addAll(analyzeNegativeConstraint(sub, aClass));
+        	rawLine.addAll(analyzeNegativeConstraint(sub, uClassifier));
         }
         else if (sub.is("fakeContraint")){
         	rawLine.add(new ConstraintVariable("STATIC",sub.getValue()));
         }
         else
         {
-          rawLine.addAll(analyzeConstraint(sub,aClass));
+          rawLine.addAll(analyzeConstraint(sub,uClassifier));
         }
       } 
     }
   return rawLine;
   }
   
-  private List<ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClass aClass){
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClassifier uClassifier){
 	  List<Token> negativeConstraintSubtokens = negativeConstraintToken.getSubTokens();
 	  List<Token> subtokensCopy = new ArrayList<Token> ();
 	  subtokensCopy.addAll(negativeConstraintSubtokens);
@@ -135,13 +151,14 @@ class UmpleInternalParser
 	      	}
 	      }
 	  
-	  rawLine.addAll(analyzeConstraint(negativeConstraintToken, aClass)); 
+	  rawLine.addAll(analyzeConstraint(negativeConstraintToken, uClassifier)); 
 	  
 
 	  return rawLine; //rawLine = !(constraintBodystuff)
   }
   
-  private List<ConstraintVariable> analyzeLinkingOpExpression(Token linkingOpExpressionToken , UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeLinkingOpExpression(Token linkingOpExpressionToken , UmpleClassifier uClassifier)
   {
 	  List<Token> LinkingOpExpressionSubtokens = linkingOpExpressionToken.getSubTokens();
 	  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -157,12 +174,14 @@ class UmpleInternalParser
 	  {
 		  rawLine.add(new ConstraintVariable("OPERATOR","&&"));
 	  }
-	  rawLine.addAll(analyzeConstraint(linkingOpExpressionToken.getSubToken(1), aClass)); 
+	  rawLine.addAll(analyzeConstraint(linkingOpExpressionToken.getSubToken(1), uClassifier)); 
 
 	  return rawLine;
 
   }
-  private List<ConstraintVariable> analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClass aClass)
+  
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClassifier uClassifier)
   {
 	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
 	List<Token> generalExpressionSubtokens = generalExpressionToken.getSubTokens();
@@ -175,7 +194,7 @@ class UmpleInternalParser
       } 
       else if(sub.is("constraintName"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true));
+        rawLine.add(analyzeConstraintName(sub,uClassifier,true));
       }
       else if(sub.is("equalsOp"))
       {
@@ -193,7 +212,8 @@ class UmpleInternalParser
     return rawLine;
   }
   
-  private List<ConstraintVariable> analyzeBooleanConstraintExpression(Token booleanExpressionToken , UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeBooleanConstraintExpression(Token booleanExpressionToken , UmpleClassifier uClassifier)
   {
   	List<Token> BooleanExpressionSubtokens = booleanExpressionToken.getSubTokens();
   	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -210,7 +230,7 @@ class UmpleInternalParser
       }
       else if(sub.is("constraintName"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,"boolean"));
+        rawLine.add(analyzeConstraintName(sub,uClassifier,true,"boolean"));
       }
       else if(sub.is("equalsOp"))
       {
@@ -230,14 +250,15 @@ class UmpleInternalParser
   !cardinal && all : for each number or name have a contains() &&, not currently implemented for a list of lists
   !cardinal && !all : for each number or name have a contains() ||, not currently implemented for a list of lists
   */
-  private List<ConstraintVariable> analyzeAssociationLiteralConstraintExpression(Token literalToken, UmpleClass aClass, boolean cardinal, boolean all, boolean firstName, List<ConstraintVariable> subject, ConstraintVariable operator)
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeAssociationLiteralConstraintExpression(Token literalToken, UmpleClassifier uClassifier, boolean cardinal, boolean all, boolean firstName, List<ConstraintVariable> subject, ConstraintVariable operator)
   {
     List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
     for(Token sub:literalToken.getSubTokens())
     {
       if(sub.is("associationLit"))
       {
-        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub, aClass, cardinal, all, firstName, subject, operator));
+        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub, uClassifier, cardinal, all, firstName, subject, operator));
         firstName = false;
       }
       else if(sub.is("constraintName"))
@@ -259,7 +280,7 @@ class UmpleInternalParser
         }
         rawLine.addAll(subject);
         rawLine.add(operator);
-        rawLine.add(analyzeConstraintName(sub,aClass,true));
+        rawLine.add(analyzeConstraintName(sub,uClassifier,true));
       }
       else if(sub.is("elements"))
       {
@@ -294,7 +315,8 @@ class UmpleInternalParser
     return rawLine;
   }
   
-  private List<ConstraintVariable> analyzeAssociationConstraintExpression(Token associationExpressionToken , UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeAssociationConstraintExpression(Token associationExpressionToken , UmpleClassifier uClassifier)
   {
   	List<Token> associationExpressionSubtokens = associationExpressionToken.getSubTokens();
   	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
@@ -307,11 +329,11 @@ class UmpleInternalParser
     {
       if(sub.is("constraintName"))
       {
-        subject.add(analyzeConstraintName(sub,aClass,true));
+        subject.add(analyzeConstraintName(sub,uClassifier,true));
       }
       else if(sub.is("associationLit"))
       {
-        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub,aClass,card,all,true,subject,operator));
+        rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub,uClassifier,card,all,true,subject,operator));
       }
       else if(sub.is("all"))
       {
@@ -377,7 +399,8 @@ class UmpleInternalParser
     return rawLine;
   }
   
-  private List<ConstraintVariable> analyzeStringConstraintExpression(Token stringExpressionToken , UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeStringConstraintExpression(Token stringExpressionToken , UmpleClassifier uClassifier)
   {
     Token innerTokens = stringExpressionToken.getSubToken(0);
     String[] mustBeTypes = new String[]{"string"}; 
@@ -400,7 +423,7 @@ class UmpleInternalParser
       }
       else if(sub.is("constraintName"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,mustBeTypes));
+        rawLine.add(analyzeConstraintName(sub,uClassifier,true,mustBeTypes));
       }
       else if(sub.is("operator"))
       {
@@ -422,7 +445,8 @@ class UmpleInternalParser
     return rawLine;
   }
   
-  private List<ConstraintVariable> analyzeNumberConstraintExpression(Token numberExpressionToken, UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeNumberConstraintExpression(Token numberExpressionToken, UmpleClassifier uClassifier)
   {
 	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
 	List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
@@ -435,11 +459,11 @@ class UmpleInternalParser
       } 
       else if(sub.is("constraintName"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double", "date"));
+        rawLine.add(analyzeConstraintName(sub,uClassifier,true,"integer","float","double", "date"));
       }
       else if(sub.is("arithmeticCall"))
       {
-        rawLine.addAll(analyzeArithmeticCall(sub,aClass));
+        rawLine.addAll(analyzeArithmeticCall(sub,uClassifier));
       }
       else if(sub.is("number"))
       {
@@ -475,7 +499,8 @@ class UmpleInternalParser
     return rawLine;
   }
   
-  private List<ConstraintVariable> analyzeArithmeticCall(Token numberExpressionToken, UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment;
+  private List<ConstraintVariable> analyzeArithmeticCall(Token numberExpressionToken, UmpleClassifier uClassifier)
   {
 	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
 	List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
@@ -488,7 +513,7 @@ class UmpleInternalParser
       } 
       else if(sub.is("constraintName"))
       {
-        rawLine.add(analyzeConstraintName(sub,aClass,true,"integer","float","double"));
+        rawLine.add(analyzeConstraintName(sub,uClassifier,true,"integer","float","double"));
       }
       else if(sub.is("number"))
       {
@@ -500,14 +525,15 @@ class UmpleInternalParser
       }
       else if(sub.is("arithmeticCall")||sub.is("lowArithmeticOperatorCall")||sub.is("highArithmeticOperatorCall"))
       {
-        rawLine.addAll(analyzeArithmeticCall(sub,aClass));
+        rawLine.addAll(analyzeArithmeticCall(sub,uClassifier));
       }
     }
     return rawLine;
   }
   
+  //TODO I changed the parameter's type. please remove this comment;
   boolean mustWarn = true;
-  private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClass aClass, boolean mustBeInClass, String... type)
+  private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClassifier uClassifier, boolean mustBeInClass, String... type)
   {
   	Token grandparentToken = nameToken.getParentToken().getParentToken();
   	ConstraintVariable cv = new ConstraintVariable("NAME","");
@@ -542,7 +568,7 @@ class UmpleInternalParser
   	          cv.getSubConstraint().addExpression(analyzeConstraintNumber(value));
   	        }
   	        else if(value.is("constraintName")){
-  	          cv.getSubConstraint().addExpression(analyzeConstraintName(value,aClass,false));
+  	          cv.getSubConstraint().addExpression(analyzeConstraintName(value,uClassifier,false));
   	        }
   	      }
   	      else
@@ -571,7 +597,7 @@ class UmpleInternalParser
   	    for(Token subsub:sub.getSubTokens()){
   	      if(subsub.is("constraintName"))
   	      {
-  	        cv.getSubConstraint().addExpression(analyzeConstraintName(subsub,aClass,true));
+  	        cv.getSubConstraint().addExpression(analyzeConstraintName(subsub,uClassifier,true));
   	      }
   	    }  	    
   	    mustWarn = false;
@@ -579,7 +605,7 @@ class UmpleInternalParser
   	  else if(sub.is("name"))
   	  {
   	    cv.setValue(sub.getValue());
-  	    cv.getAttribute(aClass);
+  	    cv.getAttribute(uClassifier);
   	    ConstraintVariable name = new ConstraintVariable("",sub.getValue());
   	    cv.getSubConstraint().addExpression(name);
   	    if("this".equals(name.getValue()))
@@ -589,7 +615,7 @@ class UmpleInternalParser
   	    UmpleVariable attribute;
         if(mustBeInClass)
         {
-          attribute = name.getAttribute(aClass);
+          attribute = name.getAttribute(uClassifier);
           
           if(attribute!=null||isNew)
           {
@@ -667,8 +693,9 @@ class UmpleInternalParser
             if(grandparentToken.is("postcondition")&&sub.getValue().equals("result")){
               //don't throw error if the attribute is named "result" the result is the return value from the original function
             }
-            else if(!isComplex&&mustWarn&&aClass!=null){
-              setFailedPosition(sub.getPosition(), 28, sub.getValue(), aClass.getName());
+            else if(!isComplex&&mustWarn&&uClassifier!=null){
+              if (uClassifier instanceof UmpleClass)
+              setFailedPosition(sub.getPosition(), 28, sub.getValue(), uClassifier.getName());
             }      
           }          
         }
