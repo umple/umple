@@ -1,7 +1,7 @@
 package cruise.umple.implementation.mbtest;
 
 import org.junit.Before;
-/*
+
 import cruise.umple.implementation.TemplateTest;
 
 
@@ -17,4 +17,3 @@ public class mbtestTemplateTest extends TemplateTest{
     
 	  }
 }
-*/

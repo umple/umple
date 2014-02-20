@@ -2670,7 +2670,7 @@ class UmpleInternalParser
   }
   public void analyzeToplevelException(Token token){
     Token top = token;
-    Position position = token.getPosition();
+    Position position = new Position(token.getPosition().getFilename(), token.getPosition().getLineNumber(), token.getPosition().getCharacterOffset(), token.getPosition().getOffset());
     token = token.getSubToken("toplevelExceptionMain");
     String[] identifiers = new String[]{
       "unknown",
