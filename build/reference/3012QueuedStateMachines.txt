@@ -1,0 +1,86 @@
+Queued State Machines
+State Machines
+noreferences
+
+@@description
+<p>      
+Standard state machines operate in a single thread. When an event method is called, the state machine code that runs continues the same thread of the caller. This can be satisfactory for simple applications, but it doesn't work in multi-threaded environments, and can also result in deadlocks.
+</p>
+
+<p>      
+To overcome the above problems, a state machine may be declared as 'queued' by just placing the keyword queued before the declaration of the state machine. In a queued state machine, the calls to the event methods simply add a record to the queue, and then return. The calling thread can then continue and do other activities. A separate thread exists in each state machine to take events off the queue and process them, in the order they are received.
+</p>
+
+<p>      
+A queued state machine will process events in the same order as a regular state machine. See also <a href="PooledStateMachines.html">pooled state machines</a> for a variation on this semantics.
+</p>
+
+@@syntax
+
+[[inlineStateMachine]]
+
+@@example
+
+// Test of queued state machines.
+// The word queued results in a thread being created to process events.
+
+class TestSM {
+  queued sm{
+    s1 {
+      e1 /{System.out.println("e1");} ->s2;
+    }
+    s2 {
+      e2 /{System.out.println("e2");} ->s3;
+    }
+    s3 {
+      e3 /{System.out.println("e3");} ->s4;
+    }
+    s4 {
+      e4 /{System.out.println("e4");} ->s1;
+    }
+  }
+  
+  public static  void main(String [] ags){
+    TestSM test=new TestSM();
+    test.e1(); // processed s2
+    test.e2(); // processed s3
+    test.e3(); // processed s4
+    test.e4(); // processed s1
+
+    test.e1(); // processed s2
+    test.e3(); // queued: ignored  pooled: left in queue, until we are next in s3
+    test.e4(); //      pooled: left in queue, until next in s4
+    test.e2(); //      pooled: processed goes to s3
+               //      pooled: process e3 from queue goes to s4
+               //      pooled: process s4 from queue goes to s1
+    test.e1(); 
+    test.e3(); 
+    test.e2(); 
+    test.e4();
+    
+    test.e1();
+    test.e2();
+    test.e3();
+    test.e4();
+
+    test.e1();
+    test.e2();
+    test.e4();
+    test.e3();
+    test.e4();
+
+    test.e1();
+    test.e3();
+    test.e2();
+    test.e3();
+    test.e1();
+    test.e4();
+
+    test.e2();
+    test.e1();
+    test.e2();
+
+  }
+}
+
+@@endexample

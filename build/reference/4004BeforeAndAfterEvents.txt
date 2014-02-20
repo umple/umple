@@ -1,0 +1,29 @@
+Code Injection in Event Methods
+Aspect Orientation
+noreferences
+
+@@description
+<p><a href="BasicStateMachines.html">State machine</a> event methods are generated automatically from a state machine.
+Sometimes a programmer wants to execute some code whenever a given event is processed by a state machine, no matter what state the state machine is in.
+</p>
+
+<p>Code can be injected before or after any event, as shown in the example below. Note that in the case of <a href="QueuedStateMachines.html">queued</a> or <a href=""PooledStateMachines.html">pooled state machines</a>, the injected code will only be triggered when the event is actually processed by the state machine (i.e. when it is removed from the queue).
+</p>
+
+
+@@example
+
+class Car {
+  queued radio {
+    on {
+      radioToggle -> off;
+    }
+    off {
+      radioToggle -> on;
+    }
+  }
+  after radioToggle {soundBeep();}
+}
+
+
+@@endexample
