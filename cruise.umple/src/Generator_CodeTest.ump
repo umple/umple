@@ -1,0 +1,315 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class TestGenerator
+{
+
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+    StringBuilder subCode;
+    String packageName;
+    List<String> allTypes = new ArrayList<String>();
+    List<String> interfacesProcessed = new ArrayList<String>();
+
+    code.append("");
+
+    boolean isFirst = true;
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      subCode = new StringBuilder();
+      if (isFirst)
+      {
+        isFirst = false;
+        packageName = getTargetNamespaceName();
+        //nsURI = model.getDefaultNamespace() != null ? model.getDefaultNamespace(): model.getUmpleFile().getSimpleFileName();
+        //code.append(StringFormatter.format("",packageName, nsURI));
+        code.append(StringFormatter.format(""));
+      }
+
+      String superStructureFlag = "";
+      String interfaceFlag = "";
+      String abstractFlag = "";
+      if (uClass.getExtendsClass() != null)
+      {
+        //superStructureFlag = StringFormatter.format(" eSuperTypes=\"#//{0}\"",uClass.getExtendsClass().getName()); 
+      }
+      else if (uClass.hasParentInterface()){
+        // add class element attributes
+		/*List<UmpleInterface> uInterfaces = uClass.getParentInterface();
+		StringBuilder interfacesToken = new StringBuilder();
+		interfacesToken.append(" eSuperTypes=\"");
+		for (UmpleInterface uInterface : uInterfaces) {
+			if (interfacesToken.toString().contains("#//"))
+				interfacesToken.append(" ");
+			interfacesToken.append("#//" + uInterface.getName());
+		}
+		interfacesToken.append("\"");
+		
+		superStructureFlag = interfacesToken.toString();
+		interfaceFlag = " interface=\"true\"";
+		abstractFlag = "abstract=\"true\"";
+
+		// add interfaces
+		for (UmpleInterface uInterface : uInterfaces) {
+			if (!(interfacesProcessed.contains(uInterface.getName()))) {
+				interfacesProcessed.add(uInterface.getName());
+				code.append(StringFormatter
+						.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",
+								uInterface.getName(), interfaceFlag,
+								abstractFlag));
+				code.append("  </eClassifiers>\n");
+			}
+		}*/
+      }
+
+      code.append(StringFormatter.format(" class {0} : Test { ",uClass.getName()));
+
+      for(Attribute av : uClass.getAttributes())
+      {
+        String typeName = av.getType() == null ? "String" : av.getType();
+        String upperBound = av.getIsList() ? " upperBound=\"-1\"" : "";
+        String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
+        
+        
+        code.append(StringFormatter.format("// tests for attribute: {0}", attrName));
+        
+        
+        
+        
+        
+        
+        //test Set Attribute
+        code.append(StringFormatter.format("testCase{0}: testSet{0} { \n", attrName));
+	      
+        if (!av.isImmutable())
+	      {
+      	  //TODO:testGenerator test set assertion  [exception for Immutable] 
+	    	  
+	    	  
+	    	  //set with some constraints
+	    	  if (uClass.hasConstraints())
+	    	  {
+	    		  for(Constraint cs : uClass.getConstraints())
+	    		  {
+	    			 if (cs.hasExpressions())
+	    			 {
+	    				 for ( ConstraintVariable cv: cs.getExpressions())
+	    				 {
+	    					 
+	    					 //FIXME : constraints
+	    					 
+	    					 //cv.getType();
+	    					 code.append(StringFormatter.format("a constraint test, fix me"));
+	    					 code.append(StringFormatter.format("AssertTrue: {0}={set{1} = }\n",av.getClass().getName() , attrName));
+	    				 }
+	    			 }
+	    		  }
+	    	  }
+	    	  
+	    	  else 
+	    	  {
+	    		  code.append(StringFormatter.format("AssertTrue: {0}={set{1} = }\n",av.getClass().getName() , attrName));
+	    	  }
+	      }
+        
+        
+       //test get Attribute
+      //test get attribute [ this is generated for all attribute without exception]
+       code.append(StringFormatter.format("testCase{0}: testSet{0} { \n", attrName));
+      
+	   code.append(StringFormatter.format("AssertTrue: {0}={get{1} = value}\n",av.getClass().getName() , attrName));
+       
+	   code.append(StringFormatter.format("} \n", attrName));
+	   
+	   
+        //TODO: Abstract Assertions:
+	      
+        
+        
+          
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      
+	      if (av.isIsLazy())
+	      {
+	    	  //TODO: testGenerator,  add assertion for lazy, we want to see if the object has the lazy-specific LOC in the constructor, Note this is still abstrac ( not language oriented) 
+	    	  //  AssertLOC : student={ method=Student(), LOC="name = null;"} 
+	    	  if(av.getType() == "String" || av.getType() == null)
+	    	  {
+	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = null\" }\n",av.getClass().getName() , attrName));
+	    	  }
+	    	  
+	    	  if(av.getType() == "Double" || av.getType() == "Integer")
+	    	  {
+	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = 0\" }\n",av.getClass().getName() , attrName));
+	    	  }
+	    	  
+	    	  if(av.getType() == "Float")
+	    	  {
+	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = 0.0\" }\n",av.getClass().getName() , attrName));
+	
+	    	  }
+	    	  
+
+	    	  if(av.getType() == "Boolean") 
+	    	  {
+	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = false\" }\n",av.getClass().getName() , attrName));
+	    	  }
+	    	  
+	    	  
+	    	  
+	    	  
+	    	  
+	    	  if (av.getType() == "")
+	    	  {
+	    		  code.append(StringFormatter.format(""));
+	    	  }
+	    	  
+	    	  else{
+	    		  
+	    	  }
+	      }
+	      
+	      if ( av.isImmutable())
+	      {
+	    	  //TODO:
+	    	  code.append(StringFormatter.format("AssertFunc: {0}={set{1}()}\n",av.getClass().getName() , attrName));
+	      }
+	      
+	      
+	      
+	      
+	      code.append("}");
+	      
+	      
+	      
+      }
+
+      ArrayList<Association> internalAssociations = new ArrayList<Association>();
+      for(Association as : uClass.getAssociations())
+      {
+        AssociationEnd myEnd = as.getIsRightNavigable()?as.getEnd(0):as.getEnd(1);
+        AssociationEnd theirEnd = as.getIsRightNavigable()?as.getEnd(1):as.getEnd(0);
+        
+
+        if (internalAssociations.contains(as))
+          continue;
+
+        if (myEnd.getClassName().equals(theirEnd.getClassName())) 
+        {
+          internalAssociations.add(as);
+          code.append(StringFormatter.format("",myEnd.getRoleName(),myEnd.getMultiplicity().getLowerBound(),myEnd.getMultiplicity().getUpperBound(),myEnd.getClassName(),myEnd.getClassName(),theirEnd.getRoleName()));
+          code.append(StringFormatter.format("",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+        }
+        else
+        {
+          boolean isBidirectional = as.getIsLeftNavigable()&&as.getIsRightNavigable();
+          boolean isTheirEndClass = theirEnd.getClassName().equals(uClass.getName());
+          //auto-link if bidirectional
+          if (isTheirEndClass && isBidirectional)
+          {
+            myEnd = as.getEnd(1);
+            theirEnd = as.getEnd(0);
+          }
+          //add
+          if(isBidirectional)
+        	  code.append(StringFormatter.format("  ",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+          else if(!isTheirEndClass)
+        	  code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName()));
+        }
+      }
+
+      for (StateMachine sm : uClass.getStateMachines())
+      {
+        if ("Simple".equals(sm.getType()))
+        {
+          String enumerationName = StringFormatter.toPascalCase(sm.getName());
+          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"#//{1}\" />\n",sm.getName(),enumerationName));          
+
+          int index = 0;
+          subCode.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EEnum\" name=\"{0}\">\n",enumerationName));
+          for (State s : sm.getStates())
+          {
+            subCode.append(StringFormatter.format("    <eLiterals name=\"{0}\" value=\"{1}\"/>\n",s.getName(),index));
+            index += 1;
+          }
+          subCode.append("  </eClassifiers>\n");
+        }
+      }
+
+      code.append("");
+      code.append(subCode.toString());
+    }
+
+    if (!isFirst)
+    {
+      code.append("\n");
+    }
+    
+    code.append(StringFormatter.format(" }"));
+
+
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  private String getFullyQualifiedName(String packageName, String className)
+  {
+    try
+    {
+      String fullName = packageName + "." + className;
+      Class.forName(fullName);
+      return fullName;
+    }
+    catch (Exception e) 
+    {
+      return null;  
+    }
+  }
+
+  private String getTargetNamespaceName(){ 
+    if (model.getDefaultNamespace() != null){
+      if (model.getDefaultNamespace().length() > 0 )
+      {
+        String [] namespaces = model.getDefaultNamespace().split("\\.");	
+        return namespaces[namespaces.length-1];
+      }
+    }
+    return model.getUmpleFile().getSimpleFileName();
+  }
+
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".txt";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Xmi code." + e, e);
+    }
+  }
+}
+
+

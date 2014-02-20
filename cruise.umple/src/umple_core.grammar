@@ -30,8 +30,8 @@ strictnessMessage : [=message:allow|ignore|expect|disallow] [messageNumber]
 
 // The generate clause can be used to generate multiple outputs
 // The --override is used to say that subsequent generate statements will be ignored
-generate- : generate [=generate:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|GvStateDiagram|GvClassDiagram|Alloy|Papyrus|Ecore|Xmi|Xtext|Sql|Umple|UmpleSelf|USE] ; 
-generate_path : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|GvStateDiagram|GvClassDiagram|Alloy|Papyrus|Ecore|Xmi|Xtext|Sql|UmpleSelf|USE] " [**output] " [=override:--override|--override-all]? ;
+generate- : generate [=generate:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|GvStateDiagram|GvClassDiagram|Alloy|Papyrus|Ecore|Xmi|Xtext|Sql|Umple|UmpleSelf|USE|Test] ; 
+generate_path : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|Yuml|Violet|Umlet|Simulate|TextUml|GvStateDiagram|GvClassDiagram|Alloy|Papyrus|Ecore|Xmi|Xtext|Sql|UmpleSelf|USE|test] " [**output] " [=override:--override|--override-all]? ;
 
 // Use statements allow incorporation of other Umple files. See [*UseStatements*]
 useStatement : use [use] ;
