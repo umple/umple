@@ -1,0 +1,61 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file generates Alloy code
+  generate Alloy;
+in your umple file, or the command line option
+  -g Alloy
+
+ */
+
+namespace cruise.umple.compiler;
+
+class AlloyGenerator
+{
+  public void generate()
+  {
+    StringBuilder code = new StringBuilder();
+
+    code.append("// Initial Test empty alloy file generated using Umple from "+model.getUmpleFile().getFileName()+" \n\n");
+    
+    terminateCode(code);
+  }
+
+  private void terminateCode(StringBuilder code) {
+
+    model.setCode(code.toString());
+    writeModel();
+  } 
+
+  // Used to indent code
+  private void appendSpaces(StringBuilder code, int numSpaces) {
+    for(int i=0; i<numSpaces; i++) {
+      code.append(" ");
+    }
+  }
+
+  // Output the Alloy file to a file with the .als suffix
+  private void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".als";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Alloy code." + e, e);
+    }
+  } 
+}
+
