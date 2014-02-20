@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Umplificator Plugin
+Bundle-SymbolicName: cruise.umplificator.eclipse;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: cruise.umplificator.ui.eclipse.Activator
+Bundle-Vendor: CRuiSE - University of Ottawa
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.apache.log4j;bundle-version="1.2.15",
+ org.eclipse.jdt.core;bundle-version="3.9.1",
+ org.eclipse.core.resources
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ActivationPolicy: lazy
