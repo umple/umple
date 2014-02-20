@@ -129,6 +129,10 @@ class UmpleInternalParser
     {
       analyzeAllAssociations(t);
     }
+    else if (t.is("toplevelException"))
+    {
+      analyzeToplevelException(t);
+    }
 
     // This essentially "clears" the comments in the list so that new comments, when parsed, will be the ones appearing above
     // classes, methods, attributes, etc (whichever comes next) rather than old comments propogating everywhere.
@@ -2662,6 +2666,73 @@ class UmpleInternalParser
     else
     {
       aClass.appendExtraCode(token.getValue());
+    }
+  }
+  public void analyzeToplevelException(Token token){
+    Token top = token;
+    token = token.getSubToken("toplevelExceptionMain");
+    String[] identifiers = new String[]{
+      "unknown",
+      "class",
+      "external",
+      "interface",
+      "association",
+      "associationClass",
+      "statemachine",
+      "glossary",
+      "strictness",
+      "generate",
+      "use",
+      "namespace"};
+    String identifier = token.getValue("identifier");
+    boolean isNotProperIdentifier = true;
+    for(String id:identifiers)
+    {
+      if(identifier.equals(id))
+      {
+        isNotProperIdentifier = false;
+        break;
+      }
+    }
+    
+    if(isNotProperIdentifier)
+    {
+      int bestScore = -100;
+      String bestMatch = "unknown";
+      for(String id:identifiers)
+      {
+        int score = 0;
+        for(int i=0,j=0;j<id.length()&&i<identifier.length();++j)
+        {
+          if(id.charAt(j)==identifier.charAt(i)){
+            ++score;
+            ++i;
+          }
+          else {
+            --score;
+          }
+        }
+        for(int i=0,j=0;j<id.length()&&i<identifier.length();++i)
+        {
+          if(id.charAt(j)==identifier.charAt(i)){
+            ++score;
+            ++j;
+          }
+          else {
+            --score;
+          }
+        }
+        if(score>bestScore)
+        {
+          bestScore = score;
+          bestMatch = id;
+        }
+      }
+      setFailedPosition(token.getPosition(),1503,identifier,bestMatch);
+    }
+    else 
+    {
+      setFailedPosition(token.getPosition(),1502,identifier);
     }
   }
 } 

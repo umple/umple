@@ -96,7 +96,8 @@
 
 1500 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
-1502 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ; 
+1502 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ;
+1503 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
 1510 : 1, "http://umple.org/E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error

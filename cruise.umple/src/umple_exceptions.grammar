@@ -13,3 +13,7 @@ malformedStatement2 : [!stuff:[^\\{\\};]*] ( [!stuff:[^\\{\\};]*] )* { [**inners
 malformedStatemachine2 : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*]  ( [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*] )* { [**innerstuff] }
 malformedMethod : [!stuff:[^\\{\\}\\OPEN_ROUND_BRACKET\\CLOSE_ROUND_BRACKET]*] ( [!stuff:[^\\{\\}]*] )* { [**innerstuff] }
 exception : [[misnamedAttribute]] | [[malformedStatement1]] | [[malformedStatemachine1]] | [[malformedStatement2]] | [[malformedStatemachine2]] | [[malformedMethod]]
+
+toplevelException : [[toplevelExceptionMain]] ( { [**extraStuff] } )? ( " [**quotedStuff] " )? ( ; )?
+toplevelExceptionMain : [=access:public|private|protected]? [identifier] [=queued]? [name]? [[inheritanceException]]? [name]*
+inheritanceException : ( [=level:extends|implements]? [name] ( , [name] )* )+
