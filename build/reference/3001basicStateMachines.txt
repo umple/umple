@@ -30,6 +30,8 @@ Details of each state can include:
 </ul>
 </p>
 
+<p>Note that, in addition, you can specify code to be executed whenever an event is processed by using <a href="CodeInjectioninEventMethods.html">before or after directives.</a></p>
+
 <p>The following diagram shows a garage door state machine as a UML diagram. The Umple code for this is at the bottom of this page. Note that UmpleOnline currently cannot draw state machines.
 
 <img src="examples/GarageStateMachine.png" alt="state machne for garage door"/>
