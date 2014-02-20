@@ -67,4 +67,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.ui,
  org.eclipse.debug.core,
  org.eclipse.jdt.launching
-Import-Package: cruise.umple.ui.eclipse
+Import-Package: cruise.umple.ui.eclipse,
+ junit.framework,
+ org.junit;version="4.10.0"
