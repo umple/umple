@@ -575,4 +575,14 @@ public class StateMachineTest
     sm.setQueued(true);
     Assert.assertEquals(true,sm.isQueued());
   }
+
+  @Test
+  public void isPooled()
+  {
+    StateMachine sm = new StateMachine("sm");
+    Assert.assertEquals(false,sm.isPooled());
+    //System.err.println(sm.isPooled());
+    sm.setPooled(true);
+    Assert.assertEquals(true,sm.isPooled());
+  }
 }

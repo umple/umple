@@ -32,6 +32,7 @@ class StateMachine
   before setUmpleTrait { if (aUmpleTrait != null && aUmpleTrait.isImmutable()) { return false; } }
   
   Boolean queued = false;
+  Boolean pooled = false;
 }
 
 /*

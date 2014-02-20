@@ -370,11 +370,17 @@ class UmpleInternalParser
 	    } 
     }
       
+    
+    if(stateMachineToken.is("pooled"))
+    {
+      sm.setPooled(true);
+    }
+    
     if(stateMachineToken.is("queued"))
     {
       sm.setQueued(true);
-    } 
-
+    }
+    
     populateStateMachine(stateMachineToken, sm, uClassifier);
 
     while (placeholderStateMachine.numberOfStates() > 0)
@@ -444,10 +450,15 @@ class UmpleInternalParser
     
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
+      if(stateToken.is("pooled"))
+      {
+        sm.setPooled(true);
+      }
+      
       if(stateToken.is("queued"))
       {
         sm.setQueued(true);
-      }
+      }    
       
       // Concurrency is only allowed between nested state-machines
       if (stateToken.is("||"))
