@@ -124,6 +124,9 @@ class ChoiceRule
 	while(lookfor<input.length()-1&&(input.charAt(lookfor)+"").matches("\\s")){
 		++lookfor;
 	}
+	if(lookfor>=input.length()){
+	  lookfor=input.length()-1;
+	}
     Set<Integer> keys = data.getLinenumbers().keySet();
     int offset = 0;
     int linenumber = 0;
@@ -132,7 +135,7 @@ class ChoiceRule
     int previous = 0;
     for(Integer key:keys)
     {
-      if(key>lookfor)
+      if(key-1>=lookfor)
       {
         offset = lookfor-previous;
         linenumber = data.getLinenumbers().get(key);        
@@ -140,10 +143,12 @@ class ChoiceRule
       }
       previous = key;
     }
+    Boolean first = true;
     if(linenumber==0)
     {
       linenumber = 1;
       offset = lookfor;
+      first = true;
     }
     return new Position(
         data.getFilename(),
