@@ -162,7 +162,6 @@
       <src path="${project.path}/src"/>
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
-      <src path="${validator.project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
       <src path="${jopt-simple.project.path}/src/main/java"/>
       <exclude name="**/.svn"/>
