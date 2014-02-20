@@ -208,6 +208,21 @@ class GvClassDiagramGenerator
   String output = "";
 }
 
+class AlloyGenerator
+{
+  isA CodeGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+}
+
+
 class SimulateGenerator
 {
   isA CodeGenerator;
@@ -389,6 +404,7 @@ use Generator_CodeTextUml.ump;
 use Generator_CodeGvStateDiagram.ump;
 use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
+use Generator_CodeAlloy.ump;
 use Generator_CodeSimulate.ump;
 use Generator_CodeYuml.ump;
 use Generator_CodeXtext.ump;
