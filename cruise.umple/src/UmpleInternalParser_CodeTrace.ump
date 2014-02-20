@@ -303,7 +303,6 @@ private void analyzeTraceToken(Token token, int analysisStep)
       {
         traceAttr.setTraceSet(true);
       }
-  	System.out.println("[single]trace attr=\n"+traceAttr.getAttribute(0));
 
     }
     else if( traceToken.getValue("trace_entity").equals("*attribute") )
