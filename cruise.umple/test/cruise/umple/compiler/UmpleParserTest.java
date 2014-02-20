@@ -1426,7 +1426,7 @@ public class UmpleParserTest
   @Test
   public void associationClassMissingRight()
   {
-    assertFailedParse("010_associationClassMissingRight.ump", new Position("010_associationClassMissingRight.ump",1,0,0));
+    assertFailedParse("010_associationClassMissingRight.ump", new Position("010_associationClassMissingRight.ump",2,0,1));
   }
   
   @Test
