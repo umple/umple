@@ -12,8 +12,11 @@ public class mbtestTemplateTest extends TemplateTest{
 	  public void setUp()
 	  {
 	super.setUp();
-    language = "mbtest";
-    languagePath = "mbtest";
+		language = "mbtest";
+    	languagePath = "mbtest";
     
 	  }
+	  
+	  
+	  
 }
