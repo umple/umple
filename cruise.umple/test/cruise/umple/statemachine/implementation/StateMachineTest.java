@@ -347,4 +347,10 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("nestedStatesOfQSMwithSameEventNames.ump",languagePath + "/nestedStatesOfQSMwithSameEventNames."+ languagePath +".txt","NestedStatesWthSameEventNames");
   }
+  
+  @Test
+  public void pooledStateMachine()
+  {
+	assertUmpleTemplateFor("pooledStateMachine.ump",languagePath + "/pooledStateMachine."+ languagePath +".txt","Course");
+  }
 }
