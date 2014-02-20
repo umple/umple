@@ -29,6 +29,28 @@ class UmpleModel {
 //----------------------------------------------------------
 class UmpleTrait {
 
+	public Attribute getAttribute(String name)
+  {
+    for (Attribute av : attributes)
+    {
+      if (av.getName().equals(name))
+      {
+        return av;
+      }
+    }
+    return null;
+  }
+
+   public AssociationVariable getAssociationVariable(String name){
+    for (AssociationVariable av : associationVariables)
+    {
+      if (av.getName().equals(name))
+      {
+        return av;
+      }
+    }
+    return null;
+  }	
     public boolean isImmutable(){
     	return (iAmImmutable || ancestorIsImmutable);
  	}

@@ -1384,14 +1384,19 @@ class Association
 
 class ConstraintVariable
 {
-  UmpleVariable getAttribute(UmpleClass aClass){
-    if(!getIsAttribute()) {
+  UmpleVariable getAttribute(UmpleClassifier uClassifier){
+	if(!getIsAttribute()) {
       return null;
     }
-    if(aClass==null){
+    if(uClassifier==null){
     	return null;
     }
-    UmpleVariable uv = aClass.getAttribute(this.getValue());
+    UmpleVariable uv;
+    if (uClassifier instanceof UmpleClass) {
+    	 uv= ((UmpleClass)(uClassifier)).getAttribute(this.getValue());
+    } else {
+    	uv = ((UmpleTrait)(uClassifier)).getAttribute(this.getValue());
+    }
     
     if(uv!=null){
       setFoundAttribute(uv);
@@ -1400,7 +1405,12 @@ class ConstraintVariable
     }
     else
     {
-      uv = aClass.getAssociationVariable(this.getValue());
+      if (uClassifier instanceof UmpleClass) {
+    	  uv = ((UmpleClass)(uClassifier)).getAssociationVariable(this.getValue());
+      } else {
+    	  uv = ((UmpleTrait)(uClassifier)).getAssociationVariable(this.getValue());
+      }	
+      
       setFoundAttribute(uv);
       isAssociation = uv!=null;
       return uv;

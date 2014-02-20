@@ -119,3 +119,4 @@
 2551: 1, "http://umple.org", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance.;
 2552: 4, "http://umple.org", Attribute '{0}' is available in both class '{1}' and trait '{2}'. Solution: Please just remove the attribute from the trait.;
 2553: 1, "http://umple.org", Trait '{0}' cannot cyclically extend '{1}'.;  
+2554: 1, "http://umple.org", Variable '{0}' inside of the constraint in Trait '{1}' is not availabe in class '{2}' or trait '{1}'.;

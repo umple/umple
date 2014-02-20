@@ -140,7 +140,7 @@ class UmpleInternalParser
   	analyzeCoreToken(t,aTrait,analysisStep);
     analyzeTraitToken(t,aTrait,analysisStep);
     analyzeStateMachineToken(t,aTrait,analysisStep);
-//    analyzeDependentTokens(t,aTrait,analysisStep);
+    analyzeDependentTokens(t,aTrait,analysisStep);
   }
 
 //----------------------------------------------------------------------------  
@@ -647,6 +647,36 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------  
 //---------------------------------the Method---------------------------------
 //----------------------------------------------------------------------------
+   private void analyzeDependentTokens(Token t, UmpleTrait uTrait, int analysisStep){
+    if(analysisStep == 1 || shouldProcessClassAgain)
+    {
+      shouldProcessClassAgain = true;
+      return;
+    }
+
+    // Methods after this point will occur on analysisStep > 1
+    
+    if (t.is("invariant"))
+    {
+      analyzeInvariant(t,uTrait);
+    }
+    else if (t.is("beforeCode") || t.is("afterCode"))
+    {
+    //TODO should applied for traits
+    //  analyzeInjectionCode(t,uTrait);
+    }
+    else if (t.is("key") || t.is("defaultKey"))
+    {
+    //TODO should applied for traits
+    //  analyzeKey(t,aClass);
+    }
+    //analyzeTraceToken(t,aClass);
+    //analyzeLayoutToken(t,aClass,analysisStep);
+  }
+//----------------------------------------------------------------------------  
+//---------------------------------the Method---------------------------------
+//----------------------------------------------------------------------------
+
   private void applyTraits(){
   	if (getParseResult().getWasSuccess()) {
 	    for (UmpleClass uClass : getModel().getUmpleClasses()) {
@@ -711,6 +741,12 @@ class UmpleInternalParser
 		
 		// copy Constraints
 		for(Constraint aConstraint : inTrait.getConstraints()) {
+			for(ConstraintVariable cVariable : aConstraint.getExpressions() ) {			
+				if (cVariable.getType().equals("NAME") && inClass.getAttribute(cVariable.getValue()) == null && inTrait.getAttribute(cVariable.getValue()) == null) {
+					getParseResult().addErrorMessage(new ErrorMessage(2554,inTrait.getPosition(0),cVariable.getValue(),inTrait.getName(),inClass.getName()));	
+					return;
+				}
+			}
 			inClass.addConstraint(aConstraint);
 		}	
 		
