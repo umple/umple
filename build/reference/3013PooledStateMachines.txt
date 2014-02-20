@@ -27,7 +27,7 @@ A queued state machine will therefore often process events in a different order 
 // until entry into a state where they can be handled.
 
 class TestSM {
-  queued sm{
+  pooled sm{
     s1 {
       e1 /{System.out.println("e1");} ->s2;
     }
