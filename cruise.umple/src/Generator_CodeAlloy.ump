@@ -19,8 +19,61 @@ class AlloyGenerator
   public void generate()
   {
     StringBuilder code = new StringBuilder();
+    int indent = 0;
+    AssociationEnd assocEndToOutput;
+    AssociationEnd leftEnd;
+    AssociationEnd rightEnd;
+    String alloyMultiplicity;
 
-    code.append("// Initial Test empty alloy file generated using Umple from "+model.getUmpleFile().getFileName()+" \n\n");
+    code.append("// Alloy file generated using Umple from "+model.getUmpleFile().getFileName()+" \n\n");
+
+    
+    // Iterate through all classes and generate Alloy
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+       Set processedAssociations = new HashSet(); // needed to prevent double reflexive count
+    
+      code.append("sig "+uClass.getName()+" {\n");
+      indent += 2;
+    
+      // Iterate through associations, but only visit in first class encounter
+      for(Association uAssoc : uClass.getAssociations()) {
+
+        if(processedAssociations.contains(uAssoc)) continue;
+
+        // Prevent double-counting of  associations
+        processedAssociations.add(uAssoc);
+        
+        leftEnd = uAssoc.getEnd(0);
+        rightEnd = uAssoc.getEnd(1);
+        if(rightEnd.getClassName().equals(uClass.getName())) {
+          assocEndToOutput=leftEnd;
+        }
+        else {
+          assocEndToOutput=rightEnd;        
+        }
+        String theMult = assocEndToOutput.getMultiplicity().getParserable();
+        if(theMult.equals("1")) {
+          alloyMultiplicity = "one";
+        }
+        else if(theMult.equals("0..1")) {
+          alloyMultiplicity = "lone";
+        }
+        else if(theMult.equals("*")) {
+          alloyMultiplicity = "set";
+        }
+        else {
+          alloyMultiplicity = "some";
+        }
+
+       // Output alloy assertions for this association
+          appendSpaces(code, indent);
+          code.append(assocEndToOutput.getRoleName()+" : "+ alloyMultiplicity + " " +assocEndToOutput.getClassName()+"\n");
+        
+      }
+      indent -=2;
+      code.append("}\n");
+    }
     
     terminateCode(code);
   }
