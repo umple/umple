@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            description="Transforms the sources into umple files"
+            id="cruise.umplificator.umplify"
+            name="Umplify Element (s)">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="cruise.umplificator.ui.eclipse.UmplifyUnitActionHandler"
+            commandId="cruise.umplificator.umplify">
+      </handler>
+   </extension>
+ 
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.jdt.ui.PackageExplorer">
+            <command
+                  commandId="cruise.umplificator.umplify"
+                  icon="icons/UmpleLogo32.gif"
+                  id="cruise.umplificator.umplify"
+                  mnemonic="S">
+            </command>
+      </menuContribution>
+   </extension>
+</plugin>
