@@ -421,7 +421,7 @@ public class UmpleParserTest
   @Test
   public void otherLanguage()
   {
-    assertFailedParse("001_otherLanguage.ump", new Position("001_otherLanguage.ump", 1,9,9));
+    assertFailedParse("001_otherLanguage.ump", new Position("001_otherLanguage.ump", 1,0,0));
   }
 
   @Test
@@ -479,7 +479,7 @@ public class UmpleParserTest
   @Test
   public void invalidNamespace_noName()
   {
-    assertFailedParse("002_invalidNamespace_noName.ump", new Position("002_invalidNamespace_noName.ump",1,10,10));
+    assertFailedParse("002_invalidNamespace_noName.ump", new Position("002_invalidNamespace_noName.ump",1,0,0));
   }
 
   @Test
@@ -1030,6 +1030,11 @@ public class UmpleParserTest
     UmpleClass aClass = model.getUmpleClass("Student");
     Attribute variable = aClass.getAttribute("t");
     Assert.assertEquals("new Time(\"now\")",variable.getValue());
+  }
+  @Test
+  public void invalidClassKeyword()
+  {
+	  assertFailedParse("109_badClassKeyWord.ump", 1503);
   }
   
   @Test

@@ -285,7 +285,10 @@ class NewAction
         
         if (!t.is("classDefinition"))
         {
-          addAfterModel = t;
+          if(!t.is("toplevelException"))
+          {
+        	  addAfterModel = t;
+          }
           continue;
         }
           

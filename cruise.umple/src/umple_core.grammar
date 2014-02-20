@@ -15,7 +15,7 @@ program- : ( [[comment]] | [[directive]] | ; )*
 // Directives are the top-level items in an umple file. See manual page [*TypesofDirectives*]
 // A directive is either used to configure the system or else is
 // an actual entity of the system to be modelled or generated
-directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]] | [[strictness]]
+directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelException]]
 
 // A glossary item is used to fine tune pluralization during code generation
 glossary : glossary { [[word]]* }

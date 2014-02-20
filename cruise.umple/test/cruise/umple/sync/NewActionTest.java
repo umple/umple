@@ -88,7 +88,7 @@ public class NewActionTest
 
     NewAction action = new NewAction(json,umple);
     action.go();
-    
+    System.out.println(action.getUmpleCode());
     Assert.assertEquals("class Student\n{\n}\n\nblah\nclass Student\n{\n  position 1 2 3 4;\n}\n",action.getUmpleCode());
   }   
   
