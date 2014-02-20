@@ -225,3 +225,28 @@ class CourseW {
     }
   }
 }
+external Observable {}
+class ObservableCourse
+{
+  depend java.util.Observable;
+  isA Observable;
+  log = "initial value";
+  status {
+    Open {
+      anEvent -> Closed;
+    }
+    Closed {
+      anEvent -> Open;
+    }
+  }
+  before anEvent {
+    log = "before";
+    setChanged();
+    notifyObservers(status);
+  }
+  after anEvent {
+    log = "after";
+    setChanged();
+    notifyObservers(status);
+  }
+}
