@@ -1,5 +1,5 @@
 package cruise.umple.compiler.java;
-//
+
 import cruise.umple.compiler.*;
 import cruise.umple.util.*;
 import java.util.*;
@@ -114,8 +114,9 @@ appendln(stringBuffer,"  // CONSTANT MEMBERS  ");
  {
  	String constantName = aConstant.getName();
  	String constantModifier = "public static final";
- 	String constantType =  gen.translateInterfaceType(aConstant.getType());
+    String constantType =  gen.translateInterfaceType(aConstant.getType());
  	String constantValue =  gen.translateInterfaceValue(aConstant.getValue(), constantType);
+
  
  if (!(constantValue.equals(""))){
  	appendln(stringBuffer, "");

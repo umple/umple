@@ -10,7 +10,32 @@
   StringBuilder actionJavaLineNumbers = new StringBuilder();
   StringBuilder actionLengths = new StringBuilder();
   String umpleSourceFileFormat = "\n  @umplesourcefile(line={{0}}, file={{1}}, javaline={{2}}, length={{3}})";
+  String customEventPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("eventMethod",e)));
+  String customEventPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("eventMethod",e)));
+  if(e.getName().startsWith("_")&&(customEventPrefixCode==null||customEventPostfixCode==null))
+  {
+    boolean queued = false;
+    for(StateMachine sm : uClass.getStateMachines(e))
+    {
+      if(sm.isQueued())
+      {
+        queued = true;
+        break;
+      }
+    }
+    if(queued)
+    {
+      if(customEventPrefixCode==null)
+      {
+        customEventPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("eventMethod",e)));
+      }
+      if(customEventPostfixCode==null)
+      {
+        customEventPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("eventMethod",e)));
+      }
   
+    }
+  }
   for(StateMachine sm : uClass.getStateMachines(e))
   {
     allDeclarations.append(StringFormatter.format("\n    {0} {1} = {2};",gen.translate("type",sm),gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
@@ -116,9 +141,9 @@
   
 %><%= umpleSourceFile %>
   <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if(sm.isQueued() && e.getIsInternal() == false) {append(stringBuffer,"_");}}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
-  {
+  {<% if (customEventPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPrefixCode, "    ")); } %>
     boolean wasEventProcessed = false;
-    <%= eventOutput %>
+    <%= eventOutput %><% if (customEventPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPostfixCode, "    ")); } %>
     return wasEventProcessed;
   }
 
