@@ -1,0 +1,14 @@
+namespace example;
+
+class Course
+{
+  pooled status
+  {
+    Open {
+      register -> Full;
+    }
+    Full {
+      reject -> Full;
+    }
+  }
+}
