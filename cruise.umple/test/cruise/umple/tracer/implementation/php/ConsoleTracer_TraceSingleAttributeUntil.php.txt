@@ -37,7 +37,7 @@ class Tracer
     $this->id = $aId;
     if ($traceFlag2)
     {
-      ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeUntil.ump,6,Tracer,".spl_object_hash( $this ).",at_s,id,".$this->id );
+      ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeUntil.ump,8,Tracer,".spl_object_hash( $this ).",at_s,id,".$this->id );
     }
     $wasSet = true;
     if ($id>6)
@@ -53,7 +53,7 @@ class Tracer
     $this->name = $aName;
     if ($traceFlag1)
     {
-      ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeUntil.ump,5,Tracer,".spl_object_hash( $this ).",at_s,name,".$this->name );
+      ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceSingleAttributeUntil.ump,7,Tracer,".spl_object_hash( $this ).",at_s,name,".$this->name );
     }
     $wasSet = true;
     if ($name=="tim")

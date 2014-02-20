@@ -1,3 +1,5 @@
+namespace example;
+
 class Tracer
 {
 	Integer id;

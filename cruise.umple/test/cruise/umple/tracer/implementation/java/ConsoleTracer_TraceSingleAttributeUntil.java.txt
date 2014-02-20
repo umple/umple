@@ -1,7 +1,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.17.0.2716 modeling language!*/
 
-
+package example;
 import cruise.util.ConsoleTracer;
 import java.util.Date;
 
@@ -42,7 +42,7 @@ public class Tracer
     id = aId;
     if (traceFlag2)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttributeUntil.ump,6,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttributeUntil.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id );
     }
     wasSet = true;
     if (id>6)
@@ -58,7 +58,7 @@ public class Tracer
     name = aName;
     if (traceFlag1)
     {
-      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttributeUntil.ump,5,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name );
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceSingleAttributeUntil.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name );
     }
     wasSet = true;
     if (name.equals("tim"))
