@@ -120,6 +120,10 @@ class ChoiceRule
   */
   public Position findPosition(int lookfor, ParserDataPackage data)
   {
+    String input = data.getInput();
+	while(lookfor<input.length()-1&&(input.charAt(lookfor)+"").matches("\\s")){
+		++lookfor;
+	}
     Set<Integer> keys = data.getLinenumbers().keySet();
     int offset = 0;
     int linenumber = 0;
@@ -128,7 +132,7 @@ class ChoiceRule
     int previous = 0;
     for(Integer key:keys)
     {
-      if(key>=lookfor)
+      if(key>lookfor)
       {
         offset = lookfor-previous;
         linenumber = data.getLinenumbers().get(key);        
