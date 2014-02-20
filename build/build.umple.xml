@@ -185,15 +185,15 @@
       <src path="${project.path}/src-gen-jet"/>
       <src path="${project.path}/src-gen-umple"/>
       <src path="${project.path}/test"/>
-      <src path="${validator.project.path}/src-gen-umple"/>
-      <src path="${validator.project.path}/test"/>
+      <src path="cruise.umple.validator/src-gen-umple"/>
+      <src path="cruise.umple.validator/test"/>
       <src path="${jopt-simple.project.path}/src/main/java"/>
       <exclude name="**/.svn"/>
       <exclude name="**/*.ump" />
       <classpath refid="project.classpath"/>
       <classpath refid="validator.project.classpath"/>
     </javac>
-    <copy todir="${validator.project.path}/bin" overwrite="true">
+    <copy todir="cruise.umple.validator/bin" overwrite="true">
 	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
 	<fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
     </copy>
@@ -272,7 +272,7 @@
 
     <!-- The validator jar-->
     <echo message="Package: Umple validator jar used in Umple " />
-    <jar destfile="dist/umplevalidator.jar" basedir="${validator.project.path}/bin" includes="cruise/umple/** cruise/umple/validator** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
+    <jar destfile="dist/umplevalidator.jar" basedir="cruise.umple.validator/bin" includes="cruise/umple/** cruise/umple/validator** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
