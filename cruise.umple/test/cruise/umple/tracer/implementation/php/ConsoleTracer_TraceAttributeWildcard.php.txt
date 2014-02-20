@@ -1,0 +1,83 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private $x;
+  private $y;
+  private $z;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aX, $aY, $aZ)
+  {
+    $this->x = $aX;
+    $this->y = $aY;
+    $this->z = $aZ;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setX($aX)
+  {
+    $wasSet = false;
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceAttributeWilcard.ump,8,Tracer,".spl_object_hash( $this ).",at_s,x,".$this->x.",".(""+$aX)null );
+    $this->x = $aX;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setY($aY)
+  {
+    $wasSet = false;
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceAttributeWilcard.ump,8,Tracer,".spl_object_hash( $this ).",at_s,y,".$this->y.",".(""+$aY)null );
+    $this->y = $aY;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setZ($aZ)
+  {
+    $wasSet = false;
+    ConsoleTracer::handle( gettimeofday(true).",".uniqid().",ConsoleTracer_TraceAttributeWilcard.ump,8,Tracer,".spl_object_hash( $this ).",at_s,z,".$this->z.",".(""+$aZ)null );
+    $this->z = $aZ;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getX()
+  {
+    return $this->x;
+  }
+
+  public function getY()
+  {
+    return $this->y;
+  }
+
+  public function getZ()
+  {
+    return $this->z;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

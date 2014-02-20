@@ -42,6 +42,12 @@ public class TracerTest extends TracerTemplateTest
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceSingleAttribute.ump",languagePath + "/ConsoleTracer_TraceSingleAttribute."+ languagePath +".txt","Tracer");
 	}
+	
+	@Test 
+	public void ConsoleTracer_TraceAttributeWildcard()
+	{
+		assertUmpleTemplateFor("ConsoleTracer_TraceAttributeWilcard.ump",languagePath + "/ConsoleTracer_TraceAttributeWildcard."+ languagePath +".txt","Tracer");
+	}
 	  
 	@Test
 	public void ConsoleTracer_SingleAttributeWhereCondition()

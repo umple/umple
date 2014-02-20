@@ -240,8 +240,8 @@ private void analyzeTraceToken(Token token, int analysisStep)
   }
 
   // Analyze Trace Item Token whether trace item is an attribute or a method ... etc
-  private void analyzeTraceItem( Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, AttributeTraceItem traceAttr)
-  {
+     
+  private void analyzeTraceItem(Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, AttributeTraceItem traceAttr){
     UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
     attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
     String methodName = traceToken.getValue("trace_entity");
@@ -303,6 +303,49 @@ private void analyzeTraceToken(Token token, int analysisStep)
       {
         traceAttr.setTraceSet(true);
       }
+  	System.out.println("[single]trace attr=\n"+traceAttr.getAttribute(0));
+
+    }
+    else if( traceToken.getValue("trace_entity").equals("*attribute") )
+    {
+    	// trace all attribute [wildcard]
+    	
+    	UmpleClass uClass = traceDirective.getUmpleClass();
+    	
+    	for( int i = 0 ; i < uClass.numberOfAttributes() ; ++i )
+    	{
+    		attr = uClass.getAttribute(i);
+    		traceAttr.setPosition(traceToken.getPosition());
+    		traceAttr.addUmpleVariable(attr);
+
+    		boolean wasSet = false;
+
+    		for(Token sub: traceToken.getParentToken().getSubTokens())
+    		{
+
+    			if(sub.is("traceOptions"))
+    			{
+    				traceAttr.setTraceSet(false);
+    				for(Token sub2: sub.getSubTokens())
+    				{
+    					if( "get".equals(sub2.getValue("option")) )
+    					{
+    						wasSet = true;
+    						traceAttr.setTraceGet(true);
+    					}
+    					if( "set".equals(sub2.getValue("option")) )
+    					{
+    						wasSet = true;
+    						traceAttr.setTraceSet(true);
+    					}
+    				}
+    			}
+    		}
+    		if(!wasSet)
+    		{
+    			traceAttr.setTraceSet(true);
+    		}
+    	}
     }
   }
   

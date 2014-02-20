@@ -11,9 +11,6 @@ package cruise.umple.compiler;
 
 import java.io.File;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.*;
 
 import cruise.umple.util.SampleFileWriter;
@@ -1711,6 +1708,12 @@ public class UmpleParserTracerTest
   
   //===================================
   
+  @Test
+  public void traceAttributesWildcard()
+  {
+	  assertParse("310_traceAttributesWildCard.ump","[classDefinition][name:Tracer][attribute][name:x][attribute][name:y][attribute][name:z][trace][trace_entity:*attribute]");
+  }
+	
   @Test @Ignore
   public void X()
   {
@@ -1732,7 +1735,9 @@ public class UmpleParserTracerTest
   
   private void assertParse(String filename, String expectedOutput, boolean expected)
   {
+	  
     String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+    
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
     parser = UmpleParserFactory.create(umpleParserName,model,true);
