@@ -140,7 +140,7 @@
     actionLengths.toString().substring(1)):"";
   
 %><%= umpleSourceFile %>
-  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if(sm.isQueued() && e.getIsInternal() == false) {append(stringBuffer,"_");}}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
+  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false) || (sm.isPooled() && e.getIsInternal() == false)) {append(stringBuffer,"_");}}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
   {<% if (customEventPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPrefixCode, "    ")); } %>
     boolean wasEventProcessed = false;
     <%= eventOutput %><% if (customEventPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPostfixCode, "    ")); } %>

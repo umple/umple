@@ -1,9 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
+import java.util.*;
+import java.lang.Thread;
 
-public class Course
+public class Course implements Runnable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -15,6 +17,16 @@ public class Course
   //Course State Machines
   enum Status { Open, Full }
   private Status status;
+  
+  //enumeration type of messages accepted by Course
+  enum MessageType { register_M, reject_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  // A list of message types for each state of the Course
+  List<MessageType> state1MsgTypeList= Arrays.asList(MessageType.register_M);
+  List<MessageType> state2MsgTypeList= Arrays.asList(MessageType.reject_M);
 
   //------------------------
   // CONSTRUCTOR
@@ -23,6 +35,10 @@ public class Course
   public Course()
   {
     setStatus(Status.Open);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of Course
+    removal.start();
   }
 
   //------------------------
@@ -40,7 +56,7 @@ public class Course
     return status;
   }
 
-  public boolean register()
+  public boolean _register()
   {
     boolean wasEventProcessed = false;
     
@@ -58,7 +74,7 @@ public class Course
     return wasEventProcessed;
   }
 
-  public boolean reject()
+  public boolean _reject()
   {
     boolean wasEventProcessed = false;
     
@@ -84,4 +100,117 @@ public class Course
   public void delete()
   {}
 
+  // A method to return a list of message types for each state of the Coursestate machine
+  public List<MessageType> getStateMsgTypeList(Status state){
+    List<MessageType> msg = null;
+    switch (state)
+    {
+      case Open:
+        msg=state1MsgTypeList;
+        break;
+      case Full:
+        msg=state2MsgTypeList;
+        break;
+      default:
+    }
+    return msg;
+  }
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      List<MessageType> processableMessages;
+      // return a list of message types for the current state
+      processableMessages = getStateMsgTypeList(getSm());
+      Message message=null;
+
+      try {
+        message=getNextProcessableMessage(processableMessages);
+        while (message==null)
+        {
+          wait();
+          message=getNextProcessableMessage(processableMessages);
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); }
+
+      // return the message
+      return (message);
+    }
+
+    public Message getNextProcessableMessage(List<MessageType> processableMessages)
+    {
+      // Iterate through messages and remove the first message that matches one of the processableMessages list
+      // otherwise return null
+      for (Message msg: messages){
+        if(processableMessages.contains(msg.type)){
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+      }
+      return null;
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void register ()
+  {
+    pool.put(new Message(MessageType.register_M, null));
+  }
+
+  public void reject ()
+  {
+    pool.put(new Message(MessageType.reject_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case register_M:
+          status = _register();
+          break;
+        case reject_M:
+          status = _reject();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
 }

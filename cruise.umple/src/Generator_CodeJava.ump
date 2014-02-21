@@ -282,6 +282,37 @@ class JavaGenerator
       }
       return allEnums;
     }
+    
+    else if ("listMessageTypesStates".equals(keyName))
+    {
+      String allEnums = "";
+      int i=0;
+      for(State state : sm.getStates())
+      {
+        i++;
+        if (allEnums.length() > 0)
+        {
+          allEnums += "\n  ";
+        }
+        allEnums+="List<MessageType> state";
+        allEnums+=i;
+        allEnums +="MsgTypeList= Arrays.asList(";
+        String allEventEnums = "";
+        for (Transition t : state.getTransitions())
+        {
+          if (allEventEnums.length() > 0)
+          {
+            allEventEnums += ", ";
+          }
+          allEventEnums += "MessageType.";
+          allEventEnums += t.getEvent().getName();
+          allEventEnums += "_M";
+        }
+        allEnums += allEventEnums;
+        allEnums += ");";
+      }
+      return allEnums;
+    } 
         
     return "UNKNOWN ID: " + keyName;
   }
@@ -1252,7 +1283,7 @@ class JavaGenerator
 
     for (StateMachine sm : aClass.getStateMachines())
     {
-      if (sm.isQueued())
+      if (sm.isQueued() || sm.isPooled())
       {
         genClass.addMultiLookup("import", "java.util.*");
         genClass.addMultiLookup("import", "java.lang.Thread");

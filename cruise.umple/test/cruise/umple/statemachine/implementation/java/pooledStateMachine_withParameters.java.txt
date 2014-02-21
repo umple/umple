@@ -1,0 +1,298 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import java.util.*;
+import java.lang.Thread;
+
+public class LightFixture implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture Attributes
+  private int brightness;
+
+  //LightFixture State Machines
+  enum Bulb { Off, Dimmed, On }
+  private Bulb bulb;
+  
+  //enumeration type of messages accepted by LightFixture
+  enum MessageType { turnDimmer_M, flipSwitch_M, entry_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  // A list of message types for each state of the LightFixture
+  List<MessageType> state1MsgTypeList= Arrays.asList(MessageType.turnDimmer_M, MessageType.flipSwitch_M);
+  List<MessageType> state2MsgTypeList= Arrays.asList(MessageType.entry_M, MessageType.flipSwitch_M, MessageType.turnDimmer_M);
+  List<MessageType> state3MsgTypeList= Arrays.asList(MessageType.flipSwitch_M, MessageType.turnDimmer_M);
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public LightFixture()
+  {
+    brightness = 0;
+    setBulb(Bulb.Off);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of LightFixture
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setBrightness(int aBrightness)
+  {
+    boolean wasSet = false;
+    brightness = aBrightness;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getBrightness()
+  {
+    return brightness;
+  }
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  @umplesourcefile(line={8,14,18}, file={"pooledStateMachine_withParameters.ump","pooledStateMachine_withParameters.ump","pooledStateMachine_withParameters.ump"}, javaline={87,93,99}, length={1,1,1})
+  public boolean _turnDimmer(Integer lightval)
+  {
+    boolean wasEventProcessed = false;
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
+    {
+      case Off:
+        setBrightness(lightval)
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+      case Dimmed:
+        setBrightness(lightval)
+        setBulb(Bulb.Dimmed);
+        wasEventProcessed = true;
+        break;
+      case On:
+        setBrightness(lightval)
+        setBulb(Bulb.Dimmed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _flipSwitch()
+  {
+    boolean wasEventProcessed = false;
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
+    {
+      case Off:
+        setBulb(Bulb.Dimmed);
+        wasEventProcessed = true;
+        break;
+      case Dimmed:
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+      case On:
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={12}, file={"pooledStateMachine_withParameters.ump"}, javaline={145}, length={1})
+  public boolean _entry()
+  {
+    boolean wasEventProcessed = false;
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
+    {
+      case Dimmed:
+        if (dimmer>99)
+        {
+          setBulb(Bulb.On);
+          wasEventProcessed = true;
+          break;
+        }
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+  }
+
+  public void delete()
+  {}
+
+  // A method to return a list of message types for each state of the LightFixturestate machine
+  public List<MessageType> getStateMsgTypeList(Bulb state){
+    List<MessageType> msg = null;
+    switch (state)
+    {
+      case Off:
+        msg=state1MsgTypeList;
+        break;
+      case Dimmed:
+        msg=state2MsgTypeList;
+        break;
+      case On:
+        msg=state3MsgTypeList;
+        break;
+      default:
+    }
+    return msg;
+  }
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      List<MessageType> processableMessages;
+      // return a list of message types for the current state
+      processableMessages = getStateMsgTypeList(getSm());
+      Message message=null;
+
+      try {
+        message=getNextProcessableMessage(processableMessages);
+        while (message==null)
+        {
+          wait();
+          message=getNextProcessableMessage(processableMessages);
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); }
+
+      // return the message
+      return (message);
+    }
+
+    public Message getNextProcessableMessage(List<MessageType> processableMessages)
+    {
+      // Iterate through messages and remove the first message that matches one of the processableMessages list
+      // otherwise return null
+      for (Message msg: messages){
+        if(processableMessages.contains(msg.type)){
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+      }
+      return null;
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void turnDimmer (Integer lightval)
+  {
+    Vector v = new Vector(1);
+    v.add(0, lightval);
+    pool.put(new Message(MessageType.turnDimmer_M, v));
+  }
+
+  public void flipSwitch ()
+  {
+    pool.put(new Message(MessageType.flipSwitch_M, null));
+  }
+
+  public void entry ()
+  {
+    pool.put(new Message(MessageType.entry_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case turnDimmer_M:
+          status = _turnDimmer((Integer) m.param.elementAt(0));
+          break;
+        case flipSwitch_M:
+          status = _flipSwitch();
+          break;
+        case entry_M:
+          status = _entry();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "brightness" + ":" + getBrightness()+ "]"
+     + outputString;
+  }
+}

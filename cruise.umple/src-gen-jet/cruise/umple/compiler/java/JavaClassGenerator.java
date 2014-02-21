@@ -2116,15 +2116,16 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_2096 = NL + "      ";
   protected final String TEXT_2097 = ".get(0).";
   protected final String TEXT_2098 = "(null);" + NL + "    }";
-  protected final String TEXT_2099 = NL + "  private class Message" + NL + "  {" + NL + "    MessageType type;" + NL + "    " + NL + "    //Message parameters" + NL + "    Vector<Object> param;" + NL + "    " + NL + "    public Message(MessageType t, Vector<Object> p)" + NL + "    {" + NL + "      type = t; " + NL + "      param = p;" + NL + "    }" + NL + "  }" + NL + "  " + NL + "  protected class MessagePool {" + NL + "    Queue<Message> messages = new LinkedList<Message>();" + NL + "    " + NL + "    public synchronized void put(Message m)" + NL + "    {" + NL + "      messages.add(m); " + NL + "      notify();" + NL + "    }" + NL + "" + NL + "    public synchronized Message getNext()" + NL + "    {" + NL + "      try {" + NL + "        while (messages.isEmpty()) " + NL + "        {" + NL + "          wait();" + NL + "        }" + NL + "      } catch (InterruptedException e) { e.printStackTrace(); } " + NL + "" + NL + "      //The element to be removed" + NL + "      Message m = messages.remove(); " + NL + "      return (m);" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2100 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
-  protected final String TEXT_2101 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2102 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";";
-  protected final String TEXT_2103 = NL + "  }";
-  protected final String TEXT_2104 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_2105 = NL + "  ";
-  protected final String TEXT_2106 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      translate(e);" + NL + "      if(e.getCause()!=null)" + NL + "      {" + NL + "        translate(e.getCause());" + NL + "      }" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "    public void translate(Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int[] methodlength = (int[])anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] javaline = (int[])anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] line = (int[])anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  String[] file = (String[])anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  for(int i=0;i<file.length;i++)" + NL + "                  {" + NL + "                    int distanceFromStart = element.getLineNumber()-javaline[i]-((\"main\".equals(methodName))?2:0);" + NL + "                    if(file[i] == \"\")" + NL + "                    {" + NL + "                      break;" + NL + "                    }" + NL + "                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])" + NL + "                    {" + NL + "                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));" + NL + "                      methodFound = true;" + NL + "                      break;" + NL + "                    }" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2107 = NL + "}";
+  protected final String TEXT_2099 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
+  protected final String TEXT_2100 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2101 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
+  protected final String TEXT_2102 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2103 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";";
+  protected final String TEXT_2104 = NL + "  }";
+  protected final String TEXT_2105 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_2106 = NL + "  ";
+  protected final String TEXT_2107 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      translate(e);" + NL + "      if(e.getCause()!=null)" + NL + "      {" + NL + "        translate(e.getCause());" + NL + "      }" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "    public void translate(Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int[] methodlength = (int[])anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] javaline = (int[])anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] line = (int[])anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  String[] file = (String[])anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  for(int i=0;i<file.length;i++)" + NL + "                  {" + NL + "                    int distanceFromStart = element.getLineNumber()-javaline[i]-((\"main\".equals(methodName))?2:0);" + NL + "                    if(file[i] == \"\")" + NL + "                    {" + NL + "                      break;" + NL + "                    }" + NL + "                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])" + NL + "                    {" + NL + "                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));" + NL + "                      methodFound = true;" + NL + "                      break;" + NL + "                    }" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2108 = NL + "}";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -2205,7 +2206,7 @@ public class JavaClassGenerator implements ILang
 
 for (StateMachine smq : uClass.getStateMachines())
   {
-    if (smq.isQueued())
+    if (smq.isQueued() || smq.isPooled())
     {
       append(stringBuffer," implements Runnable");
     }
@@ -2418,7 +2419,7 @@ for (StateMachine smq : uClass.getStateMachines())
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
     }
 
-    if (sm.isQueued())
+    if (sm.isQueued() || sm.isPooled())
     {
       boolean nestedSMhasEvent=false;
       append(stringBuffer,"\n  ");
@@ -2453,7 +2454,13 @@ for (StateMachine smq : uClass.getStateMachines())
       }
       append(stringBuffer,"\n  ");
       append(stringBuffer,"\n  MessagePool pool;");
-      append(stringBuffer,"\n  Thread removal;");      
+      append(stringBuffer,"\n  Thread removal;");
+            
+    }
+    if (sm.isPooled()){
+      append(stringBuffer,"\n");
+      append(stringBuffer,"\n  // A list of message types for each state of the {0}", uClass.getName());
+      append(stringBuffer,"\n  {0}",gen.translate("listMessageTypesStates",sm));
     }
   }
 }
@@ -3177,7 +3184,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     for (StateMachine smq : uClass.getStateMachines())
     {
-      if (smq.isQueued())
+      if (smq.isQueued() || smq.isPooled())
       {
         append(stringBuffer,"\n    pool = new MessagePool();");
         append(stringBuffer,"\n    removal=new Thread(this);");
@@ -4556,7 +4563,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_428);
     stringBuffer.append( scope );
     stringBuffer.append(TEXT_429);
-    for (StateMachine sm : uClass.getStateMachines()){if(sm.isQueued() && e.getIsInternal() == false) {append(stringBuffer,"_");}}
+    for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false) || (sm.isPooled() && e.getIsInternal() == false)) {append(stringBuffer,"_");}}
     stringBuffer.append(gen.translate("eventMethod",e));
     stringBuffer.append(TEXT_430);
     stringBuffer.append( (e.getArgs()==null?"":e.getArgs()));
@@ -9353,9 +9360,114 @@ if (p != null) {
 
      for (StateMachine smq : uClass.getStateMachines())
      {
-       if (smq.isQueued())
+       if (smq.isPooled())
        {
-    stringBuffer.append(TEXT_2099);
+    
+  append(stringBuffer,"\n  // A method to return a list of message types for each state of the {0}", uClass.getName()); 
+  append(stringBuffer,"state machine");
+  append(stringBuffer,"\n  public List<MessageType> getStateMsgTypeList({0}", gen.translate("type",smq));
+  append(stringBuffer," state){");
+  append(stringBuffer,"\n    List<MessageType> msg = null;");
+  append(stringBuffer,"\n    switch (state)");
+  append(stringBuffer,"\n    {");
+
+  int countNumberOfStates=0;
+  
+  for(State state : smq.getStates()){
+    String stateNumber="";
+    countNumberOfStates++;
+    append(stringBuffer,"\n      case {0}",gen.translate("stateOne",state));
+    append(stringBuffer,":");
+    append(stringBuffer,"\n        msg=state");
+    stateNumber+=countNumberOfStates;
+    append(stringBuffer,stateNumber);
+    append(stringBuffer,"MsgTypeList;");
+    append(stringBuffer,"\n        break;");
+  }
+
+  append(stringBuffer,"\n      default:");
+  append(stringBuffer,"\n    }");
+  append(stringBuffer,"\n    return msg;");
+  append(stringBuffer,"\n  }");
+  append(stringBuffer,"\n");
+
+    
+  appendln(stringBuffer,"\n  private class Message");
+  appendln(stringBuffer,"  {");
+  appendln(stringBuffer,"    MessageType type;"); 
+  appendln(stringBuffer,"    ");  
+  appendln(stringBuffer,"    //Message parameters");
+  appendln(stringBuffer,"    Vector<Object> param;"); 
+  appendln(stringBuffer,"    ");   
+  appendln(stringBuffer,"    public Message(MessageType t, Vector<Object> p)");
+  appendln(stringBuffer,"    {");
+  appendln(stringBuffer,"      type = t; "); 
+  appendln(stringBuffer,"      param = p;");
+  appendln(stringBuffer,"    }");
+  appendln(stringBuffer,"  }");
+  appendln(stringBuffer,"  ");  
+  appendln(stringBuffer,"  protected class MessagePool {");
+  appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+  appendln(stringBuffer,"    ");   
+  appendln(stringBuffer,"    public synchronized void put(Message m)");
+  appendln(stringBuffer,"    {");
+  appendln(stringBuffer,"      messages.add(m); "); 
+  appendln(stringBuffer,"      notify();");
+  appendln(stringBuffer,"    }");
+  appendln(stringBuffer,"");   
+  if (smq.isQueued()){
+    appendln(stringBuffer,"    public synchronized Message getNext()");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      try {");
+    appendln(stringBuffer,"        while (messages.isEmpty()) "); 
+    appendln(stringBuffer,"        {");
+    appendln(stringBuffer,"          wait();");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      } catch (InterruptedException e) { e.printStackTrace(); } "); 
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      //The element to be removed");
+    appendln(stringBuffer,"      Message m = messages.remove(); "); 
+    appendln(stringBuffer,"      return (m);");
+    appendln(stringBuffer,"    }");
+    append(stringBuffer,"  }");  
+  }
+  else if(smq.isPooled()){
+    appendln(stringBuffer,"    public synchronized Message getNext()");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      List<MessageType> processableMessages;");
+    appendln(stringBuffer,"      // return a list of message types for the current state");
+    appendln(stringBuffer,"      processableMessages = getStateMsgTypeList(getSm());");
+    appendln(stringBuffer,"      Message message=null;");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      try {");
+    appendln(stringBuffer,"        message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"        while (message==null)");
+    appendln(stringBuffer,"        {");
+    appendln(stringBuffer,"          wait();");
+    appendln(stringBuffer,"          message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      } catch (InterruptedException e) { e.printStackTrace(); }");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      // return the message");
+    appendln(stringBuffer,"      return (message);");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"    public Message getNextProcessableMessage(List<MessageType> processableMessages)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      // Iterate through messages and remove the first message that matches one of the processableMessages list");
+    appendln(stringBuffer,"      // otherwise return null");
+    appendln(stringBuffer,"      for (Message msg: messages){");
+    appendln(stringBuffer,"        if(processableMessages.contains(msg.type)){");
+    appendln(stringBuffer,"          //The element to be removed");
+    appendln(stringBuffer,"          messages.remove(msg);");
+    appendln(stringBuffer,"          return (msg);");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      }");
+    appendln(stringBuffer,"      return null;");
+    appendln(stringBuffer,"    }");
+    append(stringBuffer,"  }"); 
+  }
+
     
   append(stringBuffer,"\n");
   append(stringBuffer,"\n  //------------------------------");
@@ -9365,7 +9477,7 @@ if (p != null) {
   
   for (StateMachine sm : uClass.getStateMachines())
   {
-    if(sm.isQueued()) { 
+    if(sm.isQueued() || sm.isPooled()) { 
       for(Event event : sm.getEvents())
       { 
         append(stringBuffer,"\n");
@@ -9444,7 +9556,7 @@ if (p != null) {
     }
   }
 
-    stringBuffer.append(TEXT_2100);
+    stringBuffer.append(TEXT_2099);
      for(Event event : smq.getEvents())
            {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
@@ -9521,7 +9633,253 @@ if (p != null) {
                }
              }
            
+    stringBuffer.append(TEXT_2100);
+    }
+       if (smq.isQueued())
+       {
+    
+  appendln(stringBuffer,"\n  private class Message");
+  appendln(stringBuffer,"  {");
+  appendln(stringBuffer,"    MessageType type;"); 
+  appendln(stringBuffer,"    ");  
+  appendln(stringBuffer,"    //Message parameters");
+  appendln(stringBuffer,"    Vector<Object> param;"); 
+  appendln(stringBuffer,"    ");   
+  appendln(stringBuffer,"    public Message(MessageType t, Vector<Object> p)");
+  appendln(stringBuffer,"    {");
+  appendln(stringBuffer,"      type = t; "); 
+  appendln(stringBuffer,"      param = p;");
+  appendln(stringBuffer,"    }");
+  appendln(stringBuffer,"  }");
+  appendln(stringBuffer,"  ");  
+  appendln(stringBuffer,"  protected class MessagePool {");
+  appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+  appendln(stringBuffer,"    ");   
+  appendln(stringBuffer,"    public synchronized void put(Message m)");
+  appendln(stringBuffer,"    {");
+  appendln(stringBuffer,"      messages.add(m); "); 
+  appendln(stringBuffer,"      notify();");
+  appendln(stringBuffer,"    }");
+  appendln(stringBuffer,"");   
+  if (smq.isQueued()){
+    appendln(stringBuffer,"    public synchronized Message getNext()");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      try {");
+    appendln(stringBuffer,"        while (messages.isEmpty()) "); 
+    appendln(stringBuffer,"        {");
+    appendln(stringBuffer,"          wait();");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      } catch (InterruptedException e) { e.printStackTrace(); } "); 
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      //The element to be removed");
+    appendln(stringBuffer,"      Message m = messages.remove(); "); 
+    appendln(stringBuffer,"      return (m);");
+    appendln(stringBuffer,"    }");
+    append(stringBuffer,"  }");  
+  }
+  else if(smq.isPooled()){
+    appendln(stringBuffer,"    public synchronized Message getNext()");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      List<MessageType> processableMessages;");
+    appendln(stringBuffer,"      // return a list of message types for the current state");
+    appendln(stringBuffer,"      processableMessages = getStateMsgTypeList(getSm());");
+    appendln(stringBuffer,"      Message message=null;");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      try {");
+    appendln(stringBuffer,"        message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"        while (message==null)");
+    appendln(stringBuffer,"        {");
+    appendln(stringBuffer,"          wait();");
+    appendln(stringBuffer,"          message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      } catch (InterruptedException e) { e.printStackTrace(); }");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      // return the message");
+    appendln(stringBuffer,"      return (message);");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"    public Message getNextProcessableMessage(List<MessageType> processableMessages)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      // Iterate through messages and remove the first message that matches one of the processableMessages list");
+    appendln(stringBuffer,"      // otherwise return null");
+    appendln(stringBuffer,"      for (Message msg: messages){");
+    appendln(stringBuffer,"        if(processableMessages.contains(msg.type)){");
+    appendln(stringBuffer,"          //The element to be removed");
+    appendln(stringBuffer,"          messages.remove(msg);");
+    appendln(stringBuffer,"          return (msg);");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      }");
+    appendln(stringBuffer,"      return null;");
+    appendln(stringBuffer,"    }");
+    append(stringBuffer,"  }"); 
+  }
+
+    
+  append(stringBuffer,"\n");
+  append(stringBuffer,"\n  //------------------------------");
+  append(stringBuffer,"\n  //messages accepted ");
+  append(stringBuffer,"\n  //------------------------------");
+  append(stringBuffer,"\n");
+  
+  for (StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isQueued() || sm.isPooled()) { 
+      for(Event event : sm.getEvents())
+      { 
+        append(stringBuffer,"\n");
+        append(stringBuffer,"  public void ");
+        append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
+        append(stringBuffer,"\n  {");
+        
+        if (!event.getArgs().equals(""))
+        {
+          append(stringBuffer,"\n    Vector v = new Vector({0});", event.getParams().size());
+          for ( int i=0; i < event.getParams().size(); i++)
+          {
+            append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
+          }
+	      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+	      append(stringBuffer,"_M, v));");
+        }
+        else
+        {
+          append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+          append(stringBuffer,"_M, null));");
+        }
+        append(stringBuffer,"\n  }");
+        append(stringBuffer,"\n");
+      }
+      String eveName="";
+      boolean sameEventName=false;
+      List<String> eveList=new ArrayList<String>();
+      for (StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for (Event e : nsm.getEvents())
+        {
+          for(int i=0; i<eveList.size(); i++){
+            if(eveList.get(i)== e.getName())
+              //break;
+              sameEventName=true;
+          }
+          
+          if(sameEventName == false)
+          {
+            if(!(eveName.equals(e.getName())))
+            {
+              if(e.getIsInternal() == false)
+              {
+                eveList.add(e.getName());
+                append(stringBuffer,"\n");
+                append(stringBuffer,"  public void ");
+                append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
+                append(stringBuffer,"\n  {");
+        
+                if (!e.getArgs().equals(""))
+                {
+                  append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
+                  for ( int i=0; i < e.getParams().size(); i++)
+                  {
+                    append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
+                  }
+                  append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+	              append(stringBuffer,"_M, v));");
+	              eveName=e.getName(); 
+                }
+                else
+                {
+                  append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                  append(stringBuffer,"_M, null));");
+                  eveName=e.getName();
+                }
+                append(stringBuffer,"\n  }");
+                append(stringBuffer,"\n");
+              }
+            }
+          }
+          sameEventName=false;
+        }
+      }
+    }
+  }
+
     stringBuffer.append(TEXT_2101);
+     for(Event event : smq.getEvents())
+           {
+             append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
+             append(stringBuffer,"_M:");
+             if (!event.getArgs().equals(""))
+             {
+               append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",event));
+               String allParameters="";
+               for ( int i=0; i < event.getParams().size(); i++)
+               {
+                 if (allParameters.length() > 0)
+                 {
+                   allParameters += ", ";
+                 }
+                 allParameters += "("+event.getParam(i).getType()+") m.param.elementAt("+i+")";
+               }
+               append(stringBuffer,"{0});",allParameters);
+             }
+             else
+             {
+               append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
+               append(stringBuffer,"();");
+             }
+             append(stringBuffer,"\n          break;");
+             }
+             String eveName="";
+             boolean sameEventName=false;
+             List<String> eveList=new ArrayList<String>();
+             for (StateMachine nsm : smq.getNestedStateMachines())
+             {
+               for (Event e : nsm.getEvents())
+               {
+                 for(int i=0; i<eveList.size(); i++){
+                   if(eveList.get(i)== e.getName()){
+                     sameEventName=true;
+                   }
+                 }
+          
+                 if(sameEventName == false)
+                 {
+          		   if(!(eveName.equals(e.getName())))
+                   {
+                     if(e.getIsInternal() == false)
+                     {
+                       eveList.add(e.getName());
+                       append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",e));
+                       append(stringBuffer,"_M:");
+                       if (!e.getArgs().equals(""))
+                       {
+                         append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",e));
+                         String allParameters="";
+                         for ( int i=0; i < e.getParams().size(); i++)
+                         {
+                           if (allParameters.length() > 0)
+                           {
+                             allParameters += ", ";
+                           }
+                           allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
+                         }
+                         append(stringBuffer,"{0});",allParameters);
+                         eveName=e.getName();
+                       }
+                       else
+                       {
+                         append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",e));
+                         append(stringBuffer,"();");
+                         eveName=e.getName();
+                       }
+                       append(stringBuffer,"\n          break;");
+                     }
+                   }
+                 }
+                 sameEventName=false;
+               }
+             }
+           
+    stringBuffer.append(TEXT_2102);
     }
      }
     return stringBuffer.toString();
@@ -9700,7 +10058,7 @@ if (p != null) {
      }
    }
    if (uClass.getAttributes().size()>0 && !matchFound){ 
-    stringBuffer.append(TEXT_2102);
+    stringBuffer.append(TEXT_2103);
     
 	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
 	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
@@ -9788,7 +10146,7 @@ if (p != null) {
 	  ret += "\n     + outputString";
 	  append(stringBuffer,"\n    return {0};", ret);
 	  
-    stringBuffer.append(TEXT_2103);
+    stringBuffer.append(TEXT_2104);
      } 
     return stringBuffer.toString();
     } 
@@ -9797,7 +10155,7 @@ if (p != null) {
      
   boolean isMainClass = false;
   if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_2104);
+    stringBuffer.append(TEXT_2105);
     
   java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0-9]*) (.*)");
   java.util.regex.Pattern methodNamePattern = java.util.regex.Pattern.compile("[ |\\t]*(public|private|protected)[ |\\t]+(.*)[(](.*)[)].*");
@@ -9895,12 +10253,12 @@ if (p != null) {
   }
   
     stringBuffer.append(extraCode);
-    stringBuffer.append(TEXT_2105);
+    stringBuffer.append(TEXT_2106);
      } 
     if(uClass.getHasMainMethod()||isMainClass){
-    stringBuffer.append(TEXT_2106);
-    }
     stringBuffer.append(TEXT_2107);
+    }
+    stringBuffer.append(TEXT_2108);
     
   return stringBuffer.toString();
 }

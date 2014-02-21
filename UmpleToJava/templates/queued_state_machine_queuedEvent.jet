@@ -8,7 +8,7 @@
   
   for (StateMachine sm : uClass.getStateMachines())
   {
-    if(sm.isQueued()) { 
+    if(sm.isQueued() || sm.isPooled()) { 
       for(Event event : sm.getEvents())
       { 
         append(stringBuffer,"\n");
