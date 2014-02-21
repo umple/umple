@@ -16,9 +16,9 @@
 
 	 <echo>Building Eclipse Plugin</echo>
         <ant antfile="build/build.eclipseplugin.xml" target="build" inheritAll="false" />
-
+<!--
       <echo>Building Umplificator Eclipse Plugin</echo>
-        <ant antfile="build/build.umplificatorplugin.xml" target="build" inheritAll="false" />
+        <ant antfile="build/build.umplificatorplugin.xml" target="build" inheritAll="false" />--> 
 	
 	     <!-- <echo>Building Eclipse Plugin with XText Code Editor</echo>
         <ant antfile="build/build.eclipsextextplugin.xml" target="build" inheritAll="false" /> --> 
