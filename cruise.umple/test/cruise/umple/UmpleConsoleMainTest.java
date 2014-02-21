@@ -31,6 +31,8 @@ public class UmpleConsoleMainTest
   {
     SampleFileWriter.destroy("myfile.ump");
     SampleFileWriter.destroy("myfile.cmd");
+    SampleFileWriter.destroy("testclass1.ump");
+    SampleFileWriter.destroy("testclass2.ump");
     SampleFileWriter.destroy("test_package");
     SampleFileWriter.destroy("testclass.ecore");
   }
