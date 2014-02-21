@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="UmplificatorEclipsePlugin" >
+
+  <import file="_template.xml" />
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+
+  <property name="project.path" value="cruise.umplificator.eclipse"/>
+  <property name="bin.path" value="${project.path}/bin"/>
+  <property name="dist.path" value="dist/cruise.umplificator.eclipse"/>
+
+  <condition property="jvmarg.01" value="-d32"><equals arg1="${is.osx}" arg2="true" /></condition>
+  <condition property="jvmarg.02" value="-XstartOnFirstThread"><equals arg1="${is.osx}" arg2="true" /></condition>
+  <property name="jvmarg.01" value="-Dignore1"/>
+  <property name="jvmarg.02" value="-Dignore2"/>
+
+  <condition property="path.eclipse.01" value="org.eclipse.swt_3.5.2.v3557f.jar"><equals arg1="${is.osx}" arg2="true" /></condition>
+  <condition property="path.eclipse.02" value="org.eclipse.swt.cocoa.macosx_3.5.2.v3557f.jar"><equals arg1="${is.osx}" arg2="true" /></condition>
+  <property name="path.eclipse.01" value="linux/org.eclipse.swt_3.6.2.v3659c.jar"/>
+  <property name="path.eclipse.02" value="linux/org.eclipse.swt.gtk.linux.x86_64_3.6.2.v3659b.jar"/>
+
+
+  <path id="project.classpath">
+    <pathelement location="${bin.path}"/>
+    <pathelement location="cruise.umple/bin"/>
+    <path refid="eclipse.umplificator.classpath"/>
+    <path refid="umple.classpath"/>
+    <path refid="junit4.classpath"/>
+  </path>
+  
+  <path id="eclipse.umplificator.classpath">
+    <pathelement location="lib/junit.jar"/>
+    <pathelement location="lib/org.hamcrest.core_1.1.0.v20090501071000.jar"/> 
+    <pathelement location="lib/umplificatorplugins/commons-collections4-4.0.jar"/>
+    <pathelement location="lib/umplificatorplugins/commons-lang-2.5.jar"/> 
+    <pathelement location="lib/umplificatorplugins/commons-logging-1.1.3.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.200.v20130326-1255.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.core.jobs_3.5.300.v20130429-1813.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.apache.log4j_1.2.15.v201012070815.jar" />
+    <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.5.100.v20130422-1538.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar"/>
+	<pathelement location="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
+    <pathelement location="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"/>
+    <pathelement location="lib/eclipseplugins/${path.eclipse.01}" />
+    <pathelement location="lib/eclipseplugins/${path.eclipse.02}" />
+
+    <pathelement location="lib/eclipseplugins/org.eclipse.core.commands_3.5.0.I20090525-2000.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.core.contenttype_3.4.1.R35x_v20090826-0451.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.core.filebuffers_3.5.0.v20090526-2000.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.core.jobs_3.4.100.v20090429-1800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.core.resources_3.5.2.R35x_v20091203-1235.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.core.runtime_3.5.0.v20090525.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.core.runtime.compatibility.registry_3.2.200.v20090429-1800/runtime_registry_compatibility.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.emf.ecore_2.5.0.v200906151043.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.equinox.app_1.2.0.v20090520-1800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.equinox.common_3.5.1.R35x_v20090807-1100.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.equinox.registry_3.4.100.v20090520-1800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.jdt.compiler.apt_1.0.201.R35x_v20090825-1530.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.jdt.compiler.tool_1.0.100.v_972_R35x.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.jface_3.5.2.M20100120-0800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.jface.text_3.5.2.r352_v20091118-0800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.text_3.5.0.v20090513-2000.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.ui_3.5.2.M20100120-0800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.ui.console_3.5.100.v20111007_r372.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.ui.editors_3.5.0.v20090527-2000.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.ui.ide_3.5.2.M20100113-0800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.debug.ui_3.7.102.v20111129-1423_r372.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.debug.core_3.7.1.v20111129-2031.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.jdt.launching_3.6.1.v20111006_r372.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.ui.views_3.4.1.M20090826-0800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench_3.5.2.M20100113-0800.jar" />
+    <pathelement location="lib/eclipseplugins/org.eclipse.ui.workbench.texteditor_3.5.1.r352_v20100105.jar" />
+  </path>  
+
+
+  <target name="clean">
+    <delete dir="cruise.umplificator/bin" failonerror="false" />
+  </target>
+
+  <target name="init">
+    <mkdir dir="cruise.umplificator/bin"/>
+  </target>
+
+  <target name="setVersion">
+    <echo message="Setting Version: ${umple.version}" />
+    <replace file="cruise.umplificator.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: 0.0.1" value="Bundle-Version: ${umple.version}" />
+  </target>
+
+  <target name="resetVersion">
+    <echo message="Resetting To Test Version: ${last.version} -> @UMPLE_VERSION@" />
+    <replace file="cruise.umplificator.eclipse/META-INF/MANIFEST.MF" token="Bundle-Version: ${umple.version}" value="Bundle-Version: 0.0.1" />
+  </target>
+
+  <!-- ```````````````````````````
+    Compile Umple files 
+  ``````````````````````````` -->
+  <target name="umpleSelf">
+     <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="cruise.umplificator/src/Master.ump"/>
+    </java>
+  </target>
+
+
+  <!-- ```````````````````````````
+    Compile the application
+  ``````````````````````````` -->
+
+  <target name="compile">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${bin.path}" source="1.7" target="1.7">
+      <src path="${project.path}/src"/>
+      <src path="cruise.umplificator/src-gen-umple"/>
+      <exclude name="**/.svn"/>
+      <exclude name="**/*.ump" />
+      <exclude name="**/data" />
+      <classpath refid="project.classpath"/>
+    </javac>
+  </target>
+
+  <!-- ```````````````````````````
+    Package the application
+  ``````````````````````````` -->
+
+  <target name="package">
+    <echo message="Package Version: ${umple.version}" />
+
+    <property name="plugin.build.root" location="dist" />
+    <property name="plugin.build.temp" location="${plugin.build.root}/temp" />
+    <property name="plugin.build.out" location="${plugin.build.root}" />
+
+    <delete dir="${plugin.build.temp}" />
+    <mkdir dir="${plugin.build.temp}" />
+    <mkdir dir="${plugin.build.out}" />
+    
+    <copy file="cruise.umplificator.eclipse/META-INF/MANIFEST.MF" todir="${plugin.build.temp}" />
+    <replace file="${plugin.build.temp}/MANIFEST.MF">
+      <replacefilter token=":=" value="=" />
+      <replacefilter token=":" value="=" />
+      <replacetoken>;</replacetoken>
+      <replacevalue>
+      </replacevalue>
+    </replace>  
+
+    <property file="${plugin.build.temp}/MANIFEST.MF" />
+    <property name="plugin.dir" value="cruise.umplificator.eclipse_${umple.version}" />
+    <property name="plugin.files" location="${plugin.build.temp}/files/${plugin.dir}" />
+    <property name="plugin.jar" location="${plugin.build.temp}/jars/plugins/${plugin.dir}.jar" />
+    <property name="product.zip" value="${plugin.build.out}/cruise.umplificator.eclipse_v${umple.version}.zip" />
+
+    <copy todir="${plugin.files}">
+      <fileset dir="cruise.umplificator.eclipse" includes="plugin.xml" />
+      <fileset dir="cruise.umplificator.eclipse/bin" includes="cruise/**" />
+      <fileset dir="cruise.umplificator.eclipse" includes="icons/**" />
+      <fileset dir="cruise.umplificator.eclipse" includes="META-INF/MANIFEST.MF" />
+    </copy>
+
+    <copy todir="${plugin.files}">
+      <fileset dir="cruise.umple/src" includes="*.grammar"/>
+      <fileset dir="cruise.umple/src" includes="*.error"/>
+    </copy>
+    
+
+    <!-- Assemble plug-in jar -->
+    <mkdir dir="${plugin.build.temp}/jars/plugins" />
+    <zip destfile="${plugin.jar}">
+      <zipfileset dir="${plugin.files}">
+        <include name="**/*.*" />
+      </zipfileset>
+    </zip>
+    
+    <!-- Assemble the product zip -->
+    <zip destfile="${product.zip}">
+      <fileset dir="${plugin.build.temp}/jars" />
+    </zip>
+
+    <copy file="${plugin.build.temp}/jars/plugins/${plugin.dir}.jar" tofile="${plugin.build.out}/${plugin.dir}.jar" />
+
+    <!-- Cleanup once you are done -->
+    <delete dir="${plugin.build.temp}" />
+    
+
+  </target>
+
+  <!-- ```````````````````````````
+    Build the application
+  ``````````````````````````` -->
+  
+  <!-- 
+    Build
+    run by the build machine, should work as-is on your machine, but be careful
+    as your code will be run against the "latest" Umpled Umple.
+   -->
+  <target name="build" >
+    <antcall target="clean" />
+    <antcall target="init" />
+    <antcall target="setVersion" />
+    <antcall target="umpleSelf" />
+    <antcall target="compile" />
+    <antcall target="package" />
+    <antcall target="resetVersion" />
+  </target>
+  
+  <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
+  <target name="pre_build" >
+    <antcall target="compile" />
+  </target>
+  
+  
+  
+</project>
+
