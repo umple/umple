@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3250 modeling language!*/
+/*This code was generated using the UMPLE 1.19.0.3537 modeling language!*/
 
 package example;
 import java.util.*;
@@ -29,6 +29,11 @@ public class CourseAttempt implements Runnable
   
   MessagePool pool;
   Thread removal;
+
+  // A list of message types for each state of the CourseAttempt
+  List<MessageType> state1MsgTypeList= Arrays.asList();
+  List<MessageType> state2MsgTypeList= Arrays.asList();
+  List<MessageType> state3MsgTypeList= Arrays.asList();
 
   //------------------------
   // CONSTRUCTOR
@@ -79,7 +84,7 @@ public class CourseAttempt implements Runnable
     return courseAttemptSMFinalExam;
   }
 
-  private boolean __autotransition2__()
+  private boolean __autotransition5__()
   {
     boolean wasEventProcessed = false;
     
@@ -240,12 +245,12 @@ public class CourseAttempt implements Runnable
         if (courseAttemptSMLab1 == CourseAttemptSMLab1.Null) { setCourseAttemptSMLab1(CourseAttemptSMLab1.lab1); }
         if (courseAttemptSMTermProject == CourseAttemptSMTermProject.Null) { setCourseAttemptSMTermProject(CourseAttemptSMTermProject.termProject); }
         if (courseAttemptSMFinalExam == CourseAttemptSMFinalExam.Null) { setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.finalExam); }
-        __autotransition2__();
+        __autotransition5__();
         break;
     }
   }
 
-  @umplesourcefile(line={12}, file={"queuedWithConcurrensStatesCourseAttempt.ump"}, javaline={256}, length={1})
+  @umplesourcefile(line={12}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={261}, length={1})
   private void exitCourseAttemptSMLab1()
   {
     switch(courseAttemptSMLab1)
@@ -262,7 +267,7 @@ public class CourseAttempt implements Runnable
     if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMLab1 != CourseAttemptSMLab1.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
-  @umplesourcefile(line={18}, file={"queuedWithConcurrensStatesCourseAttempt.ump"}, javaline={274}, length={1})
+  @umplesourcefile(line={18}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={279}, length={1})
   private void exitCourseAttemptSMTermProject()
   {
     switch(courseAttemptSMTermProject)
@@ -279,7 +284,7 @@ public class CourseAttempt implements Runnable
     if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMTermProject != CourseAttemptSMTermProject.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
-  @umplesourcefile(line={25}, file={"queuedWithConcurrensStatesCourseAttempt.ump"}, javaline={292}, length={1})
+  @umplesourcefile(line={25}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={297}, length={1})
   private void exitCourseAttemptSMFinalExam()
   {
     switch(courseAttemptSMFinalExam)
@@ -298,6 +303,25 @@ public class CourseAttempt implements Runnable
 
   public void delete()
   {}
+
+  // A method to return a list of message types for each state of the CourseAttemptstate machine
+  public List<MessageType> getStateMsgTypeList(CourseAttemptSM state){
+    List<MessageType> msg = null;
+    switch (state)
+    {
+      case studying:
+        msg=state1MsgTypeList;
+        break;
+      case failed:
+        msg=state2MsgTypeList;
+        break;
+      case passed:
+        msg=state3MsgTypeList;
+        break;
+      default:
+    }
+    return msg;
+  }
 
   private class Message
   {
@@ -324,16 +348,36 @@ public class CourseAttempt implements Runnable
 
     public synchronized Message getNext()
     {
+      List<MessageType> processableMessages;
+      // return a list of message types for the current state
+      processableMessages = getStateMsgTypeList(getSm());
+      Message message=null;
+
       try {
-        while (messages.isEmpty()) 
+        message=getNextProcessableMessage(processableMessages);
+        while (message==null)
         {
           wait();
+          message=getNextProcessableMessage(processableMessages);
         }
-      } catch (InterruptedException e) { e.printStackTrace(); } 
+      } catch (InterruptedException e) { e.printStackTrace(); }
 
-      //The element to be removed
-      Message m = messages.remove(); 
-      return (m);
+      // return the message
+      return (message);
+    }
+
+    public Message getNextProcessableMessage(List<MessageType> processableMessages)
+    {
+      // Iterate through messages and remove the first message that matches one of the processableMessages list
+      // otherwise return null
+      for (Message msg: messages){
+        if(processableMessages.contains(msg.type)){
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+      }
+      return null;
     }
   }
 

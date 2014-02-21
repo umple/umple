@@ -2436,7 +2436,7 @@ for (StateMachine smq : uClass.getStateMachines())
     	}
     	
     	if (nestedSMhasEvent == true){
-    	  append(stringBuffer, "\n  enum MessageType { {0}, {1} }", gen.translate("listEvents",sm), gen.translate("listEventsNSM",sm));
+    	  append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listWithAutoTransitionAndNestedEvents",sm));
     	  nestedSMhasEvent=false;
     	}
     	else
@@ -4563,7 +4563,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_428);
     stringBuffer.append( scope );
     stringBuffer.append(TEXT_429);
-    for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false) || (sm.isPooled() && e.getIsInternal() == false)) {append(stringBuffer,"_");}}
+    for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false)){append(stringBuffer,"_");}}
     stringBuffer.append(gen.translate("eventMethod",e));
     stringBuffer.append(TEXT_430);
     stringBuffer.append( (e.getArgs()==null?"":e.getArgs()));
@@ -9480,6 +9480,8 @@ if (p != null) {
     if(sm.isQueued() || sm.isPooled()) { 
       for(Event event : sm.getEvents())
       { 
+        if(event.isAutoTransition() == false)
+        {
         append(stringBuffer,"\n");
         append(stringBuffer,"  public void ");
         append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
@@ -9503,6 +9505,9 @@ if (p != null) {
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
       }
+      }
+
+
       String eveName="";
       boolean sameEventName=false;
       List<String> eveList=new ArrayList<String>();
@@ -9510,6 +9515,8 @@ if (p != null) {
       {
         for (Event e : nsm.getEvents())
         {
+          if(e.isAutoTransition() == false)
+          {
           for(int i=0; i<eveList.size(); i++){
             if(eveList.get(i)== e.getName())
               //break;
@@ -9552,12 +9559,15 @@ if (p != null) {
           }
           sameEventName=false;
         }
+        }
       }
     }
   }
 
     stringBuffer.append(TEXT_2099);
      for(Event event : smq.getEvents())
+           {
+           if(event.isAutoTransition() == false)
            {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
              append(stringBuffer,"_M:");
@@ -9582,12 +9592,17 @@ if (p != null) {
              }
              append(stringBuffer,"\n          break;");
              }
+             }
+
+
              String eveName="";
              boolean sameEventName=false;
              List<String> eveList=new ArrayList<String>();
              for (StateMachine nsm : smq.getNestedStateMachines())
              {
                for (Event e : nsm.getEvents())
+               {
+               if(e.isAutoTransition() == false)
                {
                  for(int i=0; i<eveList.size(); i++){
                    if(eveList.get(i)== e.getName()){
@@ -9631,10 +9646,11 @@ if (p != null) {
                  }
                  sameEventName=false;
                }
+               }
              }
            
     stringBuffer.append(TEXT_2100);
-    }
+    }       
        if (smq.isQueued())
        {
     
@@ -9726,6 +9742,8 @@ if (p != null) {
     if(sm.isQueued() || sm.isPooled()) { 
       for(Event event : sm.getEvents())
       { 
+        if(event.isAutoTransition() == false)
+        {
         append(stringBuffer,"\n");
         append(stringBuffer,"  public void ");
         append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
@@ -9749,6 +9767,9 @@ if (p != null) {
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
       }
+      }
+
+
       String eveName="";
       boolean sameEventName=false;
       List<String> eveList=new ArrayList<String>();
@@ -9756,6 +9777,8 @@ if (p != null) {
       {
         for (Event e : nsm.getEvents())
         {
+          if(e.isAutoTransition() == false)
+          {
           for(int i=0; i<eveList.size(); i++){
             if(eveList.get(i)== e.getName())
               //break;
@@ -9798,12 +9821,15 @@ if (p != null) {
           }
           sameEventName=false;
         }
+        }
       }
     }
   }
 
     stringBuffer.append(TEXT_2101);
      for(Event event : smq.getEvents())
+           {
+           if(event.isAutoTransition() == false)
            {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
              append(stringBuffer,"_M:");
@@ -9828,12 +9854,17 @@ if (p != null) {
              }
              append(stringBuffer,"\n          break;");
              }
+             }
+
+
              String eveName="";
              boolean sameEventName=false;
              List<String> eveList=new ArrayList<String>();
              for (StateMachine nsm : smq.getNestedStateMachines())
              {
                for (Event e : nsm.getEvents())
+               {
+               if(e.isAutoTransition() == false)
                {
                  for(int i=0; i<eveList.size(); i++){
                    if(eveList.get(i)== e.getName()){
@@ -9876,6 +9907,7 @@ if (p != null) {
                    }
                  }
                  sameEventName=false;
+               }
                }
              }
            

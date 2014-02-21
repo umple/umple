@@ -12,6 +12,8 @@
       {
         <% for(Event event : smq.getEvents())
            {
+           if(event.isAutoTransition() == false)
+           {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
              append(stringBuffer,"_M:");
              if (!event.getArgs().equals(""))
@@ -35,12 +37,17 @@
              }
              append(stringBuffer,"\n          break;");
              }
+             }
+
+
              String eveName="";
              boolean sameEventName=false;
              List<String> eveList=new ArrayList<String>();
              for (StateMachine nsm : smq.getNestedStateMachines())
              {
                for (Event e : nsm.getEvents())
+               {
+               if(e.isAutoTransition() == false)
                {
                  for(int i=0; i<eveList.size(); i++){
                    if(eveList.get(i)== e.getName()){
@@ -83,6 +90,7 @@
                    }
                  }
                  sameEventName=false;
+               }
                }
              }
            %> 
