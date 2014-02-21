@@ -306,7 +306,7 @@ class CodeInjection
   type;
   operation;
   CodeBlock snippet;
-  * -> 1 UmpleClass;
+  * -> 1 UmpleClassifier;
   1 -> 0..1 Constraint;
   lazy Position position;
   Boolean isInternal = false;

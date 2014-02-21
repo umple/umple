@@ -556,7 +556,7 @@ class CodeBlock
  */
 class CodeInjection
 {
-  public CodeInjection(String a, String b, String c, UmpleClass d)
+  public CodeInjection(String a, String b, String c, UmpleClassifier d)
   {
     this(a,b,new CodeBlock(c), d);
   }
