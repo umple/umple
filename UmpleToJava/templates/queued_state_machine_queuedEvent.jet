@@ -11,6 +11,8 @@
     if(sm.isQueued() || sm.isPooled()) { 
       for(Event event : sm.getEvents())
       { 
+        if(event.isAutoTransition() == false)
+        {
         append(stringBuffer,"\n");
         append(stringBuffer,"  public void ");
         append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
@@ -34,6 +36,9 @@
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
       }
+      }
+
+
       String eveName="";
       boolean sameEventName=false;
       List<String> eveList=new ArrayList<String>();
@@ -41,6 +46,8 @@
       {
         for (Event e : nsm.getEvents())
         {
+          if(e.isAutoTransition() == false)
+          {
           for(int i=0; i<eveList.size(); i++){
             if(eveList.get(i)== e.getName())
               //break;
@@ -82,6 +89,7 @@
             }
           }
           sameEventName=false;
+        }
         }
       }
     }

@@ -1,0 +1,76 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3537 modeling language!*/
+
+class Light
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Light State Machines
+  private static $BulbOff = 1;
+  private static $BulbOn = 2;
+  private $bulb;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setBulb(self::$BulbOff);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getBulbFullName()
+  {
+    $answer = $this->getBulb();
+    return $answer;
+  }
+
+  public function getBulb()
+  {
+    if ($this->bulb == self::$BulbOff) { return "BulbOff"; }
+    elseif ($this->bulb == self::$BulbOn) { return "BulbOn"; }
+    return null;
+  }
+
+  private function __autotransition3__()
+  {
+    $wasEventProcessed = false;
+    
+    $aBulb = $this->bulb;
+    if ($aBulb == self::$BulbOff)
+    {
+      $this->setBulb(self::$BulbOn);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setBulb($aBulb)
+  {
+    $this->bulb = $aBulb;
+
+    // entry actions and do activities
+    if ($this->bulb == self::$BulbOff)
+    {
+      $this->__autotransition3__();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

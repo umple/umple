@@ -1,0 +1,10 @@
+namespace example;
+
+class Light
+{
+  pooled bulb
+  {
+    Off { -> On; }
+    On { }
+  }
+}

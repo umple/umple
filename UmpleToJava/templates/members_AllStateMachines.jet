@@ -44,7 +44,7 @@
     	}
     	
     	if (nestedSMhasEvent == true){
-    	  append(stringBuffer, "\n  enum MessageType { {0}, {1} }", gen.translate("listEvents",sm), gen.translate("listEventsNSM",sm));
+    	  append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listWithAutoTransitionAndNestedEvents",sm));
     	  nestedSMhasEvent=false;
     	}
     	else

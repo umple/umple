@@ -235,12 +235,15 @@ class JavaGenerator
       String allEnums = "";
       for(Event event : sm.getEvents())
       {
-        if (allEnums.length() > 0)
+        if (!event.isAutoTransition())
         {
-          allEnums += ", ";
+          if (allEnums.length() > 0)
+          {
+            allEnums += ", ";
+          }
+          allEnums += translate("eventMethod",event);
+          allEnums += "_M";
         }
-        allEnums += translate("eventMethod",event);
-        allEnums += "_M";
       }
       return allEnums;
     }
@@ -264,6 +267,8 @@ class JavaGenerator
           {
             if(event.getIsInternal() == false)
             {
+              if (!event.isAutoTransition())
+              {
               if( eveName != event.getName()){
                 eveList.add(event.getName());
               
@@ -274,12 +279,76 @@ class JavaGenerator
                 allEnums += translate("eventMethod",event);
                 allEnums += "_M"; 
                 eveName=event.getName();
+              }
               } 
             }
           }
           sameEventName=false;
         }
       }
+      return allEnums;
+    }
+    
+    else if ("listWithAutoTransitionAndNestedEvents".equals(keyName))
+    {
+      String allEnums = "";
+      String allNesEvenEnums = "";
+      String eveName="";
+      boolean sameEventName=false;
+      List<String> eveList=new ArrayList<String>();
+
+      for(Event event : sm.getEvents())
+      {
+        if (!event.isAutoTransition())
+        {
+          if (allEnums.length() > 0)
+          {
+            allEnums += ", ";
+          }
+          allEnums += translate("eventMethod",event);
+          allEnums += "_M";
+       }
+      }
+      if(allEnums.length() > 0 )
+      {
+         allEnums += ", ";
+      }
+      for (StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for (Event event : nsm.getEvents())
+        {
+          for(int i=0; i<eveList.size(); i++){
+            if(eveList.get(i)== event.getName()){
+              sameEventName=true;
+            }
+          }
+          
+          if(sameEventName == false)
+          {
+            if(event.getIsInternal() == false)
+            {
+              if (!event.isAutoTransition())
+              {
+              if( eveName != event.getName())
+              {
+                eveList.add(event.getName());
+              
+                if (allNesEvenEnums.length() > 0)
+                {
+                  allNesEvenEnums += ", ";
+                }
+                allNesEvenEnums += translate("eventMethod",event);
+                allNesEvenEnums += "_M"; 
+                eveName=event.getName();
+              } 
+              }
+            }
+          }
+          sameEventName=false;
+        }
+        
+      }
+      allEnums += allNesEvenEnums;
       return allEnums;
     }
     
@@ -300,13 +369,16 @@ class JavaGenerator
         String allEventEnums = "";
         for (Transition t : state.getTransitions())
         {
-          if (allEventEnums.length() > 0)
+          if(!t.getEvent().isAutoTransition())
           {
-            allEventEnums += ", ";
+            if (allEventEnums.length() > 0)
+            {
+              allEventEnums += ", ";
+            }
+            allEventEnums += "MessageType.";
+            allEventEnums += t.getEvent().getName();
+            allEventEnums += "_M";
           }
-          allEventEnums += "MessageType.";
-          allEventEnums += t.getEvent().getName();
-          allEventEnums += "_M";
         }
         allEnums += allEventEnums;
         allEnums += ");";
