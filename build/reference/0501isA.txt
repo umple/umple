@@ -3,11 +3,11 @@ Classes and Interfaces
 noreferences
 
 @@description
-<p>The isA keyword is used to denote an inheritance relationship (generalization) between two classes, or a class and the interfaces it implements.</p>
+<p>The isA keyword is used to denote an inheritance relationship (generalization) between two classes, or a class and the <a href="interfaceDefinition.html">interfaces</a> it implements, or a class and the <a href="Traits.html">traits</a> it includes.</p>
 
-<p>This corresponds to keywords such as 'extends', 'subclass', etc. in other languages. The isA keyword was chosen so as to be independent of other languages.</p>
+<p>This corresponds to keywords such as 'extends', 'subclass', etc. in other languages. The isA keyword was chosen so as to be independent of other languages, and due to the strong conceptual similarity between interfaces, classes and traits.</p>
 
-<p>Note that it is possible to avoid using the isA keyword, by directly embedding a subclass inside a superclass. Note that this does <i>not</i> create an inner class in the Java sense, but instead creates a subclass. The two examples below give identical results.</p>
+<p>Note that it is possible to avoid using the isA keyword for class generatlization, by directly embedding a subclass inside a superclass. Note that this does <i>not</i> create an inner class in the Java sense, but instead creates a subclass. The two examples below give identical results.</p>
 
 <p>The following is how a generalization appears in UML. The corresponding Umple is below. Note that in UmpleOnline, the expected layout for generalizations places superclasses above subclasses.</p>
 
