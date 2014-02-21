@@ -1,5 +1,0 @@
-class LightFixture
-{
-	Integer id;
-	trace id;
-}

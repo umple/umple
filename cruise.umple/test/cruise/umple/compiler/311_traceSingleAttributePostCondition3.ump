@@ -1,9 +1,0 @@
-namespace example;
-
-class Tracer
-{
-	Integer a;
-	Integer b;
-	Integer c;
-	trace c giving a < b;
-}

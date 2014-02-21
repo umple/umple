@@ -40,101 +40,52 @@ public class UmpleParserTracerTest
   }
  
   //------------------------
-  // Tracing Attributes
+  // Tracers
   //------------------------
+  
   @Test
   public void traceType_Console()
   {
-	  code = "tracer Console; class Tracer{x;}";
-	  assertParse(code,"[traceType][tracerType:Console][classDefinition][name:Tracer][attribute][name:x]");
+	  code = "tracer Console;";
+	  assertParse(code,"[traceType][tracerType:Console]");
+	  Assert.assertEquals("Console",model.getTraceType());
+  }
+  
+  @Test
+  public void traceType_File()
+  {
+	  code = "tracer File;";
+	  assertParse(code,"[traceType][tracerType:File]");
+	  Assert.assertEquals("File",model.getTraceType());
+  }
+  
+  @Test
+  public void traceType_String()
+  {
+	  code = "tracer String;";
+	  assertParse(code,"[traceType][tracerType:String]");
+	  Assert.assertEquals("String",model.getTraceType());
+  }
+  
+  @Test
+  public void traceType_DefaultIsConsole()
+  {
+	  code = "class Tracer{x; trace x;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][name:x][trace][trace_entity:x]");
 	  Assert.assertEquals("Console",model.getTraceType());
   }
   	
-  
   //------------------------
-  // Assert methods
+  // Tracing Attributes
   //------------------------
   
-  private void assertParse(String inCode, String expectedOutput)
-  {
-	  SampleFileWriter.createFile(pathToInput+"/traceTest.ump",inCode);	
-	  uFile = new UmpleFile(pathToInput+"/traceTest.ump");	
-	  assertParse("traceTest.ump",expectedOutput,true);
-  }
-  
-  private void assertParse(String filename, String expectedOutput, boolean expected)
-  {
-	  
-    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
-    model = new UmpleModel(new UmpleFile(pathToInput,filename));
-    model.setShouldGenerate(false);
-    parser = UmpleParserFactory.create(umpleParserName,model,true);
-    
-    boolean answer = parser.parse("program", input).getWasSuccess();
-    
-    if (answer)
-    {
-      answer = parser.analyze(false).getWasSuccess();
-    }
-
-    if (answer == false && expected)
-    {
-      System.out.println("failed at:" + parser.getParseResult().getPosition());
-    }
-    
-    Assert.assertEquals(expected, answer);
-    if (expected)
-    {
-      Assert.assertEquals(expectedOutput, parser.toString());  
-    }
-  }
-  
-  public void assertCondition( TraceDirective td, String conditionType, String lhs, String co, String rhs, int index)
-  {
-	  Assert.assertEquals(conditionType,td.getCondition(index).getConditionType());
-	  Assert.assertEquals(lhs, td.getCondition(index).getLhs());
-	  Assert.assertEquals(co, td.getCondition(index).getRhs().getComparisonOperator());
-	  Assert.assertEquals(rhs, td.getCondition(index).getRhs().getRhs());
-  }
-  
-  /****
-  @Test @Ignore
-  public void traceType_Console()
-  {
-    assertParse("300_tracerType_Console.ump","[traceType][tracerType:Console]");
-    Assert.assertEquals("Console",model.getTraceType());
-  }
-  
-  @Test @Ignore
-  public void traceType_File()
-  {
-    assertParse("300_tracerType_File.ump","[traceType][tracerType:File]");
-    Assert.assertEquals("File",model.getTraceType());
-  }
-  
-  @Test @Ignore
-  public void traceType_String()
-  {
-    assertParse("300_tracerType_String.ump","[traceType][tracerType:String]");
-    Assert.assertEquals("String",model.getTraceType());
-  }
-  
-  @Test @Ignore
-  public void traceType_DefaultIsConsole()
-  {
-    assertParse("300_defaultTracer.ump","[classDefinition][name:Tracer][attribute][name:x][trace][trace_entity:x]");
-    Assert.assertEquals("Console",model.getTraceType());
-  }
-  
-  //***************************************************
-  //*************   Tracing Attributes   **************
-  //***************************************************
-  
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeString()
   {
-	  assertParse("310_traceSingleAttributeString.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][trace][trace_entity:name]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  code = "class Tracer { String name; trace name;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:String][name:name][trace][trace_entity:name]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective = clazz.getTraceDirective(0);
@@ -147,11 +98,13 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeInteger()
   {
-	  assertParse("310_traceSingleAttributeInteger.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][trace][trace_entity:id]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  code = "class Tracer{ Integer id; trace id ;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective = clazz.getTraceDirective(0);
@@ -164,11 +117,13 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeBoolean()
   {
-	  assertParse("310_traceSingleAttributeBoolean.ump","[classDefinition][name:LightFixture][attribute][type:Boolean][name:flag][trace][trace_entity:flag]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  code = "class Tracer{ Boolean flag; trace flag; }";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Boolean][name:flag][trace][trace_entity:flag]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("Boolean",clazz.getAttribute("flag").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective = clazz.getTraceDirective(0);
@@ -181,127 +136,151 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
   }
   
-  @Test @Ignore
-  public void traceSingleAttributeList()
+  @Test
+  public void traceAttributesWildcard()
   {
-//	  assertParse("310_traceSingleAttributeList.ump","[classDefinition][name:LightFixture][attribute][type:Integer][list:[]][name:id][attribute][type:String][list:[]][name:name][trace][trace_entity:id][trace][trace_entity:name]");
+	  code = "class Tracer{x; y; z; trace *attribute; }";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][name:x][attribute][name:y][attribute][name:z][trace][trace_entity:*attribute]");
   }
   
-  @Test @Ignore
+  @Test
+  public void traceSingleAttributeSet()
+  {
+	  code = "class Tracer{Integer id; String name; trace set id , name;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][traceOptions][traceOption][option:set][trace_entity:id][trace_entity:name]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(0));
+	  Assert.assertEquals(true,traceAttr1.getTraceSet());
+	  Assert.assertEquals(false,traceAttr1.getTraceGet());
+  }
+  
+  @Test
+  public void traceSingleAttributeGet()
+  {
+	  code = "class Tracer{x; trace get x;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][name:x][trace][traceOptions][traceOption][option:get][trace_entity:x]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals((Object)clazz.getAttribute("x"),traceAttr1.getAttribute(0));
+	  Assert.assertEquals(false,traceAttr1.getTraceSet());
+	  Assert.assertEquals(true,traceAttr1.getTraceGet());
+  }
+  
+  @Test
+  public void traceSingleAttributeSetGet()
+  {
+	  code = "class Tracer{x; trace set,get x;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][name:x][trace][traceOptions][traceOption][option:set][traceOption][option:get][trace_entity:x]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
+	  Assert.assertEquals((Object)clazz.getAttribute("x"),traceAttr1.getAttribute(0));
+	  Assert.assertEquals(true,traceAttr1.getTraceSet());
+	  Assert.assertEquals(true,traceAttr1.getTraceGet());
+  }
+  
+  @Test
   public void traceSingleAttributeWithCondition()
   {
-	  assertParse("311_traceSingleAttributeWithCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:30][trace][trace_entity:id][traceWhen][conditionType:where][LHS:id][comparison_operator:>][RHS:500]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  code = "class Tracer{ Integer id; String name; trace name where [id == 30]; trace id where [id > 500];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:30][trace][trace_entity:id][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:id][moreOp:>][number:500]");
+	 
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "where", "id", "==", "30", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"where");
+	  Assert.assertEquals(traceAttr1.getConstraint().getExpression(0).getValue(), "id");
+	  Assert.assertEquals(traceAttr1.getConstraint().getExpression(1), new ConstraintVariable("OPERATOR", "=="));
+	  Assert.assertEquals(traceAttr1.getConstraint().getExpression(2), new ConstraintVariable("OPERATOR", "30"));
+
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "where", "id", ">", "500", 0);
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
+	  Assert.assertEquals(traceAttr2.getConditionType(),"where");
+	  Assert.assertEquals(traceAttr2.getConstraint().getExpression(0).getValue(), "id");
+	  Assert.assertEquals(traceAttr2.getConstraint().getExpression(1), new ConstraintVariable("OPERATOR", ">"));
+	  Assert.assertEquals(traceAttr2.getConstraint().getExpression(2), new ConstraintVariable("OPERATOR", "500"));
+
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeUntilCondition()
   {
-	  assertParse("313_traceSingleAttributeUntilCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:until][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceWhen][conditionType:until][LHS:id][comparison_operator:==][RHS:6]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  code = "class Tracer{Integer id; String name; trace name until [name == \"tim\"]; trace id until [id == 6];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:until][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][traceWhen][conditionType:until][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:6]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "until", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"until");
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "until", "id", "==", "6", 0);
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
+	  Assert.assertEquals(traceAttr2.getConditionType(),"until");
+
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeAfterCondition()
   {
-	  assertParse("314_traceSingleAttributeAfterCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:6]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  code = "class Tracer{Integer id; String name; trace name after [name == \"tim\"]; trace id after [id == 6];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:after][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][traceWhen][conditionType:after][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:6]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "after", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"after");
+
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "after", "id", "==", "6", 0);
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
+	  Assert.assertEquals(traceAttr2.getConditionType(),"after");
+
   }
   
-  @Test @Ignore
+  @Test 
   public void traceSingleAttributePreCondition1()
   {
-	  assertParse("312_traceSingleAttributePreCondition1.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][trace][LHS:a][comparison_operator:<][RHS:b]");
+	  code = "class Tracer{Integer a; Integer b; trace where [a < b];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][trace][trace_entity:where][traceWhen][constraintToken][numExpr][constraintName][name:a][smallerOp:<][constraintName][name:b]");  
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributePreCondition2()
   {
-	  assertParse("312_traceSingleAttributePreCondition2.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhen][conditionType:where][LHS:a][comparison_operator:<][RHS:b]");
+	  code = "class Tracer{Integer a; Integer b; Integer c; trace c where [a < b];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:a][smallerOp:<][constraintName][name:b]");
+	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("c"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "where", "a", "<", "b", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"where");
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributePreCondition3()
   {
-	  assertParse("312_traceSingleAttributePreCondition3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhen][conditionType:where][LHS:a][comparison_operator:<][RHS:b]");
+	  code = "class Tracer{Integer a; Integer b; Integer c; trace get c where [a < b];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][traceOptions][traceOption][option:get][trace_entity:c][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:a][smallerOp:<][constraintName][name:b]");
+	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
@@ -310,225 +289,157 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)clazz.getAttribute("c"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals(false,traceAttr1.getTraceSet());
 	  Assert.assertEquals(true,traceAttr1.getTraceGet());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "where", "a", "<", "b", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"where");
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributePostCondition1()
   {
-//	  assertParse("311_traceSingleAttributePostCondition1.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:6]");
+	  code = "class Tracer{Integer a; Integer b; trace [a < b];}";
+//	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:6]");
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributePostCondition2()
   {
-	  assertParse("311_traceSingleAttributePostCondition2.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][trace][LHS:a][comparison_operator:<][RHS:b]");
-	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
-
-	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
-	  Assert.assertEquals((Object)clazz.getAttribute("a"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "giving", "a", "<", "b", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  code = "class Tracer{Integer a; Integer b; trace giving [a < b];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][trace][trace_entity:giving][traceWhen][constraintToken][numExpr][constraintName][name:a][smallerOp:<][constraintName][name:b]");
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributePostCondition3()
   {
-	  assertParse("311_traceSingleAttributePostCondition3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhen][conditionType:giving][LHS:a][comparison_operator:<][RHS:b]");
+	  code = "class Tracer{Integer a; Integer b; Integer c; trace c giving [a < b];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:a][attribute][type:Integer][name:b][attribute][type:Integer][name:c][trace][trace_entity:c][traceWhen][conditionType:giving][constraintToken][numExpr][constraintName][name:a][smallerOp:<][constraintName][name:b]");
+	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("c"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "giving", "a", "<", "b", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"giving");
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeOccurences()
   {
-	  assertParse("315_traceSingleAttributeOccurences.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_for:5][trace][trace_entity:id][trace_for:100]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  code = "class Tracer{Integer id; String name; trace name for 5; trace id for 100;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_for:5][trace][trace_entity:id][trace_for:100]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
 	  Assert.assertEquals("traceFlag1",traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
 	  Assert.assertEquals("traceFlag2",traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributePeriod()
   {
-	  assertParse("316_traceSingleAttributePeriod.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_period:30ms][trace][trace_entity:id][trace_period:100s]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name; trace name period 30ms; trace id period 100s; }";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_period:30ms][trace][trace_entity:id][trace_period:100s]");
+
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);  
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
 	  Assert.assertEquals("30ms",traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
 	  Assert.assertEquals("100s",traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
+
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeDuration()
   {
-	  assertParse("317_traceSingleAttributeDuration.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_duration:50s][trace][trace_entity:id][trace_duration:100ms]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name; trace name during 50s; trace id during 100ms;;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_duration:50s][trace][trace_entity:id][trace_duration:100ms]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
 	  Assert.assertEquals("50s",traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
 	  Assert.assertEquals("100ms",traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
 	  
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeExecuteClause()
   {
-	  assertParse("318_traceSingleAttributeExecuteClause.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_execute:\"somthing\"][trace][trace_entity:id][trace_execute:record(\"objectBeingTraced\")][trace][trace_entity:name][trace_execute:record(\"x\",name)][trace_for:100][trace][trace_entity:id][trace_execute:record (\"objectBeingTraced\"), record(\"x\",name)][traceWhen][conditionType:where][LHS:id][comparison_operator:>][RHS:500]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
+	  code = "class Tracer{Integer id;	String name; "
+			  +	" trace name execute { \"somthing\" }; "
+			  + " trace id execute { record(\"objectBeingTraced\") }; "
+			  + " trace name execute { record(\"x\",name) } for 100; "
+			  + " trace id execute { record (\"objectBeingTraced\"), record(\"x\",name) } where [id > 500];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_execute:\"somthing\"][trace][trace_entity:id][trace_execute:record(\"objectBeingTraced\")][trace][trace_entity:name][trace_execute:record(\"x\",name)][trace_for:100][trace][trace_entity:id][trace_execute:record (\"objectBeingTraced\"), record(\"x\",name)][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:id][moreOp:>][number:500]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(4,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1), traceDirective3 = clazz.getTraceDirective(2) ,traceDirective4 = clazz.getTraceDirective(3);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
 	  Assert.assertEquals("\"somthing\"",traceAttr1.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
 	  Assert.assertEquals("record(\"objectBeingTraced\")",traceAttr2.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr3 = traceDirective3.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr3.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective3.numberOfCondition());
-	  Assert.assertEquals(100,traceAttr3.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr3.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr3.getDuringClause());
+	  Assert.assertEquals("traceFlag1",traceAttr3.getForClause());
 	  Assert.assertEquals("record(\"x\",name)",traceAttr3.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr4 = traceDirective4.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr4.getAttribute(0));
-	  Assert.assertEquals(1,traceDirective4.numberOfCondition());
-	  assertCondition(traceDirective4, "where", "id", ">", "500", 0);
-	  Assert.assertEquals(0,traceAttr4.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr4.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr4.getDuringClause());
 	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceAttr4.getExecuteClause());
+	  Assert.assertEquals(traceAttr4.getConditionType(),"where");
+
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeRecord1()
   {
-	  assertParse("318_traceSingleAttributeRecord1.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id]");
+	  code = "class Tracer{Integer id; String name; trace name record id;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id]");
+	 
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  TraceRecord record = traceDirective1.getTraceRecord();
-	  Assert.assertEquals((Object)record.getRecord(),(Object)null);
 	  Assert.assertEquals((Object)record.getRecordOnly(),false);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),record.getAttribute(0));
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeRecord2()
   {
-	  assertParse("318_traceSingleAttributeRecord2.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id]");
+	  code = "class Tracer{Integer id; String name; trace name record only id;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id]");
+	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
-	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
-	  
 	  TraceRecord record = traceDirective1.getTraceRecord();
-	  Assert.assertEquals((Object)record.getRecord(),(Object)null);
 	  Assert.assertEquals((Object)record.getRecordOnly(),true);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),record.getAttribute(0));
   }
@@ -536,341 +447,201 @@ public class UmpleParserTracerTest
   @Test @Ignore
   public void traceSingleAttributeRecord3()
   {
-	  assertParse("318_traceSingleAttributeRecord3.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:\"i am tracing name\"]");
+	  code = "class Tracer{Integer id; String name; trace name record \"i am tracing name\";}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:\"i am tracing name\"]");
+
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
-	  
-	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
-	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  TraceRecord record = traceDirective1.getTraceRecord();
 	  Assert.assertEquals((Object)record.getRecord(),"\"i am tracing name\"");
 	  Assert.assertEquals((Object)record.getRecordOnly(),false);
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeRecord4()
   {
-	  assertParse("318_traceSingleAttributeRecord4.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:Integer][name:contact][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id][trace_record:contact]");
+	  code = "class Tracer{Integer id; Integer contact;	String name;trace name record id,contact; }";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:Integer][name:contact][attribute][type:String][name:name][trace][trace_entity:name][trace_record:id][trace_record:contact]");
+	 
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
-	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
-	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
-	  
 	  TraceRecord record = traceDirective1.getTraceRecord();
-	  Assert.assertEquals((Object)record.getRecord(),(Object)null);
 	  Assert.assertEquals((Object)record.getRecordOnly(),false);
 	  Assert.assertEquals((Object)record.getAttribute(0),clazz.getAttribute("id"));
 	  Assert.assertEquals((Object)record.getAttribute(1),clazz.getAttribute("contact"));
   }
   
-  @Test @Ignore
+  @Test
   public void traceMultipleAttribute()
   {
-	  assertParse("319_traceMultipleAttribute.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name; trace name,id; }";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective = clazz.getTraceDirective(0);
 	  
 	  AttributeTraceItem traceAttr = traceDirective.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr.getAttribute(1));
-	  Assert.assertEquals(0,traceDirective.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributeWithCondition()
   {
-	  assertParse("320_traceMultipleAttributeWithCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:id][trace_entity:name][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name; trace name , id where [name == \"tim\"]; trace id , name where [id == 234];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][trace_entity:name][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "where", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"where");
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(1));
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "where", "id", "==", "234", 0);
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
+	  Assert.assertEquals(traceAttr2.getConditionType(),"where");
   }
   
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributeUntilCondition()
   {
-	  assertParse("321_traceMultipleAttributeUntilCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][LHS:id][comparison_operator:==][RHS:234]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name; trace name , id until [name == \"tim\"]; trace name,id until [id == 234];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "until", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"until");
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "until", "id", "==", "234", 0);
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
+	  Assert.assertEquals(traceAttr2.getConditionType(),"until");
   }
   
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributeAfterCondition()
   {
-	  assertParse("322_traceMultipleAttributeAfterCondition.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:234]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name; trace name, id after [name == \"tim\"]; trace name , id after [id == 234];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "after", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
+	  Assert.assertEquals(traceAttr1.getConditionType(),"after");
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective2, "after", "id", "==", "234", 0);
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
+	  Assert.assertEquals(traceAttr2.getConditionType(),"after");
   }
   
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributeOccurences()
   {
-	  assertParse("323_traceMultipleAttributeOccurences.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_for:5][trace][trace_entity:name][trace_entity:id][trace_for:100]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name;	trace name , id for 5; trace name , id for 100;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_for:5][trace][trace_entity:name][trace_entity:id][trace_for:100]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
 	  Assert.assertEquals("traceFlag1",traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
 	  Assert.assertEquals("traceFlag2",traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributePeriod()
   {
-	  assertParse("324_traceMultipleAttributePeriod.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_period:30ms][trace][trace_entity:name][trace_entity:id][trace_period:1s]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name;	trace name,id period 30ms; trace name, id period 1s; }";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_period:30ms][trace][trace_entity:name][trace_entity:id][trace_period:1s]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
 	  Assert.assertEquals("30ms",traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
 	  Assert.assertEquals("1s",traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributeDuration()
   {
-	  assertParse("325_traceMultipleAttributeDuration.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_duration:150s][trace][trace_entity:name][trace_entity:id][trace_duration:200ms]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name;	trace name , id during 150s; trace name , id during 200ms;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][trace_duration:150s][trace][trace_entity:name][trace_entity:id][trace_duration:200ms]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
 	  Assert.assertEquals("150s",traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
 	  Assert.assertEquals("200ms",traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributeExecuteClause()
   {
-	  assertParse("326_traceMultipleAttributeExecuteClause.ump","[classDefinition][name:LightFixture][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name][trace_execute:\"something\"][trace_duration:30ms][trace][trace_entity:name][trace_entity:id][trace_execute:record(\"x\")][traceWhen][conditionType:where][LHS:id][comparison_operator:>][RHS:100]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
+	  code = "class Tracer{Integer id; String name; trace id , name execute { \"something\" } during 30ms; trace name, id execute {record(\"x\")} where [id > 100];}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name][trace_execute:\"something\"][trace_duration:30ms][trace][trace_entity:name][trace_entity:id][trace_execute:record(\"x\")][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:id][moreOp:>][number:100]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(1));	  
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
 	  Assert.assertEquals("30ms",traceAttr1.getDuringClause());
 	  Assert.assertEquals("\"something\"",traceAttr1.getExecuteClause());
 
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(1));
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "where", "id", ">", "100", 0);
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
 	  Assert.assertEquals("record(\"x\")",traceAttr2.getExecuteClause());
+	  Assert.assertEquals(traceAttr2.getConditionType(),"where");
   }
   
-  @Test @Ignore
-  public void traceSingleAttributeSet()
-  {
-	  assertParse("327_traceSingleAttributeSet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
-	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
-	  
-	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
-	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(true,traceAttr1.getTraceSet());
-	  Assert.assertEquals(false,traceAttr1.getTraceGet());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());  
-  }
-  
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributeSet()
   {
-	  assertParse("327_traceMultipleAttributeSet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name]");
-	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  code = "class Tracer{Integer id; String name;	trace set id , name;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][traceOptions][traceOption][option:set][trace_entity:id][trace_entity:name]");	  
 	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(1));
 	  Assert.assertEquals(true,traceAttr1.getTraceSet());
 	  Assert.assertEquals(false,traceAttr1.getTraceGet());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());  
-  }
-  
-  @Test @Ignore
-  public void traceSingleAttributeGet()
-  {
-	  assertParse("328_traceSingleAttributeGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
-	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
-	  
-	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
-	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(false,traceAttr1.getTraceSet());
-	  Assert.assertEquals(true,traceAttr1.getTraceGet());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause()); 
   }
   
   @Test @Ignore
@@ -895,34 +666,13 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());  
   }
   
-  @Test @Ignore
-  public void traceSingleAttributeSetGet()
-  {
-	  assertParse("329_traceSingleAttributeSetGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][trace][trace_entity:id]");
-	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
-	  
-	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
-	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(0));
-	  Assert.assertEquals(true,traceAttr1.getTraceSet());
-	  Assert.assertEquals(true,traceAttr1.getTraceGet());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
-  }
-  
-  @Test @Ignore
+  @Test
   public void traceMultipleAttributeSetGet()
   {
-	  assertParse("329_traceMultipleAttributeSetGet.ump","[namespace:example][classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:id][trace_entity:name]");
+	  code = "class Tracer{Integer id; String name; trace set,get id , name;}";
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][traceOptions][traceOption][option:set][traceOption][option:get][trace_entity:id][trace_entity:name]");
+	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
@@ -930,12 +680,12 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(1));
 	  Assert.assertEquals(true,traceAttr1.getTraceSet());
 	  Assert.assertEquals(true,traceAttr1.getTraceGet());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());  
   }
+  
+  /****
+
+  
+
   
   //***************************************************
   //*************   Tracing Methods     ***************
@@ -1775,12 +1525,6 @@ public class UmpleParserTracerTest
   }
   
   //===================================
-  
-  @Test @Ignore
-  public void traceAttributesWildcard()
-  {
-	  assertParse("310_traceAttributesWildCard.ump","[classDefinition][name:Tracer][attribute][name:x][attribute][name:y][attribute][name:z][trace][trace_entity:*attribute]");
-  }
 	
   @Test @Ignore
   public void X()
@@ -1790,4 +1534,50 @@ public class UmpleParserTracerTest
   
   */
 
+  //------------------------
+  // Assert methods
+  //------------------------
+  
+  private void assertParse(String inCode, String expectedOutput)
+  {
+	  SampleFileWriter.createFile(pathToInput+"/traceTest.ump",inCode);	
+	  uFile = new UmpleFile(pathToInput+"/traceTest.ump");	
+	  assertParse("traceTest.ump",expectedOutput,true);
+  }
+  
+  private void assertParse(String filename, String expectedOutput, boolean expected)
+  {
+	  
+    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+    model = new UmpleModel(new UmpleFile(pathToInput,filename));
+    model.setShouldGenerate(false);
+    parser = UmpleParserFactory.create(umpleParserName,model,true);
+    
+    boolean answer = parser.parse("program", input).getWasSuccess();
+    
+    if (answer)
+    {
+      answer = parser.analyze(false).getWasSuccess();
+    }
+
+    if (answer == false && expected)
+    {
+      System.out.println("failed at:" + parser.getParseResult().getPosition());
+    }
+    
+    Assert.assertEquals(expected, answer);
+    if (expected)
+    {
+      Assert.assertEquals(expectedOutput, parser.toString());  
+    }
+  }
+  
+  public void assertCondition( TraceDirective td, String conditionType, String lhs, String co, String rhs, int index)
+  {
+	  Assert.assertEquals(conditionType,td.getCondition(index).getConditionType());
+	  Assert.assertEquals(lhs, td.getCondition(index).getLhs());
+	  Assert.assertEquals(co, td.getCondition(index).getRhs().getComparisonOperator());
+	  Assert.assertEquals(rhs, td.getCondition(index).getRhs().getRhs());
+  }
+  
 }
