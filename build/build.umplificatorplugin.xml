@@ -80,10 +80,12 @@
 
   <target name="clean">
     <delete dir="cruise.umplificator/bin" failonerror="false" />
+    <delete dir="cruise.umplificator.eclipse/bin" failonerror="false" />
   </target>
 
   <target name="init">
     <mkdir dir="cruise.umplificator/bin"/>
+    <mkdir dir="cruise.umplificator.eclipse/bin"/>
   </target>
 
   <target name="setVersion">
