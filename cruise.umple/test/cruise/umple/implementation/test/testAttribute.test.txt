@@ -1,0 +1,23 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+ class A : Test { 
+// tests for attribute: id
+	testCaseId: testSetId { 
+		AssertTrue: A={setId = "id123"}
+	}
+	testCaseId: testGetId { 
+		AssertTrue: A={getId = value}
+	} 
+}
+ class B : Test { 
+// tests for attribute: name
+	testCaseName: testSetName { 
+		AssertTrue: B={setName = "id123"}
+	}
+	testCaseName: testGetName { 
+		AssertTrue: B={getName = value}
+	} 
+}
+
