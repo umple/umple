@@ -1,7 +1,0 @@
-class LightFixture
-{
-	Integer id;
-	String name;
-	trace id , name execute { "something" } during 30ms;
-	trace name, id execute {record("x")} where id > 100;
-}

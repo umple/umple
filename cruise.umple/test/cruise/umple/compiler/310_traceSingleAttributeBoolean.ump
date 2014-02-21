@@ -1,5 +1,0 @@
-class LightFixture
-{
-	Boolean flag;
-	trace flag;
-}
