@@ -27,24 +27,31 @@ A queued state machine will therefore often process events in a different order 
 // until entry into a state where they can be handled.
 
 class TestSM {
-  pooled sm{
+   String ev="";
+   pooled sm{
     s1 {
-      e1 /{System.out.println("e1");} ->s2;
+      e1 /{ev="e1";} ->s2;
+      e5 /{ev="e5";} ->s2;
     }
     s2 {
-      e2 /{System.out.println("e2");} ->s3;
+      e2 /{ev="e2";} ->s3;
     }
     s3 {
-      e3 /{System.out.println("e3");} ->s4;
+      e3 /{ev="e3";} ->s4;
     }
     s4 {
-      e4 /{System.out.println("e4");} ->s1;
+      e4 /{ev="e4";} ->s1;
     }
+  }
+  after e* {
+    if(wasEventProcessed)
+      System.out.println(ev);
   }
   
   public static  void main(String [] ags){
     TestSM test=new TestSM();
     test.e1(); // processed s2
+    test.e5(); // Will only be processed in the pooled case (eventually)
     test.e2(); // processed s3
     test.e3(); // processed s4
     test.e4(); // processed s1
