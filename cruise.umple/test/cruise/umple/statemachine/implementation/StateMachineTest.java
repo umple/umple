@@ -353,4 +353,10 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
 	assertUmpleTemplateFor("pooledStateMachine.ump",languagePath + "/pooledStateMachine."+ languagePath +".txt","Course");
   }
+  
+  @Test
+  public void pooledStateMachine_withParameters()
+  {
+	assertUmpleTemplateFor("pooledStateMachine_withParameters.ump",languagePath + "/pooledStateMachine_withParameters."+ languagePath +".txt","LightFixture");
+  }
 }

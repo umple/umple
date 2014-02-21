@@ -27,7 +27,7 @@
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
     }
 
-    if (sm.isQueued())
+    if (sm.isQueued() || sm.isPooled())
     {
       boolean nestedSMhasEvent=false;
       append(stringBuffer,"\n  ");
@@ -62,7 +62,13 @@
       }
       append(stringBuffer,"\n  ");
       append(stringBuffer,"\n  MessagePool pool;");
-      append(stringBuffer,"\n  Thread removal;");      
+      append(stringBuffer,"\n  Thread removal;");
+            
+    }
+    if (sm.isPooled()){
+      append(stringBuffer,"\n");
+      append(stringBuffer,"\n  // A list of message types for each state of the {0}", uClass.getName());
+      append(stringBuffer,"\n  {0}",gen.translate("listMessageTypesStates",sm));
     }
   }
 }

@@ -1,38 +1,78 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
-  private class Message
-  {
-    MessageType type;
-    
-    //Message parameters
-    Vector<Object> param;
-    
-    public Message(MessageType t, Vector<Object> p)
-    {
-      type = t; 
-      param = p;
-    }
+<%
+  appendln(stringBuffer,"\n  private class Message");
+  appendln(stringBuffer,"  {");
+  appendln(stringBuffer,"    MessageType type;"); 
+  appendln(stringBuffer,"    ");  
+  appendln(stringBuffer,"    //Message parameters");
+  appendln(stringBuffer,"    Vector<Object> param;"); 
+  appendln(stringBuffer,"    ");   
+  appendln(stringBuffer,"    public Message(MessageType t, Vector<Object> p)");
+  appendln(stringBuffer,"    {");
+  appendln(stringBuffer,"      type = t; "); 
+  appendln(stringBuffer,"      param = p;");
+  appendln(stringBuffer,"    }");
+  appendln(stringBuffer,"  }");
+  appendln(stringBuffer,"  ");  
+  appendln(stringBuffer,"  protected class MessagePool {");
+  appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+  appendln(stringBuffer,"    ");   
+  appendln(stringBuffer,"    public synchronized void put(Message m)");
+  appendln(stringBuffer,"    {");
+  appendln(stringBuffer,"      messages.add(m); "); 
+  appendln(stringBuffer,"      notify();");
+  appendln(stringBuffer,"    }");
+  appendln(stringBuffer,"");   
+  if (smq.isQueued()){
+    appendln(stringBuffer,"    public synchronized Message getNext()");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      try {");
+    appendln(stringBuffer,"        while (messages.isEmpty()) "); 
+    appendln(stringBuffer,"        {");
+    appendln(stringBuffer,"          wait();");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      } catch (InterruptedException e) { e.printStackTrace(); } "); 
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      //The element to be removed");
+    appendln(stringBuffer,"      Message m = messages.remove(); "); 
+    appendln(stringBuffer,"      return (m);");
+    appendln(stringBuffer,"    }");
+    append(stringBuffer,"  }");  
   }
-  
-  protected class MessagePool {
-    Queue<Message> messages = new LinkedList<Message>();
-    
-    public synchronized void put(Message m)
-    {
-      messages.add(m); 
-      notify();
-    }
-
-    public synchronized Message getNext()
-    {
-      try {
-        while (messages.isEmpty()) 
-        {
-          wait();
-        }
-      } catch (InterruptedException e) { e.printStackTrace(); } 
-
-      //The element to be removed
-      Message m = messages.remove(); 
-      return (m);
-    }
+  else if(smq.isPooled()){
+    appendln(stringBuffer,"    public synchronized Message getNext()");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      List<MessageType> processableMessages;");
+    appendln(stringBuffer,"      // return a list of message types for the current state");
+    appendln(stringBuffer,"      processableMessages = getStateMsgTypeList(getSm());");
+    appendln(stringBuffer,"      Message message=null;");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      try {");
+    appendln(stringBuffer,"        message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"        while (message==null)");
+    appendln(stringBuffer,"        {");
+    appendln(stringBuffer,"          wait();");
+    appendln(stringBuffer,"          message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      } catch (InterruptedException e) { e.printStackTrace(); }");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"      // return the message");
+    appendln(stringBuffer,"      return (message);");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");
+    appendln(stringBuffer,"    public Message getNextProcessableMessage(List<MessageType> processableMessages)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      // Iterate through messages and remove the first message that matches one of the processableMessages list");
+    appendln(stringBuffer,"      // otherwise return null");
+    appendln(stringBuffer,"      for (Message msg: messages){");
+    appendln(stringBuffer,"        if(processableMessages.contains(msg.type)){");
+    appendln(stringBuffer,"          //The element to be removed");
+    appendln(stringBuffer,"          messages.remove(msg);");
+    appendln(stringBuffer,"          return (msg);");
+    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      }");
+    appendln(stringBuffer,"      return null;");
+    appendln(stringBuffer,"    }");
+    append(stringBuffer,"  }"); 
   }
+%>

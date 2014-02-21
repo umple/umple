@@ -3,7 +3,7 @@
 <%
     for (StateMachine smq : uClass.getStateMachines())
     {
-      if (smq.isQueued())
+      if (smq.isQueued() || smq.isPooled())
       {
         append(stringBuffer,"\n    pool = new MessagePool();");
         append(stringBuffer,"\n    removal=new Thread(this);");

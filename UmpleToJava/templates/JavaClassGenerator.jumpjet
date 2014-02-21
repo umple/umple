@@ -37,7 +37,7 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
 
 for (StateMachine smq : uClass.getStateMachines())
   {
-    if (smq.isQueued())
+    if (smq.isQueued() || smq.isPooled())
     {
       append(stringBuffer," implements Runnable");
     }
@@ -129,6 +129,13 @@ for (StateMachine smq : uClass.getStateMachines())
   <%@ include file="delete_All.jet" %>
     <% for (StateMachine smq : uClass.getStateMachines())
      {
+       if (smq.isPooled())
+       {%>
+         <%@ include file="queued_state_machine_returnMessageTypesForEachState.jet" %>
+         <%@ include file="queued_state_machine_inner_class.jet" %>
+         <%@ include file="queued_state_machine_queuedEvent.jet" %>
+         <%@ include file="queued_state_machine_removalThread_run.jet" %>
+       <%}       
        if (smq.isQueued())
        {%>
          <%@ include file="queued_state_machine_inner_class.jet" %>
