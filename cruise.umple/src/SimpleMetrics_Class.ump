@@ -136,13 +136,13 @@ class ClassMetrics{
     // Print Averages
       code.append("<tr>");
       code.append( "<td>AVERAGE</td>");
-      code.append( "<td>"+ cc.getCountTotalStateMachines()/classCount+"</td>");
-      code.append( "<td>"+cc.getCountTotalAssociations()/classCount+"</td>");
-      code.append( "<td>"+cc.getCountTotalSubclasses()/classCount+"</td>");             
+      code.append( "<td>"+String.format("%.1f", (float)cc.getCountTotalStateMachines()/classCount)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)cc.getCountTotalAssociations()/classCount)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)cc.getCountTotalSubclasses()/classCount)+"</td>");             
       code.append( "<td>"+""+"</td>");             
-      code.append( "<td>"+cc.getCountTotalAttributes()/classCount+"</td>");
-      code.append( "<td>"+cc.getCountTotalMethods()/classCount+"</td>");
-      code.append( "<td>"+cc.getCountTotalParameters()/classCount+"</td>");           
+      code.append( "<td>"+String.format("%.1f", (float)cc.getCountTotalAttributes()/classCount)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)cc.getCountTotalMethods()/classCount)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)cc.getCountTotalParameters()/classCount)+"</td>");           
       code.append("</tr>");
     
     // Print MAXs
