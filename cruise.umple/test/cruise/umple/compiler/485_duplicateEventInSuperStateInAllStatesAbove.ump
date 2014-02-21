@@ -1,0 +1,20 @@
+class X {
+  Integer b = 0;
+  sm {
+    state1 {
+      e -> state3;
+      substate1 {
+        e -> state2;
+      }
+      substate2 {
+        e -> state2;
+      }
+    }
+    state2 {
+      e -> state1;
+    }
+    state3 {
+      e -> state2;
+    }
+  }
+}

@@ -55,8 +55,8 @@
 51: 2, "http://umple.org/E051EventParametersMustMatch.html", Event parameter(s) '{0}' inconsistent with previous declaration of the same event ; 
 52: 2, "http://umple.org/E052StateMachineNameClash.html", Association or attribute can not have same name as state machine '{0}' ;
 53: 2, "http://umple.org/E053NoConcurrencyAtTopLevel.html", State machine {0} has concurrent states, but concurrency is only allowed in nested substates or in 'active' blocks ;
-54: 4, "http://umple.org/PageBeingDeveloped.html", Duplicate unguarded event {0} in this state will be ignored ;
-
+54: 4, "http://umple.org/W054DuplicateEvents.html", Transition {0} will be ignored due to a prior unguarded duplicate event;
+55: 4, "http://umple.org/W055DuplicateEventsWithinSubstates.html", Transition {0} in super-state will be ignored due to unguarded duplicate events in all sub-states;
 
 # Messages relating to format of identifiers.
 100: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;
