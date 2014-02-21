@@ -1,0 +1,27 @@
+namespace cruise.umplificator.core;
+	
+
+class Umplificator {
+	1 -- 0..1 JavaParser;	
+}
+
+class RefactoringStep {
+
+}
+
+class InitialRefactoringStep {
+	isA RefactoringStep;
+}
+
+class AttributeRefactoringStep {
+	isA RefactoringStep;
+}
+
+class AssociationRefactoringStep {
+	isA RefactoringStep;
+}
+
+class StateMachineRefactoringStep {
+	isA RefactoringStep;
+}
+

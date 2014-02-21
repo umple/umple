@@ -1,0 +1,8 @@
+namespace cruise.umplificator.visitor;
+
+
+class JavaVisitor {
+
+
+
+}
