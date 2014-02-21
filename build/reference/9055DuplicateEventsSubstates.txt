@@ -1,0 +1,28 @@
+W055 Duplicate Events Within  Substates
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple warning generated when there is a duplicate unguarded event that will never be reached, in the situation where there is a superstate and a substate with the same event</h2>
+
+<p>
+In the example below, the event e from the s1 superstate and the event e in the s1a substate are ambiguous. Current semantics is that the event in the superstate takes precedence, but this semantics may be changed..
+</p>
+
+@@example
+
+class X {
+  sm {
+    s1 {
+      e-> s2;
+      s1a {
+        e-> s3;
+      }
+    }
+    s2 {}
+    s3 {}
+  }
+}
+
+@@endexample

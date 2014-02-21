@@ -500,6 +500,7 @@ class UmpleInternalParser
         changeType = null;
       }
     }
+    checkStateMachineForDuplicateEvents(stateMachineToken);
   }
 
   private void analyzeState(Token stateToken, State fromState)
@@ -580,31 +581,51 @@ class UmpleInternalParser
         analyzeState(subToken, s);
       }
     }
-		checkStateForDuplicateEvents(stateToken, fromState);
   }
 
 	//Telmer
-	private void checkStateForDuplicateEvents(Token stateToken, State fromState)
+  private void checkStateMachineForDuplicateEvents(Token stateMachineToken){
+    for (Token subToken : stateMachineToken.getSubTokens()){
+      if (subToken.is("state")){
+        checkStateForDuplicateEvents(subToken, null);
+      }
+    }
+  }
+  
+	private void checkStateForDuplicateEvents(Token stateToken, Set<String> superStateEvents)
 	{
-		List<Token> pastTransitionTokens = new ArrayList<Token>();
-		Token newTransitionToken;
-		String newEventName, pastEventName;
-		for(Token subToken : stateToken.getSubTokens()){
-			if (subToken.is("transition")){
-				newTransitionToken = subToken;
-				//if we have past transitions 
-				if (!pastTransitionTokens.isEmpty()){
-					newEventName = newTransitionToken.getValue("event");
-					for(Token pastTransitionToken: pastTransitionTokens){
-						pastEventName = pastTransitionToken.getValue("event");
-						if ((pastTransitionToken.getSubToken("guard") == null) && (pastEventName.equals(newEventName))){
-							setFailedPosition(newTransitionToken.getPosition(), 54, newEventName);
-						}
-					}	
-				}
-				pastTransitionTokens.add(newTransitionToken);
-			}
-		}
+    
+    Set<String> unguardedEvents = new HashSet<String>();
+    List<Token> subStates = new ArrayList<Token>();
+    
+    if (superStateEvents == null){
+      superStateEvents = new HashSet<String>();
+    }
+    
+    for(Token subToken : stateToken.getSubTokens()){
+      if(subToken.is("transition")){
+        if(unguardedEvents.contains(subToken.getValue("event"))){
+          setFailedPosition(subToken.getPosition(), 54, subToken.getValue("event"));
+        }
+        if(superStateEvents.contains(subToken.getValue("event"))){
+          setFailedPosition(subToken.getPosition(), 55, subToken.getValue("event"));
+        }
+        if(subToken.getValue("guard") == null){
+          unguardedEvents.add(subToken.getValue("event"));
+        }
+      }
+      if(subToken.is("state")){
+        subStates.add(subToken);
+      }
+    }
+    
+    unguardedEvents.addAll(superStateEvents);
+    
+    for(Token subState : subStates){
+      checkStateForDuplicateEvents(subState, unguardedEvents);
+    }
+    
+    return;
 	}
 	//End Telmer
 

@@ -832,11 +832,22 @@ public class UmpleParserStateMachineTest
   
   @Test
   public void duplicateEvents(){
-		//right now only aasserts that a warning is raised if a guardless event comes before the same event
-		assertHasWarning("485_duplicateEventsNoGuards.ump",  0, 54, new Position("485_duplicateEventsNoGuards.ump",8,6,95));
- 		assertHasWarning("485_duplicateEventsGuardlessBeforeGuarded.ump",  0, 54, new Position("485_duplicateEventsGuardlessBeforeGuarded.ump",9,6,111));
-		//A guardless event is allowed to come after a guarded one to act as a default case
-		assertParse("485_duplicateEventsGuardedBeforeGuardless.ump","[classDefinition][name:X][attribute][type:Integer][name:b][value:0][stateMachine][inlineStateMachine][name:sm][state][stateName:state1][transition][event:e1][stateName:state2][state][stateName:state2][transition][event:e2][guard][numExpr][constraintName][name:b][smallerOp:<][number:1][stateName:state1][transition][event:e2][stateName:state1]");
+	  //right now only aasserts that a warning is raised if a guardless event comes before the same event
+    assertHasWarning("485_duplicateEventsNoGuards.ump",  0, 54, new Position("485_duplicateEventsNoGuards.ump",8,6,95));
+    assertHasWarning("485_duplicateEventsGuardlessBeforeGuarded.ump",  0, 54, new Position("485_duplicateEventsGuardlessBeforeGuarded.ump",9,6,111));
+    assertNoWarnings("485_duplicateEventsGuardedBeforeGuardless.ump");
+    
+    //make sure there is a warning when the substate events are guarded
+    assertHasWarning("485_duplicateEventInSuperStateInAllStatesGuardedBelow.ump", 0, 55, new Position("485_duplicateEventInSuperStateInAllStatesGuardedBelow.ump", 6, 8, 73));
+        
+    //make sure a warning is raised when the duplicate event is in all states, no guards
+    assertHasWarning("485_duplicateEventInSuperStateInAllStatesAbove.ump", 0, 55, new Position("485_duplicateEventInSuperStateInAllStatesAbove.ump",7,8,92));
+    assertHasWarning("485_duplicateEventInSuperStateInAllStatesBelow.ump", 0, 55, new Position("485_duplicateEventInSuperStateInAllStatesBelow.ump",6,8,73));
+    
+    
+    //make sure no warnings are raised when the event in the super state is guarded
+    assertNoWarnings("485_duplicateEventInSuperStateGuarded.ump");
+    
   }
   
   @Test
@@ -991,31 +1002,43 @@ public class UmpleParserStateMachineTest
 	  Assert.assertEquals(expectedPosition, answer.getErrorMessage(0).getPosition());
   }
   
+  private void assertNoWarnings(String filename) 
+  {
+    assertHasWarning(filename,-1,-1,null);
+  }
+
   private void assertHasWarning(String filename, int expectedWarningIndex, int expectedError, Position expectedPosition){
 	  UmpleFile file = new UmpleFile(pathToInput,filename);
-	    model = new UmpleModel(new UmpleFile(pathToInput,filename));
-	    model.setShouldGenerate(false);
-	    boolean answer = true;
-	    RuleBasedParser rbp = new RuleBasedParser();
-	    parser = new UmpleInternalParser(umpleParserName,model,rbp);
-	    ParseResult result = rbp.parse(file);
-	    answer = result.getWasSuccess();
-	    if (answer)
-	    {
-	      answer = parser.analyze(false).getWasSuccess();
-	    }
+	  model = new UmpleModel(new UmpleFile(pathToInput,filename));
+	  model.setShouldGenerate(false);
+	  boolean answer = true;
+	  RuleBasedParser rbp = new RuleBasedParser();
+	  parser = new UmpleInternalParser(umpleParserName,model,rbp);
+	  ParseResult result = rbp.parse(file);
+	  answer = result.getWasSuccess();
+	  if (answer)
+	  {
+	    answer = parser.analyze(false).getWasSuccess();
+	  }
 
-	    if (answer == false && true)
-	    {
-	      System.out.println("failed at:" + model.getLastResult().getPosition());
-	    }
+	  if (answer == false && true)
+	  {
+	    System.out.println("failed at:" + model.getLastResult().getPosition());
+	  }
 	    
 	  Assert.assertEquals(answer, true);
-	  Assert.assertEquals(true, parser.getParseResult().getHasWarnings());
-	  Assert.assertNotNull(parser.getParseResult().getErrorMessage(expectedWarningIndex));
-	  Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedWarningIndex).getErrorType().getErrorCode());
-	  System.out.println(">>"+parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition().getOffset());
-	  Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition());
+    if (expectedWarningIndex == -1)
+    {
+      Assert.assertEquals(false, parser.getParseResult().getHasWarnings());
+    }
+    else
+    {
+  	  Assert.assertEquals(true, parser.getParseResult().getHasWarnings());
+	    Assert.assertNotNull(parser.getParseResult().getErrorMessage(expectedWarningIndex));
+	    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedWarningIndex).getErrorType().getErrorCode());
+	    System.out.println(">>"+parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition().getOffset());
+	    Assert.assertEquals(expectedPosition, parser.getParseResult().getErrorMessage(expectedWarningIndex).getPosition());
+    }
   }
   
   private void assertParse(String filename, String expectedOutput, boolean expected)
