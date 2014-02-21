@@ -20,7 +20,9 @@ class TestGenerator
     List<String> allTypes = new ArrayList<String>();
     List<String> interfacesProcessed = new ArrayList<String>();
 
-    code.append("");
+    code.append("/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF Umple xUnit Model */\n");
+    code.append("/*PLEASE DO NOT EDIT THIS CODE*/\n");
+    code.append("/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/\n\n");
 
     boolean isFirst = true;
     for (UmpleClass uClass : model.getUmpleClasses())
@@ -63,32 +65,31 @@ class TestGenerator
 			if (!(interfacesProcessed.contains(uInterface.getName()))) {
 				interfacesProcessed.add(uInterface.getName());
 				code.append(StringFormatter
-						.format("  <eClassifiers xsi:type=\"ecore:EClass\" name=\"{0}\"{1} {2}>\n",
+						.format(" \n",
 								uInterface.getName(), interfaceFlag,
 								abstractFlag));
-				code.append("  </eClassifiers>\n");
+				code.append("");
 			}
 		}*/
       }
 
-      code.append(StringFormatter.format(" class {0} : Test { ",uClass.getName()));
+      code.append(StringFormatter.format(" class {0} : Test { \n",uClass.getName()));
 
       for(Attribute av : uClass.getAttributes())
       {
         String typeName = av.getType() == null ? "String" : av.getType();
         String upperBound = av.getIsList() ? " upperBound=\"-1\"" : "";
-        String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
+        String attrName = StringFormatter.toPascalCase(av.getName());
         
         
-        code.append(StringFormatter.format("// tests for attribute: {0}", attrName));
-        
+        code.append(StringFormatter.format("// tests for attribute: {0}\n", av.getName()));
         
         
         
         
         
         //test Set Attribute
-        code.append(StringFormatter.format("testCase{0}: testSet{0} { \n", attrName));
+        code.append(StringFormatter.format("\ttestCase{0}: testSet{0} { \n", attrName));
 	      
         if (!av.isImmutable())
 	      {
@@ -109,7 +110,7 @@ class TestGenerator
 	    					 
 	    					 //cv.getType();
 	    					 code.append(StringFormatter.format("a constraint test, fix me"));
-	    					 code.append(StringFormatter.format("AssertTrue: {0}={set{1} = }\n",av.getClass().getName() , attrName));
+	    					 code.append(StringFormatter.format("AssertTrue: {0}={set{1} = }\n",uClass.getName() , attrName));
 	    				 }
 	    			 }
 	    		  }
@@ -117,18 +118,43 @@ class TestGenerator
 	    	  
 	    	  else 
 	    	  {
-	    		  code.append(StringFormatter.format("AssertTrue: {0}={set{1} = }\n",av.getClass().getName() , attrName));
+	    	  		
+	    	  	if(av.getType() == "String" || av.getType() == null)
+	    	  {
+	    		   code.append(StringFormatter.format("\t\tAssertTrue: {0}={set{1} = \"id123\"}\n",uClass.getName() , attrName));
 	    	  }
+	    	  
+	    	  if(av.getType() == "Double" || av.getType() == "Integer")
+	    	  {
+	    		   code.append(StringFormatter.format("\t\tAssertTrue: {0}={set{1} = 123}\n",uClass.getName() , attrName));
+	    		   //code.append(StringFormatter.format("\t\tAssertFalse: {0}={set{1} = 1.3}\n",uClass.getName() , attrName));
+	    		   
+	    	  }
+	    	  
+	    	  if(av.getType() == "Float")
+	    	  {
+	    		   code.append(StringFormatter.format("\t\tAssertTrue: {0}={set{1} = 1.2}\n",uClass.getName() , attrName));
+	
+	    	  }
+	    	  
+
+	    	  if(av.getType() == "Boolean") 
+	    	  {
+	    		   code.append(StringFormatter.format("\t\tAssertTrue: {0}={set{1} = true}\n",uClass.getName() , attrName));
+	    	  }
+	    		 
+	    	  }
+	    	  code.append(StringFormatter.format("\t}\n", attrName));
 	      }
         
         
        //test get Attribute
       //test get attribute [ this is generated for all attribute without exception]
-       code.append(StringFormatter.format("testCase{0}: testSet{0} { \n", attrName));
+       code.append(StringFormatter.format("\ttestCase{0}: testGet{0} { \n", attrName));
       
-	   code.append(StringFormatter.format("AssertTrue: {0}={get{1} = value}\n",av.getClass().getName() , attrName));
+	   code.append(StringFormatter.format("\t\tAssertTrue: {0}={get{1} = value}\n",uClass.getName() , attrName));
        
-	   code.append(StringFormatter.format("} \n", attrName));
+	   code.append(StringFormatter.format("\t} \n", attrName));
 	   
 	   
         //TODO: Abstract Assertions:
@@ -150,24 +176,24 @@ class TestGenerator
 	    	  //  AssertLOC : student={ method=Student(), LOC="name = null;"} 
 	    	  if(av.getType() == "String" || av.getType() == null)
 	    	  {
-	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = null\" }\n",av.getClass().getName() , attrName));
+	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = null\" }\n",uClass.getName() , attrName));
 	    	  }
 	    	  
 	    	  if(av.getType() == "Double" || av.getType() == "Integer")
 	    	  {
-	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = 0\" }\n",av.getClass().getName() , attrName));
+	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = 0\" }\n",uClass.getName() , attrName));
 	    	  }
 	    	  
 	    	  if(av.getType() == "Float")
 	    	  {
-	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = 0.0\" }\n",av.getClass().getName() , attrName));
+	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = 0.0\" }\n",uClass.getName() , attrName));
 	
 	    	  }
 	    	  
 
 	    	  if(av.getType() == "Boolean") 
 	    	  {
-	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = false\" }\n",av.getClass().getName() , attrName));
+	    		  code.append(StringFormatter.format("AssertLOC: {0}={method={0}(), LOC=\"{1} = false\" }\n",uClass.getName() , attrName));
 	    	  }
 	    	  
 	    	  
@@ -187,13 +213,14 @@ class TestGenerator
 	      if ( av.isImmutable())
 	      {
 	    	  //TODO:
-	    	  code.append(StringFormatter.format("AssertFunc: {0}={set{1}()}\n",av.getClass().getName() , attrName));
+	    	  code.append(StringFormatter.format("AssertFunc: {0}={set{1}()}\n",uClass.getName() , attrName));
 	      }
 	      
 	      
 	      
 	      
-	      code.append("}");
+	    //  code.append("\t}\n");
+	      
 	      
 	      
 	      
@@ -227,9 +254,9 @@ class TestGenerator
           }
           //add
           if(isBidirectional)
-        	  code.append(StringFormatter.format("  ",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
+        	  code.append(StringFormatter.format("",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName(),theirEnd.getClassName(),myEnd.getRoleName()));
           else if(!isTheirEndClass)
-        	  code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EReference\" name=\"{0}\" lowerBound=\"{1}\" upperBound=\"{2}\" eType=\"#//{3}\"/>\n",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName()));
+        	  code.append(StringFormatter.format("",theirEnd.getRoleName(),theirEnd.getMultiplicity().getLowerBound(),theirEnd.getMultiplicity().getUpperBound(),theirEnd.getClassName()));
         }
       }
 
@@ -238,21 +265,24 @@ class TestGenerator
         if ("Simple".equals(sm.getType()))
         {
           String enumerationName = StringFormatter.toPascalCase(sm.getName());
-          code.append(StringFormatter.format("    <eStructuralFeatures xsi:type=\"ecore:EAttribute\" name=\"{0}\" eType=\"#//{1}\" />\n",sm.getName(),enumerationName));          
+          code.append(StringFormatter.format("",sm.getName(),enumerationName));          
 
           int index = 0;
-          subCode.append(StringFormatter.format("  <eClassifiers xsi:type=\"ecore:EEnum\" name=\"{0}\">\n",enumerationName));
+          subCode.append(StringFormatter.format("",enumerationName));
           for (State s : sm.getStates())
           {
-            subCode.append(StringFormatter.format("    <eLiterals name=\"{0}\" value=\"{1}\"/>\n",s.getName(),index));
+            subCode.append(StringFormatter.format("",s.getName(),index));
             index += 1;
           }
-          subCode.append("  </eClassifiers>\n");
+          subCode.append("");
         }
       }
-
+		
+	  	
       code.append("");
       code.append(subCode.toString());
+      code.append(StringFormatter.format("}\n"));
+      
     }
 
     if (!isFirst)
@@ -260,7 +290,7 @@ class TestGenerator
       code.append("\n");
     }
     
-    code.append(StringFormatter.format(" }"));
+    //code.append(StringFormatter.format("}"));
 
 
     model.setCode(code.toString());
@@ -291,6 +321,87 @@ class TestGenerator
     }
     return model.getUmpleFile().getSimpleFileName();
   }
+
+static 
+  {
+    HashMap<String, String> UpperCaseSingularLookupMap = new HashMap<String, String>();
+    UpperCaseSingularLookupMap.put("parameterOne", "a{0}");
+    UpperCaseSingularLookupMap.put("removeParameterOne", "placeholder{0}");    
+    UpperCaseSingularLookupMap.put("parameterNew", "new{0}");
+    UpperCaseSingularLookupMap.put("parameterNext", "next{0}");
+    UpperCaseSingularLookupMap.put("addMethod", "add{0}");
+    UpperCaseSingularLookupMap.put("removeMethod", "remove{0}");
+    UpperCaseSingularLookupMap.put("indexOfMethod", "indexOf{0}");
+    UpperCaseSingularLookupMap.put("parameterOld", "old{0}");
+    UpperCaseSingularLookupMap.put("parameterExisting", "existing{0}");
+    UpperCaseSingularLookupMap.put("parameterIsNew", "isNew{0}");
+    UpperCaseSingularLookupMap.put("associationNew", "new{0}");
+    UpperCaseSingularLookupMap.put("canSetMethod", "canSet{0}");
+    UpperCaseSingularLookupMap.put("parameterCurrent", "current{0}");
+    UpperCaseSingularLookupMap.put("deleteMethod", "delete{0}");
+    UpperCaseSingularLookupMap.put("setMethod", "set{0}");
+    UpperCaseSingularLookupMap.put("enterMethod", "enter{0}");
+    UpperCaseSingularLookupMap.put("exitMethod", "exit{0}");
+    UpperCaseSingularLookupMap.put("resetMethod", "reset{0}");
+    UpperCaseSingularLookupMap.put("getMethod", "get{0}");
+    UpperCaseSingularLookupMap.put("getFullMethod", "get{0}FullName");
+    UpperCaseSingularLookupMap.put("getStringMethod", "get{0}StringName");
+    UpperCaseSingularLookupMap.put("isFinalMethod", "is{0}Final");    
+    UpperCaseSingularLookupMap.put("getDefaultMethod", "getDefault{0}");
+    UpperCaseSingularLookupMap.put("didAdd", "didAdd{0}");
+    UpperCaseSingularLookupMap.put("hasMethod", "has{0}");
+    UpperCaseSingularLookupMap.put("associationCanSetOne","canSet{0}");
+    UpperCaseSingularLookupMap.put("attributeCanSetOne","canSet{0}");
+    UpperCaseSingularLookupMap.put("eventStartMethod", "start{0}Handler");
+    UpperCaseSingularLookupMap.put("eventStopMethod", "stop{0}Handler");    
+    UpperCaseSingularLookupMap.put("stateNull", "Null");
+
+    HashMap<String, String> UpperCasePluralLookupMap = new HashMap<String, String>();
+    UpperCasePluralLookupMap.put("parameterMany", "new{0}");
+    UpperCasePluralLookupMap.put("parameterAll", "all{0}");
+    UpperCasePluralLookupMap.put("numberOfMethod", "numberOf{0}");
+    UpperCasePluralLookupMap.put("minimumNumberOfMethod", "minimumNumberOf{0}");
+    UpperCasePluralLookupMap.put("maximumNumberOfMethod", "maximumNumberOf{0}");
+    UpperCasePluralLookupMap.put("isNumberOfValidMethod", "isNumberOf{0}Valid");
+    UpperCasePluralLookupMap.put("parameterVerifiedMany", "verified{0}");
+    UpperCasePluralLookupMap.put("parameterOldMany", "old{0}");
+    UpperCasePluralLookupMap.put("parameterCheckNewMany", "checkNew{0}");
+    UpperCasePluralLookupMap.put("parameterCopyOfMany", "copyOf{0}");
+    UpperCasePluralLookupMap.put("getManyMethod", "get{0}");
+    UpperCasePluralLookupMap.put("parameterMany", "new{0}");
+    UpperCasePluralLookupMap.put("setManyMethod", "set{0}");
+    UpperCasePluralLookupMap.put("didAddMany", "didAdd{0}");
+    UpperCasePluralLookupMap.put("hasManyMethod", "has{0}");
+    UpperCasePluralLookupMap.put("associationCanSetMany","canSet{0}");
+    UpperCasePluralLookupMap.put("attributeCanSetMany","canSet{0}");
+    UpperCasePluralLookupMap.put("requiredNumberOfMethod", "requiredNumberOf{0}");
+
+    HashMap<String, String> AsIsSingularLookupMap = new HashMap<String, String>();
+    AsIsSingularLookupMap.put("associationOne","{0}");
+    AsIsSingularLookupMap.put("attributeOne","{0}");
+    AsIsSingularLookupMap.put("stateMachineOne","{0}");
+    AsIsSingularLookupMap.put("stateOne","{0}");
+    AsIsSingularLookupMap.put("stateString","\"{0}\"");
+    AsIsSingularLookupMap.put("eventMethod","{0}");
+    AsIsSingularLookupMap.put("eventHandler", "{0}Handler");
+        
+    HashMap<String, String> AsIsPluralLookupMap = new HashMap<String, String>();
+    AsIsPluralLookupMap.put("associationMany","{0}");
+    AsIsPluralLookupMap.put("attributeMany","{0}");
+    
+    ArrayList<String> OneOrManyLookup = new ArrayList<String>();
+    OneOrManyLookup.add("attribute");
+    OneOrManyLookup.add("parameter");
+    
+    HashMap<String, String> TestingCredentialsLookUpMap = new HashMap<String, String>();
+    TestingCredentialsLookUpMap.put("setAttString", "id123");
+    TestingCredentialsLookUpMap.put("getAttString", "id123");
+    TestingCredentialsLookUpMap.put("setAttInt", "123");
+    TestingCredentialsLookUpMap.put("getAttInt", "123");
+    TestingCredentialsLookUpMap.put("setAttInt", "");
+    TestingCredentialsLookUpMap.put("setAttFloat", "");
+    TestingCredentialsLookUpMap.put("setAttBoolean", "");
+  }	
 
   private void writeModel()
   {

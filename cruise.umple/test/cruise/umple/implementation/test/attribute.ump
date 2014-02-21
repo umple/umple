@@ -1,0 +1,16 @@
+generate Test;
+
+
+class A {
+
+id;
+
+
+}
+
+
+class B{
+
+name;
+
+}
