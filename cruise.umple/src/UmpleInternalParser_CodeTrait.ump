@@ -663,7 +663,7 @@ class UmpleInternalParser
     else if (t.is("beforeCode") || t.is("afterCode"))
     {
     //TODO should applied for traits
-    //  analyzeInjectionCode(t,uTrait);
+      analyzeInjectionCode(t,uTrait);
     }
     else if (t.is("key") || t.is("defaultKey"))
     {
@@ -755,6 +755,11 @@ class UmpleInternalParser
 			st.setUmpleClass(inClass);
 		}
 		
+               // copy injection codes
+               for (CodeInjection cj : inTrait.getCodeInjections()) {
+                       cj.setUmpleClassifier(inClass);
+                       inClass.addCodeInjection(cj);
+               }
 	  
   }
   

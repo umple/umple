@@ -1793,17 +1793,23 @@ class UmpleInternalParser
     return value;
   }
 
-  private void analyzeInjectionCode(Token injectToken, UmpleClass aClass)
+	//TODO I changed the parameter's type. please remove this comment;
+  private void analyzeInjectionCode(Token injectToken, UmpleClassifier uClassifier)
   {
     String type = injectToken.is("beforeCode") ? "before" : "after";    
     CodeBlock cb = new CodeBlock();
-    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),"",aClass);
-    makeCodeInject(injectToken,injection,cb,aClass);
+    CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),"",uClassifier);
+    makeCodeInject(injectToken,injection,cb,uClassifier);
     injection.setSnippet(cb);
-    aClass.addCodeInjection(injection);    
+    if (uClassifier instanceof UmpleClass) {
+    	((UmpleClass)uClassifier).addCodeInjection(injection);
+    } else if (uClassifier instanceof UmpleTrait){
+    	((UmpleTrait)uClassifier).addCodeInjection(injection);
+    }  
   }
   
-  private void makeCodeInject(Token injectToken,CodeInjection injection, CodeBlock cb, UmpleClass aClass)
+  //TODO I changed the parameter's type. please remove this comment;
+  private void makeCodeInject(Token injectToken,CodeInjection injection, CodeBlock cb, UmpleClassifier uClassifier)
   {
     List<String> langs = new ArrayList<String>();
     for(Token sub: injectToken.getSubTokens())
@@ -1829,7 +1835,7 @@ class UmpleInternalParser
       }
       if(sub.is("codeInject"))
       {
-        makeCodeInject(sub,injection, cb , aClass);
+        makeCodeInject(sub,injection, cb , uClassifier);
       }
     }    
     injection.setPosition(injectToken.getPosition());
