@@ -131,7 +131,7 @@ class StateMachineMetrics{
 
     // printing totals
       code.append("<tr>");    
-      code.append( "<td>"+"TOTALS"+"</td>");
+      code.append( "<td>"+"TOTAL"+"</td>");
       code.append( "<td>"+countTotals.getTotalStateMachines()+"</td>");
       code.append( "<td>"+countTotals.getTotalStates()+"</td>");
       code.append( "<td>"+countTotals.getTotalTransitions()+"</td>");
@@ -148,23 +148,23 @@ class StateMachineMetrics{
     int tc = countTotals.getTotalClass();
     String res;
       code.append("<tr>");    
-      code.append( "<td>"+"AVERAGES"+"</td>");
-      code.append( "<td>"+countTotals.getTotalStateMachines()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalStates()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalTransitions()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalDifferentTransitions()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalEvents()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalGuards()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalActions()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalNestedStateMachine()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalCycles()/tc+"</td>");
-      code.append( "<td>"+countTotals.getTotalSelfCycles()/tc+"</td>");
+      code.append( "<td>"+"AVERAGE"+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalStateMachines()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalStates()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalTransitions()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalDifferentTransitions()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalEvents()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalGuards()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalActions()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalNestedStateMachine()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalCycles()/tc)+"</td>");
+      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalSelfCycles()/tc)+"</td>");
       code.append("</tr>");
 
     
     // printing MAX values
       code.append("<tr>");    
-     code.append( "<td>"+"MAX VALUES"+"</td>");
+     code.append( "<td>"+"MAX"+"</td>");
       code.append( "<td>"+countTotals.getTotalStateMachinesPerClassMax()+"</td>");
       code.append( "<td>"+countTotals.getTotalStatesPerClassMax()+"</td>");
       code.append( "<td>"+countTotals.getTotalTransitionsPerClassMax()+"</td>");
@@ -179,7 +179,7 @@ class StateMachineMetrics{
     
       // printing MIN values
       code.append("<tr>");      
-     code.append( "<td>"+"MIN VALUES"+"</td>");
+     code.append( "<td>"+"MIN"+"</td>");
       code.append( "<td>"+countTotals.getTotalStateMachinesPerClassMin()+"</td>");
       code.append( "<td>"+countTotals.getTotalStatesPerClassMin()+"</td>");
       code.append( "<td>"+countTotals.getTotalTransitionsPerClassMin()+"</td>");

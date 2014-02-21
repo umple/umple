@@ -57,17 +57,17 @@
 use SimpleMetrics_Util.ump;
 
 class CodeMetrics {
-	isA SimpleMetricsGenerator;
-	StringBuilder code = null;
-	UmpleModel model=null;
-	
-	void calculate(){
+  isA SimpleMetricsGenerator;
+  StringBuilder code = null;
+  UmpleModel model=null;
+  
+  void calculate(){
       int totalLineCount = 0; //count lines per file
       int totalLoc = 0;
       int totalComments = 0;
       int totalBlanks = 0;
-	  CountLines cl = new CountLines();
-	
+    CountLines cl = new CountLines();
+  
       java.util.Set<String> allUmpFiles = new java.util.HashSet<String>();
       String fn = null;
   
@@ -81,9 +81,9 @@ class CodeMetrics {
         }
       }
 
-	  code.append( "\n\n\n");
+    code.append( "\n\n\n");
       code.append("<h1>Code Line Measures</h1>\n");      
-	  
+    
       java.util.List<String>title  = new java.util.ArrayList<String>();
       title.add(" file                                                     ");
       title.add("    LOC    ");
@@ -99,7 +99,7 @@ class CodeMetrics {
       }
       code.append("</tr>");
       
-	  
+    
       for( String fn1 : allUmpFiles){
           int fileLineCount = 0;
         code.append("<tr>");
@@ -113,7 +113,7 @@ class CodeMetrics {
              code.append( "<td>"+cl.getCountBlanks()+"</td>");
              code.append( "<td>"+cl.getCountLines()+"</td>");
           }
-	 	  catch (java.io.IOException e) {
+       catch (java.io.IOException e) {
              try {
                  cl = countLinesInFile(model.getUmpleFile().getPath()+java.io.File.separator+fn1);
          
@@ -130,24 +130,24 @@ class CodeMetrics {
                  code.append("Unreadable\n");
               } 
             }
-   	        totalLoc += cl.getCountCode();
+             totalLoc += cl.getCountCode();
             totalComments += cl.getCountComments();
             totalBlanks += cl.getCountBlanks();
             totalLineCount += cl.getCountLines();  
             
         code.append("</tr>");
-	    }
-	    code.append("</tbody></table>");
-  	    code.append("\n\n<ul>");
+      }
+      code.append("</tbody></table>");
+        code.append("\n\n<ul>");
         code.append("\n  <li>Total Line of Code = "+totalLoc);
         code.append("\n  <li>Total Comment Lines  = "+totalComments );
         code.append("\n  <li>Total Blank Lines  = "+totalBlanks);
         code.append("\n  <li>Total of Lines = "+totalLineCount + "\n");
-	    code.append("</ul>\n\n");
-		return;
-	}
-	
-	CountLines countLinesInFile(String filename)throws java.io.IOException{
+      code.append("</ul>\n\n");
+    return;
+  }
+  
+  CountLines countLinesInFile(String filename)throws java.io.IOException{
      CountLines cl = new CountLines();
      cl.setCountLines(0);
      cl.setCountComments(0);
@@ -160,7 +160,7 @@ class CodeMetrics {
           java.io.BufferedReader lerArq = new java.io.BufferedReader(arq);
           String orgline;
           String line = lerArq.readLine(); // Read first line of a file
-      	  
+          
           while (line != null) {
           ind1=-1;
           ind2=-1;
@@ -173,23 +173,23 @@ class CodeMetrics {
           // destroy quoted/string          
           int pos1, pos2 = -1;
           if ( (pos1 = line.indexOf("\"")) >= 0 ){
-          	if ( ( (pos2= line.indexOf("\"",pos1+1)) > 0 ) && (pos2 > pos1) ){
-         		line = line.substring( 0, pos1+1 ) + line.substring( pos1 + (pos2-pos1), line.length() ) ;
-          	}
+            if ( ( (pos2= line.indexOf("\"",pos1+1)) > 0 ) && (pos2 > pos1) ){
+             line = line.substring( 0, pos1+1 ) + line.substring( pos1 + (pos2-pos1), line.length() ) ;
+            }
           }
 
           if ( line.length() == 0){
             cl.incCountBlanks();
 
           }else{    
-		  
+      
             //comment in one line
             if ( ((ind1 = line.indexOf("//")) != -1) && (!insideblock) ) {
               cl.incCountComments();
               line = line.substring(0,2); // consume the line to avoid parsing mistakes
 
             }
-			
+      
             // block of comments
             if (insideblock){
               cl.incCountComments();
@@ -204,10 +204,10 @@ class CodeMetrics {
                 insideblock = true;
               }
             }
-			
+      
             // line of code
             if  ( ( (!insideblock) && (  (ind1 > 0) || (ind2 > 0) ) )|| // ind1 check "//"  and ind 2 check "/*"
-            	     ( (ind3 > 0) && (ind3 < line.length()-2) ) || // close braces before code line 
+                   ( (ind3 > 0) && (ind3 < line.length()-2) ) || // close braces before code line 
                      ( (ind1==-1) && (ind2==-1) && (ind3==-1) && (!insideblock)  ) //
                  )  {
                 cl.incCountCode();     
@@ -217,7 +217,7 @@ class CodeMetrics {
           } // close while (line != null)
           arq.close();
        return cl;
-   } // End method	
+   } // End method  
 }
 
 
