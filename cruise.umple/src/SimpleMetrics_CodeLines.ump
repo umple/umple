@@ -82,9 +82,7 @@ class CodeMetrics {
       }
 
 	  code.append( "\n\n\n");
-      code.append(Format.repeat("*",126)+"\n");
-      code.append(Format.repeat(" ",20)+"C O D E   L I N E   M E A S U R E S"+"\n");
-      code.append(Format.repeat("*",126)+"\n");
+      code.append("<h1>Code Line Measures</h1>\n");      
 	  
       java.util.List<String>title  = new java.util.ArrayList<String>();
       title.add(" file                                                     ");
@@ -92,39 +90,38 @@ class CodeMetrics {
       title.add(" Comment Lines ");
       title.add(" Blank Lines ");
       title.add(" Total of Lines ");
-      code.append(Format.repeat("-",120)+"\n");
-            
-      for (int i=0;i<title.size();i++){ code.append("|"+title.get(i));  }
-      code.append(" |\n");          
-      code.append(Format.repeat("-",120)+"\n");
+      
+      code.append("<table border=\"1\"><tbody>\n");
+      
+      code.append("<tr>");
+      for (int i=0;i<title.size();i++){
+          code.append("<td>"+title.get(i)+"</td>");
+      }
+      code.append("</tr>");
       
 	  
       for( String fn1 : allUmpFiles){
           int fileLineCount = 0;
+        code.append("<tr>");
      
          try {
              cl = countLinesInFile(fn1);
             
-			 String vartemp = fn1.substring( fn1.lastIndexOf("\\")+1);
-             code.append( "| " +vartemp+ Format.repeat(" ", title.get(0).length()-vartemp.length()-1 ) );
-             code.append( "| " +Format.repeat(" ", title.get(1).length()-(""+cl.getCountCode()).length()-1 )+ cl.getCountCode() );
-             code.append( "| " +Format.repeat(" ", title.get(2).length()-(""+cl.getCountComments()).length()-1 )+ cl.getCountComments() );
-             code.append( "| " +Format.repeat(" ", title.get(3).length()-(""+cl.getCountBlanks()).length()-1 )+ cl.getCountBlanks() );
-             code.append( "| " +Format.repeat(" ", title.get(4).length()-(""+cl.getCountLines()).length()-1 )+ cl.getCountLines() );
-             code.append( " |\n" ); // closing the record. One record one line.
-             code.append(Format.repeat("-",120)+"\n");
+             code.append( "<td>"+fn1+"</td>");
+             code.append( "<td>"+cl.getCountCode()+"</td>");
+             code.append( "<td>"+cl.getCountComments()+"</td>");
+             code.append( "<td>"+cl.getCountBlanks()+"</td>");
+             code.append( "<td>"+cl.getCountLines()+"</td>");
           }
 	 	  catch (java.io.IOException e) {
              try {
                  cl = countLinesInFile(model.getUmpleFile().getPath()+java.io.File.separator+fn1);
          
-                 code.append("| "+fn1.substring( fn1.lastIndexOf("\\")+1)+ Format.repeat(" ", title.get(0).length()-(""+fn1).length() ) );
-                 code.append( "| " +Format.repeat(" ", title.get(1).length()-(""+cl.getCountCode()).length() )+ cl.getCountCode() );
-                 code.append( "| " +Format.repeat(" ", title.get(2).length()-(""+cl.getCountComments()).length() )+ cl.getCountComments() );
-                 code.append( "| " +Format.repeat(" ", title.get(3).length()-(""+cl.getCountBlanks()).length() )+ cl.getCountBlanks() );
-                 code.append( "| " +Format.repeat(" ", title.get(4).length()-(""+cl.getCountLines()).length() )+ cl.getCountLines() );
-                 code.append( " |\n" ); // closing the record. One record one line.
-                 code.append(Format.repeat("-",135)+"\n");
+             code.append( "<td>"+fn1+"</td>");
+             code.append( "<td>"+cl.getCountCode()+"</td>");
+             code.append( "<td>"+cl.getCountComments()+"</td>");
+             code.append( "<td>"+cl.getCountBlanks()+"</td>");
+             code.append( "<td>"+cl.getCountLines()+"</td>");
           
               }
               catch (java.io.IOException e2) {  
@@ -137,13 +134,16 @@ class CodeMetrics {
             totalComments += cl.getCountComments();
             totalBlanks += cl.getCountBlanks();
             totalLineCount += cl.getCountLines();  
+            
+        code.append("</tr>");
 	    }
-  	    code.append("\n\n");
-        code.append("\n  Total Line of Code = "+totalLoc);
-        code.append("\n  Total Comment Lines  = "+totalComments );
-        code.append("\n  Total Blank Lines  = "+totalBlanks);
-        code.append("\n  Total Total of Lines = "+totalLineCount + "\n");
-	    code.append("\n\n");
+	    code.append("</tbody></table>");
+  	    code.append("\n\n<ul>");
+        code.append("\n  <li>Total Line of Code = "+totalLoc);
+        code.append("\n  <li>Total Comment Lines  = "+totalComments );
+        code.append("\n  <li>Total Blank Lines  = "+totalBlanks);
+        code.append("\n  <li>Total of Lines = "+totalLineCount + "\n");
+	    code.append("</ul>\n\n");
 		return;
 	}
 	

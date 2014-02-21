@@ -56,7 +56,7 @@ function generateMenu($buttonSuffix)
             <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>                        
             <option value=\"java:Json\">Json</option>
             <option value=\"sql:Sql\">Sql</option>
-            <option value=\"java:SimpleMetrics\">Simple metrics</option>
+            <option value=\"html:SimpleMetrics\">Simple metrics</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
