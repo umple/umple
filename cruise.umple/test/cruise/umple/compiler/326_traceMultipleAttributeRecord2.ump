@@ -1,9 +1,0 @@
-namespace example;
-
-class Tracer
-{
-	Integer id;
-	String name;
-	String address;
-	trace name,address record only id;
-}
