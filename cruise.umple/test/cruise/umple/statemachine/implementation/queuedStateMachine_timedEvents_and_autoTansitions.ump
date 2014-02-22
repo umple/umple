@@ -1,0 +1,13 @@
+class X{
+  queued sm{
+    s1 {
+      e1 -> s2;
+      ->s3;
+    }
+    s2{
+      after(10) -> s3;
+    }
+    s3{
+    }
+  }
+}

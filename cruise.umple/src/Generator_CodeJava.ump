@@ -964,15 +964,23 @@ class JavaGenerator
     
     //Add  entry / exit methods to start and stop the timed events in Java
     boolean hasTimedEvents = false;
+    StateMachine smq = null;
     for (StateMachine sm : aClass.getStateMachines())
     {
       prepareNestedStatesFor(sm,null,0);
       hasTimedEvents = prepareTimedEvents(sm) || hasTimedEvents;
+      smq = sm;
     }
         
     if (hasTimedEvents)
     {
-      aClass.addDepend(new Depend("java.util.*"));
+      if (!smq.isQueued())
+      {
+        if (!smq.isPooled())
+        {
+          aClass.addDepend(new Depend("java.util.*"));
+        }
+      }
     }
   }
   
