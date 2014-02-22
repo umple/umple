@@ -355,6 +355,18 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
   
   @Test
+  public void queuedStateMachine_timedEvents()
+  {
+	assertUmpleTemplateFor("queuedStateMachine_timedEvents.ump",languagePath + "/queuedStateMachine_timedEvents."+ languagePath +".txt","Mentor");
+  }
+  
+  @Test
+  public void pooledStateMachine_timedEvents()
+  {
+	assertUmpleTemplateFor("pooledStateMachine_timedEvents.ump",languagePath + "/pooledStateMachine_timedEvents."+ languagePath +".txt","Mentor");
+  }
+  
+  @Test
   public void pooledStateMachine()
   {
 	assertUmpleTemplateFor("pooledStateMachine.ump",languagePath + "/pooledStateMachine."+ languagePath +".txt","Course");

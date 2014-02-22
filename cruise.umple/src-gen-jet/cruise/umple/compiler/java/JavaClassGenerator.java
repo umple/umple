@@ -9482,6 +9482,8 @@ if (p != null) {
       { 
         if(event.isAutoTransition() == false)
         {
+        if(!event.getIsTimer())
+        {
         append(stringBuffer,"\n");
         append(stringBuffer,"  public void ");
         append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
@@ -9494,8 +9496,8 @@ if (p != null) {
           {
             append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
           }
-	      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
-	      append(stringBuffer,"_M, v));");
+        append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+        append(stringBuffer,"_M, v));");
         }
         else
         {
@@ -9504,6 +9506,7 @@ if (p != null) {
         }
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
+      }
       }
       }
 
@@ -9516,6 +9519,8 @@ if (p != null) {
         for (Event e : nsm.getEvents())
         {
           if(e.isAutoTransition() == false)
+          {
+          if(!e.getIsTimer())
           {
           for(int i=0; i<eveList.size(); i++){
             if(eveList.get(i)== e.getName())
@@ -9543,8 +9548,8 @@ if (p != null) {
                     append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
                   }
                   append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-	              append(stringBuffer,"_M, v));");
-	              eveName=e.getName(); 
+                append(stringBuffer,"_M, v));");
+                eveName=e.getName(); 
                 }
                 else
                 {
@@ -9560,6 +9565,7 @@ if (p != null) {
           sameEventName=false;
         }
         }
+        }
       }
     }
   }
@@ -9568,6 +9574,8 @@ if (p != null) {
      for(Event event : smq.getEvents())
            {
            if(event.isAutoTransition() == false)
+           {
+           if(!event.getIsTimer())
            {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
              append(stringBuffer,"_M:");
@@ -9593,6 +9601,7 @@ if (p != null) {
              append(stringBuffer,"\n          break;");
              }
              }
+             }
 
 
              String eveName="";
@@ -9604,6 +9613,8 @@ if (p != null) {
                {
                if(e.isAutoTransition() == false)
                {
+               if(!e.getIsTimer())
+               {
                  for(int i=0; i<eveList.size(); i++){
                    if(eveList.get(i)== e.getName()){
                      sameEventName=true;
@@ -9612,7 +9623,7 @@ if (p != null) {
           
                  if(sameEventName == false)
                  {
-          		   if(!(eveName.equals(e.getName())))
+                 if(!(eveName.equals(e.getName())))
                    {
                      if(e.getIsInternal() == false)
                      {
@@ -9645,6 +9656,7 @@ if (p != null) {
                    }
                  }
                  sameEventName=false;
+               }
                }
                }
              }
@@ -9744,6 +9756,8 @@ if (p != null) {
       { 
         if(event.isAutoTransition() == false)
         {
+        if(!event.getIsTimer())
+        {
         append(stringBuffer,"\n");
         append(stringBuffer,"  public void ");
         append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
@@ -9756,8 +9770,8 @@ if (p != null) {
           {
             append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
           }
-	      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
-	      append(stringBuffer,"_M, v));");
+        append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+        append(stringBuffer,"_M, v));");
         }
         else
         {
@@ -9766,6 +9780,7 @@ if (p != null) {
         }
         append(stringBuffer,"\n  }");
         append(stringBuffer,"\n");
+      }
       }
       }
 
@@ -9778,6 +9793,8 @@ if (p != null) {
         for (Event e : nsm.getEvents())
         {
           if(e.isAutoTransition() == false)
+          {
+          if(!e.getIsTimer())
           {
           for(int i=0; i<eveList.size(); i++){
             if(eveList.get(i)== e.getName())
@@ -9805,8 +9822,8 @@ if (p != null) {
                     append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
                   }
                   append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-	              append(stringBuffer,"_M, v));");
-	              eveName=e.getName(); 
+                append(stringBuffer,"_M, v));");
+                eveName=e.getName(); 
                 }
                 else
                 {
@@ -9822,6 +9839,7 @@ if (p != null) {
           sameEventName=false;
         }
         }
+        }
       }
     }
   }
@@ -9830,6 +9848,8 @@ if (p != null) {
      for(Event event : smq.getEvents())
            {
            if(event.isAutoTransition() == false)
+           {
+           if(!event.getIsTimer())
            {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
              append(stringBuffer,"_M:");
@@ -9855,6 +9875,7 @@ if (p != null) {
              append(stringBuffer,"\n          break;");
              }
              }
+             }
 
 
              String eveName="";
@@ -9866,6 +9887,8 @@ if (p != null) {
                {
                if(e.isAutoTransition() == false)
                {
+               if(!e.getIsTimer())
+               {
                  for(int i=0; i<eveList.size(); i++){
                    if(eveList.get(i)== e.getName()){
                      sameEventName=true;
@@ -9874,7 +9897,7 @@ if (p != null) {
           
                  if(sameEventName == false)
                  {
-          		   if(!(eveName.equals(e.getName())))
+                 if(!(eveName.equals(e.getName())))
                    {
                      if(e.getIsInternal() == false)
                      {
@@ -9907,6 +9930,7 @@ if (p != null) {
                    }
                  }
                  sameEventName=false;
+               }
                }
                }
              }

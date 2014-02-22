@@ -14,6 +14,8 @@
            {
            if(event.isAutoTransition() == false)
            {
+           if(!event.getIsTimer())
+           {
              append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
              append(stringBuffer,"_M:");
              if (!event.getArgs().equals(""))
@@ -38,6 +40,7 @@
              append(stringBuffer,"\n          break;");
              }
              }
+             }
 
 
              String eveName="";
@@ -49,6 +52,8 @@
                {
                if(e.isAutoTransition() == false)
                {
+               if(!e.getIsTimer())
+               {
                  for(int i=0; i<eveList.size(); i++){
                    if(eveList.get(i)== e.getName()){
                      sameEventName=true;
@@ -57,7 +62,7 @@
           
                  if(sameEventName == false)
                  {
-          		   if(!(eveName.equals(e.getName())))
+                 if(!(eveName.equals(e.getName())))
                    {
                      if(e.getIsInternal() == false)
                      {
@@ -90,6 +95,7 @@
                    }
                  }
                  sameEventName=false;
+               }
                }
                }
              }
