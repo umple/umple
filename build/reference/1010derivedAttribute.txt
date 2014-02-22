@@ -36,6 +36,6 @@ class Point
 class Rectangle {
   Double height;
   Double width;
-  Double area = Java {height*width} Php ($height*$width}
+  Double area = Java {height*width} Php {$height*$width}
 }  
 @@endexample
