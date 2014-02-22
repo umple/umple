@@ -1,0 +1,280 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3544 modeling language!*/
+
+package example;
+import java.util.*;
+import java.util.*;
+import java.lang.Thread;
+
+public class Mentor implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private int howLongUntilOk;
+
+  //Mentor State Machines
+  enum Status { Ok, NotOk }
+  private Status status;
+  
+  //enumeration type of messages accepted by Mentor
+  enum MessageType {  }
+  
+  MessagePool pool;
+  Thread removal;
+
+  //Helper Variables
+  private TimedEventHandler timeoutOkToNotOkHandler;
+  private TimedEventHandler timeoutNotOkToOkHandler;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor()
+  {
+    howLongUntilOk = 3;
+    setStatus(Status.Ok);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of Mentor
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setHowLongUntilOk(int aHowLongUntilOk)
+  {
+    boolean wasSet = false;
+    howLongUntilOk = aHowLongUntilOk;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getHowLongUntilOk()
+  {
+    return howLongUntilOk;
+  }
+
+  public String getStatusFullName()
+  {
+    String answer = status.toString();
+    return answer;
+  }
+
+  public Status getStatus()
+  {
+    return status;
+  }
+
+  public boolean _timeoutOkToNotOk()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case Ok:
+        exitStatus();
+        setStatus(Status.NotOk);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _timeoutNotOkToOk()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
+    {
+      case NotOk:
+        exitStatus();
+        setStatus(Status.Ok);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitStatus()
+  {
+    switch(status)
+    {
+      case Ok:
+        stopTimeoutOkToNotOkHandler();
+        break;
+      case NotOk:
+        stopTimeoutNotOkToOkHandler();
+        break;
+    }
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case Ok:
+        startTimeoutOkToNotOkHandler();
+        break;
+      case NotOk:
+        startTimeoutNotOkToOkHandler();
+        break;
+    }
+  }
+
+  private void startTimeoutOkToNotOkHandler()
+  {
+    timeoutOkToNotOkHandler = new TimedEventHandler(this,"timeoutOkToNotOk",4);
+  }
+
+  private void stopTimeoutOkToNotOkHandler()
+  {
+    timeoutOkToNotOkHandler.stop();
+  }
+
+  private void startTimeoutNotOkToOkHandler()
+  {
+    timeoutNotOkToOkHandler = new TimedEventHandler(this,"timeoutNotOkToOk",howLongUntilOk);
+  }
+
+  private void stopTimeoutNotOkToOkHandler()
+  {
+    timeoutNotOkToOkHandler.stop();
+  }
+
+  public static class TimedEventHandler extends TimerTask  
+  {
+    private Mentor controller;
+    private String timeoutMethodName;
+    private double howLongInSeconds;
+    private Timer timer;
+    
+    public TimedEventHandler(Mentor aController, String aTimeoutMethodName, double aHowLongInSeconds)
+    {
+      controller = aController;
+      timeoutMethodName = aTimeoutMethodName;
+      howLongInSeconds = aHowLongInSeconds;
+      timer = new Timer();
+      timer.schedule(this, (long)howLongInSeconds*1000);
+    }
+    
+    public void stop()
+    {
+      timer.cancel();
+    }
+    
+    public void run ()
+    {
+      if ("timeoutOkToNotOk".equals(timeoutMethodName))
+      {
+        boolean shouldRestart = !controller.timeoutOkToNotOk();
+        if (shouldRestart)
+        {
+          controller.startTimeoutOkToNotOkHandler();
+        }
+        return;
+      }
+      if ("timeoutNotOkToOk".equals(timeoutMethodName))
+      {
+        boolean shouldRestart = !controller.timeoutNotOkToOk();
+        if (shouldRestart)
+        {
+          controller.startTimeoutNotOkToOkHandler();
+        }
+        return;
+      }
+    }
+  }
+
+  public void delete()
+  {}
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      { 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "howLongUntilOk" + ":" + getHowLongUntilOk()+ "]"
+     + outputString;
+  }
+}

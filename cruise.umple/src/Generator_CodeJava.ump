@@ -237,12 +237,15 @@ class JavaGenerator
       {
         if (!event.isAutoTransition())
         {
-          if (allEnums.length() > 0)
+          if(!event.getIsTimer())
           {
-            allEnums += ", ";
+            if (allEnums.length() > 0)
+            {
+              allEnums += ", ";
+            }
+            allEnums += translate("eventMethod",event);
+            allEnums += "_M";
           }
-          allEnums += translate("eventMethod",event);
-          allEnums += "_M";
         }
       }
       return allEnums;
@@ -269,18 +272,21 @@ class JavaGenerator
             {
               if (!event.isAutoTransition())
               {
-              if( eveName != event.getName()){
-                eveList.add(event.getName());
-              
-        	    if (allEnums.length() > 0 )
+                if(!event.getIsTimer())
                 {
-                  allEnums += ", ";
-                }
-                allEnums += translate("eventMethod",event);
-                allEnums += "_M"; 
-                eveName=event.getName();
+                  if( eveName != event.getName()){
+                    eveList.add(event.getName());
+              
+                  if (allEnums.length() > 0 )
+                    {
+                      allEnums += ", ";
+                    }
+                    allEnums += translate("eventMethod",event);
+                    allEnums += "_M"; 
+                    eveName=event.getName();
+                  }
+                } 
               }
-              } 
             }
           }
           sameEventName=false;
@@ -301,12 +307,15 @@ class JavaGenerator
       {
         if (!event.isAutoTransition())
         {
-          if (allEnums.length() > 0)
+          if(!event.getIsTimer())
           {
-            allEnums += ", ";
-          }
-          allEnums += translate("eventMethod",event);
-          allEnums += "_M";
+            if (allEnums.length() > 0)
+            {
+              allEnums += ", ";
+            }
+            allEnums += translate("eventMethod",event);
+            allEnums += "_M";
+         }
        }
       }
       if(allEnums.length() > 0 )
@@ -329,18 +338,21 @@ class JavaGenerator
             {
               if (!event.isAutoTransition())
               {
-              if( eveName != event.getName())
-              {
-                eveList.add(event.getName());
-              
-                if (allNesEvenEnums.length() > 0)
+                if(!event.getIsTimer())
                 {
-                  allNesEvenEnums += ", ";
+                  if( eveName != event.getName())
+                  {
+                    eveList.add(event.getName());
+              
+                    if (allNesEvenEnums.length() > 0)
+                    {
+                      allNesEvenEnums += ", ";
+                    }
+                    allNesEvenEnums += translate("eventMethod",event);
+                    allNesEvenEnums += "_M"; 
+                    eveName=event.getName();
+                  } 
                 }
-                allNesEvenEnums += translate("eventMethod",event);
-                allNesEvenEnums += "_M"; 
-                eveName=event.getName();
-              } 
               }
             }
           }
@@ -371,13 +383,16 @@ class JavaGenerator
         {
           if(!t.getEvent().isAutoTransition())
           {
-            if (allEventEnums.length() > 0)
+            if(!t.getEvent().getIsTimer())
             {
-              allEventEnums += ", ";
+              if (allEventEnums.length() > 0)
+              {
+                allEventEnums += ", ";
+              }
+              allEventEnums += "MessageType.";
+              allEventEnums += t.getEvent().getName();
+              allEventEnums += "_M";
             }
-            allEventEnums += "MessageType.";
-            allEventEnums += t.getEvent().getName();
-            allEventEnums += "_M";
           }
         }
         allEnums += allEventEnums;

@@ -1,0 +1,195 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+#include "Mentor.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ Mentor::Mentor()
+  {
+    howLongUntilOk = 3;
+    setStatus(Ok);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ Mentor::Mentor(const Mentor & mentor)
+  {
+    this->howLongUntilOk = mentor.howLongUntilOk;
+  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ Mentor Mentor::operator=(const Mentor & mentor)
+  {
+    this->howLongUntilOk = mentor.howLongUntilOk;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  bool Mentor::setHowLongUntilOk(const int & aHowLongUntilOk)
+  {
+    bool wasSet = false;
+    howLongUntilOk = aHowLongUntilOk;
+    wasSet = true;
+    return wasSet;
+  }
+
+  int Mentor::getHowLongUntilOk() const
+  {
+    return howLongUntilOk;
+  }
+
+  string Mentor::getStatusFullName()
+  {
+    string answer = getStatusStringName(status);
+    return answer;
+  }
+  
+  Mentor::Status Mentor::getStatus()
+  {
+    return status;
+  }
+
+  string Mentor::getStatusStringName (Status status)
+  {
+    switch (status)  {
+      case 0 : {return "Ok"; break;}
+      case 1 : {return "NotOk"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool Mentor::timeoutOkToNotOk()
+  {
+    bool wasEventProcessed = false;
+
+    switch (status)
+    {
+      case Ok:
+        exitStatus();
+        setStatus(NotOk);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool Mentor::timeoutNotOkToOk()
+  {
+    bool wasEventProcessed = false;
+
+    switch (status)
+    {
+      case NotOk:
+        exitStatus();
+        setStatus(Ok);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void Mentor::exitStatus()
+  {
+    switch(status)
+    {
+      case Ok:
+        stopTimeoutOkToNotOkHandler();
+        break;
+      case NotOk:
+        stopTimeoutNotOkToOkHandler();
+        break;
+    }
+  }
+
+  void Mentor::setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case Ok:
+        startTimeoutOkToNotOkHandler();
+        break;
+      case NotOk:
+        startTimeoutNotOkToOkHandler();
+        break;
+    }
+  }
+  
+
+  void startTimeoutOkToNotOkHandler();
+  void stopTimeoutOkToNotOkHandler();
+  
+
+
+  void startTimeoutNotOkToOkHandler();
+  void stopTimeoutNotOkToOkHandler();
+  
+
+
+  public static class TimedEventHandler extends TimerTask  
+  {
+    private Mentor controller;
+    private String timeoutMethodName;
+    private double howLongInSeconds;
+    private Timer timer;
+    
+    public TimedEventHandler(Mentor aController, String aTimeoutMethodName, double aHowLongInSeconds)
+    {
+      controller = aController;
+      timeoutMethodName = aTimeoutMethodName;
+      howLongInSeconds = aHowLongInSeconds;
+      timer = new Timer();
+      timer.schedule(this, (long)howLongInSeconds*1000);
+    }
+    
+    public void Mentor::stop()
+    {
+      timer.cancel();
+    }
+    
+    public void Mentor::run ()
+    {
+      if ("timeoutOkToNotOk" == timeoutMethodName)
+      {
+        boolean shouldRestart = !controller.timeoutOkToNotOk();
+        if (shouldRestart)
+        {
+          controller.startTimeoutOkToNotOkHandler();
+        }
+        return;
+      }
+      if ("timeoutNotOkToOk" == timeoutMethodName)
+      {
+        boolean shouldRestart = !controller.timeoutNotOkToOk();
+        if (shouldRestart)
+        {
+          controller.startTimeoutNotOkToOkHandler();
+        }
+        return;
+      }
+    }
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+Mentor::~Mentor()
+  {}

@@ -1,0 +1,100 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3548 modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $howLongUntilOk;
+
+  //Mentor State Machines
+  private static $StatusOk = 1;
+  private static $StatusNotOk = 2;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->howLongUntilOk = 3;
+    $this->setStatus(self::$StatusOk);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setHowLongUntilOk($aHowLongUntilOk)
+  {
+    $wasSet = false;
+    $this->howLongUntilOk = $aHowLongUntilOk;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getHowLongUntilOk()
+  {
+    return $this->howLongUntilOk;
+  }
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOk) { return "StatusOk"; }
+    elseif ($this->status == self::$StatusNotOk) { return "StatusNotOk"; }
+    return null;
+  }
+
+  public function timeoutOkToNotOk()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOk)
+    {
+      $this->setStatus(self::$StatusNotOk);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function timeoutNotOkToOk()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusNotOk)
+    {
+      $this->setStatus(self::$StatusOk);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

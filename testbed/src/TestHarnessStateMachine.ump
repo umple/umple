@@ -107,7 +107,7 @@ class CourseH
   }
 }
 
-
+strictness ignore 55;
 class CourseI
 {
   status
