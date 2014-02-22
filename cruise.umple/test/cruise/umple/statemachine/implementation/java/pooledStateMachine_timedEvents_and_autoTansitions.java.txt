@@ -1,11 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3544 modeling language!*/
+/*This code was generated using the UMPLE 1.19.0.3552 modeling language!*/
 
-package example;
+
 import java.util.*;
 import java.lang.Thread;
 
-public class Mentor implements Runnable
+public class X implements Runnable
 {
   @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
   public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
@@ -14,38 +14,34 @@ public class Mentor implements Runnable
   // MEMBER VARIABLES
   //------------------------
 
-  //Mentor Attributes
-  private int howLongUntilOk;
-
-  //Mentor State Machines
-  enum Status { Ok, NotOk }
-  private Status status;
+  //X State Machines
+  enum Sm { s1, s2, s3 }
+  private Sm sm;
   
-  //enumeration type of messages accepted by Mentor
-  enum MessageType {  }
+  //enumeration type of messages accepted by X
+  enum MessageType { e1_M }
   
   MessagePool pool;
   Thread removal;
 
-  // A list of message types for each state of the Mentor
-  List<MessageType> state1MsgTypeList= Arrays.asList();
+  // A list of message types for each state of the X
+  List<MessageType> state1MsgTypeList= Arrays.asList(MessageType.e1_M);
   List<MessageType> state2MsgTypeList= Arrays.asList();
+  List<MessageType> state3MsgTypeList= Arrays.asList();
 
   //Helper Variables
-  private TimedEventHandler timeoutOkToNotOkHandler;
-  private TimedEventHandler timeoutNotOkToOkHandler;
+  private TimedEventHandler timeouts2Tos3Handler;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Mentor()
+  public X()
   {
-    howLongUntilOk = 3;
-    setStatus(Status.Ok);
+    setSm(Sm.s1);
     pool = new MessagePool();
     removal=new Thread(this);
-    //start the thread of Mentor
+    //start the thread of X
     removal.start();
   }
 
@@ -53,40 +49,26 @@ public class Mentor implements Runnable
   // INTERFACE
   //------------------------
 
-  public boolean setHowLongUntilOk(int aHowLongUntilOk)
+  public String getSmFullName()
   {
-    boolean wasSet = false;
-    howLongUntilOk = aHowLongUntilOk;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public int getHowLongUntilOk()
-  {
-    return howLongUntilOk;
-  }
-
-  public String getStatusFullName()
-  {
-    String answer = status.toString();
+    String answer = sm.toString();
     return answer;
   }
 
-  public Status getStatus()
+  public Sm getSm()
   {
-    return status;
+    return sm;
   }
 
-  public boolean _timeoutOkToNotOk()
+  public boolean _e1()
   {
     boolean wasEventProcessed = false;
     
-    Status aStatus = status;
-    switch (aStatus)
+    Sm aSm = sm;
+    switch (aSm)
     {
-      case Ok:
-        exitStatus();
-        setStatus(Status.NotOk);
+      case s1:
+        setSm(Sm.s2);
         wasEventProcessed = true;
         break;
       default:
@@ -96,16 +78,15 @@ public class Mentor implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean _timeoutNotOkToOk()
+  private boolean __autotransition7__()
   {
     boolean wasEventProcessed = false;
     
-    Status aStatus = status;
-    switch (aStatus)
+    Sm aSm = sm;
+    switch (aSm)
     {
-      case NotOk:
-        exitStatus();
-        setStatus(Status.Ok);
+      case s1:
+        setSm(Sm.s3);
         wasEventProcessed = true;
         break;
       default:
@@ -115,63 +96,69 @@ public class Mentor implements Runnable
     return wasEventProcessed;
   }
 
-  private void exitStatus()
+  public boolean _timeouts2Tos3()
   {
-    switch(status)
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
     {
-      case Ok:
-        stopTimeoutOkToNotOkHandler();
+      case s2:
+        exitSm();
+        setSm(Sm.s3);
+        wasEventProcessed = true;
         break;
-      case NotOk:
-        stopTimeoutNotOkToOkHandler();
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case s2:
+        stopTimeouts2Tos3Handler();
         break;
     }
   }
 
-  private void setStatus(Status aStatus)
+  private void setSm(Sm aSm)
   {
-    status = aStatus;
+    sm = aSm;
 
     // entry actions and do activities
-    switch(status)
+    switch(sm)
     {
-      case Ok:
-        startTimeoutOkToNotOkHandler();
+      case s1:
+        __autotransition7__();
         break;
-      case NotOk:
-        startTimeoutNotOkToOkHandler();
+      case s2:
+        startTimeouts2Tos3Handler();
         break;
     }
   }
 
-  private void startTimeoutOkToNotOkHandler()
+  private void startTimeouts2Tos3Handler()
   {
-    timeoutOkToNotOkHandler = new TimedEventHandler(this,"timeoutOkToNotOk",4);
+    timeouts2Tos3Handler = new TimedEventHandler(this,"timeouts2Tos3",10);
   }
 
-  private void stopTimeoutOkToNotOkHandler()
+  private void stopTimeouts2Tos3Handler()
   {
-    timeoutOkToNotOkHandler.stop();
-  }
-
-  private void startTimeoutNotOkToOkHandler()
-  {
-    timeoutNotOkToOkHandler = new TimedEventHandler(this,"timeoutNotOkToOk",howLongUntilOk);
-  }
-
-  private void stopTimeoutNotOkToOkHandler()
-  {
-    timeoutNotOkToOkHandler.stop();
+    timeouts2Tos3Handler.stop();
   }
 
   public static class TimedEventHandler extends TimerTask  
   {
-    private Mentor controller;
+    private X controller;
     private String timeoutMethodName;
     private double howLongInSeconds;
     private Timer timer;
     
-    public TimedEventHandler(Mentor aController, String aTimeoutMethodName, double aHowLongInSeconds)
+    public TimedEventHandler(X aController, String aTimeoutMethodName, double aHowLongInSeconds)
     {
       controller = aController;
       timeoutMethodName = aTimeoutMethodName;
@@ -187,21 +174,12 @@ public class Mentor implements Runnable
     
     public void run ()
     {
-      if ("timeoutOkToNotOk".equals(timeoutMethodName))
+      if ("timeouts2Tos3".equals(timeoutMethodName))
       {
-        boolean shouldRestart = !controller.timeoutOkToNotOk();
+        boolean shouldRestart = !controller.timeouts2Tos3();
         if (shouldRestart)
         {
-          controller.startTimeoutOkToNotOkHandler();
-        }
-        return;
-      }
-      if ("timeoutNotOkToOk".equals(timeoutMethodName))
-      {
-        boolean shouldRestart = !controller.timeoutNotOkToOk();
-        if (shouldRestart)
-        {
-          controller.startTimeoutNotOkToOkHandler();
+          controller.startTimeouts2Tos3Handler();
         }
         return;
       }
@@ -211,16 +189,19 @@ public class Mentor implements Runnable
   public void delete()
   {}
 
-  // A method to return a list of message types for each state of the Mentorstate machine
-  public List<MessageType> getStateMsgTypeList(Status state){
+  // A method to return a list of message types for each state of the Xstate machine
+  public List<MessageType> getStateMsgTypeList(Sm state){
     List<MessageType> msg = null;
     switch (state)
     {
-      case Ok:
+      case s1:
         msg=state1MsgTypeList;
         break;
-      case NotOk:
+      case s2:
         msg=state2MsgTypeList;
+        break;
+      case s3:
+        msg=state3MsgTypeList;
         break;
       default:
     }
@@ -289,6 +270,11 @@ public class Mentor implements Runnable
   //messages accepted 
   //------------------------------
 
+  public void e1 ()
+  {
+    pool.put(new Message(MessageType.e1_M, null));
+  }
+
   
   @Override
   public void run ()
@@ -299,7 +285,10 @@ public class Mentor implements Runnable
       Message m = pool.getNext();
       
       switch (m.type)
-      { 
+      {
+        case e1_M:
+          status = _e1();
+          break; 
         default:
       }
       if(!status)
@@ -307,13 +296,5 @@ public class Mentor implements Runnable
         // Error message is written or  exception is raised
       }
     }
-  }
-
-  public String toString()
-  {
-	  String outputString = "";
-    return super.toString() + "["+
-            "howLongUntilOk" + ":" + getHowLongUntilOk()+ "]"
-     + outputString;
   }
 }

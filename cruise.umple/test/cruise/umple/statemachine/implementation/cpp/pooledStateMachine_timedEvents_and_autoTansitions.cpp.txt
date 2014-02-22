@@ -1,0 +1,172 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+#include "X.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ X::X()
+  {
+    setSm(s1);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ X::X(const X & x)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ X X::operator=(const X & x)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string X::getSmFullName()
+  {
+    string answer = getSmStringName(sm);
+    return answer;
+  }
+  
+  X::Sm X::getSm()
+  {
+    return sm;
+  }
+
+  string X::getSmStringName (Sm sm)
+  {
+    switch (sm)  {
+      case 0 : {return "s1"; break;}
+      case 1 : {return "s2"; break;}
+      case 2 : {return "s3"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool X::e1()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s1:
+        setSm(s2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::__autotransition7__()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s1:
+        setSm(s3);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::timeouts2Tos3()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s2:
+        exitSm();
+        setSm(s3);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void X::exitSm()
+  {
+    switch(sm)
+    {
+      case s2:
+        stopTimeouts2Tos3Handler();
+        break;
+    }
+  }
+
+  void X::setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s2:
+        startTimeouts2Tos3Handler();
+        break;
+    }
+  }
+  
+
+  void startTimeouts2Tos3Handler();
+  void stopTimeouts2Tos3Handler();
+  
+
+
+  public static class TimedEventHandler extends TimerTask  
+  {
+    private X controller;
+    private String timeoutMethodName;
+    private double howLongInSeconds;
+    private Timer timer;
+    
+    public TimedEventHandler(X aController, String aTimeoutMethodName, double aHowLongInSeconds)
+    {
+      controller = aController;
+      timeoutMethodName = aTimeoutMethodName;
+      howLongInSeconds = aHowLongInSeconds;
+      timer = new Timer();
+      timer.schedule(this, (long)howLongInSeconds*1000);
+    }
+    
+    public void X::stop()
+    {
+      timer.cancel();
+    }
+    
+    public void X::run ()
+    {
+      if ("timeouts2Tos3" == timeoutMethodName)
+      {
+        boolean shouldRestart = !controller.timeouts2Tos3();
+        if (shouldRestart)
+        {
+          controller.startTimeouts2Tos3Handler();
+        }
+        return;
+      }
+    }
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+X::~X()
+  {}
