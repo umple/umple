@@ -77,7 +77,7 @@ public class Mentor implements Runnable
     return status;
   }
 
-  public boolean _timeoutOkToNotOk()
+  public boolean timeoutOkToNotOk()
   {
     boolean wasEventProcessed = false;
     
@@ -96,7 +96,7 @@ public class Mentor implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean _timeoutNotOkToOk()
+  public boolean timeoutNotOkToOk()
   {
     boolean wasEventProcessed = false;
     

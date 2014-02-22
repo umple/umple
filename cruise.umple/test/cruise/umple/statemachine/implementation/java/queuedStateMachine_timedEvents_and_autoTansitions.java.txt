@@ -91,7 +91,7 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean _timeouts2Tos3()
+  public boolean timeouts2Tos3()
   {
     boolean wasEventProcessed = false;
     
