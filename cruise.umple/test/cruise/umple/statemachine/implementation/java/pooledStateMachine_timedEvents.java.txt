@@ -254,7 +254,7 @@ public class Mentor implements Runnable
     {
       List<MessageType> processableMessages;
       // return a list of message types for the current state
-      processableMessages = getStateMsgTypeList(getSm());
+      processableMessages = getStateMsgTypeList(getStatus());
       Message message=null;
 
       try {

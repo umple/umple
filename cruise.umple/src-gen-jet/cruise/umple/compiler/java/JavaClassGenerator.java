@@ -9436,7 +9436,9 @@ if (p != null) {
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      List<MessageType> processableMessages;");
     appendln(stringBuffer,"      // return a list of message types for the current state");
-    appendln(stringBuffer,"      processableMessages = getStateMsgTypeList(getSm());");
+    append(stringBuffer,"      processableMessages = getStateMsgTypeList(get");
+    append(stringBuffer,"{0}", gen.translate("type",smq));
+    appendln(stringBuffer,"());");
     appendln(stringBuffer,"      Message message=null;");
     appendln(stringBuffer,"");
     appendln(stringBuffer,"      try {");
@@ -9710,7 +9712,9 @@ if (p != null) {
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      List<MessageType> processableMessages;");
     appendln(stringBuffer,"      // return a list of message types for the current state");
-    appendln(stringBuffer,"      processableMessages = getStateMsgTypeList(getSm());");
+    append(stringBuffer,"      processableMessages = getStateMsgTypeList(get");
+    append(stringBuffer,"{0}", gen.translate("type",smq));
+    appendln(stringBuffer,"());");
     appendln(stringBuffer,"      Message message=null;");
     appendln(stringBuffer,"");
     appendln(stringBuffer,"      try {");
