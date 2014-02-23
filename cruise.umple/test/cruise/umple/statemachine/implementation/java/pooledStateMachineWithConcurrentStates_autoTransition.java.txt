@@ -350,7 +350,7 @@ public class CourseAttempt implements Runnable
     {
       List<MessageType> processableMessages;
       // return a list of message types for the current state
-      processableMessages = getStateMsgTypeList(getSm());
+      processableMessages = getStateMsgTypeList(getCourseAttemptSM());
       Message message=null;
 
       try {
