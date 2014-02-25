@@ -755,11 +755,13 @@ class UmpleInternalParser
 			st.setUmpleClass(inClass);
 		}
 		
-               // copy injection codes
-               for (CodeInjection cj : inTrait.getCodeInjections()) {
-                       cj.setUmpleClassifier(inClass);
-                       inClass.addCodeInjection(cj);
-               }
+       // copy injection codes
+       for (CodeInjection cj : inTrait.getCodeInjections()) {
+               cj.setUmpleClassifier(inClass);
+               inClass.addCodeInjection(cj);
+       }
+      //Add Extra code
+       inClass.appendExtraCode(inTrait.getExtraCode());
 	  
   }
   
@@ -826,7 +828,7 @@ class UmpleInternalParser
 		    */     
 
 		} else {
-			setFailedPosition(pos, 2502, child.getName());
+			setFailedPosition(pos, 2502, extendName);
 			return;
 		}
       }
