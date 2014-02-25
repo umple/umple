@@ -122,7 +122,14 @@ public class UmpleTraitTest {
 		String code = "class A {isA T;} trait T { Integer x; after getX { x = 0;} before getX { x = 0;} } ";
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfCodeInjections());		
-	}		
+	}	
+	
+	@Test
+	public void extraCodeTraitsTest() {
+		String code = "class A {isA T;} trait T { cout<<x; } ";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(false, model.getUmpleClass("A").getExtraCode().isEmpty());		
+	}	
 	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
