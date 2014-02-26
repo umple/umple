@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace entry method1() where id == 234;
-    trace entry method2() where name > "Tim";
-}

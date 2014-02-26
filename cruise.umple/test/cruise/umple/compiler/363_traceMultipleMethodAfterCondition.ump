@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace m1() , m2() after name == "tim";
-	trace m(),n() after id == 444;
-}

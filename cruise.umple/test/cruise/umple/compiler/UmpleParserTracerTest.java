@@ -836,606 +836,77 @@ public class UmpleParserTracerTest
 	  assertParse(code,"[classDefinition][name:Student][inlineAssociation][inlineAssociationEnd][lowerBound:2][upperBound:3][arrow:--][associationEnd][lowerBound:0][upperBound:1][type:Mentor][roleName:aMentor][trace][traceOptions][traceOption][option:cardinality][trace_entity:aMentor][classDefinition][name:Mentor]");
   }
   
-  
-  /****
-
-  
-
-  
   //------------------------
   // Tracing Methods
   //------------------------
   
-  @Test @Ignore
+  @Test
   public void traceSingleMethod()
   {
-	  assertParse("350_traceSingleMethod.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace][trace_entity:method2()]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  code = "class Tracer { void method1() {}; int method2() {}; trace method1(); trace method2(); }";
+	  assertParse(code,"[classDefinition][name:Tracer][concreteMethodDeclaration][type:void][methodDeclarator][methodName:method1][parameterList][code:][concreteMethodDeclaration][type:int][methodDeclarator][methodName:method2][parameterList][code:][trace][trace_entity:method1][trace][trace_entity:method2]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getName(),"method1");
+	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getEntry());
+	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getExit());
 	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-	  
+	  Assert.assertEquals(traceDirective2.getMethodTraceItem(0).getName(),"method2");
+	  Assert.assertEquals(false,traceDirective2.getMethodTraceItem(0).getEntry());
+	  Assert.assertEquals(false,traceDirective2.getMethodTraceItem(0).getExit());
   }
   
-  @Test @Ignore
+  @Test 
   public void traceSingleMethodEntry()
   {
-	  assertParse("351_traceSingleMethodEntry.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace][trace_entity:method2()]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
+	  code = "class Tracer { void method1() {}; trace entry method1(); }";
+	  assertParse(code,"[classDefinition][name:Tracer][concreteMethodDeclaration][type:void][methodDeclarator][methodName:method1][parameterList][code:][trace][traceOptions][traceOption][option:entry][trace_entity:method1]");
 	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(true,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(true,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodExit()
-  {
-	  assertParse("352_traceSingleMethodExit.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace][trace_entity:method2()]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(true,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(true,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodWithCondition()
-  {
-	  assertParse("353_traceSingleMethodWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhen][conditionType:where][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "where", "id", "==", "234", 0);
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "where", "name", ">", "\"Tim\"", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodEntryWithCondition()
-  {
-	  assertParse("353_traceSingleMethodEntryWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhen][conditionType:where][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(true,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "where", "id", "==", "234", 0);
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(true,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "where", "name", ">", "\"Tim\"", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodExitWithCondition()
-  {
-	  assertParse("353_traceSingleMethodExitWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234][trace][trace_entity:method2()][traceWhen][conditionType:where][LHS:name][comparison_operator:>][RHS:\"Tim\"]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(true,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "where", "id", "==", "234", 0);
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(true,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "where", "name", ">", "\"Tim\"", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodUntilCondition()
-  {
-	  assertParse("354_traceSingleMethodUntilCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:until][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method2()][traceWhen][conditionType:until][LHS:id][comparison_operator:==][RHS:6]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "until", "name", "==", "\"tim\"", 0);
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "until", "id", "==", "6", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodAfterCondition()
-  {
-	  assertParse("355_traceSingleMethodAfterCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method2()][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:6]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "after", "name", "==", "\"tim\"", 0);
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "after", "id", "==", "6", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodOccurences()
-  {
-	  assertParse("356_traceSingleMethodOccurences.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_for:5][trace][trace_entity:method2()][trace_for:100]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(5,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(100,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodPeriod()
-  {
-	  assertParse("357_traceSingleMethodPeriod.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_period:30ms][trace][trace_entity:method2()][trace_period:100s]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals("30ms",traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals("100s",traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodDuration()
-  {
-	  assertParse("358_traceSingleMethodDuration.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_duration:50s][trace][trace_entity:method2()][trace_duration:100ms]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals("50s",traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals("100ms",traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceSingleMethodExecuteClause()
-  {
-	  assertParse("359_traceSingleMethodExecuteClause.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_execute:\"somthing\"][trace][trace_entity:method2()][trace_execute:record (\"objectBeingTraced\"), record(\"x\",name)][trace_period:100ms]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals("\"somthing\"",traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective4.getForClause());
-//	  Assert.assertEquals("100ms",traceDirective4.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective4.getDuringClause());
-//	  Assert.assertEquals("record (\"objectBeingTraced\"), record(\"x\",name)",traceDirective4.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceMultipleMethod()
-  {
-	  assertParse("360_traceMultipleMethod.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(1,clazz.numberOfTraceDirectives());
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(1).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getName(),"method1");
+	  Assert.assertEquals(true,traceDirective1.getMethodTraceItem(0).getEntry());
+	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getExit());
+  }
+  
+  @Test
+  public void traceSingleMethodExit()
+  {
+	  code = "class Tracer { void method1() {}; trace exit method1(); }";
+	  assertParse(code,"[classDefinition][name:Tracer][concreteMethodDeclaration][type:void][methodDeclarator][methodName:method1][parameterList][code:][trace][traceOptions][traceOption][option:exit][trace_entity:method1]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getName(),"method1");
+	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getEntry());
+	  Assert.assertEquals(true,traceDirective1.getMethodTraceItem(0).getExit());
+  }
+  
+  @Test
+  public void traceMultipleMethod()
+  {
+	  code = "class Tracer { void method1() {}; int method2() {}; trace method1(),method2(); }";
+	  assertParse(code,"[classDefinition][name:Tracer][concreteMethodDeclaration][type:void][methodDeclarator][methodName:method1][parameterList][code:][concreteMethodDeclaration][type:int][methodDeclarator][methodName:method2][parameterList][code:][trace][trace_entity:method1][trace_entity:method2]");
+	  
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
+	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
+	  
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getName(),"method1");
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(1).getName(),"method2");
+	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getEntry());
+	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getExit());
+	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(1).getEntry());
+	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(1).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
   }
-  
-  @Test @Ignore
-  public void traceMultipleMethodWithCondition()
-  {
-	  assertParse("361_traceMultipleMethodWithCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()][traceWhen][conditionType:where][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method4()][trace_entity:method3()][traceWhen][conditionType:where][LHS:id][comparison_operator:==][RHS:234]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(1).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "where", "name", "==", "\"tim\"", 0);
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method4()");
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"method3()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "where", "id", "==", "234", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceMultipleMethodUntilCondition()
-  {
-	  assertParse("362_traceMultipleMethodUntilCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()][traceWhen][conditionType:until][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:method4()][trace_entity:method3()][traceWhen][conditionType:until][LHS:id][comparison_operator:==][RHS:234]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(1).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "until", "name", "==", "\"tim\"", 0);
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"method4()");
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"method3()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "until", "id", "==", "234", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceMultipleMethodAfterCondition()
-  {
-	  assertParse("363_traceMultipleMethodAfterCondition.ump","[classDefinition][name:LightFixture][trace][trace_entity:m1()][trace_entity:m2()][traceWhen][conditionType:after][LHS:name][comparison_operator:==][RHS:\"tim\"][trace][trace_entity:m()][trace_entity:n()][traceWhen][conditionType:after][LHS:id][comparison_operator:==][RHS:444]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"m1()");
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(1).getName(),"m2()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(1,traceDirective1.numberOfCondition());
-	  assertCondition(traceDirective1, "after", "name", "==", "\"tim\"", 0);
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"m()");
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"n()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "after", "id", "==", "444", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceMultipleMethodOccurences()
-  {
-	  assertParse("364_traceMultipleMethodOccurences.ump","[classDefinition][name:LightFixture][trace][trace_entity:add()][trace_entity:subtract()][trace_for:5][trace][trace_entity:m()][trace_entity:n()][trace_for:100]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"add()");
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(1).getName(),"subtract()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(5,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"m()");
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"n()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(100,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceMultipleMethodPeriod()
-  {
-	  assertParse("365_traceMultipleMethodPeriod.ump","[classDefinition][name:LightFixture][trace][trace_entity:method1()][trace_entity:method2()][trace_period:30ms][trace][trace_entity:x()][trace_entity:y()][trace_period:1s]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method1()");
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(1).getName(),"method2()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals("30ms",traceDirective1.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"x()");
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"y()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals("1s",traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceMultipleMethodDuration()
-  {
-	  assertParse("366_traceMultipleMethodDuration.ump","[classDefinition][name:LightFixture][trace][trace_entity:m1()][trace_entity:m2()][trace_duration:150s][trace][trace_entity:x()][trace_entity:y()][trace_duration:200ms]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"m1()");
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(1).getName(),"m2()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals("150s",traceDirective1.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"x()");
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"y()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(0,traceDirective2.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals("200ms",traceDirective2.getDuringClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getExecuteClause());
-  }
-  
-  @Test @Ignore
-  public void traceMultipleMethodExecuteClause()
-  {
-	  assertParse("367_traceMultipleMethodExecuteClause.ump","[classDefinition][name:LightFixture][trace][trace_entity:method()][trace_execute:\"something\"][trace_duration:30ms][trace][trace_entity:m1()][trace_entity:m2()][trace_execute:record(\"x\")][traceWhen][conditionType:where][LHS:id][comparison_operator:>][RHS:100]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
-	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
-	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
-	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceEntity(0).getName(),"method()");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
-//	  Assert.assertEquals(0,traceDirective1.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective1.getPeriodClause());
-//	  Assert.assertEquals("30ms",traceDirective1.getDuringClause());
-//	  Assert.assertEquals("\"something\"",traceDirective1.getExecuteClause());
-	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(0).getName(),"m1()");
-	  Assert.assertEquals(traceDirective2.getMethodTraceEntity(1).getName(),"m2()");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(0).getExit());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getEntry());
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceEntity(1).getExit());
-	  Assert.assertEquals(1,traceDirective2.numberOfCondition());
-	  assertCondition(traceDirective2, "where", "id", ">", "100", 0);
-//	  Assert.assertEquals(0,traceDirective2.getForClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getPeriodClause());
-//	  Assert.assertEquals((Object)null,traceDirective2.getDuringClause());
-//	  Assert.assertEquals("record(\"x\")",traceDirective2.getExecuteClause());
-  }
+
+  /****
+
   
   //***************************************************
   //*************        Trace Cases         **********
@@ -1444,8 +915,8 @@ public class UmpleParserTracerTest
   @Test @Ignore
   public void traceCaseSingleTD()
   {
-	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][trace][tracecase_name:tc1][trace_entity:name]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][trace][tracecase_name:tc1][trace_entity:name]");
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceCases());
 	  TraceCase tc = clazz.getTraceCase(0);
 	  Assert.assertEquals("tc1",tc.getName());
@@ -1464,8 +935,8 @@ public class UmpleParserTracerTest
   @Test @Ignore
   public void traceCaseMultipleTD()
   {
-	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:LightFixture][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][LHS:name][comparison_operator:==][RHS:\"tim\"]");
-	  UmpleClass clazz = model.getUmpleClass("LightFixture");
+	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][LHS:name][comparison_operator:==][RHS:\"tim\"]");
+	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceCases());

@@ -330,7 +330,7 @@ class LLOCMetricVisitor {
 	void visit(AttributeTraceItem attributeT) {
 		cur_lloc++;
 	}
-	void visit(MethodTraceEntity methodTraceEntity) {
+	void visit(MethodTraceItem methodTraceEntity) {
 		cur_lloc++;
 	}
 	void visit(StateMachineTraceItem stateMachineTraceItem) {
