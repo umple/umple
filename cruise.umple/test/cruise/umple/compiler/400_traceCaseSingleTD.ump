@@ -1,4 +1,4 @@
-class LightFixture
+class Tracer
 {
 	String name;
 	tracecase tc1 {
