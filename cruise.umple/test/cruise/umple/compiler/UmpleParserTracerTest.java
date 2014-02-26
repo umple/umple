@@ -904,18 +904,15 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(1).getExit());
 	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
   }
-
-  /****
-
   
-  //***************************************************
-  //*************        Trace Cases         **********
-  //***************************************************
-  
-  @Test @Ignore
+  //------------------------
+  // Trace Cases
+  //------------------------
+
+  @Test
   public void traceCaseSingleTD()
   {
-	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][trace][tracecase_name:tc1][trace_entity:name]");
+	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][trace][tracecase_name:tc1][trace_entity:name]",true);
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceCases());
 	  TraceCase tc = clazz.getTraceCase(0);
@@ -925,17 +922,13 @@ public class UmpleParserTracerTest
 	  TraceDirective td = tc.getTraceDirective(0);
 	  AttributeTraceItem traceAttr = td.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)traceAttr.getAttribute(0),clazz.getAttribute("name"));
-	  Assert.assertEquals(0,td.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceCaseMultipleTD()
   {
-	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][LHS:name][comparison_operator:==][RHS:\"tim\"]");
+	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim]",true);
+	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
 	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
@@ -948,38 +941,24 @@ public class UmpleParserTracerTest
 	  TraceDirective td1 = tc.getTraceDirective(0);
 	  AttributeTraceItem traceAttr1 = td1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)traceAttr1.getAttribute(0),clazz.getAttribute("name"));
-	  Assert.assertEquals(0,td1.numberOfCondition());
-	  Assert.assertEquals((Object)null,traceAttr1.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr1.getExecuteClause());
 	  
 	  TraceDirective td2 = tc.getTraceDirective(1);
 	  AttributeTraceItem traceAttr2 = td2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)traceAttr2.getAttribute(0),clazz.getAttribute("id"));
-	  Assert.assertEquals(1,td2.numberOfCondition());
-	  assertCondition(td2, "where", "name", "==", "\"tim\"", 0);
-	  Assert.assertEquals((Object)null,traceAttr2.getForClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getPeriodClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getDuringClause());
-	  Assert.assertEquals((Object)null,traceAttr2.getExecuteClause());
   }
   
-  @Test @Ignore
+  @Test
   public void traceCaseActivation()
   {
-	  assertParse("402_traceCaseActivation.ump","[classDefinition][name:LightFixture][trace][tracecase_act_name:tc1]");
+	  assertParse("402_traceCaseActivation.ump","[classDefinition][name:LightFixture][trace][tracecase_act_name:tc1]",true);
   }
   
-  @Test @Ignore
+  @Test
   public void traceCaseDeactivation()
   {
-	  assertParse("403_traceCaseDeactivation.ump","[classDefinition][name:LightFixture][trace][tracecase_deact_name:tc1][trace][tracecase_deact_name:tc2][deactivate_for:1s]");
+	  assertParse("403_traceCaseDeactivation.ump","[classDefinition][name:LightFixture][trace][tracecase_deact_name:tc1][trace][tracecase_deact_name:tc2][deactivate_for:1s]",true);
   }
-    
-
-********/
-
+  
   //------------------------
   // Assert methods
   //------------------------

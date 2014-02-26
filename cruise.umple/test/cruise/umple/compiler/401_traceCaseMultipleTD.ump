@@ -1,9 +1,9 @@
-class LightFixture
+class Tracer
 {
 	String name;
 	Integer id;
 	tracecase tc1 {
   		trace name;
-  		trace id where name == "tim";
+  		trace id where [name == "tim"];
 	}
 }
