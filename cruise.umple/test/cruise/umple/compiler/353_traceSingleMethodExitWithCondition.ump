@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace exit method1() where id == 234;
-    trace exit method2() where name > "Tim";
-}

@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace method1() after name == "tim";
-	trace method2() after id == 6;
-}

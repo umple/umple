@@ -74,7 +74,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
   
     TraceDirective traceDirective = new TraceDirective(model.getTracer());
     AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
-    MethodTraceEntity mte = new MethodTraceEntity();
+    MethodTraceItem mte = new MethodTraceItem();
     TraceRecord traceRecord = null;
     traceDirective.setUmpleClass(aClass);
      
@@ -241,15 +241,22 @@ private void analyzeTraceToken(Token token, int analysisStep)
 
   // Analyze Trace Item Token whether trace item is an attribute or a method ... etc
      
-  private void analyzeTraceItem(Token traceToken, TraceDirective traceDirective, MethodTraceEntity mte, AttributeTraceItem traceAttr){
+   private void analyzeTraceItem(Token traceToken, TraceDirective traceDirective, MethodTraceItem mte, AttributeTraceItem traceAttr){
     UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
     attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
-    String methodName = traceToken.getValue("trace_entity");
+    String methodName = null;
     
     // here, i faced a problem of finding traced state machine because
     // -> in UmpleClass there no getStateMachine( String stm ) which gets state by searching its name
     analyzeStateMachineTraceItem(traceToken,traceDirective);
     analyzeAssociationTraceItem(traceToken,traceDirective);
+    
+    for( int i = 0 ; i < traceDirective.getUmpleClass().numberOfMethods() ; ++i )
+    {
+    	if( traceToken.getValue("trace_entity").equals(traceDirective.getUmpleClass().getMethod(i).getName()) )
+    		methodName = traceToken.getValue("trace_entity");
+    }
+    
     if( traceToken.getName().equals("entry") )
     {
       mte.setEntry(true);
@@ -261,14 +268,32 @@ private void analyzeTraceToken(Token token, int analysisStep)
     }
     
     // if trace entity is a method
-    if( methodName != null && methodName.contains("("))
+    if( methodName != null )
     {
       if( mte.getName() !=  null)
       {
-        mte = new MethodTraceEntity();
+        mte = new MethodTraceItem();
       }
       mte.setName(methodName);
-      traceDirective.addMethodTraceEntity(mte);
+      for(Token sub: traceToken.getParentToken().getSubTokens())
+      {
+        
+        if(sub.is("traceOptions"))
+        {
+          for(Token sub2: sub.getSubTokens())
+          {
+            if( "entry".equals(sub2.getValue("option")) )
+            {
+            	mte.setEntry(true);
+            }
+            if( "exit".equals(sub2.getValue("option")) )
+            {
+            	mte.setExit(true);
+            }
+          }
+        }
+      }
+      traceDirective.addMethodTraceItem(mte);
     }
     // if trace entity is an attribute
     else if( attr != null )
@@ -551,7 +576,7 @@ private void analyzeTraceToken(Token token, int analysisStep)
   private void analyzeTraceDirectiveFragments( TraceDirective traceDirective , UmpleClass aClass , Token traceToken , Token token )
   {
     AttributeTraceItem traceAttr = new AttributeTraceItem(traceDirective);
-      MethodTraceEntity mte = new MethodTraceEntity();
+      MethodTraceItem mte = new MethodTraceItem();
       
       if( traceToken.is("trace_entity") )  
       {

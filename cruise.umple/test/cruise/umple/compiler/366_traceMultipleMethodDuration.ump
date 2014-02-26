@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace m1(),m2() during 150s;
-	trace x(),y() during 200ms;
-}

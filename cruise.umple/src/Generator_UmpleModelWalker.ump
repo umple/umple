@@ -125,7 +125,7 @@ class UmpleModelVisitor {
 	void visit(AttributeTraceItem attributeT) {}
 	void visit(TraceCase traceCase) {}
 	void visit(TraceCondition traceCondition) {}
-	void visit(MethodTraceEntity methodTraceEntity) {}
+	void visit(MethodTraceItem methodTraceEntity) {}
 	void visit(StateMachineTraceItem stateMachineTraceItem) {}
 	
 	
@@ -340,7 +340,7 @@ class UmpleModelWalker {
 							visitor.visit(tc);
 						}
 						
-						for(MethodTraceEntity mte : td.getMethodTraceEntities()) {
+						for(MethodTraceItem mte : td.getMethodTraceItems()) {
 							visitor.visit(mte);
 						}
 						

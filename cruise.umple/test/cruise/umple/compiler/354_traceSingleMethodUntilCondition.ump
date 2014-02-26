@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace method1() until name == "tim";
-	trace method2() until id == 6;
-}

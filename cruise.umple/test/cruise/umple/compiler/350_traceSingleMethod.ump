@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace method1();
-	trace method2();
-}

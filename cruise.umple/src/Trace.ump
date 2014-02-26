@@ -57,7 +57,7 @@ class TraceRecord
   String[] record;
 }
 
-class MethodTraceEntity
+class MethodTraceItem
 {
   name = null;
   boolean entry = false;
@@ -76,7 +76,7 @@ class TraceDirective
   
     1 -- 0..* AttributeTraceItem;
    1 -- 0..* StateMachineTraceItem;
-   0..* -- 0..* MethodTraceEntity;
+   0..* -- 0..* MethodTraceItem;
    0..1 -- 0..1 AssociationVariable;
    1 -> 0..* TraceCondition condition;
    1 -- 0..1 TraceRecord;

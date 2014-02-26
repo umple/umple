@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace method1(), method2() period 30ms;
-	trace x(),y() period 1s;
-}

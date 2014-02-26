@@ -1,5 +1,0 @@
-class LightFixture
-{
-	trace method() execute { "something" } during 30ms;
-	trace m1(),m2() execute {record("x")} where id > 100;
-}
