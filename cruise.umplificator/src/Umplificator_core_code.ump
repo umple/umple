@@ -1,0 +1,11 @@
+class Umplificator {
+
+depend java.io.File;
+depend java.util.List;
+
+public boolean umplify(List<File> srcFiles) {
+	return false;
+}
+
+
+}
