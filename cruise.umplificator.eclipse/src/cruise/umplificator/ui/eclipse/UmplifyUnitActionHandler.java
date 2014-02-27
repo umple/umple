@@ -1,11 +1,15 @@
 package cruise.umplificator.ui.eclipse;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -15,6 +19,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.handlers.HandlerUtil;
+
+import cruise.umplificator.core.Umplificator;
 
 
 public class UmplifyUnitActionHandler extends AbstractHandler {
@@ -30,7 +36,7 @@ public class UmplifyUnitActionHandler extends AbstractHandler {
 		ISelectionService service = window.getSelectionService();
 		// set structured selection
 		IStructuredSelection structured = (IStructuredSelection) service.getSelection();
-	 
+
 		shell = window.getShell();
 		logger.info("Umplificating Process Started");
 		Object objectSelected = structured.getFirstElement();
@@ -39,31 +45,54 @@ public class UmplifyUnitActionHandler extends AbstractHandler {
 		return null;
 	}
 
+	// Main entry point for the cruise.umplificator.eclipse
+	// Invokes the Umplificator class located in cruise.umplificator which is the core project
 	private void umplifyElement(Object element) {
-		if (element instanceof ICompilationUnit){
-			//umplifyUnit((ICompilationUnit)element);
-			displayInfo("Java File selected");
-		}
-		else if (element instanceof IPackageFragment){
-			//umplifyPackage((IPackageFragment)element);
-			displayInfo("Package selected");
-		}
-		else if (element instanceof IJavaProject){
-			//umplifyProject((IJavaProject)element);
-			displayInfo("Java Project selected");
-		}
-		else if (element instanceof IPackageFragmentRoot){
-			//umplifyProject((IJavaProject)element);
-			displayInfo("Folder selected");
-		}
-		else if (element instanceof IFile){
-			IFile aFile= (IFile) element;
-			if (aFile != null && aFile.getFileExtension().equals("ump"))
-			{
-				displayInfo("Umple File selected");	
+		List<File> srcFiles = getListOfFilesFromSelection(element);
+		// Umplificator is located in cruise.umplificator
+		// It receives a list of files (Java or Umple files) and retrieves Umple files.
+		Umplificator umplificator = new Umplificator();
+		boolean result = umplificator.umplify(srcFiles);
+		String message = result ? "Umplification process succeeded!" : "Umplification process failed!";
+		// Feedback
+		logger.error(message);
+		displayInfo (message);
+	}
+
+	public List<File> getListOfFilesFromSelection (Object element){ 
+		List <File> srcFiles = new ArrayList<File>();
+		try {
+			if (element instanceof ICompilationUnit){
+				ICompilationUnit compilationUnit= (ICompilationUnit) element;
+				srcFiles = FileConverter.getFileFromCompilationUnit(compilationUnit);
+				displayInfo("Java File will be processed ...");
 			}
-			else { displayInfo("Invalid File");}	
+			else if (element instanceof IPackageFragment){
+				IPackageFragment packageFragment= (IPackageFragment) element;
+				srcFiles = FileConverter.getFilesFromPackageFragment(packageFragment);
+				displayInfo("Package will be processed ...");
+			}
+			else if (element instanceof IJavaProject){
+				IJavaProject javaProject= (IJavaProject) element;
+				srcFiles = FileConverter.getFilesFromProject(javaProject);
+				displayInfo("Java Project will be processed ...");
+			}
+			else if (element instanceof IFile){
+				IFile aFile= (IFile) element;
+				if (aFile != null && aFile.getFileExtension().equals("ump"))
+				{
+					srcFiles = FileConverter.getFileFromIFile(aFile);
+					displayInfo("Umple File will be processed ...");	
+				}
+				else { displayInfo("Invalid File selected ");}	
+			}
 		}
+		catch (JavaModelException ex){
+			logger.error(ex);
+			return null;
+		}
+
+		return srcFiles;
 	}
 
 	private void displayInfo (String status)
@@ -72,40 +101,6 @@ public class UmplifyUnitActionHandler extends AbstractHandler {
 				shell,
 				"Umplificator",
 				status);
-
 		logger.info("Displaying status");
 	}
-
-	/*
-	private boolean umplifyUnit(ICompilationUnit unit){
-		//UmpleGenerator.translateJavaElement(unit, getLevelOfUmplification());
-		displayInfo ()
-		return false;
-	}
-	private boolean umplifyPackage(IPackageFragment aPackage){
-		//UmpleGenerator.translateJavaElementsInPackage(aPackage, getLevelOfUmplification());
-		displayInfo (String status)
-		return false;
-	}
-	private boolean umplifyProject(IJavaProject project){
-		try {
-			UmpleGenerator.translateJavaElementsInProject(project,getLevelOfUmplification());
-		} catch (JavaModelException e) {
-			logger.error(e);
-		}
-		return false;
-	}
-
-	private int getLevelOfUmplification(){
-		if (levelOfRefactoring.equals("Umplify Classes")){
-			return 0;	
-		}
-		else if (levelOfRefactoring.equals("Umplify Attributes")){
-			return 1;	
-		}
-		else{
-			return 2;	
-		}
-	}
-	 */
 }
