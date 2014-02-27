@@ -29,7 +29,8 @@ public class UmpleTraitTest {
 	public void tearDown()
 	{
 		SampleFileWriter.destroy("traitTest.ump");
-		SampleFileWriter.destroy("A.java");		
+		SampleFileWriter.destroy("A.java");
+		SampleFileWriter.destroy("B.java");
 	}
 	
 	@Test 
@@ -130,7 +131,15 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(false, model.getUmpleClass("A").getExtraCode().isEmpty());		
 	}	
-	
+
+	@Test
+	public void associationTraitsTest() {
+		String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
+		UmpleModel model = getRunModel(code);
+		SampleFileWriter.destroy("B.java");	
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());	
+		Assert.assertEquals(1, model.getUmpleClass("B").numberOfAssociationVariables());
+	}	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {

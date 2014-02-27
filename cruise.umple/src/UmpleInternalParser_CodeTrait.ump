@@ -456,8 +456,8 @@ class UmpleInternalParser
 //---------------------------------the Method---------------------------------
 //----------------------------------------------------------------------------
    private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleTrait aTrait){
-    /*
-    Association association = analyzeAssociation(inlineAssociationToken,aClass.getName());
+    
+    Association association = analyzeAssociation(inlineAssociationToken,aTrait.getName());
 
     if (!getParseResult().getWasSuccess())
     {
@@ -483,6 +483,7 @@ class UmpleInternalParser
       }
       else
       {
+      	//TODO traits' errors
         setFailedPosition(inlineAssociationToken.getPosition(),17);
       }
     }
@@ -499,19 +500,23 @@ class UmpleInternalParser
     lastattr = null;
     
 
-    boolean added = aClass.addAssociationVariable(yourAs);
+    boolean added = aTrait.addAssociationVariable(yourAs);
     if (added)
     {
       unlinkedAssociationVariables.add(yourAs);
-      aClass.addAssociation(association);
+      aTrait.addAssociation(association);
     }
     else
     {
-      if (aClass.isImmutable()) { setFailedPosition(inlineAssociationToken.getPosition(),17); }
-      
-      else { setFailedPosition(inlineAssociationToken.getPosition(),13); }
+      if (aTrait.isImmutable()) {
+      	//TODO traits' errors
+      	setFailedPosition(inlineAssociationToken.getPosition(),17);
+      } else {
+      	//TODO traits' errors
+      	setFailedPosition(inlineAssociationToken.getPosition(),13);
+      }
     }
-    */
+    
   }
 
 //----------------------------------------------------------------------------  
@@ -520,7 +525,7 @@ class UmpleInternalParser
    private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleTrait aTrait){
     /*
     String myName = symmetricReflexiveAssociationToken.getValue("roleName");
-    String myType = aClass.getName();
+    String myType = aTrait.getName();
     String myModifier = "symmetricreflexive";
     String myBound = symmetricReflexiveAssociationToken.getValue("bound");
     String myLowerBound = symmetricReflexiveAssociationToken.getValue("lowerBound");
@@ -533,12 +538,12 @@ class UmpleInternalParser
     AssociationVariable yourAs = new AssociationVariable(myName,myType,myModifier,null,myMult,true);
 
     myAs.setRelatedAssociation(yourAs);
-    aClass.addAssociationVariable(yourAs);
+    aTrait.addAssociationVariable(yourAs);
     
     AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
     AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
     Association assoc = new Association(false, true, leftEnd, rightEnd);
-    aClass.addAssociation(assoc);
+    aTrait.addAssociation(assoc);
     */
   } 
 
@@ -760,9 +765,24 @@ class UmpleInternalParser
                cj.setUmpleClassifier(inClass);
                inClass.addCodeInjection(cj);
        }
-      //Add Extra code
+       // copy Extra code
        inClass.appendExtraCode(inTrait.getExtraCode());
-	  
+       
+       // copy associations
+       for (AssociationVariable aVariable : inTrait.getAssociationVariables()) {
+    	   aVariable.setUmpleClass(inClass);
+    	   UmpleClass relatedAss =  model.getUmpleClass(aVariable.getType()); 	   
+    	   aVariable.getRelatedAssociation().setUmpleClass(relatedAss);
+    	   aVariable.getRelatedAssociation().setType(inClass.getName());
+	       String rawName = StringFormatter.toCamelCase(inTrait.getName());
+	       String name = aVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	       if (name.equals(aVariable.getRelatedAssociation().getName())){
+	    	   rawName = StringFormatter.toCamelCase(inClass.getName());
+	    	   name = aVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	    	   aVariable.getRelatedAssociation().setName(name);
+	       }
+	       inClass.addAssociationVariable(aVariable);    
+       }	  
   }
   
 	private void postTokenTraitAnalysis() {
