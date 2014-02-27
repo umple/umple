@@ -63,16 +63,19 @@ public class Tracer
 
   public String getX()
   {
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,x,"+x );
     return x;
   }
 
   public String getY()
   {
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,y,"+y );
     return y;
   }
 
   public String getZ()
   {
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",ConsoleTracer_TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,z,"+z );
     return z;
   }
 
