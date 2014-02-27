@@ -111,6 +111,7 @@ class UmpleInternalParser
       Association a = model.getAssociation(i);
       
       if (associationIsBetweenClassAndInterface (a)){continue;}
+      if (associationIsBetweenClassAndTrait (a)){continue;}
       
       int numberOfPositions = a.numberOfPositions();
 

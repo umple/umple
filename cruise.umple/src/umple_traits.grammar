@@ -1,2 +1,3 @@
-traitDefinition : trait [name] { [[traitContent]]* }
+traitDefinition : trait [name] [[traitTemplate]]* { [[traitContent]]* }
+traitTemplate : < [~name] ( , [~name] )* >
 traitContent- : [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]

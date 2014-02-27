@@ -884,9 +884,11 @@ class UmpleInternalParser
     {
       boolean isAClass = model.getUmpleClass(e.getValue()) != null;
       boolean isAInterface = model.getUmpleInterface(e.getValue()) != null;
-
-      if (!isAClass && !isAInterface) //item referenced not a class or interface
+	  boolean isATrait = model.getUmpleTrait(e.getValue()) != null;
+	  
+      if (!isATrait && !isAClass && !isAInterface) //item referenced not a class or interface or a trait
       {
+      	//TODO traits' error
         UmpleClass aClass = model.addUmpleClass(e.getValue());
         aClass.setPackageName(model.getDefaultNamespace());
         setFailedPosition(e.getKey(), 5, e.getValue());
@@ -912,6 +914,20 @@ class UmpleInternalParser
       
    }
   
+  private boolean associationIsBetweenClassAndTrait(Association a){
+	    AssociationEnd myEnd = a.getEnd(0);
+	       AssociationEnd yourEnd = a.getEnd(1);
+	       
+	       UmpleTrait myClass = model.getUmpleTrait(myEnd.getClassName());
+	        UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
+	       
+	       if (myClass != null && yourClass != null ){ //association is between class and interface
+	         return true;
+	       }
+	       
+	       return false;
+	  }
+
 
 
   private void addUnlinkedAssociationVariables()
@@ -1218,7 +1234,8 @@ class UmpleInternalParser
   {
     for (Association association : model.getAssociations()) 
     {  
-      if (associationIsBetweenClassAndInterface (association)){continue;}  
+      if (associationIsBetweenClassAndInterface (association)){continue;} 
+      if (associationIsBetweenClassAndTrait(association)){continue;} 
       
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
@@ -1257,6 +1274,7 @@ class UmpleInternalParser
     for (Association association : unlinkedAssociations)
     {         
       if (associationIsBetweenClassAndInterface (association)){continue;}  
+      if (associationIsBetweenClassAndTrait(association)){continue;}
       
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
