@@ -1,0 +1,10 @@
+class LightFixture
+{ 
+  pooled bulb 
+  {
+    On 
+    {
+      Off {}
+    }
+  }
+}

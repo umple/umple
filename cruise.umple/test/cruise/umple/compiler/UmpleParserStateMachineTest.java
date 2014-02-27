@@ -895,6 +895,14 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
+  public void queuedStateMachine_pooledStateMachine_noEvents(){
+	assertHasWarning("106_queuedStateMachine_noEvents.ump", 0, 56, new Position("106_queuedStateMachine_noEvents.ump", 2, 2, 16));
+	assertHasWarning("106_pooledStateMachine_noEvents.ump", 0, 57, new Position("106_pooledStateMachine_noEvents.ump", 2, 2, 16));
+	assertHasWarning("106_queued_nestedSM_noEvents.ump", 0, 56, new Position("106_queued_nestedSM_noEvents.ump", 3, 2, 24));
+	assertHasWarning("106_pooled_nestedSM_noEvents.ump", 0, 57, new Position("106_pooled_nestedSM_noEvents.ump", 3, 2, 24));
+  }
+  
+  @Test
   public void queuedStateMachine()
   {
                             

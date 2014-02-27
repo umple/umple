@@ -387,6 +387,42 @@ class UmpleInternalParser
     {
       placeholderStateMachine.getState(0).setStateMachine(sm);
     }
+    
+    if(sm.getQueued() || sm.getPooled())
+    {
+      
+      if(sm.getEvents().isEmpty())
+      { 
+        if(!sm.getNestedStateMachines().isEmpty())
+        {
+          boolean nsmEvents=false;
+          for(StateMachine nsm: sm.getNestedStateMachines())
+          {
+            if(!nsm.getEvents().isEmpty())
+            {
+              nsmEvents=true;
+            }
+          }
+          if(!nsmEvents && sm.getQueued())
+          {
+            setFailedPosition(stateMachineToken.getPosition(), 56, sm.getName());
+          }
+          else if (!nsmEvents && sm.getPooled())
+          {
+            setFailedPosition(stateMachineToken.getPosition(), 57, sm.getName());
+          }
+        }
+        else if(sm.getNestedStateMachines().isEmpty() && sm.getQueued())
+        {
+          setFailedPosition(stateMachineToken.getPosition(), 56, sm.getName());
+        }
+        else if(sm.getNestedStateMachines().isEmpty() && sm.getPooled())
+        {
+          setFailedPosition(stateMachineToken.getPosition(), 57, sm.getName());
+        }
+      }
+    }
+    
     return sm;
   }
 
