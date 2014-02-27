@@ -1,0 +1,6 @@
+class Course{
+  pooled sm{
+    register {}
+    full {}
+  }
+}

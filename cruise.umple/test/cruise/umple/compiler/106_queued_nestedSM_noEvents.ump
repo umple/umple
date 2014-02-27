@@ -1,0 +1,10 @@
+class LightFixture
+{ 
+  queued bulb 
+  {
+    On 
+    {
+      Off {}
+    }
+  }
+}
