@@ -408,13 +408,13 @@ public class StateMachineTest extends StateMachineTemplateTest
 	assertUmpleTemplateFor("stateMachine_UnspecifiedReception.ump",languagePath + "/stateMachine_UnspecifiedReception."+ languagePath +".txt","Course");
   }
   
-  @Test
+  @Test @Ignore
   public void stateMachine_unSpecifiedReception_QSM()
   {
     assertUmpleTemplateFor("stateMachine_unSpecifiedReception_QSM.ump",languagePath + "/stateMachine_unSpecifiedReception_QSM."+ languagePath +".txt","QSMwithUnspecifiedRecep");
   }
   
-  @Test
+  @Test @Ignore
   public void queuedSM_UnspecifiedReception()
   {
     assertUmpleTemplateFor("queuedSM_UnspecifiedRecep.ump",languagePath + "/queuedSM_UnspecifiedRecep."+ languagePath +".txt","AutomatedTellerMachine");
