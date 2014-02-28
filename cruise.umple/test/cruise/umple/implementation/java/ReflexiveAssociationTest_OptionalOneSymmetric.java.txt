@@ -49,6 +49,12 @@ public class Mentor
     return superMentor;
   }
 
+  public boolean hasSuperMentor()
+  {
+    boolean has = superMentor != null;
+    return has;
+  }
+
   public boolean setSuperMentor(Mentor aNewSuperMentor)
   {
     boolean wasSet = false;

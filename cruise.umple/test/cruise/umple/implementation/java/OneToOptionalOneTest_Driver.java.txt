@@ -49,6 +49,12 @@ public class MyDriver
     return mySubordinate;
   }
 
+  public boolean hasMySubordinate()
+  {
+    boolean has = mySubordinate != null;
+    return has;
+  }
+
   public boolean setMySubordinate(MySubordinate aNewMySubordinate)
   {
     boolean wasSet = false;
