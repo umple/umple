@@ -49,6 +49,12 @@ public class Student
     return mentor;
   }
 
+  public boolean hasMentor()
+  {
+    boolean has = mentor != null;
+    return has;
+  }
+
   public void delete()
   {
     if (mentor != null)

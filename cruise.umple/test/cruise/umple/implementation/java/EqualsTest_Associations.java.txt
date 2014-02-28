@@ -43,6 +43,12 @@ public class Mentor
     return main;
   }
 
+  public boolean hasMain()
+  {
+    boolean has = main != null;
+    return has;
+  }
+
   public Course getSecondary(int index)
   {
     Course aSecondary = secondaries.get(index);

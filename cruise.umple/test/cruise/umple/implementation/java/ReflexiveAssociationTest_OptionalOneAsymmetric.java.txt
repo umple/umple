@@ -50,9 +50,21 @@ public class Student
     return pupil;
   }
 
+  public boolean hasPupil()
+  {
+    boolean has = pupil != null;
+    return has;
+  }
+
   public Student getTa()
   {
     return ta;
+  }
+
+  public boolean hasTa()
+  {
+    boolean has = ta != null;
+    return has;
   }
 
   public boolean setPupil(Student aNewPupil)

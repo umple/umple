@@ -48,6 +48,12 @@ public class Student
     return mentor;
   }
 
+  public boolean hasMentor()
+  {
+    boolean has = mentor != null;
+    return has;
+  }
+
   private boolean setMentor(Mentor aNewMentor)
   {
     boolean wasSet = false;

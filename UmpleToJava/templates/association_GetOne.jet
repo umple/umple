@@ -24,5 +24,14 @@
     <% append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); %>
     return <%=gen.translate("parameterOne",av)%>;
 <% } %>
+  }<% 
+  if(av.getMultiplicity().getLowerBound() == 0) {
+  %>
+<%= umpleSourceFile %>
+  public boolean <%=gen.translate("hasMethod",av)%>()
+  {
+    boolean has = <%=gen.translate("associationOne",av)%> != null;
+    return has;
   }
+<% } %>
 
