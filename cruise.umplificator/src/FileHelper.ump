@@ -8,7 +8,7 @@ depend java.util.Arrays;
 depend java.util.List;
 
 public static final String [] EXTENSIONS = new String []{".java",".ump"};
-	
+public static final String separator = System.getProperty("line.separator");
 
  public static  List<File> getListOfFilesFromPath(String path){
     // Get File or a Folder from path
@@ -30,7 +30,23 @@ public static final String [] EXTENSIONS = new String []{".java",".ump"};
 		 }
 	  }
 	return inputFiles;
-	  
   }
   
-  }
+  
+public static void printFilesToUmplify(List<File> srcFiles){
+    StringBuffer outMessage = new StringBuffer();
+		outMessage.append(separator);
+		outMessage.append("Files to be umplified: ");
+		outMessage.append(separator);
+		for (File aFile: srcFiles)
+		{
+			outMessage.append(aFile.getName());
+			outMessage.append(separator);
+		}
+		outMessage.append("End of processing");
+		outMessage.append(separator);
+		outMessage.append("-----------------------");
+	System.out.println(outMessage.toString());
+}
+  
+}
