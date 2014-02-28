@@ -36,6 +36,13 @@
     <path refid="validator_core.classpath"/>
   </path>
 
+ <path id="umplificator.project.classpath">
+    <pathelement location="cruise.umplificator/bin"/>
+    <path refid="umple.classpath"/>
+    <path refid="junit4.classpath"/>
+    <path refid="validator_core.classpath"/>
+  </path>
+
   <!-- ```````````````````````````
     Clean up and initialize any potential byproduct
   ``````````````````````````` -->
@@ -54,6 +61,9 @@
      <java jar="lib/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
+     <java jar="lib/umple.jar" fork="true" failonerror="true">
+      <arg value="cruise.umplificator/src/Master.ump"/>
+    </java>
   </target>
 
   <target name="umpleSelf">
@@ -64,6 +74,9 @@
     </java>
      <java jar="dist/umple.jar" fork="true" failonerror="true">
       <arg value="cruise.umple.validator/src/Master.ump"/>
+    </java>
+  <java jar="dist/umple.jar" fork="true" failonerror="true">
+      <arg value="cruise.umplificators/src/Master.ump"/>
     </java>
   </target>
 
@@ -98,7 +111,7 @@
   </target>
 
   <!-- Unzip JDT libraries into the jar construction folder -->
-  <target name="jdtJar">
+  <target name="validatorJar">
     <unjar src="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.200.v20130326-1255.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
     <unjar src="lib/umplificatorplugins/org.eclipse.core.jobs_3.5.300.v20130429-1813.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
     <unjar src="lib/umplificatorplugins/org.eclipse.core.resources_3.8.100.v20130521-2026.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
@@ -111,6 +124,20 @@
 	<unjar src="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar" dest="cruise.umple.validator/bin/" overwrite="true"/>
   </target>
   
+
+  <!-- Unzip JDT libraries into the jar construction folder -->
+  <target name="umplificatorJar">
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.contenttype_3.4.200.v20130326-1255.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.jobs_3.5.300.v20130429-1813.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.resources_3.8.100.v20130521-2026.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.equinox.preferences_3.5.100.v20130422-1538.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+    <unjar src="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+  </target>
   
   <!-- Move the velocity templates into an accessible folder -->
   <target name="velocitytemplates">
@@ -201,6 +228,29 @@
     <delete file="cruise.umple/bin/rules.grammar"/>
   </target>
 
+  <target name="compileUmplificator">
+    <echo message="${ant.project.name}: ${ant.file}"/>
+    <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="cruise.umplificator/bin" source="1.7" target="1.7">
+      <src path="${project.path}/src"/>
+      <src path="${project.path}/src-gen-jet"/>
+      <src path="${project.path}/src-gen-umple"/>
+      <src path="${project.path}/test"/>
+      <src path="cruise.umplificator/src-gen-umple"/>
+      <src path="cruise.umplificator/test"/>
+      <src path="${jopt-simple.project.path}/src/main/java"/>
+      <exclude name="**/.svn"/>
+      <exclude name="**/*.ump" />
+      <classpath refid="project.classpath"/>
+      <classpath refid="umplificator.project.classpath"/>
+    </javac>
+    <copy todir="cruise.umplificator/bin" overwrite="true">
+	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
+	<fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
+    </copy>
+    <delete file="cruise.umple/src/rules.grammar"/>
+    <delete file="cruise.umple/bin/rules.grammar"/>
+  </target>
+
   <!-- ```````````````````````````
     Package the application
   ``````````````````````````` -->
@@ -224,7 +274,8 @@
   <target name="packageMainJar">
     <antcall target="velocitytemplates"/>
     <antcall target="velocityjar"/>
-    <antcall target="jdtJar"/>
+    <antcall target="validatorJar"/>
+    <antcall target="umplificatorJar"/>
     <echo message="Package: Main command line jar" />
     <property name="umple_classpath" value=" " />
     <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error templates/** org/apache/**" excludes="**/*Test.class">
@@ -259,6 +310,18 @@
         <attribute name="Class-Path" value="${umple_classpath}"/>
       </manifest>
     </jar>
+
+    <!-- The Umplificator jar-->
+  <echo message="Package: Umplificator, the Reverse engineering tool" />
+   <jar destfile="dist/umplificator.jar" basedir="cruise.umplificator/bin" includes="cruise/umple/** cruise/umplificator/** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umplificator.UmplificatorMain"/>
+        <attribute name="Class-Path" value="eclipse.umplificator.classpath"/>
+      </manifest>
+    </jar>
+
 
     <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygrounMain" />
     <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/**">
@@ -466,6 +529,7 @@
     <antcall target="resetUmpleSelf" />
     <antcall target="compile" />
     <antcall target="compileValidator" />
+    <antcall target="compileUmplificator" />
     <antcall target="package" />
     <antcall target="template.resetVersion" />
   </target>
@@ -484,6 +548,7 @@
     <antcall target="resetUmpleSelf" />
     <antcall target="compile" />
     <antcall target="compileValidator" />
+    <antcall target="compileUmplificator" />
     <antcall target="template.test" />
     <antcall target="package" />
     <antcall target="deploy" />
