@@ -1,0 +1,16 @@
+class Course
+{
+  status
+  {
+    Open {
+      register -> Full;
+      unspecified -> error1;
+    }
+    Full {
+      reject -> Full;
+    }
+    error1 {
+      -> Open;
+    }
+  }
+}

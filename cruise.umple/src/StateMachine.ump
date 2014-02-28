@@ -175,6 +175,8 @@ class Event
 
   Boolean isInternal = false;  // for code generation only e.g. ouside scope of nested state
 
+  Boolean unspecified = false;
+  
   // The event parameters.
   1 -> 0..* MethodParameter params;
     

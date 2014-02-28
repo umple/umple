@@ -780,6 +780,12 @@ class UmpleInternalParser
         event.setIsTimer(true);
         event.setTimerInSeconds(eventTimerAmount);
       }
+      
+      if(event.getName().equals("unspecified"))
+      {
+        event.setUnspecified(true);
+      }
+      
       t.setEvent(event);
       
       if ("-".equals(changeType))

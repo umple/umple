@@ -1,0 +1,117 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3555 modeling language!*/
+
+class Course
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Course State Machines
+  private static $StatusOpen = 1;
+  private static $StatusFull = 2;
+  private static $StatusError1 = 3;
+  private $status;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setStatus(self::$StatusOpen);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getStatusFullName()
+  {
+    $answer = $this->getStatus();
+    return $answer;
+  }
+
+  public function getStatus()
+  {
+    if ($this->status == self::$StatusOpen) { return "StatusOpen"; }
+    elseif ($this->status == self::$StatusFull) { return "StatusFull"; }
+    elseif ($this->status == self::$StatusError1) { return "StatusError1"; }
+    return null;
+  }
+
+  public function register()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOpen)
+    {
+      $this->setStatus(self::$StatusFull);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function unspecified()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusOpen)
+    {
+      $this->setStatus(self::$StatusError1);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function reject()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusFull)
+    {
+      $this->setStatus(self::$StatusFull);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function __autotransition8__()
+  {
+    $wasEventProcessed = false;
+    
+    $aStatus = $this->status;
+    if ($aStatus == self::$StatusError1)
+    {
+      $this->setStatus(self::$StatusOpen);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setStatus($aStatus)
+  {
+    $this->status = $aStatus;
+
+    // entry actions and do activities
+    if ($this->status == self::$StatusError1)
+    {
+      $this->__autotransition8__();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

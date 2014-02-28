@@ -34,7 +34,7 @@ autoTransitionBlock- : [[guard]]? ( [[action]] -> | -> [[action]] | -> ) [stateN
 
 // A transition guard can come before or after the arrow
 // The order of guard and event definition can also be interchanged
-transition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [[guard]] | [[eventDefinition]])? ( [[action]] -> | -> [[action]] | -> ) [stateName] ; 
+transition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? ( [[action]] -> | -> [[action]] | -> ) [stateName] ; 
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event] ( [[parameterList]] )?
 afterEveryEvent- : afterEvery -( [timer] -)

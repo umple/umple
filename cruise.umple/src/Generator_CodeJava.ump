@@ -239,12 +239,15 @@ class JavaGenerator
         {
           if(!event.getIsTimer())
           {
-            if (allEnums.length() > 0)
+            if(!event.isUnspecified())
             {
+              if (allEnums.length() > 0)
+              {
               allEnums += ", ";
+              }
+              allEnums += translate("eventMethod",event);
+              allEnums += "_M";
             }
-            allEnums += translate("eventMethod",event);
-            allEnums += "_M";
           }
         }
       }
@@ -260,8 +263,10 @@ class JavaGenerator
       {
         for (Event event : nsm.getEvents())
         {
-          for(int i=0; i<eveList.size(); i++){
-            if(eveList.get(i)== event.getName()){
+          for(int i=0; i<eveList.size(); i++)
+          {
+            if(eveList.get(i)== event.getName())
+            {
               sameEventName=true;
             }
           }
@@ -274,16 +279,20 @@ class JavaGenerator
               {
                 if(!event.getIsTimer())
                 {
-                  if( eveName != event.getName()){
-                    eveList.add(event.getName());
-              
-                  if (allEnums.length() > 0 )
+                  if(!event.isUnspecified())
+                  {
+                    if( eveName != event.getName())
                     {
-                      allEnums += ", ";
+                      eveList.add(event.getName());
+              
+                      if (allEnums.length() > 0 )
+                      {
+                        allEnums += ", ";
+                      }
+                      allEnums += translate("eventMethod",event);
+                      allEnums += "_M"; 
+                      eveName=event.getName();
                     }
-                    allEnums += translate("eventMethod",event);
-                    allEnums += "_M"; 
-                    eveName=event.getName();
                   }
                 } 
               }
@@ -309,12 +318,15 @@ class JavaGenerator
         {
           if(!event.getIsTimer())
           {
-            if (allEnums.length() > 0)
+            if(!event.isUnspecified())
             {
-              allEnums += ", ";
-            }
-            allEnums += translate("eventMethod",event);
-            allEnums += "_M";
+              if (allEnums.length() > 0)
+              {
+                allEnums += ", ";
+              }
+              allEnums += translate("eventMethod",event);
+              allEnums += "_M";
+           }
          }
        }
       }
@@ -340,18 +352,21 @@ class JavaGenerator
               {
                 if(!event.getIsTimer())
                 {
-                  if( eveName != event.getName())
+                  if(!event.isUnspecified())
                   {
-                    eveList.add(event.getName());
-              
-                    if (allNesEvenEnums.length() > 0)
+                    if( eveName != event.getName())
                     {
-                      allNesEvenEnums += ", ";
-                    }
-                    allNesEvenEnums += translate("eventMethod",event);
-                    allNesEvenEnums += "_M"; 
-                    eveName=event.getName();
-                  } 
+                      eveList.add(event.getName());
+              
+                      if (allNesEvenEnums.length() > 0)
+                      {
+                        allNesEvenEnums += ", ";
+                      }
+                      allNesEvenEnums += translate("eventMethod",event);
+                      allNesEvenEnums += "_M"; 
+                      eveName=event.getName();
+                    } 
+                  }
                 }
               }
             }
@@ -385,13 +400,16 @@ class JavaGenerator
           {
             if(!t.getEvent().getIsTimer())
             {
-              if (allEventEnums.length() > 0)
+              if(!t.getEvent().isUnspecified())
               {
-                allEventEnums += ", ";
+                if (allEventEnums.length() > 0)
+                {
+                  allEventEnums += ", ";
+                }
+                allEventEnums += "MessageType.";
+                allEventEnums += t.getEvent().getName();
+                allEventEnums += "_M";
               }
-              allEventEnums += "MessageType.";
-              allEventEnums += t.getEvent().getName();
-              allEventEnums += "_M";
             }
           }
         }

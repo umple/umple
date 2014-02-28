@@ -1,0 +1,25 @@
+namespace example;
+
+class NestedStatesWthSameEventNames{
+  sm{
+    nestedState1{
+      state1 {
+        e1 -> state2;
+        unspecified -> state1;
+      }
+      state2{
+        e2 -> state5;
+      }
+    }
+    nestedState2{
+      state3{
+        e3 ->s tate4;
+      }
+      state4{
+        e4 -> state5;
+        unspecified -> nestedState2;
+      }
+    }
+    state5{}
+  }
+}

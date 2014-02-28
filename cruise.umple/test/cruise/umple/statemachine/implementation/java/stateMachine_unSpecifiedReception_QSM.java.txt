@@ -1,0 +1,254 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.util.*;
+import java.lang.Thread;
+
+public class QSMwithUnspecifiedRecep implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //QSMwithUnspecifiedRecep State Machines
+  enum Sm { s1, s2, error1, error2 }
+  private Sm sm;
+  
+  //enumeration type of messages accepted by QSMwithUnspecifiedRecep
+  enum MessageType { e1_M, e2_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public QSMwithUnspecifiedRecep()
+  {
+    setSm(Sm.s1);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of QSMwithUnspecifiedRecep
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public boolean _e1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+        wasEventProcessed = unspecified(getSm().toString(), "e1");
+    }
+
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={5}, file={"stateMachine_unSpecifiedReception_QSM.ump"}, javaline={84}, length={1})
+  public boolean unspecified(String state, String event)
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        printError();
+        setSm(Sm.error1);
+        wasEventProcessed = true;
+        break;
+      case s2:
+        setSm(Sm.error2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _e2()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s2:
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+        wasEventProcessed = unspecified(getSm().toString(), "e2");
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition9__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case error1:
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition10__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case error2:
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case error1:
+        __autotransition9__();
+        break;
+      case error2:
+        __autotransition10__();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void e1 ()
+  {
+    pool.put(new Message(MessageType.e1_M, null));
+  }
+
+  public void e2 ()
+  {
+    pool.put(new Message(MessageType.e2_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case e1_M:
+          status = _e1();
+          break;
+        case e2_M:
+          status = _e2();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+  @umplesourcefile(line={21},file={"stateMachine_unSpecifiedReception_QSM.ump"},javaline={254},length={3})
+  public void printError(){
+    System.out.println("Unspecified Reception");
+  }
+
+}

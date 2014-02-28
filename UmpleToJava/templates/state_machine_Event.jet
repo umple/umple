@@ -125,6 +125,45 @@
     } 
     allCases.append(StringFormatter.format("      default:\n"));
     allCases.append(StringFormatter.format("        // Other states do respond to this event\n"));
+    
+    for(State s : sm.getStates())
+    {
+      Transition t1=null;
+      Transition t2=null;
+      String exitEvent=null;
+      if (sm.getParentState() != null)
+      {
+        State parentState = sm.getParentState();
+        exitEvent = gen.translate("exitMethod",parentState);
+      }
+      for(Transition tran: s.getTransitions())
+      {
+        if(tran.getEvent().isUnspecified())
+        {
+          t1=tran;
+        }
+        if(tran.getEvent().getName().equals(e.getName()))
+        {
+          t2=tran;
+        }
+      }
+      if(s.getTransitions().contains(t1) && s.getTransitions().contains(t2))
+      {
+        if(!e.isUnspecified() && !e.getName().equals(exitEvent))
+        {
+          allCases.append(StringFormatter.format("        wasEventProcessed = unspecified("));
+          allCases.append(StringFormatter.format("get"));
+          allCases.append(StringFormatter.format("{0}",gen.translate("type",sm)));
+          allCases.append(StringFormatter.format("("));
+          allCases.append(StringFormatter.format(").toString()"));
+          allCases.append(StringFormatter.format(", "));
+          allCases.append(StringFormatter.format("\""));
+          allCases.append(StringFormatter.format(e.getName()));
+          allCases.append(StringFormatter.format("\""));
+          allCases.append(StringFormatter.format(");\n"));
+        }
+      }
+    }
     allCases.append(StringFormatter.format("    }\n"));
     javaLine+=3;
   }
@@ -140,7 +179,7 @@
     actionLengths.toString().substring(1)):"";
   
 %><%= umpleSourceFile %>
-  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.getIsTimer()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false  && !e.getIsTimer())){append(stringBuffer,"_");}}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%>)
+  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.getIsTimer() && !e.isUnspecified()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false  && !e.getIsTimer() && !e.isUnspecified())){append(stringBuffer,"_");}}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%><%if(e.isUnspecified()){append(stringBuffer,"String state, String event");}%>)
   {<% if (customEventPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPrefixCode, "    ")); } %>
     boolean wasEventProcessed = false;
     <%= eventOutput %><% if (customEventPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPostfixCode, "    ")); } %>
