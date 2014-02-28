@@ -247,14 +247,16 @@ class UmpleInternalParser
    * Analyze Trace Item Token whether trace item is an attribute or a method ... etc
    */
    private void analyzeTraceItem(Token traceToken){
-    UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
-    attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
     
     int traceItemType = traceItemType(traceToken);
     
     if( traceItemType == 1 )
     {
     	analyzeAttributeTraceItem(traceToken);
+    }
+    if( traceItemType == 2 )
+    {
+    	analyzeStateMachineTraceItem(traceToken);
     }
     if( traceItemType == 3 )
     {
@@ -264,9 +266,6 @@ class UmpleInternalParser
     {
     	analyzeMethodTraceItem(traceToken);
     }
-    // here, i faced a problem of finding traced state machine because
-    // -> in UmpleClass there no getStateMachine( String stm ) which gets state by searching its name
-    analyzeStateMachineTraceItem(traceToken);
 
     // trace all attribute [wildcard]
     if( traceToken.getValue("trace_entity").equals("*attribute") )
@@ -275,6 +274,7 @@ class UmpleInternalParser
     	
     	for( int i = 0 ; i < uClass.numberOfAttributes() ; ++i )
     	{
+    		UmpleVariable attr;
     		attr = uClass.getAttribute(i);
     		traceAttr.setPosition(traceToken.getPosition());
     		traceAttr.addUmpleVariable(attr);
@@ -511,11 +511,12 @@ class UmpleInternalParser
   }
 
 
-  // Check Type of Trace Item
-  // returns (1) attribute (3) association (4) method
-  private int traceItemType( Token traceToken)
-  {
-	  int traceItemType = -1;
+  /**
+   * Check Type of Trace Item
+   * returns (1) attribute (2) state machine (3) association (4) method
+   */
+   private int traceItemType(Token traceToken){
+    int traceItemType = -1;
 	  
 	  // --- check if attribute
 	  UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));  
@@ -523,6 +524,18 @@ class UmpleInternalParser
 	  if( attr != null )
 		  traceItemType = 1;
 	  
+	  // --- check if state machine
+	  for( StateMachine sVar : traceDirective.getUmpleClass().getStateMachines() )
+	  {
+		  if( traceToken.getValue("trace_entity").equals(sVar.getName()))
+			  traceItemType = 2;
+		  for( State s : sVar.getStates() )
+		  {
+			  if( traceToken.getValue("trace_entity").equals(s.getName()) || traceToken.getValue("trace_entity").equals(sVar.getName()+"."+s.getName()) )
+				  traceItemType = 2;
+		  }
+	  }
+
 	  // --- check if association
 	  for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
       {
