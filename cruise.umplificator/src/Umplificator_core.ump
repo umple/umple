@@ -9,8 +9,16 @@ class RefactoringStep {
 
 }
 
+class RefactoringAction {
+
+}
+
 class InitialRefactoringStep {
 	isA RefactoringStep;
+	
+	1 -- 0..* RefactoringAction;	
+	
+	
 }
 
 class AttributeRefactoringStep {
