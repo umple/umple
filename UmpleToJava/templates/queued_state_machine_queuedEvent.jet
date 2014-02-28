@@ -13,32 +13,35 @@
       { 
         if(event.isAutoTransition() == false)
         {
-        if(!event.getIsTimer())
-        {
-        append(stringBuffer,"\n");
-        append(stringBuffer,"  public void ");
-        append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
-        append(stringBuffer,"\n  {");
-        
-        if (!event.getArgs().equals(""))
-        {
-          append(stringBuffer,"\n    Vector v = new Vector({0});", event.getParams().size());
-          for ( int i=0; i < event.getParams().size(); i++)
+          if(!event.getIsTimer())
           {
-            append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
+            if(!event.isUnspecified())
+            {
+              append(stringBuffer,"\n");
+              append(stringBuffer,"  public void ");
+              append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
+              append(stringBuffer,"\n  {");
+        
+              if (!event.getArgs().equals(""))
+              {
+                append(stringBuffer,"\n    Vector v = new Vector({0});", event.getParams().size());
+                for ( int i=0; i < event.getParams().size(); i++)
+                {
+                  append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
+                }
+                append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                append(stringBuffer,"_M, v));");
+              }
+              else
+              {
+                append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                append(stringBuffer,"_M, null));");
+              }
+              append(stringBuffer,"\n  }");
+              append(stringBuffer,"\n");
+            }
           }
-        append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
-        append(stringBuffer,"_M, v));");
         }
-        else
-        {
-          append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
-          append(stringBuffer,"_M, null));");
-        }
-        append(stringBuffer,"\n  }");
-        append(stringBuffer,"\n");
-      }
-      }
       }
 
 
@@ -51,51 +54,55 @@
         {
           if(e.isAutoTransition() == false)
           {
-          if(!e.getIsTimer())
-          {
-          for(int i=0; i<eveList.size(); i++){
-            if(eveList.get(i)== e.getName())
-              //break;
-              sameEventName=true;
-          }
-          
-          if(sameEventName == false)
-          {
-            if(!(eveName.equals(e.getName())))
+            if(!e.getIsTimer())
             {
-              if(e.getIsInternal() == false)
+              if(!e.isUnspecified())
               {
-                eveList.add(e.getName());
-                append(stringBuffer,"\n");
-                append(stringBuffer,"  public void ");
-                append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
-                append(stringBuffer,"\n  {");
+                for(int i=0; i<eveList.size(); i++)
+                {
+                  if(eveList.get(i)== e.getName())
+                    //break;
+                    sameEventName=true;
+                }
+          
+               if(sameEventName == false)
+               {
+                 if(!(eveName.equals(e.getName())))
+                 {
+                   if(e.getIsInternal() == false)
+                   {
+                     eveList.add(e.getName());
+                     append(stringBuffer,"\n");
+                     append(stringBuffer,"  public void ");
+                     append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
+                     append(stringBuffer,"\n  {");
         
-                if (!e.getArgs().equals(""))
-                {
-                  append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
-                  for ( int i=0; i < e.getParams().size(); i++)
-                  {
-                    append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
-                  }
-                  append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-                append(stringBuffer,"_M, v));");
-                eveName=e.getName(); 
-                }
-                else
-                {
-                  append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-                  append(stringBuffer,"_M, null));");
-                  eveName=e.getName();
-                }
-                append(stringBuffer,"\n  }");
-                append(stringBuffer,"\n");
-              }
-            }
-          }
-          sameEventName=false;
-        }
-        }
+                     if (!e.getArgs().equals(""))
+                     {
+                       append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
+                       for ( int i=0; i < e.getParams().size(); i++)
+                       {
+                         append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
+                       }
+                       append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       append(stringBuffer,"_M, v));");
+                       eveName=e.getName(); 
+                     }
+                     else
+                     {
+                       append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       append(stringBuffer,"_M, null));");
+                       eveName=e.getName();
+                     }
+                     append(stringBuffer,"\n  }");
+                     append(stringBuffer,"\n");
+                   }
+                 }
+               }
+               sameEventName=false;
+             }
+           }
+         }
         }
       }
     }

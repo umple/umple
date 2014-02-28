@@ -1,0 +1,19 @@
+class UnSpecifiedReceptionTestCaseOne {
+  sm {
+    s1 {
+      e1 -> s2;
+      unspecified /{printError();}-> error1;
+    }
+    s2 {
+      e2 -> s1;
+      unspecified -> error2;
+    }
+    error1 {
+      -> s1;
+    }
+
+    error2 {
+      -> s2;
+    }
+  }
+}

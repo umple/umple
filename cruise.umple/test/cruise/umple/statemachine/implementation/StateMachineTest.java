@@ -401,4 +401,28 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
 	assertUmpleTemplateFor("pooledStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/pooledStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
   }
+  
+  @Test
+  public void stateMachine_UnspecifiedReception()
+  {
+	assertUmpleTemplateFor("stateMachine_UnspecifiedReception.ump",languagePath + "/stateMachine_UnspecifiedReception."+ languagePath +".txt","Course");
+  }
+  
+  @Test
+  public void stateMachine_unSpecifiedReception_QSM()
+  {
+    assertUmpleTemplateFor("stateMachine_unSpecifiedReception_QSM.ump",languagePath + "/stateMachine_unSpecifiedReception_QSM."+ languagePath +".txt","QSMwithUnspecifiedRecep");
+  }
+  
+  @Test
+  public void queuedSM_UnspecifiedReception()
+  {
+    assertUmpleTemplateFor("queuedSM_UnspecifiedRecep.ump",languagePath + "/queuedSM_UnspecifiedRecep."+ languagePath +".txt","AutomatedTellerMachine");
+  }
+  
+  @Test
+  public void nestedStates_UnspecifiedReception()
+  {
+    assertUmpleTemplateFor("nestedStates_UnspecifiedReception.ump",languagePath + "/nestedStates_UnspecifiedReception."+ languagePath +".txt","NestedStatesWthSameEventNames");
+  }
 }

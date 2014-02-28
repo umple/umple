@@ -958,6 +958,62 @@ public class UmpleParserStateMachineTest
   }
  
   @Test
+  public void stateMachine_unspecifiedReception()
+  {
+    assertParse("100_stateMachine_UnspecifiedReception.ump","[classDefinition][name:UnSpecifiedReceptionTestCaseOne][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][transition][event:e1][stateName:s2][transition][event:unspecified][action][code:printError();][stateName:error1][state][stateName:s2][transition][event:e2][stateName:s1][transition][event:unspecified][stateName:error2][state][stateName:error1][autoTransition][stateName:s1][state][stateName:error2][autoTransition][stateName:s2]");
+
+    UmpleClass c = model.getUmpleClass("UnSpecifiedReceptionTestCaseOne");
+    
+    StateMachine sm = c.getStateMachine(0);
+    Assert.assertEquals("sm", sm.getName());
+
+    Assert.assertEquals(4, sm.numberOfStates());
+    State s1State = sm.getState(0);
+    State s2State = sm.getState(1);
+    State error1State = sm.getState(2);
+    State error2State = sm.getState(3);
+      
+    Assert.assertEquals("s1", s1State.getName());
+    Assert.assertEquals("s2", s2State.getName());
+    Assert.assertEquals("error1", error1State.getName());
+    Assert.assertEquals("error2", error2State.getName());
+
+    Assert.assertEquals(2, s1State.numberOfTransitions());
+    Assert.assertEquals(2, s2State.numberOfTransitions());
+    Assert.assertEquals(1, error1State.numberOfTransitions());
+    Assert.assertEquals(1, error2State.numberOfTransitions());
+    
+    Transition t1 = s1State.getTransition(0);
+    Assert.assertEquals("e1", t1.getEvent().getName());
+    
+    Transition t2 = s1State.getTransition(1);
+    Assert.assertEquals(true,t2.getEvent().isUnspecified());
+    
+    Transition t3 = s2State.getTransition(0);
+    Assert.assertEquals("e2", t3.getEvent().getName());
+    
+    Transition t4 = s2State.getTransition(1);
+    Assert.assertEquals(true,t4.getEvent().isUnspecified());
+    
+    Transition t5 = error1State.getTransition(0);
+    Assert.assertEquals(true,t5.isAutoTransition());
+    
+    Transition t6 = error2State.getTransition(0);
+    Assert.assertEquals(true,t6.isAutoTransition());
+    
+    Event autoEvent1 = t5.getEvent();
+    Assert.assertEquals(true, autoEvent1.isAutoTransition());
+    Event autoEvent2 = t6.getEvent();
+    Assert.assertEquals(true, autoEvent2.isAutoTransition());
+
+    Action a1= t2.getAction();
+    
+    Assert.assertNotNull(a1);
+    Assert.assertEquals("printError();", a1.getActionCode());
+
+  }
+  
+  @Test
   public void malformedStateMachine(){
 	  assertHasWarning("107_badStateMachineSyntaxBrokenArrow.ump", 0, 1006, new Position("107_badStateMachineSyntaxBrokenArrow.ump", 8, 6, 106));
 	//  assertHasWarning("107_badStateMachineSyntaxEmptyCodeBlock.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyCodeBlock.ump", 4, 2, 45));

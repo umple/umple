@@ -1,0 +1,319 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.19.0.3287 modeling language!*/
+
+class AutomatedTellerMachine
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //AutomatedTellerMachine State Machines
+  private static $SmIdle = 1;
+  private static $SmMaintenance = 2;
+  private static $SmActive = 3;
+  private static $SmError1 = 4;
+  private static $SmError2 = 5;
+  private static $SmActiveNull = 6;
+  private static $SmActiveValidating = 7;
+  private static $SmActiveSelecting = 8;
+  private static $SmActiveProcessing = 9;
+  private static $SmActivePrinting = 10;
+  private $sm;
+  private $smActive;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setSmActive(self::$SmActiveNull);
+    $this->setSm(self::$SmIdle);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    if ($this->smActive != self::$SmActiveNull) { $answer .= "." . $this->getSmActive(); }
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmIdle) { return "SmIdle"; }
+    elseif ($this->sm == self::$SmMaintenance) { return "SmMaintenance"; }
+    elseif ($this->sm == self::$SmActive) { return "SmActive"; }
+    elseif ($this->sm == self::$SmError1) { return "SmError1"; }
+    elseif ($this->sm == self::$SmError2) { return "SmError2"; }
+    return null;
+  }
+
+  public function getSmActive()
+  {
+    if ($this->smActive == self::$SmActiveNull) { return "SmActiveNull"; }
+    elseif ($this->smActive == self::$SmActiveValidating) { return "SmActiveValidating"; }
+    elseif ($this->smActive == self::$SmActiveSelecting) { return "SmActiveSelecting"; }
+    elseif ($this->smActive == self::$SmActiveProcessing) { return "SmActiveProcessing"; }
+    elseif ($this->smActive == self::$SmActivePrinting) { return "SmActivePrinting"; }
+    return null;
+  }
+
+  public function cardInserted()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmIdle)
+    {
+      $this->setSm(self::$SmActive);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function maintain()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmIdle)
+    {
+      $this->setSm(self::$SmMaintenance);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function unspecified()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    $aSmActive = $this->smActive;
+    if ($aSm == self::$SmIdle)
+    {
+      $this->setSm(self::$SmError1);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aSmActive == self::$SmActiveValidating)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmError2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function isMaintained()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmMaintenance)
+    {
+      $this->setSm(self::$SmIdle);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function cancel()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmActive)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmIdle);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function __autotransition11__()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmError1)
+    {
+      $this->setSm(self::$SmIdle);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function __autotransition12__()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmError2)
+    {
+      $this->setSmActive(self::$SmActiveValidating);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterActive()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmActive = $this->smActive;
+    if ($aSmActive == self::$SmActiveNull)
+    {
+      $this->setSmActive(self::$SmActiveValidating);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitActive()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmActive = $this->smActive;
+    if ($aSmActive == self::$SmActiveValidating)
+    {
+      $this->setSmActive(self::$SmActiveNull);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSmActive == self::$SmActiveSelecting)
+    {
+      $this->setSmActive(self::$SmActiveNull);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSmActive == self::$SmActiveProcessing)
+    {
+      $this->setSmActive(self::$SmActiveNull);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSmActive == self::$SmActivePrinting)
+    {
+      $this->setSmActive(self::$SmActiveNull);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function validated()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmActive = $this->smActive;
+    if ($aSmActive == self::$SmActiveValidating)
+    {
+      $this->setSmActive(self::$SmActiveSelecting);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function select()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmActive = $this->smActive;
+    if ($aSmActive == self::$SmActiveSelecting)
+    {
+      $this->setSmActive(self::$SmActiveProcessing);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function selectAnotherTransiction()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmActive = $this->smActive;
+    if ($aSmActive == self::$SmActiveProcessing)
+    {
+      $this->setSmActive(self::$SmActiveSelecting);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function finish()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmActive = $this->smActive;
+    if ($aSmActive == self::$SmActiveProcessing)
+    {
+      $this->setSmActive(self::$SmActivePrinting);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function receiptPrinted()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmActive = $this->smActive;
+    if ($aSmActive == self::$SmActivePrinting)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmIdle);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitSm()
+  {
+    if ($this->sm == self::$SmActive)
+    {
+      $this->exitActive();
+      ejectCard();
+    }
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmActive)
+    {
+      readCard();
+      if ($this->smActive == self::$SmActiveNull) { $this->setSmActive(self::$SmActiveValidating); }
+    }
+    elseif ($this->sm == self::$SmError1)
+    {
+      $this->__autotransition11__();
+    }
+    elseif ($this->sm == self::$SmError2)
+    {
+      $this->__autotransition12__();
+    }
+  }
+
+  private function setSmActive($aSmActive)
+  {
+    $this->smActive = $aSmActive;
+    if ($this->sm != self::$SmActive && $aSmActive != self::$SmActiveNull) { $this->setSm(self::$SmActive); }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>
