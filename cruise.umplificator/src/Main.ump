@@ -2,4 +2,29 @@ namespace cruise.umplificator;
 
 class UmplificatorMain {
 
+	depend cruise.umple.compiler.UmpleFile;
+	depend java.util.List;
+	depend cruise.umplificator.core.*;
+	depend java.io.File;
+	
+	public static String console ;
+  
+	public static void main(String[] args) {
+	 if (args != null && args.length== 1){ 
+			List<File> inputFiles = FileHelper.getListOfFilesFromPath(args[0]);
+			if (inputFiles.size() >= 0 ){
+				Umplificator umplificator = new Umplificator();
+				console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
+			}
+	 }
+	 else {
+		printUsage();
+	 }
+	}
+	
+	private static  void printUsage(){
+		console = "Usage: java -jar umplificator.jar <file/folder>\nExample: java -jar umplificator.jar Student.java";
+    	System.out.println(console);
+	}
+
 } 

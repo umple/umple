@@ -1,0 +1,36 @@
+namespace cruise.umplificator;
+
+class FileHelper {
+
+depend java.io.File;
+depend java.util.ArrayList;
+depend java.util.Arrays;
+depend java.util.List;
+
+public static final String [] EXTENSIONS = new String []{".java",".ump"};
+	
+
+ public static  List<File> getListOfFilesFromPath(String path){
+    // Get File or a Folder from path
+	  List<File> inputFiles = new ArrayList<File> ();
+	  File aFile = new File(path);
+	  if (aFile.isDirectory())
+	  {
+		 for (File input: aFile.listFiles()){ 
+			 String extension = input.getName().substring(input.getName().lastIndexOf("."));
+			 if (Arrays.asList(EXTENSIONS).contains(extension)){
+				 inputFiles.add(input);
+			 }
+		 }	
+	  }
+	  else if (aFile.isFile()){
+		 String extension = aFile.getName().substring(aFile.getName().lastIndexOf("."));
+		 if (Arrays.asList(EXTENSIONS).contains(extension)){
+			 inputFiles.add(aFile);
+		 }
+	  }
+	return inputFiles;
+	  
+  }
+  
+  }

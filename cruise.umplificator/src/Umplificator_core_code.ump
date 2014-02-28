@@ -3,9 +3,27 @@ class Umplificator {
 depend java.io.File;
 depend java.util.List;
 
+final String separator = System.getProperty("line.separator");
+
 public boolean umplify(List<File> srcFiles) {
+	printFilesToUmplify(srcFiles);
 	return false;
 }
 
+public void printFilesToUmplify(List<File> srcFiles){
+    StringBuffer outMessage = new StringBuffer();
+		outMessage.append(separator);
+		outMessage.append("Files to be umplified: ");
+		outMessage.append(separator);
+		for (File aFile: srcFiles)
+		{
+			outMessage.append(aFile.getName());
+			outMessage.append(separator);
+		}
+		outMessage.append("End of processing");
+		outMessage.append(separator);
+		outMessage.append("-----------------------");
+	System.out.println(outMessage.toString());
+}
 
 }
