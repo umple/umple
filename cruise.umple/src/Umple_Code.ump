@@ -1489,10 +1489,6 @@ class Constraint
     addExpression(new ConstraintVariable("SYNTAX",")"));
   }
   
-  String getCode(){
-    return StringFormatter.format(gen.translate((getNegated()?"Not":"")+format,this),inject);
-  }
-  
   public boolean equals(Object object)
   {
     if(object==null)

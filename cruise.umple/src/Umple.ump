@@ -263,7 +263,8 @@ class Constraint {
   String inject = "";
   CodeTranslator gen = null;
   boolean negated = false;
-  ConstraintVariable[] expressions;  
+  String code = { StringFormatter.format(getGen().translate((getNegated()?"Not":"")+getFormat(),this),getInject()) };
+  ConstraintVariable[] expressions; 
 }
 
 /*
@@ -290,7 +291,7 @@ class Postcondition{
 class CodeBlock
 {
   depend java.util.*;
-
+  
   internal HashMap<String,String> codes = new HashMap<String,String>();
   public static String languageUsed = "";
 }
