@@ -390,19 +390,19 @@ public class StateMachineTest extends StateMachineTemplateTest
 	assertUmpleTemplateFor("pooledStateMachineWithConcurrentStates_autoTransition.ump",languagePath + "/pooledStateMachineWithConcurrentStates_autoTransition."+ languagePath +".txt","CourseAttempt");
   }
   
-  @Test
+  @Test  @Ignore 
   public void queuedStateMachine_timedEvents_and_autoTansitions()
   {
 	assertUmpleTemplateFor("queuedStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/queuedStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
   }
   
-  @Test
+  @Test @Ignore 
   public void pooledStateMachine_timedEvents_and_autoTansitions()
   {
 	assertUmpleTemplateFor("pooledStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/pooledStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
   }
   
-  @Test
+  @Test @Ignore 
   public void stateMachine_UnspecifiedReception()
   {
 	assertUmpleTemplateFor("stateMachine_UnspecifiedReception.ump",languagePath + "/stateMachine_UnspecifiedReception."+ languagePath +".txt","Course");
