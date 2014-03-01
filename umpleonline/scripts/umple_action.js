@@ -1275,6 +1275,7 @@ Action.moveSelectedClass = function(umpleClass, delta)
 
 Action.keyboardShortcut = function(event)
 {
+		
   if (!Page.shortcutsEnabled)
   {
   	return;
@@ -1285,6 +1286,22 @@ Action.keyboardShortcut = function(event)
   if (shortcut == 27)		// escape
   {
   	Page.unselectAllToggleTools();
+  }
+  else if ((shortcut == 8 || shortcut == 46) && jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
+	  if(Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0)
+	  {
+		  Action.classDeleted(Page.selectedClass.id);
+	  }
+	  else if(Page.selectedAssociation)
+	  {
+		  Action.associationDeleted(Page.selectedAssociation.id);
+	  }
+	  else if(Page.selectedGeneralization)
+	  {
+		  Action.generalizationDeleted(Page.selectedGeneralization.id);
+	  }
+	  event.preventDefault();
   }
   else if (shortcut == 40) 	// down
   {
@@ -1301,6 +1318,39 @@ Action.keyboardShortcut = function(event)
   else if (shortcut == 39) 	// right
   {
   	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(1,0,0,0));
+  }//My new shortcut
+  else if (shortcut == 65)
+  {
+	  if(jQuery('#umpleCanvasColumn').hasClass('focus') 
+	  	&& Page.selectedAssociation == null && Page.selectedGeneralization == null)
+	  {
+		  if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
+		  {
+			  document.getElementById('buttonAddAssociation').click();
+		  }
+	  }
+  }
+  else if (shortcut == 67)
+  {
+	  if(jQuery('#umpleCanvasColumn').hasClass('focus') 
+	  	&& Page.selectedAssociation == null && Page.selectedGeneralization == null)
+	  {
+		  if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
+		  {		  	
+			  document.getElementById('buttonAddClass').click();
+		  }			  
+	  }
+  }
+  else if (shortcut == 71)
+  {
+	  if(jQuery('#umpleCanvasColumn').hasClass('focus') 
+	  	&& Page.selectedAssociation == null && Page.selectedGeneralization == null)
+	  {		  
+		  if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
+		  {
+			  document.getElementById('buttonAddGeneralization').click();
+		  }			  
+	  }
   }
 }
 
@@ -2297,6 +2347,42 @@ Action.ajax = function(callback,post,errors)
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
   // var errors = typeof(errors) != 'undefined' ? errors : "false";
-  var errors = "true";    
+  var errors = "true";
     Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
+}
+
+//Mac Keyboard Shortcut
+if (navigator.appVersion.indexOf("Mac")!=-1)
+{
+	Mousetrap.bind(['command+z'], function(e) {
+		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+		{			
+			Action.undo();
+		}
+		e.preventDefault();
+	});	
+	Mousetrap.bind(['command+shift+z'], function(e) {
+		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+		{			
+			Action.redo();
+		}
+		e.preventDefault();
+	});
+}
+else //Non Mac
+{
+	Mousetrap.bind(['ctrl+z'], function(e) {
+		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+		{			
+			Action.undo();
+		}
+		e.preventDefault();
+	});	
+	Mousetrap.bind(['ctrl+y'], function(e) {
+		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+		{			
+			Action.redo();
+		}
+		e.preventDefault();
+	});
 }

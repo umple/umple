@@ -4,6 +4,9 @@
 //
 // Loads all the js code for UmpleLine
 
+//Mouse shortcut
+document.write('<script type="text/javascript" src="scripts/mousetrap.min.js"><\/script>');
+
 //PROTOTYPE
 document.write('<script type="text/javascript" src="scripts/prototype.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/scriptaculous.js"><\/script>');
