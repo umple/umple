@@ -826,9 +826,15 @@ class UmpleInternalParser
         event.setTimerInSeconds(eventTimerAmount);
       }
       
-      if(event.getName().equals("unspecified"))
+      if(event.getName().equals("unspecified") && !sm.getPooled())
       {
         event.setUnspecified(true);
+      }
+      
+      if(event.getName().equals("unspecified") && sm.getPooled())
+      {
+        Token eventToken = transitionToken.getSubToken("event");
+        setFailedPosition(eventToken.getPosition(),62, sm.getName());
       }
       
       t.setEvent(event);

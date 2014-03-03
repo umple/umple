@@ -911,6 +911,11 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
+  public void pooledStateMachine_UnspecifiedReception(){
+	assertHasWarning("106_invalid_PooledStateMachine_UnspecifiedReception.ump", 0, 62, new Position("106_invalid_PooledStateMachine_UnspecifiedReception.ump", 5, 6, 84));
+  }
+  
+  @Test
   public void queuedStateMachine()
   {
                             

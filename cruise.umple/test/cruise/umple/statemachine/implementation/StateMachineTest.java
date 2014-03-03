@@ -457,4 +457,14 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
 	assertUmpleTemplateFor("nestedStates_UnspecifiedReception.ump",languagePath + "/nestedStates_UnspecifiedReception."+ languagePath +".txt","NestedStatesWthSameEventNames");
   }
+  
+  @Test
+  public void pooledStateMachine_UnspecifiedReception() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+	 Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+     f1.setAccessible(true);
+	 f1.setInt(null, 1);
+		
+     assertUmpleTemplateFor("pooledStateMachine_UnspecifiedReception.ump",languagePath + "/pooledStateMachine_UnspecifiedReception."+ languagePath +".txt","PooledSMwithUnspecifiedReception");
+  }
 }
