@@ -78,7 +78,7 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean __autotransition7__()
+  private boolean __autotransition1__()
   {
     boolean wasEventProcessed = false;
     
@@ -133,7 +133,7 @@ public class X implements Runnable
     switch(sm)
     {
       case s1:
-        __autotransition7__();
+        __autotransition1__();
         break;
       case s2:
         startTimeouts2Tos3Handler();

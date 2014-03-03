@@ -114,7 +114,7 @@ public class QSMwithUnspecifiedRecep implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean __autotransition9__()
+  private boolean __autotransition1__()
   {
     boolean wasEventProcessed = false;
     
@@ -132,7 +132,7 @@ public class QSMwithUnspecifiedRecep implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean __autotransition10__()
+  private boolean __autotransition2__()
   {
     boolean wasEventProcessed = false;
     
@@ -158,10 +158,10 @@ public class QSMwithUnspecifiedRecep implements Runnable
     switch(sm)
     {
       case error1:
-        __autotransition9__();
+        __autotransition1__();
         break;
       case error2:
-        __autotransition10__();
+        __autotransition2__();
         break;
     }
   }

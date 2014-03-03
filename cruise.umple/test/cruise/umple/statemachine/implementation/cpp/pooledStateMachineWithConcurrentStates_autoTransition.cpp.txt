@@ -102,7 +102,7 @@
     }
   }
 
-  bool CourseAttempt::__autotransition5__()
+  bool CourseAttempt::__autotransition1__()
   {
     bool wasEventProcessed = false;
 

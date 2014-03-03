@@ -80,7 +80,7 @@ class CourseAttempt
     return null;
   }
 
-  private function __autotransition5__()
+  private function __autotransition1__()
   {
     $wasEventProcessed = false;
     
@@ -202,7 +202,7 @@ class CourseAttempt
       if ($this->courseAttemptSMLab1 == self::$CourseAttemptSMLab1Null) { $this->setCourseAttemptSMLab1(self::$CourseAttemptSMLab1Lab1); }
       if ($this->courseAttemptSMTermProject == self::$CourseAttemptSMTermProjectNull) { $this->setCourseAttemptSMTermProject(self::$CourseAttemptSMTermProjectTermProject); }
       if ($this->courseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamNull) { $this->setCourseAttemptSMFinalExam(self::$CourseAttemptSMFinalExamFinalExam); }
-      $this->__autotransition5__();
+      $this->__autotransition1__();
     }
   }
 
