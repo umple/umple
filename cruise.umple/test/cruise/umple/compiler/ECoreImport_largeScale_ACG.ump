@@ -1,4 +1,4 @@
-
+namespace ACG;
 
 class LocatedElement
 {
@@ -407,6 +407,8 @@ class StringExp
 	isA LiteralExp;
 	String value;
 }
+
+namespace PrimitiveTypes;
 
 class Boolean
 {

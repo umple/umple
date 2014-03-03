@@ -43,6 +43,12 @@ class ECoreImportHandler
 		if (currentElement.equals("EPackage")) {
 			UmpleImportPackage umplePackage = new UmpleImportPackage(UmpleImportConstants.ECORE_PACKAGE, "");
 			String nameSpace = attributes.getValue(UmpleImportConstants.XMI_PACKAGENAME);
+			
+			// If no attribute "nsURI", use attribute "name" instead
+			if (nameSpace == null || nameSpace.isEmpty()) {
+				nameSpace = attributes.getValue(UmpleImportConstants.XMI_NAME);
+			}
+			
 			if (nameSpace != null && !nameSpace.isEmpty()) {
 				umplePackage.setName(nameSpace);
 				model.addUmpleImportElement(umplePackage);
