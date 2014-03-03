@@ -903,6 +903,14 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
+  public void testOfNotTwoOrMoreTypesOFStateMachineInSameClass(){
+    assertFailedParse("106_invalidQSMandPooledSMandRegularSMinSameClass.ump", new Position("106_invalidQSMandPooledSMandRegularSMinSameClass.ump", 16, 2, 133), 58);
+    assertFailedParse("106_invalidQSMandPooledSMinSameClass.ump", new Position("106_invalidQSMandPooledSMinSameClass.ump", 10, 2, 75), 59);
+    assertFailedParse("106_invalidRegularSMandPooledSMinSameClass.ump", new Position("106_invalidRegularSMandPooledSMinSameClass.ump", 9, 2, 72), 60);
+    assertFailedParse("106_invalidQSMandRegularSMinSameClass.ump", new Position("106_invalidQSMandRegularSMinSameClass.ump", 9, 2, 72), 61);
+  }
+  
+  @Test
   public void queuedStateMachine()
   {
                             

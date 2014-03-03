@@ -236,6 +236,51 @@ class UmpleInternalParser
           existingStateMachineNames.add(sm.getName());
       }
       
+      Boolean foundQueued = false;
+      Boolean foundPooled = false;
+      Boolean foundRegularSM = false;
+      Token stateMachineToken=null;
+    
+      for (StateMachine sm : C.getStateMachines())
+      {
+        if(sm.getQueued())
+        {
+          foundQueued = true;
+          stateMachineToken = stateMachineNameToToken.get(sm.getName());
+        }
+        else if(sm.getPooled())
+        {
+          foundPooled = true;
+          stateMachineToken = stateMachineNameToToken.get(sm.getName());
+        }
+        else if(!sm.getQueued() && !sm.getPooled())
+        {
+          foundRegularSM = true;
+          stateMachineToken = stateMachineNameToToken.get(sm.getName());
+        }  
+      }
+    
+      if (foundQueued == true && foundPooled == true && foundRegularSM == true)
+      {
+        //raise an error if QSM, PooledSM and RegularSM are used in the same class
+        setFailedPosition(stateMachineToken.getPosition(), 58, C.getName());
+      }
+      else if(foundQueued == true && foundPooled == true && foundRegularSM == false)
+      {
+        //raise an error if QSM and PooledSM are used in the same class
+        setFailedPosition(stateMachineToken.getPosition(), 59, C.getName());
+      }
+      else if(foundQueued == false && foundPooled == true && foundRegularSM == true)
+      {
+        //raise an error if PooledSM and RegularSM are used in the same class
+        setFailedPosition(stateMachineToken.getPosition(), 60, C.getName());
+      }
+      else if(foundQueued == true && foundPooled == false && foundRegularSM == true)
+      {
+        //raise an error if QSM and RegularSM are used in the same class
+        setFailedPosition(stateMachineToken.getPosition(), 61, C.getName());
+      }
+
       List<String> existingAssociationNames = new ArrayList<String>();
       List<Association> visitedAssociations = new ArrayList<Association>();
       for(Association assoc : C.getAssociations())

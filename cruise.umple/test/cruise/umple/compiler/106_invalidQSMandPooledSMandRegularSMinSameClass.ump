@@ -1,0 +1,23 @@
+class X{
+  queued sm1{
+    s1{ 
+      e1->s2;
+    }
+    s2{
+    }
+  }
+  pooled sm2{
+    s3{
+      e2 ->s4;
+    }
+    s4{
+    }
+  }
+  sm3{
+    s5{
+      e3->s6;
+    }
+    s6{
+    }
+  }
+}
