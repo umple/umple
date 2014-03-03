@@ -1,0 +1,246 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.util.*;
+import java.lang.Thread;
+
+public class PooledSMwithUnspecifiedReception implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //PooledSMwithUnspecifiedReception State Machines
+  enum Sm { s1, error1, s2 }
+  private Sm sm;
+  
+  //enumeration type of messages accepted by PooledSMwithUnspecifiedReception
+  enum MessageType { e1_M, unspecified_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  // A list of message types for each state of the PooledSMwithUnspecifiedReception
+  List<MessageType> state1MsgTypeList= Arrays.asList(MessageType.e1_M, MessageType.unspecified_M);
+  List<MessageType> state2MsgTypeList= Arrays.asList();
+  List<MessageType> state3MsgTypeList= Arrays.asList();
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public PooledSMwithUnspecifiedReception()
+  {
+    setSm(Sm.s1);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of PooledSMwithUnspecifiedReception
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public boolean _e1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _unspecified()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        setSm(Sm.error1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean __autotransition1__()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case error1:
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case error1:
+        __autotransition1__();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+  // A method to return a list of message types for each state of the PooledSMwithUnspecifiedReceptionstate machine
+  public List<MessageType> getStateMsgTypeList(Sm state){
+    List<MessageType> msg = null;
+    switch (state)
+    {
+      case s1:
+        msg=state1MsgTypeList;
+        break;
+      case error1:
+        msg=state2MsgTypeList;
+        break;
+      case s2:
+        msg=state3MsgTypeList;
+        break;
+      default:
+    }
+    return msg;
+  }
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      List<MessageType> processableMessages;
+      // return a list of message types for the current state
+      processableMessages = getStateMsgTypeList(getSm());
+      Message message=null;
+
+      try {
+        message=getNextProcessableMessage(processableMessages);
+        while (message==null)
+        {
+          wait();
+          message=getNextProcessableMessage(processableMessages);
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); }
+
+      // return the message
+      return (message);
+    }
+
+    public Message getNextProcessableMessage(List<MessageType> processableMessages)
+    {
+      // Iterate through messages and remove the first message that matches one of the processableMessages list
+      // otherwise return null
+      for (Message msg: messages){
+        if(processableMessages.contains(msg.type)){
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+      }
+      return null;
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void e1 ()
+  {
+    pool.put(new Message(MessageType.e1_M, null));
+  }
+
+  public void unspecified ()
+  {
+    pool.put(new Message(MessageType.unspecified_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case e1_M:
+          status = _e1();
+          break;
+        case unspecified_M:
+          status = _unspecified();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+}

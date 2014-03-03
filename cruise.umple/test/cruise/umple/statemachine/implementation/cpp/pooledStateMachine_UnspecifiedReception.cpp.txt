@@ -1,0 +1,113 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+#include "PooledSMwithUnspecifiedReception.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ PooledSMwithUnspecifiedReception::PooledSMwithUnspecifiedReception()
+  {
+    setSm(s1);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ PooledSMwithUnspecifiedReception::PooledSMwithUnspecifiedReception(const PooledSMwithUnspecifiedReception & pooledsmwithunspecifiedreception)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ PooledSMwithUnspecifiedReception PooledSMwithUnspecifiedReception::operator=(const PooledSMwithUnspecifiedReception & pooledsmwithunspecifiedreception)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string PooledSMwithUnspecifiedReception::getSmFullName()
+  {
+    string answer = getSmStringName(sm);
+    return answer;
+  }
+  
+  PooledSMwithUnspecifiedReception::Sm PooledSMwithUnspecifiedReception::getSm()
+  {
+    return sm;
+  }
+
+  string PooledSMwithUnspecifiedReception::getSmStringName (Sm sm)
+  {
+    switch (sm)  {
+      case 0 : {return "s1"; break;}
+      case 1 : {return "error1"; break;}
+      case 2 : {return "s2"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool PooledSMwithUnspecifiedReception::e1()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s1:
+        setSm(s2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool PooledSMwithUnspecifiedReception::unspecified()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s1:
+        setSm(error1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool PooledSMwithUnspecifiedReception::__autotransition1__()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case error1:
+        setSm(s1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void PooledSMwithUnspecifiedReception::setSm(Sm aSm)
+  {
+    sm = aSm;
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+PooledSMwithUnspecifiedReception::~PooledSMwithUnspecifiedReception()
+  {}

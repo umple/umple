@@ -1,0 +1,13 @@
+class PooledSMwithUnspecifiedReception{
+  pooled sm{
+    s1 {
+      e1 -> s2;
+      unspecified -> error1;
+    }
+    s1 {
+    }
+    error1 {
+      -> s1;
+    }
+  }
+}
