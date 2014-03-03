@@ -1,0 +1,104 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+class PooledSMwithUnspecifiedReception
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //PooledSMwithUnspecifiedReception State Machines
+  private static $SmS1 = 1;
+  private static $SmError1 = 2;
+  private static $SmS2 = 3;
+  private $sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setSm(self::$SmS1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmS1) { return "SmS1"; }
+    elseif ($this->sm == self::$SmError1) { return "SmError1"; }
+    elseif ($this->sm == self::$SmS2) { return "SmS2"; }
+    return null;
+  }
+
+  public function e1()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS1)
+    {
+      $this->setSm(self::$SmS2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function unspecified()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS1)
+    {
+      $this->setSm(self::$SmError1);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function __autotransition1__()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmError1)
+    {
+      $this->setSm(self::$SmS1);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmError1)
+    {
+      $this->__autotransition1__();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>
