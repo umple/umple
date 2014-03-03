@@ -8,7 +8,7 @@ import cruise.umple.compiler.GenerateTarget;
 import cruise.umple.compiler.UmpleModel;
 import cruise.umple.util.SampleFileWriter;
 
-public class MultipleGenerateDirectiveTests extends TemplateTest {
+public class MultipleGenerateDirectiveTest extends TemplateTest {
 	
 	@Test
 	public void testConstraintJavaRubyPhp() {
