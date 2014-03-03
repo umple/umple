@@ -1049,9 +1049,13 @@ class UmpleInternalParser
         else {
           UmpleInterface uInterface=  model.getUmpleInterface(extendName);
           child.addParentInterface(uInterface);
-          addImplementedMethodsFromInterface(uInterface, child);
         }
       }
+    }
+    for(UmpleClass uClass: getModel().getUmpleClasses()) {
+    	for (UmpleInterface uInterface : uClass.getParentInterface()) {
+    		addImplementedMethodsFromInterface(uInterface, uClass);
+    	}
     }
   }  
 
@@ -1063,7 +1067,7 @@ class UmpleInternalParser
       for (Method aMethod : parentInterface.getMethods())
       {
         boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
-        if (!(uClass.hasMethod(aMethod)) && shouldAddMethod)
+        if (!(uClass.hasMethod(aMethod)) && !(uClass.hasMethodInTraits(aMethod)) && shouldAddMethod)
         {
           if("".equals(aMethod.getMethodBody().getExtraCode("")))
           {

@@ -29,6 +29,18 @@ class UmpleModel {
 //----------------------------------------------------------
 class UmpleTrait {
 
+  public boolean hasCascadeMethod (Method aMethod) {
+	  if (hasMethod(aMethod)) return  true;
+	  if (hasExtendsTraits()) {
+		  for (UmpleTrait uTrait : getExtendsTraits()) {
+			  if (uTrait.hasCascadeMethod(aMethod)) {
+				  return true; 
+			  }
+		  }
+	  }	  
+	  return false;
+  }
+
 	public Attribute getAttribute(String name)
   {
     for (Attribute av : attributes)

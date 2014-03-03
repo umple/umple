@@ -31,6 +31,7 @@ public class UmpleTraitTest {
 		SampleFileWriter.destroy("traitTest.ump");
 		SampleFileWriter.destroy("A.java");
 		SampleFileWriter.destroy("B.java");
+		SampleFileWriter.destroy("I.java");
 	}
 	
 	@Test 
@@ -139,7 +140,15 @@ public class UmpleTraitTest {
 		SampleFileWriter.destroy("B.java");	
 		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());	
 		Assert.assertEquals(1, model.getUmpleClass("B").numberOfAssociationVariables());
-	}	
+	}
+	
+	@Test
+	public void interfaceMethodOverride() {
+		String code = "interface I { void dukeX();} class A { isA I; isA T; } trait T { void dukeX() {} }";
+		UmpleModel model = getRunModel(code);	
+		SampleFileWriter.destroy("I.java");
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
+	 }
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {

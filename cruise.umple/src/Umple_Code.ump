@@ -724,6 +724,15 @@ class AssociationClass
 class UmpleClass
 {
 
+  public boolean hasMethodInTraits (Method aMethod) {
+	  for (UmpleTrait uTrait : getExtendsTraits()) {
+		  if (uTrait.hasCascadeMethod(aMethod)) {
+			  return true;
+		  }
+	}
+	  return false;  
+  }
+
   after setExtendsClass {
     if(aExtendsClass!=null&&aExtendsClass.getMethods()!=null)
     for(Method method:aExtendsClass.getMethods())
