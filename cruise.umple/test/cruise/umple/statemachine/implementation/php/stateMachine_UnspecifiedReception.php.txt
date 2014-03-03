@@ -81,7 +81,7 @@ class Course
     return $wasEventProcessed;
   }
 
-  private function __autotransition8__()
+  private function __autotransition1__()
   {
     $wasEventProcessed = false;
     
@@ -101,7 +101,7 @@ class Course
     // entry actions and do activities
     if ($this->status == self::$StatusError1)
     {
-      $this->__autotransition8__();
+      $this->__autotransition1__();
     }
   }
 

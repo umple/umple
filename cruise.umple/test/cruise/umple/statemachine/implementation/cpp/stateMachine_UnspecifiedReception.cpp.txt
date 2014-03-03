@@ -98,7 +98,7 @@
     return wasEventProcessed;
   }
 
-  bool Course::__autotransition8__()
+  bool Course::__autotransition1__()
   {
     bool wasEventProcessed = false;
 

@@ -52,7 +52,7 @@
     }
   }
 
-  bool Light::__autotransition3__()
+  bool Light::__autotransition1__()
   {
     bool wasEventProcessed = false;
 

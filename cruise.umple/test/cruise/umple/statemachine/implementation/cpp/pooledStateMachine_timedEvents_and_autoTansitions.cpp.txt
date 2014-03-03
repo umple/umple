@@ -68,7 +68,7 @@
     return wasEventProcessed;
   }
 
-  bool X::__autotransition7__()
+  bool X::__autotransition1__()
   {
     bool wasEventProcessed = false;
 

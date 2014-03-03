@@ -158,7 +158,7 @@
     return wasEventProcessed;
   }
 
-  bool AutomatedTellerMachine::__autotransition11__()
+  bool AutomatedTellerMachine::__autotransition1__()
   {
     bool wasEventProcessed = false;
 
@@ -173,7 +173,7 @@
     return wasEventProcessed;
   }
 
-  bool AutomatedTellerMachine::__autotransition12__()
+  bool AutomatedTellerMachine::__autotransition2__()
   {
     bool wasEventProcessed = false;
 

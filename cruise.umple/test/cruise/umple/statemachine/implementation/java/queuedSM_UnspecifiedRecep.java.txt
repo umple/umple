@@ -166,7 +166,7 @@ public class AutomatedTellerMachine implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean __autotransition11__()
+  private boolean __autotransition1__()
   {
     boolean wasEventProcessed = false;
     
@@ -184,7 +184,7 @@ public class AutomatedTellerMachine implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean __autotransition12__()
+  private boolean __autotransition2__()
   {
     boolean wasEventProcessed = false;
     
@@ -366,10 +366,10 @@ public class AutomatedTellerMachine implements Runnable
         if (smActive == SmActive.Null) { setSmActive(SmActive.validating); }
         break;
       case error1:
-        __autotransition11__();
+        __autotransition1__();
         break;
       case error2:
-        __autotransition12__();
+        __autotransition2__();
         break;
     }
   }

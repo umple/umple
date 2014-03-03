@@ -55,7 +55,7 @@ class X
     return $wasEventProcessed;
   }
 
-  private function __autotransition6__()
+  private function __autotransition1__()
   {
     $wasEventProcessed = false;
     
@@ -88,7 +88,7 @@ class X
     // entry actions and do activities
     if ($this->sm == self::$SmS1)
     {
-      $this->__autotransition6__();
+      $this->__autotransition1__();
     }
   }
 

@@ -139,7 +139,7 @@ class AutomatedTellerMachine
     return $wasEventProcessed;
   }
 
-  private function __autotransition11__()
+  private function __autotransition1__()
   {
     $wasEventProcessed = false;
     
@@ -152,7 +152,7 @@ class AutomatedTellerMachine
     return $wasEventProcessed;
   }
 
-  private function __autotransition12__()
+  private function __autotransition2__()
   {
     $wasEventProcessed = false;
     
@@ -293,11 +293,11 @@ class AutomatedTellerMachine
     }
     elseif ($this->sm == self::$SmError1)
     {
-      $this->__autotransition11__();
+      $this->__autotransition1__();
     }
     elseif ($this->sm == self::$SmError2)
     {
-      $this->__autotransition12__();
+      $this->__autotransition2__();
     }
   }
 

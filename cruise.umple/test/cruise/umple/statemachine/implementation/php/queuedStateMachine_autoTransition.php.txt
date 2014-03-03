@@ -40,7 +40,7 @@ class Light
     return null;
   }
 
-  private function __autotransition3__()
+  private function __autotransition1__()
   {
     $wasEventProcessed = false;
     
@@ -60,7 +60,7 @@ class Light
     // entry actions and do activities
     if ($this->bulb == self::$BulbOff)
     {
-      $this->__autotransition3__();
+      $this->__autotransition1__();
     }
   }
 

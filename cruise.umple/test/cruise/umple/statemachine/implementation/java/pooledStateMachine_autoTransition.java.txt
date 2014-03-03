@@ -56,7 +56,7 @@ public class Light implements Runnable
     return bulb;
   }
 
-  private boolean __autotransition4__()
+  private boolean __autotransition1__()
   {
     boolean wasEventProcessed = false;
     
@@ -82,7 +82,7 @@ public class Light implements Runnable
     switch(bulb)
     {
       case Off:
-        __autotransition4__();
+        __autotransition1__();
         break;
     }
   }

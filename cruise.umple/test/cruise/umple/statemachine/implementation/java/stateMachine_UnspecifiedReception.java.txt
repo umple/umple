@@ -95,7 +95,7 @@ public class Course
     return wasEventProcessed;
   }
 
-  private boolean __autotransition8__()
+  private boolean __autotransition1__()
   {
     boolean wasEventProcessed = false;
     
@@ -121,7 +121,7 @@ public class Course
     switch(status)
     {
       case error1:
-        __autotransition8__();
+        __autotransition1__();
         break;
     }
   }
