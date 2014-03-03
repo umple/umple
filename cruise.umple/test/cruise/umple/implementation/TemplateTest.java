@@ -218,6 +218,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.java");
     SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.cpp");
     SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.h");
+    SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.java");    
+    SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.php");    
+    SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.cpp");    
+    SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.h");    
 
     //
     // Tear down abstract class tests.

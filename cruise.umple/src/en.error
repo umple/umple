@@ -63,6 +63,7 @@
 59: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no queued state machine and pooled state machine in the same class;
 60: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no pooled state machine and regular state machine in the same class;
 61: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no queued state machine and regular state machine in the same class;
+62: 4, "http://umple.org/PageBeingDeveloped.html", (unspecified) must not be used in combination with Pooled State machine {0} - it is treated such as other regular events - it is pooled;
 
 # Messages relating to format of identifiers.
 100: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;
