@@ -109,9 +109,7 @@ class UmpleInternalParser
       boolean success = generatedMethods.add(generatedMethodName);
       
       if(!success){
-        ErrorMessage e = new ErrorMessage(48,aAttr.getPosition(), aAttr.getName(), className, generatedMethodName);
-        getParseResult().addErrorMessage(e);
-        System.out.println(e.getFormattedMessage());
+        getParseResult().addErrorMessage(new ErrorMessage(48,aAttr.getPosition(), aAttr.getName(), className, generatedMethodName));
         return false;
       }
       
