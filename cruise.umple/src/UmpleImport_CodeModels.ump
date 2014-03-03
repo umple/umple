@@ -16,10 +16,21 @@ class UmpleImportModel
 	internal StringBuilder umpleBuilder = new StringBuilder();
 	
 	String generateUmple() {
+		boolean packageExist = false;
 		umpleBuilder = new StringBuilder();
-		for (UmpleImportElement umpleImportElement : umpleImportElements) {
-			if(umpleImportElement.getId()!=UmpleImportConstants.ECORE_REFERENCE)
+		for (UmpleImportElement umpleImportElement : umpleImportElements) {			
+			if(umpleImportElement.getId()!=UmpleImportConstants.ECORE_REFERENCE) {
+				// Append 2 new lines if there is more than 1 package
+				if("ecore:EPackage".equals(umpleImportElement.getId())) {
+					if(packageExist) {
+						umpleBuilder.append("\n\n");
+					} else {
+						packageExist = true;
+					}
+				}
+			
 				umpleBuilder.append(umpleImportElement.generateUmple());
+			}
 		}
 		return umpleBuilder.toString();
 	}

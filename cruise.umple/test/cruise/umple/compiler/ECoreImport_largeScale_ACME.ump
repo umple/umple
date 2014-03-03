@@ -1,4 +1,4 @@
-
+namespace ACME;
 
 class ACMEFile
 {
@@ -96,6 +96,8 @@ class Binding
 	String compDest;
 	String portDest;
 }
+
+namespace PrimitiveTypes;
 
 class Boolean
 {
