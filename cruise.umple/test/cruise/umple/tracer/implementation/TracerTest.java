@@ -57,7 +57,7 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceSingleAttributePostCondition.ump",languagePath + tracerPath+"TraceSingleAttributePostCondition."+ languagePath +".txt","Tracer",false);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void SingleAttributePeriod()
 	{
 		assertUmpleTemplateFor("TraceSingleAttributePeriod.ump",languagePath + tracerPath+"TraceSingleAttributePeriod."+ languagePath +".txt","Tracer",false);
@@ -105,7 +105,7 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceSingleAttributeSetGet.ump",languagePath + tracerPath+"TraceSingleAttributeSetGet."+ languagePath +".txt","Tracer",false);
 	}
 	
-	@Test
+	@Test @Ignore
 	public void SingleAttributeOccurences()
 	{
 		assertUmpleTemplateFor("TraceSingleAttributeOccurences.ump",languagePath + tracerPath+"TraceSingleAttributeOccurences."+ languagePath +".txt","Tracer",false);
