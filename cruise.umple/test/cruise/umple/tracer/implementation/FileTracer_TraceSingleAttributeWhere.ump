@@ -1,9 +1,0 @@
-namespace example;
-
-tracer File;
-
-class Tracer
-{
-  Integer x;
-  trace x where x == 100;
-}

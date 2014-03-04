@@ -1,0 +1,119 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.ConsoleTracer;
+import java.util.Date;
+
+public class Tracer
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private int id;
+  private String name;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(int aId, String aName)
+  {
+    id = aId;
+    ( new Thread()
+    {
+      Thread thread;
+      {
+        thread = Thread.currentThread();
+      }
+      public void run()
+      {
+        while( thread.isAlive() )
+        {
+              ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributePeriod.ump,7,Tracer,"+System.identityHashCode(this)+",at_p,id,"+id );
+          try
+          {
+            Thread.sleep(30ms);
+          }
+          catch (InterruptedException e)
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+    ).start();
+    name = aName;
+    ( new Thread()
+    {
+      Thread thread;
+      {
+        thread = Thread.currentThread();
+      }
+      public void run()
+      {
+        while( thread.isAlive() )
+        {
+              ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributePeriod.ump,7,Tracer,"+System.identityHashCode(this)+",at_p,name,"+name );
+          try
+          {
+            Thread.sleep(30ms);
+          }
+          catch (InterruptedException e)
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+    ).start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
+            "name" + ":" + getName()+ "]"
+     + outputString;
+  }
+}

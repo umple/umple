@@ -1,0 +1,51 @@
+  public Tracer(int aId, String aName)
+  {
+    id = aId;
+    ( new Thread()
+    {
+      Thread thread;
+      {
+        thread = Thread.currentThread();
+      }
+      public void run()
+      {
+        while( thread.isAlive() )
+        {
+              ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributePeriod.ump,8,Tracer,"+System.identityHashCode(this)+",at_p,id,"+id );
+          try
+          {
+            Thread.sleep(100s);
+          }
+          catch (InterruptedException e)
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+    ).start();
+    name = aName;
+    ( new Thread()
+    {
+      Thread thread;
+      {
+        thread = Thread.currentThread();
+      }
+      public void run()
+      {
+        while( thread.isAlive() )
+        {
+              ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributePeriod.ump,7,Tracer,"+System.identityHashCode(this)+",at_p,name,"+name );
+          try
+          {
+            Thread.sleep(30ms);
+          }
+          catch (InterruptedException e)
+          {
+            e.printStackTrace();
+          }
+        }
+      }
+    }
+    ).start();
+  }

@@ -1,0 +1,23 @@
+  public boolean setB(int aB)
+  {
+    boolean wasSet = false;
+    b = aB;
+    if (a<aB)
+    {
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributePostCondition.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,b,"+b );
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setC(int aC)
+  {
+    boolean wasSet = false;
+    c = aC;
+    if (a<b)
+    {
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributePostCondition.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,c,"+c );
+    }
+    wasSet = true;
+    return wasSet;
+  }

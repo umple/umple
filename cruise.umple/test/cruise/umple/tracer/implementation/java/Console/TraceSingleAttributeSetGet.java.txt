@@ -1,0 +1,14 @@
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeSetGet.ump,6,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id+","+(""+aId).toString().replace("\n","").replace(",",";") );
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeSetGet.ump,6,Tracer,"+System.identityHashCode(this)+",at_g,id,"+id );
+    return id;
+  }
