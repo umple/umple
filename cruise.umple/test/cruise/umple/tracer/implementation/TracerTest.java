@@ -159,13 +159,13 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceMultipleAttributeSetGet.ump",languagePath + tracerPath+"TraceMultipleAttributeSetGet."+ languagePath +".txt","Tracer",false);
 	}
 	
-	@Test  
+	@Test  @Ignore
 	public void MultipleAttributeOccurences()
 	{
 		assertUmpleTemplateFor("TraceMultipleAttributeOccurences.ump",languagePath + tracerPath+"TraceMultipleAttributeOccurences."+ languagePath +".txt","Tracer");
 	}
 	
-	@Test  
+	@Test  @Ignore
 	public void MultipleAttributesPeriod()
 	{
 		assertUmpleTemplateFor("TraceMultipleAttributePeriod.ump",languagePath + tracerPath+"TraceMultipleAttributePeriod."+ languagePath +".txt","Tracer",false);
