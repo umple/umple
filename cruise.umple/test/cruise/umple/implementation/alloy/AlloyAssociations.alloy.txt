@@ -1,0 +1,143 @@
+// Alloy file generated using Umple from AlloyAssociations.ump 
+
+sig A {
+  b : one B,
+  c : lone C,
+  ds : some D,
+  es : set E
+}
+
+sig B {
+  c : one C,
+  d : lone D,
+  es : some E,
+  fs : set F,
+  a : one A
+}
+
+sig C {
+  d : one D,
+  e : lone E,
+  fs : some F,
+  gs : set G,
+  a : one A,
+  b : lone B
+}
+
+sig D {
+  e : one E,
+  f : lone F,
+  gs : some G,
+  a : one A,
+  b : lone B,
+  cs : some C
+}
+
+sig E {
+  a : one A,
+  b : lone B,
+  cs : some C,
+  ds : set D
+}
+
+sig F {
+  b : lone B,
+  cs : some C,
+  ds : set D
+}
+
+sig G {
+  cs : some C,
+  ds : set D
+}
+
+sig H { }
+
+fact {
+  all a1 : A, b1 : B |
+    a1 != none && b1 != none && a1 in a[b1] <=> b1 in b[a1]
+}
+
+fact {
+  all a1 : A, c1 : C |
+    a1 != none && c1 != none || c1 = none && a1 in a[c1] <=> c1 in c[a1]
+}
+
+
+
+fact {
+  all a1 : A, d1 : D |
+    a1 != none && d1 != none && a1 in a[d1] <=> d1 in ds[a1]
+}
+
+fact {
+  all a1 : A, e1 : E |
+    a1 != none && e1 != none || e1 = none && a1 in a[e1] <=> e1 in es[a1]
+}
+
+
+
+fact {
+  all b1 : B, c1 : C |
+    b1 = none || b1 != none && c1 != none && b1 in b[c1] <=> c1 in c[b1]
+}
+
+fact {
+  all b1 : B, d1 : D |
+    b1 = none || b1 != none && d1 != none || d1 = none && b1 in b[d1] <=> d1 in d[b1]
+}
+
+
+
+fact {
+  all b1 : B, e1 : E |
+    b1 = none || b1 != none && e1 != none && b1 in b[e1] <=> e1 in es[b1]
+}
+
+fact {
+  all b1 : B, f1 : F |
+    b1 = none || b1 != none && f1 != none || f1 = none && b1 in b[f1] <=> f1 in fs[b1]
+}
+
+
+
+fact {
+  all c1 : C, d1 : D |
+    c1 != none && d1 != none && c1 in cs[d1] <=> d1 in d[c1]
+}
+
+fact {
+  all c1 : C, e1 : E |
+    c1 != none && e1 != none || e1 = none && c1 in cs[e1] <=> e1 in e[c1]
+}
+
+
+
+fact {
+  all c1 : C, f1 : F |
+    c1 != none && f1 != none && c1 in cs[f1] <=> f1 in fs[c1]
+}
+
+fact {
+  all c1 : C, g1 : G |
+    c1 != none && g1 != none || g1 = none && c1 in cs[g1] <=> g1 in gs[c1]
+}
+
+
+
+fact {
+  all d1 : D, e1 : E |
+    d1 = none || d1 != none && e1 != none && d1 in ds[e1] <=> e1 in e[d1]
+}
+
+fact {
+  all d1 : D, f1 : F |
+    d1 = none || d1 != none && f1 != none || f1 = none && d1 in ds[f1] <=> f1 in f[d1]
+}
+
+
+
+fact {
+  all d1 : D, g1 : G |
+    d1 = none || d1 != none && g1 != none && d1 in ds[g1] <=> g1 in gs[d1]
+}

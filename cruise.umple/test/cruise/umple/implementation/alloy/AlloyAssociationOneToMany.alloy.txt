@@ -1,0 +1,14 @@
+// Alloy file generated using Umple from Alloy_AssociationOneToMany.ump 
+
+sig A {
+  bs : set B
+}
+
+sig B {
+  a : one A
+}
+
+fact {
+  all a1 : A, b1 : B |
+    a1 != none && b1 != none || b1 = none && a1 in a[b1] <=> b1 in bs[a1]
+}

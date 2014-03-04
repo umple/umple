@@ -1,0 +1,43 @@
+// Alloy file generated using Umple from AlloySophisticatedAssociations.ump 
+
+sig A {
+  bs : set B,
+  cs : some C
+}
+
+sig B {
+  cs : some C,
+  a : lone A
+}
+
+sig C {
+  as : some A,
+  b : one B,
+  d : one D
+}
+
+sig D {
+  cs : some C
+}
+
+fact {
+  all a1 : A, b1 : B |
+    a1 = none || a1 != none && b1 != none || b1 = none && a1 in a[b1] <=> b1 in bs[a1]
+}
+
+
+
+fact {
+  all b1 : B, c1 : C |
+    b1 != none && c1 != none && b1 in b[c1] <=> c1 in cs[b1]
+}
+
+fact {
+  all c1 : C, a1 : A |
+    c1 != none && a1 != none && c1 in cs[a1] <=> a1 in as[c1]
+}
+
+fact {
+  all d1 : D, c1 : C |
+    d1 != none && c1 != none && d1 in d[c1] <=> c1 in cs[d1]
+}

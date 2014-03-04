@@ -1,0 +1,24 @@
+// Alloy file generated using Umple from AlloyAssociation.ump 
+
+sig Man {
+  wives : some Woman,
+  children : some Child
+}
+
+sig Woman {
+  husband : one Man
+}
+
+sig Child {
+  father : lone Man
+}
+
+fact {
+  all m1 : Man, w1 : Woman |
+    m1 != none && w1 != none && m1 in husband[w1] <=> w1 in wives[m1]
+}
+
+fact {
+  all m1 : Man, c1 : Child |
+    m1 = none || m1 != none && c1 != none && m1 in father[c1] <=> c1 in children[m1]
+}
