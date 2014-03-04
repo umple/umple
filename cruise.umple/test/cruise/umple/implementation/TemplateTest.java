@@ -26,6 +26,9 @@ public class TemplateTest
   public String language;
   public String languagePath;
   public String umpleParserName;
+  
+  public String aTracer;
+  public String tracerPath;
 
   @Before
   public void setUp()
@@ -35,6 +38,8 @@ public class TemplateTest
     language = null;
     languagePath = "java";
     umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
+    aTracer = null;
+    tracerPath = null;
   }
 
   @After
@@ -278,6 +283,7 @@ public class TemplateTest
   {
     assertUmpleTemplateFor(umpleFile, codeFile, className, isFullMatch, true);
   }
+  
 
   public void assertGeneratedCodeEquals(String pathToInput, String actualFilename)
   {
@@ -299,8 +305,9 @@ public class TemplateTest
     {
       Assert.fail("Unable to locate code file: " + checkFile);
     }
-    
+        
     UmpleModel model = createUmpleSystem(pathToInput, umpleFile);
+    
 
     String actual = null;
     if (className == null)
@@ -325,6 +332,7 @@ public class TemplateTest
     File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
 
+
     if (isFullMatch)
     {
       if (ignoreLineComments)
@@ -345,6 +353,8 @@ public class TemplateTest
     UmpleFile file = new UmpleFile(pathToInput, filename);
     UmpleModel model = new UmpleModel(file);
     model.setShouldGenerate(false);
+    if( aTracer != null )
+    	model.setTracer(new Tracer(aTracer));
     RuleBasedParser rbp = new RuleBasedParser();
     UmpleParser parser = new UmpleInternalParser(umpleParserName, model, rbp);
     ParseResult result = rbp.parse(file);
