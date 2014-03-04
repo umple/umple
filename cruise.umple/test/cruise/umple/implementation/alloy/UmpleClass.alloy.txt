@@ -1,0 +1,3 @@
+// Alloy file generated using Umple from UmpleClass.ump 
+
+sig A { }

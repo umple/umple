@@ -1,0 +1,7 @@
+class Man{
+    1 husband -- 2 Woman wives;
+    0..1 father -- 1..5 Child children; 
+}
+
+class Woman{}
+class Child{}

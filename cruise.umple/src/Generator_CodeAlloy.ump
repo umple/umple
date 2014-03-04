@@ -16,27 +16,32 @@ namespace cruise.umple.compiler;
 
 class AlloyGenerator
 {
-  public void generate()
-  {
+  public void generate(){
     StringBuilder code = new StringBuilder();
     int indent = 0;
     AssociationEnd assocEndToOutput;
     AssociationEnd leftEnd;
     AssociationEnd rightEnd;
-    String alloyMultiplicity;
-
+    String temp ="";
+    
     code.append("// Alloy file generated using Umple from "+model.getUmpleFile().getFileName()+" \n\n");
-
     
     // Iterate through all classes and generate Alloy
+    //model.getAssociations();
+    Set processedClass = new HashSet(); // needed to prevent double reflexive count
     for (UmpleClass uClass : model.getUmpleClasses())
     {
        Set processedAssociations = new HashSet(); // needed to prevent double reflexive count
-    
+          
+      if(uClass.getAssociations().length == 0) {
+          code.append("sig "+uClass.getName()+" { }\n\n");
+          continue;
+      }
+      if(uClass.getAssociations().length >= 2) temp = ",";
       code.append("sig "+uClass.getName()+" {\n");
       indent += 2;
-    
       // Iterate through associations, but only visit in first class encounter
+      int size = uClass.getAssociations().length;
       for(Association uAssoc : uClass.getAssociations()) {
 
         if(processedAssociations.contains(uAssoc)) continue;
@@ -47,35 +52,127 @@ class AlloyGenerator
         leftEnd = uAssoc.getEnd(0);
         rightEnd = uAssoc.getEnd(1);
         if(rightEnd.getClassName().equals(uClass.getName())) {
-          assocEndToOutput=leftEnd;
+          assocEndToOutput = leftEnd;
         }
         else {
-          assocEndToOutput=rightEnd;        
-        }
-        String theMult = assocEndToOutput.getMultiplicity().getParserable();
-        if(theMult.equals("1")) {
-          alloyMultiplicity = "one";
-        }
-        else if(theMult.equals("0..1")) {
-          alloyMultiplicity = "lone";
-        }
-        else if(theMult.equals("*")) {
-          alloyMultiplicity = "set";
-        }
-        else {
-          alloyMultiplicity = "some";
-        }
-
-       // Output alloy assertions for this association
+          assocEndToOutput = rightEnd;        
+        }    
+       //Output alloy assertions for this association
           appendSpaces(code, indent);
-          code.append(assocEndToOutput.getRoleName()+" : "+ alloyMultiplicity + " " +assocEndToOutput.getClassName()+"\n");
-        
+          String str = alloyAssociation(assocEndToOutput);
+          code.append(str);
+          
+          //temp +="\n";
+          if(size > 1){
+              code.append(temp);
+              code.append("\n");
+              size--;
+          }
+          else {
+              temp = "";
+              code.append("\n");
+          }
       }
       indent -=2;
-      code.append("}\n");
+      code.append("}\n\n");
+      processedClass.add(uClass);
     }
-    
+    for(Association assoc : model.getAssociations()){
+        
+        associativityRule(assoc,code);
+        code.append("\n\n");
+    }
     terminateCode(code);
+  }
+  //This generates the first line in the fact statement
+  private void getConstraintPart(String rEndName, String lEndName, StringBuilder code){
+    char a = lEndName.toLowerCase().charAt(0), b = rEndName.toLowerCase().charAt(0);
+      int indent = 0;
+      code.append("fact {\n");
+      indent += 2;
+      appendSpaces(code,indent);
+      code.append("all "+a+"1 : "+lEndName+", "+b+"1 : "+rEndName+" |\n");
+      indent += 2;
+      appendSpaces(code,indent);
+  }
+  //This generates other parts of the Umple facts
+  private void genFactForUmpleClass(UmpleClass uClass, StringBuilder code){
+    Set processedAssociations = new HashSet(); // needed to prevent double reflexive count
+      for(Association assoc : uClass.getAssociations()){
+          if(uClass.getAssociations().length == 0 || processedAssociations.contains(assoc)) 
+              continue;
+          String rEndMult = getAlloyMultiplicity(assoc.getEnd(1));
+          code.append("\n\n");
+          processedAssociations.add(assoc); // needed to prevent double reflexive count
+      }
+  } 
+  
+  private String alloyAssociation(AssociationEnd end){
+    String str, theMult = getAlloyMultiplicity(end);
+      str = end.getRoleName()+" : "+ theMult + " " +end.getClassName();
+      return str;
+  }
+  
+  //This method defines associativity rule
+  private void associativityRule(Association assoc, StringBuilder code){
+    String rEndName = assoc.getEnd(1).getClassName(),
+              lEndName = assoc.getEnd(0).getClassName();
+      String beginEnd = getAlloyMultiplicity(assoc.getEnd(0));
+      String endMult = getAlloyMultiplicity(assoc.getEnd(1));
+      char a = lEndName.toLowerCase().charAt(0), b = rEndName.toLowerCase().charAt(0);
+      if(beginEnd.equals("one") || beginEnd.equals("some")){
+          if(endMult.equals("one") || endMult.equals("some")){
+              getConstraintPart(rEndName,lEndName,code);
+              code.append(a+"1 != none && "+b+"1 != none && "+a+"1 in "+assoc.getEnd(0).getRoleName()
+                  +"["+b+"1] <=> "+b+"1 in "+assoc.getEnd(1).getRoleName()+"["+a+"1]\n}");
+          }
+          if(endMult.equals("lone") || endMult.equals("set")){
+              getConstraintPart(rEndName,lEndName,code);
+              code.append(a+"1 != none && "+b+"1 != none || "+b+"1 = none && "+a+"1 in "+assoc.getEnd(0).getRoleName()
+                  +"["+b+"1] <=> "+b+"1 in "+assoc.getEnd(1).getRoleName()+"["+a+"1]\n}\n\n");
+          }
+       }
+      if(beginEnd.equals("lone") || beginEnd.equals("set")){
+          if(endMult.equals("one") || endMult.equals("some")){
+              getConstraintPart(rEndName,lEndName,code);
+              code.append(a+"1 = none || "+a+"1 != none && "+b+"1 != none && "+a+"1 in "+assoc.getEnd(0).getRoleName()
+                  +"["+b+"1] <=> "+b+"1 in "+assoc.getEnd(1).getRoleName()+"["+a+"1]\n}");
+          }
+          if(endMult.equals("lone") || endMult.equals("set")){
+              getConstraintPart(rEndName,lEndName,code);
+              code.append(a+"1 = none || "+a+"1 != none && "+b+"1 != none || "+b+"1 = none && "+a+"1 in "+assoc.getEnd(0).getRoleName()
+                  +"["+b+"1] <=> "+b+"1 in "+assoc.getEnd(1).getRoleName()+"["+a+"1]\n}\n\n");
+          }
+       }
+  }
+  //This method generates the string for associationEnd output
+  
+  //This method translate UmpleMultiplicity to Alloy equivalent
+  private String getAlloyMultiplicity(AssociationEnd end){
+    String theMult = end.getMultiplicity().getParserable();
+        if(theMult.equals("1"))
+          return "one";
+        else if(theMult.equals("0..1"))
+          return "lone"; 
+        else if(theMult.equals("*")) 
+          return "set";
+        else if(theMult.equals("1..*"))
+            return "some";
+        else return getMultiplicity(end);
+  }
+  
+  
+  //This method computes alloy multiplicity for numeric associations
+  private String getMultiplicity(AssociationEnd end){
+    if(end.getMultiplicity().isValid()){
+          int m = end.getMultiplicity().getUpperBound(),
+              n = end.getMultiplicity().getLowerBound();
+          if(n == 0 && m > 1) return "set"; 
+          if(n == 1 && m == 1) return "one";
+          //if(n == 0 && m == 1) return "lone";
+          return "some";
+      }
+      return null;
   }
 
   private void terminateCode(StringBuilder code) {
@@ -111,4 +208,3 @@ class AlloyGenerator
     }
   } 
 }
-
