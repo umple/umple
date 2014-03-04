@@ -1,9 +1,0 @@
-namespace example;
-
-tracer File;
-
-class Tracer
-{
-	x;
-	trace x;
-}

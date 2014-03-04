@@ -1,0 +1,11 @@
+  public boolean setC(int aC)
+  {
+    boolean wasSet = false;
+    c = aC;
+    if (a<b)
+    {
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributePostCondition.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,c,"+c );
+    }
+    wasSet = true;
+    return wasSet;
+  }

@@ -1,0 +1,11 @@
+  public boolean setX(int aX)
+  {
+    boolean wasSet = false;
+    if (aX==100)
+    {
+      ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeWhere.ump,6,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
+    }
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }

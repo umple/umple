@@ -7,7 +7,7 @@
 
 */
 
-package cruise.umple.tracer.implementation.java;
+package cruise.umple.tracer.implementation.php;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,14 +18,18 @@ import cruise.umple.tracer.implementation.TracerTest;
 import cruise.umple.util.SampleFileWriter;
 
 @Ignore
-public class JavaTracerTest extends TracerTest
+public class PhpConsoleTracerTest extends TracerTest
 {
   @Before
   public void setUp()
   {
     super.setUp();
-    language = "Java";
-    languagePath = "java";
+    language = "Php";
+    languagePath = "php";
+    this.aTracer = "Console";
+    this.tracerPath = "/Console/";
+    pathToInput = SampleFileWriter.rationalize("test/cruise/umple/tracer/implementation");
+    pathToRoot = SampleFileWriter.rationalize("../../cruise.umple");
   }
   
   @After

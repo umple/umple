@@ -1,0 +1,5 @@
+  public int getId()
+  {
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeGet.ump,6,Tracer,"+System.identityHashCode(this)+",at_g,id,"+id );
+    return id;
+  }

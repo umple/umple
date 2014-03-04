@@ -1,9 +1,0 @@
-namespace example;
-tracer File;
-class Tracer
-{
-	Integer id;
-	String name;
-	trace name for 5;
-	trace id for 100;
-}
