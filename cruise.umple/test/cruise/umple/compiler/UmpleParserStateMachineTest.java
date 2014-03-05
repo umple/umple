@@ -1027,6 +1027,30 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
+  public void pooledStateMachines_and_EmptyRegularStateMachine()
+  {
+    assertParse("106_valid_PooledSM_with_EmptyRegularSM.ump","[classDefinition][name:X][stateMachine][inlineStateMachine][pooled:pooled][name:sm1][state][stateName:x][transition][event:e][stateName:y][state][stateName:y][transition][event:f][stateName:x][inlineComment:The following should work as an enum][stateMachine][inlineStateMachine][name:sm2][state][stateName:q][state][stateName:r][state][stateName:s]");
+
+    UmpleClass c = model.getUmpleClass("X");
+    StateMachine sm1 = c.getStateMachine(0);
+    StateMachine sm2 = c.getStateMachine(0);
+    
+    Assert.assertEquals(true,sm1.isPooled());
+  }  
+
+  @Test
+  public void queuedStateMachines_and_EmptyRegularStateMachine()
+  {
+    assertParse("106_valid_QSM_with_EmptyRegularSM.ump","[classDefinition][name:X][stateMachine][inlineStateMachine][queued:queued][name:sm1][state][stateName:x][transition][event:e][stateName:y][state][stateName:y][transition][event:f][stateName:x][inlineComment:The following should work as an enum][stateMachine][inlineStateMachine][name:sm2][state][stateName:q][state][stateName:r][state][stateName:s]");
+
+    UmpleClass c = model.getUmpleClass("X");
+    StateMachine sm1 = c.getStateMachine(0);
+    StateMachine sm2 = c.getStateMachine(0);
+    
+    Assert.assertEquals(true,sm1.isQueued());
+  }
+  
+  @Test
   public void malformedStateMachine(){
 	  assertHasWarning("107_badStateMachineSyntaxBrokenArrow.ump", 0, 1006, new Position("107_badStateMachineSyntaxBrokenArrow.ump", 8, 6, 106));
 	//  assertHasWarning("107_badStateMachineSyntaxEmptyCodeBlock.ump", 0, 1006, new Position("107_badStateMachineSyntaxEmptyCodeBlock.ump", 4, 2, 45));

@@ -1,0 +1,9 @@
+class X {
+  pooled sm1 {
+    x {e -> y;}
+    y {f -> x;}
+  }
+
+  // The following should work as an enum
+  sm2 {q{} r{} s{}}
+}
