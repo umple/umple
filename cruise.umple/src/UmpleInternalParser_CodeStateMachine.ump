@@ -239,6 +239,7 @@ class UmpleInternalParser
       Boolean foundQueued = false;
       Boolean foundPooled = false;
       Boolean foundRegularSM = false;
+      Boolean foundEventlessRegularSM = false;
       Token stateMachineToken=null;
     
       for (StateMachine sm : C.getStateMachines())
@@ -255,8 +256,18 @@ class UmpleInternalParser
         }
         else if(!sm.getQueued() && !sm.getPooled())
         {
-          foundRegularSM = true;
-          stateMachineToken = stateMachineNameToToken.get(sm.getName());
+          if(sm.getEvents().isEmpty())
+          {
+            foundEventlessRegularSM = true;
+            foundRegularSM = true;
+            stateMachineToken = stateMachineNameToToken.get(sm.getName());
+          }
+          else
+          {
+            foundEventlessRegularSM = false;
+            foundRegularSM = true;
+            stateMachineToken = stateMachineNameToToken.get(sm.getName());
+          }
         }  
       }
     
@@ -270,12 +281,12 @@ class UmpleInternalParser
         //raise an error if QSM and PooledSM are used in the same class
         setFailedPosition(stateMachineToken.getPosition(), 59, C.getName());
       }
-      else if(foundQueued == false && foundPooled == true && foundRegularSM == true)
+      else if(foundQueued == false && foundPooled == true && foundRegularSM == true && foundEventlessRegularSM == false)
       {
         //raise an error if PooledSM and RegularSM are used in the same class
         setFailedPosition(stateMachineToken.getPosition(), 60, C.getName());
       }
-      else if(foundQueued == true && foundPooled == false && foundRegularSM == true)
+      else if(foundQueued == true && foundPooled == false && foundRegularSM == true && foundEventlessRegularSM == false)
       {
         //raise an error if QSM and RegularSM are used in the same class
         setFailedPosition(stateMachineToken.getPosition(), 61, C.getName());
