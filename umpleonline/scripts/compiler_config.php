@@ -453,7 +453,9 @@ function handleUmpleTextChange()
   
   //Windows versus Linux PHP issues
   $actionCode = $GLOBALS["OS"] == "Windows" ? json_encode($_REQUEST["actionCode"]) : "\"" . $_REQUEST["actionCode"] . "\""; 
-
+  $actionCode = str_replace("<","\<",$actionCode);
+  $actionCode = str_replace(">","\>",$actionCode);
+  
   $filename = saveFile($input);
   $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} {$actionCode} {$filename}");
   saveFile($umpleOutput,$filename);
