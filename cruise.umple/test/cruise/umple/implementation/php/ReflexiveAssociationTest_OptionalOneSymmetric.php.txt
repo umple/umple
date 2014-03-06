@@ -46,6 +46,12 @@ class Mentor
     return $this->superMentor;
   }
 
+  public function hasSuperMentor()
+  {
+    $has = $this->superMentor != null;
+    return $has;
+  }
+
   public function setSuperMentor($aNewSuperMentor)
   {
     $wasSet = false;

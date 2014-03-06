@@ -61,6 +61,12 @@ class Student
     return $aM1;
   }
 
+  public function hasM1()
+  {
+    $has = $this->m1 != null;
+    return $has;
+  }
+
   public function getM2()
   {
     print "getM2";

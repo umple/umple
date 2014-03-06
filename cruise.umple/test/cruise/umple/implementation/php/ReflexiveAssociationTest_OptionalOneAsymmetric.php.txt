@@ -47,9 +47,21 @@ class Student
     return $this->pupil;
   }
 
+  public function hasPupil()
+  {
+    $has = $this->pupil != null;
+    return $has;
+  }
+
   public function getTa()
   {
     return $this->ta;
+  }
+
+  public function hasTa()
+  {
+    $has = $this->ta != null;
+    return $has;
   }
 
   public function setPupil($aNewPupil)

@@ -46,6 +46,12 @@ class Mentor
     return $this->student;
   }
 
+  public function hasStudent()
+  {
+    $has = $this->student != null;
+    return $has;
+  }
+
   public function setStudent($aNewStudent)
   {
     $wasSet = false;
