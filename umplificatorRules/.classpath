@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="DROOLS/Drools"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/cruise.umplificator"/>
+	<classpathentry kind="output" path="target"/>
+</classpath>
