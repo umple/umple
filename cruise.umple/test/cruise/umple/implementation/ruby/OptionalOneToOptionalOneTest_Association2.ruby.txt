@@ -34,6 +34,11 @@ class Student
     @mentor
   end
 
+  def has_mentor
+    has = !@mentor.nil?
+    has
+  end
+
   def set_mentor(a_new_mentor)
     was_set = false
     if a_new_mentor.nil?

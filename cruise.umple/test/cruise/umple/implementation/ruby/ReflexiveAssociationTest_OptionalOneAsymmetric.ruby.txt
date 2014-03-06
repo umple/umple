@@ -50,8 +50,18 @@ class Student
     @pupil
   end
 
+  def has_pupil
+    has = !@pupil.nil?
+    has
+  end
+
   def get_ta
     @ta
+  end
+
+  def has_ta
+    has = !@ta.nil?
+    has
   end
 
   def set_pupil(a_new_pupil)

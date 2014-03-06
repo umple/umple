@@ -38,6 +38,11 @@ class Mentor
     @main
   end
 
+  def has_main
+    has = !@main.nil?
+    has
+  end
+
   def get_secondary(index)
     a_secondary = @secondaries[index]
     a_secondary

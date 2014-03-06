@@ -49,6 +49,11 @@ class Mentor
     @superMentor
   end
 
+  def has_superMentor
+    has = !@superMentor.nil?
+    has
+  end
+
   def set_superMentor(a_new_superMentor)
     was_set = false
     if a_new_superMentor.nil?

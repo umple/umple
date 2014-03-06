@@ -49,6 +49,11 @@ class Student
     @mentor
   end
 
+  def has_mentor
+    has = !@mentor.nil?
+    has
+  end
+
   def set_mentor(a_mentor)
     #
     # self source of self source generation is association_SetOptionalOneToMandatoryMany.jet

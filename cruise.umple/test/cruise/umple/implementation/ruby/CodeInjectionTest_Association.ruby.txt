@@ -51,6 +51,11 @@ class Student
     a_m1
   end
 
+  def has_m1
+    has = !@m1.nil?
+    has
+  end
+
   def get_m2
     print "getM2";
     a_m2 = @m2

@@ -9,5 +9,13 @@
     <% if (customGetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); } %>
     <%=gen.translate("parameterOne",av)%>
 <% } %>
+  end<% 
+  if(av.getMultiplicity().getLowerBound() == 0) {
+  %>
+
+  def <%=gen.translate("hasMethod",av)%>
+    has = !@<%=gen.translate("associationOne",av)%>.nil?
+    has
   end
+<% } %>
 
