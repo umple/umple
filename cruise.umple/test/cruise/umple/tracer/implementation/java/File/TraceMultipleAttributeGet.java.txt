@@ -1,0 +1,11 @@
+  public int getId()
+  {
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributeGet.ump,7,Tracer,"+System.identityHashCode(this)+",at_g,id,"+id );
+    return id;
+  }
+
+  public String getName()
+  {
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributeGet.ump,7,Tracer,"+System.identityHashCode(this)+",at_g,name,"+name );
+    return name;
+  }

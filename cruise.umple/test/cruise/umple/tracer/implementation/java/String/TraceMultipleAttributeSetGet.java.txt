@@ -1,0 +1,29 @@
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributeSetGet.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id+","+(""+aId).toString().replace("\n","").replace(",",";") );
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributeSetGet.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name+","+(""+aName).toString().replace("\n","").replace(",",";") );
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributeSetGet.ump,7,Tracer,"+System.identityHashCode(this)+",at_g,id,"+id );
+    return id;
+  }
+
+  public String getName()
+  {
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributeSetGet.ump,7,Tracer,"+System.identityHashCode(this)+",at_g,name,"+name );
+    return name;
+  }

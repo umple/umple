@@ -1,0 +1,31 @@
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    if (traceFlag2)
+    {
+      StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeUntil.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id );
+    }
+    wasSet = true;
+    if (id>6)
+    {
+      traceFlag2=false;
+    }
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    if (traceFlag1)
+    {
+      StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeUntil.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name );
+    }
+    wasSet = true;
+    if (name.equals("tim"))
+    {
+      traceFlag1=false;
+    }
+    return wasSet;
+  }
