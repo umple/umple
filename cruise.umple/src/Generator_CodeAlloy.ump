@@ -78,7 +78,7 @@ class AlloyGenerator
       processedClass.add(uClass);
     }
     for(Association assoc : model.getAssociations()){
-        
+    	genEndConstraint(assoc,code);
         associativityRule(assoc,code);
         code.append("\n\n");
     }
@@ -102,10 +102,10 @@ class AlloyGenerator
           if(uClass.getAssociations().length == 0 || processedAssociations.contains(assoc)) 
               continue;
           String rEndMult = getAlloyMultiplicity(assoc.getEnd(1));
-          code.append("\n\n");
+          //code.append("\n\n");
           processedAssociations.add(assoc); // needed to prevent double reflexive count
       }
-  } 
+  }
   
   private String alloyAssociation(AssociationEnd end){
     String str, theMult = getAlloyMultiplicity(end);
@@ -120,6 +120,7 @@ class AlloyGenerator
       String beginEnd = getAlloyMultiplicity(assoc.getEnd(0));
       String endMult = getAlloyMultiplicity(assoc.getEnd(1));
       char a = lEndName.toLowerCase().charAt(0), b = rEndName.toLowerCase().charAt(0);
+         
       if(beginEnd.equals("one") || beginEnd.equals("some")){
           if(endMult.equals("one") || endMult.equals("some")){
               getConstraintPart(rEndName,lEndName,code);
@@ -129,7 +130,7 @@ class AlloyGenerator
           if(endMult.equals("lone") || endMult.equals("set")){
               getConstraintPart(rEndName,lEndName,code);
               code.append(a+"1 != none && "+b+"1 != none || "+b+"1 = none && "+a+"1 in "+assoc.getEnd(0).getRoleName()
-                  +"["+b+"1] <=> "+b+"1 in "+assoc.getEnd(1).getRoleName()+"["+a+"1]\n}\n\n");
+                  +"["+b+"1] <=> "+b+"1 in "+assoc.getEnd(1).getRoleName()+"["+a+"1]\n}");
           }
        }
       if(beginEnd.equals("lone") || beginEnd.equals("set")){
@@ -141,7 +142,7 @@ class AlloyGenerator
           if(endMult.equals("lone") || endMult.equals("set")){
               getConstraintPart(rEndName,lEndName,code);
               code.append(a+"1 = none || "+a+"1 != none && "+b+"1 != none || "+b+"1 = none && "+a+"1 in "+assoc.getEnd(0).getRoleName()
-                  +"["+b+"1] <=> "+b+"1 in "+assoc.getEnd(1).getRoleName()+"["+a+"1]\n}\n\n");
+                  +"["+b+"1] <=> "+b+"1 in "+assoc.getEnd(1).getRoleName()+"["+a+"1]\n}");
           }
        }
   }
@@ -161,6 +162,180 @@ class AlloyGenerator
         else return getMultiplicity(end);
   }
   
+  //This generates the first character of an association end 
+  private char fCharOfClassName(AssociationEnd end){
+    return end.getClassName().toLowerCase().charAt(0);
+  }
+  //This method generates additional constraints for multplicity with numeric bounds
+  private void genEndConstraint(Association assoc, StringBuilder code){
+    
+	  int indent = 0;	
+	  int n = 0;
+	  AssociationEnd end = assoc.getEnd(1);
+	  AssociationEnd tend = assoc.getEnd(0);
+	  char a = fCharOfClassName(assoc.getEnd(0));
+	  while(n < 2){
+		  if(n == 1){
+			  end = assoc.getEnd(0);
+			  tend = assoc.getEnd(1);
+			  a = fCharOfClassName(assoc.getEnd(1));
+		  }
+		  int lBound = end.getMultiplicity().getLowerBound();
+		  int uBound = end.getMultiplicity().getUpperBound();
+		  
+		  if(!parserableEnd(end)){
+			 
+			  if(lBound == uBound){
+		  			indent += 2;
+		  			code.append("fact {\n");
+				  	 appendSpaces(code,indent);
+				  	code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+				  	indent += 2;
+				  	appendSpaces(code,indent);
+				  	code.append("#"+a+"1."+end.getRoleName()+" = "+lBound+"\n}\n\n");
+				  	indent = 0;
+		  	  } 
+			  else{
+				  indent += 2;
+				  code.append("fact {\n");
+				  appendSpaces(code,indent);
+				  code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+				  indent += 2;
+				  appendSpaces(code,indent);
+				  code.append("#"+a+"1."+end.getRoleName()+" >= "+lBound+" && #"+a+"1."+end.getRoleName()+" <= "+uBound+"\n}\n\n");
+				  indent = 0;
+		  	 }
+		}
+	  	else{
+	  		String temp = end.getMultiplicity().getParserable();
+	  		if(temp.equals("*")){
+	  			indent += 2;
+	  			code.append("fact {\n");
+			  	appendSpaces(code,indent);
+			  	code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+			  	indent += 2;
+			  	appendSpaces(code,indent);
+			  	code.append("#"+a+"1."+end.getRoleName()+" >= 0\n}\n\n");
+			  	indent = 0;
+	  		}
+	  	}
+	  	n++;
+	  }
+  }private void genEndConstraint(Association assoc, StringBuilder code){
+    
+	  int indent = 0;	
+	  int n = 0;
+	  AssociationEnd end = assoc.getEnd(1);
+	  AssociationEnd tend = assoc.getEnd(0);
+	  char a = fCharOfClassName(assoc.getEnd(0));
+	  while(n < 2){
+		  if(n == 1){
+			  end = assoc.getEnd(0);
+			  tend = assoc.getEnd(1);
+			  a = fCharOfClassName(assoc.getEnd(1));
+		  }
+		  int lBound = end.getMultiplicity().getLowerBound();
+		  int uBound = end.getMultiplicity().getUpperBound();
+		  
+		  if(!parserableEnd(end)){
+			 
+			  if(lBound == uBound){
+		  			indent += 2;
+		  			code.append("fact {\n");
+				  	 appendSpaces(code,indent);
+				  	code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+				  	indent += 2;
+				  	appendSpaces(code,indent);
+				  	code.append("#"+a+"1."+end.getRoleName()+" = "+lBound+"\n}\n\n");
+				  	indent = 0;
+		  	  } 
+			  else{
+				  indent += 2;
+				  code.append("fact {\n");
+				  appendSpaces(code,indent);
+				  code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+				  indent += 2;
+				  appendSpaces(code,indent);
+				  code.append("#"+a+"1."+end.getRoleName()+" >= "+lBound+" && #"+a+"1."+end.getRoleName()+" <= "+uBound+"\n}\n\n");
+				  indent = 0;
+		  	 }
+		}
+	  	else{
+	  		String temp = end.getMultiplicity().getParserable();
+	  		if(temp.equals("*")){
+	  			indent += 2;
+	  			code.append("fact {\n");
+			  	appendSpaces(code,indent);
+			  	code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+			  	indent += 2;
+			  	appendSpaces(code,indent);
+			  	code.append("#"+a+"1."+end.getRoleName()+" >= 0\n}\n\n");
+			  	indent = 0;
+	  		}
+	  	}
+	  	n++;
+	  }
+  }private void genEndConstraint(Association assoc, StringBuilder code){
+    
+	  int indent = 0;	
+	  int n = 0;
+	  AssociationEnd end = assoc.getEnd(1);
+	  AssociationEnd tend = assoc.getEnd(0);
+	  char a = fCharOfClassName(assoc.getEnd(0));
+	  while(n < 2){
+		  if(n == 1){
+			  end = assoc.getEnd(0);
+			  tend = assoc.getEnd(1);
+			  a = fCharOfClassName(assoc.getEnd(1));
+		  }
+		  int lBound = end.getMultiplicity().getLowerBound();
+		  int uBound = end.getMultiplicity().getUpperBound();
+		  
+		  if(!parserableEnd(end)){
+			 
+			  if(lBound == uBound){
+		  			indent += 2;
+		  			code.append("fact {\n");
+				  	 appendSpaces(code,indent);
+				  	code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+				  	indent += 2;
+				  	appendSpaces(code,indent);
+				  	code.append("#"+a+"1."+end.getRoleName()+" = "+lBound+"\n}\n\n");
+				  	indent = 0;
+		  	  } 
+			  else{
+				  indent += 2;
+				  code.append("fact {\n");
+				  appendSpaces(code,indent);
+				  code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+				  indent += 2;
+				  appendSpaces(code,indent);
+				  code.append("#"+a+"1."+end.getRoleName()+" >= "+lBound+" && #"+a+"1."+end.getRoleName()+" <= "+uBound+"\n}\n\n");
+				  indent = 0;
+		  	 }
+		}
+	  	else{
+	  		String temp = end.getMultiplicity().getParserable();
+	  		if(temp.equals("*")){
+	  			indent += 2;
+	  			code.append("fact {\n");
+			  	appendSpaces(code,indent);
+			  	code.append("all "+a+"1 : "+tend.getClassName()+" |\n");
+			  	indent += 2;
+			  	appendSpaces(code,indent);
+			  	code.append("#"+a+"1."+end.getRoleName()+" >= 0\n}\n\n");
+			  	indent = 0;
+	  		}
+	  	}
+	  	n++;
+	  }
+  } 
+  
+  private boolean parserableEnd(AssociationEnd end){
+    String mult = end.getMultiplicity().getParserable();
+	  		return mult.equals("1..*") || mult.equals("*") 
+	  			? true : false;
+  }
   
   //This method computes alloy multiplicity for numeric associations
   private String getMultiplicity(AssociationEnd end){
@@ -169,14 +344,12 @@ class AlloyGenerator
               n = end.getMultiplicity().getLowerBound();
           if(n == 0 && m > 1) return "set"; 
           if(n == 1 && m == 1) return "one";
-          //if(n == 0 && m == 1) return "lone";
           return "some";
       }
       return null;
   }
 
   private void terminateCode(StringBuilder code) {
-
     model.setCode(code.toString());
     writeModel();
   } 

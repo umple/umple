@@ -21,11 +21,29 @@ sig D {
 }
 
 fact {
+  all a1 : A |
+    #a1.bs >= 0 && #a1.bs <= 2
+}
+
+fact {
+  all b1 : B |
+    #b1.a >= 0 && #b1.a <= 1
+}
+
+fact {
   all a1 : A, b1 : B |
     a1 = none || a1 != none && b1 != none || b1 = none && a1 in a[b1] <=> b1 in bs[a1]
 }
 
+fact {
+  all b1 : B |
+    #b1.cs >= 1 && #b1.cs <= 3
+}
 
+fact {
+  all c1 : C |
+    #c1.b = 1
+}
 
 fact {
   all b1 : B, c1 : C |
@@ -33,8 +51,28 @@ fact {
 }
 
 fact {
+  all c1 : C |
+    #c1.as >= 3 && #c1.as <= 7
+}
+
+fact {
+  all a1 : A |
+    #a1.cs >= 3 && #a1.cs <= 5
+}
+
+fact {
   all c1 : C, a1 : A |
     c1 != none && a1 != none && c1 in cs[a1] <=> a1 in as[c1]
+}
+
+fact {
+  all d1 : D |
+    #d1.cs = 4
+}
+
+fact {
+  all c1 : C |
+    #c1.d = 1
 }
 
 fact {
