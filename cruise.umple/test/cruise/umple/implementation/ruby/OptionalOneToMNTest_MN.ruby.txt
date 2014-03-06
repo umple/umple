@@ -49,6 +49,11 @@ class Student
     @mentor
   end
 
+  def has_mentor
+    has = !@mentor.nil?
+    has
+  end
+
   def delete
     @deleted = true
     unless @mentor.nil?

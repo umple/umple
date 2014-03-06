@@ -49,6 +49,11 @@ class MyDriver
     @mySubordinate
   end
 
+  def has_mySubordinate
+    has = !@mySubordinate.nil?
+    has
+  end
+
   def set_mySubordinate(a_new_mySubordinate)
     was_set = false
     if !@mySubordinate.nil? and !@mySubordinate.eql?(a_new_mySubordinate) and self.eql?(@mySubordinate.get_myDriver)
