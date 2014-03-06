@@ -1,0 +1,17 @@
+package cruise.umplificator.rules
+ 
+import org.eclipse.jdt.core.dom.*;
+
+ 
+rule "IsPrimitiveType"
+    when
+        fieldDeclaration: FieldDeclaration(fieldDeclaration.getType().isPrimitiveType())
+    then
+        System.out.println("Match!");
+        insert(fieldDeclaration);
+end
+
+
+query fieldDeclarations
+	fieldDeclaration: FieldDeclaration(fieldDeclaration.getType().isPrimitiveType())
+end
