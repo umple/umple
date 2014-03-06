@@ -1,0 +1,75 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.ConsoleTracer;
+import java.util.Date;
+
+// line 3 "../TraceSingleAttributeRecord1.ump"
+public class Tracer
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private int id;
+  private String name;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(int aId, String aName)
+  {
+    id = aId;
+    name = aName;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeRecord1.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name+","+(""+aName).toString().replace("\n","").replace(",",";")+","+id );
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
+            "name" + ":" + getName()+ "]"
+     + outputString;
+  }
+}

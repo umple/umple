@@ -18,7 +18,7 @@ import cruise.umple.tracer.implementation.TracerTest;
 import cruise.umple.util.SampleFileWriter;
 
 
-public class JavaFileTracerTest extends TracerTest
+public class JavaStringTracerTest extends TracerTest
 {
   @Before
   public void setUp()
@@ -26,8 +26,8 @@ public class JavaFileTracerTest extends TracerTest
     super.setUp();
     language = "Java";
     languagePath = "java";
-    this.aTracer = "File";
-    this.tracerPath = "/File/";
+    this.aTracer = "String";
+    this.tracerPath = "/String/";
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/tracer/implementation");
     pathToRoot = SampleFileWriter.rationalize("../../cruise.umple");
   }

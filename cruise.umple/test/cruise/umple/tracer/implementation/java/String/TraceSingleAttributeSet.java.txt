@@ -1,0 +1,8 @@
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeSet.ump,6,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id+","+(""+aId).toString().replace("\n","").replace(",",";") );
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }

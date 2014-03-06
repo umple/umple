@@ -1,0 +1,405 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import java.io.IOException;
+
+public class PhoneLine
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //PhoneLine Attributes
+  private String id;
+
+  //PhoneLine State Machines
+  enum State { onHook, ringing, communicating, onHold, dialing, waitingForConnection, waitForHook }
+  private State state;
+
+  //PhoneLine Associations
+  private PhoneLine otherParty;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public PhoneLine(String aId)
+  {
+    id = aId;
+    setState(State.onHook);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setId(String aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getId()
+  {
+    return id;
+  }
+
+  public String getStateFullName()
+  {
+    String answer = state.toString();
+    return answer;
+  }
+
+  public State getState()
+  {
+    return state;
+  }
+
+  public boolean startDialing()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=startDialing,");
+    switch (aState)
+    {
+      case onHook:
+        setState(State.dialing);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean incomingCall()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=incomingCall,");
+    switch (aState)
+    {
+      case onHook:
+        setState(State.ringing);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean pickUp()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=pickUp,");
+    switch (aState)
+    {
+      case ringing:
+        getOtherParty().otherPartyPickUp();
+        setState(State.communicating);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean otherPartyHangUp()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=otherPartyHangUp,");
+    switch (aState)
+    {
+      case ringing:
+        setState(State.onHook);
+        wasEventProcessed = true;
+        break;
+      case communicating:
+        setState(State.waitForHook);
+        wasEventProcessed = true;
+        break;
+      case onHold:
+        setState(State.waitForHook);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean hangUp()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=hangUp,");
+    switch (aState)
+    {
+      case communicating:
+        say("click");
+        setState(State.onHook);
+        wasEventProcessed = true;
+        break;
+      case onHold:
+        say("click");
+        setState(State.onHook);
+        wasEventProcessed = true;
+        break;
+      case dialing:
+        say("click");
+        setState(State.onHook);
+        wasEventProcessed = true;
+        break;
+      case waitingForConnection:
+        say("click");
+        setState(State.onHook);
+        wasEventProcessed = true;
+        break;
+      case waitForHook:
+        say("click");
+        setState(State.onHook);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean putOnHold()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=putOnHold,");
+    switch (aState)
+    {
+      case communicating:
+        setState(State.onHold);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean takeOffHold()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=takeOffHold,");
+    switch (aState)
+    {
+      case onHold:
+        setState(State.communicating);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean completeNumber()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=completeNumber,");
+    switch (aState)
+    {
+      case dialing:
+        setState(State.waitingForConnection);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean otherPartyPickUp()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=otherPartyPickUp,");
+    switch (aState)
+    {
+      case waitingForConnection:
+        setState(State.communicating);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  public boolean timeOut()
+  {
+    boolean wasEventProcessed = false;
+    
+    State aState = state;
+    System.err.print("state@pre="+state+",");
+    System.err.print("event=timeOut,");
+    switch (aState)
+    {
+      case waitingForConnection:
+        setState(State.onHook);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    System.err.println("state@post="+state+",id="+id);
+    return wasEventProcessed;
+  }
+
+  private void setState(State aState)
+  {
+    state = aState;
+
+    // entry actions and do activities
+    switch(state)
+    {
+      case onHook:
+        if(getOtherParty() != null) {
+          getOtherParty().otherPartyHangUp();
+        } 
+        setOtherParty(null); p();
+        break;
+      case ringing:
+        say("ring ring ring!");
+        break;
+      case communicating:
+        say("Hello "+getOtherParty().getId());
+        break;
+      case dialing:
+        say("pat pat pat");
+        break;
+      case waitingForConnection:
+        getOtherParty().incomingCall();
+        break;
+      case waitForHook:
+        say("OOO OOO OOO");
+        break;
+    }
+  }
+
+  public PhoneLine getOtherParty()
+  {
+    return otherParty;
+  }
+
+  public boolean setOtherParty(PhoneLine aNewOtherParty)
+  {
+    boolean wasSet = false;
+    if (aNewOtherParty == null)
+    {
+      PhoneLine existingOtherParty = otherParty;
+      otherParty = null;
+      
+      if (existingOtherParty != null && existingOtherParty.getOtherParty() != null)
+      {
+        existingOtherParty.setOtherParty(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    PhoneLine currentOtherParty = getOtherParty();
+    if (currentOtherParty != null && !currentOtherParty.equals(aNewOtherParty))
+    {
+      currentOtherParty.setOtherParty(null);
+    }
+
+    otherParty = aNewOtherParty;
+    PhoneLine existingOtherParty = aNewOtherParty.getOtherParty();
+
+    if (!equals(existingOtherParty))
+    {
+      aNewOtherParty.setOtherParty(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (otherParty != null)
+    {
+      otherParty.setOtherParty(null);
+    }
+  }
+
+  public String toString(){
+    return getId();
+  }
+
+  public void p(){
+    System.out.println("  other party of "+getId()+"="+getOtherParty());
+  }
+
+  public void say(String s){
+    String voice ="";
+    if(getId().equals("line2")) voice=" -v Victoria";
+    try {
+      Runtime.getRuntime().exec("say "+getId()+" "+s+voice);
+    }
+    catch (IOException e) {}
+    pause(2000);
+  }
+
+  public void pause(long ms){
+    try {
+      Thread.currentThread().sleep(ms);//sleep for 1000 ms
+    }
+    catch(InterruptedException ie){
+    }
+  }
+
+}
