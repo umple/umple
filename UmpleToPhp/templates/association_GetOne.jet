@@ -9,5 +9,14 @@
     <% append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPostfixCode, "    ")); %>
     return $<%=gen.translate("parameterOne",av)%>;
 <% } %>
+  }<% 
+  if(av.getMultiplicity().getLowerBound() == 0) {
+  %>
+
+  public function <%=gen.translate("hasMethod",av)%>()
+  {
+    $has = $this-><%=gen.translate("associationOne",av)%> != null;
+    return $has;
   }
+<% } %>
 

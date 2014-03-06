@@ -46,6 +46,12 @@ class Student
     return $this->mentor;
   }
 
+  public function hasMentor()
+  {
+    $has = $this->mentor != null;
+    return $has;
+  }
+
   public function equals($compareTo)
   {
     return $this == $compareTo;

@@ -46,6 +46,12 @@ class MyDriver
     return $this->mySubordinate;
   }
 
+  public function hasMySubordinate()
+  {
+    $has = $this->mySubordinate != null;
+    return $has;
+  }
+
   public function setMySubordinate($aNewMySubordinate)
   {
     $wasSet = false;

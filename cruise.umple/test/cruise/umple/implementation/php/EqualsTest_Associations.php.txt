@@ -39,6 +39,12 @@ class Mentor
     return $this->main;
   }
 
+  public function hasMain()
+  {
+    $has = $this->main != null;
+    return $has;
+  }
+
   public function getSecondary($index)
   {
     $aSecondary = $this->secondaries[$index];
