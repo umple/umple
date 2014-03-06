@@ -54,8 +54,28 @@ sig G {
 sig H { }
 
 fact {
+  all a1 : A |
+    #a1.b = 1
+}
+
+fact {
+  all b1 : B |
+    #b1.a = 1
+}
+
+fact {
   all a1 : A, b1 : B |
     a1 != none && b1 != none && a1 in a[b1] <=> b1 in b[a1]
+}
+
+fact {
+  all a1 : A |
+    #a1.c >= 0 && #a1.c <= 1
+}
+
+fact {
+  all c1 : C |
+    #c1.a = 1
 }
 
 fact {
@@ -63,7 +83,10 @@ fact {
     a1 != none && c1 != none || c1 = none && a1 in a[c1] <=> c1 in c[a1]
 }
 
-
+fact {
+  all d1 : D |
+    #d1.a = 1
+}
 
 fact {
   all a1 : A, d1 : D |
@@ -71,11 +94,29 @@ fact {
 }
 
 fact {
+  all a1 : A |
+    #a1.es >= 0
+}
+
+fact {
+  all e1 : E |
+    #e1.a = 1
+}
+
+fact {
   all a1 : A, e1 : E |
     a1 != none && e1 != none || e1 = none && a1 in a[e1] <=> e1 in es[a1]
 }
 
+fact {
+  all b1 : B |
+    #b1.c = 1
+}
 
+fact {
+  all c1 : C |
+    #c1.b >= 0 && #c1.b <= 1
+}
 
 fact {
   all b1 : B, c1 : C |
@@ -83,11 +124,24 @@ fact {
 }
 
 fact {
+  all b1 : B |
+    #b1.d >= 0 && #b1.d <= 1
+}
+
+fact {
+  all d1 : D |
+    #d1.b >= 0 && #d1.b <= 1
+}
+
+fact {
   all b1 : B, d1 : D |
     b1 = none || b1 != none && d1 != none || d1 = none && b1 in b[d1] <=> d1 in d[b1]
 }
 
-
+fact {
+  all e1 : E |
+    #e1.b >= 0 && #e1.b <= 1
+}
 
 fact {
   all b1 : B, e1 : E |
@@ -95,11 +149,24 @@ fact {
 }
 
 fact {
+  all b1 : B |
+    #b1.fs >= 0
+}
+
+fact {
+  all f1 : F |
+    #f1.b >= 0 && #f1.b <= 1
+}
+
+fact {
   all b1 : B, f1 : F |
     b1 = none || b1 != none && f1 != none || f1 = none && b1 in b[f1] <=> f1 in fs[b1]
 }
 
-
+fact {
+  all c1 : C |
+    #c1.d = 1
+}
 
 fact {
   all c1 : C, d1 : D |
@@ -107,11 +174,14 @@ fact {
 }
 
 fact {
+  all c1 : C |
+    #c1.e >= 0 && #c1.e <= 1
+}
+
+fact {
   all c1 : C, e1 : E |
     c1 != none && e1 != none || e1 = none && c1 in cs[e1] <=> e1 in e[c1]
 }
-
-
 
 fact {
   all c1 : C, f1 : F |
@@ -119,11 +189,24 @@ fact {
 }
 
 fact {
+  all c1 : C |
+    #c1.gs >= 0
+}
+
+fact {
   all c1 : C, g1 : G |
     c1 != none && g1 != none || g1 = none && c1 in cs[g1] <=> g1 in gs[c1]
 }
 
+fact {
+  all d1 : D |
+    #d1.e = 1
+}
 
+fact {
+  all e1 : E |
+    #e1.ds >= 0
+}
 
 fact {
   all d1 : D, e1 : E |
@@ -131,11 +214,24 @@ fact {
 }
 
 fact {
+  all d1 : D |
+    #d1.f >= 0 && #d1.f <= 1
+}
+
+fact {
+  all f1 : F |
+    #f1.ds >= 0
+}
+
+fact {
   all d1 : D, f1 : F |
     d1 = none || d1 != none && f1 != none || f1 = none && d1 in ds[f1] <=> f1 in f[d1]
 }
 
-
+fact {
+  all g1 : G |
+    #g1.ds >= 0
+}
 
 fact {
   all d1 : D, g1 : G |

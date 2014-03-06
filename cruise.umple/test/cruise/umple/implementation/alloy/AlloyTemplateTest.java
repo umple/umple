@@ -32,7 +32,8 @@ public class AlloyTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyAssociation.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyAssociations.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/UmpleClass.als");
-	    //UmpleClass.als
+	    SampleFileWriter.destroy(pathToInput + "/alloy/AssociationWithNumericBounds.als");
+	    //SampleFileWriter.destroy(pathToInput + "/alloy/AssociationWithNumericBound.als");
 	  }
 
 	  @Test //@Ignore
@@ -75,5 +76,12 @@ public class AlloyTemplateTest extends TemplateTest{
 	  {
 		  assertUmpleTemplateFor("alloy/UmpleClass.ump","alloy/UmpleClass.alloy.txt");
 		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/UmpleClass.als")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void AssociationWithNumericBounds()
+	  {
+		  assertUmpleTemplateFor("alloy/AssociationWithNumericBounds.ump","alloy/AssociationWithNumericBounds.alloy.txt");
+		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/AssociationWithNumericBounds.als")).exists());
 	  }
 }
