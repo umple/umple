@@ -2354,6 +2354,10 @@ Action.ajax = function(callback,post,errors)
 //Mac Keyboard Shortcut
 if (navigator.appVersion.indexOf("Mac")!=-1)
 {
+	jQuery(document).ready(function(){
+		jQuery('#undosmall').html('[cmd+z]');
+		jQuery('#redosmall').html('[cmd+shift+z]');
+	});
 	Mousetrap.bind(['command+z'], function(e) {
 		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
 		{			
@@ -2371,6 +2375,10 @@ if (navigator.appVersion.indexOf("Mac")!=-1)
 }
 else //Non Mac
 {
+	jQuery(document).ready(function(){
+		jQuery('#undosmall').html('[ctrl+z]');
+		jQuery('#redosmall').html('[ctrl+y]');
+	});
 	Mousetrap.bind(['ctrl+z'], function(e) {
 		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
 		{			
