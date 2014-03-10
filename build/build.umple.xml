@@ -76,7 +76,7 @@
       <arg value="cruise.umple.validator/src/Master.ump"/>
     </java>
   <java jar="dist/umple.jar" fork="true" failonerror="true">
-      <arg value="cruise.umplificators/src/Master.ump"/>
+      <arg value="cruise.umplificator/src/Master.ump"/>
     </java>
   </target>
 
