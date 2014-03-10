@@ -61,6 +61,9 @@ class UmpleModel
   // The Umple Traits contained within the model.
   1 -> * UmpleTrait;
  
+  // The Umple Templates contained within the model.
+  1 -> * UmpleTemplate;
+ 
   // The State Machines contained within the model.
   1 -> * StateMachine stateMachineDefinitions;
 
@@ -263,8 +266,7 @@ class Constraint {
   String inject = "";
   CodeTranslator gen = null;
   boolean negated = false;
-  String code = { StringFormatter.format(getGen().translate((getNegated()?"Not":"")+getFormat(),this),getInject()) };
-  ConstraintVariable[] expressions; 
+  ConstraintVariable[] expressions;  
 }
 
 /*
@@ -291,7 +293,7 @@ class Postcondition{
 class CodeBlock
 {
   depend java.util.*;
-  
+
   internal HashMap<String,String> codes = new HashMap<String,String>();
   public static String languageUsed = "";
 }
@@ -405,6 +407,8 @@ class UmpleClass
   * subclasses -- 0..1 UmpleClass extendsClass;
 
   * subClasses -- * UmpleTrait extendsTraits;
+  
+  * subClasses -- * UmpleTemplate extendsTemplates;
 
   * -> 0..* UmpleInterface parentInterface;
 
@@ -760,6 +764,11 @@ class Comment
 
   // The text associated with the comment.
   text;
+}
+
+class UmpleTemplate {
+  depend cruise.umple.util.*;
+  isA UmpleClass;
 }
 
 /*

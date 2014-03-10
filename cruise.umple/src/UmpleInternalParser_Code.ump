@@ -17,6 +17,7 @@ and Ruby.  It is configured to mostly delegate to helper methods for the followi
  + State Machinesx
  + Traces
  + Layouts
+ + Template
 
 The grammar is parsed from the *.grammar files in the /src directory.  Please refer to the
 addRulesInFile() methods to see which files comprise the current grammar.
@@ -74,6 +75,7 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_state_machines.grammar");
     parser.addGrammarFile("/umple_traces.grammar");
     parser.addGrammarFile("/umple_constraints.grammar");  // TODO Under development
+    parser.addGrammarFile("/umple_template.grammar"); 
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
   }
@@ -217,6 +219,7 @@ class UmpleInternalParser
     analyzeCoreToken(t,analysisStep);
     analyzeClassToken(t,analysisStep);
     analyzeTraitToken(t,analysisStep);
+    analyzeTemplateToken(t,analysisStep);
     analyzeStateMachineToken(t,analysisStep);
     analyzeTraceToken(t,analysisStep);
     analyzeLayoutToken(t,analysisStep);
@@ -414,6 +417,7 @@ use UmpleInternalParser_CodeCore.ump;
 use UmpleInternalParser_CodeClass.ump;
 use UmpleInternalParser_CodeTrait.ump;
 use UmpleInternalParser_CodeConstraints.ump;
+use UmpleInternalParser_CodeTemplate.ump;
 use UmpleInternalParser_CodeStateMachine.ump;
 use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
