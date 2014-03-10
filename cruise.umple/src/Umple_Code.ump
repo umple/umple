@@ -22,6 +22,7 @@ class UmpleModel
     List<UmpleElement> all = new ArrayList<UmpleElement>();
     all.addAll(getUmpleClasses());
     all.addAll(getUmpleInterfaces());
+    all.addAll(getUmpleTemplates());
     return all;
   }
 
