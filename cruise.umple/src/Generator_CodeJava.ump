@@ -101,23 +101,42 @@ class JavaGenerator
   {
     prepare();
     UmpleElement lastElement = null;
-    try
-    {
+    List<WriteFilerThread> threads = new ArrayList<WriteFilerThread>();
+    try{
       for (UmpleElement currentElement : getModel().getUmpleElements())
       {
         if ("external".equals(currentElement.getModifier()))
         {
           continue;
         }
-        writeFile(currentElement);
+        if(currentElement instanceof UmpleClass && ((UmpleClass)currentElement).numberOfAssociations()>0)
+        {
+          WriteFilerThread thread = new WriteFilerThread(currentElement,this);
+          threads.add(thread);
+          thread.start();    	
+        }
+        else {
+    	  writeFile(currentElement);
+        }
         lastElement = currentElement;
       }
     }
-    catch (Exception e)
-    {
-      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
+    catch(Exception e){
+      throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);	
     }
-
+    
+    for(WriteFilerThread thread:threads){
+    	try {
+			thread.join();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+    	Exception e = thread.getException();
+      if(e!=null)
+      {
+        throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
+      }
+    }
     if (lastElement == null)
     {
       System.err.println("No classes were compiled. It is likely the source .ump file(s) contained no compilable code.");
@@ -1421,7 +1440,7 @@ class JavaGenerator
     return typeOf(aType);
   }
   
-  private void writeFile(UmpleElement aClass) throws IOException
+  public void writeFile(UmpleElement aClass) throws IOException
   {
     ILang language = getLanguageFor(aClass);
     
