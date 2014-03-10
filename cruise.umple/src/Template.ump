@@ -1,0 +1,203 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Template meta-model.
+
+*/
+
+//@author Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+//@author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+namespace cruise.umple.compiler;
+
+//Handle the existing templates in the current umple model.
+class UmpleModel {
+  UmpleTemplate getUmpleTemplate(String name){
+    for (UmpleTemplate aTemplate : getUmpleTemplates())
+    {
+      if (aTemplate.getName().equals(name))
+      {
+        return aTemplate;
+      }
+    }
+    return null;
+  }
+  
+   public UmpleTemplate addUmpleTemplate(String name)
+  {
+    UmpleTemplate newTemplate = getUmpleTemplate(name);
+    if (newTemplate == null)
+    {
+      newTemplate = new UmpleTemplate(name, this);
+      addUmpleTemplate(newTemplate);
+    }
+    return newTemplate;
+  }
+}
+
+//----------------------------------------------------------
+//An umple template contains a map for emittable strings
+class UmpleTemplate {
+	depend java.util.*;
+	
+	Map<String,String> templateEmitStringMap = new HashMap<String,String>();
+}
+
+//A template filed reprsents a field with a value for emitting purposes
+class TemplateField {
+	const String TEMPLATE_TEXT_FIELD="TEXT_";
+	String name;
+	String value;
+}
+
+//A template element represents template contents to be built. It relies on a set of TemplateField
+class TemplateElement {
+	abstract;
+	lazy internal StringBuilder content;
+	internal String contentString; 
+	
+	0..1 -- * TemplateField fields;
+
+	after constructor {
+		content = new StringBuilder();
+		getContent().append(contentString);
+	}
+	StringBuilder getContent() {
+		return content;
+	}
+	void emit(StringBuilder builder, int idx) {}
+}
+
+//Expression segment in a template
+class ExpressionElement {
+	isA TemplateElement;
+	
+	void emit(StringBuilder builder, int idx) {
+		builder.append(System.getProperty("line.separator"));
+		builder.append("\t\t");
+		builder.append("sb.append(");
+		builder.append(getContent());
+		builder.append(");");
+	}
+}
+
+//Scriplet segment in a template
+class ScripletElement {
+	isA TemplateElement;
+
+	void emit(StringBuilder builder, int idx) {
+		builder.append(System.getProperty("line.separator"));
+		builder.append("\t\t");
+		builder.append(getContent());
+	}
+}
+
+//Comment segment for a template contents
+class CommentElement {
+	isA TemplateElement;
+	void emit(StringBuilder builder, int idx) {
+		String content = getContent().toString();
+		content = "/*" + content + "*/";
+		content = Utils.nlize(content);
+		String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + idx;
+		addField(new TemplateField(fieldId, content));
+		builder.append(System.getProperty("line.separator"));
+		builder.append("\t\t");
+		builder.append("sb.append(");
+		builder.append(fieldId);
+		builder.append(");");
+	}
+}
+
+class TextElement {
+	isA TemplateElement;
+
+	void emit(StringBuilder builder, int idx) {
+		String content = getContent().toString();
+		content = Utils.nlize(content);
+		String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + idx;
+		addField(new TemplateField(fieldId, content));
+		
+		builder.append(System.getProperty("line.separator"));
+		builder.append("\t\t");
+		builder.append("sb.append(");
+		builder.append(fieldId);
+		builder.append(");");
+	}
+}
+
+//Helpr class to handle the process of emiitting the code to its eqivalent in JET based
+//on the existing template elements and their contents, expressions, etc.
+class Utils {
+	depend java.util.regex.Matcher;
+	depend java.util.regex.Pattern;
+	
+	singleton;
+	public static boolean isBlank(String str) {
+		int len = str == null ? 0 : str.length();
+		if (len == 0) {
+			return true;
+		}
+	    for (int i = 0; i < len; i++) {
+	    	if (!Character.isWhitespace(str.charAt(i)))
+	    		return false;
+	    }
+	    return true;
+	}
+	
+	// JET Style
+	public static String nlize(String str) {
+	  StringBuffer result = new StringBuffer(str.length());
+	  Pattern newLinePattern = Pattern.compile("([\\n][\\r]?|[\\r][\\n]?)", Pattern.MULTILINE);
+	  Matcher m = newLinePattern.matcher(str);
+	  if(m.find()) {
+		  int currentIndex = 0;
+		  boolean first = true;
+		  do{
+			  if(first) {
+				  first = false;
+			  } else {
+				  result.append(" + "); 
+			  }
+			  if(m.start() > currentIndex) {
+				  result.append('"');
+				  result.append(Utils.escapeString(str.substring (currentIndex, m.start())));
+				  result.append('"');
+				  result.append(" + "); 
+			  }
+			  result.append("System.getProperty(\"line.separator\")");
+			  currentIndex = m.end();
+		  } while( m.find());
+		  if(currentIndex < str.length()) {
+			  if(!first) {
+				  result.append(" + ");
+				  result.append('"');
+				  result.append(Utils.escapeString(str.substring(currentIndex)));
+				  result.append('"');
+			  }
+		  }
+		  return result.toString();
+	  } else {
+		  result.append('"');
+		  result.append(Utils.escapeString(str));
+		  result.append('"');
+		  return result.toString();
+	  }
+  	}
+  	
+	public static String escapeString(String str) {
+		return str.replaceAll("\n", "\\\\n")
+				  .replaceAll("\r", "\\\\r")
+				  .replaceAll("\t", "\\\\t")
+				  .replaceAll("\b", "\\\\b")
+				  .replaceAll("\f", "\\\\f")
+				  .replaceAll("\"", "\\\\\"");
+	}
+}
+
+
+
+//use Template_Code.ump;

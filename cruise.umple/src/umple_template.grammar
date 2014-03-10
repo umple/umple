@@ -1,0 +1,34 @@
+// The master of this part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_template.grammar*]
+//@author Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+//@author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+
+templateDefinition : [=template] [name] [=brace:{] [[templateContent]]* [=brace:}]
+templateContent- : [[comment]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[templateAttribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; |[[exception]]   | [[extraCode]]
+
+
+templateAttributeDefinition- : [[templateName]] <<! [**templateAttributeContent] !>>
+templateName : [name]
+
+emitMethod : [=modifier:public|protected|private]? [=static]? [type]? [=emit] [[methodDeclarator]] [[templateList]]?;
+methodDeclarator : [methodName] [[parameterList]]
+parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
+parameter : [[typedName]]
+list- : [!list:\[\s*\]]
+typedName- : [type]? [[list]]? [~name]
+
+templateList- : [=braket:OPEN_ROUND_BRACKET] ( [[templatePrameter]] ( , [[templatePrameter]] )* )? [=bracket:CLOSE_ROUND_BRACKET]
+templatePrameter : [name]
+
+//templateAttribute : <<! [[templateAttributeContent]]* !>>
+//templateAttributeContent- : [[templateExpression]] | [[templateComment]] | [[templateLanguageCode]] | [[templateText]] 
+//templateText :  [[inlineTemplateText]] | [[multilineTemplateText]]
+//inlineTemplateText- : [*inlineTemplateText]
+//multilineTemplateText- : [**multilineTemplateText]
+
+//templateComment : <</* [**templateCommentContent] */>>
+//templateExpression : <<= [**templateExpressionContent] >>
+//templateLanguageCode : <<# [**templateLanguageCode] #>>
+//templateOpen- : <<!
+//templateClose- : !>>
+
