@@ -1,17 +1,62 @@
 package cruise.umplificator.rules
  
 import org.eclipse.jdt.core.dom.*;
+import cruise.umple.compiler.*;
+import cruise.umplificator.rules.Action;
 
- 
-rule "IsPrimitiveType"
+rule "isUmpleAttribute"
     when
         fieldDeclaration: FieldDeclaration(fieldDeclaration.getType().isPrimitiveType())
+        uClass: UmpleClass()
     then
-        System.out.println("Match!");
-        insert(fieldDeclaration);
+  		Attribute uAttr = new Attribute(null, null, null, null, false, uClass);
+    	uAttr.setName(getFieldName(fieldDeclaration));
+    	uClass.addAttribute(uAttr);
+    	// We insert the atribute into the Working memory, so it can accessed and modified by other Rules
+    	insert(uAttr);
+    	// We can log refactoring actions by using this.
+    	//Action action  = new Action();
+    	//action.performAction(fieldDeclaration);
 end
 
 
-query fieldDeclarations
-	fieldDeclaration: FieldDeclaration(fieldDeclaration.getType().isPrimitiveType())
+rule "hasGetter"
+	when
+		fieldDeclaration: FieldDeclaration()
+	 	method: MethodDeclaration(method.getName().getFullyQualifiedName().endsWith(getFieldName(fieldDeclaration)))
+	 	attribute: Attribute(name.equals(getFieldName(fieldDeclaration)))
+	then
+		System.out.print("hasGetter");
 end
+
+/*
+// lazy: A constructor argument is not required for this attribute
+// We look for the initialization of this variable in the constructor
+rule "isLazy"
+when
+then
+end
+
+rule "isConstant"
+when
+then
+end
+
+rule "isAutounique"
+when
+then
+end
+
+rule "isDefaulted"
+when
+then
+end
+*/
+
+function String getFieldName(FieldDeclaration field){
+   		Object declarationFrag = field.fragments().get(0);
+   		String fieldName = ((VariableDeclarationFragment) declarationFrag).getName().getFullyQualifiedName();
+   		return fieldName;
+}
+
+
