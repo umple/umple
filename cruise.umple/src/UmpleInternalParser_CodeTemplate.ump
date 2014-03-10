@@ -1077,6 +1077,10 @@ class TemplateDefinitionWalker {
     }
     
     private void analyzeToken(Token aToken, TemplateTokenAnalyzer analyzer, int analysisStep){
+    	if (analysisStep != 2) {
+    		parser.reAnalyze(parser.reAnalyze() || (analysisStep == 1));
+	      	return;
+	  	}
     	if (aToken.is("templateAttributeContent")) {
     		analyzer.analyzeEmission(aToken);
     	} else if (aToken.is("emitMethod")) {
@@ -1085,20 +1089,19 @@ class TemplateDefinitionWalker {
     }
     
     private void analyzeSubTokens(Token aToken, TemplateTokenAnalyzer analyzer) {
-    	int analysisStep = 0;
-    	reAnalyze = true;
-    	parser.reAnalyze(true);
-    	do {
-    		analysisStep+= 1;
-      		reAnalyze = false;
-      		parser.reAnalyze(false);
+//    	reAnalyze = true;
+//    	parser.reAnalyze(true);
+//    	do {
+//    		analysisStep+= 1;
+//      		reAnalyze = false;
+//      		parser.reAnalyze(false);
       		for(Token subToken : aToken.getSubTokens()) {
-      			analyzeToken(subToken,analyzer,analysisStep);
+      			analyzeToken(subToken,analyzer,rootAnalysisStep);
       			if (!parser.getParseResult().getWasSuccess()) {
       				return;
       			}
       		}
-    	} while (reAnalyze);
+//    	} while (reAnalyze);
     }
     
     void analyze() {

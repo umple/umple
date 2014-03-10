@@ -266,6 +266,7 @@ class Constraint {
   String inject = "";
   CodeTranslator gen = null;
   boolean negated = false;
+  String code = { StringFormatter.format(getGen().translate((getNegated()?"Not":"")+getFormat(),this),getInject()) };
   ConstraintVariable[] expressions;  
 }
 
