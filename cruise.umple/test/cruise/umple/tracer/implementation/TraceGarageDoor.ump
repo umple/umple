@@ -1,0 +1,27 @@
+namespace example;
+
+class Tracer
+{
+    // UML state machine digram for a Garage door, written in Umple
+    GarageDoor {
+      	
+      	Open { buttonOrObstacle -> Closing;  }
+      	
+      	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed { buttonOrObstacle -> Opening; }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
+    }
+    
+    trace GarageDoor;
+    
+ }

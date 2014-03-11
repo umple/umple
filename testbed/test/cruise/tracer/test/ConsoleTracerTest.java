@@ -56,7 +56,9 @@ public class ConsoleTracerTest
 			};
 			
 			String[] stmTraceExpected = {
-					"sm_e,Close,status",
+					"sm_t,Open,buttonOrObstacle,Closing",
+					"sm_t,Closing,reachBottom,Closed"
+//					"sm_e,Close,status",
 			};
 			
 			String[] recordTraceExpected = {
@@ -71,7 +73,7 @@ public class ConsoleTracerTest
 			public void println(String x){
 				if(index<expected.length){
 					
-					System.out.println("out = "+x);
+//					System.out.println("out = "+x);
 					String[] actualOutput = x.split(",");
 					String[] expectedOutput = expected[index].split(",");
 				
@@ -89,7 +91,8 @@ public class ConsoleTracerTest
 		};
 	  System.setErr(ps);
 	  
-	  //==== invoke attributes tracing
+	  //----- invoke attributes tracing
+	
 	  TraceAttr aTest = new TraceAttr(null, null, 0, false, 0, null, 0, 0, 0, 0, null);
 	  
 	  aTest.setName("Geoff");
@@ -155,11 +158,19 @@ public class ConsoleTracerTest
 //	  acTest.setN5(-1);
 	  
 	  //==== invoke state machine tracing
-	  TraceStm sTrace = new TraceStm();
-	  sTrace.ev1();
-	  sTrace.ev1();
 	  
+	  TraceStm sTrace = new TraceStm();
+	  System.out.println("Garage = "+sTrace.getGaragDoor());
+	  sTrace.buttonOrObstacle();
+	  System.out.println("Garage = "+sTrace.getGaragDoor());
+	  sTrace.reachBottom();
+	  System.out.println("Garage = "+sTrace.getGaragDoor());
+	  sTrace.buttonOrObstacle();
+	  System.out.println("Garage = "+sTrace.getGaragDoor());
+
+
 	  //==== invoke record trace
+	  
 	  TraceRecord rTrace = new TraceRecord(0, 0, null);
 	  
 	  rTrace.setNumber1(100);

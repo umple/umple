@@ -4519,6 +4519,16 @@ for (StateMachine smq : uClass.getStateMachines())
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
           javaLine+=a1.getActionCode().split("\\n").length;
         }
+        // trace a single state
+        for( TraceDirective td : uClass.getTraceDirectives() )
+          for( StateMachineTraceItem traceStm : td.getStateMachineTraceItems() )
+        	if( ! traceStm.getTraceStateMachineFlag() )
+        		if( traceStm.getState().getName().equals(state.getName()) ||  traceStm.getState().getName().equals(nextState.getName()) )
+        		{
+        			allCases.append(traceStm.trace(gen, t,"sm_t", uClass)+"\n");
+       				break;
+       			}
+        			
         allCases.append(traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
         allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
         allCases.append(traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
