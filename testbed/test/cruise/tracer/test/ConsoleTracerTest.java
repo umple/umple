@@ -57,8 +57,9 @@ public class ConsoleTracerTest
 			
 			String[] stmTraceExpected = {
 					"sm_t,Open,buttonOrObstacle,Closing",
-					"sm_t,Closing,reachBottom,Closed"
-//					"sm_e,Close,status",
+					"sm_t,Closing,reachBottom,Closed",
+					"sm_t,Open,buttonOrObstacle,Closing"
+
 			};
 			
 			String[] recordTraceExpected = {
@@ -160,13 +161,12 @@ public class ConsoleTracerTest
 	  //==== invoke state machine tracing
 	  
 	  TraceStm sTrace = new TraceStm();
-	  System.out.println("Garage = "+sTrace.getGaragDoor());
 	  sTrace.buttonOrObstacle();
-	  System.out.println("Garage = "+sTrace.getGaragDoor());
 	  sTrace.reachBottom();
-	  System.out.println("Garage = "+sTrace.getGaragDoor());
 	  sTrace.buttonOrObstacle();
-	  System.out.println("Garage = "+sTrace.getGaragDoor());
+	  sTrace.reachTop();
+	  sTrace.buttonOrObstacle();
+	  //System.out.println("Garage = "+sTrace.getGaragDoor());
 
 
 	  //==== invoke record trace
