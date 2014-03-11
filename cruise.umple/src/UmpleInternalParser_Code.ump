@@ -297,6 +297,10 @@ class UmpleInternalParser
       postTokenLayoutAnalysis();
     }
     
+    if (getParseResult().getWasSuccess()) {
+    	postTokenTemplateAnalysis();
+    }
+    
     if (getParseResult().getWasSuccess())
     {
     	postTokenTraitAnalysis();

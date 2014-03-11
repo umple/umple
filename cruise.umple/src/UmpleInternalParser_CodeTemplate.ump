@@ -852,7 +852,7 @@ class TemplateTokenAnalyzer {
 	depend java.io.InputStream;
 
 	UmpleInternalParser parser;
-	lazy UmpleTemplate template;
+	lazy UmpleClass template;
 	lazy TemplateMethod [] methods;
 	0..1 -- * TemplateField fields;
 	
@@ -860,7 +860,7 @@ class TemplateTokenAnalyzer {
 	
 	void prepare(final Token token) {
 		String templateName = token.getValue("name");
-		
+		/*
 		AnalysisTaskExecuter.run(new AnalysisParserTask(parser,token,3500, templateName ) {
     		public Boolean analyze() {
     			if(!Token.isValidIdentifier(token.getValue("name"))){
@@ -869,8 +869,8 @@ class TemplateTokenAnalyzer {
     			return true;
     		}    		
     	});
-    	template = parser.getModel().addUmpleTemplate(templateName);
-    	parser.getModel().addUmpleClass(template);
+    	*/
+    	template = parser.getModel().addUmpleClass(templateName);
     	startIndex = template.getTemplateFieldCount(); 
 	}
 	
@@ -889,9 +889,9 @@ class TemplateTokenAnalyzer {
 		  	  if(val != null) {
 		  	  	em.getJavaCode().append(val.getJavaCode());
 		  	  	em.getCppCode().append(val.getCppCode());	
-			  } else {
-				//parser.getParseResult().setPosition(fld.getPosition());
-    			//parser.getParseResult().addErrorMessage(new ErrorMessage(3502,fld.getPosition(),key));
+			  } else { 
+				parser.getParseResult().setPosition(fld.getPosition());
+    			parser.getParseResult().addErrorMessage(new ErrorMessage(3502,fld.getPosition(),key));
 			  }
 		  }
 	  }
@@ -984,6 +984,8 @@ class TemplateTokenAnalyzer {
 	
 	
 	void analyze(final Token token) {
+		// Validated in other class analysis passes 
+		/*
 		template.addPosition(token.getPosition());
     	template.addEndPosition(token.getEndPosition());
     	
@@ -1011,7 +1013,7 @@ class TemplateTokenAnalyzer {
     			return true;
     		}    		
     	});
-      	
+      	*/
     	
 	}
 		
@@ -1202,21 +1204,26 @@ interface IAnalysisWalker {
 class TemplateDefinitionWalker {
 	depend java.util.List;
 	isA IWalker;
-	Token rootToken;
-	int rootAnalysisStep;
 	UmpleInternalParser parser;
+	
+	lazy Token rootToken;
+	lazy int rootAnalysisStep;
 	lazy internal TemplateTokenAnalyzer templateAnalyzer;
 	Boolean reAnalyze = false;
 	after constructor {
 		templateAnalyzer = new TemplateTokenAnalyzer(parser);
 	}
+	
     void accept(TemplateTokenAnalyzer analyzer) {
-    	if (rootToken.is("templateDefinition")) {
+    	if (rootToken.is("classDefinition")) {  // aka "templateDefinition"
     		analyzer.prepare(rootToken);
     		analyzer.analyze(rootToken);
     	}
     	analyzeSubTokens(rootToken, analyzer);
-    	analyzer.done();
+    }
+    
+    void done() {
+    	templateAnalyzer.done();
     }
     
     private void analyzeToken(Token aToken, TemplateTokenAnalyzer analyzer, int analysisStep){
@@ -1247,7 +1254,9 @@ class TemplateDefinitionWalker {
 //    	} while (reAnalyze);
     }
     
-    void analyze() {
+    void analyze(Token mainToken, int rootAnalysisStep) {
+    	setRootToken(mainToken);
+    	setRootAnalysisStep(rootAnalysisStep);
     	accept(templateAnalyzer);
     }
 }
@@ -1256,9 +1265,14 @@ class TemplateDefinitionWalker {
 //can instantiate the analysis if required
 class UmpleInternalParser
 {
-  private void analyzeTemplateToken(Token token, int analysisStep) {
-  	TemplateDefinitionWalker walker = new TemplateDefinitionWalker(token, analysisStep, this);
-  	walker.analyze();
+  lazy internal TemplateDefinitionWalker walker = new TemplateDefinitionWalker(this);
+  
+  private void analyzeTemplateToken(Token token, int analysisStep) {  	
+  	walker.analyze(token, analysisStep);
+  }
+  
+  private void postTokenTemplateAnalysis(){
+    walker.done();
   }
   
   public boolean reAnalyze() {
