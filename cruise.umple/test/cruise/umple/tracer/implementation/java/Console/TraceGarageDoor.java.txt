@@ -1,0 +1,130 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.ConsoleTracer;
+import java.util.Date;
+
+public class Tracer
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer State Machines
+  enum GarageDoor { Open, Closing, Closed, Opening, HalfOpen }
+  private GarageDoor GarageDoor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer()
+  {
+    setGarageDoor(GarageDoor.Open);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getGarageDoorFullName()
+  {
+    String answer = GarageDoor.toString();
+    return answer;
+  }
+
+  public GarageDoor getGarageDoor()
+  {
+    return GarageDoor;
+  }
+
+  public boolean buttonOrObstacle()
+  {
+    boolean wasEventProcessed = false;
+    
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
+    {
+      case Open:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Open,buttonOrObstacle,Closing" );
+        setGarageDoor(GarageDoor.Closing);
+        wasEventProcessed = true;
+        break;
+      case Closing:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,buttonOrObstacle,Opening" );
+        setGarageDoor(GarageDoor.Opening);
+        wasEventProcessed = true;
+        break;
+      case Closed:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Closed,buttonOrObstacle,Opening" );
+        setGarageDoor(GarageDoor.Opening);
+        wasEventProcessed = true;
+        break;
+      case Opening:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Opening,buttonOrObstacle,HalfOpen" );
+        setGarageDoor(GarageDoor.HalfOpen);
+        wasEventProcessed = true;
+        break;
+      case HalfOpen:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,HalfOpen,buttonOrObstacle,Opening" );
+        setGarageDoor(GarageDoor.Opening);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean reachBottom()
+  {
+    boolean wasEventProcessed = false;
+    
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
+    {
+      case Closing:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,reachBottom,Closed" );
+        setGarageDoor(GarageDoor.Closed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean reachTop()
+  {
+    boolean wasEventProcessed = false;
+    
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
+    {
+      case Opening:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Opening,reachTop,Open" );
+        setGarageDoor(GarageDoor.Open);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setGarageDoor(GarageDoor aGarageDoor)
+  {
+    GarageDoor = aGarageDoor;
+  }
+
+  public void delete()
+  {}
+
+}

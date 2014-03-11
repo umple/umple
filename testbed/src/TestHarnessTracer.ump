@@ -68,35 +68,35 @@ class TraceAttrCond
 
 class TraceStm
 {
+    // UML state machine digram for a Garage door, written in Umple
+    GaragDoor {
+      	
+      	Open { buttonOrObstacle -> Closing;  }
+      	
+      	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
 
-  log = "initial value";
-  status {
-    Open {
-      entry / { log = "entry called"; }
-      exit / { log = "exit called"; }
-      ev1 -> Close;
-    }
-    Close {
-      entry / { log = "Close entry called"; }
-      exit / { log = "exit called"; }
-      ev1 -> Open;
-    }
-    HalfOpen{
-      ev2 -> HalfClose;
-    }
-    HalfClose{
-      ev2 -> HalfOpen;
+      	Closed { buttonOrObstacle -> Opening; }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
     }
     
     // trace a state - not working (doesn't trace transition entering this state -> )
-    trace Open;
+    trace Closing;
     
-    trace entry Close;
+    //trace entry Opening;
     
     // trace a transition - not working (doesn't trace all cases)
-    trace transition ev2;
+    //trace transition ev2;
     
-  }
+ }
   
   class TraceRecord
   {

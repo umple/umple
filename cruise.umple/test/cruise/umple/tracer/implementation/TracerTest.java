@@ -196,43 +196,31 @@ public class TracerTest extends TracerTemplateTest
 //	}
 	
 	
+	//------ Trace State Machines 
 	
-	
-	
-	
-	 
-	@Test @Ignore
-	public void TraceSupportFileTracer()
+	@Test
+	public void TraceGarageDoor()
 	{
-	    assertUmpleTemplateFor("FileTracer.ump",languagePath + "/FileTracer."+ languagePath +".txt","Tracer",false);
+		assertUmpleTemplateFor("TraceGarageDoor.ump",languagePath + tracerPath+"/TraceGarageDoor."+ languagePath +".txt","Tracer");
 	}
-	  
-	@Test @Ignore
-	public void TraceSupportStringTracer()
+	
+	@Test
+	public void TraceGarageDoorOneState()
 	{
-	    assertUmpleTemplateFor("StringTracer.ump",languagePath + "/StringTracer."+ languagePath +".txt","Tracer");
+		assertUmpleTemplateFor("TraceGarageDoorOneState.ump",languagePath + tracerPath+"/TraceGarageDoorOneState."+ languagePath +".txt","Tracer");
 	}
-		
-
+	
+	@Test @Ignore
+	public void TraceState()
+	{
+		assertUmpleTemplateFor("TraceState.ump",languagePath + tracerPath+"/TraceState."+ languagePath +".txt","Light");
+	}
 
 	
-
-	
-	//*******************************//
-	//**** Trace State Machines *****//
-	//*******************************//	
-
-	//====== Console tracer
 	@Test @Ignore
 	public void ConsoleTracer_StateMachine()
 	{
 		assertUmpleTemplateFor("ConsoleTracer_TraceStateMachine.ump",languagePath + "/ConsoleTracer_TraceStateMachine."+ languagePath +".txt","GarageDoor");
-	}
-	
-	@Test @Ignore 
-	public void ConsoleTracer_State()
-	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceState.ump",languagePath + "/ConsoleTracer_TraceState."+ languagePath +".txt","Light");
 	}
 	
 	@Test @Ignore
@@ -295,24 +283,18 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("ConsoleTracer_TraceTransitionRecordAttr.ump",languagePath + "/ConsoleTracer_TraceTransitionRecordAttr."+ languagePath +".txt","Light");
 	}
 	
-	//====== File tracer
 	@Test @Ignore
-	public void FileTracer_State()
+	public void TraceSupportFileTracer()
 	{
-		assertUmpleTemplateFor("FileTracer_TraceState.ump",languagePath + "/FileTracer_TraceState."+ languagePath +".txt","GarageDoor");
+	    assertUmpleTemplateFor("FileTracer.ump",languagePath + "/FileTracer."+ languagePath +".txt","Tracer",false);
 	}
-	
-	@Test @Ignore 
-	public void FileTracer_TraceStateEntryAction()
+	  
+	@Test @Ignore
+	public void TraceSupportStringTracer()
 	{
-		assertUmpleTemplateFor("FileTracer_TraceStateEntryAction.ump",languagePath + "/FileTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
+	    assertUmpleTemplateFor("StringTracer.ump",languagePath + "/StringTracer."+ languagePath +".txt","Tracer");
 	}
-	
-	@Test @Ignore 
-	public void FileTracer_TraceStateExitAction()
-	{
-		assertUmpleTemplateFor("FileTracer_TraceStateExitAction.ump",languagePath + "/FileTracer_TraceStateExitAction."+ languagePath +".txt","Light");
-	}
+		
 	
 	//***************************//
 	//**** Trace Association ****//
