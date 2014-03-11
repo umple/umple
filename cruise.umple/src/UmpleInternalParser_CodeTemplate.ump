@@ -870,8 +870,10 @@ class TemplateTokenAnalyzer {
     		}    		
     	});
     	*/
-    	template = parser.getModel().addUmpleClass(templateName);
-    	startIndex = template.getTemplateFieldCount(); 
+    	template = parser.getModel().getUmpleClass(templateName);
+    	if(template != null) {
+    		startIndex = template.getTemplateFieldCount();
+    	} 
 	}
 	
 	EmitResponse getEmisionString(TemplateMethodField [] templates) {
