@@ -1,0 +1,34 @@
+
+namespace cruise.tracer.test;
+
+class TraceStm
+{
+    // UML state machine digram for a Garage door, written in Umple
+    GaragDoor {
+      	
+      	Open { buttonOrObstacle -> Closing;  }
+      	
+      	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed { buttonOrObstacle -> Opening; }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
+    }
+    
+    // trace a state - not working (doesn't trace transition entering this state -> )
+    trace Closing;
+    
+    //trace entry Opening;
+    
+    // trace a transition - not working (doesn't trace all cases)
+    //trace transition ev2;
+    
+}
