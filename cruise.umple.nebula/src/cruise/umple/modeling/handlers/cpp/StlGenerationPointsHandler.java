@@ -118,6 +118,13 @@ public class StlGenerationPointsHandler{
 		return generationValueGetter.use(ICppDefinitions.COPY_STRING_ATTRIBUTE, name);
 	}
 	
+	@DecisionPoint(decisionPoint = IModelingConstructorDefinitionsConstants.COPY_CONSTRUCTOR_GENERATION_POINT, 
+			watchIf= {IModelingConstructorDefinitionsConstants.COPY_CONSTRUCTOR_GENERATION_POINT, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_IMPLEMENTATION})
+	public static boolean filterCopyConstructorForSingletonDecision(@GenerationElementParameter(id = IModelingElementDefinitions.IS_CONSTANT) boolean isConstant) {
+		//Constant should not be a part of the copy constructor
+		return !isConstant;
+	}
+	
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.COPY_CONSTRUCTOR_GENERATION_POINT, priority= IGenerationPointPriorityConstants.HIGHEST,  
 			unique= true)
 	public static void dataTimeConditionsCopyConstructor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
@@ -474,7 +481,9 @@ public class StlGenerationPointsHandler{
 			return new InterceptorResponse(ISTLConstants.DATE);
 		}else if(CommonTypesConstants.STRING.equals(typeName)){
 			return new InterceptorResponse(ISTLConstants.STRING);
-		}
+		} else if(CommonTypesConstants.STRING_BUILDER.equals(typeName)){
+			return new InterceptorResponse(ISTLConstants.STRING);
+		} 
 		return null;
 	}
 	

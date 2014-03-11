@@ -230,7 +230,6 @@ public class CppCustomGetterFunctionsPointsHandler{
 	public static void stream(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationBaseElement Object element,
 			@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
 		if(isMany){
@@ -238,14 +237,25 @@ public class CppCustomGetterFunctionsPointsHandler{
 			return;
 		}
 		
+		String stream = generationValueGetter.generationPointString(element, IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_IMPLEMENTATION);
+		
+		if(stream== null|| stream.isEmpty()){
+			return;
+		}
+		generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_IMPLEMENTATION, stream, parent, Boolean.valueOf(isPrimitiveType));
+	}
+	
+	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_IMPLEMENTATION, priority= IGenerationPointPriorityConstants.HIGHEST)
+	public static String stremImplementation(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element,
+			@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType,
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name) {
 		String id= isPrimitiveType? IModelingConstructorDefinitionsConstants.STREAM_PRIMITIVE_ATTRIBUTE: 
 			IModelingConstructorDefinitionsConstants.STREAM_ATTRIBUTE;
 		
 		String stream = generationValueGetter.generate(id, element, name);
-		
-		generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_STREAM_IMPLEMENTATION, stream, parent, Boolean.valueOf(isPrimitiveType));
+		return stream;
 	}
-	
 	
 	@GenerationPoint(generationPoint = IModelingDecisions.OPERATIONS_GENERATION_POINT)
 	public static void operationsProcessor(

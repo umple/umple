@@ -293,7 +293,7 @@ class TemplateParser {
 				adaptor.addChild(root, adaptor.create(tkn));
 			}
 			else {
-				// // TODO: Error Messages
+				throw new TemplateException(tkn,1500, tkn.getName());
 			}
 			return ret;
 		}
@@ -533,7 +533,13 @@ class TemplateTokenizer {
 				}
 				break;
 				default: {					
-					// TODO: Error Messages
+					/*
+					Token t = new Token("", "");
+					Position pos = new Position(input.index(), input.getCharPositionInLine(), input.index());
+					t.setPosition(pos);
+					t.setEndPosition(pos);
+					*/
+					throw new TemplateException(currentToken,1500, currentToken.getName());
 				}
 				}
 			}
@@ -545,7 +551,7 @@ class TemplateTokenizer {
 			analyzeTextElement();
 		}
 		else {
-			// TODO: Error Messages
+			throw new TemplateException(currentToken,1500, currentToken.getName());
 		}
 	}
 
@@ -630,8 +636,22 @@ external Exception
 
 class TemplateException {
 	isA Exception;
-	TokenStream input;
-	internal Token token;
+	Token token;
+	Integer errorCode;
+	String errMsg;
+	
+	public TemplateException(Token aToken, int aErrorCode, String aErrMsg, Exception ex) {
+    	super(aErrMsg, ex);
+    	token = aToken;
+    	errorCode = aErrorCode;
+    	errMsg = aErrMsg;
+  	}
+  	public TemplateException(Token aToken, int aErrorCode, String aErrMsg) {
+    	super(aErrMsg, null);
+    	token = aToken;
+    	errorCode = aErrorCode;
+    	errMsg = aErrMsg;
+  	}
 }
 
 class TemplateParsingContext {
@@ -736,7 +756,7 @@ class TemplateTextTree {
 			TemplateElement element = getTemplateAttributeParser().getElement(getTemplateAttributeParser().numberOfElements() - 1);
 			if (element instanceof TextElement) {
 				TextElement textElement = (TextElement) element;
-				textElement.getContent().append(text);
+				textElement.append(text);
 			} else {
 				getTemplateAttributeParser().addElement(new TextElement(text));
 			}
@@ -781,11 +801,11 @@ class TemplateAttributeParser {
 	
 	String rawTemplateContent;
 	
-	lazy internal StringBuilder emisionContent; 
+	lazy EmitResponse emisionContent; 
 	
 	public boolean parse() throws IOException {
 		elements.clear();
-		emisionContent = new StringBuilder();
+		emisionContent = new EmitResponse();
 		try {			
 			TemplateTokenizer tokenizer = new TemplateTokenizer(new CharStream(rawTemplateContent));
 			TokenStream tokens = new TokenStream(tokenizer);
@@ -811,19 +831,18 @@ class TemplateAttributeParser {
 		}
 		return false;
 	}
-
-	String emit() {
-		StringBuilder builder = new StringBuilder();
-		builder.append(emisionContent);
-		return builder.toString();
-	}
-
 }
+
+class TemplateMethodField {
+	Position position;
+	String template;
+}
+
 
 //Method rpesentations in a template 
 class TemplateMethod {
 	Method method;
-	lazy String [] templates;
+	lazy TemplateMethodField [] templates;
 }
 
 //Used as a helper class to analyze tokens in a given template
@@ -842,7 +861,7 @@ class TemplateTokenAnalyzer {
 	void prepare(final Token token) {
 		String templateName = token.getValue("name");
 		
-		AnalysisTaskExecuter.run(new AnalysisParserTask(parser,token,0, "" ) {  // TODO: Error Messages
+		AnalysisTaskExecuter.run(new AnalysisParserTask(parser,token,3500, templateName ) {
     		public Boolean analyze() {
     			if(!Token.isValidIdentifier(token.getValue("name"))){
     				return false;
@@ -852,25 +871,31 @@ class TemplateTokenAnalyzer {
     	});
     	template = parser.getModel().addUmpleTemplate(templateName);
     	parser.getModel().addUmpleClass(template);
+    	startIndex = template.getTemplateFieldCount(); 
 	}
 	
-	String getEmisionString(String [] templates) {
-	  StringBuffer sb = new StringBuffer();
-	  if(templates.length == 0 || templates[0].equalsIgnoreCase("*")) {
+	EmitResponse getEmisionString(TemplateMethodField [] templates) {
+	  EmitResponse em = new EmitResponse();
+	  if(templates.length == 0 || templates[0].getTemplate().equalsIgnoreCase("*")) {
 		  for(String key : template.getTemplateEmitStringMap().keySet()) {
-			  sb.append(template.getTemplateEmitStringMap().get(key));
+		  	  EmitResponse val = template.getTemplateEmitStringMap().get(key);
+		  	  em.getJavaCode().append(val.getJavaCode());
+		  	  em.getCppCode().append(val.getCppCode());	
 		  }
 	  } else {
-		  for(String key : templates) {
-		  	  String val = template.getTemplateEmitStringMap().get(key);
+		  for(TemplateMethodField fld : templates) {
+		  	  String key = fld.getTemplate();
+		  	  EmitResponse val = template.getTemplateEmitStringMap().get(key);
 		  	  if(val != null) {
-			  	sb.append(template.getTemplateEmitStringMap().get(key));
+		  	  	em.getJavaCode().append(val.getJavaCode());
+		  	  	em.getCppCode().append(val.getCppCode());	
 			  } else {
-			  	// TODO: Error Messages
+				//parser.getParseResult().setPosition(fld.getPosition());
+    			//parser.getParseResult().addErrorMessage(new ErrorMessage(3502,fld.getPosition(),key));
 			  }
 		  }
 	  }
-	  return sb.toString();
+	  return em;
     }
 	
 	void analyzeEmission(final Token token) {
@@ -885,11 +910,12 @@ class TemplateTokenAnalyzer {
 		  		try {
 		  			TemplateAttributeParser emitter = new TemplateAttributeParser(startIndex, templateContent);
 		  			emitter.parse();
-		  			template.getTemplateEmitStringMap().put(templateName, emitter.emit());
+		  			template.getTemplateEmitStringMap().put(templateName, emitter.getEmisionContent());
 		  			for(TemplateField field : emitter.getFields()) {
 		  				addField(field);
 		  			}
 		  			startIndex+= emitter.getFields().size(); 
+		  			template.setTemplateFieldCount(startIndex);
 		  		} catch (IOException e) {
 		  		}
 	  		}
@@ -909,7 +935,8 @@ class TemplateTokenAnalyzer {
     		if (emitToken.is("templatePrameter")) {
 				Token templateName = emitToken.getSubToken("name");
 				if(templateName != null) {
-					tMethod.addTemplate(templateName.getValue("name"));
+					String templateNameValue = templateName.getValue("name"); 
+					tMethod.addTemplate(new TemplateMethodField(templateName.getPosition(),templateNameValue));
 				}
 			}
     		if (emitToken.is("methodDeclarator")) {
@@ -921,7 +948,8 @@ class TemplateTokenAnalyzer {
     					aMethod.setType("String");
     					if (methodToken.getValue().equals("main"))
     					{
-    						// TODO: Error Messages
+    						parser.getParseResult().setPosition(methodToken.getPosition());
+    						parser.getParseResult().addErrorMessage(new ErrorMessage(3501,token.getPosition()));
     					}
     				}
     				if (methodToken.is("parameterList"))
@@ -959,7 +987,7 @@ class TemplateTokenAnalyzer {
 		template.addPosition(token.getPosition());
     	template.addEndPosition(token.getEndPosition());
     	
-    	AnalysisTaskExecuter.run(new AnalysisParserTask(parser,token,0, "" ) {  // TODO: Error Messages
+    	AnalysisTaskExecuter.run(new AnalysisParserTask(parser,token,0, "Unable to make template abstract!") {  
     		public Boolean analyze() {
     			if(token.getValue("abstract") != null) {
     				return template.setIsAbstract(true);
@@ -967,7 +995,7 @@ class TemplateTokenAnalyzer {
     			return true;
     		}    		
     	});
-    	AnalysisTaskExecuter.run(new AnalysisParserTask(parser,token,0, "" ) {  // TODO: Error Messages
+    	AnalysisTaskExecuter.run(new AnalysisParserTask(parser,token,0, "Unable to make template singleton!") { 
     		public Boolean analyze() {
     			if(token.getValue("singleton") != null) {
     				return template.setIsSingleton(true);
@@ -975,7 +1003,7 @@ class TemplateTokenAnalyzer {
     			return true;
     		}    		
     	});
-    	AnalysisTaskExecuter.run(new AnalysisParserTask(parser, token,0, "" ) {  // TODO: Error Messages
+    	AnalysisTaskExecuter.run(new AnalysisParserTask(parser, token,14, token.getName()) { 
     		public Boolean analyze() {
     			if(token.getValue("immutable") != null) {
     				return template.setImmutable();
@@ -986,33 +1014,148 @@ class TemplateTokenAnalyzer {
       	
     	
 	}
+		
+	void initializeNL() {
+	  if(template.getAttribute(Utils.getLineSeparator()) == null) {
+		  CodeBlock cb = new CodeBlock();
+		  cb.setCode("Java", Utils.getLineSeparatorValue("Java"));
+		  cb.setCode("Cpp", Utils.getLineSeparatorValue("Cpp"));
+		  Attribute aField = new Attribute(Utils.getLineSeparator(),"String","const","",false,template);
+		  aField.setCodeblock(cb);
+		  template.addAttribute(aField);
+	  }
+	}
+	
+	String createWrapMethod(Method mth, EmitResponse emitResp) {
+		String methodName = "_"+mth.getName();
+		StringBuilder paramSignature = new StringBuilder("sb");
+		Method aMethod = new Method("","","",false);
+    	aMethod.setPosition(mth.getPosition());
+    	aMethod.setEndPosition(mth.getEndPosition());
+    	aMethod.setModifier(mth.getModifier());
+    	 
+    	aMethod.setName(methodName);
+    	aMethod.setType("StringBuilder");
+    	
+    	MethodParameter stringBuilderParameter  = new MethodParameter("sb","StringBuilder",null,null, false);
+    	stringBuilderParameter.setIsList(false);
+    	
+    	aMethod.addMethodParameter(stringBuilderParameter);
+    	
+    	for( MethodParameter aParameter : mth.getMethodParameters()) {
+    		MethodParameter param  = new MethodParameter(aParameter.getName(),aParameter.getType(),null,null, false);
+    		param.setIsList(aParameter.getIsList());
+    		aMethod.addMethodParameter(param);
+    		paramSignature.append(",");
+    		paramSignature.append(aParameter.getName());
+    	}
+    	
+    	
+    	StringBuilder javaBuffer = new StringBuilder();
+		StringBuilder cppBuffer = new StringBuilder();
+			
+		javaBuffer.append(emitResp.getJavaCode());
+		javaBuffer.append(System.getProperty("line.separator"));
+		javaBuffer.append("    ");
+		Utils.getWrapMethodReturnSignature("Java", javaBuffer);		    
+		
+			
+		cppBuffer.append(emitResp.getCppCode());
+		cppBuffer.append(System.getProperty("line.separator"));
+		javaBuffer.append("    ");
+		Utils.getWrapMethodReturnSignature("Cpp", cppBuffer);		    
+		
+
+		CodeBlock cb = new CodeBlock();
+		cb.setCode("Java", javaBuffer.toString());
+        cb.setCode("Cpp", cppBuffer.toString());
+            
+		MethodBody methBody = new MethodBody(cb);
+		aMethod.setMethodBody(methBody);
+		template.addMethod(aMethod);
+		return paramSignature.toString(); 
+	}
 	
 	// Analyzer Events
 	void done() {
+		if(fields.size() > 0) {
+			initializeNL();
+		}
 		for(TemplateField fld : fields) {
-			Attribute aField = new Attribute(fld.getName(),"String","const",fld.getValue(),false,template);
-			template.addAttribute(aField);			
+			CodeBlock cb = new CodeBlock();
+    		cb.setCode("Java", fld.getValue().getJavaCode().toString());
+    		cb.setCode("Cpp", fld.getValue().getCppCode().toString());
+			Attribute aField = new Attribute(fld.getName(),"String","const","",false,template);
+			aField.setCodeblock(cb);
+			template.addAttribute(aField);
 		}
 		for(TemplateMethod tMth : methods) {
 			Method mth = tMth.getMethod();
+			EmitResponse emitResp = getEmisionString(tMth.getTemplates());
 			
-			StringBuffer methodBodyBuffer = new StringBuffer();
-			methodBodyBuffer.append(System.getProperty("line.separator"));
-		    methodBodyBuffer.append("\t\tStringBuffer sb = new StringBuffer();");
-		    methodBodyBuffer.append(System.getProperty("line.separator"));
-		    methodBodyBuffer.append(getEmisionString(tMth.getTemplates()));
-		    methodBodyBuffer.append(System.getProperty("line.separator"));
-		    methodBodyBuffer.append("\t\t");
-		    methodBodyBuffer.append("return sb.toString();\n");
-		    methodBodyBuffer.append(System.getProperty("line.separator"));
+			String paramSignature = createWrapMethod(mth, emitResp);
+			String wrapMethodName = "_"+mth.getName();
 			
-			CodeBlock cb = new CodeBlock(methodBodyBuffer.toString());
+			StringBuilder javaBuffer = new StringBuilder();
+			StringBuilder cppBuffer = new StringBuilder();
+
+			javaBuffer.append("    ");					
+			Utils.getStringBuilder("Java", javaBuffer);
+			javaBuffer.append(System.getProperty("line.separator"));
+			javaBuffer.append("    ");
+			Utils.getStringBuilderToString("Java", javaBuffer, wrapMethodName, paramSignature);		    
+			
+			
+			javaBuffer.append("    ");					
+			Utils.getStringBuilder("Cpp", cppBuffer);
+			cppBuffer.append(System.getProperty("line.separator"));
+			javaBuffer.append("    ");
+			Utils.getStringBuilderToString("Cpp", cppBuffer, wrapMethodName, paramSignature);
+			
+			CodeBlock cb = new CodeBlock();
+			cb.setCode("Java", javaBuffer.toString());
+            cb.setCode("Cpp", cppBuffer.toString());
+            
 			MethodBody methBody = new MethodBody(cb);
 			mth.setMethodBody(methBody);
 			template.addMethod(mth);
 			
 			/*
-			StringBuffer methodBuffer = new StringBuffer();
+			StringBuilder javaBuffer = new StringBuilder();
+			StringBuilder cppBuffer = new StringBuilder();
+			
+			
+			
+			javaBuffer.append(System.getProperty("line.separator"));
+			javaBuffer.append("    ");					
+			Utils.getStringBuilder("Java", javaBuffer);
+			javaBuffer.append(System.getProperty("line.separator"));
+			javaBuffer.append(emitResp.getJavaCode());
+			javaBuffer.append(System.getProperty("line.separator"));
+			javaBuffer.append("    ");
+			Utils.getStringBuilderToString("Java", javaBuffer);		    
+			
+			
+			cppBuffer.append(System.getProperty("line.separator"));
+			javaBuffer.append("    ");					
+			Utils.getStringBuilder("Cpp", cppBuffer);
+			cppBuffer.append(System.getProperty("line.separator"));
+			cppBuffer.append(emitResp.getCppCode());
+			cppBuffer.append(System.getProperty("line.separator"));
+			javaBuffer.append("    ");
+			Utils.getStringBuilderToString("Cpp", cppBuffer);		    
+			
+
+			CodeBlock cb = new CodeBlock();
+			cb.setCode("Java", javaBuffer.toString());
+            cb.setCode("Cpp", cppBuffer.toString());
+            
+			MethodBody methBody = new MethodBody(cb);
+			mth.setMethodBody(methBody);
+			template.addMethod(mth);
+			*/
+			/*
+			StringBuilder methodBuffer = new StringBuilder();
 		    methodBuffer.append(" " + mth.getType()+ " " + mth.getName());
 		    methodBuffer.append("(");
 		    String paramName="";
@@ -1036,12 +1179,12 @@ class TemplateTokenAnalyzer {
 		    methodBuffer.append(")");
 		    methodBuffer.append("  {");
 		    methodBuffer.append(System.getProperty("line.separator"));
-		    methodBuffer.append("\t\tStringBuffer sb = new StringBuffer();");
+		    methodBuffer.append("    StringBuilder sb = new StringBuilder();");
 		    methodBuffer.append(System.getProperty("line.separator"));
 		    methodBuffer.append(getEmisionString(tMth.getTemplates()));
 		    methodBuffer.append(System.getProperty("line.separator"));
-		    methodBuffer.append("\t\t");
-		    methodBuffer.append("return sb.toString();\n");
+		    javaBuffer.append("    ");
+		    methodBuffer.append("return sb.toString(););
 		    methodBuffer.append(System.getProperty("line.separator"));
 		    methodBuffer.append("  }");
 			template.appendExtraCode(methodBuffer.toString());

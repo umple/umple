@@ -42,45 +42,57 @@ class UmpleModel {
 //An umple template contains a map for emittable strings
 class UmpleTemplate {
 	depend java.util.*;
-	
-	Map<String,String> templateEmitStringMap = new HashMap<String,String>();
+	int templateFieldCount = 0;
+	Map<String,EmitResponse> templateEmitStringMap = new HashMap<String,EmitResponse>();
 }
 
 //A template filed reprsents a field with a value for emitting purposes
 class TemplateField {
 	const String TEMPLATE_TEXT_FIELD="TEXT_";
 	String name;
-	String value;
+	EmitResponse value;
+}
+
+class EmitResponse {
+	StringBuilder javaCode = new StringBuilder();
+	StringBuilder cppCode = new StringBuilder();
 }
 
 //A template element represents template contents to be built. It relies on a set of TemplateField
 class TemplateElement {
 	abstract;
-	lazy internal StringBuilder content;
-	internal String contentString; 
+	lazy internal EmitResponse emitResponse;
+	internal String content; 
 	
 	0..1 -- * TemplateField fields;
 
 	after constructor {
-		content = new StringBuilder();
-		getContent().append(contentString);
+		emitResponse = new EmitResponse();
+		getEmitResponse().getJavaCode().append(content);
+		getEmitResponse().getCppCode().append(content);
 	}
-	StringBuilder getContent() {
-		return content;
+	void append(String text) {
+		getEmitResponse().getJavaCode().append(text);
+		getEmitResponse().getCppCode().append(text);
 	}
-	void emit(StringBuilder builder, int idx) {}
+	EmitResponse getEmitResponse() {
+		return emitResponse;
+	}
+	void emit(EmitResponse responseBuffer, int idx) {}
 }
 
 //Expression segment in a template
 class ExpressionElement {
 	isA TemplateElement;
 	
-	void emit(StringBuilder builder, int idx) {
-		builder.append(System.getProperty("line.separator"));
-		builder.append("\t\t");
-		builder.append("sb.append(");
-		builder.append(getContent());
-		builder.append(");");
+	void emit(EmitResponse responseBuffer, int idx) {
+		responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
+		responseBuffer.getJavaCode().append("    ");		
+		Utils.getStringAppend("Java", responseBuffer.getJavaCode(), getEmitResponse().getJavaCode().toString());
+
+		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+		responseBuffer.getCppCode().append("    ");		
+		Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), getEmitResponse().getCppCode().toString());
 	}
 }
 
@@ -88,44 +100,67 @@ class ExpressionElement {
 class ScripletElement {
 	isA TemplateElement;
 
-	void emit(StringBuilder builder, int idx) {
-		builder.append(System.getProperty("line.separator"));
-		builder.append("\t\t");
-		builder.append(getContent());
+	void emit(EmitResponse responseBuffer, int idx) {
+		responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
+		responseBuffer.getJavaCode().append("    ");
+		responseBuffer.getJavaCode().append(getEmitResponse().getJavaCode());
+		
+		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+		responseBuffer.getCppCode().append("    ");
+		responseBuffer.getCppCode().append(getEmitResponse().getCppCode());
+
 	}
 }
 
 //Comment segment for a template contents
 class CommentElement {
 	isA TemplateElement;
-	void emit(StringBuilder builder, int idx) {
-		String content = getContent().toString();
-		content = "/*" + content + "*/";
-		content = Utils.nlize(content);
+	void emit(EmitResponse responseBuffer, int idx) {
 		String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + idx;
-		addField(new TemplateField(fieldId, content));
-		builder.append(System.getProperty("line.separator"));
-		builder.append("\t\t");
-		builder.append("sb.append(");
-		builder.append(fieldId);
-		builder.append(");");
+		EmitResponse fieldValue = new EmitResponse();
+		String javaContent = getEmitResponse().getJavaCode().toString();		
+		javaContent = "/*" + javaContent + "*/";
+		
+		String cppContent = getEmitResponse().getCppCode().toString();
+		cppContent = "/*" + cppContent + "*/";
+		
+		fieldValue.getJavaCode().append(Utils.nlize("Java", javaContent));
+		fieldValue.getCppCode().append(Utils.nlize("Cpp", cppContent));
+				
+		addField(new TemplateField(fieldId, fieldValue));
+		
+		
+		responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
+		responseBuffer.getJavaCode().append("    ");		
+		Utils.getStringAppend("Java", responseBuffer.getJavaCode(), fieldId);
+
+		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+		responseBuffer.getCppCode().append("    ");		
+		Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), fieldId);
 	}
 }
 
 class TextElement {
 	isA TemplateElement;
 
-	void emit(StringBuilder builder, int idx) {
-		String content = getContent().toString();
-		content = Utils.nlize(content);
+	void emit(EmitResponse responseBuffer, int idx) {
 		String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + idx;
-		addField(new TemplateField(fieldId, content));
+		EmitResponse fieldValue = new EmitResponse();
+		String javaContent = getEmitResponse().getJavaCode().toString();
+		String cppContent = getEmitResponse().getCppCode().toString();	
 		
-		builder.append(System.getProperty("line.separator"));
-		builder.append("\t\t");
-		builder.append("sb.append(");
-		builder.append(fieldId);
-		builder.append(");");
+		fieldValue.getJavaCode().append(Utils.nlize("Java", javaContent));
+		fieldValue.getCppCode().append(Utils.nlize("Cpp", cppContent));
+				
+		addField(new TemplateField(fieldId, fieldValue));
+		
+		responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
+		responseBuffer.getJavaCode().append("    ");		
+		Utils.getStringAppend("Java", responseBuffer.getJavaCode(), fieldId);
+
+		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+		responseBuffer.getCppCode().append("    ");		
+		Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), fieldId);
 	}
 }
 
@@ -149,8 +184,8 @@ class Utils {
 	}
 	
 	// JET Style
-	public static String nlize(String str) {
-	  StringBuffer result = new StringBuffer(str.length());
+	public static String nlize(String lang, String str) {
+	  StringBuilder result = new StringBuilder(str.length());
 	  Pattern newLinePattern = Pattern.compile("([\\n][\\r]?|[\\r][\\n]?)", Pattern.MULTILINE);
 	  Matcher m = newLinePattern.matcher(str);
 	  if(m.find()) {
@@ -160,23 +195,43 @@ class Utils {
 			  if(first) {
 				  first = false;
 			  } else {
-				  result.append(" + "); 
+				  result.append(Utils.getStringConcat(lang)); 
 			  }
 			  if(m.start() > currentIndex) {
-				  result.append('"');
+			  	  if(lang.equalsIgnoreCase("Cpp")) {
+			  	  	result.append("string(\"");			  	  	
+			  	  } else {
+			  	  	result.append('"');
+			  	  }
+				  
 				  result.append(Utils.escapeString(str.substring (currentIndex, m.start())));
-				  result.append('"');
-				  result.append(" + "); 
+				  
+				  if(lang.equalsIgnoreCase("Cpp")) {
+			  	  	result.append("\")");			  	  	
+			  	  } else {
+			  	  	result.append('"');
+			  	  }
+				  result.append(Utils.getStringConcat(lang)); 
 			  }
-			  result.append("System.getProperty(\"line.separator\")");
+			  result.append(Utils.getLineSeparator());
 			  currentIndex = m.end();
 		  } while( m.find());
 		  if(currentIndex < str.length()) {
 			  if(!first) {
-				  result.append(" + ");
-				  result.append('"');
+				  result.append(Utils.getStringConcat(lang));
+				  if(lang.equalsIgnoreCase("Cpp")) {
+			  	  	result.append("string(\"");		  	  	
+			  	  } else {
+			  	  	result.append('"');
+			  	  }
+			  	  
 				  result.append(Utils.escapeString(str.substring(currentIndex)));
-				  result.append('"');
+				  
+				  if(lang.equalsIgnoreCase("Cpp")) {
+			  	  	result.append("\")");			  	  	
+			  	  } else {
+			  	  	result.append('"');
+			  	  }
 			  }
 		  }
 		  return result.toString();
@@ -188,10 +243,85 @@ class Utils {
 	  }
   	}
   	
+  	public static String getLineSeparatorValue(String lang) {
+  		if(lang.equalsIgnoreCase("Java")) {  
+  			return "System.getProperty(\"line.separator\")";
+  		} if(lang.equalsIgnoreCase("Cpp")) {  
+//	    	return "endl";
+			return "string(\"\\n\")";
+	  	}
+	  	return "\n";
+	 }
+  	
+  	public static String getLineSeparator() {
+  		return "NL";
+	 }
+	
+	public static String getStringConcat(String lang) {
+  		if(lang.equalsIgnoreCase("Java")) {  
+  			return " + ";  
+  		} if(lang.equalsIgnoreCase("Cpp")) {  
+	    	return " + ";  
+	  	}
+	  	return "";
+	 }
+	
+	public static void getWrapMethodReturnSignature(String lang,StringBuilder sb) {
+		if(lang.equalsIgnoreCase("Java")) {  
+  			sb.append("return sb;");  
+  		} if(lang.equalsIgnoreCase("Cpp")) {
+  			sb.append("return sb;");  
+	  	}
+	}
+	
+	public static void getStringBuilderToString(String lang,StringBuilder sb, String mthName, String paramSignature) {
+		if(lang.equalsIgnoreCase("Java")) {
+			sb.append("    ");
+			sb.append("return ");
+			sb.append("this.");
+			sb.append(mthName);
+			sb.append("(");
+			sb.append(paramSignature);
+			sb.append(").toString();");  
+//			sb.append(System.getProperty("line.separator"));  
+  		} if(lang.equalsIgnoreCase("Cpp")) { 
+  			sb.append("    ");
+  			sb.append("return ");
+			sb.append("this->");
+			sb.append(mthName);
+			sb.append("(");
+			sb.append(paramSignature);
+			sb.append(");");  
+//	    	sb.append("return sb.str();");
+//			sb.append(System.getProperty("line.separator"));  
+	  	}
+	}
+  	
+  	public static void getStringAppend(String lang, StringBuilder sb, String value) {
+  		if(lang.equalsIgnoreCase("Java")) {  
+  			sb.append("sb.append(");
+  			sb.append(value);
+  			sb.append(");");
+  		} if(lang.equalsIgnoreCase("Cpp")) {  
+//	    	sb.append("sb << ");
+	    	sb.append("sb+= ");
+  			sb.append(value);
+  			sb.append(";");   
+	  	}
+  	}
+  	public static void getStringBuilder(String lang, StringBuilder sb){
+	  	if(lang.equalsIgnoreCase("Java")) {  
+  			sb.append("StringBuilder sb = new StringBuilder();");
+  		} if(lang.equalsIgnoreCase("Cpp")) {  
+//  			sb.append("std::stringstream sb;");
+  			sb.append("string sb;");     
+	  	}
+	 }
+  	
 	public static String escapeString(String str) {
 		return str.replaceAll("\n", "\\\\n")
 				  .replaceAll("\r", "\\\\r")
-				  .replaceAll("\t", "\\\\t")
+				  .replaceAll("\t", "  ") // Two spaces instead of tab
 				  .replaceAll("\b", "\\\\b")
 				  .replaceAll("\f", "\\\\f")
 				  .replaceAll("\"", "\\\\\"");
