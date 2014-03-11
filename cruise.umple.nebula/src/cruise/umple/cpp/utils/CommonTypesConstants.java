@@ -32,4 +32,6 @@ public interface CommonTypesConstants {
 	public static final String BOOLEAN= "Boolean"; //$NON-NLS-1$
 	public static final String DATE= "Date"; //$NON-NLS-1$
 	public static final String TIME= "Time"; //$NON-NLS-1$
+	
+	public static final String STRING_BUILDER= "StringBuilder"; //$NON-NLS-1$
 }
