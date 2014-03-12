@@ -930,7 +930,7 @@ class NewAssociationAction
             addAfterLastAssociation = t.getSubToken(i+1); // ";" is not included in the "extendsName" token
           }
           
-          if (addAfterLastAssociation == null || subT.is("openBrace") || subT.is("inlineAssociation") || subT.is("attribute")) // TODO }
+          if (addAfterLastAssociation == null || subT.isStatic("{") || subT.is("inlineAssociation") || subT.is("attribute")) // TODO }
           {
             addAfterLastAssociation = subT;
           }
