@@ -8,7 +8,7 @@
 
 // Classes are the most common elements in Umple.
 // See user manual page [*ClassDefinition*]
-classDefinition : class [name] { [[classContent]]* }
+classDefinition : class [name] [=openBrace:{] [[classContent]]* [=closeBrace:}]
 
 //The external keyword declares a class that is defined in a different
 // compilation unit
