@@ -193,7 +193,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-removeClass",json,"myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("\n",PlaygroundMain.console);
+    Assert.assertEquals("",PlaygroundMain.console);
   }
   
   @Test
