@@ -21,15 +21,19 @@ public class Mentor implements Runnable
   enum Status { Ok, NotOk }
   private Status status;
   
-  //enumeration type of messages accepted by Mentor
-  enum MessageType {  }
-  
   MessagePool pool;
   Thread removal;
+  
+  //enumeration type of messages accepted by Mentor
+  enum MessageType { null_M }
 
-  // A list of message types for each state of the Mentor
-  List<MessageType> state1MsgTypeList= Arrays.asList();
-  List<MessageType> state2MsgTypeList= Arrays.asList();
+  // Map for a Mentor pooled state machine that allows querying which events are possible in each map
+
+  public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();
+  static {
+    stateMessageMap.put(Status.Ok,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(Status.NotOk,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+  }
 
   //Helper Variables
   private TimedEventHandler timeoutOkToNotOkHandler;
@@ -211,22 +215,6 @@ public class Mentor implements Runnable
   public void delete()
   {}
 
-  // A method to return a list of message types for each state of the Mentorstate machine
-  public List<MessageType> getStateMsgTypeList(Status state){
-    List<MessageType> msg = null;
-    switch (state)
-    {
-      case Ok:
-        msg=state1MsgTypeList;
-        break;
-      case NotOk:
-        msg=state2MsgTypeList;
-        break;
-      default:
-    }
-    return msg;
-  }
-
   private class Message
   {
     MessageType type;
@@ -252,17 +240,14 @@ public class Mentor implements Runnable
 
     public synchronized Message getNext()
     {
-      List<MessageType> processableMessages;
-      // return a list of message types for the current state
-      processableMessages = getStateMsgTypeList(getStatus());
       Message message=null;
 
       try {
-        message=getNextProcessableMessage(processableMessages);
+        message=getNextProcessableMessage();
         while (message==null)
         {
           wait();
-          message=getNextProcessableMessage(processableMessages);
+          message=getNextProcessableMessage();
         }
       } catch (InterruptedException e) { e.printStackTrace(); }
 
@@ -270,12 +255,14 @@ public class Mentor implements Runnable
       return (message);
     }
 
-    public Message getNextProcessableMessage(List<MessageType> processableMessages)
+    public Message getNextProcessableMessage()
     {
-      // Iterate through messages and remove the first message that matches one of the processableMessages list
+      // Iterate through messages and remove the first message that matches one of the Messages list
       // otherwise return null
-      for (Message msg: messages){
-        if(processableMessages.contains(msg.type)){
+      for (Message msg: messages)
+      {
+        if(stateMessageMap.get(getStatus()).contains(msg.type))
+        {
           //The element to be removed
           messages.remove(msg);
           return (msg);

@@ -331,9 +331,13 @@ public class StateMachineTest extends StateMachineTemplateTest
   }
   
   @Test
-  public void queuedWithConcurrensStatesCourseAttempt()
+  public void queuedWithConcurrensStatesCourseAttempt() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-    assertUmpleTemplateFor("queuedWithConcurrensStatesCourseAttempt.ump",languagePath + "/queuedWithConcurrensStatesCourseAttempt."+ languagePath +".txt","CourseAttempt");
+	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+	f1.setAccessible(true);
+	f1.setInt(null, 1);
+		
+	assertUmpleTemplateFor("queuedWithConcurrensStatesCourseAttempt.ump",languagePath + "/queuedWithConcurrensStatesCourseAttempt."+ languagePath +".txt","CourseAttempt");
   }
   
   @Test
@@ -466,5 +470,29 @@ public class StateMachineTest extends StateMachineTemplateTest
 	 f1.setInt(null, 1);
 		
      assertUmpleTemplateFor("pooledStateMachine_UnspecifiedReception.ump",languagePath + "/pooledStateMachine_UnspecifiedReception."+ languagePath +".txt","PooledSMwithUnspecifiedReception");
+  }
+  
+  @Test
+  public void testPooledwithNestedStates()
+  {
+	assertUmpleTemplateFor("testPooledwithNestedStates.ump",languagePath + "/testPooledwithNestedStates."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testPooledwithNestedStates_2()
+  {
+	assertUmpleTemplateFor("testPooledwithNestedStates_2.ump",languagePath + "/testPooledwithNestedStates_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testPooledwithNestedStates_3()
+  {
+	assertUmpleTemplateFor("testPooledwithNestedStates_3.ump",languagePath + "/testPooledwithNestedStates_3."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testPooledwithNestedStates_4()
+  {
+	assertUmpleTemplateFor("testPooledwithNestedStates_4.ump",languagePath + "/testPooledwithNestedStates_4."+ languagePath +".txt","X");
   }
 }

@@ -27,7 +27,7 @@
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
     }
 
-    if (sm.isQueued() || sm.isPooled())
+    if (sm.isQueued())
     {
       boolean nestedSMhasEvent=false;
       append(stringBuffer,"\n  ");
@@ -65,11 +65,46 @@
       append(stringBuffer,"\n  Thread removal;");
             
     }
+    
+    if(sm.isPooled())
+    {
+      append(stringBuffer,"\n  ");
+      append(stringBuffer,"\n  MessagePool pool;");
+      append(stringBuffer,"\n  Thread removal;");
+      append(stringBuffer,"\n  ");
+      append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
+      append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
+    }
+  }
+  
+ boolean foundPooled = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
     if (sm.isPooled()){
-      append(stringBuffer,"\n");
-      append(stringBuffer,"\n  // A list of message types for each state of the {0}", uClass.getName());
+      foundPooled = true;
+    }
+    break;
+  }
+  if(foundPooled == true)
+  {
+    append(stringBuffer,"\n");
+    append(stringBuffer,"\n  // Map for a {0} pooled state machine that allows querying which events are possible in each map", uClass.getName());
+    append(stringBuffer,"\n");
+    append(stringBuffer,"\n  public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();");
+    append(stringBuffer,"\n  static {");
+  }
+   
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isPooled())
+    {
       append(stringBuffer,"\n  {0}",gen.translate("listMessageTypesStates",sm));
     }
+  }
+  
+  if(foundPooled == true)
+  {
+    append(stringBuffer,"\n  }");
   }
 }
 %>

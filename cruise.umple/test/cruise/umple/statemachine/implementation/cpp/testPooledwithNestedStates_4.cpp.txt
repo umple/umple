@@ -1,0 +1,440 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+#include "X.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ X::X()
+  {
+    if (sm1S1 == Null) { setSm1S1(Null); }
+    if (sm1S2 == Null) { setSm1S2(Null); }
+    if (sm1S2S2b == Null) { setSm1S2S2b(Null); }
+    setSm1(s1);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ X::X(const X & x)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ X X::operator=(const X & x)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string X::getSm1FullName()
+  {
+    string answer = getSm1StringName(sm1);
+    if (sm1S1 != Null) { answer += "." + getSm1S1StringName(sm1S1); }
+    if (sm1S2 != Null) { answer += "." + getSm1S2StringName(sm1S2); }
+    if (sm1S2S2b != Null) { answer += "." + getSm1S2S2bStringName(sm1S2S2b); }
+    return answer;
+  }
+  
+  X::Sm1 X::getSm1()
+  {
+    return sm1;
+  }
+
+  string X::getSm1StringName (Sm1 sm1)
+  {
+    switch (sm1)  {
+      case 0 : {return "s1"; break;}
+      case 1 : {return "s2"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  X::Sm1S1 X::getSm1S1()
+  {
+    return sm1S1;
+  }
+
+  string X::getSm1S1StringName (Sm1S1 sm1S1)
+  {
+    switch (sm1S1)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "s1a"; break;}
+      case 2 : {return "s1b"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  X::Sm1S2 X::getSm1S2()
+  {
+    return sm1S2;
+  }
+
+  string X::getSm1S2StringName (Sm1S2 sm1S2)
+  {
+    switch (sm1S2)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "s2a"; break;}
+      case 2 : {return "s2b"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  X::Sm1S2S2b X::getSm1S2S2b()
+  {
+    return sm1S2S2b;
+  }
+
+  string X::getSm1S2S2bStringName (Sm1S2S2b sm1S2S2b)
+  {
+    switch (sm1S2S2b)  {
+      case 0 : {return "Null"; break;}
+      case 1 : {return "s2b1"; break;}
+      case 2 : {return "s2b2"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool X::e()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1)
+    {
+      case s1:
+        exitSm1();
+        setSm1(s2);
+        wasEventProcessed = true;
+        break;
+      case s2:
+        exitSm1();
+        setSm1(s1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::enterS1()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S1)
+    {
+      case Null:
+        setSm1S1(s1a);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::exitS1()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S1)
+    {
+      case s1a:
+        setSm1S1(Null);
+        wasEventProcessed = true;
+        break;
+      case s1b:
+        setSm1S1(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::f()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S1)
+    {
+      case s1a:
+        setSm1S2(s2b);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::g()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S1)
+    {
+      case s1a:
+        setSm1S1(s1a);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::h()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S1)
+    {
+      case s1b:
+        setSm1S1(s1a);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (sm1S2)
+    {
+      case s2b:
+        exitSm1S2();
+        setSm1S2(s2a);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::i()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S1)
+    {
+      case s1b:
+        setSm1S2(s2b);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (sm1S2)
+    {
+      case s2a:
+        setSm1S2(s2b);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::k()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S1)
+    {
+      case s1b:
+        setSm1(s2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (sm1S2)
+    {
+      case s2b:
+        exitSm1S2();
+        setSm1(s1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::enterS2()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S2)
+    {
+      case Null:
+        setSm1S2(s2a);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::exitS2()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S2)
+    {
+      case s2a:
+        setSm1S2(Null);
+        wasEventProcessed = true;
+        break;
+      case s2b:
+        exitSm1S2();
+        setSm1S2(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::j()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S2)
+    {
+      case s2a:
+        setSm1S1(s1b);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::enterS2b()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S2S2b)
+    {
+      case Null:
+        setSm1S2S2b(s2b1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::exitS2b()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S2S2b)
+    {
+      case s2b1:
+        setSm1S2S2b(Null);
+        wasEventProcessed = true;
+        break;
+      case s2b2:
+        setSm1S2S2b(Null);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::m()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm1S2S2b)
+    {
+      case s2b1:
+        setSm1S2S2b(s2b2);
+        wasEventProcessed = true;
+        break;
+      case s2b2:
+        setSm1S2S2b(s2b1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void X::exitSm1()
+  {
+    switch(sm1)
+    {
+      case s1:
+        exitS1();
+        break;
+      case s2:
+        exitS2();
+        break;
+    }
+  }
+
+  void X::setSm1(Sm1 aSm1)
+  {
+    sm1 = aSm1;
+
+    // entry actions and do activities
+    switch(sm1)
+    {
+      case s1:
+        if (sm1S1 == Null) { setSm1S1(s1a); }
+        break;
+      case s2:
+        if (sm1S2 == Null) { setSm1S2(s2a); }
+        break;
+    }
+  }
+  
+
+  void X::setSm1S1(Sm1S1 aSm1S1)
+  {
+    sm1S1 = aSm1S1;
+    if (sm1 != s1 && aSm1S1 != Null) { setSm1(s1); }
+  }
+  
+
+  void X::exitSm1S2()
+  {
+    switch(sm1S2)
+    {
+      case s2b:
+        exitS2b();
+        break;
+    }
+  }
+
+  void X::setSm1S2(Sm1S2 aSm1S2)
+  {
+    sm1S2 = aSm1S2;
+    if (sm1 != s2 && aSm1S2 != Null) { setSm1(s2); }
+
+    // entry actions and do activities
+    switch(sm1S2)
+    {
+      case s2b:
+        if (sm1S2S2b == Null) { setSm1S2S2b(s2b1); }
+        break;
+    }
+  }
+  
+
+  void X::setSm1S2S2b(Sm1S2S2b aSm1S2S2b)
+  {
+    sm1S2S2b = aSm1S2S2b;
+    if (sm1S2 != s2b && aSm1S2S2b != Null) { setSm1S2(s2b); }
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+X::~X()
+  {}

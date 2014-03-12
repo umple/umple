@@ -11,8 +11,8 @@ class PooledSMwithUnspecifiedReception
 
   //PooledSMwithUnspecifiedReception State Machines
   private static $SmS1 = 1;
-  private static $SmError1 = 2;
-  private static $SmS2 = 3;
+  private static $SmS2 = 2;
+  private static $SmError1 = 3;
   private $sm;
 
   //------------------------
@@ -37,8 +37,8 @@ class PooledSMwithUnspecifiedReception
   public function getSm()
   {
     if ($this->sm == self::$SmS1) { return "SmS1"; }
-    elseif ($this->sm == self::$SmError1) { return "SmError1"; }
     elseif ($this->sm == self::$SmS2) { return "SmS2"; }
+    elseif ($this->sm == self::$SmError1) { return "SmError1"; }
     return null;
   }
 

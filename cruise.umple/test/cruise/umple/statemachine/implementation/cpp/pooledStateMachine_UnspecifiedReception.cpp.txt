@@ -47,8 +47,8 @@
   {
     switch (sm)  {
       case 0 : {return "s1"; break;}
-      case 1 : {return "error1"; break;}
-      case 2 : {return "s2"; break;}
+      case 1 : {return "s2"; break;}
+      case 2 : {return "error1"; break;}
       default: {return ""; break;}
     }
   }

@@ -2424,7 +2424,7 @@ for (StateMachine smq : uClass.getStateMachines())
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
     }
 
-    if (sm.isQueued() || sm.isPooled())
+    if (sm.isQueued())
     {
       boolean nestedSMhasEvent=false;
       append(stringBuffer,"\n  ");
@@ -2462,11 +2462,46 @@ for (StateMachine smq : uClass.getStateMachines())
       append(stringBuffer,"\n  Thread removal;");
             
     }
+    
+    if(sm.isPooled())
+    {
+      append(stringBuffer,"\n  ");
+      append(stringBuffer,"\n  MessagePool pool;");
+      append(stringBuffer,"\n  Thread removal;");
+      append(stringBuffer,"\n  ");
+      append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
+      append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
+    }
+  }
+  
+ boolean foundPooled = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
     if (sm.isPooled()){
-      append(stringBuffer,"\n");
-      append(stringBuffer,"\n  // A list of message types for each state of the {0}", uClass.getName());
+      foundPooled = true;
+    }
+    break;
+  }
+  if(foundPooled == true)
+  {
+    append(stringBuffer,"\n");
+    append(stringBuffer,"\n  // Map for a {0} pooled state machine that allows querying which events are possible in each map", uClass.getName());
+    append(stringBuffer,"\n");
+    append(stringBuffer,"\n  public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();");
+    append(stringBuffer,"\n  static {");
+  }
+   
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isPooled())
+    {
       append(stringBuffer,"\n  {0}",gen.translate("listMessageTypesStates",sm));
     }
+  }
+  
+  if(foundPooled == true)
+  {
+    append(stringBuffer,"\n  }");
   }
 }
 
@@ -9430,35 +9465,6 @@ if (p != null) {
        if (smq.isPooled())
        {
     
-  append(stringBuffer,"\n  // A method to return a list of message types for each state of the {0}", uClass.getName()); 
-  append(stringBuffer,"state machine");
-  append(stringBuffer,"\n  public List<MessageType> getStateMsgTypeList({0}", gen.translate("type",smq));
-  append(stringBuffer," state){");
-  append(stringBuffer,"\n    List<MessageType> msg = null;");
-  append(stringBuffer,"\n    switch (state)");
-  append(stringBuffer,"\n    {");
-
-  int countNumberOfStates=0;
-  
-  for(State state : smq.getStates()){
-    String stateNumber="";
-    countNumberOfStates++;
-    append(stringBuffer,"\n      case {0}",gen.translate("stateOne",state));
-    append(stringBuffer,":");
-    append(stringBuffer,"\n        msg=state");
-    stateNumber+=countNumberOfStates;
-    append(stringBuffer,stateNumber);
-    append(stringBuffer,"MsgTypeList;");
-    append(stringBuffer,"\n        break;");
-  }
-
-  append(stringBuffer,"\n      default:");
-  append(stringBuffer,"\n    }");
-  append(stringBuffer,"\n    return msg;");
-  append(stringBuffer,"\n  }");
-  append(stringBuffer,"\n");
-
-    
   appendln(stringBuffer,"\n  private class Message");
   appendln(stringBuffer,"  {");
   appendln(stringBuffer,"    MessageType type;"); 
@@ -9501,19 +9507,14 @@ if (p != null) {
   else if(smq.isPooled()){
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
-    appendln(stringBuffer,"      List<MessageType> processableMessages;");
-    appendln(stringBuffer,"      // return a list of message types for the current state");
-    append(stringBuffer,"      processableMessages = getStateMsgTypeList(get");
-    append(stringBuffer,"{0}", gen.translate("type",smq));
-    appendln(stringBuffer,"());");
     appendln(stringBuffer,"      Message message=null;");
     appendln(stringBuffer,"");
     appendln(stringBuffer,"      try {");
-    appendln(stringBuffer,"        message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"        message=getNextProcessableMessage();");
     appendln(stringBuffer,"        while (message==null)");
     appendln(stringBuffer,"        {");
     appendln(stringBuffer,"          wait();");
-    appendln(stringBuffer,"          message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"          message=getNextProcessableMessage();");
     appendln(stringBuffer,"        }");
     appendln(stringBuffer,"      } catch (InterruptedException e) { e.printStackTrace(); }");
     appendln(stringBuffer,"");
@@ -9521,16 +9522,54 @@ if (p != null) {
     appendln(stringBuffer,"      return (message);");
     appendln(stringBuffer,"    }");
     appendln(stringBuffer,"");
-    appendln(stringBuffer,"    public Message getNextProcessableMessage(List<MessageType> processableMessages)");
+    appendln(stringBuffer,"    public Message getNextProcessableMessage()");
     appendln(stringBuffer,"    {");
-    appendln(stringBuffer,"      // Iterate through messages and remove the first message that matches one of the processableMessages list");
+    appendln(stringBuffer,"      // Iterate through messages and remove the first message that matches one of the Messages list");
     appendln(stringBuffer,"      // otherwise return null");
-    appendln(stringBuffer,"      for (Message msg: messages){");
-    appendln(stringBuffer,"        if(processableMessages.contains(msg.type)){");
-    appendln(stringBuffer,"          //The element to be removed");
-    appendln(stringBuffer,"          messages.remove(msg);");
-    appendln(stringBuffer,"          return (msg);");
-    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      for (Message msg: messages)");
+    appendln(stringBuffer,"      {");
+    
+    if(smq.getNestedStateMachines().isEmpty())
+    {
+       append(stringBuffer,"        if(stateMessageMap.get(get");
+       append(stringBuffer,"{0}", gen.translate("type",smq));
+       appendln(stringBuffer,"()).contains(msg.type))");
+       appendln(stringBuffer,"        {");
+       appendln(stringBuffer,"          //The element to be removed");
+       appendln(stringBuffer,"          messages.remove(msg);");
+       appendln(stringBuffer,"          return (msg);");
+       appendln(stringBuffer,"        }");
+    }
+    else if(!smq.getNestedStateMachines().isEmpty())
+    {
+      append(stringBuffer,"        if(stateMessageMap.get(get");
+      append(stringBuffer,"{0}", gen.translate("type",smq));
+      appendln(stringBuffer,"()).contains(msg.type))");
+      appendln(stringBuffer,"        {");
+      appendln(stringBuffer,"          //The element to be removed");
+      appendln(stringBuffer,"          messages.remove(msg);");
+      appendln(stringBuffer,"          return (msg);");
+      appendln(stringBuffer,"        }");
+      append(stringBuffer,"        else");
+      int nsmSize = smq.getNestedStateMachines().size();
+      int nesCount = 0;
+      for(StateMachine nsm : smq.getNestedStateMachines()){
+        nesCount++;
+        append(stringBuffer," if(stateMessageMap.get(get");
+        append(stringBuffer,"{0}", gen.translate("type",nsm));
+        appendln(stringBuffer,"()).contains(msg.type))");
+        appendln(stringBuffer,"        {");
+        appendln(stringBuffer,"          //The element to be removed");
+        appendln(stringBuffer,"          messages.remove(msg);");
+        appendln(stringBuffer,"          return (msg);");
+        appendln(stringBuffer,"        }");
+        if(nsmSize > nesCount)
+        {
+          append(stringBuffer,"        else");
+        }
+      }
+    }
+    
     appendln(stringBuffer,"      }");
     appendln(stringBuffer,"      return null;");
     appendln(stringBuffer,"    }");
@@ -9792,19 +9831,14 @@ if (p != null) {
   else if(smq.isPooled()){
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
-    appendln(stringBuffer,"      List<MessageType> processableMessages;");
-    appendln(stringBuffer,"      // return a list of message types for the current state");
-    append(stringBuffer,"      processableMessages = getStateMsgTypeList(get");
-    append(stringBuffer,"{0}", gen.translate("type",smq));
-    appendln(stringBuffer,"());");
     appendln(stringBuffer,"      Message message=null;");
     appendln(stringBuffer,"");
     appendln(stringBuffer,"      try {");
-    appendln(stringBuffer,"        message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"        message=getNextProcessableMessage();");
     appendln(stringBuffer,"        while (message==null)");
     appendln(stringBuffer,"        {");
     appendln(stringBuffer,"          wait();");
-    appendln(stringBuffer,"          message=getNextProcessableMessage(processableMessages);");
+    appendln(stringBuffer,"          message=getNextProcessableMessage();");
     appendln(stringBuffer,"        }");
     appendln(stringBuffer,"      } catch (InterruptedException e) { e.printStackTrace(); }");
     appendln(stringBuffer,"");
@@ -9812,16 +9846,54 @@ if (p != null) {
     appendln(stringBuffer,"      return (message);");
     appendln(stringBuffer,"    }");
     appendln(stringBuffer,"");
-    appendln(stringBuffer,"    public Message getNextProcessableMessage(List<MessageType> processableMessages)");
+    appendln(stringBuffer,"    public Message getNextProcessableMessage()");
     appendln(stringBuffer,"    {");
-    appendln(stringBuffer,"      // Iterate through messages and remove the first message that matches one of the processableMessages list");
+    appendln(stringBuffer,"      // Iterate through messages and remove the first message that matches one of the Messages list");
     appendln(stringBuffer,"      // otherwise return null");
-    appendln(stringBuffer,"      for (Message msg: messages){");
-    appendln(stringBuffer,"        if(processableMessages.contains(msg.type)){");
-    appendln(stringBuffer,"          //The element to be removed");
-    appendln(stringBuffer,"          messages.remove(msg);");
-    appendln(stringBuffer,"          return (msg);");
-    appendln(stringBuffer,"        }");
+    appendln(stringBuffer,"      for (Message msg: messages)");
+    appendln(stringBuffer,"      {");
+    
+    if(smq.getNestedStateMachines().isEmpty())
+    {
+       append(stringBuffer,"        if(stateMessageMap.get(get");
+       append(stringBuffer,"{0}", gen.translate("type",smq));
+       appendln(stringBuffer,"()).contains(msg.type))");
+       appendln(stringBuffer,"        {");
+       appendln(stringBuffer,"          //The element to be removed");
+       appendln(stringBuffer,"          messages.remove(msg);");
+       appendln(stringBuffer,"          return (msg);");
+       appendln(stringBuffer,"        }");
+    }
+    else if(!smq.getNestedStateMachines().isEmpty())
+    {
+      append(stringBuffer,"        if(stateMessageMap.get(get");
+      append(stringBuffer,"{0}", gen.translate("type",smq));
+      appendln(stringBuffer,"()).contains(msg.type))");
+      appendln(stringBuffer,"        {");
+      appendln(stringBuffer,"          //The element to be removed");
+      appendln(stringBuffer,"          messages.remove(msg);");
+      appendln(stringBuffer,"          return (msg);");
+      appendln(stringBuffer,"        }");
+      append(stringBuffer,"        else");
+      int nsmSize = smq.getNestedStateMachines().size();
+      int nesCount = 0;
+      for(StateMachine nsm : smq.getNestedStateMachines()){
+        nesCount++;
+        append(stringBuffer," if(stateMessageMap.get(get");
+        append(stringBuffer,"{0}", gen.translate("type",nsm));
+        appendln(stringBuffer,"()).contains(msg.type))");
+        appendln(stringBuffer,"        {");
+        appendln(stringBuffer,"          //The element to be removed");
+        appendln(stringBuffer,"          messages.remove(msg);");
+        appendln(stringBuffer,"          return (msg);");
+        appendln(stringBuffer,"        }");
+        if(nsmSize > nesCount)
+        {
+          append(stringBuffer,"        else");
+        }
+      }
+    }
+    
     appendln(stringBuffer,"      }");
     appendln(stringBuffer,"      return null;");
     appendln(stringBuffer,"    }");
