@@ -1,0 +1,364 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  private static $SmS1 = 1;
+  private static $SmS2 = 2;
+  private static $SmS3 = 3;
+  private static $SmS1Null = 4;
+  private static $SmS1S1a = 5;
+  private static $SmS1S1b = 6;
+  private static $SmS2Null = 7;
+  private static $SmS2S2a = 8;
+  private static $SmS2S2b = 9;
+  private static $SmS3Null = 10;
+  private static $SmS3S3a = 11;
+  private static $SmS3S3b = 12;
+  private $sm;
+  private $smS1;
+  private $smS2;
+  private $smS3;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setSmS1(self::$SmS1Null);
+    $this->setSmS2(self::$SmS2Null);
+    $this->setSmS3(self::$SmS3Null);
+    $this->setSm(self::$SmS1);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    if ($this->smS1 != self::$SmS1Null) { $answer .= "." . $this->getSmS1(); }
+    if ($this->smS2 != self::$SmS2Null) { $answer .= "." . $this->getSmS2(); }
+    if ($this->smS3 != self::$SmS3Null) { $answer .= "." . $this->getSmS3(); }
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmS1) { return "SmS1"; }
+    elseif ($this->sm == self::$SmS2) { return "SmS2"; }
+    elseif ($this->sm == self::$SmS3) { return "SmS3"; }
+    return null;
+  }
+
+  public function getSmS1()
+  {
+    if ($this->smS1 == self::$SmS1Null) { return "SmS1Null"; }
+    elseif ($this->smS1 == self::$SmS1S1a) { return "SmS1S1a"; }
+    elseif ($this->smS1 == self::$SmS1S1b) { return "SmS1S1b"; }
+    return null;
+  }
+
+  public function getSmS2()
+  {
+    if ($this->smS2 == self::$SmS2Null) { return "SmS2Null"; }
+    elseif ($this->smS2 == self::$SmS2S2a) { return "SmS2S2a"; }
+    elseif ($this->smS2 == self::$SmS2S2b) { return "SmS2S2b"; }
+    return null;
+  }
+
+  public function getSmS3()
+  {
+    if ($this->smS3 == self::$SmS3Null) { return "SmS3Null"; }
+    elseif ($this->smS3 == self::$SmS3S3a) { return "SmS3S3a"; }
+    elseif ($this->smS3 == self::$SmS3S3b) { return "SmS3S3b"; }
+    return null;
+  }
+
+  public function e1()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS1)
+    {
+      $this->setSmS1(self::$SmS1S1a);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e4()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS2)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmS1);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e7()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS3)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmS2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterS1()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS1 = $this->smS1;
+    if ($aSmS1 == self::$SmS1Null)
+    {
+      $this->setSmS1(self::$SmS1S1a);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitS1()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS1 = $this->smS1;
+    if ($aSmS1 == self::$SmS1S1a)
+    {
+      $this->setSmS1(self::$SmS1Null);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSmS1 == self::$SmS1S1b)
+    {
+      $this->setSmS1(self::$SmS1Null);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e2()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS1 = $this->smS1;
+    if ($aSmS1 == self::$SmS1S1a)
+    {
+      $this->setSmS1(self::$SmS1S1b);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e3()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS1 = $this->smS1;
+    if ($aSmS1 == self::$SmS1S1b)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmS2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterS2()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS2 = $this->smS2;
+    if ($aSmS2 == self::$SmS2Null)
+    {
+      $this->setSmS2(self::$SmS2S2a);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitS2()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS2 = $this->smS2;
+    if ($aSmS2 == self::$SmS2S2a)
+    {
+      $this->setSmS2(self::$SmS2Null);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSmS2 == self::$SmS2S2b)
+    {
+      $this->setSmS2(self::$SmS2Null);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e5()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS2 = $this->smS2;
+    if ($aSmS2 == self::$SmS2S2a)
+    {
+      $this->setSmS2(self::$SmS2S2b);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e6()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS2 = $this->smS2;
+    if ($aSmS2 == self::$SmS2S2b)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmS3);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function enterS3()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS3 = $this->smS3;
+    if ($aSmS3 == self::$SmS3Null)
+    {
+      $this->setSmS3(self::$SmS3S3a);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitS3()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS3 = $this->smS3;
+    if ($aSmS3 == self::$SmS3S3a)
+    {
+      $this->setSmS3(self::$SmS3Null);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSmS3 == self::$SmS3S3b)
+    {
+      $this->setSmS3(self::$SmS3Null);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e8()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS3 = $this->smS3;
+    if ($aSmS3 == self::$SmS3S3a)
+    {
+      $this->setSmS3(self::$SmS3S3b);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function e9()
+  {
+    $wasEventProcessed = false;
+    
+    $aSmS3 = $this->smS3;
+    if ($aSmS3 == self::$SmS3S3b)
+    {
+      $this->exitSm();
+      $this->setSmS1(self::$SmS1S1a);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitSm()
+  {
+    if ($this->sm == self::$SmS1)
+    {
+      $this->exitS1();
+    }
+    elseif ($this->sm == self::$SmS2)
+    {
+      $this->exitS2();
+    }
+    elseif ($this->sm == self::$SmS3)
+    {
+      $this->exitS3();
+    }
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmS1)
+    {
+      if ($this->smS1 == self::$SmS1Null) { $this->setSmS1(self::$SmS1S1a); }
+    }
+    elseif ($this->sm == self::$SmS2)
+    {
+      if ($this->smS2 == self::$SmS2Null) { $this->setSmS2(self::$SmS2S2a); }
+    }
+    elseif ($this->sm == self::$SmS3)
+    {
+      if ($this->smS3 == self::$SmS3Null) { $this->setSmS3(self::$SmS3S3a); }
+    }
+  }
+
+  private function setSmS1($aSmS1)
+  {
+    $this->smS1 = $aSmS1;
+    if ($this->sm != self::$SmS1 && $aSmS1 != self::$SmS1Null) { $this->setSm(self::$SmS1); }
+  }
+
+  private function setSmS2($aSmS2)
+  {
+    $this->smS2 = $aSmS2;
+    if ($this->sm != self::$SmS2 && $aSmS2 != self::$SmS2Null) { $this->setSm(self::$SmS2); }
+  }
+
+  private function setSmS3($aSmS3)
+  {
+    $this->smS3 = $aSmS3;
+    if ($this->sm != self::$SmS3 && $aSmS3 != self::$SmS3Null) { $this->setSm(self::$SmS3); }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

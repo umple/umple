@@ -131,7 +131,6 @@ for (StateMachine smq : uClass.getStateMachines())
      {
        if (smq.isPooled())
        {%>
-         <%@ include file="queued_state_machine_returnMessageTypesForEachState.jet" %>
          <%@ include file="queued_state_machine_inner_class.jet" %>
          <%@ include file="queued_state_machine_queuedEvent.jet" %>
          <%@ include file="queued_state_machine_removalThread_run.jet" %>

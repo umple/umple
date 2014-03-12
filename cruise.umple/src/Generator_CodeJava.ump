@@ -401,39 +401,280 @@ class JavaGenerator
     else if ("listMessageTypesStates".equals(keyName))
     {
       String allEnums = "";
-      int i=0;
-      for(State state : sm.getStates())
+      
+      if(sm.getNestedStateMachines().isEmpty())
       {
-        i++;
-        if (allEnums.length() > 0)
+        for(State state : sm.getStates())
         {
-          allEnums += "\n  ";
-        }
-        allEnums+="List<MessageType> state";
-        allEnums+=i;
-        allEnums +="MsgTypeList= Arrays.asList(";
-        String allEventEnums = "";
-        for (Transition t : state.getTransitions())
-        {
-          if(!t.getEvent().isAutoTransition())
+          if (allEnums.length() > 0)
           {
-            if(!t.getEvent().getIsTimer())
+            allEnums += "\n  ";
+          }
+          allEnums+="  stateMessageMap.put(";
+          allEnums+=translate("type",sm);
+          allEnums+=".";
+          allEnums +=state.getName();
+          allEnums+=",new HashSet<MessageType>(Arrays.asList(";
+          String allEventEnums = "";
+          if(!state.getTransitions().isEmpty())
+          {
+            for (Transition t : state.getTransitions())
             {
-              if(!t.getEvent().isUnspecified())
+              if(!t.getEvent().isAutoTransition())
               {
-                if (allEventEnums.length() > 0)
+                if(!t.getEvent().getIsTimer())
                 {
-                  allEventEnums += ", ";
+                  if(!t.getEvent().isUnspecified())
+                  {
+                    if (allEventEnums.length() > 0)
+                    {
+                      allEventEnums += ", ";
+                    }
+                    allEventEnums += "MessageType.";
+                    allEventEnums += t.getEvent().getName();
+                    allEventEnums += "_M";
+                  }
                 }
-                allEventEnums += "MessageType.";
-                allEventEnums += t.getEvent().getName();
-                allEventEnums += "_M";
               }
             }
+          
+            int countingAutoTrans = 0;
+            int countingTimer = 0;
+            int countingUnspec = 0;
+            int countingResult = 0;
+            int countingSize = state.getTransitions().size();
+            for(Transition t : state.getTransitions())
+            {
+              if(t.getEvent().isAutoTransition())
+              {
+                countingAutoTrans++;
+              }
+              if(t.getEvent().getIsTimer())
+              {
+                countingTimer++;
+              }
+              if(t.getEvent().isUnspecified())
+              {
+                countingUnspec++;
+              }    
+            }
+            countingResult = countingAutoTrans+countingTimer+countingUnspec;
+            if(countingResult == countingSize)
+            {
+              allEventEnums += "MessageType.null_M";
+            }
           }
+          else if(state.getTransitions().isEmpty())
+          {
+            allEventEnums += "MessageType.null_M";
+          }
+          allEnums += allEventEnums;
+          allEnums += ")));";
         }
-        allEnums += allEventEnums;
-        allEnums += ");";
+      }
+      else if(!sm.getNestedStateMachines().isEmpty())
+      {
+        for(State state : sm.getStates())
+        {
+          if (allEnums.length() > 0)
+          {
+            allEnums += "\n  ";
+          }
+          allEnums+="  stateMessageMap.put(";
+          allEnums+=translate("type",sm);
+          allEnums+=".";
+          allEnums +=state.getName();
+          allEnums+=",new HashSet<MessageType>(Arrays.asList(";
+          String allEventEnums = "";
+          if(!state.getTransitions().isEmpty())
+          {
+            for (Transition t : state.getTransitions())
+            {
+              if(!t.getEvent().isAutoTransition())
+              {
+                if(!t.getEvent().getIsTimer())
+                {
+                  if(!t.getEvent().isUnspecified())
+                  {
+                    if (allEventEnums.length() > 0)
+                    {
+                      allEventEnums += ", ";
+                    }
+                    allEventEnums += "MessageType.";
+                    allEventEnums += t.getEvent().getName();
+                    allEventEnums += "_M";
+                  }
+                }
+              }
+            }
+          
+            int countAutoTrans = 0;
+            int countTimer = 0;
+            int countUnspec = 0;
+            int result = 0;
+            int size = state.getTransitions().size();
+            for(Transition t : state.getTransitions())
+            {
+              if(t.getEvent().isAutoTransition())
+              {
+                countAutoTrans++;
+              }
+              if(t.getEvent().getIsTimer())
+              {
+                countTimer++;
+              }
+              if(t.getEvent().isUnspecified())
+              {
+                countUnspec++;
+              }
+            }
+            result = countAutoTrans+countTimer+countUnspec;
+            if(result == size)
+            {
+              allEventEnums += "MessageType.null_M";
+            }
+          }
+          else if(state.getTransitions().isEmpty())
+          {
+            allEventEnums += "MessageType.null_M";
+          }
+          allEnums += allEventEnums;
+          allEnums += ")));";
+        }
+
+        String exitEveName ="";
+        String enterEveName ="";
+        for(StateMachine nsm : sm.getNestedStateMachines())
+        {
+          String exitEve=null;
+          String enterEve=null;
+          
+          if (nsm.getParentState() != null)
+          {
+            State parentState = nsm.getParentState();
+            exitEve = translate("exitMethod",parentState); //for parent stat of nsm
+            enterEve = translate("enterMethod",parentState);
+          }
+          for(State s:sm.getStates())
+          {
+            String exitE = translate("exitMethod",s);
+            String enterE = translate("enterMethod",s);
+            if(exitE.equals(exitEve) && enterE.equals(enterEve))
+            {
+              exitEveName = exitE;
+              enterEveName = enterE;
+              break;
+            }
+          }
+          for(State state : nsm.getStates())
+          {
+            if (allEnums.length() > 0)
+            {
+              allEnums += "\n  ";
+            }
+            allEnums+="  stateMessageMap.put(";
+            allEnums+=translate("type",nsm);
+            allEnums+=".";
+            allEnums +=state.getName();
+            allEnums+=",new HashSet<MessageType>(Arrays.asList(";
+            String allEventEnums = "";
+            if(!state.getTransitions().isEmpty())
+            {
+              for (Transition t : state.getTransitions())
+              {
+                if(!t.getEvent().isAutoTransition())
+                {
+                  if(!t.getEvent().getIsTimer())
+                  {
+                    if(!t.getEvent().isUnspecified())
+                    {
+                      if(!t.getEvent().getName().equals(exitEve))
+                      {
+                        if(!t.getEvent().getName().equals(enterEve))
+                        {
+                          if(!t.getEvent().getName().equals(exitEveName))
+                          {
+                            if(!t.getEvent().getName().equals(enterEveName))
+                            {
+                              if (allEventEnums.length() > 0)
+                              {
+                                allEventEnums += ", ";
+                              }
+                              allEventEnums += "MessageType.";
+                              allEventEnums += t.getEvent().getName();
+                              allEventEnums += "_M";
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            
+              int countNestedAutoTrans = 0;
+              int countNestedTimer = 0;
+              int countNestedUnspec = 0;
+              int nestedResult = 0;
+              int nestedSize = state.getTransitions().size();
+              for(Transition t : state.getTransitions())
+              {
+                if(t.getEvent().isAutoTransition())
+                {
+                  countNestedAutoTrans++;
+                }
+                if(t.getEvent().getIsTimer())
+                {
+                  countNestedTimer++;
+                }
+                if(t.getEvent().isUnspecified())
+                {
+                  countNestedUnspec++;
+                }
+              }
+              nestedResult = countNestedAutoTrans+countNestedTimer+countNestedUnspec;
+              if(nestedResult == nestedSize)
+              {
+                allEventEnums += "MessageType.null_M";
+              }
+          
+              String exEvent ="";
+              String enEvent ="";
+              int sizeTrans = state.getTransitions().size();
+              for(State s : sm.getStates())
+              {
+                int exCount = 0;
+                int enCount = 0;
+                int countResult = 0;
+                exEvent = translate("exitMethod",s);  
+                enEvent = translate("enterMethod",s);
+                for(Transition t : state.getTransitions())
+                {
+                  if(t.getEvent().getName().equals(exEvent))
+                  {
+                    exCount++;
+                  }
+                  if(t.getEvent().getName().equals(enEvent))
+                  {
+                    enCount++;
+                  }
+                }
+                countResult = exCount+enCount;
+                if(countResult == sizeTrans)
+                {
+                  allEventEnums += "MessageType.null_M";
+                }
+              }     
+            }
+            else if(state.getTransitions().isEmpty())
+            {
+              allEventEnums += "MessageType.null_M";
+            }
+            
+            allEnums += allEventEnums;
+            allEnums += ")));";
+          }       
+        }
       }
       return allEnums;
     } 
@@ -522,6 +763,391 @@ class JavaGenerator
     {
       return "delete";
     }
+    
+    else if ("listEventsForPooledSM".equals(keyName))
+    {
+      String allEnums = "";
+      
+      for(StateMachine sm : aClass.getStateMachines())
+      {
+        List<StateMachine> allNested = sm.getNestedStateMachines();
+        boolean nestedSMhasEvent=false;
+        
+        if (!sm.getNestedStateMachines().isEmpty() && !sm.getEvents().isEmpty())
+        {
+          for(StateMachine nestedSm : allNested)
+          {
+            for (Event event : nestedSm.getEvents())
+            {
+              if(event.getIsInternal() == false && event != null)
+              {
+                nestedSMhasEvent=true;
+              }
+            } 
+          }
+          if (nestedSMhasEvent == true)
+          {
+            String allNesEvenEnums = "";
+            String eveName="";
+            boolean sameEventName=false;
+            List<String> eveList=new ArrayList<String>();
+          
+            for(Event event : sm.getEvents())
+            {
+              if (!event.isAutoTransition())
+              {
+                if(!event.getIsTimer())
+                {
+                  if(!event.isUnspecified())
+                  {
+                    if (allEnums.length() > 0)
+                    {
+                      allEnums += ", ";
+                    }
+                    allEnums += translate("eventMethod",event);
+                    allEnums += "_M";
+                  }
+                }
+              }
+            }
+            if(allEnums.length() > 0 )
+            {
+              allEnums += ", ";
+            }
+            for (StateMachine nsm : sm.getNestedStateMachines())
+            {
+              for (Event event : nsm.getEvents())
+              {
+                for(int i=0; i<eveList.size(); i++)
+                {
+                  if(eveList.get(i)== event.getName())
+                  {
+                    sameEventName=true;
+                  }
+                }
+          
+                if(sameEventName == false)
+                {
+                  if(event.getIsInternal() == false)
+                  {
+                    if (!event.isAutoTransition())
+                    {
+                      if(!event.getIsTimer())
+                      {
+                        if(!event.isUnspecified())
+                        {
+                          if( eveName != event.getName())
+                          {
+                            eveList.add(event.getName());
+              
+                            if (allNesEvenEnums.length() > 0)
+                            {
+                              allNesEvenEnums += ", ";
+                            }
+                            allNesEvenEnums += translate("eventMethod",event);
+                            allNesEvenEnums += "_M"; 
+                            eveName=event.getName();
+                          } 
+                        }
+                      }
+                    }
+                  }
+                }
+                sameEventName=false;
+              }
+            }
+            allEnums += allNesEvenEnums;
+            nestedSMhasEvent=false;
+          }
+          else
+          {
+            for(Event event : sm.getEvents())
+            {
+              if (!event.isAutoTransition())
+              {
+                if(!event.getIsTimer())
+                {
+                  if(!event.isUnspecified())
+                  {
+                    if (allEnums.length() > 0)
+                    {
+                      allEnums += ", ";
+                    }
+                    allEnums += translate("eventMethod",event);
+                    allEnums += "_M";
+                  }
+                }
+              }
+            }
+          }  
+        }
+        else if (!sm.getNestedStateMachines().isEmpty() && sm.getEvents().isEmpty())
+        {
+          String eveName="";
+          boolean sameEventName=false;
+          List<String> eveList=new ArrayList<String>();
+          for (StateMachine nsm : sm.getNestedStateMachines())
+          {
+            for (Event event : nsm.getEvents())
+            {
+              for(int i=0; i<eveList.size(); i++)
+              {
+                if(eveList.get(i)== event.getName())
+                {
+                  sameEventName=true;
+                }
+              }
+          
+              if(sameEventName == false)
+              {
+                if(event.getIsInternal() == false)
+                {
+                  if (!event.isAutoTransition())
+                  {
+                    if(!event.getIsTimer())
+                    {
+                      if(!event.isUnspecified())
+                      {
+                        if( eveName != event.getName())
+                        {
+                          eveList.add(event.getName());
+              
+                          if (allEnums.length() > 0 )
+                          {
+                            allEnums += ", ";
+                          }
+                          allEnums += translate("eventMethod",event);
+                          allEnums += "_M"; 
+                          eveName=event.getName();
+                        }
+                      }
+                    } 
+                  }
+                }
+              }
+              sameEventName=false;
+            }
+          }
+        }
+        else
+        {
+          for(Event event : sm.getEvents())
+          {
+            if (!event.isAutoTransition())
+            {
+              if(!event.getIsTimer())
+              {
+                if(!event.isUnspecified())
+                {
+                  if (allEnums.length() > 0)
+                  {
+                    allEnums += ", ";
+                  }
+                  allEnums += translate("eventMethod",event);
+                  allEnums += "_M";
+                }
+              }
+            }
+          }
+        }
+
+        if(sm.getNestedStateMachines().isEmpty())
+        {
+          for(State state : sm.getStates())
+          {
+            if(!state.getTransitions().isEmpty())
+            {
+              int cAutoTrans = 0;
+              int cTimer = 0;
+              int cUnspec = 0;
+              int cResult = 0;
+              int cSize = state.getTransitions().size();
+              for(Transition t : state.getTransitions())
+              {
+                if(t.getEvent().isAutoTransition())
+                {
+                  cAutoTrans++;
+                }
+                if(t.getEvent().getIsTimer())
+                {
+                  cTimer++;
+                }
+                if(t.getEvent().isUnspecified())
+                {
+                  cUnspec++;
+                }
+              }
+              cResult = cAutoTrans+cTimer+cUnspec;
+              if(cSize == cResult)
+              {
+                if (!allEnums.contains("null_M"))
+                {
+                  if(!allEnums.equals(""))
+                  {
+                    allEnums += ", null_M";
+                  }
+                  else
+                  {
+                    allEnums += "null_M";
+                  }
+                }
+              }
+            }
+            else if(state.getTransitions().isEmpty())
+            {
+              if (!allEnums.contains("null_M")) 
+              {
+                if(!allEnums.equals(""))
+                {
+                  allEnums += ", null_M";
+                }
+                else
+                {
+                  allEnums += "null_M";
+                }
+              }
+            }
+          }
+        }
+        else if(!sm.getNestedStateMachines().isEmpty())
+        {
+          for(State state : sm.getStates())
+          {
+            if(!state.getTransitions().isEmpty())
+            {
+              int countAutoTrans = 0;
+              int countTimer = 0;
+              int countUnspec = 0;
+              int result = 0;
+              int size = state.getTransitions().size();
+              for(Transition t : state.getTransitions())
+              {
+                if(t.getEvent().isAutoTransition())
+                {
+                  countAutoTrans++;
+                }
+                if(t.getEvent().getIsTimer())
+                {
+                  countTimer++;
+                }
+                if(t.getEvent().isUnspecified())
+                {
+                  countUnspec++;
+                }
+              }
+              result = countAutoTrans+countTimer+countUnspec;
+              if(result == size)
+              {
+                if (!allEnums.contains("null_M")) 
+                {
+                  if(!allEnums.equals(""))
+                  {
+                    allEnums += ", null_M";
+                  }
+                  else
+                  {
+                    allEnums += "null_M";
+                  }
+                }
+              }
+            }
+            else if(state.getTransitions().isEmpty())
+            {
+              if (!allEnums.contains("null_M")) 
+              {
+                if(!allEnums.equals(""))
+                {
+                  allEnums += ", null_M";
+                }
+                else
+                {
+                  allEnums += "null_M";
+                }
+              }
+            }
+          }
+          for(StateMachine nsm : sm.getNestedStateMachines())
+          {
+            String exitEve=null;
+            String enterEve=null;
+            if (nsm.getParentState() != null)
+            {
+              State parentState = nsm.getParentState();
+              exitEve = translate("exitMethod",parentState);
+              enterEve = translate("enterMethod",parentState);
+            }
+        
+            for(State state : nsm.getStates())
+            {
+              String allEventEnums = "";
+              if(!state.getTransitions().isEmpty())
+              { 
+                int countNestedAutoTrans = 0;
+                int countNestedTimer = 0;
+                int countNestedUnspec = 0;
+                int countExit = 0;
+                int countEnter = 0;
+                int nestedResult = 0;
+                int nestedSize = state.getTransitions().size();
+                for(Transition t : state.getTransitions())
+                {
+                  if(t.getEvent().isAutoTransition())
+                  {
+                    countNestedAutoTrans++;
+                  }
+                  if(t.getEvent().getIsTimer())
+                  {
+                    countNestedTimer++;
+                  }
+                  if(t.getEvent().isUnspecified())
+                  {
+                    countNestedUnspec++;
+                  }
+                  if(t.getEvent().getName().equals(exitEve))
+                  {
+                    countExit++;
+                  }
+                  if(t.getEvent().getName().equals(enterEve))
+                  {
+                    countEnter++;
+                  }
+                }
+                nestedResult = countNestedAutoTrans+countNestedTimer+countNestedUnspec+countExit+countEnter;
+                if(nestedResult == nestedSize)
+                {
+                  if (!allEnums.contains("null_M")) 
+                  {
+                    if(!allEnums.equals(""))
+                    {
+                      allEnums += ", null_M";
+                    }
+                    else
+                    {
+                      allEnums += "null_M";
+                    }
+                  }
+                }
+              }
+              else if(state.getTransitions().isEmpty())
+              {
+                if (!allEnums.contains("null_M")) 
+                {
+                  if(!allEnums.equals(""))
+                  {
+                    allEnums += ", null_M";
+                  }
+                  else
+                  {
+                    allEnums += "null_M";
+                  }
+                }
+              }
+            }        
+          }
+        }
+      }
+      return allEnums;
+    } 
     
     return "UNKNOWN ID: " + keyName;
   }

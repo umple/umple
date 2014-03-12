@@ -18,15 +18,19 @@ public class Course implements Runnable
   enum Status { Open, Full }
   private Status status;
   
-  //enumeration type of messages accepted by Course
-  enum MessageType { register_M, reject_M }
-  
   MessagePool pool;
   Thread removal;
+  
+  //enumeration type of messages accepted by Course
+  enum MessageType { register_M, reject_M }
 
-  // A list of message types for each state of the Course
-  List<MessageType> state1MsgTypeList= Arrays.asList(MessageType.register_M);
-  List<MessageType> state2MsgTypeList= Arrays.asList(MessageType.reject_M);
+  // Map for a Course pooled state machine that allows querying which events are possible in each map
+
+  public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();
+  static {
+    stateMessageMap.put(Status.Open,new HashSet<MessageType>(Arrays.asList(MessageType.register_M)));
+    stateMessageMap.put(Status.Full,new HashSet<MessageType>(Arrays.asList(MessageType.reject_M)));
+  }
 
   //------------------------
   // CONSTRUCTOR
@@ -100,22 +104,6 @@ public class Course implements Runnable
   public void delete()
   {}
 
-  // A method to return a list of message types for each state of the Coursestate machine
-  public List<MessageType> getStateMsgTypeList(Status state){
-    List<MessageType> msg = null;
-    switch (state)
-    {
-      case Open:
-        msg=state1MsgTypeList;
-        break;
-      case Full:
-        msg=state2MsgTypeList;
-        break;
-      default:
-    }
-    return msg;
-  }
-
   private class Message
   {
     MessageType type;
@@ -141,17 +129,14 @@ public class Course implements Runnable
 
     public synchronized Message getNext()
     {
-      List<MessageType> processableMessages;
-      // return a list of message types for the current state
-      processableMessages = getStateMsgTypeList(getStatus());
       Message message=null;
 
       try {
-        message=getNextProcessableMessage(processableMessages);
+        message=getNextProcessableMessage();
         while (message==null)
         {
           wait();
-          message=getNextProcessableMessage(processableMessages);
+          message=getNextProcessableMessage();
         }
       } catch (InterruptedException e) { e.printStackTrace(); }
 
@@ -159,12 +144,14 @@ public class Course implements Runnable
       return (message);
     }
 
-    public Message getNextProcessableMessage(List<MessageType> processableMessages)
+    public Message getNextProcessableMessage()
     {
-      // Iterate through messages and remove the first message that matches one of the processableMessages list
+      // Iterate through messages and remove the first message that matches one of the Messages list
       // otherwise return null
-      for (Message msg: messages){
-        if(processableMessages.contains(msg.type)){
+      for (Message msg: messages)
+      {
+        if(stateMessageMap.get(getStatus()).contains(msg.type))
+        {
           //The element to be removed
           messages.remove(msg);
           return (msg);

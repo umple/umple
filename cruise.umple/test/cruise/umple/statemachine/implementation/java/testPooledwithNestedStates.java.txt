@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3552 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 
 import java.util.*;
@@ -15,26 +15,27 @@ public class X implements Runnable
   //------------------------
 
   //X State Machines
-  enum Sm { s1, s2, s3 }
+  enum Sm { s1, s2 }
+  enum SmS2 { Null, s2a, s2b }
   private Sm sm;
+  private SmS2 smS2;
   
   MessagePool pool;
   Thread removal;
   
   //enumeration type of messages accepted by X
-  enum MessageType { e1_M, null_M }
+  enum MessageType { e1_M, e2_M, e3_M, e4_M, e5_M, null_M }
 
   // Map for a X pooled state machine that allows querying which events are possible in each map
 
   public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();
   static {
-    stateMessageMap.put(Sm.s1,new HashSet<MessageType>(Arrays.asList(MessageType.e1_M)));
-    stateMessageMap.put(Sm.s2,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
-    stateMessageMap.put(Sm.s3,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(Sm.s1,new HashSet<MessageType>(Arrays.asList(MessageType.e1_M, MessageType.e2_M)));
+    stateMessageMap.put(Sm.s2,new HashSet<MessageType>(Arrays.asList(MessageType.e3_M)));
+    stateMessageMap.put(SmS2.Null,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(SmS2.s2a,new HashSet<MessageType>(Arrays.asList(MessageType.e4_M)));
+    stateMessageMap.put(SmS2.s2b,new HashSet<MessageType>(Arrays.asList(MessageType.e5_M)));
   }
-
-  //Helper Variables
-  private TimedEventHandler timeouts2Tos3Handler;
 
   //------------------------
   // CONSTRUCTOR
@@ -42,6 +43,7 @@ public class X implements Runnable
 
   public X()
   {
+    setSmS2(SmS2.Null);
     setSm(Sm.s1);
     pool = new MessagePool();
     removal=new Thread(this);
@@ -56,12 +58,18 @@ public class X implements Runnable
   public String getSmFullName()
   {
     String answer = sm.toString();
+    if (smS2 != SmS2.Null) { answer += "." + smS2.toString(); }
     return answer;
   }
 
   public Sm getSm()
   {
     return sm;
+  }
+
+  public SmS2 getSmS2()
+  {
+    return smS2;
   }
 
   public boolean _e1()
@@ -82,7 +90,7 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1__()
+  public boolean _e2()
   {
     boolean wasEventProcessed = false;
     
@@ -90,7 +98,7 @@ public class X implements Runnable
     switch (aSm)
     {
       case s1:
-        setSm(Sm.s3);
+        setSmS2(SmS2.s2b);
         wasEventProcessed = true;
         break;
       default:
@@ -100,7 +108,7 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean timeouts2Tos3()
+  public boolean _e3()
   {
     boolean wasEventProcessed = false;
     
@@ -109,7 +117,83 @@ public class X implements Runnable
     {
       case s2:
         exitSm();
-        setSm(Sm.s3);
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterS2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2 aSmS2 = smS2;
+    switch (aSmS2)
+    {
+      case Null:
+        setSmS2(SmS2.s2a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitS2()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2 aSmS2 = smS2;
+    switch (aSmS2)
+    {
+      case s2a:
+        setSmS2(SmS2.Null);
+        wasEventProcessed = true;
+        break;
+      case s2b:
+        setSmS2(SmS2.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _e4()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2 aSmS2 = smS2;
+    switch (aSmS2)
+    {
+      case s2a:
+        setSmS2(SmS2.s2b);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _e5()
+  {
+    boolean wasEventProcessed = false;
+    
+    SmS2 aSmS2 = smS2;
+    switch (aSmS2)
+    {
+      case s2b:
+        setSmS2(SmS2.s2a);
         wasEventProcessed = true;
         break;
       default:
@@ -124,7 +208,7 @@ public class X implements Runnable
     switch(sm)
     {
       case s2:
-        stopTimeouts2Tos3Handler();
+        exitS2();
         break;
     }
   }
@@ -136,58 +220,16 @@ public class X implements Runnable
     // entry actions and do activities
     switch(sm)
     {
-      case s1:
-        __autotransition1__();
-        break;
       case s2:
-        startTimeouts2Tos3Handler();
+        if (smS2 == SmS2.Null) { setSmS2(SmS2.s2a); }
         break;
     }
   }
 
-  private void startTimeouts2Tos3Handler()
+  private void setSmS2(SmS2 aSmS2)
   {
-    timeouts2Tos3Handler = new TimedEventHandler(this,"timeouts2Tos3",10);
-  }
-
-  private void stopTimeouts2Tos3Handler()
-  {
-    timeouts2Tos3Handler.stop();
-  }
-
-  public static class TimedEventHandler extends TimerTask  
-  {
-    private X controller;
-    private String timeoutMethodName;
-    private double howLongInSeconds;
-    private Timer timer;
-    
-    public TimedEventHandler(X aController, String aTimeoutMethodName, double aHowLongInSeconds)
-    {
-      controller = aController;
-      timeoutMethodName = aTimeoutMethodName;
-      howLongInSeconds = aHowLongInSeconds;
-      timer = new Timer();
-      timer.schedule(this, (long)howLongInSeconds*1000);
-    }
-    
-    public void stop()
-    {
-      timer.cancel();
-    }
-    
-    public void run ()
-    {
-      if ("timeouts2Tos3".equals(timeoutMethodName))
-      {
-        boolean shouldRestart = !controller.timeouts2Tos3();
-        if (shouldRestart)
-        {
-          controller.startTimeouts2Tos3Handler();
-        }
-        return;
-      }
-    }
+    smS2 = aSmS2;
+    if (sm != Sm.s2 && aSmS2 != SmS2.Null) { setSm(Sm.s2); }
   }
 
   public void delete()
@@ -245,6 +287,12 @@ public class X implements Runnable
           messages.remove(msg);
           return (msg);
         }
+        else if(stateMessageMap.get(getSmS2()).contains(msg.type))
+        {
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
       }
       return null;
     }
@@ -257,6 +305,26 @@ public class X implements Runnable
   public void e1 ()
   {
     pool.put(new Message(MessageType.e1_M, null));
+  }
+
+  public void e2 ()
+  {
+    pool.put(new Message(MessageType.e2_M, null));
+  }
+
+  public void e3 ()
+  {
+    pool.put(new Message(MessageType.e3_M, null));
+  }
+
+  public void e4 ()
+  {
+    pool.put(new Message(MessageType.e4_M, null));
+  }
+
+  public void e5 ()
+  {
+    pool.put(new Message(MessageType.e5_M, null));
   }
 
   
@@ -272,6 +340,18 @@ public class X implements Runnable
       {
         case e1_M:
           status = _e1();
+          break;
+        case e2_M:
+          status = _e2();
+          break;
+        case e3_M:
+          status = _e3();
+          break;
+        case e4_M:
+          status = _e4();
+          break;
+        case e5_M:
+          status = _e5();
           break; 
         default:
       }

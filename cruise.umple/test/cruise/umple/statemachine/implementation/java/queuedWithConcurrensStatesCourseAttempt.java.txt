@@ -79,7 +79,7 @@ public class CourseAttempt implements Runnable
     return courseAttemptSMFinalExam;
   }
 
-  private boolean __autotransition2__()
+  private boolean __autotransition1__()
   {
     boolean wasEventProcessed = false;
     
@@ -240,7 +240,7 @@ public class CourseAttempt implements Runnable
         if (courseAttemptSMLab1 == CourseAttemptSMLab1.Null) { setCourseAttemptSMLab1(CourseAttemptSMLab1.lab1); }
         if (courseAttemptSMTermProject == CourseAttemptSMTermProject.Null) { setCourseAttemptSMTermProject(CourseAttemptSMTermProject.termProject); }
         if (courseAttemptSMFinalExam == CourseAttemptSMFinalExam.Null) { setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.finalExam); }
-        __autotransition2__();
+        __autotransition1__();
         break;
     }
   }

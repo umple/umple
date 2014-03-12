@@ -24,16 +24,27 @@ public class CourseAttempt implements Runnable
   private CourseAttemptSMTermProject courseAttemptSMTermProject;
   private CourseAttemptSMFinalExam courseAttemptSMFinalExam;
   
-  //enumeration type of messages accepted by CourseAttempt
-  enum MessageType { lab1Done_M, fail_M }
-  
   MessagePool pool;
   Thread removal;
+  
+  //enumeration type of messages accepted by CourseAttempt
+  enum MessageType { lab1Done_M, fail_M, null_M }
 
-  // A list of message types for each state of the CourseAttempt
-  List<MessageType> state1MsgTypeList= Arrays.asList();
-  List<MessageType> state2MsgTypeList= Arrays.asList();
-  List<MessageType> state3MsgTypeList= Arrays.asList();
+  // Map for a CourseAttempt pooled state machine that allows querying which events are possible in each map
+
+  public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();
+  static {
+    stateMessageMap.put(CourseAttemptSM.studying,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(CourseAttemptSM.failed,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(CourseAttemptSM.passed,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(CourseAttemptSMLab1.Null,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(CourseAttemptSMLab1.lab1,new HashSet<MessageType>(Arrays.asList(MessageType.lab1Done_M)));
+    stateMessageMap.put(CourseAttemptSMLab1.lab2,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(CourseAttemptSMTermProject.Null,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(CourseAttemptSMTermProject.termProject,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(CourseAttemptSMFinalExam.Null,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(CourseAttemptSMFinalExam.finalExam,new HashSet<MessageType>(Arrays.asList(MessageType.fail_M)));
+  }
 
   //------------------------
   // CONSTRUCTOR
@@ -250,7 +261,7 @@ public class CourseAttempt implements Runnable
     }
   }
 
-  @umplesourcefile(line={12}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={261}, length={1})
+  @umplesourcefile(line={12}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={272}, length={1})
   private void exitCourseAttemptSMLab1()
   {
     switch(courseAttemptSMLab1)
@@ -267,7 +278,7 @@ public class CourseAttempt implements Runnable
     if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMLab1 != CourseAttemptSMLab1.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
-  @umplesourcefile(line={18}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={279}, length={1})
+  @umplesourcefile(line={18}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={290}, length={1})
   private void exitCourseAttemptSMTermProject()
   {
     switch(courseAttemptSMTermProject)
@@ -284,7 +295,7 @@ public class CourseAttempt implements Runnable
     if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMTermProject != CourseAttemptSMTermProject.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
-  @umplesourcefile(line={25}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={297}, length={1})
+  @umplesourcefile(line={25}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={308}, length={1})
   private void exitCourseAttemptSMFinalExam()
   {
     switch(courseAttemptSMFinalExam)
@@ -303,25 +314,6 @@ public class CourseAttempt implements Runnable
 
   public void delete()
   {}
-
-  // A method to return a list of message types for each state of the CourseAttemptstate machine
-  public List<MessageType> getStateMsgTypeList(CourseAttemptSM state){
-    List<MessageType> msg = null;
-    switch (state)
-    {
-      case studying:
-        msg=state1MsgTypeList;
-        break;
-      case failed:
-        msg=state2MsgTypeList;
-        break;
-      case passed:
-        msg=state3MsgTypeList;
-        break;
-      default:
-    }
-    return msg;
-  }
 
   private class Message
   {
@@ -348,17 +340,14 @@ public class CourseAttempt implements Runnable
 
     public synchronized Message getNext()
     {
-      List<MessageType> processableMessages;
-      // return a list of message types for the current state
-      processableMessages = getStateMsgTypeList(getCourseAttemptSM());
       Message message=null;
 
       try {
-        message=getNextProcessableMessage(processableMessages);
+        message=getNextProcessableMessage();
         while (message==null)
         {
           wait();
-          message=getNextProcessableMessage(processableMessages);
+          message=getNextProcessableMessage();
         }
       } catch (InterruptedException e) { e.printStackTrace(); }
 
@@ -366,12 +355,32 @@ public class CourseAttempt implements Runnable
       return (message);
     }
 
-    public Message getNextProcessableMessage(List<MessageType> processableMessages)
+    public Message getNextProcessableMessage()
     {
-      // Iterate through messages and remove the first message that matches one of the processableMessages list
+      // Iterate through messages and remove the first message that matches one of the Messages list
       // otherwise return null
-      for (Message msg: messages){
-        if(processableMessages.contains(msg.type)){
+      for (Message msg: messages)
+      {
+        if(stateMessageMap.get(getCourseAttemptSM()).contains(msg.type))
+        {
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+        else if(stateMessageMap.get(getCourseAttemptSMLab1()).contains(msg.type))
+        {
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+        else if(stateMessageMap.get(getCourseAttemptSMTermProject()).contains(msg.type))
+        {
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+        else if(stateMessageMap.get(getCourseAttemptSMFinalExam()).contains(msg.type))
+        {
           //The element to be removed
           messages.remove(msg);
           return (msg);
