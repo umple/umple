@@ -58,7 +58,11 @@ public class ConsoleTracerTest
 			String[] stmTraceExpected = {
 					"sm_t,Open,buttonOrObstacle,Closing",
 					"sm_t,Closing,reachBottom,Closed",
-					"sm_t,Open,buttonOrObstacle,Closing"
+					"sm_t,Open,buttonOrObstacle,Closing",
+					"sm_t,Closing,reachBottom,Closed",
+					"sm_e,Closed,action={openGarageLights();},GarageDoor",
+					"sm_t,Closing,reachBottom,Closed",
+					"sm_e,Closed,action={openGarageLights();},GarageDoor",
 
 			};
 			
@@ -160,12 +164,21 @@ public class ConsoleTracerTest
 	  
 	  //==== invoke state machine tracing
 	  
-	  TraceStm sTrace = new TraceStm();
-	  sTrace.buttonOrObstacle();
-	  sTrace.reachBottom();
-	  sTrace.buttonOrObstacle();
-	  sTrace.reachTop();
-	  sTrace.buttonOrObstacle();
+	  GarageDoorA gaTrace = new GarageDoorA();
+	  gaTrace.buttonOrObstacle();
+	  gaTrace.reachBottom();
+	  gaTrace.buttonOrObstacle();
+	  gaTrace.reachTop();
+	  gaTrace.buttonOrObstacle();
+	  
+	  GarageDoorB gbTrace = new GarageDoorB();
+	  gbTrace.buttonOrObstacle();
+	  gbTrace.reachBottom();
+	  gbTrace.buttonOrObstacle();
+	  gbTrace.reachTop();
+	  gbTrace.buttonOrObstacle();
+	  gbTrace.reachBottom();
+
 	  //System.out.println("Garage = "+sTrace.getGaragDoor());
 
 
