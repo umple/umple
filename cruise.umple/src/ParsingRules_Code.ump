@@ -946,23 +946,35 @@ class ParsingCouple
   */
   public ParsingCouple init(String input){
     int level = 0;
-    boolean isQuote = false;
-    boolean isSingleQuote = false;
-    boolean isComment = false;
-    boolean isMultiComment = false;
+    String[] quoteLikeOpen = new String[] {"//","/*","\"","\'"};
+    String[] quoteLikeClose = new String[] {"\n","*/","\"","\'"};
+    String[] braceLikeOpen = new String[] {"<<!","<<#","<</*","<<="};
+    String[] braceLikeClose = new String[] {"!>>","#>>","*/>>",">>"}; 
+    int quoteLikeIndex = -1;
+    int braceLikeIndex = -1;
+    boolean braceLike = false;
+    for(int i=0;i<braceLikeOpen.length;++i)
+    {
+      if((braceLikeOpen[i]+braceLikeClose[i]).equals(open+close))
+      {
+        braceLike = true;
+      }
+    }
     boolean escaping = false;
     char[] chars = input.toCharArray();
     int size = input.length();
     List<Integer> levels = new ArrayList<Integer>();
+    //System.out.println(open+close);
     for(int i=0;i<size;i++)
     {
+      //System.out.print((quoteLikeIndex==-1?"":quoteLikeOpen[quoteLikeIndex])+level+chars[i]);
       if(!escaping)
       {
         if(chars[i]=='\\')
         {
           escaping = true;
         }
-        else if(!isComment&&!isMultiComment&&!isQuote&&!isSingleQuote)
+        else if(quoteLikeIndex==-1&&(braceLikeIndex==-1||braceLike))
         {
           if(level>0&&(close.length()==1&&close.charAt(0)==(chars[i]))||(close.length()>1&&(i+close.length()<input.length()?input.substring(i,i+close.length()).matches("\\Q"+close+"\\E"):false)))
           {            
@@ -976,12 +988,12 @@ class ParsingCouple
               positionFrom.add(levels.get(level));
               positionTo.add(new Integer(i));
             }
-            if("\"".equals(close))
+            if(braceLikeIndex!=-1&&braceLikeClose[braceLikeIndex].equals(close))
             {
-              isQuote = false;
+              braceLikeIndex = -1;
             }
           }            
-          else if((open.length()==1&&open.charAt(0)==(chars[i]))||open.length()>1&&(i+open.length()<input.length()?input.substring(i,i+open.length()).matches("\\Q"+open+"\\E"):false))
+          else if((open.length()==1&&open.charAt(0)==(chars[i]))||open.length()>1&&(i+open.length()<input.length()?input.substring(i,i+open.length()).equals(open):false))
           {
             if(levels.size()<=level)
             {
@@ -992,42 +1004,51 @@ class ParsingCouple
               levels.set(level, i);
             }
             level++;
-            if("\"".equals(open))
+            for(int j=0;j<quoteLikeOpen.length;++j)
             {
-              isQuote = true;
+              String quoteLike = quoteLikeOpen[j];
+              if(quoteLike.equals(open)){
+                quoteLikeIndex = j;
+                break;
+              }
             }
+            for(int j=0;j<braceLikeOpen.length;++j)
+            {
+              String brace = braceLikeOpen[j];
+              if(brace.equals(open)){
+                braceLikeIndex = j;
+                break;
+              }
+            }
+            i+=open.length()-1;
           }            
           else if (level>ParsingCouple.ignoreLevel)
           {
-            if(chars[i]=='\"')
+            for(int j=0;j<quoteLikeOpen.length;++j)
             {
-              isQuote = true;
-            }
-            else if(chars[i]=='\'')
-            {
-              isSingleQuote = true;
-            }
-            if(i<size-1&&chars[i]=='/')
-            {
-              if(chars[i+1]=='/')
-              {
-                isComment = true;
+              String quoteLike = quoteLikeOpen[j];
+              if(i+quoteLike.length()<input.length()?input.substring(i,i+quoteLike.length()).equals(quoteLike):false){
+                i+=quoteLike.length()-1;
+                quoteLikeIndex = j;
+                break;
               }
-              else if(chars[i+1]=='*')
-              {
-                isMultiComment = true;
-                i++;
+            }
+            for(int j=0;j<braceLikeOpen.length;++j)
+            {
+              String brace = braceLikeOpen[j];
+              if(i+brace.length()<input.length()?input.substring(i,i+brace.length()).equals(brace):false){
+                i+=brace.length()-1;
+                braceLikeIndex = j;
+                break;
               }
             }
           }
         }          
-        else if(isQuote&&chars[i]=='\"')
+        else if(quoteLikeIndex!=-1&&(i+quoteLikeClose[quoteLikeIndex].length()<input.length()?input.substring(i,i+quoteLikeClose[quoteLikeIndex].length()).equals(quoteLikeClose[quoteLikeIndex]):false))
         {
-          isQuote = false;
-          
-          if("\"".equals(close))
+          if(level>0&&quoteLikeClose[quoteLikeIndex].equals(close))
           {
-        	level--;
+            level--;
             if(level<0)
             {
               level=0;
@@ -1038,19 +1059,25 @@ class ParsingCouple
               positionTo.add(new Integer(i));
             }
           }
+          quoteLikeIndex = -1;
         }
-        else if(isSingleQuote&&chars[i]=='\'')
+        else if(braceLikeIndex!=-1&&(i+braceLikeClose[braceLikeIndex].length()<input.length()?input.substring(i,i+braceLikeClose[braceLikeIndex].length()).equals(braceLikeClose[braceLikeIndex]):false))
         {
-          isSingleQuote = false;
+          if(level>0&&braceLikeClose[braceLikeIndex].equals(close))
+          {
+            level--;
+            if(level<0)
+            {
+              level=0;
+            }
+            else
+            {
+              positionFrom.add(levels.get(level));
+              positionTo.add(new Integer(i));
+            }
+          }
+          braceLikeIndex = -1;
         }
-        else if(isComment&&chars[i]=='\n')
-        {
-          isComment = false;
-        }
-        else if(isMultiComment&&i<size-1&&chars[i]=='*'&&chars[i+1]=='/')
-        {
-          isMultiComment = false;
-        }          
         else {
           escaping = false;
         }      
