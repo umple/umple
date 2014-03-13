@@ -1,0 +1,146 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.StringTracer;
+import java.util.Date;
+
+public class Tracer
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer State Machines
+  enum GarageDoor { Open, Closing, Closed, Opening, HalfOpen }
+  private GarageDoor GarageDoor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer()
+  {
+    setGarageDoor(GarageDoor.Open);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getGarageDoorFullName()
+  {
+    String answer = GarageDoor.toString();
+    return answer;
+  }
+
+  public GarageDoor getGarageDoor()
+  {
+    return GarageDoor;
+  }
+
+  public boolean buttonOrObstacle()
+  {
+    boolean wasEventProcessed = false;
+    
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
+    {
+      case Open:
+        setGarageDoor(GarageDoor.Closing);
+        wasEventProcessed = true;
+        break;
+      case Closing:
+        setGarageDoor(GarageDoor.Opening);
+        wasEventProcessed = true;
+        break;
+      case Closed:
+        setGarageDoor(GarageDoor.Opening);
+        wasEventProcessed = true;
+        break;
+      case Opening:
+        setGarageDoor(GarageDoor.HalfOpen);
+        wasEventProcessed = true;
+        break;
+      case HalfOpen:
+        setGarageDoor(GarageDoor.Opening);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean reachBottom()
+  {
+    boolean wasEventProcessed = false;
+    
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
+    {
+      case Closing:
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorEntryState.ump,31,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,reachBottom,Closed" );
+        setGarageDoor(GarageDoor.Closed);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean reachTop()
+  {
+    boolean wasEventProcessed = false;
+    
+    GarageDoor aGarageDoor = GarageDoor;
+    switch (aGarageDoor)
+    {
+      case Opening:
+        setGarageDoor(GarageDoor.Open);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setGarageDoor(GarageDoor aGarageDoor)
+  {
+    GarageDoor = aGarageDoor;
+
+    // entry actions and do activities
+    switch(GarageDoor)
+    {
+      case Open:
+        closeGarageLights();
+        break;
+      case Closed:
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorEntryState.ump,31,Tracer,"+System.identityHashCode(this)+",sm_e,Closed,action={openGarageLights();},GarageDoor" );
+        openGarageLights();
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+  @umplesourcefile(line={33},file={"TraceGarageDoorEntryState.ump"},javaline={141},length={3})
+  public void openGarageLights(){
+    
+  }
+
+  @umplesourcefile(line={34},file={"TraceGarageDoorEntryState.ump"},javaline={146},length={3})
+  public void closeGarageLights(){
+    
+  }
+
+}

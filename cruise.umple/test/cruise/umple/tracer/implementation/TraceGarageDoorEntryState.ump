@@ -1,0 +1,35 @@
+namespace example;
+
+class Tracer
+{
+    GarageDoor {
+      	
+      	Open { 
+          buttonOrObstacle -> Closing;
+          entry / { closeGarageLights(); }
+          }
+      	
+      	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed {
+          buttonOrObstacle -> Opening;
+          entry / { openGarageLights(); }
+          }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
+    }
+    
+    // trace state entry
+    trace entry Closed;
+  
+    void openGarageLights() {}
+    void closeGarageLights() {}
+}
