@@ -1,0 +1,194 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+#include "X.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ X::X()
+  {
+    setSm(s1);
+    setSm2(sm21);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ X::X(const X & x)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ X X::operator=(const X & x)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string X::getSmFullName()
+  {
+    string answer = getSmStringName(sm);
+    return answer;
+  }
+  
+  string X::getSm2FullName()
+  {
+    string answer = getSm2StringName(sm2);
+    return answer;
+  }
+  
+  X::Sm X::getSm()
+  {
+    return sm;
+  }
+
+  string X::getSmStringName (Sm sm)
+  {
+    switch (sm)  {
+      case 0 : {return "s1"; break;}
+      case 1 : {return "s2"; break;}
+      case 2 : {return "s3"; break;}
+      case 3 : {return "s4"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  X::Sm2 X::getSm2()
+  {
+    return sm2;
+  }
+
+  string X::getSm2StringName (Sm2 sm2)
+  {
+    switch (sm2)  {
+      case 0 : {return "sm21"; break;}
+      case 1 : {return "sm22"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool X::ev1()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s1:
+        setSm(s2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    switch (sm2)
+    {
+      case sm21:
+        setSm2(sm22);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::ev5()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s1:
+        setSm(s2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::ev2()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s2:
+        setSm(s3);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::ev3()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s3:
+        setSm(s4);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::ev4()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s4:
+        setSm(s1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::ev7()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm2)
+    {
+      case sm22:
+        setSm2(sm21);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void X::setSm(Sm aSm)
+  {
+    sm = aSm;
+  }
+  
+
+  void X::setSm2(Sm2 aSm2)
+  {
+    sm2 = aSm2;
+  }
+  
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+X::~X()
+  {}

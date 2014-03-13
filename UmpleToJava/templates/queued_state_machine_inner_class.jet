@@ -23,7 +23,8 @@
   appendln(stringBuffer,"      notify();");
   appendln(stringBuffer,"    }");
   appendln(stringBuffer,"");   
-  if (smq.isQueued()){
+  if (smq.isQueued())
+  {
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      try {");
@@ -39,7 +40,8 @@
     appendln(stringBuffer,"    }");
     append(stringBuffer,"  }");  
   }
-  else if(smq.isPooled()){
+  else if(smq.isPooled())
+  {
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      Message message=null;");
@@ -64,47 +66,53 @@
     appendln(stringBuffer,"      for (Message msg: messages)");
     appendln(stringBuffer,"      {");
     
-    if(smq.getNestedStateMachines().isEmpty())
+    for(StateMachine sm: uClass.getStateMachines())
     {
-       append(stringBuffer,"        if(stateMessageMap.get(get");
-       append(stringBuffer,"{0}", gen.translate("type",smq));
-       appendln(stringBuffer,"()).contains(msg.type))");
-       appendln(stringBuffer,"        {");
-       appendln(stringBuffer,"          //The element to be removed");
-       appendln(stringBuffer,"          messages.remove(msg);");
-       appendln(stringBuffer,"          return (msg);");
-       appendln(stringBuffer,"        }");
-    }
-    else if(!smq.getNestedStateMachines().isEmpty())
-    {
-      append(stringBuffer,"        if(stateMessageMap.get(get");
-      append(stringBuffer,"{0}", gen.translate("type",smq));
-      appendln(stringBuffer,"()).contains(msg.type))");
-      appendln(stringBuffer,"        {");
-      appendln(stringBuffer,"          //The element to be removed");
-      appendln(stringBuffer,"          messages.remove(msg);");
-      appendln(stringBuffer,"          return (msg);");
-      appendln(stringBuffer,"        }");
-      append(stringBuffer,"        else");
-      int nsmSize = smq.getNestedStateMachines().size();
-      int nesCount = 0;
-      for(StateMachine nsm : smq.getNestedStateMachines()){
-        nesCount++;
-        append(stringBuffer," if(stateMessageMap.get(get");
-        append(stringBuffer,"{0}", gen.translate("type",nsm));
-        appendln(stringBuffer,"()).contains(msg.type))");
-        appendln(stringBuffer,"        {");
-        appendln(stringBuffer,"          //The element to be removed");
-        appendln(stringBuffer,"          messages.remove(msg);");
-        appendln(stringBuffer,"          return (msg);");
-        appendln(stringBuffer,"        }");
-        if(nsmSize > nesCount)
+      if(sm.isPooled())
+      {
+        if(sm.getNestedStateMachines().isEmpty())
         {
+          append(stringBuffer,"        if(stateMessageMap.get(get");
+          append(stringBuffer,"{0}", gen.translate("type",sm));
+          appendln(stringBuffer,"()).contains(msg.type))");
+          appendln(stringBuffer,"        {");
+          appendln(stringBuffer,"          //The element to be removed");
+          appendln(stringBuffer,"          messages.remove(msg);");
+          appendln(stringBuffer,"          return (msg);");
+          appendln(stringBuffer,"        }");
+        }
+        else if(!sm.getNestedStateMachines().isEmpty())
+        {
+          append(stringBuffer,"        if(stateMessageMap.get(get");
+          append(stringBuffer,"{0}", gen.translate("type",sm));
+          appendln(stringBuffer,"()).contains(msg.type))");
+          appendln(stringBuffer,"        {");
+          appendln(stringBuffer,"          //The element to be removed");
+          appendln(stringBuffer,"          messages.remove(msg);");
+          appendln(stringBuffer,"          return (msg);");
+          appendln(stringBuffer,"        }");
           append(stringBuffer,"        else");
+          int nsmSize = sm.getNestedStateMachines().size();
+          int nesCount = 0;
+          for(StateMachine nsm : sm.getNestedStateMachines())
+          {
+            nesCount++;
+            append(stringBuffer," if(stateMessageMap.get(get");
+            append(stringBuffer,"{0}", gen.translate("type",nsm));
+            appendln(stringBuffer,"()).contains(msg.type))");
+            appendln(stringBuffer,"        {");
+            appendln(stringBuffer,"          //The element to be removed");
+            appendln(stringBuffer,"          messages.remove(msg);");
+            appendln(stringBuffer,"          return (msg);");
+            appendln(stringBuffer,"        }");
+            if(nsmSize > nesCount)
+            {
+              append(stringBuffer,"        else");
+            }
+          }
         }
       }
     }
-    
     appendln(stringBuffer,"      }");
     appendln(stringBuffer,"      return null;");
     appendln(stringBuffer,"    }");
