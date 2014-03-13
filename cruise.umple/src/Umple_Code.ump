@@ -1025,13 +1025,6 @@ class UmpleClass
     return getGeneratedClass();
   }
 
-
-
-  public boolean hasUniqueIdentifier()
-  {
-    return getUniqueIdentifier() != null;
-  }
-
   public boolean isAttributeClass()
   {
     for (AssociationVariable association : getAssociationVariables())

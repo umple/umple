@@ -3,11 +3,11 @@
 //@author Ahmed M.Orabi {@link ahmedvc@hotmail.com}
 //@author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
 
-templateDefinition : [=template] [name] [=brace:{] [[templateContent]]* [=brace:}]
+templateDefinition : template [name] { [[templateContent]]* }
 templateContent- : [[comment]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[templateAttribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; |[[exception]]   | [[extraCode]]
 
 
-templateAttributeDefinition- : [[templateName]] <<! [**templateAttributeContent] !>>
+templateAttributeDefinition : [[templateName]] [[templateAttribute]]
 templateName : [name]
 
 emitMethod : [=modifier:public|protected|private]? [=static]? [type]? [=emit] [[methodDeclarator]] [[templateList]]?;
@@ -17,18 +17,16 @@ parameter : [[typedName]]
 list- : [!list:\[\s*\]]
 typedName- : [type]? [[list]]? [~name]
 
-templateList- : [=braket:OPEN_ROUND_BRACKET] ( [[templatePrameter]] ( , [[templatePrameter]] )* )? [=bracket:CLOSE_ROUND_BRACKET]
+templateList- : OPEN_ROUND_BRACKET ( [[templatePrameter]] ( , [[templatePrameter]] )* )? CLOSE_ROUND_BRACKET
 templatePrameter : [name]
 
-//templateAttribute : <<! [[templateAttributeContent]]* !>>
-//templateAttributeContent- : [[templateExpression]] | [[templateComment]] | [[templateLanguageCode]] | [[templateText]] 
-//templateText :  [[inlineTemplateText]] | [[multilineTemplateText]]
-//inlineTemplateText- : [*inlineTemplateText]
-//multilineTemplateText- : [**multilineTemplateText]
+templateAttribute : <<! [[templateAttributeContent]]* !>>
+templateAttributeContent -: [[templateExpression]] | [[templateComment]] | [[templateScriptlet]] | [[templateText]] 
+templateText : [**templateTextContent:<<]
 
-//templateComment : <</* [**templateCommentContent] */>>
-//templateExpression : <<= [**templateExpressionContent] >>
-//templateLanguageCode : <<# [**templateLanguageCode] #>>
+templateComment : <</* [**templateCommentContent] */>>
+templateExpression : <<= [**templateExpressionContent] >>
+templateScriptlet : <<# [**templateLanguageCode] #>>
 //templateOpen- : <<!
 //templateClose- : !>>
 

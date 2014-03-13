@@ -165,6 +165,7 @@ class TokenStream {
 	const String TEMPLATE_END_TAG="endTag";
 	const String TEMPLATE_COMMENT="templateComment";
 	const String TEMPLATE_EXPRESSION="templateExpression";
+	const String TEMPLATE_TEXT="templateText";
 	const String TEMPLATE_SCRIPTLET="templateScriptlet";
 	const String IDENT = "indent";
 	const String TEXT="Text";
@@ -796,40 +797,41 @@ class TemplateAttributeParser {
 	depend java.io.IOException;
 	
 	int startIndex;
+	Token rootToken;
 	0..1 -- * TemplateElement elements;
 	0..1 -- * TemplateField fields;
-	
-	String rawTemplateContent;
 	
 	lazy EmitResponse emisionContent; 
 	
 	public boolean parse() throws IOException {
-		elements.clear();
-		emisionContent = new EmitResponse();
-		try {			
-			TemplateTokenizer tokenizer = new TemplateTokenizer(new CharStream(rawTemplateContent));
-			TokenStream tokens = new TokenStream(tokenizer);
-			TemplateParser parser = new TemplateParser(tokens,new TemplateParserAdaptor(this));
-			if(parser.parse()) {
-				int idx = startIndex;
-				for (TemplateElement templateElement : elements) {
-					if(templateElement instanceof TextElement || templateElement instanceof CommentElement) {
-						idx++;
-					}
-					templateElement.emit(emisionContent, idx);
-					for(TemplateField field : templateElement.getFields()) {
-						addField(field);
-					}
-				}
-				return true;
-			} else {
-				// TODO: Error Messages
-			}
-		} 
-		catch (TemplateException e) {
-			// TODO: Error Messages
-		}
-		return false;
+	  elements.clear();
+      emisionContent = new EmitResponse();
+	  int idx = startIndex;
+	  for(Token token:rootToken.getSubTokens()){
+	    
+		if(token.is(TokenStream.TEMPLATE_EXPRESSION)) {
+		  addElement(new ExpressionElement(token.getSubToken(TokenStream.TEMPLATE_EXPRESSION).getValue("templateExpressionContent")));
+		} else if(token.is(TokenStream.TEMPLATE_SCRIPTLET)) {
+		  addElement(new ScripletElement(token.getSubToken(TokenStream.TEMPLATE_SCRIPTLET).getValue("templateLanguageCode")));
+		} else if(token.is(TokenStream.TEMPLATE_COMMENT)) {
+		  addElement(new CommentElement(token.getSubToken(TokenStream.TEMPLATE_COMMENT).getValue("templateCommentContent")));
+		} else if(token.is(TokenStream.TEMPLATE_TEXT)) {
+		  String text = token.getSubToken(TokenStream.TEMPLATE_TEXT).getValue("templateTextContent");		    
+		  if(!"".equals(text)){
+		    addElement(new TextElement(text));
+		  }
+		} 		    
+	  }
+	  for (TemplateElement templateElement : elements) {
+	    if(templateElement instanceof TextElement || templateElement instanceof CommentElement) {
+	      idx++;
+	    }
+	    templateElement.emit(emisionContent, idx);
+	    for(TemplateField field : templateElement.getFields()) {
+		  addField(field);
+	    }
+	  }
+	  return true;
 	}
 }
 
@@ -901,27 +903,23 @@ class TemplateTokenAnalyzer {
     }
 	
 	void analyzeEmission(final Token token) {
-		Token parentToken = token.getParentToken();
-	  	if(parentToken != null) {
-	  		int idx = parentToken.indexOfSubToken(token);
-	  		Token nameToken = parentToken.getSubToken(idx-2);
-	  		if(nameToken.is("templateName")) {
-	  			Token valToken = nameToken.getSubToken("name");
-	  			String templateName = valToken.getValue("name");
-	  			String templateContent = token.getValue("templateAttributeContent");
-		  		try {
-		  			TemplateAttributeParser emitter = new TemplateAttributeParser(startIndex, templateContent);
-		  			emitter.parse();
-		  			template.getTemplateEmitStringMap().put(templateName, emitter.getEmisionContent());
-		  			for(TemplateField field : emitter.getFields()) {
-		  				addField(field);
-		  			}
-		  			startIndex+= emitter.getFields().size(); 
-		  			template.setTemplateFieldCount(startIndex);
-		  		} catch (IOException e) {
-		  		}
-	  		}
-	  	}
+		Token nameToken = token.getSubToken("templateName");
+        Token valToken = nameToken.getSubToken("name");
+	  	String templateName = valToken.getValue("name");
+	  	Token templateContent = token.getSubToken("templateAttribute");
+		try {
+			TemplateAttributeParser emitter = new TemplateAttributeParser(startIndex, templateContent);
+			emitter.parse();
+			template.getTemplateEmitStringMap().put(templateName, emitter.getEmisionContent());
+			for(TemplateField field : emitter.getFields()) {
+				addField(field);
+			}
+			startIndex+= emitter.getFields().size(); 
+			template.setTemplateFieldCount(startIndex);
+		} catch (IOException e) {
+		}
+	  		
+	  	
 	}
 	
 	void analyzeEmitMethodDeclarator(Token token) {
@@ -1233,7 +1231,7 @@ class TemplateDefinitionWalker {
     		parser.reAnalyze(parser.reAnalyze() || (analysisStep == 1));
 	      	return;
 	  	}
-    	if (aToken.is("templateAttributeContent")) {
+    	if (aToken.is("templateAttributeDefinition")) {
     		analyzer.analyzeEmission(aToken);
     	} else if (aToken.is("emitMethod")) {
         	analyzer.analyzeEmitMethodDeclarator(aToken);

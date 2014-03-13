@@ -153,61 +153,7 @@ class RuleBasedParser
       }
       if(mustParse || forceParse)
       {
-        Terminal.space(" \\t");
-        ChoiceRule rulename = new Terminal("rulename","[a-zA-Z0-9_]+",false);
-        ChoiceRule definition = new RepeatableRule("definition",0,Integer.MAX_VALUE);
-        ChoiceRule openbrace = new Terminal("openbrace","\\(",false).dontCare();
-        ChoiceRule closebrace = new Terminal("closebrace","\\)",false).dontCare();
-        ChoiceRule opencurl = new Terminal("opencurl","(\\{|\")",false);
-        ChoiceRule closecurl = new Terminal("closecurl","(\\}|\")",false);
-        ChoiceRule otherRule = new ChainRule("otherrule",new Terminal("open","\\Q[[\\E",false).dontCare(),rulename,new Terminal("close","\\Q]]\\E",false).dontCare()).dontCare();
-        ChoiceRule spaceSeparated = new BalancedRule("token","[",
-            new ChainRule("multi",
-                new Terminal("premodifier","[~!=*]?[*]?"),
-                new Terminal("tokenname","([|][|]|[a-zA-Z0-9_,-]+)"),
-                new Terminal("valuecolon","[:>]?",false),
-                new Terminal("value",".*",false)).dontCare(),"]").dontCare();
-        ChoiceRule options = new ChoiceRule("options",
-            new ChainRule("braced",opencurl,definition,closecurl),
-            new ChainRule("anonymousRule",openbrace,definition,closebrace, new Terminal("modifier","[*+?]?",false)),
-            new ChainRule("otherrule",otherRule,new Terminal("modifier","[*+?]?",false)),
-            new ChainRule("token",spaceSeparated,new Terminal("modifier","[*+?]?")),
-            new Terminal("separator","[|]",false),
-            new Terminal("spaces","",true).dontCare(),
-            new ChainRule("terminal",new Terminal("terminal","(\\Q-(\\E|\\Q-)\\E|[^ \\t\\n\"\\{\\(\\}\\)]+)",false))).dontCare();
-
-        definition.add(options);
-
-        ChoiceRule rule = new ChoiceRule("rule",
-            new ChainRule("layout",
-                rulename,
-                new Terminal("modifier","[-]?",false),
-                new Terminal("colon","[:]",false).dontCare(),
-                definition, new Terminal("newline", "[\\n]",false).dontCare()
-                ).dontCare()
-            );
-
-        ChoiceRule root = rule;
-
-        ParsingCouple.ignoreLevel = 1;
-        grootToken = new Token("ROOT","");
-        List<Thread> parsers = new ArrayList<Thread>();
-        String[] keys = new String[]{"[","]"};
-        grootToken = new Token("ROOT","");
-        for(String filename:grammarFiles)
-        {
-          ParserDataPackage data = new ParserDataPackage(filename);
-          data.getKeys().put("[]",keys);
-          data.init(null);
-          for(int i=0;i<data.numberOfLines();++i){
-            if(!data.getLine(i).startsWith("//")&&!data.getLine(i).startsWith("\n")){
-              parse(root,grootToken,filename,i, data);
-            }
-          }
-        }
-        analyzer = new GrammarAnalyzer();
-        analyzer.analyze(grootToken);
-        analyzer.setupTerminals();
+        readGrammarFiles();
         if(rulesfile.exists()&&rulesfile.canWrite()){
           rulesfile.delete();
         }
@@ -243,6 +189,10 @@ class RuleBasedParser
 
         analyzer.getKeys().put("{}", new String[]{"{","}"});    
         analyzer.getKeys().put("\"", new String[]{"\"","\""});
+        analyzer.getKeys().put("<<!!>>", new String[]{"<<!","!>>"});    
+        analyzer.getKeys().put("<<##>>", new String[]{"<<#","#>>"});
+        analyzer.getKeys().put("<<=>>", new String[]{"<<=",">>"});    
+        analyzer.getKeys().put("<</**/>>", new String[]{"<</*","*/>>"});
 
         while(currentLine!=null){    
           if(currentLine.equals("//END DECLARE")){
@@ -420,8 +370,8 @@ class RuleBasedParser
     ChoiceRule definition = new RepeatableRule("definition",0,Integer.MAX_VALUE);
     ChoiceRule openbrace = new Terminal("openbrace","\\(",false).dontCare();
     ChoiceRule closebrace = new Terminal("closebrace","\\)",false).dontCare();
-    ChoiceRule opencurl = new Terminal("opencurl","(\\{|\")",false);
-    ChoiceRule closecurl = new Terminal("closecurl","(\\}|\")",false);
+    ChoiceRule opencurl = new Terminal("opencurl","(\\{|\"|<<!|<</\\*|<<=|<<#)",false);
+    ChoiceRule closecurl = new Terminal("closecurl","(\\}|\"|!>>|\\*/>>|>>|#>>)",false);
     ChoiceRule otherRule = new ChainRule("otherrule",new Terminal("open","\\Q[[\\E",false).dontCare(),rulename,new Terminal("close","\\Q]]\\E",false).dontCare()).dontCare();
     ChoiceRule spaceSeparated = new BalancedRule("token","[",
         new ChainRule("multi",
@@ -436,7 +386,7 @@ class RuleBasedParser
         new ChainRule("token",spaceSeparated,new Terminal("modifier","[*+?]?")),
         new Terminal("separator","[|]",false),
         new Terminal("spaces","",true).dontCare(),
-        new ChainRule("terminal",new Terminal("terminal","(\\Q-(\\E|\\Q-)\\E|[^ \\t\\n\"\\{\\(\\}\\)]+)",false))).dontCare();
+        new ChainRule("terminal",new Terminal("terminal","(\\Q-(\\E|\\Q-)\\E|^((?!"+((Terminal)opencurl).getRegex()+"|"+((Terminal)closecurl).getRegex()+"|\\s|\\(|\\)).)*)",false))).dontCare();
 
     definition.add(options);
 
@@ -949,8 +899,15 @@ class GrammarAnalyzer {
     }
     if("**".equals(premodifier))
     {
-      regex = ".*";
-      post = true;
+      if(!"".equals(value))
+      {
+        regex = "^((?!"+value+").)*";
+      }
+      else
+      {
+        regex = ".*";
+        post = true;
+      }
     }
     else if("*".equals(premodifier))
     {

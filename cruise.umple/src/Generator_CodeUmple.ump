@@ -587,7 +587,7 @@ class UmpleGenerator
 
     parser.setupRules(true);    // Compute the Umple grammar rules
 
-    rootRuleToken = parser.getGRootToken();
+    rootRuleToken = parser.getRootToken();
     if(rootRuleToken == null) {
       throw new UmpleCompilerException("rootRuleToken retrieved from parser is NULL.", null);
     }
