@@ -495,4 +495,29 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
 	assertUmpleTemplateFor("testPooledwithNestedStates_4.ump",languagePath + "/testPooledwithNestedStates_4."+ languagePath +".txt","X");
   }
+  
+  @Test
+  public void multiplePooledStateMachine()
+  {
+  assertUmpleTemplateFor("multiplePooledStateMachine.ump",languagePath + "/multiplePooledStateMachine."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void multiplePooledStateMachine_EventlessStateMachine()
+  {
+  assertUmpleTemplateFor("multiplePooledStateMachine_EventlessStateMachine.ump",languagePath + "/multiplePooledStateMachine_EventlessStateMachine."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void multiplePooledStateMachine_nestedStates()
+  {
+  assertUmpleTemplateFor("multiplePooledStateMachine_nestedStates.ump",languagePath + "/multiplePooledStateMachine_nestedStates."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void multiplePooledStateMachines_sameEvents()
+  {
+  assertUmpleTemplateFor("multiplePooledStateMachines_sameEvents.ump",languagePath + "/multiplePooledStateMachines_sameEvents."+ languagePath +".txt","X");
+  }
+
 }

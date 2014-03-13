@@ -41,6 +41,7 @@ for (StateMachine smq : uClass.getStateMachines())
     {
       append(stringBuffer," implements Runnable");
     }
+    break;
   }
 
 %>
@@ -141,6 +142,7 @@ for (StateMachine smq : uClass.getStateMachines())
          <%@ include file="queued_state_machine_queuedEvent.jet" %>
          <%@ include file="queued_state_machine_removalThread_run.jet" %>
        <%}
+       break;
      }%>
   <%return stringBuffer.toString();
     } 

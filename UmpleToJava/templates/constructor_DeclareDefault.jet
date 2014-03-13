@@ -231,6 +231,7 @@
     }
   }
   
+  boolean found=false;
   for(StateMachine sm : uClass.getStateMachines())
   {
     State state = sm.getStartState();
@@ -244,6 +245,17 @@
       %><%@ include file="constructor_NestedStateMachineAssignDefault.jet"%><%
     }
     %><%@ include file="constructor_StateMachineAssignDefault.jet"%><%
+    if (sm.isPooled() || sm.isQueued())
+    {
+      found = true;
+    }
+  }
+  if(found == true)
+  {
+    append(stringBuffer,"\n    pool = new MessagePool();");
+    append(stringBuffer,"\n    removal=new Thread(this);");
+    append(stringBuffer,"\n    //start the thread of {0}", uClass.getName());
+    append(stringBuffer,"\n    removal.start();");
   }
   
   if (customConstructorPostfixCode != null)

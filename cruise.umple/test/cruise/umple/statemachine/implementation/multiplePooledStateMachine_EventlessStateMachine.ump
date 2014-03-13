@@ -1,0 +1,25 @@
+class X{
+  pooled sm{
+    s1{
+      e1 -> s1a;
+      s1a{
+        e5 -> s1b;
+      }
+      s1b{
+        e6 -> s2;
+      }
+    }
+    s2{
+      e2 ->s1;
+    }
+  }
+  pooled sm1{
+    s3{
+      e3 -> s4;
+    }
+    s4{
+      e4 -> s3;
+    }
+  }
+  sm2 {q{} s{}}
+}

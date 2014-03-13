@@ -37,20 +37,20 @@
         for(StateMachine nestedSm : allNested){
            for (Event event : nestedSm.getEvents())
            {
-        	    if(event.getIsInternal() == false && event != null){
-        			nestedSMhasEvent=true; 
-        		}
-        	}
-    	}
-    	
-    	if (nestedSMhasEvent == true){
-    	  append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listWithAutoTransitionAndNestedEvents",sm));
-    	  nestedSMhasEvent=false;
-    	}
-    	else
-    	{
-    	  append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm));
-    	}  
+              if(event.getIsInternal() == false && event != null){
+              nestedSMhasEvent=true; 
+            }
+          }
+      }
+      
+      if (nestedSMhasEvent == true){
+        append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listWithAutoTransitionAndNestedEvents",sm));
+        nestedSMhasEvent=false;
+      }
+      else
+      {
+        append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm));
+      }  
       }
       else if (!sm.getNestedStateMachines().isEmpty() && sm.getEvents().isEmpty())
       {
@@ -62,10 +62,11 @@
       }
       append(stringBuffer,"\n  ");
       append(stringBuffer,"\n  MessagePool pool;");
-      append(stringBuffer,"\n  Thread removal;");
-            
-    }
-    
+      append(stringBuffer,"\n  Thread removal;");            
+    }    
+  }  
+  for(StateMachine sm : uClass.getStateMachines())
+  {  
     if(sm.isPooled())
     {
       append(stringBuffer,"\n  ");
@@ -75,9 +76,9 @@
       append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
       append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
     }
+    break;
   }
-  
- boolean foundPooled = false;
+  boolean foundPooled = false;
   for(StateMachine sm : uClass.getStateMachines())
   {
     if (sm.isPooled()){

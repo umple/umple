@@ -189,7 +189,7 @@
     actionLengths.toString().substring(1)):"";
   
 %><%= umpleSourceFile %>
-  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.getIsTimer() && !e.isUnspecified()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false  && !e.getIsTimer() && !e.isUnspecified())){append(stringBuffer,"_");}}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%><%if(e.isUnspecified()){append(stringBuffer,"String state, String event");}%>)
+  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.getIsTimer() && !e.isUnspecified()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false  && !e.getIsTimer() && !e.isUnspecified())){append(stringBuffer,"_");}break;}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%><%if(e.isUnspecified()){append(stringBuffer,"String state, String event");}%>)
   {<% if (customEventPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPrefixCode, "    ")); } %>
     boolean wasEventProcessed = false;
     <%= eventOutput %><% if (customEventPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPostfixCode, "    ")); } %>
