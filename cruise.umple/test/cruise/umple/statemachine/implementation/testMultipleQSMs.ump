@@ -1,0 +1,31 @@
+class X {
+   String ev="";
+   queued sm{
+    s1 {
+      ev1 /{ev="ev1";} ->s2;
+      ev5 /{ev="ev5";} ->s2;
+    }
+    s2 {
+      ev2 /{ev="ev2";} ->s3;
+    }
+    s3 {
+      ev3 /{ev="ev3";} ->s4;
+    }
+    s4 {
+      ev4 /{ev="ev4";} ->s1;
+    }
+  }
+  after ev* {
+    if(wasEventProcessed)
+      System.out.println(ev);
+  }
+  
+  queued sm2 {
+    sm21 {
+      ev1 /{ev="ev1 in sm2";} -> sm22;
+    }
+    sm22 {
+      ev7 /{ev="ev7 in sm2";}-> sm21;
+    }
+  }
+}

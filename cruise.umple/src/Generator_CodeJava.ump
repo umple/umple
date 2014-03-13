@@ -249,155 +249,7 @@ class JavaGenerator
       }
       return allEnums;
     }
-    else if ("listEvents".equals(keyName))
-    {
-      String allEnums = "";
-      for(Event event : sm.getEvents())
-      {
-        if (!event.isAutoTransition())
-        {
-          if(!event.getIsTimer())
-          {
-            if(!event.isUnspecified())
-            {
-              if (allEnums.length() > 0)
-              {
-              allEnums += ", ";
-              }
-              allEnums += translate("eventMethod",event);
-              allEnums += "_M";
-            }
-          }
-        }
-      }
-      return allEnums;
-    }
-    else if ("listEventsNSM".equals(keyName))
-    {
-      String allEnums = "";
-      String eveName="";
-      boolean sameEventName=false;
-      List<String> eveList=new ArrayList<String>();
-      for (StateMachine nsm : sm.getNestedStateMachines())
-      {
-        for (Event event : nsm.getEvents())
-        {
-          for(int i=0; i<eveList.size(); i++)
-          {
-            if(eveList.get(i)== event.getName())
-            {
-              sameEventName=true;
-            }
-          }
-          
-          if(sameEventName == false)
-          {
-            if(event.getIsInternal() == false)
-            {
-              if (!event.isAutoTransition())
-              {
-                if(!event.getIsTimer())
-                {
-                  if(!event.isUnspecified())
-                  {
-                    if( eveName != event.getName())
-                    {
-                      eveList.add(event.getName());
-              
-                      if (allEnums.length() > 0 )
-                      {
-                        allEnums += ", ";
-                      }
-                      allEnums += translate("eventMethod",event);
-                      allEnums += "_M"; 
-                      eveName=event.getName();
-                    }
-                  }
-                } 
-              }
-            }
-          }
-          sameEventName=false;
-        }
-      }
-      return allEnums;
-    }
-    
-    else if ("listWithAutoTransitionAndNestedEvents".equals(keyName))
-    {
-      String allEnums = "";
-      String allNesEvenEnums = "";
-      String eveName="";
-      boolean sameEventName=false;
-      List<String> eveList=new ArrayList<String>();
-
-      for(Event event : sm.getEvents())
-      {
-        if (!event.isAutoTransition())
-        {
-          if(!event.getIsTimer())
-          {
-            if(!event.isUnspecified())
-            {
-              if (allEnums.length() > 0)
-              {
-                allEnums += ", ";
-              }
-              allEnums += translate("eventMethod",event);
-              allEnums += "_M";
-           }
-         }
-       }
-      }
-      if(allEnums.length() > 0 )
-      {
-         allEnums += ", ";
-      }
-      for (StateMachine nsm : sm.getNestedStateMachines())
-      {
-        for (Event event : nsm.getEvents())
-        {
-          for(int i=0; i<eveList.size(); i++){
-            if(eveList.get(i)== event.getName()){
-              sameEventName=true;
-            }
-          }
-          
-          if(sameEventName == false)
-          {
-            if(event.getIsInternal() == false)
-            {
-              if (!event.isAutoTransition())
-              {
-                if(!event.getIsTimer())
-                {
-                  if(!event.isUnspecified())
-                  {
-                    if( eveName != event.getName())
-                    {
-                      eveList.add(event.getName());
-              
-                      if (allNesEvenEnums.length() > 0)
-                      {
-                        allNesEvenEnums += ", ";
-                      }
-                      allNesEvenEnums += translate("eventMethod",event);
-                      allNesEvenEnums += "_M"; 
-                      eveName=event.getName();
-                    } 
-                  }
-                }
-              }
-            }
-          }
-          sameEventName=false;
-        }
-        
-      }
-      allEnums += allNesEvenEnums;
-      return allEnums;
-    }
-    
+       
     else if ("listMessageTypesStates".equals(keyName))
     {
       String allEnums = "";
@@ -764,6 +616,285 @@ class JavaGenerator
       return "delete";
     }
     
+    else if ("listEventsForQSM".equals(keyName))
+    {
+      String allEnums = "";
+      
+      String evName="";
+      boolean sameEvName=false;
+      List<String> evList=new ArrayList<String>();         
+      
+      for(StateMachine stm : aClass.getStateMachines())
+      {
+        List<StateMachine> allNested = stm.getNestedStateMachines();
+        boolean nestedSMhasEvent=false;
+        
+        if (!stm.getNestedStateMachines().isEmpty() && !stm.getEvents().isEmpty())
+        {
+          for(StateMachine nestedSm : allNested)
+          {
+            for (Event event : nestedSm.getEvents())
+            {
+              if(event.getIsInternal() == false && event != null)
+              {
+                nestedSMhasEvent=true;
+              }
+            }
+          }
+        
+          if (nestedSMhasEvent == true)
+          {
+            String allNesEvenEnums = "";          
+          
+            for(Event event : stm.getEvents())
+            {
+              for(int i=0; i<evList.size(); i++)
+              {
+                if(evList.get(i).equals(event.getName()))
+                {
+                  sameEvName=true;
+                }
+              }
+         
+              if(sameEvName == false)
+              {
+                if (!event.isAutoTransition())
+                {
+                  if(!event.getIsTimer())
+                  {
+                    if(!event.isUnspecified())
+                    {
+                      if(!evName.equals(event.getName()))
+                      {
+                        evList.add(event.getName());
+               
+                        if (allEnums.length() > 0)
+                        {
+                          allEnums += ", ";
+                        }
+                        allEnums += translate("eventMethod",event);
+                        allEnums += "_M";
+                        evName=event.getName();
+                      }
+                    }
+                  }
+                }
+              }
+              sameEvName=false;
+            }
+            
+            boolean found = false;
+            for (StateMachine nsm : stm.getNestedStateMachines())
+            {
+              for (Event event : nsm.getEvents())
+              {
+                for(int i=0; i<evList.size(); i++)
+                {
+                  if(evList.get(i).equals(event.getName()))
+                  {
+                    sameEvName=true;
+                  }
+                }
+          
+                if(sameEvName == false)
+                {
+                  if(event.getIsInternal() == false)
+                  {
+                    if (!event.isAutoTransition())
+                    {
+                      if(!event.getIsTimer())
+                      {
+                        if(!event.isUnspecified())
+                        {
+                          found =true;
+                        }
+                      }
+                    }
+                  }
+                }
+                sameEvName=false;
+              }
+            }
+            
+            if(allEnums.length() > 0 && found == true)
+            {
+              allEnums += ", ";
+            }
+            
+            for (StateMachine nsm : stm.getNestedStateMachines())
+            {
+              for (Event event : nsm.getEvents())
+              {
+                for(int i=0; i<evList.size(); i++)
+                {
+                  if(evList.get(i).equals(event.getName()))
+                  {
+                    sameEvName=true;
+                  }
+                }
+          
+                if(sameEvName == false)
+                {
+                  if(event.getIsInternal() == false)
+                  {
+                    if (!event.isAutoTransition())
+                    {
+                      if(!event.getIsTimer())
+                      {
+                        if(!event.isUnspecified())
+                        {
+                          if(!evName.equals(event.getName()))
+                          {
+                            evList.add(event.getName());
+              
+                            if (allNesEvenEnums.length() > 0)
+                            {
+                              allNesEvenEnums += ", ";
+                            }
+                            allNesEvenEnums += translate("eventMethod",event);
+                            allNesEvenEnums += "_M"; 
+                            evName=event.getName();
+                          } 
+                        }
+                      }
+                    }
+                  }
+                }
+                sameEvName=false;
+              }
+            }
+            allEnums += allNesEvenEnums;
+            nestedSMhasEvent=false;
+          }
+          else
+          {
+            for(Event event : stm.getEvents())
+            {
+              for(int i=0; i<evList.size(); i++)
+              {
+                if(evList.get(i).equals(event.getName()))
+                {
+                  sameEvName=true;
+                }
+              }
+              
+              if(sameEvName == false)
+              {
+                if (!event.isAutoTransition())
+                {
+                  if(!event.getIsTimer())
+                  {
+                    if(!event.isUnspecified())
+                    {
+                      if( !evName.equals(event.getName()))
+                      {
+                        evList.add(event.getName());
+              
+                        if (allEnums.length() > 0)
+                        {
+                          allEnums += ", ";
+                        }
+                        allEnums += translate("eventMethod",event);
+                        allEnums += "_M";
+                        evName=event.getName();
+                      }
+                    }
+                  }
+                }
+              }
+              sameEvName=false;
+            }
+          }  
+        }
+        else if (!stm.getNestedStateMachines().isEmpty() && stm.getEvents().isEmpty())
+        {
+          for (StateMachine nsm : stm.getNestedStateMachines())
+          {
+            for (Event event : nsm.getEvents())
+            {
+              for(int i=0; i<evList.size(); i++)
+              {
+                if(evList.get(i).equals(event.getName()))
+                {
+                  sameEvName=true;
+                }
+              }
+          
+              if(sameEvName == false)
+              {
+                if(event.getIsInternal() == false)
+                {
+                  if (!event.isAutoTransition())
+                  {
+                    if(!event.getIsTimer())
+                    {
+                      if(!event.isUnspecified())
+                      {
+                        if( !evName.equals(event.getName()))
+                        {
+                          evList.add(event.getName());
+              
+                          if (allEnums.length() > 0 )
+                          {
+                            allEnums += ", ";
+                          }
+                          allEnums += translate("eventMethod",event);
+                          allEnums += "_M"; 
+                          evName=event.getName();
+                        }
+                      }
+                    } 
+                  }
+                }
+              }
+              sameEvName=false;
+            }
+          }
+        }
+        else
+        {
+          for(Event event : stm.getEvents())
+          {
+          
+            for(int i=0; i<evList.size(); i++)
+            {
+              if(evList.get(i).equals(event.getName()))
+              {
+                sameEvName=true;
+              }
+            }
+              
+            if(sameEvName == false)
+            {
+              if (!event.isAutoTransition())
+              {
+                if(!event.getIsTimer())
+                {
+                  if(!event.isUnspecified())
+                  {
+                    if( !evName.equals(event.getName()))
+                    {
+                      evList.add(event.getName());
+              
+                      if (allEnums.length() > 0)
+                      {
+                        allEnums += ", ";
+                      }
+                      allEnums += translate("eventMethod",event);
+                      allEnums += "_M";
+                      evName=event.getName();
+                    }
+                  }
+                }
+              }
+            }
+            sameEvName=false;
+          }
+        }
+      }
+      return allEnums;
+    }
+    
     else if ("listEventsForPooledSM".equals(keyName))
     {
       String allEnums = "";
@@ -901,7 +1032,7 @@ class JavaGenerator
 
               for(int i=0; i<evList.size(); i++)
               {
-                if(evList.get(i)== event.getName())
+                if(evList.get(i).equals(event.getName()))
                 {
                   sameEvName=true;
                 }
@@ -942,7 +1073,7 @@ class JavaGenerator
             {
               for(int i=0; i<evList.size(); i++)
               {
-                if(evList.get(i)== event.getName())
+                if(evList.get(i).equals(event.getName()))
                 {
                   sameEvName=true;
                 }
@@ -958,7 +1089,7 @@ class JavaGenerator
                     {
                       if(!event.isUnspecified())
                       {
-                        if( evName != event.getName())
+                        if(!evName.equals(event.getName()))
                         {
                           evList.add(event.getName());
               
@@ -986,7 +1117,7 @@ class JavaGenerator
 
             for(int i=0; i<evList.size(); i++)
             {
-                if(evList.get(i)== event.getName())
+                if(evList.get(i).equals(event.getName()))
                 {
                   sameEvName=true;
                 }
@@ -1000,7 +1131,7 @@ class JavaGenerator
                 {
                   if(!event.isUnspecified())
                   {
-                    if( evName != event.getName())
+                    if(!evName.equals(event.getName()))
                     {
                       evList.add(event.getName());
                       if (allEnums.length() > 0)

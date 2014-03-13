@@ -519,5 +519,34 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
   assertUmpleTemplateFor("multiplePooledStateMachines_sameEvents.ump",languagePath + "/multiplePooledStateMachines_sameEvents."+ languagePath +".txt","X");
   }
+  
+  @Test
+  public void multipleQSM()
+  {
+  assertUmpleTemplateFor("multipleQSM.ump",languagePath + "/multipleQSM."+ languagePath +".txt","X");
+  }
 
+  @Test
+  public void multipleQSM_EventlessStateMachine()
+  {
+  assertUmpleTemplateFor("multipleQSM_EventlessStateMachine.ump",languagePath + "/multipleQSM_EventlessStateMachine."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void multipleQSMe_nestedStates()
+  {
+  assertUmpleTemplateFor("multipleQSMe_nestedStates.ump",languagePath + "/multipleQSMe_nestedStates."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void multipleQSM_sameEvents()
+  {
+  assertUmpleTemplateFor("multipleQSM_sameEvents.ump",languagePath + "/multipleQSM_sameEvents."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void testMultipleQSMs()
+  {
+  assertUmpleTemplateFor("testMultipleQSMs.ump",languagePath + "/testMultipleQSMs."+ languagePath +".txt","X");
+  }
 }
