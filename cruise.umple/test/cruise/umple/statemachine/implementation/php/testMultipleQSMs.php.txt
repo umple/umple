@@ -1,0 +1,194 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+  private $ev;
+
+  //X State Machines
+  private static $SmS1 = 1;
+  private static $SmS2 = 2;
+  private static $SmS3 = 3;
+  private static $SmS4 = 4;
+  private $sm;
+
+  private static $Sm2Sm21 = 1;
+  private static $Sm2Sm22 = 2;
+  private $sm2;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->ev = "";
+    $this->setSm(self::$SmS1);
+    $this->setSm2(self::$Sm2Sm21);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setEv($aEv)
+  {
+    $wasSet = false;
+    $this->ev = $aEv;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getEv()
+  {
+    return $this->ev;
+  }
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    return $answer;
+  }
+
+  public function getSm2FullName()
+  {
+    $answer = $this->getSm2();
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmS1) { return "SmS1"; }
+    elseif ($this->sm == self::$SmS2) { return "SmS2"; }
+    elseif ($this->sm == self::$SmS3) { return "SmS3"; }
+    elseif ($this->sm == self::$SmS4) { return "SmS4"; }
+    return null;
+  }
+
+  public function getSm2()
+  {
+    if ($this->sm2 == self::$Sm2Sm21) { return "Sm2Sm21"; }
+    elseif ($this->sm2 == self::$Sm2Sm22) { return "Sm2Sm22"; }
+    return null;
+  }
+
+  public function ev1()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    $aSm2 = $this->sm2;
+    if ($aSm == self::$SmS1)
+    {
+      ev="ev1";
+      $this->setSm(self::$SmS2);
+      $wasEventProcessed = true;
+    }
+
+    
+    if ($aSm2 == self::$Sm2Sm21)
+    {
+      ev="ev1 in sm2";
+      $this->setSm2(self::$Sm2Sm22);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function ev5()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS1)
+    {
+      ev="ev5";
+      $this->setSm(self::$SmS2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function ev2()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS2)
+    {
+      ev="ev2";
+      $this->setSm(self::$SmS3);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function ev3()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS3)
+    {
+      ev="ev3";
+      $this->setSm(self::$SmS4);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function ev4()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS4)
+    {
+      ev="ev4";
+      $this->setSm(self::$SmS1);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function ev7()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm2 = $this->sm2;
+    if ($aSm2 == self::$Sm2Sm22)
+    {
+      ev="ev7 in sm2";
+      $this->setSm2(self::$Sm2Sm21);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+  }
+
+  private function setSm2($aSm2)
+  {
+    $this->sm2 = $aSm2;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

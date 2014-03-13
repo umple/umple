@@ -2211,11 +2211,16 @@ public class JavaClassGenerator implements ILang
 
 for (StateMachine smq : uClass.getStateMachines())
   {
-    if (smq.isQueued() || smq.isPooled())
+    if (smq.isQueued())
     {
       append(stringBuffer," implements Runnable");
+      break;
     }
-    break;
+    else if(smq.isPooled())
+    {
+      append(stringBuffer," implements Runnable");
+      break;
+    }
   }
 
 
@@ -2423,46 +2428,34 @@ for (StateMachine smq : uClass.getStateMachines())
     for (StateMachine nestedSm : allNested)
     {
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
-    }
-
-    if (sm.isQueued())
+    }  
+  }
+  
+  boolean foundQueued = false;
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isQueued())
     {
-      boolean nestedSMhasEvent=false;
-      append(stringBuffer,"\n  ");
-      append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-      if (!sm.getNestedStateMachines().isEmpty() && !sm.getEvents().isEmpty())
-      {
-        for(StateMachine nestedSm : allNested){
-           for (Event event : nestedSm.getEvents())
-           {
-              if(event.getIsInternal() == false && event != null){
-              nestedSMhasEvent=true; 
-            }
-          }
-      }
-      
-      if (nestedSMhasEvent == true){
-        append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listWithAutoTransitionAndNestedEvents",sm));
-        nestedSMhasEvent=false;
-      }
-      else
-      {
-        append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm));
-      }  
-      }
-      else if (!sm.getNestedStateMachines().isEmpty() && sm.getEvents().isEmpty())
-      {
-        append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsNSM",sm));
-      }
-      else
-      {
-        append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEvents",sm));
-      }
-      append(stringBuffer,"\n  ");
-      append(stringBuffer,"\n  MessagePool pool;");
-      append(stringBuffer,"\n  Thread removal;");            
-    }    
-  }  
+      foundQueued = true;
+    }
+  }
+  if(foundQueued == true)
+  {
+    append(stringBuffer,"\n  ");
+    append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
+    append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForQSM",uClass));   
+  }
+  for(StateMachine sm : uClass.getStateMachines())
+  {
+    if(sm.isQueued())
+    {
+       append(stringBuffer,"\n  ");
+       append(stringBuffer,"\n  MessagePool pool;");
+       append(stringBuffer,"\n  Thread removal;");
+    }
+    break;
+  }
+  
   for(StateMachine sm : uClass.getStateMachines())
   {  
     if(sm.isPooled())
@@ -9846,7 +9839,8 @@ if (p != null) {
          }
            
     stringBuffer.append(TEXT_2105);
-    }       
+     break;
+       }       
        if (smq.isQueued())
        {
     
@@ -10220,8 +10214,8 @@ if (p != null) {
          }
            
     stringBuffer.append(TEXT_2107);
-    }
-       break;
+     break;
+       }
      }
     return stringBuffer.toString();
     } 

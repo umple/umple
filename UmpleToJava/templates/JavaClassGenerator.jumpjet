@@ -37,11 +37,16 @@ public <% if (uClass.getIsAbstract()) { append(stringBuffer, "{0} ", "abstract")
 
 for (StateMachine smq : uClass.getStateMachines())
   {
-    if (smq.isQueued() || smq.isPooled())
+    if (smq.isQueued())
     {
       append(stringBuffer," implements Runnable");
+      break;
     }
-    break;
+    else if(smq.isPooled())
+    {
+      append(stringBuffer," implements Runnable");
+      break;
+    }
   }
 
 %>
@@ -135,14 +140,15 @@ for (StateMachine smq : uClass.getStateMachines())
          <%@ include file="queued_state_machine_inner_class.jet" %>
          <%@ include file="queued_state_machine_queuedEvent.jet" %>
          <%@ include file="queued_state_machine_removalThread_run.jet" %>
-       <%}       
+       <% break;
+       }       
        if (smq.isQueued())
        {%>
          <%@ include file="queued_state_machine_inner_class.jet" %>
          <%@ include file="queued_state_machine_queuedEvent.jet" %>
          <%@ include file="queued_state_machine_removalThread_run.jet" %>
-       <%}
-       break;
+       <% break;
+       }
      }%>
   <%return stringBuffer.toString();
     } 

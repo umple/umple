@@ -1,0 +1,360 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.util.*;
+import java.lang.Thread;
+
+public class X implements Runnable
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Attributes
+  private String ev;
+
+  //X State Machines
+  enum Sm { s1, s2, s3, s4 }
+  private Sm sm;
+  enum Sm2 { sm21, sm22 }
+  private Sm2 sm2;
+  
+  //enumeration type of messages accepted by X
+  enum MessageType { ev1_M, ev5_M, ev2_M, ev3_M, ev4_M, ev7_M }
+  
+  MessagePool pool;
+  Thread removal;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    ev = "";
+    setSm(Sm.s1);
+    setSm2(Sm2.sm21);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of X
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setEv(String aEv)
+  {
+    boolean wasSet = false;
+    ev = aEv;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getEv()
+  {
+    return ev;
+  }
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public String getSm2FullName()
+  {
+    String answer = sm2.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public Sm2 getSm2()
+  {
+    return sm2;
+  }
+
+  @umplesourcefile(line={5,25}, file={"testMultipleQSMs.ump","testMultipleQSMs.ump"}, javaline={96,108}, length={1,1})
+  public boolean _ev1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    Sm2 aSm2 = sm2;
+    switch (aSm)
+    {
+      case s1:
+        ev="ev1";
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    switch (aSm2)
+    {
+      case sm21:
+        ev="ev1 in sm2";
+        setSm2(Sm2.sm22);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    if(wasEventProcessed)
+          System.out.println(ev);
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={6}, file={"testMultipleQSMs.ump"}, javaline={133}, length={1})
+  public boolean _ev5()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s1:
+        ev="ev5";
+        setSm(Sm.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    if(wasEventProcessed)
+          System.out.println(ev);
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={9}, file={"testMultipleQSMs.ump"}, javaline={157}, length={1})
+  public boolean _ev2()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s2:
+        ev="ev2";
+        setSm(Sm.s3);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    if(wasEventProcessed)
+          System.out.println(ev);
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={12}, file={"testMultipleQSMs.ump"}, javaline={181}, length={1})
+  public boolean _ev3()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s3:
+        ev="ev3";
+        setSm(Sm.s4);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    if(wasEventProcessed)
+          System.out.println(ev);
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={15}, file={"testMultipleQSMs.ump"}, javaline={205}, length={1})
+  public boolean _ev4()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s4:
+        ev="ev4";
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    if(wasEventProcessed)
+          System.out.println(ev);
+    return wasEventProcessed;
+  }
+
+  @umplesourcefile(line={28}, file={"testMultipleQSMs.ump"}, javaline={229}, length={1})
+  public boolean _ev7()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm2 aSm2 = sm2;
+    switch (aSm2)
+    {
+      case sm22:
+        ev="ev7 in sm2";
+        setSm2(Sm2.sm21);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    if(wasEventProcessed)
+          System.out.println(ev);
+    return wasEventProcessed;
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+  }
+
+  private void setSm2(Sm2 aSm2)
+  {
+    sm2 = aSm2;
+  }
+
+  public void delete()
+  {}
+
+  private class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      try {
+        while (messages.isEmpty()) 
+        {
+          wait();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); } 
+
+      //The element to be removed
+      Message m = messages.remove(); 
+      return (m);
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void ev1 ()
+  {
+    pool.put(new Message(MessageType.ev1_M, null));
+  }
+
+  public void ev5 ()
+  {
+    pool.put(new Message(MessageType.ev5_M, null));
+  }
+
+  public void ev2 ()
+  {
+    pool.put(new Message(MessageType.ev2_M, null));
+  }
+
+  public void ev3 ()
+  {
+    pool.put(new Message(MessageType.ev3_M, null));
+  }
+
+  public void ev4 ()
+  {
+    pool.put(new Message(MessageType.ev4_M, null));
+  }
+
+  public void ev7 ()
+  {
+    pool.put(new Message(MessageType.ev7_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case ev1_M:
+          status = _ev1();
+          break;
+        case ev5_M:
+          status = _ev5();
+          break;
+        case ev2_M:
+          status = _ev2();
+          break;
+        case ev3_M:
+          status = _ev3();
+          break;
+        case ev4_M:
+          status = _ev4();
+          break;
+        case ev7_M:
+          status = _ev7();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "ev" + ":" + getEv()+ "]"
+     + outputString;
+  }
+}
