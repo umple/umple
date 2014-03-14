@@ -25,6 +25,7 @@ class ChoiceRule
   boolean declared = false;
   boolean reset = false;  
   private String[] subrules = null;
+  noSpaces = false;
 }
 
 /*
@@ -139,6 +140,8 @@ class BalancedRule
   depend cruise.umple.parser.analysis.*;
 
   key = "";
+  open = "";
+  close = "";
   ChoiceRule spacesTerminal = new Terminal("spaces","",false).dontCare();
 }
 

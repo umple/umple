@@ -308,7 +308,9 @@ class RuleBasedParser
     }
     else if(type.equals("BalancedRule"))
     {
-      choicerules.put(hash,new BalancedRule(name,args[6],args[7]));
+      BalancedRule rule = new BalancedRule(name,args[6],args[7]);
+      rule.setNoSpaces("true".equals(args[8]));
+      choicerules.put(hash,rule);
     }
     else if(type.equals("RootRule")){
       choicerules.put(hash,new RootRule(name));
@@ -375,7 +377,7 @@ class RuleBasedParser
     ChoiceRule otherRule = new ChainRule("otherrule",new Terminal("open","\\Q[[\\E",false).dontCare(),rulename,new Terminal("close","\\Q]]\\E",false).dontCare()).dontCare();
     ChoiceRule spaceSeparated = new BalancedRule("token","[",
         new ChainRule("multi",
-        new Terminal("premodifier","[~!=*]?[*]?"),
+        new Terminal("premodifier","([~!=*]?[*]?)"),
         new Terminal("tokenname","([|][|]|[a-zA-Z0-9_,-]+)"),
         new Terminal("valuecolon","[:>]?",false),
         new Terminal("value",".*",false)).dontCare(),"]").dontCare();
@@ -383,7 +385,7 @@ class RuleBasedParser
         new ChainRule("braced",opencurl,definition,closecurl),
         new ChainRule("anonymousRule",openbrace,definition,closebrace, new Terminal("modifier","[*+?]?",false)),
         new ChainRule("otherrule",otherRule,new Terminal("modifier","[*+?]?",false)),
-        new ChainRule("token",spaceSeparated,new Terminal("modifier","[*+?]?")),
+        new ChainRule("token",spaceSeparated,new Terminal("modifier","([*+?]?)")),
         new Terminal("separator","[|]",false),
         new Terminal("spaces","",true).dontCare(),
         new ChainRule("terminal",new Terminal("terminal","(\\Q-(\\E|\\Q-)\\E|^((?!"+((Terminal)opencurl).getRegex()+"|"+((Terminal)closecurl).getRegex()+"|\\s|\\(|\\)).)*)",false))).dontCare();
@@ -393,7 +395,7 @@ class RuleBasedParser
     ChoiceRule rule = new ChoiceRule("rule",
         new ChainRule("layout",
             rulename,
-            new Terminal("modifier","[-]?",false),
+            new Terminal("modifier","[-]?[#]?",false),
             new Terminal("colon","[:]",false).dontCare(),
             definition, new Terminal("newline", "[\\n]",false).dontCare()
             ).dontCare()
@@ -664,9 +666,18 @@ class GrammarAnalyzer {
       }
     }
     ChoiceRule self = rules.get(getValue(token,"rulename"));
-    if(getValue(token,"modifier")!=null)
+    String modifier = getValue(token,"modifier");
+    noSpaces = false;
+    if(modifier!=null)
     {
-      self.dontCare();
+      if(modifier.contains("-"))
+      {
+        self.dontCare();
+      }
+      if(modifier.contains("#"))
+      {
+        noSpaces = true;
+      }
     }
     if(actionedTokens.get(self.getName())!=null)
     {
@@ -726,7 +737,6 @@ class GrammarAnalyzer {
       set(getValue(token,"rulename"),new ChoiceRule(getValue(token,"rulename")));
     }
     stacks.get("stack").peek().add(rules.get(getValue(token,"rulename")));  
-
     if(modifier!=null&&modifier.length()>0)
     {
       stacks.get("stack").pop();
@@ -911,7 +921,7 @@ class GrammarAnalyzer {
     }
     else if("*".equals(premodifier))
     {
-      regex = "[^\\n]*\\n\\s*";
+      regex = "([^\\n]*\\n\\s*)";
       ChoiceRule rule = stacks.get("stack").peek();
       if(rule.size()>0&&rule.get(0) instanceof Terminal)
       {
@@ -1027,6 +1037,8 @@ class GrammarAnalyzer {
         open,
         rule,
         close).dontCare();
+    couple.setNoSpaces(noSpaces);
+    
     String key = open+close;
     if(!keys.containsKey(key))
     {

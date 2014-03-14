@@ -121,6 +121,9 @@ class ParserDataPackage
   
   //List of lines from the input
   String[] lines;
+  
+  //carries the context of the "no spaces" rule
+  noSpaces = false;
 }
 
 external Thread { }
@@ -190,6 +193,9 @@ class GrammarAnalyzer
 
   //filename of the file to be parsed
   input = null;
+  
+  //if a balanced rule is created, it needs to know if the current context is nospaces or not
+  noSpaces = false;
 
   //resulting parse result from the parse
   ParseResult parseResult = null;

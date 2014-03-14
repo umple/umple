@@ -20,13 +20,13 @@ typedName- : [type]? [[list]]? [~name]
 templateList- : OPEN_ROUND_BRACKET ( [[templatePrameter]] ( , [[templatePrameter]] )* )? CLOSE_ROUND_BRACKET
 templatePrameter : [name]
 
-templateAttribute : <<! [[templateAttributeContent]]* !>>
+templateAttribute# : <<! [[templateAttributeContent]]* !>>
 templateAttributeContent -: [[templateExpression]] | [[templateComment]] | [[templateScriptlet]] | [[templateText]] 
 templateText : [**templateTextContent:<<]
 
-templateComment : <</* [**templateCommentContent] */>>
-templateExpression : <<= [**templateExpressionContent] >>
-templateScriptlet : <<# [**templateLanguageCode] #>>
+templateComment# : <</* [**templateCommentContent] */>>
+templateExpression# : <<= [**templateExpressionContent] >>
+templateScriptlet# : <<# [**templateLanguageCode] #>>
 //templateOpen- : <<!
 //templateClose- : !>>
 
