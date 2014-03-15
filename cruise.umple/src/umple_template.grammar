@@ -21,12 +21,12 @@ templateList- : OPEN_ROUND_BRACKET ( [[templatePrameter]] ( , [[templatePrameter
 templatePrameter : [name]
 
 templateAttribute# : <<! [[templateAttributeContent]]* !>>
-templateAttributeContent -: [[templateExpression]] | [[templateComment]] | [[templateScriptlet]] | [[templateText]] 
+templateAttributeContent -: [[templateExpression]] | [[templateComment]] | [[templateCodeBlock]] | [[templateText]] 
 templateText : [**templateTextContent:<<]
 
 templateComment# : <</* [**templateCommentContent] */>>
 templateExpression# : <<= [**templateExpressionContent] >>
-templateScriptlet# : <<# [**templateLanguageCode] #>>
+templateCodeBlock# : <<# [**templateLanguageCode] #>>
 //templateOpen- : <<!
 //templateClose- : !>>
 
