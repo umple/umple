@@ -40,7 +40,7 @@ useStatement : use [use] ;
 namespace- : namespace [namespace] ;
 
 // The main top level elements to be found in an Umple file
-entity- : [[classDefinition]] | [[traitDefinition]] | [[fixmlDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]] | [[templateDefinition]]
+entity- : [[classDefinition]] | [[traitDefinition]] | [[interfaceDefinition]] | [[externalDefinition]] | [[associationDefinition]] | [[associationClassDefinition]] | [[stateMachineDefinition]] | [[templateDefinition]]
 
 // Comments follow the same conventions as C-family languages. [*UmpleComments*]
 comment- : [[inlineComment]] | [[multilineComment]]

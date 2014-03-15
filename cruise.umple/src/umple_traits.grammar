@@ -1,11 +1,3 @@
 traitDefinition : trait [name] [[traitTemplate]]* { [[traitContent]]* }
 traitTemplate : < [~name] ( , [~name] )* >
 traitContent- : [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
-
-
-
-fixmlDefinition : <FIXML> [[fixmlContent]]* </FIXML>
-fixmlContent : [[endContent]] | [[ extendContent ]]
-endContent : < [~name] ( [[tagDefinition]] )* /> 
-extendContent : < [~name] ( [[tagDefinition]] )* > ( [[endContent]] | [[extendContent]] )* < ( / ) [~name] >
-tagDefinition : [name] = "[**value]"
