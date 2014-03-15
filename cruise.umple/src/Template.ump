@@ -45,7 +45,21 @@ class UmpleModel {
 class UmpleClass {	
 	depend java.util.*;
 	int templateFieldCount = 0;
+	lazy TemplateMethod [] emitMethods;
+	0..1 -- * TemplateField templateFields;
+	
 	Map<String,EmitResponse> templateEmitStringMap = new HashMap<String,EmitResponse>();
+}
+
+class TemplateMethodBlock {
+	Position position;
+	String template;
+}
+
+//Method rpesentations in a template 
+class TemplateMethod {
+	Method method;
+	lazy TemplateMethodBlock [] templates;
 }
 
 //A template filed reprsents a field with a value for emitting purposes
