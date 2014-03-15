@@ -166,7 +166,7 @@ class TokenStream {
 	const String TEMPLATE_COMMENT="templateComment";
 	const String TEMPLATE_EXPRESSION="templateExpression";
 	const String TEMPLATE_TEXT="templateText";
-	const String TEMPLATE_SCRIPTLET="templateScriptlet";
+	const String TEMPLATE_CODEBLOCK="templateCodeBlock";
 	const String IDENT = "indent";
 	const String TEXT="Text";
 	
@@ -255,7 +255,7 @@ class TemplateParser {
 					String ch = input.getPointerAt(1);			
 					if ( ((ch.equalsIgnoreCase(TokenStream.TEMPLATE_COMMENT) 
 							|| ch.equalsIgnoreCase(TokenStream.TEMPLATE_EXPRESSION) 
-							||  ch.equalsIgnoreCase(TokenStream.TEMPLATE_SCRIPTLET)
+							||  ch.equalsIgnoreCase(TokenStream.TEMPLATE_CODEBLOCK)
 							||  ch.equalsIgnoreCase(TokenStream.TEXT)
 							||  ch.equalsIgnoreCase(TokenStream.IDENT))) ) {
 						childCtx=getChild();
@@ -288,7 +288,7 @@ class TemplateParser {
 			String ch = input.getPointerAt(1);
 			if ( ((ch.equalsIgnoreCase(TokenStream.TEMPLATE_COMMENT) 
 					|| ch.equalsIgnoreCase(TokenStream.TEMPLATE_EXPRESSION) 
-					||  ch.equalsIgnoreCase(TokenStream.TEMPLATE_SCRIPTLET)
+					||  ch.equalsIgnoreCase(TokenStream.TEMPLATE_CODEBLOCK)
 					||  ch.equalsIgnoreCase(TokenStream.TEXT))) ) {
 				input.next();
 				adaptor.addChild(root, adaptor.create(tkn));
@@ -501,7 +501,7 @@ class TemplateTokenizer {
 				return reAnalysis;
 			}			
 		});
-		currentTokenType = TokenStream.TEMPLATE_SCRIPTLET;
+		currentTokenType = TokenStream.TEMPLATE_CODEBLOCK;
 	}
 
 	void analyzeTextElement() throws TemplateException {
@@ -768,7 +768,7 @@ class TemplateTextTree {
 }
 
 //Template parser adaptor creates the respective tree toekn based on the toekn type.
-//It can be TEMPLATE_EXPRESSION, TEMPLATE_SCRIPTLET, TEMPLATE_COMMENT, or TEXT.
+//It can be TEMPLATE_EXPRESSION, TEMPLATE_CODEBLOCK, TEMPLATE_COMMENT, or TEXT.
 class TemplateParserAdaptor {
 	isA TreeAdaptor;
 	TemplateAttributeParser templateAttributeParser;
@@ -777,7 +777,7 @@ class TemplateParserAdaptor {
 		String type = token == null ? "" : token.getName();
 		if(type.equalsIgnoreCase(TokenStream.TEMPLATE_EXPRESSION)) {
 			return new TemplateExpressionTree(token,templateAttributeParser);
-		} else if(type.equalsIgnoreCase(TokenStream.TEMPLATE_SCRIPTLET)) {
+		} else if(type.equalsIgnoreCase(TokenStream.TEMPLATE_CODEBLOCK)) {
 			return new TemplateScripletTree(token,templateAttributeParser);
 		} else if(type.equalsIgnoreCase(TokenStream.TEMPLATE_COMMENT)) {
 			return new TemplateCommentTree(token,templateAttributeParser);
@@ -811,8 +811,8 @@ class TemplateAttributeParser {
 	    
 		if(token.is(TokenStream.TEMPLATE_EXPRESSION)) {
 		  addElement(new ExpressionElement(token.getSubToken(TokenStream.TEMPLATE_EXPRESSION).getValue("templateExpressionContent")));
-		} else if(token.is(TokenStream.TEMPLATE_SCRIPTLET)) {
-		  addElement(new ScripletElement(token.getSubToken(TokenStream.TEMPLATE_SCRIPTLET).getValue("templateLanguageCode")));
+		} else if(token.is(TokenStream.TEMPLATE_CODEBLOCK)) {
+		  addElement(new ScripletElement(token.getSubToken(TokenStream.TEMPLATE_CODEBLOCK).getValue("templateLanguageCode")));
 		} else if(token.is(TokenStream.TEMPLATE_COMMENT)) {
 		  addElement(new CommentElement(token.getSubToken(TokenStream.TEMPLATE_COMMENT).getValue("templateCommentContent")));
 		} else if(token.is(TokenStream.TEMPLATE_TEXT)) {
