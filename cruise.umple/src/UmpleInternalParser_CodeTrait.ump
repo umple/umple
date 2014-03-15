@@ -918,3 +918,5 @@ class UmpleInternalParser
   
 	
 }
+
+use UmpleInternalParser_FIXML.ump;
