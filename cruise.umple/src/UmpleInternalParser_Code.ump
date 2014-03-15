@@ -223,6 +223,7 @@ class UmpleInternalParser
     analyzeStateMachineToken(t,analysisStep);
     analyzeTraceToken(t,analysisStep);
     analyzeLayoutToken(t,analysisStep);
+    analyzeFIXML(t, analysisStep);
   }
 
   // Analyze an individual token, delegates to the various components in Umple
