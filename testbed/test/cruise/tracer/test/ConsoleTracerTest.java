@@ -60,9 +60,9 @@ public class ConsoleTracerTest
 					"sm_t,Closing,reachBottom,Closed",
 					"sm_t,Open,buttonOrObstacle,Closing",
 					"sm_t,Closing,reachBottom,Closed",
-					"sm_e,Closed,action={openGarageLights();},GarageDoor",
+					"sm_e,Closed,actionUmpleLine=46,GarageDoor",
 					"sm_t,Closing,reachBottom,Closed",
-					"sm_e,Closed,action={openGarageLights();},GarageDoor",
+					"sm_e,Closed,actionUmpleLine=46,GarageDoor",
 
 			};
 			

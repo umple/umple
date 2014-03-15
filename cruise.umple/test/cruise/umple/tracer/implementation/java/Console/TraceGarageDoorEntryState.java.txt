@@ -124,7 +124,7 @@ public class Tracer
         closeGarageLights();
         break;
       case Closed:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorEntryState.ump,31,Tracer,"+System.identityHashCode(this)+",sm_e,Closed,action={openGarageLights();},GarageDoor" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorEntryState.ump,31,Tracer,"+System.identityHashCode(this)+",sm_e,Closed,actionUmpleLine=19,GarageDoor" );
         openGarageLights();
         break;
     }
