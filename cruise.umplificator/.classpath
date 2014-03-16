@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="src" path="src-gen-umple"/>
 	<classpathentry kind="src" path="src-gen-jet"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="src-gen-umple"/>
+	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="con" path="DROOLS/Drools"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/commons-collections4-4.0.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/commons-configuration-1.10.jar"/>

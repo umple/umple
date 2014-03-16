@@ -1,21 +1,20 @@
 namespace cruise.umplificator.parser;
 
+
 class JavaParser {
-	
-	// Associations
-	1 -- 0..* JavaVisitor;
 
 	// JDT Dependencies
 	depend org.eclipse.jdt.core.dom.AST;
 	depend org.eclipse.jdt.core.dom.ASTParser;
 	depend org.eclipse.jdt.core.dom.CompilationUnit;
 	depend org.eclipse.jdt.core.JavaCore;
+	depend cruise.umplificator.visitor.JavaClassVisitor;
 	// Java Util Dependencies
 	depend java.util.Map;
 	
 	// Parsing Methods
 	
-	 protected CompilationUnit parse(String source){
+	 public CompilationUnit parseUnit(String source){
 	    ASTParser parser = ASTParser.newParser(AST.JLS4); 
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setSource(source.toCharArray()); // set source
@@ -25,7 +24,12 @@ class JavaParser {
 			JavaCore.setComplianceOptions(JavaCore.VERSION_1_7, options);		
 			parser.setCompilerOptions(options);
 			parser.setResolveBindings(true); // we need bindings later on
-			return (CompilationUnit) parser.createAST(null);
+			CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+			// VISITOR
+			cu.accept(new JavaClassVisitor());
+			// VISITOR
+			
+			return cu;
 	  }
 
 }

@@ -1,8 +1,29 @@
 namespace cruise.umplificator.visitor;
 
+class JavaClassVisitor {
 
-class JavaVisitor {
+ isA ASTVisitor;
 
+ depend org.eclipse.jdt.core.dom.ASTVisitor;
+ depend org.eclipse.jdt.core.dom.ImportDeclaration;
+ depend org.eclipse.jdt.core.dom.MethodDeclaration;
 
+ ImportDeclaration [] importDeclarations;
+ MethodDeclaration [] methodDeclarations;
+
+  @Override
+  public boolean visit(ImportDeclaration node) {
+    importDeclarations.add(node);
+    return super.visit(node);
+  }
+  
+  @Override
+  public boolean visit(MethodDeclaration node) {
+    methodDeclarations.add(node);
+    return super.visit(node);
+  }
 
 }
+ external MethodDeclaration {}
+ external ImportDeclaration {}
+ external ASTVisitor {}

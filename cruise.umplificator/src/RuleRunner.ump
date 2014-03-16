@@ -1,0 +1,99 @@
+namespace cruise.umplificator.rules;
+
+class RuleService{
+
+depend java.io.*;
+depend org.kie.api.runtime.KieSession;
+  
+  RuleRunner runner;
+  
+public KieSession startRuleEngine(){
+    try {
+		runner.addRuleFile("src/main/resources/rules/", "Rules_Fields.drl");
+		return runner.buildKnowledgeSession();
+	} catch (FileNotFoundException e) {
+		e.printStackTrace();
+		return null;
+	}
+}
+
+}
+
+class RuleRunner
+{
+depend org.kie.api.KieServices;
+depend org.kie.api.builder.KieBuilder;
+depend org.kie.api.builder.KieFileSystem;
+depend org.kie.api.builder.KieRepository;
+depend org.kie.api.builder.Message.Level;
+depend org.kie.api.io.KieResources;
+depend org.kie.api.io.Resource;
+depend org.kie.api.runtime.KieContainer;
+depend org.kie.api.runtime.KieSession;
+depend java.io.*;
+depend java.io.FileInputStream;
+depend java.io.InputStream;
+depend cruise.umple.util.SampleFileWriter;
+
+     KieServices kieServices;
+     KieContainer kieContainer;
+     KieSession kieSession;
+     KieResources kieResources;
+     KieFileSystem kieFileSystem;
+     KieRepository kieRepository;
+
+    public RuleRunner()
+    {
+        this.kieServices = KieServices.Factory.get();
+        this.kieResources = kieServices.getResources();
+        this.kieFileSystem = kieServices.newKieFileSystem();
+        this.kieRepository = kieServices.getRepository();
+    }
+
+
+    public void addRuleFile(String packagename, String rulefile) throws FileNotFoundException{
+    	String path=  SampleFileWriter.rationalize(packagename+rulefile);
+  		java.io.File ruleFile= new java.io.File(path);
+  		InputStream inputStream = new FileInputStream(ruleFile);  
+  		Resource  resource = kieResources.newInputStreamResource(inputStream);
+
+        kieFileSystem.write(path, resource);
+    }
+
+
+    public KieSession buildKnowledgeSession()
+    {
+        KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
+
+        kb.buildAll();
+
+        if (kb.getResults().hasMessages(Level.ERROR))
+        {
+            throw new RuntimeException("Build Errors:\n" + kb.getResults().toString());
+        }
+
+        kieContainer = kieServices.newKieContainer(kieRepository.getDefaultReleaseId());
+
+        kieSession = this.kieContainer.newKieSession();
+
+        return kieSession;
+    } 
+    
+    public KieSession fireAllRules()
+    {
+        kieSession.fireAllRules();
+
+        return kieSession;
+    }
+
+    public void dispose()
+    {
+        this.kieSession.dispose();
+    } 
+}
+  external KieServices  {}
+  external KieContainer {}
+  external KieSession {}
+  external KieResources {}
+  external KieFileSystem {}
+  external KieRepository {}

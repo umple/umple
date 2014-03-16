@@ -2,7 +2,7 @@ namespace cruise.umplificator.core;
 	
 
 class Umplificator {
-	1 -- 0..1 JavaParser;	
+
 }
 
 class RefactoringStep {
