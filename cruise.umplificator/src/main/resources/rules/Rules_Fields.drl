@@ -1,0 +1,91 @@
+package rules
+ 
+import org.eclipse.jdt.core.dom.*;
+import cruise.umple.compiler.*;
+import org.apache.commons.lang.WordUtils;
+
+rule "JavaField_IsUmpleAttribute"
+    when
+        fieldDeclaration: FieldDeclaration(fieldDeclaration.getType().isPrimitiveType())
+        uClass: UmpleClass()
+    then
+  		Attribute uAttr = new Attribute(null, null, null, null, false, uClass);
+    	uAttr.setName(getFieldName(fieldDeclaration));
+    	uClass.addAttribute(uAttr);
+    	// We insert the atribute into the Working memory,
+    	// so it can accessed and modified by other Rules
+    	insert(uAttr);
+end
+
+
+rule "JavaField_hasGetter"
+	when
+		fieldDeclaration: FieldDeclaration()
+	 	method: MethodDeclaration(getMethodName(method).equals(getGetterName(fieldDeclaration)) &&
+	 	        getMethodType(method).equals(getFieldType(fieldDeclaration)))
+	 	attribute: Attribute(name.equals(getFieldName(fieldDeclaration)))
+	then
+		System.out.println("Field has a getter");
+		System.out.println(getGetterName(fieldDeclaration));
+end
+
+rule "hasEmptyConstructor"
+	when
+		uClass: UmpleClass()
+		method: MethodDeclaration(getMethodName(method).equals(uClass.getName) &&
+				(method.parameters().size() == 0) &&
+				method.isConstructor())
+	    attribute: Attribute()		
+	then
+		attribute.setIsLazy(true);
+		insert(attribute);
+		System.out.println("Constructor name: " + getMethodName(method));
+end
+
+function String getMethodName(MethodDeclaration method){
+	return method.getName().getFullyQualifiedName();
+}
+
+function String getMethodType(MethodDeclaration method){
+	return method.getReturnType2().toString();
+}
+
+function String getGetterName(FieldDeclaration field)
+{
+	String fieldName = WordUtils.capitalize(getFieldName(field));
+	return "get" + fieldName;
+}
+
+function String getFieldName(FieldDeclaration field){
+   	Object declarationFrag = field.fragments().get(0);
+   	String fieldName = ((VariableDeclarationFragment) declarationFrag).getName().getFullyQualifiedName();
+   	return fieldName;
+}
+
+function String getFieldType(FieldDeclaration field){
+   	return field.getType().toString();
+}
+
+/*
+// lazy: A constructor argument is not required for this attribute
+// We look for the initialization of this variable in the constructor
+rule "isLazy"
+when
+then
+end
+
+rule "isConstant"
+when
+then
+end
+
+rule "isAutounique"
+when
+then
+end
+
+rule "isDefaulted"
+when
+then
+end
+*/

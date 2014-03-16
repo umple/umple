@@ -1,0 +1,11 @@
+import java.util.*;
+
+public class A { 
+
+int b; 
+
+A () { }
+
+ A(int b) {this.b=b;}
+ 
+}

@@ -6,8 +6,18 @@ depend cruise.umplificator.FileHelper;
 
 public boolean umplify(List<File> srcFiles) {
 	FileHelper.printFilesToUmplify(srcFiles);
+	
 	return false;
 }
 
+
+public boolean umplifyElement(File file)
+{
+// Parser content
+// Select Visitor
+// Build UmpleModel
+// OutputFile
+return false;
+}
 
 }
