@@ -26,6 +26,7 @@
     <pathelement location="${bin.path}"/>
     <pathelement location="cruise.umple/bin"/>
     <path refid="eclipse.umplificator.classpath"/>
+	<path refid="validator_core.classpath"/>
     <path refid="umple.classpath"/>
     <path refid="junit4.classpath"/>
   </path>
