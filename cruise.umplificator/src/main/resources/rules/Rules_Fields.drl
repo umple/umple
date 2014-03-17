@@ -29,6 +29,15 @@ rule "JavaField_hasGetter"
 		System.out.println(getGetterName(fieldDeclaration));
 end
 
+rule "transform_ImportDeclaration"
+	when
+		importDeclaration: ImportDeclaration()
+		uClass: UmpleClass()
+	then
+		Depend depend = new Depend(getImportName(importDeclaration));
+		uClass.addDepend(depend);
+end
+
 rule "hasEmptyConstructor"
 	when
 		uClass: UmpleClass()
@@ -66,6 +75,18 @@ function String getFieldType(FieldDeclaration field){
    	return field.getType().toString();
 }
 
+//http://svn.apache.org/repos/asf/geronimo/devtools/j2g/trunk/plugins/org.apache.geronimo.devtools.j2g.sources/src/org/apache/geronimo/devtools/j2g/sources/dependence/NodesVisitor.java
+function String getImportName(ImportDeclaration importDeclaration){
+	StringBuilder importName =  new StringBuilder();
+	importName.append(importDeclaration.getName().getFullyQualifiedName());
+	if (importDeclaration.isOnDemand()) { 
+		importName.append(".*"); 
+	}else { 
+		importName.append("");
+	}
+	return importName.toString();
+}
+
 function String getAttributeType(FieldDeclaration field){
 	String attrType="";
 	String fieldType= getFieldType(field);
@@ -78,7 +99,7 @@ function String getAttributeType(FieldDeclaration field){
 	         else  if (fieldType.equals("int")){  
 	           return "Integer";}
 	         else if (fieldType.equals("long")){
-	           return "Integer";}
+	           return "Double";}
 	         else if (fieldType.equals("float")){ 
 	           return "Float"; }
 	         else if (fieldType.equals("double")){

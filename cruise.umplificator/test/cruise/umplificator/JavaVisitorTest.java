@@ -31,7 +31,7 @@ public class JavaVisitorTest {
 	public void imports_returned()
 	{
 		int nbImports = visitor.numberOfImportDeclarations();
-		 Assert.assertEquals(1, nbImports);
+		 Assert.assertEquals(3, nbImports);
 	}
 	
 	
