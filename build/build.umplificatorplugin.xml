@@ -233,7 +233,7 @@
     <antcall target="setVersion" />
     <antcall target="umpleSelf" />
     <antcall target="compile" />
-	<antcall target="test" />
+	  <!-- <antcall target="test" />-->
     <antcall target="package" />
     <antcall target="resetVersion" />
   </target>
