@@ -10,6 +10,7 @@
   <property name="project.path" value="cruise.umplificator.eclipse"/>
   <property name="bin.path" value="${project.path}/bin"/>
   <property name="dist.path" value="dist/cruise.umplificator.eclipse"/>
+  <property name="test.output.path" value="dist/qa/cruise.umplificator"/>
 
   <condition property="jvmarg.01" value="-d32"><equals arg1="${is.osx}" arg2="true" /></condition>
   <condition property="jvmarg.02" value="-XstartOnFirstThread"><equals arg1="${is.osx}" arg2="true" /></condition>
@@ -82,11 +83,13 @@
   <target name="clean">
     <delete dir="cruise.umplificator/bin" failonerror="false" />
     <delete dir="cruise.umplificator.eclipse/bin" failonerror="false" />
+	<delete dir="dist/qa/cruise.umplificator" failonerror="false" />
   </target>
 
   <target name="init">
     <mkdir dir="cruise.umplificator/bin"/>
     <mkdir dir="cruise.umplificator.eclipse/bin"/>
+	<mkdir dir="dist/qa/cruise.umplificator"/>
   </target>
 
   <target name="setVersion">
@@ -124,6 +127,30 @@
       <exclude name="**/data" />
       <classpath refid="project.classpath"/>
     </javac>
+  </target>
+
+
+  <target name="test">
+    <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}">
+      <jvmarg value="${jvmarg.01}"/>
+      <jvmarg value="${jvmarg.02}" />
+      
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir="${test.output.path}">
+        <fileset dir="cruise.umplificator/test">
+          <include name="**/*Test*.java"/>
+          <exclude name="**/AllTests.java"/>
+        </fileset>
+      </batchtest>
+      <classpath refid="project.classpath"/>
+    </junit>
+
+    <junitreport todir="${test.output.path}">
+      <fileset dir="${test.output.path}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="${test.output.path}"/>
+    </junitreport>
   </target>
 
 
@@ -206,6 +233,7 @@
     <antcall target="setVersion" />
     <antcall target="umpleSelf" />
     <antcall target="compile" />
+	<antcall target="test" />
     <antcall target="package" />
     <antcall target="resetVersion" />
   </target>

@@ -6,6 +6,17 @@ depend cruise.umplificator.FileHelper;
 
 public boolean umplify(List<File> srcFiles) {
 	FileHelper.printFilesToUmplify(srcFiles);
+	// GetContent from file
+	  
+	// Parse it
+	  
+	// initialize visitor
+	  
+	// initialize drools engine
+	  
+	// get Umple Elements 
+	  
+	// generate Umple Code
 	
 	return false;
 }
