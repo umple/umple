@@ -63,6 +63,8 @@ public class ConsoleTracerTest
 					"sm_e,Closed,actionUmpleLine=46,GarageDoor",
 					"sm_t,Closing,reachBottom,Closed",
 					"sm_e,Closed,actionUmpleLine=46,GarageDoor",
+					"sm_x,Closed,actionUmpleLine=81,GarageDoor",
+					"sm_t,Closed,buttonOrObstacle,Opening",
 
 			};
 			
@@ -179,6 +181,13 @@ public class ConsoleTracerTest
 	  gbTrace.buttonOrObstacle();
 	  gbTrace.reachBottom();
 
+	  GarageDoorC gcTrace = new GarageDoorC();
+	  gcTrace.buttonOrObstacle();
+	  gcTrace.reachBottom();
+	  gcTrace.buttonOrObstacle();
+	  gcTrace.reachTop();
+	  gcTrace.buttonOrObstacle();
+	  gcTrace.reachBottom();
 	  //System.out.println("Garage = "+sTrace.getGaragDoor());
 
 

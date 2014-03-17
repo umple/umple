@@ -61,6 +61,41 @@ class GarageDoorB
     void closeGarageLights() {}
 }
 
+class GarageDoorC
+{
+    GarageDoor {
+      	
+      	Open { 
+          buttonOrObstacle -> Closing;
+          
+          }
+      	
+      	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed {
+          buttonOrObstacle -> Opening;
+          entry / { openGarageLights(); }
+          exit / { closeGarageLights(); }
+          }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
+    }
+    
+    // trace state exit
+    trace exit Closed;
+  
+    void openGarageLights() {}
+    void closeGarageLights() {}
+}
+
 class GarageDoorZ
 {
     // UML state machine digram for a Garage door, written in Umple
