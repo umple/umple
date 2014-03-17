@@ -2,7 +2,7 @@
 /*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
-import cruise.util.ConsoleTracer;
+import cruise.util.FileTracer;
 import java.util.Date;
 
 // line 3 "../TraceSingleAttributeRecord1.ump"
@@ -44,7 +44,7 @@ public class Tracer
   public boolean setName(String aName)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeRecord1.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name+","+(""+aName).toString().replace("\n","").replace(",",";")+","+id );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeRecord1.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name+","+(""+aName).toString().replace("\n","").replace(",",";")+","+id );
     name = aName;
     wasSet = true;
     return wasSet;

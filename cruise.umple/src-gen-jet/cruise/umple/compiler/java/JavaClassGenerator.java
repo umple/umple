@@ -4558,7 +4558,7 @@ for (StateMachine smq : uClass.getStateMachines())
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
           javaLine+=a1.getActionCode().split("\\n").length;
         }
-         // trace a single state
+        //----- trace a single state
         for( TraceDirective td : uClass.getTraceDirectives() )
           for( StateMachineTraceItem traceStm : td.getStateMachineTraceItems() )
         	if( ! traceStm.getTraceStateMachineFlag() )
@@ -4566,6 +4566,11 @@ for (StateMachine smq : uClass.getStateMachines())
         		State traceState = traceStm.getState();
 
         		if( traceState.getName().equals(nextState.getName()) && traceStm.getEntry() )
+        		{
+        			allCases.append(traceStm.trace(gen, t,"sm_t", uClass)+"\n");
+       				break;
+        		}
+        		if( traceState.getName().equals(state.getName()) && traceStm.getExit() )
         		{
         			allCases.append(traceStm.trace(gen, t,"sm_t", uClass)+"\n");
        				break;

@@ -216,6 +216,12 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceGarageDoorEntryState.ump",languagePath + tracerPath+"/TraceGarageDoorEntryState."+ languagePath +".txt","Tracer");
 	}
 	
+	@Test
+	public void TraceGarageDoorExitState()
+	{
+		assertUmpleTemplateFor("TraceGarageDoorExitState.ump",languagePath + tracerPath+"/TraceGarageDoorExitState."+ languagePath +".txt","Tracer");
+	}
+	
 	@Test @Ignore
 	public void TraceState()
 	{

@@ -327,7 +327,12 @@ class StateMachineTraceItem
       name = getStateMachine().getName()+"\"";
       obj = state.getName();
       for( Action a : ((State) o).getActions() )
-    	  obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+      {
+    	  if( this.getEntry() && a.getActionType().equals("entry") )
+    		  obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+    	  if( this.getExit() && a.getActionType().equals("exit") )
+    		  obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
+      }
     }
     if(getTraceDirective().getTraceRecord()!=null)
     {

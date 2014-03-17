@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE ${last.version} modeling language!*/
+/*This code was generated using the UMPLE 1.19.0.3710 modeling language!*/
 
 package example;
 import cruise.util.StringTracer;
@@ -50,27 +50,24 @@ public class Tracer
     switch (aGarageDoor)
     {
       case Open:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Open,buttonOrObstacle,Closing" );
         setGarageDoor(GarageDoor.Closing);
         wasEventProcessed = true;
         break;
       case Closing:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,buttonOrObstacle,Opening" );
         setGarageDoor(GarageDoor.Opening);
         wasEventProcessed = true;
         break;
       case Closed:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Closed,buttonOrObstacle,Opening" );
+        exitGarageDoor();
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorExitState.ump,32,Tracer,"+System.identityHashCode(this)+",sm_t,Closed,buttonOrObstacle,Opening" );
         setGarageDoor(GarageDoor.Opening);
         wasEventProcessed = true;
         break;
       case Opening:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Opening,buttonOrObstacle,HalfOpen" );
         setGarageDoor(GarageDoor.HalfOpen);
         wasEventProcessed = true;
         break;
       case HalfOpen:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,HalfOpen,buttonOrObstacle,Opening" );
         setGarageDoor(GarageDoor.Opening);
         wasEventProcessed = true;
         break;
@@ -89,7 +86,6 @@ public class Tracer
     switch (aGarageDoor)
     {
       case Closing:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,reachBottom,Closed" );
         setGarageDoor(GarageDoor.Closed);
         wasEventProcessed = true;
         break;
@@ -108,7 +104,6 @@ public class Tracer
     switch (aGarageDoor)
     {
       case Opening:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoor.ump,25,Tracer,"+System.identityHashCode(this)+",sm_t,Opening,reachTop,Open" );
         setGarageDoor(GarageDoor.Open);
         wasEventProcessed = true;
         break;
@@ -119,12 +114,42 @@ public class Tracer
     return wasEventProcessed;
   }
 
+  @umplesourcefile(line={20}, file={"TraceGarageDoorExitState.ump"}, javaline={126}, length={1})
+  private void exitGarageDoor()
+  {
+    switch(GarageDoor)
+    {
+      case Closed:
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceGarageDoorExitState.ump,32,Tracer,"+System.identityHashCode(this)+",sm_x,Closed,actionUmpleLine=20,GarageDoor" );
+        closeGarageLights();
+        break;
+    }
+  }
+
   private void setGarageDoor(GarageDoor aGarageDoor)
   {
     GarageDoor = aGarageDoor;
+
+    // entry actions and do activities
+    switch(GarageDoor)
+    {
+      case Closed:
+        openGarageLights();
+        break;
+    }
   }
 
   public void delete()
   {}
+
+  @umplesourcefile(line={34},file={"TraceGarageDoorExitState.ump"},javaline={150},length={3})
+  public void openGarageLights(){
+    
+  }
+
+  @umplesourcefile(line={35},file={"TraceGarageDoorExitState.ump"},javaline={155},length={3})
+  public void closeGarageLights(){
+    
+  }
 
 }
