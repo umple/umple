@@ -11,12 +11,12 @@ rule "JavaField_IsUmpleAttribute"
     then
   		Attribute uAttr = new Attribute(null, null, null, null, false, uClass);
     	uAttr.setName(getFieldName(fieldDeclaration));
+    	uAttr.setType(getAttributeType(fieldDeclaration));
     	uClass.addAttribute(uAttr);
     	// We insert the atribute into the Working memory,
     	// so it can accessed and modified by other Rules
     	insert(uAttr);
 end
-
 
 rule "JavaField_hasGetter"
 	when
@@ -65,6 +65,32 @@ function String getFieldName(FieldDeclaration field){
 function String getFieldType(FieldDeclaration field){
    	return field.getType().toString();
 }
+
+function String getAttributeType(FieldDeclaration field){
+	String attrType="";
+	String fieldType= getFieldType(field);
+		 	if  (fieldType.equals("byte")){
+			    return "Integer";}
+	         else if (fieldType.equals("short")) {
+	         	return "Integer";}
+	         else if (fieldType.equals("char")){
+	           return "String";}
+	         else  if (fieldType.equals("int")){  
+	           return "Integer";}
+	         else if (fieldType.equals("long")){
+	           return "Integer";}
+	         else if (fieldType.equals("float")){ 
+	           return "Float"; }
+	         else if (fieldType.equals("double")){
+	           return "Double";}
+	         else if (fieldType.equals("boolean")){
+	          return "Boolean";}
+	         else if  (fieldType.equals("void")){  
+	          return"";}
+	         else { throw new IllegalArgumentException("Invalid Type");}
+}
+
+
 
 /*
 // lazy: A constructor argument is not required for this attribute

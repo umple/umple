@@ -39,7 +39,7 @@ public class JavaVisitorTest {
 	public void methods_returned()
 	{
 		int nbMethods = visitor.numberOfMethodDeclarations();
-		 Assert.assertEquals(2, nbMethods);
+		 Assert.assertEquals(3, nbMethods);
 	}
 	
 }

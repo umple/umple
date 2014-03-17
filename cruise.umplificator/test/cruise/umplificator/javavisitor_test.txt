@@ -2,10 +2,14 @@ import java.util.*;
 
 public class A { 
 
-int b; 
+private int b; 
 
 A () { }
 
- A(int b) {this.b=b;}
+A(int b) {this.b=b;}
+
+public int getB(){
+return b;
+}
  
 }
