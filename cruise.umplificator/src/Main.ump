@@ -2,7 +2,6 @@ namespace cruise.umplificator;
 
 class UmplificatorMain {
 
-	depend cruise.umple.compiler.UmpleFile;
 	depend java.util.List;
 	depend cruise.umplificator.core.*;
 	depend java.io.File;

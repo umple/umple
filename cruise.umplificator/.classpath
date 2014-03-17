@@ -5,7 +5,6 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="con" path="DROOLS/Drools"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/commons-collections4-4.0.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/commons-configuration-1.10.jar"/>
@@ -21,6 +20,17 @@
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar"/>
 	<classpathentry kind="lib" path="/lib/junit.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/cruise.umple"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/antlr-runtime-3.5.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/drools-compiler-6.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/drools-core-6.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/drools-jsr94-6.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/kie-api-6.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/kie-internal-6.0.1.Final.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/mvel2-2.1.8.Final.jar"/>
+	<classpathentry kind="lib" path="/lib/umple.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/protobuf-java-2.5.0.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/xstream-1.4.3.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/slf4j-api-1.7.6.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

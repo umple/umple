@@ -30,6 +30,20 @@
     <pathelement location="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar"/>
 	<pathelement location="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
     <pathelement location="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"/>
+	  <!-- ```````````````````````````
+    DROOLS LIBRARIES FOR THE UMPLIFICATOR
+    ``````````````````````````` -->
+	<pathelement location="lib/umplificatorplugins/droolsplugins/antlr-runtime-3.5.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/drools-compiler-6.0.1.Final.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/drools-core-6.0.1.Final.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/drools-jsr94-6.0.1.Final.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/kie-api-6.0.1.Final.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/kie-internal-6.0.1.Final.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/mvel2-2.1.8.Final.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/protobuf-java-2.5.0.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/slf4j-api-1.7.6.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar"/>
+	<pathelement location="lib/umplificatorplugins/droolsplugins/xstream-1.4.3.jar"/>
   </path>
 
   <path id="umple.classpath">
