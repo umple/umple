@@ -7,13 +7,21 @@ class JavaClassVisitor {
  depend org.eclipse.jdt.core.dom.ASTVisitor;
  depend org.eclipse.jdt.core.dom.ImportDeclaration;
  depend org.eclipse.jdt.core.dom.MethodDeclaration;
+ depend org.eclipse.jdt.core.dom.FieldDeclaration;
 
  ImportDeclaration [] importDeclarations;
  MethodDeclaration [] methodDeclarations;
+ FieldDeclaration [] fieldDeclarations;
 
   @Override
   public boolean visit(ImportDeclaration node) {
     importDeclarations.add(node);
+    return super.visit(node);
+  }
+  
+  @Override
+  public boolean visit(FieldDeclaration node) {
+    fieldDeclarations.add(node);
     return super.visit(node);
   }
   
