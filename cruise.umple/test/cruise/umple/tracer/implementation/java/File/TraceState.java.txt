@@ -1,10 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
+import cruise.util.FileTracer;
+import java.util.Date;
 
 public class Light
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -56,10 +60,12 @@ public class Light
     {
       case On:
         exitStatus();
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Light,"+System.identityHashCode(this)+",sm_t,On,flip,Off" );
         setStatus(Status.Off);
         wasEventProcessed = true;
         break;
       case Off:
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Light,"+System.identityHashCode(this)+",sm_t,Off,flip,On" );
         setStatus(Status.On);
         wasEventProcessed = true;
         break;
@@ -78,6 +84,7 @@ public class Light
     switch (aStatusOn)
     {
       case Null:
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Light,"+System.identityHashCode(this)+",sm_t,Null,enterOn,SemiOn" );
         setStatusOn(StatusOn.SemiOn);
         wasEventProcessed = true;
         break;
@@ -115,6 +122,7 @@ public class Light
     switch(status)
     {
       case On:
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Light,"+System.identityHashCode(this)+",sm_x,On,status" );
         exitOn();
         break;
     }
@@ -122,10 +130,6 @@ public class Light
 
   private void setStatus(Status aStatus)
   {
-    if( aStatus.equals(Status.On) )
-      System.err.println("entry=" + aStatus);
-    if( status != null && status.equals(Status.On) && !aStatus.equals(Status.On) )
-      System.err.println("exit=" + status);
     status = aStatus;
 
     // entry actions and do activities
@@ -139,10 +143,6 @@ public class Light
 
   private void setStatusOn(StatusOn aStatusOn)
   {
-    if( aStatusOn.equals(StatusOn.SemiOn) )
-      System.err.println("entry=" + aStatusOn);
-    if( statusOn != null && statusOn.equals(StatusOn.SemiOn) && !aStatusOn.equals(StatusOn.SemiOn) )
-      System.err.println("exit=" + statusOn);
     statusOn = aStatusOn;
     if (status != Status.On && aStatusOn != StatusOn.Null) { setStatus(Status.On); }
   }
