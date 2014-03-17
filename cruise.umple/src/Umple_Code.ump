@@ -935,6 +935,16 @@ class UmpleClass
     return null;
   }
 
+  public boolean hasImplementedMethodIncludingWithinParentClasses(Method comparedMethod) {
+    Method aMethod = getMethod(comparedMethod);
+    if(aMethod!=null&&!"".equals(aMethod.getMethodBody().getExtraCode(""))){
+      return true;
+    }
+    else if(getExtendsClass()!=null&&getExtendsClass().hasImplementedMethodIncludingWithinParentClasses(comparedMethod)){
+      return true;
+    }
+    return false;
+  }
 
   public boolean hasMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();

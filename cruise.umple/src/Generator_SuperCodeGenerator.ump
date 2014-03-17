@@ -9,11 +9,6 @@ class SuperCodeGenerator {
   protected Map<String,String> UmpleToPrimitiveMap = new HashMap<String,String>();
   protected Map<String,String> TraceLookupMap = new HashMap<String,String>();
   protected Map<String,String> ConstraintLookupMap = new HashMap<String,String>();
-	
-  //This method is because of issue number 373;
-  public void generate() {
-
-  }
 
   public abstract void initializeLangaugeBasedVariables();
 

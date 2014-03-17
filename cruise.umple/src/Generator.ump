@@ -44,16 +44,15 @@ interface CodeTranslator
 }
 
 class SuperCodeGenerator {
-	depend java.util.*;
-	depend cruise.umple.util.*;
-	abstract;
-	//The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
-	isA CodeGenerator;
-	isA CodeTranslator;
-	UmpleModel model = null;
-	String output = "";
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  abstract;
+  //The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
+  isA CodeGenerator;
+  isA CodeTranslator;
+  UmpleModel model = null;
+  String output = "";
 
-  public void prepare() {}
   public void postpare() { GeneratorHelper.postpare(getModel()); }
 }
 class GeneratorHelper
