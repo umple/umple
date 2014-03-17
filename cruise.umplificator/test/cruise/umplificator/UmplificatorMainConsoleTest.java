@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import cruise.umplificator.UmplificatorMain;
 
-@SuppressWarnings("restriction")
 public class UmplificatorMainConsoleTest {
 
 	@Test

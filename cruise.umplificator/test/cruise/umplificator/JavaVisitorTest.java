@@ -11,7 +11,6 @@ import cruise.umple.util.SampleFileWriter;
 import cruise.umplificator.parser.JavaParser;
 import cruise.umplificator.visitor.JavaClassVisitor;
 
-@SuppressWarnings("restriction")
 public class JavaVisitorTest {
 
 	String pathToInput;
