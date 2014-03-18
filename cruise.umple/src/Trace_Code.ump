@@ -69,9 +69,8 @@ class State
  * @params uClass: the umple class to look within for the trace item
  * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute); 
  */
-  TraceItem getTraced(String method, UmpleClass uClass)
-  {
-  	//go through all the trace directives of uClass
+   TraceItem getTraced(String method, UmpleClass uClass){
+    //go through all the trace directives of uClass
     for(TraceDirective td: uClass.getTraceDirectives())
     {
       //for all the statemachine trace items
@@ -80,6 +79,8 @@ class State
       	StateMachine sm = smti.getStateMachine();
       	Transition  tsn = smti.getTransition();
       	State st = smti.getState();
+      	if( method.equals("activity") && st.equals(this) && st.hasActivity() )
+      		return smti;
       	if(!(smti.getExit()||smti.getEntry())){
         if(tsn!=null&&method.equals("transition"))
         {
@@ -333,6 +334,17 @@ class StateMachineTraceItem
     	  if( this.getExit() && a.getActionType().equals("exit") )
     		  obj += ",actionUmpleLine=" + a.getPosition().getLineNumber();
       }
+    }
+    else if(o instanceof Activity)
+    {
+    	Activity act = (Activity)o;
+    	State state = act.getState();
+        name = getStateMachine().getName()+"\"";
+        obj = state.getName();
+        if( methodname.equals("sm_da"))
+        	obj += ",doActivitedStarted";
+        else if(methodname.equals("sm_di"))
+        	obj += ",doActivitedInterrupted";
     }
     if(getTraceDirective().getTraceRecord()!=null)
     {
