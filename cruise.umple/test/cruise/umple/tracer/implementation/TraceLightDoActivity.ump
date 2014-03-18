@@ -1,0 +1,20 @@
+namespace example;
+
+class LightFixtureA
+{
+  
+  status {
+    Open {
+      flip -> Closed;
+    }
+    Closed {
+      flip -> Open;
+      do 
+      {  
+        Thread.sleep(400);
+        measureClose();
+      }
+    }
+    trace Closed;
+  }
+}
