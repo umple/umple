@@ -9,7 +9,7 @@ RuleRunner runner;
   
 public KieSession startRuleEngine(){
     try {
-		runner.addRuleFile("src/main/resources/rules/", "Rules_Fields.drl");
+		runner.addRuleFile("rules", "Rules_Fields.drl");
 		return runner.buildKnowledgeSession();
 	} catch (FileNotFoundException e) {
 		e.printStackTrace();
@@ -33,7 +33,6 @@ depend org.kie.api.runtime.KieSession;
 depend java.io.*;
 depend java.io.FileInputStream;
 depend java.io.InputStream;
-depend cruise.umple.util.SampleFileWriter;
 depend cruise.umplificator.visitor.JavaClassVisitor;
 depend cruise.umple.compiler.UmpleClass;
 depend org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -57,12 +56,10 @@ depend org.eclipse.jdt.core.dom.MethodDeclaration;
 
 
     public void addRuleFile(String packagename, String rulefile) throws FileNotFoundException{
-    	String path=  SampleFileWriter.rationalize(packagename+rulefile);
-  		java.io.File ruleFile= new java.io.File(path);
-  		InputStream inputStream = new FileInputStream(ruleFile);  
-  		Resource  resource = kieResources.newInputStreamResource(inputStream);
-
-        kieFileSystem.write(path, resource);
+		System.out.println("--- Adding rule files ---");
+		Resource  resource =kieResources.newUrlResource(getClass().getResource("/"+packagename+"/"+rulefile));
+		System.out.print(IOUtils.toString(resource.getInputStream()));
+        kieFileSystem.write(resource1);
     }
 
 

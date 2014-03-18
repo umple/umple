@@ -21,7 +21,7 @@ import cruise.umplificator.visitor.JavaClassVisitor;
 public class RulesTest {
 
 	String pathToInput;
-	JavaClassVisitor visitor = new JavaClassVisitor();
+	JavaClassVisitor visitor ;
 	RuleRunner runner  = new RuleRunner();
 	RuleService ruleService= new RuleService(runner);
 	KieSession kieSession;
@@ -37,8 +37,6 @@ public class RulesTest {
 	   	visitor = new JavaClassVisitor();
 		JavaParser javaParser = new JavaParser(visitor);
 		javaParser.parseUnit(code);
-    	visitor = new JavaClassVisitor();
-    	compilationUnit.accept(visitor);
 		uClass = new UmpleClass("A");
 	    kieSession = ruleService.startRuleEngine();
 		kieSession.insert( uClass);

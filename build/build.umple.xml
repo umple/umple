@@ -139,6 +139,19 @@
     <unjar src="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
 	<unjar src="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
 	<unjar src="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/commons-io-2.4.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/kie-api-6.0.1.Final.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/drools-compiler-6.0.1.Final.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/drools-core-6.0.1.Final.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/drools-jsr94-6.0.1.Final.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/antlr-runtime-3.5.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/kie-internal-6.0.1.Final.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/mvel2-2.1.8.Final.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/protobuf-java-2.5.0.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/xstream-1.4.3.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/mvel2-2.1.8.Final.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/slf4j-api-1.7.6.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
+	<unjar src="lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar" dest="cruise.umplificator/bin/" overwrite="true"/>
   </target>
   
   <!-- Move the velocity templates into an accessible folder -->
@@ -249,6 +262,9 @@
 	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
 	<fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
     </copy>
+	<copy todir="cruise.umplificator/bin/rules" overwrite="true">
+	<fileset dir="cruise.umplificator/src/main/resources/rules"><include name="*.drl"/></fileset>
+    </copy>
     <delete file="cruise.umple/src/rules.grammar"/>
     <delete file="cruise.umple/bin/rules.grammar"/>
   </target>
@@ -315,7 +331,7 @@
 
     <!-- The Umplificator jar-->
   <echo message="Package: Umplificator, the Reverse engineering tool" />
-   <jar destfile="dist/umplificator.jar" basedir="cruise.umplificator/bin" includes="cruise/umple/** cruise/umplificator/** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
+   <jar destfile="dist/umplificator.jar" basedir="cruise.umplificator/bin" includes="cruise/umple/** cruise/umplificator/** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/** *.drl  org/kie/api/** org/drools/** org/antlr/** org/kie/internal/** com/google/protobuf/** com/thoughtworks/xstream/** org.mvel/** rules/**" >
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
