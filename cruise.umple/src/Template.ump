@@ -416,9 +416,12 @@ class Utils {
 		return str.replaceAll("\n", "\\\\n")
 				  .replaceAll("\r", "\\\\r")
 				  .replaceAll("\t", "  ") // Two spaces instead of tab
+				  .replaceAll("\\\\", "\\\\\\\\")
 				  .replaceAll("\b", "\\\\b")
 				  .replaceAll("\f", "\\\\f")
-				  .replaceAll("\"", "\\\\\"");
+				  .replaceAll("\'", "\\\'")
+				  .replaceAll("\"", "\\\"")
+				  .replace("\"","\\\"");
 	}
 }
 
