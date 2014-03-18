@@ -1008,15 +1008,7 @@ class ParsingCouple
             {
               levels.set(level, i);
             }
-            level++;
-            for(int j=0;j<quoteLikeOpen.length;++j)
-            {
-              String quoteLike = quoteLikeOpen[j];
-              if(quoteLike.equals(open)){
-                quoteLikeIndex = j;
-                break;
-              }
-            }
+            level++;            
             for(int j=0;j<braceLikeOpen.length;++j)
             {
               String brace = braceLikeOpen[j];
@@ -1025,19 +1017,21 @@ class ParsingCouple
                 break;
               }
             }
+            if(braceLikeIndex==-1)
+            {
+              for(int j=0;j<quoteLikeOpen.length;++j)
+              {
+                String quoteLike = quoteLikeOpen[j];
+                if(quoteLike.equals(open)){
+                  quoteLikeIndex = j;
+                  break;
+                }
+              }
+            }
             i+=open.length()-1;
           }            
           else if (level>ParsingCouple.ignoreLevel)
           {
-            for(int j=0;j<quoteLikeOpen.length;++j)
-            {
-              String quoteLike = quoteLikeOpen[j];
-              if(i+quoteLike.length()<input.length()?input.substring(i,i+quoteLike.length()).equals(quoteLike):false){
-                i+=quoteLike.length()-1;
-                quoteLikeIndex = j;
-                break;
-              }
-            }
             for(int j=0;j<braceLikeOpen.length;++j)
             {
               String brace = braceLikeOpen[j];
@@ -1047,24 +1041,19 @@ class ParsingCouple
                 break;
               }
             }
-          }
-        }          
-        else if(quoteLikeIndex!=-1&&(i+quoteLikeClose[quoteLikeIndex].length()<input.length()?input.substring(i,i+quoteLikeClose[quoteLikeIndex].length()).equals(quoteLikeClose[quoteLikeIndex]):false))
-        {
-          if(level>0&&quoteLikeClose[quoteLikeIndex].equals(close))
-          {
-            level--;
-            if(level<0)
+            if(braceLikeIndex==-1)
             {
-              level=0;
-            }
-            else
-            {
-              positionFrom.add(levels.get(level));
-              positionTo.add(new Integer(i));
-            }
+              for(int j=0;j<quoteLikeOpen.length;++j)
+              {
+                String quoteLike = quoteLikeOpen[j];
+                if(i+quoteLike.length()<input.length()?input.substring(i,i+quoteLike.length()).equals(quoteLike):false){
+                  i+=quoteLike.length()-1;
+                  quoteLikeIndex = j;
+                  break;
+                }
+              }
+            }            
           }
-          quoteLikeIndex = -1;
         }
         else if(braceLikeIndex!=-1&&(i+braceLikeClose[braceLikeIndex].length()<input.length()?input.substring(i,i+braceLikeClose[braceLikeIndex].length()).equals(braceLikeClose[braceLikeIndex]):false))
         {
@@ -1082,7 +1071,24 @@ class ParsingCouple
             }
           }
           braceLikeIndex = -1;
-        }
+        }          
+        else if(quoteLikeIndex!=-1&&(i+quoteLikeClose[quoteLikeIndex].length()<input.length()?input.substring(i,i+quoteLikeClose[quoteLikeIndex].length()).equals(quoteLikeClose[quoteLikeIndex]):false))
+        {
+          if(level>0&&quoteLikeClose[quoteLikeIndex].equals(close))
+          {
+            level--;
+            if(level<0)
+            {
+              level=0;
+            }
+            else
+            {
+              positionFrom.add(levels.get(level));
+              positionTo.add(new Integer(i));
+            }
+          }
+          quoteLikeIndex = -1;
+        }        
         else {
           escaping = false;
         }      
