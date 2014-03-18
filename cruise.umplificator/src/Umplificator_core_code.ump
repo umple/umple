@@ -47,6 +47,7 @@ public boolean umplifyElement(File file)
 			FileHelper.writeFile(model);
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.err.print(e.getLocalizedMessage());
 		} 
 	  return true;
   }

@@ -1,4 +1,4 @@
-package rules
+package cruise.umplificator.rules
  
 import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
