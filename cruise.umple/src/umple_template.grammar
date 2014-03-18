@@ -11,12 +11,6 @@ templateAttributeDefinition : [[templateName]] [[templateAttribute]]
 templateName : [name]
 
 emitMethod : [=modifier:public|protected|private]? [=static]? [type]? [=emit] [[methodDeclarator]] [[templateList]]?;
-methodDeclarator : [methodName] [[parameterList]]
-parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_ROUND_BRACKET
-parameter : [[typedName]]
-list- : [!list:\[\s*\]]
-typedName- : [type]? [[list]]? [~name]
-
 templateList- : OPEN_ROUND_BRACKET ( [[templatePrameter]] ( , [[templatePrameter]] )* )? CLOSE_ROUND_BRACKET
 templatePrameter : [name]
 
