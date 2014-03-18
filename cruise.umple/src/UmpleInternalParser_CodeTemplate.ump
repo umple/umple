@@ -45,590 +45,6 @@ class AnalysisParserTask {
 	}
 }
 
-//The tokens to be analyzed
-class AnalysisTokenTask {
-	isA TokenAnalysisStub;
-	abstract;
-	TemplateTokenizer tokenizer;
-	
-	void logError() {
-    	
-	}
-	
-	void setValue(String str) {
-		tokenizer.setText(str);
-	}
-		
-	String getValue() {
-		return tokenizer.getText();
-	}
-}
-
-//Singlton class to execute analysis tasks. It is implemented to run as helper class
-class AnalysisTaskExecuter {
-	singleton;
-	static void run(AnalysisStub stub) {
-		if(!stub.analyze()) {
-			stub.logError();
-		}
-	}
-	static void run(CharStream input, String startTag, String endTag, TokenAnalysisStub stub) {
-		validate(stub,input,startTag);
-		while(stub.analyze()) {
-			input.next();
-		}
-		validate(stub,input,endTag); 
-		String value = stub.getValue();
-	    stub.setValue(value.substring(startTag.length(), value.length() - endTag.length()));
-	}
-	
-	static void validate(AnalysisStub stub ,CharStream input ,String str) {
-		int i = 0;
-		while(i < str.length()) {
-			if ( input.getPointerAt(1) != str.charAt(i) ) {
-				// TODO: Error Messages
-				stub.logError();
-			}
-			i++;
-			input.next();
-		}
-  	}
-}
-
-//Char Array stream
-class CharStream {
-
-	internal int idx=0;
-	internal int line = 1;
-	internal int charPositionInLine = 0;
-	char data[] = null;
-	String rawTemplateContent;
-	
-	after constructor {
-		data = rawTemplateContent.toCharArray();
-	}
-
-	String substring(int start, int stop) {
-		return new String(data,start,stop-start+1);
-	}
-	
-	int index() {
-        return idx;
-    }
-	
-	void next() {
-        if ( idx < data.length ) {
-			charPositionInLine++;
-			if ( data[idx]=='\n' ) {
-				line++;
-				charPositionInLine=0;
-			}
-            idx++;
-        }
-    }
-	
-	int getLine() {
-		return line;
-	}
-
-	int getCharPositionInLine() {
-		return charPositionInLine;
-	}
-	
-    int getPointerAt(int i) {
-		if ( i==0 ) {
-			return 0;
-		}
-		if ( i<0 ) {
-			i++;
-			if ( (idx+i-1) < size() ) {
-				return -1;
-			}
-		}
-		if ( (idx+i-1) >= size() ) {
-            return -1;
-        }
-		return data[idx+i-1];
-    }
-
-    int size() {
-		return data.length;
-	}
-}
-
-//Token stream
-class TokenStream {
-	depend java.util.ArrayList;
-	depend java.util.List;
-	depend cruise.umple.compiler.Token;
-
-	const String TEMPLATE_END_TAG="endTag";
-	const String TEMPLATE_COMMENT="templateComment";
-	const String TEMPLATE_EXPRESSION="templateExpression";
-	const String TEMPLATE_TEXT="templateText";
-	const String TEMPLATE_CODEBLOCK="templateCodeBlock";
-	const String IDENT = "indent";
-	const String TEXT="Text";
-	
-    TemplateTokenizer tokenizer;
-    internal List<Token> tokens = new ArrayList<Token>(100);
-    internal int idx = -1;
-
-    void seek(int i) {
-        int n = i - tokens.size() + 1;
-    	if ( n > 0 ) {
-    		for (int j=1; j<=n; j++) {
-            	Token t = tokenizer.nextToken();
-            	tokens.add(t);
-            	if ( t.getValue().equalsIgnoreCase(TEMPLATE_END_TAG)) break;
-        	}
-    	}
-    }
-    int index() { return idx; }
-    
-    void next() {
-        if ( idx == -1 ) reset();
-        idx++;
-        seek(idx);
-    }
-
-    Token getPointerBackwardAt(int k) {
-        if ( k==0 || (idx-k)<0 ) return null;
-        int i = idx;
-        int n = 1;
-        while ( n<=k ) {
-            i = i-1;
-            n++;
-        }
-        if ( i<0 ) return null;
-        return tokens.get(i);
-    }
-
-    Token getPointerAheadAt(int k) {
-        if ( idx == -1 ) reset();
-        if ( k == 0 ) return null;
-        if ( k < 0 ) return getPointerBackwardAt(-k);
-        int i = idx;
-        int n = 1; 
-        while ( n<k ) {
-        	seek(++i);
-            n++;
-        }
-        return tokens.get(i);
-    }
-
-	void reset() {
-        idx = 0;
-        seek(0);
-        int i = 0;
-    }
-
-	String getPointerAt(int i) { return getPointerAheadAt(i).getName(); }
-	
-}
-
-//Responsible for parsing template contents
-class TemplateParser {
-
-	TokenStream input;	
-	TreeAdaptor adaptor;
-
-	Boolean parse() throws TemplateException {
-	  TokenTree parsingCtx = getParsingTree().getTree();
-	  if (parsingCtx!= null) {
-		  for (int i = 0; i < parsingCtx.getChildCount(); i++) {
-			  parsingCtx.getChild(i).create();
-		  }
-		  return true;
-	  } else {
-		  return false;
-	  }
-  	}
-	
-  	TemplateParsingTokenTree getParsingTree() throws TemplateException {
-	  return PrunTaskExecuter.prune(adaptor, input, TemplateParsingTokenTree.class, new IPruneTask() {
-			@Override
-			public <T extends TemplateParsingContext> T prune(T ret, TokenTree root) throws TemplateException {
-				TemplateParsingContext childCtx =null;
-				boolean reAnalysis = true; 
-				while (reAnalysis) {
-					String ch = input.getPointerAt(1);			
-					if ( ((ch.equalsIgnoreCase(TokenStream.TEMPLATE_COMMENT) 
-							|| ch.equalsIgnoreCase(TokenStream.TEMPLATE_EXPRESSION) 
-							||  ch.equalsIgnoreCase(TokenStream.TEMPLATE_CODEBLOCK)
-							||  ch.equalsIgnoreCase(TokenStream.TEXT)
-							||  ch.equalsIgnoreCase(TokenStream.IDENT))) ) {
-						childCtx=getChild();
-						adaptor.addChild(root, childCtx.getTree());
-					} else {
-						reAnalysis = false;
-					}
-				}
-				return ret;
-			}
-	  });
-  }
-
-  TemplateHierarchyTokenTree getChild() throws TemplateException {
-	  return PrunTaskExecuter.prune(adaptor, input, TemplateHierarchyTokenTree.class, new IPruneTask() {
-			@Override
-			public <T extends TemplateParsingContext> T prune(T ret, TokenTree root) throws TemplateException {
-				TemplateParsingContext pContent = getParsingContent();
-				adaptor.addChild(root, pContent.getTree());
-				return ret;
-			}
-	  });
-  }
-
-  TemplateParsingContent getParsingContent() throws TemplateException {
-	  return PrunTaskExecuter.prune(adaptor, input, TemplateParsingContent.class, new IPruneTask() {
-		@Override
-		public <T extends TemplateParsingContext> T prune(T ret, TokenTree root) throws TemplateException {
-			Token tkn=input.getPointerAheadAt(1);
-			String ch = input.getPointerAt(1);
-			if ( ((ch.equalsIgnoreCase(TokenStream.TEMPLATE_COMMENT) 
-					|| ch.equalsIgnoreCase(TokenStream.TEMPLATE_EXPRESSION) 
-					||  ch.equalsIgnoreCase(TokenStream.TEMPLATE_CODEBLOCK)
-					||  ch.equalsIgnoreCase(TokenStream.TEXT))) ) {
-				input.next();
-				adaptor.addChild(root, adaptor.create(tkn));
-			}
-			else {
-				throw new TemplateException(tkn,1500, tkn.getName());
-			}
-			return ret;
-		}
-	  });
-  }
-
-}
-
-interface IPruneTask {
-	<T extends TemplateParsingContext> T prune(T ret, TokenTree root) throws TemplateException;
-}
-
-class PrunTaskExecuter {
-	singleton;
-	static<T extends TemplateParsingContext> T prune (TreeAdaptor adaptor,TokenStream input , Class<T> type ,IPruneTask prnTask) {
-	  try {
-		  T retval = type.newInstance();
-		  retval.setStart(input.getPointerAheadAt(1));
-		  TokenTree root = adaptor.nil();
-		  prnTask.prune(retval, root);
-		  retval.setStop(input.getPointerAheadAt(-1));
-		  retval.setTree(adaptor.prune(root));
-		  adaptor.setParsingContext(retval);
-		  return retval;
-	  } catch(InstantiationException e) {
-	  } catch(TemplateException e) {
-	  } catch(IllegalAccessException e) {
-	  }
-	  return null;
-  	}
-}
-
-//Tockenize template for parsing purposes
-class TemplateTokenizer {
-	depend cruise.umple.compiler.Position;
-	depend cruise.umple.compiler.Token;
-	
-	CharStream input;
-
-	lazy internal Token currentToken;
-	lazy internal int currentTokenStartCharIndex = -1;
-	lazy internal int currentTokenStartLine;
-	lazy internal int currentTokenStartCharPositionInLine;
-	lazy internal String currentTokenType;
-	lazy internal String currentTokenText;
-		
-	void setText(String text) {
-		currentTokenText = text;
-	}
-
-	int getCharIndex() {
-		return input.index();
-	}
-	
-	String getText() {
-		if ( currentTokenText!=null ) {
-			return currentTokenText;
-		}
-		return input.substring(currentTokenStartCharIndex,getCharIndex()-1);
-	}
-		
-	int getLine() {
-		return input.getLine();
-	}
-
-	int getCharPositionInLine() {
-		return input.getCharPositionInLine();
-	}
-	
-	Token nextToken() {
-		while (true) {
-			currentToken = null;
-			currentTokenStartCharIndex = input.index();
-			currentTokenStartCharPositionInLine = input.getCharPositionInLine();
-			currentTokenStartLine = input.getLine();
-			currentTokenText = null;
-			if ( input.getPointerAt(1)== -1 ) {
-				int n = input.size();
-				int start = input.index();
-				int stop = input.index();
-				String value = "";
-				if ( start<n && stop<n) {
-					value = input.substring(start,stop);
-				}
-				Token endTag = new Token(TokenStream.TEMPLATE_END_TAG, value);
-				Position startPos = new Position(getLine(), getCharPositionInLine(), input.index());
-				Position endPos = new Position(getLine(), getCharPositionInLine(), input.index());
-				endTag.setPosition(startPos);
-				endTag.setEndPosition(endPos);
-				return endTag;
-			}
-			try {
-				analyze();
-				if ( currentToken==null ) {
-					int n = input.size();
-					int start = currentTokenStartCharIndex;
-					int stop = getCharIndex()-1;
-					String value = currentTokenText;
-					if ( value == null ) {
-						if ( start<n && stop<n) {
-							value = input.substring(start,stop);
-						}
-					}
-					Token t = new Token(currentTokenType, value);
-					Position startPos = new Position(currentTokenStartLine, currentTokenStartCharPositionInLine, currentTokenStartCharIndex);
-					Position endPos = new Position(currentTokenStartLine, currentTokenStartCharPositionInLine + (stop - start), getCharIndex()-1);
-					t.setPosition(startPos);
-					t.setEndPosition(endPos);
-					currentToken = t;
-				}
-				return currentToken;
-			}
-			catch (TemplateException re) {
-				// TODO: Error Messages
-			}
-		}
-	}
-	
-	void analyzeComments() throws TemplateException {
-		AnalysisTaskExecuter.run(input,"<</*","*/>>", new AnalysisTokenTask(this) {
-			@Override
-			public Boolean analyze() {
-				boolean reAnalysis = true;
-				int ch = input.getPointerAt(1);
-				if ( (ch=='*') ) {
-					int ch1 = input.getPointerAt(2);
-					if ( (ch1=='/') ) {
-						int ch2 = input.getPointerAt(3);
-						if ( (ch2=='>') ) {
-							int ch3 = input.getPointerAt(4);
-							if ( (ch3=='>') ) {
-								reAnalysis = false;
-							}
-							else if ( ((ch3 >= '\u0000' && ch3 <= '=')||(ch3 >= '?' && ch3 <= '\uFFFF')) ) {
-								reAnalysis = true;
-							}
-						}
-						else if ( ((ch2 >= '\u0000' && ch2 <= '=')||(ch2 >= '?' && ch2 <= '\uFFFF')) ) {
-							reAnalysis = true;
-						}
-					}
-					else if ( ((ch1 >= '\u0000' && ch1 <= '.')||(ch1 >= '0' && ch1 <= '\uFFFF')) ) {
-						reAnalysis = true;
-					}
-				}
-				else if ( ((ch >= '\u0000' && ch <= ')')||(ch >= '+' && ch <= '\uFFFF')) ) {
-					reAnalysis = true;
-				}
-				return reAnalysis;
-			}
-		});
-	  	currentTokenType = TokenStream.TEMPLATE_COMMENT;
-	}
-	
-	void analyzeExpression() throws TemplateException {
-		AnalysisTaskExecuter.run(input,"<<=",">>", new AnalysisTokenTask(this) {
-			@Override
-			public Boolean analyze() {
-				boolean reAnalysis = true;
-				int ch = input.getPointerAt(1);
-				if ( (ch=='>') ) {
-					int ch2 = input.getPointerAt(2);
-					if ( (ch2=='>') ) {
-						reAnalysis = false;
-					}
-					else if ( ((ch2 >= '\u0000' && ch2 <= '=')||(ch2 >= '?' && ch2 <= '\uFFFF')) ) {
-						reAnalysis = true;
-					}
-				}
-				else if ( ((ch >= '\u0000' && ch <= '=')||(ch >= '?' && ch <= '\uFFFF')) ) {
-					reAnalysis = true;
-				}
-				return reAnalysis;
-			}
-			
-		});
-	  currentTokenType = TokenStream.TEMPLATE_EXPRESSION;
-	}
-	
-	void analyzeScriptCode() throws TemplateException {
-		AnalysisTaskExecuter.run(input,"<<#","#>>", new AnalysisTokenTask(this) {
-			@Override
-			public Boolean analyze() {
-				boolean reAnalysis = true;
-				int currentCharacter = input.getPointerAt(1);
-				if ( (currentCharacter=='#') ) {
-					int nextCharacter = input.getPointerAt(2);
-					if ( (nextCharacter=='>') ) {
-						int ch = input.getPointerAt(3);
-						if ( (ch=='>') ) {
-							reAnalysis=false;
-						}
-						else if ( ((ch >= '\u0000' && ch <= '=')||(ch >= '?' && ch <= '\uFFFF')) ) {
-							reAnalysis = true;
-						}
-					}
-					else if ( ((nextCharacter >= '\u0000' && nextCharacter <= '=')||(nextCharacter >= '?' && nextCharacter <= '\uFFFF')) ) {
-						reAnalysis = true;
-					}
-				}
-				else if ( ((currentCharacter >= '\u0000' && currentCharacter <= '\"')||(currentCharacter >= '$' && currentCharacter <= '\uFFFF')) ) {
-					reAnalysis = true;
-				}
-				return reAnalysis;
-			}			
-		});
-		currentTokenType = TokenStream.TEMPLATE_CODEBLOCK;
-	}
-
-	void analyzeTextElement() throws TemplateException {
-		input.next(); 
-		currentTokenType = TokenStream.TEXT;
-	}
-	
-	
-	boolean matchText(int ch) {
-		return (ch >= '\t' && ch <= '\n')||(ch >= '\f' && ch <= '\r')||ch==' '|| ch=='\u000B'||(ch >= '\u0000' && ch <= '\b')||(ch >= '\u000E' && ch <= '\u001F')||(ch >= '!' && ch <= ';')||(ch >= '=' && ch <= '\uFFFF');
-	}
-
-	void analyze() throws TemplateException {
-		int currentCharacter = input.getPointerAt(1);
-		if ( (currentCharacter=='<') ) {
-			int nextCharacter = input.getPointerAt(2);
-			if ( (nextCharacter=='<') ) {
-				int idx = "/=#".indexOf(input.getPointerAt(3));				
-				switch (idx) {
-				case 0 :{
-					analyzeComments(); 
-				}
-				break;
-				case 1 :{
-					analyzeExpression(); 
-				}
-				break;
-				case 2 :{
-					analyzeScriptCode(); 
-				}
-				break;
-				default: {					
-					/*
-					Token t = new Token("", "");
-					Position pos = new Position(input.index(), input.getCharPositionInLine(), input.index());
-					t.setPosition(pos);
-					t.setEndPosition(pos);
-					*/
-					throw new TemplateException(currentToken,1500, currentToken.getName());
-				}
-				}
-			}
-			else {
-				analyzeTextElement();
-			}
-		}
-		else if (matchText(currentCharacter)) {
-			analyzeTextElement();
-		}
-		else {
-			throw new TemplateException(currentToken,1500, currentToken.getName());
-		}
-	}
-
-}
-
-// Tree representation for a given token
-class TokenTree {
-	depend java.util.ArrayList;
-	depend java.util.List;
-	depend cruise.umple.compiler.Token;
-
-	0..1 parent -- * TokenTree children;
-	int startIndex=-1;
-	int stopIndex=-1;
-	int childIndex = -1;
-	
-	Token token;
-	lazy TokenTree node;
-
-	after constructor {
-	}
-	
-	public TokenTree(TokenTree node) {
-		this(node.token);
-		this.startIndex = node.startIndex;
-		this.stopIndex = node.stopIndex;
-	}
-	
-	public void create() { 
-	}
-	
-	boolean isNil() {
-		return token==null;
-	}
-	String getType() {
-		if ( token==null ) {
-			return "";
-		}
-		return token.getName();
-	}
-	
-	String getValue() {
-		if ( token==null ) {
-			return null;
-		}
-		return token.getValue();
-	}
-
-	int getLine() {
-		if( token == null || token.getPosition() == null || token.getPosition().getLineNumber() == 0) {
-			if ( getChildCount()>0 ) {
-				return getChild(0).getLine();
-			}
-			return 0;
-		}
-		return token.getPosition().getLineNumber();
-	}
-	
-	int getChildCount() {
-		if ( children==null ) {
-			return 0;
-		}
-		return children.size();
-	}
-
-	int getCharPositionInLine() {
-		if( token == null || token.getPosition() == null || token.getPosition().getLineNumber() == -1) {
-			if ( getChildCount()>0 ) {
-				return getChild(0).getCharPositionInLine();
-			}
-			return 0;
-		}
-		return token.getPosition().getCharacterOffset();
-	}
-}
-
 external Exception
 {
   message;
@@ -655,140 +71,6 @@ class TemplateException {
   	}
 }
 
-class TemplateParsingContext {
-	lazy Token start;
-	lazy Token stop;
-	TokenTree getTree() {return null;}
-	boolean setTree(TokenTree t) {return false;}
-}
-
-class TemplateHierarchyTokenTree {
-	isA TemplateParsingContext;
-	lazy TokenTree tree;
-}
-
-class TemplateParsingTokenTree {
-	isA TemplateParsingContext;
-	lazy TokenTree tree;
-}
-
-class TemplateParsingContent {
-	isA TemplateParsingContext;
-	lazy TokenTree tree;
-}
-
-//Tree adaptor for tree hirarichal representation for the parsing tokens
-class TreeAdaptor  {
-	
-	TokenTree nil() {
-		return create(null);
-	}
-
-	void addChild(TokenTree t, TokenTree child) {
-		if ( t!=null && child!=null ) {
-			t.addChild(child);
-		}
-	}
-	
-	TokenTree prune(TokenTree root) {
-		TokenTree r = root;
-		if ( r!=null && r.isNil() ) {
-			if ( r.getChildCount()==0 ) {
-				r = null;
-			}
-			else if ( r.getChildCount()==1 ) {
-				r = r.getChild(0);
-				r.setParent(null);
-				r.setChildIndex(-1);
-			}
-		}
-		return r;
-	}
-	
-	TokenTree create(Token tkn) {
-		return new TokenTree(tkn);
-	}
-
-	void setParsingContext(TemplateParsingContext ctx) {
-		if ( ctx==null || ctx.getTree() == null ) return;
-		int start = 0;
-		int stop = 0;
-		if ( ctx.getStart() !=null ) start = ctx.getStart().getPosition().getOffset();
-		if ( ctx.getStop() !=null ) stop = ctx.getStop().getEndPosition().getOffset();
-		ctx.getTree().setStartIndex(start);
-		ctx.getTree().setStopIndex(stop);
-	}
-}
-
-//It is an instance of token tree and intended to be used for template parsing purposes
-class TemplateTree {
-	isA TokenTree;
-	TemplateAttributeParser templateAttributeParser; 
-	public void create() { }
-}
-
-class TemplateExpressionTree {
-	isA TemplateTree;
-	public void create() {
-		getTemplateAttributeParser().addElement(new ExpressionElement(getValue()));
-	}
-}
-
-class TemplateScripletTree{
-	isA TemplateTree;
-	public void create() {
-		getTemplateAttributeParser().addElement(new ScripletElement(getValue()));
-	}
-}
-	
-class TemplateCommentTree {
-	isA TemplateTree;
-	public void create() {
-		getTemplateAttributeParser().addElement(new CommentElement(getValue()));
-	}
-}
-
-class TemplateTextTree {
-	isA TemplateTree;
-
-	public void create() {
-		String text = getValue();
-		if (getTemplateAttributeParser().numberOfElements() > 0) {
-			TemplateElement element = getTemplateAttributeParser().getElement(getTemplateAttributeParser().numberOfElements() - 1);
-			if (element instanceof TextElement) {
-				TextElement textElement = (TextElement) element;
-				textElement.append(text);
-			} else {
-				getTemplateAttributeParser().addElement(new TextElement(text));
-			}
-		} else {
-			getTemplateAttributeParser().addElement(new TextElement(text));
-		}
-	}
-}
-
-//Template parser adaptor creates the respective tree toekn based on the toekn type.
-//It can be TEMPLATE_EXPRESSION, TEMPLATE_CODEBLOCK, TEMPLATE_COMMENT, or TEXT.
-class TemplateParserAdaptor {
-	isA TreeAdaptor;
-	TemplateAttributeParser templateAttributeParser;
-
-	public TokenTree create(final Token token) {
-		String type = token == null ? "" : token.getName();
-		if(type.equalsIgnoreCase(TokenStream.TEMPLATE_EXPRESSION)) {
-			return new TemplateExpressionTree(token,templateAttributeParser);
-		} else if(type.equalsIgnoreCase(TokenStream.TEMPLATE_CODEBLOCK)) {
-			return new TemplateScripletTree(token,templateAttributeParser);
-		} else if(type.equalsIgnoreCase(TokenStream.TEMPLATE_COMMENT)) {
-			return new TemplateCommentTree(token,templateAttributeParser);
-		} else if(type.equalsIgnoreCase(TokenStream.TEXT)) {
-			return new TemplateTextTree(token,templateAttributeParser);
-		} else {
-			return new TemplateTree(token,templateAttributeParser);
-		}
-	}
-}
-
 //Parse existing attributes in a template
 class TemplateAttributeParser {
 	depend java.io.InputStream;
@@ -801,27 +83,57 @@ class TemplateAttributeParser {
 	0..1 -- * TemplateElement elements;
 	0..1 -- * TemplateField fields;
 	
+	const String TEMPLATE_END_TAG="endTag";
+	const String TEMPLATE_COMMENT="templateComment";
+	const String TEMPLATE_EXPRESSION="templateExpression";
+	const String TEMPLATE_TEXT="templateText";
+	const String TEMPLATE_CODEBLOCK="templateCodeBlock";
+	const String IDENT = "indent";
+	const String TEXT="Text";
+	
 	lazy EmitResponse emisionContent; 
 	
 	public boolean parse() throws IOException {
 	  elements.clear();
       emisionContent = new EmitResponse();
 	  int idx = startIndex;
-	  for(Token token:rootToken.getSubTokens()){
-	    
-		if(token.is(TokenStream.TEMPLATE_EXPRESSION)) {
-		  addElement(new ExpressionElement(token.getSubToken(TokenStream.TEMPLATE_EXPRESSION).getValue("templateExpressionContent")));
-		} else if(token.is(TokenStream.TEMPLATE_CODEBLOCK)) {
-		  addElement(new ScripletElement(token.getSubToken(TokenStream.TEMPLATE_CODEBLOCK).getValue("templateLanguageCode")));
-		} else if(token.is(TokenStream.TEMPLATE_COMMENT)) {
-		  addElement(new CommentElement(token.getSubToken(TokenStream.TEMPLATE_COMMENT).getValue("templateCommentContent")));
-		} else if(token.is(TokenStream.TEMPLATE_TEXT)) {
-		  String text = token.getSubToken(TokenStream.TEMPLATE_TEXT).getValue("templateTextContent");		    
+	  int tokenIdx = 0;
+	  for(Token token:rootToken.getSubTokens()){	    
+		if(token.is(TEMPLATE_EXPRESSION)) {
+		  addElement(new ExpressionElement(token.getSubToken(TEMPLATE_EXPRESSION).getValue("templateExpressionContent")));
+		  tokenIdx++;
+		} else if(token.is(TEMPLATE_CODEBLOCK)) {
+		  addElement(new CodeBlockElement(token.getSubToken(TEMPLATE_CODEBLOCK).getValue("templateLanguageCode")));
+		  tokenIdx++;
+		} else if(token.is(TEMPLATE_COMMENT)) {
+		  addElement(new CommentElement(token.getSubToken(TEMPLATE_COMMENT).getValue("templateCommentContent")));
+		  tokenIdx++;
+		} else if(token.is(TEMPLATE_TEXT)) {
+		  String text = token.getSubToken(TEMPLATE_TEXT).getValue("templateTextContent");		    
 		  if(!"".equals(text)){
+		    if(tokenIdx == 0) {
+		    	text = Utils.trimTemplateBlockBeginigNewLine(text);
+		    }
+		    if(numberOfElements() > 0) {
+		  		TemplateElement lastElement = getElement(numberOfElements() - 1);
+		  		if(lastElement instanceof CodeBlockElement) {
+		  			text = Utils.trimTemplateBlockBeginigNewLine(text);		  		
+		  		}
+		  	}
 		    addElement(new TextElement(text));
+		    tokenIdx++;
 		  }
-		} 		    
+		}
 	  }
+	  if(numberOfElements() > 0) {
+		  TemplateElement lastElement = getElement(numberOfElements() - 1);
+		  if(lastElement instanceof TextElement) {
+			  String text = lastElement.getContent();
+			  text = Utils.trimTemplateBlockEndNewLine(text);
+			  lastElement.setContent(text);
+		  }	  
+	  }
+	  
 	  for (TemplateElement templateElement : elements) {
 	    if(templateElement instanceof TextElement || templateElement instanceof CommentElement) {
 	      idx++;
@@ -843,6 +155,7 @@ class TemplateTokenAnalyzer {
 	depend java.io.InputStream;
 	depend java.util.HashMap;
 	depend java.util.Map;
+	depend java.util.regex.Pattern;
 
 	UmpleInternalParser parser;
 	lazy UmpleClass currentTemplate;
@@ -1006,6 +319,43 @@ class TemplateTokenAnalyzer {
       	*/
     	
 	}
+	
+	String emit createSpaceStringMethodBody(String lang)(createSpaces);
+	createSpaces <<!
+	<<#if(lang.equalsIgnoreCase("Java")) {#>>
+StringBuilder spaces =  new StringBuilder();
+    	for(int i=0; i <numSpaces; i++) {
+      		spaces.append(" ");
+    	}
+    	return spaces.toString();
+    <<#} else if(lang.equalsIgnoreCase("Cpp")) {#>>
+string spaces = "";
+    	for(int i=0; i <numSpaces; i++) {
+      		spaces+= " ";
+    	}
+    	return spaces;
+    <<#}#>>
+  	!>>
+	
+	void initializeCreateSpaceMethod(UmpleClass template, Method placeHolderMth) {	  
+	  Method aMethod = new Method("","","",false);
+      aMethod.setModifier("private");    	 
+      aMethod.setName("_createSpacesString");
+      aMethod.setType("String");
+      
+      aMethod.setPosition(placeHolderMth.getPosition());
+      aMethod.setEndPosition(placeHolderMth.getEndPosition());
+      
+      MethodParameter spacesParameter = new MethodParameter("numSpaces","int",null,null, false);
+      spacesParameter.setIsList(false);
+      aMethod.addMethodParameter(spacesParameter);
+      CodeBlock cb = new CodeBlock();
+      cb.setCode("Java", createSpaceStringMethodBody("Java"));
+	  cb.setCode("Cpp", createSpaceStringMethodBody("Cpp"));
+	  MethodBody methBody = new MethodBody(cb);
+	  aMethod.setMethodBody(methBody);
+      template.addMethod(aMethod);
+	}
 		
 	void initializeNL(UmpleClass template) {
 	  if(template.getAttribute(Utils.getLineSeparator()) == null) {
@@ -1018,9 +368,22 @@ class TemplateTokenAnalyzer {
 	  }
 	}
 	
-	String createWrapMethod(UmpleClass template,Method mth, EmitResponse emitResp) {
+  	String emit createSecondaryEmitMethodBody(EmitResponse emitResp, String lang)(secondaryEmitMethod);
+	secondaryEmitMethod <<!
+<<=Utils.getSpaceStringInit(lang)>>
+<<=emitResp.getCode(lang)>>
+		<<=Utils.getWrapMethodReturnSignature(lang)>>
+	!>>
+	
+	String emit createPrimaryEmitMethodBody(String lang,String methodName, String params)(primaryEmitMethod);
+  	primaryEmitMethod <<!
+<<=Utils.getStringBuilder(lang)>>
+		<<=Utils.getStringBuilderToString(lang, methodName, params)>>
+  	!>>
+	
+	String createSecondaryMethod(UmpleClass template,Method mth, EmitResponse emitResp) {
 		String methodName = "_"+mth.getName();
-		StringBuilder paramSignature = new StringBuilder("sb");
+		StringBuilder paramSignature = new StringBuilder("0,sb");
 		Method aMethod = new Method("","","",false);
     	aMethod.setPosition(mth.getPosition());
     	aMethod.setEndPosition(mth.getEndPosition());
@@ -1028,6 +391,11 @@ class TemplateTokenAnalyzer {
     	 
     	aMethod.setName(methodName);
     	aMethod.setType("StringBuilder");
+    	
+    	MethodParameter numSpaceParameter = new MethodParameter("numSpaces","Integer",null,null, false);
+    	numSpaceParameter.setIsList(false);
+    	
+    	aMethod.addMethodParameter(numSpaceParameter);
     	
     	MethodParameter stringBuilderParameter  = new MethodParameter("sb","StringBuilder",null,null, false);
     	stringBuilderParameter.setIsList(false);
@@ -1042,7 +410,7 @@ class TemplateTokenAnalyzer {
     		paramSignature.append(aParameter.getName());
     	}
     	
-    	
+    	/*
     	StringBuilder javaBuffer = new StringBuilder();
 		StringBuilder cppBuffer = new StringBuilder();
 			
@@ -1055,12 +423,16 @@ class TemplateTokenAnalyzer {
 		cppBuffer.append(emitResp.getCppCode());
 		cppBuffer.append(System.getProperty("line.separator"));
 		javaBuffer.append("    ");
-		Utils.getWrapMethodReturnSignature("Cpp", cppBuffer);		    
+		Utils.getWrapMethodReturnSignature("Cpp", cppBuffer);
+		CodeBlock cb = new CodeBlock();
 		
+		cb.setCode("Java", javaBuffer.toString());
+        cb.setCode("Cpp", cppBuffer.toString());		    
+		*/
 
 		CodeBlock cb = new CodeBlock();
-		cb.setCode("Java", javaBuffer.toString());
-        cb.setCode("Cpp", cppBuffer.toString());
+		cb.setCode("Java", createSecondaryEmitMethodBody(emitResp, "Java"));
+        cb.setCode("Cpp", createSecondaryEmitMethodBody(emitResp, "Cpp"));
             
 		MethodBody methBody = new MethodBody(cb);
 		aMethod.setMethodBody(methBody);
@@ -1074,6 +446,12 @@ class TemplateTokenAnalyzer {
 			if(template.numberOfTemplateFields() > 0) {
 				initializeNL(template);
 			}
+			if(template.numberOfEmitMethods() > 0) {
+				TemplateMethod tMth = template.getEmitMethod(0);
+				Method mth = tMth.getMethod();
+				initializeCreateSpaceMethod(template, mth);
+				template.addDepend(new Depend("java.util.regex.Pattern"));
+			}
 			for(TemplateField fld : template.getTemplateFields()) {
 				CodeBlock cb = new CodeBlock();
     			cb.setCode("Java", fld.getValue().getJavaCode().toString());
@@ -1086,9 +464,10 @@ class TemplateTokenAnalyzer {
 				Method mth = tMth.getMethod();
 				EmitResponse emitResp = getEmisionString(template, tMth.getTemplates());
 			
-				String paramSignature = createWrapMethod(template, mth, emitResp);
-				String wrapMethodName = "_"+mth.getName();
+				String params = createSecondaryMethod(template, mth, emitResp);
+				String primaryMethodName = "_"+mth.getName();
 				
+				/*
 				StringBuilder javaBuffer = new StringBuilder();
 				StringBuilder cppBuffer = new StringBuilder();
 
@@ -1108,7 +487,11 @@ class TemplateTokenAnalyzer {
 				CodeBlock cb = new CodeBlock();
 				cb.setCode("Java", javaBuffer.toString());
         	    cb.setCode("Cpp", cppBuffer.toString());
-            
+        	    */
+        	    
+        	    CodeBlock cb = new CodeBlock();
+				cb.setCode("Java", createPrimaryEmitMethodBody("Java",primaryMethodName, params));
+        	    cb.setCode("Cpp", createPrimaryEmitMethodBody("Cpp",primaryMethodName, params));            
 				MethodBody methBody = new MethodBody(cb);
 				mth.setMethodBody(methBody);
 				template.addMethod(mth);
