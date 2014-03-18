@@ -60,7 +60,7 @@ depend org.apache.commons.io.IOUtils;
 		System.out.println("--- Adding rule files ---");
 		Resource  resource =kieResources.newUrlResource(getClass().getResource("/"+packagename+"/"+rulefile));
 		System.out.print(IOUtils.toString(resource.getInputStream()));
-        kieFileSystem.write(resource1);
+        kieFileSystem.write(resource);
     }
 
 
