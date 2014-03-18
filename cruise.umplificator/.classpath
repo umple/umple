@@ -32,5 +32,6 @@
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/xstream-1.4.3.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/slf4j-api-1.7.6.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

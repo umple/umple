@@ -6,6 +6,8 @@ depend java.io.File;
 depend java.util.ArrayList;
 depend java.util.Arrays;
 depend java.util.List;
+depend cruise.umple.compiler.UmpleModel;
+depend cruise.umple.compiler.UmpleSelfGenerator;
 
 public static final String [] EXTENSIONS = new String []{".java",".ump"};
 public static final String separator = System.getProperty("line.separator");
@@ -48,5 +50,11 @@ public static void printFilesToUmplify(List<File> srcFiles){
 		outMessage.append("-----------------------");
 	System.out.println(outMessage.toString());
 }
+
+  public static void writeFile(UmpleModel model){
+        UmpleSelfGenerator gen = new UmpleSelfGenerator();
+        gen.setModel(model);
+        gen.generate();
+  }
   
 }

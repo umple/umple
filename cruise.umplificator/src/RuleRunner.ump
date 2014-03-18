@@ -4,8 +4,8 @@ class RuleService{
 
 depend java.io.*;
 depend org.kie.api.runtime.KieSession;
-  
-  RuleRunner runner;
+
+RuleRunner runner;
   
 public KieSession startRuleEngine(){
     try {
@@ -34,6 +34,11 @@ depend java.io.*;
 depend java.io.FileInputStream;
 depend java.io.InputStream;
 depend cruise.umple.util.SampleFileWriter;
+depend cruise.umplificator.visitor.JavaClassVisitor;
+depend cruise.umple.compiler.UmpleClass;
+depend org.eclipse.jdt.core.dom.FieldDeclaration;
+depend org.eclipse.jdt.core.dom.ImportDeclaration;
+depend org.eclipse.jdt.core.dom.MethodDeclaration;
 
      KieServices kieServices;
      KieContainer kieContainer;
@@ -78,6 +83,27 @@ depend cruise.umple.util.SampleFileWriter;
 
         return kieSession;
     } 
+    
+    public KieSession insertJavaElements(JavaClassVisitor visitor){
+	   for (ImportDeclaration importDecl : visitor.getImportDeclarations())
+	   {
+		   kieSession.insert(importDecl); 
+	   }
+	   for (MethodDeclaration methodDecl : visitor.getMethodDeclarations())
+	   {
+		   kieSession.insert(methodDecl); 
+	   }
+	   for (FieldDeclaration fieldDeclaration : visitor.getFieldDeclarations())
+	   {
+		   kieSession.insert(fieldDeclaration); 
+	   }
+	  return kieSession;
+    }
+  
+ 	public KieSession insertUmpleClass(UmpleClass uClass){
+	  kieSession.insert(uClass);
+	  return kieSession;
+  	}  
     
     public KieSession fireAllRules()
     {

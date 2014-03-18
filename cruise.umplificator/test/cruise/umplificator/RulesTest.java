@@ -34,8 +34,9 @@ public class RulesTest {
 		pathToInput = SampleFileWriter.rationalize("test/cruise/umplificator/javavisitor_test.txt");
 		File testFile = new File(pathToInput);
 		String code = SampleFileWriter.readContent(testFile);
-		JavaParser javaParser = new JavaParser();
-		compilationUnit = javaParser.parseUnit(code);
+	   	visitor = new JavaClassVisitor();
+		JavaParser javaParser = new JavaParser(visitor);
+		javaParser.parseUnit(code);
     	visitor = new JavaClassVisitor();
     	compilationUnit.accept(visitor);
 		uClass = new UmpleClass("A");
