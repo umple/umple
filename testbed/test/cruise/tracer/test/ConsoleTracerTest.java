@@ -65,6 +65,10 @@ public class ConsoleTracerTest
 					"sm_e,Closed,actionUmpleLine=46,GarageDoor",
 					"sm_x,Closed,actionUmpleLine=81,GarageDoor",
 					"sm_t,Closed,buttonOrObstacle,Opening",
+					"sm_t,Open,flip,Closed",
+					"sm_da,Closed,doActivitedStarted,status",
+					"sm_di,Closed,doActivitedInterrupted,status",
+					"sm_t,Closed,flip,Open"
 
 			};
 			
@@ -188,6 +192,13 @@ public class ConsoleTracerTest
 	  gcTrace.reachTop();
 	  gcTrace.buttonOrObstacle();
 	  gcTrace.reachBottom();
+	  
+	  LightFixtureA lA = new LightFixtureA();
+	  lA.flip();
+	  try {Thread.sleep(500);} catch (InterruptedException e) { e.printStackTrace();}
+	  lA.flip();
+	  try {Thread.sleep(500);} catch (InterruptedException e) { e.printStackTrace();}
+	  
 	  //System.out.println("Garage = "+sTrace.getGaragDoor());
 
 
