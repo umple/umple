@@ -16,7 +16,7 @@ templatePrameter : [name]
 
 templateAttribute# : <<! [[templateAttributeContent]]* !>>
 templateAttributeContent -: [[templateExpression]] | [[templateComment]] | [[templateCodeBlock]] | [[templateText]] 
-templateText : [**templateTextContent:<<]
+templateText : [**templateTextContent:<<(=|#|/[*])]
 
 templateComment# : <</* [**templateCommentContent] */>>
 templateExpression# : <<= [**templateExpressionContent] >>
