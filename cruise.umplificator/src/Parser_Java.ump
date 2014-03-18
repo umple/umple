@@ -12,6 +12,7 @@ class JavaParser {
 	// Java Util Dependencies
 	depend java.util.Map;
 	
+	JavaClassVisitor javaVisitor;
 	// Parsing Methods
 	
 	 public CompilationUnit parseUnit(String source){
@@ -26,8 +27,7 @@ class JavaParser {
 			parser.setResolveBindings(true); // we need bindings later on
 			CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 			// VISITOR
-			cu.accept(new JavaClassVisitor());
-			// VISITOR
+			cu.accept(javaVisitor);
 			
 			return cu;
 	  }

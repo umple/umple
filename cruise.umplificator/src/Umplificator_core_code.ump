@@ -1,34 +1,54 @@
 class Umplificator {
 
 depend java.io.File;
+depend java.io.IOException;
 depend java.util.List;
+depend org.apache.commons.io.IOUtils;
+depend cruise.umple.compiler.UmpleClass;
+depend cruise.umple.compiler.UmpleFile;
+depend cruise.umple.compiler.UmpleModel;
 depend cruise.umplificator.FileHelper;
+depend cruise.umplificator.parser.JavaParser;
+depend cruise.umplificator.rules.RuleRunner;
+depend cruise.umplificator.rules.RuleService;
+depend cruise.umplificator.visitor.JavaClassVisitor;
 
 public boolean umplify(List<File> srcFiles) {
-	FileHelper.printFilesToUmplify(srcFiles);
-	// GetContent from file
-	  
-	// Parse it
-	  
-	// initialize visitor
-	  
-	// initialize drools engine
-	  
-	// get Umple Elements 
-	  
-	// generate Umple Code
-	
-	return false;
+    FileHelper.printFilesToUmplify(srcFiles);
+    for (File aFile : srcFiles){
+    	 umplifyElement(aFile);
+    }
+    return true;
 }
-
 
 public boolean umplifyElement(File file)
 {
-// Parser content
-// Select Visitor
-// Build UmpleModel
-// OutputFile
-return false;
-}
+	// GetContent from file
+	// Parse File
+	// The visitor is automatically assigned to the Parser
+		try {
+ 		   	JavaParser javaParser =new JavaParser(new JavaClassVisitor());
+		    String content =  IOUtils.toString(file.toURI());;
+		    javaParser.parseUnit(content);
+			// initialize drools engine
+		    RuleRunner ruleRunner = new RuleRunner();
+		    RuleService ruleService = new RuleService (ruleRunner);
+			ruleService.startRuleEngine();
+			// Insert Elements in Working Memory
+			UmpleClass uClass = new UmpleClass(file.getName().substring(0, file.getName().lastIndexOf(".")));
+			ruleRunner.insertUmpleClass(uClass);
+			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
+			ruleRunner.fireAllRules();
+			// generate Umple Code
+			UmpleFile umpleFile = new UmpleFile(file);
+			UmpleModel model = new UmpleModel(umpleFile);
+			model.addUmpleClass(uClass);
+			// generate Umple Code
+			FileHelper.writeFile(model);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	  return true;
+  }
 
 }

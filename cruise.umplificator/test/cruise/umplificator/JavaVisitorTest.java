@@ -1,8 +1,6 @@
 package cruise.umplificator;
 
 import java.io.File;
-
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,10 +19,9 @@ public class JavaVisitorTest {
 		pathToInput = SampleFileWriter.rationalize("test/cruise/umplificator/javavisitor_test.txt");
 		File testFile = new File(pathToInput);
 		String code = SampleFileWriter.readContent(testFile);
-		JavaParser javaParser = new JavaParser();
-		CompilationUnit compilationUnit = javaParser.parseUnit(code);
-    	visitor = new JavaClassVisitor();
-    	compilationUnit.accept(visitor);
+	   	visitor = new JavaClassVisitor();
+		JavaParser javaParser = new JavaParser(visitor);
+		javaParser.parseUnit(code);
 	}
 	
 	@Test
