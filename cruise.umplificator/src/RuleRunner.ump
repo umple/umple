@@ -15,6 +15,10 @@ public KieSession startRuleEngine(){
 		e.printStackTrace();
 		return null;
 	}
+	} catch (IOException ex) {
+		ex.printStackTrace();
+		return null;
+	}
 }
 
 }
@@ -56,7 +60,7 @@ depend org.apache.commons.io.IOUtils;
     }
 
 
-    public void addRuleFile(String packagename, String rulefile) throws FileNotFoundException{
+    public void addRuleFile(String packagename, String rulefile) throws FileNotFoundException, IOException{
 		System.out.println("--- Adding rule files ---");
 		Resource  resource =kieResources.newUrlResource(getClass().getResource("/"+packagename+"/"+rulefile));
 		System.out.print(IOUtils.toString(resource.getInputStream()));
