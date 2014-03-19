@@ -45,7 +45,6 @@ public static void printFilesToUmplify(List<File> srcFiles){
 			outMessage.append(aFile.getName());
 			outMessage.append(separator);
 		}
-		outMessage.append("End of processing");
 		outMessage.append(separator);
 		outMessage.append("-----------------------");
 	System.out.println(outMessage.toString());
@@ -55,6 +54,8 @@ public static void printFilesToUmplify(List<File> srcFiles){
         UmpleSelfGenerator gen = new UmpleSelfGenerator();
         gen.setModel(model);
         gen.generate();
+        System.out.println("--Output--");
+        System.out.println(model.getCode());
   }
   
 }

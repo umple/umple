@@ -29,6 +29,8 @@ public boolean umplifyElement(File file)
 		try {
  		   	JavaParser javaParser =new JavaParser(new JavaClassVisitor());
 		    String content =  IOUtils.toString(file.toURI());;
+		    System.out.println("---Input---");
+       		System.out.println(content);
 		    javaParser.parseUnit(content);
 			// initialize drools engine
 		    RuleRunner ruleRunner = new RuleRunner();
