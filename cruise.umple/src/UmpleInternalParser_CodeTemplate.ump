@@ -111,9 +111,9 @@ class TemplateAttributeParser {
 		} else if(token.is(TEMPLATE_TEXT)) {
 		  String text = token.getSubToken(TEMPLATE_TEXT).getValue("templateTextContent");		    
 		  if(!"".equals(text)){
-		    if(tokenIdx == 0) {
+		    /*if(tokenIdx == 0) {
 		    	text = Utils.trimTemplateBlockBeginigNewLine(text);
-		    }
+		    }*/
 		    if(numberOfElements() > 0) {
 		  		TemplateElement lastElement = getElement(numberOfElements() - 1);
 		  		if(lastElement instanceof CodeBlockElement) {
@@ -129,7 +129,7 @@ class TemplateAttributeParser {
 		  TemplateElement lastElement = getElement(numberOfElements() - 1);
 		  if(lastElement instanceof TextElement) {
 			  String text = lastElement.getContent();
-			  text = Utils.trimTemplateBlockEndNewLine(text);
+			  //text = Utils.trimTemplateBlockEndNewLine(text);
 			  lastElement.setContent(text);
 		  }	  
 	  }
