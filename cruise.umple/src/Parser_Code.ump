@@ -823,15 +823,21 @@ class Parser
 
           // Determine if there is a minus sign indicating a rule
           // whose name will not appear in the parse tree
+          // or a hash symbol for a rule that eats all content
           int hasMinus = (splitRule[0]).charAt(splitRule[0].length()-2) == '-'? 1 : 0;
+          int hasHash = (splitRule[0]).charAt(splitRule[0].length()-2) == '#'? 1 : 0;
           String ruleName = 
-            (splitRule[0]).substring(0,(splitRule[0]).length()-1-hasMinus);
+            (splitRule[0]).substring(0,(splitRule[0]).length()-1-hasMinus-hasHash);
           
           if(rulesToOutput.length() == 0 || rulesToOutput.contains("[["+ruleName+"]]"))
           {
             // We are to output the rule since we are outputting all
             // or it was listed in rulesToOutput
             String cleanedUpRule = splitRule[1];
+
+            // Ensure that rules with angle brackets appear correctly.
+            cleanedUpRule = cleanedUpRule.replace("<", "&lt;");
+            cleanedUpRule = cleanedUpRule.replace(">", "&gt;");
             
             // Replace all references to rules using [[ ]] with links to the rules 
             cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "[[<a href=\"UmpleGrammar.html#$1\">$1</a>]]");
@@ -869,6 +875,7 @@ class Parser
             cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "(");
             cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", ")");
             cleanedUpRule = cleanedUpRule.replace("DOUBLE_OR_BARS", "||");
+
             
             // If long rule, then indent on any 'or'
             if(ruleLength > 80) {
@@ -889,6 +896,7 @@ class Parser
             answer.append("</font></b>");
 
             if(hasMinus == 1) answer.append("-");
+            if(hasHash == 1) answer.append("#");
             answer.append(" :");
             
             answer.append(cleanedUpRule);
