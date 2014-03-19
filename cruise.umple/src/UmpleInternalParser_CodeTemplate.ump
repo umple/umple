@@ -321,21 +321,19 @@ class TemplateTokenAnalyzer {
 	}
 	
 	String emit createSpaceStringMethodBody(String lang)(createSpaces);
-	createSpaces <<!
-	<<#if(lang.equalsIgnoreCase("Java")) {#>>
-StringBuilder spaces =  new StringBuilder();
+	createSpaces <<!<<#if(lang.equalsIgnoreCase("Java")) {#>>
+		StringBuilder spaces =  new StringBuilder();
     	for(int i=0; i <numSpaces; i++) {
       		spaces.append(" ");
     	}
     	return spaces.toString();
     <<#} else if(lang.equalsIgnoreCase("Cpp")) {#>>
-string spaces = "";
+		string spaces = "";
     	for(int i=0; i <numSpaces; i++) {
       		spaces+= " ";
     	}
     	return spaces;
-    <<#}#>>
-  	!>>
+    <<#}#>>!>>
 	
 	void initializeCreateSpaceMethod(UmpleClass template, Method placeHolderMth) {	  
 	  Method aMethod = new Method("","","",false);
@@ -369,17 +367,13 @@ string spaces = "";
 	}
 	
   	String emit createSecondaryEmitMethodBody(EmitResponse emitResp, String lang)(secondaryEmitMethod);
-	secondaryEmitMethod <<!
-<<=Utils.getSpaceStringInit(lang)>>
+	secondaryEmitMethod <<!<<=Utils.getSpaceStringInit(lang)>>
 <<=emitResp.getCode(lang)>>
-		<<=Utils.getWrapMethodReturnSignature(lang)>>
-	!>>
+		<<=Utils.getWrapMethodReturnSignature(lang)>> !>>
 	
 	String emit createPrimaryEmitMethodBody(String lang,String methodName, String params)(primaryEmitMethod);
-  	primaryEmitMethod <<!
-<<=Utils.getStringBuilder(lang)>>
-		<<=Utils.getStringBuilderToString(lang, methodName, params)>>
-  	!>>
+  	primaryEmitMethod <<!		<<=Utils.getStringBuilder(lang)>>
+		<<=Utils.getStringBuilderToString(lang, methodName, params)>> !>>
 	
 	String createSecondaryMethod(UmpleClass template,Method mth, EmitResponse emitResp) {
 		String methodName = "_"+mth.getName();
