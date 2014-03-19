@@ -38,6 +38,12 @@ public class JavaClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("ClassTemplateTest_Methods.ump",languagePath + "/ClassTemplateTest_Methods."+ languagePath +".txt","CodeTranslator");
   }
   
+  @Test
+  public void FixmlAttributes()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_FixmlAttributes.ump",languagePath + "/ClassTemplateTest_FixmlAttributes."+ languagePath +".txt","Mentor");
+  }  
+  
   //Ignored this test because it doesn't seem to be able to take a umple version like @UMPLE_VERSION@ instead it needs it to be an exact version
   @Test @Ignore
   public void ClassMethods_TestingPartialFile()

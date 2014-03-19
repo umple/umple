@@ -1,0 +1,58 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+
+public class Mentor
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private String capacity;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(String aCapacity)
+  {
+    capacity = aCapacity;
+  }
+
+  public Mentor() {}
+
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setCapacity(String aCapacity)
+  {
+    boolean wasSet = false;
+    capacity = aCapacity;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getCapacity()
+  {
+    return capacity;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "capacity" + ":" + getCapacity()+ "]"
+     + outputString;
+  }
+}

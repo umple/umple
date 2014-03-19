@@ -70,8 +70,8 @@ isSorted- : sorted { [priority] }
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
 simpleAttribute- : [~name] ;
 autouniqueAttribute- : [=autounique] [~name] ;
-derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const]? [[typedName]] = ( [[moreCode]] )+
-complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const]? [[typedName]] (= [**value])? ;
+derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] = ( [[moreCode]] )+
+complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] (= [**value])? ;
 
 
 // Keys are used to define quality and hash codes, plus Sql keys.

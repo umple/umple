@@ -1031,6 +1031,17 @@ public class UmpleParserTest
     Attribute variable = aClass.getAttribute("t");
     Assert.assertEquals("new Time(\"now\")",variable.getValue());
   }
+  
+  @Test @Ignore
+  public void attributeFixml()
+  {
+    assertParse("008_fixmlAttribute.ump");
+    
+    UmpleClass aClass = model.getUmpleClass("Student");
+    Attribute variable = aClass.getAttribute("capacity");
+    Assert.assertEquals("\"31\"",variable.getValue());
+  }
+  
   @Test
   public void invalidClassKeyword()
   {

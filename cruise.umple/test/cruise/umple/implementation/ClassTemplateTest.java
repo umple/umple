@@ -43,6 +43,7 @@ public class ClassTemplateTest extends TemplateTest
 
   }  
 
+
   
 
   @Test
