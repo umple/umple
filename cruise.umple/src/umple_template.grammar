@@ -15,7 +15,7 @@ templateList- : OPEN_ROUND_BRACKET ( [[templatePrameter]] ( , [[templatePrameter
 templatePrameter : [name]
 
 templateAttribute# : <<! [[templateAttributeContent]]* !>>
-templateAttributeContent -: [[templateExpression]] | [[templateComment]] | [[templateCodeBlock]] | [[templateText]] 
+templateAttributeContent- : [[templateExpression]] | [[templateComment]] | [[templateCodeBlock]] | [[templateText]] 
 templateText : [**templateTextContent:<<(=|#|/[*])]
 
 templateComment# : <</* [**templateCommentContent] */>>

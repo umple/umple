@@ -1,0 +1,195 @@
+Basic Templates
+Generation Templates
+noreferences
+
+@@description
+
+<p>
+Generating string output is a very common task for programs. Common types of output include html, xml and executable code. Umple has a special capability for this, as do many other technogies (it is central to PhP, for example). The advantage of Umple's approach is that it adds generation templates in a uniform manner to C++, Java, PhP and other languages that Umple supports. The same templates can be reused.
+</p>
+
+<p>
+The Umple generation templates are essentially a readable way to generate special methods that emit Strings (and also in Java's case StringBuilders).
+</p>
+
+<p>
+Two basic elements are needed to use generation templates:
+</p>
+
+<p>
+<b>Templates</b> The first essential element is the templates themselves. These are shown as a name followed by arbitrary text in &lt;&lt;! !&gt;&gt; brackets. The text in the brackets can contain anything you want. See the examples below to understand how these are used.
+
+
+<p>
+<pre>
+&lt;&lt;!output this!&gt;&gt;
+</pre>
+</p>
+
+<p>
+will build the string 'output this' when specified in an emit method (below).
+</p>
+
+<p>
+<b>Emit method specifications:</b> The second essential element is one or more 'emit' statements. These specify the methods to be generated. As with any method there can be a set of arbitrary parameters. Following this, in a second set of parameters is comma-separated list of templates to emit. For example, the following says to generate a method with signature String printRow(intTimes, intCount); that will emit a string containing the contents of the row and cr templates:
+</p>
+
+<p>
+<pre>
+emit printRow(int times, int count)(row, cr);  
+</pre>
+</p>
+
+<p>
+Optional elements in templates are:
+</p>
+
+<p>
+<b>Expression blocks:</b> Inside the template, programmers can specify arbitrary expressions in <<= >> brackets. These can refer to attributes of the class, parameters to the emit method, states and so on. The result of the expression will be substituted every time the template method is called. This appears in all examples below.
+</p>
+
+<p>
+<b>Code blocks:</b> Also inside the template program logic can be embedded in <<# #>> brackets. This enables conditional emission of parts of a template, or looping within the template. This appears in the second example below.
+</p>
+
+<p>
+<b>Comment blocks:</b> Comments in templates can be shown within &lt;&lt;/* */&gt;&gt;
+</p>
+
+<p>
+The first two examples below show how simple templates can be used to output strings, in this case a one-column multiplication table. The first example uses two template methods, the second being called in a loop. The second example generates the same output, but all the looping logic is enclosed in the template itself. The third example shows a more substantial template with a lot of 'boilerplate' text that is easy to read and edit in the Umple source. Manually writing the generated would be substantially more awkward.
+</p>
+
+<p>
+Umple's mixin capability allows templates to be kept in separate files. This can faciliatate reuse. 
+</p>
+
+
+@@syntax
+[[templateAttributeDefinition]] [[templateName]] [[templateAttribute]] [[templateAttributeContent]] [[templateExpression]] [[templateComment]]  [[templateCodeBlock]] [[templateText]] [[emitMethod]] [[templateList]] [[templatePrameter]]
+
+@@example
+// Simple example to demonstrate umple's template base string generation
+// mechanism.
+// In this approach there is an iterative call to the emit function
+
+class MathExample {
+
+  // A simple template to inject a platform-specific newline
+  cr <<!
+!>>
+
+  // Two templates for different lines of output
+  header <<!Print out a <<=times>> times table!>>
+  row <<!  <<=times>> times <<=count>> is <<=times*count>>!>>
+
+  // Specification for two methods to be generated to output  
+  // parts of the text
+  // Method arguments are in the first parentheses
+  // Templates to output are in the second set
+  emit printHeader(int times)(header, cr);
+  emit printRow(int times, int count)(row, cr);
+
+  // Main program to run the above and generate the output
+  public static void main(String[] argv) {
+    int times = 10; // default
+    MathExample m = new MathExample();
+
+    if(argv.length > 0) {
+      times=Integer.parseInt(argv[0]);
+    }
+
+    // Print the header
+    System.out.print(m.printHeader(times)); 
+    // Print one row for each element
+    for (int i=0; i <= times; i++) {
+      System.out.print(m.printRow(times,i));
+    }
+  }
+}
+
+@@endexample
+
+@@example
+// Simple example to demonstrate umple's template base string generation
+// mechanism.
+// In this approach iteration is embedded in the rows template
+// and there is a single emitter function generated called result
+
+class MathExample {
+
+  // A simple template to inject a platform-specific newline
+  cr <<!
+!>>
+
+  // A template for the header lines
+  header <<!Print out a <<=times>> times table!>>
+
+  // A template that generates all the rows by iterating
+  rows <<!<<# for  (int i=0; i <= times; i++) {#>>
+  <<=times>> times <<=i>> is <<=times*i>><<#}#>>!>>
+
+  // Specification of a single method to emit the result
+  emit result(int times)(header, rows, cr);
+  
+  public static void main(String[] argv) {
+    int times = 10; // default
+    if(argv.length > 0) {
+      times=Integer.parseInt(argv[0]);
+    }
+    // Output the entire result
+    System.out.print(new MathExample().result(times)); 
+  }
+}
+
+@@endexample
+
+
+@@example
+// Example of creating a lengthy output in Umple from a template
+// Note this is plain text. See the next page for html generation.
+// The company is, of course, fictitious.
+class RefLetterRequest {
+  // Attributes used to construct the instance
+  String fileno; String recipient; String applicant;
+  String sender; String senderTitle;
+  
+  // Letter template
+  letterTemplate <<!
+Subject: Reference request for <<=applicant>>, File #<<=fileno>>
+
+Dear <<=recipient>>,
+Our company, Umple Enterprises, is hiring talented software
+engineers.
+
+We have received an application from <<=applicant>> who named you
+as an individual who could provide a letter of reference. Would you
+please reply to this letter, answering the following questions:
+  * In what capacity do you know <<=applicant>>
+  * For how long have you known <<=applicant>>
+  * Describe the abilities of <<=applicant>> in software development
+  * What his or her strengths and weaknesses?
+  * Please provide your phone number and suitable times to call in
+    case we need to follow up 
+    
+Yours sincerely,
+<<=sender>>
+<<=senderTitle>>
+!>>
+
+  // Specification of the method to generate
+  emit letterTemplate()(letterTemplate);
+
+  // Main program to generate the letter
+  public static void main(String[] argv) {
+    if(argv.length < 5) {
+      System.err.println("You must specify arguments for fileno, recipient, applicant, sender, sendertitle");
+    }
+    // Output the entire result
+    else System.out.print(new RefLetterRequest(
+      argv[0], argv[1],argv[2], argv[3], argv[4]
+    ).letterTemplate()); 
+  }
+}
+
+@@endexample

@@ -147,13 +147,33 @@ Hence, here are a few examples that satisfy the earlier example:
 </ul>
 
 
+&nbsp;<br>
+<h2>Optionality and repeating</h2>
+
+<p>Parentheses can be used to group several elements in the grammar into a single element for the purposes of the following special treatment.</p>
+
+<p>An asterisk * means that zero or more of the preceding elements may occur.</p>
+
+<p>A plus sign + means that one or more of the preceding elements must occur.</p>
+
+<p>A question mark ? means that the preceding element may occur.</p>
+
+
+&nbsp;<br>
+<h2>Avoiding consumption of whitespace</h2>
+
+<p>Normally when parsing, all whitespace (spaces, carriage returns, tabs, etc.) around tokens are ignored, and the token output by the parser does not contain them. However, if a # symbol is found after the rule (on the left hand side) then all whitespace is preserved. This is useful for cases where that space is actually useful, such as in Umple's templates.</p>
+
 
 
 &nbsp;<br>
 <h2>Comments and arbitrary input</h2>
 
 <p>
-The grammar syntax supports a simple mechanism for non-terminals that can include whitespace (e.g. comments).
+The grammar syntax supports a simple mechanism for non-terminals that can include whitespace (e.g. comments). Text in [** ] such as [**arbitraryStuff] is not parsed. However if the rule name is followed by a colon, such as [**templateTextContent:&lt;&lt;(=|#|/[**] then a pattern for different types of brackets that can be internally parsed can be specified. So the above says ignore everything except things in &lt;&lt;= &lt;&lt;# &lt;&lt;/* , which will be processed.
+</p>
+
+<p>
 Let us consider the rules to define inline and multi-line comments.
 </p>
 
