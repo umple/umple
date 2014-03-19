@@ -3,6 +3,8 @@ traitTemplate : < [~name] ( , [~name] )* >
 traitContent- : [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
 
 
+fixml : [[fixmlDefinition]] | [[fixmComment]]
+fixmComment :  <?xml [[tagDefinition]]* ?>
 
 fixmlDefinition : <FIXML> [[fixmlContent]]* </FIXML>
 fixmlContent : [[endContent]] | [[ extendContent ]]
