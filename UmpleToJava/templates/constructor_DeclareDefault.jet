@@ -273,6 +273,18 @@
   {
     append(stringBuffer, "}");
   }
+  
+  // fxml attribute (create empty constructor)
+    for (Attribute av : uClass.getAttributes())
+    {
+	  if ("fixml".equals(av.getModifier()))
+	    {
+		  accessibility = uClass.getIsSingleton() ? "private" : "public";
+		  appendln(stringBuffer,"");
+		  appendln(stringBuffer,"");
+    	  appendln(stringBuffer,"  {0} {1}() {}",new Object[] {accessibility, uClass.getName()});
+	    }
+    }
 
   if (uClass.getIsSingleton())
   {
