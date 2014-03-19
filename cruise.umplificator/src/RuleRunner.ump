@@ -33,8 +33,6 @@ depend org.kie.api.io.Resource;
 depend org.kie.api.runtime.KieContainer;
 depend org.kie.api.runtime.KieSession;
 depend java.io.*;
-depend java.io.FileInputStream;
-depend java.io.InputStream;
 depend cruise.umplificator.visitor.JavaClassVisitor;
 depend cruise.umple.compiler.UmpleClass;
 depend org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -59,10 +57,10 @@ depend org.apache.commons.io.IOUtils;
 
 
     public void addRuleFile(String packagename, String rulefile) throws FileNotFoundException, IOException{
-		System.out.println("--- Adding rule files ---");
-		Resource  resource =kieResources.newUrlResource(getClass().getResource("/"+packagename+"/"+rulefile));
-		System.out.print(IOUtils.toString(resource.getInputStream()));
-        kieFileSystem.write(resource);
+	  	   System.out.println("--- Adding rule files ---");
+		   Resource resource = kieResources.newClassPathResource(rulefile, "UTF-8");
+           kieFileSystem.write("src/main/resources/"+packagename+"/"+rulefile, resource);
+           System.out.print(IOUtils.toString(resource.getInputStream()));
     }
 
 
