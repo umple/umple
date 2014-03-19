@@ -281,6 +281,9 @@ class Documenter
       }
       exampleOutput += nextExample;
     }
+    exampleOutput = exampleOutput.replaceAll("<<", "&lt;&lt;");
+    exampleOutput = exampleOutput.replaceAll(">>", "&gt;&gt;");
+    
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
     htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", grammarparser.toGrammar());
     return htmlOutput;
