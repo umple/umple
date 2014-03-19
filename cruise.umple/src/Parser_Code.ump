@@ -836,8 +836,8 @@ class Parser
             String cleanedUpRule = splitRule[1];
 
             // Ensure that rules with angle brackets appear correctly.
-            cleanedUpRule = cleanedUpRule.replace("<", "&lt;");
-            cleanedUpRule = cleanedUpRule.replace(">", "&gt;");
+            cleanedUpRule = cleanedUpRule.replaceAll("<", "&lt;");
+            cleanedUpRule = cleanedUpRule.replaceAll(">", "&gt;");
             
             // Replace all references to rules using [[ ]] with links to the rules 
             cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "[[<a href=\"UmpleGrammar.html#$1\">$1</a>]]");
@@ -868,8 +868,8 @@ class Parser
             // Colour special constants such as [=debug] red 
             cleanedUpRule = cleanedUpRule.replaceAll("[\\[]=([a-zA-Z_]*)[\\]]", "[=<font color=\"red\">$1</font>]");
             
-            // Colour arbitrary text blocks dirty yellow
-            cleanedUpRule = cleanedUpRule.replaceAll("[\\[][*][*]?([a-zA-Z_]*)[\\]]", "[**<font color=\"#AAAA22\">$1</font>]");
+            // Colour arbitrary text blocks dirty yellow [**stuff] or [**stuff:xx]
+            cleanedUpRule = cleanedUpRule.replaceAll("[\\[][*][*]?([a-zA-Z_]*)([:].*)?[\\]]", "[**<font color=\"#AAAA22\">$1</font>$2]");
 
             // Revert changes made during rule parsing
             cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "(");
