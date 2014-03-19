@@ -262,8 +262,8 @@
 	<fileset dir="${project.path}/src"><include name="**/*.grammar"/></fileset>
 	<fileset dir="${project.path}/src"><include name="**/*.error"/></fileset>
     </copy>
-	<copy todir="cruise.umplificator/bin/rules" overwrite="true">
-	<fileset dir="cruise.umplificator/src/main/resources/rules"><include name="*.drl"/></fileset>
+	<copy todir="cruise.umplificator/bin" overwrite="true">
+	<fileset dir="cruise.umplificator/src/main/resources/"><include name="*.drl"/></fileset>
     </copy>
     <delete file="cruise.umple/src/rules.grammar"/>
     <delete file="cruise.umple/bin/rules.grammar"/>
@@ -289,11 +289,38 @@
     <copy file="dist/vml.jar" tofile="umpleonline/scripts/vml.jar" overwrite="true" />
   </target>
 
+
+
+  <target name="packageUmplificator">
+    <antcall target="umplificatorJar"/>
+    <antcall target="validatorJar"/>
+     <echo message="Package: Umplificator and Validator jar" />
+    <!-- The Umplificator jar-->
+  <echo message="Package: Umplificator, the Reverse engineering tool" />
+   <jar destfile="dist/umplificator.jar" basedir="cruise.umplificator/bin" includes="cruise/umple/** cruise/umplificator/** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/** *.drl  org/kie/api/** org/drools/** org/antlr/** org/kie/internal/** com/google/protobuf/** com/thoughtworks/xstream/** org.mvel/** rules/**" >
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umplificator.UmplificatorMain"/>
+        <attribute name="Class-Path" value="eclipse.umplificator.classpath"/>
+      </manifest>
+    </jar>
+
+    <!-- The validator jar-->
+    <echo message="Package: Umple validator jar used in Umple " />
+    <jar destfile="dist/umplevalidator.jar" basedir="cruise.umple.validator/bin" includes="cruise/umple/** cruise/umple/validator** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+        <attribute name="Main-Class" value="cruise.umple.CodeGenValidatorMainConsole"/>
+        <attribute name="Class-Path" value="${validator.project.classpath}"/>
+      </manifest>
+    </jar>
+  </target>
+
   <target name="packageMainJar">
     <antcall target="velocitytemplates"/>
     <antcall target="velocityjar"/>
-    <antcall target="validatorJar"/>
-    <antcall target="umplificatorJar"/>
     <echo message="Package: Main command line jar" />
     <property name="umple_classpath" value=" " />
     <jar destfile="dist/umple.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error *.grammar *.error templates/** org/apache/**" excludes="**/*Test.class">
@@ -329,18 +356,6 @@
       </manifest>
     </jar>
 
-    <!-- The Umplificator jar-->
-  <echo message="Package: Umplificator, the Reverse engineering tool" />
-   <jar destfile="dist/umplificator.jar" basedir="cruise.umplificator/bin" includes="cruise/umple/** cruise/umplificator/** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/** *.drl  org/kie/api/** org/drools/** org/antlr/** org/kie/internal/** com/google/protobuf/** com/thoughtworks/xstream/** org.mvel/** rules/**" >
-      <manifest>
-        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
-        <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.umplificator.UmplificatorMain"/>
-        <attribute name="Class-Path" value="eclipse.umplificator.classpath"/>
-      </manifest>
-    </jar>
-
-
     <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygrounMain" />
     <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/**">
       <manifest>
@@ -348,17 +363,6 @@
         <attribute name="Version" value="${umple.version}"/>
         <attribute name="Main-Class" value="cruise.umple.PlaygroundMain"/>
         <attribute name="Class-Path" value="${umple_classpath}"/>
-      </manifest>
-    </jar>
-
-    <!-- The validator jar-->
-    <echo message="Package: Umple validator jar used in Umple " />
-    <jar destfile="dist/umplevalidator.jar" basedir="cruise.umple.validator/bin" includes="cruise/umple/** cruise/umple/validator** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
-      <manifest>
-        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
-        <attribute name="Version" value="${umple.version}"/>
-        <attribute name="Main-Class" value="cruise.umple.CodeGenValidatorMainConsole"/>
-        <attribute name="Class-Path" value="${validator.project.classpath}"/>
       </manifest>
     </jar>
  
@@ -572,6 +576,24 @@
     <antcall target="deploy" />
     <antcall target="template.resetVersion" />
   </target>
+
+  <target name="build-umplificator" >
+    <antcall target="clean" />
+    <antcall target="template.init" />
+    <antcall target="codegen" />
+    <antcall target="rtcpp" />
+    <antcall target="template.setVersion" />
+    <antcall target="resetUmpleSelf" />
+    <antcall target="compile" />
+    <antcall target="compileValidator" />
+    <antcall target="compileUmplificator" />
+    <antcall target="template.test" />
+    <antcall target="package" />
+    <antcall target="packageUmplificator" />
+    <antcall target="deploy" />
+    <antcall target="template.resetVersion" />
+  </target>
+
 
   <!-- can be run locally as a quick(er) test to see if the build will pass on the server -->
   <target name="pre_build" >
