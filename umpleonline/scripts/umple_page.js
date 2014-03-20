@@ -303,12 +303,61 @@ Page.initCodeMirrorEditor = function() {
         onCursorActivity: function() {
           Page.codeMirrorEditor.setLineClass(Page.hLine, null);
           Page.hLine = Page.codeMirrorEditor.setLineClass(Page.codeMirrorEditor.getCursor().line, "activeline");
-          Action.umpleCodeMirrorCursorActivity();}
-      }
+          Action.umpleCodeMirrorCursorActivity();},
+        extraKeys: { // Change consistently in umple_action.js for Mousetrap
+          "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
+          "Ctrl-G": function(cm) {Page.clickShowGvClassDiagram()},
+          "Ctrl-S": function(cm) {Page.clickShowGvStateDiagram()},
+          "Ctrl-T": function(cm) {Page.clickShowHideText()},
+          "Ctrl-D": function(cm) {Page.clickShowHideCanvas()},
+          "Ctrl-N": function(cm) {Page.clickShowHideMenu()},
+          "Ctrl-Shift-=": function(cm) {Page.clickButtonlarger()},
+          "Ctrl-Shift--": function(cm) {Page.clickButtonSmaller()},
+          "Ctrl-A": function(cm) {Page.clickToggleAttributes()},
+          "Ctrl-M": function(cm) {Page.clickToggleMethods()}
+          }
+        }
       );
   Page.hLine = Page.codeMirrorEditor.setLineClass(0, "activeline");
   Page.codeMirrorOn = true;  
 }
+
+// Functions to click various menu items - invoked by code mirror and MouseTrap
+Page.clickShowEditableClassDiagram = function() {
+  jQuery('#buttonShowEditableClassDiagram').trigger('click');
+}
+Page.clickShowGvClassDiagram = function() {
+  jQuery('#buttonShowGvClassDiagram').trigger('click');
+}
+Page.clickShowGvStateDiagram = function() {
+  jQuery('#buttonShowGvStateDiagram').trigger('click');
+}
+
+Page.clickShowHideText = function() {
+  jQuery('#buttonShowHideTextEditor').trigger('click');
+}
+Page.clickShowHideCanvas = function() {
+  jQuery('#buttonShowHideCanvas').trigger('click');
+}
+Page.clickShowHideMenu = function() {
+  Action.showHideMenu(); // No clickable button
+}
+
+Page.clickButtonlarger = function() {
+  jQuery('#buttonLarger').trigger('click');
+}
+Page.clickButtonSmaller = function() {
+  jQuery('#buttonSmaller').trigger('click');
+}
+Page.clickToggleAttributes = function() {
+  jQuery('#buttonToggleAttributes').trigger('click');
+}
+Page.clickToggleMethods = function() {
+  jQuery('#buttonToggleMethods').trigger('click');
+}
+
+
+
 
 Page.resizeCodeMirrorEditor = function(newHeight) {
 

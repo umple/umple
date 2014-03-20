@@ -322,17 +322,17 @@ $output = readTemporaryFile("ump/" . $filename);
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
         <ul class="first">
           <li class="subtitle"> Show View </li>
-          <li> <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" title="Show/hide the canvas" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> Diagram (Canvas) -> </li>
-          <li> <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" title="Show/hide the text editor" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> Text Editor <- <small style="font-size:8px">[shift+t]</small></li>
+          <li> <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" title="Show/hide the canvas" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> Diagram (Canvas) -> <small style="font-size:8px">[ctrl+d]</small></li>
+          <li> <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" title="Show/hide the text editor" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> Text Editor <- <small style="font-size:8px">[ctrl+t]</small></li>
           <li id="layoutListItem"> <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" title="Show/hide the layout editor" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> Layout Editor </li>          
-          <li id="layoutListItem"> <input id="buttonToggleAttributes" class="checkbox" type="checkbox"  title="Show/hide Attributes"/> Attributes  <small style="font-size:8px">[shift+a]</small></li>
-          <li id="layoutListItem"> <input id="buttonToggleMethods" class="checkbox" type="checkbox"  title="Show/hide Methods"/> Methods <small style="font-size:8px">[shift+m]</small></li>
+          <li id="layoutListItem"> <input id="buttonToggleAttributes" class="checkbox" type="checkbox"  title="Show/hide Attributes"/> Attributes  <small style="font-size:8px">[ctrl+a]</small></li>
+          <li id="layoutListItem"> <input id="buttonToggleMethods" class="checkbox" type="checkbox"  title="Show/hide Methods"/> Methods <small style="font-size:8px">[ctrl+m]</small></li>
 	</ul>
         <ul>
           <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>
-          <li> <input id="buttonShowEditableClassDiagram" class="radio" type="radio" title="Editable class diagram" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> Editable class diagram <small style="font-size:8px">[shift+e]</small></li>
-          <li> <input id="buttonShowGvClassDiagram" class="radio" type="radio" title="GraphViz class diagram" name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> GraphViz class diagram <small style="font-size:8px">[shift+g]</small></li>
-          <li> <input id="buttonShowGvStateDiagram" class="radio" type="radio" title="GraphViz state" name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> GraphViz state diagram <small style="font-size:8px">[shift+s]</small></li>
+          <li> <input id="buttonShowEditableClassDiagram" class="radio" type="radio" title="Editable class diagram" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> Editable class diagram <small style="font-size:8px">[ctrl+e]</small></li>
+          <li> <input id="buttonShowGvClassDiagram" class="radio" type="radio" title="GraphViz class diagram" name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> GraphViz class diagram <small style="font-size:8px">[ctrl+g]</small></li>
+          <li> <input id="buttonShowGvStateDiagram" class="radio" type="radio" title="GraphViz state" name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> GraphViz state diagram <small style="font-size:8px">[ctrl+s]</small></li>
         </ul>
         <ul>
           <li id="preferencesTitle" class="subtitle"> Preferences </li>
@@ -341,8 +341,8 @@ $output = readTemporaryFile("ump/" . $filename);
         </ul>
         <ul>
           <li id="canvasSizeTitle" class="subtitle"> Canvas Size </li>
-          <li id="buttonSmaller" name="paletteItem"><img id="buttonSmaller" src="scripts/smaller.png" title="Reduce the size of the canvas" /> Smaller <small style="font-size:8px">[-]</small></li>
-          <li id="buttonLarger" name="paletteItem"><img id="buttonLarger" src="scripts/larger.png" title="Increase the size of the canvas" /> Larger <small style="font-size:8px">[+]</small></li>
+          <li id="buttonSmaller" name="paletteItem"><img id="buttonSmaller" src="scripts/smaller.png" title="Reduce the size of the canvas" /> Smaller <small style="font-size:8px">[ctrl-shift--]</small></li>
+          <li id="buttonLarger" name="paletteItem"><img id="buttonLarger" src="scripts/larger.png" title="Increase the size of the canvas" /> Larger <small style="font-size:8px">[ctrl-shift-+]</small></li>
         </ul>
         <ul>
           <li class="subtitle"> Other Views </li>
