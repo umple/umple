@@ -214,6 +214,9 @@ class UmpleModel
         CodeGenerator generator = newGenerator(target.getLanguage());
         generator.setOutput(target.getPath());
         CodeBlock.languageUsed = target.getLanguage();
+        for (String subopt : target.getSuboptions()) {
+        	 generator.setSuboption(subopt);
+        }
         generator.generate();
       }
     }
