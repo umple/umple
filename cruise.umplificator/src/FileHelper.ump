@@ -52,6 +52,7 @@ public static void printFilesToUmplify(List<File> srcFiles){
 
   public static void writeFile(UmpleModel model){
         UmpleSelfGenerator gen = new UmpleSelfGenerator();
+        gen.setFileExtension(".ump");
         gen.setModel(model);
         gen.generate();
         System.out.println("--Output--");

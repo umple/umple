@@ -12,6 +12,8 @@ namespace cruise.umple.compiler;
 class UmpleSelfGenerator
 {
 
+lazy fileExtension= ".umpself";
+
   public void generate()
   {
     CodeGenerator internalGen = generateBasedOn();
@@ -27,6 +29,11 @@ class UmpleSelfGenerator
       if (uClass.getExtendsClass() != null)
       {
         code.append(StringFormatter.format("  isA {0};\n", uClass.getExtendsClass().getName()));
+      }
+      
+      for (Depend aDepend : uClass.getDepends())
+      {
+    	 code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
       }
 
       for (Attribute av : uClass.getAttributes())
@@ -249,7 +256,7 @@ class UmpleSelfGenerator
       String path = model.getUmpleFile().getPath();
       File file = new File(path);
       file.mkdirs();
-      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".umpself";
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + this.fileExtension ;
       BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
       bw.write(model.getCode());
       bw.flush();
