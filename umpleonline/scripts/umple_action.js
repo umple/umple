@@ -142,15 +142,15 @@ Action.clicked = function(event)
   }
   else if (action == "ManualSync")
   {
-  	Action.enableManualSync();
+    Action.enableManualSync();
   }
   else if (action == "SyncDiagram")
   {
-  	Action.processTyping("umpleModelEditor", true);
+    Action.processTyping("umpleModelEditor", true);
   }
   else if (action == "PhotoReady")
   {
-  	Action.photoReady();
+    Action.photoReady();
   }
   else if (action == "ToggleAttributes")
   {
@@ -169,10 +169,10 @@ Action.focusOn = function(id, gained)
   
   if (gained) 
   {
-  	if (textEditor || !Page.isPhotoReady())
-  	{
-  	  jQuery(selector).parent().addClass("focus");
-  	  if (textEditor)
+    if (textEditor || !Page.isPhotoReady())
+    {
+      jQuery(selector).parent().addClass("focus");
+      if (textEditor)
       {
         Page.shortcutsEnabled = false;
         if (Page.selectedItem != null) Page.unselectAllToggleTools();
@@ -217,9 +217,9 @@ Action.redoOrUndo = function(isUndo)
   var afterHistoryChange = "";
   if (Action.manualSync && Action.diagramInSync)
   {
-  	Action.diagramInSync = false;
-  	Page.enablePaletteItem("buttonSyncDiagram", true);
-  	Page.enableDiagram(false);
+    Action.diagramInSync = false;
+    Page.enablePaletteItem("buttonSyncDiagram", true);
+    Page.enableDiagram(false);
   }
   
   if (isUndo) afterHistoryChange = History.getPreviousVersion();
@@ -227,7 +227,7 @@ Action.redoOrUndo = function(isUndo)
   
   if (afterHistoryChange == History.noChange)
   {
-  	afterHistoryChange = "";
+    afterHistoryChange = "";
   }
   Action.freshLoad = true;
   Page.setUmpleCode(afterHistoryChange);
@@ -283,13 +283,13 @@ Action.showHideLayoutEditor = function(doShow)
   
   if (doShow)  // warning: This works backwards to intuition
   {
-  	newHeight = layoutEditor.height() + (modelEditor.height()) + 3;
-    layoutEditor.hide(); 	
+    newHeight = layoutEditor.height() + (modelEditor.height()) + 3;
+    layoutEditor.hide();   
   }
   else
   {
-  	layoutEditor.show();
-  	newHeight = modelEditor.height() - (layoutEditor.height()) - 3; 
+    layoutEditor.show();
+    newHeight = modelEditor.height() - (layoutEditor.height()) - 3; 
   }
   modelEditor.height(newHeight);
   if(Page.codeMirrorOn) {
@@ -310,18 +310,18 @@ Action.showHideTextEditor = function(doShow)
     
   if (doShow)
   {
-  	textEditor.show();
-  	
-  	// canvas must be visible in order to change width
-  	// if hidden, show temporarily
-  	if (!canvasVisible) canvasColumn.show();
-  	canvas.width(Action.minCanvasSize.width);
-  	if (!canvasVisible) canvasColumn.hide();
-  	
-  	// disable the show/hide layout editor option
-  	layoutBox.attr('disabled', false);
-  	layoutBox.css('cursor', 'pointer');
-  	layoutListItem.css('color', 'Black');
+    textEditor.show();
+    
+    // canvas must be visible in order to change width
+    // if hidden, show temporarily
+    if (!canvasVisible) canvasColumn.show();
+    canvas.width(Action.minCanvasSize.width);
+    if (!canvasVisible) canvasColumn.hide();
+    
+    // disable the show/hide layout editor option
+    layoutBox.attr('disabled', false);
+    layoutBox.css('cursor', 'pointer');
+    layoutListItem.css('color', 'Black');
     if(Page.readOnly) {
       jQuery("#topLine").show(); 
     }
@@ -332,12 +332,12 @@ Action.showHideTextEditor = function(doShow)
   }
   else
   {
-  	canvas.width(canvas.width() + textEditor.width());
-  	textEditor.hide();
-	layoutBox.attr('disabled', true);
-	layoutBox.css('cursor', 'not-allowed');
-	layoutListItem.css('color', 'DimGray');
-	if(Page.readOnly) {
+    canvas.width(canvas.width() + textEditor.width());
+    textEditor.hide();
+  layoutBox.attr('disabled', true);
+  layoutBox.css('cursor', 'not-allowed');
+  layoutListItem.css('color', 'DimGray');
+  if(Page.readOnly) {
       jQuery("#topLine").hide(); 
     }
     else {
@@ -379,6 +379,21 @@ Action.changeDiagramType = function(newDiagramType)
   }
 }
 
+Action.showHideMenu = function(doShow)
+{
+  var menu = jQuery("#paletteColumn");
+
+  if (doShow == undefined) doShow = !menu.is(":visible"); 
+  if (doShow)
+  {
+    menu.show();
+  }
+  else
+  {
+    menu.hide();
+  }
+}
+
 Action.showHideCanvas = function(doShow)
 { 
   var canvas = jQuery("#umpleCanvasColumn");
@@ -386,53 +401,53 @@ Action.showHideCanvas = function(doShow)
   if (doShow == undefined) doShow = !canvas.is(":visible"); 
   if (doShow)
   {
-  	canvas.show();
-  	Action.manualSync = jQuery("#buttonManualSync").attr('checked');
-  	jQuery("#buttonShowHideCanvas").attr('checked',true);
-  	
-  	if (!Action.manualSync) 
-  	{
-  	  Action.updateUmpleDiagram();
-  	  Action.diagramInSync = true;
-  	  Page.enableDiagram(true);
-  	}
-  	if (Action.manualSync && !Action.diagramInSync) Page.enablePaletteItem('buttonSyncDiagram', true);
-  	if (!Action.manualSync || Action.diagramInSync)
-  	{
-  	  Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", true);
+    canvas.show();
+    Action.manualSync = jQuery("#buttonManualSync").attr('checked');
+    jQuery("#buttonShowHideCanvas").attr('checked',true);
+    
+    if (!Action.manualSync) 
+    {
+      Action.updateUmpleDiagram();
+      Action.diagramInSync = true;
+      Page.enableDiagram(true);
+    }
+    if (Action.manualSync && !Action.diagramInSync) Page.enablePaletteItem('buttonSyncDiagram', true);
+    if (!Action.manualSync || Action.diagramInSync)
+    {
+      Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", true);
       Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", true);
 
- 	  Page.enablePaletteItem('buttonAddClass', true);
-  	  Page.enablePaletteItem('buttonAddAssociation', true);
-  	  Page.enablePaletteItem('buttonAddGeneralization', true);
-  	  Page.enablePaletteItem('buttonDeleteEntity', true);
-  	
-  	  Page.initToggleTool('buttonAddClass');
-  	  Page.initToggleTool('buttonAddAssociation');
-  	  Page.initToggleTool('buttonAddGeneralization');
-  	  Page.initToggleTool('buttonDeleteEntity');
-  	}
+     Page.enablePaletteItem('buttonAddClass', true);
+      Page.enablePaletteItem('buttonAddAssociation', true);
+      Page.enablePaletteItem('buttonAddGeneralization', true);
+      Page.enablePaletteItem('buttonDeleteEntity', true);
+    
+      Page.initToggleTool('buttonAddClass');
+      Page.initToggleTool('buttonAddAssociation');
+      Page.initToggleTool('buttonAddGeneralization');
+      Page.initToggleTool('buttonDeleteEntity');
+    }
   }
   else
   {
-  	canvas.hide();
-  	Action.manualSync = true;
-  	jQuery("#buttonShowHideCanvas").attr('checked',false);
+    canvas.hide();
+    Action.manualSync = true;
+    jQuery("#buttonShowHideCanvas").attr('checked',false);
 
-	Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", false);
-  	Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", false);
+  Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", false);
+    Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", false);
 
-  	
-	Page.enablePaletteItem('buttonAddClass', false);
-  	Page.enablePaletteItem('buttonAddAssociation', false);
-  	Page.enablePaletteItem('buttonAddGeneralization', false);
-  	Page.enablePaletteItem('buttonDeleteEntity', false);
-	Page.enablePaletteItem('buttonSyncDiagram', false);
+    
+  Page.enablePaletteItem('buttonAddClass', false);
+    Page.enablePaletteItem('buttonAddAssociation', false);
+    Page.enablePaletteItem('buttonAddGeneralization', false);
+    Page.enablePaletteItem('buttonDeleteEntity', false);
+  Page.enablePaletteItem('buttonSyncDiagram', false);
 
-  	Page.removeToggleTool('buttonAddClass');
-  	Page.removeToggleTool('buttonAddAssociation');
-  	Page.removeToggleTool('buttonAddGeneralization');
-  	Page.removeToggleTool('buttonDeleteEntity');
+    Page.removeToggleTool('buttonAddClass');
+    Page.removeToggleTool('buttonAddAssociation');
+    Page.removeToggleTool('buttonAddGeneralization');
+    Page.removeToggleTool('buttonDeleteEntity');
   }
 }
 
@@ -562,7 +577,7 @@ Action.classSelected = function(obj)
   }
   else
   {
-  	jQuery("#umpleCanvas").removeClass("unscrollable");
+    jQuery("#umpleCanvas").removeClass("unscrollable");
   }
 }
 
@@ -582,8 +597,8 @@ Action.classHover = function(event,isHovering)
   // show or hide the hovers (if they are enabled)
   if (Page.canShowHovers())
   {
-  	var numHovers = 8;
-  	var hoverSelector = "#" + updateClass.id + "_hover";
+    var numHovers = 8;
+    var hoverSelector = "#" + updateClass.id + "_hover";
     for (var i=0; i<numHovers; i++)
     {
       if (isHovering) jQuery(hoverSelector + i).show();
@@ -630,7 +645,7 @@ Action.classClicked = function(event)
   }
   else if (Page.selectedItem == "AddGeneralization")
   {
-  	if (Action.newGeneralization == null)
+    if (Action.newGeneralization == null)
     {
       var successful = Action.createGeneralizationPartOne(event);
       if (successful) Action.canCreateByDrag = false;
@@ -743,28 +758,28 @@ Action.classDeleted = function(diagramId)
   
   for (var i=0; i<UmpleSystem.umpleAssociations.length; i++)
   {
-  	var umpleAssociation = UmpleSystem.umpleAssociations[i];
-  	if (umpleAssociation.contains(umpleClass))
-  	{
-  	  associationsAffected.push(umpleAssociation.id);	
-  	}
+    var umpleAssociation = UmpleSystem.umpleAssociations[i];
+    if (umpleAssociation.contains(umpleClass))
+    {
+      associationsAffected.push(umpleAssociation.id);  
+    }
   }
   for (var i=0; i<UmpleSystem.umpleClasses.length; i++)
   {
-  	var currentClass = UmpleSystem.umpleClasses[i];
-  	if (currentClass.extendsClass == umpleClass.id)
-  	{
-  	  generalizationsAffected.push(currentClass.id + "_generalization");
-  	}
+    var currentClass = UmpleSystem.umpleClasses[i];
+    if (currentClass.extendsClass == umpleClass.id)
+    {
+      generalizationsAffected.push(currentClass.id + "_generalization");
+    }
   }
   
   for (var i=0; i<associationsAffected.length; i++)
   {
-  	Action.associationDeleted(associationsAffected[i], addToQueue);
+    Action.associationDeleted(associationsAffected[i], addToQueue);
   }
   for (var i=0; i<generalizationsAffected.length; i++)
   {
-  	Action.generalizationDeleted(generalizationsAffected[i], addToQueue);
+    Action.generalizationDeleted(generalizationsAffected[i], addToQueue);
   }
     
   var result = UmpleSystem.removeClass(diagramId);
@@ -786,7 +801,7 @@ Action.associationDeleted = function(diagramId, addToQueue)
   
   if (addToQueue)
   {
-  	var update = new Object();
+    var update = new Object();
     update.callback = Action.updateUmpleTextCallback;
     update.post = format("action=removeAssociation&actionCode={0}",json);
     Action.textUpdateQueue.push(update);
@@ -831,11 +846,11 @@ Action.associationHover = function(event,isHovering)
   
   if (updateAssociation != null && Page.canShowHovers())
   {
-  	var hoverCount = 2;
-  	var selector = "#" + updateAssociation.id + "_hover";
-  	
-  	for (var i=0; i<hoverCount; i++)
-  	{
+    var hoverCount = 2;
+    var selector = "#" + updateAssociation.id + "_hover";
+    
+    for (var i=0; i<hoverCount; i++)
+    {
       if (isHovering) jQuery(selector+i).show();
       else jQuery(selector+i).hide();
     }
@@ -849,9 +864,9 @@ Action.generalizationHover = function(event,isHovering)
   
   if (updateGeneralization != null && Page.canShowHovers())
   {
-  	var selector = "#" + updateGeneralization.id + "_hover";
-  	for (var i=0; i<3; i++)
-  	{
+    var selector = "#" + updateGeneralization.id + "_hover";
+    for (var i=0; i<3; i++)
+    {
       if (isHovering) jQuery(selector+i).show();
       else jQuery(selector+i).hide();
     }
@@ -865,7 +880,7 @@ Action.associationSelected = function(obj)
   
   if (Page.selectedItem == "DeleteEntity" && obj != null)
   {
-  	var addToQueue = false;
+    var addToQueue = false;
     Action.associationDeleted(obj.id, addToQueue);
     return;
   }  
@@ -889,8 +904,8 @@ Action.associationSelected = function(obj)
   var anchorSelector = "#" + updateObj.id + "_anchor";
   for (var i=0; i<anchorCount; i++)
   {
-  	if (isSelected) jQuery(anchorSelector + i).show();
-  	else jQuery(anchorSelector + i).hide();
+    if (isSelected) jQuery(anchorSelector + i).show();
+    else jQuery(anchorSelector + i).hide();
   }
 }
 
@@ -925,8 +940,8 @@ Action.generalizationSelected = function(obj)
   var anchorSelector = "#" + updateObj.id + "_anchor";
   for (var i=0; i<anchorCount; i++)
   {
-  	if (isSelected) jQuery(anchorSelector + i).show();
-  	else jQuery(anchorSelector + i).hide();
+    if (isSelected) jQuery(anchorSelector + i).show();
+    else jQuery(anchorSelector + i).hide();
   }
 }
 
@@ -947,11 +962,11 @@ Action.photoReady = function()
   var canvasSel = "#" + Page.umpleCanvasId();
   if (Page.isPhotoReady())
   {
-    jQuery(canvasSel).addClass("photoReady");	
+    jQuery(canvasSel).addClass("photoReady");  
   }
   else
   {
-  	jQuery(canvasSel).removeClass("photoReady");
+    jQuery(canvasSel).removeClass("photoReady");
   }
   
   UmpleSystem.redrawCanvas();
@@ -972,11 +987,11 @@ Action.classMouseDown = function(event)
   
   if (Page.selectedItem == "AddAssociation" && Action.newAssociation == null)
   {
-	Action.createAssociationPartOne(event);
+  Action.createAssociationPartOne(event);
   }
   else if (Page.selectedItem == "AddGeneralization" && Action.newGeneralization == null)
   {
-	Action.createGeneralizationPartOne(event);
+  Action.createGeneralizationPartOne(event);
   }
 }
 
@@ -986,11 +1001,11 @@ Action.classMouseUp = function(event)
   
   if (Page.selectedItem == "AddAssociation" && Action.newAssociation != null)
   {
-  	Action.createAssociationPartTwo(event);
+    Action.createAssociationPartTwo(event);
   }
   else if (Page.selectedItem == "AddGeneralization" && Action.newGeneralization != null)
   {
-  	Action.createGeneralizationPartTwo(event);
+    Action.createGeneralizationPartTwo(event);
   }
 }
 
@@ -1000,13 +1015,13 @@ Action.mouseMove = function(event)
   
   if (Page.selectedItem == "AddClass")
   {
-  	if (Action.newClass == null)
-  	{
-  	  Action.newClass = new UmpleClass();
-  	  Action.newClass.name = "";
-  	  Action.newClass.id = "tempClass";
-  	}
-  	Action.drawClassOutline(event, Action.newClass);
+    if (Action.newClass == null)
+    {
+      Action.newClass = new UmpleClass();
+      Action.newClass.name = "";
+      Action.newClass.id = "tempClass";
+    }
+    Action.drawClassOutline(event, Action.newClass);
   }
   
   if (Action.newAssociation != null && Page.selectedItem == "AddAssociation")
@@ -1068,8 +1083,8 @@ Action.umpleCanvasClicked = function(event)
 {
   if (Action.elementClicked)
   {
-  	Action.elementClicked = false;
-  	return;
+    Action.elementClicked = false;
+    return;
   }
   
   if (Page.selectedItem == "AddClass")
@@ -1118,7 +1133,7 @@ Action.updateUmpleTextCallback = function(response)
   }
   else
   {
-  	Page.hideLoading();
+    Page.hideLoading();
   }
   
   //Uncomment for testing purposes only - to update the image after updating the text
@@ -1268,63 +1283,63 @@ Action.moveSelectedClass = function(umpleClass, delta)
   
   if (Action.oldTimeout != null)
   {
-  	clearTimeout(Action.oldTimeout);
+    clearTimeout(Action.oldTimeout);
   }
   Action.oldTimeout = setTimeout(function() {Action.classMoved(Page.selectedClass);}, 1000); 
 }
 
 Action.keyboardShortcut = function(event)
 {
-		
+    
   if (!Page.shortcutsEnabled)
   {
-  	return;
+    return;
   }
   
   var shortcut = event.which;
   
-  if (shortcut == 27)		// escape
+  if (shortcut == 27)    // escape
   {
-  	Page.unselectAllToggleTools();
+    Page.unselectAllToggleTools();
   }
   else if ((shortcut == 8 || shortcut == 46) && jQuery('#umpleCanvasColumn').hasClass('focus'))
   {
-	  if(Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0)
-	  {
-		  Action.classDeleted(Page.selectedClass.id);
-	  }
-	  else if(Page.selectedAssociation)
-	  {
-		  Action.associationDeleted(Page.selectedAssociation.id);
-	  }
-	  else if(Page.selectedGeneralization)
-	  {
-		  Action.generalizationDeleted(Page.selectedGeneralization.id);
-	  }
-	  event.preventDefault();
+    if(Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0)
+    {
+      Action.classDeleted(Page.selectedClass.id);
+    }
+    else if(Page.selectedAssociation)
+    {
+      Action.associationDeleted(Page.selectedAssociation.id);
+    }
+    else if(Page.selectedGeneralization)
+    {
+      Action.generalizationDeleted(Page.selectedGeneralization.id);
+    }
+    event.preventDefault();
   }
 
 }
 
 Action.getCaretPosition = function() // TIM Returns the line number
 {
-	var ctrl = document.getElementById('umpleModelEditor');
-	
-	var CaretPos = Action.getInputSelectionStart(ctrl);
-	
-	var nlcount=1;
-	var theCode=Page.getRawUmpleCode();
+  var ctrl = document.getElementById('umpleModelEditor');
+  
+  var CaretPos = Action.getInputSelectionStart(ctrl);
+  
+  var nlcount=1;
+  var theCode=Page.getRawUmpleCode();
 
-	for(var ch=0; ch<(CaretPos); ch++)
-	{
-	   if(theCode.charAt(ch)=="\n") nlcount++;
-	   
-	   // The following for debugging
-	   if (Page.getAdvancedMode() == 2 && ch < 15) { // debug
-	     Page.catFeedbackMessage("<"+ch+" "+theCode.charAt(ch)+"="+theCode.charCodeAt(ch)+"> ");
-	   }
-	}
-	return nlcount;
+  for(var ch=0; ch<(CaretPos); ch++)
+  {
+     if(theCode.charAt(ch)=="\n") nlcount++;
+     
+     // The following for debugging
+     if (Page.getAdvancedMode() == 2 && ch < 15) { // debug
+       Page.catFeedbackMessage("<"+ch+" "+theCode.charAt(ch)+"="+theCode.charCodeAt(ch)+"> ");
+     }
+  }
+  return nlcount;
 }
 
 // The following from http://stackoverflow.com/questions/263743/how-to-get-cursor-position-in-textarea/3373056#3373056
@@ -1334,14 +1349,14 @@ Action.getInputSelectionStart = function(el) {
     if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
       start = el.selectionStart;
       // The following for debugging
-	  if (Page.getAdvancedMode() == 2) { // debug
-	    Page.setFeedbackMessage("Non-IE browser ");
+    if (Page.getAdvancedMode() == 2) { // debug
+      Page.setFeedbackMessage("Non-IE browser ");
       }
     }
     else { // IE Support
       // The following for debugging
-	  if (Page.getAdvancedMode() == 2) { // debug
-	    Page.setFeedbackMessage("IE-type browser ");
+    if (Page.getAdvancedMode() == 2) { // debug
+      Page.setFeedbackMessage("IE-type browser ");
       }
         range = document.selection.createRange();
 
@@ -1612,9 +1627,9 @@ Action.removeComments = function(str) {
 Action.umpleTypingActivity = function(target) {
   if (Action.manualSync && Action.diagramInSync)
   {
-  	if (jQuery("#umpleCanvasColumn").is(":visible")) Page.enablePaletteItem("buttonSyncDiagram", true);
-  	Action.diagramInSync = false;
-  	Page.enableDiagram(false);
+    if (jQuery("#umpleCanvasColumn").is(":visible")) Page.enablePaletteItem("buttonSyncDiagram", true);
+    Action.diagramInSync = false;
+    Page.enableDiagram(false);
   }
   
   if (Action.oldTimeout != null)
@@ -1740,8 +1755,8 @@ Action.updateUmpleDiagramCallback = function(response)
     }
 
     if (Page.readOnly) {
-  	  jQuery("span.editable").addClass("uneditable");
-  	  // jQuery("div.umpleClass").addClass("unselectable");
+      jQuery("span.editable").addClass("uneditable");
+      // jQuery("div.umpleClass").addClass("unselectable");
     }
   }
   
@@ -1775,9 +1790,9 @@ Action.addAssociation = function(line)
   // is a dummy - erase it and create association 
   Action.removeNewAssociation();
   var umpleAssociation = UmpleSystem.createAssociation( line.classOneId,
-  														line.classTwoId,
-  														line.classOnePosition.add(UmpleSystem.position()),
-  														line.classTwoPosition.add(UmpleSystem.position()));
+                              line.classTwoId,
+                              line.classOnePosition.add(UmpleSystem.position()),
+                              line.classTwoPosition.add(UmpleSystem.position()));
   // obtain the json representation of the association
   var umpleJson = Json.toString(umpleAssociation);
   
@@ -1934,8 +1949,8 @@ Action.reflexiveAssociationMoving = function(dragSelector)
   
   if (Action.newAssociation == null)
   {
-  	Action.newAssociation = new UmpleAssociation();
-  	Action.newAssociation.classOneId = association.classOneId;
+    Action.newAssociation = new UmpleAssociation();
+    Action.newAssociation.classOneId = association.classOneId;
     Action.newAssociation.classTwoId = association.classTwoId;
     Action.newAssociation.classOnePosition = association.classOnePosition;
     Action.newAssociation.classTwoPosition = association.classTwoPosition;
@@ -2283,13 +2298,13 @@ Action.enableManualSync = function(enable)
   
   if (enable)
   {
-	Action.manualSync = true;
+  Action.manualSync = true;
   }
   else
   {
-  	Action.manualSync = false;
-  	Action.processTyping("umpleModelEditor",true);
-  	Page.enablePaletteItem("buttonSyncDiagram", false);
+    Action.manualSync = false;
+    Action.processTyping("umpleModelEditor",true);
+    Page.enablePaletteItem("buttonSyncDiagram", false);
   }
 }
 
@@ -2306,165 +2321,155 @@ Action.ajax = function(callback,post,errors)
 //Mac Keyboard Shortcut
 if (navigator.appVersion.indexOf("Mac")!=-1)
 {
-	jQuery(document).ready(function(){
-		jQuery('#undosmall').html('[cmd+z]');
-		jQuery('#redosmall').html('[cmd+shift+z]');
-	});
-	Mousetrap.bind(['command+z'], function(e) {
-		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-		{			
-			Action.undo();
-		}
-		e.preventDefault();
-	});	
-	Mousetrap.bind(['command+shift+z'], function(e) {
-		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-		{			
-			Action.redo();
-		}
-		e.preventDefault();
-	});
+  jQuery(document).ready(function(){
+    jQuery('#undosmall').html('[cmd+z]');
+    jQuery('#redosmall').html('[cmd+shift+z]');
+  });
+  Mousetrap.bind(['command+z'], function(e) {
+    if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+    {      
+      Action.undo();
+    }
+    e.preventDefault();
+  });  
+  Mousetrap.bind(['command+shift+z'], function(e) {
+    if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+    {      
+      Action.redo();
+    }
+    e.preventDefault();
+  });
 }
 else //Non Mac
 {
-	jQuery(document).ready(function(){
-		jQuery('#undosmall').html('[ctrl+z]');
-		jQuery('#redosmall').html('[ctrl+y]');
-	});
-	Mousetrap.bind(['ctrl+z'], function(e) {
-		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-		{			
-			Action.undo();
-		}
-		e.preventDefault();
-	});	
-	Mousetrap.bind(['ctrl+y'], function(e) {
-		if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-		{			
-			Action.redo();
-		}
-		e.preventDefault();
-	});
+  jQuery(document).ready(function(){
+    jQuery('#undosmall').html('[ctrl+z]');
+    jQuery('#redosmall').html('[ctrl+y]');
+  });
+  Mousetrap.bind(['ctrl+z'], function(e) {
+    if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+    {      
+      Action.undo();
+    }
+    e.preventDefault();
+  });  
+  Mousetrap.bind(['ctrl+y'], function(e) {
+    if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+    {      
+      Action.redo();
+    }
+    e.preventDefault();
+  });
 }
 
 //Arrow Up
 Mousetrap.bind(['up'], function(e){
-  	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,-5,0,0));
+    Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,-5,0,0));
 });
 Mousetrap.bind(['shift+up'], function(e){
-  	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,-1,0,0));
+    Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,-1,0,0));
 });
 
 //Arrow Down
 Mousetrap.bind(['down'], function(e){
-  	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,5,0,0));
+    Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,5,0,0));
 });
 Mousetrap.bind(['shift+down'], function(e){
-  	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,1,0,0));
+    Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,1,0,0));
 });
 
 //Arrow Left
 Mousetrap.bind(['left'], function(e){
-	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(-5,0,0,0));
+  Action.moveSelectedClass(Page.selectedClass, new UmplePosition(-5,0,0,0));
 });
 Mousetrap.bind(['shift+left'], function(e){
-	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(-1,0,0,0));
+  Action.moveSelectedClass(Page.selectedClass, new UmplePosition(-1,0,0,0));
 });
 
 //Arrow Right
 Mousetrap.bind(['right'], function(e){
-  	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(5,0,0,0));
+    Action.moveSelectedClass(Page.selectedClass, new UmplePosition(5,0,0,0));
 });
 Mousetrap.bind(['shift+right'], function(e){
-  	Action.moveSelectedClass(Page.selectedClass, new UmplePosition(1,0,0,0));
+    Action.moveSelectedClass(Page.selectedClass, new UmplePosition(1,0,0,0));
 });
 
-Mousetrap.bind(['shift+e'], function(e){
-	if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-	{			
-		jQuery('#buttonShowEditableClassDiagram').trigger('click');
-	}
+//Functions for changing diagram view - change consistently in umple_page.js
+Mousetrap.bind(['ctrl+e'], function(e){
+  Page.clickShowEditableClassDiagram();
 });
 
-Mousetrap.bind(['shift+g'], function(e){
-	if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-	{			
-		jQuery('#buttonShowGvClassDiagram').trigger('click');
-	}
+Mousetrap.bind(['ctrl+g'], function(e){
+  Page.clickShowGvClassDiagram();
 });
 
-Mousetrap.bind(['shift+s'], function(e){
-	if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-	{			
-		jQuery('#buttonShowGvStateDiagram').trigger('click');
-	}
+Mousetrap.bind(['ctrl+s'], function(e){
+  Page.clickShowGvStateDiagram();
 });
 
-Mousetrap.bind(['shift+t'], function(e){
-	if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-	{			
-		jQuery('#buttonShowHideTextEditor').trigger('click');
-	}
+//Functions for showing and hiding parts of the view
+Mousetrap.bind(['ctrl+t'], function(e){
+  Page.clickShowHideText();
 });
 
-Mousetrap.bind(['shift+='], function(e){
-	if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-	{			
-		jQuery('#buttonLarger').trigger('click');
-	}
+Mousetrap.bind(['ctrl+d'], function(e){
+  Page.clickShowHideCanvas();
 });
 
-Mousetrap.bind(['shift+-'], function(e){
-	if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-	{			
-		jQuery('#buttonSmaller').trigger('click');
-	}
+Mousetrap.bind(['ctrl+n'], function(e){
+  Page.clickShowHideMenu();
 });
 
-Mousetrap.bind(['shift+a'], function(e){
-	if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-	{			
-		jQuery('#buttonToggleAttributes').trigger('click');
-	}
+
+//Functions for shrinking and growing the diagram
+Mousetrap.bind(['ctrl+shift+='], function(e){
+  Page.clickButtonlarger();
 });
 
-Mousetrap.bind(['shift+m'], function(e){
-	if(jQuery('#umpleCanvasColumn').hasClass('focus'))
-	{			
-		jQuery('#buttonToggleMethods').trigger('click');
-	}
+Mousetrap.bind(['ctrl+shift+-'], function(e){
+  Page.clickButtonSmaller();
 });
 
+// Functions for changing what is shown on the diagram
+Mousetrap.bind(['ctrl+a'], function(e){
+  Page.clickToggleAttributes();
+});
+
+Mousetrap.bind(['ctrl+m'], function(e){
+  Page.clickToggleMethods();
+});
+
+// Functions for editing the diagram - using shift
 Mousetrap.bind(['g'], function(e){
   if(jQuery('#umpleCanvasColumn').hasClass('focus') 
-  	&& Page.selectedAssociation == null && Page.selectedGeneralization == null)
-  {		  
-	  if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
-	  {
-		  document.getElementById('buttonAddGeneralization').click();
-	  }			  
-  }	
+    && Page.selectedAssociation == null && Page.selectedGeneralization == null)
+  {      
+    if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
+    {
+      document.getElementById('buttonAddGeneralization').click();
+    }        
+  }  
 });
 
 Mousetrap.bind(['a'], function(e){
   if(jQuery('#umpleCanvasColumn').hasClass('focus') 
-  	&& Page.selectedAssociation == null && Page.selectedGeneralization == null)
+    && Page.selectedAssociation == null && Page.selectedGeneralization == null)
   {
-	  if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
-	  {
-		  document.getElementById('buttonAddAssociation').click();
-	  }
+    if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
+    {
+      document.getElementById('buttonAddAssociation').click();
+    }
   }
 });
 
 Mousetrap.bind(['c'], function(e){
   if(jQuery('#umpleCanvasColumn').hasClass('focus') 
-  	&& Page.selectedAssociation == null && Page.selectedGeneralization == null)
+    && Page.selectedAssociation == null && Page.selectedGeneralization == null)
   {
-	  if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
-	  {		  	
-		  document.getElementById('buttonAddClass').click();
-	  }			  
+    if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
+    {        
+      document.getElementById('buttonAddClass').click();
+    }        
   }
 });
 
