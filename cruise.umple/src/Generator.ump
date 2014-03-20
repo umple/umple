@@ -19,9 +19,27 @@ interface CodeGenerator
 { 
   boolean setModel(UmpleModel aUmpleModel);
   boolean setOutput(String aString);
+  boolean setSuboption(String subopt);
+  boolean hasSuboption(String subopt);
   void generate();
   void prepare();
   void postpare();
+}
+
+// Default implementation for generators with suboptions
+class CodeGeneratorWithSubptions
+{
+  isA CodeGenerator;
+  lazy String[] suboptions;  
+  public boolean hasSuboption(String subopt) 
+  { 
+    return suboptions.contains(subopt);
+  }
+  
+  public boolean setSuboption(String subopt) 
+  { 
+    return suboptions.add(subopt);
+  }  
 }
 
 interface CodeFileWriter
@@ -48,7 +66,7 @@ class SuperCodeGenerator {
   depend cruise.umple.util.*;
   abstract;
   //The reason for bringing following inheritance here is because of Umple code generation. It generates a false method for iterface coverage.
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   isA CodeTranslator;
   UmpleModel model = null;
   String output = "";
@@ -62,7 +80,7 @@ class GeneratorHelper
 
 class EcoreGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -76,7 +94,7 @@ class EcoreGenerator
 
 class TestGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -90,7 +108,7 @@ class TestGenerator
 
 class UmpleSelfGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -104,7 +122,7 @@ class UmpleSelfGenerator
 
 class USEGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -116,7 +134,7 @@ class USEGenerator
 
 class PapyrusGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -130,7 +148,7 @@ class PapyrusGenerator
 
 class XmiGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -144,7 +162,7 @@ class XmiGenerator
 
 class TextUmlGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -158,7 +176,7 @@ class TextUmlGenerator
 
 class GvStateDiagramGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -172,7 +190,7 @@ class GvStateDiagramGenerator
 
 class CodeAnalysisGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -186,7 +204,7 @@ class CodeAnalysisGenerator
 
 class SimpleMetricsGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -200,7 +218,7 @@ class SimpleMetricsGenerator
 
 class GvClassDiagramGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -214,7 +232,7 @@ class GvClassDiagramGenerator
 
 class AlloyGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -229,7 +247,7 @@ class AlloyGenerator
 
 class SimulateGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
@@ -243,7 +261,7 @@ class SimulateGenerator
 
 class YumlGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.util.*;
   depend cruise.umple.util.*;
 
@@ -255,7 +273,7 @@ class YumlGenerator
 
 class XtextGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.util.regex.*;
   depend java.util.*;
   depend java.io.*;
@@ -273,7 +291,7 @@ class XtextGenerator
 
 class JsonGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend cruise.umple.util.*;
 
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
@@ -297,7 +315,7 @@ class JavaGenerator
 
 class RTCppGenerator
 {
-  isA CodeGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.util.*;
   depend java.io.*;
   depend cruise.umple.util.*;

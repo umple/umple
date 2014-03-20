@@ -784,7 +784,8 @@ class GenerateTarget
 
   Boolean override = false;
   Boolean overrideAll = false;
-
+  lazy String[] suboptions;
+  
   before getPath{if(path == null) path = ""; }
   key{language}
 }

@@ -179,6 +179,11 @@ class UmpleConsoleMain
             String lang = (String)optset.valueOf("generate");
             GenerateTarget gt = new GenerateTarget(lang, path);
             gt.setOverrideAll(override);
+            if (optset.has("s")) {
+            	for (Object s : optset.valuesOf("s")) {
+            		gt.addSuboption((String) s); 
+            	}
+            }
             model.addGenerate(Arrays.asList(gt));
         }
         return false;
@@ -194,6 +199,7 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("c","compile"), "Indicate to the entry class to compile, or with argument - to compile all outputfiles").withRequiredArg().ofType(String.class);
     optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
+    optparser.acceptsAll(Arrays.asList("suboption","s"), "Indicate to generate files with suboptions").withRequiredArg().ofType(String.class);
     
     OptionSet optSet = null;
 
