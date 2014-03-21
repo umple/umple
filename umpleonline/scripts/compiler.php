@@ -42,7 +42,17 @@ else if (isset($_REQUEST["action"]))
 else if (isset($_REQUEST["umpleCode"]))
 {
   $input = $_REQUEST["umpleCode"];
-  $language = $_REQUEST["language"];
+  $fulllanguage = $_REQUEST["language"];
+  
+  // If there are suboptions in the language string, parse them out
+  // Language stringh could be cpp or cpp.opt1.opt2.opt3
+  $langparts = explode('.',$fulllanguage);
+  $language = $langparts[0];
+  $suboptions = "";
+  for($i=1; $i<count($langparts); $i++){
+    $suboptions = $suboptions . "-s " . $langparts[$i];
+  }
+  
   $languageStyle = $_REQUEST["languageStyle"];
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
   $uigu = False;
@@ -165,9 +175,10 @@ else if (isset($_REQUEST["umpleCode"]))
     $command = "java -jar umplesync.jar -source {$filename} 1> {$outputFilename} 2> {$errorFilename}";
   }
   else {
+      // The following is used for outputting diagrams only
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv");
-      $command = "java -jar umplesync.jar -generate " . $language . " {$filename} 1> {$outputFilename} 2> {$errorFilename}";
+      $command = "java -jar umplesync.jar -generate " . $language . " {$filename} " . $suboptions . " 1> {$outputFilename} 2> {$errorFilename}";
   }
   exec($command);
   
