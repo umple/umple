@@ -24,6 +24,10 @@ lazy fileExtension= ".umpself";
 
     for (UmpleClass uClass : model.getUmpleClasses())
     {
+      for (String aNamespace: uClass.getNamespaces())
+      {
+        code.append(StringFormatter.format("namespace {0};\n", aNamespace));   
+      }
       code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
 
       if (uClass.getExtendsClass() != null)
