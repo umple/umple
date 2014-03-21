@@ -50,6 +50,33 @@ public class UmpleUSEParserTest
     Assert.assertEquals("Customer", model.getUmpleClass(1).getName());
   }
   
+  @Test
+  public void oneAttribute()
+  {
+    assertParse("useOneAttribute.use");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
+    Assert.assertEquals("Employee", model.getUmpleClass(0).getName());
+    Assert.assertTrue(model.getUmpleClass("Employee").getAttributes().size() == 1);
+    Assert.assertTrue(model.getUmpleClass("Employee").getAttribute("name") != null);
+    Assert.assertEquals("String", model.getUmpleClass("Employee").getAttribute("name").getType());
+    Assert.assertTrue(model.getUmpleClass("Employee").getAttribute("name").isPrimitive());
+  }
+  
+  @Test
+  public void twoAttributes()
+  {
+    assertParse("useTwoAttributes.use");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
+    Assert.assertEquals("Employee", model.getUmpleClass(0).getName());
+    Assert.assertTrue(model.getUmpleClass("Employee").getAttributes().size() == 2);
+    Assert.assertTrue(model.getUmpleClass("Employee").getAttribute("name") != null);
+    Assert.assertEquals("String", model.getUmpleClass("Employee").getAttribute("name").getType());
+    Assert.assertTrue(model.getUmpleClass("Employee").getAttribute("name").isPrimitive());
+    Assert.assertTrue(model.getUmpleClass("Employee").getAttribute("budget") != null);
+    Assert.assertEquals("Integer", model.getUmpleClass("Employee").getAttribute("budget").getType());
+    Assert.assertTrue(model.getUmpleClass("Employee").getAttribute("budget").isPrimitive());
+  }
+  
   // Assertion case where we expect the parse to succeed - may be overridden
   public void assertParse(String filename)
   {

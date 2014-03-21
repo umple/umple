@@ -8,12 +8,12 @@ useProgram : model [id] [[useGeneralClassDefinition]]*
 
 useGeneralClassDefinition- : [[useClassDefinition]]
 
-useClassDefinition : (abstract)? class [id] ([[useAttributes]])? end
+useClassDefinition : (abstract)? class [id] [[useAttributes]]? end
 
 useAttributes : attributes [[useAttributeDefinition]]*
 
-useAttributeDefinition : [[id]] : [[useType]] (;)?
+useAttributeDefinition : [id] : [[useType]] (;)?
 
-useType : [[useSimpleType]]
+useType- : [[useSimpleType]]
 
 useSimpleType : [id]
