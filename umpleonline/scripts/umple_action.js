@@ -1700,6 +1700,11 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   if(Page.useEditableClassDiagram) {language="language=Json"}
   else if(Page.useGvClassDiagram) {language="language=classDiagram"}
   else {language="language=stateDiagram"}
+  
+  // append any suboptions needed
+  if(Page.showMethods) language=language+".showmethods";
+  if(!Page.showAttributes) language=language+".hideattributes";
+  
   Action.ajax(Action.updateUmpleDiagramCallback,language);
 }
 
@@ -2215,16 +2220,24 @@ Action.attributeDelete = function(diagramId,index)
 Action.toggleAttributes = function()
 {
   Page.showAttributes = !Page.showAttributes;
-  UmpleSystem.update();
+  Action.redrawDiagram()
+  // UmpleSystem.update();
 }
   
 Action.toggleMethods = function()
 {
   Page.showMethods = !Page.showMethods;
-  UmpleSystem.update();
+  Action.redrawDiagram()
+  // UmpleSystem.update();
 }
 
-
+Action.redrawDiagram = function()
+{
+    UmpleSystem.merge(null);    // Clear the diagram
+    var canvas = jQuery("#umpleCanvas");
+    canvas.html("");
+    Action.showHideCanvas(true);
+}
 
 InlineEditor.elementChanged = function(obj, oldVal, newVal)
 {
