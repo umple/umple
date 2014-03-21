@@ -5,13 +5,17 @@ class JavaClassVisitor {
  isA ASTVisitor;
 
  depend org.eclipse.jdt.core.dom.ASTVisitor;
+ depend org.eclipse.jdt.core.dom.TypeDeclaration;
  depend org.eclipse.jdt.core.dom.ImportDeclaration;
  depend org.eclipse.jdt.core.dom.MethodDeclaration;
  depend org.eclipse.jdt.core.dom.FieldDeclaration;
+ depend org.eclipse.jdt.core.dom.PackageDeclaration;
 
  ImportDeclaration [] importDeclarations;
  MethodDeclaration [] methodDeclarations;
  FieldDeclaration [] fieldDeclarations;
+ lazy PackageDeclaration packageDeclaration;
+ lazy String name;
 
   @Override
   public boolean visit(ImportDeclaration node) {
@@ -30,8 +34,23 @@ class JavaClassVisitor {
     methodDeclarations.add(node);
     return super.visit(node);
   }
+  
+  @Override
+  public boolean visit(TypeDeclaration node) {
+    name = node.getName().getFullyQualifiedName();
+    return super.visit(node);
+  }
+  
+  @Override
+  public boolean visit (PackageDeclaration node) 
+  {
+    packageDeclaration = node;
+    return super.visit(node);
+  }
 
 }
+ external PackageDeclaration {}
+ external FieldDeclaration {}
  external MethodDeclaration {}
  external ImportDeclaration {}
  external ASTVisitor {}

@@ -38,6 +38,14 @@ rule "transform_ImportDeclaration"
 		uClass.addDepend(depend);
 end
 
+rule "transform_Namespace"
+	when
+		packageDeclaration: PackageDeclaration()
+		uClass: UmpleClass()
+	then
+		uClass.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
+end
+
 rule "hasEmptyConstructor"
 	when
 		uClass: UmpleClass()
@@ -110,8 +118,6 @@ function String getAttributeType(FieldDeclaration field){
 	          return"";}
 	         else { throw new IllegalArgumentException("Invalid Type");}
 }
-
-
 
 /*
 // lazy: A constructor argument is not required for this attribute
