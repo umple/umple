@@ -132,6 +132,8 @@ $output = readTemporaryFile("ump/" . $filename);
   <a id="topBookmarkable" href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Create Bookmarkable URL</a>
 <?php } ?>
 
+<span id="restorecode" >&nbsp; &nbsp; <a href="#"> Restore Saved State</a></span>
+  
 &nbsp; &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
 
 </div>
