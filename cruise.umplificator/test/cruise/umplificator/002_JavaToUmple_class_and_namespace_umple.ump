@@ -1,0 +1,12 @@
+namespace composite.name;
+
+class Test
+{
+ depend java.awt.*;
+ depend java.awt.event.*;
+ depend javax.swing.*;
+ depend java.util.*;
+ depend java.io.*;
+ depend java.text.*;
+ depend java.util.regex.*;
+}

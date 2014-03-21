@@ -95,7 +95,9 @@ depend org.apache.commons.io.IOUtils;
 	   {
 		   kieSession.insert(fieldDeclaration); 
 	   }
-	  return kieSession;
+	  
+	   kieSession.insert(visitor.getPackageDeclaration());
+	   return kieSession;
     }
   
  	public KieSession insertUmpleClass(UmpleClass uClass){

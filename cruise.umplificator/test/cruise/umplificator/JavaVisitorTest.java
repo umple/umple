@@ -31,6 +31,13 @@ public class JavaVisitorTest {
 		 Assert.assertEquals(3, nbImports);
 	}
 	
+	@Test
+	public void packages_returned()
+	{
+		String packageName = visitor.getPackageDeclaration().getName().getFullyQualifiedName();
+		Assert.assertEquals("cruise.umplificator", packageName);
+	}
+	
 	
 	@Test
 	public void methods_returned()
