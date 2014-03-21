@@ -1,0 +1,34 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyze core umple meta model tokens such as which language to generate,
+the current namespace, etc and populates the umple meta model.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+  
+  private void analyzeUSE(Token t, int analysisStep) {
+    if(t.is("useProgram")) {
+      for(Token sub : t.getSubTokens()) {
+        if(sub.is("useClassDefinition")) {
+          analyzeUSEClass(sub);
+        }
+      }
+    }
+  }
+  
+  private UmpleClass analyzeUSEClass(Token t) {
+    UmpleClass generatedClass = model.addUmpleClass(t.getValue("id"));
+    return generatedClass;
+  }
+}

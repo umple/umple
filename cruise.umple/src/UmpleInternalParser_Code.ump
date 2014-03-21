@@ -78,6 +78,8 @@ class UmpleInternalParser
     parser.addGrammarFile("/umple_template.grammar"); 
     parser.addGrammarFile("/umple_layout.grammar");
     parser.addGrammarFile("/umple_exceptions.grammar");
+    
+    parser.addGrammarFile("/use.grammar");
   }
 
   public ParseResult parse(String ruleName, String input){
@@ -216,6 +218,7 @@ class UmpleInternalParser
   // Delegate function to analyze a token and send it to the write
   private void analyzeToken(Token t, int analysisStep)
   {
+    analyzeUSE(t, analysisStep);
     analyzeCoreToken(t,analysisStep);
     analyzeClassToken(t,analysisStep);
     analyzeTraitToken(t,analysisStep);
@@ -426,3 +429,4 @@ use UmpleInternalParser_CodeTemplate.ump;
 use UmpleInternalParser_CodeStateMachine.ump;
 use UmpleInternalParser_CodeTrace.ump;
 use UmpleInternalParser_CodeLayout.ump;
+use UmpleInternalParser_CodeUSE.ump;

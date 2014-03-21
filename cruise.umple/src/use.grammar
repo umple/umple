@@ -1,0 +1,19 @@
+// Copyright: All contributors to the Umple Project
+// This file is made available subject to the open source license found at:
+// [*http://umple.org/license*]
+
+// This is essentially rewriting the grammar rules present in the USE compiler, which exist in a similar format.
+
+useProgram : model [id] [[useGeneralClassDefinition]]*
+
+useGeneralClassDefinition- : [[useClassDefinition]]
+
+useClassDefinition : (abstract)? class [id] ([[useAttributes]])? end
+
+useAttributes : attributes [[useAttributeDefinition]]*
+
+useAttributeDefinition : [[id]] : [[useType]] (;)?
+
+useType : [[useSimpleType]]
+
+useSimpleType : [id]
