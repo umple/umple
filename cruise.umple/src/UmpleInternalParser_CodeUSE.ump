@@ -21,14 +21,45 @@ class UmpleInternalParser
     if(t.is("useProgram")) {
       for(Token sub : t.getSubTokens()) {
         if(sub.is("useClassDefinition")) {
-          analyzeUSEClass(sub);
+          analyzeUSEClass(sub, analysisStep);
         }
       }
     }
   }
   
-  private UmpleClass analyzeUSEClass(Token t) {
+  private UmpleClass analyzeUSEClass(Token t, int analysisStep) {
     UmpleClass generatedClass = model.addUmpleClass(t.getValue("id"));
+    if(analysisStep != 1) {
+      Token attributes = t.getSubToken("useAttributes");
+      if(attributes != null) {
+        analyzeUSEAttributes(attributes, generatedClass);
+      }
+    }
     return generatedClass;
+  }
+  
+  private void analyzeUSEAttributes(Token allAttributesToken, UmpleClass myClass) {
+    for(Token attributeToken : allAttributesToken.getSubTokens()) {
+      if(attributeToken.is("useAttributeDefinition")) {
+        String name = attributeToken.getValue("id");
+        
+        for(Attribute aAttribute : myClass.getAttributes()){
+          if (aAttribute.getName().equals(name)){
+            setFailedPosition(attributeToken.getPosition(), 22, myClass.getName(), name);
+          }
+        }
+        
+        Token simpleType = attributeToken.getSubToken("useSimpleType");
+        if(simpleType != null) {
+          String type = simpleType.getValue("id");
+          
+          Attribute attribute = new Attribute(name, type, null, null, false, myClass);
+          attribute.setPosition(attributeToken.getPosition());
+          
+        } else {
+          System.err.println("Internal error: attribute has no recognized type");
+        }
+      }
+    }
   }
 }
