@@ -879,7 +879,14 @@ class Parser
             
             // If long rule, then indent on any 'or'
             if(ruleLength > 80) {
+              int currentLength = cleanedUpRule.length();
+              // Replace ! in main rule
               cleanedUpRule = cleanedUpRule.replaceAll("\\s[|]\\s", "\n<br/>&nbsp;&nbsp;&nbsp;&nbsp| ");
+              
+              // Replace | in substrings if no changes made above
+              if(currentLength == cleanedUpRule.length()) {
+                cleanedUpRule = cleanedUpRule.replaceAll("[|]", "\n<br/>&nbsp;&nbsp;&nbsp;&nbsp|");
+              }
             }
           
             // Output the rule nicely
