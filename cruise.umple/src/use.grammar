@@ -4,7 +4,7 @@
 
 // This is essentially rewriting the grammar rules present in the USE compiler, which exist in a similar format.
 
-useProgram : model [id] [[useGeneralClassDefinition]]*
+useProgram : model [id] ([[useGeneralClassDefinition]] | [[useInlineComment]])*
 
 useGeneralClassDefinition- : [[useClassDefinition]]
 
@@ -17,3 +17,5 @@ useAttributeDefinition : [id] : [[useType]] (;)?
 useType- : [[useSimpleType]]
 
 useSimpleType : [id]
+
+useInlineComment- : // [*inlineComment]
