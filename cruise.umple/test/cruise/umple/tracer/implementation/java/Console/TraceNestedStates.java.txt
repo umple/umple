@@ -1,0 +1,176 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.ConsoleTracer;
+import java.util.Date;
+
+public class LightFixture
+{
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //LightFixture State Machines
+  enum Bulb { Off, On }
+  enum BulbOn { Null, Normal, Dimmed }
+  private Bulb bulb;
+  private BulbOn bulbOn;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public LightFixture()
+  {
+    setBulbOn(BulbOn.Null);
+    setBulb(Bulb.Off);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getBulbFullName()
+  {
+    String answer = bulb.toString();
+    if (bulbOn != BulbOn.Null) { answer += "." + bulbOn.toString(); }
+    return answer;
+  }
+
+  public Bulb getBulb()
+  {
+    return bulb;
+  }
+
+  public BulbOn getBulbOn()
+  {
+    return bulbOn;
+  }
+
+  public boolean flip()
+  {
+    boolean wasEventProcessed = false;
+    
+    Bulb aBulb = bulb;
+    switch (aBulb)
+    {
+      case Off:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,LightFixture,"+System.identityHashCode(this)+",sm_t,Off,flip,On" );
+        setBulb(Bulb.On);
+        wasEventProcessed = true;
+        break;
+      case On:
+        exitBulb();
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,LightFixture,"+System.identityHashCode(this)+",sm_t,On,flip,Off" );
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterOn()
+  {
+    boolean wasEventProcessed = false;
+    
+    BulbOn aBulbOn = bulbOn;
+    switch (aBulbOn)
+    {
+      case Null:
+        setBulbOn(BulbOn.Normal);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitOn()
+  {
+    boolean wasEventProcessed = false;
+    
+    BulbOn aBulbOn = bulbOn;
+    switch (aBulbOn)
+    {
+      case Normal:
+        setBulbOn(BulbOn.Null);
+        wasEventProcessed = true;
+        break;
+      case Dimmed:
+        setBulbOn(BulbOn.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean touch()
+  {
+    boolean wasEventProcessed = false;
+    
+    BulbOn aBulbOn = bulbOn;
+    switch (aBulbOn)
+    {
+      case Normal:
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,LightFixture,"+System.identityHashCode(this)+",sm_t,Normal,touch,Dimmed" );
+        setBulbOn(BulbOn.Dimmed);
+        wasEventProcessed = true;
+        break;
+      case Dimmed:
+        exitBulb();
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,LightFixture,"+System.identityHashCode(this)+",sm_t,Dimmed,touch,Off" );
+        setBulb(Bulb.Off);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitBulb()
+  {
+    switch(bulb)
+    {
+      case On:
+        exitOn();
+        break;
+    }
+  }
+
+  private void setBulb(Bulb aBulb)
+  {
+    bulb = aBulb;
+
+    // entry actions and do activities
+    switch(bulb)
+    {
+      case On:
+        if (bulbOn == BulbOn.Null) { setBulbOn(BulbOn.Normal); }
+        break;
+    }
+  }
+
+  private void setBulbOn(BulbOn aBulbOn)
+  {
+    bulbOn = aBulbOn;
+    if (bulb != Bulb.On && aBulbOn != BulbOn.Null) { setBulb(Bulb.On); }
+  }
+
+  public void delete()
+  {}
+
+}
