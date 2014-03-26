@@ -4570,31 +4570,17 @@ for (StateMachine smq : uClass.getStateMachines())
           allCases.append(StringFormatter.format("{0}{1}\n",tabSpace,a1.getActionCode()));
           javaLine+=a1.getActionCode().split("\\n").length;
         }
-        //----- trace a single state
-        for( TraceDirective td : uClass.getTraceDirectives() )
-          for( StateMachineTraceItem traceStm : td.getStateMachineTraceItems() )
-        	if( ! traceStm.getTraceStateMachineFlag() )
-        	{
-        		State traceState = traceStm.getState();
-
-        		if( traceState.getName().equals(nextState.getName()) && traceStm.getEntry() )
-        		{
-        			allCases.append(traceStm.trace(gen, t,"sm_t", uClass)+"\n");
-       				break;
-        		}
-        		if( traceState.getName().equals(state.getName()) && traceStm.getExit() )
-        		{
-        			allCases.append(traceStm.trace(gen, t,"sm_t", uClass)+"\n");
-       				break;
-        		}
-        		else if( (traceState.getName().equals(state.getName()) ||  traceState.getName().equals(nextState.getName()) )
-        			 && (traceStm.getEntry()==false && traceStm.getExit()==false)
-        				)
-        		{
-        			allCases.append(traceStm.trace(gen, t,"sm_t", uClass)+"\n");
-       				break;
-       			}
-        	}
+        
+        StateMachineTraceItem traceStmItem;
+        
+        traceStmItem = state.getTrace("entry",uClass,t);
+        allCases.append(traceStmItem!=null?traceStmItem.trace(gen, t, "sm_t", uClass)+"\n":"");
+        
+        traceStmItem = state.getTrace("exit",uClass,t);
+        allCases.append(traceStmItem!=null?traceStmItem.trace(gen, t, "sm_t", uClass)+"\n":"");
+        
+        traceStmItem = state.getTrace("state",uClass,t);
+        allCases.append(traceStmItem!=null?traceStmItem.trace(gen, t, "sm_t", uClass)+"\n":"");
         			
         allCases.append(traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
         allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));

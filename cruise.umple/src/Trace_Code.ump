@@ -168,6 +168,42 @@ class State
     
     return null;
   }
+    
+    public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
+	  
+	  State nextState = t.getNextState();
+	  
+      for( TraceDirective td : uClass.getTraceDirectives() )
+        for( StateMachineTraceItem smti : td.getStateMachineTraceItems() )
+      	if( ! smti.getTraceStateMachineFlag() )
+      	{
+      		State traceState = smti.getState();
+
+      		if(method.equals("entry"))
+      		{
+      			if( traceState.getName().equals(nextState.getName()) && smti.getEntry() )
+      				return smti;
+      		}
+      		if(method.equals("exit"))
+      		{
+      			if( traceState.getName().equals(this.getName()) && smti.getExit() )
+      				return smti;
+      		}
+      		if(method.equals("state"))
+      		{
+      			if( (traceState.getName().equals(this.getName()) ||  traceState.getName().equals(nextState.getName()) )
+            			 && (smti.getEntry()==false && smti.getExit()==false) )
+         			    return smti;
+      			if(smti.getLevel()==-1)
+      				for(StateMachine stm : traceState.getNestedStateMachines())
+      					for( State s : stm.getStates())
+      						if(s.equals(this) && !s.getName().equals("Null") && !nextState.getName().equals("Null"))
+      							return smti;
+      		}
+      	}
+	  
+	  return null;
+  }
   
 }
 

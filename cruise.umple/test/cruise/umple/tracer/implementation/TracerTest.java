@@ -228,6 +228,12 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceLightDoActivity.ump",languagePath + tracerPath+"/TraceLightDoActivity."+ languagePath +".txt","LightFixtureA");
 	}
 	
+	@Test
+	public void TraceNestedStates()
+	{
+		assertUmpleTemplateFor("TraceNestedStates.ump",languagePath + tracerPath+"/TraceNestedStates."+ languagePath +".txt","LightFixture");
+	}
+	
 	@Test @Ignore
 	public void TraceState()
 	{
