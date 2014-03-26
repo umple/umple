@@ -68,8 +68,12 @@ public class ConsoleTracerTest
 					"sm_t,Open,flip,Closed",
 					"sm_da,Closed,doActivitedStarted,status",
 					"sm_di,Closed,doActivitedInterrupted,status",
-					"sm_t,Closed,flip,Open"
-
+					"sm_t,Closed,flip,Open",
+					"sm_t,Off,flip,On",
+					"sm_t,Normal,touch,Dimmed",
+					"sm_t,Dimmed,touch,Off",
+					"sm_t,Off,flip,On",
+					"sm_t,On,flip,Off"
 			};
 			
 			String[] recordTraceExpected = {
@@ -198,6 +202,13 @@ public class ConsoleTracerTest
 	  try {Thread.sleep(500);} catch (InterruptedException e) { e.printStackTrace();}
 	  lA.flip();
 	  try {Thread.sleep(500);} catch (InterruptedException e) { e.printStackTrace();}
+	  
+	  LightFixtureB lB = new LightFixtureB();
+	  lB.flip();
+	  lB.touch();
+	  lB.touch();
+	  lB.flip();
+	  lB.flip();
 	  
 	  //System.out.println("Garage = "+sTrace.getGaragDoor());
 
