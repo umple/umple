@@ -997,6 +997,8 @@ class ParsingCouple
             {
               braceLikeIndex = -1;
             }
+            
+            i+=close.length()-1;
           }            
           else if((open.length()==1&&open.charAt(0)==(chars[i]))||open.length()>1&&(i+open.length()<input.length()?input.substring(i,i+open.length()).equals(open):false))
           {
@@ -1071,6 +1073,7 @@ class ParsingCouple
             }
           }
           braceLikeIndex = -1;
+          i+=close.length()-1;
         }          
         else if(quoteLikeIndex!=-1&&(i+quoteLikeClose[quoteLikeIndex].length()<input.length()?input.substring(i,i+quoteLikeClose[quoteLikeIndex].length()).equals(quoteLikeClose[quoteLikeIndex]):false))
         {

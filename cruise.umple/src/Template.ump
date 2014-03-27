@@ -48,12 +48,18 @@ class UmpleClass {
 	lazy TemplateMethod [] emitMethods;
 	0..1 -- * TemplateField templateFields;
 	
-	Map<String,EmitResponse> templateEmitStringMap = new HashMap<String,EmitResponse>();
+	Map<String,TemplateAttributeParser> templateEmitStringMap = new HashMap<String,TemplateAttributeParser>();
+}
+
+class TemplateName {
+  String name;
+  String[] parameters;
 }
 
 class TemplateMethodBlock {
-	Position position;
-	String template;
+  Position position;
+  String template;
+  String[] parameters;
 }
 
 //Method rpesentations in a template 
@@ -84,48 +90,80 @@ class EmitResponse {
 }
 
 //A template element represents template contents to be built. It relies on a set of TemplateField
-class TemplateElement {
-	abstract;
-	lazy internal EmitResponse emitResponse;
-	String content; 
-	
-	0..1 -- * TemplateField fields;
+class TemplateElement
+{
+  abstract;
+  lazy internal EmitResponse emitResponse;
+  String content; 
 
-	after constructor {
-		emitResponse = new EmitResponse();
-		getEmitResponse().getJavaCode().append(content);
-		getEmitResponse().getCppCode().append(content);
-	}
-	
-	after setContent {
-		emitResponse = new EmitResponse();
-		getEmitResponse().getJavaCode().append(content);
-		getEmitResponse().getCppCode().append(content);
-	}
-	
-	void append(String text) {
-		getEmitResponse().getJavaCode().append(text);
-		getEmitResponse().getCppCode().append(text);
-	}
-	EmitResponse getEmitResponse() {
-		return emitResponse;
-	}
-	void emit(EmitResponse responseBuffer, int idx) {}
+  0..1 -- * TemplateField fields;
+  0..1 parentElement -- * TemplateElement subElements;
+
+  after constructor {
+    emitResponse = new EmitResponse();
+    getEmitResponse().getJavaCode().append(content);
+    getEmitResponse().getCppCode().append(content);
+  }
+
+  EmitResponse computeContent(){
+    EmitResponse old = getEmitResponse();
+    emitResponse = new EmitResponse();
+    getEmitResponse().getJavaCode().append(old.getJavaCode());
+    getEmitResponse().getCppCode().append(old.getCppCode());
+    for(TemplateElement element:getSubElements())
+    {
+      EmitResponse resetValue = element.computeContent();
+      getEmitResponse().getJavaCode().append(element.getEmitResponse().getJavaCode().toString());
+      getEmitResponse().getCppCode().append(element.getEmitResponse().getCppCode().toString());
+      element.resetContent(resetValue);
+    }
+    return old;
+  }
+
+  after setContent
+  {
+    emitResponse = new EmitResponse();
+    getEmitResponse().getJavaCode().append(content);
+    getEmitResponse().getCppCode().append(content);
+  }
+
+  void resetContent(EmitResponse old)
+  {
+    emitResponse = old;
+  }	
+  
+  void append(String text)
+  {
+    getEmitResponse().getJavaCode().append(text);
+    getEmitResponse().getCppCode().append(text);
+  }
+ 
+  EmitResponse getEmitResponse()
+  {
+     return emitResponse;
+  }
+  
+  List<TemplateField> emit(EmitResponse responseBuffer, int idx) { return new ArrayList<TemplateField>(); }
 	
 }
 
 //Expression segment in a template
 class ExpressionElement {
-	isA TemplateElement;
+	isA TemplateElement;	
 	
-	void emit(EmitResponse responseBuffer, int idx) {
-		responseBuffer.getJavaCode().append("    ");		
-		Utils.getStringAppend("Java", responseBuffer.getJavaCode(), getEmitResponse().getJavaCode().toString());
-		responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
+	
+	List<TemplateField> emit(EmitResponse responseBuffer, int idx) 
+	{
+	  EmitResponse resetValue = computeContent();
+      responseBuffer.getJavaCode().append("    ");      
+      Utils.getStringAppend("Java", responseBuffer.getJavaCode(), getEmitResponse().getJavaCode().toString());
+	  responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
 
-		responseBuffer.getCppCode().append("    ");		
-		Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), getEmitResponse().getCppCode().toString());
-		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+	  responseBuffer.getCppCode().append("    ");
+      Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), getEmitResponse().getCppCode().toString());
+	  responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+          resetContent(resetValue);
+	  return super.emit(responseBuffer, idx);
 	}
 }
 
@@ -133,23 +171,37 @@ class ExpressionElement {
 class CodeBlockElement {
 	isA TemplateElement;
 
-	void emit(EmitResponse responseBuffer, int idx) {
+	List<TemplateField> emit(EmitResponse responseBuffer, int idx) {
+	    EmitResponse resetValue = computeContent();
+	
 		responseBuffer.getJavaCode().append("    ");
 		responseBuffer.getJavaCode().append(getEmitResponse().getJavaCode());
 		responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
 		
+		
 		responseBuffer.getCppCode().append("    ");
 		responseBuffer.getCppCode().append(getEmitResponse().getCppCode());
 		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
-
+		
+            resetContent(resetValue);
+		return super.emit(responseBuffer, idx);
 	}
 }
 
 //Comment segment for a template contents
 class CommentElement {
 	isA TemplateElement;
-	void emit(EmitResponse responseBuffer, int idx) {
-		String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + idx;
+	
+	int index = -1;
+	
+	List<TemplateField> emit(EmitResponse responseBuffer, int idx) {
+	    boolean first = false;
+	    if(getIndex()==-1)
+	    {
+	      setIndex(idx);
+	      first = true;
+	    }
+		String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + getIndex();
 		EmitResponse fieldValue = new EmitResponse();
 		String javaContent = getEmitResponse().getJavaCode().toString();		
 		javaContent = "/*" + javaContent + "*/";
@@ -160,7 +212,10 @@ class CommentElement {
 		fieldValue.getJavaCode().append(Utils.nlize("Java", javaContent));
 		fieldValue.getCppCode().append(Utils.nlize("Cpp", cppContent));
 				
-		addField(new TemplateField(fieldId, fieldValue));
+        if(first)
+        {
+		  addField(new TemplateField(fieldId, fieldValue));
+		}
 		
 		
 		responseBuffer.getJavaCode().append("    ");		
@@ -170,13 +225,69 @@ class CommentElement {
 		responseBuffer.getCppCode().append("    ");		
 		Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), fieldId);
 		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+		
+		if(first)
+		{
+		  return getFields();
+		}
+		else
+		{
+		  return super.emit(responseBuffer, idx);
+		}
 	}
 }
 
 class TextElement {
 	isA TemplateElement;
 
-	void emit(EmitResponse responseBuffer, int idx) {
+    int index = -1;
+
+	List<TemplateField> emit(EmitResponse responseBuffer, int idx) {
+	  boolean first = false;
+	    if(getIndex()==-1)
+	    {
+	      setIndex(idx);	
+	      first = true;
+	    }      
+	    
+		String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + getIndex();
+		EmitResponse fieldValue = new EmitResponse();
+		String javaContent = getEmitResponse().getJavaCode().toString();
+		String cppContent = getEmitResponse().getCppCode().toString();	
+		
+		fieldValue.getJavaCode().append(Utils.nlize("Java", javaContent));
+		fieldValue.getCppCode().append(Utils.nlize("Cpp", cppContent));
+		
+		if(first)
+		{
+	      addField(new TemplateField(fieldId, fieldValue));
+		}
+		
+		responseBuffer.getJavaCode().append("    ");		
+		Utils.getStringAppend("Java", responseBuffer.getJavaCode(), fieldId);
+		responseBuffer.getJavaCode().append(System.getProperty("line.separator"));
+
+		responseBuffer.getCppCode().append("    ");		
+        Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), fieldId);
+		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+		
+		if(first)
+		{
+		  return getFields();
+		}
+		else
+		{
+		  return super.emit(responseBuffer, idx);
+		}
+	}
+}
+
+class VariableElement {
+	isA TemplateElement;
+
+    int index;
+
+	List<TemplateField> emit(EmitResponse responseBuffer, int idx) {
 		String fieldId = TemplateField.TEMPLATE_TEXT_FIELD + idx;
 		EmitResponse fieldValue = new EmitResponse();
 		String javaContent = getEmitResponse().getJavaCode().toString();
@@ -185,6 +296,9 @@ class TextElement {
 		fieldValue.getJavaCode().append(Utils.nlize("Java", javaContent));
 		fieldValue.getCppCode().append(Utils.nlize("Cpp", cppContent));
 				
+		if(numberOfFields()>0){
+		  removeField(getField(0));
+		}
 		addField(new TemplateField(fieldId, fieldValue));
 		
 		responseBuffer.getJavaCode().append("    ");		
@@ -194,6 +308,8 @@ class TextElement {
 		responseBuffer.getCppCode().append("    ");		
 		Utils.getStringAppend("Cpp", responseBuffer.getCppCode(), fieldId);
 		responseBuffer.getCppCode().append(System.getProperty("line.separator"));
+		
+		return getFields();
 	}
 }
 

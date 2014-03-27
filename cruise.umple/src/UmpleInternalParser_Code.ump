@@ -111,7 +111,6 @@ class UmpleInternalParser
     if(generatedMethodName != null && !"".equals(generatedMethodName) && !generatedMethodName.startsWith("UNKNOWN ID")){
       
       boolean success = generatedMethods.add(generatedMethodName);
-      
       if(!success){
         getParseResult().addErrorMessage(new ErrorMessage(48,aAttr.getPosition(), aAttr.getName(), className, generatedMethodName));
         return false;
