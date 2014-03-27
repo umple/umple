@@ -95,6 +95,7 @@ public class UmpleTraitTest {
 	public void cyclicInheritanceTest() {
 		String code = "class A{isA T;} trait T { isA T1;} trait T1 {isA T;}";
 		UmpleModel model = getModel(code);
+		
 		try {
 			model.run();	
 		} catch (Exception e) {
@@ -150,6 +151,22 @@ public class UmpleTraitTest {
 		SampleFileWriter.destroy("I.java");
 		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
 	 }
+	
+	@Test
+	public void checkRequiredMethodTest() {
+		String code = "class A{isA T;} trait T { String test();}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2555");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
+	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {
