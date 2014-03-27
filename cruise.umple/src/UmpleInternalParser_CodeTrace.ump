@@ -365,8 +365,7 @@ class UmpleInternalParser
 }
 
    private void analyzeStateMachineTraceItem(Token traceToken){
-    
-	List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
+    List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
     StateMachine stm = null;
     State state = null;
     String stmTraceItem = traceToken.getValue("trace_entity");
