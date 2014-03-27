@@ -10,6 +10,7 @@ RuleRunner runner;
 public KieSession startRuleEngine(){
     try {
 		runner.addRuleFile("cruise/umplificator/rules", "Rules_Fields.drl");
+		runner.addRuleFile("cruise/umplificator/rules", "Rules_ClassLevel.drl");
 		return runner.buildKnowledgeSession();
 	} catch (FileNotFoundException e) {
 		e.printStackTrace();

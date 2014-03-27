@@ -31,12 +31,13 @@ public class RulesTest {
 	@Before
 	public void setUp() throws Exception {
 		
-		pathToInput = SampleFileWriter.rationalize("test/cruise/umplificator/javavisitor_test.txt");
+		pathToInput = SampleFileWriter.rationalize("test/cruise/umplificator/visitorTestFiles/InputForVisitorTest.java");
 		File testFile = new File(pathToInput);
 		String code = SampleFileWriter.readContent(testFile);
 	   	visitor = new JavaClassVisitor();
-		JavaParser javaParser = new JavaParser(visitor);
+		JavaParser javaParser = new JavaParser();
 		javaParser.parseUnit(code);
+		visitor = javaParser.getJavaVisitor();
 		uClass = new UmpleClass("A");
 	    kieSession = ruleService.startRuleEngine();
 		kieSession.insert( uClass);
@@ -88,10 +89,9 @@ public class RulesTest {
 			kieSession.insert(importDecl);
 		}
 		kieSession.fireAllRules();
-		Assert.assertEquals(3, uClass.getDepends().size());
+		Assert.assertEquals(2, uClass.getDepends().size());
 		Assert.assertEquals("java.util.*", uClass.getDepends().get(0).getName());
 		Assert.assertEquals("java.io.*", uClass.getDepends().get(1).getName());
-		Assert.assertEquals("java.io.File", uClass.getDepends().get(2).getName());
 	}
 	
 	@After

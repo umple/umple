@@ -34,6 +34,11 @@ public static final String separator = System.getProperty("line.separator");
 	return inputFiles;
   }
   
+public static String getFileExtension (File file)
+{
+    return file.getName().substring(file.getName().lastIndexOf("."));
+}
+  
   
 public static void printFilesToUmplify(List<File> srcFiles){
     StringBuffer outMessage = new StringBuffer();

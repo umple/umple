@@ -4,19 +4,20 @@ namespace cruise.umplificator.parser;
 class JavaParser {
 
 	// JDT Dependencies
-	depend org.eclipse.jdt.core.dom.AST;
-	depend org.eclipse.jdt.core.dom.ASTParser;
-	depend org.eclipse.jdt.core.dom.CompilationUnit;
+	depend org.eclipse.jdt.core.dom.*;
 	depend org.eclipse.jdt.core.JavaCore;
 	depend cruise.umplificator.visitor.JavaClassVisitor;
 	// Java Util Dependencies
 	depend java.util.Map;
+	// Class used 
+	lazy JavaClassVisitor javaVisitor;
+	/*  
+		Parsing Methods
+	*/  
 	
-	JavaClassVisitor javaVisitor;
-	// Parsing Methods
-	
+	 // Parses a complete Java Class
 	 public CompilationUnit parseUnit(String source){
-	    ASTParser parser = ASTParser.newParser(AST.JLS4); 
+	   		ASTParser parser = ASTParser.newParser(AST.JLS4); 
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setSource(source.toCharArray()); // set source
 		    // In order to parse 1.7 code, some compiler options need to be set to 1.7
@@ -27,9 +28,29 @@ class JavaParser {
 			parser.setResolveBindings(true); // we need bindings later on
 			CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 			// VISITOR
+			javaVisitor=  new JavaClassVisitor();
 			cu.accept(javaVisitor);
 			
 			return cu;
 	  }
-
-}
+	  
+	 // Parses independent Java body declarations
+	public ASTNode parseBodyDeclarations(String source){
+    	ASTParser parser = ASTParser.newParser(AST.JLS4); 
+			parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
+			parser.setSource(source.toCharArray()); // set source
+		    // In order to parse 1.7 code, some compiler options need to be set to 1.7
+		    // Annotations were not available prior 1.6
+			Map<?, ?> options = JavaCore.getOptions();
+			JavaCore.setComplianceOptions(JavaCore.VERSION_1_7, options);		
+			parser.setCompilerOptions(options);
+			parser.setResolveBindings(true); // we need bindings later on
+			ASTNode typeDeclaration =  parser.createAST(null);
+		    // VISITOR
+			javaVisitor=  new JavaClassVisitor();
+			typeDeclaration.accept(javaVisitor);
+			
+			return typeDeclaration;
+    }
+    
+  }

@@ -18,7 +18,7 @@ public class UmplificatorMainConsoleTest {
 		
 		try {
 			BufferedWriter out = new BufferedWriter(new FileWriter("testclass.ump"));
-		    out.write("class testclass {}");
+		    out.write("class Testclass {}");
 		    out.close();
 		    
 		    UmplificatorMain.main(args);
