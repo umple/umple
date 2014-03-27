@@ -13,8 +13,6 @@ package cruise.umple.tracer.implementation;
 
 import org.junit.*;
 
-import cruise.umple.implementation.TemplateTest;
-
 @Ignore
 public class TracerTest extends TracerTemplateTest
 {
@@ -198,7 +196,7 @@ public class TracerTest extends TracerTemplateTest
 	
 	//------ Trace State Machines 
 	
-	@Test
+	@Test @Ignore
 	public void TraceGarageDoor()
 	{
 		assertUmpleTemplateFor("TraceGarageDoor.ump",languagePath + tracerPath+"/TraceGarageDoor."+ languagePath +".txt","Tracer");
@@ -240,6 +238,11 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceState.ump",languagePath + tracerPath+"/TraceState."+ languagePath +".txt","Light");
 	}
 
+	@Test
+	public void TraceTransition()
+	{
+		assertUmpleTemplateFor("TraceTransition.ump",languagePath + tracerPath+ "/TraceTransition."+ languagePath +".txt","GarageDoor");
+	}
 	
 	@Test @Ignore
 	public void ConsoleTracer_StateMachine()

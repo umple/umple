@@ -4571,7 +4571,7 @@ for (StateMachine smq : uClass.getStateMachines())
           javaLine+=a1.getActionCode().split("\\n").length;
         }
         
-        StateMachineTraceItem traceStmItem;
+        StateMachineTraceItem traceStmItem = null;
         
         traceStmItem = state.getTrace("entry",uClass,t);
         allCases.append(traceStmItem!=null?traceStmItem.trace(gen, t, "sm_t", uClass)+"\n":"");
@@ -4581,10 +4581,14 @@ for (StateMachine smq : uClass.getStateMachines())
         
         traceStmItem = state.getTrace("state",uClass,t);
         allCases.append(traceStmItem!=null?traceStmItem.trace(gen, t, "sm_t", uClass)+"\n":"");
-        			
-        allCases.append(traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
+        
+        traceStmItem = state.getTrace("transition",uClass,t);
+        allCases.append(traceStmItem!=null?traceStmItem.trace(gen, t, "sm_t", uClass)+"\n":"");
+        	
+//        allCases.append(traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
         allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
-        allCases.append(traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
+//        allCases.append(traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
+
         
         allCases.append(StringFormatter.format("{0}wasEventProcessed = true;\n",tabSpace));
         allCases.append(StringFormatter.format("{0}break;\n",tabSpace));

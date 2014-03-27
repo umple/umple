@@ -11,8 +11,6 @@ package cruise.umple.tracer.implementation.java;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import cruise.umple.tracer.implementation.TracerTest;
 import cruise.umple.util.SampleFileWriter;

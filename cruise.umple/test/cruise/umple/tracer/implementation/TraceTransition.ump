@@ -1,17 +1,27 @@
 namespace example;
 
-class Light
+class GarageDoor
 {
-  status
-  {
-    On { 
-      entry / { System.out.println("entry state On"); } 
-      flip -> Off;
+    // UML state machine digram for a Garage door, written in Umple
+    sm {
+      	
+      	Open { buttonOrObstacle -> Closing;  }
+      	
+      	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+
+      	Closed { buttonOrObstacle -> Opening; }
+
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+
+      	HalfOpen { buttonOrObstacle -> Opening; }
     }
-    Off { 
-      entry / { System.out.println("entry state Off"); }
-      flip -> On;
-    }
-  }
-  trace transition flip;
+    
+    // trace event
+    trace buttonOrObstacle;
 }

@@ -365,11 +365,15 @@ class UmpleInternalParser
 }
 
    private void analyzeStateMachineTraceItem(Token traceToken){
-    List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
+    
+	List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
     StateMachine stm = null;
     State state = null;
     String stmTraceItem = traceToken.getValue("trace_entity");
-    if( traceToken.getParentToken().getSubToken(1).numberOfSubTokens()>0){
+    
+    if( traceToken.getParentToken().getSubToken(1).numberOfSubTokens()>0)
+    {
+      
       boolean isTransition = false;
       boolean isIn = false;
       boolean isOut = false;
@@ -384,6 +388,7 @@ class UmpleInternalParser
           isOut = true;
         }
       }
+            
       if(isTransition)
       {
         StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
@@ -404,6 +409,7 @@ class UmpleInternalParser
               {
                 tracedStm.setTransition(tsn);
                 tracedStm.setStateMachine(sm);
+                tracedStm.setState(nestedState);
                 traceDirective.addStateMachineTraceItem(tracedStm);
               }
             }
@@ -411,6 +417,23 @@ class UmpleInternalParser
         }
       }
     }
+    
+    for( StateMachine ss : stms )
+  	  for( State s : ss.getStates() )
+  		  for( Transition tsn : s.getTransitions() )
+  			  if( tsn.getEvent().getName().equals(traceToken.getValue()) )
+  			  {
+  				  StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
+  				  tracedStm.setIsOut(false);
+  				  tracedStm.setIsIn(false);
+  				  tracedStm.setPosition(traceToken.getPosition());
+  				  tracedStm.setTransition(tsn);
+  				  tracedStm.setStateMachine(ss);
+  				  tracedStm.setState(s);
+  				  traceDirective.addStateMachineTraceItem(tracedStm);
+  				  break;
+  			  }
+    
     if( stmTraceItem != null && stmTraceItem.contains("."))
     {
       String delimiter = "\\.";
@@ -533,6 +556,9 @@ class UmpleInternalParser
 		  {
 			  if( traceToken.getValue("trace_entity").equals(s.getName()) || traceToken.getValue("trace_entity").equals(sVar.getName()+"."+s.getName()) )
 				  traceItemType = 2;
+			  for( Transition t : s.getTransitions() )
+				  if( traceToken.getValue("trace_entity").equals(t.getEvent().getName()))
+					  traceItemType = 2;
 		  }
 	  }
 
