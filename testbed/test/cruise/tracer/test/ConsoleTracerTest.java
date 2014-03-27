@@ -65,6 +65,11 @@ public class ConsoleTracerTest
 					"sm_e,Closed,actionUmpleLine=46,GarageDoor",
 					"sm_x,Closed,actionUmpleLine=81,GarageDoor",
 					"sm_t,Closed,buttonOrObstacle,Opening",
+					"sm_t,Open,buttonOrObstacle,Closing",
+					"sm_t,Closed,buttonOrObstacle,Opening",
+					"sm_t,Open,buttonOrObstacle,Closing",
+					"sm_t,Closing,buttonOrObstacle,Opening",
+					"sm_t,Opening,buttonOrObstacle,HalfOpen",
 					"sm_t,Open,flip,Closed",
 					"sm_da,Closed,doActivitedStarted,status",
 					"sm_di,Closed,doActivitedInterrupted,status",
@@ -73,7 +78,8 @@ public class ConsoleTracerTest
 					"sm_t,Normal,touch,Dimmed",
 					"sm_t,Dimmed,touch,Off",
 					"sm_t,Off,flip,On",
-					"sm_t,On,flip,Off"
+					"sm_t,On,flip,Off",
+					
 			};
 			
 			String[] recordTraceExpected = {
@@ -196,6 +202,15 @@ public class ConsoleTracerTest
 	  gcTrace.reachTop();
 	  gcTrace.buttonOrObstacle();
 	  gcTrace.reachBottom();
+	  
+	  GarageDoorD gD = new GarageDoorD();
+	  gD.buttonOrObstacle();
+	  gD.reachBottom();
+	  gD.buttonOrObstacle();
+	  gD.reachTop();
+	  gD.buttonOrObstacle();
+	  gD.buttonOrObstacle();
+	  gD.buttonOrObstacle();
 	  
 	  LightFixtureA lA = new LightFixtureA();
 	  lA.flip();
