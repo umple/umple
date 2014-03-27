@@ -545,7 +545,7 @@
     <antcall target="codegen" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
-    <antcall target="resetUmpleSelf" />
+    <antcall target="umpleSelf" />
     <antcall target="compile" />
     <antcall target="compileValidator" />
     <antcall target="compileUmplificator" />
@@ -561,7 +561,7 @@
     <antcall target="codegen" />
     <antcall target="rtcpp" />
     <antcall target="template.setVersion" />
-    <antcall target="resetUmpleSelf" />
+    <antcall target="umpleSelf" />
     <antcall target="compile" />
     <antcall target="compileValidator" />
     <antcall target="compileUmplificator" />
