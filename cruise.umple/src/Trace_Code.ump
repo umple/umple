@@ -169,9 +169,8 @@ class State
     return null;
   }
     
-   public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
-    
-	  State nextState = t.getNextState();
+    public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
+    State nextState = t.getNextState();
 	  
       for( TraceDirective td : uClass.getTraceDirectives() )
         for( StateMachineTraceItem smti : td.getStateMachineTraceItems() )
@@ -194,11 +193,15 @@ class State
       			if( (traceState.getName().equals(this.getName()) ||  traceState.getName().equals(nextState.getName()) )
             			 && (smti.getEntry()==false && smti.getExit()==false) )
          			    return smti;
-      			if(smti.getLevel()==-1)
-      				for(StateMachine stm : traceState.getNestedStateMachines())
-      					for( State s : stm.getStates())
-      						if(s.equals(this) && !s.getName().equals("Null") && !nextState.getName().equals("Null"))
-      							return smti;
+//      			if(smti.getLevel()==-1)
+//      				for(StateMachine stm : traceState.getNestedStateMachines())
+//      					for( State s : stm.getStates())
+//      						if(s.equals(this) && !s.getName().equals("Null") && !nextState.getName().equals("Null"))
+//      							return smti;
+      			if(smti.getLevel()==-1 && isNested(smti, t))
+      			{
+      				return smti;
+      			}
       		}
       		if(method.equals("transition") && smti.getTransition() != null)
       		{
@@ -208,6 +211,43 @@ class State
       	}
 	  
 	  return null;
+  }
+
+
+  private boolean isNested(StateMachineTraceItem smti, Transition tsn) {
+	
+	  boolean isNested = false;
+	  State nextState = tsn.getNextState();
+	
+	  State state = smti.getState();
+	  
+	  StateMachine root = this.getStateMachine();
+      State parent = this;
+      
+//      for(StateMachine stm : state.getNestedStateMachines())
+//    	  for( State s : stm.getStates())
+//    		  if(s.equals(this) && !s.getName().equals("Null") && !nextState.getName().equals("Null"))
+//    			  return true;
+
+      root = parent.getStateMachine();
+      parent = root.getParentState();
+      
+      while (parent != null)
+      {
+//        if(state.getName().equals(parent.getName()) && !parent.getName().equals("Null") && !nextState.getName().equals("Null") )
+//        {
+//          return true;
+//        }
+        root = parent.getStateMachine();
+        parent = root.getParentState();
+        for(StateMachine stm : root.getNestedStateMachines())
+      	  for( State s : stm.getStates())
+      		  if(s.equals(this) && !s.getName().equals("Null") && !nextState.getName().equals("Null"))
+      			  return true;
+      }
+      
+	  return isNested;
+
   }
   
 }
