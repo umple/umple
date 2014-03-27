@@ -27,11 +27,11 @@
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/kie-api-6.0.1.Final.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/kie-internal-6.0.1.Final.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/mvel2-2.1.8.Final.jar"/>
-	<classpathentry kind="lib" path="/lib/umple.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/protobuf-java-2.5.0.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/xstream-1.4.3.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/slf4j-api-1.7.6.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="/home/mgarzon/Repositories/umple/trunk/dist/umple.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

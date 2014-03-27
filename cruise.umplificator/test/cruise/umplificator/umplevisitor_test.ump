@@ -1,0 +1,11 @@
+namespace something.else;
+
+class A {
+
+depend java.util.*;
+
+public int a;
+public boolean b;
+public String s;
+
+}
