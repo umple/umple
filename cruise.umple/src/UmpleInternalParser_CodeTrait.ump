@@ -757,7 +757,14 @@ class UmpleInternalParser
 		
 		// copy StateMachines
 		for (StateMachine st : inTrait.getStateMachines()) {
-			st.setUmpleClass(inClass);
+			StateMachine stNew = new StateMachine(st.getName());
+			stNew.setPooled(st.getPooled());
+			stNew.setQueued(st.getQueued());
+			stNew.setUmpleClass(inClass);
+			for (State element : st.getStates()) {
+				stNew.addState(element);
+			}
+			inClass.addStateMachine(stNew);
 		}
 		
        // copy injection codes
