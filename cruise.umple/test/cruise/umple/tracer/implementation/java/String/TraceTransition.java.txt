@@ -1,82 +1,125 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
+import cruise.util.StringTracer;
+import java.util.Date;
 
-public class Light
+public class GarageDoor
 {
+  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
+  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Light State Machines
-  enum Status { On, Off }
-  private Status status;
+  //GarageDoor State Machines
+  enum Sm { Open, Closing, Closed, Opening, HalfOpen }
+  private Sm sm;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Light()
+  public GarageDoor()
   {
-    setStatus(Status.On);
+    setSm(Sm.Open);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public String getStatusFullName()
+  public String getSmFullName()
   {
-    String answer = status.toString();
+    String answer = sm.toString();
     return answer;
   }
 
-  public Status getStatus()
+  public Sm getSm()
   {
-    return status;
+    return sm;
   }
 
-  public boolean flip()
+  public boolean buttonOrObstacle()
   {
     boolean wasEventProcessed = false;
     
-    Status aStatus = status;
-    System.err.print("state@pre="+status+",");
-    System.err.print("event=flip,");
-    switch (aStatus)
+    Sm aSm = sm;
+    switch (aSm)
     {
-      case On:
-        setStatus(Status.Off);
+      case Open:
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,Open,buttonOrObstacle,Closing" );
+        setSm(Sm.Closing);
         wasEventProcessed = true;
         break;
-      case Off:
-        setStatus(Status.On);
+      case Closing:
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,Closing,buttonOrObstacle,Opening" );
+        setSm(Sm.Opening);
+        wasEventProcessed = true;
+        break;
+      case Closed:
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,Closed,buttonOrObstacle,Opening" );
+        setSm(Sm.Opening);
+        wasEventProcessed = true;
+        break;
+      case Opening:
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,Opening,buttonOrObstacle,HalfOpen" );
+        setSm(Sm.HalfOpen);
+        wasEventProcessed = true;
+        break;
+      case HalfOpen:
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,HalfOpen,buttonOrObstacle,Opening" );
+        setSm(Sm.Opening);
         wasEventProcessed = true;
         break;
       default:
         // Other states do respond to this event
     }
 
-    System.err.println("state@post="+status);
     return wasEventProcessed;
   }
 
-  private void setStatus(Status aStatus)
+  public boolean reachBottom()
   {
-    status = aStatus;
-
-    // entry actions and do activities
-    switch(status)
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
     {
-      case On:
-        System.out.println("entry state On");
+      case Closing:
+        setSm(Sm.Closed);
+        wasEventProcessed = true;
         break;
-      case Off:
-        System.out.println("entry state Off");
-        break;
+      default:
+        // Other states do respond to this event
     }
+
+    return wasEventProcessed;
+  }
+
+  public boolean reachTop()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case Opening:
+        setSm(Sm.Open);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
   }
 
   public void delete()

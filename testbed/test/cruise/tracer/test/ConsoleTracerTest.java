@@ -22,7 +22,7 @@ public class ConsoleTracerTest
 	  defaultPS = System.err;
   }
   
-  @Test 
+  @Test
   public void traceConsole()
   {
 	  PrintStream ps = new PrintStream(System.err){
