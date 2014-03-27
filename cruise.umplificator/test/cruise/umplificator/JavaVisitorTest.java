@@ -13,15 +13,31 @@ public class JavaVisitorTest {
 
 	String pathToInput;
 	JavaClassVisitor visitor = new JavaClassVisitor();
+	JavaClassVisitor umple_visitor =  new JavaClassVisitor();
 	
 	@Before
 	public void setUp() throws Exception {
-		pathToInput = SampleFileWriter.rationalize("test/cruise/umplificator/javavisitor_test.txt");
-		File testFile = new File(pathToInput);
+		pathToInput = SampleFileWriter.rationalize("test/cruise/umplificator/");
+		File testFile = new File(pathToInput+"javavisitor_test.txt");
 		String code = SampleFileWriter.readContent(testFile);
-	   	visitor = new JavaClassVisitor();
-		JavaParser javaParser = new JavaParser(visitor);
+		File umpleFile = new File(pathToInput+"umplevisitor_test.ump");
+		String umpleCode = SampleFileWriter.readContent(umpleFile);
+	   	JavaParser javaParser = new JavaParser(visitor);
 		javaParser.parseUnit(code);
+		JavaParser umpleParser = new JavaParser(umple_visitor);
+		umpleParser.parseUnit(umpleCode);
+	}
+	
+	@Test
+	public void field_declarations_returned_in_java_file()
+	{
+		 Assert.assertEquals(7, visitor.numberOfFieldDeclarations());
+	}
+	
+	@Test
+	public void field_declarations_returned_in_umple_file()
+	{
+		 Assert.assertEquals(4, umple_visitor.numberOfFieldDeclarations());
 	}
 	
 	@Test

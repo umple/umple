@@ -25,10 +25,10 @@ public boolean umplify(List<File> srcFiles) {
 
 public boolean umplifyElement(File file)
 {
-	// GetContent from file
-	// Parse File
-	// The visitor is automatically assigned to the Parser
 		try {
+			// GetContent from file
+			// Parse File
+			// The visitor is automatically assigned to the Parser
  		   	JavaParser javaParser =new JavaParser(new JavaClassVisitor());
 		    String content =  IOUtils.toString(file.toURI());;
 		    System.out.println("---Input---");
