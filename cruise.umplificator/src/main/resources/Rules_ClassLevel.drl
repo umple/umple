@@ -1,0 +1,33 @@
+package cruise.umplificator.rules
+
+import org.eclipse.jdt.core.dom.*;
+import cruise.umple.compiler.*;
+
+rule "transform_ImportDeclaration"
+	when
+		importDeclaration: ImportDeclaration()
+		uClass: UmpleClass()
+	then
+		Depend depend = new Depend(getImportName(importDeclaration));
+		uClass.addDepend(depend);
+end
+
+rule "transform_Namespace"
+	when
+		packageDeclaration: PackageDeclaration()
+		uClass: UmpleClass()
+	then
+		uClass.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
+end
+
+//http://svn.apache.org/repos/asf/geronimo/devtools/j2g/trunk/plugins/org.apache.geronimo.devtools.j2g.sources/src/org/apache/geronimo/devtools/j2g/sources/dependence/NodesVisitor.java
+function String getImportName(ImportDeclaration importDeclaration){
+	StringBuilder importName =  new StringBuilder();
+	importName.append(importDeclaration.getName().getFullyQualifiedName());
+	if (importDeclaration.isOnDemand()) { 
+		importName.append(".*"); 
+	}else { 
+		importName.append("");
+	}
+	return importName.toString();
+}

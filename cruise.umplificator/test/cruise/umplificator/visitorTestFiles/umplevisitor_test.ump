@@ -1,11 +1,13 @@
+strictness allow 1007;
 namespace something.else;
 
 class A {
 
 depend java.util.*;
+depend java.io.*;
 
 public int a;
 public boolean b;
-public String s;
+public short s;
 
 }

@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src-gen-umple"/>
 	<classpathentry kind="src" path="src-gen-jet"/>
-	<classpathentry kind="src" path="test"/>
+	<classpathentry excluding="cruise/umplificator/trasnformationTestFiles/|cruise/umplificator/visitorTestFiles/" kind="src" path="test"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>

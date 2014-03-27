@@ -2,34 +2,20 @@ namespace cruise.umplificator.core;
 	
 
 class Umplificator {
-
-}
-
-class RefactoringStep {
-
-}
-
-class RefactoringAction {
-
-}
-
-class InitialRefactoringStep {
-	isA RefactoringStep;
 	
-	1 -- 0..* RefactoringAction;	
-	
-	
+	depend java.io.File;
+	depend java.io.IOException;
+	depend java.util.List;
+	depend org.apache.commons.io.IOUtils;
+	depend cruise.umple.compiler.UmpleClass;
+	depend cruise.umple.compiler.UmpleFile;
+	depend cruise.umple.compiler.UmpleModel;
+	depend cruise.umplificator.FileHelper;
+	depend cruise.umplificator.parser.JavaParser;
+	depend cruise.umplificator.rules.RuleRunner;
+	depend cruise.umplificator.rules.RuleService;
+
+	lazy UmpleModel outputModel;
 }
 
-class AttributeRefactoringStep {
-	isA RefactoringStep;
-}
-
-class AssociationRefactoringStep {
-	isA RefactoringStep;
-}
-
-class StateMachineRefactoringStep {
-	isA RefactoringStep;
-}
 

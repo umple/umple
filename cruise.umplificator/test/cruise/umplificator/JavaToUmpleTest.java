@@ -25,7 +25,7 @@ public class JavaToUmpleTest {
 	@Before
 	public void setUp() throws Exception {
 		umplificator = new Umplificator();
-		pathToRoot = "test/cruise/umplificator/";
+		pathToRoot = "test/cruise/umplificator/trasnformationTestFiles/";
 	}
 
 	@After
@@ -36,7 +36,7 @@ public class JavaToUmpleTest {
 	@Test
 	public void JavaToUmple_class_and_depends_001(){
 		String fileName = "001_JavaToUmple_class_and_depends";
-		File javaFile = new File(pathToRoot+fileName+"_java.txt"); //INPUT
+		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
 		File umpleFile = new File(pathToRoot+fileName+"_umple.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
 		assertTrue(umplificator.umplifyElement(javaFile));
@@ -49,7 +49,7 @@ public class JavaToUmpleTest {
 	@Test
 	public void JavaToUmple_class_and_namespace_002(){
 		String fileName = "002_JavaToUmple_class_and_namespace";
-		File javaFile = new File(pathToRoot+fileName+"_java.txt"); //INPUT
+		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
 		File umpleFile = new File(pathToRoot+fileName+"_umple.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
 		assertTrue(umplificator.umplifyElement(javaFile));

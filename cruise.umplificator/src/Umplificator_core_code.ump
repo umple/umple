@@ -1,20 +1,5 @@
 class Umplificator {
 
-depend java.io.File;
-depend java.io.IOException;
-depend java.util.List;
-depend org.apache.commons.io.IOUtils;
-depend cruise.umple.compiler.UmpleClass;
-depend cruise.umple.compiler.UmpleFile;
-depend cruise.umple.compiler.UmpleModel;
-depend cruise.umplificator.FileHelper;
-depend cruise.umplificator.parser.JavaParser;
-depend cruise.umplificator.rules.RuleRunner;
-depend cruise.umplificator.rules.RuleService;
-depend cruise.umplificator.visitor.JavaClassVisitor;
-
-lazy UmpleModel outputModel;
-
 public boolean umplify(List<File> srcFiles) {
     FileHelper.printFilesToUmplify(srcFiles);
     for (File aFile : srcFiles){
@@ -23,13 +8,63 @@ public boolean umplify(List<File> srcFiles) {
     return true;
 }
 
-public boolean umplifyElement(File file)
+public boolean umplifyElement(File file){
+    String language = FileHelper.getFileExtension(file);
+    boolean result=false;
+	switch(language)
+	{
+		case ".java": result = umplifyJava(file);
+			break;
+		case ".ump":  result = umplifyUmple(file);
+			break;
+		case ".cpp": result =  umplifyCPP(file);
+			break;
+	}
+	return result;
+}
+
+public boolean umplifyUmple(File file)
+{
+    try {
+			UmpleFile umpleFile = new UmpleFile(file);
+    	    UmpleModel inputUmpleModel = new UmpleModel(umpleFile);
+    	    inputUmpleModel.run();
+    	    UmpleClass uClass=  inputUmpleModel.getUmpleClass(0);
+    		// Use the Java Parser for extra code 
+ 		   	JavaParser javaParser =new JavaParser();
+		    String content =  IOUtils.toString(file.toURI());;
+		    System.out.println("---Input---");
+       		System.out.println(content);
+		    javaParser.parseBodyDeclarations(uClass.getExtraCode());
+       		System.out.println(uClass.getExtraCode());
+			// initialize drools engine
+		    RuleRunner ruleRunner = new RuleRunner();
+		    RuleService ruleService = new RuleService (ruleRunner);
+			ruleService.startRuleEngine();
+			//UmpleClass uClass = new UmpleClass(compilationUnitName);
+			ruleRunner.insertUmpleClass(uClass);
+			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
+			ruleRunner.fireAllRules();
+			// generate Umple Code
+			outputModel = new UmpleModel(umpleFile);
+			outputModel.addUmpleClass(uClass);
+			// generate Umple Code
+			FileHelper.writeFile(outputModel);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.err.print(e.getLocalizedMessage());
+			return false;
+		} 
+	return true;
+}
+
+public boolean umplifyJava(File file)
 {
 		try {
 			// GetContent from file
 			// Parse File
 			// The visitor is automatically assigned to the Parser
- 		   	JavaParser javaParser =new JavaParser(new JavaClassVisitor());
+ 		   	JavaParser javaParser =new JavaParser();
 		    String content =  IOUtils.toString(file.toURI());;
 		    System.out.println("---Input---");
        		System.out.println(content);
@@ -55,7 +90,13 @@ public boolean umplifyElement(File file)
 			System.err.print(e.getLocalizedMessage());
 			return false;
 		} 
-	  return true;
-  }
+	 return true;
+}
+
+
+public boolean umplifyCPP(File file)
+{
+	return false;
+}
 
 }

@@ -29,23 +29,6 @@ rule "JavaField_hasGetter"
 		System.out.println(getGetterName(fieldDeclaration));
 end
 
-rule "transform_ImportDeclaration"
-	when
-		importDeclaration: ImportDeclaration()
-		uClass: UmpleClass()
-	then
-		Depend depend = new Depend(getImportName(importDeclaration));
-		uClass.addDepend(depend);
-end
-
-rule "transform_Namespace"
-	when
-		packageDeclaration: PackageDeclaration()
-		uClass: UmpleClass()
-	then
-		uClass.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
-end
-
 rule "hasEmptyConstructor"
 	when
 		uClass: UmpleClass()
@@ -58,6 +41,32 @@ rule "hasEmptyConstructor"
 		insert(attribute);
 		System.out.println("Constructor name: " + getMethodName(method));
 end
+
+/*
+// lazy: A constructor argument is not required for this attribute
+// We look for the initialization of this variable in the constructor
+rule "isLazy"
+when
+then
+end
+
+rule "isConstant"
+when
+then
+end
+
+rule "isAutounique"
+when
+then
+end
+
+rule "isDefaulted"
+when
+then
+end
+*/
+
+/*Helper Functions */
 
 function String getMethodName(MethodDeclaration method){
 	return method.getName().getFullyQualifiedName();
@@ -83,17 +92,7 @@ function String getFieldType(FieldDeclaration field){
    	return field.getType().toString();
 }
 
-//http://svn.apache.org/repos/asf/geronimo/devtools/j2g/trunk/plugins/org.apache.geronimo.devtools.j2g.sources/src/org/apache/geronimo/devtools/j2g/sources/dependence/NodesVisitor.java
-function String getImportName(ImportDeclaration importDeclaration){
-	StringBuilder importName =  new StringBuilder();
-	importName.append(importDeclaration.getName().getFullyQualifiedName());
-	if (importDeclaration.isOnDemand()) { 
-		importName.append(".*"); 
-	}else { 
-		importName.append("");
-	}
-	return importName.toString();
-}
+
 
 function String getAttributeType(FieldDeclaration field){
 	String attrType="";
@@ -118,27 +117,3 @@ function String getAttributeType(FieldDeclaration field){
 	          return"";}
 	         else { throw new IllegalArgumentException("Invalid Type");}
 }
-
-/*
-// lazy: A constructor argument is not required for this attribute
-// We look for the initialization of this variable in the constructor
-rule "isLazy"
-when
-then
-end
-
-rule "isConstant"
-when
-then
-end
-
-rule "isAutounique"
-when
-then
-end
-
-rule "isDefaulted"
-when
-then
-end
-*/

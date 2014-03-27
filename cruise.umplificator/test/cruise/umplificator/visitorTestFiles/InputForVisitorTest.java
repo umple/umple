@@ -1,10 +1,10 @@
-package cruise.umplificator;
+package cruise.umplificator.visitorTestFiles;
 
 import java.util.*;
 import java.io.*;
-import java.io.File;
 
-public class A { 
+@SuppressWarnings("unused")
+public class InputForVisitorTest { 
 
 boolean result = true;
 char capitalC = 'C';
@@ -14,9 +14,11 @@ int i = 100000;
 double d1 = 123.4;
 long creditCardNumber = 1234_5678_9012_3456L;
 
-A () { }
+InputForVisitorTest () { }
 
-A(int b) {this.b=b;}
+InputForVisitorTest(byte b) {
+	this.b=b;
+}
 
 public int getB(){
 return b;
