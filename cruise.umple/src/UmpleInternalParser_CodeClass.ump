@@ -1572,6 +1572,7 @@ class UmpleInternalParser
     else if (uElement instanceof UmpleTrait)
     {
         UmpleTrait uTrait = (UmpleTrait) uElement;
+        if (method.is("abstractMethodDeclaration")) aMethod.setIsAbstract(true);
         
         // Add Getter/Setter/Constructor to Class
      //   boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);

@@ -207,7 +207,10 @@ class UmpleInternalParser
     {
       analyzeExtraCode(token,aTrait);
     }
-
+    else if (token.is("abstractMethodDeclaration"))
+    {
+      analyzeMethod(token,aTrait);
+    }
     else if (token.is("concreteMethodDeclaration"))
     {
       analyzeMethod(token,aTrait);
@@ -725,7 +728,7 @@ class UmpleInternalParser
 							
 		// copy methods
 		for(Method aMethod : inTrait.getMethods()) {
-			inClass.addMethod(aMethod);
+			if(!aMethod.isIsAbstract()) inClass.addMethod(aMethod);
 		}
 							
 		// copy Precondition
@@ -799,6 +802,7 @@ class UmpleInternalParser
 			checkTraitsNameWithInterfaces();
 			checkTheSameAttributes();
 			checkCyclicTraitInheritance();
+			checkAllRequiredMethods();
 		}
 	}
 
@@ -922,7 +926,38 @@ class UmpleInternalParser
 			 }
 		 }
 	 }
-  
+
+  private void checkAllRequiredMethods() {
+	  if ( getParseResult().getWasSuccess() ) {
+	  for(UmpleClass uClass : getModel().getUmpleClasses()) {
+		  if (uClass.hasExtendsTraits()) {
+			  for(UmpleTrait uTrait : uClass.getExtendsTraits())  {
+				recursiveCheckRequiredMethods(uClass,uTrait);
+			  }
+				  
+		  }
+	  }
+	  }
+  }  
+
+  private void recursiveCheckRequiredMethods(UmpleClass inClass, UmpleTrait inTrait) {
+	  checkRequiredMethod(inClass, inTrait);
+	  if (inTrait.hasExtendsTraits()) {	  
+		  for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+			  recursiveCheckRequiredMethods(inClass,uTrait);
+		  }
+	  }
+  }
+
+  private void checkRequiredMethod(UmpleClass inClass, UmpleTrait inTrait) {
+	for (Method uMethod : inTrait.getMethods() ) {
+		if (uMethod.isIsAbstract() && ! inClass.hasMethod(uMethod)) {
+			getParseResult().addErrorMessage(new ErrorMessage(2555,uMethod.getPosition(),uMethod.getName(),inTrait.getName(),inClass.getName()));
+			return;
+		}
+	}
+  }  
+
 	
 }
 
