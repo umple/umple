@@ -238,6 +238,12 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceDeepNestedStates.ump",languagePath + tracerPath+"/TraceDeepNestedStates."+ languagePath +".txt","NestedState");
 	}
 	
+	@Test
+	public void TraceDeepNestedStatesLevel1()
+	{
+		assertUmpleTemplateFor("TraceDeepNestedStatesLevel1.ump",languagePath + tracerPath+"/TraceDeepNestedStatesLevel1."+ languagePath +".txt","NestedState");
+	}
+	
 	@Test @Ignore
 	public void TraceState()
 	{
