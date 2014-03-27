@@ -8,20 +8,21 @@ templateContent- : [[comment]] | [[emitMethod]] | [[templateAttributeDefinition]
 
 
 templateAttributeDefinition : [[templateName]] [[templateAttribute]]
-templateName : [name]
+templateName : [name] [[templateParameters]]?
+templateParameters : OPEN_ROUND_BRACKET [[templateParameter]] ( , [[templateParameter]] )* CLOSE_ROUND_BRACKET
+templateParameter- : [parameter] | " [**parameter] " 
 
 emitMethod : [=modifier:public|protected|private]? [=static]? [type]? [=emit] [[methodDeclarator]] [[templateList]]?;
-templateList- : OPEN_ROUND_BRACKET ( [[templatePrameter]] ( , [[templatePrameter]] )* )? CLOSE_ROUND_BRACKET
-templatePrameter : [name]
+templateList- : OPEN_ROUND_BRACKET ( [[templateName]] ( , [[templateName]] )* )? CLOSE_ROUND_BRACKET
 
 templateAttribute# : <<! [[templateAttributeContent]]* !>>
-templateAttributeContent- : [[templateExpression]] | [[templateComment]] | [[templateCodeBlock]] | [[templateText]] 
-templateText : [**templateTextContent:<<(=|#|$|/[*])]
+templateAttributeContent- : [[templateExpression]] | [[templateComment]] | [[templateCodeBlock]] | [[templateText]] | [[templateExactSpaces]] 
+templateText : [**templateTextContent:<<(=|#|/[*]|$)]
 
 templateComment# : <</* [**templateCommentContent] */>>
-templateExpression# : <<= [**templateExpressionContent] >>
-templateExactSpaces# : <<$ [**templateExpressionContent] >>
-templateCodeBlock# : <<# [**templateLanguageCode] #>>
+templateExpression# : <<= ( [[templateExpression]] | [**templateExpressionContent:<<(=|#|/[*]|$)] )+ >>
+templateCodeBlock# : <<# ( [[templateExpression]] | [**templateLanguageCode:<<(=|#|/[*]|$)] )* #>>
+templateExactSpaces# : <<$ [**templateExactSpacesContent] >>
 //templateOpen- : <<!
 //templateClose- : !>>
 

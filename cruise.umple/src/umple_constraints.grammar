@@ -65,7 +65,7 @@ associationOperators- : [=firstOp:cardinality|has] ( [[ordinalOp]] | [[equalityO
 associationLit : [[numberLiteral]] [=elements]? | [[stringLiteral]] | [[constraintName]] | { [[associationLit]] ( , [[associationLit]] )* }
 
 statemachineExpr : [[constraintName]] [[statemachineOperators]] [[statemachineLiteral]]
-statemachineOperators- : [=isInOp:is in|isIn|state==] | [=isNotInOp:is not in|isNotIn|state!=]
+statemachineOperators- : [=isInOp:is|state] ( == | in ) | [=isNotInOp:is|state] ( != | not in )
 statemachineLiteral- : [=state]? [[constraintName]]
 
 constraintName : [=new]? [!name:[a-zA-Z_][a-zA-Z0-9_-]*] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
