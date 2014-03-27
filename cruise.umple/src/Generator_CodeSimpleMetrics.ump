@@ -27,6 +27,7 @@ class SimpleMetricsGenerator {
   
   td <<!<td><<=content>></td>!>>
   emit genCell(String content)(td,cr);
+  
   public StringBuilder genCellInt(StringBuilder code, int i) {
     return _genCell(0, code, String.valueOf(i));
   }
