@@ -416,13 +416,13 @@ class TemplateTokenAnalyzer {
 	
 	String emit createSpaceStringMethodBody(String lang)(createSpaces);
 	createSpaces <<!<<#if(lang.equalsIgnoreCase("Java")) {#>>
-		StringBuilder spaces =  new StringBuilder();
+	StringBuilder spaces =  new StringBuilder();
     	for(int i=0; i <numSpaces; i++) {
       		spaces.append(" ");
     	}
     	return spaces.toString();
     <<#} else if(lang.equalsIgnoreCase("Cpp")) {#>>
-		string spaces = "";
+	string spaces = "";
     	for(int i=0; i <numSpaces; i++) {
       		spaces+= " ";
     	}
@@ -460,15 +460,6 @@ class TemplateTokenAnalyzer {
 	  }
 	}
 	
-  	String emit createSecondaryEmitMethodBody(EmitResponse emitResp, String lang)(secondaryEmitMethod);
-	secondaryEmitMethod <<!<<=Utils.getSpaceStringInit(lang)>>
-<<=emitResp.getCode(lang)>>
-		<<=Utils.getWrapMethodReturnSignature(lang)>> !>>
-	
-	String emit createPrimaryEmitMethodBody(String lang,String methodName, String params)(primaryEmitMethod);
-  	primaryEmitMethod <<!		<<=Utils.getStringBuilder(lang)>>
-		<<=Utils.getStringBuilderToString(lang, methodName, params)>> !>>
-	
 	String createSecondaryMethod(UmpleClass template,Method mth, EmitResponse emitResp) {
 		String methodName = "_"+mth.getName();
 		StringBuilder paramSignature = new StringBuilder("0,sb");
@@ -498,29 +489,10 @@ class TemplateTokenAnalyzer {
     		paramSignature.append(aParameter.getName());
     	}
     	
-    	/*
-    	StringBuilder javaBuffer = new StringBuilder();
-		StringBuilder cppBuffer = new StringBuilder();
-			
-		javaBuffer.append(emitResp.getJavaCode());
-		javaBuffer.append(System.getProperty("line.separator"));
-		javaBuffer.append("    ");
-		Utils.getWrapMethodReturnSignature("Java", javaBuffer);		    
-		
-			
-		cppBuffer.append(emitResp.getCppCode());
-		cppBuffer.append(System.getProperty("line.separator"));
-		javaBuffer.append("    ");
-		Utils.getWrapMethodReturnSignature("Cpp", cppBuffer);
-		CodeBlock cb = new CodeBlock();
-		
-		cb.setCode("Java", javaBuffer.toString());
-        cb.setCode("Cpp", cppBuffer.toString());		    
-		*/
 
 		CodeBlock cb = new CodeBlock();
-		cb.setCode("Java", createSecondaryEmitMethodBody(emitResp, "Java"));
-        cb.setCode("Cpp", createSecondaryEmitMethodBody(emitResp, "Cpp"));
+		cb.setCode("Java", Utils.getMethodTemplateFormatter("Java").getSecondaryEmitMethodBody(emitResp));
+        cb.setCode("Cpp", Utils.getMethodTemplateFormatter("Cpp").getSecondaryEmitMethodBody(emitResp));
             
 		MethodBody methBody = new MethodBody(cb);
 		aMethod.setMethodBody(methBody);
@@ -547,32 +519,11 @@ class TemplateTokenAnalyzer {
 			
 				String params = createSecondaryMethod(template, mth, emitResp);
 				String primaryMethodName = "_"+mth.getName();
-				
-				/*
-				StringBuilder javaBuffer = new StringBuilder();
-				StringBuilder cppBuffer = new StringBuilder();
-
-				javaBuffer.append("    ");					
-				Utils.getStringBuilder("Java", javaBuffer);
-				javaBuffer.append(System.getProperty("line.separator"));
-				javaBuffer.append("    ");
-				Utils.getStringBuilderToString("Java", javaBuffer, wrapMethodName, paramSignature);		    
-			
-			
-				javaBuffer.append("    ");					
-				Utils.getStringBuilder("Cpp", cppBuffer);
-				cppBuffer.append(System.getProperty("line.separator"));
-				javaBuffer.append("    ");
-				Utils.getStringBuilderToString("Cpp", cppBuffer, wrapMethodName, paramSignature);
-				
-				CodeBlock cb = new CodeBlock();
-				cb.setCode("Java", javaBuffer.toString());
-        	    cb.setCode("Cpp", cppBuffer.toString());
-        	    */
-        	    
+				        	    
         	    CodeBlock cb = new CodeBlock();
-				cb.setCode("Java", createPrimaryEmitMethodBody("Java",primaryMethodName, params));
-        	    cb.setCode("Cpp", createPrimaryEmitMethodBody("Cpp",primaryMethodName, params));            
+        	    
+				cb.setCode("Java", Utils.getMethodTemplateFormatter("Java").getPrimaryEmitMethodBody(primaryMethodName, params));
+        	    cb.setCode("Cpp", Utils.getMethodTemplateFormatter("Cpp").getPrimaryEmitMethodBody(primaryMethodName, params));            
 				MethodBody methBody = new MethodBody(cb);
 				mth.setMethodBody(methBody);
 				template.addMethod(mth);

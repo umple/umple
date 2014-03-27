@@ -313,6 +313,77 @@ class VariableElement {
 	}
 }
 
+interface MethodTemplateFormatter {
+	String getPrimaryEmitMethodBody(String methodName, String params);
+	String getSecondaryEmitMethodBody(EmitResponse emitResp);
+}
+
+class JavaMethodTemplateFormatter {
+	isA MethodTemplateFormatter;
+	
+	String getPrimaryEmitMethodBody(String methodName, String params) {
+		return getJavaPrimaryEmitMethodBody(methodName, params);
+	}
+	String getSecondaryEmitMethodBody(EmitResponse emitResp) {
+		return getJavaSecondaryEmitMethodBody(emitResp);
+	}
+	
+	String emit getJavaSecondaryEmitMethodBody(EmitResponse emitResp)(javaSecondaryEmitMethodBody);
+	javaSecondaryEmitMethodBody <<!String spaces="";
+    StringBuilder newCode = new StringBuilder();
+    StringBuilder realSb = sb;
+    if(numSpaces > 0) {
+        realSb = newCode;
+        spaces = _createSpacesString(numSpaces);
+        newCode.append(spaces);
+    }
+    
+<<=emitResp.getCode("Java")>>
+    if(numSpaces > 0) {
+        newCode.replace(0, newCode.length(), Pattern.compile(NL).matcher(newCode).replaceAll(NL + spaces));
+        sb.append(newCode);
+    }
+    return sb; !>>
+	
+	String emit getJavaPrimaryEmitMethodBody(String methodName, String params)(javaPrimaryEmitMethod);
+  	javaPrimaryEmitMethod <<!		StringBuilder sb = new StringBuilder();
+		return this.<<=methodName>>(<<=params>>).toString(); !>>	
+}
+
+class CppMethodTemplateFormatter {
+	isA MethodTemplateFormatter;
+	
+	String getPrimaryEmitMethodBody(String methodName, String params) {
+		return getCppPrimaryEmitMethodBody(methodName, params);
+	}
+	String getSecondaryEmitMethodBody(EmitResponse emitResp) {
+		return getCppSecondaryEmitMethodBody(emitResp);
+	}
+	
+	
+	String emit getCppSecondaryEmitMethodBody(EmitResponse emitResp)(cppSecondaryEmitMethodBody);
+	cppSecondaryEmitMethodBody <<!string spaces = "";
+	string newCode = "";
+	string realSb = sb;
+	if(numSpaces > 0) {
+        realSb = newCode;
+        spaces = _createSpacesString(numSpaces);
+        newCode+=spaces;
+    }
+    
+<<=emitResp.getCode("Cpp")>>
+    if(numSpaces > 0) {
+        string replacement = NL + spaces;
+        for(string::size_type _szIdx_ = 0; (_szIdx_ = newCode.find(NL, _szIdx_)) != string::npos;newCode.replace(_szIdx_, NL.length(), replacement),_szIdx_ += replacement.length() - NL.length() + 1);
+        sb+=newCode;
+    }
+    return sb; !>>
+	
+	String emit getCppPrimaryEmitMethodBody(String methodName, String params)(cppPrimaryEmitMethod);
+  	cppPrimaryEmitMethod <<!		string sb;
+		return this-><<=methodName>>(<<=params>>); !>>
+}
+
 //Helpr class to handle the process of emiitting the code to its eqivalent in JET based
 //on the existing template elements and their contents, expressions, etc.
 class Utils {
@@ -321,6 +392,11 @@ class Utils {
 	singleton;
 	
 	private static Pattern newLinePattern = Pattern.compile("([\\n][\\r]?|[\\r][\\n]?)", Pattern.MULTILINE);
+	
+	// TODO : Replace with array which cover all umple language codeblocks
+	private static MethodTemplateFormatter javaTemplateFormatter = new JavaMethodTemplateFormatter();
+	private static MethodTemplateFormatter cppTemplateFormatter = new CppMethodTemplateFormatter();
+	
 	
 	public static boolean isBlank(String str) {
 		int len = str == null ? 0 : str.length();
@@ -416,88 +492,30 @@ class Utils {
 	  	return "";
 	 }
 	
-	public static String getWrapMethodReturnSignature(String lang) {
-		StringBuilder sb = new StringBuilder();
-		if(lang.equalsIgnoreCase("Java")) {
-			sb.append("sb.replace(0, sb.length(), Pattern.compile(NL).matcher(sb).replaceAll(NL + spaces));");
-			sb.append(System.getProperty("line.separator"));
-  			sb.append("    ");  
-  			sb.append("return sb;");  
-  		} else if(lang.equalsIgnoreCase("Cpp")) {
-  			sb.append("string replacement = NL + spaces;");
-  			sb.append(System.getProperty("line.separator"));
-  			sb.append("    ");
-  			// TODO
-  			sb.append("for(string::size_type _szIdx_ = 0; (_szIdx_ = sb.find(NL, _szIdx_)) != string::npos;sb.replace(_szIdx_, NL.length(), replacement),_szIdx_ += replacement.length() - NL.length() + 1);");
-  			sb.append(System.getProperty("line.separator"));
-  			sb.append("    ");
-  			sb.append("return sb;"); 
-  		}
-  		return sb.toString();
-	}
-	
-	public static String getStringBuilderToString(String lang, String mthName, String paramSignature) {
-		StringBuilder sb = new StringBuilder();
-		if(lang.equalsIgnoreCase("Java")) {
-			sb.append("return ");
-			sb.append("this.");
-			sb.append(mthName);
-			sb.append("(");
-			sb.append(paramSignature);
-			sb.append(").toString();");  
-//			sb.append(System.getProperty("line.separator"));  
-  		} else if(lang.equalsIgnoreCase("Cpp")) { 
-  			sb.append("return ");
-			sb.append("this->");
-			sb.append(mthName);
-			sb.append("(");
-			sb.append(paramSignature);
-			sb.append(");");  
-//	    	sb.append("return sb.str();");
-//			sb.append(System.getProperty("line.separator"));  
-	  	}
-	  	return sb.toString();
-	}
-  	
-  	public static String getSpaceStringInit(String lang) {
-  		StringBuilder sb = new StringBuilder();
+	public static MethodTemplateFormatter getMethodTemplateFormatter(String lang) {
   		if(lang.equalsIgnoreCase("Java")) {  
-  			sb.append("String spaces = _createSpacesString(numSpaces);");
-  			sb.append(System.getProperty("line.separator"));
-  			sb.append("    ");
-  			sb.append("sb.append(spaces);");
+  			return javaTemplateFormatter; 
   		} else if(lang.equalsIgnoreCase("Cpp")) {  
-	    	sb.append("string spaces = _createSpacesString(numSpaces);");
-	    	sb.append(System.getProperty("line.separator"));
-	    	sb.append("    ");
-	    	sb.append("sb+=spaces;");
+  			return cppTemplateFormatter;
 	  	}
-	  	return sb.toString();
+	  	// TODO : Unspecified Lang code handler
+	  	return null; 
   	}
+	  	
   	
   	public static void getStringAppend(String lang, StringBuilder sb, String value) {
   		if(lang.equalsIgnoreCase("Java")) {  
-  			sb.append("sb.append(");
+  			sb.append("realSb.append(");
   			sb.append(value);
   			sb.append(");");
   		} else if(lang.equalsIgnoreCase("Cpp")) {  
 //	    	sb.append("sb << ");
-	    	sb.append("sb+= ");
+	    	sb.append("realSb+= ");
   			sb.append(value);
   			sb.append(";");
 	  	}
   	}
-  	public static String getStringBuilder(String lang){
-	  	StringBuilder sb = new StringBuilder();
-	  	if(lang.equalsIgnoreCase("Java")) {  
-  			sb.append("StringBuilder sb = new StringBuilder();");
-  			
-  		} else if(lang.equalsIgnoreCase("Cpp")) {  
-//  		return "std::stringstream sb;";
-  			sb.append("string sb;");
-	  	}
-	  	return sb.toString();
-	 }
+
 	 /*
 	  public static String trimTemplateBlockNewLines(String str) {
         int end = str.length;
