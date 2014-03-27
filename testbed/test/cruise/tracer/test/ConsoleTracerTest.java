@@ -79,7 +79,10 @@ public class ConsoleTracerTest
 					"sm_t,Dimmed,touch,Off",
 					"sm_t,Off,flip,On",
 					"sm_t,On,flip,Off",
-					
+					"sm_t,sLevel1,e1,sLevel2b",
+					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
+					"sm_t,sLevel2aLevel3a,e3,sLevel2aLevel3b",
+					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested"
 			};
 			
 			String[] recordTraceExpected = {
@@ -225,6 +228,12 @@ public class ConsoleTracerTest
 	  lB.flip();
 	  lB.flip();
 	  
+	  NestedState ns = new NestedState();
+	  ns.e1();
+	  ns.e2();
+	  ns.e3();
+	  ns.e4();
+
 	  //System.out.println("Garage = "+sTrace.getGaragDoor());
 
 
