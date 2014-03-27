@@ -52,36 +52,27 @@ class StateMachineMetrics{
   void calculate(){
       // Output basic file header
       
-      /*
-      code.append( "\n\n\n");
-      code.append(Format.repeat("*",126)+"\n");
-      code.append(Format.repeat(" ",20)+"S T A T E   M A C H I N E  ( S M )   M E A S U R E S"+"\n");
-      code.append(Format.repeat("*",126)+"\n");
-    
-       */
-       
        code.append("<h1>State Machine (SM) Measures</h1>");
     
-    
-    // Preparing Head (columns) of output file
+      // Preparing Head (columns) of output file
       List<String>title = new ArrayList<String>();
       title.add(" Class Name                   ");
       title.add(" #State Machines ");
       title.add(" #States ");
-    title.add(" #Transitions ");
-    title.add(" #Different Transitions ");
+      title.add(" #Transitions ");
+      title.add(" #Different Transitions ");
       title.add(" #Events ");
-    title.add(" #Guards ");
+      title.add(" #Guards ");
       title.add(" #Actions ");
       title.add(" #Nested SM ");
-    title.add(" #Cycles ");
-    title.add(" #Self Cycles ");
+      title.add(" #Cycles ");
+      title.add(" #Self Cycles ");
     
       code.append("<table border=\"1\"><tbody>\n");    
     
       code.append("<tr>");
       for (int i=0;i<title.size();i++){
-          code.append("<td>"+title.get(i)+"</td>");
+          _genCell(0,code,title.get(i));
       }
       code.append("</tr>");
 
@@ -95,23 +86,22 @@ class StateMachineMetrics{
     if (uClass!=null){
 
       code.append("<tr>");
-
-      code.append( "<td>"+uClass.getName()+"</td>");
+      genCellString(code, uClass.getName());
 
       // CALCULATING STATE MACHINE METRICS
       countPerClass.calculate(uClass);
       
       // writing and formating string to record in output file
-      code.append( "<td>"+countPerClass.getTotalStateMachinesPerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalStatesPerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalTransitionsPerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalDifferentTransitionsPerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalEventsPerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalGuardsPerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalActionsPerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalNestedStateMachinePerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalCyclesPerClass()+"</td>");
-      code.append( "<td>"+countPerClass.getTotalSelfCyclesPerClass()+"</td>");
+      genCellInt(code,countPerClass.getTotalStateMachinesPerClass());
+      genCellInt(code,countPerClass.getTotalStatesPerClass());
+      genCellInt(code,countPerClass.getTotalTransitionsPerClass());
+      genCellInt(code,countPerClass.getTotalDifferentTransitionsPerClass());
+      genCellInt(code,countPerClass.getTotalEventsPerClass());
+      genCellInt(code,countPerClass.getTotalGuardsPerClass());
+      genCellInt(code,countPerClass.getTotalActionsPerClass());
+      genCellInt(code,countPerClass.getTotalNestedStateMachinePerClass());
+      genCellInt(code,countPerClass.getTotalCyclesPerClass());
+      genCellInt(code,countPerClass.getTotalSelfCyclesPerClass());
 
       
       // Sum all values per class in Totals
@@ -131,65 +121,65 @@ class StateMachineMetrics{
 
     // printing totals
       code.append("<tr>");    
-      code.append( "<td>"+"TOTAL"+"</td>");
-      code.append( "<td>"+countTotals.getTotalStateMachines()+"</td>");
-      code.append( "<td>"+countTotals.getTotalStates()+"</td>");
-      code.append( "<td>"+countTotals.getTotalTransitions()+"</td>");
-      code.append( "<td>"+countTotals.getTotalDifferentTransitions()+"</td>");
-      code.append( "<td>"+countTotals.getTotalEvents()+"</td>");
-      code.append( "<td>"+countTotals.getTotalGuards()+"</td>");
-      code.append( "<td>"+countTotals.getTotalActions()+"</td>");
-      code.append( "<td>"+countTotals.getTotalNestedStateMachine()+"</td>");
-      code.append( "<td>"+countTotals.getTotalCycles()+"</td>");
-      code.append( "<td>"+countTotals.getTotalSelfCycles()+"</td>");
+      genCellString(code,"TOTAL");
+      genCellInt(code,countTotals.getTotalStateMachines());
+      genCellInt(code,countTotals.getTotalStates());
+      genCellInt(code,countTotals.getTotalTransitions());
+      genCellInt(code,countTotals.getTotalDifferentTransitions());
+      genCellInt(code,countTotals.getTotalEvents());
+      genCellInt(code,countTotals.getTotalGuards());
+      genCellInt(code,countTotals.getTotalActions());
+      genCellInt(code,countTotals.getTotalNestedStateMachine());
+      genCellInt(code,countTotals.getTotalCycles());
+      genCellInt(code,countTotals.getTotalSelfCycles());
       code.append("</tr>");
       
     // printing averages
     int tc = countTotals.getTotalClass();
     String res;
       code.append("<tr>");    
-      code.append( "<td>"+"AVERAGE"+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalStateMachines()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalStates()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalTransitions()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalDifferentTransitions()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalEvents()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalGuards()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalActions()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalNestedStateMachine()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalCycles()/tc)+"</td>");
-      code.append( "<td>"+String.format("%.1f", (float)countTotals.getTotalSelfCycles()/tc)+"</td>");
+      genCellString(code,"AVERAGE");
+      genCellFloat(code,(float)countTotals.getTotalStateMachines()/tc);
+      genCellFloat(code,(float)countTotals.getTotalStates()/tc);
+      genCellFloat(code,(float)countTotals.getTotalTransitions()/tc);
+      genCellFloat(code,(float)countTotals.getTotalDifferentTransitions()/tc);
+      genCellFloat(code,(float)countTotals.getTotalEvents()/tc);
+      genCellFloat(code,(float)countTotals.getTotalGuards()/tc);
+      genCellFloat(code,(float)countTotals.getTotalActions()/tc);
+      genCellFloat(code,(float)countTotals.getTotalNestedStateMachine()/tc);
+      genCellFloat(code,(float)countTotals.getTotalCycles()/tc);
+      genCellFloat(code, (float)countTotals.getTotalSelfCycles()/tc);
       code.append("</tr>");
 
     
     // printing MAX values
       code.append("<tr>");    
-     code.append( "<td>"+"MAX"+"</td>");
-      code.append( "<td>"+countTotals.getTotalStateMachinesPerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalStatesPerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalTransitionsPerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalDifferentTransitionsPerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalEventsPerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalGuardsPerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalActionsPerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalNestedStateMachinePerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalCyclesPerClassMax()+"</td>");
-      code.append( "<td>"+countTotals.getTotalSelfCyclesPerClassMax()+"</td>");
+      genCellString(code,"MAX");
+      genCellInt(code,countTotals.getTotalStateMachinesPerClassMax());
+      genCellInt(code,countTotals.getTotalStatesPerClassMax());
+      genCellInt(code,countTotals.getTotalTransitionsPerClassMax());
+      genCellInt(code,countTotals.getTotalDifferentTransitionsPerClassMax());
+      genCellInt(code,countTotals.getTotalEventsPerClassMax());
+      genCellInt(code,countTotals.getTotalGuardsPerClassMax());
+      genCellInt(code,countTotals.getTotalActionsPerClassMax());
+      genCellInt(code,countTotals.getTotalNestedStateMachinePerClassMax());
+      genCellInt(code,countTotals.getTotalCyclesPerClassMax());
+      genCellInt(code,countTotals.getTotalSelfCyclesPerClassMax());
       code.append("</tr>");    
     
       // printing MIN values
       code.append("<tr>");      
-     code.append( "<td>"+"MIN"+"</td>");
-      code.append( "<td>"+countTotals.getTotalStateMachinesPerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalStatesPerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalTransitionsPerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalDifferentTransitionsPerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalEventsPerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalGuardsPerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalActionsPerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalNestedStateMachinePerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalCyclesPerClassMin()+"</td>");
-      code.append( "<td>"+countTotals.getTotalSelfCyclesPerClassMin()+"</td>");
+      genCellString(code,"MIN");
+      genCellInt(code,countTotals.getTotalStateMachinesPerClassMin());
+      genCellInt(code,countTotals.getTotalStatesPerClassMin());
+      genCellInt(code,countTotals.getTotalTransitionsPerClassMin());
+      genCellInt(code,countTotals.getTotalDifferentTransitionsPerClassMin());
+      genCellInt(code,countTotals.getTotalEventsPerClassMin());
+      genCellInt(code,countTotals.getTotalGuardsPerClassMin());
+      genCellInt(code,countTotals.getTotalActionsPerClassMin());
+      genCellInt(code,countTotals.getTotalNestedStateMachinePerClassMin());
+      genCellInt(code,countTotals.getTotalCyclesPerClassMin());
+      genCellInt(code,countTotals.getTotalSelfCyclesPerClassMin());
       code.append("</tr>");      
       
       
