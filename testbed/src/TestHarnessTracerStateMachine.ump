@@ -328,7 +328,7 @@ class NestedStateLevel4
   trace sLevel1 level 4;
 }
 
-class CoursA
+class pooledTrace
 {
   queued status
   {
