@@ -10,9 +10,13 @@ Umple will regenerate all Java files.
 The following instructs the system to inject comments on every class point to the source
 @outputumplesource
 */
+strictness allow 1007;
+strictness allow 1008;
+
 generate Java "../src-gen-umple";
 
 use Main.ump;
 use CodeGenValidator.ump;
 use Validator_CodeGenJava.ump;
 use Validator_CodeGenCPP.ump;
+use Validator_Ecore.ump;

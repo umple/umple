@@ -19,7 +19,7 @@ external DefaultHandler{}
 /* 
  * Parse ECore by extend SAX handler callbacks
  */
-class ECoreImportHandler
+class EcoreImportHandler
 {	
 	depend java.io.File;
 	depend java.io.IOException;
@@ -30,7 +30,6 @@ class ECoreImportHandler
 	depend org.xml.sax.SAXException;
 	depend org.xml.sax.SAXParseException;
 	depend org.xml.sax.helpers.DefaultHandler;
-
 	isA DefaultHandler;
 }
 

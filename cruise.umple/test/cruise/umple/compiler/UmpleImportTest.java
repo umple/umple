@@ -81,7 +81,7 @@ public class UmpleImportTest {
 		String filename = getFullFilePath(name);
 		assertEquals(true, (new File(filename)).exists());
 
-		ECoreImportHandler handler = new ECoreImportHandler();
+		EcoreImportHandler handler = new EcoreImportHandler();
 		UmpleImportModel umple = handler.readDataFromXML(filename);
 		return umple.generateUmple();
 	}

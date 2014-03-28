@@ -11,13 +11,18 @@ Model for importing XMI and generating Umple code
 
 namespace cruise.umple.compiler;
 
-class ECoreImportHandler
+class EcoreImportHandler
 {	
 	internal UmpleImportModel model = new UmpleImportModel("");
 	internal currentElement = "";
 	internal UmpleImportClass currentClass = null;
 	
 	public UmpleImportModel readDataFromXML(String filename) throws IOException, ParserConfigurationException {
+	    
+	    //if(!UmpleEcoreValidator.getInstance().validate(URI.createURI(filename))){
+      	//	System.err.println("Ecore model used is not valid");
+    	//}
+
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setNamespaceAware(true);
 		try {
