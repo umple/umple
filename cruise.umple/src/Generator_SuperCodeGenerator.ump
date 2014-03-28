@@ -46,7 +46,9 @@ class SuperCodeGenerator {
   	
   public String translate(String format, Constraint constraint){
     if(constraint==null)
+    {
       return "{0}";
+    }
     String expression = "";
     boolean insertNext = false;
     boolean strictNext = format.contains("$strict$");
@@ -77,6 +79,28 @@ class SuperCodeGenerator {
           previousName = name;
         }
       }
+      else if(expr.getType().equals("STATE"))
+      {
+        String value = translate("stateOne",((ConstraintStateVariable)expr).getState());
+        if(insertNext){
+          expression = StringFormatter.format(expression,value,previousName);
+          insertNext = false;
+        }
+        else {
+          expression += value;
+        }
+      } 
+      else if(expr.getType().equals("STATEMACHINE"))
+      {
+        String value = translate("getFullMethod",((ConstraintStateMachineVariable)expr).getStateMachine());
+        if(insertNext){
+          expression = StringFormatter.format(expression,value,previousName);
+          insertNext = false;
+        }
+        else {
+          expression += value;
+        }
+      }
       else if( expr.getIsAttribute() )
       {
         String value;
@@ -101,7 +125,7 @@ class SuperCodeGenerator {
         }
         else 
         {
-          value = (!strictNext?ConstraintLookupMap.get("accessor"):"")+expr.getValue();
+          value = (strictNext?"":ConstraintLookupMap.get("accessor"))+expr.getValue();
           strictNext=false;
         }
         if(insertNext){
@@ -111,7 +135,8 @@ class SuperCodeGenerator {
         else {
           expression += value;
         }
-      } 
+      }
+      
       else // STATIC OR OPERATOR
       { 
         if(expr.getValue().equals("."))

@@ -255,6 +255,16 @@ class ConstraintVariable{
 
 }
 
+class ConstraintStateVariable {
+  isA ConstraintVariable;
+  State state;
+}
+
+class ConstraintStateMachineVariable {
+  isA ConstraintVariable;
+  StateMachine stateMachine;
+}
+
 /*
  * The Constraint object related to Umple Classes
  */

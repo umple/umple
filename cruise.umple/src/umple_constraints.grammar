@@ -24,7 +24,7 @@ negativeConstraint : ! [[constraint]] | not [[constraint]] | ~ [[constraint]]
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
 constraintBody- : [=brace:OPEN_ROUND_BRACKET] [[constraint]] [=brace:CLOSE_ROUND_BRACKET]
 linkingOp : ( [=||] | [=andOp:and|&&|&] | [=orOp:or] ) [[constraintToken]]
-constraintExpr- : [[negativeConstraint]] | [[stringExpr]] | [[boolExpr]] | [[numExpr]] | [[associationExpr]] | [[statemachineExpr]] | [[genExpr]] | [[loneBoolean]] | { [!fakeContraint:[^\n]+] } 
+constraintExpr- : [[negativeConstraint]] | [[statemachineExpr]] | [[stringExpr]] | [[boolExpr]] | [[numExpr]] | [[associationExpr]]  | [[genExpr]] | [[loneBoolean]] | { [!fakeContraint:[^\n]+] } 
 
 compoundExpr- : [[stringExpr]]|[[numExpr]]|[[boolExpr]]|[[genExpr]]
 
@@ -65,8 +65,8 @@ associationOperators- : [=firstOp:cardinality|has] ( [[ordinalOp]] | [[equalityO
 associationLit : [[numberLiteral]] [=elements]? | [[stringLiteral]] | [[constraintName]] | { [[associationLit]] ( , [[associationLit]] )* }
 
 statemachineExpr : [[constraintName]] [[statemachineOperators]] [[statemachineLiteral]]
-statemachineOperators- : [=isInOp:is|state] ( == | in ) | [=isNotInOp:is|state] ( != | not in )
-statemachineLiteral- : [=state]? [[constraintName]]
+statemachineOperators- : [=isInOp:is|state] [=ignore:==|in] | [=isNotInOp:is|state] ( [=ignore:!=] | [=ignore:not] [=ignore:in] )
+statemachineLiteral- : [=state]? [~stateName]
 
 constraintName : [=new]? [!name:[a-zA-Z_][a-zA-Z0-9_-]*] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
 constraintIndexOperator- : [ [!index:[0-9]+] ]

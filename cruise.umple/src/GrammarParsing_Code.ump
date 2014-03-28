@@ -1,63 +1,4 @@
 namespace cruise.umple.parser.analysis;
-class Analyzer {
-  /*
-    This funciton is used for putting things into the global hashmap that contains all objects
-  */
-  protected void set(String string, Object object)
-  {
-    global.put(string, object);
-  }
-  /*
-    This function goes through all the subtokens and invokes this analyzer's method(if it exists) which has the same name as the token
-  */
-  public void analyze(Token tokens)
-  {
-    for(Token token: tokens.getSubTokens())
-    {
-      if(handlers.get(token.getName())!=null)
-      {
-        try
-        {
-          handlers.get(token.getName()).invoke(this,token);
-        }
-        catch (IllegalArgumentException e)
-        {
-          e.printStackTrace();
-        } 
-        catch (IllegalAccessException e)
-        {
-          e.printStackTrace();
-        }
-        catch (InvocationTargetException e)
-        {
-          e.printStackTrace();
-        }
-      }
-    }
-  }
-  /*
-    abstract method for executing the rootrule onto the umplefile(for example)
-  */
-  public void execute()
-  {
-  }
-  
-  /*
-    Inner class which is a wrapper for the objects that will go into the global hashmap
-  */
-  public class Getter<T>
-  {
-    public Getter()
-    {
-    }
-    @SuppressWarnings("unchecked")
-    public T get(String name)
-    {
-      return ((T)global.get(name));
-    }
-  }
-
-}
 
 class RuleBasedParser 
 {
@@ -590,7 +531,7 @@ class GrammarAnalyzer {
       }
     });
     set("anon_index",0);
-    set("analyzer",new Analyzer());
+    set("analyzer",this);
     set("stack",new Stack<ChoiceRule>());//new RuleStack());
     ChoiceRule root = new ChoiceRule("root");
     stacks.get("stack").push(root);
