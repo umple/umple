@@ -85,7 +85,11 @@ public class ConsoleTracerTest
 					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested",
 					"sm_t,sLevel1,e1,sLevel2b",
 					"sm_t,sLevel1,e1,sLevel2b",
-					"sm_t,sLevel2b,e2,sLevel2aLevel3a"
+					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
+					"sm_t,sLevel1,e1,sLevel2b",
+					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
+					"sm_t,sLevel2aLevel3a,e3,sLevel2aLevel3b",
+					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested"
 			};
 			
 			String[] recordTraceExpected = {
@@ -248,6 +252,12 @@ public class ConsoleTracerTest
 	  ns2.e2();
 	  ns2.e3();
 	  ns2.e4();
+	  
+	  NestedStateLevel4 ns4 = new NestedStateLevel4();
+	  ns4.e1();
+	  ns4.e2();
+	  ns4.e3();
+	  ns4.e4();
 
 	  //System.out.println("Garage = "+sTrace.getGaragDoor());
 

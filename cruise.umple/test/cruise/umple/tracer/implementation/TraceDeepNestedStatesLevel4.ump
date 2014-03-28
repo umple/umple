@@ -1,0 +1,37 @@
+namespace example;
+
+class NestedState {
+  
+  stm
+  {
+    sLevel1
+    {
+      e1 -> sLevel2b;
+      sLevel2a
+      {
+        sLevel2aLevel3a
+        {
+          e3 -> sLevel2aLevel3b;
+        }
+        sLevel2aLevel3b
+        {
+          e3 -> sLevel2aLevel3a;
+          sLevel2aLevel3bLevel4
+          {
+            e4 -> outsideNested;
+          }
+        }
+      }
+      sLevel2b
+      {
+        e2 -> sLevel2aLevel3a;
+      }
+    }
+    outsideNested
+    {}
+  }
+  
+  // trace deeply nested states
+  trace sLevel1 level 4;
+
+}
