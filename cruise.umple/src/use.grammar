@@ -2,9 +2,11 @@
 // This file is made available subject to the open source license found at:
 // [*http://umple.org/license*]
 
+// beginning of use.grammar
+
 // This is essentially rewriting the grammar rules present in the USE compiler, which exist in a similar format.
 
-useProgram : model [id] ([[useGeneralClassDefinition]] | [[useInlineComment]])*
+useProgram : model [id] ([[useGeneralClassDefinition]] | [[useInlineComment]] | [[useAssociation]])*
 
 useGeneralClassDefinition- : [[useClassDefinition]]
 
@@ -18,4 +20,14 @@ useType- : [[useSimpleType]]
 
 useSimpleType : [id]
 
-useInlineComment- : // [*inlineComment]
+useInlineComment- : (-- [*inlineComment]) | (// [*inlineComment])
+
+useAssociation : association [name] between [[useAssociationEnd]] [[useAssociationEnd]] end
+
+useAssociationEnd : [name] [ [[useMultiplicity]] ]
+
+useMultiplicity- : [[useMultiplicityRange]]
+
+useMultiplicityRange : [[useMultiplicitySpec]] (.. [[useMultiplicitySpec]])?
+
+useMultiplicitySpec : [integerSpec:\d+|[*]]
