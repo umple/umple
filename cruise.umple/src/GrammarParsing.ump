@@ -1,36 +1,5 @@
 namespace cruise.umple.parser.analysis;
-/*
-  Abstract class which gives has two major components:
-  a hashmap of Methods and a hashmap of Objects
-  it also contains a method called analyze which performs analysis on a token by taking all of its subtokens and finding a method name
-  corresponding to the token's name, and then calling that function with the subtoken as parameter.
-  The hashmap of objects is mainly estetic, where the idea is that you get and set and nothing else from this hashmap
-*/
-class Analyzer 
-{
-  depend java.lang.reflect.*;
-  depend java.lang.reflect.Method;
-  depend java.util.*;
-  depend cruise.umple.compiler.*;
 
-  boolean done = false;
-  boolean first = true;
-
-  //HashMap of all the methods of this class
-  HashMap<String,Method> handlers = new HashMap<String,Method>();
-
-  //hashmap of global variables(local to the class, not local to methods)
-  HashMap<String,Object> global = new HashMap<String,Object>();
-
-  //rootToken which will be the result of the parsing of the umple file passed
-  Token rootToken = null;
-
-  //the data package used during the parsing.
-  ParserDataPackage data = null;
-
-  //the failed position, if there was one, it will remain null if the parse was successful
-  Position failedPosition = null;
-}
 /*
   The rule based parser takes in umple grammar files and parses them into Rule objects(ChoiceRule, ChainRule, etc.). Really what happens is
   that the rulebasedparser contstructs an initial rootToken that contains all the grammar rules, and then the grammaranalyzer turns those
@@ -161,7 +130,6 @@ class RuleBasedParserThread
 */
 class GrammarAnalyzer 
 {
-  isA Analyzer;
   
   depend java.util.*;
   depend cruise.umple.compiler.*;
@@ -169,13 +137,52 @@ class GrammarAnalyzer
   depend java.io.*;  
   depend java.lang.reflect.Method;
 
+  /*
+    Inner class which is a wrapper for the objects that will go into the global hashmap
+  */
+  public class Getter<T>
+  {
+    public Getter()
+    {
+    }
+    @SuppressWarnings("unchecked")
+    public T get(String name)
+    {
+      return ((T)global.get(name));
+    }
+  }
+  /*
+    This funciton is used for putting things into the global hashmap that contains all objects
+  */
+  protected void set(String string, Object object)
+  {
+    global.put(string, object);
+  }
+
+  boolean done = false;
+  boolean first = true;
+
+  //HashMap of all the methods of this class
+  HashMap<String,Method> handlers = new HashMap<String,Method>();
+
+  //hashmap of global variables(local to the class, not local to methods)
+  HashMap<String,Object> global = new HashMap<String,Object>();
+
+  //rootToken which will be the result of the parsing of the umple file passed
+  Token rootToken = null;
+
+  //the data package used during the parsing.
+  ParserDataPackage data = null;
+
+  //the failed position, if there was one, it will remain null if the parse was successful
+  Position failedPosition = null;
 /*
   Global variable getters and setters
 */
 
   Getter<ChoiceRule> rules = new Getter<ChoiceRule>();
   Getter<Stack<ChoiceRule>> stacks = new Getter<Stack<ChoiceRule>>();
-  Getter<Analyzer> analyzers = new Getter<Analyzer>();
+  Getter<GrammarAnalyzer> analyzers = new Getter<GrammarAnalyzer>();
   Getter<String> strings = new Getter<String>();
   Getter<Integer> ints = new Getter<Integer>();
 

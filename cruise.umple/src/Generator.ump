@@ -53,6 +53,7 @@ interface CodeTranslator
 {
   String translate(String id, Attribute attribute);
   String translate(String id, StateMachine stm);
+  String translate(String id, State st);
   String translate(String id, Event e);
   String translate(String id, AssociationVariable aVar);
   String translate(String id, Constraint constraint);

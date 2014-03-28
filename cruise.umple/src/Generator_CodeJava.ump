@@ -2311,6 +2311,8 @@ class JavaGenerator
     TraceLookupMap.put("increment","{0}++;");
     TraceLookupMap.put("formatnonprimitive",".toString().replace(\"\\n\",\"\").replace(\",\",\";\")");
     //
+    ConstraintLookupMap.put("in==","().equals(\"{0}\")");
+    ConstraintLookupMap.put("in!=","().equals(\"{0}\")");
     ConstraintLookupMap.put("==",".equals({0})");
     ConstraintLookupMap.put("accessor","");
     ConstraintLookupMap.put("paramaccessor","");

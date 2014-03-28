@@ -104,13 +104,13 @@ class UmpleInternalParser
         {
           rawLine.addAll(analyzeNumberConstraintExpression(sub,uClassifier));
         }
-        else if (sub.is("numExpr2"))
-        {
-          rawLine.addAll(analyzeNumberConstraintExpression(sub,uClassifier));
-        }
         else if (sub.is("associationExpr"))
         {
           rawLine.addAll(analyzeAssociationConstraintExpression(sub,uClassifier));
+        }
+        else if (sub.is("statemachineExpr"))
+        {
+          rawLine.addAll(analyzeStateMachineConstraintExpression(sub,uClassifier));
         }
         else if(sub.is("loneBoolean"))
         {
@@ -448,8 +448,8 @@ class UmpleInternalParser
   //TODO I changed the parameter's type. please remove this comment;
   private List<ConstraintVariable> analyzeNumberConstraintExpression(Token numberExpressionToken, UmpleClassifier uClassifier)
   {
-	List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
-	List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
+    List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+    List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
     for(Token sub : numberExpressionSubtokens)
     {
       if (sub.getValue().equals("STATIC"))
@@ -493,7 +493,71 @@ class UmpleInternalParser
       else if(sub.is("notequalsOp"))
       {
         ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
-        rawLine.add(cv); 
+        rawLine.add(cv);
+      } 
+    }
+    return rawLine;
+  }
+
+  private List<ConstraintVariable> analyzeStateMachineConstraintExpression(Token statemachineExpressionToken, UmpleClassifier uClassifier)
+  {
+    List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+    List<Token> numberExpressionSubtokens = statemachineExpressionToken.getSubTokens();
+    StateMachine stateMachine = null;
+    for(Token sub : numberExpressionSubtokens)
+    {
+    
+      if (sub.getValue().equals("STATIC"))
+      {
+      	if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+          rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+      } 
+      else if(sub.is("constraintName"))
+      {
+        ConstraintVariable cv = analyzeConstraintName(sub,uClassifier,true);
+        if(uClassifier instanceof UmpleClass)
+        {
+          stateMachine = ((UmpleClass)uClassifier).getStateMachine(cv.getValue());
+        }
+        else if(uClassifier instanceof UmpleTrait)
+        {
+          stateMachine = ((UmpleTrait)uClassifier).getStateMachine(cv.getValue());
+          
+        }
+        if(stateMachine==null)
+        {
+          stateMachine = new StateMachine(cv.getValue());
+          rawLine.add(cv);
+        }
+        else
+        {
+          rawLine.add(new ConstraintStateMachineVariable("STATEMACHINE",cv.getValue(),stateMachine));
+        }
+        
+        
+      }
+      else if(sub.is("stateName"))
+      {
+        String stateName = sub.getValue();
+        State state = stateMachine.findState(stateName);
+        if(stateMachine != null && state==null )
+        {
+          state = new State(stateName, stateMachine);
+          setFailedPosition(sub.getPosition(), 80, stateName, stateMachine.getName());
+        }
+        rawLine.add(new ConstraintStateVariable("STATE",stateName,state));
+      }
+      else if(sub.is("isInOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","in==");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv);        
+      }
+      else if(sub.is("isNotInOp"))
+      {
+        ConstraintVariable cv = new ConstraintVariable("OPERATOR","in!=");
+        cv.setIsPrimitive(false);
+        rawLine.add(cv);        
       } 
     }
     return rawLine;
@@ -623,6 +687,7 @@ class UmpleInternalParser
       	    {
       	      boolean isType = false;
       	      String typesFailed = "";
+      	      String comma = "";
       	      for(String t: type)
       	      {
       	        if((isNew?sub.getValue():attribute.getType()).toLowerCase().equals(t))
@@ -631,12 +696,9 @@ class UmpleInternalParser
                 }          
                 else
                 {
-                  typesFailed += t+",";
+                  typesFailed += comma+t;
                 }
-              }
-              if(!isType)
-              {
-          	    setFailedPosition(sub.getPosition(), 29, sub.getValue(), typesFailed);
+                comma = ",";
               }
             }
             name.setType(isNew?sub.getValue():attribute.getType());

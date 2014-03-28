@@ -260,7 +260,17 @@ class UmpleTrait {
     }
     return null;
   }
-  
+
+  public StateMachine getStateMachine(String name){
+    for (StateMachine sm : stateMachines)
+    {
+      if (sm.getName().equals(name))
+      {
+        return sm;
+      }
+    }
+    return null;
+  }
  //**************************	
    public boolean hasMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();
@@ -288,7 +298,9 @@ class UmpleTrait {
       }
     }
     return false;
-  } 	
+  }
+
+  
 }
 
 //----------------------------------------------------------
