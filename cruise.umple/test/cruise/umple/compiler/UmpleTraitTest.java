@@ -167,6 +167,13 @@ public class UmpleTraitTest {
 		}	
 	}	
 	
+	@Test
+	public void GeneraParameterTest() {
+		String code = "class A{isA T<fname>;} trait T<p1> { %p1;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("fname", model.getUmpleClass("A").getAttribute(0).getName());	
+		
+	}	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {

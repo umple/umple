@@ -9,8 +9,11 @@ softwarePattern- : [[isA]] | [[singleton]] | [[immutable]] | [[keyDefinition]] |
 
 // Generalization and inheritance [*isAclause*]
 isA- : [[singleIsA]] | [[multipleIsA]]
-singleIsA- : isA [extendsName] ( , isA [extendsName] )*  ;
-multipleIsA- : isA [extendsName] ( , [extendsName] )* ;
+singleIsA- : isA [extendsName] [[gTemplateParameter]]? ( , isA [extendsName] [[gTemplateParameter]]? )*  ;
+multipleIsA- : isA [extendsName] [[gTemplateParameter]]? ( , [extendsName] [[gTemplateParameter]]? )* ;
+
+//general template parameters. 
+gTemplateParameter : < [~parameter] ( , [~parameter] )* >
 
 // A class that can have only one instance [*SingletonPattern*]
 singleton- : [=singleton] ;

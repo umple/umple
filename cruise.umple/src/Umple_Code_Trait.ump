@@ -1,6 +1,8 @@
 namespace cruise.umple.compiler;
 
-//----------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+//------------------------------------class start----------------------------------------------
+//---------------------------------------------------------------------------------------------
 class UmpleModel {
  
   public UmpleTrait getUmpleTrait(String name){
@@ -25,8 +27,13 @@ class UmpleModel {
     return newTrait;
   }
 }
+//---------------------------------------------------------------------------------------------
+//------------------------------------class end------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
-//----------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+//------------------------------------class start----------------------------------------------
+//---------------------------------------------------------------------------------------------
 class UmpleTrait {
 
   public boolean hasCascadeMethod (Method aMethod) {
@@ -300,10 +307,42 @@ class UmpleTrait {
     return false;
   }
 
+
+//This section is related to codes which is going to support general templates for traits
+//--------------------------------------------------------------------------------------
+//----------------------------------start-----------------------------------------------
+	public boolean hasDefinedParameter(String name, String type) {
+		for (GeneralTemplateParameter gTparameter : getGeneralTemplateParameters()) {
+			if (gTparameter.getName().equals(name) && gTparameter.getType().equals(type)) return true;
+		}
+		return false;
+	}
+	
+	public void setDefinedParameterType(String name, String type) {
+		for (GeneralTemplateParameter gTparameter : getGeneralTemplateParameters()) {
+			if (gTparameter.getName().equals(name)) gTparameter.setType(type);
+		}
+	}
+
+	public Integer getGeneralTemplateParameterIndexByName(String name, String type) {
+		for (int i = 0; i<numberOfGeneralTemplateParameters();i++) {
+			if(getGeneralTemplateParameter(i).getName().equals(name) && getGeneralTemplateParameter(i).getType().equals(type)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+//--------------------------------------------------------------------------------------
+//------------------------------------end-----------------------------------------------
   
 }
+//---------------------------------------------------------------------------------------------
+//------------------------------------class end------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
-//----------------------------------------------------------
+//---------------------------------------------------------------------------------------------
+//------------------------------------class start----------------------------------------------
+//---------------------------------------------------------------------------------------------
 class Attribute {
 
   public Attribute(String aName, String aType, String aModifier, String aValue, boolean aIsAutounique, UmpleTrait aUmpleTrait)
@@ -327,4 +366,24 @@ class Attribute {
     codeblock = aValue!=null ? new CodeBlock(aValue) : new CodeBlock();
   }
 }
+//---------------------------------------------------------------------------------------------
+//------------------------------------class end------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
+//---------------------------------------------------------------------------------------------
+//------------------------------------class start----------------------------------------------
+//---------------------------------------------------------------------------------------------
+class UmpleClass {
+
+	public GeneralTPApplied getGeneralTPAppliedByName(String name) {
+		for (GeneralTPApplied gTPApplied : getGeneralTPApplieds()) {
+			if (gTPApplied.getInheritanceName().equals(name)) {
+				return gTPApplied;
+			}
+		}
+		return null;
+	}
+}
+//---------------------------------------------------------------------------------------------
+//------------------------------------class end------------------------------------------------
+//---------------------------------------------------------------------------------------------

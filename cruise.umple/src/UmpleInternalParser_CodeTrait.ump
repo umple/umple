@@ -104,6 +104,10 @@ class UmpleInternalParser
         setFailedPosition(traitToken.getPosition(), 14, traitToken.getName());
       }
     }
+
+   if (traitToken.getValue("gTemplateParameter") != null ) {
+    	proccessGeneralTemplateParameters(traitToken.getSubToken("gTemplateParameter"), aTrait);
+    }
 	
     analyzeAllTokens(traitToken,aTrait);
          
@@ -252,6 +256,7 @@ class UmpleInternalParser
     boolean validName = Token.isValidIdentifier(attributeToken.getValue("name"));
     boolean properName = !Token.isValidIdentifier(attributeToken.getValue("name"), "[A-Z]");
     boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
+    boolean isAGParameter = attributeToken.getValue("gpIdentifier") !=null;
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
     
@@ -275,6 +280,15 @@ class UmpleInternalParser
       
       return;
     }
+    
+    if (isAGParameter) {
+    	if (aTrait.hasDefinedParameter(name,"")){
+    		aTrait.setDefinedParameterType(name,"attribute");
+
+    	} else {
+        	setFailedPosition(attributeToken.getPosition(), 2556, name, aTrait.getName());
+        }
+    }    
     
     if(!properName && !isConstant){
       setFailedPosition(attributeToken.getPosition(), 131, name);
@@ -744,7 +758,19 @@ class UmpleInternalParser
 		//copy attributes
 		for(Attribute aAttribute : inTrait.getAttributes()) {
 			//check for attributes which have already existed.
-			inClass.addAttribute(aAttribute);
+			Integer index = inTrait.getGeneralTemplateParameterIndexByName(aAttribute.getName(),"attribute");
+			if (index>=0){
+				if (inClass.hasGeneralTPApplieds()) {
+					GeneralTPApplied gtp = inClass.getGeneralTPAppliedByName(inTrait.getName());
+					if (gtp != null){
+						aAttribute.setName(	gtp.getParameter(index));
+						inClass.addAttribute(aAttribute);
+					}
+							
+				}
+			} else {
+				inClass.addAttribute(aAttribute);
+			}
 		}
 		
 		// copy Constraints
@@ -957,8 +983,39 @@ class UmpleInternalParser
 		}
 	}
   }  
+  
 
+//This section is related to codes which is going to support general templates for traits
+//--------------------------------------------------------------------------------------
+//----------------------------------start-----------------------------------------------
+  private void proccessGeneralTemplateParameters(Token mainToken, UmpleTrait aTrait) {
+	// TODO Auto-generated method stub
+	  for (Token subToken : mainToken.getSubTokens()) {
+		  if (subToken.is("parameter")) {
+			  GeneralTemplateParameter gtParameter = new GeneralTemplateParameter(subToken.getValue(),"");
+			  aTrait.addGeneralTemplateParameter(gtParameter);
+		  }
+	  }
+  }
+  
+private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
+	GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
+	for(Token subToken : mainToken.getSubTokens()) {
+		if (subToken.is("parameter")) {
+				aGeneralTPApplied.addParameter(subToken.getValue());
+		}
+	}
+	if (aClassifier instanceof UmpleClass) {
+		((UmpleClass)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
+	} else if (aClassifier instanceof UmpleTrait) {
+		((UmpleTrait)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
+	}
 	
+}
+//--------------------------------------------------------------------------------------
+//------------------------------------end-----------------------------------------------
+
+  
 }
 
 use UmpleInternalParser_FIXML.ump;
