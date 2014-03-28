@@ -3,6 +3,7 @@ generate Java "../src-gen-umple";
 use TestHarnessAttributes.ump;
 use TestHarnessAssociations.ump;
 use TestHarnessStateMachine.ump;
+use TestHarnessPooledStateMachine.ump;
 use TestHarnessStateMachineJava.ump;
 use TestHarnessPatterns.ump;
 use TestHarnessPatternsImmutable.ump;

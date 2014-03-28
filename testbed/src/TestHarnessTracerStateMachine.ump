@@ -330,7 +330,7 @@ class NestedStateLevel4
 
 class Course
 {
-  pooled status
+  queued status
   {
     Open {
       register -> Full;
