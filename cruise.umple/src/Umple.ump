@@ -356,6 +356,7 @@ class UmpleClassifier
   // The constants contained within the Umple Classifier.
   1 -> 0..* Constant;
   * -> 0..1 Token extendsToken;
+  
 }
 
 /*
@@ -436,6 +437,9 @@ class UmpleClass
   
   UmpleModel sourceModel;
 
+  //This is used to assign inheritance parameters.
+  1 -> * GeneralTPApplied;	
+  	
   before addDepend { if (depends.contains(aDepend)) { return false; } }  
 
   before setImmutable { if (!canBeImmutable()) { return false; } }
@@ -446,6 +450,8 @@ class UmpleClass
   
   before addStateMachine { if (isImmutable()) { return false; } }
 }
+
+
 
 /*
  * An UmpleTrait can contain attributes, associations, state machines and methods.
@@ -502,7 +508,13 @@ class UmpleTrait {
   1 -> * Comment;
   
   UmpleModel sourceModel;
+  
+  //The template parameters which are specified when traits are defined.
+  1 -> * GeneralTemplateParameter;
 
+  //This is used to assign inheritance parameters.
+  1 -> * GeneralTPApplied;	
+  
   //--- before addDepend { if (depends.contains(aDepend)) { return false; } }  
 
   before setImmutable { if (!canBeImmutable()) { return false; } }
@@ -513,6 +525,21 @@ class UmpleTrait {
   
   before addStateMachine { if (isImmutable()) { return false; } }
   
+}
+
+//This class is used to specify parameters for traits.
+//TODO : when can also apply this to support formal template concepts for classes.
+class GeneralTemplateParameter {
+	name;
+	type;
+	defaultValue = "";
+
+}
+
+//This class is used to assign parameters in classes and traits.
+class GeneralTPApplied {
+	inheritanceName;
+	String[] parameters;
 }
 
 /*

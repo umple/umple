@@ -668,6 +668,7 @@ class UmpleInternalParser
     List<String> extendsList = new ArrayList<String>();
     List<Token> extendsTokenList = new ArrayList<Token>();
 
+	 String extendName="";
     // Go through all sub-tokens of the class token to add subclasses related to the Umple class.
     for (Token extendsToken : classifierToken.getSubTokens())
     {
@@ -677,7 +678,10 @@ class UmpleInternalParser
         extendsTokenList.add(extendsToken); // With this line we really don't need the above, todo: refactor
         unlinkedExtends.put(aClassifier, extendsList);
         unlinkedExtendsTokens.put(aClassifier, extendsTokenList);
-      }  
+        extendName = extendsToken.getValue("extendsName");
+      } else if (extendsToken.getValue("gTemplateParameter") !=null ){
+    	  processGTemplateParameterAssignment(extendsToken, aClassifier, extendName);
+      }
     }
   	//Checks list of extends tokens to prevent multiple class inheritance
     if(numberOfExtendsClass(extendsTokenList) > 1)

@@ -1,5 +1,4 @@
-traitDefinition : trait [name] [[traitTemplate]]* { [[traitContent]]* }
-traitTemplate : < [~name] ( , [~name] )* >
+traitDefinition : trait [name] [[gTemplateParameter]]? { [[traitContent]]* }
 traitContent- : [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
 
 

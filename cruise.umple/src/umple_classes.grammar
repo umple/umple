@@ -57,18 +57,20 @@ parameterList : OPEN_ROUND_BRACKET ([[parameter]] ( , [[parameter]] )* )? CLOSE_
 parameter : [[typedName]]
 
 // Details of associations: See manual page [*AssociationDefinition*]
-association : [=modifier:immutable]? [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
+
+association : [=modifier:immutable]?  [[associationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
 symmetricReflexiveAssociation : [[multiplicity]] self [roleName] ;
 inlineAssociation : [=modifier:immutable]? [[inlineAssociationEnd]] [=arrow:--|->|<-|><] [[associationEnd]] ;
 inlineAssociationEnd : [[multiplicity]] [~roleName]? [[isSorted]]?
 singleAssociationEnd : [[multiplicity]] [type] [~roleName]? ;
-associationEnd : [[multiplicity]] [type] [~roleName]? [[isSorted]]?
+// note: gpIdentifier = general parameter identifier
+associationEnd : [[multiplicity]] [=gpIdentifier:%]? [type] [~roleName]? [[isSorted]]?
 multiplicity- : [!lowerBound:\d+|[*]] .. [!upperBound:\d+|[*]] | [!bound:\d+|[*]]
 isSorted- : sorted { [priority] }
 
 // Details of attributes. See user manual page [*AttributeDefinition*]
 attribute : [[simpleAttribute]] | [[autouniqueAttribute]] | [[derivedAttribute]] | [[complexAttribute]]
-simpleAttribute- : [~name] ;
+simpleAttribute- : [=gpIdentifier:%]? [~name] ;
 autouniqueAttribute- : [=autounique] [~name] ;
 derivedAttribute- : [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] = ( [[moreCode]] )+
 complexAttribute- : [=unique]? [=lazy]? [=modifier:immutable|settable|internal|defaulted|const|fixml]? [[typedName]] (= [**value])? ;
