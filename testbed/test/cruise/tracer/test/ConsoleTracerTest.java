@@ -56,6 +56,7 @@ public class ConsoleTracerTest
 			};
 			
 			String[] stmTraceExpected = {
+					//=== GarageDoorA
 					"sm_t,Open,buttonOrObstacle,Closing",
 					"sm_t,Closing,reachBottom,Closed",
 					"sm_t,Open,buttonOrObstacle,Closing",
@@ -70,29 +71,35 @@ public class ConsoleTracerTest
 					"sm_t,Open,buttonOrObstacle,Closing",
 					"sm_t,Closing,buttonOrObstacle,Opening",
 					"sm_t,Opening,buttonOrObstacle,HalfOpen",
+					//=== LightFixtureA
 					"sm_t,Open,flip,Closed",
 					"sm_da,Closed,doActivitedStarted,status",
 					"sm_di,Closed,doActivitedInterrupted,status",
 					"sm_t,Closed,flip,Open",
+					//=== LightFixtureB
 					"sm_t,Off,flip,On",
 					"sm_t,Normal,touch,Dimmed",
 					"sm_t,Dimmed,touch,Off",
 					"sm_t,Off,flip,On",
 					"sm_t,On,flip,Off",
+					//=== NestedState
 					"sm_t,sLevel1,e1,sLevel2b",
 					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
 					"sm_t,sLevel2aLevel3a,e3,sLevel2aLevel3b",
 					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested",
+					//=== NestedStateLevel1
 					"sm_t,sLevel1,e1,sLevel2b",
+					//=== NestedStateLevel2
 					"sm_t,sLevel1,e1,sLevel2b",
 					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
+					//=== NestedStateLevel4
 					"sm_t,sLevel1,e1,sLevel2b",
 					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
 					"sm_t,sLevel2aLevel3a,e3,sLevel2aLevel3b",
 					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested",
-					"sm_t,Open,register,Full",
-					"sm_t,Full,reject,Full",
-					"sm_t,Full,reject,Full"
+					//=== CourseA
+//					"sm_t,Open,register,Full",
+//					"sm_t,Full,reject,Full",
 			};
 			
 			String[] recordTraceExpected = {
@@ -262,10 +269,9 @@ public class ConsoleTracerTest
 	  ns4.e3();
 	  ns4.e4();
 
-	  Course cA = new Course();
-	  cA.register();
-	  cA.reject();
-	  cA.reject();
+//	  Course cA = new Course();
+//	  cA.register();
+//	  cA.reject();
 
 
 	  //==== invoke record trace
