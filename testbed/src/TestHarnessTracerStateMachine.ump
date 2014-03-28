@@ -294,8 +294,8 @@ class NestedStateLevel2 {
   
 }
 
-class NestedStateLevel4 {
-  
+class NestedStateLevel4 
+{
   stm
   {
     sLevel1
@@ -324,8 +324,21 @@ class NestedStateLevel4 {
     outsideNested
     {}
   }
-  
   // trace state with it deep nested states
   trace sLevel1 level 4;
-  
+}
+
+class Course
+{
+  pooled status
+  {
+    Open {
+      register -> Full;
+    }
+    Full {
+      reject -> Full;
+    }
+  }
+  // trace state in pooled state machine
+  trace Full;
 }

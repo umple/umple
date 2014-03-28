@@ -256,7 +256,7 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceDeepNestedStatesLevel4.ump",languagePath + tracerPath+"/TraceDeepNestedStatesLevel4."+ languagePath +".txt","NestedState");
 	}
 	
-	@Test @Ignore
+	@Test
 	public void TraceState()
 	{
 		assertUmpleTemplateFor("TraceState.ump",languagePath + tracerPath+"/TraceState."+ languagePath +".txt","Light");
@@ -268,22 +268,22 @@ public class TracerTest extends TracerTemplateTest
 		assertUmpleTemplateFor("TraceTransition.ump",languagePath + tracerPath+ "/TraceTransition."+ languagePath +".txt","GarageDoor");
 	}
 	
-	@Test @Ignore
-	public void ConsoleTracer_StateMachine()
+	@Test
+	public void TracePooledStateMachine()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceStateMachine.ump",languagePath + "/ConsoleTracer_TraceStateMachine."+ languagePath +".txt","GarageDoor");
+		assertUmpleTemplateFor("TracePooledStateMachine.ump",languagePath + tracerPath+"/TracePooledStateMachine."+ languagePath +".txt","Course");
 	}
 	
 	@Test @Ignore
-	public void ConsoleTracer_TraceStateEntryAction()
+	public void ConsoleTracer_StateMachine()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryAction.ump",languagePath + "/ConsoleTracer_TraceStateEntryAction."+ languagePath +".txt","Light");
+		assertUmpleTemplateFor("ConsoleTracer_TraceStateMachine.ump",languagePath + tracerPath + "/ConsoleTracer_TraceStateMachine."+ languagePath +".txt","GarageDoor");
 	}
 	
 	@Test @Ignore 
 	public void ConsoleTracer_TraceBigStateMachine()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceBigStateMachine.ump",languagePath + "/ConsoleTracer_TraceBigStateMachine."+ languagePath +".txt","StateMachineTest");
+		assertUmpleTemplateFor("ConsoleTracer_TraceBigStateMachine.ump",languagePath + tracerPath + "/ConsoleTracer_TraceBigStateMachine."+ languagePath +".txt","StateMachineTest");
 	}
 	
 	@Test @Ignore 
@@ -293,9 +293,9 @@ public class TracerTest extends TracerTemplateTest
 	}
 
 	@Test @Ignore 
-	public void ConsoleTracer_TraceStateEntryWhere()
+	public void TraceStateWhere()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceStateEntryWhere.ump",languagePath + "/ConsoleTracer_TraceStateEntryWhere."+ languagePath +".txt","Light");
+		assertUmpleTemplateFor("TraceStateWhere.ump",languagePath + tracerPath + "/TraceStateWhere."+ languagePath +".txt","Light");
 	}
 	
 	@Test @Ignore 
@@ -307,13 +307,13 @@ public class TracerTest extends TracerTemplateTest
 	@Test @Ignore 
 	public void ConsoleTracer_TraceStateExitAction()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceStateExitAction.ump",languagePath + "/ConsoleTracer_TraceStateExitAction."+ languagePath +".txt","Light");
+		assertUmpleTemplateFor("ConsoleTracer_TraceStateExitAction.ump",languagePath + tracerPath + "/ConsoleTracer_TraceStateExitAction."+ languagePath +".txt","Light");
 	}
 	
 	@Test @Ignore 
 	public void ConsoleTracer_TraceTransition()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceTransition.ump",languagePath + "/ConsoleTracer_TraceTransition."+ languagePath +".txt","Light");
+		assertUmpleTemplateFor("ConsoleTracer_TraceTransition.ump",languagePath + tracerPath + "/ConsoleTracer_TraceTransition."+ languagePath +".txt","Light");
 	}
 	
 	@Test @Ignore 

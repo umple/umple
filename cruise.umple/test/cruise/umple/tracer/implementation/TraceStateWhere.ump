@@ -14,5 +14,5 @@ class Light
     Off { flip -> On; }
      
   }
-  trace entry On where v == 10;
+  trace On where [v == 10];
 }

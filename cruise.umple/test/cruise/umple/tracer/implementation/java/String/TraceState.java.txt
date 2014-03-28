@@ -84,7 +84,6 @@ public class Light
     switch (aStatusOn)
     {
       case Null:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Light,"+System.identityHashCode(this)+",sm_t,Null,enterOn,SemiOn" );
         setStatusOn(StatusOn.SemiOn);
         wasEventProcessed = true;
         break;
@@ -122,7 +121,6 @@ public class Light
     switch(status)
     {
       case On:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Light,"+System.identityHashCode(this)+",sm_x,On,status" );
         exitOn();
         break;
     }
