@@ -534,7 +534,7 @@ class Utils {
     */
 	 
 	  public static String trimTemplateBlockBeginigNewLine(String str) {
-	  	Pattern spacesNewLinePattern = Pattern.compile("\\s*([\\n][\\r]?|[\\r][\\n]?)", Pattern.MULTILINE);
+	  	Pattern spacesNewLinePattern = Pattern.compile("^([\\n][\\r]?|[\\r][\\n]?)");
 	  	Matcher m = spacesNewLinePattern.matcher(str);
 	  	return (m.find()) ? str.substring(m.end()) : str;
       }
