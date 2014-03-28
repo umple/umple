@@ -109,28 +109,12 @@ start_<<=clSmName>>;
 !>>
   emit startState(String clSmName)(startState);
 
-  // Append the standard format for a start state into the current graph context
-  private void appendStartState(StringBuilder code, int numSpaces, String clSmName) {
-    // Temporary: Shouldn't need to create a new stringbuilder
-    // Should refactor to change all of these to call the emit method directly
-    StringBuilder sb = new StringBuilder();
-    code.append(_startState(numSpaces,sb,clSmName));
-  }
-
   // Template for a normal node
   normalStateFormat <<!
 // Format for normal states
 node [shape = rectangle, width=1,style=rounded];
 !>>
   emit normalStateFormat()(normalStateFormat);
-
-  // Append the format for normal nodes.
-  private void appendNormalStateFormat(StringBuilder code, int numSpaces) {
-    // Temporary: Shouldn't need to create a new stringbuilder
-    // Should refactor to change all of these to call the emit method directly
-    StringBuilder sb = new StringBuilder();
-    code.append(_normalStateFormat(numSpaces,sb));
-  }
 
   // Used to indent code
   private void appendSpaces(StringBuilder code, int numSpaces) {
@@ -190,7 +174,19 @@ node [shape = rectangle, width=1,style=rounded];
   }
   #>> labeltooltip = "<<=readableStart>> <<=label>> -> <<=readableEnd>>", labelURL="#"!>>
   emit transitionAttributes(String lheadtail, String label, String readableStart, String readableEnd)(transitionAttributes);
+  
+  // TEMPLATES FOR STATES
+/* The following are commented out since they don't parse for some reason  
+  String quote ="\"";  // Temporary attempt at a workaround
+  String openCurly = "{";  // Temporary attempt at a workaround
 
+  topLevelBorder <<!
+ subgraph cluster<<=clSmName>> <<=openCurly>>
+  label = <<=quote>>sm <<=className>> <<=smName>> <<=quote>>;
+  penwidth=0.5;
+!>>
+  emit topLevelBord(String clSmName, String className, String smName)(topLevelBorder); 
+*/
   private void appendStateMachineRecursively(StringBuilder code, StringBuilder transitions, StateMachine sm,
       UmpleClass uClass, String className, boolean isTopLevel,
       int smCount, int indentLevel) {
@@ -230,12 +226,17 @@ node [shape = rectangle, width=1,style=rounded];
       appendSpaces(code,  indentLevel+2);
       code.append("label=\"sm "+className+" "+smName+"\";\n");   
       appendSpaces(code,  indentLevel+2);
-      code.append("penwidth=0.5;\n");        
+      code.append("penwidth=0.5;\n");   
+      
+       /* The following code to be reinstated when the templates are working 
+         and the above 7 lines then deleted.
+      _topLevelBorder(indentLevel, code, clSmName, className, smName);
+      */
     }
       
     // Every state machine has a start state
-    appendStartState(code, indentLevel, clSmName);
-    appendNormalStateFormat(code, indentLevel);
+    _startState(indentLevel,code,clSmName);
+    _normalStateFormat(indentLevel, code);
  
     // Iterate through the states of this state machine
     for (State s : sm.getStates())
@@ -269,7 +270,8 @@ node [shape = rectangle, width=1,style=rounded];
         String dest=getTransitionNameForState(s,uClass,false);
         String head=getTransitionHeadOrTailForState(s, uClass,false);
         
-        _transition(2,transitions,"start_"+clSmName,"->", dest, transitionAttributes(head,"","start",s.getName()));
+        _transition(2,transitions,"start_"+clSmName,"->", dest,
+          transitionAttributes(head,"","start",s.getName()));
         
       }
           
@@ -310,18 +312,17 @@ node [shape = rectangle, width=1,style=rounded];
           guardString = event.isAutoTransition() ? "[" : " ["
             + guard.getCondition()+"]";
         }
-
-        appendSpaces(transitions,  indentLevel+2);
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);
         String dest = getTransitionNameForState(t.getNextState(),uClass,false);
         String origlh = getTransitionHeadOrTailForState(t.getFromState(),uClass,true);
         String destlt = getTransitionHeadOrTailForState(t.getNextState(),uClass,false);
+
+        _transition(2,transitions,orig,"->", dest,
+          transitionAttributes(origlh+destlt,
+          transitionLabel + guardString + transitionAction,
+          t.getFromState().getName(),t.getNextState().getName()));
         
-        transitions.append(orig 
-          + " -> "+ dest
-          + " ["+origlh+destlt+" label = \""
-          + transitionLabel + guardString + transitionAction + "\" ];\n");
       }  // End iteration through the transitions
 
       // Process nested state machines of this state
@@ -340,7 +341,6 @@ node [shape = rectangle, width=1,style=rounded];
       code.append("// End State: "+sLabel+"\n"); 
      
     } // End iteration through states of a state machine
-
 
     appendSpaces(code,  indentLevel);
     code.append("// End "+levelPhrase+"StateMachine: "+smName+"\n");  
