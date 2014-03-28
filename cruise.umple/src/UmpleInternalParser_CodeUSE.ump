@@ -17,17 +17,22 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
   
-  private void analyzeUSE(Token t, int analysisStep) {
+  private void analyzeUSE(Token t, int analysisStep)
+  {
     if(t.is("useProgram")) {
       for(Token sub : t.getSubTokens()) {
         if(sub.is("useClassDefinition")) {
           analyzeUSEClass(sub, analysisStep);
         }
+        if(sub.is("useAssociation")) {
+          analyzeUSEAssociation(sub, analysisStep);
+        }
       }
     }
   }
   
-  private UmpleClass analyzeUSEClass(Token t, int analysisStep) {
+  private UmpleClass analyzeUSEClass(Token t, int analysisStep)
+  {
     UmpleClass generatedClass = model.addUmpleClass(t.getValue("id"));
     if(analysisStep != 1) {
       Token attributes = t.getSubToken("useAttributes");
@@ -38,7 +43,8 @@ class UmpleInternalParser
     return generatedClass;
   }
   
-  private void analyzeUSEAttributes(Token allAttributesToken, UmpleClass myClass) {
+  private void analyzeUSEAttributes(Token allAttributesToken, UmpleClass myClass)
+  {
     for(Token attributeToken : allAttributesToken.getSubTokens()) {
       if(attributeToken.is("useAttributeDefinition")) {
         String name = attributeToken.getValue("id");
@@ -61,5 +67,62 @@ class UmpleInternalParser
         }
       }
     }
+  }
+  
+  private Association analyzeUSEAssociation(Token associations, int analysisStep)
+  {
+    if(analysisStep == 1) {
+      return null;
+    }
+    if(!associations.is("useAssociation")) {
+      System.out.println("failed at analyze use association");
+      return null;
+    }
+    
+    AssociationEnd firstEnd = analyzeUSEAssociationEnd(associations.getSubToken("useAssociationEnd", 0));
+    AssociationEnd secondEnd = analyzeUSEAssociationEnd(associations.getSubToken("useAssociationEnd", 1));
+    
+    firstEnd.setRoleName(associations.getValue("name"));
+    secondEnd.setRoleName(associations.getValue("name"));
+    
+    Association ret = new Association(true, true, firstEnd, secondEnd);
+    model.addAssociation(ret);
+    
+    unlinkedAssociations.add(ret);
+    
+    return ret;
+  }
+  
+  private AssociationEnd analyzeUSEAssociationEnd(Token associationEnd)
+  {
+    if(!associationEnd.is("useAssociationEnd")) {
+      System.out.println("failed at analyze association end");
+      return null;
+    }
+    
+    String name = associationEnd.getValue("name");
+    Multiplicity multiplicity = analyzeUSEMultiplicity(associationEnd.getSubToken("useMultiplicityRange"));
+    
+    return new AssociationEnd(null, name, null, null, multiplicity);
+  }
+  
+  private Multiplicity analyzeUSEMultiplicity(Token multiplicity) {
+    if(!multiplicity.is("useMultiplicityRange")) {
+      System.out.println("failed at analyze use multiplicity");
+      return null;
+    }
+    
+    Multiplicity ret = new Multiplicity();
+    
+    if(multiplicity.numberOfSubTokens() == 1) {
+      ret.setRange(null, null);
+      ret.setBound(multiplicity.getSubToken("useMultiplicitySpec").getValue("integerSpec"));
+    } else {
+      Token firstSpec = multiplicity.getSubToken("useMultiplicitySpec", 0);
+      Token secondSpec = multiplicity.getSubToken("useMultiplicitySpec", 1);
+      ret.setRange(firstSpec.getValue("integerSpec"), secondSpec.getValue("integerSpec"));
+    }
+    
+    return ret;
   }
 }

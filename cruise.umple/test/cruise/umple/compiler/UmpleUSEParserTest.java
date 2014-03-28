@@ -77,6 +77,45 @@ public class UmpleUSEParserTest
     Assert.assertTrue(model.getUmpleClass("Employee").getAttribute("budget").isPrimitive());
   }
   
+  @Test
+  public void attributes()
+  {
+    assertParse("useAssociations.use");
+    Assert.assertEquals(3, model.numberOfUmpleClasses());
+    
+    UmpleClass employee = model.getUmpleClass("Employee");
+    UmpleClass department = model.getUmpleClass("Department");
+    UmpleClass project = model.getUmpleClass("Project");
+    
+    Assert.assertEquals(2, employee.numberOfAssociationVariables());
+    Assert.assertEquals(2, department.numberOfAssociationVariables());
+    Assert.assertEquals(2, project.numberOfAssociationVariables());
+    Assert.assertEquals("WorksIn", employee.getAssociationVariable(0).getName());
+    Assert.assertEquals("WorksOn", employee.getAssociationVariable(1).getName());
+    Assert.assertEquals("WorksOn", project.getAssociationVariable(0).getName());
+    Assert.assertEquals("Controls", project.getAssociationVariable(1).getName());
+    Assert.assertEquals("WorksIn", department.getAssociationVariable(0).getName());
+    Assert.assertEquals("Controls", department.getAssociationVariable(1).getName());
+    
+    Multiplicity star = new Multiplicity();
+    star.setBound("*");
+    
+    Assert.assertEquals(star, employee.getAssociationVariable(1).getMultiplicity());
+    Assert.assertEquals(star, department.getAssociationVariable(0).getMultiplicity());
+    Assert.assertEquals(star, project.getAssociationVariable(0).getMultiplicity());
+    Assert.assertEquals(star, department.getAssociationVariable(1).getMultiplicity());
+    
+    Multiplicity one = new Multiplicity();
+    one.setBound("1");
+    
+    Assert.assertEquals(one, project.getAssociationVariable(1).getMultiplicity());
+    
+    Multiplicity oneToStar = new Multiplicity();
+    oneToStar.setRange("1", "*");
+    
+    Assert.assertEquals(oneToStar, employee.getAssociationVariable(0).getMultiplicity());
+  }
+  
   // Assertion case where we expect the parse to succeed - may be overridden
   public void assertParse(String filename)
   {
