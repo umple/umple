@@ -212,7 +212,7 @@ class State
    // method to trace state and its desired nested states
    private boolean isNested(StateMachineTraceItem smti, Transition tsn){
     
-	  boolean isNested = false;
+      boolean isNested = false;
 	  State nextState = tsn.getNextState();
 	  StateMachine root = this.getStateMachine();
 	  State parent = this;
@@ -223,18 +223,13 @@ class State
 
 	  while (parent != null)
 	  {
+		  level+=parent.getName().equals("Null")?0:1;
+		  if(smti.getState().getName().equals(parent.getName())&&(level<smti.getLevel()||smti.getLevel()==-1)&& !this.getName().equals("Null") && !nextState.getName().equals("Null"))
+          {
+            return true;
+          }
 		  root = parent.getStateMachine();
 		  parent = root.getParentState();
-		  for(StateMachine stm : root.getNestedStateMachines())
-		  {
-			  ++level;
-			  if( level == smti.getLevel() ) 
-				  return false;
-			  for( State s : stm.getStates())
-				  if(s.equals(this) && !s.getName().equals("Null") && !nextState.getName().equals("Null"))
-					  return true;
-			  
-		  }
 	  }
 
 	  return isNested;
