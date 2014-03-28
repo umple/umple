@@ -90,9 +90,9 @@ public class ConsoleTracerTest
 					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
 					"sm_t,sLevel2aLevel3a,e3,sLevel2aLevel3b",
 					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested",
-					"sm_t,Open,register,Full",
-					"sm_t,Full,reject,Full",
-					"sm_t,Full,reject,Full"
+//					"sm_t,Open,register,Full",
+//					"sm_t,Full,reject,Full",
+//					"sm_t,Full,reject,Full"
 			};
 			
 			String[] recordTraceExpected = {
@@ -262,10 +262,10 @@ public class ConsoleTracerTest
 	  ns4.e3();
 	  ns4.e4();
 
-	  Course cA = new Course();
-	  cA.register();
-	  cA.reject();
-	  cA.reject();
+//	  Course cA = new Course();
+//	  cA.register();
+//	  cA.reject();
+//	  cA.reject();
 
 
 	  //==== invoke record trace
