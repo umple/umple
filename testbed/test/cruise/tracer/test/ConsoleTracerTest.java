@@ -270,7 +270,7 @@ public class ConsoleTracerTest
 	  ns4.e3();
 	  ns4.e4();
 
-	  CoursA cA = new CoursA();
+	  pooledTrace cA = new pooledTrace();
 	  cA.register();
 	  cA.reject();
 	  cA.reject();
