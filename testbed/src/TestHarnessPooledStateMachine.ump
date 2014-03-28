@@ -1,0 +1,17 @@
+
+namespace cruise.pooled.statemachine.test;
+
+
+class CourseA
+{
+  Integer i;
+  status
+  {
+    Open {
+      register -> Full;
+    }
+    Full {
+      reject -> Full;
+    }
+  }
+}
