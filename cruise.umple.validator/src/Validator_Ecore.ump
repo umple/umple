@@ -1,0 +1,98 @@
+namespace cruise.umple.validator;
+
+class UmpleEcoreValidator {
+
+  singleton;
+  
+  depend java.io.ByteArrayInputStream;
+  depend java.io.FileNotFoundException;
+  depend java.io.IOException;
+  depend java.util.Map;
+  depend java.util.Random;
+  depend org.eclipse.emf.common.util.BasicDiagnostic;
+  depend org.eclipse.emf.common.util.Diagnostic;
+  depend org.eclipse.emf.common.util.URI;
+  depend org.eclipse.emf.ecore.EPackage;
+  depend org.eclipse.emf.ecore.resource.Resource;
+  depend org.eclipse.emf.ecore.resource.ResourceSet;
+  depend org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+  depend org.eclipse.emf.ecore.util.Diagnostician;
+  depend org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
+
+  internal ResourceSet resSet = new ResourceSetImpl();
+
+  after constructor{
+    Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
+    Map<String, Object> m = reg.getExtensionToFactoryMap();
+    m.put("ecore", new XMIResourceFactoryImpl());    
+  }
+
+  // Validate an EPackage object and store results in the BasicDiagnostic object
+  private void validate(EPackage ePackage, BasicDiagnostic status){
+    if (ePackage != null) {
+      Diagnostician diagnostician = new Diagnostician(org.eclipse.emf.ecore.util.EcoreValidator.Registry.INSTANCE);
+      Diagnostic diagnostic = diagnostician.validate(ePackage);
+      
+      if (diagnostic.getSeverity() == Diagnostic.ERROR) {
+        status.addAll(diagnostic);
+      } else if (diagnostic.getSeverity() == Diagnostic.WARNING) {
+        for (Diagnostic child : diagnostic.getChildren()) {
+          if (!org.eclipse.emf.ecore.util.EcoreValidator.DIAGNOSTIC_SOURCE.equals(child.getSource())
+              || child.getCode() != org.eclipse.emf.ecore.util.EcoreValidator.CONSISTENT_ARGUMENTS_NONE) {
+            status.addAll(diagnostic);
+            break;
+          }
+        }
+      }
+    }
+  }
+  
+  // Validate a resource has been loaded
+  public boolean validate(Resource resource){
+    try{
+      BasicDiagnostic status = new BasicDiagnostic(getClass().getName(),
+          0, "Problems encountered in the model",
+          null);
+      for(Object loadedObject : resource.getContents()){         
+        validate((EPackage)loadedObject, status);       
+      }
+
+      return status.getSeverity() != Diagnostic.ERROR;
+    }catch(Exception e){
+      // If any exception, invalid
+      return false;
+    }
+  }
+
+  // Validate Ecore string
+  public boolean validate(String ecoreCode){
+    if(ecoreCode == null)
+      return false;
+    
+    String tempName = String.valueOf(new Random().nextLong()) + ".ecore"; 
+    Resource temp = resSet.createResource(URI.createURI(tempName));
+    
+    try{
+      temp.load(new ByteArrayInputStream(ecoreCode.getBytes("UTF-8")), null);
+      return validate(temp);
+    }catch (IOException e){
+      
+    }
+    
+    return false;
+  }
+  
+  // Validate Ecore file by providing URI
+  public boolean validate(URI uri) throws FileNotFoundException{
+    try{
+      return validate(resSet.getResource(uri, true));
+    }catch (Exception e){
+      Throwable c = e.getCause();
+      if(c instanceof FileNotFoundException){
+        throw((FileNotFoundException)c);
+      }
+    }
+    
+    return false;
+  }
+}

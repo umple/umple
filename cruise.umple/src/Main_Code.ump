@@ -129,7 +129,7 @@ class UmpleConsoleMain
     private static void generateUmple(String xmi) {
 	  boolean isSuccess = false;
 	  try {    
-		ECoreImportHandler handler = new ECoreImportHandler();
+		EcoreImportHandler handler = new EcoreImportHandler();
 		UmpleImportModel umple = handler.readDataFromXML(xmi);
 		isSuccess = umple.generateUmpleFile(xmi+".ump");
 	  } catch (Exception e) {

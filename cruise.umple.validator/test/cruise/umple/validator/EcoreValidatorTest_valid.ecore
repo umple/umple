@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore">
+  <ecore:EPackage name="ACG" nsURI="ACG" nsPrefix="ACG"/>
+  <ecore:EPackage name="PrimitiveTypes" nsURI="a" nsPrefix="a">
+    <eClassifiers xsi:type="ecore:EDataType" name="Boolean" instanceClassName="boolean"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="Integer" instanceClassName="int"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="String" instanceClassName="java.lang.String"/>
+  </ecore:EPackage>
+</xmi:XMI>
