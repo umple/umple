@@ -257,15 +257,9 @@ node [shape = rectangle, width=1,style=rounded];
         allT.addAll(s.getNextTransition());
 
         for (Transition t: allT) {
-      
-          System.out.println("A"+sLabel+" "+t.getEvent().getName()+"--- "+t.getFromState().getName()+"->"+t.getNextState().getName()); // DEBUG
- if(internalBoundaryTrans.containsKey(t)) System.out.println("    ALREADY");
-
           if(!internalBoundaryTrans.containsKey(t) && (
             (t.getFromState()==s && t.getNextState().isSubstateOf(s)) ||
             (t.getNextState()==s && t.getFromState().isSubstateOf(s)) ) ) {
-
-            System.out.println("    YES"); // DEBUG
 
             nodeNumber++;
             String dummyName="dummyNode"+nodeNumber+"_"+
