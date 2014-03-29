@@ -314,6 +314,20 @@ class State
     State yourSuper = findSuperState(state,relativeTo);
     return mySuper != null && mySuper.equals(yourSuper); 
   }
+
+  // return true of this is a substate of or same as possibleSuperState
+  public boolean isSubstateOf(State possibleSuperState) {
+    if(this.equals(possibleSuperState)) {
+      return true;
+    }
+    State parent = this.getStateMachine().getParentState();
+    if(parent == null) {
+      return false;
+    }
+    else {
+      return parent.isSubstateOf(possibleSuperState);
+    }
+  }
   
   private State findSuperState(State me, StateMachine lookFor)
   {

@@ -27,6 +27,10 @@ class GvStateDiagramGenerator
 {
   Boolean hideActions = hasSuboption("hideactions");
   Boolean hideGuards = hasSuboption("hideguards");
+ 
+  internal Map<Transition,String> internalBoundaryTrans
+    = new HashMap<Transition,String>();
+  internal int nodeNumber=0;
   
   // Basic templates for GV elements to output
   
@@ -178,7 +182,7 @@ node [shape = rectangle, width=1,style=rounded];
   }
   if(label.length()>0) {#>> label = "<<=label>>",<<#
   }
-  #>> labeltooltip = "<<=readableStart>> <<=label>> -> <<=readableEnd>>", labelURL="#"!>>
+  #>> tooltip = "<<=readableStart>> <<=label>> -> <<=readableEnd>>"!>>
   emit transitionAttributes(String lheadtail, String label, String readableStart, String readableEnd)(transitionAttributes);
   
   // TEMPLATES FOR STATES
@@ -238,7 +242,53 @@ node [shape = rectangle, width=1,style=rounded];
       
       code.append("\n");      
       appendSpaces(code,  indentLevel+2);
-      code.append("// State: "+sLabel+"\n");   
+      code.append("// State: "+sLabel+"\n\n");   
+
+      // WORKING ON
+      // If state will have transitions that start from or end at boundary
+      // and go or come from other states further inside
+      // then we need to add a dummy connector state
+
+      if(!isBottomLevel) { // s is not bottom level
+        Map<Transition,String> newInternalBoundaryTrans = new HashMap<Transition,String>();
+      
+        Set<Transition> allT = new HashSet<Transition>();
+        allT.addAll(s.getTransitions());
+        allT.addAll(s.getNextTransition());
+
+        for (Transition t: allT) {
+      
+          System.out.println("A"+sLabel+" "+t.getEvent().getName()+"--- "+t.getFromState().getName()+"->"+t.getNextState().getName()); // DEBUG
+ if(internalBoundaryTrans.containsKey(t)) System.out.println("    ALREADY");
+
+          if(!internalBoundaryTrans.containsKey(t) && (
+            (t.getFromState()==s && t.getNextState().isSubstateOf(s)) ||
+            (t.getNextState()==s && t.getFromState().isSubstateOf(s)) ) ) {
+
+            System.out.println("    YES"); // DEBUG
+
+            nodeNumber++;
+            String dummyName="dummyNode"+nodeNumber+"_"+
+              t.getFromState().getName()+"_"+t.getNextState().getName();
+            internalBoundaryTrans.put(t,dummyName);
+            newInternalBoundaryTrans.put(t,dummyName);
+          }
+        }
+        if(!newInternalBoundaryTrans.isEmpty()) {
+          appendSpaces(code, indentLevel+2);
+          code.append("// Dummy notes for transitions to/from internals to boundary\n");
+          appendSpaces(code, indentLevel+2);
+          code.append("node [shape = point, width = 0.005];\n");
+
+          for (String nodeName : newInternalBoundaryTrans.values()) {
+            appendSpaces(code, indentLevel+2);
+            code.append(nodeName+" [label=\"\"];\n");
+          }
+          
+          // Reinstate normal format
+          _normalStateFormat(indentLevel+2, code);
+        }
+      }
 
       // Output the state (and possibly state machine) id
       if(!s.hasNestedStateMachines()) {
@@ -255,7 +305,7 @@ node [shape = rectangle, width=1,style=rounded];
         appendSpaces(code,  indentLevel+2);
         code.append("style = rounded;\n");
       }
-      
+
       if(isFirstState) {
          // Output transition to first state
          isFirstState = false;
@@ -264,7 +314,6 @@ node [shape = rectangle, width=1,style=rounded];
         
         _transition(2,transitions,"start_"+clSmName,"->", dest,
           transitionAttributes(head,"","start",s.getName()));
-        
       }
           
       // Output all the other transitions
@@ -310,11 +359,28 @@ node [shape = rectangle, width=1,style=rounded];
         String origlh = getTransitionHeadOrTailForState(t.getFromState(),uClass,true);
         String destlt = getTransitionHeadOrTailForState(t.getNextState(),uClass,false);
 
-        _transition(2,transitions,orig,"->", dest,
-          transitionAttributes(origlh+destlt,
-          transitionLabel + guardString + transitionAction,
-          t.getFromState().getName(),t.getNextState().getName()));
-        
+        // WORKING ON
+        // If we have to go through a dummy external state
+        // we have to add two transitions
+        if(internalBoundaryTrans.containsKey(t)) {
+          _transition(2,transitions,orig,"->", internalBoundaryTrans.get(t)+":e",
+            transitionAttributes("dir=none, "+origlh,
+            transitionLabel + guardString + transitionAction,
+            t.getFromState().getName(),t.getNextState().getName()));        
+
+          _transition(2,transitions,internalBoundaryTrans.get(t)+":w","->", dest,
+            transitionAttributes(destlt,
+            "",
+            t.getFromState().getName(),t.getNextState().getName()));        
+        }
+        else {
+          // Normal transition
+          _transition(2,transitions,orig,"->", dest,
+            transitionAttributes(origlh+destlt,
+            transitionLabel + guardString + transitionAction,
+            t.getFromState().getName(),t.getNextState().getName()));
+        }
+        transitions.append("\n");
       }  // End iteration through the transitions
 
       // Process nested state machines of this state
