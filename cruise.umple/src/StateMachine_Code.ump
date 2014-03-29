@@ -231,9 +231,63 @@ class StateMachine
     }
   }  
   
+  public State findStateDotNotaion(String aName)
+  {
+    //TODO: add suport to look deeper first
+    //look at this level for first name in s1.s2.s3, then check nested sms for s1
+    //then go up until you find then go down
+    
+    StateMachine root = this;
+    State state;
+    
+    String[] stateNames = aName.split("\\.");
+    int stateNameIndex = 0;
+    String stateNameToFind = stateNames[stateNameIndex];
+    
+    //find first state in dot notation by looking at level of transition
+    //then looking in each parent state machine until at top
+    while (true)
+    {
+      state = root.findState(stateNameToFind, false);
+      if (state != null)//we found the first state
+      {
+        root = state.getStateMachine();
+        break;
+      }
+      else
+      {
+        state = root.getParentState();
+        if(state == null){return null;}
+        root = state.getStateMachine();
+      }
+    }
+    
+    //Starting at the state found above, search nested state machines for the 
+    //next item in stateNames until at end of stateNames
+    stateNameIndex = 1;
+    while(stateNameIndex < stateNames.length)
+    {
+      State tmpState = null;
+      stateNameToFind = stateNames[stateNameIndex];
+      for (StateMachine sm : state.getNestedStateMachines())
+      {  
+        tmpState = sm.findState(stateNameToFind, false);
+        if(tmpState != null){
+          break;}
+      }
+      //if the next state in dot noation is not found in previous state in dot notation, return null
+      state = tmpState;
+      if(state == null){return null;}
+             
+      stateNameIndex += 1;
+    }
+    
+    return state;
+  }
+  
   private State findState(String aName, boolean searchNestedStateMachines, boolean didFindRoot)
   {
-  
+    
     StateMachine root = this;
     if (!didFindRoot && searchNestedStateMachines)
     {
@@ -242,6 +296,16 @@ class StateMachine
     
     for (State aState : root.states)
     {
+      if (aState.getName().indexOf('.') > 0)
+      {
+        //this is a state in placeHolderStateMachine saved from a transition
+        //that used dot-notation to transition to a state that hadn't been declared yet
+        if (aName.endsWith(aState.getName()))//aName must be in dot notation
+        {
+          root.recentSearchDepth=0;
+          return aState;
+        }
+      }
       if (aState.getName().equals(aName))
       {
         root.recentSearchDepth=0;
@@ -260,6 +324,12 @@ class StateMachine
           } 
         }
       }
+    }
+    //must be last so that searching placeHolderStateMachine for states that
+    //were declared in a transition earlier works
+    if(aName.indexOf('.') > 0)
+    {
+      return findStateDotNotaion(aName);
     }
     return null;
   }
