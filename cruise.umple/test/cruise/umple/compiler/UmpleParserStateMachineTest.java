@@ -161,6 +161,64 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
+  public void dotNotationInvalid(){
+    assertHasWarning("519_dotNotationInvalidState.ump", 0, 50, new Position("519_dotNotationInvalidState.ump", 12, 6, 120));
+    assertFailedParse("519_dotNotationInvalidStateName.ump", new Position("519_dotNotationInvalidStateName.ump", 12, 6, 120), 152);
+  }
+  
+  @Test
+  public void dotNotationAtLevelAbove(){
+    assertNoWarnings("519_dotNotationAtLevelAbove.ump");
+    
+    UmpleClass c = model.getUmpleClass("X");
+
+    StateMachine sm = c.getStateMachine(0);
+    State s1 = sm.getState(0);
+    StateMachine s1Sm = s1.getNestedStateMachine(0);
+    State s1ss1 = s1Sm.getState(0); //state second dot notation transition should point
+    Transition tTos2ss1 = s1Sm.getState(1).getTransition(0);
+    
+    State s2 = sm.getState(1);
+    StateMachine s2Sm = s2.getNestedStateMachine(0);
+    State s2ss1 = s2Sm.getState(0);
+    State s2ss2 = s2Sm.getState(1); //state first dot notation should point to
+    
+    Transition tTos2ss2 = s2ss1.getTransition(0);
+    Transition tTos1ss1 = s2ss2.getTransition(0);
+    
+    //assert Names are correct
+    Assert.assertEquals(tTos2ss2.getNextState().getName(), "ss2");
+    Assert.assertEquals(tTos2ss1.getNextState().getName(), "ss1");
+    Assert.assertEquals(tTos1ss1.getNextState().getName(), "ss1");
+    
+    //assert they are equal 
+    Assert.assertEquals(s2ss2, tTos2ss2.getNextState());
+    Assert.assertEquals(s1ss1, tTos1ss1.getNextState());
+    Assert.assertEquals(s2ss1, tTos2ss1.getNextState());
+  }
+  
+  @Test
+  public void dotNotationAtSameLevel(){
+    assertNoWarnings("519_dotNotationAtSameLevel.ump");
+    
+    UmpleClass c = model.getUmpleClass("X");
+
+    //get state that transition should point to
+    StateMachine sm = c.getStateMachine(0);
+    State s1 = sm.getState(0);
+    StateMachine innerSm = s1.getNestedStateMachine(0);
+    State ss1 = innerSm.getState(0);
+    
+    //get state that transition does point to
+    State s2 = sm.getState(1);
+    Transition t = s2.getTransition(0);
+    
+    //assert they are equal
+    Assert.assertEquals(ss1, t.getNextState());
+
+  }
+  
+  @Test
   public void oneStateOneEntry()
   {
     assertParse("100_oneStateOneEntry.ump","[classDefinition][name:LightFixture][stateMachine][inlineStateMachine][name:bulb][state][stateName:On][entryOrExitAction][type:entry][code:blahblah]");

@@ -52,9 +52,13 @@ class State
   Boolean isHistoryState = false;
   Boolean isDeepHistoryState = false;
   Boolean finalState = false;
+  //Boolean containsHistoryState = false;
+  //Boolean containsDeepHistoryState = false;
+  //State mostRecentState; //will be in dot notation, if used by historyState, only look at first part?
   
   before isFinalState { if ("Final".equals(name)) { finalState = true; } }
- 
+  //before isAHistoryState { if ("H".equals(name)) { isHistoryState = true; } }
+  //before isADeepHistoryState { if ("H*".equals(name)) { isDeepHistoryState = true; } }
 }
 
 /* 
