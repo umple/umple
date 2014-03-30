@@ -1,4 +1,7 @@
 class UmpleInternalParser {
+   Map<Attribute,Token> fixmlLastIntilialization = new HashMap<Attribute, Token>();
+   Map<Attribute,Integer> fixmlAttributeCount = new HashMap<Attribute, Integer>();
+   
 
    private void analyzeFIXML(Token t, int analysisStep){
     if (analysisStep != 2)
@@ -12,27 +15,30 @@ class UmpleInternalParser {
 	    }
   }
 
+
    private void analyzeFIXML(Token t){
     for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("fixmlDefinition")) {
 				analyzeFIXMLDefinition(subToken);
 			}
-		}   
-
+		}
   }
 
-	private void analyzeFIXMLDefinition(Token t){
-		for (Token subToken : t.getSubTokens()) {
+
+   private void analyzeFIXMLDefinition(Token t){
+    for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("fixmlContent")) {
 				analyzeFIXMLContetnt(subToken);
+				assignInitialValues();
 			}
-		}	
-	}
+		}
+  }
+
 
    private void analyzeFIXMLContetnt(Token t){
     for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("endContent")) {
-				analyzeFIXMLEndContetnt(subToken);
+			//	analyzeFIXMLEndContetnt(subToken);
 			} else if (subToken.getName().equals("extendContent")) {
 				analyzeFIXMLextendedContentContetnt(subToken);
 			}
@@ -40,8 +46,8 @@ class UmpleInternalParser {
   }
 
 
-   private UmpleClass analyzeFIXMLEndContetnt(Token t){
-	  UmpleClass uClass;
+   private UmpleClass analyzeFIXMLEndContetnt(UmpleClass inClass, Token t){
+    UmpleClass uClass;
 	  boolean available = getModel().getUmpleClass(t.getSubToken("name").getValue()) != null ? true : false;
 	  if (available) {
 		  uClass  = getModel().getUmpleClass(t.getSubToken("name").getValue());
@@ -54,12 +60,19 @@ class UmpleInternalParser {
 			}
 		}
 		if (! available)	getModel().addUmpleClass(uClass);
+//		addAttributes(inClass, uClass,t);
 		return uClass;
   }
 
 
    private UmpleClass analyzeFIXMLextendedContentContetnt(Token t){
-	  UmpleClass uClass;
+    String sName = t.getSubToken(1).getValue();
+	  String eName = t.getSubToken(t.numberOfSubTokens()-2).getValue();  
+	  if (!(sName.equals(eName))) {
+		  getParseResult().addErrorMessage(new ErrorMessage(4500,t.getPosition(),t.getSubToken(1).getValue()));
+	      return null;
+	  }
+      UmpleClass uClass;
 	  boolean available = getModel().getUmpleClass(t.getSubToken("name").getValue()) != null ? true : false;
 	  if (available) {
 		  uClass  = getModel().getUmpleClass(t.getSubToken("name").getValue());
@@ -70,15 +83,172 @@ class UmpleInternalParser {
 			if (subToken.getName().equals("tagDefinition")) {
 				analyzeFIXMLAttributes (subToken,uClass);
 			} else if (subToken.getName().equals("endContent")){
-				UmpleClass rUClass = analyzeFIXMLEndContetnt(subToken);
-				addAssociation(uClass, rUClass);
+				UmpleClass rUClass = analyzeFIXMLEndContetnt(uClass,subToken);
+				addAttributes(uClass, rUClass,subToken);
+				//addAssociation(uClass, rUClass);
 			} else if (subToken.getName().equals("extendContent")) {
 				UmpleClass rUClass = analyzeFIXMLextendedContentContetnt(subToken);
-				addAssociation(uClass, rUClass);
+				//addAssociation(uClass, rUClass);
+				addAttributes(uClass, rUClass,subToken);
 			}
 		}
 		if (! available)	getModel().addUmpleClass(uClass);
 	  return uClass;
+  }
+
+
+   private void addAttributes(UmpleClass uClass, UmpleClass rUClass, Token mainToken){
+    String type = rUClass.getName();
+	  Integer index = findValidName(uClass, type,0);
+	  String postLable = "";
+	  if (index>0) { 
+		  postLable=index.toString();
+	  }
+	  String name = rUClass.getName()+"_Object"+postLable;	  
+	  Attribute aAttribute = new Attribute(name, type, "", "", false,uClass);
+	  fixmlLastIntilialization.put(aAttribute, mainToken);
+	  if(index>0){	
+		  if (index==1) { 
+			  fixmlAttributeCount.remove(uClass.getAttribute(rUClass.getName()+"_Object"));
+			  fixmlAttributeCount.put(uClass.getAttribute(rUClass.getName()+"_Object"),1);
+		  }
+		  fixmlAttributeCount.put(aAttribute,1);
+	  } else{
+		  fixmlAttributeCount.put(aAttribute,0);  
+	  }
+  }
+
+
+   private void assignInitialValues(){
+    Map<String,String> db = new HashMap<String,String>();
+	for (Attribute	aa : fixmlLastIntilialization.keySet()) {
+		String value = "new "+aa.getType()+"("; //t.getSubToken(3).getValue();	
+		if (fixmlAttributeCount.get(aa)==0) {
+			  value = value + ")";	
+			  aa.setValue(value);
+		} else {
+		Token rootToken = fixmlLastIntilialization.get(aa);
+		for (Token subToken : rootToken.getSubTokens()) {
+			if (subToken.is("tagDefinition")) {
+				   String attname = subToken.getSubToken(0).getValue();
+				   //   String attType = "String";
+				   String attValue = subToken.getSubToken(3).getValue();	
+				   db.put(attname, attValue);  	
+			}
+		}  
+	for (Attribute aAttribute : getModel().getUmpleClass(aa.getType()).getAttributes()) {
+		if (db.containsKey(aAttribute.getName())){
+			String attValue = db.get(aAttribute.getName());
+			   if  ( isStringInteger(attValue) && aAttribute.getType().equals("Integer")) {
+				  // attType="Integer";
+			   } else if (isStringDuble(attValue) && aAttribute.getType().equals("Double")) {
+				   //attType = "Double";
+			   } else if (aAttribute.getType().equals("String")) {
+				   attValue = "\""+attValue+"\"";
+			   } else {
+				   attValue = "\""+attValue+"\"";
+			   }
+			value = value + attValue+", ";
+		} else {
+		   if  ( aAttribute.getType().equals("Integer") ) {
+			   value = value+"0"+", ";
+		   } else if (aAttribute.getType().equals("Double")) {
+			   value = value+"0.0"+", ";
+		   } else if (aAttribute.getType().equals("String")){
+			   value = value+"\"\""+", ";
+		   } else {
+			   if (rootToken.is("endContent")){
+				   value = value+"null"+", ";   
+			   } else if (!hasThisObject(rootToken,aAttribute.getType())){
+				   value = value+"null"+", ";
+			   } else {
+				   value = value+getConstructorInConstructor(aAttribute)+", ";
+			   }   
+		   }
+		}
+		
+	}		  
+	  value = value.subSequence(0, value.length()-2) + ")";	
+	  aa.setValue(value);
+	}
+	}
+  }
+
+
+   private boolean hasThisObject(Token mainToken, String name){
+    for (Token subToken : mainToken.getSubTokens()) {
+		if (subToken.is("endContent")) {
+			if (subToken.getSubToken(1).getValue().equals(name)) {
+					return true;
+				} else {
+					return false;
+				}
+		} else if (subToken.is("extendContent")){
+			return hasThisObject(subToken,name);
+		}
+	}
+	return false;
+  }
+
+
+   private String getConstructorInConstructor(Attribute inAttribute){
+    Map<String,String> db = new HashMap<String,String>();
+		String value = "new "+inAttribute.getType()+"("; //t.getSubToken(3).getValue();	
+		for (Token subToken : fixmlLastIntilialization.get(inAttribute).getSubTokens()) {
+			if (subToken.getName().equals("tagDefinition")) {
+				   String attname = subToken.getSubToken(0).getValue();
+//				   String attType = "String";
+				   String attValue = subToken.getSubToken(3).getValue();
+				   db.put(attname, attValue);  	
+				 }
+			}  
+	for (Attribute aAttribute : getModel().getUmpleClass(inAttribute.getType()).getAttributes()) {
+		if (db.containsKey(aAttribute.getName())){
+			String attValue = db.get(aAttribute.getName());
+			   if  ( isStringInteger(attValue) && aAttribute.getType().equals("Integer")) {
+				  // attType="Integer";
+			   } else if (isStringDuble(attValue) && aAttribute.getType().equals("Double")) {
+				   //attType = "Double";
+			   } else if (aAttribute.getType().equals("String")) {
+				   attValue = "\""+attValue+"\"";
+			   } else {
+				   attValue = "\""+attValue+"\"";
+			   }
+			value = value + attValue+", ";
+		} else {
+		   if  ( aAttribute.getType().equals("Integer") ) {
+			   value = value+"0"+", ";
+		   } else if (aAttribute.getType().equals("Double")) {
+			   value = value+"0.0"+", ";
+		   } else if (aAttribute.getType().equals("String")){
+			   value = value+"\"\""+", ";
+		   } else if (aAttribute.getType()!="") {
+			   value = value+getConstructorInConstructor(aAttribute)+", ";
+		   } else {
+			   
+		   }
+		}
+		
+	}		  
+	  value = value.subSequence(0, value.length()-2) + ")";	
+	  return value;
+  }
+
+
+   private Integer findValidName(UmpleClass uClass, String type, Integer index){
+    String name= type + "_Object";
+	if ( index == 0 ) {
+	} else {
+		name = name + index.toString();
+	}
+	for (Attribute attribute : uClass.getAttributes()) {
+		if (attribute.getType().equals(type)) {
+			if (attribute.getName().equals(name)){
+				return findValidName (uClass,type,index+1);
+			}
+		}
+	}
+	return index;
   }
 
 
@@ -101,7 +271,7 @@ class UmpleInternalParser {
 
 
    private void addAssociation(UmpleClass uClass, UmpleClass rUClass){
-	  	Multiplicity m = new Multiplicity();
+    Multiplicity m = new Multiplicity();
 		
 		if (getModel().getAssociation(rUClass.getName()+"_Object") != null) {			
 			Integer bound = Integer.parseInt(getModel().getAssociation(rUClass.getName()+"_Object").getEnd(1).getMultiplicity().getBound());
@@ -135,21 +305,25 @@ class UmpleInternalParser {
 		}
   }
 
-	boolean isStringInteger(String s) {
-		try { 
+
+   public boolean isStringInteger(String s){
+    try { 
 	    	Integer.parseInt(s); 
 	    } catch(NumberFormatException e) { 
 	        return false; 
 	    }
 	    return true;
-	}
+  }
 
-	boolean isStringDuble(String s) {
-		try { 
+
+   public boolean isStringDuble(String s){
+    try { 
 	    	Double.parseDouble(s);
 	    } catch(NumberFormatException e) { 
 	        return false; 
 	    }
 	    return true;
-	}
+  }
+
+
 }

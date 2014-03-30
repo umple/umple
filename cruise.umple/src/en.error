@@ -136,3 +136,6 @@
 3500: 2, "http://umple.org", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
 3501: 2, "http://umple.org", Template emit method can not be a main;
 3502: 1, "http://umple.org", Template name '{0}' can not be resolved;
+
+# Messages related to fixml
+4500: 1,  "http://umple.org", The tag '{0}' is not closed correctly.  ;
