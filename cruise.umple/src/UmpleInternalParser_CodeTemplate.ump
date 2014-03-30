@@ -194,17 +194,14 @@ class TemplateAttributeParser {
 	  }
 	} 
     
-    EmitResponse getEmissionResponse(int idx, UmpleClass currentTemplate, TemplateMethodBlock methodBlock)
+    EmitResponse getEmissionResponse(UmpleClass currentTemplate, TemplateMethodBlock methodBlock)
     {	  
       emisionContent = new EmitResponse();
 	  for (TemplateElement templateElement : elements)
 	  {	  
 	    setVariableElements(templateElement,methodBlock);  
-	    for(TemplateField field : templateElement.emit(emisionContent, idx)) {
-	      addField(field);
-		  currentTemplate.addTemplateField(field);
-		  idx++;
-	    }
+	    templateElement.emit(emisionContent,currentTemplate);
+	    
 	  }
 	  return emisionContent;
 	}
@@ -223,7 +220,6 @@ class TemplateTokenAnalyzer {
 	UmpleInternalParser parser;
 	lazy UmpleClass currentTemplate;
 	0..1 -- * UmpleClass templates;
-	lazy int startIndex = 0;
 	
 	void prepare(final Token token) {
 		String templateName = token.getValue("name");
@@ -239,35 +235,45 @@ class TemplateTokenAnalyzer {
     	*/
     	currentTemplate = parser.getModel().getUmpleClass(templateName);
     	if(currentTemplate != null) {
-    		startIndex = currentTemplate.getTemplateFieldCount();
     		addTemplate(currentTemplate);
     	} 
 	}
 	
 	EmitResponse getEmisionString(UmpleClass template, TemplateMethodBlock [] templates) {
 	  EmitResponse em = new EmitResponse();
-	  if(templates.length == 0 || templates[0].getTemplate().equalsIgnoreCase("*")) {
-		  for(String key : template.getTemplateEmitStringMap().keySet()) {
-		  	  EmitResponse val = template.getTemplateEmitStringMap().get(key).getEmissionResponse(startIndex, template, null);
-		  	  em.getJavaCode().append(val.getJavaCode());
-		  	  em.getCppCode().append(val.getCppCode());	
+	  if(templates.length == 0 || templates[0].getTemplate().getName().equalsIgnoreCase("*"))
+	  {
+		for(String key : template.getTemplateEmitStringMap().keySet())
+		{
+		  EmitResponse val = template.getTemplateEmitStringMap().get(key).getEmissionResponse(template, null);
+		  em.getJavaCode().append(val.getJavaCode());
+		  em.getCppCode().append(val.getCppCode());	
+	    }
+	  }
+	  else
+	  {
+		for(TemplateMethodBlock fld : templates)
+		{
+		  String key = fld.getTemplate().getName();
+		  UmpleClass referenceTemplate = fld.getTemplate().getClassName()==null?template:template.getSourceModel().getUmpleClass(fld.getTemplate().getClassName());
+		  TemplateAttributeParser val = null;
+		  if(referenceTemplate!=null)
+		  {
+		    val = referenceTemplate.getTemplateEmitStringMap().get(key);
 		  }
-	  } else {
-		  for(TemplateMethodBlock fld : templates) {
-		  	  String key = fld.getTemplate();
-		  	  TemplateAttributeParser val = template.getTemplateEmitStringMap().get(key);
-		  	  
-		  	  if(val != null) {
-		  	    EmitResponse response = val.getEmissionResponse(startIndex, template,fld);
-		  	    startIndex+=val.numberOfFields();
-		  	    template.setTemplateFieldCount(startIndex);
-		  	  	em.getJavaCode().append(response.getJavaCode());
-		  	  	em.getCppCode().append(response.getCppCode());	
-			  } else { 
-				parser.getParseResult().setPosition(fld.getPosition());
-    			parser.getParseResult().addErrorMessage(new ErrorMessage(3502,fld.getPosition(),key));
-			  }
+		  
+		  if(val != null && referenceTemplate !=null)
+		  {
+		    EmitResponse response = val.getEmissionResponse(template,fld);
+		    em.getJavaCode().append(response.getJavaCode());
+		  	em.getCppCode().append(response.getCppCode());	
+		  } 
+		  else
+		  { 
+			parser.getParseResult().setPosition(fld.getPosition());
+			parser.getParseResult().addErrorMessage(new ErrorMessage(3502,fld.getPosition(),fld.getTemplate().getClassName()+"."+key));
 		  }
+		}
 	  }
 	  return em;
     }
@@ -276,7 +282,7 @@ class TemplateTokenAnalyzer {
     {
       if(token!=null)
       {        
-        TemplateName templateName = new TemplateName(token.getValue("name"));        
+        TemplateName templateName = new TemplateName(token.getValue("name"),token.getValue("classname"));
 	  	Token templateParameters = token.getSubToken("templateParameters");
 	  	if(templateParameters!=null)
 		{
@@ -308,9 +314,7 @@ class TemplateTokenAnalyzer {
 		  emitter.addParameterName(parameter);			  		  
 		}
 		emitter.parse();
-		currentTemplate.getTemplateEmitStringMap().put(templateName, emitter);
-		
-	  		
+		currentTemplate.getTemplateEmitStringMap().put(templateNameObject.getName(), emitter);  		
 	  	
 	}
 	
@@ -328,7 +332,7 @@ class TemplateTokenAnalyzer {
     	      TemplateName templateNameObject = analyzeTemplateName(emitToken);
 			  if(templateNameObject != null) {
 				String templateNameValue = templateNameObject.getName(); 
-				TemplateMethodBlock templateMethodBlock = new TemplateMethodBlock(emitToken.getSubToken("name").getPosition(),templateNameValue);
+				TemplateMethodBlock templateMethodBlock = new TemplateMethodBlock(emitToken.getSubToken("name").getPosition(),templateNameObject);
 				for(String parameter:templateNameObject.getParameters())
 				{
 				  templateMethodBlock.addParameter(parameter);
@@ -505,7 +509,6 @@ class TemplateTokenAnalyzer {
 	
 		for(UmpleClass template : getTemplates()) {
 		
-			
 			if(template.numberOfEmitMethods() > 0) {
 				TemplateMethod tMth = template.getEmitMethod(0);
 				Method mth = tMth.getMethod();
