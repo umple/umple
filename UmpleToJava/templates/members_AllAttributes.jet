@@ -38,7 +38,10 @@
       if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
     }
     
-    append(stringBuffer, "  private {0} {1};", type, attribute);
+    if( av.getModifier().equals("fixml") && av.getValue() != null )
+    	append(stringBuffer, "  private {0} {1} = {2};", type, attribute,av.getValue());
+    else
+    	append(stringBuffer, "  private {0} {1};", type, attribute);
   }
   
   isFirst = true;

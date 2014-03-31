@@ -1,5 +1,6 @@
 
 class Student
 {
+  fixml Integer id;
   fixml capacity = "31";
 }

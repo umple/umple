@@ -1,8 +1,6 @@
 namespace example;
 
-
 class Mentor 
 {
   fixml Integer id;
-  fixml capacity = "31";
 }

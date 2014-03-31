@@ -283,6 +283,7 @@
 		  appendln(stringBuffer,"");
 		  appendln(stringBuffer,"");
     	  appendln(stringBuffer,"  {0} {1}() {}",new Object[] {accessibility, uClass.getName()});
+    	  break;
 	    }
     }
 
