@@ -1,0 +1,16 @@
+
+namespace cruise.queued.statemachine.test;
+
+
+class QueuedSM
+{
+  queued sm
+  {
+    s1 {
+      e1 -> s2;
+    }
+    s2 {
+      e2 -> s2;
+    }
+  }
+}

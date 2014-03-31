@@ -181,6 +181,12 @@ public class QSMwithUnspecifiedRecep implements Runnable
       type = t; 
       param = p;
     }
+
+    @Override
+    public String toString()
+    {
+      return type + "," + param;
+    }
   }
   
   protected class MessagePool {
@@ -246,7 +252,7 @@ public class QSMwithUnspecifiedRecep implements Runnable
       }
     }
   }
-  @umplesourcefile(line={21},file={"stateMachine_unSpecifiedReception_QSM.ump"},javaline={254},length={3})
+  @umplesourcefile(line={21},file={"stateMachine_unSpecifiedReception_QSM.ump"},javaline={260},length={3})
   public void printError(){
     System.out.println("Unspecified Reception");
   }

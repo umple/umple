@@ -4,6 +4,7 @@ use TestHarnessAttributes.ump;
 use TestHarnessAssociations.ump;
 use TestHarnessStateMachine.ump;
 use TestHarnessPooledStateMachine.ump;
+use TestHarnessQueuedStateMachine.ump;
 use TestHarnessStateMachineJava.ump;
 use TestHarnessPatterns.ump;
 use TestHarnessPatternsImmutable.ump;
