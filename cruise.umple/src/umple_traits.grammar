@@ -8,5 +8,6 @@ fixmComment :  <?xml [[tagDefinition]]* ?>
 fixmlDefinition : <FIXML> [[fixmlContent]]* </FIXML>
 fixmlContent : [[endContent]] | [[ extendContent ]]
 endContent : < [~name] ( [[tagDefinition]] )* /> 
-extendContent : < [~name] ( [[tagDefinition]] )* > ( [[endContent]] | [[extendContent]] )* < ( / ) [~name] >
+extendContent : < [~name] ( [[tagDefinition]] )* > ( [[endContent]] | [[extendContent]] | [[attContent]])* < ( / ) [~name] >
 tagDefinition : [name] = "[**value]"
+attContent : < [~name] > [**value:\<] < ( / ) [~name] >

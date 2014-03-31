@@ -82,6 +82,8 @@ class UmpleInternalParser {
 		for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("tagDefinition")) {
 				analyzeFIXMLAttributes (subToken,uClass);
+			} else if (subToken.getName().equals("attContent")){
+				analyzeFixmlTagAttributes(subToken,uClass); 
 			} else if (subToken.getName().equals("endContent")){
 				UmpleClass rUClass = analyzeFIXMLEndContetnt(uClass,subToken);
 				addAttributes(uClass, rUClass,subToken);
@@ -105,7 +107,7 @@ class UmpleInternalParser {
 		  postLable=index.toString();
 	  }
 	  String name = rUClass.getName()+"_Object"+postLable;	  
-	  Attribute aAttribute = new Attribute(name, type, "", "", false,uClass);
+	  Attribute aAttribute = new Attribute(name, type, "fixml", "", false,uClass);
 	  fixmlLastIntilialization.put(aAttribute, mainToken);
 	  if(index>0){	
 		  if (index==1) { 
@@ -265,10 +267,26 @@ class UmpleInternalParser {
 	    } else {
 	    	value = "\""+value+"\"";
 	    }		
-		uClass.addAttribute(name, type, "", value, false);    	
+		uClass.addAttribute(name, type, "fixml", value, false);    	
     }
   }
 
+  private void analyzeFixmlTagAttributes(Token t, UmpleClass uClass) {
+	    String name = t.getSubToken(1).getValue();
+	    boolean available = uClass.getAttribute(name) != null ? true : false;
+	    if (!available) {
+	        String type = "String";
+	        String value = t.getSubToken(3).getValue();
+		    if  ( isStringInteger(value) ) {
+		    	type="Integer";
+		    } else if (isStringDuble(value)) {
+		    	type = "Double";
+		    } else {
+		    	value = "\""+value+"\"";
+		    }		
+			uClass.addAttribute(name, type, "fixml", value, false);    	
+	    }
+  }
 
    private void addAssociation(UmpleClass uClass, UmpleClass rUClass){
     Multiplicity m = new Multiplicity();
@@ -324,6 +342,5 @@ class UmpleInternalParser {
 	    }
 	    return true;
   }
-
 
 }
