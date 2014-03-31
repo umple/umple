@@ -2,21 +2,27 @@ namespace cruise.umplificator.rules;
 
 class RuleService{
 
+static Logger logger = Logger.getLogger(RuleService.class);
+
 depend java.io.*;
 depend org.kie.api.runtime.KieSession;
+depend org.apache.log4j.Logger;
 
 RuleRunner runner;
   
 public KieSession startRuleEngine(){
+	logger.debug("RuleService.startRuleEngine");
     try {
 		runner.addRuleFile("cruise/umplificator/rules", "Rules_Fields.drl");
 		runner.addRuleFile("cruise/umplificator/rules", "Rules_ClassLevel.drl");
 		return runner.buildKnowledgeSession();
 	} catch (FileNotFoundException e) {
-		e.printStackTrace();
+		logger.error("RuleService.startRuleEngine - FileNotFoundException");
+		logger.error(e.getStackTrace());
 		return null;
 	} catch (IOException ex) {
-		ex.printStackTrace();
+		logger.error("RuleService.startRuleEngine - IOException");
+		logger.error(ex.getStackTrace());
 		return null;
 	}
  }
@@ -24,6 +30,9 @@ public KieSession startRuleEngine(){
 
 class RuleRunner
 {
+
+static Logger logger = Logger.getLogger(RuleRunner.class);
+
 depend org.kie.api.KieServices;
 depend org.kie.api.builder.KieBuilder;
 depend org.kie.api.builder.KieFileSystem;
@@ -40,6 +49,7 @@ depend org.eclipse.jdt.core.dom.FieldDeclaration;
 depend org.eclipse.jdt.core.dom.ImportDeclaration;
 depend org.eclipse.jdt.core.dom.MethodDeclaration;
 depend org.apache.commons.io.IOUtils;
+depend org.apache.log4j.Logger;
 
      KieServices kieServices;
      KieContainer kieContainer;
@@ -50,6 +60,7 @@ depend org.apache.commons.io.IOUtils;
 
     public RuleRunner()
     {
+        logger.debug("Instantiate RuleRunner- Resources, FileSystem and Repository created");
         this.kieServices = KieServices.Factory.get();
         this.kieResources = kieServices.getResources();
         this.kieFileSystem = kieServices.newKieFileSystem();
@@ -58,10 +69,9 @@ depend org.apache.commons.io.IOUtils;
 
 
     public void addRuleFile(String packagename, String rulefile) throws FileNotFoundException, IOException{
-	    System.out.println("--- Adding rule files ---");
+        logger.debug("RuleRunner.addRuleFile - Add Rule Files to Session");
 	    Resource resource = kieResources.newClassPathResource(rulefile);
 	    kieFileSystem.write("src/main/resources/"+packagename+"/"+rulefile, resource);
-	    System.out.print(IOUtils.toString(resource.getInputStream()));
     }
 
 
@@ -73,6 +83,7 @@ depend org.apache.commons.io.IOUtils;
 
         if (kb.getResults().hasMessages(Level.ERROR))
         {
+        	logger.error("RuleRunner.buildKnowledgeSession - Errors in rule files");
             throw new RuntimeException("Build Errors:\n" + kb.getResults().toString());
         }
 
@@ -84,6 +95,7 @@ depend org.apache.commons.io.IOUtils;
     } 
     
     public KieSession insertJavaElements(JavaClassVisitor visitor){
+       logger.debug("RuleRunner.insertJavaElements - Insert Java elements into working memory");
 	   for (ImportDeclaration importDecl : visitor.getImportDeclarations())
 	   {
 		   kieSession.insert(importDecl); 
@@ -102,12 +114,14 @@ depend org.apache.commons.io.IOUtils;
     }
   
  	public KieSession insertUmpleClass(UmpleClass uClass){
+ 	  logger.debug("RuleRunner.insertUmpleClass - Insert uClass into working memory");
 	  kieSession.insert(uClass);
 	  return kieSession;
   	}  
     
     public KieSession fireAllRules()
     {
+     	logger.debug("RuleRunner.fireAllRules - Fire rules");
         kieSession.fireAllRules();
 
         return kieSession;

@@ -14,7 +14,7 @@ class Umplificator {
 	depend cruise.umplificator.parser.JavaParser;
 	depend cruise.umplificator.rules.RuleRunner;
 	depend cruise.umplificator.rules.RuleService;
-
+	depend org.apache.log4j.Logger;
 	lazy UmpleModel outputModel;
 }
 
