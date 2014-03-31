@@ -267,6 +267,12 @@ public class QueuedSMwithConcurrentStates_2 implements Runnable
       type = t; 
       param = p;
     }
+
+    @Override
+    public String toString()
+    {
+      return type + "," + param;
+    }
   }
   
   protected class MessagePool {

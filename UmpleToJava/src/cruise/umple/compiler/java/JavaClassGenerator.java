@@ -9521,6 +9521,12 @@ if (p != null) {
   appendln(stringBuffer,"      type = t; "); 
   appendln(stringBuffer,"      param = p;");
   appendln(stringBuffer,"    }");
+  appendln(stringBuffer,"");
+  appendln(stringBuffer,"    @Override");
+  appendln(stringBuffer,"    public String toString()");
+  appendln(stringBuffer,"    {");
+  appendln(stringBuffer,"      return type + \",\" + param;");
+  appendln(stringBuffer,"    }");
   appendln(stringBuffer,"  }");
   appendln(stringBuffer,"  ");  
   appendln(stringBuffer,"  protected class MessagePool {");
@@ -9895,6 +9901,12 @@ if (p != null) {
   appendln(stringBuffer,"    {");
   appendln(stringBuffer,"      type = t; "); 
   appendln(stringBuffer,"      param = p;");
+  appendln(stringBuffer,"    }");
+  appendln(stringBuffer,"");
+  appendln(stringBuffer,"    @Override");
+  appendln(stringBuffer,"    public String toString()");
+  appendln(stringBuffer,"    {");
+  appendln(stringBuffer,"      return type + \",\" + param;");
   appendln(stringBuffer,"    }");
   appendln(stringBuffer,"  }");
   appendln(stringBuffer,"  ");  

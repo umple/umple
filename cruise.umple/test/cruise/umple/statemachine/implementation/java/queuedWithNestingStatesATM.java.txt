@@ -320,6 +320,12 @@ public class AutomatedTellerMachine implements Runnable
       type = t; 
       param = p;
     }
+
+    @Override
+    public String toString()
+    {
+      return type + "," + param;
+    }
   }
   
   protected class MessagePool {

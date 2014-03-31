@@ -2,10 +2,9 @@
 namespace cruise.pooled.statemachine.test;
 
 
-class CourseA
+class PooledSM
 {
-  Integer i;
-  status
+  pooled status
   {
     Open {
       register -> Full;
