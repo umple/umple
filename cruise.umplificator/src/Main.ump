@@ -5,11 +5,18 @@ class UmplificatorMain {
 	depend java.util.List;
 	depend cruise.umplificator.core.*;
 	depend java.io.File;
+	// Log4j dependencies
+	depend org.apache.log4j.*;
+	
+	static Logger logger = Logger.getLogger(UmplificatorMain.class);
 	
 	public static String console ;
   
 	public static void main(String[] args) {
+	 // Configure Logger
+	 logger.debug("Configure Logger from log4j.properties");
 	 if (args != null && args.length== 1){ 
+	 	    logger.debug("Umplification process started!");
 			List<File> inputFiles = FileHelper.getListOfFilesFromPath(args[0]);
 			if (inputFiles.size() >= 0 ){
 				Umplificator umplificator = new Umplificator();
@@ -23,7 +30,11 @@ class UmplificatorMain {
 	
 	private static  void printUsage(){
 		console = "Usage: java -jar umplificator.jar <file/folder>\nExample: java -jar umplificator.jar Student.java";
-    	System.out.println(console);
+	    logger.info(console);
 	}
+	
+    after constructor {
+    	PropertyConfigurator.configure(getClass().getResource("/log4j.properties"));
+  	}
 
 } 

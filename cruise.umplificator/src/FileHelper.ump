@@ -8,8 +8,12 @@ depend java.util.Arrays;
 depend java.util.List;
 depend cruise.umple.compiler.UmpleModel;
 depend cruise.umple.compiler.UmpleSelfGenerator;
+// Logger log4j
+depend org.apache.log4j.Logger;
 
-public static final String [] EXTENSIONS = new String []{".java",".ump"};
+static Logger logger = Logger.getLogger(FileHelper.class);
+
+public static final String [] EXTENSIONS = new String [] {".java",".ump"};
 public static final String separator = System.getProperty("line.separator");
 
  public static  List<File> getListOfFilesFromPath(String path){
@@ -52,7 +56,7 @@ public static void printFilesToUmplify(List<File> srcFiles){
 		}
 		outMessage.append(separator);
 		outMessage.append("-----------------------");
-	System.out.println(outMessage.toString());
+	logger.info(outMessage.toString());
 }
 
   public static void writeFile(UmpleModel model){
@@ -60,8 +64,8 @@ public static void printFilesToUmplify(List<File> srcFiles){
         gen.setFileExtension(EXTENSIONS[1]);
         gen.setModel(model);
         gen.generate();
-        System.out.println("--Output--");
-        System.out.println(model.getCode());
+        logger.debug("--Output--");
+        logger.debug(model.getCode());
   }
   
 }

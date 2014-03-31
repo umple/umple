@@ -2,6 +2,8 @@ namespace cruise.umplificator.visitor;
 
 class JavaClassVisitor {
 
+static Logger logger = Logger.getLogger(JavaClassVisitor.class);
+
  isA ASTVisitor;
 
  depend org.eclipse.jdt.core.dom.ASTVisitor;
@@ -10,6 +12,8 @@ class JavaClassVisitor {
  depend org.eclipse.jdt.core.dom.MethodDeclaration;
  depend org.eclipse.jdt.core.dom.FieldDeclaration;
  depend org.eclipse.jdt.core.dom.PackageDeclaration;
+ 
+ depend org.apache.log4j.Logger;
 
  ImportDeclaration [] importDeclarations;
  MethodDeclaration [] methodDeclarations;
@@ -19,24 +23,28 @@ class JavaClassVisitor {
 
   @Override
   public boolean visit(ImportDeclaration node) {
+    logger.debug("Visiting ImportDeclarations");
     importDeclarations.add(node);
     return super.visit(node);
   }
   
   @Override
   public boolean visit(FieldDeclaration node) {
+    logger.debug("Visiting FieldDeclarations");
     fieldDeclarations.add(node);
     return super.visit(node);
   }
   
   @Override
   public boolean visit(MethodDeclaration node) {
+    logger.debug("Visiting MethodDeclarations");
     methodDeclarations.add(node);
     return super.visit(node);
   }
   
   @Override
   public boolean visit(TypeDeclaration node) {
+    logger.debug("Visiting TypeDeclarations");
     name = node.getName().getFullyQualifiedName();
     return super.visit(node);
   }
@@ -44,6 +52,7 @@ class JavaClassVisitor {
   @Override
   public boolean visit (PackageDeclaration node) 
   {
+    logger.debug("Visiting PackageDeclaration");
     packageDeclaration = node;
     return super.visit(node);
   }

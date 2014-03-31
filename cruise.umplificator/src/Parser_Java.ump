@@ -3,12 +3,16 @@ namespace cruise.umplificator.parser;
 
 class JavaParser {
 
+	static Logger logger = Logger.getLogger(JavaParser.class);
+
 	// JDT Dependencies
 	depend org.eclipse.jdt.core.dom.*;
 	depend org.eclipse.jdt.core.JavaCore;
 	depend cruise.umplificator.visitor.JavaClassVisitor;
 	// Java Util Dependencies
 	depend java.util.Map;
+	// Logger log4j
+	depend org.apache.log4j.Logger;
 	// Class used 
 	lazy JavaClassVisitor javaVisitor;
 	/*  
@@ -17,6 +21,7 @@ class JavaParser {
 	
 	 // Parses a complete Java Class
 	 public CompilationUnit parseUnit(String source){
+	 		logger.debug("Parsing Compilation Unit");
 	   		ASTParser parser = ASTParser.newParser(AST.JLS4); 
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setSource(source.toCharArray()); // set source
@@ -28,6 +33,7 @@ class JavaParser {
 			parser.setResolveBindings(true); // we need bindings later on
 			CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 			// VISITOR
+			logger.debug("Initializing Java Visitor for Compilation Unit");
 			javaVisitor=  new JavaClassVisitor();
 			cu.accept(javaVisitor);
 			
@@ -36,7 +42,8 @@ class JavaParser {
 	  
 	 // Parses independent Java body declarations
 	public ASTNode parseBodyDeclarations(String source){
-    	ASTParser parser = ASTParser.newParser(AST.JLS4); 
+			logger.debug("Parsing Body Declarations from source");
+    	    ASTParser parser = ASTParser.newParser(AST.JLS4); 
 			parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
 			parser.setSource(source.toCharArray()); // set source
 		    // In order to parse 1.7 code, some compiler options need to be set to 1.7
@@ -47,6 +54,7 @@ class JavaParser {
 			parser.setResolveBindings(true); // we need bindings later on
 			ASTNode typeDeclaration =  parser.createAST(null);
 		    // VISITOR
+		    logger.debug("Initializing Java Visitor for Body Declarations");
 			javaVisitor=  new JavaClassVisitor();
 			typeDeclaration.accept(javaVisitor);
 			
