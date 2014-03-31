@@ -2337,7 +2337,10 @@ for (StateMachine smq : uClass.getStateMachines())
       if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); }
     }
     
-    append(stringBuffer, "  private {0} {1};", type, attribute);
+    if( av.getModifier().equals("fixml") && av.getValue() != null )
+    	append(stringBuffer, "  private {0} {1} = {2};", type, attribute,av.getValue());
+    else
+    	append(stringBuffer, "  private {0} {1};", type, attribute);
   }
   
   isFirst = true;
@@ -2793,7 +2796,7 @@ for (StateMachine smq : uClass.getStateMachines())
       if(!av.getIsLazy()){
          
     
-  String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
+  String parameterLookup = av.getValue() == null || av.getModifier().equals("fixml") ? "parameterOne" : "parameterValue";
 
     stringBuffer.append(TEXT_24);
     stringBuffer.append(gen.translate("attributeOne",av));
@@ -3265,6 +3268,7 @@ for (StateMachine smq : uClass.getStateMachines())
 		  appendln(stringBuffer,"");
 		  appendln(stringBuffer,"");
     	  appendln(stringBuffer,"  {0} {1}() {}",new Object[] {accessibility, uClass.getName()});
+    	  break;
 	    }
     }
 
@@ -3387,7 +3391,7 @@ for (StateMachine smq : uClass.getStateMachines())
       hasBody = true;
       
     
-  String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
+  String parameterLookup = av.getValue() == null || av.getModifier().equals("fixml") ? "parameterOne" : "parameterValue";
 
     stringBuffer.append(TEXT_134);
     stringBuffer.append(gen.translate("attributeOne",av));
