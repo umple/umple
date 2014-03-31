@@ -9,6 +9,7 @@ class UmpleEcoreValidator {
   depend java.io.IOException;
   depend java.util.Map;
   depend java.util.Random;
+  depend java.nio.file.Path;
   depend org.eclipse.emf.common.util.BasicDiagnostic;
   depend org.eclipse.emf.common.util.Diagnostic;
   depend org.eclipse.emf.common.util.URI;
@@ -94,5 +95,9 @@ class UmpleEcoreValidator {
     }
     
     return false;
+  }
+  
+  public boolean validate(Path path) throws FileNotFoundException{
+  	return validate(URI.createURI(path.toString()));
   }
 }

@@ -3,6 +3,7 @@ package cruise.umple.validator;
 import java.io.FileNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -73,5 +74,36 @@ public class EcoreValidatorTest{
   public void validateResource(){
     /* Resource null */
     Assert.assertFalse(UmpleEcoreValidator.getInstance().validate((Resource)null));
+  }
+  
+  @Test
+  public void validatePath(){
+    Path validPath = FileSystems.getDefault().getPath(rootPath, "EcoreValidatorTest_valid.ecore");
+    Path invalidPath = FileSystems.getDefault().getPath(rootPath, "EcoreValidatorTest_invalid.ecore");
+    Path nonExistPath = FileSystems.getDefault().getPath(rootPath, "File_NonExist.ecore");
+        
+    /* Valid */
+    try{
+      Assert.assertTrue(UmpleEcoreValidator.getInstance().validate(validPath));
+    }catch (Exception e){
+      Assert.fail();
+    }
+    
+    /* Invalid */
+    try{
+      Assert.assertFalse(UmpleEcoreValidator.getInstance().validate(invalidPath));
+    }catch (Exception e){
+      Assert.fail();
+    }
+    
+    /* File not exist */
+    try{
+      UmpleEcoreValidator.getInstance().validate(nonExistPath);
+      Assert.fail();
+    }catch (FileNotFoundException e){
+      
+    }catch (Exception e){
+      Assert.fail();
+    }
   }
 }
