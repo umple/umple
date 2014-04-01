@@ -48,7 +48,6 @@ depend cruise.umple.compiler.UmpleClass;
 depend org.eclipse.jdt.core.dom.FieldDeclaration;
 depend org.eclipse.jdt.core.dom.ImportDeclaration;
 depend org.eclipse.jdt.core.dom.MethodDeclaration;
-depend org.apache.commons.io.IOUtils;
 depend org.apache.log4j.Logger;
 
      KieServices kieServices;
