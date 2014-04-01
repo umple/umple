@@ -247,8 +247,10 @@
 
 <!-- The Umplificator jar-->
 <target name="packageUmplificator">
-        <jar destfile="dist/umplificator.jar" filesetmanifest="mergewithoutmain">
+        <jar destfile="dist/umplificator_${umple.version}.jar" filesetmanifest="mergewithoutmain">
             <manifest>
+			    <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+				<attribute name="Version" value="${umple.version}"/>
                 <attribute name="Main-Class" value="cruise.umplificator.UmplificatorMain"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
@@ -290,7 +292,7 @@
      <echo message="Package: Umplificator and Validator jar" />
     <!-- The validator jar-->
     <echo message="Package: Umple validator jar used in Umple " />
-    <jar destfile="dist/umplevalidator.jar" basedir="cruise.umple.validator/bin" includes="cruise/umple/** cruise/umple/validator** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
+    <jar destfile="dist/umplevalidator_${umple.version}.jar" basedir="cruise.umple.validator/bin" includes="cruise/umple/** cruise/umple/validator** org/eclipse/** joptsimple/** en.error org/** *.grammar *.error templates/** org/apache/**" >
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
