@@ -18,7 +18,7 @@
       {
         for(StackTraceElement element:elements)
         {
-          Class clazz = Class.forName(element.getClassName());
+          Class<?> clazz = Class.forName(element.getClassName());
           String methodName = element.getMethodName();
           boolean methodFound = false;
           for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())
