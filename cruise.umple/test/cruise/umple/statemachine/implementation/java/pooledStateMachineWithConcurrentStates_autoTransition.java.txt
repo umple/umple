@@ -315,7 +315,7 @@ public class CourseAttempt implements Runnable
   public void delete()
   {}
 
-  private class Message
+  protected class Message
   {
     MessageType type;
     
