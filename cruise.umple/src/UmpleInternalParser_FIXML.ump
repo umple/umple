@@ -1,6 +1,8 @@
 class UmpleInternalParser {
    Map<Attribute,Token> fixmlLastIntilialization = new HashMap<Attribute, Token>();
    Map<Attribute,Integer> fixmlAttributeCount = new HashMap<Attribute, Integer>();
+   Map<Association,List<Token>> afixmlLastIntilialization = new HashMap<Association, List<Token>>();
+   Map<Association,Integer> afixmlAttributeCount = new HashMap<Association, Integer>();
    
 
    private void analyzeFIXML(Token t, int analysisStep){
@@ -29,7 +31,8 @@ class UmpleInternalParser {
     for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("fixmlContent")) {
 				analyzeFIXMLContetnt(subToken);
-				assignInitialValues();
+				//assignInitialValues(); // based-on-single-attributes
+				assignAssociationInitialValues(); // based-on-single-associations
 			}
 		}
   }
@@ -64,7 +67,6 @@ class UmpleInternalParser {
 		return uClass;
   }
 
-
    private UmpleClass analyzeFIXMLextendedContentContetnt(Token t){
     String sName = t.getSubToken(1).getValue();
 	  String eName = t.getSubToken(t.numberOfSubTokens()-2).getValue();  
@@ -82,16 +84,16 @@ class UmpleInternalParser {
 		for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("tagDefinition")) {
 				analyzeFIXMLAttributes (subToken,uClass);
-			} else if (subToken.getName().equals("attContent")){
+			} else if (subToken.getName().equals("attContent")){// based-on-single-associations
 				analyzeFixmlTagAttributes(subToken,uClass); 
 			} else if (subToken.getName().equals("endContent")){
 				UmpleClass rUClass = analyzeFIXMLEndContetnt(uClass,subToken);
-				addAttributes(uClass, rUClass,subToken);
-				//addAssociation(uClass, rUClass);
+				//addAttributes(uClass, rUClass,subToken); //based-on-single-attributes
+				addAssociation(uClass, rUClass,subToken); // based-on-single-associations
 			} else if (subToken.getName().equals("extendContent")) {
 				UmpleClass rUClass = analyzeFIXMLextendedContentContetnt(subToken);
-				//addAssociation(uClass, rUClass);
-				addAttributes(uClass, rUClass,subToken);
+				addAssociation(uClass, rUClass,subToken); // based-on-single-associations
+				//addAttributes(uClass, rUClass,subToken); //based-on-single-attributes
 			}
 		}
 		if (! available)	getModel().addUmpleClass(uClass);
@@ -288,10 +290,10 @@ class UmpleInternalParser {
 	    }
   }
 
-   private void addAssociation(UmpleClass uClass, UmpleClass rUClass){
+   private void addAssociation(UmpleClass uClass, UmpleClass rUClass, Token mainToken){
     Multiplicity m = new Multiplicity();
-		
-		if (getModel().getAssociation(rUClass.getName()+"_Object") != null) {			
+		Association aAss = getModel().getAssociation(rUClass.getName()+"_Object");
+		if ( aAss != null) {			
 			Integer bound = Integer.parseInt(getModel().getAssociation(rUClass.getName()+"_Object").getEnd(1).getMultiplicity().getBound());
 			bound++;
 			m.setBound( bound.toString());
@@ -301,6 +303,9 @@ class UmpleInternalParser {
 					yourAs.setMultiplicity(m);
 				}
 			}
+		    List <Token> listOfToken = afixmlLastIntilialization.get(aAss);
+		    listOfToken.add(mainToken);
+		    afixmlLastIntilialization.put(aAss, listOfToken);
 			
 		} else {
 			m.setBound("1");
@@ -320,9 +325,132 @@ class UmpleInternalParser {
 		      unlinkedAssociationVariables.add(yourAs);
 		      uClass.addAssociation(aAssociation);
 		    }
+		    List <Token> listOfToken = new ArrayList<>();
+		    listOfToken.add(mainToken);
+		    afixmlLastIntilialization.put(aAssociation, listOfToken);
 		}
   }
 
+   private void assignAssociationInitialValues(){
+    String value = "";
+	for (Association	aa : getModel().getAssociations()) {
+		UmpleClass mainClass = getModel().getUmpleClass(aa.getEnd(0).getClassName());
+		UmpleClass uClass = getModel().getUmpleClass(aa.getEnd(1).getClassName());
+		if (Integer.parseInt(aa.getEnd(1).getMultiplicity().getBound()) >1) {
+			for (Token rootToken : afixmlLastIntilialization.get(aa)) {
+				value = "new "+uClass.getName()+"(";
+				Map<String,String> db = new HashMap<String,String>();
+				for (Token subToken : rootToken.getSubTokens()) {
+					if (subToken.is("tagDefinition")) {
+						   String attname = subToken.getSubToken(0).getValue();
+						   //   String attType = "String";
+						   String attValue = subToken.getSubToken(3).getValue();	
+						   db.put(attname, attValue);  	
+					}
+				}			
+				for (Attribute aAttribute : uClass.getAttributes()) {
+					if (db.containsKey(aAttribute.getName())){
+						String attValue = db.get(aAttribute.getName());
+						   if  ( isStringInteger(attValue) && aAttribute.getType().equals("Integer")) {
+							  // attType="Integer";
+						   } else if (isStringDuble(attValue) && aAttribute.getType().equals("Double")) {
+							   //attType = "Double";
+						   } else if (aAttribute.getType().equals("String")) {
+							   attValue = "\""+attValue+"\"";
+						   } else {
+							   attValue = "\""+attValue+"\"";
+						   }
+						value = value + attValue +", ";
+					} else {
+					   if  ( aAttribute.getType().equals("Integer") ) {
+						   value = value+"0"+", ";
+					   } else if (aAttribute.getType().equals("Double")) {
+						   value = value+"0.0"+", ";
+					   } else if (aAttribute.getType().equals("String")){
+						   value = value+"\"\""+", ";
+					   }
+					}	
+				}
+				
+				for (Association aAssociation : uClass.getAssociations()) {
+					List<Token> aToken = afixmlLastIntilialization.get(aAssociation);
+					if (aToken.size() >1) {
+
+					} else {
+						if (!hasThisObject(rootToken,aAssociation.getEnd(1).getClassName())) {
+							 value = value+"null"+", ";
+						} else {
+							value = value+getAssociationConstructorInConstructor(aAssociation.getEnd(1).getClassName(),aToken.get(0))+", ";
+						}
+					}
+				}
+				
+				value = value.subSequence(0, value.length()-2) + ")";
+				value = aa.getEnd(1).getRoleName()+".add("+value+");";	
+				CodeInjection injection = new CodeInjection("after","emptyConstructor",value,mainClass);
+				mainClass.addCodeInjection(injection);
+			}
+		} else {
+			value = "new "+uClass.getName()+"(";
+			value = value+")"; //t.getSubToken(3).getValue();
+			value = "set"+aa.getEnd(1).getRoleName()+"("+value+");";
+			CodeInjection injection = new CodeInjection("after","emptyConstructor",value,mainClass);
+			mainClass.addCodeInjection(injection);
+		}
+
+	}
+  }
+
+   private String getAssociationConstructorInConstructor(String inName, Token inToken){	  
+    Map<String,String> db = new HashMap<String,String>();
+		String value = "new "+inName+"("; //t.getSubToken(3).getValue();	
+		for (Token subToken : inToken.getSubTokens()) {
+			if (subToken.getName().equals("tagDefinition")) {
+				   String attname = subToken.getSubToken(0).getValue();
+//				   String attType = "String";
+				   String attValue = subToken.getSubToken(3).getValue();
+				   db.put(attname, attValue);  	
+				 }
+			}  
+	for (Attribute aAttribute : getModel().getUmpleClass(inName).getAttributes()) {
+		if (db.containsKey(aAttribute.getName())){
+			String attValue = db.get(aAttribute.getName());
+			   if  ( isStringInteger(attValue) && aAttribute.getType().equals("Integer")) {
+				  // attType="Integer";
+			   } else if (isStringDuble(attValue) && aAttribute.getType().equals("Double")) {
+				   //attType = "Double";
+			   } else if (aAttribute.getType().equals("String")) {
+				   attValue = "\""+attValue+"\"";
+			   } else {
+				   attValue = "\""+attValue+"\"";
+			   }
+			value = value + attValue+", ";
+		} else {
+		   if  ( aAttribute.getType().equals("Integer") ) {
+			   value = value+"0"+", ";
+		   } else if (aAttribute.getType().equals("Double")) {
+			   value = value+"0.0"+", ";
+		   } else if (aAttribute.getType().equals("String")){
+			   value = value+"\"\""+", ";
+		   }
+		}
+		
+	}		  
+	for (Association aAssociation : getModel().getUmpleClass(inName).getAssociations()) {
+		List<Token> aToken = afixmlLastIntilialization.get(aAssociation);
+		if (aToken.size() >1) {
+
+		} else {
+			if (!hasThisObject(inToken,aAssociation.getEnd(1).getClassName())) {
+				 value = value+"null"+", ";
+			} else {
+				value = value+getAssociationConstructorInConstructor(aAssociation.getEnd(1).getClassName(),aToken.get(0));
+			}
+		}
+	}
+	  value = value.subSequence(0, value.length()-2) + ")";	
+	  return value;
+  }
 
    public boolean isStringInteger(String s){
     try { 
@@ -342,5 +470,8 @@ class UmpleInternalParser {
 	    }
 	    return true;
   }
+
+
+
 
 }
