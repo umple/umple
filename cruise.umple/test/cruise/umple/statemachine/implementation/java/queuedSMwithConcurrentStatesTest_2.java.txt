@@ -255,7 +255,7 @@ public class QueuedSMwithConcurrentStates_2 implements Runnable
   public void delete()
   {}
 
-  private class Message
+  protected class Message
   {
     MessageType type;
     

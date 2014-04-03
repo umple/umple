@@ -14,3 +14,114 @@ class PooledSM
     }
   }
 }
+
+class LightFixture
+{
+  Integer brightness = 0;
+  Integer dimmer;
+  pooled bulb{
+	Off{
+	    turnDimmer(Integer lightval) /{setBrightness(lightval);} -> Off;
+	    flipSwitch -> Dimmed;
+	}
+	Dimmed{
+		entry[dimmer > 99] -> On;
+		flipSwitch -> Off;
+        turnDimmer(Integer lightval) /{setBrightness(lightval);} -> Dimmed;
+	}
+	On{
+		flipSwitch -> Off;
+        turnDimmer(Integer lightval) /{setBrightness(lightval);} -> Dimmed;
+	}
+  }
+}
+
+class Light
+{
+  pooled bulb
+  {
+    Off { -> On; }
+    On { }
+  }
+}
+
+class Mentor 
+{
+
+  int howLongUntilOk = 3;
+
+  pooled status
+  {
+    Ok { afterEvery(4) -> NotOk; }
+    NotOk { afterEvery(howLongUntilOk) -> Ok; } 
+  }
+}
+
+class X{
+  pooled sm{
+    s1 {
+      e1 -> s2;
+      ->s2;
+    }
+    s2{
+      after(10) -> s3;
+    }
+    s3{
+    }
+  }
+}
+
+class PooledSMwithUnspecifiedReception{
+  pooled sm{
+    s1 {
+      e1 -> s2;
+      unspecified -> error1;
+    }
+    s2 {
+    }
+    error1 {
+      -> s1;
+    }
+  }
+}
+
+class PooledSM_NestedState_L1 {
+  pooled sm {
+     s1 {
+        e1 -> s2;
+        e2 -> s2b;
+     }
+     s2 {
+        e3 -> s1;
+        s2a {
+          e4 -> s2b;
+        }
+        s2b {
+          e5 -> s2a;
+        }
+     }
+  }
+}
+
+class PooledSM_NestedState_L1_1 {
+  pooled sm {
+     s1 {
+        e1 -> s1a;
+       s1a{
+         e2 -> s1b;
+       }
+       s1b{
+         e3 -> s2;
+       }
+     }
+     s2 {
+        e4 -> s1;
+        s2a {
+          e5 -> s2b;
+        }
+        s2b {
+          e6 -> s2a;
+        }
+     }
+  }
+}

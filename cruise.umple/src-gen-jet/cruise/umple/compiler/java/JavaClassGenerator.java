@@ -9509,7 +9509,7 @@ if (p != null) {
        if (smq.isPooled())
        {
     
-  appendln(stringBuffer,"\n  private class Message");
+  appendln(stringBuffer,"\n  protected class Message");
   appendln(stringBuffer,"  {");
   appendln(stringBuffer,"    MessageType type;"); 
   appendln(stringBuffer,"    ");  
@@ -9890,7 +9890,7 @@ if (p != null) {
        if (smq.isQueued())
        {
     
-  appendln(stringBuffer,"\n  private class Message");
+  appendln(stringBuffer,"\n  protected class Message");
   appendln(stringBuffer,"  {");
   appendln(stringBuffer,"    MessageType type;"); 
   appendln(stringBuffer,"    ");  
