@@ -3267,6 +3267,14 @@ for (StateMachine smq : uClass.getStateMachines())
 		  accessibility = uClass.getIsSingleton() ? "private" : "public";
 		  appendln(stringBuffer,"");
 		  appendln(stringBuffer,"");
+		  for( CodeInjection ci  : uClass.getCodeInjections())
+		  {
+			  if( ci.getOperation().equals("emptyConstructor"))
+			  {
+				  appendln(stringBuffer,"  {0} {1}() { {2} }",new Object[] {accessibility, uClass.getName(),ci.getCode()});
+				  break;
+			  }
+		  }
     	  appendln(stringBuffer,"  {0} {1}() {}",new Object[] {accessibility, uClass.getName()});
     	  break;
 	    }
