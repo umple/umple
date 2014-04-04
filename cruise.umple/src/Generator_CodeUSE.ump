@@ -9,94 +9,70 @@ namespace cruise.umple.compiler;
 
 class USEGenerator
 {
+  
+  String getUSEType(Attribute av) {
+    String typeName = av.getType() == null ? "String" : av.getType();
+    if ("Date".equals(typeName) || "Time".equals(typeName))
+    {
+       typeName = "String";
+    }
+    else if ("Double".equals(typeName) || "Float".equals(typeName))
+    {
+      typeName = "Real";
+    }
+    return typeName;
+  }
+  
+  useAssociationEnd <<!
+  <<=ae.getClassName()>>[<<#
+  Multiplicity m = ae.getMultiplicity();
+  if(m.getBound() == null) {
+  #>><<=m.getMinimum()>> -- <<=m.getMaximum()>><<#
+  } else {
+  #>><<=m.getBound()>><<#
+  } #>>]!>>
+  private emit useAssociationEnd(AssociationEnd ae)(useAssociationEnd);
+  
+  wholefile <<!<<# ArrayList<Association> externalAssociations = new ArrayList<Association>(); #>>
+model <<=model.getUmpleFile().getSimpleFileName()>>
+<<# for(UmpleClass uClass : model.getUmpleClasses()) { #>>
 
+class <<=uClass.getName()>><<# if(uClass.getExtendsClass() != null) { #>><<=uClass.getExtendsClass().getName()>><<# } #>>
+
+<<# if(uClass.getAttributes().size() > 0) { #>>
+  attributes
+<<# } #>>
+<<# for(Attribute av : uClass.getAttributes()) { #>>
+    <<# if(av.getIsList()) { #>><<=model.getGlossary().getPlural(av.getName())>><<# } else { #>><<=model.getGlossary().getSingular(av.getName())>><<# } #>> : <<=getUSEType(av)>>
+
+<<# } #>>
+<<# for(CodeInjection ci : uClass.getCodeInjections()) { #>>
+<<=ci.getType()>> <<=ci.getOperation()>> { <<=ci.getCode()>> }
+<<# } #>>
+end
+<<# }
+java.util.HashSet<Association> processed = new java.util.HashSet<Association>();
+for(UmpleClass uClass : model.getUmpleClasses()) {
+  for(Association as : uClass.getAssociations()) {
+    if(processed.contains(as)) {
+      continue;
+    }
+    processed.add(as);
+#>>
+
+association <<=as.getName()>> between <<=useAssociationEnd(as.getEnd(0))>> <<=useAssociationEnd(as.getEnd(1))>>
+end
+<<#
+  }
+} 
+#>>!>>
+  
+  emit generateTemplate()(wholefile);
+  
   public void generate()
   {
-    StringBuilder code = new StringBuilder();
-    ArrayList<Association> externalAssociations = new ArrayList<Association>();
-
-    code.append(StringFormatter.format("model {0}\n", model.getUmpleFile().getSimpleFileName()));
-
-    for (UmpleClass uClass : model.getUmpleClasses())
-    {
-  
-      code.append(StringFormatter.format("\nclass {0}", uClass.getName()));
-
-      if (uClass.getExtendsClass() != null)
-      {
-        code.append(StringFormatter.format(" < {0}", uClass.getExtendsClass().getName()));
-      }
-      code.append("\n");
-
-      List<Attribute> allAttributes = uClass.getAttributes();
-      if (allAttributes.size() > 0)
-      {
-        code.append("  attributes\n");
-      }
-
-      for (Attribute av : uClass.getAttributes())
-      {
-        String typeName = av.getType() == null ? "String" : av.getType();
-        if ("Date".equals(typeName) || "Time".equals(typeName))
-        {
-          typeName = "String";
-        }
-        else if ("Double".equals(typeName) || "Float".equals(typeName))
-        {
-          typeName = "Real";
-        }
-
-        String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
-        code.append(StringFormatter.format("    {0} : {1}\n", attrName, typeName));
-      }
-
-      for (Association as : uClass.getAssociations())
-      {
-        AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
-        AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
-
-        if (!myEnd.getClassName().equals(uClass.getName()))
-        {
-          continue;
-        }
-        if (as.isNamed())
-        {
-          externalAssociations.add(as);
-          continue;
-        }
-        code.append(StringFormatter.format("  {0} {1} -- {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
-      }
-
-      for (CodeInjection ci : uClass.getCodeInjections())
-      {
-        code.append(StringFormatter.format("  {0} {1} { {2} }\n", ci.getType(), ci.getOperation(), ci.getCode()));
-      }
-
-      for (Method m : uClass.getMethods())
-      {
-        generateMethod(m, code);
-      }
-
-      code.append("end\n");
-    }
-
-    for (Association as : externalAssociations)
-    {
-      AssociationEnd myEnd = as.getIsRightNavigable() ? as.getEnd(0) : as.getEnd(1);
-      AssociationEnd theirEnd = as.getIsRightNavigable() ? as.getEnd(1) : as.getEnd(0);
-
-      code.append(StringFormatter.format("\nassociation {0}\n{\n", as.getName()));
-      code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
-      code.append("}");
-    }
-
-    model.setCode(code.toString());
+    model.setCode(generateTemplate());
     writeModel();
-  }
-
-  private void generateMethod(Method m, StringBuilder code)
-  {
-  
   }
 
   private void writeModel()
