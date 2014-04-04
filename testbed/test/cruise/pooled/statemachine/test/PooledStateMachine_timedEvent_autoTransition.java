@@ -55,12 +55,14 @@ public class PooledStateMachine_timedEvent_autoTransition
   {
 	  X psm = new X();
 	  // check initial state is s1
+	  //auto-transition to state s2
 	  Assert.assertEquals(X.Sm.s2, psm.getSm());
+	  //wait for 10 seconds before transition to s3
 	  wait(11);
 	  
 	  Assert.assertEquals(X.Sm.s3, psm.getSm());
 	  
-	  //check that there are two events left in the queue
+	  //check that there is no event left in the queue
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
   }

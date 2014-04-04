@@ -53,7 +53,7 @@ public class PooledStateMachine_autoTransition
 	  // check initial state is Off
 	  Assert.assertEquals(Light.Bulb.On, psm.getBulb());
 	  
-	  //check that there are two events left in the queue
+	  //check that there is no event left in the queue
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
   }

@@ -55,67 +55,103 @@ public class PooledStateMachine_withParameters
   public void processEvents() throws InterruptedException
   {
 	  LightFixture psm = new LightFixture(100);
+	  //check that the value of dimmer=100
 	  Assert.assertEquals(100, psm.getDimmer());
+	  //check that the value of brightness=0
 	  Assert.assertEquals(0, psm.getBrightness());
 	  // check initial state is Off
 	  Assert.assertEquals(LightFixture.Bulb.Off, psm.getBulb());
 	  
-	  psm.turnDimmer(20);
+	  //event turnDimmer is called
+	  psm.turnDimmer(20);//event turnDimmer is added to the pool
 	  Thread.sleep(10);
+	  //check that the value of brightness is changed to be 20
 	  Assert.assertEquals(20, psm.getBrightness());
+	  // event turnDimmer is taken off the pool and is processed: transition to state Off 
 	  Assert.assertEquals(LightFixture.Bulb.Off, psm.getBulb());
+	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
-	  psm.entry();
+	  //event entry is called
+	  psm.entry();//event entry is added to the pool
 	  Thread.sleep(10);
+	  //event entry is unspecified, it is saved at the head of the queue, current sate is not changed
 	  Assert.assertEquals(LightFixture.Bulb.Off, psm.getBulb());
+	  //check that the value of dimmer is still 100
 	  Assert.assertEquals(100, psm.getDimmer());
+	  //the pool has entry event saved at its head
 	  Assert.assertEquals(1, psm.pool.messages.size());
+	  //check the pool to see if event entry is saved in it
 	  for (LightFixture.Message msg: psm.pool.messages)
       {
 		  Assert.assertEquals(LightFixture.MessageType.entry_M, msg.type);
       }
 	  
 	  
-	  psm.flipSwitch();
+	  //event flipSwitch is called
+	  psm.flipSwitch();//event flipSwitch is added to the pool
 	  Thread.sleep(10);
+	  // event flipSwitch is taken off the pool and is processed: transition to state Dimmed 
+	  // event entry is taken off the pool and is processed: transition to state On 
 	  Assert.assertEquals(LightFixture.Bulb.On, psm.getBulb());
+	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
-	  psm.turnDimmer(30);
+	  //event turnDimmer is called
+	  psm.turnDimmer(30);//event turnDimmer is added to the pool
 	  Thread.sleep(10);
+	  //check that the value of brightness is changed to 30
 	  Assert.assertEquals(30, psm.getBrightness());
+	  // event turnDimmer is taken off the pool and is processed: transition to state Dimmed 
 	  Assert.assertEquals(LightFixture.Bulb.Dimmed, psm.getBulb());
+	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
-	  psm.flipSwitch();
+	  //event flipSwitch is called
+	  psm.flipSwitch();//event flipSwitch is added to the pool
 	  Thread.sleep(10);
+	  // event flipSwitch is taken off the pool and is processed: transition to state Off 
 	  Assert.assertEquals(LightFixture.Bulb.Off, psm.getBulb());
+	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
+	  //change the value of dimmer to be 50
 	  psm.setDimmer(50);
-	  psm.entry();
+	  //event entry is called
+	  psm.entry();//event entry is added to the pool
 	  Thread.sleep(10);
+	  //event entry is unspecified, it is saved at the head of the queue, current sate is not changed
 	  Assert.assertEquals(LightFixture.Bulb.Off, psm.getBulb());
+	  //check that the value of dimmer=50
 	  Assert.assertEquals(50, psm.getDimmer());
+	  //the pool has entry event saved at its head
 	  Assert.assertEquals(1, psm.pool.messages.size());
+	  //check the pool to see if event entry is saved in it
 	  for (LightFixture.Message msg: psm.pool.messages)
       {
 		  Assert.assertEquals(LightFixture.MessageType.entry_M, msg.type);
       }
 	  
-	  psm.turnDimmer(40);
+	  //event turnDimmer is called
+	  psm.turnDimmer(40);//event turnDimmer is added to the pool
 	  Thread.sleep(10);
+	  //check that the value of brightness is changed to 40
 	  Assert.assertEquals(40, psm.getBrightness());
+	  // event turnDimmer is taken off the pool and is processed: transition to state Off 
 	  Assert.assertEquals(LightFixture.Bulb.Off, psm.getBulb());
+	  //the pool has entry event saved at its head
 	  Assert.assertEquals(1, psm.pool.messages.size());
 	  
-	  psm.flipSwitch();
+	  //event flipSwitch is called
+	  psm.flipSwitch();//event flipSwitch is added to the pool
 	  Thread.sleep(10);
+	  // event flipSwitch is taken off the pool and is processed: transition to state Dimmed 
+	  // event entry is taken off the pool and is processed and condition is false: stay at Dimmed
 	  Assert.assertEquals(LightFixture.Bulb.Dimmed, psm.getBulb());
+	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
-	  //check that there are two events left in the queue
+	  //check that there is no event left in the queue
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
   }

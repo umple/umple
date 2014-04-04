@@ -14,3 +14,155 @@ class QueuedSM
     }
   }
 }
+
+class QueuedSM_withParameters
+{
+  Integer value=0;
+  
+  queued sm
+  {
+    s1 {
+      e1(Integer val) /{setValue(val);} -> s2;
+    }
+    s2 {
+      e2 -> s2;
+    }
+  }
+}
+
+class QueuedSM_timedEvent 
+{
+  int timer = 3;
+
+  queued status
+  {
+    s1 { 
+      afterEvery(4) -> s2; 
+    }
+    s2 { 
+      afterEvery(timer) -> s1; 
+    } 
+  }
+}
+
+class QueuedSM_autoTransition
+{
+  queued sm
+  {
+    s1 { -> s2; }
+    s2 { }
+  }
+}
+
+class QueuedSM_autoTransition_timedEvent {
+  queued sm{
+    s1 {
+      e1 -> s2;
+      ->s2;
+    }
+    s2{
+      after(10) -> s3;
+    }
+    s3{
+    }
+  }
+}
+
+
+class AutomatedTellerMachine{
+  String[] logs;
+  queued sm{
+    
+    idle {
+      cardInserted -> active;
+      maintain -> maintenance;
+      unspecified -> error1;
+    }
+    
+    maintenance {
+      isMaintained -> idle;
+    }
+    
+    active {
+      entry /{addLog("Card is read");}
+      exit /{addLog("Card is ejected");}
+      validating {
+        validated -> selecting;
+        unspecified -> error2;
+      }
+      
+      selecting {
+        select -> processing;
+      }
+      
+      processing {
+        selectAnotherTransiction -> selecting;
+        finish -> printing; 
+      }
+      
+      printing {
+        receiptPrinted -> idle;
+      }
+      cancel -> idle;
+    }
+    
+    error1{
+      ->idle;
+    }
+    
+    error2{
+      ->validating;
+    }   
+  }
+}
+
+class QueuedSM_NestedStates_level1 {
+  queued sm {
+     s1 {
+        e1 -> s2;
+     }
+     s2 {
+        s2a {
+          e2 -> s2b;
+        }
+        s2b {
+          e3 -> s2a;
+        }
+     }
+  }
+}
+
+
+class QueuedSM_NestedStates_level2 {
+  queued sm1 {
+    s1 {
+      e -> s2;
+      s1a {
+        f -> s2b;
+        g -> s1a;
+      }
+      s1b {
+        h -> s1a;
+        i -> s2b;
+        k -> s2;
+      }
+    }
+    s2 {
+      e -> s1;
+      s2a {
+        i -> s2b;
+        j -> s1b;
+      }
+      s2b {
+        h -> s2a;
+        k -> s1;
+        s2b1 {
+          m -> s2b2;
+        }
+        s2b2 {
+          m -> s2b1;
+        }
+      }
+    }
+  }
+}
