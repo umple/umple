@@ -3,7 +3,6 @@ package cruise.pooled.statemachine.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cruise.queued.statemachine.test.QueuedSM;
 
 public class PooledStateMachineTest
 { 
@@ -62,7 +61,10 @@ public class PooledStateMachineTest
 	  // reject is pooled at the head of queue: it is not processed
 	  Assert.assertEquals(PooledSM.Status.Open, psm.getStatus());
 	  // check that the message 'reject_M' is pooled
-	  messageIsSaved(psm, PooledSM.MessageType.reject_M);
+	  for (PooledSM.Message msg: psm.pool.messages)
+      {
+		  Assert.assertEquals(PooledSM.MessageType.reject_M, msg.type);
+      }
 	  //Now, there is one message saved at the head of the queue
 	  Assert.assertEquals(1, psm.pool.messages.size());
 	  
@@ -90,7 +92,10 @@ public class PooledStateMachineTest
 	  // register is pooled at the head of queue: it is not processed
 	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
 	  // check that the message 'register_M' is pooled
-	  messageIsSaved(psm, PooledSM.MessageType.register_M);
+	  for (PooledSM.Message msg: psm.pool.messages)
+      {
+		  Assert.assertEquals(PooledSM.MessageType.register_M, msg.type);
+      }
 	  //Now, there is one message saved at the head of the queue
 	  Assert.assertEquals(1, psm.pool.messages.size());
 		  
@@ -100,7 +105,13 @@ public class PooledStateMachineTest
 	  // register is pooled at the head of queue: it is not processed
 	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
 	  // check that the message 'register_M' is pooled
-	  messageIsSaved(psm, PooledSM.MessageType.register_M);
+	  for (PooledSM.Message msg: psm.pool.messages)
+      {
+		  if(msg.type.equals(PooledSM.MessageType.register_M))
+		  {
+			  Assert.assertEquals(PooledSM.MessageType.register_M, msg.type);
+		  }
+      }
 	  //Now, there are two messages saved at the head of the queue
 	  Assert.assertEquals(2, psm.pool.messages.size());
 			
@@ -117,21 +128,5 @@ public class PooledStateMachineTest
 	 //check that there are two events left in the queue
 	  Assert.assertEquals(2, psm.pool.messages.size());
 	  
-  }
-  
-  public void messageIsSaved(PooledSM psm, PooledSM.MessageType type)
-  {
-	  if(!psm.pool.messages.isEmpty())
-	  {
-		  for (Object msg: psm.pool.messages)
-	      {
-			  String m = msg.toString();
-			  String[] compare = m.split(",");
-			  Assert.assertEquals(compare[0], type.name());
-	      }
-		  Assert.assertEquals(false, psm.pool.messages.isEmpty());
-	  }
-	  else
-		  Assert.assertEquals(0, psm.pool.messages.size());	  
   }
 }

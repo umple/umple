@@ -52,8 +52,10 @@ public class PooledStateMachine_timedEvent
 	  Mentor psm = new Mentor();
 	  // check initial state is Ok
 	  Assert.assertEquals(Mentor.Status.Ok, psm.getStatus());
+	  //waiting for 4 seconds before transition to NotOk
 	  wait(5);
 	  
+	  //transition to NotOk
 	  Assert.assertEquals(Mentor.Status.NotOk, psm.getStatus());
 	  wait(4);
 	  
@@ -63,7 +65,7 @@ public class PooledStateMachine_timedEvent
 	  Assert.assertEquals(Mentor.Status.NotOk, psm.getStatus());
 	  
 	  
-	  //check that there are two events left in the queue
+	  //check that there is no event left in the queue
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
   }

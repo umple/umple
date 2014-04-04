@@ -8,7 +8,7 @@ public class PooledStateMachine_UnspecifiedReception
   @Test 
   public void numberOfMessagesInMessageType()
   {
-	  // compare the number of messages in MessageType is equal to the number of events in State Machine ePooledSMwithUnspecifiedReceptioncept timed events and auto-transition
+	  // compare the number of messages in MessageType is equal to the number of events in State Machine except timed events and auto-transition
 	  Assert.assertEquals(3, PooledSMwithUnspecifiedReception.MessageType.values().length);
 	  Assert.assertEquals(true, PooledSMwithUnspecifiedReception.MessageType.valueOf("e1_M").equals(PooledSMwithUnspecifiedReception.MessageType.e1_M));
 	  Assert.assertEquals(true, PooledSMwithUnspecifiedReception.MessageType.valueOf("unspecified_M").equals(PooledSMwithUnspecifiedReception.MessageType.unspecified_M));
@@ -54,23 +54,30 @@ public class PooledStateMachine_UnspecifiedReception
   @Test 
   public void processEvents() throws InterruptedException
   {
+	  //Unspecified error handling is not compatible with pooled state machine
+	  //unspecified event is treated like any regular event, is not special any more
 	  PooledSMwithUnspecifiedReception psm = new PooledSMwithUnspecifiedReception();
 	  // check initial state is s1
 	  Assert.assertEquals(PooledSMwithUnspecifiedReception.Sm.s1, psm.getSm());
 	  
 	  
-	  psm.unspecified();
-	  Thread.sleep(10);
-	  
+	  //event unspecified is called
+	  psm.unspecified();//event unspecified is added to the pool
+	  Thread.sleep(10);	  
+	  // event unspecified is taken off the pool and is processed: transition to state s1 
 	  Assert.assertEquals(PooledSMwithUnspecifiedReception.Sm.s1, psm.getSm());
+	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
-	  psm.e1();
+	  //event e1 is called
+	  psm.e1();//event e1 is added to the pool
 	  Thread.sleep(10);
+	  // event e1 is taken off the pool and is processed: transition to state s2 
 	  Assert.assertEquals(PooledSMwithUnspecifiedReception.Sm.s2, psm.getSm());
+	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
-	  //check that there are two events left in the queue
+	  //check that there is no event left in the queue
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
   }
