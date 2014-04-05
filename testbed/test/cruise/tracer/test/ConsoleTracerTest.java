@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 import org.junit.*;
 
+import cruise.pooled.statemachine.test.CourseA;
+
 
 public class ConsoleTracerTest
 {
@@ -97,7 +99,10 @@ public class ConsoleTracerTest
 					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
 					"sm_t,sLevel2aLevel3a,e3,sLevel2aLevel3b",
 					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested",
-					//=== CoursA
+					//=== TimedEventA
+					"sm_t,Open,timeoutOpenToClosed,Closed",
+					"sm_t,Closed,timeoutClosedToFinal,Final"
+					//=== CourseA
 //					"sm_t,Open,register,Full",
 //					"sm_t,Full,reject,Full",
 //					"sm_t,Full,reject,Full"
@@ -269,12 +274,13 @@ public class ConsoleTracerTest
 	  ns4.e2();
 	  ns4.e3();
 	  ns4.e4();
+	  
+	  TimedEventA tA = new TimedEventA();
 
 //	  pooledTrace cA = new pooledTrace();
 //	  cA.register();
 //	  cA.reject();
 //	  cA.reject();
-
 
 	  //==== invoke record trace
 	  

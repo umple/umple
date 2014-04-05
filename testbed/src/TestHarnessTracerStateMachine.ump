@@ -328,6 +328,21 @@ class NestedStateLevel4
   trace sLevel1 level 4;
 }
 
+class TimedEventA
+{
+  status {
+    Open { 
+      after(0.000001) -> Closed; 
+    }
+    Closed {
+      after(0.000001) -> Final; 
+    }
+    
+    Final{}
+  }
+  trace Closed;
+}
+/*
 class pooledTrace
 {
   queued status
@@ -342,3 +357,4 @@ class pooledTrace
   // trace state in pooled state machine
   trace Full;
 }
+*/
