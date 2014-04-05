@@ -13,25 +13,41 @@ public class Mentor
   //------------------------
 
   //Mentor Attributes
+  private String capacity;
   private int id;
+  private String name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Mentor(int aId)
+  public Mentor(String aCapacity, int aId, String aName)
   {
+    capacity = aCapacity;
     id = aId;
+    name = aName;
   }
 
   public Mentor()
   {
+    capacity = "31";
+    name = "Umple";
+    System.out.println("Testing");
+    String test;
   }
 
 
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setCapacity(String aCapacity)
+  {
+    boolean wasSet = false;
+    capacity = aCapacity;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setId(int aId)
   {
@@ -41,9 +57,27 @@ public class Mentor
     return wasSet;
   }
 
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getCapacity()
+  {
+    return capacity;
+  }
+
   public int getId()
   {
     return id;
+  }
+
+  public String getName()
+  {
+    return name;
   }
 
   public void delete()
@@ -54,7 +88,9 @@ public class Mentor
   {
 	  String outputString = "";
     return super.toString() + "["+
-            "id" + ":" + getId()+ "]"
+            "capacity" + ":" + getCapacity()+ "," +
+            "id" + ":" + getId()+ "," +
+            "name" + ":" + getName()+ "]"
      + outputString;
   }
 }
