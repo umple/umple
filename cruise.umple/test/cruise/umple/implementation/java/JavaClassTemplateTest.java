@@ -48,11 +48,11 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   {
     assertUmpleTemplateFor("ClassTemplateTest_FixmlAttributes2.ump",languagePath + "/ClassTemplateTest_FixmlAttributes2."+ languagePath +".txt","Mentor");
   }
-//  @Test
-//  public void FixmlAttributes1()
-//  {
-//    assertUmpleTemplateFor("ClassTemplateTest_FixmlAttributes1.ump",languagePath + "/ClassTemplateTest_FixmlAttributes."+ languagePath +".txt","Mentor");
-//  }
+  @Test
+  public void FixmlAttributes3()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_FixmlAttributes3.ump",languagePath + "/ClassTemplateTest_FixmlAttributes3."+ languagePath +".txt","Mentor");
+  }
   
   //Ignored this test because it doesn't seem to be able to take a umple version like @UMPLE_VERSION@ instead it needs it to be an exact version
   @Test @Ignore

@@ -5,4 +5,9 @@ class Mentor
   fixml capacity = "31";
   fixml Integer id;
   fixml name = "Umple";
+  after emptyConstructor
+  {
+    System.out.println("Testing");
+    String test;
+  }
 }
