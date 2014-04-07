@@ -21,8 +21,8 @@ public class QueuedStateMachineTest_timedEvent_autoTransition
 	  // check initial state is s1
 	  //auto-transition to state s2
 	  Assert.assertEquals(QueuedSM_autoTransition_timedEvent.Sm.s2, qsm.getSm());
-	  //wait for 10 seconds before transition to s3
-	  wait(11);
+	  //wait for 2 seconds before transition to s3
+	  wait(3);
 		  
 	  Assert.assertEquals(QueuedSM_autoTransition_timedEvent.Sm.s3, qsm.getSm());
 		  

@@ -23,18 +23,11 @@ public class QueuedStateMachineTest_timedEvent
     // check initial state is s1
     Assert.assertEquals(QueuedSM_timedEvent.Status.s1, qsm.getStatus());
     Assert.assertEquals(3, qsm.getTimer());
-    //waiting for 4 seconds before transition to s2
-    wait(5);
+    //waiting for 2 seconds before transition to s2
+    wait(3);
       
     //transition to s2
-    Assert.assertEquals(QueuedSM_timedEvent.Status.s2, qsm.getStatus());
-    wait(4);
-      
-    Assert.assertEquals(QueuedSM_timedEvent.Status.s1, qsm.getStatus());
-    wait(5);
-      
-    Assert.assertEquals(QueuedSM_timedEvent.Status.s2, qsm.getStatus());
-      
+    Assert.assertEquals(QueuedSM_timedEvent.Status.s2, qsm.getStatus()); 
       
     //check that there is no event left in the queue
     Assert.assertEquals(0, qsm.pool.messages.size());

@@ -52,7 +52,7 @@ class Mentor
 
   pooled status
   {
-    Ok { afterEvery(4) -> NotOk; }
+    Ok { afterEvery(2) -> NotOk; }
     NotOk { afterEvery(howLongUntilOk) -> Ok; } 
   }
 }
@@ -64,7 +64,7 @@ class X{
       ->s2;
     }
     s2{
-      after(10) -> s3;
+      after(3) -> s3;
     }
     s3{
     }

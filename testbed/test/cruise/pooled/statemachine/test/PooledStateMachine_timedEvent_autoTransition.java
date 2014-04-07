@@ -57,8 +57,8 @@ public class PooledStateMachine_timedEvent_autoTransition
 	  // check initial state is s1
 	  //auto-transition to state s2
 	  Assert.assertEquals(X.Sm.s2, psm.getSm());
-	  //wait for 10 seconds before transition to s3
-	  wait(11);
+	  //wait for 3 seconds before transition to s3
+	  wait(4);
 	  
 	  Assert.assertEquals(X.Sm.s3, psm.getSm());
 	  
