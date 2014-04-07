@@ -49,7 +49,12 @@ class Content
   syntax;
 
   // Short samples of Umple code
-  String[] examples;
+  0..1 -> * ManualExample examples;
+}
+
+class ManualExample {
+  text;
+  url = "";
 }
 
 /*

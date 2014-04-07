@@ -43,7 +43,7 @@ public class ContentParserTest
     Assert.assertEquals("the syntax looks like this",content.getSyntax());
     
     Assert.assertEquals(1, content.numberOfExamples());
-    Assert.assertEquals("here is an example to consider",content.getExample(0));
+    Assert.assertEquals("here is an example to consider",content.getExample(0).getText());
   }
   
   @Test
@@ -62,8 +62,8 @@ public class ContentParserTest
     Assert.assertEquals("the syntax looks like this2",content.getSyntax());
     
     Assert.assertEquals(2, content.numberOfExamples());
-    Assert.assertEquals("one example to consider",content.getExample(0));
-    Assert.assertEquals("a second example to consider",content.getExample(1));
+    Assert.assertEquals("one example to consider",content.getExample(0).getText());
+    Assert.assertEquals("a second example to consider",content.getExample(1).getText());
   }  
 
   @Test
