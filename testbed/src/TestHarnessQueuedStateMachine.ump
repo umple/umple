@@ -37,10 +37,9 @@ class QueuedSM_timedEvent
   queued status
   {
     s1 { 
-      afterEvery(4) -> s2; 
+      after(2) -> s2; 
     }
-    s2 { 
-      afterEvery(timer) -> s1; 
+    s2 {  
     } 
   }
 }
@@ -61,7 +60,7 @@ class QueuedSM_autoTransition_timedEvent {
       ->s2;
     }
     s2{
-      after(10) -> s3;
+      after(2) -> s3;
     }
     s3{
     }
