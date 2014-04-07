@@ -264,8 +264,10 @@ class Documenter
     }
     
     String exampleOutput = "";
-    for (String example : selectedContent.getExamples())
+    for (ManualExample manualExample : selectedContent.getExamples())
     {
+      String example = manualExample.getText();
+      String url = manualExample.getUrl();
       String nextExample = Template.ExampleTemplate;
       String exampleHeader = exampleOutput.length() == 0 ? "Example" : "Another Example";
       nextExample = nextExample.replace("@@EXAMPLE_NUMBER@@",exampleHeader);
@@ -273,11 +275,20 @@ class Documenter
       endOfExampleBeforePosition = example.indexOf("//$?[End_of_model]$?");
       if(endOfExampleBeforePosition == -1) {endOfExampleBeforePosition = example.length();}
       nextExample = nextExample.replace("@@EXAMPLE_CODE@@", example.substring(0,endOfExampleBeforePosition));
-      try {
-        nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@",
+      
+      if(url.isEmpty()) {
+        // Encode it, as the code is embedded
+        try {
+          nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@","?text="+
             URLEncoder.encode(example,"UTF-8").replaceAll("\\+","%20").replaceAll("%2B","%252B"));
+        }
+        catch (java.io.UnsupportedEncodingException e) {
+        }
       }
-      catch (java.io.UnsupportedEncodingException e) {
+      else {
+        // Use the actual filename in the URL but trim off the trailing .ump
+        nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@",
+          url.substring(0, url.lastIndexOf('.')));
       }
       exampleOutput += nextExample;
     }
@@ -354,6 +365,10 @@ class Group
 
 class ContentParser
 {
+  depend java.nio.file.Paths;
+  depend java.nio.file.Files;
+  depend java.io.IOException;
+  
   internal Integer init = init();
 
   private int init()
@@ -397,7 +412,24 @@ class ContentParser
         {
           if (exampleToken.is("example"))
           {
-            content.addExample(exampleToken.getValue());
+            String exampleText = exampleToken.getValue();
+            String exampleURL="";
+            if(exampleText. startsWith("@@source")) {
+              // obtain the example text from the ump directory in umpleonline
+              try {
+                String exampleName=exampleText.substring(9).trim();
+                exampleText = new String(Files.readAllBytes(Paths
+                  .get("umpleonline/ump/"+exampleName) ));
+                exampleURL="?example="+exampleName;
+              }
+              catch (IOException e) {
+                exampleText = "Could not open example file "
+                  +exampleText.substring(9).trim();
+              }
+            }
+            ManualExample newEx = new ManualExample(exampleText);
+            newEx.setUrl(exampleURL);
+            content.addExample(newEx);
           }
         }
         g.addContent(content);
@@ -444,7 +476,7 @@ class Template
       "@@EXAMPLE_CODE@@" + "\n" +
       "      </pre>" + "\n" +
       "<p class=\"description\">" +
-      "<a target=\"uol\" href=\"http://try.umple.org?text=@@EXAMPLE_CODE_URL@@\">" +
+      "<a target=\"uol\" href=\"http://try.umple.org@@EXAMPLE_CODE_URL@@\">" +
         "Load the above code into UmpleOnline</a></p>" + "\n" +
       "&nbsp; <br/>" + "\n";
     return template;
