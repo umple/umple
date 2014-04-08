@@ -2,7 +2,8 @@ traitDefinition : trait [name] [[gTemplateParameter]]? { [[traitContent]]* }
 traitContent- : [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
 
 
-fixml : [[fixmlDefinition]] | [[fixmComment]]
+fixml : [[fixmlDefinition]] | [[fixmComment]] | [[fixmlDoc]] 
+fixmlDoc : <! [**value] >
 fixmComment :  <?xml [[tagDefinition]]* ?>
 
 fixmlDefinition : <FIXML> [[fixmlContent]]* </FIXML>

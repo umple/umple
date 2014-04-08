@@ -386,8 +386,12 @@ class UmpleInternalParser {
 				}
 				
 				value = value.subSequence(0, value.length()-2) + ")";
-				value = aa.getEnd(1).getRoleName()+".add("+value+");";	
-				CodeInjection injection = new CodeInjection("after","emptyConstructor",value,mainClass);
+				String valueG = aa.getEnd(1).getRoleName()+".add("+value+");";	
+				String valuep= "$this->"+aa.getEnd(1).getRoleName()+"[] = "+value+";";
+				CodeBlock cb1 = new CodeBlock();
+				cb1.setCode("", valueG);
+				cb1.setCode("Php", valuep);
+				CodeInjection injection = new CodeInjection("after","emptyConstructor",cb1,mainClass);
 				mainClass.addCodeInjection(injection);
 			}
 		} else {
