@@ -2143,7 +2143,7 @@ public class PhpClassGenerator implements ILang
       if(!av.getIsLazy()){
          
     
-  String assignValue = av.getValue() == null ? "$" + gen.translate("parameterOne",av) : gen.translate("parameterValue",av);
+  String assignValue = av.getValue() == null || av.getModifier().equals("fixml") ? "$" + gen.translate("parameterOne",av) : gen.translate("parameterValue",av);
 
     stringBuffer.append(TEXT_17);
     stringBuffer.append(instanceIdentifier);
@@ -2563,6 +2563,35 @@ public class PhpClassGenerator implements ILang
     append(stringBuffer, "}");
   }
 
+  // fixml attribute (create empty constructor)
+  for (Attribute av : uClass.getAttributes())
+  {
+	  if ("fixml".equals(av.getModifier()))
+	  {
+		  accessibility = uClass.getIsSingleton() ? "private" : "public";
+		  append(stringBuffer,"\n\n  {0} function __construct()",accessibility);
+
+		  appendln(stringBuffer, "");
+		  
+		  append(stringBuffer, "  {\n");
+
+		  for (Attribute a : uClass.getAttributes())
+		  {
+			  if ("fixml".equals(a.getModifier()) && a.getValue() != null )
+				  append(stringBuffer, "    $this->{0} = {1};\n", a.getName(),a.getValue());
+		  }
+		  for( CodeInjection ci  : uClass.getCodeInjections())
+		  {
+			  if( ci.getOperation().equals("emptyConstructor"))
+			  {
+				  appendln(stringBuffer,"    {0}",ci.getCode());
+			  }
+		  }
+		  appendln(stringBuffer,"  }");
+		  break;
+	  }
+  }
+  
   if (uClass.getIsSingleton())
   {
     appendln(stringBuffer, "");
@@ -2669,7 +2698,7 @@ public class PhpClassGenerator implements ILang
     {
       
     
-  String assignValue = av.getValue() == null ? "$" + gen.translate("parameterOne",av) : gen.translate("parameterValue",av);
+  String assignValue = av.getValue() == null || av.getModifier().equals("fixml") ? "$" + gen.translate("parameterOne",av) : gen.translate("parameterValue",av);
 
     stringBuffer.append(TEXT_130);
     stringBuffer.append(instanceIdentifier);

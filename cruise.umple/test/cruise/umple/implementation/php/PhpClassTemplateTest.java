@@ -35,6 +35,13 @@ public class PhpClassTemplateTest extends ClassTemplateTest
     language = null;
     assertUmpleTemplateFor("php/ClassTemplateTest_Php.ump","php/ClassTemplateTest_Php.php.txt","Mentor");
   }
+  
+  @Test
+  public void fixmlAttribute2()
+  {
+    language = "Php";
+    assertUmpleTemplateFor("ClassTemplateTest_FixmlAttributes2.ump","php/ClassTemplateTest_FixmlAttributes2.php.txt","Mentor");
+  }
 
   @Test
   public void ExtraCode()

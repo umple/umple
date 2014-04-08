@@ -1,0 +1,86 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.20.0.3876 modeling language!*/
+
+class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Attributes
+  private $capacity;
+  private $id;
+  private $name;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aCapacity, $aId, $aName)
+  {
+    $this->capacity = $aCapacity;
+    $this->id = $aId;
+    $this->name = $aName;
+  }
+
+  public function __construct()
+  {
+    $this->capacity = "31";
+    $this->name = "Umple";
+  }
+
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setCapacity($aCapacity)
+  {
+    $wasSet = false;
+    $this->capacity = $aCapacity;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setId($aId)
+  {
+    $wasSet = false;
+    $this->id = $aId;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function setName($aName)
+  {
+    $wasSet = false;
+    $this->name = $aName;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getCapacity()
+  {
+    return $this->capacity;
+  }
+
+  public function getId()
+  {
+    return $this->id;
+  }
+
+  public function getName()
+  {
+    return $this->name;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}

@@ -813,7 +813,7 @@ class PhpGenerator
     
     for (Attribute av : uClass.getAttributes()) 
     {
-      if (av.getIsAutounique() || av.getIsList() || "defaulted".equals(av.getModifier()) || av.getIsLazy() || av.getValue() != null)
+      if (av.getIsAutounique() || av.getIsList() || "defaulted".equals(av.getModifier()) || av.getIsLazy() || ( av.getValue() != null && ! av.getModifier().equals("fixml")) )
       {
         continue;
       }
