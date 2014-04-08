@@ -15,8 +15,6 @@ public class QueuedStateMachineTest_timedEvent
   }
   
   @Test
-  // Test ignored for now as it is nondeterministic - the waiting times are
-  // not guaranteed. Test needs replacing
   public void processEvents() throws InterruptedException
   {
     QueuedSM_timedEvent qsm = new QueuedSM_timedEvent();
