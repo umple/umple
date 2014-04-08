@@ -165,3 +165,142 @@ class QueuedSM_NestedStates_level2 {
     }
   }
 }
+
+class QueuedSM_ConcurrentState
+{
+  queued sm
+  {
+    s1
+    {
+      e1 -> s2;
+    }
+    s2
+    {
+      e2 -> s1;
+      s2a
+      {
+        e3 -> s2b;
+        e5 -> s1;
+      }
+      s2b
+      {
+        e3 -> s2a;
+      }
+      
+      ||
+      
+      s2c
+      {
+        e4 -> s2d;  
+      }
+      
+      s2d
+      {
+        e4 -> s2c;
+      }     
+      
+    }
+  
+  }
+}
+
+class QueuedSM_ConcurrentState_2
+{
+  queued sm
+  {
+    s1
+    {
+      e1 -> s2;
+    }
+    s2
+    {
+      e2 -> s1;
+      s2a
+      {
+        e3 -> s2b;
+        e5 -> s1;
+      }
+      
+      ||
+      
+      s2b
+      {
+        e4 -> s1;  
+      }          
+    }  
+  }
+}
+
+
+class MultipleQueuedSMs {
+  queued sm{
+    s1{
+      e1 -> s2;
+    }
+    s2{
+      e2 ->s1;
+    }
+  }
+  queued sm1{
+    s3{
+      e2 -> s4;
+    }
+    s4{
+      e4 -> s3;
+    }
+    s5{
+    }
+  }
+}
+
+class MultipleQueuedSMs_sameEvents {
+   queued sm{
+    s1 {
+      ev1 ->s2;
+      ev5 ->s3;
+    }
+    s2 {
+      ev2 ->s3;
+    }
+    s3 {
+      ev3 ->s4;
+    }
+    s4 {
+      ev4 ->s1;
+    }
+  }
+  queued sm1 {
+    s21 {
+      ev1 -> s22;
+    }
+    s22 {
+      ev7 -> s21;
+    }
+  }
+ }
+ 
+ class MultipleQueuedSMs_nestedStates_EventlessSM{
+  queued sm{
+    s1{
+      e1 -> s1a;
+      s1a{
+        e5 -> s1b;
+      }
+      s1b{
+        e6 -> s2;
+      }
+    }
+    s2{
+      e2 ->s1;
+    }
+  }
+  queued sm1{
+    s3{
+      e3 -> s4;
+    }
+    s4{
+      e4 -> s3;
+    }
+  }
+  sm2 {q{} s{}}
+}
