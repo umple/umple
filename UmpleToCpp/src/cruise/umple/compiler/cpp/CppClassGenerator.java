@@ -2,6 +2,7 @@ package cruise.umple.compiler.cpp;
 
 import cruise.umple.compiler.*;
 import cruise.umple.util.*;
+
 import java.util.*;
 
 @SuppressWarnings("unused")
@@ -18,7 +19,7 @@ public class CppClassGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
+  protected final String TEXT_1 = "/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */" + NL + "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE ${last.version} modeling language!*/";
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL + "\t";
@@ -2280,7 +2281,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       hasBody = true;
       
     
-  String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
+  String parameterLookup = av.getValue() == null || av.getModifier().equals("fixml") ? "parameterOne" : "parameterValue";
 
     stringBuffer.append(TEXT_11);
     stringBuffer.append(gen.translate("attributeOne",av));
@@ -2298,7 +2299,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       if(!av.getIsLazy()){
          
     
-  String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
+  String parameterLookup = av.getValue() == null || av.getModifier().equals("fixml") ? "parameterOne" : "parameterValue";
 
     stringBuffer.append(TEXT_16);
     stringBuffer.append(gen.translate("attributeOne",av));
@@ -2745,7 +2746,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       hasBody = true;
       
     
-  String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
+  String parameterLookup = av.getValue() == null || av.getModifier().equals("fixml") ? "parameterOne" : "parameterValue";
 
     stringBuffer.append(TEXT_100);
     stringBuffer.append(gen.translate("attributeOne",av));
@@ -2892,7 +2893,32 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
     append(stringBuffer, "}");
   }
   
-
+  // fxml attribute (create empty constructor)
+  for (Attribute av : uClass.getAttributes())
+  {
+	  if ("fixml".equals(av.getModifier()))
+	  {
+		  accessibility = uClass.getIsSingleton() ? "private" : "public";
+		  appendln(stringBuffer,"");
+		  appendln(stringBuffer,"");
+		  appendln(stringBuffer,"  {0} {1}()",new Object[] {accessibility, uClass.getName()});
+		  appendln(stringBuffer,"  {");
+		  for (Attribute a : uClass.getAttributes())
+		  {
+			  if ("fixml".equals(a.getModifier()) && a.getValue() != null )
+				  append(stringBuffer, "    {0} = {1};\n", a.getName(),a.getValue());
+		  }
+		  for( CodeInjection ci  : uClass.getCodeInjections())
+		  {
+			  if( ci.getOperation().equals("emptyConstructor"))
+			  {
+				  appendln(stringBuffer,"    {0}",ci.getCode());
+			  }
+		  }
+		  appendln(stringBuffer,"  }");
+		  break;
+	  }
+  }
     
   }
 
