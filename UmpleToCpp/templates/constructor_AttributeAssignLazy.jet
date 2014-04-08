@@ -1,6 +1,6 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore" %>
 <%
-  String parameterLookup = null; // av.getValue() == null ? "parameterOne" : "parameterValue";
+  String parameterLookup = null; // av.getValue() == null || av.getModifier().equals("fixml") ? "parameterOne" : "parameterValue";
   String defaultValue = null;
   
  
