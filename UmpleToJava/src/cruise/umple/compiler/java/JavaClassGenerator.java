@@ -3255,7 +3255,24 @@ for (StateMachine smq : uClass.getStateMachines())
     append(stringBuffer, "}");
   }
   
-  // fxml attribute (create empty constructor)
+  // fixml attribute (create empty constructor)
+  boolean fixmlAttr = false;
+  boolean emptyConstructor = false;
+  
+  for (Attribute av : uClass.getAttributes())
+	  if ("fixml".equals(av.getModifier()))
+	  {
+		  fixmlAttr = true;
+		  break;
+	  }
+
+  for( CodeInjection ci  : uClass.getCodeInjections())
+	  if( ci.getOperation().equals("emptyConstructor"))
+	  {
+		  emptyConstructor = true;
+		  break;
+	  }
+
   for (Attribute av : uClass.getAttributes())
   {
 	  if ("fixml".equals(av.getModifier()))
@@ -3266,20 +3283,27 @@ for (StateMachine smq : uClass.getStateMachines())
 		  appendln(stringBuffer,"  {0} {1}()",new Object[] {accessibility, uClass.getName()});
 		  appendln(stringBuffer,"  {");
 		  for (Attribute a : uClass.getAttributes())
-		  {
 			  if ("fixml".equals(a.getModifier()) && a.getValue() != null )
 				  append(stringBuffer, "    {0} = {1};\n", a.getName(),a.getValue());
-		  }
 		  for( CodeInjection ci  : uClass.getCodeInjections())
-		  {
 			  if( ci.getOperation().equals("emptyConstructor"))
-			  {
 				  appendln(stringBuffer,"    {0}",ci.getCode());
-			  }
-		  }
 		  appendln(stringBuffer,"  }");
 		  break;
 	  }
+  }
+
+  if( fixmlAttr == false && emptyConstructor == true )
+  {
+	  accessibility = uClass.getIsSingleton() ? "private" : "public";
+	  appendln(stringBuffer,"");
+	  appendln(stringBuffer,"");
+	  appendln(stringBuffer,"  {0} {1}()",new Object[] {accessibility, uClass.getName()});
+	  appendln(stringBuffer,"  {");
+	  for( CodeInjection ci  : uClass.getCodeInjections())
+		  if( ci.getOperation().equals("emptyConstructor"))
+			  appendln(stringBuffer,"    {0}",ci.getCode());
+	  appendln(stringBuffer,"  }");
   }
 
   if (uClass.getIsSingleton())
