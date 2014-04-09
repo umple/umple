@@ -1,0 +1,11 @@
+namespace example;
+
+class Mentor 
+{
+name;
+  after emptyConstructor
+  {
+    System.out.println("Testing");
+    String test;
+  }
+}
