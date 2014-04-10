@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import org.junit.*;
 
-import cruise.pooled.statemachine.test.CourseA;
+import cruise.statemachine.test.CourseA;
 
 
 public class ConsoleTracerTest

@@ -26,12 +26,12 @@ public class UseGeneratorTest extends TemplateTest
   {
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/OneToManyTest.use");
+    SampleFileWriter.destroy(pathToInput + "/useAssociations.use.use");
   }
 
   @Test
   public void OneToMany()
   {
-    System.out.println("OUTPUT PLEASE");
     language = "USE";
     assertUmpleTemplateFor("OneToManyTest.ump","use/OneToManyTest.use.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/OneToManyTest.use")).exists());
