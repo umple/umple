@@ -10,7 +10,21 @@ namespace cruise.umple.compiler;
 class USEGenerator
 {
   
-  String getUSEType(Attribute av) {
+  private String getAssociationName(Association as) {
+    String firstEndName = as.getEnd(0).getDisplayRoleName();
+    String secondEndName = as.getEnd(1).getDisplayRoleName();
+    if(firstEndName.equals(secondEndName)) {
+      if("".equals(firstEndName)) {
+        return as.getName();
+      } else {
+        return firstEndName;
+      }
+    } else {
+      return firstEndName + "__" + secondEndName;
+    }
+  }
+  
+  private String getUSEType(Attribute av) {
     String typeName = av.getType() == null ? "String" : av.getType();
     if ("Date".equals(typeName) || "Time".equals(typeName))
     {
@@ -60,7 +74,7 @@ for(UmpleClass uClass : model.getUmpleClasses()) {
     processed.add(as);
 #>>
 
-association <<=as.getName()>> between <<=useAssociationEnd(as.getEnd(0))>> <<=useAssociationEnd(as.getEnd(1))>>
+association <<=getAssociationName(as)>> between <<=useAssociationEnd(as.getEnd(0))>> <<=useAssociationEnd(as.getEnd(1))>>
 end
 <<#
   }
