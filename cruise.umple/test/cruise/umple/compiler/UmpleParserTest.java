@@ -2207,6 +2207,25 @@ public class UmpleParserTest
   }
   
   @Test
+  public void generateSuboption()
+  {
+	  assertParse("027_generateSuboption.ump");
+	  Assert.assertEquals("GvClassDiagram", model.getDefaultGenerate());
+	  Assert.assertEquals("hideattributes", model.getGenerate(0).getSuboption(0));
+	  Assert.assertEquals("showmethods", model.getGenerate(0).getSuboption(1));
+  }
+  
+  @Test
+  public void generateSuboptionOverride()
+  {
+	  assertParse("027_generateSuboptionOverride.ump");
+	  Assert.assertEquals("GvClassDiagram", model.getDefaultGenerate());
+	  Assert.assertEquals(true, model.getGenerate(0).getOverride());
+	  Assert.assertEquals("blah/blah/blah", model.getDefaultGeneratePath());
+	  Assert.assertEquals("hideattributes", model.getGenerate(0).getSuboption(0));
+  }
+  
+  @Test
   public void methodNameConflictUsingDefaulted()
   {
     assertFailedParse("045_javaDefaultedNameConflict.ump", 48);  

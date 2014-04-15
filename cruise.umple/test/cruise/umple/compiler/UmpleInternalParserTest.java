@@ -105,10 +105,10 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("001_oneCharacterMethod.ump", "[classDefinition][name:X][concreteMethodDeclaration][type:void][methodDeclarator][methodName:m][parameterList][code:z=1;]");
     fileToOutputs.put("001_twoCharacterMethod.ump", "[classDefinition][name:X][concreteMethodDeclaration][type:void][methodDeclarator][methodName:m1][parameterList][code:z=1;]");
     
-    fileToOutputs.put("001_javaLanguage.ump","[generate:Java]");
-    fileToOutputs.put("001_phpLanguage.ump","[generate:Php]");
-    fileToOutputs.put("001_rubyLanguage.ump","[generate:Ruby]");
-    fileToOutputs.put("001_cppLanguage.ump","[generate:Cpp]");
+    fileToOutputs.put("001_javaLanguage.ump","[generate][language:Java]");
+    fileToOutputs.put("001_phpLanguage.ump","[generate][language:Php]");
+    fileToOutputs.put("001_rubyLanguage.ump","[generate][language:Ruby]");
+    fileToOutputs.put("001_cppLanguage.ump","[generate][language:Cpp]");
     fileToOutputs.put("001_outputLanguage.ump","[generate_path][language:Ruby][output:blah/blah/blah][generate_path][language:Java][output:blue/blue/blue][override:--override][generate_path][language:Php][output:path/to/php]");
     fileToOutputs.put("001_outputLanguageOverride.ump","[generate_path][language:Java][output:1][generate_path][language:Java][output:2][generate_path][language:Java][output:3][override:--override][generate_path][language:Java][output:4][override:--override][generate_path][language:Java][output:5]");
     fileToOutputs.put("001_outputLanguageOverrideAll.ump","[generate_path][language:Php][output:1][generate_path][language:Java][output:2][generate_path][language:Ruby][output:3][override:--override][generate_path][language:Java][output:4][override:--override-all][generate_path][language:Java][output:5][override:--override-all][generate_path][language:Php][output:6][generate_path][language:Ruby][output:7][override:--override]");
@@ -248,6 +248,8 @@ public class UmpleInternalParserTest extends UmpleParserTest
 
     fileToOutputs.put("412_association_comment.ump", "[classDefinition][name:A][attribute][name:aName][classDefinition][name:B][attribute][name:bName][associationDefinition][association][associationEnd][bound:1][type:A][arrow:--][associationEnd][bound:*][type:B][inlineComment:comment....]");
     
+    fileToOutputs.put("027_generateSuboption.ump", "[generate][language:GvClassDiagram][suboptionIndicator:--suboption][suboption:hideattributes][suboptionIndicator:-s][suboption:showmethods]");
+    fileToOutputs.put("027_generateSuboptionOverride.ump", "[generate_path][language:GvClassDiagram][output:blah/blah/blah][override:--override][suboptionIndicator:-s][suboption:hideattributes]");
   }
 
   @Before

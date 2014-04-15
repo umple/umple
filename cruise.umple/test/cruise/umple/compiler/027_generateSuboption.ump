@@ -1,0 +1,1 @@
+generate GvClassDiagram --suboption "hideattributes" -s "showmethods";

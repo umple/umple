@@ -94,6 +94,32 @@ digraph "<<=filename>>" {
         isFirst = false;
       }
     }
+    
+    if (hasSuboption("showmethods")) {
+      boolean isFirstMethod = true;
+      for (Method uMethod : uClass.getMethods()) {
+    	if(isFirstMethod) code.append("|"); // method block starter
+    	else code.append("\\\n"); // separator between attributes
+    	String accessModifier = "";
+    	switch (uMethod.getModifier().trim()) {
+    	  case "": accessModifier = "+";
+    	  case "private": accessModifier = "-"; 
+    	  case "protected": accessModifier = "#"; 
+    	  case "public": accessModifier = "+"; 
+    	}
+    	String parameters = "";
+    	if(uMethod.hasMethodParameters()) {
+    	  for (MethodParameter mp : uMethod.getMethodParameters()) {
+    		parameters += mp.getFullType() + ",";
+    	  }
+    	  parameters = parameters.substring(0, parameters.length() - 1); // delete last comma
+    	}
+    	parameters = parameters.replace("<","&lt;").replace(">","&gt;");
+    	String type = uMethod.getType().replace("<","&lt;").replace(">","&gt;");
+    	code.append(accessModifier+uMethod.getName()+"("+parameters+")\\ :\\ "+type+"\\l");
+    	isFirstMethod = false;
+      }
+    }
 
     // Terminate outputting the class attributes
     code.append("}\"");
