@@ -127,13 +127,28 @@ class UmpleInternalParser
   	  
   	  if(genToken.getValue("override") != null && genToken.getValue("override").equals("--override-all"))
   	  	target.setOverrideAll(true);
-  	  
-  	   model.addGenerate(target);
+  	  	
+	  if(genToken.getValue("suboption") != null) {
+	    for (Token t: genToken.getSubTokens()) {
+	      if (t.getName().equals("suboption")) {
+	        target.addSuboption(t.getValue());
+	      }          
+	    }     
+	  }
+	  model.addGenerate(target);
   	}
   	else
   	{
-      model.addGenerate(genToken.getValue());
-  	}
+      GenerateTarget target = new GenerateTarget(genToken.getValue("language"), "");
+      if(genToken.getValue("suboption") != null) {
+        for (Token t: genToken.getSubTokens()) {
+          if (t.getName().equals("suboption")) {
+            target.addSuboption(t.getValue());
+          }          
+        }     
+      }
+      model.addGenerate(target);  	
+    }
   }
 
 }
