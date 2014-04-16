@@ -102,10 +102,10 @@ digraph "<<=filename>>" {
     	else code.append("\\\n"); // separator between attributes
     	String accessModifier = "";
     	switch (uMethod.getModifier().trim()) {
-    	  case "": accessModifier = "+";
-    	  case "private": accessModifier = "-"; 
-    	  case "protected": accessModifier = "#"; 
-    	  case "public": accessModifier = "+"; 
+    	  case "": accessModifier = "+"; break;
+    	  case "private": accessModifier = "-"; break;
+    	  case "protected": accessModifier = "#"; break;
+    	  case "public": accessModifier = "+"; break;
     	}
     	String parameters = "";
     	if(uMethod.hasMethodParameters()) {
