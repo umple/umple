@@ -21,93 +21,44 @@ class UmpleFile
   {
     this(new File(aFullFilename));
   }
-  
-  private StringBuilder init()
+
+  public String getFileName()
   {
-    String fullFilename = file.getAbsolutePath();
-    fileName = file.getName();
-    path = file.getAbsoluteFile().getParentFile().getAbsolutePath();
-    fileContent = new StringBuilder();
-    if (doesFileExist(fullFilename))
-    {
-      append(fullFilename);
-    }
-    return fileContent;
+    return file.getName();
   }
-  
+
+  public String getPath()
+  {
+    return file.getAbsoluteFile().getParentFile().getAbsolutePath();
+  }
+
   public String getSimpleFileName()
   {
-
-    int lastIndex = fileName.lastIndexOf(".");
+    String name = getFileName();
+    int lastIndex = name.lastIndexOf(".");
     if (lastIndex == -1)
     {
-      return fileName;
+      return name;
     }
     else
     {
-      return fileName.substring(0, lastIndex);
+      return name.substring(0, lastIndex);
     }
   }
-
-  public String getFileContent()
-  {
-    return fileContent.toString();
-  }
-
   public InputStream getFileStream() throws FileNotFoundException
   {
     return new FileInputStream(file);
   }
 
-  private boolean doesFileExist(String aFileName)
-  {
-    File file = new File(aFileName);
-    return file.exists();
-  }
-
   public boolean doesFileExist()
   {
-    File file = new File(path,fileName);
     return file.exists();
   }
   
   public String getParent()
   {
-    return ((new File(path)).getParent().toString());
+    return ((new File(getPath())).getParent().toString());
   }
-
-  public void append(String aFilename)
-  {
-    try
-    {
-      FileReader fileReader = new FileReader(aFilename);
-      BufferedReader reader = new BufferedReader(fileReader);
-
-      String nextLine = reader.readLine();
-      while (nextLine != null)
-      {
-        fileContent.append(nextLine);
-        nextLine = reader.readLine();
-      }
-      reader.close();
-      fileReader.close();
-      cleanContent();
-    }
-    catch (FileNotFoundException e)
-    {
-      throw new UmpleCompilerException("File " + aFilename + " was not found.", e);
-    }
-    catch (IOException e)
-    {
-      throw new UmpleCompilerException("File " + aFilename + " had IO problems.", e);
-    }
-  }
-
-  void cleanContent()
-  {
-    fileContent = new StringBuilder(fileContent.toString().replaceAll("//(\\w|\\d|\\s)*\\n", "\n"));
-  }
-  
   // this is used to add command-based linked Umple files to the proper list.
   public void addLinkedFiles(String filename) {
   	linkedFiles = linkedFiles+"use "+filename+";\n";
