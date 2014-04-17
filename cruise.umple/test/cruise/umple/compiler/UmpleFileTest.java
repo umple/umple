@@ -45,16 +45,6 @@ public class UmpleFileTest {
   }
 
   @Test
-  public void appendMultipleFiles()
-  {
-    UmpleFile file = new UmpleFile("aha.txt");
-    file.append("aha2.txt");
-    
-    Assert.assertEquals("aha.txt", file.getFileName());
-    Assert.assertEquals("class Teacher {}class Student {}", file.getFileContent());
-  }  
-
-  @Test
   public void constructorFileOnlyMakeSureThePathIsProperlyResolved()
 
   {
@@ -62,27 +52,14 @@ public class UmpleFileTest {
     String fullName = f.getAbsolutePath();
     UmpleFile file = new UmpleFile(fullName);
     Assert.assertEquals(f.getAbsoluteFile().getParentFile().getAbsolutePath(), file.getPath());
-    
-    Assert.assertEquals("aha.txt", file.getFileName());
-    Assert.assertEquals("class Teacher {}", file.getFileContent());
   }
-  
-  
+
   @Test
   public void constructorFileOnly()
   {
     UmpleFile file = new UmpleFile("aha.txt");
     Assert.assertEquals("aha.txt", file.getFileName());
-    Assert.assertEquals("class Teacher {}", file.getFileContent());
   }
-  
-  @Test
-  public void constructorUnknownFilenameIsOkay()
-  {
-    UmpleFile file = new UmpleFile("blah.txt");
-    Assert.assertEquals("blah.txt", file.getFileName());
-    Assert.assertEquals("", file.getFileContent());
-  }  
 
   @Test
   public void constructorWithPathAndFilenameSeparate()
@@ -92,7 +69,6 @@ public class UmpleFileTest {
 
     UmpleFile file = new UmpleFile(path,"aha.txt");
     Assert.assertEquals("aha.txt", file.getFileName());
-    Assert.assertEquals("class Teacher {}", file.getFileContent());
   }   
 
   @Test
@@ -101,7 +77,6 @@ public class UmpleFileTest {
     String path = SampleFileWriter.rationalize("test/data/Election");
     UmpleFile file = new UmpleFile(path,"ElectionSystem.ump");
     Assert.assertEquals("ElectionSystem.ump", file.getFileName());
-    Assert.assertEquals(true,file.getFileContent().length() > 0);
   }   
 
   @Test

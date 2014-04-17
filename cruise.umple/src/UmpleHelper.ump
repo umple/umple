@@ -25,10 +25,7 @@ class UmpleFile
   depend java.io.*;
   depend cruise.umple.compiler.exceptions.*;
 
-  File file;
-  fileName = null;
-  String path = null;
-  internal StringBuilder fileContent = init();
+  internal File file;
   // list of command-based linked Umple files
   internal String linkedFiles="";
 }
