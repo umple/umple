@@ -22,15 +22,9 @@ class UmpleFile
     this(new File(aFullFilename));
   }
 
-  public String getFileName()
-  {
-    return file.getName();
-  }
-
-  public String getPath()
-  {
-    return file.getAbsoluteFile().getParentFile().getAbsolutePath();
-  }
+  fileName = { file.getName() }
+  path = { file.getAbsoluteFile().getParentFile().getAbsolutePath() }
+  parent = { new File(getPath()).getParent().toString() }
 
   public String getSimpleFileName()
   {
@@ -54,11 +48,7 @@ class UmpleFile
   {
     return file.exists();
   }
-  
-  public String getParent()
-  {
-    return ((new File(getPath())).getParent().toString());
-  }
+
   // this is used to add command-based linked Umple files to the proper list.
   public void addLinkedFiles(String filename) {
   	linkedFiles = linkedFiles+"use "+filename+";\n";
