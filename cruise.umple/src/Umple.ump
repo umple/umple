@@ -149,14 +149,6 @@ class Method
 }
 
 /*
- * TO DO: Determine if this can be deleted
- */
-class Modifier
-{
-  String [] name;
-}
-
-/*
  * The contents of a method, such as the code within it.
  */
 class MethodBody
@@ -329,7 +321,6 @@ class CodeInjection
 class ExtraCode
 {
  internal CodeBlock[] code;
- boolean hasCode=false;
 }
 
 /*
