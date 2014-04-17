@@ -617,13 +617,11 @@ class ExtraCode
   public void appendExtraCode(String newCode)
   {
     code.add(new CodeBlock(newCode));
-    setHasCode(true);
   }
 
   public void appendExtraCode(CodeBlock cb)
   {
     code.add(cb);
-    setHasCode(true);
   }
 
   public String getExtraCode()
@@ -640,6 +638,10 @@ class ExtraCode
     return returnCode;
   }
 
+  public boolean getHasCode()
+  {
+    return code.size() > 0;
+  }
 }
 
 /*
