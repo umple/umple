@@ -1307,16 +1307,18 @@ Action.keyboardShortcut = function(event)
     if(Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0)
     {
       Action.classDeleted(Page.selectedClass.id);
+	  event.preventDefault();	  
     }
     else if(Page.selectedAssociation)
     {
       Action.associationDeleted(Page.selectedAssociation.id);
+	  event.preventDefault();	  
     }
     else if(Page.selectedGeneralization)
     {
       Action.generalizationDeleted(Page.selectedGeneralization.id);
+	  event.preventDefault();
     }
-    event.preventDefault();
   }
 
 }
