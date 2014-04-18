@@ -780,7 +780,68 @@ class Parser
   {
     return toGrammarParts("");
   }
+
+  private String cleanupRule(String cleanedUpRule)
+  {
   
+    int ruleLength = cleanedUpRule.length();
+    // Ensure that rules with angle brackets appear correctly.
+    cleanedUpRule = cleanedUpRule.replaceAll("<", "&lt;");
+    cleanedUpRule = cleanedUpRule.replaceAll(">", "&gt;");
+    
+    // Replace all references to rules using [[ ]] with links to the rules 
+    cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "[[<a href=\"UmpleGrammar.html#$1\">$1</a>]]");
+    
+    // Colour all named identifiers such as [name] green
+    cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E~?)([a-zA-Z_]+)\\Q]\\E", "$1<font color=\"green\">$2</font>]");
+    
+    // Colour all named identifiers such as "bound" in [!bound:\d+|[*]] green
+    cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E!)([a-zA-Z_]+)\\Q:\\d+|[*]]\\E", "$1<font color=\"green\">$2</font>:\\\\d+|[*]]");       
+    // Colour all named identifiers such as "bound" in [=bound:*] green
+    cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E=)([a-zA-Z_]+)\\Q:*\\E", "$1<font color=\"green\">$2</font>:*");
+    
+    // Colour pairs of identifiers green (where one or both may be supplied
+    cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E)([a-zA-Z_]+),([a-zA-Z_]+)", "$1<font color=\"green\">$2</font>,<font color=\"green\">$3</font>");
+    
+    // Colour constant strings (i.e. keywords) and explicit special characters red
+    cleanedUpRule = cleanedUpRule.replaceAll("([(]|\\s)([a-zA-Z_{}.,:;\\-\\\"<>]+|/|//|/\\*|\\*/|\\[|\\])(\\s|$|[)])", "$1<font color=\"red\">$2</font>$3");
+
+    // There are a couple of places with parens that need making red
+    cleanedUpRule = cleanedUpRule.replaceAll("(\\s)([{}]|OPEN_ROUND_BRACKET)(\\s)", "$1<font color=\"red\">$2</font>$3");
+    
+    // Colour constant strings sets such as [=modifier:immutable|settable] red
+    cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:|[|])([A-Za-z\\-+<>*]+)", "$1<font color=\"red\">$2</font>");
+                
+    // Colour special case [=list:[]] red
+    cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:)\\Q[]\\E", "$1<font color=\"red\">[]</font>");
+                
+    // Colour special constants such as [=debug] red 
+    cleanedUpRule = cleanedUpRule.replaceAll("[\\[]=([a-zA-Z_]*)[\\]]", "[=<font color=\"red\">$1</font>]");
+    
+    // Colour arbitrary text blocks dirty yellow [**stuff] or [**stuff:xx]
+    cleanedUpRule = cleanedUpRule.replaceAll("[\\[][*][*]?([a-zA-Z_]*)([:].*)?[\\]]", "[**<font color=\"#AAAA22\">$1</font>$2]");
+
+    // Revert changes made during rule parsing
+    cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "(");
+    cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", ")");
+    cleanedUpRule = cleanedUpRule.replace("DOUBLE_OR_BARS", "||");
+
+    
+    // If long rule, then indent on any 'or'
+    if(ruleLength > 80) {
+      int currentLength = cleanedUpRule.length();
+      // Replace ! in main rule
+      cleanedUpRule = cleanedUpRule.replaceAll("\\s[|]\\s", "\n<br/>&nbsp;&nbsp;&nbsp;&nbsp| ");
+      
+      // Replace | in substrings if no changes made above
+      if(currentLength == cleanedUpRule.length()) {
+        cleanedUpRule = cleanedUpRule.replaceAll("[|]", "\n<br/>&nbsp;&nbsp;&nbsp;&nbsp|");
+      }
+    }
+    
+    return cleanedUpRule;
+  }
+
   public String toGrammarParts(String rulesToOutput)
   {
     StringBuilder answer = new StringBuilder();
@@ -819,7 +880,6 @@ class Parser
         String[] splitRule = rule.split(":",2);
         if(splitRule[0].length() != 0) {
           // We seem to have a valid rule
-          int ruleLength = splitRule[1].length();
 
           // Determine if there is a minus sign indicating a rule
           // whose name will not appear in the parse tree
@@ -833,62 +893,8 @@ class Parser
           {
             // We are to output the rule since we are outputting all
             // or it was listed in rulesToOutput
-            String cleanedUpRule = splitRule[1];
+            String cleanedUpRule = cleanupRule(splitRule[1]);
 
-            // Ensure that rules with angle brackets appear correctly.
-            cleanedUpRule = cleanedUpRule.replaceAll("<", "&lt;");
-            cleanedUpRule = cleanedUpRule.replaceAll(">", "&gt;");
-            
-            // Replace all references to rules using [[ ]] with links to the rules 
-            cleanedUpRule = cleanedUpRule.replaceAll("\\Q[[\\E([a-zA-Z_]*)\\Q]]\\E", "[[<a href=\"UmpleGrammar.html#$1\">$1</a>]]");
-            
-            // Colour all named identifiers such as [name] green
-            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E~?)([a-zA-Z_]+)\\Q]\\E", "$1<font color=\"green\">$2</font>]");
-            
-            // Colour all named identifiers such as "bound" in [!bound:\d+|[*]] green
-            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E!)([a-zA-Z_]+)\\Q:\\d+|[*]]\\E", "$1<font color=\"green\">$2</font>:\\\\d+|[*]]");       
-            // Colour all named identifiers such as "bound" in [=bound:*] green
-            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E=)([a-zA-Z_]+)\\Q:*\\E", "$1<font color=\"green\">$2</font>:*");
-            
-            // Colour pairs of identifiers green (where one or both may be supplied
-            cleanedUpRule = cleanedUpRule.replaceAll("(\\Q[\\E)([a-zA-Z_]+),([a-zA-Z_]+)", "$1<font color=\"green\">$2</font>,<font color=\"green\">$3</font>");
-            
-            // Colour constant strings (i.e. keywords) and explicit special characters red
-            cleanedUpRule = cleanedUpRule.replaceAll("([(]|\\s)([a-zA-Z_{}.,:;\\-\\\"<>]+|/|//|/\\*|\\*/|\\[|\\])(\\s|$|[)])", "$1<font color=\"red\">$2</font>$3");
-
-            // There are a couple of places with parens that need making red
-            cleanedUpRule = cleanedUpRule.replaceAll("(\\s)([{}]|OPEN_ROUND_BRACKET)(\\s)", "$1<font color=\"red\">$2</font>$3");
-           
-            // Colour constant strings sets such as [=modifier:immutable|settable] red
-            cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:|[|])([A-Za-z\\-+<>*]+)", "$1<font color=\"red\">$2</font>");
-                        
-            // Colour special case [=list:[]] red
-            cleanedUpRule = cleanedUpRule.replaceAll("([\\[]=[a-zA-Z]*:)\\Q[]\\E", "$1<font color=\"red\">[]</font>");
-                        
-            // Colour special constants such as [=debug] red 
-            cleanedUpRule = cleanedUpRule.replaceAll("[\\[]=([a-zA-Z_]*)[\\]]", "[=<font color=\"red\">$1</font>]");
-            
-            // Colour arbitrary text blocks dirty yellow [**stuff] or [**stuff:xx]
-            cleanedUpRule = cleanedUpRule.replaceAll("[\\[][*][*]?([a-zA-Z_]*)([:].*)?[\\]]", "[**<font color=\"#AAAA22\">$1</font>$2]");
-
-            // Revert changes made during rule parsing
-            cleanedUpRule = cleanedUpRule.replace("OPEN_ROUND_BRACKET", "(");
-            cleanedUpRule = cleanedUpRule.replace("CLOSE_ROUND_BRACKET", ")");
-            cleanedUpRule = cleanedUpRule.replace("DOUBLE_OR_BARS", "||");
-
-            
-            // If long rule, then indent on any 'or'
-            if(ruleLength > 80) {
-              int currentLength = cleanedUpRule.length();
-              // Replace ! in main rule
-              cleanedUpRule = cleanedUpRule.replaceAll("\\s[|]\\s", "\n<br/>&nbsp;&nbsp;&nbsp;&nbsp| ");
-              
-              // Replace | in substrings if no changes made above
-              if(currentLength == cleanedUpRule.length()) {
-                cleanedUpRule = cleanedUpRule.replaceAll("[|]", "\n<br/>&nbsp;&nbsp;&nbsp;&nbsp|");
-              }
-            }
-          
             // Output the rule nicely
 
             // Start by outputting any queued comments (if there are any)
