@@ -50,7 +50,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $language = $langparts[0];
   $suboptions = "";
   for($i=1; $i<count($langparts); $i++){
-    $suboptions = $suboptions . "-s " . $langparts[$i];
+    $suboptions = $suboptions . " -s " . $langparts[$i];
   }
   
   $languageStyle = $_REQUEST["languageStyle"];
