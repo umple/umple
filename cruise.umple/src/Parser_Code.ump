@@ -1389,6 +1389,37 @@ class Parser
     int closeBracket = definition.lastIndexOf("]");
     return openBracket > closeBracket;
   }
+  
+  // Return the location of the matched quote.
+  private int findMatchingQuote(char[] chars, char quote, int start)
+  {
+    if(chars[start] != quote) {
+      return start;
+    }
+    int i;
+    for(i = start + 1; i < chars.length && chars[i] != quote; i++) {
+      if(chars[i] == '\\') {
+        //Escape the next character
+        i++;
+      }
+    }
+    return i;
+  }
+
+  // Return the location of the next newline
+  private int findNewline(char[] chars, int start) {
+    int i;
+    for(i = start; i < chars.length && chars[i] != '\n'; i++) {}
+    return i;
+  }
+
+  // Return the location of the closing c-style comment.
+  private int findCloseComment(char[] chars, int start)
+  {
+    int i;
+    for(i = start; i < chars.length - 1 && !(chars[i] == '*' && chars[i+1] == '/'); i++) {}
+    return i + 1;
+  }
 
   private boolean isBalanced(String input)
   {
@@ -1396,61 +1427,32 @@ class Parser
       return true;
     }
     int braces = 0;
-    boolean isQuote = false;
-    boolean isSingleQuote = false;
-    boolean isComment = false;
-    boolean isMultiComment = false;
-    boolean escaping = false;
     char[] chars = input.toCharArray();
-    int size = input.length();
-    for(int i=0;i<size;i++){
-      if(!escaping)
-      {
-        if(isQuote&&chars[i]=='\"'){
-          isQuote = false;
-        }
-        else if(isSingleQuote&&chars[i]=='\''){
-          isSingleQuote = false;
-        }
-        else if(!isComment&&!isMultiComment&&!isQuote&&!isSingleQuote){
-          if(chars[i]=='{'){
-            braces++;
-          }
-          else if(chars[i]=='}'){
-            braces--;
-          }
-          else if(chars[i]=='\"'){
-            isQuote = true;
-          }
-          else if(chars[i]=='\''){
-             isSingleQuote = true;
-          }
-          else if(i<size-1&&chars[i]=='/'){
-            if(chars[i+1]=='/'){
-              isComment = true;
-              i++;
-            }
-            else if(chars[i+1]=='*'){
-              isMultiComment = true;
-              i++;
-            }
-          }          
-        }
-        else if(isComment&&chars[i]=='\n'){
-          isComment = false;
-        }
-        else if(isMultiComment&&i<size-1&&chars[i]=='*'&&chars[i+1]=='/'){
-          isMultiComment = false;
-        }
-        else if(chars[i]=='\\'){
-          escaping = true;
-        }
-        else {
-          escaping = false;
-        }      
+    for(int i=0; i < chars.length; i++){
+      if(chars[i]== '{' ){
+        braces++;
       }
-      else {
-        escaping = false;
+      else if(chars[i] == '}'){
+        braces--;
+      }
+      else if(chars[i] == '\"' || chars[i] == '\''){
+        i = findMatchingQuote(chars, chars[i], i);
+        if(i == chars.length) {
+          //Unclosed quote
+          return false;
+        }
+      }
+      else if(i < chars.length - 1 && chars[i] == '/'){
+        if(chars[i+1] == '/'){
+          i = findNewline(chars, i);
+        }
+        else if(chars[i+1] == '*'){
+          i = findCloseComment(chars, i);
+          if(i == chars.length) {
+            //Unclosed comment
+            return false;
+          }
+        }
       }
     }
     return braces == 0;
