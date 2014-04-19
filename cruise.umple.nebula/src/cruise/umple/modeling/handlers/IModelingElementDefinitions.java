@@ -29,6 +29,7 @@ public interface IModelingElementDefinitions {
 	public static final String IS_SORTED= "isSorted"; //$NON-NLS-1$
 	public static final String IS_DERIVED= "isDerived"; //$NON-NLS-1$
 	public static final String IS_INTERNAL= "isInternal"; //$NON-NLS-1$
+	public static final String MODIFIER= "modifier"; //$NON-NLS-1$
 	public static final String DEFAULTED_MODIFIER= "defaulted"; //$NON-NLS-1$
 	public static final String INTERNAL= "internal"; //$NON-NLS-1$
 	public static final String HAS_KEY_MEMBERS= "key"; //$NON-NLS-1$
