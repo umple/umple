@@ -36,6 +36,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 
+import cruise.umple.core.DecisionPoint.ReturnDecisionObject;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
 import cruise.umple.core.GenerationCallback.GenerationArguments;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
@@ -47,6 +48,7 @@ import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationCallback.GenerationStringSegment;
 import cruise.umple.core.GenerationCallback.WatchedObjectValue;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
+import cruise.umple.core.GenerationPoint.ReturnGenerationObject;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
 import cruise.umple.templates.GenerationTemplateDelegator;
 import cruise.umple.templates.IGenerationTemplateRegistry;
@@ -210,9 +212,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			
 			loopProcessorObject.fMethod.invoke(loopProcessorObject.fInstance,
 					getParameters(obj, this, loopProcessorObject.fMethod));
-			
-			//System.gc();
-			//Runtime.getRuntime().freeMemory();
 		}
 	}
 
@@ -368,7 +367,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				
 				all= all+ invoke;
 				
-				if(generationPointObject.unique()){
+				if(generationPointObject.unique()|| (invoke instanceof ReturnGenerationObject&& ((ReturnGenerationObject)invoke).isEndpoint())){
 					this.interceptedObjectsRetriever.setValue(generationPoint, invoke, true, element, arguments);
 					return (String) invoke;
 				}
@@ -546,12 +545,33 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		}
 		for(String key: _decisionInvocations.keySet()){
 			List<DecisionObject> list = _decisionInvocations.get(key);
+			
+			Collections.sort(list, new Comparator<DecisionObject>() {
+
+				@Override
+				public int compare(DecisionObject d1,DecisionObject d2) {
+					return Integer.valueOf(d2.fDecisionPoint.priority()).compareTo(Integer.valueOf(d1.fDecisionPoint.priority()));
+				}
+			});
+			
 			for(DecisionObject decisionObject: list){
 				for(String condition: decisionObject.fDecisionPoint.watchIf()){
 					List<GenerationPointObject> generationsList = _pointsInvocations.get(condition);
 					if(generationsList!= null){
 						for(GenerationPointObject object: generationsList){
+							if(object.whenDecisions.contains(decisionObject)){
+								continue;
+							}
+							
 							object.whenDecisions.add(decisionObject);
+							
+							Collections.sort(object.whenDecisions, new Comparator<DecisionObject>() {
+
+								@Override
+								public int compare(DecisionObject d1,DecisionObject d2) {
+									return Integer.valueOf(d2.fDecisionPoint.priority()).compareTo(Integer.valueOf(d1.fDecisionPoint.priority()));
+								}
+							});
 						}
 					}
 				}
@@ -560,7 +580,19 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					List<GenerationPointObject> generationsList = _pointsInvocations.get(condition);
 					if(generationsList!= null){
 						for(GenerationPointObject object: generationsList){
+							if(object.whenNotDecisions.contains(decisionObject)){
+								continue;
+							}
+							
 							object.whenNotDecisions.add(decisionObject);
+							
+							Collections.sort(object.whenNotDecisions, new Comparator<DecisionObject>() {
+
+								@Override
+								public int compare(DecisionObject d1,DecisionObject d2) {
+									return Integer.valueOf(d2.fDecisionPoint.priority()).compareTo(Integer.valueOf(d1.fDecisionPoint.priority()));
+								}
+							});
 						}
 					}
 				}
@@ -749,6 +781,12 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 										(Object)Boolean.valueOf(decision), true, element, arguments);
 								return decision;
 							}
+						}
+					}else if(result instanceof ReturnDecisionObject){
+						ReturnDecisionObject returnDecisionObject= (ReturnDecisionObject) result;
+						
+						if(returnDecisionObject.isEndpoint()){
+							return returnDecisionObject.value();
 						}
 					}
 				} catch (Exception e) {
@@ -1262,8 +1300,8 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	private class GenerationPointObject{
 		protected Method fMethod;
 		protected GenerationPoint fGenerationPoint;
-		protected Set<DecisionObject> whenDecisions= new HashSet<DecisionObject>();
-		protected Set<DecisionObject> whenNotDecisions= new HashSet<DecisionObject>();
+		protected List<DecisionObject> whenDecisions= new ArrayList<DecisionObject>();
+		protected List<DecisionObject> whenNotDecisions= new ArrayList<DecisionObject>();
 		protected Object fInstance;
 		
 		public GenerationPointObject(Method method, GenerationPoint generationPoint, Object instance) {
@@ -1299,7 +1337,6 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 						registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments, this.fMethod, arguments, watchingObject);
 						return null;
 					}
-					
 					Object[] parameters = getParametersValues(element, registry, currentString, decisionObject.fMethod, false, watchingObject, arguments);
 					Object invoke = decisionObject.fMethod.invoke(decisionObject.fInstance, parameters);
 					if(invoke instanceof Boolean){
@@ -1307,7 +1344,18 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 							registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments, this.fMethod, arguments, watchingObject);
 							return null;
 						}
+					}else if(invoke instanceof ReturnDecisionObject){
+						ReturnDecisionObject returnDecisionObject= (ReturnDecisionObject) invoke;
+						if(!returnDecisionObject.value()){
+							registry.generationObjectsRetriever.setValue(generationPoint, null, true, element, arguments, this.fMethod, arguments, watchingObject);
+							return null;
+						}
+						
+						if(returnDecisionObject.isEndpoint()){
+							break;
+						}
 					}
+					
 				}
 				
 				for(DecisionObject decisionObject: this.whenNotDecisions){
@@ -1438,7 +1486,7 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			return comparePriorities(priority1, priority2);
 		}
 
-		private static int comparePriorities(int priority1, int priority2) {
+		private int comparePriorities(int priority1, int priority2) {
 			if(priority1== priority2){
 				return 0;
 			}

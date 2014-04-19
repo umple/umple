@@ -55,6 +55,7 @@ public interface IModelingConstructorDefinitionsConstants {
 	public final static String CONSTRUCTOR_DECLARATIONS="cpp.constructor.declartions";  //$NON-NLS-1$
 	public final static String CONSTRUCTOR_DECLARATION="cpp.constructor.declartion";  //$NON-NLS-1$
 	public final static String CONSTRUCTOR_CONTENTS="cpp.constructor.contents";  //$NON-NLS-1$
+	public static final String PROCESS_CONSTRUCTOR_CONTENTS = "process.constructor.contents"; //$NON-NLS-1$
 	public final static String CONSTRUCTOR_PARAMETERS_IMPLEMENTATION_PARENT_ELEMENT="cpp.constructor.parameters.implementation.parent.element";  //$NON-NLS-1$
 	public final static String CONSTRUCTOR_PARAMETERS_IMPLEMENTATION_ROOT_ELEMENT="cpp.constructor.parameters.implementation.root.element";  //$NON-NLS-1$
 	public final static String CONSTRUCTOR_PARAMETERS_IMPLEMENTATION_IS_CALL="cpp.constructor.parameters.implementation.is.call";  //$NON-NLS-1$

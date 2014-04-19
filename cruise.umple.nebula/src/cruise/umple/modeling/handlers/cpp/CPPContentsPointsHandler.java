@@ -242,18 +242,36 @@ public class CPPContentsPointsHandler{
 				GenerationArgumentDescriptor.arg(ICppDefinitions.CONSTRUCTOR_PARENT_PARAMETERS_LIST, all));
 	}
 	
-	@SuppressWarnings("unchecked")
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_CONTENTS, priority= IGenerationPointPriorityConstants.HIGHEST)
 	public static void constrcuorHelperContents(@GenerationBaseElement Object element,
-			@GenerationLoopElement Object modelPackage,
-			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name){
-		
-		List<Object> parameters = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, element);
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter){
 		
 		List<String> allDeclarations= new ArrayList<String>();
 		List<String> allImplementations= new ArrayList<String>();
 		
+		generationValueGetter.generationPoint(element, IModelingConstructorDefinitionsConstants.PROCESS_CONSTRUCTOR_CONTENTS, 
+				allDeclarations,allImplementations);
+		
+		String declarations = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_DECLARATIONS,element, 
+				GenerationUtil.listToGeneratedString(0, 0, allDeclarations).trim(), Boolean.valueOf(allDeclarations.size()>1));
+		
+		String implementations = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATIONS,element, 
+				GenerationUtil.listToGeneratedString(0, 0, allImplementations).trim(), Boolean.valueOf(allImplementations.size()>1));
+		
+		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC, 
+				declarations, implementations);
+	}
+
+	@SuppressWarnings("unchecked")
+	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.PROCESS_CONSTRUCTOR_CONTENTS, priority= IGenerationPointPriorityConstants.HIGHEST)
+	public static void processConstructorDetails(@GenerationBaseElement Object element,
+			@GenerationLoopElement Object modelPackage,
+			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
+			@GenerationArgument List<String> allDeclarations, 
+			@GenerationArgument List<String> allImplementations) {
+		
+		List<Object> parameters = generationValueGetter.getValues(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_REGISTERED_PARAMETERS, element);
 		SimpleEntry<Object, Object> params= (SimpleEntry<Object, Object>) parameters.get(0);
 		SimpleEntry<Object, Object> otherParams= (SimpleEntry<Object, Object>) parameters.get(parameters.size()-1);
 		
@@ -356,14 +374,6 @@ public class CPPContentsPointsHandler{
 				allImplementations.add(expandedConstructor);
 			}
 		}
-		String declarations = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_DECLARATIONS,element, 
-				GenerationUtil.listToGeneratedString(0, 0, allDeclarations).trim(), Boolean.valueOf(allDeclarations.size()>1));
-		
-		String implementations = generationValueGetter.generate(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATIONS,element, 
-				GenerationUtil.listToGeneratedString(0, 0, allImplementations).trim(), Boolean.valueOf(allImplementations.size()>1));
-		
-		addBaseDeclaration(generationValueGetter, element, IModelingConstants.METHOD_PRE_DEFINED_GROUP, VisibilityConstants.PUBLIC, 
-				declarations, implementations);
 	}
 	
 	private static void processConstructorContents(GenerationPolicyRegistry generationValueGetter, Object modelPackage, Object source,
