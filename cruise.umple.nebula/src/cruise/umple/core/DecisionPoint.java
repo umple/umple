@@ -32,4 +32,32 @@ public @interface DecisionPoint {
 	String[] watchIf() default {};
 	String[] watchIfNot() default {};
 	boolean optimistic() default true;
+	int priority() default 0;
+	
+	public class ReturnDecisionObject{
+		
+		private boolean fCut;
+		private boolean fValue;
+
+		public ReturnDecisionObject(boolean value, boolean cut){
+			this.setValue(value);
+			this.setEndpoint(cut);
+		}
+
+		public boolean isEndpoint() {
+			return this.fCut;
+		}
+
+		public void setEndpoint(boolean cut) {
+			this.fCut = cut;
+		}
+
+		public boolean value() {
+			return this.fValue;
+		}
+
+		public void setValue(boolean value) {
+			this.fValue = value;
+		}
+	}
 }

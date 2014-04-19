@@ -19,6 +19,7 @@
 package cruise.umple.cpp.generator;
 
 import cruise.umple.cpp.processors.CppPoliciesProcessor;
+import cruise.umple.modeling.handlers.cpp.FixmlPointsHandler;
 import cruise.umple.modeling.handlers.cpp.UmpleBaseGenerationPointsHandler;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.cpp.jet.util.UmpleCppTemplateHelper;
@@ -40,6 +41,9 @@ public abstract class UmpleCppPoliciesProcessor extends CppPoliciesProcessor{
 		generationPolicyRegistry.register(IUmpleModelingPriorities.class);
 		super.registerGenerationPoints();
 		generationPolicyRegistry.register(new UmpleBaseGenerationPointsHandler());
+		
+		
+		generationPolicyRegistry.register(new FixmlPointsHandler());
 	}
 	
 	@Override

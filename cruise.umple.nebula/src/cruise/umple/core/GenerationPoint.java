@@ -47,4 +47,31 @@ public @interface GenerationPoint {
 		}
 		
 	}
+	
+	public class ReturnGenerationObject{
+		
+		private boolean fEndpoint;
+		private Object fValue;
+
+		public ReturnGenerationObject(Object value, boolean endpoint){
+			this.setValue(value);
+			this.setCut(endpoint);
+		}
+
+		public boolean isEndpoint() {
+			return this.fEndpoint;
+		}
+
+		public void setCut(boolean cut) {
+			this.fEndpoint = cut;
+		}
+
+		public Object value() {
+			return this.fValue;
+		}
+
+		public void setValue(Object value) {
+			this.fValue = value;
+		}
+	}
 }
