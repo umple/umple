@@ -615,6 +615,11 @@ public class UmpleModelGenerationPolicy{
 		return attribute.isIsLazy();
 	}
 	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.MODIFIER)
+	public static String modifier(@GenerationBaseElement Attribute attribute){
+		return attribute.getModifier();
+	}
+	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.HAS_KEY_MEMBERS)
 	public static boolean getKey(@GenerationBaseElement UmpleClass element){
 		return element.getKey().getMembers().length>0;
