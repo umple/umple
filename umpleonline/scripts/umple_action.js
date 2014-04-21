@@ -1669,10 +1669,21 @@ Action.updateLayoutEditorAndDiagram = function()
 
 Action.updateUmpleLayoutEditor = function(response)
 {
-  var umpleJson = response.responseText;
+  //Extract data from response	
+  var codeparts = response.responseText.split('URL_SPLIT');
+  var errorMessage=codeparts[0];
+  var umpleJson=codeparts[1];//Remove the URL_SPLIT in umpleJson
+
+  //If anything failed, set umpleJson to response.responseText
+  if(umpleJson == null || umpleJson == undefined)
+  {
+	  umpleJson = response.responseText;
+  }
+  
   Page.showLayoutLoading();
   //TODO: for some reason in the live version this call isnt being made
   //but oddly the diagram is updated, and that is done in the callback
+      
   Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",umpleJson));  
 }
 
@@ -1726,7 +1737,7 @@ Action.updateUmpleDiagramCallback = function(response)
   var errorMessage = "";
   var isError = false;
   
-  if(Page.useEditableClassDiagram) {
+  if(Page.useEditableClassDiagram) {	  
     var codeparts = toDisplay.split('URL_SPLIT');
     errorMessage=codeparts[0];
     umpleJson=codeparts[1];
@@ -1741,7 +1752,7 @@ Action.updateUmpleDiagramCallback = function(response)
     }
     
     if(codeparts.length>1 && codeparts[1].length>100) {
-      umpleJson="<svg xmlns="+codeparts[1];     
+      umpleJson="<svg xmlns="+codeparts[1];
     }
   }
   

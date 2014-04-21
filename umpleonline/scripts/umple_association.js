@@ -205,6 +205,11 @@ function UmpleAssociation()
   	
     var classOne = UmpleSystem.find(this.classOneId);
     var classTwo = UmpleSystem.find(this.classTwoId);
+	
+	//If the classes are undefined quite operation
+	if(classOne == null || classOne == undefined || classTwo == null || classTwo == undefined)
+		return associationDiv;
+	
     this.classOnePosition = classOne.position;
     this.classTwoPosition = classTwo.position;
     var perimeterOne = this.classOnePosition.add(this.offsetOnePosition);
