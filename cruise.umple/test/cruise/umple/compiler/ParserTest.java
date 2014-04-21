@@ -19,8 +19,6 @@ import org.junit.*;
 
 
 
-import cruise.umple.util.FileManager;
-
 import cruise.umple.util.SampleFileWriter;
 
 
@@ -109,7 +107,7 @@ public class ParserTest
 
   {
 
-    FileManager.writeFileToDisk("grammar01.txt", "program : [name] = [[value]] ;\nvalue : a | b\n");
+    SampleFileWriter.createFile("grammar01.txt", "program : [name] = [[value]] ;\nvalue : a | b\n");
 
     Assert.assertEquals(2,parser.addRulesInFile("grammar01.txt"));
 
@@ -141,7 +139,7 @@ public class ParserTest
 
   {
 
-    FileManager.writeFileToDisk("grammar01.txt", "program : [name] = [value] ;\n //this style\n  # or this style\n");
+    SampleFileWriter.createFile("grammar01.txt", "program : [name] = [value] ;\n //this style\n  # or this style\n");
 
     Assert.assertEquals(1,parser.addRulesInFile("grammar01.txt"));
 
@@ -165,7 +163,7 @@ public class ParserTest
 
     
 
-    FileManager.writeFileToDisk("grammar01.txt", "program : [name] = [[value]] ;\nvalue : a | b\n\n");
+    SampleFileWriter.createFile("grammar01.txt", "program : [name] = [[value]] ;\nvalue : a | b\n\n");
 
     Assert.assertEquals(2,parser.addRulesInFile("grammar01.txt"));
 

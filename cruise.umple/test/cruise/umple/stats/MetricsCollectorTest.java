@@ -13,7 +13,7 @@ import java.io.File;
 
 import org.junit.*;
 
-import cruise.umple.util.FileManager;
+import cruise.umple.util.SampleFileWriter;
 
 public class MetricsCollectorTest
 {
@@ -45,7 +45,7 @@ public class MetricsCollectorTest
   @Test
   public void analyze_knownFile()
   {
-    FileManager.writeFileToDisk("myapp.umple", "");
+    SampleFileWriter.createFile("myapp.umple", "");
     boolean answer = collector.analyze("p1","myapp.umple"); 
     Assert.assertEquals(true, answer);
   }
@@ -59,7 +59,7 @@ public class MetricsCollectorTest
   @Test
   public void numberOf_invalidData()
   {
-    FileManager.writeFileToDisk("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
+    SampleFileWriter.createFile("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
     collector.analyze("p1","myapp.umple");
     Assert.assertEquals(0,collector.numberOf("p1","blah","blah"));
   }
@@ -67,7 +67,7 @@ public class MetricsCollectorTest
   @Test
   public void numberOf_oneToMany()
   {
-    FileManager.writeFileToDisk("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
+    SampleFileWriter.createFile("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
   
     collector.analyze("p1","myapp.umple");
     Assert.assertEquals(1,collector.numberOf("p1","1","*"));
@@ -77,7 +77,7 @@ public class MetricsCollectorTest
   @Test
   public void numberOf_nToM()
   {
-    FileManager.writeFileToDisk("myapp.umple", "namespace Airline;\nclass Airline{3 -- 5 RegularFlight;}class RegularFlight {2 -- 4 Gate;} class Gate {}");
+    SampleFileWriter.createFile("myapp.umple", "namespace Airline;\nclass Airline{3 -- 5 RegularFlight;}class RegularFlight {2 -- 4 Gate;} class Gate {}");
   
     collector.analyze("p1","myapp.umple");
     Assert.assertEquals(2,collector.numberOf("p1","n","m"));
@@ -87,19 +87,19 @@ public class MetricsCollectorTest
   @Test
   public void saveToDisk()
   {
-    FileManager.writeFileToDisk("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
+    SampleFileWriter.createFile("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
   
     collector.analyze("p1","myapp.umple");
     collector.save("myapp.results");
-    String results = FileManager.loadFile("myapp.results");
-    String expected = "Project Id\t#1 -- *\np1\t1";
+    String results = SampleFileWriter.readContent(new File("myapp.results"));
+    String expected = "Project Id\t#1 -- *\np1\t1" + System.getProperty("line.separator");;
     Assert.assertEquals(expected,results);
   } 
   
   @Test
   public void toStringShowResults()
   {
-    FileManager.writeFileToDisk("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
+    SampleFileWriter.createFile("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
   
     collector.analyze("p1","myapp.umple");
     String results = collector.toString();
@@ -110,8 +110,8 @@ public class MetricsCollectorTest
   @Test
   public void toStringMultiProjects()
   {
-    FileManager.writeFileToDisk("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
-    FileManager.writeFileToDisk("myapp2.umple", "namespace Airline;\nclass Airline{1 -- 1 RegularFlight;}class RegularFlight {}");
+    SampleFileWriter.createFile("myapp.umple", "namespace Airline;\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
+    SampleFileWriter.createFile("myapp2.umple", "namespace Airline;\nclass Airline{1 -- 1 RegularFlight;}class RegularFlight {}");
   
     collector.analyze("p1","myapp.umple");
     collector.analyze("p2","myapp2.umple");
