@@ -14,6 +14,7 @@ namespace cruise.umple.stats;
 class StatsMain
 {
   depend cruise.umple.util.*;
+  depend java.io.File;
   
   public static String console;
   
@@ -31,7 +32,7 @@ class StatsMain
     }
     
     String outputFilename = args[0];
-    String projectListings = FileManager.loadFile(args[1]);
+    String projectListings = SampleFileWriter.readContent(new File(args[1]));
     String[] allProjects = projectListings.split("\n");
     
     
@@ -111,7 +112,7 @@ class MetricsCollector
   
   public void save(String outputFilename)
   {
-    FileManager.writeFileToDisk(outputFilename, toString()); 
+    SampleFileWriter.createFile(outputFilename, toString()); 
   }
   
   public int numberOf(String projectId, String lowerBound, String upperBound)

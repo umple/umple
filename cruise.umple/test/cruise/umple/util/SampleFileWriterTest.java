@@ -15,9 +15,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
-import cruise.umple.util.FileManager;
+import cruise.umple.util.SampleFileWriter;
 
-public class FileManagerTest {
+public class SampleFileWriterTest {
 
   
   @After
@@ -26,52 +26,38 @@ public class FileManagerTest {
     (new File("abc.txt")).delete();
   }
   
-  @Test
+  @Test(expected=RuntimeException.class)
   public void loadFile_nullFile()
   {
     String actual;
     
-    actual = FileManager.loadFile((File)null);
-    Assert.assertEquals(null,actual);
-
-    actual = FileManager.loadFile((String)null);
+    actual = SampleFileWriter.readContent((File)null);
     Assert.assertEquals(null,actual);
   }  
   
-  @Test
+  @Test(expected=RuntimeException.class)
   public void loadFile_unknown()
   {
     String actual;
     
-    actual = FileManager.loadFile(new File("unknown.txt"));
-    Assert.assertEquals(null,actual);
-
-    actual = FileManager.loadFile("unknown.txt");
+    actual = SampleFileWriter.readContent(new File("unknown.txt"));
     Assert.assertEquals(null,actual);
   }
 
   @Test
   public void loadFile_okay()
   {
-    FileManager.writeFileToDisk("abc.txt", "aha");
+    SampleFileWriter.createFile("abc.txt", "aha");
     String actual;
-    actual = FileManager.loadFile("abc.txt");
-    Assert.assertEquals("aha",actual);
-
-    actual = FileManager.loadFile(new File("abc.txt"));
-    Assert.assertEquals("aha",actual);
+    
+    actual = SampleFileWriter.readContent(new File("abc.txt"));
+    Assert.assertEquals("aha" + System.getProperty("line.separator"),actual);
   }  
-  
-  @Test(expected=Exception.class)
-  public void writeFileToDisk_nullFile()
-  {
-    FileManager.writeFileToDisk((File)null, "aha");
-  }   
 
   @Test(expected=Exception.class)
   public void writeFileToDisk_nullString()
   {
-    FileManager.writeFileToDisk((String)null, "aha");
+    SampleFileWriter.createFile((String)null, "aha");
   }  
   
   
@@ -79,12 +65,13 @@ public class FileManagerTest {
   public void writeFileToDisk_okay()
   {
     Assert.assertEquals(false, (new File("abc.txt")).exists());
-    File file = FileManager.writeFileToDisk("abc.txt", "aha");
+    SampleFileWriter.createFile("abc.txt", "aha");
+    File file = new File("abc.txt");
     Assert.assertEquals(true, file.exists());
     Assert.assertEquals("abc.txt", file.getName());
     String actual;
-    actual = FileManager.loadFile("abc.txt");
-    Assert.assertEquals("aha",actual);
+    actual = SampleFileWriter.readContent(new File("abc.txt"));
+    Assert.assertEquals("aha" + System.getProperty("line.separator"),actual);
 
   }   
   

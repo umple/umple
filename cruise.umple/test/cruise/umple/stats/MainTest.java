@@ -12,7 +12,7 @@ package cruise.umple.stats;
 import java.io.*;
 import org.junit.*;
 
-import cruise.umple.util.FileManager;
+import cruise.umple.util.SampleFileWriter;
 
 public class MainTest
 {
@@ -35,8 +35,8 @@ public class MainTest
   @Test
   public void SaveFile()
   {
-    FileManager.writeFileToDisk("myapp.ump", "namespace Airline\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
-    FileManager.writeFileToDisk("myapps.txt", "p1\nmyapp.ump\n");
+    SampleFileWriter.createFile("myapp.ump", "namespace Airline\nclass Airline{1 -- * RegularFlight;}class RegularFlight {}");
+    SampleFileWriter.createFile("myapps.txt", "p1\nmyapp.ump\n");
     StatsMain.main(new String[] {"results.xls","myapps.txt"});
     Assert.assertEquals(true, (new File("results.xls")).exists());
   }
