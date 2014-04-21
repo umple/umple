@@ -455,9 +455,18 @@ function handleUmpleTextChange()
   $actionCode = $GLOBALS["OS"] == "Windows" ? json_encode($_REQUEST["actionCode"]) : "\"" . $_REQUEST["actionCode"] . "\""; 
   $actionCode = str_replace("<","\<",$actionCode);
   $actionCode = str_replace(">","\>",$actionCode);
+   
+  if(!is_null($actionCode)){
+	  //Escape all the double quotes
+	  $actionCode = str_replace("\"","\\\"",$actionCode);
+	  //Trim for any un-standard characters
+	  $actionCode = trim($actionCode);
+	  //Trim for escaped doubles quotes in the beginning and end of the actionCode string
+	  $actionCode = trim($actionCode, "\\\"");
+  }
   
   $filename = saveFile($input);
-  $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} {$actionCode} {$filename}");
+  $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} \"{$actionCode}\" {$filename}");
   saveFile($umpleOutput,$filename);
   echo urldecode($umpleOutput);
   return;
