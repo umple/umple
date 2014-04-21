@@ -30,6 +30,7 @@ Page.useGvClassDiagram = false;
 Page.useGvStateDiagram = false;
 Page.showAttributes = true;
 Page.showMethods = false;
+Page.showActions = true;
 Page.modifiedDiagrams = false;
 
 // The following is set called from umple.php
@@ -89,6 +90,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSyncDiagram");
   Page.initHighlighter("buttonToggleMethods");
   Page.initHighlighter("buttonToggleAttributes");
+  Page.initHighlighter("buttonToggleActions");
 
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
@@ -127,6 +129,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonSyncDiagram");
   Page.initAction("buttonToggleMethods");
   Page.initAction("buttonToggleAttributes");
+  Page.initAction("buttonToggleActions");
 
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
@@ -168,6 +171,7 @@ Page.initOptions = function()
   jQuery("#buttonShowHideTextEditor").attr('checked', Page.showText);
   jQuery("#buttonShowHideCanvas").attr('checked', Page.showDiagram);
   jQuery("#buttonToggleAttributes").attr('checked',true);
+  jQuery("#buttonToggleActions").attr('checked',true);
 
 if(Page.useEditableClassDiagram)
  jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
@@ -355,7 +359,6 @@ Page.clickToggleAttributes = function() {
 Page.clickToggleMethods = function() {
   jQuery('#buttonToggleMethods').trigger('click');
 }
-
 
 
 
