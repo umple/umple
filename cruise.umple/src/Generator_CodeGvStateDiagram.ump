@@ -25,8 +25,8 @@ namespace cruise.umple.compiler;
 
 class GvStateDiagramGenerator
 {
-  Boolean hideActions = hasSuboption("hideactions");
-  Boolean hideGuards = hasSuboption("hideguards");
+  Boolean hideActions = false;
+  Boolean hideGuards = false;
  
   internal Map<Transition,String> internalBoundaryTrans
     = new HashMap<Transition,String>();
@@ -65,7 +65,10 @@ digraph "<<=filename>>" {
     StringBuilder code = new StringBuilder();
     StringBuilder transitions = new StringBuilder();
     String className;
-
+    
+    hideActions = hasSuboption("hideactions");
+    hideGuards = hasSuboption("hideguards");
+    
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
 

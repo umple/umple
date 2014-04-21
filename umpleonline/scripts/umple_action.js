@@ -160,6 +160,10 @@ Action.clicked = function(event)
   {
        Action.toggleMethods();
   }
+  else if (action == "ToggleActions")
+  {
+       Action.toggleActions();
+  }
 }
 
 Action.focusOn = function(id, gained)
@@ -1703,10 +1707,15 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   else if(Page.useGvClassDiagram) {language="language=classDiagram"}
   else {language="language=stateDiagram"}
   
-  // append any suboptions needed
-  if(Page.showMethods) language=language+".showmethods";
-  if(!Page.showAttributes) language=language+".hideattributes";
-  
+  // append any suboptions needed for GvStateDiagram
+  if(Page.useGvStateDiagram) { 
+    if(!Page.showActions) language=language+".hideactions";
+  }
+  // append any suboptions needed for GvClassDiagram
+  if(Page.useGvClassDiagram) { 
+    if(Page.showMethods) language=language+".showmethods";
+    if(!Page.showAttributes) language=language+".hideattributes";
+  }
   Action.ajax(Action.updateUmpleDiagramCallback,language);
 }
 
@@ -2231,6 +2240,12 @@ Action.toggleMethods = function()
   Page.showMethods = !Page.showMethods;
   Action.redrawDiagram()
   // UmpleSystem.update();
+}
+
+Action.toggleActions = function()
+{
+  Page.showActions = !Page.showActions;
+  Action.redrawDiagram()
 }
 
 Action.redrawDiagram = function()

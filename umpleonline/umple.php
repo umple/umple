@@ -329,6 +329,7 @@ $output = readTemporaryFile("ump/" . $filename);
           <li id="layoutListItem"> <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" title="Show/hide the layout editor" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> Layout Editor </li>          
           <li id="layoutListItem"> <input id="buttonToggleAttributes" class="checkbox" type="checkbox"  title="Show/hide Attributes"/> Attributes  <small style="font-size:8px">[ctrl+a]</small></li>
           <li id="layoutListItem"> <input id="buttonToggleMethods" class="checkbox" type="checkbox"  title="Show/hide Methods"/> Methods <small style="font-size:8px">[ctrl+m]</small></li>
+          <li id="layoutListItem"> <input id="buttonToggleActions" class="checkbox" type="checkbox"  title="Show/hide Actions"/> Actions </li>
 	</ul>
         <ul>
           <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>
