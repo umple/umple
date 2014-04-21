@@ -5,7 +5,7 @@ noreferences
 @@description
 
 <p>
-The first example below illustrates Umple's generation templates. It is an html generation library. The second example is a program that uses the second example.
+The first example below illustrates the generation template capability of Umple. It is an html generation library. The second example is a program that uses the second example.
 </p>
 
 @@example
