@@ -21,10 +21,3 @@ class UmpleCompilerException
 
   static final long serialVersionUID = 1;  
 }
-
-class SemanticException
-{
-  isA RuntimeException;
-  
-  static final long serialVersionUID = 2;
-}
