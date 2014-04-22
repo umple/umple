@@ -199,30 +199,6 @@ class MethodParameter
 }
 
 /*
- * NOT used right now
- * Type is a simple string 
- */
-class Type{
-}
-
-/*
- * NOT used right now
- */
-class PrimitiveType{
-  isA Type;
-  typeName;
-}
-
-/*
- * NOT used right now
- */
-class ReferenceType{
-  isA Type;
-  * -> 0..1 UmpleClass;
-  * -> 0..1 UmpleInterface;
-}
-
-/*
  * Under Development --> commited code needs Specs, Andrew and Miguel not happy!
  */
 class ConstraintVariable{
