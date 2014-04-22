@@ -122,14 +122,7 @@ class UmpleInternalParser
   
   void checkDefaultedNameConflict(){
     
-    Map<String, CodeTranslator> allTranslators = new HashMap<String, CodeTranslator>();
-    CodeGenerator tempCodeGen = null;
-    for(GenerateTarget t : model.getGenerates())
-    {
-      if((tempCodeGen = model.newGenerator(t.getLanguage())) instanceof CodeTranslator){        
-        allTranslators.put(t.getLanguage(), (CodeTranslator)tempCodeGen);
-      }
-    }
+    Map<String, CodeTranslator> allTranslators = model.getAllTranslators();
         
     HashSet<String> generatedMethods = new HashSet<String>();
     for(String langName : allTranslators.keySet()){

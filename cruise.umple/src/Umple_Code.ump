@@ -397,6 +397,20 @@ class UmpleModel
 
     return defaults;
   }
+  
+  
+  public Map<String, CodeTranslator> getAllTranslators() {
+    Map<String, CodeTranslator> allTranslators = new HashMap<String, CodeTranslator>();
+    CodeGenerator tempCodeGen = null;
+    for(GenerateTarget t : getGenerates())
+    {
+      if((tempCodeGen = newGenerator(t.getLanguage())) instanceof CodeTranslator) {        
+        allTranslators.put(t.getLanguage(), (CodeTranslator)tempCodeGen);
+      }
+    }
+    
+    return allTranslators;
+  }
 }
 
 /*
