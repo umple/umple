@@ -76,11 +76,6 @@ class UmpleModelVisitor {
 	void visit(ClassPattern ptrn) {}
 	void visit(Hierarchy hier) {}
 	
-	// Types
-	void visit(Type type) {}
-	void visit(PrimitiveType primitiveType) {}
-	void visit(ReferenceType referenceType) {}
-	
 	// Attributes
 	void visit(Constant cnst) {}
 	void visit(Attribute attribute) {}
