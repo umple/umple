@@ -10,16 +10,12 @@
 package cruise.umple.compiler;
 
 
+import static org.junit.Assert.*;
 
 import java.io.*;
-
 import java.util.*;
 
-
-
 import org.junit.*;
-
-
 
 import cruise.umple.util.SampleFileWriter;
 
@@ -84,15 +80,15 @@ public class UmpleModelTest
 
   {
 
-    Assert.assertEquals(null, model.getDefaultGenerate());
+    assertEquals(null, model.getDefaultGenerate());
 
     model.addGenerate("Php");
 
-    Assert.assertEquals("Php", model.getDefaultGenerate());
+    assertEquals("Php", model.getDefaultGenerate());
 
     model.addGenerate("Java");
 
-    Assert.assertEquals("Php", model.getDefaultGenerate());
+    assertEquals("Php", model.getDefaultGenerate());
 
   }
 
@@ -104,13 +100,13 @@ public class UmpleModelTest
 
   {
 
-    Assert.assertEquals(null,model.getUmpleInterface("Teacher"));
+    assertEquals(null,model.getUmpleInterface("Teacher"));
 
     
 
     UmpleInterface aInterface = model.addUmpleInterface("Teacher");
 
-    Assert.assertEquals(aInterface,model.getUmpleInterface("Teacher"));
+    assertEquals(aInterface,model.getUmpleInterface("Teacher"));
 
   }
 
@@ -122,13 +118,13 @@ public class UmpleModelTest
 
   {
 
-    Assert.assertEquals(null,model.getUmpleClass("Teacher"));
+    assertEquals(null,model.getUmpleClass("Teacher"));
 
     
 
     UmpleClass uClass = model.addUmpleClass("Teacher");
 
-    Assert.assertEquals(uClass,model.getUmpleClass("Teacher"));
+    assertEquals(uClass,model.getUmpleClass("Teacher"));
 
   }
 
@@ -144,7 +140,7 @@ public class UmpleModelTest
 
   {
 
-    Assert.assertEquals(null,model.getUmpleClass("Teacher"));
+    assertEquals(null,model.getUmpleClass("Teacher"));
 
     
 
@@ -156,7 +152,7 @@ public class UmpleModelTest
 
     UmpleClass sameClass = model.addUmpleClass("Teacher");
 
-    Assert.assertSame(uClass,sameClass);
+    assertSame(uClass,sameClass);
 
   }
 
@@ -174,19 +170,19 @@ public class UmpleModelTest
 
     model = new UmpleModel(null);
 
-    Assert.assertEquals(true,model.getShouldGenerate());
+    assertEquals(true,model.getShouldGenerate());
 
     
 
     model.setShouldGenerate(false);
 
-    Assert.assertEquals(false,model.getShouldGenerate());
+    assertEquals(false,model.getShouldGenerate());
 
 
 
     model.setShouldGenerate(true);
 
-    Assert.assertEquals(true,model.getShouldGenerate());
+    assertEquals(true,model.getShouldGenerate());
 
   }
 
@@ -198,7 +194,7 @@ public class UmpleModelTest
 
   {
 
-    Assert.assertEquals("teacher", model.getUmpleFile().getSimpleFileName());
+    assertEquals("teacher", model.getUmpleFile().getSimpleFileName());
 
   }
 
@@ -214,7 +210,7 @@ public class UmpleModelTest
 
     String path = new File(f.getAbsolutePath()).getParentFile().getAbsolutePath();
 
-    Assert.assertEquals(path, uFile.getPath());
+    assertEquals(path, uFile.getPath());
 
   }
 
@@ -226,7 +222,7 @@ public class UmpleModelTest
 
   {
 
-    Assert.assertEquals("teacher.txt", model.getUmpleFile().getFileName());
+    assertEquals("teacher.txt", model.getUmpleFile().getFileName());
 
   }
 
@@ -240,11 +236,11 @@ public class UmpleModelTest
 
     UmpleClass aClass = new UmpleClass("Blah");
 
-    Assert.assertEquals(null, model.getUmpleClass("Blah"));
+    assertEquals(null, model.getUmpleClass("Blah"));
 
     model.addUmpleClass(aClass);
 
-    Assert.assertEquals(aClass, model.getUmpleClass("Blah"));
+    assertEquals(aClass, model.getUmpleClass("Blah"));
 
   }
 
@@ -256,11 +252,11 @@ public class UmpleModelTest
 
   {
 
-    Assert.assertEquals(null, model.getUmpleClass("Blah"));
+    assertEquals(null, model.getUmpleClass("Blah"));
 
     model.addAssociationClass("Blah");
 
-    Assert.assertEquals("Blah", model.getUmpleClass("Blah").getName());
+    assertEquals("Blah", model.getUmpleClass("Blah").getName());
 
   }
 
@@ -274,11 +270,11 @@ public class UmpleModelTest
 
     StateMachine sm = new StateMachine("Blah");
 
-    Assert.assertEquals(null,model.getStateMachineDefinition("Blah"));
+    assertEquals(null,model.getStateMachineDefinition("Blah"));
 
     model.addStateMachineDefinition(sm);
 
-    Assert.assertEquals(sm,model.getStateMachineDefinition("Blah"));
+    assertEquals(sm,model.getStateMachineDefinition("Blah"));
 
   }
 
@@ -334,9 +330,9 @@ public class UmpleModelTest
 
 	a.addPosition(defaults[1]);
 
-	Assert.assertEquals(new Coordinate(109,10,0,0), a.getPosition(0));
+	assertEquals(new Coordinate(109,10,0,0), a.getPosition(0));
 
-	Assert.assertEquals(new Coordinate(0,10,0,0), a.getPosition(1));
+	assertEquals(new Coordinate(0,10,0,0), a.getPosition(1));
 
 	a.removePosition(defaults[0]);
 
@@ -360,9 +356,9 @@ public class UmpleModelTest
 
 	a.addPosition(defaults[1]);
 
-	Assert.assertEquals(new Coordinate(0,10,0,0), a.getPosition(0));
+	assertEquals(new Coordinate(0,10,0,0), a.getPosition(0));
 
-	Assert.assertEquals(new Coordinate(109,10,0,0), a.getPosition(1));
+	assertEquals(new Coordinate(109,10,0,0), a.getPosition(1));
 
 	a.removePosition(defaults[0]);
 
@@ -386,9 +382,9 @@ public class UmpleModelTest
 
 	a.addPosition(defaults[1]);
 
-	Assert.assertEquals(new Coordinate(30,45,0,0), a.getPosition(0));
+	assertEquals(new Coordinate(30,45,0,0), a.getPosition(0));
 
-	Assert.assertEquals(new Coordinate(30,0,0,0), a.getPosition(1));  
+	assertEquals(new Coordinate(30,0,0,0), a.getPosition(1));  
 
 	a.removePosition(defaults[0]);
 
@@ -412,9 +408,9 @@ public class UmpleModelTest
 
 	a.addPosition(defaults[1]);
 
-	Assert.assertEquals(new Coordinate(30,0,0,0), a.getPosition(0));
+	assertEquals(new Coordinate(30,0,0,0), a.getPosition(0));
 
-	Assert.assertEquals(new Coordinate(30,45,0,0), a.getPosition(1));
+	assertEquals(new Coordinate(30,45,0,0), a.getPosition(1));
 
 	a.removePosition(defaults[0]);
 
@@ -438,9 +434,9 @@ public class UmpleModelTest
 
 	a.addPosition(defaults[1]);
 
-	Assert.assertEquals(new Coordinate(109,10,0,0), a.getPosition(0));
+	assertEquals(new Coordinate(109,10,0,0), a.getPosition(0));
 
-	Assert.assertEquals(new Coordinate(0,10,0,0), a.getPosition(1));
+	assertEquals(new Coordinate(0,10,0,0), a.getPosition(1));
 
 	a.removePosition(defaults[0]);
 
@@ -482,9 +478,9 @@ public class UmpleModelTest
 
 	  a.addPosition(defaults[1]);
 
-	  Assert.assertEquals(new Coordinate(15,45,0,0), a.getPosition(0));
+	  assertEquals(new Coordinate(15,45,0,0), a.getPosition(0));
 
-	  Assert.assertEquals(new Coordinate(0,30,0,0), a.getPosition(1));
+	  assertEquals(new Coordinate(0,30,0,0), a.getPosition(1));
 
   }
 
@@ -502,11 +498,11 @@ public class UmpleModelTest
 
     List<UmpleElement> all = model.getUmpleElements();
 
-    Assert.assertEquals(2,all.size());
+    assertEquals(2,all.size());
 
-    Assert.assertEquals(x,all.get(0));
+    assertEquals(x,all.get(0));
 
-    Assert.assertEquals(y,all.get(1));
+    assertEquals(y,all.get(1));
 
     
 
@@ -516,8 +512,33 @@ public class UmpleModelTest
   public void SymmetricReflexiveTest (){
 	  UmpleModel inModel = new UmpleModel(new UmpleFile("TestSymmetric.txt"));
 	  inModel.run();
-	  Assert.assertEquals(1,inModel.getUmpleClass(0).getAssociations().length);
+	  assertEquals(1,inModel.getUmpleClass(0).getAssociations().length);
   }
-
+  
+  @Test
+  public void getAllTranslatorsTest_ModelWithNormalGenerators() {
+    // Note that this test is not exhaustive. This test implementation was
+    //  chosen because the supported translators may change frequently and
+    //  we don't want to have to keep changing this test. As long as we know
+    //  that the method does not blow up, we are good.
+    
+    model.addGenerate("Php");
+    model.addGenerate("Java");
+    
+    Map<String, CodeTranslator> allTranslators = model.getAllTranslators();
+    
+    assertTrue(allTranslators.containsKey("Php"));
+    assertNotNull(allTranslators.get("Php"));
+    assertTrue(allTranslators.containsKey("Java"));
+    assertNotNull(allTranslators.get("Java"));
+  }
+  
+  @Test
+  public void getAllTranslatorsTest_ModelWithNoGenerators() {    
+    Map<String, CodeTranslator> allTranslators = model.getAllTranslators();
+    
+    assertTrue(allTranslators.isEmpty());
+  }
+  
 }
 
