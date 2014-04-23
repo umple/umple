@@ -1,0 +1,16 @@
+/*
+ * Simple Hello World example for Umple.
+ * Compile this with Umple and it will generate Java
+ * that is essentially the same.
+ * 
+ * You could just as readily compile this code directly
+ * with javac. However, this serves as the starting point:
+ * Other examples in this manual show other things you
+ * can do with Umple
+ */
+class HelloWorld {
+  public static void main(String [ ] args) {
+    System.out.println("Hello World");
+  }
+}
+
