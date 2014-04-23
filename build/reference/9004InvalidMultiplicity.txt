@@ -23,7 +23,7 @@ noreferences
 
 </p>
 
-<p>When this error message appears, the multiplicity doesn't fit any of the above patterns. A common error, for example, is to use the notation 'n', as found in Entity-Relationship Diagrams. This is not valid in Umple; only integers, and * may appear.
+<p>When this error message appears, the multiplicity doesn&#39;t fit any of the above patterns. A common error, for example, is to use the notation &#39;n&#39;, as found in Entity-Relationship Diagrams. This is not valid in Umple; only integers, and * may appear.
 </p>
 
 

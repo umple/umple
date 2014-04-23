@@ -5,17 +5,20 @@ noreferences
 @@description
 
 <p>
-Generating string output is a very common task for programs. Common types of output include html, xml and executable code. Umple has a special capability for this, as do many other technogies (it is central to PhP, for example). The advantage of Umple's approach is that it adds generation templates in a uniform manner to C++, Java, PhP and other languages that Umple supports. The same templates can be reused.
+Generating string output is a very common task for programs. Common types of output include html, xml and executable code. Umple has a special capability for this, as do many other technogies (it is central to PhP, for example). The advantage of Umple&#39;s approach is that it adds generation templates in a uniform manner to C++, Java, PhP and other languages that Umple supports. The same templates can be reused.
 </p>
 
 <p>
-The Umple generation templates are essentially a readable way to generate special methods that emit Strings (and also in Java's case StringBuilders).
+The Umple generation templates are essentially a readable way to generate special methods that emit Strings (and also in Java&#39;s case StringBuilders).
 </p>
 
 <p>
 Two basic elements are needed to use generation templates:
 </p>
 
+
+
+<br/>&nbsp;<br/>
 <p>
 <b>Templates</b> The first essential element is the templates themselves. These are shown as a name followed by arbitrary text in &lt;&lt;! !&gt;&gt; brackets. The text in the brackets can contain anything you want. See the examples below to understand how these are used.
 
@@ -27,11 +30,13 @@ Two basic elements are needed to use generation templates:
 </p>
 
 <p>
-will build the string 'output this' when specified in an emit method (below).
+will build the string &#39;output this&#39; when specified in an emit method (below).
 </p>
 
+
+<br/>&nbsp;<br/>
 <p>
-<b>Emit method specifications:</b> The second essential element is one or more 'emit' statements. These specify the methods to be generated. As with any method there can be a set of arbitrary parameters. Following this, in a second set of parameters is comma-separated list of templates to emit. For example, the following says to generate a method with signature String printRow(intTimes, intCount); that will emit a string containing the contents of the row and cr templates:
+<b>Emit method specifications:</b> The second essential element is one or more &#39;emit&#39; statements. These specify the methods to be generated. As with any method there can be a set of arbitrary parameters. Following this, in a second set of parameters is comma-separated list of templates to emit. For example, the following says to generate a method with signature String printRow(intTimes, intCount); that will emit a string containing the contents of the row and cr templates:
 </p>
 
 <p>
@@ -40,6 +45,7 @@ emit printRow(int times, int count)(row, cr);
 </pre>
 </p>
 
+<br/>&nbsp;<br/>
 <p>
 Optional elements in templates are:
 </p>
@@ -49,19 +55,22 @@ Optional elements in templates are:
 </p>
 
 <p>
-<b>Code blocks:</b> Also inside the template program logic can be embedded in <<# #>> brackets. This enables conditional emission of parts of a template, or looping within the template. This appears in the second example below.
+<b>Code blocks:</b> Also inside the template program logic can be embedded in &lt;&lt;# #&gt;&gt; brackets. This enables conditional emission of parts of a template, or looping within the template. This appears in the second example below.
 </p>
 
 <p>
 <b>Comment blocks:</b> Comments in templates can be shown within &lt;&lt;/* */&gt;&gt;
 </p>
 
+
+<br/>&nbsp;<br/>
+
 <p>
 The first two examples below show how simple templates can be used to output strings, in this case a one-column multiplication table. The first example uses two template methods, the second being called in a loop. The second example generates the same output, but all the looping logic is enclosed in the template itself. The third example shows a more substantial template with a lot of 'boilerplate' text that is easy to read and edit in the Umple source. Manually writing the generated would be substantially more awkward.
 </p>
 
 <p>
-Umple's mixin capability allows templates to be kept in separate files. This can faciliatate reuse. 
+Umple&#39;s mixin capability allows templates to be kept in separate files. This can faciliatate reuse. 
 </p>
 
 

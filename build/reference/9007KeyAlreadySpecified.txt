@@ -8,7 +8,7 @@ noreferences
 
 <p>To avoid confusion, a class should normally only have one <a href="KeysforEqualityandHashing.html">key specification</a>. This warning is intended to direct the programmer to list the multiple attributes within the same key directive, rather specifying them separately.</p>
 
-<p>The reason for this is that without this warning, code that is separated by many lines or found in a mixin file might modify the key in a way that wasn't anticipated by the developer who is not aware of the existence of multiple key statements. </p>
+<p>The reason for this is that without this warning, code that is separated by many lines or found in a mixin file might modify the key in a way that wasn&#39;t anticipated by the developer who is not aware of the existence of multiple key statements. </p>
 
 <p>Developers can ignore this warning without any consequences. The examples below will generate the same compiled code.
 </p>

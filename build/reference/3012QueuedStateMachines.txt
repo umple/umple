@@ -4,11 +4,11 @@ noreferences
 
 @@description
 <p>      
-Standard state machines operate in a single thread. When an event method is called, the state machine code that runs continues the same thread of the caller. This can be satisfactory for simple applications, but it doesn't work in multi-threaded environments, and can also result in deadlocks.
+Standard state machines operate in a single thread. When an event method is called, the state machine code that runs continues the same thread of the caller. This can be satisfactory for simple applications, but it doesn&#39;t work in multi-threaded environments, and can also result in deadlocks.
 </p>
 
 <p>      
-To overcome the above problems, a state machine may be declared as 'queued' by just placing the keyword queued before the declaration of the state machine. In a queued state machine, the calls to the event methods simply add a record to the queue, and then return. The calling thread can then continue and do other activities. A separate thread exists in each state machine to take events off the queue and process them, in the order they are received.
+To overcome the above problems, a state machine may be declared as &#39;queued&#39; by just placing the keyword queued before the declaration of the state machine. In a queued state machine, the calls to the event methods simply add a record to the queue, and then return. The calling thread can then continue and do other activities. A separate thread exists in each state machine to take events off the queue and process them, in the order they are received.
 </p>
 
 <p>      
