@@ -6,7 +6,7 @@ noreferences
 
 <h2>Umple semantic warning reported when a singleton class has an attribute that is not marked lazy</h2>
 
-<p>A singleton class can't have any arguments in its constructor. In general in Umple, unless an attribute is specified as 'lazy', then an argument for the attribute is added to the constructor. In the case of singletons this is not done. This warning is to let programmer know this. To avoid the warning, add the keyword 'lazy' to all attributes of a singleton class. However, whether or not this is done, the generated code will behave as if it had been done.
+<p>A singleton class can&#39;t have any arguments in its constructor. In general in Umple, unless an attribute is specified as &#39;lazy&#39;, then an argument for the attribute is added to the constructor. In the case of singletons this is not done. This warning is to let programmer know this. To avoid the warning, add the keyword &#39;lazy&#39; to all attributes of a singleton class. However, whether or not this is done, the generated code will behave as if it had been done.
 
 </p>
 

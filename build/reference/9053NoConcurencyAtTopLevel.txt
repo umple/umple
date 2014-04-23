@@ -8,7 +8,7 @@ noreferences
 
 <p>A state machine must be in one top level state at all times. Concurrent substates can exist in any substate at any level, but not directly in a top level state. The second example below shows how this can be handled simply by adding a level of nesting.</p>
 
-<p>If the intent is simply to create concurrent do activities, and alternative is to use Umple's active objects notation.
+<p>If the intent is simply to create concurrent do activities, and alternative is to use Umple&#39;s active objects notation.
 </p>
 
 

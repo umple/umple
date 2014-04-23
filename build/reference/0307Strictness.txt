@@ -4,26 +4,33 @@ noreferences
 
 @@description
 <p>
-The strictness directive is used to control certain messages that the Umple compiler may issue. It has five subdirectives that are specified by a second keyword following 'strictness':
+The strictness directive is used to control certain messages that the Umple compiler may issue. It has five subdirectives that are specified by a second keyword following &#39;strictness&#39;:
 </p>
 
 <p>
-The first two are 'modelOnly' or 'noExtraCode'. These are used when the programmer or modeller intends not to include base language code, and wants a warning to appear if base language code is found. Base language code is code in a language like Java or PhP that is discovered by Umple but not interpreted in any way. One example is the code in the bodies of methods; however, when parsing a class, any time Umple can't parse what it finds, it assumes it must be base language code. It just emits the base language code for the base language compiler to deal with. However there are circumstances when the developer does not want this: The developer may be creating a pure model or may want intend that the only base language code would in the body of methods. It is advantageous therefore to tell the compiler to raise a warning if it thinks it has found base language code in some other context, since otherwise, and ordinary Umple syntax error may go undetected, until the base language compiler is run on the code.</p>
+The first two are &#39;modelOnly&#39; or &#39;noExtraCode&#39;. These are used when the programmer or modeller intends not to include base language code, and wants a warning to appear if base language code is found. Base language code is code in a language like Java or PhP that is discovered by Umple but not interpreted in any way. One example is the code in the bodies of methods; however, when parsing a class, any time Umple can&#39;t parse what it finds, it assumes it must be base language code. It just emits the base language code for the base language compiler to deal with. However there are circumstances when the developer does not want this: The developer may be creating a pure model or may want intend that the only base language code would in the body of methods. It is advantageous therefore to tell the compiler to raise a warning if it thinks it has found base language code in some other context, since otherwise, and ordinary Umple syntax error may go undetected, until the base language compiler is run on the code.</p>
 <ul>
-<li>'strictness modelOnly;' means be very strict and issue a warning if base language code is found.</li>
-<li>'strictness noExtraCode;' means that base language code is allowed in method bodies, but if found anywhere else to issue a warning.</li>
+<li><b>strictness modelOnly;</b> means be very strict and issue a warning if base language code is found.</li>
+<li><b>strictness noExtraCode;</b> means that base language code is allowed in method bodies, but if found anywhere else to issue a warning.</li>
 </ul>
 </p>
 
 <p>
-<i>Under development:</i> The second set of subdirectives are 'expect', 'allow' and 'disallow'. These are used to control the effect of certain messages. They are followed by a message number. 'expect n' declares that message number n <i>should occur</i>; it is an error if the message does not. This is used in testing to create example cases of message n; an error would be triggered if message n does <i>not</i> appear. 'allow n' is used in the case of errors, to tell the compiler to not actually 'fail', but to report that error as if it was a warning. This is also used in testing to include cases that give message n, without the compiler reporting that it has failed. 'disallow n', where n is a warning, tells the compiler to treat n as if it was an error, and fail the compilation.
+The second set of subdirectives are &#39;expect&#39;, &#39;allow&#39; and &#39;disallow&#39;. These are used to control the effect of certain messages. They are followed by a message number. &#39;expect n&#39; declares that message number n <i>should occur</i>; it is an error if the message does not. This is used in testing to create example cases of message n; an error would be triggered if message n does <i>not</i> appear. &#39;allow n&#39; is used in the case of errors, to tell the compiler to not actually &#39;fail&#39;, but to report that error as if it was a warning. This is also used in testing to include cases that give message n, without the compiler reporting that it has failed. &#39;disallow n&#39;, where n is a warning, tells the compiler to treat n as if it was an error, and fail the compilation. <em>Some of the above are still under development.</em>
 </p>
 
 @@syntax
 [[strictness]]
 
 @@example
-// UNDER DEVELOPMENT: This is not operational yet
+// Tell the compiler that error 25 will appear (and fail if it does not)
+strictness expect 25;
+
+// Tell the compiler that if error 22 occurs, not to fail the compile.
+// However, this does not mean that code can be generated
+strictness allow 22;
+
+// UNDER DEVELOPMENT: The following is not operational yet
 // Tell the compiler that  base language code should not appear
 strictness modelOnly;
 
@@ -31,10 +38,4 @@ strictness modelOnly;
 // Any other unparsable 'extra code' in classes will be rejected.
 strictness noExtraCode;
 
-// Tell the compiler that error 25 will appear (and fail if it does not)
-strictness expect 25;
-
-// Tell the compiler that if error 22 occurs, not to fail the compile.
-// However, this does not mean that code can be generated
-strictness allow 22; 
 @@endexample
