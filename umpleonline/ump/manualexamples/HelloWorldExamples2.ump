@@ -1,0 +1,50 @@
+/*
+ * Introductory example of Umple showing classes,
+ * attribute, association, generalization, methods
+ * and the mixin capability. Generate java and run this.
+ * 
+ * The output will be:
+ * The mentor of Tom The Student is Nick The Mentor
+ * The students of Nick The Mentor are [Tom The Student]
+ */
+class Person {
+  name; // Attribute, string by default
+  String toString () {
+    return(getName());
+  }
+}
+
+class Student {
+  isA Person;
+}
+
+class Mentor {
+  isA Person;
+}
+
+association {
+  0..1 Mentor -- * Student;
+}
+
+class Person {
+  // Notice that we are defining more contents for Person
+  // This uses Umple's mixin capability
+  
+  public static void main(String [ ] args) {
+    Mentor m = new Mentor("Nick The Mentor");
+    Student s = new Student("Tom The Student");
+    s.setMentor(m);
+    System.out.println("The mentor of "  + s  + " is " +  s.getMentor());
+    System.out.println("The students of " +  m  + " are " +  m.getStudents());
+  }
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 154 29 109 60;
+}
+
+class Mentor
+{
+  position 253 130 109 45;
+}
