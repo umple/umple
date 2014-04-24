@@ -1,0 +1,14 @@
+// This example generates the error message
+class X {
+  1 -- 0..1..2 Y;
+}
+
+class Y {
+}
+// The following shows how to avoid the error
+class X {
+  1 -- 0..2 Y;
+}
+
+class Y {
+}

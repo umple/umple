@@ -12,20 +12,10 @@ noreferences
 
 
 @@example
-// This example generates the message
-class A {
-  id;
-  key { }
-}
-
+@@source manualexamples/W047EmptyKeyStatement1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the message.
-class A {
-  id;
-  key { id }
-}
-
+@@source manualexamples/W047EmptyKeyStatement2.ump
 @@endexample
 

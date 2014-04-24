@@ -11,18 +11,5 @@ In the example below, the event e from the s1 superstate and the event e in the 
 </p>
 
 @@example
-
-class X {
-  sm {
-    s1 {
-      e-> s2;
-      s1a {
-        e-> s3;
-      }
-    }
-    s2 {}
-    s3 {}
-  }
-}
-
+@@source manualexamples/W055DuplicateEventsWithinSubstates1.ump
 @@endexample

@@ -1,0 +1,31 @@
+
+class Person {
+  name;
+}
+
+class GraduateStudent {
+  isA Person;
+  Integer id;
+  * -- 0..2 Professor supervisor;
+}
+
+class Professor {
+  isA Person;
+  rank;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 51 29 109 60;
+}
+
+class GraduateStudent
+{
+  position 268 136 124 60;
+  position.association GraduateStudent__Professor:supervisor 0,34 109,24;
+}
+
+class Professor
+{
+  position 25 143 109 60;
+}

@@ -9,24 +9,9 @@ noreferences
 <p>It makes little sense to have a constant unless it is given a value. Since there is no obvious default value for arbitrary data types, unitialized constants that are not from a default Umple data type the code cannot be parsed until the constants are initialized.</p>
 
 @@example
-// This example generates error 37
-class X {
-  const Y A;
-}
-
-class Y {
-  Integer a;
-}
+@@source manualexamples/E037UninitializedConstantObject1.ump
 @@endexample
 
 @@example
-// This example resolves error 37
-
-class X {
-  const Y A=new Y(3);
-}
-
-class Y {
-  Integer a;
-}
+@@source manualexamples/E037UninitializedConstantObject2.ump
 @@endexample

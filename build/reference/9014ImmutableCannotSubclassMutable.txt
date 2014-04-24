@@ -14,17 +14,7 @@ Note that this will occur if the entire subclass is being declared as immutable 
 
 
 @@example
-// This example generates message 14
-class B {
-  a;
-}
-
-class X14immut {
-  isA B;
-  immutable;
-  b;
-}
-
+@@source manualexamples/E014ImmutableSubclassofMutable1.ump
 @@endexample
 
 

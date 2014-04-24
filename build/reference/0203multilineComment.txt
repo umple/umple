@@ -11,10 +11,7 @@ Use multiline comments starting with slash-star and ending with star-slash to do
 [[multilineComment]]
 
 @@example
-/* 
-  This apple can only be compared to 
-  other apples
-*/
+@@source manualexamples/MultilineComments1.ump
 @@endexample
 
 

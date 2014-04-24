@@ -20,22 +20,9 @@ API (rather than directly accessing variables) and avoid having any side-effects
 [[derivedAttribute]]
 
 @@example
-class Point 
-{
-    // Cartesian coordinates
-    Float x;
-    Float y;
-    
-    // Polar coordinates
-    Float rho = {Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2))}
-    Float theta = {Math.toDegrees(Math.atan2(getY(),getX()))}
-}
+@@source manualexamples/DerivedAttributes1.ump
 @@endexample
 
 @@example
-class Rectangle {
-  Double height;
-  Double width;
-  Double area = Java {height*width} Php {$height*$width}
-}  
+@@source manualexamples/DerivedAttributes2.ump
 @@endexample

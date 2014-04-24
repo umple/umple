@@ -1,0 +1,12 @@
+// This example generates the error message
+class X {
+  sm {
+    s1 {
+      e1(String s) -> s2;
+    }
+    s2 {
+      e1(Float f) -> s2;
+    }
+  }
+}
+

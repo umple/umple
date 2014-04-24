@@ -1,0 +1,8 @@
+// This example generates error 37
+class X {
+  const Y A;
+}
+
+class Y {
+  Integer a;
+}

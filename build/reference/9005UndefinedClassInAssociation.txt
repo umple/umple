@@ -13,35 +13,18 @@ declare the class as external, as shown in the third example below.
 
 
 @@example
-// This example generates the error message
-class X {
-  1 -- * Y;
-}
+@@source manualexamples/E005UndefinedClassinAssociation1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the error
-class X {
-  1 -- * Y;
-}
-class Y {}
+@@source manualexamples/E005UndefinedClassinAssociation2.ump
 @@endexample
 
 @@example
-// It is also possible to designate that the class Y is external in the following manner
-class X {
-  1 -- * Y;
-}
-external Y {}
+@@source manualexamples/E005UndefinedClassinAssociation3.ump
 @@endexample
 
 @@example
-// The following will also generate the error message
-class X {}
-class Y {}
-
-association {
-  1 X -- * Z;
-}
+@@source manualexamples/E005UndefinedClassinAssociation4.ump
 @@endexample
 

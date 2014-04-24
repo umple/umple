@@ -1,0 +1,30 @@
+// The following will generate this error
+
+class P1 {}
+class P2 {}
+
+class Sub {
+  isA P1, P2;
+}
+// The following is another way of formulating the same declarations, also resulting in the error
+
+class P1 {}
+class P2 {}
+
+class Sub {
+  isA P1;
+  isA P2;
+}
+
+
+// If all but one of the parents is declared as an Interface, the problem is solved
+
+interface P1 {}
+class P2 {}
+
+class Sub {
+  isA P1;
+  isA P2;
+}
+
+

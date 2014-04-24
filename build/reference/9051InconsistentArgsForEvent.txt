@@ -11,32 +11,10 @@ noreferences
 
 
 @@example
-// This example generates the error message
-class X {
-  sm {
-    s1 {
-      e1(String s) -> s2;
-    }
-    s2 {
-      e1(Float f) -> s2;
-    }
-  }
-}
-
+@@source manualexamples/E051EventParametersMustMatch1.ump
 @@endexample
 
 @@example
-// This example solves the problem
-class X {
-  sm {
-    s1 {
-      e1(String s) -> s2;
-    }
-    s2 {
-      e1(String s) -> s2;
-    }
-  }
-}
-
+@@source manualexamples/E051EventParametersMustMatch2.ump
 @@endexample
 

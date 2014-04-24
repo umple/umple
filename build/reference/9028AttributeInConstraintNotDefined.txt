@@ -10,11 +10,7 @@ noreferences
 
 
 @@example
-// This example generates the message
-class X28attrconsrnotdef {
-  Integer a;
-  [b > 5]
-}
+@@source manualexamples/E028ConstraintIdentifierIncorrect1.ump
 @@endexample
 
 

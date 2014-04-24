@@ -1,0 +1,6 @@
+// This example generates the message because 
+// namespace n is never used
+namespace n;
+namespace m;
+
+class X21namespacenotused {}

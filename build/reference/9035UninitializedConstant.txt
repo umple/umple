@@ -10,19 +10,9 @@ noreferences
 
 
 @@example
-// The following will generate this warning
-
-class X {
-  const String A; //same as const String a = "";
-}
+@@source manualexamples/W035UninitializedConstant1.ump
 @@endexample
 
 @@example
-
-// The following will resolve the issue
-
-class X {
-  const String A = "Something Interesting";
-}
-
+@@source manualexamples/W035UninitializedConstant2.ump
 @@endexample

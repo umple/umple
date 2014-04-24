@@ -15,24 +15,11 @@ noreferences
 
 
 @@example
-// This example generates the message
-class X {
-  name;
-  id;
-  key { name }
-  key { id }
-}
-
+@@source manualexamples/W007KeyAlreadySpecified1.ump
 @@endexample
 
 @@example
-// This example below avoids the message
-class X {
-  name;
-  id;
-  key { name, id }
-}
-
+@@source manualexamples/W007KeyAlreadySpecified2.ump
 @@endexample
 
 

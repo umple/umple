@@ -1,0 +1,11 @@
+
+class Student
+{
+  firstName;
+  lastName;
+  cityOfBirth;
+  before get*Name { 
+    if ( DEBUG) { System.out.println("accessing the name"); }
+  }
+}
+

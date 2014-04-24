@@ -12,20 +12,11 @@ noreferences
 
 
 @@example
-// This example generates the message
-class X29attrtypeconstr {
-  a;
-  [a > 5]
-}
+@@source manualexamples/E029ConstraintTypeMismatch1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the message
-class X29attrtypeconstr {
-  Integer a;
-  [a > 5]
-}
-
+@@source manualexamples/E029ConstraintTypeMismatch2.ump
 @@endexample
 
 

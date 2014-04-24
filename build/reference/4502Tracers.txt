@@ -26,14 +26,5 @@ noreferences
 [[traceType]]
 
 @@example
-
-// this example generates traces using the File tracer
-tracer File;
-
-class Student
-{
-  Integer id;
-  trace id;
-}
-
+@@source manualexamples/Tracers1.ump
 @@endexample

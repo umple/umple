@@ -1,0 +1,6 @@
+// The following will generate two such warnings
+class X {
+  blah blah blah;
+  1 - * X;
+}
+

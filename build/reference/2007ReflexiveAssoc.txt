@@ -45,56 +45,17 @@ itself does not appear in UmpleOnline; this will be fixed.</p>
 [[symmetricReflexiveAssociation]] 
 
 @@example
-// Example asymmetric association with role names on both ends
-class Course {
-  * successor -- * Course prerequisite;
-}
-//$?[End_of_model]$?
-
-class Course
-{
-  position 158 30 109 45;
-}
-
+@@source manualexamples/ReflexiveAssociations1.ump
 @@endexample
 
 @@example
-// Example asymmetric association with role name on one end
-class Course {
-   * -- * Course prerequisite;
-}
-//$?[End_of_model]$?
-
-class Course
-{
-  position 158 30 109 45;
-}
+@@source manualexamples/ReflexiveAssociations2.ump
 @@endexample
 
 @@example
-// Example asymmetric association with role name on the other end
-class Person {
-   0..2 parents -- * Person;
-}
-//$?[End_of_model]$?
-
-class Person
-{
-  position 158 30 109 45;
-}
-
+@@source manualexamples/ReflexiveAssociations3.ump
 @@endexample
 
 @@example
-// Example symmetric association. Note the use of the keyword self
-class Course {
-   * self  isMutuallyExclusiveWith;
-}
-//$?[End_of_model]$?
-
-class Course
-{
-  position 158 30 109 45;
-}
-
+@@source manualexamples/ReflexiveAssociations4.ump
 @@endexample

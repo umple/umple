@@ -1,0 +1,25 @@
+// Generating Java and Php the following will result in the appropriate 
+// method body being selected.
+class LanguageSpecific {
+  int m1() Java {
+    // Return 1 if the model is compiled into Java
+    return 1;
+  }
+  Php {
+     // Return 0 if the model is compiled into Php
+    return 0;
+  }
+}
+// A method body may work for several languages.
+// If no language is specified it is taken as the default.
+class LanguageSpecific {
+  int m1()
+  Java,Php {
+    // Return 0 if the model is compiled into Java or Php
+    return 0;
+  }
+  {
+    // Default implementation for other languages
+    return 1;
+  }
+}

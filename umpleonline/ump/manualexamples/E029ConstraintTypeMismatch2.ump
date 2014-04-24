@@ -1,0 +1,11 @@
+// This example generates the message
+class X29attrtypeconstr {
+  a;
+  [a > 5]
+}
+// The following shows how to avoid the message
+class X29attrtypeconstr {
+  Integer a;
+  [a > 5]
+}
+

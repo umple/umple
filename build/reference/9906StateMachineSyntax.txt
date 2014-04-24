@@ -15,14 +15,7 @@ Since that sequence is not found in target languages, and since it is easy to ma
 
 
 @@example
-// This example generates the warning because there is a missing semicolon
-class X {
-  sm {
-    a -> b
-    b -> c
-  }
-}
-
+@@source manualexamples/W1006StateMachineNotParsed1.ump
 @@endexample
 
 

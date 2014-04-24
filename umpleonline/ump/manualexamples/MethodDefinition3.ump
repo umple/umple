@@ -1,0 +1,43 @@
+generate Java;
+
+// A class with a method displayName() that has no arguments
+class Person
+{
+  name;
+  
+  String displayName()
+  {
+    System.out.println("Hello, my name is " + getName());
+  }
+}
+generate Java;
+
+// A class with a method that has arguments
+class Person
+{
+  name;
+  
+  String displayName(String greeting, String property)
+  {
+    System.out.println(
+      greeting +
+      ", my " +
+      property +
+      " is " +
+      getName());
+  }
+}
+generate Java;
+
+// A class with a method that uses non-recognized syntax 'public'.
+// This method will still be emitted by Umple as 'arbitrary code' but
+// will not be recognized as a formal UML/umple method.
+class Person
+{
+  name;
+  
+  public String displayName()
+  {
+    System.out.println("Hello, my name is " + getName());
+  }
+}

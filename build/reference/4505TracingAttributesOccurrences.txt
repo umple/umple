@@ -11,25 +11,9 @@ MOTL provides the functionality of tracing an attribute for a certain number of 
 [[traceFor]]
 
 @@example
-
-// this example traces attribute name whenever its value is changed for 5 times 
-
-class Student
-{
-  name;
-  trace name for 5;
-}
-
+@@source manualexamples/TracingAttributeswithOccurrences1.ump
 @@endexample
 
 @@example
-
-// this example traces attribute name whenever its value is accessed for 5 times 
-
-class Student
-{
-  name;
-  trace get name for 5;
-}
-
+@@source manualexamples/TracingAttributeswithOccurrences2.ump
 @@endexample

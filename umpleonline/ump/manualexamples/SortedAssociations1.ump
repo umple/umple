@@ -1,0 +1,109 @@
+// This example demonstrates two cases of sorted associations
+// The main program adds items out of order
+// But when they are printed the output will be sorted
+class Academy {
+  1 -- * Course;
+  1 -- * Student registrants sorted {id};
+}
+
+class Student {
+  Integer id;
+  name;
+}
+
+class Course {
+  code;
+}
+
+class Registration {
+  * -- 1 Student;
+
+  // In each course, sort registrations by name
+  * sorted {name} -- 1 Course;
+
+  // Derived delegated attribute used for sorting printing
+  name = {getStudent().getName()}
+
+  // Derived delegated attribute used for sorting printing
+  code = {getCourse().getCode()}
+
+  
+  public String toString() {
+    return "Registration: " + getName() + ":" + getCode();
+  }
+}
+
+// Mixin with main program and toString method
+class Academy {
+  public static void main(String [ ] args) {
+    Academy ac = new Academy();
+    Student j = ac.addRegistrant(12,"Jim");
+    Student a = ac.addRegistrant(4,"Ali");
+    Student m = ac.addRegistrant(8,"Mary");
+    Student f = ac.addRegistrant(3,"Francois");
+    Course c = ac.addCourse("CS191");
+    Course c2 = ac.addCourse("AN234");    
+    j.addRegistration(c);
+    a.addRegistration(c);
+    m.addRegistration(c);
+    f.addRegistration(c);
+    m.addRegistration(c2);
+    f.addRegistration(c2);
+    System.out.println(ac);
+  }
+  public String toString() {
+    String result="Students:\n";
+    for (Student s: getRegistrants()) {
+      result +=s + "\n";
+    }
+    result +="Courses:\n";
+    for (Course c: getCourses()) {
+      result +=c + "\n";
+    }
+
+    return result;
+  }
+}
+
+class Student {
+  public String toString() {
+    String result="Student=" + id + "[" + name + "\n";
+    for (Registration r: getRegistrations()) {
+      result +="  In: " + r + "\n";
+    }
+    return result;
+  }
+}
+
+class Course {
+  public String toString() {
+    String result ="Course=" + code + "\n";
+    for (Registration r: getRegistrations()) {
+      result +="  Has: " + r + "\n";
+    }    
+    return result;
+  }
+}//$?[End_of_model]$?
+
+class Course
+{
+  position 234 218 202 74;
+}
+
+class Student
+{
+  position 33 42 109 74;
+}
+
+class Academy
+{
+  position.association Academy__Student:registrants 0,42 109,28;
+  position 259 31 192 58;
+}
+
+class Registration
+{
+  position.association Registration__Student 30,0 44,77;
+  position.association Course__Registration 110,16 0,29;
+  position 50 220 109 74;
+}

@@ -1,0 +1,16 @@
+// The following demonstrates two simple constraints limiting the range of age
+// The test code demonstrates that this works as expected.
+class Client {
+  const Integer minAge =18;
+  Integer age;
+  [age >= minAge]
+  [age <= 120]
+  
+  public static void main(String [ ] args) {
+    Client c = new Client(40);
+    for (int i: new int[] {-1,10,17,18,19,50,119,120,122,1000}) {
+       System.out.println("Trying to initialize age to "+i);
+       System.out.println(c.setAge(i) ? "  Success" : "  FAILURE");
+    }
+  }
+}

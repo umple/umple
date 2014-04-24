@@ -1,0 +1,12 @@
+// This example generates the message
+class A {
+  id;
+  key { }
+}
+
+// The following shows how to avoid the message.
+class A {
+  id;
+  key { id }
+}
+

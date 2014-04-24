@@ -22,12 +22,9 @@ Comments can be either <a href="InlineComments.html">inlineComments</a>, or <a h
 <br />
 
 @@example
-// The Umple system is both fun and efficient to development with
+@@source manualexamples/UmpleComments1.ump
 @@endexample
 
 @@example
-/* 
-  This apple can only be compared to 
-  other apples
-*/
+@@source manualexamples/UmpleComments2.ump
 @@endexample

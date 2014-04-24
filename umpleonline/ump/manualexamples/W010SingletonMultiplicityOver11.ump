@@ -1,0 +1,8 @@
+// This example generates the warning message
+class X {
+  singleton;
+}
+
+class Y {
+   0..1 -- * X;
+}

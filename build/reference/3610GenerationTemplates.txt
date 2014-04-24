@@ -78,128 +78,14 @@ Umple&#39;s mixin capability allows templates to be kept in separate files. This
 [[templateAttributeDefinition]] [[templateName]] [[templateAttribute]] [[templateAttributeContent]] [[templateExpression]] [[templateComment]]  [[templateCodeBlock]] [[templateText]] [[emitMethod]] [[templateList]] [[templatePrameter]]
 
 @@example
-// Simple example to demonstrate umple's template base string generation
-// mechanism.
-// In this approach there is an iterative call to the emit function
-
-class MathExample {
-
-  // A simple template to inject a platform-specific newline
-  cr <<!
-!>>
-
-  // Two templates for different lines of output
-  header <<!Print out a <<=times>> times table!>>
-  row <<!  <<=times>> times <<=count>> is <<=times*count>>!>>
-
-  // Specification for two methods to be generated to output  
-  // parts of the text
-  // Method arguments are in the first parentheses
-  // Templates to output are in the second set
-  emit printHeader(int times)(header, cr);
-  emit printRow(int times, int count)(row, cr);
-
-  // Main program to run the above and generate the output
-  public static void main(String[] argv) {
-    int times = 10; // default
-    MathExample m = new MathExample();
-
-    if(argv.length > 0) {
-      times=Integer.parseInt(argv[0]);
-    }
-
-    // Print the header
-    System.out.print(m.printHeader(times)); 
-    // Print one row for each element
-    for (int i=0; i <= times; i++) {
-      System.out.print(m.printRow(times,i));
-    }
-  }
-}
-
+@@source manualexamples/BasicTemplates1.ump
 @@endexample
 
 @@example
-// Simple example to demonstrate umple's template base string generation
-// mechanism.
-// In this approach iteration is embedded in the rows template
-// and there is a single emitter function generated called result
-
-class MathExample {
-
-  // A simple template to inject a platform-specific newline
-  cr <<!
-!>>
-
-  // A template for the header lines
-  header <<!Print out a <<=times>> times table!>>
-
-  // A template that generates all the rows by iterating
-  rows <<!<<# for  (int i=0; i <= times; i++) {#>>
-
-<<=times>> times <<=i>> is <<=times*i>><<#}#>>!>>
-
-  // Specification of a single method to emit the result
-  emit result(int times)(header, rows, cr);
-  
-  public static void main(String[] argv) {
-    int times = 10; // default
-    if(argv.length > 0) {
-      times=Integer.parseInt(argv[0]);
-    }
-    // Output the entire result
-    System.out.print(new MathExample().result(times)); 
-  }
-}
-
+@@source manualexamples/BasicTemplates2.ump
 @@endexample
 
 
 @@example
-// Example of creating a lengthy output in Umple from a template
-// Note this is plain text. See the next page for html generation.
-// The company is, of course, fictitious.
-class RefLetterRequest {
-  // Attributes used to construct the instance
-  String fileno; String recipient; String applicant;
-  String sender; String senderTitle;
-  
-  // Letter template
-  letterTemplate <<!
-Subject: Reference request for <<=applicant>>, File #<<=fileno>>
-
-Dear <<=recipient>>,
-Our company, Umple Enterprises, is hiring talented software
-engineers.
-
-We have received an application from <<=applicant>> who named you
-as an individual who could provide a letter of reference. Would you
-please reply to this letter, answering the following questions:
-  * In what capacity do you know <<=applicant>>
-  * For how long have you known <<=applicant>>
-  * Describe the abilities of <<=applicant>> in software development
-  * What his or her strengths and weaknesses?
-  * Please provide your phone number and suitable times to call in
-    case we need to follow up 
-    
-Yours sincerely,
-<<=sender>>
-<<=senderTitle>>
-!>>
-
-  // Specification of the method to generate
-  emit letterTemplate()(letterTemplate);
-
-  // Main program to generate the letter
-  public static void main(String[] argv) {
-    if(argv.length < 5) {
-      System.err.println("You must specify arguments for fileno, recipient, applicant, sender, sendertitle");
-    }
-    // Output the entire result
-    else System.out.print(new RefLetterRequest(
-      argv[0], argv[1],argv[2], argv[3], argv[4]
-    ).letterTemplate()); 
-  }
-}
-
+@@source manualexamples/BasicTemplates3.ump
 @@endexample

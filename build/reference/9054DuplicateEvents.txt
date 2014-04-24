@@ -11,16 +11,5 @@ In the example below, the second transition e from s1 can never be triggered bec
 </p>
 
 @@example
-
-class X {
-  sm {
-    s1 {
-      e-> s2;
-      e-> s3;
-    }
-    s2 {}
-    s3 {}
-  }
-}
-
+@@source manualexamples/W054DuplicateEvents1.ump
 @@endexample

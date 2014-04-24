@@ -13,37 +13,11 @@ noreferences
 
 
 @@example
-// This example generates the message
-class X53conctoplevel {
-  sm {
-    s1 {
-      do {System.out.println("Reached s1");}
-    }
-    ||
-    s2
-    {
-      do {System.out.println("Reached s1");}
-    }
-  }
-}
+@@source manualexamples/E053NoConcurrencyAtTopLevel1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the message
-class X53conctoplevel {
-  sm {
-    s0 {
-      s1 {
-        do {System.out.println("Reached s1");}
-      }
-      ||
-      s2
-      {
-        do {System.out.println("Reached s1");}
-      }
-    }
-  }
-}
+@@source manualexamples/E053NoConcurrencyAtTopLevel2.ump
 @@endexample
 
 

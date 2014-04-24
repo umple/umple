@@ -12,91 +12,13 @@ noreferences
 
 
 @@example
-// The following example generates the error message
-class X {
-   Integer x;
-}
-
-class Y {
-  String s;
-  immutable;
-  0..1 -> 0..1 X;
-}//$?[End_of_model]$?
-
-class Y
-{
-  position 50 132 109 60;
-}
-
-class X
-{
-  position 50 26 109 60;
-}
+@@source manualexamples/E013NonImmutableAssociation1.ump
 @@endexample
 
 @@example
-// One way to solve this is to make the association point to
-// another immutable class
-// But note that this only works for one-way associations
-class X {
-   Integer x;
-   immutable;
-}
-
-class Y {
-  immutable;
-  String s;
-  0..1 -> 0..1 X;
-}//$?[End_of_model]$?
-
-class Y
-{
-  position 50 132 109 60;
-}
-
-class X
-{
-  position 50 26 109 60;
-}
+@@source manualexamples/E013NonImmutableAssociation2.ump
 @@endexample
 
 @@example
-// Another solution is to not require the association to be immutable,
-// just the attributes. But this may not match the intended semantics.
-class X {
-   immutable Integer x;
-}
-
-class Y {
-    immutable String s;
-    0..1 -- 0..1 X;
-}//$?[End_of_model]$?
-
-class Y
-{
-  position 50 132 109 60;
-}
-
-class X
-{
-  position 50 26 109 60;
-}
-class X {
-   immutable Integer x;
-}
-
-class Y {
-    immutable String s;
-    0..1 -- 0..1 X;
-}//$?[End_of_model]$?
-
-class Y
-{
-  position 50 132 109 60;
-}
-
-class X
-{
-  position 50 26 109 60;
-}
+@@source manualexamples/E013NonImmutableAssociation3.ump
 @@endexample

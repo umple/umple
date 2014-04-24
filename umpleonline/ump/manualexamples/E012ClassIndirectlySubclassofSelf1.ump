@@ -1,0 +1,12 @@
+// This example generates the error message
+class A {
+  isA C;
+}
+
+class B {
+  isA A;
+}
+
+class C {
+  isA B;
+}

@@ -10,12 +10,7 @@ noreferences
 </p>
 
 @@example
-// The following will generate two such warnings
-class X {
-  blah blah blah;
-  1 - * X;
-}
-
+@@source manualexamples/W1007ElementNotParsed1.ump
 @@endexample
 
 

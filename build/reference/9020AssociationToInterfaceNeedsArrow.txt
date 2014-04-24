@@ -12,21 +12,11 @@ noreferences
 
 
 @@example
-// This example generates the message
-class X20classintfarrow {
-  1 -- * IA;
-}
-
-interface IA {}
+@@source manualexamples/E020InterfaceAssociationNotOneWay1.ump
 @@endexample
 
 @@example
-// This example generates the message
-class X20classintfarrow {
-  1 -> * IA;
-}
-
-interface IA {}
+@@source manualexamples/E020InterfaceAssociationNotOneWay2.ump
 @@endexample
 
 

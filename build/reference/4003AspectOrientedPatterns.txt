@@ -13,29 +13,9 @@ same code.</p>
 on the <a href="PooledStateMachines.html">page on pooled state machines, where the same code is injected into all the event methods matching a certain pattern</a></p>
 
 @@example
-
-class Student
-{
-  firstName;
-  lastName;
-  cityOfBirth;
-  before get*Name { 
-    if ( DEBUG) { System.out.println("accessing the name"); }
-  }
-}
-
+@@source manualexamples/CodeInjectionPatternMatching1.ump
 @@endexample
 
 @@example
-
-class Student
-{
-  firstName;
-  lastName;
-  cityOfBirth;
-  before get*,!getCityOfBirth { 
-    if ( DEBUG) { System.out.println("accessing the name"); }
-  }
-}
-
+@@source manualexamples/CodeInjectionPatternMatching2.ump
 @@endexample

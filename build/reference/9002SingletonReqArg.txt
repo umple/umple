@@ -18,25 +18,11 @@ greater than 1 (e.g. 5). However Umple treats a multiplicity specified with a lo
 
 
 @@example
-// This example generates the warning message
-class X {
-  singleton;
-  0..1 -- 1 Y;
-}
-
-class Y {
-}
+@@source manualexamples/W002SingletonWithRequiredObject1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the warning
-class X {
-  singleton;
-  0..1 -- 0..1 Y;
-}
-
-class Y {
-}
+@@source manualexamples/W002SingletonWithRequiredObject2.ump
 @@endexample
 
 

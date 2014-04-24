@@ -1,0 +1,19 @@
+// This example generates the error message
+class X {
+  sm {
+    s1 {
+      e1 -> s2;
+    }
+  }
+}
+
+// This example solves the problem
+class X {
+  sm {
+    s1 {
+      e1 -> s2;
+    }
+    s2 {}
+  }
+}
+

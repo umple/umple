@@ -1,0 +1,9 @@
+// This example generates the error message
+class X {
+    * -- 1 Y sorted {nom};
+}
+
+class Y {
+  name;
+}
+

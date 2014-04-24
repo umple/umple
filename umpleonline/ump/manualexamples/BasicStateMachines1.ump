@@ -1,0 +1,32 @@
+
+// This example shows a simple state machine without any actions or guards
+//
+// In the following, status is a state machine, and acts like an
+// attributes, whose value is set by various events.
+//
+// Open, Closing, Closed, Opening and HalfOpen are the possible
+// values, or states, of status.
+//
+// buttonOrObstacle, reachBottom and reachTop are events. These
+// become generated methods that can be called to cause a state
+// change.
+//
+// To make the state diagram appear in UmpleOnline, select 'Options'
+// then choose 'GraphViz State Diagram'
+class GarageDoor
+{
+   status {
+      Open { buttonOrObstacle -> Closing;  }
+      Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      }
+      Closed { buttonOrObstacle -> Opening; }
+      Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      }
+      HalfOpen { buttonOrObstacle -> Opening; }
+  }
+}
+

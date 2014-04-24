@@ -1,0 +1,14 @@
+
+class Car {
+  queued radio {
+    on {
+      radioToggle -> off;
+    }
+    off {
+      radioToggle -> on;
+    }
+  }
+  after radioToggle {soundBeep();}
+}
+
+

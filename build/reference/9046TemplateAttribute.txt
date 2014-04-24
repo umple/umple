@@ -12,29 +12,14 @@ noreferences
 
 
 @@example
-// This example generates the message
-class A {
-  List<OtherClass> otherClassGroup;
-}
-class OtherClass {}
-
+@@source manualexamples/W046AttributeHasTemplateType1.ump
 @@endexample
 
 
 @@example
-// The following shows how to avoid the message using a multivalued attribute
-class A {
-  OtherClass[] otherClassGroup;
-}
-class OtherClass {}
-
+@@source manualexamples/W046AttributeHasTemplateType2.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the message using an association
-class A {
-  0..1 -- * OtherClass;
-}
-class OtherClass {}
-
+@@source manualexamples/W046AttributeHasTemplateType3.ump
 @@endexample

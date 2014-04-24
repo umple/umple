@@ -1,0 +1,16 @@
+// This example generates the warning message
+class X {
+  singleton;
+}
+
+class Y {
+   0..1 -- * X;
+}
+// The following shows how to avoid the warning
+class X {
+  singleton;
+}
+
+class Y {
+   0..1 -- 1 X;
+}

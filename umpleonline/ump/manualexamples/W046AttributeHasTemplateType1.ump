@@ -1,0 +1,6 @@
+// This example generates the message
+class A {
+  List<OtherClass> otherClassGroup;
+}
+class OtherClass {}
+

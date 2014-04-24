@@ -1,0 +1,18 @@
+
+// this example traces attribute name whenever its value is changed for 5 times 
+
+class Student
+{
+  name;
+  trace name for 5;
+}
+
+
+// this example traces attribute name whenever its value is accessed for 5 times 
+
+class Student
+{
+  name;
+  trace get name for 5;
+}
+

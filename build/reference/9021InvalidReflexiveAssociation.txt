@@ -12,23 +12,14 @@ noreferences
 <p><a href="ReflexiveAssociations.html">For more information about  reflexive associations, see this page.</a></p>
 
 @@example
-// The following example shows how to generate this error.
-class X {
-    0..1 -- 0..1 X;
-}
+@@source manualexamples/E021InvalidReflexiveAssociation1.ump
 @@endexample
 
 
 @@example
-// The following example shows how to fix the error if this is an asymmetric association.
-class X {
-    0..1 -- 0..1 X right;
-}
+@@source manualexamples/E021InvalidReflexiveAssociation2.ump
 @@endexample
 
 @@example
-// The following example shows how to fix the error if this is a symmetric association.
-class X {
-    0..1 self right;
-}
+@@source manualexamples/E021InvalidReflexiveAssociation3.ump
 @@endexample

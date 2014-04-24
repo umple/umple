@@ -1,0 +1,29 @@
+
+class Group { }
+class Item {}
+class Description {}
+
+association {
+  * Group -- * Item;
+}
+
+association {
+  1 Group -> 0..1 Description;  
+}//$?[End_of_model]$?
+
+class Item
+{
+  position 127 123 109 45;
+}
+
+class Group
+{
+  position.association Group__Item:item 65,46 30,0;
+    position.association Description__Group 24,45 30,0;
+position 51 31 109 45;
+}
+
+class Description
+{
+  position 51 229 109 45;
+}

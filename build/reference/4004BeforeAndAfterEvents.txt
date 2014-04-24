@@ -12,18 +12,5 @@ Sometimes a programmer wants to execute some code whenever a given event is proc
 
 
 @@example
-
-class Car {
-  queued radio {
-    on {
-      radioToggle -> off;
-    }
-    off {
-      radioToggle -> on;
-    }
-  }
-  after radioToggle {soundBeep();}
-}
-
-
+@@source manualexamples/CodeInjectioninEventMethods1.ump
 @@endexample

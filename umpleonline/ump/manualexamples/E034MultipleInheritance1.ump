@@ -1,0 +1,8 @@
+// The following will generate this error
+
+class P1 {}
+class P2 {}
+
+class Sub {
+  isA P1, P2;
+}

@@ -11,11 +11,7 @@ noreferences
 
 
 @@example
-// The following example shows how to generate this error.
-class X {
-  a;
-  a;
-}
+@@source manualexamples/E022DuplicateAttribute1.ump
 @@endexample
 
 

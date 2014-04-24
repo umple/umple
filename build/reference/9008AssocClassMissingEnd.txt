@@ -11,26 +11,11 @@ noreferences
 
 
 @@example
-// This example generates the error message
-class A {}
-
-class B {}
-
-associationClass C {
-   * A;
-}
+@@source manualexamples/E008AssociationClassMissingEnd1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the error
-class A {}
-
-class B {}
-
-associationClass C {
-   * A;
-   * B;
-}
+@@source manualexamples/E008AssociationClassMissingEnd2.ump
 @@endexample
 
 

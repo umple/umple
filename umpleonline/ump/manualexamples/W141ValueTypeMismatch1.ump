@@ -1,0 +1,8 @@
+// The following will generate this warning on every line of the class
+class X {
+  Date d = "20130708";
+  Integer i = "abc";
+  String s = 123;
+  Boolean b = 1;
+  Time t = "120000";
+}

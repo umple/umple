@@ -1,0 +1,10 @@
+// This example generates the error message
+class X {
+  isA X;
+}
+// The following shows how to avoid the error
+class Y {}
+
+class X {
+  isA Y;
+}

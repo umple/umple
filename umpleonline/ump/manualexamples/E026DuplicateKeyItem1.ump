@@ -1,0 +1,6 @@
+// The following example has error 26 since they key has 'a' twice
+class X26dupiteminkey {
+  a;
+  b;
+  key {a, b, a} 
+}

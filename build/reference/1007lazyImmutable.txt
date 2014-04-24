@@ -22,8 +22,5 @@ to specify constructor arguments.<p>
 
 
 @@example
-class A 
-{
-    lazy immutable z;
-}
+@@source manualexamples/LazyImmutableAttributes1.ump
 @@endexample

@@ -12,21 +12,10 @@ noreferences
 </p>
 
 @@example
-// This example generates the warning since T is not defined
-class S {
-  isA T;
-}
-
+@@source manualexamples/W033MissingSuperclass1.ump
 @@endexample
 
 @@example
-// This example solves the problem by defining T as an external class
-// Umple will not generate any code for T, but now knows it exists
-class S {
-  isA T;
-}
-external T {};
-
-
+@@source manualexamples/W033MissingSuperclass2.ump
 @@endexample
 

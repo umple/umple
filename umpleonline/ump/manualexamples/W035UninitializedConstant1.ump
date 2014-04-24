@@ -1,0 +1,5 @@
+// The following will generate this warning
+
+class X {
+  const String A; //same as const String a = "";
+}

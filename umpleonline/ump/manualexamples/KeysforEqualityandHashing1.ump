@@ -1,0 +1,66 @@
+class Sport {
+  name;
+  description;
+  code;
+  key { code }
+}
+
+class League {
+  name;
+  id;
+  geographicalArea;
+  * -- 1 Sport;
+  Date seasonStart;
+  Date seasonEnd;
+  key { id }
+}
+
+class Team {
+  name;
+  * -- 1 League;
+}
+
+class Player {
+  name;
+  Integer id;
+  key { id }
+ }
+
+class PlayerOnTeam {
+  Integer year;
+  * -- 1 Player;
+  * -- 1 Team;
+  key { year, player, team }
+}
+
+   //$?[End_of_model]$?
+
+class Sport
+{
+  position 311 30 149 97;
+}
+
+class League
+{
+  position 41 61 192 131;
+  position.association League__Sport 193,41 0,68;
+}
+
+class Team
+{
+  position 50 230 109 45;
+  position.association League__Team 30,0 36,131;
+}
+
+class Player
+{
+  position 357 235 113 80;
+}
+
+class PlayerOnTeam
+{
+  position 181 352 114 63;
+  position.association Player__PlayerOnTeam 85,0 0,59;
+  position.association PlayerOnTeam__Team 30,0 61,63;
+}
+

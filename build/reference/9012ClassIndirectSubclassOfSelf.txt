@@ -12,32 +12,11 @@ noreferences
 
 
 @@example
-// This example generates the error message
-class A {
-  isA C;
-}
-
-class B {
-  isA A;
-}
-
-class C {
-  isA B;
-}
+@@source manualexamples/E012ClassIndirectlySubclassofSelf1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the error
-class A {
-}
-
-class B {
-  isA A;
-}
-
-class C {
-  isA B;
-}
+@@source manualexamples/E012ClassIndirectlySubclassofSelf2.ump
 @@endexample
 
 

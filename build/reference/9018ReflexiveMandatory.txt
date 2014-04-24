@@ -12,9 +12,5 @@ noreferences
 
 
 @@example
-// The following example generates the error message
-class X {
-    immutable;
-    0..1 -> 1 X;
-}
+@@source manualexamples/E018ReflexiveImmutable1.ump
 @@endexample

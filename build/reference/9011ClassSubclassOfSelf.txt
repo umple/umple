@@ -12,19 +12,11 @@ noreferences
 
 
 @@example
-// This example generates the error message
-class X {
-  isA X;
-}
+@@source manualexamples/E011ClassisSubclassOfSelf1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the error
-class Y {}
-
-class X {
-  isA Y;
-}
+@@source manualexamples/E011ClassisSubclassOfSelf2.ump
 @@endexample
 
 

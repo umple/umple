@@ -7,79 +7,9 @@ noreferences
 <p>Multiple concurrent blocks that become active when in a particular state can accomplished in Umple using a state machine with two substates separated by the || symbol, each with a do activity. Both do activities will run concurrently.</p>
 
 @@example
-class X {
-  activesm {
-    topstate {
-      thread1 {
-        do {
-          System.out.println("Doing the activity - Normally this would last a long time");
-          Thread.sleep(1000);
-          System.out.println("Done thread 1");
-        }
-      }
-      ||
-      thread2 {
-        do {
-          System.out.println("Doing the other activity - Again normally this would last a long time");
-          Thread.sleep(3000);
-          System.out.println("Done thread 2");
-        }
-      }
-    }
-  }
-  public static void main(String argv[]) {
-    new X();
-  }
-}
+@@source manualexamples/ConcurrencyUsingDoActivities1.ump
 @@endexample
 
 @@example
-// This is a more sophisticated example
-class X {
- sm {
-   s1 {
-     do {
-        System.out.println("In S1");
-        Thread.sleep(1000);
-        System.out.println("Still in S1 after sleep");
-        Thread.sleep(2000);
-        System.out.println("About to leave S1");
-      }
-      -> s2;
-    }
-    s2 {
-     do {
-        System.out.println("In S2");
-        Thread.sleep(1000);
-        System.out.println("Still in S2 after sleep");
-        Thread.sleep(2000);
-        System.out.println("About to leave S2");
-      }
-      nesteds2a {
-        do {
-          System.out.println("In S2a");
-          Thread.sleep(1000);
-          System.out.println("Still in S2a after sleep");
-          Thread.sleep(2000);
-          System.out.println("About to leave S2a");
-        }
-      }
-      ||
-      nesteds2b {
-       do {
-          System.out.println("In S2b");
-          Thread.sleep(1000);
-          System.out.println("Still in S2b after sleep");
-          Thread.sleep(2000);
-          System.out.println("About to leave S2b");
-        }
-      }
-    }
-  }
-  public static void main(String argv[]) {
-    System.out.println("In Main");
-    X theX = new X();
-    System.out.println("End of Main");
-  }
-}
+@@source manualexamples/ConcurrencyUsingDoActivities2.ump
 @@endexample

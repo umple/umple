@@ -1,0 +1,4 @@
+// This example generates the error message
+class X {
+  defaulted Integer a;
+}

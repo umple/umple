@@ -1,0 +1,13 @@
+namespace school.admin;
+
+class Faculty{}
+class Student{}
+
+namespace elevator.structure;
+
+class Building
+{
+  1 -- * Classroom;
+}
+
+class Classroom{}

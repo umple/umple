@@ -1,0 +1,23 @@
+// This example generates the error message
+class A {
+  isA C;
+}
+
+class B {
+  isA A;
+}
+
+class C {
+  isA B;
+}
+// The following shows how to avoid the error
+class A {
+}
+
+class B {
+  isA A;
+}
+
+class C {
+  isA B;
+}

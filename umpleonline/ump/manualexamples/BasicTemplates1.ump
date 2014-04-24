@@ -1,0 +1,39 @@
+// Simple example to demonstrate umple's template base string generation
+// mechanism.
+// In this approach there is an iterative call to the emit function
+
+class MathExample {
+
+  // A simple template to inject a platform-specific newline
+  cr <<!
+!>>
+
+  // Two templates for different lines of output
+  header <<!Print out a <<=times>> times table!>>
+  row <<!  <<=times>> times <<=count>> is <<=times*count>>!>>
+
+  // Specification for two methods to be generated to output  
+  // parts of the text
+  // Method arguments are in the first parentheses
+  // Templates to output are in the second set
+  emit printHeader(int times)(header, cr);
+  emit printRow(int times, int count)(row, cr);
+
+  // Main program to run the above and generate the output
+  public static void main(String[] argv) {
+    int times = 10; // default
+    MathExample m = new MathExample();
+
+    if(argv.length > 0) {
+      times=Integer.parseInt(argv[0]);
+    }
+
+    // Print the header
+    System.out.print(m.printHeader(times)); 
+    // Print one row for each element
+    for (int i=0; i <= times; i++) {
+      System.out.print(m.printRow(times,i));
+    }
+  }
+}
+
