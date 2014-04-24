@@ -12,39 +12,5 @@ as you would define an attribute.</p>
 [[inlineAssociation]] [[inlineAssociationEnd]] [[associationEnd]]
 
 @@example
-
-class Group 
-{
-  // a many-to-many association
-  // An item has zero or more groups and a group has zero or more items
-  * -- * Item item;
-  
-  // An item has an optional description
-  // The association is directed, so descriptions do not know
-  // which groups link to them
-  1 -> 0..1 Description;
-}
-
-class Item
-{}
-
-class Description
-{}//$?[End_of_model]$?
-
-class Item
-{
-  position 127 125 109 45;
-}
-
-class Group
-{
-  position.association Group__Item:item 65,46 30,0;
-    position.association Description__Group 30,46 30,0;
-position 50 31 109 45;
-}
-
-class Description
-{
-  position 50 230 109 45;
-}
+@@source manualexamples/InlineAssociations1.ump
 @@endexample

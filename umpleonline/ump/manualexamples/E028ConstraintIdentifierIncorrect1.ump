@@ -1,0 +1,5 @@
+// This example generates the message
+class X28attrconsrnotdef {
+  Integer a;
+  [b > 5]
+}

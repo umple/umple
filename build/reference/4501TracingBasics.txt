@@ -21,43 +21,9 @@ The following are extremely simple example of tracing using MOTL on a UML Intege
 &nbsp; <br/>
 
 @@example
-
-class Student
-{
-  Integer id;
-  
-  // Whenever the id attribute is changed, emit a trace record
-  // The record will have the format id=value
-  trace id;
-  
-  // The following Java main program can be used to demonstrate this in operation
-  // This will output a record when id is set to 9.
-  public static void main(String [ ] args) {
-    Student s = new Student(6);
-    s.setId(9); 
-  }
-}
+@@source manualexamples/TracingBasics1.ump
 @@endexample
 
 @@example
-
-class Student
-{
-  lazy Integer id;
-  lazy name;
-  
-  // It is possible to specify multiple UML entities to trace as follows
-  // It is also possible to indicate interesting information to record
-  // in addition to the value of the element being traced
-  trace id, name record "interesting behavior";
-  trace id record "Even more interesting";
-
-  // Traces will be triggered for each call to a 'set' method
-  // and twice for id, since there are two trace statements for id  
-  public static void main(String [ ] args) {
-    Student s = new Student();
-    s.setId(9); 
-    s.setName("Tim");
-  }
-}
+@@source manualexamples/TracingBasics2.ump
 @@endexample

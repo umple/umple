@@ -1,0 +1,5 @@
+// This example generates the warning because there is a missing return type
+class X {
+  m() {}
+}
+

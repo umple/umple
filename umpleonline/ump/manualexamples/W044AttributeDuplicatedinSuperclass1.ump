@@ -1,0 +1,10 @@
+// This example generates the warning message
+class A {
+  attr;
+}
+
+class B {
+  isA A;
+  attr;
+}
+

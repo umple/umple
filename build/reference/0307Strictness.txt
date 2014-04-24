@@ -23,19 +23,5 @@ The second set of subdirectives are &#39;expect&#39;, &#39;allow&#39; and &#39;d
 [[strictness]]
 
 @@example
-// Tell the compiler that error 25 will appear (and fail if it does not)
-strictness expect 25;
-
-// Tell the compiler that if error 22 occurs, not to fail the compile.
-// However, this does not mean that code can be generated
-strictness allow 22;
-
-// UNDER DEVELOPMENT: The following is not operational yet
-// Tell the compiler that  base language code should not appear
-strictness modelOnly;
-
-// Tell the compiler that the only base language code could be in method bodies
-// Any other unparsable 'extra code' in classes will be rejected.
-strictness noExtraCode;
-
+@@source manualexamples/StrictnessDirective1.ump
 @@endexample

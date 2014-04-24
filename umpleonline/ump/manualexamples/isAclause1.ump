@@ -1,0 +1,21 @@
+// A superclass-subclass relationship defined using the isA keyword
+class Person
+{
+  name;
+}
+
+class Student
+{
+  isA Person;
+  Integer number;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 45 21 113 63;
+}
+
+class Student
+{
+  position 50 141 135 63;
+}

@@ -58,39 +58,6 @@ There are several special kinds of associations in Umple.
 <p><a href="E005UndefinedClassinAssociation.html">Umple will report an error if the an association refers to a non-existent class.</a></p>
 
 @@example
-// Example code illustrating various
-// kinds of associations
-class A {}
-
-// Class with inline association having role name
-class B {
-  1 -- * A endTwo; 
-}
-
-// Class with reflexive association
-class C {
-  0..1 -- * C;
-  1 -- 0..1 D; // D is external
-}
-
-// Independently defined and directed association
-association {
-  0..1 A -> * C;
-}
-
-// Reference to a class defined elsewhere
-external D {}//$?[End_of_model]$?
-
-class B
-{
-  position 242 33 109 45;
-  position.association A:endTwo__B 0,23 110,26;
-}
-
-class C
-{
-  position 50 150 109 45;
-  position.association C__D 75,46 76,0;
-}
+@@source manualexamples/AssociationDefinition1.ump
 @@endexample
 

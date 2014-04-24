@@ -22,5 +22,5 @@ of use statements.</p>
 [[useStatement]]
 
 @@example
-use Core.ump;
+@@source manualexamples/UseStatements1.ump
 @@endexample

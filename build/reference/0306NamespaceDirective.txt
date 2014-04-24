@@ -10,17 +10,5 @@ as well as reduce the possibility of name collision.
 [[namespace]]
 
 @@example
-namespace school.admin;
-
-class Faculty{}
-class Student{}
-
-namespace elevator.structure;
-
-class Building
-{
-  1 -- * Classroom;
-}
-
-class Classroom{}
+@@source manualexamples/NamespaceDirectives1.ump
 @@endexample

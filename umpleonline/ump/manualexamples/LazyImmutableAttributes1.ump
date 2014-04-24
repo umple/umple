@@ -1,0 +1,4 @@
+class A 
+{
+    lazy immutable z;
+}

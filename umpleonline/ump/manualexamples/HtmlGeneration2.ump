@@ -1,0 +1,245 @@
+// Umple library for generating html
+// Currently it supports h1, h2 ... as well as p, and table tags.
+// This will be extended to support more of html later
+// It serves as an illustration of Umple's generation templates
+
+// Class representing either a top level html node or a collection of subnodes
+class HtmlNode {
+  String getContent() {return "";};  // should be abstract
+}
+
+// Simple text to be output between tags - these are leaves
+class HtmlTextNode {
+  isA HtmlNode;
+  String content;
+}
+
+// Non-leaf nodes in the html tree
+class HtmlRegularNode {
+  isA HtmlNode;
+  const String Xmltagstart = "<";
+  const String Xmltagend = ">";
+
+  // Arguments for the constructor
+  String tag; // e.g. p, h1, a
+  String arguments; // e.g. href
+  
+  0..1 -> * HtmlNode subnodes; // whatever to emit between tags
+  
+  // The following template will render any html node
+  rendering <<!<<=Xmltagstart>><<=getTag()>> <<=getArguments()>><<=Xmltagend>>
+  <<#
+  for(HtmlNode n : getSubnodes()) {#>><<=n.getContent()>>
+  <<#}#>><<=Xmltagstart>>/<<=getTag()>><<=Xmltagend>>!>>
+  
+  emit getContent()(rendering);
+  
+  HtmlTable table() {
+    HtmlTable t = new HtmlTable();
+    addSubnode(t);
+    return t;
+  }
+  
+  HtmlTextNode text(String s) {
+    HtmlTextNode t = new HtmlTextNode(s);
+    addSubnode(t);
+    return(t);
+  }
+
+  HtmlRegularNode taggedText(String tag, String arguments, String s) {
+    HtmlRegularNode r = new HtmlRegularNode(tag, arguments);
+    HtmlTextNode t = new HtmlTextNode(s);
+    r.addSubnode(t);
+    addSubnode(r);
+    return(r);
+  }
+}
+
+class HtmlTable {
+  isA HtmlRegularNode;
+
+  HtmlTable() {
+    super("table","");
+  }
+
+  HtmlRow tr() {
+    HtmlRow r = new HtmlRow();
+    addSubnode(r);
+    return r;
+  }  
+}
+
+class HtmlRow {
+  isA HtmlRegularNode;
+
+  HtmlRow() {
+    super("tr","");
+  }
+
+  // Add a cell that contains text
+  HtmlCell td(String s) {
+    HtmlCell c = td();
+    c.text(s);
+    return(c);
+  }
+
+  // Add a cell that can contain anything
+  HtmlCell td() {
+    HtmlCell c = new HtmlCell();
+    addSubnode(c);
+    return c;
+  }
+}
+
+class HtmlCell {
+  isA HtmlRegularNode;
+
+  HtmlCell() {
+    super("td","");
+  }
+}
+
+class HtmlGen {
+
+  lazy HtmlNode firstNode;
+
+  // Subtrees for the header and body
+  0..1 -> * HtmlNode headerNodes;
+  0..1 -> * HtmlNode bodyNodes;
+ 
+  after constructor {
+    firstNode = new HtmlTextNode(filehead());
+  }
+
+  filehead <<!<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">!>>
+  emit filehead()(filehead);
+
+  xmlns <<!xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"!>>
+  emit xmlns()(xmlns);
+  
+  wholefile <<!<<=getFirstNode().getContent()>>
+<html <<=xmlns()>> >
+  <head>
+  <<#for(HtmlNode h: getHeaderNodes()) {#>>
+    <<=h.getContent()>>
+  <<#}#>>
+  </head>
+  <body>
+  <<#for(HtmlNode h: getBodyNodes()) {#>>
+    <<=h.getContent()>>
+  <<#}#>>
+  </body>
+</html>
+!>>
+    
+  emit wholefile()(wholefile);
+
+  // Creates a new simple node; but does not add it anywhere
+  HtmlRegularNode simpleNode(String tag, String content) {
+    HtmlTextNode t = new HtmlTextNode(content);
+    HtmlRegularNode r = new HtmlRegularNode(tag,"");
+    r.addSubnode(t);
+    return r;
+  }
+
+  // Add a top level node of any type that contains a string
+  HtmlNode addNode(HtmlNode n) {
+    addBodyNode(n);
+    return n;
+  } 
+
+  // Add a node of any type that contains a string
+  HtmlRegularNode addSimpleNode(String tag, String text) {
+    HtmlRegularNode t = simpleNode(tag,text);
+    addBodyNode(t);
+    return t;
+  } 
+
+  // Adds a top level header at a certain level with plain text
+  // Subsequent calls can be made to add additional elements
+  // to the result
+  HtmlRegularNode h(int level, String text) {
+    return addSimpleNode("h"+level,text);
+  } 
+
+  // Adds a top level p with plain text
+  // Subsequent calls can add additional elements to the p
+  // beyond just the text
+  HtmlRegularNode p(String text) {
+    return addSimpleNode("p",text);
+  } 
+
+    
+  // Adds a top level table
+  HtmlTable table() {
+    HtmlTable t = new HtmlTable();
+    addBodyNode(t);
+    return t;
+  }
+}
+
+// Umple program demonstrating generation
+// of the html generation library for Umple
+
+use htmlgen.ump;
+
+class TimesTable {
+  public static void main(String[] argv) {
+    int times = 10; // default
+    HtmlGen h = new HtmlGen();
+    HtmlRegularNode p;
+
+    if(argv.length > 0) {
+      times=Integer.parseInt(argv[0]);
+    }
+    
+    // Specify the table main header
+    h.h(1, "Multiplication Table: "+times);
+
+    // Generate an explanatory paragraph
+    p = h.p("The following is a ");
+    p.taggedText("i","","simple");
+    p.text(" multiplication table");
+    
+    // Generate another paragraph with some subnodes
+    // showing a slightly different use of the API
+    p = new HtmlRegularNode("p","");    
+    h.addNode(p);
+    p.text("Nodes in ");
+    p.taggedText("font", "color=\"red\"", "red");
+    p.text(" are powers of 3");
+
+    h.h(2, "The table");
+
+    // Create a table at the top level
+    HtmlTable t=h.table();
+
+    // Add the top row of the table
+    HtmlRow r;
+    r=t.tr();
+    r.td("*");
+    for(int i=1; i<= times; i++) {
+      r.td().taggedText("b","",""+i);;
+    }
+
+    // Add the interior rows of the table
+    for(int i=1; i<= times; i++) {
+      r=t.tr();
+      r.td().taggedText("b","",""+i);
+      for(int j=1; j<= times; j++) {
+        String output=""+i*j;
+        if((i*j)%3==0) {
+          HtmlCell c = r.td();
+          c.taggedText("font", "color=\"red\"",output);
+        }
+        else {
+          r.td(output);
+        }
+      }
+    }
+    
+    System.out.println(h.wholefile()); 
+  }
+}
+
+

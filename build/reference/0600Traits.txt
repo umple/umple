@@ -20,36 +20,7 @@ Traits are not part of UML. A UML class diagram drawn from an Umple file contain
 [[traitDefinition]] [[traitContent]]
 
 @@example
-// Example of use of a trait in Umple
-// The trait has regular attributes, derived attribute
-// and a method that are copied into Organization
-// and Company
-trait Identifiable {
-  firstName;
-  lastName;
-  address;
-  phone number;
-  fullName = {firstName   " "   lastName;}
-  Boolean isLongName() {return lastName.length() > 1;}  
-}
-
-class Person {
-  isA Identifiable;
-}
-
-class Organization {
-  Integer registrationNumber;
-}
-
-class Company {
-  isA Organization, Identifiable;
-}//$?[End_of_model]$?
-
-class Organization
-{
-  position 247 149 202 60;
-}
-
+@@source manualexamples/Traits1.ump
 @@endexample
 
 

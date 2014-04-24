@@ -16,36 +16,14 @@ Note that for an initialization value with no type specified will result in the 
 
 
 @@example
-// The following will generate this warning on every line of the class
-class X {
-  Date d = "20130708";
-  Integer i = "abc";
-  String s = 123;
-  Boolean b = 1;
-  Time t = "120000";
-}
+@@source manualexamples/W141ValueTypeMismatch1.ump
 @@endexample
 
 @@example
-// The following shows how to solve the above problem
-class X {
-  Date d = "2013-07-08";
-  Integer i = 7;
-  String s = "123";
-  Boolean b = true;
-  Time t = "12:00:00";
-}
+@@source manualexamples/W141ValueTypeMismatch2.ump
 @@endexample
 
 @@example
-// The following shows how to solve the above problem not even showing the type at all
-class X {
-  d = "2013-07-08";
-  i = 7;
-  s = "123";
-  b = true;
-  t = "12:00:00";
-  m = 2.3;
-}
+@@source manualexamples/W141ValueTypeMismatch3.ump
 @@endexample
 

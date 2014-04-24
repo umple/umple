@@ -9,40 +9,20 @@ noreferences
 <p>In order to define a reflexive association, it is necessary to specify role names. There is a situation where it is possible to define a reflexive association with one role name. When this happens, Umple uses an implicit name for the second role name which is the plural form of the class name (e.g. if the class name is Computer, plural form would be computers). Therefore, if a user uses plural form of the class name as role name, Umple produces an error.</p>
 
 @@example
-// This example generates the error message
-
-class Course {  
-  * -- * Course courses;  
-}  
-
+@@source manualexamples/E032ReservedRoleName1.ump
 @@endexample
 
 
 @@example
-// The following shows how to avoid the error
-
-class Course {  
-  * -- * Course course_s ;  
-}  
-
+@@source manualexamples/E032ReservedRoleName2.ump
 @@endexample
 
 @@example
-// This example generates the error message
-
-class Course {  
-  * courses -- * Course;  
-}  
-
+@@source manualexamples/E032ReservedRoleName3.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the error
-
-class Course {  
-  * course_s -- * Course;  
-}  
-
+@@source manualexamples/E032ReservedRoleName4.ump
 @@endexample
 
 

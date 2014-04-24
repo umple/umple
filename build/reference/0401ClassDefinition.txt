@@ -20,34 +20,5 @@ A class definition defines an object-oriented  class available for use as a type
 [[classDefinition]] [[classContent]]
 
 @@example
-
-class Student
-{
-  firstName;   // attribute - defaults to String
-  lastName;
-  Integer number;  // attribute with type Integer
-  * -- * Address;  // Many-to-many association
-  
-  public String fullName()  // Method, whose content is not processed by Umple
-  {
-    return getFirstName()   " "   getLastName();
-  } 
-}
-
-class Address
-{
-  String[] line;  // Multi-valued attribute
-}//$?[End_of_model]$?
-
-class Address
-{
-  position 47 160 109 64;
-}
-
-class Student
-{
-  position.association Address__Student 30,100 30,0;
-  position 47 23 141 100;
-}
-
+@@source manualexamples/ClassDefinition1.ump
 @@endexample

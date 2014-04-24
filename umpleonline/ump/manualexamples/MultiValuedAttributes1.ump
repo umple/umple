@@ -1,0 +1,10 @@
+class Office {
+   Integer number;
+   Phone[] installedTelephones;
+} 
+
+class Phone {
+  String digits;
+  String callerID;
+}
+

@@ -1,0 +1,13 @@
+// This example generates the message
+class X53conctoplevel {
+  sm {
+    s1 {
+      do {System.out.println("Reached s1");}
+    }
+    ||
+    s2
+    {
+      do {System.out.println("Reached s1");}
+    }
+  }
+}

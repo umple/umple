@@ -1,0 +1,20 @@
+// The following example generates the error message
+class X {
+   Integer x;
+}
+
+class Y {
+  String s;
+  immutable;
+  0..1 -> 0..1 X;
+}//$?[End_of_model]$?
+
+class Y
+{
+  position 50 132 109 60;
+}
+
+class X
+{
+  position 50 26 109 60;
+}

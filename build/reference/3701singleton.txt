@@ -13,9 +13,5 @@ noreferences
 [[singleton]] [[softwarePattern]]
 
 @@example
-
-class Airline
-{
-  singleton;
-}
+@@source manualexamples/SingletonPattern1.ump
 @@endexample

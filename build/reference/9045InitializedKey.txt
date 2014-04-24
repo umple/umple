@@ -11,19 +11,9 @@ noreferences
 
 
 @@example
-// This example generates the message
-class X {
-  Integer z = 1;
-  key { z }
-}
-
+@@source manualexamples/W045InitializedValueinKey1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the message
-class X {
-  Integer z;
-  key { z  }
-}
-
+@@source manualexamples/W045InitializedValueinKey2.ump
 @@endexample

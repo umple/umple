@@ -1,0 +1,12 @@
+generate Java;
+
+// A class with a method displayName() that has no arguments
+class Person
+{
+  name;
+  
+  String displayName()
+  {
+    System.out.println("Hello, my name is " + getName());
+  }
+}

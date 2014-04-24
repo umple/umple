@@ -11,17 +11,11 @@ noreferences
 
 
 @@example
-// This causes the warning
-interface Y {
-  constant A=5;
-}
+@@source manualexamples/W901DeprecatedKeywordConstant1.ump
 @@endexample
 
 @@example
-// This does not causes the warning
-interface Y {
-  const A=5;
-}
+@@source manualexamples/W901DeprecatedKeywordConstant2.ump
 @@endexample
 
 

@@ -18,25 +18,9 @@ Using "giving" keyword, tracing code is injected with a postcondition.
 [[conditionRHS]]
 
 @@example
-
-// this example injects trace code in attribute setter with specified precondition
-
-class Student
-{
-  name;
-  trace name where name == "john";
-}
-
+@@source manualexamples/TracingAttributeswithConditions1.ump
 @@endexample
 
 @@example
-
-// this example injects trace code in attribute setter with specified postcondition
-
-class Student
-{
-  name;
-  trace name giving name == "john";
-}
-
+@@source manualexamples/TracingAttributeswithConditions2.ump
 @@endexample

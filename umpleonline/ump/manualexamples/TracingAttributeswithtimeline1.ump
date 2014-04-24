@@ -1,0 +1,9 @@
+
+// this example starts the tracing of attribute name and doesn't stop until condition becomes true
+
+class Student
+{
+  name;
+  trace name until name == "john";
+}
+

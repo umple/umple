@@ -11,27 +11,10 @@ An end state (with no outgoing transitions) is generated. The purpose of the war
 
 
 @@example
-// This example generates the error message
-class X {
-  sm {
-    s1 {
-      e1 -> s2;
-    }
-  }
-}
-
+@@source manualexamples/W050TargetStateNotFound1.ump
 @@endexample
 
 @@example
-// This example solves the problem
-class X {
-  sm {
-    s1 {
-      e1 -> s2;
-    }
-    s2 {}
-  }
-}
-
+@@source manualexamples/W050TargetStateNotFound2.ump
 @@endexample
 

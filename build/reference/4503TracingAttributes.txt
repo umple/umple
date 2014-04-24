@@ -17,30 +17,13 @@ MOTL allows the tracing of attributes at the model level. Attribute tracing can 
 [[traceDirective]] [[traceItem]] [[executeClause]] [[traceWhere]] [[traceEntity]]
 
 @@example
-// This traces setId() and setName()
-class Student
-{
-  Integer id;
-  String name;
-  trace id;
-  trace set name;
-}
+@@source manualexamples/TracingAttributes1.ump
 @@endexample
 
 @@example
-// This traces  getId() method
-class Student
-{
-  Integer id;
-  trace get id;
-}
+@@source manualexamples/TracingAttributes2.ump
 @@endexample
 
 @@example
-// This example traces getId() and setId()
-class Student
-{
-  Integer id;
-  trace set,get id;
-}
+@@source manualexamples/TracingAttributes3.ump
 @@endexample

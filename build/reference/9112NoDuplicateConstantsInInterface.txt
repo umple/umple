@@ -11,11 +11,7 @@ noreferences
 
 
 @@example
-// The following example shows how to generate this error.
-interface X {
-  const A="dog";
-  const A="cat";
-}
+@@source manualexamples/E112DuplicateConstantsinInterface1.ump
 @@endexample
 
 

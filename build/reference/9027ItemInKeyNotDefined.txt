@@ -12,12 +12,7 @@ noreferences
 
 
 @@example
-// This example generates the message
-class X27itemkeynotdef {
-  a;
-  key {b}; 
-}
-
+@@source manualexamples/W027KeyIdentifierIncorrect1.ump
 @@endexample
 
 

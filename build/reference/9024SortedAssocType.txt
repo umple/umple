@@ -11,15 +11,7 @@ noreferences
 
 
 @@example
-// This example generates the error message
-class X {
-  1 -- * Y sorted {endDate};
-}
-
-class Y {
-   Date endDate;
-}
-
+@@source manualexamples/E024SortKeyNotofUmpleType1.ump
 @@endexample
 
 

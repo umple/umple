@@ -1,0 +1,12 @@
+// This example generates the message
+class A {
+  List<OtherClass> otherClassGroup;
+}
+class OtherClass {}
+
+// The following shows how to avoid the message using a multivalued attribute
+class A {
+  OtherClass[] otherClassGroup;
+}
+class OtherClass {}
+

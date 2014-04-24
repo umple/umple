@@ -12,27 +12,9 @@ error.
 
 
 @@example
-// This example generates the warning message
-class A {
-  attr;
-}
-
-class B {
-  isA A;
-  attr;
-}
-
+@@source manualexamples/W044AttributeDuplicatedinSuperclass1.ump
 @@endexample
 
 @@example
-//This example solves the problem
-class A {
-  attr;
-}
-
-class B {
-  isA A;
-  differentAttr;
-}
-
+@@source manualexamples/W044AttributeDuplicatedinSuperclass2.ump
 @@endexample

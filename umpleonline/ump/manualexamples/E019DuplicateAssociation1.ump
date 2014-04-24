@@ -1,0 +1,8 @@
+// The following example shows how to generate this error.
+class X {
+}
+
+class Y {
+  1 -> * X;
+  1 -> * X;
+}

@@ -12,19 +12,11 @@ noreferences
 
 
 @@example
-// This example generates the warning message
-class X {
-  singleton;
-  Integer x;
-}
+@@source manualexamples/W001SingletonWithNon-LazyAttribute1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the warning
-class X {
-  singleton;
-  lazy Integer x;
-}
+@@source manualexamples/W001SingletonWithNon-LazyAttribute2.ump
 @@endexample
 
 

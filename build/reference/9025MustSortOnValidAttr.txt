@@ -11,15 +11,7 @@ noreferences
 
 
 @@example
-// This example generates the error message
-class X {
-    * -- 1 Y sorted {nom};
-}
-
-class Y {
-  name;
-}
-
+@@source manualexamples/E025SortKeyNotFound1.ump
 @@endexample
 
 

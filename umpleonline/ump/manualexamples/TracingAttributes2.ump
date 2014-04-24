@@ -1,0 +1,14 @@
+// This traces setId() and setName()
+class Student
+{
+  Integer id;
+  String name;
+  trace id;
+  trace set name;
+}
+// This traces  getId() method
+class Student
+{
+  Integer id;
+  trace get id;
+}

@@ -1,0 +1,9 @@
+// The following will generate this warnbing
+
+class X {
+  1 -> * B first;
+  1..3 -> * B second;
+  0..2 -> * B third;
+}
+
+class B {}

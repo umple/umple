@@ -1,0 +1,5 @@
+// This example generates the message
+class X29attrtypeconstr {
+  a;
+  [a > 5]
+}

@@ -12,33 +12,5 @@ to the next immediately after completing entry actions or upon completion of a d
 [[autoTransition]] [[autoTransitionBlock]] 
  
 @@example
-
-// In this example, the system will transition to s2 automatically
-// when the do activity ends
-class X {
-  sm {
-    s1 {
-      entry / {
-        System.out.println("Starting first sleep");
-      }
-      do {
-        Thread.sleep(2000);
-        System.out.println("Ending first sleep");
-      }
-      -> s2;
-    }
-    s2 {
-      entry / {
-        System.out.println("Starting second sleep");
-      }
-      do {
-        Thread.sleep(2000);
-        System.out.println("Ending second sleep");
-      }
-    }
-  }
-  public static void main(String [ ] args) {
-    X x = new X();
-  }
-}
+@@source manualexamples/Auto-Transitions1.ump
 @@endexample

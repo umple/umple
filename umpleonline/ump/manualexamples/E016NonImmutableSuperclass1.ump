@@ -1,0 +1,19 @@
+// The following example generates the error message
+// A solution is to make class X immutable
+class X {
+  a;
+}
+class Y {
+  immutable;
+  isA X;
+}//$?[End_of_model]$?
+
+class Y
+{
+  position 50 132 109 60;
+}
+
+class X
+{
+  position 50 26 109 60;
+}

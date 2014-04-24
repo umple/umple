@@ -25,13 +25,7 @@ noreferences
 
 
 @@example
-// The following example shows how to generate this warning.
-strictness modelOnly;
-class X {
-  public static void main() {
-    system.out.println("Hello World");
-  }
-}
+@@source manualexamples/W1002-3UnexpectedEmbeddedCode1.ump
 @@endexample
 
 

@@ -1,0 +1,8 @@
+// This example generates the message
+class X {
+  name;
+  id;
+  key { name }
+  key { id }
+}
+

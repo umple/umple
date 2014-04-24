@@ -1,0 +1,8 @@
+// This example generates the error message
+class A {}
+
+class B {}
+
+associationClass C {
+   * A;
+}

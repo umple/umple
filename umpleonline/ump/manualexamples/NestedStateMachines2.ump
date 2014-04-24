@@ -1,0 +1,112 @@
+
+// Illustration of nested states. Event e1 will take the system into
+// state s2, and its first substrate s2a. Event e2 directly goes to s2b.
+// Event e3 toggles between s2b and s2a. Event e1 when in s2, goes to s1
+
+class A {
+  sm {
+     s1 {
+        e1 -> s2;
+        e2 -> s2b;
+     }
+     s2 {
+        e1 -> s1;
+        s2a {
+          e3 -> s2b;
+        }
+        s2b {
+          e3 -> s2a;
+        }
+     }
+  }
+}
+
+
+// Example showing nested states.
+
+class Course {
+  code;
+  description;
+  1 -- * CourseSection;
+}
+
+class CourseSection
+{
+  // Example from Lethbridge and Laganiere: Object Oriented Software
+  // Engineering: Practical Software Development using UML and Java
+  // McGraw Hill, 2005  www.lloseng.com
+
+  sectionId;
+  Integer classSize = 0;
+  Integer minimumClassSize = 10;
+  Integer maximumClassSize = 100;
+  
+  // State machine controlling status
+  status
+  {
+    Planned {
+      openRegistration -> NotEnoughStudents;
+    }
+    Open {
+      cancel -> Cancelled;
+      NotEnoughStudents {
+        closeRegistration -> Cancelled;
+        register [getClassSize() > getMinimumClassSize()] -> EnoughStudents;
+      }
+      EnoughStudents {
+        closeRegistration -> Closed;
+        register [getClassSize() > getMaximumClassSize()] -> Closed;
+      }
+    }
+    Cancelled {}
+    Closed {}
+  }
+
+  boolean requestToRegister(Student aStudent)
+  {
+    register();
+    setClassSize(getClassSize()+1);
+  }
+}//$?[End_of_model]$?
+
+class Course
+{
+  position 49 22 149 80;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 49 22 149 80;
+  position.association Course__CourseSection 30,80 30,0;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 50 30 109 45;
+}
+
+class CourseSection
+{
+  position 50 151 214 114;
+}
+
+class Course
+{
+  position 49 30 149 80;
+}
+
+class Course
+{
+  position.association Course__CourseSection 31,80 30,0;
+}
+

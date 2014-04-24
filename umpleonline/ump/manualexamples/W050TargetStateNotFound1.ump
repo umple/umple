@@ -1,0 +1,9 @@
+// This example generates the error message
+class X {
+  sm {
+    s1 {
+      e1 -> s2;
+    }
+  }
+}
+

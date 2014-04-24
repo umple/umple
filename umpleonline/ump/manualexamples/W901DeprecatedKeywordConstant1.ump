@@ -1,0 +1,4 @@
+// This causes the warning
+interface Y {
+  constant A=5;
+}

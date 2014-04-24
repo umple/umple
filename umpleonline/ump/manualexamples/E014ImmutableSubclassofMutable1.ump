@@ -1,0 +1,11 @@
+// This example generates message 14
+class B {
+  a;
+}
+
+class X14immut {
+  isA B;
+  immutable;
+  b;
+}
+

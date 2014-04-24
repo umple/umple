@@ -1,0 +1,38 @@
+// Class with non-alphanumeric name (100)
+class @ {}
+
+// Warnings from attribute starting with upper case letter (131)
+class X {
+  Attrib;
+}
+
+class Y {}
+
+// Attribute name with special characters (130)
+class X {
+  na$me;
+}
+
+// Attribute name with special characters that looks like an association (132)
+// If this is supposed to be an association, put spaces before and after the -- and *
+class X {
+  1--*Y;
+}
+
+class Y {}
+
+// Attribute type with special characters that looks like an association (140)
+// If this is supposed to be an association, put spaces before and after the --
+class X {
+  1--* Y;
+}
+
+class Y {}
+
+// State machine name with special characters (150)
+class X {
+  ed%4 {
+    s1 {}
+  }
+}
+

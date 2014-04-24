@@ -11,17 +11,11 @@ noreferences
 
 
 @@example
-// This example generates the error message
-class X {
-  defaulted Integer a;
-}
+@@source manualexamples/E006MissingDefault1.ump
 @@endexample
 
 @@example
-// The following shows how to avoid the error
-class X {
-  defaulted Integer a = 5;
-}
+@@source manualexamples/E006MissingDefault2.ump
 @@endexample
 
 

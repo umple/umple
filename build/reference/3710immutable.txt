@@ -19,42 +19,13 @@ noreferences
 [[association]] [[inlineAssociation]] [[derivedAttribute]] [[complexAttribute]] [[immutable]] [[softwarePattern]]
 
 @@example
-// A simple example of an immutable class
-class Point2D
-{
-  immutable;
-  Float x;
-  Float y;
-}
+@@source manualexamples/ImmutablePattern1.ump
 @@endexample
 
 @@example
-// An example of one immutable class making reference to another
-
-class Path
-{
-  immutable;
-  1 -> * Point2D pathElements;
-}
-
-class Point2D
-{
-  immutable;
-  Float x;
-  Float y;
-}
+@@source manualexamples/ImmutablePattern2.ump
 @@endexample
 
 @@example
-// Example of the declaration of an association to be immutable
-// Note that this can be set only the first time
-class X {
-  Integer id;
-  immutable * -> 0..1 Y;
-}
-
-class Y {
-  immutable;
-  someInfo;
-}  
+@@source manualexamples/ImmutablePattern3.ump
 @@endexample

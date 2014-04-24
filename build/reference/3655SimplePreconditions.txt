@@ -10,14 +10,5 @@ noreferences
 [[methodBody]] [[precondition]] 
 
 @@example
-class PotentialVoter {
-  Integer age;
-  
-  int vote(int candidate) {
-    [pre: age >= 18]
-    [pre: candidate > 0]
-    // rest of stuff that we do not interpret
-     return 0;
-  }
-}
+@@source manualexamples/Preconditions1.ump
 @@endexample

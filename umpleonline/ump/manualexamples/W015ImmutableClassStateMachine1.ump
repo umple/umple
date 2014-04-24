@@ -1,0 +1,10 @@
+// The following example shows how to generate this warning.
+// Removing the immutable keyword will solve the problem.
+class X {
+  immutable;
+  Integer y;
+  sm {
+    S1 {
+    }
+  }
+}

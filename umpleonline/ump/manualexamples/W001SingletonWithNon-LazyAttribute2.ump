@@ -1,0 +1,10 @@
+// This example generates the warning message
+class X {
+  singleton;
+  Integer x;
+}
+// The following shows how to avoid the warning
+class X {
+  singleton;
+  lazy Integer x;
+}

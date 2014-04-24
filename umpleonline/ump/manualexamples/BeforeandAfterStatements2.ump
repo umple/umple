@@ -1,0 +1,18 @@
+
+class X
+{
+  a;
+  whenWasASet;
+  
+  after setA {
+     setWhenWasASet(getA() + System.currentTimeMillis());
+  }
+}
+
+class Person {
+  name;
+  before setName {
+    if (aName != null && aName.length() > 20) { return false; }
+  }
+}
+

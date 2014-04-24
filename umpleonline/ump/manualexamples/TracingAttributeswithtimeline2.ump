@@ -1,0 +1,18 @@
+
+// this example starts the tracing of attribute name and doesn't stop until condition becomes true
+
+class Student
+{
+  name;
+  trace name until name == "john";
+}
+
+
+// this example will not start tracing of attribute name until condition becomes true and then always continue tracing 
+
+class Student
+{
+  name;
+  trace name after name == "john";
+}
+

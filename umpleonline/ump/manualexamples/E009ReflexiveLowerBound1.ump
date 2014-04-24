@@ -1,0 +1,4 @@
+// This example generates the error message
+class Person {
+  * -- 2 Person parents;
+}

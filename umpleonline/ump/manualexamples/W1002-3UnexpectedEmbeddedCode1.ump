@@ -1,0 +1,7 @@
+// The following example shows how to generate this warning.
+strictness modelOnly;
+class X {
+  public static void main() {
+    system.out.println("Hello World");
+  }
+}

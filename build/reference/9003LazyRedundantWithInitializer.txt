@@ -12,17 +12,11 @@ noreferences
 
 
 @@example
-// This example generates the warning
-class X3lazy {
-  lazy Integer a = 1;
-}
+@@source manualexamples/W003RedundantLazyWithInitialization1.ump
 @@endexample
 
 @@example
-This shows how the warning can be removed.
-class X3lazy {
-  Integer a = 1;
-}
+@@source manualexamples/W003RedundantLazyWithInitialization2.ump
 @@endexample
 
 

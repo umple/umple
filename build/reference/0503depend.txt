@@ -12,23 +12,5 @@ noreferences
 [[depend]] 
 
 @@example
-namespace sports.core;
-
-class Equipment
-{
-  name;
-  Integer weight;
-}
-
-namespace sports.baseball;
-
-class Baseball
-{
-  depend sports.core.*;
-
-  public boolean isRequired(Equipment eq)
-  {
-    return eq.getName().equals("bat");
-  }
-}
+@@source manualexamples/Dependclause1.ump
 @@endexample

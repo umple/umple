@@ -1,0 +1,133 @@
+// A person can attend many seminars,
+// and a seminar can be attended by many people
+// The relationship between Person and Seminar is thus
+// many-to-many.
+//
+// There is, however, data to record about each ticket.
+// This can be  recorded as an association class
+//
+// Note the following doesn't currently render
+// in UmpleOnline using Correct UML association class
+// notation. There are plans to fix this.
+associationClass Ticket
+{
+  Integer ticketNumber;
+  Double price = 0.0;
+  
+  * Person attendee;
+  * Seminar;
+}
+
+class Person
+{
+  name;
+}
+
+class Seminar
+{
+  Date when;
+  address;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 333 125 109 60;
+}
+
+class Ticket
+{
+  position.association Person:attendee__Ticket 166,48 0,23;
+    position.association Seminar__Ticket 30,77 30,0;
+position 50 10 166 77;
+}
+// The following shows the same example as using a regular class
+// Instead of an association class
+class Ticket
+{
+  Integer ticketNumber;
+  Double price = 0.0;
+  
+  1 -- * Person attendee;
+  1 -- * Seminar;
+}
+
+class Person
+{
+  name;
+}
+
+class Seminar
+{
+  Date when;
+  address;
+}//$?[End_of_model]$?
+
+class Person
+{
+  position 331 83 109 60;
+}
+
+class Ticket
+{
+  position 41 62 166 77;
+  position.association Seminar__Ticket 29,80 30,0;
+  position.association Person:attendee__Ticket 174,44 0,19;
+}
+
+class Seminar
+{
+  position 40 233 120 77;
+}
+// The following shows a 'quaternary' association, where the association
+// class represents data in an association that links four classes.
+class SportsPlayer {
+  name;
+}
+
+class Season {
+  year;
+}
+
+// e.g. goalie, forward etc.
+class PlayingPosition {
+  description;
+}
+
+class Team {
+  name;
+}
+
+// This gathers the number of points a player gained on a particular team
+// in a particular position while playing in a particular position
+// To get the total points in any one category, you would have to add the points several instances
+associationClass PlayerInPosition {
+  Integer points;
+  * SportsPlayer player;
+  * Season;
+  * Team;
+  * PlayingPosition position;
+}//$?[End_of_model]$?
+
+class PlayerInPosition
+{
+  position 135 161 109 58;
+  position.association PlayerInPosition__Season 72,0 37,61;
+  position.association PlayerInPosition__SportsPlayer:player 30,0 63,61;
+  position.association PlayerInPosition__PlayingPosition 118,40 0,37;
+  position.association PlayerInPosition__Team 109,0 0,26;
+}
+
+class Season
+{
+  position 221 50 109 58;
+}
+
+class PlayingPosition
+{
+  position 335 158 120 58;
+}
+
+class Team
+{
+  position 397 70 109 58;
+}

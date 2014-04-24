@@ -9,6 +9,6 @@ Use two slashes to place comments after any text on the line. The comment ends a
 [[inlineComment]]
 
 @@example
-// Umple is both fun and efficient to develop with
+@@source manualexamples/InlineComments1.ump
 @@endexample
 

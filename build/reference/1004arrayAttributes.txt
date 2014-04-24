@@ -13,14 +13,5 @@ the attribute notation can be useful sometimes.</p>
 [[complexAttribute]]
 
 @@example
-class Office {
-   Integer number;
-   Phone[] installedTelephones;
-} 
-
-class Phone {
-  String digits;
-  String callerID;
-}
-
+@@source manualexamples/MultiValuedAttributes1.ump
 @@endexample

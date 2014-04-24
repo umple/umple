@@ -1,0 +1,8 @@
+// This causes the warning
+interface Y {
+  constant A=5;
+}
+// This does not causes the warning
+interface Y {
+  const A=5;
+}

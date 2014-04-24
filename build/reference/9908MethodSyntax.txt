@@ -15,11 +15,7 @@ Note that currently, Java main methods generate this warning. It can be safely i
 
 
 @@example
-// This example generates the warning because there is a missing return type
-class X {
-  m() {}
-}
-
+@@source manualexamples/W1008MethodNotParsed1.ump
 @@endexample
 
 
