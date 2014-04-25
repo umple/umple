@@ -1,27 +1,3 @@
-class X {
-  activesm {
-    topstate {
-      thread1 {
-        do {
-          System.out.println("Doing the activity - Normally this would last a long time");
-          Thread.sleep(1000);
-          System.out.println("Done thread 1");
-        }
-      }
-      ||
-      thread2 {
-        do {
-          System.out.println("Doing the other activity - Again normally this would last a long time");
-          Thread.sleep(3000);
-          System.out.println("Done thread 2");
-        }
-      }
-    }
-  }
-  public static void main(String argv[]) {
-    new X();
-  }
-}
 // This is a more sophisticated example
 class X {
  sm {

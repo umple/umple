@@ -1,24 +1,3 @@
-// A simple example of an immutable class
-class Point2D
-{
-  immutable;
-  Float x;
-  Float y;
-}
-// An example of one immutable class making reference to another
-
-class Path
-{
-  immutable;
-  1 -> * Point2D pathElements;
-}
-
-class Point2D
-{
-  immutable;
-  Float x;
-  Float y;
-}
 // Example of the declaration of an association to be immutable
 // Note that this can be set only the first time
 class X {

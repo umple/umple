@@ -1,22 +1,6 @@
 
 class Student
 {
-  Integer id;
-  
-  // Whenever the id attribute is changed, emit a trace record
-  // The record will have the format id=value
-  trace id;
-  
-  // The following Java main program can be used to demonstrate this in operation
-  // This will output a record when id is set to 9.
-  public static void main(String [ ] args) {
-    Student s = new Student(6);
-    s.setId(9); 
-  }
-}
-
-class Student
-{
   lazy Integer id;
   lazy name;
   

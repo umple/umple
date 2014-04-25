@@ -1,20 +1,3 @@
-
-namespace example;
-
-class LightFixture
-{
-  bulb
-  {
-    On {
-      entry / { doEntry(); }
-      exit / { doExit(); }
-      push -> /{ doTransition(); } Off;
-      do { doThisContinuouslyWhileOn(); }
-    }
-    Off {}
-  }
-}
-
 // This demonstrates that actions can be different in different target languages
 class DemoSM
 {

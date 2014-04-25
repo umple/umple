@@ -1,26 +1,3 @@
-// This first example uses attribute notation
-// The address is required on the constructor, but can be null
-// An instance of Address can be considered to be contained
-// within the Person class.
-//
-// Although there is nothing currently preventing the same address
-// from being re-used in multiple classes, it is strongly suggested
-// to avoid that. If you want to reuse the same Address, then use
-// association notation instead.
-class Person {
-  name;
-  
-  // The following uses a class as the attribute type
-  Address address;
-}
-
-class Address {
-  street;
-  city;
-  postalCode;
-  country;
-}
-
 
 // Contrast this example with the previous one
 // Here we use a directed association instead of an attribute.

@@ -1,18 +1,6 @@
 // This example generates the error message
 
 class Course {  
-  * -- * Course courses;  
-}  
-
-// The following shows how to avoid the error
-
-class Course {  
-  * -- * Course course_s ;  
-}  
-
-// This example generates the error message
-
-class Course {  
   * courses -- * Course;  
 }  
 

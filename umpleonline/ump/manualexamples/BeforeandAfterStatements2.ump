@@ -1,14 +1,4 @@
 
-class X
-{
-  a;
-  whenWasASet;
-  
-  after setA {
-     setWhenWasASet(getA() + System.currentTimeMillis());
-  }
-}
-
 class Person {
   name;
   before setName {

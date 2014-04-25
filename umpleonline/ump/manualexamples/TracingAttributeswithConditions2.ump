@@ -1,13 +1,4 @@
 
-// this example injects trace code in attribute setter with specified precondition
-
-class Student
-{
-  name;
-  trace name where name == "john";
-}
-
-
 // this example injects trace code in attribute setter with specified postcondition
 
 class Student
