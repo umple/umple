@@ -1,11 +1,3 @@
-// The following example shows how to generate this error.
-class X {
-    0..1 -- 0..1 X;
-}
-// The following example shows how to fix the error if this is an asymmetric association.
-class X {
-    0..1 -- 0..1 X right;
-}
 // The following example shows how to fix the error if this is a symmetric association.
 class X {
     0..1 self right;

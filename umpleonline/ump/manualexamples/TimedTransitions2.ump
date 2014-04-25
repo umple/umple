@@ -1,21 +1,3 @@
-
-// In this example, the system will transition to state b
-// after a 1-second delay
-class X {
-  sm {
-    a {
-      entry / {System.out.println("entering a");}
-      after(1) -> b;
-    }
-    b {
-      entry / {System.out.println("entering b");}
-    }
-  }
-  public static void main(String [ ] args) {
-    X x = new X();
-  }
-}
-
 // In this example, the system will transition to state b
 // when the value of the attribute count drops below 5
 // An attempt to make this transition is taken every second

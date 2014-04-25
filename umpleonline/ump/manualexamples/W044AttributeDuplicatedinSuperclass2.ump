@@ -1,13 +1,3 @@
-// This example generates the warning message
-class A {
-  attr;
-}
-
-class B {
-  isA A;
-  attr;
-}
-
 //This example solves the problem
 class A {
   attr;

@@ -1,11 +1,3 @@
-// This example generates error 23 because an attribute and role name share a name
-class X23atdupassoc1 {
-   a;
-   1 -- 0..1 Another a;
-}
-
-class Another {}
-
 // This generates error 23 because attribute b clashes with
 // class name B in the association
 class X23atdupassoc2 {

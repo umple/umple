@@ -1,15 +1,4 @@
 
-class Demo 
-{
-  Integer i;
-  Float flt;
-  String str;  // the default of no type is specified
-  Double dbl;
-  Boolean bln;
-  Date dte; // In Java. uses the java.sql.Date class
-  Time tme; // In Java. uses the java.sql.Time class
-}
-
 class DemoNonUmpleType
 {
   // If you use a non-umple type that is specific to a base
