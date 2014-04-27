@@ -1,7 +1,7 @@
 // Umple program demonstrating generation
 // of the html generation library for Umple
 
-use htmlgen.ump;
+use ../HtmlGeneration.ump;
 
 class TimesTable {
   public static void main(String[] argv) {
