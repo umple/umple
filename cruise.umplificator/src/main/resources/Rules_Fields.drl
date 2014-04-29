@@ -92,7 +92,11 @@ function String getFieldType(FieldDeclaration field){
    	return field.getType().toString();
 }
 
-
+function String getValue(FieldDeclaration field){
+   	VariableDeclarationFragment declarationFragment =  (VariableDeclarationFragment) field.fragments().get(0);
+   	Expresion expression = declarationFragment.getInitializer();
+   	return "";
+}
 
 function String getAttributeType(FieldDeclaration field){
 	String attrType="";

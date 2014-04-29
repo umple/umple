@@ -25,7 +25,7 @@ public class JavaToUmpleTest {
 	@Before
 	public void setUp() throws Exception {
 		umplificator = new Umplificator();
-		pathToRoot = "test/cruise/umplificator/trasnformationTestFiles/";
+		pathToRoot = "test/cruise/umplificator/transformationTestFiles/";
 	}
 
 	@After
@@ -58,6 +58,20 @@ public class JavaToUmpleTest {
 		// Clean files 
 		filesToDelete.add(fileName);
 	}
+	
+	@Test
+	public void JavaToUmple_VariablesToAttributes_003(){
+		String fileName = "003_JavaToUmple_VariablesToAttributes";
+		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
+		File umpleFile = new File(pathToRoot+fileName+"_umple.ump"); //OUTPUT
+		// Umplify file. Process must succeed!
+		assertTrue(umplificator.umplifyElement(javaFile));
+		// Get the output content
+		assertOuputAndFile(umpleFile);
+		// Clean files 
+		filesToDelete.add(fileName);
+	}
+	
 	
 
 	@After

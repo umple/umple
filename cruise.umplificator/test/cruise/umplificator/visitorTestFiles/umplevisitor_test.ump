@@ -1,5 +1,4 @@
 strictness allow 1007;
-namespace something.else;
 
 class A {
 

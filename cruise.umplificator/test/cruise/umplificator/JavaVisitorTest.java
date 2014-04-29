@@ -2,6 +2,7 @@ package cruise.umplificator;
 
 import java.io.File;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,5 +73,11 @@ public class JavaVisitorTest {
 		int nbMethods = visitor.numberOfMethodDeclarations();
 		 Assert.assertEquals(3, nbMethods);
 	}
+	
+	@After
+	public void tearDown() throws Exception {
+		SampleFileWriter.destroy(pathToInput +"A.java");
+	}
+	
 	
 }
