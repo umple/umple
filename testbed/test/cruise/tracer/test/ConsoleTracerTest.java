@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import org.junit.*;
 
-@Ignore
+
 public class ConsoleTracerTest
 {
   

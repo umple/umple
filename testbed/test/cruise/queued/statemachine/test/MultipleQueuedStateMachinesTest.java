@@ -1,10 +1,8 @@
 package cruise.queued.statemachine.test;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
 public class MultipleQueuedStateMachinesTest
 { 
 	
