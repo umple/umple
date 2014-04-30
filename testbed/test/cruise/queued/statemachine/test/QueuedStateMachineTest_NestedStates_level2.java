@@ -1,11 +1,11 @@
-//package cruise.queued.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//
-//public class QueuedStateMachineTest_NestedStates_level2
-//{ 
+package cruise.queued.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+
+public class QueuedStateMachineTest_NestedStates_level2
+{ 
 //  @Test 
 //  public void numberOfMessagesInMessageType()
 //  {
@@ -169,4 +169,4 @@
 //	  Assert.assertEquals(0, qsm.pool.messages.size());
 //	  
 //  }
-//}
+}

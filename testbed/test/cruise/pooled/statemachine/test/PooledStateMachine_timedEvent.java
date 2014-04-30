@@ -1,10 +1,10 @@
-//package cruise.pooled.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//public class PooledStateMachine_timedEvent
-//{ 
+package cruise.pooled.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class PooledStateMachine_timedEvent
+{ 
 //  @Test 
 //  public void numberOfMessagesInMessageType()
 //  {
@@ -83,4 +83,4 @@
 //    }    
 //  }
 //
-//}
+}

@@ -1,10 +1,10 @@
-//package cruise.pooled.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//public class MultiplePooledStateMachinesTest
-//{ 
+package cruise.pooled.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class MultiplePooledStateMachinesTest
+{ 
 //	
 //  @Test 
 //  public void numberOfMessagesInMessageType()
@@ -168,4 +168,4 @@
 //	  //check that there is no event left in the queue
 //	  Assert.assertEquals(0, psm.pool.messages.size());	  
 //  }
-//}
+}
