@@ -106,11 +106,11 @@ public class ConsoleTracerTest
 					"sm_t,MotorRunning,flip,MotorIdle",
 					"sm_t,MotorIdle,flup,Off",
 					//=== TimedEventA
-//					"sm_t,Open,timeoutOpenToClosed,Closed",
-//					"sm_t,Closed,timeoutClosedToFinal,Final",
+					"sm_t,Open,timeoutOpenToClosed,Closed",
+					"sm_t,Closed,timeoutClosedToFinal,Final",
 					//=== QueuedStmTraceA
-//					"sm_t,Open,register,Full",
-//					"sm_t,Full,reject,Full"
+					"sm_t,Open,register,Full",
+					"sm_t,Full,reject,Full"
 			};
 			
 			String[] recordTraceExpected = {
@@ -293,9 +293,9 @@ public class ConsoleTracerTest
 	  
 	  TimedEventA tA = new TimedEventA();
 
-//	  QueuedStmTraceA qA = new QueuedStmTraceA();
-//	  qA.register();
-//	  qA.reject();
+	  QueuedStmTraceA qA = new QueuedStmTraceA();
+	  qA.register();
+	  qA.reject();
 
 	  //==== invoke record trace
 	  
