@@ -21,6 +21,7 @@ public class ConsoleTracerTest
 	  defaultPS = System.err;
   }
   
+  @Ignore
   @Test
   public void traceConsole()
   {
