@@ -1,11 +1,11 @@
-//package cruise.queued.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//
-//public class QueuedStateMachineTest_autoTransition
-//{ 
+package cruise.queued.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+
+public class QueuedStateMachineTest_autoTransition
+{ 
 //  @Test 
 //  public void numberOfMessagesInMessageType()
 //  {
@@ -24,4 +24,4 @@
 //	  Assert.assertEquals(0, qsm.pool.messages.size());
 //		  
 //  }
-//}
+}

@@ -1,11 +1,11 @@
-//package cruise.queued.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//
-//public class QueuedStateMachineTest_timedEvent_autoTransition
-//{ 
+package cruise.queued.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+
+public class QueuedStateMachineTest_timedEvent_autoTransition
+{ 
 //  @Test 
 //  public void numberOfMessagesInMessageType()
 //  {
@@ -43,4 +43,4 @@
 //      e.printStackTrace();
 //    }    
 //  }
-//}
+}

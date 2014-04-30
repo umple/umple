@@ -1,12 +1,12 @@
-//package cruise.queued.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//import org.junit.Ignore;
-//
-//
-//public class QueuedStateMachineTest_timedEvent
-//{ 
+package cruise.queued.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.Ignore;
+
+
+public class QueuedStateMachineTest_timedEvent
+{ 
 //  @Test 
 //  public void numberOfMessagesInMessageType()
 //  {
@@ -43,4 +43,4 @@
 //      e.printStackTrace();
 //    }    
 //  }
-//}
+}

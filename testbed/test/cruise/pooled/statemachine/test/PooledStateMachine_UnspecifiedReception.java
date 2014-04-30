@@ -1,10 +1,10 @@
-//package cruise.pooled.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//public class PooledStateMachine_UnspecifiedReception
-//{ 
+package cruise.pooled.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class PooledStateMachine_UnspecifiedReception
+{ 
 //  @Test 
 //  public void numberOfMessagesInMessageType()
 //  {
@@ -84,4 +84,4 @@
 //  
 //
 //
-//}
+}

@@ -1,10 +1,10 @@
-//package cruise.pooled.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//public class PooledStateMachine_level1
-//{ 
+package cruise.pooled.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+public class PooledStateMachine_level1
+{ 
 //  @Test 
 //  public void numberOfMessagesInMessageType()
 //  {
@@ -167,4 +167,4 @@
 //	  Assert.assertEquals(0, psm.pool.messages.size());
 //	  
 //  }
-//}
+}

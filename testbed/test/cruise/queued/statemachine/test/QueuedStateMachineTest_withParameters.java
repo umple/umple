@@ -1,11 +1,11 @@
-//package cruise.queued.statemachine.test;
-//
-//import org.junit.Assert;
-//import org.junit.Test;
-//
-//
-//public class QueuedStateMachineTest_withParameters
-//{ 
+package cruise.queued.statemachine.test;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+
+public class QueuedStateMachineTest_withParameters
+{ 
 //  @Test 
 //  public void numberOfMessagesInMessageType()
 //  {
@@ -62,4 +62,4 @@
 //	  //check that there is no events left in the queue
 //	  Assert.assertEquals(0, qsm.pool.messages.size());	  
 //  }
-//}
+}
