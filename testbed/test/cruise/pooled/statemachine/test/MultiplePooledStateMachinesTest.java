@@ -7,7 +7,6 @@ import org.junit.Ignore;
 public class MultiplePooledStateMachinesTest
 { 
 	
-	@Ignore
   @Test 
   public void numberOfMessagesInMessageType()
   {
@@ -19,7 +18,6 @@ public class MultiplePooledStateMachinesTest
     Assert.assertEquals(true, MultiplePooledSMs.MessageType.valueOf("null_M").equals(MultiplePooledSMs.MessageType.null_M));
   }
   
-  @Ignore
   @Test 
   public void numberOfKeysInstateMessageMap()
   {
@@ -28,7 +26,6 @@ public class MultiplePooledStateMachinesTest
     Assert.assertEquals(5, MultiplePooledSMs.stateMessageMap.keySet().size());
   }
   
-  @Ignore
   @Test 
   public void eachStateOfStateMachineAddedTostateMessageMap()
   {
@@ -40,7 +37,6 @@ public class MultiplePooledStateMachinesTest
     Assert.assertEquals(true, MultiplePooledSMs.stateMessageMap.containsKey(MultiplePooledSMs.Sm1.s5));
   }
   
-  @Ignore
   @Test 
   public void everyStateHasListOfMessages()
   {
@@ -57,7 +53,6 @@ public class MultiplePooledStateMachinesTest
     Assert.assertEquals(true , MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s5).containsAll(MultiplePooledSMs.stateMessageMap.get(MultiplePooledSMs.Sm1.s5)));
   }
   
-  @Ignore
   @Test 
   public void sizeOfstateMessageMap()
   {

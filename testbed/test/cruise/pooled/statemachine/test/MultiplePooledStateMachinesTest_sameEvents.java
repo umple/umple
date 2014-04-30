@@ -6,7 +6,6 @@ import org.junit.Ignore;
 
 public class MultiplePooledStateMachinesTest_sameEvents
 { 
-  @Ignore
   @Test 
   public void numberOfMessagesInMessageType()
   {
@@ -20,7 +19,6 @@ public class MultiplePooledStateMachinesTest_sameEvents
     Assert.assertEquals(true, MultiplePooledSMs_sameEvents.MessageType.valueOf("ev7_M").equals(MultiplePooledSMs_sameEvents.MessageType.ev7_M));
   }
   
-  @Ignore
   @Test 
   public void numberOfKeysInstateMessageMap()
   {
@@ -29,7 +27,6 @@ public class MultiplePooledStateMachinesTest_sameEvents
     Assert.assertEquals(6, MultiplePooledSMs_sameEvents.stateMessageMap.keySet().size());
   }
   
-  @Ignore
   @Test 
   public void eachStateOfStateMachineAddedTostateMessageMap()
   {
@@ -42,7 +39,6 @@ public class MultiplePooledStateMachinesTest_sameEvents
     Assert.assertEquals(true, MultiplePooledSMs_sameEvents.stateMessageMap.containsKey(MultiplePooledSMs_sameEvents.Sm1.s22));
   }
   
-  @Ignore
   @Test 
   public void everyStateHasListOfMessages()
   {
@@ -61,7 +57,6 @@ public class MultiplePooledStateMachinesTest_sameEvents
     Assert.assertEquals(true , MultiplePooledSMs_sameEvents.stateMessageMap.get(MultiplePooledSMs_sameEvents.Sm1.s22).containsAll(MultiplePooledSMs_sameEvents.stateMessageMap.get(MultiplePooledSMs_sameEvents.Sm1.s22)));
   }
   
-  @Ignore
   @Test 
   public void sizeOfstateMessageMap()
   {

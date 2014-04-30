@@ -6,7 +6,6 @@ import org.junit.Ignore;
 
 public class MultiplePooledStateMachinesTest_nestedStates_EventlessStateMachine
 { 
-  @Ignore
   @Test 
   public void numberOfMessagesInMessageType()
   {
@@ -21,7 +20,6 @@ public class MultiplePooledStateMachinesTest_nestedStates_EventlessStateMachine
     Assert.assertEquals(true, MultiplePooledSMs_nestedStates_EventlessSM.MessageType.valueOf("null_M").equals(MultiplePooledSMs_nestedStates_EventlessSM.MessageType.null_M));
   }
   
-  @Ignore
   @Test 
   public void numberOfKeysInstateMessageMap()
   {
@@ -30,7 +28,6 @@ public class MultiplePooledStateMachinesTest_nestedStates_EventlessStateMachine
     Assert.assertEquals(7, MultiplePooledSMs_nestedStates_EventlessSM.stateMessageMap.keySet().size());
   }
   
-  @Ignore
   @Test 
   public void eachStateOfStateMachineAddedTostateMessageMap()
   {
@@ -46,7 +43,6 @@ public class MultiplePooledStateMachinesTest_nestedStates_EventlessStateMachine
     Assert.assertEquals(false, MultiplePooledSMs_nestedStates_EventlessSM.stateMessageMap.containsKey(MultiplePooledSMs_nestedStates_EventlessSM.Sm2.s));
   }
   
-  @Ignore
   @Test 
   public void everyStateHasListOfMessages()
   {
@@ -69,7 +65,6 @@ public class MultiplePooledStateMachinesTest_nestedStates_EventlessStateMachine
     Assert.assertEquals(true , MultiplePooledSMs_nestedStates_EventlessSM.stateMessageMap.get(MultiplePooledSMs_nestedStates_EventlessSM.SmS1.s1b).containsAll(MultiplePooledSMs_nestedStates_EventlessSM.stateMessageMap.get(MultiplePooledSMs_nestedStates_EventlessSM.SmS1.s1b)));
   }
   
-  @Ignore
   @Test 
   public void sizeOfstateMessageMap()
   {

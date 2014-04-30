@@ -6,7 +6,6 @@ import org.junit.Ignore;
 
 public class MultipleQueuedStateMachinesTest
 { 
-  @Ignore
   @Test 
   public void numberOfMessagesInMessageType()
   {
