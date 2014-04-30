@@ -1,0 +1,17 @@
+
+namespace cruise.tracer.test;
+
+class QueuedStmTraceA
+{
+  queued status
+  {
+    Open {
+      register -> Full;
+    }
+    Full {
+      reject -> Full;
+    }
+  }
+  // trace state in pooled state machine
+  trace Full;
+}

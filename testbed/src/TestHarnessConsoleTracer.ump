@@ -1,0 +1,7 @@
+
+
+tracer Console;
+
+use TestHarnessTracerAttribute.ump;
+use TestHarnessTracerStateMachine.ump;
+use TestHarnessTracerPooledStateMachine.ump;
