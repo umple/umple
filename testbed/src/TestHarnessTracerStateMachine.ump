@@ -187,7 +187,7 @@ class LightFixtureB
   trace On;
 }
 
-class NestedStateA {
+class NestedState {
   
   stm
   {
@@ -222,33 +222,6 @@ class NestedStateA {
   trace sLevel1;
   
 }
-
-class NestedStateB
-{
-  status
-  {
-    On
-    {
-      turnOff -> Off;
-      Idle
-      {
-        flip -> Running;
-      }
-      Running
-      {
-        
-      }
-    }
-    Off
-    {
-      flip -> Idle;
-    }
-    
-  }
-  // trace nested state
-  trace Idle;
-}
-
 class NestedStateLevel1 {
   
   stm
@@ -355,45 +328,6 @@ class NestedStateLevel4
   trace sLevel1 level 4;
 }
 
-class ConcurrentStmA
-{
-  status
-  {
-    Off
-    {
-      turnOn -> On;
-    }
-    On
-    {
-      turnOff -> Off;
-      MotorIdle
-      {
-        flip -> MotorRunning;
-        flup -> Off;
-      }
-      MotorRunning
-      {
-        flip -> MotorIdle;
-      }
-      
-      ||
-      
-      FanIdle
-      {
-        flop -> FanRunning;  
-      }
-      
-      FanRunning
-      {
-        flop -> FanIdle;
-      }
-    }
-  
-  }
-  // trace concurrent states
-  trace On;
-}
-
 class TimedEventA
 {
   status {
@@ -408,3 +342,19 @@ class TimedEventA
   }
   trace Closed;
 }
+/*
+class pooledTrace
+{
+  queued status
+  {
+    Open {
+      register -> Full;
+    }
+    Full {
+      reject -> Full;
+    }
+  }
+  // trace state in pooled state machine
+  trace Full;
+}
+*/

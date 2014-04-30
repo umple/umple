@@ -1,9 +1,12 @@
 package cruise.tracer.test;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.*;
+
+import cruise.statemachine.test.CourseA;
 
 
 public class ConsoleTracerTest
@@ -81,14 +84,11 @@ public class ConsoleTracerTest
 					"sm_t,Dimmed,touch,Off",
 					"sm_t,Off,flip,On",
 					"sm_t,On,flip,Off",
-					//=== NestedStateA
+					//=== NestedState
 					"sm_t,sLevel1,e1,sLevel2b",
 					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
 					"sm_t,sLevel2aLevel3a,e3,sLevel2aLevel3b",
 					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested",
-					//=== NestedStateB
-//					"sm_t,Off,flip,Idle",
-//					"sm_t,Idle,flip,Running",
 					//=== NestedStateLevel1
 					"sm_t,sLevel1,e1,sLevel2b",
 					//=== NestedStateLevel2
@@ -99,18 +99,13 @@ public class ConsoleTracerTest
 					"sm_t,sLevel2b,e2,sLevel2aLevel3a",
 					"sm_t,sLevel2aLevel3a,e3,sLevel2aLevel3b",
 					"sm_t,sLevel2aLevel3bLevel4,e4,outsideNested",
-					//=== ConcurrentStmA
-					"sm_t,Off,turnOn,On",
-					"sm_t,MotorIdle,flip,MotorRunning",
-					"sm_t,FanIdle,flop,FanRunning",
-					"sm_t,MotorRunning,flip,MotorIdle",
-					"sm_t,MotorIdle,flup,Off",
 					//=== TimedEventA
-					"sm_t,Open,timeoutOpenToClosed,Closed",
-					"sm_t,Closed,timeoutClosedToFinal,Final",
-					//=== QueuedStmTraceA
-					"sm_t,Open,register,Full",
-					"sm_t,Full,reject,Full"
+//					"sm_t,Open,timeoutOpenToClosed,Closed",
+//					"sm_t,Closed,timeoutClosedToFinal,Final"
+					//=== CourseA
+//					"sm_t,Open,register,Full",
+//					"sm_t,Full,reject,Full",
+//					"sm_t,Full,reject,Full"
 			};
 			
 			String[] recordTraceExpected = {
@@ -143,7 +138,7 @@ public class ConsoleTracerTest
 		};
 	  System.setErr(ps);
 	  
-	  //--------------------------------------- invoke attributes tracing
+	  //----- invoke attributes tracing
 	
 	  TraceAttr aTest = new TraceAttr(null, null, 0, false, 0, null, 0, 0, 0, 0, null);
 	  
@@ -209,7 +204,7 @@ public class ConsoleTracerTest
 //	  acTest.setN5(55);
 //	  acTest.setN5(-1);
 	  
-	  //--------------------------------------- invoke state machine tracing
+	  //==== invoke state machine tracing
 	  
 	  GarageDoorA gaTrace = new GarageDoorA();
 	  gaTrace.buttonOrObstacle();
@@ -256,16 +251,12 @@ public class ConsoleTracerTest
 	  lB.flip();
 	  lB.flip();
 	  
-	  NestedStateA nsA = new NestedStateA();
-	  nsA.e1();
-	  nsA.e2();
-	  nsA.e3();
-	  nsA.e4();
-
-//	  NestedStateB nsB = new NestedStateB();
-//	  nsB.flip();
-//	  nsB.flip();
-
+	  NestedState ns = new NestedState();
+	  ns.e1();
+	  ns.e2();
+	  ns.e3();
+	  ns.e4();
+	  
 	  NestedStateLevel1 ns1 = new NestedStateLevel1();
 	  ns1.e1();
 	  ns1.e2();
@@ -284,23 +275,19 @@ public class ConsoleTracerTest
 	  ns4.e3();
 	  ns4.e4();
 	  
-	  ConcurrentStmA cA = new ConcurrentStmA();
-	  cA.turnOn();
-	  cA.flip();
-	  cA.flop();
-	  cA.flip();
-	  cA.flup();
-	  
-	  TimedEventA tA = new TimedEventA();
+//	  TimedEventA tA = new TimedEventA();
 
-	  QueuedStmTraceA qA = new QueuedStmTraceA();
-	  qA.register();
-	  qA.reject();
+//	  pooledTrace cA = new pooledTrace();
+//	  cA.register();
+//	  cA.reject();
+//	  cA.reject();
 
 	  //==== invoke record trace
 	  
 	  TraceRecord rTrace = new TraceRecord(0, 0, null);
+	  
 	  rTrace.setNumber1(100);
+	  
 	  rTrace.setStr("Tracing Number2");
 	  rTrace.setNumber2(200);
 	  
