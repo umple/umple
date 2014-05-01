@@ -25,6 +25,14 @@
     for (StateMachine nestedSm : allNested)
     {
       append(stringBuffer, "\n  private {0} {1};", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      if(nestedSm.getContainsHistoryState())
+      {
+        append(stringBuffer, "\n  private {0} {1}H;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      }
+      if(nestedSm.getContainsDeepHistoryState())
+      {
+        append(stringBuffer, "\n  private {0} {1}HStar;", gen.translate("type",nestedSm), gen.translate("stateMachineOne", nestedSm));
+      }
     }  
   }
   

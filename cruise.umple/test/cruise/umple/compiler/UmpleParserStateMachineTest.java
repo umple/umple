@@ -161,6 +161,15 @@ public class UmpleParserStateMachineTest
   }
   
   @Test
+  public void historyStatePlacement(){
+    //assertNoWarnings("historyState_placement.ump")
+    
+    //UmpleClass c = model.getUmpleClass("X");
+    //TODO: finish
+    
+  }
+  
+  @Test
   public void dotNotationInvalid(){
     assertHasWarning("519_dotNotationInvalidState.ump", 0, 50, new Position("519_dotNotationInvalidState.ump", 12, 6, 120));
     assertFailedParse("519_dotNotationInvalidStateName.ump", new Position("519_dotNotationInvalidStateName.ump", 12, 6, 120), 152);

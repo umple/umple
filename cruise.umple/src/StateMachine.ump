@@ -20,6 +20,9 @@ class StateMachine
   depend cruise.umple.util.*;
   Integer recentSearchDepth = -1;
   name;
+  Boolean containsHistoryState = false;
+  Boolean containsDeepHistoryState = false;
+  
   * -- 0..1 UmpleClass;
   
   * -- 0..1 UmpleTrait;
@@ -30,6 +33,8 @@ class StateMachine
   
   before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
   before setUmpleTrait { if (aUmpleTrait != null && aUmpleTrait.isImmutable()) { return false; } }
+  //before getContainsHistoryState { if ("H".equals(name)) { containsHistoryState = true; } }
+  //before getContainsDeepHistoryState { if ("HStar".equals(name)) { containsDeepHistoryState = true; } }
   
   Boolean queued = false;
   Boolean pooled = false;
@@ -52,13 +57,11 @@ class State
   Boolean isHistoryState = false;
   Boolean isDeepHistoryState = false;
   Boolean finalState = false;
-  //Boolean containsHistoryState = false;
-  //Boolean containsDeepHistoryState = false;
   //State mostRecentState; //will be in dot notation, if used by historyState, only look at first part?
   
+  before getIsHistoryState { if ("H".equals(name)) { isHistoryState = true; } }
+  before getIsDeepHistoryState { if ("HStar".equals(name)) { isDeepHistoryState = true; } }
   before isFinalState { if ("Final".equals(name)) { finalState = true; } }
-  //before isAHistoryState { if ("H".equals(name)) { isHistoryState = true; } }
-  //before isADeepHistoryState { if ("H*".equals(name)) { isDeepHistoryState = true; } }
 }
 
 /* 

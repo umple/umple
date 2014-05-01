@@ -115,6 +115,37 @@ class StateMachine
     }
     return allEvents;
   }
+  
+  public ArrayList<Transition> getAllTransitions()
+  {
+    ArrayList<Transition> allTransitions = new ArrayList<Transition>();
+    ArrayList<StateMachine> allStateMachines = new ArrayList<StateMachine>();
+    allStateMachines.add(this);
+    addNestedStateMachinesTo(allStateMachines, this);
+    for (StateMachine sm : allStateMachines)
+    {
+      for (State state : sm.getStates())
+      {
+        for (Transition t : state.getTransitions())
+        {
+          allTransitions.add(t);
+        }
+      }
+    }
+    return allTransitions;
+  }
+
+  public State getDeepHistoryState()
+  {
+    for (State s : this.getStates())
+    {
+      if (s.getIsDeepHistoryState() == true)
+      {
+          return s;
+      }
+    }
+    return null;
+  }
 
   public State findState(String aName)
   {
