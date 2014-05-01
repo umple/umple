@@ -1,24 +1,10 @@
-// Alloy file generated using Umple from AssociationWithNumericBounds.ump 
+-- This Alloy file is generated using Umple from AssociationWithNumericBounds.ump
+open util/ordering[UmpleObject]
 
-sig Man {
+abstract sig UmpleObject { }
+sig Man extends UmpleObject {
   children : some Child
-}
-
-sig Child {
+ }
+sig Child extends UmpleObject {
   father : lone Man
-}
-
-fact {
-  all m1 : Man |
-    #m1.children >= 1 && #m1.children <= 5
-}
-
-fact {
-  all c1 : Child |
-    #c1.father >= 0 && #c1.father <= 1
-}
-
-fact {
-  all m1 : Man, c1 : Child |
-    m1 = none || m1 != none && c1 != none && m1 in father[c1] <=> c1 in children[m1]
-}
+ }

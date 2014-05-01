@@ -1,24 +1,10 @@
-// Alloy file generated using Umple from Alloy_AssociationOneToMany.ump 
+-- This Alloy file is generated using Umple from Alloy_AssociationOneToMany.ump
+open util/ordering[UmpleObject]
 
-sig A {
+abstract sig UmpleObject { }
+sig A extends UmpleObject {
   bs : set B
-}
-
-sig B {
+ }
+sig B extends UmpleObject {
   a : one A
-}
-
-fact {
-  all a1 : A |
-    #a1.bs >= 0
-}
-
-fact {
-  all b1 : B |
-    #b1.a = 1
-}
-
-fact {
-  all a1 : A, b1 : B |
-    a1 != none && b1 != none || b1 = none && a1 in a[b1] <=> b1 in bs[a1]
-}
+ }
