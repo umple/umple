@@ -33,7 +33,7 @@ class UmpleInternalParser
     return true; //We have an identifier followed by a { followe by something else that is probably a state machine
   }
   
-  //Checks to see if stateName is alpha-numeric or H*, for deep history
+  //Checks to see if stateName is alpha-numeric or HStar, for deep history
   private void checkStateNameOfToken(Token myToken){
     
     boolean shouldBeLast = false;
@@ -45,8 +45,8 @@ class UmpleInternalParser
       {
         if(shouldBeLast){setFailedPosition(myToken.getPosition(), 152, myToken.getValue("stateName"));}
         
-        if (stateName.equals("H*") || stateName.equals("H")){
-          shouldBeLast = true; //H* and H must be the last state in dotNotation
+        if (stateName.equals("HStar") || stateName.equals("H")){
+          shouldBeLast = true; //HStar and H must be the last state in dotNotation
           continue;
         }
         
@@ -468,10 +468,60 @@ class UmpleInternalParser
     
     populateStateMachine(stateMachineToken, sm, uClassifier);
 
+    //Place all states from transitions that weren't declared in the StateMachine
+    //TODO: start at level of transition
+    //TOcheck: multiple transitions to same state?
+    ArrayList<Transition> allTransitions = sm.getAllTransitions();
     while (placeholderStateMachine.numberOfStates() > 0)
     {
-      placeholderStateMachine.getState(0).setStateMachine(sm);
+      State s = placeholderStateMachine.getState(0);
+      if (s.getName().indexOf('.') > 0)
+      {
+        for (Transition t : allTransitions)
+        {
+          if (t.getNextState().equals(s))
+          {
+            String toState = s.getName();
+            String tmpName = toState;
+            String[] stateNames = tmpName.split("\\.");
+            //Strip last state from dotNotation
+            //If the super state does not have a state machine then the state will be added to the top level sm
+            //TODO: check that the top level doesn't have a state with the same name
+            while(tmpName.contains(".")){
+              tmpName = tmpName.substring(0,tmpName.lastIndexOf('.'));
+              State superState = sm.findState(tmpName);
+              if(superState != null)
+              {
+                for (StateMachine nesSm : superState.getNestedStateMachines()){
+                  //TODO: add support for concurrent sm
+                  s.setStateMachine(nesSm);
+                  break;
+                }
+                s.setName(stateNames[stateNames.length - 1]);
+                if (s.getName().equals("H"))
+                {
+                  s.getStateMachine().setContainsHistoryState(true);
+                }
+                if (s.getName().equals("HStar"))
+                {
+                  //TODO: if there was a state declared as HStar this point will never be reached
+                  s.getStateMachine().setContainsDeepHistoryState(true);
+                  addDeepHistoryStatesToNestedStateMachines(s);
+                }
+                break;
+              }
+              if(!tmpName.contains("."))
+              {
+                s.setName(stateNames[stateNames.length - 1]);
+                s.setStateMachine(sm);
+              }
+            }
+          }
+        }
+      }
+      else{s.setStateMachine(sm);}
     }
+    
     
     if(sm.getQueued() || sm.getPooled())
     {
@@ -530,6 +580,7 @@ class UmpleInternalParser
       {
         nextState = placeholderStateMachine.findState(name);
         if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
+        if(placeholderStateMachine.getParentState() != null){System.out.println("Has Parent!");}
       }
 
       if (nextState == null)
@@ -540,6 +591,19 @@ class UmpleInternalParser
       }
     }
     return nextState;
+  }
+  
+  private void addDeepHistoryStatesToNestedStateMachines(State deepState)
+  {
+    StateMachine sm = deepState.getStateMachine();
+    for (StateMachine nesSm : sm.getNestedStateMachines())
+    {
+      if (nesSm.getDeepHistoryState() == null)
+      {
+        State s = new State("HStar", nesSm);
+        nesSm.setContainsDeepHistoryState(true);
+      }
+    }
   }
   
   private String createDotNotationName(String stateName, StateMachine sm)

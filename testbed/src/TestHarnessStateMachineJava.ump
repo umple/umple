@@ -250,3 +250,58 @@ class ObservableCourse
     notifyObservers(status);
   }
 }
+
+
+class HistoryCourse
+{
+  Sm{
+    S1 {
+      Ss1 {
+        toss2 -> Ss2;
+        tos2 -> S2;
+      }
+      Ss2 {
+        toss1 -> Ss1;
+        tos2 -> S2;
+      }
+    }
+    S2 {
+      toHistory -> S1.H;
+    }
+  }
+}
+
+class DeepHistoryCourse
+{
+  Sm {
+    S1 {
+      Ss1 {
+        Sss1{
+          toSs2Sss2 -> Ss2.Sss2;
+          toS2 -> S2;
+        }
+        Sss2{
+          toS2 -> S2;
+        }
+      }
+      Ss2 {
+        Sss1{
+          toSss2 -> Sss2;
+          toS2 -> S2;
+        }
+        Sss2{
+          Ssss1{
+            toSsss2 -> Ssss2;
+          }
+          Ssss2{
+            toS2 -> S2;
+          }
+        }
+      }
+    }
+    S2 {
+      toDeepHistory -> S1.HStar;
+      toS1Ss2 -> S1.Ss2;
+    }
+  }
+}

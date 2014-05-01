@@ -86,8 +86,37 @@
           entryLengths.append(","+action.getActionCode().split("\\n").length);
           entryJavaLine++;
         }
-        entryActions.append("\n        " + action.getActionCode());
-        entryJavaLine+=action.getActionCode().split("\\n").length;
+
+        if (state.getIsDeepHistoryState() == true){
+          
+          String actionCode = action.getActionCode();
+          int x = actionCode.lastIndexOf('.');
+          int y = actionCode.indexOf(')',x);
+          String substate = actionCode.substring(x+1,y);
+          String beginning = actionCode.substring(0,x + 1);
+          String end = actionCode.substring(y);
+          actionCode = beginning.concat("HStar").concat(end);
+          
+          entryActions.append(StringFormatter.format("\n        if({0}HStar == {1}.{2})", gen.translate("stateMachineOne",sm), gen.translate("type",sm), substate));
+          entryJavaLine++;
+          entryActions.append("\n        {");
+          entryJavaLine++;  
+          
+          entryActions.append("\n          " + actionCode);
+          entryJavaLine+=actionCode.split("\\n").length;
+          
+
+          //TODO: add more spaces if deepHistory
+          //entryActions.append(StringFormatter.format("{0}{1}({2}{3});","\n          ",gen.translate("setMethod",state.getStateMachine()),gen.translate("stateMachineOne",state.getStateMachine()),gen.translate("stateOne",state)));
+          //entryJavaLine++;
+          entryActions.append("\n        }");
+          entryJavaLine++;
+        }
+        else{
+          entryActions.append("\n        " + action.getActionCode());
+          entryJavaLine+=action.getActionCode().split("\\n").length;
+        }
+
       }
       else if ("exit".equals(action.getActionType()))
       {
@@ -172,6 +201,7 @@
       exitActions.append("\n        break;");
       exitJavaLine++;
     }
+    
   }
 %>
 <% if (hasExit) {
@@ -231,6 +261,11 @@
     {
       <%= entryActions %>
     }
+<% } %>
+<% if (parentState != null) { %>
+  <% if (sm.getContainsDeepHistoryState()) { %>
+    if (<%= gen.translate("parameterOne",sm) %> == <%= gen.translate("type",sm)  %>.HStar) { <%= gen.translate("stateMachineOne",sm) %> = <%= gen.translate("stateMachineOne", sm) %>HStar;}
+  <% } %>
 <% } %>
   }
 

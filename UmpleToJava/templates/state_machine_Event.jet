@@ -39,6 +39,14 @@
   for(StateMachine sm : uClass.getStateMachines(e))
   {
     allDeclarations.append(StringFormatter.format("\n    {0} {1} = {2};",gen.translate("type",sm),gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
+    if(sm.getContainsHistoryState())
+    {     
+    	allDeclarations.append(StringFormatter.format("\n    {0}H = {1};",gen.translate("stateMachineOne",sm),gen.translate("stateMachineOne", sm)));
+    }
+    if(sm.getContainsDeepHistoryState())
+    {     
+    	allDeclarations.append(StringFormatter.format("\n    {0}HStar = {1};",gen.translate("stateMachineOne",sm),gen.translate("stateMachineOne", sm)));
+    }
     allCases.append(StringFormatter.format("\n    switch ({0})\n",gen.translate("parameterOne",sm)));
     allCases.append(StringFormatter.format("    {\n"));
     javaLine+=3;
@@ -111,7 +119,15 @@
         allCases.append(traceStmItem!=null?traceStmItem.trace(gen, t, "sm_t", uClass)+"\n":"");
         	
 //        allCases.append(traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
-        allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
+        if (nextState.getIsHistoryState() == true)
+        {
+        	allCases.append(StringFormatter.format("{0}{1}({2}{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("stateMachineOne",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
+        	
+        }
+        else
+        {
+        	allCases.append(StringFormatter.format("{0}{1}({2}.{3});\n",tabSpace,gen.translate("setMethod",nextState.getStateMachine()),gen.translate("type",nextState.getStateMachine()),gen.translate("stateOne",nextState)));
+		}
 //        allCases.append(traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, t,"sm_t", uClass)+"\n":"");
 
         

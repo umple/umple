@@ -141,6 +141,20 @@ class GeneratorHelper
       parentEntryAction.setActionType("entry");
       parentEntryAction.setIsInternal(true);
       parentState.addAction(parentEntryAction); 
+      
+      StateMachine parentSm = parentState.getStateMachine();
+      State deepState = parentSm.getDeepHistoryState();
+      if (deepState != null){
+        int x = parentEntryActionCode.lastIndexOf('.');
+        int y = parentEntryActionCode.indexOf(')',x);
+        String beginning = parentEntryActionCode.substring(0,x + 1);
+        String end = parentEntryActionCode.substring(y);
+        String deepActionCode = beginning.concat(parentState.getName()).concat(end);
+        Action deepEntryAction = new Action(deepActionCode);
+        deepEntryAction.setActionType("entry");
+        deepEntryAction.setIsInternal(true);
+        deepState.addAction(deepEntryAction);
+      }
     }  
   }
 
