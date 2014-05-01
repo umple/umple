@@ -1,0 +1,352 @@
+namespace cruise.umple.alloy;
+
+class Utility {
+  depend cruise.umple.compiler.*;
+  
+  /*AlloyMultiplicity { 
+  	oneToOne, oneToSome, oneToLone, oneToMany,
+  	loneToOne, loneToSome, loneToLone, loneToMany,
+  	manyToOne, manyToSome, manyToLone, manyToMany,
+  	someToOne, someToSome, someToLone, someToMany
+  }*/
+  
+  public void genEmptySignature(StringBuilder code,UmpleClass uClass){
+  	code.append("sig "+uClass.getName()+" { }");
+  	this.addNewLine(code,2);
+  }
+  
+  public void addNewLine(StringBuilder code, int num){
+  	int i = num;
+  	while(i > 0){
+  		code.append("\n");
+  		i--;
+  	}
+  }
+  
+  public void addTab(StringBuilder code, int tabNum){ 
+  	int i = tabNum;
+  	while(i > 0){
+  		code.append(" "); 
+  		i--;
+  	}
+  }
+  
+  public void genFactHead(StringBuilder code,String name){
+  	final String f = "fact";
+  	this.addString(code,f);
+  	this.addTab(code,1);
+  	this.addString(code,name);
+  	this.addTab(code,1);
+  	this.addCurlyBracket(code,1);
+  }
+  
+  public void addCurlyBracket(StringBuilder code, int type){
+  	if(type == 1)
+  		this.addString(code,"{");
+  	this.addString(code,"}");
+  }
+  
+  private void addChar(StringBuilder code,char c){ String cc = ""+c; this.addString(code,cc); }
+  
+  public void composeSimpleDeclaration(String rEndName, String lEndName, StringBuilder code){
+  	char a = lEndName.toLowerCase().charAt(0), b = rEndName.toLowerCase().charAt(0);
+  	this.addNewLine(code,1);
+  	this.addTab(code, 2);
+  	this.addString(code,"all");
+  	this.addTab(code, 1);
+  	this.addChar(code,a);
+  	//this.addString(code,a+"_");
+  	this.addString(code,"1 : ");
+  	this.addString(code,lEndName);
+  	this.addString(code,", ");
+  	this.addChar(code,b);
+  	//this.addString(code,b+"_");
+  	this.addString(code,"1 : ");
+  	this.addString(code,rEndName);
+  	this.addString(code," |");
+  	this.addNewLine(code,1);
+  }
+  
+  //This generates the first line in the fact statement
+  public void getConstraintPart(String rEndName, String lEndName, StringBuilder code, String name){
+      this.genFactHead(code,name);
+      this.addTab(code,2);
+      this.composeSimpleDeclaration(rEndName,lEndName,code);
+      this.addTab(code,4);
+  }
+  
+  public void addString(StringBuilder code, String str){
+  	code.append(str);
+  }
+  //This defines a signature head
+  public void addSignatureHead(StringBuilder code,UmpleClass uClass){
+  	code.append("sig "+uClass.getName()+" {\n");
+  }
+  
+  //Comment begins here
+  public void commentModel(StringBuilder code,UmpleModel model){
+  	code.append("-- This Alloy file is generated using Umple from "+model.getUmpleFile().getFileName());
+  	this.addNewLine(code,1);
+  }
+  
+  //Comment fact
+  public void commentFact(StringBuilder code,Association assoc){}
+  
+  //This defines a function mapping within alloy signature
+  public String alloyAssociation(AssociationEnd end){
+    String str, theMult = getAlloyMultiplicity(end);
+      str = end.getRoleName()+" : "+ theMult + " " +end.getClassName();
+      return str;
+  }
+  /*
+  public AlloyMultiplicity mapUmpleAssociationToAlloy(Association assoc){
+  	//AlloyMultiplicity alloyMult = AlloyMultiplicity.someToMany;
+  	if(getLeftMult(assoc).equals("one") && getRightMult(assoc).equals("one"))
+  		return AlloyMultiplicity.oneToOne;
+  	if(getLeftMult(assoc).equals("one") && getRightMult(assoc).equals("some"))
+  		return AlloyMultiplicity.oneToSome;
+  	if(getLeftMult(assoc).equals("one") && getRightMult(assoc).equals("lone"))
+  		return AlloyMultiplicity.oneToLone;
+  	if(getLeftMult(assoc).equals("one") && getRightMult(assoc).equals("many"))
+  		return AlloyMultiplicity.oneToMany;
+  	if(getLeftMult(assoc).equals("lone") && getRightMult(assoc).equals("one"))
+  		return AlloyMultiplicity.loneToOne;
+  	if(getLeftMult(assoc).equals("lone") && getRightMult(assoc).equals("some"))
+  		return AlloyMultiplicity.loneToSome;
+  	if(getLeftMult(assoc).equals("lone") && getRightMult(assoc).equals("lone"))
+  		return AlloyMultiplicity.loneToLone;
+  	if(getLeftMult(assoc).equals("lone") && getRightMult(assoc).equals("many"))
+  		return AlloyMultiplicity.loneToMany;
+  	if(getLeftMult(assoc).equals("many") && getRightMult(assoc).equals("one"))
+  		return AlloyMultiplicity.manyToOne;
+  	if(getLeftMult(assoc).equals("many") && getRightMult(assoc).equals("some"))
+  		return AlloyMultiplicity.manyToSome;
+  	if(getLeftMult(assoc).equals("many") && getRightMult(assoc).equals("lone"))
+  		return AlloyMultiplicity.manyToLone;
+  	if(getLeftMult(assoc).equals("many") && getRightMult(assoc).equals("many"))
+  		return AlloyMultiplicity.manyToMany;
+  	if(getLeftMult(assoc).equals("some") && getRightMult(assoc).equals("one"))
+  		return AlloyMultiplicity.someToOne;
+  	if(getLeftMult(assoc).equals("some") && getRightMult(assoc).equals("some"))
+  		return AlloyMultiplicity.someToSome;
+  	if(getLeftMult(assoc).equals("some") && getRightMult(assoc).equals("lone"))
+  		return AlloyMultiplicity.someToLone;
+  	else return AlloyMultiplicity.someToMany;
+  }*/
+  
+    //Returns the lower case of a class name at left end of an association
+  public String getA(Association assoc){
+    return getLeftEndName(assoc).toLowerCase()+"_";
+  }
+   //Returns the lower case of a class name at right end of an association
+  public String getB(Association assoc){
+    return getRightEndName(assoc).toLowerCase()+"_";
+  }
+  public String getLeftEndName(Association assoc){
+    return assoc.getEnd(0).getClassName();
+  }  
+  public String getRightEndName(Association assoc){
+    return assoc.getEnd(1).getClassName();
+  }
+  public String getLeftRoleName(Association assoc){
+  	return assoc.getEnd(0).getRoleName();
+  }
+  public String getRightRoleName(Association assoc){
+  	return assoc.getEnd(1).getRoleName();
+  }
+  public String getLeftMult(Association assoc){
+    return getAlloyMultiplicity(assoc.getEnd(0));
+  }
+  public String getRightMult(Association assoc){
+    return getAlloyMultiplicity(assoc.getEnd(1));
+  }
+  public AssociationEnd getRightEnd(Association assoc){
+  	return assoc.getEnd(1);
+  }
+  public AssociationEnd getLeftEnd(Association assoc){
+  	return assoc.getEnd(0);
+  }
+  
+  public String getAlloyMultiplicity(AssociationEnd end){
+    String theMult = end.getMultiplicity().getParserable();
+        if(theMult.equals("1"))
+          return "one";
+        else if(theMult.equals("0..1"))
+          return "lone"; 
+        else if(theMult.equals("*")) 
+          return "set";
+        else if(theMult.equals("1..*"))
+            return "some";
+        else return getMultiplicity(end);
+  }
+  private String getMultiplicity(AssociationEnd end){
+    if(end.getMultiplicity().isValid()){
+          int m = end.getMultiplicity().getUpperBound(),
+              n = end.getMultiplicity().getLowerBound();
+          if(n == 0 && m > 1) return "set"; 
+          if(n == 1 && m == 1) return "one";
+          return "some";
+      }
+      return null;
+  }
+  public Association convertEndsToAssociation(AssociationEnd beginEnd,AssociationEnd endToOutput){
+     AssociationEnd [] ends = new AssociationEnd[2];
+     ends[0] = new AssociationEnd(beginEnd.getRoleName(),beginEnd.getClassName(),
+					beginEnd.getModifier(),beginEnd.getReferenceToClassName(),beginEnd.getMultiplicity());
+     ends[1] = new AssociationEnd(endToOutput.getRoleName(),endToOutput.getClassName(),
+					endToOutput.getModifier(),endToOutput.getReferenceToClassName(),endToOutput.getMultiplicity());
+     return new Association(true,true,ends);
+ }
+ public void printOpenStatement(String className,String packageName,StringBuilder code){
+ 	addString(code,"open util/"+packageName+"["+className+"]");
+ 	addNewLine(code,1);
+ }
+ 
+ public void printBidirectionality(Association uAssoc,StringBuilder code){
+ 	//String lEndName = getLeftEndName(uAssoc),
+ 			//rEndName = getRightEndName(uAssoc);
+ 	
+ }
+ 
+ private String makeVarDeclaration(String cName, int num){
+	 	String tempName = cName.toLowerCase(),
+	 			out = "";
+	 	if(num == 1){
+	 		return tempName+"_1 : "+cName;	 		
+	 	}
+	 	if(num > 1){
+	 		int i = 1;
+	 		while(i < num){
+	 			out += out+tempName+"_"+i+",";
+	 			i++;
+	 		}
+	 		out += out+tempName+"_"+i+" : "+cName;
+	 	}
+	 	return out;
+  }
+  
+}
+
+class AlloyObject {
+	depend java.lang.StringBuilder;
+	Utility utility =  new Utility();
+	public void printObject(String cName,StringBuilder code){
+		utility.addNewLine(code,1);
+		utility.addString(code,"abstract sig "+cName+" { }");
+		utility.addNewLine(code,1);
+	}
+}
+
+class Function {
+	depend cruise.umple.compiler.*;
+	depend java.lang.StringBuilder;
+	
+	beginEndRoleName;
+	targetMult;
+	targetClassName;
+	Utility utility;
+	public Function(Association assoc){
+		utility =  new Utility();
+		beginEndRoleName = utility.getRightRoleName(assoc);
+		targetMult = utility.getAlloyMultiplicity(utility.getRightEnd(assoc));
+		targetClassName = utility.getRightEndName(assoc);
+	}
+	public void printFunction(StringBuilder code){
+		utility.addTab(code,2);
+		utility.addString(code,beginEndRoleName);
+		utility.addString(code," : ");
+		utility.addString(code,targetMult);
+		utility.addTab(code,1);
+		utility.addString(code,targetClassName);
+	}
+}
+
+class Signature {
+	depend cruise.umple.compiler.*;
+	depend java.lang.StringBuilder;
+ 	depend java.util.List;
+ 	depend java.util.ArrayList;
+ 	depend java.util.Set;
+ 	depend java.util.HashSet;
+ 	
+ 	String name;
+	String extendsName;
+	List<Function> function;
+	Utility utility;
+	boolean isBounded;
+	
+	public Signature(UmpleClass uClass,String cname){
+		utility = new Utility();
+	  	function = new ArrayList<Function>();
+		extendsName = cname;
+		name = uClass.getName();
+		Multiplicity mult = new Multiplicity();
+		isBounded = mult.setBound("1");
+		for(Association assoc : uClass.getAssociations()){
+			Set<Association> processedAssociations = new HashSet<Association>();
+			if(processedAssociations.contains(assoc)) continue;
+			processedAssociations.add(assoc);	
+
+			AssociationEnd endToOutput = new AssociationEnd(null,null,null,null,mult);
+			AssociationEnd beginEnd = new AssociationEnd(null,null,null,null,mult);
+			
+			if(utility.getRightEndName(assoc).equals(uClass.getName())) {
+          		endToOutput = utility.getLeftEnd(assoc);
+          		beginEnd = utility.getRightEnd(assoc);
+        	}
+        	else {
+          		endToOutput = utility.getRightEnd(assoc);  
+          		beginEnd = utility.getLeftEnd(assoc); 
+        	}
+			Association uAssoc = utility.convertEndsToAssociation(beginEnd,endToOutput);
+			Function funct = new Function(uAssoc);
+			isBounded = function.add(funct);
+			
+		}
+	}
+	public void printSignature(StringBuilder code){
+		if(function.size() == 0){
+			utility.addString(code,"sig "+name+" extends "+extendsName+" { }");
+			utility.addNewLine(code,1);
+		}
+		else if(function.size() == 1)
+			printForSizeOne(function,code);
+		else 
+			printForSizeMany(function,code);
+  }
+
+  private void computeMe(List<Function> func, StringBuilder code){
+		int i = 0;
+		for(Function fun : func){
+				if(i < func.size() - 1){
+					fun.printFunction(code);
+					utility.addString(code,",");
+					utility.addNewLine(code,1);
+					i++;
+				}
+				else
+					func.get(i).printFunction(code);	
+		}
+  }
+
+   private void printForSizeOne(List<Function> funct, StringBuilder code){
+			utility.addString(code,"sig "+name+" extends "+extendsName+" {");
+			utility.addNewLine(code,1);
+			funct.get(0).printFunction(code);
+			utility.addNewLine(code,1);
+			utility.addTab(code,1);
+			utility.addString(code,"}");
+			utility.addNewLine(code,1);		
+    }
+
+	private void printForSizeMany(List<Function> funct, StringBuilder code){
+			utility.addString(code,"sig "+name+" extends "+extendsName+" {");
+			utility.addNewLine(code,1);
+			computeMe(function,code);
+			utility.addNewLine(code,1);	
+			utility.addTab(code,1);
+			utility.addString(code,"}");	
+			utility.addNewLine(code,1);
+	}
+}
+
