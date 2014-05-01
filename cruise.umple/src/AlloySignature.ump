@@ -1,0 +1,94 @@
+namespace cruise.umple.alloy;
+
+class Signature {
+	depend cruise.umple.compiler.*;
+	depend java.lang.StringBuilder;
+ 	depend java.util.*;
+ 	
+ 	String name;
+	String extendsName;
+	List<Function> function;
+	Utility utility;
+	boolean isBounded;
+	
+	public Signature(UmpleClass uClass,String cname){
+		utility = new Utility();
+	  	function = new ArrayList<Function>();
+		extendsName = cname;
+		name = uClass.getName();
+		Multiplicity mult = new Multiplicity();
+		isBounded = mult.setBound("1");
+		for(Association assoc : uClass.getAssociations()){
+			Set<Association> processedAssociations = new HashSet<Association>();
+			if(processedAssociations.contains(assoc)) continue;
+			processedAssociations.add(assoc);	
+
+			AssociationEnd endToOutput = new AssociationEnd(null,null,null,null,mult);
+			AssociationEnd beginEnd = new AssociationEnd(null,null,null,null,mult);
+			
+			if(utility.getRightEndName(assoc).equals(uClass.getName())) {
+          		endToOutput = utility.getLeftEnd(assoc);
+          		beginEnd = utility.getRightEnd(assoc);
+        	}
+        	else {
+          		endToOutput = utility.getRightEnd(assoc);  
+          		beginEnd = utility.getLeftEnd(assoc); 
+        	}
+			Association uAssoc = utility.convertEndsToAssociation(beginEnd,endToOutput);
+			Function funct = new Function(uAssoc);
+			isBounded = function.add(funct);
+			
+		}
+	}
+	private void comment(StringBuilder code){
+  		utility.addStartDottedLine(code);
+  		utility.addString(code,"--The following defines a signature for class "+name+"\n");
+  		utility.addEndDottedLine(code);
+  	}
+	
+	public void printSignature(StringBuilder code){
+		comment(code);
+		if(function.size() == 0){
+			utility.addString(code,"sig "+name+" extends "+extendsName+" { }");
+			utility.addNewLine(code,1);
+		}
+		else if(function.size() == 1)
+			printForSizeOne(function,code);
+		else 
+			printForSizeMany(function,code);
+  }
+
+  private void computeMe(List<Function> func, StringBuilder code){
+		int i = 0;
+		for(Function fun : func){
+				if(i < func.size() - 1){
+					fun.printFunction(code);
+					utility.addString(code,",");
+					utility.addNewLine(code,1);
+					i++;
+				}
+				else
+					func.get(i).printFunction(code);	
+		}
+  }
+
+   private void printForSizeOne(List<Function> funct, StringBuilder code){
+			utility.addString(code,"sig "+name+" extends "+extendsName+" {");
+			utility.addNewLine(code,1);
+			funct.get(0).printFunction(code);
+			utility.addNewLine(code,1);
+			//utility.addTab(code,1);
+			utility.addString(code,"}");
+			utility.addNewLine(code,1);		
+    }
+
+	private void printForSizeMany(List<Function> funct, StringBuilder code){
+			utility.addString(code,"sig "+name+" extends "+extendsName+" {");
+			utility.addNewLine(code,1);
+			computeMe(function,code);
+			utility.addNewLine(code,1);	
+			//utility.addTab(code,1);
+			utility.addString(code,"}");	
+			utility.addNewLine(code,1);
+	}
+}

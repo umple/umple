@@ -14,6 +14,9 @@ in your umple file, or the command line option
 
 namespace cruise.umple.compiler;
 use AlloyMetaModel.ump;
+use AlloyUtility.ump;
+use AlloySignature.ump;
+use AlloyFact.ump;
 
 class AlloyGenerator
 {
@@ -41,12 +44,13 @@ class AlloyGenerator
        sig.printSignature(code);
        processedClass.add(uClass);
     }
-  
+    
+    //This generates bidirectionality rules for every association within Umple model 
     for(Association assoc : model.getAssociations()){
     	utility.addNewLine(code,2);
-    	//genEndConstraint(assoc,code);
-        //associativityRule(assoc,code);
-        utility.addNewLine(code,2);
+    	Fact fact = new Fact("BidirectionalityRule",assoc);
+    	fact.print(code);
+        //utility.addNewLine(code,2);
     }
     terminateCode(code);
   }
