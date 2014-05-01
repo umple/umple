@@ -2,7 +2,7 @@ package cruise.queued.statemachine.test;
 
 import org.junit.Assert;
 import org.junit.Test;
-
+import org.junit.Ignore;
 
 public class QueuedStateMachineTest_NestedStates_level2
 { 
@@ -21,6 +21,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  Assert.assertEquals(true, QueuedSM_NestedStates_level2.MessageType.valueOf("m_M").equals(QueuedSM_NestedStates_level2.MessageType.m_M));  
   }
   
+  @Ignore
   @Test 
   public void processEvents() throws InterruptedException
   {
