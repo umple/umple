@@ -1,3 +1,5 @@
-// Alloy file generated using Umple from UmpleClass.ump 
+-- This Alloy file is generated using Umple from UmpleClass.ump
+open util/ordering[UmpleObject]
 
-sig A { }
+abstract sig UmpleObject { }
+sig A extends UmpleObject { }
