@@ -1,0 +1,29 @@
+namespace example;
+
+class Tracer
+{
+ sm {
+   s1 {
+     e2 -> s2;
+     s1a {
+       e1 -> s1b;
+     }
+     s1b {
+       e1 -> s1a;
+     }
+   }
+
+   s2 {
+     e2 -> s1;
+     s2a {
+       e1 -> s2b;
+     }
+     s2b {
+       e1 -> s2a;
+     }
+   }
+ }
+
+  // trace state machine
+  trace sm;
+}
