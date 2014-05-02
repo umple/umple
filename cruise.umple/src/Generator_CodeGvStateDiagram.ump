@@ -129,6 +129,13 @@ node [shape = rectangle, width=1,style=rounded];
 !>>
   emit normalStateFormat()(normalStateFormat);
 
+  // Template for a pseudostate such as history or deep history
+  pseudoStateFormat <<!
+// Format for normal states
+node [shape = circle, fixedsize = true, width=.3];
+!>>
+  emit pseudoStateFormat()(pseudoStateFormat);
+
   // Used to indent code
   private void appendSpaces(StringBuilder code, int numSpaces) {
     for(int i=0; i<numSpaces; i++) {
@@ -202,6 +209,7 @@ node [shape = rectangle, width=1,style=rounded];
       int smCount, int indentLevel) {
 
     String smName, clSmName, sLabel, sName;
+    boolean isPseudo = false;    
     Event event;
     Action action;
     String transitionLabel, guardString, actionCode, transitionAction;
@@ -241,6 +249,8 @@ node [shape = rectangle, width=1,style=rounded];
     for (State s : sm.getStates())
     {
       sLabel=s.getName();  // This is what is displayed
+      if(sLabel.equals("HStar")) sLabel="\"H*\"";
+      isPseudo = sLabel.equals("H") || sLabel.equals("\"H*\"");
       sName=getStateQualifiedName(s,uClass);  // Internal gv identifier
       
       code.append("\n");      
@@ -290,8 +300,10 @@ node [shape = rectangle, width=1,style=rounded];
       // Output the state (and possibly state machine) id
       if(!s.hasNestedStateMachines()) {
         // Simple state node
+        if(isPseudo) _pseudoStateFormat(indentLevel, code);
         appendSpaces(code,  indentLevel+2);
         code.append(sName+" [label = "+sLabel+"];\n");
+        if(isPseudo) _normalStateFormat(indentLevel, code);        
       }
       else {
         // Start of a subgraph
