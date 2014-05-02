@@ -2,6 +2,8 @@ package cruise.queued.statemachine.test;
 
 import org.junit.Assert;
 import org.junit.Test;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 
 public class QueuedStateMachineTest
@@ -18,47 +20,92 @@ public class QueuedStateMachineTest
   @Test 
   public void processEvents() throws InterruptedException
   {
-	  QueuedSM qsm = new QueuedSM();
-	  //initial state is s1
-	  Assert.assertEquals(QueuedSM.Sm.s1, qsm.getSm());
+    QueuedSM qsm = new QueuedSM();
+    int numChecks;
+	//initial state is s1
+	Assert.assertEquals(QueuedSM.Sm.s1, qsm.getSm());
 	  
-	  //e1 is triggered: e1 is queued
-	  qsm.e1();
-	  Thread.sleep(10);
-	  //e1 is dequeued and processed: transition to s2
-	  Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
+	//e1 is triggered: e1 is queued
+	qsm.e1();	
+	//e1 is dequeued and processed: transition to s2
+	numChecks=200; // we will check for a second
+	while(!qsm.getSm().equals(QueuedSM.Sm.s2) && numChecks>0) {
+	  Thread.sleep(5);
+      numChecks--;
+	}
+	assertThat(numChecks, not(equalTo(0)));
+	Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
+    // check if there is a message saved in the queue
+    noMessageIsSaved(qsm);
+	
+    
+    //e2 is triggered: e2 is queued
+	qsm.e2();
+	//e2 is dequeued and processed: transition to s2
+	numChecks=200; // we will check for a second
+	while(numChecks>0 && qsm.getSm().equals(QueuedSM.Sm.s2)) {
+	  if(!qsm.pool.messages.isEmpty()){
+	    Thread.sleep(5);
+		numChecks--;
+	  }
+      else
+	  {
+	    Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
+		Assert.assertEquals(true, qsm.pool.messages.isEmpty());
+		break;
+	  }
+	}
+	assertThat(numChecks, not(equalTo(0)));
+	Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
+	// check if there is a message saved in the queue
+	noMessageIsSaved(qsm);
+  
+	
+	//e2 is triggered: e2 is queued
+	qsm.e2();
+	//e2 is dequeued and processed: transition to s2
+	numChecks=200; // we will check for a second
+    while(numChecks>0 && qsm.getSm().equals(QueuedSM.Sm.s2)) {
+	  if(!qsm.pool.messages.isEmpty()){
+	    Thread.sleep(5);
+		numChecks--;
+	  }
+	  else
+	  {
+		Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
+		Assert.assertEquals(true, qsm.pool.messages.isEmpty());
+		break;
+	  }
+    }
+    assertThat(numChecks, not(equalTo(0)));
+	Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());	
+	// check if there is a message saved in the queue
+	noMessageIsSaved(qsm);
+	
+	
+	//e1 is triggered: e1 is queued
+	qsm.e1();
+	//e1 is dequeued and ignored (not processed: case of unspecified reception)
+	numChecks=200; // we will check for a second
+	while(numChecks>0 && qsm.getSm().equals(QueuedSM.Sm.s2)) {
+	  if(!qsm.pool.messages.isEmpty()){
+		Thread.sleep(5);
+		numChecks--;
+	  }
+	  else
+	  {
+		Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
+		Assert.assertEquals(true, qsm.pool.messages.isEmpty());
+		break;
+	  }
+    }
+    assertThat(numChecks, not(equalTo(0)));
+	Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
+	// check if there is a message saved in the queue
+	noMessageIsSaved(qsm);
 	  
-	  // check if there is a message saved in the queue
-	  noMessageIsSaved(qsm);
-	  
-	  
-	  //e2 is triggered: e2 is queued
-	  qsm.e2();
-	  Thread.sleep(10);
-	  //e2 is dequeued and processed: transition to s2
-	  Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
-	  // check if there is a message saved in the queue
-	  noMessageIsSaved(qsm);
-	  
-	  //e2 is triggered: e2 is queued
-	  qsm.e2();
-	  Thread.sleep(10);
-	  //e2 is dequeued and processed: transition to s2
-	  Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
-	  // check if there is a message saved in the queue
-	  noMessageIsSaved(qsm);
-	  
-	  //e1 is triggered: e1 is queued
-	  qsm.e1();
-	  Thread.sleep(10);
-	  //e1 is dequeued and ignored (not processed: case of unspecified reception)
-	  Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
-	  // check if there is a message saved in the queue
-	  noMessageIsSaved(qsm);
-	  
-	  //check that there is no events left in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
-	  
+	//check that there is no events left in the queue
+	Assert.assertEquals(0, qsm.pool.messages.size());	  
   }
   
   
