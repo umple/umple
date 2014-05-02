@@ -92,7 +92,7 @@ public class MetricsCollectorTest
     collector.analyze("p1","myapp.umple");
     collector.save("myapp.results");
     String results = SampleFileWriter.readContent(new File("myapp.results"));
-    String expected = "Project Id\t#1 -- *\np1\t1" + System.getProperty("line.separator");;
+    String expected = "Project Id\t#1 -- *\np1\t1" + "\n";
     Assert.assertEquals(expected,results);
   } 
   
