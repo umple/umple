@@ -69,91 +69,92 @@ class State
  * @params uClass: the umple class to look within for the trace item
  * @return StateMachine_Traceitem for this UmpleVariable(either association or attribute); 
  */
-   TraceItem getTraced(String method, UmpleClass uClass){
+  public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all the trace directives of uClass
     for(TraceDirective td: uClass.getTraceDirectives())
     {
       //for all the statemachine trace items
       for(StateMachineTraceItem smti: td.getStateMachineTraceItems())
       {
-      	StateMachine sm = smti.getStateMachine();
-      	Transition  tsn = smti.getTransition();
-      	State st = smti.getState();
-      	if( method.equals("activity") && st.equals(this) && st.hasActivity() )
-      		return smti;
-      	if(!(smti.getExit()||smti.getEntry())){
-        if(tsn!=null&&method.equals("transition"))
-        {
-          if(smti.getIsOut()&&smti.getIsIn()){
-            if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
-              return smti;
-            }
-          }
-          else if(smti.getIsOut()){
-            if(tsn.getNextState().equals(this)){
-              return smti;
-            }
-          }
-          else if(smti.getIsIn()){
-            if(tsn.getFromState().equals(this)){
-              return smti;
-            }
-          }
-          else {
-            if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
-              return smti;
-            }
-          }
-        }
-        else if(sm==null)
-        {
-          //if the trace item is not for a transition, and does not contain a state machine, return null
-          return null;
-        }
-        else if(sm!=null&&smti.getTraceStateMachineFlag())
-        { 
+        StateMachine sm = smti.getStateMachine();
+        Transition  tsn = smti.getTransition();
+        State st = smti.getState();
+        if( smti.getTraceStateMachineFlag() ) continue;
+        if( method.equals("activity") && st.equals(this) && st.hasActivity() )
           return smti;
-        }
-        else if(method.equals("transition"))
-        {
-          if(smti.getIsOut()){
-            if(this.equals(st))
-            {
-              return smti;
-            }
-            if(smti.getLevel()>0||smti.getLevel()==-1)
-            {
-              StateMachine root = this.getStateMachine();
-              State parent = this;
-              int level = -1;
-              //System.out.println("start");
-              while (parent != null)
-              {
-                level+=parent.getName().equals("Null")?0:1;
-                if(st.getName().equals(parent.getName())&&(level<=smti.getLevel()||smti.getLevel()==-1))
-                {
-                  //System.out.println(this.getName()+" "+level);
-                  return smti;
-                }
-                //System.out.println(parent.getName());
-                root = parent.getStateMachine();
-                parent = root.getParentState();
+        if(!(smti.getExit()||smti.getEntry())){
+          if(tsn!=null&&method.equals("transition"))
+          {
+            if(smti.getIsOut()&&smti.getIsIn()){
+              if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
+                return smti;
               }
-              //System.out.println("end");
+            }
+            else if(smti.getIsOut()){
+              if(tsn.getNextState().equals(this)){
+                return smti;
+              }
+            }
+            else if(smti.getIsIn()){
+              if(tsn.getFromState().equals(this)){
+                return smti;
+              }
+            }
+            else {
+              if(tsn.getFromState().equals(this)||tsn.getNextState().equals(this)){
+                return smti;
+              }
             }
           }
-          
-          if(smti.getIsIn())
-		  {            
-            for(Transition t:getTransitions())
-            {
-              if(t.getNextState().equals(st))
+          else if(sm==null)
+          {
+            //if the trace item is not for a transition, and does not contain a state machine, return null
+            return null;
+          }
+          else if(sm!=null&&smti.getTraceStateMachineFlag())
+          { 
+            return smti;
+          }
+          else if(method.equals("transition"))
+          {
+            if(smti.getIsOut()){
+              if(this.equals(st))
               {
                 return smti;
-              }              
+              }
+              if(smti.getLevel()>0||smti.getLevel()==-1)
+              {
+                StateMachine root = this.getStateMachine();
+                State parent = this;
+                int level = -1;
+                //System.out.println("start");
+                while (parent != null)
+                {
+                  level+=parent.getName().equals("Null")?0:1;
+                  if(st.getName().equals(parent.getName())&&(level<=smti.getLevel()||smti.getLevel()==-1))
+                  {
+                    //System.out.println(this.getName()+" "+level);
+                    return smti;
+                  }
+                  //System.out.println(parent.getName());
+                  root = parent.getStateMachine();
+                  parent = root.getParentState();
+                }
+                //System.out.println("end");
+              }
+            }
+
+            if(smti.getIsIn())
+            {            
+              for(Transition t:getTransitions())
+              {
+                if(t.getNextState().equals(st))
+                {
+                  return smti;
+                }              
+              }
             }
           }
-        }
         }
         if((method.equals("exit")&&smti.getExit())||(method.equals("entry")&&smti.getEntry()))
         {
@@ -162,10 +163,10 @@ class State
             return smti;
           }
         }
-        
+
       }
     }
-    
+
     return null;
   }
     
