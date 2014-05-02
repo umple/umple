@@ -48,12 +48,26 @@
                     {
                       append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
                     }
-                    append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    if(sm.isQueued())
+                    {
+                      append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
+                    if(sm.isPooled())
+                    {
+                      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
                     append(stringBuffer,"_M, v));");
                   }
                   else
                   {
-                    append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    if(sm.isQueued())
+                    {
+                      append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
+                    if(sm.isPooled())
+                    {
+                      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
                     append(stringBuffer,"_M, null));");
                   }
                   append(stringBuffer,"\n  }");
@@ -106,12 +120,26 @@
                          {
                            append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
                          }
-                         append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         if(sm.isQueued())
+                         {
+                           append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
+                         if(sm.isPooled())
+                         {
+                           append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         } 
                          append(stringBuffer,"_M, v));"); 
                        }
                        else
                        {
-                         append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         if(sm.isQueued())
+                         {
+                           append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
+                         if(sm.isPooled())
+                         {
+                           append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
                          append(stringBuffer,"_M, null));");
                        }
                        append(stringBuffer,"\n  }");

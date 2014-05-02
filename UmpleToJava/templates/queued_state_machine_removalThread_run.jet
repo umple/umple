@@ -6,7 +6,17 @@
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+
+      <%
+      if(smq.isPooled())
+      {
+        append(stringBuffer,"      Message m = pool.getNext();");
+      }
+      if(smq.isQueued())
+      {
+        append(stringBuffer,"      Message m = queue.getNext();");
+      }
+      %>
       
       switch (m.type)
       {

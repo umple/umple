@@ -23,7 +23,7 @@ public class QueuedWithNestedStateMachines implements Runnable
   //enumeration type of messages accepted by QueuedWithNestedStateMachines
   enum MessageType { e1_M, e2_M, e3_M }
   
-  MessagePool pool;
+  MessageQueue queue;
   Thread removal;
 
   //------------------------
@@ -34,7 +34,7 @@ public class QueuedWithNestedStateMachines implements Runnable
   {
     setSmS2(SmS2.Null);
     setSm(Sm.s1);
-    pool = new MessagePool();
+    queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of QueuedWithNestedStateMachines
     removal.start();
@@ -207,7 +207,7 @@ public class QueuedWithNestedStateMachines implements Runnable
     }
   }
   
-  protected class MessagePool {
+  protected class MessageQueue {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -237,17 +237,17 @@ public class QueuedWithNestedStateMachines implements Runnable
 
   public void e1 ()
   {
-    pool.put(new Message(MessageType.e1_M, null));
+    queue.put(new Message(MessageType.e1_M, null));
   }
 
   public void e2 ()
   {
-    pool.put(new Message(MessageType.e2_M, null));
+    queue.put(new Message(MessageType.e2_M, null));
   }
 
   public void e3 ()
   {
-    pool.put(new Message(MessageType.e3_M, null));
+    queue.put(new Message(MessageType.e3_M, null));
   }
 
   
@@ -257,7 +257,7 @@ public class QueuedWithNestedStateMachines implements Runnable
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+      Message m = queue.getNext();
       
       switch (m.type)
       {

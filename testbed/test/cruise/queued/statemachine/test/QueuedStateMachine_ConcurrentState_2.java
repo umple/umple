@@ -35,7 +35,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.s2a, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.s2b, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e2 is called
 	  psm.e2();//event e2 is added to the queue
@@ -45,7 +45,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.Null, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the queue
@@ -55,7 +55,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.s2a, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.s2b, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e3 is called
       psm.e3();//event e3 is added to the queue
@@ -65,7 +65,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.s2a, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.s2b, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e4 is called
 	  psm.e4();//event e4 is added to the queue
@@ -75,7 +75,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.Null, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e5 is called
 	  psm.e5();//event e5 is added to the queue
@@ -85,7 +85,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.Null, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the queue
@@ -95,7 +95,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.s2a, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.s2b, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e2 is called
 	  psm.e2();//event e2 is added to the queue
@@ -105,7 +105,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.Null, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());	  
+	  Assert.assertEquals(0, psm.queue.messages.size());	  
 	  
 	  //event e3 is called
 	  psm.e3();//event e3 is added to the queue
@@ -115,7 +115,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.Null, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());	  
+	  Assert.assertEquals(0, psm.queue.messages.size());	  
 	  
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the queue
@@ -125,7 +125,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.s2a, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.s2b, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the queue
@@ -135,7 +135,7 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.s2a, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.s2b, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event e4 is called
 	  psm.e4();//event e4 is added to the queue
@@ -145,9 +145,9 @@ public class QueuedStateMachine_ConcurrentState_2
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(QueuedSM_ConcurrentState_2.SmS2b.Null, psm.getSmS2b());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //check that there is no event left in the queue
-	  Assert.assertEquals(0, psm.pool.messages.size());	  
+	  Assert.assertEquals(0, psm.queue.messages.size());	  
   }
 }

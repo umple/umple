@@ -27,7 +27,7 @@ public class CourseAttempt implements Runnable
   //enumeration type of messages accepted by CourseAttempt
   enum MessageType { lab1Done_M, fail_M }
   
-  MessagePool pool;
+  MessageQueue queue;
   Thread removal;
 
   //------------------------
@@ -40,7 +40,7 @@ public class CourseAttempt implements Runnable
     setCourseAttemptSMTermProject(CourseAttemptSMTermProject.Null);
     setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.Null);
     setCourseAttemptSM(CourseAttemptSM.studying);
-    pool = new MessagePool();
+    queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of CourseAttempt
     removal.start();
@@ -319,7 +319,7 @@ public class CourseAttempt implements Runnable
     }
   }
   
-  protected class MessagePool {
+  protected class MessageQueue {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -349,12 +349,12 @@ public class CourseAttempt implements Runnable
 
   public void lab1Done ()
   {
-    pool.put(new Message(MessageType.lab1Done_M, null));
+    queue.put(new Message(MessageType.lab1Done_M, null));
   }
 
   public void fail ()
   {
-    pool.put(new Message(MessageType.fail_M, null));
+    queue.put(new Message(MessageType.fail_M, null));
   }
 
   
@@ -364,7 +364,7 @@ public class CourseAttempt implements Runnable
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+      Message m = queue.getNext();
       
       switch (m.type)
       {

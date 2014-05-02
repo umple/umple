@@ -25,7 +25,7 @@ public class QueuedSMwithConcurrentStates implements Runnable
   //enumeration type of messages accepted by QueuedSMwithConcurrentStates
   enum MessageType { transit_M }
   
-  MessagePool pool;
+  MessageQueue queue;
   Thread removal;
 
   //QueuedSMwithConcurrentStates Do Activity Threads
@@ -41,7 +41,7 @@ public class QueuedSMwithConcurrentStates implements Runnable
     setSmSubState1(SmSubState1.Null);
     setSmSubState2(SmSubState2.Null);
     setSm(Sm.state1);
-    pool = new MessagePool();
+    queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of QueuedSMwithConcurrentStates
     removal.start();
@@ -287,7 +287,7 @@ public class QueuedSMwithConcurrentStates implements Runnable
     }
   }
   
-  protected class MessagePool {
+  protected class MessageQueue {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -317,7 +317,7 @@ public class QueuedSMwithConcurrentStates implements Runnable
 
   public void transit ()
   {
-    pool.put(new Message(MessageType.transit_M, null));
+    queue.put(new Message(MessageType.transit_M, null));
   }
 
   
@@ -327,7 +327,7 @@ public class QueuedSMwithConcurrentStates implements Runnable
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+      Message m = queue.getNext();
       
       switch (m.type)
       {

@@ -44,7 +44,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s3, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e2 is called
 	  psm.e2();//event e2 is added to the queue
@@ -55,7 +55,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s3, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e3 is called
 	  psm.e3();//event e3 is added to the queue
@@ -67,7 +67,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s4, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	 
 	  //event e4 is called
 	  psm.e4();//event e4 is added to the queue
@@ -79,7 +79,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s3, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event e5 is called
 	  psm.e5();//event e5 is added to the queue
@@ -96,7 +96,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s4, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event e6 is called
 	  psm.e6();//event e6 is added to the queue
@@ -109,7 +109,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s4, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	 
 	  //event e3 is called
 	  psm.e3();//event e3 is added to the queue
@@ -120,7 +120,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s4, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event e3 is called
 	  psm.e3();//event e3 is added to the queue
@@ -131,7 +131,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s4, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event e4 is called
 	  psm.e4();//event e4 is added to the queue
@@ -143,7 +143,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s3, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event e5 is called
 	  psm.e5();//event e5 is added to the queue
@@ -156,7 +156,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s3, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event e4 is called
 	  psm.e4();//event e4 is added to the queue
@@ -168,10 +168,10 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm1.s3, psm.getSm1());
 	  Assert.assertEquals(MultipleQueuedSMs_nestedStates_EventlessSM.Sm2.q, psm.getSm2());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  
 	  //check that there is no event left in the queue
-	  Assert.assertEquals(0, psm.pool.messages.size());	
+	  Assert.assertEquals(0, psm.queue.messages.size());	
   }
 }

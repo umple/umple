@@ -23,7 +23,7 @@ public class AutomatedTellerMachine implements Runnable
   //enumeration type of messages accepted by AutomatedTellerMachine
   enum MessageType { cardInserted_M, maintain_M, isMaintained_M, cancel_M, validated_M, select_M, selectAnotherTransiction_M, finish_M, receiptPrinted_M }
   
-  MessagePool pool;
+  MessageQueue queue;
   Thread removal;
 
   //------------------------
@@ -34,7 +34,7 @@ public class AutomatedTellerMachine implements Runnable
   {
     setSmActive(SmActive.Null);
     setSm(Sm.idle);
-    pool = new MessagePool();
+    queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of AutomatedTellerMachine
     removal.start();
@@ -328,7 +328,7 @@ public class AutomatedTellerMachine implements Runnable
     }
   }
   
-  protected class MessagePool {
+  protected class MessageQueue {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -358,47 +358,47 @@ public class AutomatedTellerMachine implements Runnable
 
   public void cardInserted ()
   {
-    pool.put(new Message(MessageType.cardInserted_M, null));
+    queue.put(new Message(MessageType.cardInserted_M, null));
   }
 
   public void maintain ()
   {
-    pool.put(new Message(MessageType.maintain_M, null));
+    queue.put(new Message(MessageType.maintain_M, null));
   }
 
   public void isMaintained ()
   {
-    pool.put(new Message(MessageType.isMaintained_M, null));
+    queue.put(new Message(MessageType.isMaintained_M, null));
   }
 
   public void cancel ()
   {
-    pool.put(new Message(MessageType.cancel_M, null));
+    queue.put(new Message(MessageType.cancel_M, null));
   }
 
   public void validated ()
   {
-    pool.put(new Message(MessageType.validated_M, null));
+    queue.put(new Message(MessageType.validated_M, null));
   }
 
   public void select ()
   {
-    pool.put(new Message(MessageType.select_M, null));
+    queue.put(new Message(MessageType.select_M, null));
   }
 
   public void selectAnotherTransiction ()
   {
-    pool.put(new Message(MessageType.selectAnotherTransiction_M, null));
+    queue.put(new Message(MessageType.selectAnotherTransiction_M, null));
   }
 
   public void finish ()
   {
-    pool.put(new Message(MessageType.finish_M, null));
+    queue.put(new Message(MessageType.finish_M, null));
   }
 
   public void receiptPrinted ()
   {
-    pool.put(new Message(MessageType.receiptPrinted_M, null));
+    queue.put(new Message(MessageType.receiptPrinted_M, null));
   }
 
   
@@ -408,7 +408,7 @@ public class AutomatedTellerMachine implements Runnable
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+      Message m = queue.getNext();
       
       switch (m.type)
       {

@@ -25,7 +25,7 @@ public class X implements Runnable
   //enumeration type of messages accepted by X
   enum MessageType { e1_M, e2_M, e5_M, e6_M, e3_M, e4_M }
   
-  MessagePool pool;
+  MessageQueue queue;
   Thread removal;
 
   //------------------------
@@ -37,7 +37,7 @@ public class X implements Runnable
     setSmS1(SmS1.Null);
     setSm(Sm.s1);
     setSm1(Sm1.s3);
-    pool = new MessagePool();
+    queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of X
     removal.start();
@@ -281,7 +281,7 @@ public class X implements Runnable
     }
   }
   
-  protected class MessagePool {
+  protected class MessageQueue {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -311,32 +311,32 @@ public class X implements Runnable
 
   public void e1 ()
   {
-    pool.put(new Message(MessageType.e1_M, null));
+    queue.put(new Message(MessageType.e1_M, null));
   }
 
   public void e2 ()
   {
-    pool.put(new Message(MessageType.e2_M, null));
+    queue.put(new Message(MessageType.e2_M, null));
   }
 
   public void e5 ()
   {
-    pool.put(new Message(MessageType.e5_M, null));
+    queue.put(new Message(MessageType.e5_M, null));
   }
 
   public void e6 ()
   {
-    pool.put(new Message(MessageType.e6_M, null));
+    queue.put(new Message(MessageType.e6_M, null));
   }
 
   public void e3 ()
   {
-    pool.put(new Message(MessageType.e3_M, null));
+    queue.put(new Message(MessageType.e3_M, null));
   }
 
   public void e4 ()
   {
-    pool.put(new Message(MessageType.e4_M, null));
+    queue.put(new Message(MessageType.e4_M, null));
   }
 
   
@@ -346,7 +346,7 @@ public class X implements Runnable
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+      Message m = queue.getNext();
       
       switch (m.type)
       {

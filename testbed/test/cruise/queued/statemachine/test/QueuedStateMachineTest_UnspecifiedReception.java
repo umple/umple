@@ -36,7 +36,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  Assert.assertEquals("Card is read", qsm.getLog(0));
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	  
 	  
 	  //validated is triggered: validated is queued
@@ -45,7 +45,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //validated is dequeued and processed: transition to selecting
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.selecting, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	    
 	  //select is triggered: select is queued
 	  qsm.select();
@@ -53,7 +53,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //select is dequeued and processed: transition to processing
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.processing, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //finish is triggered: finish is queued
 	  qsm.finish();
@@ -61,7 +61,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //finish is dequeued and processed: transition to printing
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.printing, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //receiptPrinted is triggered: receiptPrinted is queued
 	  qsm.receiptPrinted();
@@ -69,7 +69,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //receiptPrinted is dequeued and processed: transition to idle
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //selectAnotherTransiction is triggered: selectAnotherTransiction is queued
 	  qsm.selectAnotherTransiction();
@@ -79,7 +79,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //auto-transition to idle
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //maintain is triggered: maintain is queued
 	  qsm.maintain();
@@ -87,7 +87,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //maintain is dequeued and processed: transition to maintenance
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.maintenance, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //isMaintained is triggered: isMaintained is queued
 	  qsm.isMaintained();
@@ -95,7 +95,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //isMaintained is dequeued and processed: transition to idle
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //cancel is triggered: cancel is queued
 	  qsm.cancel();
@@ -105,7 +105,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //auto-transition to idle
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //cardInserted is triggered: cardInserted is queued
 	  qsm.cardInserted();
@@ -113,7 +113,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //cardInserted is dequeued and processed: transition to active
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //select is triggered: select is queued
 	  qsm.select();
@@ -123,7 +123,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //auto-transition to validating
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.validating, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //validated is triggered: validated is queued
 	  qsm.validated();
@@ -131,7 +131,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //validated is dequeued and processed: transition to selecting
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.selecting, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	    
 	  //select is triggered: select is queued
 	  qsm.select();
@@ -139,7 +139,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //select is dequeued and processed: transition to processing
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.processing, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //selectAnotherTransiction is triggered: selectAnotherTransiction is queued
 	  qsm.selectAnotherTransiction();
@@ -147,7 +147,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //selectAnotherTransiction is dequeued and processed: transition to processing
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.selecting, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //select is triggered: select is queued
 	  qsm.select();
@@ -155,7 +155,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //select is dequeued and processed: transition to processing
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.processing, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //finish is triggered: finish is queued
 	  qsm.finish();
@@ -163,7 +163,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //finish is dequeued and processed: transition to printing
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.printing, qsm.getSmActive());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //receiptPrinted is triggered: receiptPrinted is queued
 	  qsm.receiptPrinted();
@@ -171,7 +171,7 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //receiptPrinted is dequeued and processed: transition to idle
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //finish is triggered: finish is queued
 	  qsm.finish();
@@ -181,10 +181,10 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //auto-transition to idle
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	  
 	  //check that there is no events left in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	  
   }
 }

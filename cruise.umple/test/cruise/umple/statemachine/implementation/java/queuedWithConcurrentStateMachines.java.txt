@@ -25,7 +25,7 @@ public class QueuedWithConcurrentStateMachines implements Runnable
   //enumeration type of messages accepted by QueuedWithConcurrentStateMachines
   enum MessageType { e1_M, e2_M }
   
-  MessagePool pool;
+  MessageQueue queue;
   Thread removal;
 
   //------------------------
@@ -37,7 +37,7 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     setSmS2a(SmS2a.Null);
     setSmS2b(SmS2b.Null);
     setSm(Sm.s1);
-    pool = new MessagePool();
+    queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of QueuedWithConcurrentStateMachines
     removal.start();
@@ -235,7 +235,7 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     }
   }
   
-  protected class MessagePool {
+  protected class MessageQueue {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -265,12 +265,12 @@ public class QueuedWithConcurrentStateMachines implements Runnable
 
   public void e1 ()
   {
-    pool.put(new Message(MessageType.e1_M, null));
+    queue.put(new Message(MessageType.e1_M, null));
   }
 
   public void e2 ()
   {
-    pool.put(new Message(MessageType.e2_M, null));
+    queue.put(new Message(MessageType.e2_M, null));
   }
 
   
@@ -280,7 +280,7 @@ public class QueuedWithConcurrentStateMachines implements Runnable
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+      Message m = queue.getNext();
       
       switch (m.type)
       {
