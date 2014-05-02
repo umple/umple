@@ -522,14 +522,29 @@ class UmpleInternalParser
   }
 
    private void analyzeAssociationTraceItem(Token traceToken){
+    
+    AssociationTraceItem tracedAssoc = new AssociationTraceItem(traceDirective);
+    
+    for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
+    {
+      if( traceToken.getValue("trace_entity").equals(aVar.getName()))
+        tracedAssoc.addAssociationVariable(aVar);
+    }
+    
     if( traceToken.getParentToken().getSubToken(1).getName().equals("cardinality") )  
     {
-      for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
-      {
-        if( traceToken.getValue("trace_entity").equals(aVar.getName()))
-          traceDirective.setAssociationVariable(aVar);
-      }
+      
     }
+    if( traceToken.getParentToken().getSubToken(1).getName().equals("add") )  
+    {
+      
+    }
+    if( traceToken.getParentToken().getSubToken(1).getName().equals("remove") )  
+    {
+      
+    }
+    traceDirective.addAssociationTraceItem(tracedAssoc);
+    
   }
 
 

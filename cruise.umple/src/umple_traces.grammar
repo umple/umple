@@ -21,7 +21,7 @@ traceDirective- : trace [[traceItem]] ( [[executeClause]]|[[traceWhen]]|[[traceF
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]
 traceEntity- : ( [[traceOptions]] )?  [trace_entity] (OPEN_ROUND_BRACKET)? (CLOSE_ROUND_BRACKET)? ( , [trace_entity] (OPEN_ROUND_BRACKET)? (CLOSE_ROUND_BRACKET)? )*
 traceOptions : [[traceOption]] ( , [[traceOption]] )*
-traceOption : [=option:set|get|in|out|entry|exit|cardinality|transition]
+traceOption : [=option:set|get|in|out|entry|exit|cardinality|transition|add|remove]
 PreOrPostCondition- : (giving | where)? [[traceCondition]]
 
 executeClause- : execute { [**trace_execute] }

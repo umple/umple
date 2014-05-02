@@ -196,7 +196,7 @@ public class TracerTest extends TracerTemplateTest
 	
 	//------ Trace State Machines 
 	
-	@Test @Ignore
+	@Test
 	public void TraceGarageDoor()
 	{
 		assertUmpleTemplateFor("TraceGarageDoor.ump",languagePath + tracerPath+"/TraceGarageDoor."+ languagePath +".txt","Tracer");

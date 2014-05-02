@@ -73,14 +73,14 @@ public class TraceDirectiveTest
 //    Assert.assertEquals(b,traceDirective.getAttribute(1));
 //  }
   
-  @Test @Ignore
-  public void assocationVariable()
-  {
-	Assert.assertEquals(null,traceDirective.getAssociationVariable());
-	AssociationVariable a = new AssociationVariable("aName","MyType","symmetricreflexive","",AssociationTest.createMultiplicity(0,1),true);
-	traceDirective.setAssociationVariable(a);
-    Assert.assertEquals(a, traceDirective.getAssociationVariable());
-  }
+//  @Test @Ignore
+//  public void assocationVariable()
+//  {
+//	Assert.assertEquals(null,traceDirective.getAssociationVariable());
+//	AssociationVariable a = new AssociationVariable("aName","MyType","symmetricreflexive","",AssociationTest.createMultiplicity(0,1),true);
+//	traceDirective.setAssociationVariable(a);
+//    Assert.assertEquals(a, traceDirective.getAssociationVariable());
+//  }
 
   @Test 
   public void umpleClass()
