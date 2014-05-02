@@ -1,6 +1,7 @@
 package cruise.pooled.statemachine.test;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class PooledStateMachine_level1_1
@@ -70,6 +71,7 @@ public class PooledStateMachine_level1_1
 	  Assert.assertEquals(8, PooledSM_NestedState_L1_1.stateMessageMap.size());
   }
   
+  @Ignore
   @Test 
   public void processEvents() throws InterruptedException
   {
