@@ -14,7 +14,7 @@ package cruise.umple.tracer.implementation;
 import org.junit.*;
 
 @Ignore
-public class TracerAttributesTest extends TracerTemplateTest
+public class TracerAttributesTest extends TracerStateMachinesTest
 {
 		
 	//------ Trace Attributes 

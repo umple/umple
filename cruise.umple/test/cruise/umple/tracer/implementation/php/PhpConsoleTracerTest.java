@@ -14,11 +14,11 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import cruise.umple.tracer.implementation.TracerTest;
+import cruise.umple.tracer.implementation.TracerAttributesTest;
 import cruise.umple.util.SampleFileWriter;
 
 @Ignore
-public class PhpConsoleTracerTest extends TracerTest
+public class PhpConsoleTracerTest extends TracerAttributesTest
 {
   @Before
   public void setUp()
