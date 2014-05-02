@@ -1,10 +1,13 @@
+
+//This is a mixin feature of Umple. The Content of following class will be added automatically to core parse.
 class UmpleInternalParser {
    Map<Attribute,Token> fixmlLastIntilialization = new HashMap<Attribute, Token>();
    Map<Attribute,Integer> fixmlAttributeCount = new HashMap<Attribute, Integer>();
    Map<Association,List<Token>> afixmlLastIntilialization = new HashMap<Association, List<Token>>();
    Map<Association,Integer> afixmlAttributeCount = new HashMap<Association, Integer>();
-   
-
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------   
    private void analyzeFIXML(Token t, int analysisStep){
     if (analysisStep != 2)
 	    {
@@ -15,18 +18,20 @@ class UmpleInternalParser {
 	    {
 	      analyzeFIXML(t);
 	    }
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeFIXML(Token t){
     for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("fixmlDefinition")) {
 				analyzeFIXMLDefinition(subToken);
 			}
 		}
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeFIXMLDefinition(Token t){
     for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("fixmlContent")) {
@@ -35,9 +40,10 @@ class UmpleInternalParser {
 				assignAssociationInitialValues(); // based-on-single-associations
 			}
 		}
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeFIXMLContetnt(Token t){
     for (Token subToken : t.getSubTokens()) {
 			if (subToken.getName().equals("endContent")) {
@@ -46,9 +52,10 @@ class UmpleInternalParser {
 				analyzeFIXMLextendedContentContetnt(subToken);
 			}
 		}
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private UmpleClass analyzeFIXMLEndContetnt(UmpleClass inClass, Token t){
     UmpleClass uClass;
 	  boolean available = getModel().getUmpleClass(t.getSubToken("name").getValue()) != null ? true : false;
@@ -63,10 +70,12 @@ class UmpleInternalParser {
 			}
 		}
 		if (! available)	getModel().addUmpleClass(uClass);
-//		addAttributes(inClass, uClass,t);
+		//addAttributes(inClass, uClass,t);
 		return uClass;
-  }
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private UmpleClass analyzeFIXMLextendedContentContetnt(Token t){
     String sName = t.getSubToken(1).getValue();
 	  String eName = t.getSubToken(t.numberOfSubTokens()-2).getValue();  
@@ -98,9 +107,10 @@ class UmpleInternalParser {
 		}
 		if (! available)	getModel().addUmpleClass(uClass);
 	  return uClass;
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void addAttributes(UmpleClass uClass, UmpleClass rUClass, Token mainToken){
     String type = rUClass.getName();
 	  Integer index = findValidName(uClass, type,0);
@@ -120,9 +130,10 @@ class UmpleInternalParser {
 	  } else{
 		  fixmlAttributeCount.put(aAttribute,0);  
 	  }
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
    private void assignInitialValues(){
     Map<String,String> db = new HashMap<String,String>();
 	for (Attribute	aa : fixmlLastIntilialization.keySet()) {
@@ -135,7 +146,7 @@ class UmpleInternalParser {
 		for (Token subToken : rootToken.getSubTokens()) {
 			if (subToken.is("tagDefinition")) {
 				   String attname = subToken.getSubToken(0).getValue();
-				   //   String attType = "String";
+				   //String attType = "String";
 				   String attValue = subToken.getSubToken(3).getValue();	
 				   db.put(attname, attValue);  	
 			}
@@ -144,9 +155,9 @@ class UmpleInternalParser {
 		if (db.containsKey(aAttribute.getName())){
 			String attValue = db.get(aAttribute.getName());
 			   if  ( isStringInteger(attValue) && aAttribute.getType().equals("Integer")) {
-				  // attType="Integer";
+				  //attType="Integer";
 			   } else if (isStringDuble(attValue) && aAttribute.getType().equals("Double")) {
-				   //attType = "Double";
+				  //attType = "Double";
 			   } else if (aAttribute.getType().equals("String")) {
 				   attValue = "\""+attValue+"\"";
 			   } else {
@@ -176,9 +187,10 @@ class UmpleInternalParser {
 	  aa.setValue(value);
 	}
 	}
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private boolean hasThisObject(Token mainToken, String name){
     for (Token subToken : mainToken.getSubTokens()) {
 		if (subToken.is("endContent")) {
@@ -192,16 +204,17 @@ class UmpleInternalParser {
 		}
 	}
 	return false;
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private String getConstructorInConstructor(Attribute inAttribute){
     Map<String,String> db = new HashMap<String,String>();
 		String value = "new "+inAttribute.getType()+"("; //t.getSubToken(3).getValue();	
 		for (Token subToken : fixmlLastIntilialization.get(inAttribute).getSubTokens()) {
 			if (subToken.getName().equals("tagDefinition")) {
 				   String attname = subToken.getSubToken(0).getValue();
-//				   String attType = "String";
+				   //String attType = "String";
 				   String attValue = subToken.getSubToken(3).getValue();
 				   db.put(attname, attValue);  	
 				 }
@@ -236,9 +249,10 @@ class UmpleInternalParser {
 	}		  
 	  value = value.subSequence(0, value.length()-2) + ")";	
 	  return value;
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private Integer findValidName(UmpleClass uClass, String type, Integer index){
     String name= type + "_Object";
 	if ( index == 0 ) {
@@ -253,9 +267,10 @@ class UmpleInternalParser {
 		}
 	}
 	return index;
-  }
-
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeFIXMLAttributes(Token t, UmpleClass uClass){
     String name = t.getSubToken(0).getValue();
     boolean available = uClass.getAttribute(name) != null ? true : false;
@@ -271,8 +286,10 @@ class UmpleInternalParser {
 	    }		
 		uClass.addAttribute(name, type, "fixml", value, false);    	
     }
-  }
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void analyzeFixmlTagAttributes(Token t, UmpleClass uClass) {
 	    String name = t.getSubToken(1).getValue();
 	    boolean available = uClass.getAttribute(name) != null ? true : false;
@@ -288,8 +305,10 @@ class UmpleInternalParser {
 		    }		
 			uClass.addAttribute(name, type, "fixml", value, false);    	
 	    }
-  }
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void addAssociation(UmpleClass uClass, UmpleClass rUClass, Token mainToken){
     Multiplicity m = new Multiplicity();
 		Association aAss = getModel().getAssociation(rUClass.getName()+"_Object");
@@ -329,8 +348,10 @@ class UmpleInternalParser {
 		    listOfToken.add(mainToken);
 		    afixmlLastIntilialization.put(aAssociation, listOfToken);
 		}
-  }
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void assignAssociationInitialValues(){
     String value = "";
 	for (Association	aa : getModel().getAssociations()) {
@@ -403,15 +424,17 @@ class UmpleInternalParser {
 		}
 
 	}
-  }
-
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private String getAssociationConstructorInConstructor(String inName, Token inToken){	  
     Map<String,String> db = new HashMap<String,String>();
 		String value = "new "+inName+"("; //t.getSubToken(3).getValue();	
 		for (Token subToken : inToken.getSubTokens()) {
 			if (subToken.getName().equals("tagDefinition")) {
 				   String attname = subToken.getSubToken(0).getValue();
-//				   String attType = "String";
+				   //String attType = "String";
 				   String attValue = subToken.getSubToken(3).getValue();
 				   db.put(attname, attValue);  	
 				 }
@@ -454,28 +477,27 @@ class UmpleInternalParser {
 	}
 	  value = value.subSequence(0, value.length()-2) + ")";	
 	  return value;
-  }
-
-   public boolean isStringInteger(String s){
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private boolean isStringInteger(String s){
     try { 
 	    	Integer.parseInt(s); 
 	    } catch(NumberFormatException e) { 
 	        return false; 
 	    }
 	    return true;
-  }
-
-
-   public boolean isStringDuble(String s){
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private boolean isStringDuble(String s){
     try { 
 	    	Double.parseDouble(s);
 	    } catch(NumberFormatException e) { 
 	        return false; 
 	    }
 	    return true;
-  }
-
-
-
-
+   }
 }
