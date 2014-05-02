@@ -1,5 +1,9 @@
 package cruise.queued.statemachine.test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -26,13 +30,19 @@ public class QueuedStateMachineTest_UnspecifiedReception
   public void processEvents() throws InterruptedException
   {
 	  AutomatedTellerMachine qsm = new AutomatedTellerMachine();
+      int numChecks;
 	  //initial state is idle
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
-	  
+
 	  //cardInserted is triggered: cardInserted is queued
 	  qsm.cardInserted();
-	  Thread.sleep(10);
 	  //cardInserted is dequeued and processed: transition to active
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSm().equals(AutomatedTellerMachine.Sm.active) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  Assert.assertEquals("Card is read", qsm.getLog(0));
 	  // check if there is a message saved in the queue
@@ -41,76 +51,137 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  
 	  //validated is triggered: validated is queued
 	  qsm.validated();
-	  Thread.sleep(10);
 	  //validated is dequeued and processed: transition to selecting
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.selecting) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.selecting, qsm.getSmActive());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 	    
 	  //select is triggered: select is queued
 	  qsm.select();
-	  Thread.sleep(10);
 	  //select is dequeued and processed: transition to processing
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.processing) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.processing, qsm.getSmActive());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //finish is triggered: finish is queued
 	  qsm.finish();
-	  Thread.sleep(10);
 	  //finish is dequeued and processed: transition to printing
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.printing) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.printing, qsm.getSmActive());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //receiptPrinted is triggered: receiptPrinted is queued
 	  qsm.receiptPrinted();
-	  Thread.sleep(10);
 	  //receiptPrinted is dequeued and processed: transition to idle
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSm().equals(AutomatedTellerMachine.Sm.idle) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //selectAnotherTransiction is triggered: selectAnotherTransiction is queued
 	  qsm.selectAnotherTransiction();
-	  Thread.sleep(10);
 	  //selectAnotherTransiction is dequeued: it is unspecified, unspecified method is called to handle this error
 	  //transition to error1
 	  //auto-transition to idle
+	  numChecks=200; // we will check for a second
+	  while(numChecks>0 && qsm.getSm().equals(AutomatedTellerMachine.Sm.idle)) {
+		if(!qsm.queue.messages.isEmpty()){
+		  Thread.sleep(5);
+		  numChecks--;
+		}
+	    else
+	    {
+		  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
+		  Assert.assertEquals(true, qsm.queue.messages.isEmpty());
+		  break;
+		}
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //maintain is triggered: maintain is queued
 	  qsm.maintain();
-	  Thread.sleep(10);
 	  //maintain is dequeued and processed: transition to maintenance
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSm().equals(AutomatedTellerMachine.Sm.maintenance) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.maintenance, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //isMaintained is triggered: isMaintained is queued
 	  qsm.isMaintained();
-	  Thread.sleep(10);
 	  //isMaintained is dequeued and processed: transition to idle
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSm().equals(AutomatedTellerMachine.Sm.idle) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //cancel is triggered: cancel is queued
 	  qsm.cancel();
-	  Thread.sleep(10);
 	  //cancel is dequeued: it is unspecified, unspecified method is called to handle this error
 	  //transition to error1
 	  //auto-transition to idle
+	  numChecks=200; // we will check for a second
+	  while(numChecks>0 && qsm.getSm().equals(AutomatedTellerMachine.Sm.idle)) {
+		if(!qsm.queue.messages.isEmpty()){
+		  Thread.sleep(5);
+		  numChecks--;
+		}
+	    else
+	    {
+		  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
+		  Assert.assertEquals(true, qsm.queue.messages.isEmpty());
+		  break;
+		}
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //cardInserted is triggered: cardInserted is queued
 	  qsm.cardInserted();
-	  Thread.sleep(10);
 	  //cardInserted is dequeued and processed: transition to active
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSm().equals(AutomatedTellerMachine.Sm.active) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
@@ -121,64 +192,119 @@ public class QueuedStateMachineTest_UnspecifiedReception
 	  //select is dequeued: it is unspecified, unspecified method is called to handle this error
 	  //transition to error2
 	  //auto-transition to validating
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.validating) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
+	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.validating, qsm.getSmActive());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //validated is triggered: validated is queued
 	  qsm.validated();
-	  Thread.sleep(10);
 	  //validated is dequeued and processed: transition to selecting
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.selecting) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
+	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.selecting, qsm.getSmActive());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 	    
 	  //select is triggered: select is queued
 	  qsm.select();
-	  Thread.sleep(10);
 	  //select is dequeued and processed: transition to processing
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.processing) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.processing, qsm.getSmActive());
+	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //selectAnotherTransiction is triggered: selectAnotherTransiction is queued
 	  qsm.selectAnotherTransiction();
-	  Thread.sleep(10);
 	  //selectAnotherTransiction is dequeued and processed: transition to processing
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.selecting) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.selecting, qsm.getSmActive());
+	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //select is triggered: select is queued
 	  qsm.select();
-	  Thread.sleep(10);
 	  //select is dequeued and processed: transition to processing
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.processing) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.processing, qsm.getSmActive());
+	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //finish is triggered: finish is queued
 	  qsm.finish();
-	  Thread.sleep(10);
 	  //finish is dequeued and processed: transition to printing
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSmActive().equals(AutomatedTellerMachine.SmActive.printing) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.SmActive.printing, qsm.getSmActive());
+	  Assert.assertEquals(AutomatedTellerMachine.Sm.active, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //receiptPrinted is triggered: receiptPrinted is queued
 	  qsm.receiptPrinted();
-	  Thread.sleep(10);
 	  //receiptPrinted is dequeued and processed: transition to idle
+	  numChecks=200; // we will check for a second
+	  while(!qsm.getSm().equals(AutomatedTellerMachine.Sm.idle) && numChecks>0) {
+	    Thread.sleep(5);
+	    numChecks--;
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
 
 	  //finish is triggered: finish is queued
 	  qsm.finish();
-	  Thread.sleep(10);
 	  //finish is dequeued: it is unspecified, unspecified method is called to handle this error
 	  //transition to error1
 	  //auto-transition to idle
+	  numChecks=200; // we will check for a second
+	  while(numChecks>0 && qsm.getSm().equals(AutomatedTellerMachine.Sm.idle)) {
+		if(!qsm.queue.messages.isEmpty()){
+		  Thread.sleep(5);
+		  numChecks--;
+		}
+	    else
+	    {
+		  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
+		  Assert.assertEquals(true, qsm.queue.messages.isEmpty());
+		  break;
+		}
+	  }
+	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(AutomatedTellerMachine.Sm.idle, qsm.getSm());
 	  // check if there is a message saved in the queue
 	  Assert.assertEquals(0, qsm.queue.messages.size());
