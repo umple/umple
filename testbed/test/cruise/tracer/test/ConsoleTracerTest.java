@@ -291,8 +291,19 @@ public class ConsoleTracerTest
 	  cA.flip();
 	  cA.flup();
 	  
-	  TimedEventA tA = new TimedEventA();
+//	  TimedEventA tA = new TimedEventA();
 
+//	  HisTest ht = new HisTest();
+//
+//	   // Initial state s1a
+//	   ht.e1();  // s1b
+//	   ht.e2();  // s2a;
+//	   ht.e2();  // s1b based on history
+//	   ht.e2();  // s2a based on history
+//	   ht.e1();  // s2b;
+//	   ht.e2();  // s1b based on history
+//	   ht.e1();  // s1a;
+	  
 //	  QueuedStmTraceA qA = new QueuedStmTraceA();
 //	  qA.register();
 //	  qA.reject();

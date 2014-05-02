@@ -77,7 +77,7 @@ class TraceDirective
     1 -- 0..* AttributeTraceItem;
    1 -- 0..* StateMachineTraceItem;
    0..* -- 0..* MethodTraceItem;
-   0..1 -- 0..1 AssociationVariable;
+   1 -- 0..* AssociationTraceItem;
    1 -> 0..* TraceCondition condition;
    1 -- 0..1 TraceRecord;
 }
@@ -145,7 +145,26 @@ class StateMachineTraceItem
   Boolean conditionallyWhere = true;
   conditionType = "where";
 }
-
+/*
+ * An element of a trace directive that indicates to trace one or more associations
+ */
+class AssociationTraceItem
+{
+  isA TraceItem;
+  Constraint constraint=null;
+  tracerType = {getTraceDirective().getTracerType()}
+  
+  0..* -- 0..* AssociationVariable;
+  
+  boolean traceCardinality = false;
+  boolean traceAdd = false;
+  boolean traceRemove = false;
+  
+  Position position = null;
+  periodClause = null;
+  Boolean conditionallyWhere = true; 
+  conditionType = "where";
+}
 /*
  * To be done. A group of trace directives that can be switched on or off by other
  * trace directives

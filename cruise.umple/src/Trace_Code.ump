@@ -171,41 +171,46 @@ class State
     
    public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
     State nextState = t.getNextState();
-	  
+      
       for( TraceDirective td : uClass.getTraceDirectives() )
         for( StateMachineTraceItem smti : td.getStateMachineTraceItems() )
-      	if( ! smti.getTraceStateMachineFlag() )
-      	{
-      		State traceState = smti.getState();
+        if( ! smti.getTraceStateMachineFlag() )
+        {
+            State traceState = smti.getState();
 
-      		if(method.equals("entry"))
-      		{
-      			if( traceState.getName().equals(nextState.getName()) && smti.getEntry() )
-      				return smti;
-      		}
-      		if(method.equals("exit"))
-      		{
-      			if( traceState.getName().equals(this.getName()) && smti.getExit() )
-      				return smti;
-      		}
-      		if(method.equals("state") && smti.getTransition() == null )
-      		{
-      			if( (traceState.getName().equals(this.getName()) ||  traceState.getName().equals(nextState.getName()) )
-            			 && (smti.getEntry()==false && smti.getExit()==false) )
-         			    return smti;
-      			if(isNested(smti, t))
-      			{
-      				return smti;
-      			}
-      		}
-      		if(method.equals("transition") && smti.getTransition() != null)
-      		{
-      			if( smti.getTransition().getEvent().equals(t.getEvent()) )
-      				return smti;
-      		}
-      	}
-	  
-	  return null;
+            if(method.equals("entry"))
+            {
+                if( traceState.getName().equals(nextState.getName()) && smti.getEntry() )
+                    return smti;
+            }
+            if(method.equals("exit"))
+            {
+                if( traceState.getName().equals(this.getName()) && smti.getExit() )
+                    return smti;
+            }
+            if(method.equals("state") && smti.getTransition() == null )
+            {
+                if( (traceState.getName().equals(this.getName()) ||  traceState.getName().equals(nextState.getName()) )
+                         && (smti.getEntry()==false && smti.getExit()==false) )
+                        return smti;
+                if(isNested(smti, t))
+                {
+                    return smti;
+                }
+            }
+            if(method.equals("transition") && smti.getTransition() != null)
+            {
+                if( smti.getTransition().getEvent().equals(t.getEvent()) )
+                    return smti;
+            }
+        }
+        else if( smti.getTraceStateMachineFlag() )
+        {
+          if( method.equals("transition") )
+              return smti;
+        }
+      
+      return null;
   }
 
 
@@ -455,5 +460,39 @@ class StateMachineTraceItem
   public String getExtremities(CodeTranslator gen, String name)
   {
     return gen.translate("Closed",constraint);
+  }
+}
+
+class AssociationTraceItem
+{
+  depend cruise.umple.util.*;
+  depend java.util.*;
+   
+  public Boolean getIsPre(){
+    return conditionallyWhere;
+  }
+  public Boolean getIsPost(){
+    return !conditionallyWhere;
+  }
+  /*
+   * @params gen: A code transator
+   * @params o: the current context(i.e.attribute being traced)
+   * @params methodname: what to call this trace
+   * @params uClass: the current umple class uClass
+   * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
+   * @return the message for the trace 
+   */
+  public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass,String... args)
+  {
+
+    return "";
+  }
+  /* Gets and returns the if statement enclosing this trace item.
+   * needs the name of the attribute
+   * @return the if statement for the trace if one exists
+   */
+  public String getExtremities(CodeTranslator gen, String name)
+  {
+    return gen.translate(name+":Closed",constraint);
   }
 }
