@@ -35,7 +35,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //g is dequeued and processed: transition to s1a
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1S1.s1a, qsm.getSm1S1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //e is triggered: e is queued
 	  qsm.e();
@@ -43,7 +43,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //e is dequeued and processed: transition to s2
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s2, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //f is triggered: f is queued
 	  qsm.f();
@@ -51,7 +51,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //f is dequeued and ignored (not processed: case of unspecified reception)
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s2, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //j is triggered:j  is queued
 	  qsm.j();
@@ -59,7 +59,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //j is dequeued and processed: transition to s1b
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1S1.s1b, qsm.getSm1S1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  // i is triggered: i is queued
 	  qsm.i();
@@ -67,7 +67,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //i is dequeued and processed: transition to s2b
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1S2.s2b, qsm.getSm1S2());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  // k is triggered: k is queued
 	  qsm.k();
@@ -75,7 +75,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //k is dequeued and processed: transition to s1
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s1, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //e is triggered: e is queued
 	  qsm.e();
@@ -83,7 +83,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //e is dequeued and processed: transition to s2
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s2, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //e is triggered: e is queued
 	  qsm.e();
@@ -91,7 +91,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //e is dequeued and processed: transition to s1
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s1, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //h is triggered: h is queued
 	  qsm.h();
@@ -99,7 +99,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  // is dequeued and ignored (not processed: case of unspecified reception)
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s1, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //m is triggered:m  is queued
 	  qsm.m();
@@ -107,7 +107,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  // is dequeued and ignored (not processed: case of unspecified reception)
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s1, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //i is triggered: i is queued
 	  qsm.i();
@@ -115,7 +115,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  // is dequeued and ignored (not processed: case of unspecified reception)
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s1, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //h is triggered: h is queued
 	  qsm.h();
@@ -123,7 +123,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  // is dequeued and ignored (not processed: case of unspecified reception)
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s1, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //k is triggered: k is queued
 	  qsm.k();
@@ -131,7 +131,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  // is dequeued and ignored (not processed: case of unspecified reception)
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1.s1, qsm.getSm1());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //f is triggered: f is queued
 	  qsm.f();
@@ -139,7 +139,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //f is dequeued and processed: transition to s2b
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1S2.s2b, qsm.getSm1S2());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //g is triggered: g is queued
 	  qsm.g();
@@ -147,7 +147,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  // is dequeued and ignored (not processed: case of unspecified reception)
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1S2.s2b, qsm.getSm1S2());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //m is triggered: m is queued
 	  qsm.m();
@@ -155,7 +155,7 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //m is dequeued and processed: transition to s2b2
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1S2S2b.s2b2, qsm.getSm1S2S2b());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  //m is triggered: m is queued
 	  qsm.m();
@@ -163,11 +163,11 @@ public class QueuedStateMachineTest_NestedStates_level2
 	  //m is dequeued and processed: transition to s2b1
 	  Assert.assertEquals(QueuedSM_NestedStates_level2.Sm1S2S2b.s2b1, qsm.getSm1S2S2b());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 
 	  
 	  //check that there is no events left in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	  
   }
 }

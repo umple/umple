@@ -28,7 +28,7 @@ public class QueuedStateMachineTest_timedEvent
     Assert.assertEquals(QueuedSM_timedEvent.Status.s2, qsm.getStatus()); 
       
     //check that there is no event left in the queue
-    Assert.assertEquals(0, qsm.pool.messages.size());
+    Assert.assertEquals(0, qsm.queue.messages.size());
       
   }
   

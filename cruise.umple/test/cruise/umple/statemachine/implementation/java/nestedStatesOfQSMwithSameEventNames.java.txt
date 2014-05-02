@@ -25,7 +25,7 @@ public class NestedStatesWthSameEventNames implements Runnable
   //enumeration type of messages accepted by NestedStatesWthSameEventNames
   enum MessageType { moveTo_M, transit_M }
   
-  MessagePool pool;
+  MessageQueue queue;
   Thread removal;
 
   //------------------------
@@ -37,7 +37,7 @@ public class NestedStatesWthSameEventNames implements Runnable
     setSmNestedState1(SmNestedState1.Null);
     setSmNestedState2(SmNestedState2.Null);
     setSm(Sm.nestedState1);
-    pool = new MessagePool();
+    queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of NestedStatesWthSameEventNames
     removal.start();
@@ -274,7 +274,7 @@ public class NestedStatesWthSameEventNames implements Runnable
     }
   }
   
-  protected class MessagePool {
+  protected class MessageQueue {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -304,12 +304,12 @@ public class NestedStatesWthSameEventNames implements Runnable
 
   public void moveTo ()
   {
-    pool.put(new Message(MessageType.moveTo_M, null));
+    queue.put(new Message(MessageType.moveTo_M, null));
   }
 
   public void transit ()
   {
-    pool.put(new Message(MessageType.transit_M, null));
+    queue.put(new Message(MessageType.transit_M, null));
   }
 
   
@@ -319,7 +319,7 @@ public class NestedStatesWthSameEventNames implements Runnable
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+      Message m = queue.getNext();
       
       switch (m.type)
       {

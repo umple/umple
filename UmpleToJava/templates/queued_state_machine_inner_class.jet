@@ -20,17 +20,18 @@
   appendln(stringBuffer,"    }");
   appendln(stringBuffer,"  }");
   appendln(stringBuffer,"  ");  
-  appendln(stringBuffer,"  protected class MessagePool {");
-  appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
-  appendln(stringBuffer,"    ");   
-  appendln(stringBuffer,"    public synchronized void put(Message m)");
-  appendln(stringBuffer,"    {");
-  appendln(stringBuffer,"      messages.add(m); "); 
-  appendln(stringBuffer,"      notify();");
-  appendln(stringBuffer,"    }");
-  appendln(stringBuffer,"");   
+ 
   if (smq.isQueued())
   {
+    appendln(stringBuffer,"  protected class MessageQueue {");
+    appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+    appendln(stringBuffer,"    ");   
+    appendln(stringBuffer,"    public synchronized void put(Message m)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      messages.add(m); "); 
+    appendln(stringBuffer,"      notify();");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");  
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      try {");
@@ -48,6 +49,15 @@
   }
   else if(smq.isPooled())
   {
+    appendln(stringBuffer,"  protected class MessagePool {");
+    appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+    appendln(stringBuffer,"    ");   
+    appendln(stringBuffer,"    public synchronized void put(Message m)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      messages.add(m); "); 
+    appendln(stringBuffer,"      notify();");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");  
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      Message message=null;");

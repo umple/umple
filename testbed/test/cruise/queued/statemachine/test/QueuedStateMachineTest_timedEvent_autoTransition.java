@@ -27,7 +27,7 @@ public class QueuedStateMachineTest_timedEvent_autoTransition
 	  Assert.assertEquals(QueuedSM_autoTransition_timedEvent.Sm.s3, qsm.getSm());
 		  
 	  //check that there is no event left in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 		  
   }
 	  

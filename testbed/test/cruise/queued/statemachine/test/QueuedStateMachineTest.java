@@ -44,14 +44,14 @@ public class QueuedStateMachineTest
 	//e2 is dequeued and processed: transition to s2
 	numChecks=200; // we will check for a second
 	while(numChecks>0 && qsm.getSm().equals(QueuedSM.Sm.s2)) {
-	  if(!qsm.pool.messages.isEmpty()){
+	  if(!qsm.queue.messages.isEmpty()){
 	    Thread.sleep(5);
 		numChecks--;
 	  }
       else
 	  {
 	    Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
-		Assert.assertEquals(true, qsm.pool.messages.isEmpty());
+		Assert.assertEquals(true, qsm.queue.messages.isEmpty());
 		break;
 	  }
 	}
@@ -66,14 +66,14 @@ public class QueuedStateMachineTest
 	//e2 is dequeued and processed: transition to s2
 	numChecks=200; // we will check for a second
     while(numChecks>0 && qsm.getSm().equals(QueuedSM.Sm.s2)) {
-	  if(!qsm.pool.messages.isEmpty()){
+	  if(!qsm.queue.messages.isEmpty()){
 	    Thread.sleep(5);
 		numChecks--;
 	  }
 	  else
 	  {
 		Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
-		Assert.assertEquals(true, qsm.pool.messages.isEmpty());
+		Assert.assertEquals(true, qsm.queue.messages.isEmpty());
 		break;
 	  }
     }
@@ -88,14 +88,14 @@ public class QueuedStateMachineTest
 	//e1 is dequeued and ignored (not processed: case of unspecified reception)
 	numChecks=200; // we will check for a second
 	while(numChecks>0 && qsm.getSm().equals(QueuedSM.Sm.s2)) {
-	  if(!qsm.pool.messages.isEmpty()){
+	  if(!qsm.queue.messages.isEmpty()){
 		Thread.sleep(5);
 		numChecks--;
 	  }
 	  else
 	  {
 		Assert.assertEquals(QueuedSM.Sm.s2, qsm.getSm());
-		Assert.assertEquals(true, qsm.pool.messages.isEmpty());
+		Assert.assertEquals(true, qsm.queue.messages.isEmpty());
 		break;
 	  }
     }
@@ -105,17 +105,17 @@ public class QueuedStateMachineTest
 	noMessageIsSaved(qsm);
 	  
 	//check that there is no events left in the queue
-	Assert.assertEquals(0, qsm.pool.messages.size());	  
+	Assert.assertEquals(0, qsm.queue.messages.size());	  
   }
   
   
   public void noMessageIsSaved(QueuedSM qsm)
   {
-	  if(!qsm.pool.messages.isEmpty())
+	  if(!qsm.queue.messages.isEmpty())
 	  {
-		  Assert.assertEquals(false, qsm.pool.messages.isEmpty());
+		  Assert.assertEquals(false, qsm.queue.messages.isEmpty());
 	  }
 	  else
-		  Assert.assertEquals(0, qsm.pool.messages.size());
+		  Assert.assertEquals(0, qsm.queue.messages.size());
   }
 }

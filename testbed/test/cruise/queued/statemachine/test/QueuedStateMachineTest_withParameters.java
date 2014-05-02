@@ -31,7 +31,7 @@ public class QueuedStateMachineTest_withParameters
 	  //check that value is changed to 5
 	  Assert.assertEquals(5, qsm.getValue());	  
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 	  
 	  //e2 is triggered: e2 is queued
 	  qsm.e2();
@@ -39,7 +39,7 @@ public class QueuedStateMachineTest_withParameters
 	  //e2 is dequeued and processed: transition to s2
 	  Assert.assertEquals(QueuedSM_withParameters.Sm.s2, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	  
 	  //e2 is triggered: e2 is queued
 	  qsm.e2();
@@ -47,7 +47,7 @@ public class QueuedStateMachineTest_withParameters
 	  //e2 is dequeued and processed: transition to s2
 	  Assert.assertEquals(QueuedSM_withParameters.Sm.s2, qsm.getSm());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	  
 	  //e1 is triggered: e1 is queued
 	  qsm.e1(8);
@@ -57,9 +57,9 @@ public class QueuedStateMachineTest_withParameters
 	  //value is not changed
 	  Assert.assertEquals(5, qsm.getValue());
 	  // check if there is a message saved in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());
+	  Assert.assertEquals(0, qsm.queue.messages.size());
 	  
 	  //check that there is no events left in the queue
-	  Assert.assertEquals(0, qsm.pool.messages.size());	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
   }
 }

@@ -21,7 +21,7 @@ public class GarageDoor implements Runnable
   //enumeration type of messages accepted by GarageDoor
   enum MessageType { buttonOrObstacle_M, reachBottom_M, reachTop_M }
   
-  MessagePool pool;
+  MessageQueue queue;
   Thread removal;
 
   //------------------------
@@ -31,7 +31,7 @@ public class GarageDoor implements Runnable
   public GarageDoor()
   {
     setStatus(Status.Open);
-    pool = new MessagePool();
+    queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of GarageDoor
     removal.start();
@@ -150,7 +150,7 @@ public class GarageDoor implements Runnable
     }
   }
   
-  protected class MessagePool {
+  protected class MessageQueue {
     Queue<Message> messages = new LinkedList<Message>();
     
     public synchronized void put(Message m)
@@ -180,17 +180,17 @@ public class GarageDoor implements Runnable
 
   public void buttonOrObstacle ()
   {
-    pool.put(new Message(MessageType.buttonOrObstacle_M, null));
+    queue.put(new Message(MessageType.buttonOrObstacle_M, null));
   }
 
   public void reachBottom ()
   {
-    pool.put(new Message(MessageType.reachBottom_M, null));
+    queue.put(new Message(MessageType.reachBottom_M, null));
   }
 
   public void reachTop ()
   {
-    pool.put(new Message(MessageType.reachTop_M, null));
+    queue.put(new Message(MessageType.reachTop_M, null));
   }
 
   
@@ -200,7 +200,7 @@ public class GarageDoor implements Runnable
     boolean status=false;
     while (true) 
     {
-      Message m = pool.getNext();
+      Message m = queue.getNext();
       
       switch (m.type)
       {

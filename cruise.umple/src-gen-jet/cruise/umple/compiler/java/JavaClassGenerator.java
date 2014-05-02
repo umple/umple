@@ -2126,16 +2126,18 @@ public class JavaClassGenerator implements ILang
   protected final String TEXT_2106 = NL + "      ";
   protected final String TEXT_2107 = ".get(0).";
   protected final String TEXT_2108 = "(null);" + NL + "    }";
-  protected final String TEXT_2109 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
-  protected final String TEXT_2110 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2111 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL + "      Message m = pool.getNext();" + NL + "      " + NL + "      switch (m.type)" + NL + "      {";
-  protected final String TEXT_2112 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2113 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";";
-  protected final String TEXT_2114 = NL + "  }";
-  protected final String TEXT_2115 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
-  protected final String TEXT_2116 = NL + "  ";
-  protected final String TEXT_2117 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      translate(e);" + NL + "      if(e.getCause()!=null)" + NL + "      {" + NL + "        translate(e.getCause());" + NL + "      }" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "    public void translate(Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class<?> clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int[] methodlength = (int[])anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] javaline = (int[])anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] line = (int[])anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  String[] file = (String[])anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  for(int i=0;i<file.length;i++)" + NL + "                  {" + NL + "                    int distanceFromStart = element.getLineNumber()-javaline[i]-((\"main\".equals(methodName))?2:0);" + NL + "                    if(file[i] == \"\")" + NL + "                    {" + NL + "                      break;" + NL + "                    }" + NL + "                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])" + NL + "                    {" + NL + "                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));" + NL + "                      methodFound = true;" + NL + "                      break;" + NL + "                    }" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "    }" + NL + "  }";
-  protected final String TEXT_2118 = NL + "}";
+  protected final String TEXT_2109 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL;
+  protected final String TEXT_2110 = NL + "      " + NL + "      switch (m.type)" + NL + "      {";
+  protected final String TEXT_2111 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2112 = NL + "  " + NL + "  @Override" + NL + "  public void run ()" + NL + "  {" + NL + "    boolean status=false;" + NL + "    while (true) " + NL + "    {" + NL;
+  protected final String TEXT_2113 = NL + "      " + NL + "      switch (m.type)" + NL + "      {";
+  protected final String TEXT_2114 = " " + NL + "        default:" + NL + "      }" + NL + "      if(!status)" + NL + "      {" + NL + "        // Error message is written or  exception is raised" + NL + "      }" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2115 = NL + NL + "  public String toString()" + NL + "  {" + NL + "\t  String outputString = \"\";";
+  protected final String TEXT_2116 = NL + "  }";
+  protected final String TEXT_2117 = "  " + NL + "  //------------------------" + NL + "  // DEVELOPER CODE - PROVIDED AS-IS" + NL + "  //------------------------" + NL + "  ";
+  protected final String TEXT_2118 = NL + "  ";
+  protected final String TEXT_2119 = NL + "  public static class UmpleExceptionHandler implements Thread.UncaughtExceptionHandler" + NL + "  {" + NL + "    public void uncaughtException(Thread t, Throwable e)" + NL + "    {" + NL + "      translate(e);" + NL + "      if(e.getCause()!=null)" + NL + "      {" + NL + "        translate(e.getCause());" + NL + "      }" + NL + "      e.printStackTrace();" + NL + "    }" + NL + "    public void translate(Throwable e)" + NL + "    {" + NL + "      java.util.List<StackTraceElement> result = new java.util.ArrayList<StackTraceElement>();" + NL + "      StackTraceElement[] elements = e.getStackTrace();" + NL + "      try" + NL + "      {" + NL + "        for(StackTraceElement element:elements)" + NL + "        {" + NL + "          Class<?> clazz = Class.forName(element.getClassName());" + NL + "          String methodName = element.getMethodName();" + NL + "          boolean methodFound = false;" + NL + "          for(java.lang.reflect.Method meth:clazz.getDeclaredMethods())" + NL + "          {" + NL + "            if(meth.getName().equals(methodName))" + NL + "            {" + NL + "              for(java.lang.annotation.Annotation anno: meth.getAnnotations())" + NL + "              {" + NL + "                if(anno.annotationType().getSimpleName().equals(\"umplesourcefile\"))" + NL + "                {" + NL + "                  int[] methodlength = (int[])anno.annotationType().getMethod(\"length\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] javaline = (int[])anno.annotationType().getMethod(\"javaline\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  int[] line = (int[])anno.annotationType().getMethod(\"line\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  String[] file = (String[])anno.annotationType().getMethod(\"file\", new Class[]{}).invoke(anno,new Object[]{});" + NL + "                  for(int i=0;i<file.length;i++)" + NL + "                  {" + NL + "                    int distanceFromStart = element.getLineNumber()-javaline[i]-((\"main\".equals(methodName))?2:0);" + NL + "                    if(file[i] == \"\")" + NL + "                    {" + NL + "                      break;" + NL + "                    }" + NL + "                    else if(distanceFromStart>=0&&distanceFromStart<=methodlength[i])" + NL + "                    {" + NL + "                      result.add(new StackTraceElement(element.getClassName(),element.getMethodName(),file[i],line[i]+distanceFromStart));" + NL + "                      methodFound = true;" + NL + "                      break;" + NL + "                    }" + NL + "                  }" + NL + "                }" + NL + "              }" + NL + "              if(methodFound)" + NL + "              {" + NL + "                break;" + NL + "              }" + NL + "            }" + NL + "          }" + NL + "          if(!methodFound)" + NL + "          {" + NL + "            result.add(element);" + NL + "          }" + NL + "        }" + NL + "      }" + NL + "      catch (Exception e1)" + NL + "      {" + NL + "        e1.printStackTrace();" + NL + "      }" + NL + "      e.setStackTrace(result.toArray(new StackTraceElement[0]));" + NL + "    }" + NL + "  }";
+  protected final String TEXT_2120 = NL + "}";
 
   // Add a newline to the end of the input
   private void appendln(StringBuffer buffer, String input, Object... variables)
@@ -2462,7 +2464,7 @@ for (StateMachine smq : uClass.getStateMachines())
     if(sm.isQueued())
     {
        append(stringBuffer,"\n  ");
-       append(stringBuffer,"\n  MessagePool pool;");
+       append(stringBuffer,"\n  MessageQueue queue;");
        append(stringBuffer,"\n  Thread removal;");
     }
     break;
@@ -3200,7 +3202,8 @@ for (StateMachine smq : uClass.getStateMachines())
     }
   }
   
-  boolean found=false;
+  boolean foundQueued=false;
+  boolean foundPooled=false;
   for(StateMachine sm : uClass.getStateMachines())
   {
     State state = sm.getStartState();
@@ -3239,12 +3242,23 @@ for (StateMachine smq : uClass.getStateMachines())
     }
 
     
-    if (sm.isPooled() || sm.isQueued())
+    if (sm.isQueued())
     {
-      found = true;
+      foundQueued = true;
+    }
+    if (sm.isPooled())
+    {
+      foundPooled = true;
     }
   }
-  if(found == true)
+  if(foundQueued == true)
+  {
+    append(stringBuffer,"\n    queue = new MessageQueue();");
+    append(stringBuffer,"\n    removal=new Thread(this);");
+    append(stringBuffer,"\n    //start the thread of {0}", uClass.getName());
+    append(stringBuffer,"\n    removal.start();");
+  }
+  if(foundPooled == true)
   {
     append(stringBuffer,"\n    pool = new MessagePool();");
     append(stringBuffer,"\n    removal=new Thread(this);");
@@ -9633,17 +9647,18 @@ if (p != null) {
   appendln(stringBuffer,"    }");
   appendln(stringBuffer,"  }");
   appendln(stringBuffer,"  ");  
-  appendln(stringBuffer,"  protected class MessagePool {");
-  appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
-  appendln(stringBuffer,"    ");   
-  appendln(stringBuffer,"    public synchronized void put(Message m)");
-  appendln(stringBuffer,"    {");
-  appendln(stringBuffer,"      messages.add(m); "); 
-  appendln(stringBuffer,"      notify();");
-  appendln(stringBuffer,"    }");
-  appendln(stringBuffer,"");   
+ 
   if (smq.isQueued())
   {
+    appendln(stringBuffer,"  protected class MessageQueue {");
+    appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+    appendln(stringBuffer,"    ");   
+    appendln(stringBuffer,"    public synchronized void put(Message m)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      messages.add(m); "); 
+    appendln(stringBuffer,"      notify();");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");  
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      try {");
@@ -9661,6 +9676,15 @@ if (p != null) {
   }
   else if(smq.isPooled())
   {
+    appendln(stringBuffer,"  protected class MessagePool {");
+    appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+    appendln(stringBuffer,"    ");   
+    appendln(stringBuffer,"    public synchronized void put(Message m)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      messages.add(m); "); 
+    appendln(stringBuffer,"      notify();");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");  
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      Message message=null;");
@@ -9787,12 +9811,26 @@ if (p != null) {
                     {
                       append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
                     }
-                    append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    if(sm.isQueued())
+                    {
+                      append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
+                    if(sm.isPooled())
+                    {
+                      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
                     append(stringBuffer,"_M, v));");
                   }
                   else
                   {
-                    append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    if(sm.isQueued())
+                    {
+                      append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
+                    if(sm.isPooled())
+                    {
+                      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
                     append(stringBuffer,"_M, null));");
                   }
                   append(stringBuffer,"\n  }");
@@ -9845,12 +9883,26 @@ if (p != null) {
                          {
                            append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
                          }
-                         append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         if(sm.isQueued())
+                         {
+                           append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
+                         if(sm.isPooled())
+                         {
+                           append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         } 
                          append(stringBuffer,"_M, v));"); 
                        }
                        else
                        {
-                         append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         if(sm.isQueued())
+                         {
+                           append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
+                         if(sm.isPooled())
+                         {
+                           append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
                          append(stringBuffer,"_M, null));");
                        }
                        append(stringBuffer,"\n  }");
@@ -9869,6 +9921,17 @@ if (p != null) {
     }
 
     stringBuffer.append(TEXT_2109);
+    
+      if(smq.isPooled())
+      {
+        append(stringBuffer,"      Message m = pool.getNext();");
+      }
+      if(smq.isQueued())
+      {
+        append(stringBuffer,"      Message m = queue.getNext();");
+      }
+      
+    stringBuffer.append(TEXT_2110);
      
         String eveNameSM="";
         boolean sameEventNameSM=false;
@@ -9988,7 +10051,7 @@ if (p != null) {
            }
          }
            
-    stringBuffer.append(TEXT_2110);
+    stringBuffer.append(TEXT_2111);
      break;
        }       
        if (smq.isQueued())
@@ -10014,17 +10077,18 @@ if (p != null) {
   appendln(stringBuffer,"    }");
   appendln(stringBuffer,"  }");
   appendln(stringBuffer,"  ");  
-  appendln(stringBuffer,"  protected class MessagePool {");
-  appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
-  appendln(stringBuffer,"    ");   
-  appendln(stringBuffer,"    public synchronized void put(Message m)");
-  appendln(stringBuffer,"    {");
-  appendln(stringBuffer,"      messages.add(m); "); 
-  appendln(stringBuffer,"      notify();");
-  appendln(stringBuffer,"    }");
-  appendln(stringBuffer,"");   
+ 
   if (smq.isQueued())
   {
+    appendln(stringBuffer,"  protected class MessageQueue {");
+    appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+    appendln(stringBuffer,"    ");   
+    appendln(stringBuffer,"    public synchronized void put(Message m)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      messages.add(m); "); 
+    appendln(stringBuffer,"      notify();");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");  
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      try {");
@@ -10042,6 +10106,15 @@ if (p != null) {
   }
   else if(smq.isPooled())
   {
+    appendln(stringBuffer,"  protected class MessagePool {");
+    appendln(stringBuffer,"    Queue<Message> messages = new LinkedList<Message>();");
+    appendln(stringBuffer,"    ");   
+    appendln(stringBuffer,"    public synchronized void put(Message m)");
+    appendln(stringBuffer,"    {");
+    appendln(stringBuffer,"      messages.add(m); "); 
+    appendln(stringBuffer,"      notify();");
+    appendln(stringBuffer,"    }");
+    appendln(stringBuffer,"");  
     appendln(stringBuffer,"    public synchronized Message getNext()");
     appendln(stringBuffer,"    {");
     appendln(stringBuffer,"      Message message=null;");
@@ -10168,12 +10241,26 @@ if (p != null) {
                     {
                       append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
                     }
-                    append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    if(sm.isQueued())
+                    {
+                      append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
+                    if(sm.isPooled())
+                    {
+                      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
                     append(stringBuffer,"_M, v));");
                   }
                   else
                   {
-                    append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    if(sm.isQueued())
+                    {
+                      append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
+                    if(sm.isPooled())
+                    {
+                      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                    }
                     append(stringBuffer,"_M, null));");
                   }
                   append(stringBuffer,"\n  }");
@@ -10226,12 +10313,26 @@ if (p != null) {
                          {
                            append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
                          }
-                         append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         if(sm.isQueued())
+                         {
+                           append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
+                         if(sm.isPooled())
+                         {
+                           append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         } 
                          append(stringBuffer,"_M, v));"); 
                        }
                        else
                        {
-                         append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         if(sm.isQueued())
+                         {
+                           append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
+                         if(sm.isPooled())
+                         {
+                           append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                         }
                          append(stringBuffer,"_M, null));");
                        }
                        append(stringBuffer,"\n  }");
@@ -10249,7 +10350,18 @@ if (p != null) {
       }
     }
 
-    stringBuffer.append(TEXT_2111);
+    stringBuffer.append(TEXT_2112);
+    
+      if(smq.isPooled())
+      {
+        append(stringBuffer,"      Message m = pool.getNext();");
+      }
+      if(smq.isQueued())
+      {
+        append(stringBuffer,"      Message m = queue.getNext();");
+      }
+      
+    stringBuffer.append(TEXT_2113);
      
         String eveNameSM="";
         boolean sameEventNameSM=false;
@@ -10369,7 +10481,7 @@ if (p != null) {
            }
          }
            
-    stringBuffer.append(TEXT_2112);
+    stringBuffer.append(TEXT_2114);
      break;
        }
      }
@@ -10549,7 +10661,7 @@ if (p != null) {
      }
    }
    if (uClass.getAttributes().size()>0 && !matchFound){ 
-    stringBuffer.append(TEXT_2113);
+    stringBuffer.append(TEXT_2115);
     
 	  String customToStringPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","toString"));
 	  String customToStringPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","toString"));
@@ -10637,7 +10749,7 @@ if (p != null) {
 	  ret += "\n     + outputString";
 	  append(stringBuffer,"\n    return {0};", ret);
 	  
-    stringBuffer.append(TEXT_2114);
+    stringBuffer.append(TEXT_2116);
      } 
     return stringBuffer.toString();
     } 
@@ -10646,7 +10758,7 @@ if (p != null) {
      
   boolean isMainClass = false;
   if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) { 
-    stringBuffer.append(TEXT_2115);
+    stringBuffer.append(TEXT_2117);
     
   java.util.regex.Pattern lineNumberPattern = java.util.regex.Pattern.compile("// line ([0-9]*) (.*)");
   java.util.regex.Pattern methodNamePattern = java.util.regex.Pattern.compile("[ |\\t]*(public|private|protected)[ |\\t]+(.*)[(](.*)[)].*");
@@ -10744,12 +10856,12 @@ if (p != null) {
   }
   
     stringBuffer.append(extraCode);
-    stringBuffer.append(TEXT_2116);
+    stringBuffer.append(TEXT_2118);
      } 
     if(uClass.getHasMainMethod()||isMainClass){
-    stringBuffer.append(TEXT_2117);
+    stringBuffer.append(TEXT_2119);
     }
-    stringBuffer.append(TEXT_2118);
+    stringBuffer.append(TEXT_2120);
     
   return stringBuffer.toString();
 }

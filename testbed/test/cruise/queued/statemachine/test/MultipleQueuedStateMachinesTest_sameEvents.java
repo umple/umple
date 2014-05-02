@@ -37,7 +37,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s2, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event ev2 is called
 	  psm.ev2();//event ev2 is added to the queue
@@ -48,7 +48,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event ev2 is called
 	  psm.ev2();//event ev2 is added to the queue
@@ -57,7 +57,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	 
 	  //event ev4 is called
 	  psm.ev4();//event ev4 is added to the queue
@@ -66,7 +66,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event ev1 is called
 	  psm.ev1();//event ev1 is added to the queue
@@ -75,7 +75,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event ev1 is called
 	  psm.ev1();//event ev1 is added to the queue
@@ -84,7 +84,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	 
 	  //event ev3 is called
 	  psm.ev3();//event ev3 is added to the queue
@@ -95,7 +95,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s4, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
 	  //event ev3 is called
 	  psm.ev3();//event ev3 is added to the queue
@@ -104,7 +104,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s4, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event ev4 is called
 	  psm.ev4();//event ev4 is added to the queue
@@ -115,7 +115,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s1, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  //event ev7 is called
 	  psm.ev7();//event ev7 is added to the queue
@@ -126,7 +126,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s1, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s21, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 	  
 	  
 	  //event ev4 is called
@@ -136,7 +136,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s1, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s21, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.queue.messages.size());
 
       //event ev1 is called
 	  psm.ev1();//event ev1 is added to the queue
@@ -147,7 +147,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s2, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());	 
+	  Assert.assertEquals(0, psm.queue.messages.size());	 
 	  
       //event ev2 is called
 	  psm.ev2();//event ev2 is added to the queue
@@ -158,7 +158,7 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());	  
+	  Assert.assertEquals(0, psm.queue.messages.size());	  
 	  	  
       //event ev3 is called
 	  psm.ev3();//event ev3 is added to the queue
@@ -170,10 +170,10 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s4, psm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, psm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());	
+	  Assert.assertEquals(0, psm.queue.messages.size());	
 	  
 	  
 	  //check that there is no event left in the queue
-	  Assert.assertEquals(0, psm.pool.messages.size());	 
+	  Assert.assertEquals(0, psm.queue.messages.size());	 
   }
 }

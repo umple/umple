@@ -231,7 +231,8 @@
     }
   }
   
-  boolean found=false;
+  boolean foundQueued=false;
+  boolean foundPooled=false;
   for(StateMachine sm : uClass.getStateMachines())
   {
     State state = sm.getStartState();
@@ -245,12 +246,23 @@
       %><%@ include file="constructor_NestedStateMachineAssignDefault.jet"%><%
     }
     %><%@ include file="constructor_StateMachineAssignDefault.jet"%><%
-    if (sm.isPooled() || sm.isQueued())
+    if (sm.isQueued())
     {
-      found = true;
+      foundQueued = true;
+    }
+    if (sm.isPooled())
+    {
+      foundPooled = true;
     }
   }
-  if(found == true)
+  if(foundQueued == true)
+  {
+    append(stringBuffer,"\n    queue = new MessageQueue();");
+    append(stringBuffer,"\n    removal=new Thread(this);");
+    append(stringBuffer,"\n    //start the thread of {0}", uClass.getName());
+    append(stringBuffer,"\n    removal.start();");
+  }
+  if(foundPooled == true)
   {
     append(stringBuffer,"\n    pool = new MessagePool();");
     append(stringBuffer,"\n    removal=new Thread(this);");

@@ -55,7 +55,7 @@
     if(sm.isQueued())
     {
        append(stringBuffer,"\n  ");
-       append(stringBuffer,"\n  MessagePool pool;");
+       append(stringBuffer,"\n  MessageQueue queue;");
        append(stringBuffer,"\n  Thread removal;");
     }
     break;
