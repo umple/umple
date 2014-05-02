@@ -38,7 +38,7 @@ class UmpleInternalParser
     
     boolean shouldBeLast = false;
     
-    if (myToken.is("transition"))
+    if (myToken.is("transition") || myToken.is("autoTransition"))
     {
       String[] stateNames = myToken.getValue("stateName").split("\\.");
       for(String stateName : stateNames)
@@ -835,7 +835,11 @@ class UmpleInternalParser
           unguardedEvents.add(subToken.getValue("event"));
         }
       }
-      if(subToken.is("state")){
+      else if(subToken.is("autoTransition")){
+        priorAutoTransitionExists = true;
+        superStateEvents.add(null);
+      }
+      else if(subToken.is("state")){
         subStates.add(subToken);
       }
     }
