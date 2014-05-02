@@ -1,0 +1,10 @@
+//This is Umple's grammar for parsing fixml documents
+fixml : [[fixmlDefinition]] | [[fixmComment]] | [[fixmlDoc]] 
+fixmlDoc : <! [**value] >
+fixmComment :  <?xml [[tagDefinition]]* ?>
+fixmlDefinition : <FIXML> [[fixmlContent]]* </FIXML>
+fixmlContent : [[endContent]] | [[ extendContent ]]
+endContent : < [~name] ( [[tagDefinition]] )* /> 
+extendContent : < [~name] ( [[tagDefinition]] )* > ( [[endContent]] | [[extendContent]] | [[attContent]])* < ( / ) [~name] >
+tagDefinition : [name] = "[**value]"
+attContent : < [~name] > [**value:\<] < ( / ) [~name] >
