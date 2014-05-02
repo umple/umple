@@ -7,8 +7,6 @@ import java.util.Date;
 
 public class Tracer
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -133,12 +131,10 @@ public class Tracer
   public void delete()
   {}
 
-  @umplesourcefile(line={33},file={"TraceGarageDoorEntryState.ump"},javaline={141},length={3})
   public void openGarageLights(){
     
   }
 
-  @umplesourcefile(line={34},file={"TraceGarageDoorEntryState.ump"},javaline={146},length={3})
   public void closeGarageLights(){
     
   }

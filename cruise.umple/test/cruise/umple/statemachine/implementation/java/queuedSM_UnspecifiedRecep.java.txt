@@ -7,8 +7,6 @@ import java.lang.Thread;
 
 public class AutomatedTellerMachine implements Runnable
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -342,7 +340,6 @@ public class AutomatedTellerMachine implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={19}, file={"queuedSM_UnspecifiedRecep.ump"}, javaline={354}, length={1})
   private void exitSm()
   {
     switch(sm)

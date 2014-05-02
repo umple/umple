@@ -311,7 +311,10 @@ class JavaGenerator
   depend cruise.umple.util.*;
 
   depend cruise.umple.compiler.exceptions.*;
-  depend cruise.umple.compiler.java.*;  
+  depend cruise.umple.compiler.java.*;
+  
+  StringBuilder uncaughtExceptions = new StringBuilder();
+  UmpleClass[] mainClasses;
 }
 
 class RTCppGenerator

@@ -5,8 +5,6 @@ package example;
 
 public class LightFixture
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -59,7 +57,6 @@ public class LightFixture
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={8}, file={"exitAction.ump"}, javaline={70}, length={1})
   private void exitBulb()
   {
     switch(bulb)

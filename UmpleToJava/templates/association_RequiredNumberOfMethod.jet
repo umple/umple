@@ -8,16 +8,14 @@
   {
     return <%=av.getMultiplicity().getLowerBound()%>;
   }
-<% } else { %><%
-  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customRequiredNumberOfPrefixCode, customRequiredNumberOfPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-      %><%= umpleSourceFile %>
+<% } else { %>
   public static int <%=gen.translate("requiredNumberOfMethod",av)%>()
   {
-    <% if (customRequiredNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPrefixCode, "    ")); } %>
+    <% if (customRequiredNumberOfPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRequiredNumberOfPrefixCode,gen.translate("requiredNumberOfMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPrefixCode, "    ")); } %>
     int required = <%=av.getMultiplicity().getLowerBound()%>;
-    <% if (customRequiredNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPostfixCode, "    ")); } %>
+    <% if (customRequiredNumberOfPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRequiredNumberOfPostfixCode,gen.translate("requiredNumberOfMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRequiredNumberOfPostfixCode, "    ")); } %>
     return required;
   }
 <% } %>

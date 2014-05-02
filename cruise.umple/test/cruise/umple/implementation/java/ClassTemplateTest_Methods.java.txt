@@ -5,8 +5,6 @@ package example;
 
 public class CodeTranslator
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -26,12 +24,10 @@ public class CodeTranslator
   public void delete()
   {}
 
-  @umplesourcefile(line={6},file={"ClassTemplateTest_Methods.ump"},javaline={32},length={3})
   public String translate(String id, Attribute attribute){
     return "1";
   }
 
-  @umplesourcefile(line={9},file={"ClassTemplateTest_Methods.ump"},javaline={37},length={3})
   public String translate(String id, AssociationVariable associationVariable){
     return "1";
   }

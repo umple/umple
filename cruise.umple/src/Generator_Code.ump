@@ -9,23 +9,3 @@ http://umple.org/license
 
 // This file is now degenerate since all the original parts have been refactored out
 // It is kept to allow consulting of version history
-external Thread {}
-class  WriteFilerThread {
-  isA Thread;
-  
-  UmpleElement aClass;
-  Exception exception = null;
-  CodeFileWriter writer;
-  
-  public void run() 
-  {
-	try
-	{
-	  writer.writeFile(aClass);
-	}
-	catch (Exception e)
-	{
-		exception = e;
-	}
-  }
-}

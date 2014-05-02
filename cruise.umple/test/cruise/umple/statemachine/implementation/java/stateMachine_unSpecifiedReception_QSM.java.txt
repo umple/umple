@@ -7,8 +7,6 @@ import java.lang.Thread;
 
 public class QSMwithUnspecifiedRecep implements Runnable
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -71,7 +69,6 @@ public class QSMwithUnspecifiedRecep implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={5}, file={"stateMachine_unSpecifiedReception_QSM.ump"}, javaline={84}, length={1})
   public boolean unspecified(String state, String event)
   {
     boolean wasEventProcessed = false;
@@ -252,7 +249,6 @@ public class QSMwithUnspecifiedRecep implements Runnable
       }
     }
   }
-  @umplesourcefile(line={21},file={"stateMachine_unSpecifiedReception_QSM.ump"},javaline={260},length={3})
   public void printError(){
     System.out.println("Unspecified Reception");
   }

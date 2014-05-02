@@ -8,8 +8,6 @@ import java.util.*;
 
 public class Mentor
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // STATIC VARIABLES
@@ -291,7 +289,6 @@ public class Mentor
     return i;
   }
 
-  @umplesourcefile(line={19},file={"ClassTemplateTest_Attributes.ump"},javaline={299},length={2})
   public int getDerivedTwiceI()
   {
     return i*2;

@@ -7,8 +7,6 @@ import java.lang.Thread;
 
 public class X implements Runnable
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -83,7 +81,6 @@ public class X implements Runnable
     return sm2;
   }
 
-  @umplesourcefile(line={5,25}, file={"testMultipleQSMs.ump","testMultipleQSMs.ump"}, javaline={96,108}, length={1,1})
   public boolean _ev1()
   {
     boolean wasEventProcessed = false;
@@ -117,7 +114,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={6}, file={"testMultipleQSMs.ump"}, javaline={133}, length={1})
   public boolean _ev5()
   {
     boolean wasEventProcessed = false;
@@ -139,7 +135,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={9}, file={"testMultipleQSMs.ump"}, javaline={157}, length={1})
   public boolean _ev2()
   {
     boolean wasEventProcessed = false;
@@ -161,7 +156,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={12}, file={"testMultipleQSMs.ump"}, javaline={181}, length={1})
   public boolean _ev3()
   {
     boolean wasEventProcessed = false;
@@ -183,7 +177,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={15}, file={"testMultipleQSMs.ump"}, javaline={205}, length={1})
   public boolean _ev4()
   {
     boolean wasEventProcessed = false;
@@ -205,7 +198,6 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={28}, file={"testMultipleQSMs.ump"}, javaline={229}, length={1})
   public boolean _ev7()
   {
     boolean wasEventProcessed = false;

@@ -7,8 +7,6 @@ import java.lang.Thread;
 
 public class QueuedSMwithConcurrentStates_2 implements Runnable
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -199,7 +197,6 @@ public class QueuedSMwithConcurrentStates_2 implements Runnable
     if (sm != Sm.state1 && aSmSubState2 != SmSubState2.Null) { setSm(Sm.state1); }
   }
 
-  @umplesourcefile(line={17},file={"queuedSMwithConcurrentStatesTest_2.ump"},javaline={208},length={1})
   private void doActivitySmState2()
   {
     try
@@ -213,7 +210,6 @@ public class QueuedSMwithConcurrentStates_2 implements Runnable
     }
   }
 
-  @umplesourcefile(line={21},file={"queuedSMwithConcurrentStatesTest_2.ump"},javaline={222},length={1})
   private void doActivitySmState3()
   {
     try

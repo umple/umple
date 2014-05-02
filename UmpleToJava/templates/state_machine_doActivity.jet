@@ -7,7 +7,8 @@
 <% Position p = state.getActivity().getPosition();
 if (p != null) { 
    int javaline = stringBuffer.toString().split("\\n").length;
-  %><%= "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+7)+"},length={"+(state.getActivity().getActivityCode().split("\\n").length)+"})"%><% } %>
+   addUncaughtExceptionVariables(gen.translate("doActivityMethod",state),p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline+7,state.getActivity().getActivityCode().split("\\n").length); 
+  } %>
   private void <%= gen.translate("doActivityMethod",state)%>()
   {
     try

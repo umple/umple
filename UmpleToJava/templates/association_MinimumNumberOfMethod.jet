@@ -2,10 +2,7 @@
 <%
     String customMinimumNumberOfPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("minimumNumberOfMethod",av)));
     String customMinimumNumberOfPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("minimumNumberOfMethod",av)));
-  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-    customMinimumNumberOfPrefixCode, customMinimumNumberOfPostfixCode},
-    isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-    %><%= umpleSourceFile %>
+    %>
 <% if (customMinimumNumberOfPrefixCode == null && customMinimumNumberOfPostfixCode == null) { %>
   public static int <%=gen.translate("minimumNumberOfMethod",av)%>()
   {
@@ -14,9 +11,11 @@
 <% } else { %>
   public static int <%=gen.translate("minimumNumberOfMethod",av)%>()
   {
-    <% if (customMinimumNumberOfPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } %>
+    <% if (customMinimumNumberOfPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customMinimumNumberOfPrefixCode,gen.translate("minimumNumberOfMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPrefixCode, "    ")); } %>
     int minimum = <%=av.getMultiplicity().getLowerBound()%>;
-    <% if (customMinimumNumberOfPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } %>
+    <% if (customMinimumNumberOfPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customMinimumNumberOfPostfixCode,gen.translate("minimumNumberOfMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customMinimumNumberOfPostfixCode, "    ")); } %>
     return minimum;
   }
 <% } %>

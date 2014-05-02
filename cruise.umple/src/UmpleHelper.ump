@@ -19,6 +19,39 @@ interface ILang
   public String getCode(UmpleModel model, UmpleElement uElement);
 }
 
+class UncaughtException
+{
+  String uncaughtClassName;
+  String uncaughtMethodName;
+  String[] uncaughtFileName;
+  Integer[] uncaughtUmpleLine;
+  Integer[] uncaughtJavaLine;
+  Integer[] uncaughtLength;
+  
+  public String toString()
+  {
+    StringBuilder builder = new StringBuilder();
+    builder.append("    public UmpleSourceData ");
+    builder.append(uncaughtClassName);
+    builder.append("_");
+    builder.append(uncaughtMethodName);
+    builder.append("(){ return new UmpleSourceData().setFileNames(\"");
+    String filename = uncaughtFileName.toString().replace("\"","").replace(",","\",\"");
+    builder.append(filename.substring(1,filename.length()-1));
+    builder.append("\").setUmpleLines(");    
+    String line = uncaughtUmpleLine.toString();
+    builder.append(line.substring(1,line.length()-1));
+    builder.append(").setJavaLines(");
+    String javaline = uncaughtJavaLine.toString();
+    builder.append(javaline.substring(1,javaline.length()-1));
+    builder.append(").setLengths(");
+    String length = uncaughtLength.toString();
+    builder.append(length.substring(1,length.length()-1));
+    builder.append(");}");
+    return builder.toString();
+  }
+}
+
 // TODO: Users of this can most likely just use File, so this could be refactored out
 class UmpleFile
 {

@@ -74,10 +74,11 @@
         String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";
         if (!"if ()\n{".equals(condition))
         {
-            actionLineNumbers.append(","+t.getGuard().getPosition().getLineNumber());
-            actionFileNames.append("," + "\""+t.getGuard().getPosition().getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"","")+"\"");
-            actionJavaLineNumbers.append("," + (javaLine-1));
-            actionLengths.append("," + (condition.split("\\n").length-1));
+            addUncaughtExceptionVariables(gen.translate("eventMethod",e),
+                                        t.getGuard().getPosition().getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                        t.getGuard().getPosition().getLineNumber(),
+                                        javaLine-1,
+                                        condition.split("\\n").length-1);
             allCases.append(GeneratorHelper.doIndent(condition, "        ")+"\n");
             javaLine+=1+condition.split("\\n").length;
           
@@ -92,11 +93,11 @@
           Action a1 = t.getAction();
           Position p = a1.getPosition();
           if (p != null) {
-            
-            actionLineNumbers.append(","+p.getLineNumber());
-            actionFileNames.append("," + "\""+p.getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"","")+"\"");
-            actionJavaLineNumbers.append("," + javaLine);
-            actionLengths.append("," + a1.getActionCode().split("\\n").length);
+            addUncaughtExceptionVariables(gen.translate("eventMethod",e),
+                                        p.getRelativePath(sm.getUmpleClass(),"Java").replace("\\","/").replaceAll(".*/","").replace("\"",""),
+                                        p.getLineNumber(),
+                                        javaLine-2,
+                                        a1.getActionCode().split("\\n").length);
             allCases.append("        // line " + p.getLineNumber() + " \"" + p.getRelativePath(sm.getUmpleClass(), "Java") + "\"\n");
             javaLine++;
           }
@@ -202,19 +203,13 @@
 
   
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
-  String eventOutput = allDeclarations.toString() + allCases.toString();
-  String umpleSourceFile = actionLineNumbers.toString().length()>0?StringFormatter.format(
-  umpleSourceFileFormat,
-    actionLineNumbers.toString().substring(1),
-    actionFileNames.toString().substring(1),
-    actionJavaLineNumbers.toString().substring(1),
-    actionLengths.toString().substring(1)):"";
-  
-%><%= umpleSourceFile %>
+  String eventOutput = allDeclarations.toString() + allCases.toString();%>
   <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.getIsTimer() && !e.isUnspecified()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false  && !e.getIsTimer() && !e.isUnspecified())){append(stringBuffer,"_");}break;}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%><%if(e.isUnspecified()){append(stringBuffer,"String state, String event");}%>)
-  {<% if (customEventPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPrefixCode, "    ")); } %>
+  {<% if (customEventPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customEventPrefixCode,gen.translate("eventMethod",e));
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPrefixCode, "    ")); } %>
     boolean wasEventProcessed = false;
-    <%= eventOutput %><% if (customEventPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPostfixCode, "    ")); } %>
+    <%= eventOutput %><% if (customEventPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customEventPostfixCode,gen.translate("eventMethod",e)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPostfixCode, "    ")); } %>
     return wasEventProcessed;
   }
 

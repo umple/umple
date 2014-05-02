@@ -5,8 +5,6 @@ import junit.framework.Assert;
 
 import org.junit.*;
 
-import cruise.umple.compiler.exceptions.UmpleCompilerException;
-import cruise.umple.docs.DocumenterMain.UmpleExceptionHandler;
 import cruise.umple.util.SampleFileWriter;
 
 public class UmpleTraitTest {
