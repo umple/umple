@@ -1,0 +1,12 @@
+Umplification Process
+Umplification
+noreferences
+
+@@description
+<p>To start, source files with language L (e.g. Java, C++) code are initially renamed as Umple files, with extension <b>.ump</b>.</p>
+<p> Then, iteratively, small transformations are performed that
+gradually add UML abstractions. Each iteration should involve testing to check that the program’s semantics are preserved. </p>
+</br>
+<p>
+Umplification can be performed automatically by a reverse engineering technology that can parse a program in any native programming language and extract the Umple model from it. </p>
+
