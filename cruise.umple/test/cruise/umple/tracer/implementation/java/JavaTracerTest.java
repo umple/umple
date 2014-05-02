@@ -13,11 +13,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 
-import cruise.umple.tracer.implementation.TracerTest;
+import cruise.umple.tracer.implementation.TracerAttributesTest;
 import cruise.umple.util.SampleFileWriter;
 
 @Ignore
-public class JavaTracerTest extends TracerTest
+public class JavaTracerTest extends TracerAttributesTest
 {
   @Before
   public void setUp()

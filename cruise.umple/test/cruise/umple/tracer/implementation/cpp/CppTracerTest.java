@@ -19,7 +19,7 @@ import org.junit.Test;
 import cruise.umple.tracer.implementation.*;
 import cruise.umple.util.SampleFileWriter;
 @Ignore
-public class CppTracerTest extends TracerTest
+public class CppTracerTest extends TracerAttributesTest
 {
   @Before
   public void setUp()

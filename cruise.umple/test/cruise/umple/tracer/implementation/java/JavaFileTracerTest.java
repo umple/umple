@@ -12,11 +12,11 @@ package cruise.umple.tracer.implementation.java;
 import org.junit.After;
 import org.junit.Before;
 
-import cruise.umple.tracer.implementation.TracerTest;
+import cruise.umple.tracer.implementation.TracerAttributesTest;
 import cruise.umple.util.SampleFileWriter;
 
 
-public class JavaFileTracerTest extends TracerTest
+public class JavaFileTracerTest extends TracerAttributesTest
 {
   @Before
   public void setUp()

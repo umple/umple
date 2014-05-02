@@ -19,7 +19,7 @@ import cruise.umple.tracer.implementation.*;
 import cruise.umple.util.SampleFileWriter;
 
 @Ignore
-public class PhpTracerTest extends TracerTest
+public class PhpTracerTest extends TracerAttributesTest
 {
   @Before
   public void setUp()
