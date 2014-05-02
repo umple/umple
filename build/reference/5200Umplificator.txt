@@ -1,0 +1,31 @@
+Umplification - An Introduction
+Umplification
+noreferences
+
+@@description
+<p>Umplification involves transforming step by step a base language program to an Umple program; each step is a refactoring. The starting point and the ending point of each transformations will be a system
+rendered in a textual form combining model elements in the Umple syntax and base language code. </p>
+
+<p>Umplification involves increasing the proportion of modeling
+elements. 
+</p>
+
+<p>
+The key insight is that a pure Java program can be seen as a speci
+al case of an Umple program. A pure model can also be seen as such a special case. So Umplification involves repeatedly modifying the Umple to add abstractions, while maintaining the semantics of the
+program, and also maintaining to the greatest extent possible
+such elements as layout, algorithmic methods and comments
+</p>
+<p>
+Two main features differentiate Umple from existing reverse engineering techniques.
+</p>
+<ol>
+<li> The <b>Tranformations</b> required are intended to be
+applie <b>incrementally</b> by a programmer who has a body of legacy code and wants to gradually transform it intoUmple, preserving much of the layout, comments and other aspects of the original code if possible.
+</li>
+<li> The transformations required are at the same time
+<b>code-to-model</b>,<b>model-to-model</b> and <b>code-to-code</b>.
+</li>
+</ol>
+
+
