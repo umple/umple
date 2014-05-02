@@ -7,8 +7,6 @@ import java.util.Date;
 
 public class LightFixtureA
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -94,7 +92,6 @@ public class LightFixtureA
     }
   }
 
-  @umplesourcefile(line={12},file={"TraceLightDoActivity.ump"},javaline={103},length={2})
   private void doActivityStatusClosed()
   {
     try

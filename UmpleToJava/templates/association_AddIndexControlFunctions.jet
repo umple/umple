@@ -1,8 +1,4 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
-      umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customAddPrefixCode, customAddPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-      %><%=umpleSourceFile%>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public boolean <%=gen.translate("addAtMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>, int index)
   {  
     boolean wasAdded = false;
@@ -20,7 +16,7 @@
     }
     return wasAdded;
   }
-<%= umpleSourceFile %>
+
   public boolean <%=gen.translate("addOrMoveAtMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>, int index)
   {
     boolean wasAdded = false;

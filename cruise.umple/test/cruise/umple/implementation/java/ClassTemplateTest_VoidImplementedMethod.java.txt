@@ -5,8 +5,6 @@
 
 public class ClientConsole implements ChatIF
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -26,7 +24,6 @@ public class ClientConsole implements ChatIF
   public void delete()
   {}
 
-  @umplesourcefile(line={2},file={"ClassTemplateTest_VoidImplementedMethod.ump"},javaline={31},length={2})
   @Override
   public void display(){
           return ;

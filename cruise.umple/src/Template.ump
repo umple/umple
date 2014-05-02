@@ -394,10 +394,13 @@ class Utils {
 	    return true;
 	}
 	
+	public static int numberOfLines = 0;
+	
 	// JET Style
 	public static String nlize(String lang, String str) {
 	  StringBuilder result = new StringBuilder(str.length());
 	  Matcher m = newLinePattern.matcher(str);
+	  numberOfLines = 0;
 	  if(m.find()) {
 		  int currentIndex = 0;
 		  boolean first = true;
@@ -424,6 +427,7 @@ class Utils {
 				  result.append(Utils.getStringConcat(lang)); 
 			  }
 			  result.append(Utils.getLineSeparator());
+			  ++numberOfLines;
 			  currentIndex = m.end();
 		  } while( m.find());
 		  if(currentIndex < str.length()) {

@@ -101,7 +101,7 @@ class JavaGenerator
   {
     prepare();
     UmpleElement lastElement = null;
-    List<WriteFilerThread> threads = new ArrayList<WriteFilerThread>();
+    long start = System.currentTimeMillis();
     try{
       for (UmpleElement currentElement : getModel().getUmpleElements())
       {
@@ -109,15 +109,8 @@ class JavaGenerator
         {
           continue;
         }
-        if(currentElement instanceof UmpleClass && ((UmpleClass)currentElement).numberOfAssociations()>0)
-        {
-          WriteFilerThread thread = new WriteFilerThread(currentElement,this);
-          threads.add(thread);
-          thread.start();    	
-        }
-        else {
-    	  writeFile(currentElement);
-        }
+        writeFile(currentElement);
+        
         lastElement = currentElement;
       }
     }
@@ -125,21 +118,14 @@ class JavaGenerator
       throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);	
     }
     
-    for(WriteFilerThread thread:threads){
-    	try {
-			thread.join();
-		} catch (InterruptedException e1) {
-			e1.printStackTrace();
-		}
-    	Exception e = thread.getException();
-      if(e!=null)
-      {
-        throw new UmpleCompilerException("There was a problem with generating classes. " + e, e);
-      }
-    }
     if (lastElement == null)
     {
       System.err.println("No classes were compiled. It is likely the source .ump file(s) contained no compilable code.");
+    }
+    
+    if(mainClasses.size()>0)
+    {
+      writeUncaughtExceptionFile(mainClasses.get(0));
     }
     postpare();
   }
@@ -2291,7 +2277,51 @@ class JavaGenerator
     {
       bw.close();
     }
+    if (aClass instanceof UmpleClass)
+    {
+      StringBuilder exceptionBuilder = new StringBuilder();
+      for(String key:((JavaClassGenerator)language).uncaughtExceptions.keySet())
+      {
+        exceptionBuilder.append(((JavaClassGenerator)language).uncaughtExceptions.get(key).toString()+"\n");
+      }
+      String exception = exceptionBuilder.toString();
+      uncaughtExceptions.append(exception);
+      if(((UmpleClass)aClass).getHasMainMethod())
+      {
+        mainClasses.add((UmpleClass)aClass);
+      }
+    }
   }
+
+  public void writeUncaughtExceptionFile(UmpleClass aClass)
+  {
+    try {
+   
+    ILang language = getLanguageFor(aClass);
+    
+    String path = StringFormatter.addPathOrAbsolute( 
+                  getModel().getUmpleFile().getPath(), 
+                            getOutput()) + 
+                            aClass.getPackageName().replace(".", File.separator);
+    
+    String filename = path + File.separator + aClass.getName() + ".java";
+    File file = new File(path);
+    file.mkdirs();
+
+    BufferedWriter bw = new BufferedWriter(new FileWriter(filename,true));
+    String contents = new JavaClassGenerator().getExceptionHandler(uncaughtExceptions.toString());
+    getModel().getGeneratedCode().put(aClass.getName(),getModel().getGeneratedCode().get(aClass.getName())+contents);
+    try
+    {
+      bw.write(contents);
+      bw.flush();
+    }
+    finally
+    {
+      bw.close();
+    }
+    } catch(Exception e){ e.printStackTrace(); }
+  }  
 
   public void initializeLangaugeBasedVariables() {
     UmpleToPrimitiveMap.put("Integer","int");

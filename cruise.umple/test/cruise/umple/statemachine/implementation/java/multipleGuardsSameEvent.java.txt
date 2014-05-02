@@ -5,8 +5,6 @@ package example;
 
 public class LightFixture
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -57,7 +55,6 @@ public class LightFixture
     return bulb;
   }
 
-  @umplesourcefile(line={9,10}, file={"multipleGuardsSameEvent.ump","multipleGuardsSameEvent.ump"}, javaline={69,76}, length={1,1})
   public boolean push()
   {
     boolean wasEventProcessed = false;

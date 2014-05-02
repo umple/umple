@@ -1,8 +1,4 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
-      umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customAddPrefixCode, customAddPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-      %><%=umpleSourceFile%>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public <%=gen.translate("type",av)%> <%=gen.translate("addMethod",av)%>(<%=gen.translate("methodArgumentsExcept",relatedAssociation)%>)
   {
     <%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%> = new <%=gen.translate("type",av)%>(<%=gen.translate("callerArgumentsExcept",relatedAssociation)%>);<%= 
@@ -10,11 +6,12 @@
 %>
     return <%=gen.translate("parameterNew",av)%>;
   }
-<%= umpleSourceFile %>
+
   public boolean <%=gen.translate("addMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasAdded = false;
-    <% if (customAddPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
+    <% if (customAddPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av));
+     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
     boolean <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);
 
@@ -36,25 +33,29 @@
 (traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 %>
     wasAdded = true;
-    <% if (customAddPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
+    <% if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av));
+     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;
   }
-<%= umpleSourceFile %>
+
   public boolean <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasRemoved = false;
-    <% if (customRemovePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
+    <% if (customRemovePrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePrefixCode,gen.translate("removeMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     //Unable to remove <%=gen.translate("parameterOne",av)%>, as it must always have a <%=gen.relatedTranslate("associationOne",av)%>
     if (this.equals(<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>()))
     {
-      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
+      <% if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
+      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
       return wasRemoved;
     }
 
     //<%=gen.relatedTranslate("associationOne",av)%> already at minimum (<%=av.getMultiplicity().getLowerBound()%>)
     if (<%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("minimumNumberOfMethod",av)%>())
     {
-      <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
+      <% if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
+      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
       return wasRemoved;
     }<%= 
 (traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
@@ -64,7 +65,8 @@
 (traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 %>
     wasRemoved = true;
-    <% if (customRemovePostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
+    <% if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
     return wasRemoved;
   }
 

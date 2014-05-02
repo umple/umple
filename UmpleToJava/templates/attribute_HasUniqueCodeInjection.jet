@@ -1,13 +1,12 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
-  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customHasUniquePrefixCode,customHasUniquePostfixCode},
-      isFake?"FAKE":getAttributeCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));%><%= umpleSourceFile %>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public static boolean <%=gen.translate("hasUniqueMethod",av)%>(<%=gen.translate("type", av)%> <%=gen.translate("parameterOne", av)%>)
   {
-    <% if (customHasUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } %>
+    <% if (customHasUniquePrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customHasUniquePrefixCode,gen.translate("hasUniqueMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } %>
     boolean <%=gen.translate("parameterHasUnique",av)%> = <%=gen.translate("getUniqueMethod",av)%>(<%=gen.translate("parameterOne",av)%>) != null;
 <%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-%><% if (customHasUniquePostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customHasUniquePostfixCode, "    ")); } 
+%><% if (customHasUniquePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customHasUniquePostfixCode,gen.translate("hasUniqueMethod",av)); 
+    append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customHasUniquePostfixCode, "    ")); } 
 %>    return <%=gen.translate("parameterHasUnique",av)%>;
   }
 

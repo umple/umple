@@ -7,8 +7,6 @@ import java.lang.Thread;
 
 public class LightFixture implements Runnable
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -78,7 +76,6 @@ public class LightFixture implements Runnable
     return bulb;
   }
 
-  @umplesourcefile(line={8,14,18}, file={"pooledStateMachine_withParameters.ump","pooledStateMachine_withParameters.ump","pooledStateMachine_withParameters.ump"}, javaline={91,97,103}, length={1,1,1})
   public boolean _turnDimmer(Integer lightval)
   {
     boolean wasEventProcessed = false;
@@ -134,7 +131,6 @@ public class LightFixture implements Runnable
     return wasEventProcessed;
   }
 
-  @umplesourcefile(line={12}, file={"pooledStateMachine_withParameters.ump"}, javaline={149}, length={1})
   public boolean _entry()
   {
     boolean wasEventProcessed = false;

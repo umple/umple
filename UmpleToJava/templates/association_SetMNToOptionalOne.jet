@@ -2,18 +2,16 @@
 <%
   String existingToNewMap = StringFormatter.format("{0}ToNew{1}", relatedAssociation.getName(), av.getUpperCaseName());
   String orCheckMaxBound = av.isStar() ? "" : StringFormatter.format(" || {0}.length > {1}()", gen.translate("parameterMany",av), gen.translate("maximumNumberOfMethod",av));
-%><%
-  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customSetManyPrefixCode, customSetManyPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-      %><%= umpleSourceFile %>
+%>
   public boolean <%=gen.translate("setManyMethod",av)%>(<%=gen.translate("type",av)%>... <%=gen.translate("parameterMany",av)%>)
   {
     boolean wasSet = false;
-    <% if (customSetManyPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
+    <% if (customSetManyPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetManyPrefixCode,gen.translate("setManyMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPrefixCode, "    ")); } %>
     if (<%=gen.translate("parameterMany",av)%>.length < <%=gen.translate("minimumNumberOfMethod",av)%>()<%=orCheckMaxBound%>)
     {
-      <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
+      <% if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
+      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "      ")); } %>
       return wasSet;
     }
 
@@ -23,7 +21,8 @@
     {
       if (<%=gen.translate("parameterCheckNewMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
       {
-        <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } %>
+        <% if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
+        append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } %>
         return wasSet;
       }
       else if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>() != null && !this.equals(<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>()))
@@ -62,7 +61,8 @@
       <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
     }
     wasSet = true;
-    <% if (customSetManyPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } %>
+    <% if (customSetManyPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetManyPostfixCode,gen.translate("setManyMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "    ")); } %>
     return wasSet;
   }
 

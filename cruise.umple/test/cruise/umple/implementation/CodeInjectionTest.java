@@ -17,7 +17,7 @@ public class CodeInjectionTest extends TemplateTest
   @Test
   public void AttributesAndDelete()
   {
-    assertUmpleTemplateFor("CodeInjectionTest.ump",languagePath + "/CodeInjectionTest_Attributes."+ languagePath +".txt","Student");
+	assertUmpleTemplateFor("CodeInjectionTest.ump",languagePath + "/CodeInjectionTest_Attributes."+ languagePath +".txt","Student");
   }
 
   @Test

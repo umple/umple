@@ -7,8 +7,6 @@ import java.lang.Thread;
 
 public class CourseAttempt implements Runnable
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -261,7 +259,6 @@ public class CourseAttempt implements Runnable
     }
   }
 
-  @umplesourcefile(line={12}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={272}, length={1})
   private void exitCourseAttemptSMLab1()
   {
     switch(courseAttemptSMLab1)
@@ -278,7 +275,6 @@ public class CourseAttempt implements Runnable
     if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMLab1 != CourseAttemptSMLab1.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
-  @umplesourcefile(line={18}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={290}, length={1})
   private void exitCourseAttemptSMTermProject()
   {
     switch(courseAttemptSMTermProject)
@@ -295,7 +291,6 @@ public class CourseAttempt implements Runnable
     if (courseAttemptSM != CourseAttemptSM.studying && aCourseAttemptSMTermProject != CourseAttemptSMTermProject.Null) { setCourseAttemptSM(CourseAttemptSM.studying); }
   }
 
-  @umplesourcefile(line={25}, file={"pooledStateMachineWithConcurrentStates_autoTransition.ump"}, javaline={308}, length={1})
   private void exitCourseAttemptSMFinalExam()
   {
     switch(courseAttemptSMFinalExam)

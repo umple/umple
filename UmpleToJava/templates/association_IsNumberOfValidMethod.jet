@@ -1,16 +1,14 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
-      umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customIsNumberOfValidPrefixCode, customIsNumberOfValidPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-      %><%=umpleSourceFile%>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public boolean <%=gen.translate("isNumberOfValidMethod",av)%>()
   {
-    <% if (customIsNumberOfValidPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } %>
+    <% if (customIsNumberOfValidPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customIsNumberOfValidPrefixCode,gen.translate("isNumberOfValidMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPrefixCode, "    ")); } %>
 <% if (av.getMultiplicity().isUpperBoundMany()) { %>
     boolean isValid = <%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("minimumNumberOfMethod",av)%>();
 <% } else { %>
     boolean isValid = <%=gen.translate("numberOfMethod",av)%>() >= <%=gen.translate("minimumNumberOfMethod",av)%>() && <%=gen.translate("numberOfMethod",av)%>() <= <%=gen.translate("maximumNumberOfMethod",av)%>();
 <% } %>
-    <% if (customIsNumberOfValidPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPostfixCode, "    ")); } %>
+    <% if (customIsNumberOfValidPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customIsNumberOfValidPostfixCode,gen.translate("isNumberOfValidMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customIsNumberOfValidPostfixCode, "    ")); } %>
     return isValid;
   }

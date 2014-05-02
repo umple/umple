@@ -6,8 +6,6 @@ import java.util.*;
 
 public class Student
 {
-  @java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-  public @interface umplesourcefile{int[] line();String[] file();int[] javaline();int[] length();}
 
   //------------------------
   // MEMBER VARIABLES
@@ -38,7 +36,6 @@ public class Student
   // INTERFACE
   //------------------------
 
-  @umplesourcefile(line={10, 11},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={47, 53},length={2, 1})
   public boolean setId(String aId)
   {
     boolean wasSet = false;
@@ -51,7 +48,6 @@ public class Student
     return wasSet;
   }
 
-  @umplesourcefile(line={15, 17},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={61, 66},length={2, 1})
   public boolean setName(String aName)
   {
     boolean wasSet = false;
@@ -63,7 +59,6 @@ public class Student
     return wasSet;
   }
 
-  @umplesourcefile(line={21, 22},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={74, 78},length={1, 1})
   public boolean setType(String aType)
   {
     boolean wasSet = false;
@@ -74,7 +69,6 @@ public class Student
     return wasSet;
   }
 
-  @umplesourcefile(line={21, 22, 27, 28},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={74, 78, 86, 90},length={1, 1, 1, 1})
   public boolean resetType()
   {
     boolean wasReset = false;
@@ -85,7 +79,6 @@ public class Student
     return wasReset;
   }
 
-  @umplesourcefile(line={30, 31},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={98, 101},length={1, 1})
   public boolean addRole(String aRole)
   {
     boolean wasAdded = false;
@@ -95,7 +88,6 @@ public class Student
     return wasAdded;
   }
 
-  @umplesourcefile(line={32, 33},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={109, 112},length={1, 1})
   public boolean removeRole(String aRole)
   {
     boolean wasRemoved = false;
@@ -105,7 +97,6 @@ public class Student
     return wasRemoved;
   }
 
-  @umplesourcefile(line={12, 13},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={119, 122},length={1, 1})
   public String getId()
   {
     print "start get_id";
@@ -114,7 +105,6 @@ public class Student
     return aId;
   }
 
-  @umplesourcefile(line={18, 19},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={129, 132},length={1, 1})
   public String getName()
   {
     print "start get_name";
@@ -123,7 +113,6 @@ public class Student
     return aName;
   }
 
-  @umplesourcefile(line={23, 24},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={139, 142},length={1, 1})
   public String getType()
   {
     print "start get_type";
@@ -132,7 +121,6 @@ public class Student
     return aType;
   }
 
-  @umplesourcefile(line={25, 26},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={149, 152},length={1, 1})
   public String getDefaultType()
   {
     print "start getDefault_type";
@@ -141,7 +129,6 @@ public class Student
     return aType;
   }
 
-  @umplesourcefile(line={36, 37},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={169, 172},length={1, 1})
   public String getRole(int index)
   {
     print "start get_role";
@@ -150,7 +137,6 @@ public class Student
     return aRole;
   }
 
-  @umplesourcefile(line={36, 37},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={169, 172},length={1, 1})
   public String[] getRoles()
   {
     print "start get_roles";
@@ -159,7 +145,6 @@ public class Student
     return newRoles;
   }
 
-  @umplesourcefile(line={36, 37},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={169, 172},length={1, 1})
   public int numberOfRoles()
   {
     print "start numberOf_roles";
@@ -168,14 +153,12 @@ public class Student
     return number;
   }
 
-  @umplesourcefile(line={36, 37},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={169, 172},length={1, 1})
   public boolean hasRoles()
   {
     boolean has = roles.size() > 0;
     return has;
   }
 
-  @umplesourcefile(line={36, 37},file={"CodeInjectionTest_underscore.ump", "CodeInjectionTest_underscore.ump"},javaline={169, 172},length={1, 1})
   public int indexOfRole(String aRole)
   {
     print "start indexOf_role";

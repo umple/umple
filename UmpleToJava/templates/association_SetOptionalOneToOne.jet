@@ -1,16 +1,14 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
-  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customSetPrefixCode, customSetPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-      %><%= umpleSourceFile %>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterNew",av)%>)
   {
     boolean wasSet = false;
-    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
+    <% if (customSetPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     if (<%=gen.translate("associationOne",av)%> != null && !<%=gen.translate("associationOne",av)%>.equals(<%=gen.translate("parameterNew",av)%>) && equals(<%=gen.translate("associationOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>()))
     {
       //Unable to <%=gen.translate("setMethod",av)%>, as existing <%=gen.translate("associationOne",av)%> would become an orphan
-      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "      ")); } %>
+      <% if (customSetPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "      ")); } %>
       return wasSet;
     }
 
@@ -29,7 +27,8 @@
       }
     }
     wasSet = true;
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
+    <% if (customSetPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     return wasSet;
   }
 

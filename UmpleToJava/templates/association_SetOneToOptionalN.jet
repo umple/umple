@@ -1,23 +1,22 @@
-<%@ jet package="cruise.umple.ignore" class="Ignore"%><%
-  umpleSourceFile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customSetPrefixCode, customSetPostfixCode},
-      isFake?"FAKE":getAssociationCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-      %><%= umpleSourceFile %>
+<%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public boolean <%=gen.translate("setMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
     boolean wasSet = false;
-    <% if (customSetPrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
+    <% if (customSetPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av));
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } %>
     //Must provide <%=gen.translate("associationOne",av)%> to <%=gen.relatedTranslate("associationOne",av)%>
     if (<%=gen.translate("parameterOne",av)%> == null)
     {
-      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
+      <% if (customSetPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
       return wasSet;
     }
 
     //<%=gen.translate("associationOne",av)%> already at maximum (<%=relatedAssociation.getMultiplicity().getUpperBound()%>)
     if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("numberOfMethod",av)%>() >= <%=gen.translate("type",av)%>.<%=gen.relatedTranslate("maximumNumberOfMethod",av)%>())
     {
-      <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
+      <% if (customSetPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av));
+      append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } %>
       return wasSet;
     }
     
@@ -29,13 +28,15 @@
       if (!didRemove)
       {
         <%=gen.translate("associationOne",av)%> = <%=gen.translate("parameterExisting",av)%>;
-        <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "        ")); } %>
+        <% if (customSetPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+        append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "        ")); } %>
         return wasSet;
       }
     }
     <%=gen.translate("associationOne",av)%>.<%=gen.relatedTranslate("addMethod",av)%>(this);
     wasSet = true;
-    <% if (customSetPostfixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
+    <% if (customSetPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
     return wasSet;
   }
 

@@ -3,18 +3,14 @@
   String customDeletePrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before","delete"));
   String customDeletePostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after","delete"));
 
-  String umplesourcefile = getUmpleSourceFile(baseJavaLine,new String[]{
-      customDeletePrefixCode,customDeletePostfixCode},
-      isFake?"FAKE":getDeleteCode(new StringBuffer(), model,uClass,gClass,gen,isFirst,true));
-
-  appendln(stringBuffer,umplesourcefile);
-  appendln(stringBuffer,"  public void delete()");
+  appendln(stringBuffer,"\n  public void delete()");
   append(stringBuffer,"  {");
 
   boolean hasSomethingToDelete = false;  
 
   if (customDeletePrefixCode != null) 
   {
+    addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customDeletePrefixCode,"delete");
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePrefixCode, "    "));
     hasSomethingToDelete = true;
   }
@@ -111,6 +107,7 @@
 
   if (customDeletePostfixCode != null) 
   {
+    addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customDeletePostfixCode,"delete");
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customDeletePostfixCode, "    "));
     hasSomethingToDelete = true;
   }
