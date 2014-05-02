@@ -134,8 +134,7 @@ class GrammarAnalyzer
   depend java.util.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.parser.rules.*;
-  depend java.io.*;  
-  depend java.lang.reflect.Method;
+  depend java.io.*;
 
   /*
     Inner class which is a wrapper for the objects that will go into the global hashmap
@@ -161,9 +160,6 @@ class GrammarAnalyzer
 
   boolean done = false;
   boolean first = true;
-
-  //HashMap of all the methods of this class
-  HashMap<String,Method> handlers = new HashMap<String,Method>();
 
   //hashmap of global variables(local to the class, not local to methods)
   HashMap<String,Object> global = new HashMap<String,Object>();
@@ -212,7 +208,5 @@ class GrammarAnalyzer
   
   //List of tokens of the form [~token], which are closed minded enough to only accept alphanumerics, but still need to know if there are keyswords following them which cannot be the token's value, such as sorted being a rolename for an association. 
   Terminal[] closeTerminal;
-  
-  Terminal[] optionalTerminal;
 }
 use GrammarParsing_Code.ump;

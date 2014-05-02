@@ -338,7 +338,7 @@
       </manifest>
     </jar>
 
-    <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygrounMain" />
+    <echo message="Package: Umple sync jar used in UmpleOnline to compile and sync diagram - See PlaygroundMain" />
     <jar destfile="dist/umplesync.jar" basedir="${bin.path}" includes="cruise/umple/** joptsimple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/**">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
