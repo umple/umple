@@ -51,7 +51,8 @@ public class SampleFileWriterTest {
     String actual;
     
     actual = SampleFileWriter.readContent(new File("abc.txt"));
-    Assert.assertEquals("aha" + System.getProperty("line.separator"),actual);
+    Assert.assertEquals("aha\n",actual);
+
   }  
 
   @Test(expected=Exception.class)
@@ -71,7 +72,7 @@ public class SampleFileWriterTest {
     Assert.assertEquals("abc.txt", file.getName());
     String actual;
     actual = SampleFileWriter.readContent(new File("abc.txt"));
-    Assert.assertEquals("aha" + System.getProperty("line.separator"),actual);
+    Assert.assertEquals("aha\n",actual);
 
   }   
   
