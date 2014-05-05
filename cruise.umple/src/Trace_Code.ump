@@ -243,6 +243,43 @@ class State
   
 }
 
+class AssociationVariable
+{
+    public TraceItem getTraced(String method, UmpleClass uClass){
+    
+    for(TraceDirective td: uClass.getTraceDirectives())
+    {
+      for(AssociationTraceItem ast: td.getAssociationTraceItems())
+      {
+        if((method.equals("setMethod") && ast.getTraceCardinality()))
+        {
+          return ast;
+        }
+      }
+    }
+    
+    return null;
+  
+  }
+  
+  public AssociationTraceItem getTrace(String method, UmpleClass uClass){
+    
+    for(TraceDirective td: uClass.getTraceDirectives())
+    {
+      for(AssociationTraceItem ast: td.getAssociationTraceItems())
+      {
+        if((method.equals("setMethod") && ast.getTraceCardinality()))
+        {
+          return ast;
+        }
+      }
+    }
+    
+    return null;
+  
+  }
+}
+
 class AttributeTraceItem
 {
   depend cruise.umple.util.*;
@@ -482,10 +519,58 @@ class AssociationTraceItem
    * @params uClass: the current umple class uClass
    * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
    * @return the message for the trace 
-   */
-  public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass,String... args)
-  {
-
+   */  
+   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
+     
+     for(AssociationVariable ass: uClass.getAssociationVariables())
+     {
+       if(ass.equals(o))
+       {
+         String type = ((AssociationVariable)o).getType();
+         String name = "";
+         String extra = "";
+         String obj = "";
+         String accessor = gen.translate("traceAccessor",this);
+         String concatinator = gen.translate("traceConcatinator",this);
+         String comma = concatinator+"\",\""+concatinator;
+         String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},\"";
+         
+         if(o instanceof AssociationVariable)
+         {
+           name = gen.translate("associationMany",(AssociationVariable)o);
+         }
+         
+//         if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
+//         {
+//           obj = name;
+//         }
+//         else
+//         {
+//           obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
+//           name += gen.translate("traceFormatNonPrimitive",this);
+//         }
+         
+         for(String str: args){
+           extra+=concatinator+str;
+         }
+         String message = messageLayout+extra;
+         message = StringFormatter.format(
+           message,gen.translate("traceTimestamp",this),
+           gen.translate("traceThread",this),
+           getPosition().getFilename().replace("\\","\\\\"),
+           getPosition().getLineNumber(),
+           uClass.getName(),
+           StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
+           methodname,
+           name        
+         );
+         message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+         message = StringFormatter.format(getExtremities(gen, name),message);
+         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+         return message;
+       }
+     }
+     
     return "";
   }
   /* Gets and returns the if statement enclosing this trace item.

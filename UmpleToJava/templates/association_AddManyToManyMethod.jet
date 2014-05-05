@@ -13,10 +13,10 @@
     }
 
 <% } %><%= 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);<%= 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) != -1)
     {

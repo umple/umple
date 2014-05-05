@@ -17,10 +17,10 @@ import org.junit.*;
 public class TracerAssociationsTest extends TracerTemplateTest
 {
 		
-	@Test @Ignore 
-	public void ConsoleTracer_TraceAssociationCardinality1()
+	@Test
+	public void TraceAssociationCardinality1()
 	{
-		assertUmpleTemplateFor("ConsoleTracer_TraceAssociationCardinality1.ump",languagePath + "/ConsoleTracer_TraceAssociationCardinality1."+ languagePath +".txt","Company");
+		assertUmpleTemplateFor("TraceAssociationCardinality1.ump",languagePath + tracerPath + "/TraceAssociationCardinality1."+ languagePath +".txt","Company");
 	}
 	  
 	@Test @Ignore

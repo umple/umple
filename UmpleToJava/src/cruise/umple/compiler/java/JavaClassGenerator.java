@@ -5601,7 +5601,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_561);
      } 
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_562);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -5609,7 +5609,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_564);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_565);
     stringBuffer.append(gen.translate("parameterOne",av));
@@ -5643,6 +5643,9 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_576);
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_577);
+    stringBuffer.append(
+    (traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+    );
      if (customRemovePrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePrefixCode,gen.translate("removeMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_578);
@@ -5675,6 +5678,9 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_592);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av));
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
+    stringBuffer.append(
+    (traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+    );
     stringBuffer.append(TEXT_593);
     
     }
@@ -8500,7 +8506,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1865);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1866);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -8513,7 +8519,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1871);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1872);
     stringBuffer.append(gen.translate("addOrMoveAtMethod",av));
@@ -8531,7 +8537,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1879);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1880);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -8544,11 +8550,11 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1885);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1886);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1887);
     stringBuffer.append(gen.translate("addAtMethod",av));
@@ -8556,7 +8562,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1889);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1890);
     

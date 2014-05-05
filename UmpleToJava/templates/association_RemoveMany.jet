@@ -1,7 +1,9 @@
 <%@ jet package="cruise.umple.ignore" class="Ignore"%>
   public boolean <%=gen.translate("removeMethod",av)%>(<%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%>)
   {
-    boolean wasRemoved = false;
+    boolean wasRemoved = false;<%=
+    (traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+    %>
     <% if (customRemovePrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePrefixCode,gen.translate("removeMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     if (!<%=gen.translate("associationMany",av)%>.contains(<%=gen.translate("parameterOne",av)%>))
@@ -26,6 +28,8 @@
       }
     }
     <% if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av));
-    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %>
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } %><%=
+    (traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+    %>
     return wasRemoved;
   }
