@@ -162,7 +162,7 @@ class AssociationTraceItem
   
   Position position = null;
   periodClause = null;
-  Boolean conditionallyWhere = true; 
+  Boolean conditionallyWhere = false; 
   conditionType = "where";
 }
 /*
