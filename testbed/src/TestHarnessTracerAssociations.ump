@@ -1,0 +1,12 @@
+
+namespace cruise.tracer.test;
+
+class CompanyA
+{
+  * -- * Manager manager;
+  
+  //----- trace Many to Many association * -- *
+  trace cardinality manager;
+}
+
+class Manager {}
