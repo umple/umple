@@ -2,7 +2,9 @@ package cruise.pooled.statemachine.test;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Ignore;
+import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+
 
 public class PooledStateMachineTest
 { 
@@ -48,18 +50,34 @@ public class PooledStateMachineTest
 	  Assert.assertEquals(2, PooledSM.stateMessageMap.size());
   }
   
-  @Ignore
   @Test 
   public void processEvents() throws InterruptedException
   {
 	  PooledSM psm = new PooledSM();
+	  int numChecks;
 	  // check initial state is Open
 	  Assert.assertEquals(PooledSM.Status.Open, psm.getStatus());
 	  
 	  // reject is triggered: reject is added to the message pool(queue)
 	  psm.reject();
-	  Thread.sleep(10);
+	  numChecks=200; // we will check for a second
 	  // reject is pooled at the head of queue: it is not processed
+	  while(psm.getStatus().equals(PooledSM.Status.Open) && numChecks>0){
+		  if(psm.pool.messages.isEmpty()){
+			  Thread.sleep(5);
+			  numChecks--;
+		  }
+		  else
+		  {
+			  Assert.assertEquals(PooledSM.Status.Open, psm.getStatus());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM.MessageType.reject_M))
+			  {
+				  break;
+			  }
+		  }
+	  }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM.Status.Open, psm.getStatus());
 	  // check that the message 'reject_M' is pooled
 	  for (PooledSM.Message msg: psm.pool.messages)
@@ -67,30 +85,76 @@ public class PooledStateMachineTest
 		  Assert.assertEquals(PooledSM.MessageType.reject_M, msg.type);
       }
 	  //Now, there is one message saved at the head of the queue
-	  Assert.assertEquals(1, psm.pool.messages.size());
+	  Assert.assertEquals(1, psm.pool.messages.size());	  
+	  
 	  
 	  // register is triggered: register is added to the message pool(queue)
 	  psm.register();
-	  Thread.sleep(10);
+	  numChecks=200; // we will check for a second
 	  // register is removed from the queue and is processed: transition to Full
-	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
-	  // reject is removed and processed: transition to Full
+	  // reject is removed and it is processed: transition to Full
+	  while(!psm.getStatus().equals(PooledSM.Status.Full) && numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(!psm.pool.messages.isEmpty()){
+			  Thread.sleep(5);
+			  numChecks--;
+		  }
+		  else
+		  {
+			  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
+			  Assert.assertEquals(true, psm.pool.messages.isEmpty());
+			  break;
+		  }	      
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
 	  //there is no message saved : reject is dequeued and processed
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
+	  
 	  // reject is triggered: reject is added to the message pool(queue)
 	  psm.reject();
-	  Thread.sleep(10);
+	  numChecks=200;
 	  // reject is removed from the queue and is processed: transition to Full
+	  while(numChecks>0 && psm.getStatus().equals(PooledSM.Status.Full)) {
+		  if(!psm.pool.messages.isEmpty()){
+			  Thread.sleep(5);
+			  numChecks--;
+		  }
+	      else
+		  {
+	    	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
+	    	  Assert.assertEquals(true, psm.pool.messages.isEmpty());
+	    	  break;
+	      }
+	  }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
 	  //there is no message saved 
-	  Assert.assertEquals(0, psm.pool.messages.size());
+	  Assert.assertEquals(0, psm.pool.messages.size());	  
+	  
 	  
 	  // register is triggered: register is added to the message pool(queue)
 	  psm.register();
-	  Thread.sleep(10);
+	  numChecks=200; // we will check for a second
 	  // register is pooled at the head of queue: it is not processed
+	  while(numChecks>0 && psm.getStatus().equals(PooledSM.Status.Full)) {
+		  if(psm.pool.messages.isEmpty()){
+			  Thread.sleep(5);
+			  numChecks--;
+		  }
+	      else
+		  {
+	    	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
+	    	  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+	    	  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM.MessageType.register_M))
+	    	  {
+	    		  break;
+	    	  }
+	      }
+	  }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
 	  // check that the message 'register_M' is pooled
 	  for (PooledSM.Message msg: psm.pool.messages)
@@ -98,12 +162,35 @@ public class PooledStateMachineTest
 		  Assert.assertEquals(PooledSM.MessageType.register_M, msg.type);
       }
 	  //Now, there is one message saved at the head of the queue
-	  Assert.assertEquals(1, psm.pool.messages.size());
-		  
+	  Assert.assertEquals(1, psm.pool.messages.size());		
+	  
+	  
 	  // register is triggered: register is added to the message pool(queue)
 	  psm.register();
-	  Thread.sleep(10);
+	  numChecks=200; // we will check for a second
 	  // register is pooled at the head of queue: it is not processed
+	  while(numChecks>0 && psm.getStatus().equals(PooledSM.Status.Full)) {
+		  if(psm.pool.messages.isEmpty()){
+			  Thread.sleep(5);
+			  numChecks--;
+		  }
+		  else if(psm.pool.messages.size() !=2)
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+		  }
+	      else if(psm.pool.messages.size() ==2)
+		  {
+	    	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
+	    	  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+	    	  if(psm.pool.messages.size() == 2 && psm.pool.messages.element().type.equals(PooledSM.MessageType.register_M))
+	    	  {
+	    		  Assert.assertEquals(2, psm.pool.messages.size());
+	    		  break;
+	    	  }
+	      }
+	  }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
 	  // check that the message 'register_M' is pooled
 	  for (PooledSM.Message msg: psm.pool.messages)
@@ -114,19 +201,33 @@ public class PooledStateMachineTest
 		  }
       }
 	  //Now, there are two messages saved at the head of the queue
-	  Assert.assertEquals(2, psm.pool.messages.size());
-			
-		  
+	  Assert.assertEquals(2, psm.pool.messages.size());					
+	  
+	  
 	  // reject is triggered: reject is added to the message pool(queue)
 	  psm.reject();
-	  Thread.sleep(10);
 	  // reject is removed from the queue and is processed: transition to Full
+	  while(numChecks>0 && psm.getStatus().equals(PooledSM.Status.Full)) {
+		  if(psm.pool.messages.size() != 2){
+			  Thread.sleep(5);
+			  numChecks--;
+		  }
+	      else if(psm.pool.messages.size() == 2)
+		  {
+	    	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
+	    	  Assert.assertEquals(2, psm.pool.messages.size());
+	    	  if(psm.pool.messages.size() == 2 )
+	    	  {
+	    		  break;
+	    	  }
+	      }
+      }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM.Status.Full, psm.getStatus());
 	  //there are two messages saved at the head of the queue
-	  Assert.assertEquals(2, psm.pool.messages.size());
-		  
+	  Assert.assertEquals(2, psm.pool.messages.size());		  
 	  
-	 //check that there are two events left in the queue
+	  //check that there are two events left in the queue
 	  Assert.assertEquals(2, psm.pool.messages.size());
 	  
   }
