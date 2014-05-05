@@ -5,6 +5,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
@@ -24,7 +25,7 @@ public class MultipleQueuedStateMachinesTest_nestedStates_EventlessStateMachine
   } 
   
   
-  @Test 
+  @Test @Ignore
   public void processEvents() throws InterruptedException
   {
 	  MultipleQueuedSMs_nestedStates_EventlessSM qsm = new MultipleQueuedSMs_nestedStates_EventlessSM();
