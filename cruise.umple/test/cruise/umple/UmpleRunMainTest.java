@@ -10,24 +10,33 @@
 package cruise.umple;
 
 import org.junit.*;
+import java.io.*;
 
 import cruise.umple.util.SampleFileWriter;
 
 public class UmpleRunMainTest
 {
-
-  String pathToInput;
+  private PrintStream out_backup;
+  private PrintStream err_backup;
+  private ByteArrayOutputStream outErrIntercept;
+  private String pathToInput;
   
   @Before
   public void setUp()
   {
-    UmpleRunMain.displayOutput = false;
+    out_backup = System.out;
+    err_backup = System.err;
+    outErrIntercept = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outErrIntercept));
+    System.setErr(new PrintStream(outErrIntercept));
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/sequence");
   }
   
   @After
   public void tearDown()
   {
+    System.setOut(out_backup);
+    System.setErr(err_backup);
     SampleFileWriter.destroy("myfile.ump");
     SampleFileWriter.destroy("myfile.cmd");
     SampleFileWriter.destroy("test_package");
@@ -39,7 +48,7 @@ public class UmpleRunMainTest
    String[] args = new String[0];
    
    UmpleRunMain.main(args);
-   Assert.assertEquals("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd\n", UmpleRunMain.console);
+   Assert.assertEquals("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd\n", outErrIntercept.toString());
   }
   
  @Test @Ignore
@@ -58,7 +67,7 @@ public class UmpleRunMainTest
                      "  >>> new test_package.One\n" +
                      "Done.\n";
    
-   Assert.assertEquals(expected, UmpleRunMain.console);
+   Assert.assertEquals(expected, outErrIntercept.toString());
  }
   
 }
