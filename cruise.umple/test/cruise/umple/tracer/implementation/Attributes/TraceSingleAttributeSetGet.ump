@@ -1,7 +1,0 @@
-namespace example;
-
-class Tracer
-{
-	Integer id;
-	trace set,get id;
-}

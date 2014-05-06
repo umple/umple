@@ -1,9 +1,0 @@
-namespace example;
-
-class Tracer
-{
-	Integer id;
-	String name;
-	trace name after [name == "tim"];
-	trace id after [id > 232100];
-}
