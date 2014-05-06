@@ -275,6 +275,7 @@ class DeepHistoryCourse
 {
   Sm {
     S1 {
+      toS2HStar -> S2.HStar;
       Ss1 {
         Sss1{
           toSs2Sss2 -> Ss2.Sss2;
@@ -292,9 +293,11 @@ class DeepHistoryCourse
         Sss2{
           Ssss1{
             toSsss2 -> Ssss2;
+            toS2Ss2 -> S2.Ss2;
           }
           Ssss2{
             toS2 -> S2;
+            toSsss1 -> Ssss1;
           }
         }
       }
@@ -302,6 +305,12 @@ class DeepHistoryCourse
     S2 {
       toDeepHistory -> S1.HStar;
       toS1Ss2 -> S1.Ss2;
+      Ss1{
+        toS1 -> S1;
+      }
+      Ss2{
+        -> S1.HStar;
+      }
     }
   }
 }

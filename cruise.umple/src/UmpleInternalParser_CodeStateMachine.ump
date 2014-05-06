@@ -498,12 +498,14 @@ class UmpleInternalParser
                   break;
                 }
                 s.setName(stateNames[stateNames.length - 1]);
-                if (s.getName().equals("H"))
+                if (s.getIsHistoryState())
                 {
+                  possiblyUnknownStates.remove(s);
                   s.getStateMachine().setContainsHistoryState(true);
                 }
-                if (s.getName().equals("HStar"))
+                if (s.getIsDeepHistoryState())
                 {
+                  possiblyUnknownStates.remove(s);
                   //TODO: if there was a state declared as HStar this point will never be reached
                   s.getStateMachine().setContainsDeepHistoryState(true);
                   addDeepHistoryStatesToNestedStateMachines(s);
@@ -512,6 +514,7 @@ class UmpleInternalParser
               }
               if(!tmpName.contains("."))
               {
+                //TODO: check to make sure there are no other states at this level with same name
                 s.setName(stateNames[stateNames.length - 1]);
                 s.setStateMachine(sm);
               }
@@ -519,7 +522,11 @@ class UmpleInternalParser
           }
         }
       }
-      else{s.setStateMachine(sm);}
+      else
+      {
+        //if H or HSTar raise error
+        s.setStateMachine(sm);
+      }
     }
     
     
@@ -580,7 +587,6 @@ class UmpleInternalParser
       {
         nextState = placeholderStateMachine.findState(name);
         if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
-        if(placeholderStateMachine.getParentState() != null){System.out.println("Has Parent!");}
       }
 
       if (nextState == null)
@@ -643,6 +649,10 @@ class UmpleInternalParser
     if (s == null)
     {
       s = new State(stateToken.getValue("stateName"),sm);
+    }
+    if (s.getIsHistoryState() || s.getIsDeepHistoryState())
+    {
+      setFailedPosition(stateToken.getPosition(), 63, stateToken.getName());
     }
     possiblyUnknownStates.remove(s);
     return s;

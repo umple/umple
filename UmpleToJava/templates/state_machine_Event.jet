@@ -41,11 +41,15 @@
     allDeclarations.append(StringFormatter.format("\n    {0} {1} = {2};",gen.translate("type",sm),gen.translate("parameterOne",sm),gen.translate("stateMachineOne", sm)));
     if(sm.getContainsHistoryState())
     {     
-    	allDeclarations.append(StringFormatter.format("\n    {0}H = {1};",gen.translate("stateMachineOne",sm),gen.translate("stateMachineOne", sm)));
+      allDeclarations.append(StringFormatter.format("\n    if ({0} != {1}.Null){",gen.translate("stateMachineOne",sm),gen.translate("type",sm)));
+    	allDeclarations.append(StringFormatter.format("{0}H = {1};}",gen.translate("stateMachineOne",sm),gen.translate("stateMachineOne", sm)));    
+      javaLine++;
     }
     if(sm.getContainsDeepHistoryState())
-    {     
-    	allDeclarations.append(StringFormatter.format("\n    {0}HStar = {1};",gen.translate("stateMachineOne",sm),gen.translate("stateMachineOne", sm)));
+    { 
+      allDeclarations.append(StringFormatter.format("\n    if ({0} != {1}.Null){",gen.translate("stateMachineOne",sm),gen.translate("type",sm)));
+    	allDeclarations.append(StringFormatter.format("{0}HStar = {1};}",gen.translate("stateMachineOne",sm),gen.translate("stateMachineOne", sm)));
+      javaLine++;
     }
     allCases.append(StringFormatter.format("\n    switch ({0})\n",gen.translate("parameterOne",sm)));
     allCases.append(StringFormatter.format("    {\n"));

@@ -64,6 +64,7 @@
 60: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no pooled state machine and regular state machine in the same class;
 61: 1, "http://umple.org/PageBeingDeveloped.html", class {0} must have no queued state machine and regular state machine in the same class;
 62: 4, "http://umple.org/PageBeingDeveloped.html", (unspecified) must not be used in combination with Pooled State machine {0} - it is treated such as other regular events - it is pooled;
+63: 1, "http://umple.org/PageBeingDeveloped.html", {0} is a reserved name for History or Deep History States;
 
 80: 4, "http://umple.org/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 
