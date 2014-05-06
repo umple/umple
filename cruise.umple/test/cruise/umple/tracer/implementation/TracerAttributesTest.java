@@ -121,13 +121,13 @@ public class TracerAttributesTest extends TracerStateMachinesTest
 	  AssertAttr("TraceMultipleAttributeWhere.ump","TraceMultipleAttributeWhere.");
 	}
 	  
-	@Test  
+	@Test @Ignore
 	public void MultipleAttributeAfterCondition()
 	{
 	  AssertAttr("TraceMultipleAttributeAfter.ump","TraceMultipleAttributeAfter.");
 	}
 	
-	@Test  
+	@Test  @Ignore
 	public void MultipleAttributeUntilCondition()
 	{
 	  AssertAttr("TraceMultipleAttributeUntil.ump","TraceMultipleAttributeUntil.");

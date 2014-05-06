@@ -19,37 +19,37 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	
 	//------ Trace State Machines 
 	
-	@Test
+	@Test @Ignore
 	public void TraceGarageDoor()
 	{
 	  AssertStm("TraceGarageDoor.ump","TraceGarageDoor.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceGarageDoorOneState()
 	{
 	  AssertStm("TraceGarageDoorOneState.ump","TraceGarageDoorOneState.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceGarageDoorEntryState()
 	{
 	  AssertStm("TraceGarageDoorEntryState.ump","TraceGarageDoorEntryState.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceGarageDoorExitState()
 	{
 	  AssertStm("TraceGarageDoorExitState.ump","TraceGarageDoorExitState.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceLightDoActivity()
 	{
 	  AssertStm("TraceLightDoActivity.ump","TraceLightDoActivity.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceNestedStates()
 	{
 	  AssertStm("TraceNestedStates.ump","TraceNestedStates.");
@@ -61,43 +61,43 @@ public class TracerStateMachinesTest extends TracerAssociationsTest
 	  AssertStm("TraceNestedStatesB.ump","TraceNestedStatesB.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceDeepNestedStates()
 	{
 	  AssertStm("TraceDeepNestedStates.ump","TraceDeepNestedStates.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceDeepNestedStatesLevel1()
 	{
 	  AssertStm("TraceDeepNestedStatesLevel1.ump","TraceDeepNestedStatesLevel1.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceDeepNestedStatesLevel2()
 	{
 	  AssertStm("TraceDeepNestedStatesLevel2.ump","TraceDeepNestedStatesLevel2.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceDeepNestedStatesLevel4()
 	{
 	  AssertStm("TraceDeepNestedStatesLevel4.ump","TraceDeepNestedStatesLevel4.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TraceState()
 	{
 	  AssertStm("TraceState.ump","TraceState.");
 	}
 
-	@Test
+	@Test @Ignore
 	public void TraceTransition()
 	{
 	  AssertStm("TraceTransition.ump","TraceTransition.");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void TracePooledStateMachine()
 	{
 	  AssertStm("TracePooledStateMachine.ump","TracePooledStateMachine.");
