@@ -25,4 +25,14 @@ public class TracerTemplateTest extends TemplateTest
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/tracer/implementation");
     pathToRoot = SampleFileWriter.rationalize("../../cruise.umple");    
   }
+  
+  @After
+  public void tearDown()
+  {
+    SampleFileWriter.destroy(pathToInput + "/attributes/example");
+    SampleFileWriter.destroy(pathToInput + "/statemachines/example");
+    SampleFileWriter.destroy(pathToInput + "/associations/example");
+    
+    SampleFileWriter.destroy(pathToInput + "/attributes/cruise/util");
+  }
 }

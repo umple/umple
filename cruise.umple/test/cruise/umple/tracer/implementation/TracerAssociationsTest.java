@@ -16,17 +16,19 @@ import org.junit.*;
 @Ignore
 public class TracerAssociationsTest extends TracerTemplateTest
 {
-		
+  
+  String path = "associations/";
+  
 	@Test
 	public void TraceAssociationCardinality1()
 	{
-		assertUmpleTemplateFor("TraceAssociationCardinality1.ump",languagePath + tracerPath + "/TraceAssociationCardinality1."+ languagePath +".txt","Company");
+		assertUmpleTemplateFor(path+"TraceAssociationCardinality1.ump",languagePath + tracerPath + "/TraceAssociationCardinality1."+ languagePath +".txt","Company");
 	}
 	  
 	@Test @Ignore
 	public void TracesSupportAssoiations()
 	{
-		assertUmpleTemplateFor("AssociationTrace.ump",languagePath + "/AssociationTrace."+ languagePath +".txt","Tracer");
+		assertUmpleTemplateFor(path+"AssociationTrace.ump",languagePath + tracerPath + "/AssociationTrace."+ languagePath +".txt","Tracer");
 	}
 	
 }
