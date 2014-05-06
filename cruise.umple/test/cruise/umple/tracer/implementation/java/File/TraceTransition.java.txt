@@ -5,14 +5,14 @@ package example;
 import cruise.util.FileTracer;
 import java.util.Date;
 
-public class GarageDoor
+public class Tracer
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //GarageDoor State Machines
+  //Tracer State Machines
   enum Sm { Open, Closing, Closed, Opening, HalfOpen }
   private Sm sm;
 
@@ -20,7 +20,7 @@ public class GarageDoor
   // CONSTRUCTOR
   //------------------------
 
-  public GarageDoor()
+  public Tracer()
   {
     setSm(Sm.Open);
   }
@@ -48,27 +48,27 @@ public class GarageDoor
     switch (aSm)
     {
       case Open:
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,Open,buttonOrObstacle,Closing" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Open,buttonOrObstacle,Closing" );
         setSm(Sm.Closing);
         wasEventProcessed = true;
         break;
       case Closing:
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,Closing,buttonOrObstacle,Opening" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Closing,buttonOrObstacle,Opening" );
         setSm(Sm.Opening);
         wasEventProcessed = true;
         break;
       case Closed:
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,Closed,buttonOrObstacle,Opening" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Closed,buttonOrObstacle,Opening" );
         setSm(Sm.Opening);
         wasEventProcessed = true;
         break;
       case Opening:
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,Opening,buttonOrObstacle,HalfOpen" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,Opening,buttonOrObstacle,HalfOpen" );
         setSm(Sm.HalfOpen);
         wasEventProcessed = true;
         break;
       case HalfOpen:
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,GarageDoor,"+System.identityHashCode(this)+",sm_t,HalfOpen,buttonOrObstacle,Opening" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceTransition.ump,26,Tracer,"+System.identityHashCode(this)+",sm_t,HalfOpen,buttonOrObstacle,Opening" );
         setSm(Sm.Opening);
         wasEventProcessed = true;
         break;

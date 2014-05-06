@@ -5,14 +5,14 @@ package example;
 import cruise.util.StringTracer;
 import java.util.Date;
 
-public class LightFixture
+public class Tracer
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //LightFixture State Machines
+  //Tracer State Machines
   enum Bulb { Off, On }
   enum BulbOn { Null, Normal, Dimmed }
   private Bulb bulb;
@@ -22,7 +22,7 @@ public class LightFixture
   // CONSTRUCTOR
   //------------------------
 
-  public LightFixture()
+  public Tracer()
   {
     setBulbOn(BulbOn.Null);
     setBulb(Bulb.Off);
@@ -57,13 +57,13 @@ public class LightFixture
     switch (aBulb)
     {
       case Off:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,LightFixture,"+System.identityHashCode(this)+",sm_t,Off,flip,On" );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,Tracer,"+System.identityHashCode(this)+",sm_t,Off,flip,On" );
         setBulb(Bulb.On);
         wasEventProcessed = true;
         break;
       case On:
         exitBulb();
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,LightFixture,"+System.identityHashCode(this)+",sm_t,On,flip,Off" );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,Tracer,"+System.identityHashCode(this)+",sm_t,On,flip,Off" );
         setBulb(Bulb.Off);
         wasEventProcessed = true;
         break;
@@ -122,13 +122,13 @@ public class LightFixture
     switch (aBulbOn)
     {
       case Normal:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,LightFixture,"+System.identityHashCode(this)+",sm_t,Normal,touch,Dimmed" );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,Tracer,"+System.identityHashCode(this)+",sm_t,Normal,touch,Dimmed" );
         setBulbOn(BulbOn.Dimmed);
         wasEventProcessed = true;
         break;
       case Dimmed:
         exitBulb();
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,LightFixture,"+System.identityHashCode(this)+",sm_t,Dimmed,touch,Off" );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceNestedStates.ump,15,Tracer,"+System.identityHashCode(this)+",sm_t,Dimmed,touch,Off" );
         setBulb(Bulb.Off);
         wasEventProcessed = true;
         break;

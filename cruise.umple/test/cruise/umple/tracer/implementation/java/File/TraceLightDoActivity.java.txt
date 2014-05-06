@@ -1,29 +1,29 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3718 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
 import cruise.util.FileTracer;
 import java.util.Date;
 
-public class LightFixtureA
+public class Tracer
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //LightFixtureA State Machines
+  //Tracer State Machines
   enum Status { Open, Closed }
   private Status status;
 
-  //LightFixtureA Do Activity Threads
+  //Tracer Do Activity Threads
   Thread doActivityStatusClosedThread = null;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public LightFixtureA()
+  public Tracer()
   {
     setStatus(Status.Open);
   }
@@ -51,13 +51,13 @@ public class LightFixtureA
     switch (aStatus)
     {
       case Open:
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,LightFixtureA,"+System.identityHashCode(this)+",sm_t,Open,flip,Closed" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,Tracer,"+System.identityHashCode(this)+",sm_t,Open,flip,Closed" );
         setStatus(Status.Closed);
         wasEventProcessed = true;
         break;
       case Closed:
         exitStatus();
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,LightFixtureA,"+System.identityHashCode(this)+",sm_t,Closed,flip,Open" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,Tracer,"+System.identityHashCode(this)+",sm_t,Closed,flip,Open" );
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;
@@ -73,7 +73,7 @@ public class LightFixtureA
     switch(status)
     {
       case Closed:
-        if (doActivityStatusClosedThread != null) { doActivityStatusClosedThread.interrupt();     FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,LightFixtureA,"+System.identityHashCode(this)+",sm_di,Closed,doActivitedInterrupted,status" ); }
+        if (doActivityStatusClosedThread != null) { doActivityStatusClosedThread.interrupt();     FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,Tracer,"+System.identityHashCode(this)+",sm_di,Closed,doActivitedInterrupted,status" ); }
         break;
     }
   }
@@ -86,7 +86,7 @@ public class LightFixtureA
     switch(status)
     {
       case Closed:
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,LightFixtureA,"+System.identityHashCode(this)+",sm_da,Closed,doActivitedStarted,status" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceLightDoActivity.ump,18,Tracer,"+System.identityHashCode(this)+",sm_da,Closed,doActivitedStarted,status" );
         doActivityStatusClosedThread = new DoActivityThread(this,"doActivityStatusClosed");
         break;
     }
@@ -108,10 +108,10 @@ public class LightFixtureA
 
   private static class DoActivityThread extends Thread
   {
-    LightFixtureA controller;
+    Tracer controller;
     String doActivityMethodName;
     
-    public DoActivityThread(LightFixtureA aController,String aDoActivityMethodName)
+    public DoActivityThread(Tracer aController,String aDoActivityMethodName)
     {
       controller = aController;
       doActivityMethodName = aDoActivityMethodName;

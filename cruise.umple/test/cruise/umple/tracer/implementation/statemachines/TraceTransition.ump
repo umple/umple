@@ -1,6 +1,6 @@
 namespace example;
 
-class GarageDoor
+class Tracer
 {
     // UML state machine digram for a Garage door, written in Umple
     sm {

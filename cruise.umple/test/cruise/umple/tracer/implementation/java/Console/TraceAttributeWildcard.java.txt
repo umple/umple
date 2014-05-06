@@ -1,7 +1,7 @@
   public boolean setX(String aX)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWildcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
     x = aX;
     wasSet = true;
     return wasSet;
@@ -10,7 +10,7 @@
   public boolean setY(String aY)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,y,"+y+","+(""+aY).toString().replace("\n","").replace(",",";") );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWildcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,y,"+y+","+(""+aY).toString().replace("\n","").replace(",",";") );
     y = aY;
     wasSet = true;
     return wasSet;
@@ -19,7 +19,7 @@
   public boolean setZ(String aZ)
   {
     boolean wasSet = false;
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,z,"+z+","+(""+aZ).toString().replace("\n","").replace(",",";") );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWildcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,z,"+z+","+(""+aZ).toString().replace("\n","").replace(",",";") );
     z = aZ;
     wasSet = true;
     return wasSet;
@@ -27,18 +27,18 @@
 
   public String getX()
   {
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,x,"+x );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWildcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,x,"+x );
     return x;
   }
 
   public String getY()
   {
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,y,"+y );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWildcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,y,"+y );
     return y;
   }
 
   public String getZ()
   {
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWilcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,z,"+z );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAttributeWildcard.ump,8,Tracer,"+System.identityHashCode(this)+",at_g,z,"+z );
     return z;
   }

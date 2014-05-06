@@ -5,14 +5,14 @@ package example;
 import cruise.util.FileTracer;
 import java.util.Date;
 
-public class Light
+public class Tracer
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Light State Machines
+  //Tracer State Machines
   enum Status { On, Off }
   enum StatusOn { Null, SemiOn, FullOn }
   private Status status;
@@ -22,7 +22,7 @@ public class Light
   // CONSTRUCTOR
   //------------------------
 
-  public Light()
+  public Tracer()
   {
     setStatusOn(StatusOn.Null);
     setStatus(Status.On);
@@ -58,12 +58,12 @@ public class Light
     {
       case On:
         exitStatus();
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Light,"+System.identityHashCode(this)+",sm_t,On,flip,Off" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Tracer,"+System.identityHashCode(this)+",sm_t,On,flip,Off" );
         setStatus(Status.Off);
         wasEventProcessed = true;
         break;
       case Off:
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Light,"+System.identityHashCode(this)+",sm_t,Off,flip,On" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceState.ump,18,Tracer,"+System.identityHashCode(this)+",sm_t,Off,flip,On" );
         setStatus(Status.On);
         wasEventProcessed = true;
         break;

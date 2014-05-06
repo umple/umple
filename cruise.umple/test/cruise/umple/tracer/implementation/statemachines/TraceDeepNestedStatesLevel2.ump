@@ -1,6 +1,6 @@
 namespace example;
 
-class NestedState {
+class Tracer {
   
   stm
   {

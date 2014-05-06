@@ -7,24 +7,24 @@ import java.util.Date;
 import java.util.*;
 import java.lang.Thread;
 
-public class Course implements Runnable
+public class Tracer implements Runnable
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Course State Machines
+  //Tracer State Machines
   enum Status { Open, Full }
   private Status status;
   
   MessagePool pool;
   Thread removal;
   
-  //enumeration type of messages accepted by Course
+  //enumeration type of messages accepted by Tracer
   enum MessageType { register_M, reject_M, extend_M }
 
-  // Map for a Course pooled state machine that allows querying which events are possible in each map
+  // Map for a Tracer pooled state machine that allows querying which events are possible in each map
 
   public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();
   static {
@@ -36,12 +36,12 @@ public class Course implements Runnable
   // CONSTRUCTOR
   //------------------------
 
-  public Course()
+  public Tracer()
   {
     setStatus(Status.Open);
     pool = new MessagePool();
     removal=new Thread(this);
-    //start the thread of Course
+    //start the thread of Tracer
     removal.start();
   }
 
@@ -68,7 +68,7 @@ public class Course implements Runnable
     switch (aStatus)
     {
       case Open:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TracePooledStateMachine.ump,14,Course,"+System.identityHashCode(this)+",sm_t,Open,register,Full" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TracePooledStateMachine.ump,14,Tracer,"+System.identityHashCode(this)+",sm_t,Open,register,Full" );
         setStatus(Status.Full);
         wasEventProcessed = true;
         break;
@@ -87,7 +87,7 @@ public class Course implements Runnable
     switch (aStatus)
     {
       case Full:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TracePooledStateMachine.ump,14,Course,"+System.identityHashCode(this)+",sm_t,Full,reject,Full" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TracePooledStateMachine.ump,14,Tracer,"+System.identityHashCode(this)+",sm_t,Full,reject,Full" );
         setStatus(Status.Full);
         wasEventProcessed = true;
         break;
@@ -106,7 +106,7 @@ public class Course implements Runnable
     switch (aStatus)
     {
       case Full:
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TracePooledStateMachine.ump,14,Course,"+System.identityHashCode(this)+",sm_t,Full,extend,Open" );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TracePooledStateMachine.ump,14,Tracer,"+System.identityHashCode(this)+",sm_t,Full,extend,Open" );
         setStatus(Status.Open);
         wasEventProcessed = true;
         break;

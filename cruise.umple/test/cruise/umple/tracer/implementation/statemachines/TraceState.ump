@@ -1,6 +1,6 @@
 namespace example;
 
-class Light
+class Tracer
 {
   status
   {
