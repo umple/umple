@@ -29,9 +29,6 @@ class UmpleConsoleMain
 
     public static void main(String[] args) 
     {
-
-        console = "";
-
         OptionSet optset = optParse(args);
         if (preModelOptionProcess(optset)) {
             return;
@@ -109,12 +106,10 @@ class UmpleConsoleMain
 
     private static void println(String output)
     {
-        console += output + "\n";
         System.out.println(output);
     }
     private static void printerr(String err)
     {
-        console += err;
         System.err.print(err);
     }
     
@@ -215,8 +210,7 @@ class UmpleConsoleMain
 
     return optSet;
   }
-    
-  public static String console;
+
   private static OptionParser optparser;
 }
 
@@ -235,8 +229,6 @@ class UmpleRunMain
 
     public static void main(String[] args) 
     {
-        console = "";
-
         if (args.length < 2)
         {
             println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd");
@@ -309,30 +301,18 @@ class UmpleRunMain
 
     private static void print(String output)
     {
-        console += output;
-        if (displayOutput)
-        {
-            System.out.print(output);  
-        }
-
+      System.out.print(output);
     }
 
     private static void println(String output)
     {
-        print(output + "\n");
+      print(output + "\n");
     }
 
     private static void printerr(String err)
     {
-        console += err;
-        if (displayOutput)
-        {
-            System.err.print(err);
-        }
+      System.err.print(err);
     }
-
-    public static String console;
-    public static boolean displayOutput = true;
 }
 
 /*
@@ -352,7 +332,6 @@ class PlaygroundMain
 
     public static void main(String[] args)
     {
-        console = "";
         String answer = "";
 
         if (args.length == 0)
@@ -462,7 +441,6 @@ class PlaygroundMain
 
     private static void print(String output)
     {
-        console += output;
         System.out.print(output);
     }
 
@@ -521,8 +499,6 @@ class PlaygroundMain
             return null;
         }
     }
-
-    public static String console = "";
 }
 
 use Compiler.ump;

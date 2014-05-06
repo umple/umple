@@ -16,12 +16,19 @@ import cruise.umple.util.SampleFileWriter;
 
 public class UmpleConsoleMainTest
 {
-
+  private PrintStream out_backup;
+  private PrintStream err_backup;
+  private ByteArrayOutputStream outErrIntercept;
   String pathToInput;
   
   @Before
   public void setUp()
   {
+    out_backup = System.out;
+    err_backup = System.err;
+    outErrIntercept = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outErrIntercept));
+    System.setErr(new PrintStream(outErrIntercept));
 //    UmpleConsoleMain.displayOutput = false;
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/sequence");
   }
@@ -29,6 +36,8 @@ public class UmpleConsoleMainTest
   @After
   public void tearDown()
   {
+    System.setOut(out_backup);
+    System.setErr(err_backup);
     SampleFileWriter.destroy("myfile.ump");
     SampleFileWriter.destroy("myfile.cmd");
     SampleFileWriter.destroy("testclass1.ump");
@@ -43,7 +52,7 @@ public class UmpleConsoleMainTest
    String[] args = new String[0];
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n", UmpleConsoleMain.console);
+   Assert.assertEquals("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n", outErrIntercept.toString());
   }
   
 
@@ -52,13 +61,14 @@ public class UmpleConsoleMainTest
   {
     String[] args = new String[] { "--version"};
 
-   UmpleConsoleMain.main(args);
-   Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.versionNumber +"\n",UmpleConsoleMain.console);
+    UmpleConsoleMain.main(args);
+    Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.versionNumber +"\n", outErrIntercept.toString());
 
-   args = new String[] { "-v"};
+    outErrIntercept.reset();
+    args = new String[] { "-v"};
 
-   UmpleConsoleMain.main(args);
-   Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.versionNumber +"\n", UmpleConsoleMain.console);
+    UmpleConsoleMain.main(args);
+    Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.versionNumber +"\n", outErrIntercept.toString());
   }
 
 
@@ -68,7 +78,7 @@ public class UmpleConsoleMainTest
    String[] args = new String[] { "--IDONTEXIST"  };
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Option:\'IDONTEXIST\' is not a recognized option\nUsage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n", UmpleConsoleMain.console);
+   Assert.assertTrue(outErrIntercept.toString().startsWith("Option:\'IDONTEXIST\' is not a recognized option\nUsage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n"));
   }
   
    // Ignore the following - currently does exit
@@ -171,7 +181,7 @@ public class UmpleConsoleMainTest
 		    File fileOut = new File("Testclass1.java");
 		    Assert.assertEquals(true, fileOut.exists());
 			fileOut.delete();
-		    Assert.assertEquals("testclass1.ump\ntestclass2.ump\nSuccess! Processed testclass1.ump.\nSuccess! Processed testclass2.ump.\n", UmpleConsoleMain.console);
+		    Assert.assertEquals("testclass1.ump\ntestclass2.ump\nSuccess! Processed testclass1.ump.\nSuccess! Processed testclass2.ump.\n", outErrIntercept.toString());
 		    new File("testclass1.ump").delete();
 		    new File("testclass2.ump").delete();
 		} catch (IOException e) {
@@ -196,7 +206,7 @@ public class UmpleConsoleMainTest
 		in.close();
 		
 		UmpleConsoleMain.main(args);
-		Assert.assertEquals("Success! Processed testclass.ecore.\n", UmpleConsoleMain.console);
+    Assert.assertEquals("Success! Processed testclass.ecore.\n", outErrIntercept.toString());
 		
 		File fileOut = new File("testclass.ecore.ump");
 	    Assert.assertEquals(true, fileOut.exists());

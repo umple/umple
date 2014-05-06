@@ -17,13 +17,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.junit.*;
+import java.io.*;
 
 import cruise.umple.util.AssertHelper;
 import cruise.umple.util.SampleFileWriter;
 
 public class PlaygroundMainTest
 {
-
+  private PrintStream out_backup;
+  private PrintStream err_backup;
+  private ByteArrayOutputStream outErrIntercept;
   String pathToInput;
   String pathToRoot;
   String pathToBuild;
@@ -31,6 +34,11 @@ public class PlaygroundMainTest
   @Before
   public void setUp()
   {
+    out_backup = System.out;
+    err_backup = System.err;
+    outErrIntercept = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outErrIntercept));
+    System.setErr(new PrintStream(outErrIntercept));
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/sync");
     pathToRoot = SampleFileWriter.rationalize("../cruise.umple");
     pathToBuild = SampleFileWriter.rationalize("../build");
@@ -39,6 +47,8 @@ public class PlaygroundMainTest
   @After
   public void tearDown()
   {
+    System.setOut(out_backup);
+    System.setErr(err_backup);
     SampleFileWriter.destroy("myfile.ump");
     SampleFileWriter.destroy("myfile.uml");
     SampleFileWriter.destroy("myfile.ecore");
@@ -59,7 +69,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-classList","myfile.ump"};
     
     PlaygroundMain.main(args);
-    AssertHelper.assertEitherEquals("One,Two", "Two,One", PlaygroundMain.console);
+    AssertHelper.assertEitherEquals("One,Two", "Two,One", outErrIntercept.toString());
   }
   
   @Test
@@ -69,7 +79,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-interfaceList","myfile.ump"};
     
     PlaygroundMain.main(args);
-    AssertHelper.assertEitherEquals("One,Two", "Two,One", PlaygroundMain.console);
+    AssertHelper.assertEitherEquals("One,Two", "Two,One", outErrIntercept.toString());
   }
 
 
@@ -80,7 +90,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-source","myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals(true,PlaygroundMain.console.startsWith("/*PLEASE DO NOT EDIT THIS CODE*/"));
+    Assert.assertEquals(true,outErrIntercept.toString().startsWith("/*PLEASE DO NOT EDIT THIS CODE*/"));
   }
 
   
@@ -91,7 +101,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-generate","Json","myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals(true,PlaygroundMain.console.startsWith("{\"umpleClasses\":"));
+    Assert.assertEquals(true,outErrIntercept.toString().startsWith("{\"umpleClasses\":"));
   }
 
   @Test
@@ -101,7 +111,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-generate","Yuml","myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("[One],",PlaygroundMain.console);
+    Assert.assertEquals("[One],",outErrIntercept.toString());
   }
 
   @Test
@@ -111,7 +121,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-generate","Xmi","myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals(true,PlaygroundMain.console.startsWith("<?xml"));
+    Assert.assertEquals(true,outErrIntercept.toString().startsWith("<?xml"));
   }
   
   @Test
@@ -121,7 +131,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-generate","Papyrus","myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals(true,PlaygroundMain.console.startsWith("<?xml"));
+    Assert.assertEquals(true,outErrIntercept.toString().startsWith("<?xml"));
   }  
   
   @Test
@@ -131,7 +141,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-generate","Ecore","myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals(true,PlaygroundMain.console.startsWith("<?xml"));
+    Assert.assertEquals(true,outErrIntercept.toString().startsWith("<?xml"));
   }  
   
   @Test
@@ -141,7 +151,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-generate","TextUml","myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals(true,PlaygroundMain.console.startsWith("package"));
+    Assert.assertEquals(true,outErrIntercept.toString().startsWith("package"));
   }   
   
   @Test
@@ -154,7 +164,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-addClass",json,"myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("class Student\n{\n}\n\nclass Student\n{\n  position 1 2 3 4;\n}\n",PlaygroundMain.console);
+    Assert.assertEquals("class Student\n{\n}\n\nclass Student\n{\n  position 1 2 3 4;\n}\n",outErrIntercept.toString());
   }    
   
   //@Test - To be added when interfaces for umpleonline will be completed
@@ -167,7 +177,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-addInterface",json,"myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("interface IStudent\n{\n}\n\ninterface IStudent\n{\n  position 1 2 3 4;\n}\n",PlaygroundMain.console);
+    Assert.assertEquals("interface IStudent\n{\n}\n\ninterface IStudent\n{\n  position 1 2 3 4;\n}\n",outErrIntercept.toString());
   }  
   
   //@Test - To be added when interfaces for umpleonline will be completed
@@ -180,7 +190,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-removeInterface",json,"myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("",PlaygroundMain.console);
+    Assert.assertEquals("",outErrIntercept.toString());
   }
   
   @Test
@@ -193,7 +203,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-removeClass",json,"myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("",PlaygroundMain.console);
+    Assert.assertEquals("",outErrIntercept.toString());
   }
   
   @Test
@@ -206,7 +216,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-editClass",json,"myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("class Student { position 10 20 30 40; }\n",PlaygroundMain.console);
+    Assert.assertEquals("class Student { position 10 20 30 40; }\n",outErrIntercept.toString());
   }
 
   //@Test - To be added when interfaces for umpleonline will be completed
@@ -219,7 +229,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-editInterface",json,"myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("interface IStudent { position 10 20 30 40; }\n",PlaygroundMain.console);
+    Assert.assertEquals("interface IStudent { position 10 20 30 40; }\n",outErrIntercept.toString());
   }
   
   @Test
@@ -230,7 +240,7 @@ public class PlaygroundMainTest
     SampleFileWriter.createFile("myfile.ump", umple);
     String[] args = new String[] {"-addAssociation",json,"myfile.ump"};
     PlaygroundMain.main(args);
-    SampleFileWriter.assertFileContent(new File(pathToInput,"NewAssociationTest_Go.after.ump"), PlaygroundMain.console);
+    SampleFileWriter.assertFileContent(new File(pathToInput,"NewAssociationTest_Go.after.ump"), outErrIntercept.toString());
   }
   
   @Test
@@ -243,7 +253,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-editAssociation",json,"myfile.ump"};
     
     PlaygroundMain.main(args);
-    Assert.assertEquals("class Student { * -- * Course;\n\n  position 68 52 109 42;   position.association Course__Student 1,2 3,4;\n} class Course { position 176 199 109 42; }\n",PlaygroundMain.console);
+    Assert.assertEquals("class Student { * -- * Course;\n\n  position 68 52 109 42;   position.association Course__Student 1,2 3,4;\n} class Course { position 176 199 109 42; }\n",outErrIntercept.toString());
   }   
   
   @Test
@@ -256,7 +266,7 @@ public class PlaygroundMainTest
     String[] args = new String[] {"-removeAssociation",json,"myfile.ump"};
     PlaygroundMain.main(args);
     
-    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go.after.ump"), PlaygroundMain.console);
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go.after.ump"), outErrIntercept.toString());
   }
 
   
