@@ -22,6 +22,8 @@ class AlloyGenerator
 {
   depend cruise.umple.alloy.*;
   Utility utility = new Utility();
+  
+  
   public void generate(){
   
   	final String className = "UmpleObject";
@@ -48,11 +50,25 @@ class AlloyGenerator
     //This generates bidirectionality rules for every association within Umple model 
     for(Association assoc : model.getAssociations()){
     	utility.addNewLine(code,2);
-    	Fact fact = new Fact("BidirectionalityRule",assoc);
-    	fact.print(code);
-        //utility.addNewLine(code,2);
+    	if(analyzeAssociation(assoc) == 2){
+    		BidirectionRule bidirect = new BidirectionRule(assoc);
+    		bidirect.print(code);
+    	}
+    	else{
+    		NoExtendedRule nExt = new NoExtendedRule(assoc); 
+    		nExt.print(code);
+    		NoSelfRelation nsr = new NoSelfRelation(assoc);
+    		nsr.print(code);
+    	}
     }
     terminateCode(code);
+  }
+  
+  private Integer analyzeAssociation(Association assoc){
+  	String rEndName = utility.getRightEndName(assoc),
+  		lEndName = utility.getLeftEndName(assoc);
+  	if(lEndName.equals(rEndName)) return 1;
+  	else return 2;
   }
   
   private void terminateCode(StringBuilder code) {

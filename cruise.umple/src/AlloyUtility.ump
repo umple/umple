@@ -29,12 +29,12 @@ class Utility {
   	if(type == 2)this.addString(code,"}");
   }
   
-  public void addStartDottedLine(StringBuilder sb){
-  	this.addString(sb,"\n\n------------------------------------------------------------------------------------------------------------------\n\n");
+  public String addStartDottedLine(){
+  	return "\n\n------------------------------------------------------------------------------------------------------------------\n\n";
   }
   
-  public void addEndDottedLine(StringBuilder sb){
-  	this.addString(sb,"\n-------------------------------------------------------------------------------------------------------------------\n\n");
+  public String addEndDottedLine(){
+  	return "\n------------------------------------------------------------------------------------------------------------------\n\n";
   }
   
   private void addChar(StringBuilder code,char c){ String cc = ""+c; this.addString(code,cc); }
@@ -68,9 +68,9 @@ class Utility {
   
   //Comment begins here
   public void commentModel(StringBuilder code,UmpleModel model){
-  	addStartDottedLine(code);
-  	code.append("-- This Alloy file is generated using Umple from "+model.getUmpleFile().getFileName()+"\n");
-  	addEndDottedLine(code);
+  	code.append(addStartDottedLine()+
+  		"-- This Alloy file is generated using Umple from "+
+  			model.getUmpleFile().getFileName()+addStartDottedLine());
   }
   
   //Comment fact
