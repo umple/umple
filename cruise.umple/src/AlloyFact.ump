@@ -4,93 +4,143 @@ class Fact {
   depend java.lang.StringBuilder;
   depend cruise.umple.compiler.*; 
   
-  Utility utility;
-  factName;
-  firstClassName;
-  secondClassName;
-  rName1;
-  rName2;
+  protected Utility utility;
+  protected String factName;
+  protected String firstClassName;
+  protected String secondClassName;
+  protected String rName1;
+  protected String rName2;
   
   //This constructor builds a fact from a given name and an association
-  public Fact(String nam, Association assoc){
+  public Fact(Association assoc){
 	utility = new Utility();
-	factName = nam;
+	factName = null;
 	firstClassName = utility.getLeftEndName(assoc);
 	secondClassName = utility.getRightEndName(assoc);
 	rName1 = utility.getLeftRoleName(assoc);
 	rName2 = utility.getRightRoleName(assoc);
   }
   
-  //This method is responsible for printing bidirectionality fact
-  private void printBidirectionFact(StringBuilder sb){
-  	genFactHead(sb);
-  	utility.addNewLine(sb,1);
-  	utility.addTab(sb,2);
-  	utility.addString(sb,"all ");
-  	utility.addString(sb,makeVarDeclaration(firstClassName,1));
-  	utility.addString(sb,", ");
-  	utility.addString(sb,makeVarDeclaration(secondClassName,1));
-  	utility.addString(sb," |");
-  	bidirectionalContent(sb);
-  	utility.addNewLine(sb,1);
-  	utility.addCurlyBracket(sb,2);
-  }
-  
   //This method generates the header for any given fact
-  private void genFactHead(StringBuilder code){
-  	utility.addString(code,"fact");
-  	utility.addTab(code,1);
-  	utility.addString(code,factName);
-  	utility.addTab(code,1);
-  	utility.addCurlyBracket(code,1);
+  protected String factHeader(){  	
+  	return "fact "+factName+" {\n  ";
   }
-  
-  //This method computes the content of a bidirectionality rule
-  private void bidirectionalContent(StringBuilder sb){
-  	utility.addNewLine(sb,1);
-  	utility.addTab(sb,4);
-  	utility.addString(sb,makeVarName(firstClassName,1)+" in "+rName1+"["+
-  		makeVarName(secondClassName,1)+"] <=> "+makeVarName(secondClassName,1)+" in "+rName2+
-  			"["+makeVarName(firstClassName,1)+"]");
-  }
-  
-  //This methods comments bidirectionality rule
-  private void commentBidirectionality(StringBuilder sb){
-  	utility.addNewLine(sb,2);
-  	utility.addStartDottedLine(sb);
-  	utility.addString(sb,"--The following defines bidirectionality rule between class "+
-  		firstClassName+" and class "+secondClassName+"\n");
-  	utility.addEndDottedLine(sb);
-  }
-  
-  private String makeVarName(String name,Integer num){
+ 
+  protected String makeVarName(String name,Integer num){
   	return name.toLowerCase()+"_"+num;
   }
   
   //This method handles variable declaration for a given object
-  private String makeVarDeclaration(String cName, int num){
-	String tempName = cName.toLowerCase(),
-			out = "";
-	if(num == 1){
-		return makeVarName(cName,1)+" : "+cName;	 		
-	}
-	if(num > 1){
-		int i = 1;
-		while(i < num){
-			out += out+makeVarName(cName,num)+",";
-			i++;
-		}
-	 		out += out+makeVarName(cName,1)+" : "+cName;
-	}
-	return out;
+  protected String makeVarDeclaration(String cName, int num){
+	if(num == 1) return varDec(cName,1)+" : "+cName;	 		
+	return varDec(cName,num)+" : "+cName;
   }
- 
-  //This method prints a typical fact information in a nicely formatted manner
+  
+  private String varDec(String cName, int num){
+  	if(num == 1) return makeVarName(cName,1);
+  	return varDec(cName,num-1)+", "+makeVarName(cName,num); 
+  }
+}
+
+class NoExtendedRule {
+  depend java.lang.StringBuilder;
+  depend cruise.umple.compiler.*; 
+  isA Fact;
+  
+  public NoExtendedRule(Association assoc){
+  	super(assoc);
+  	factName = "NoExtendedRelation";
+  }
+  
+  private void commentNoExtendedFact(StringBuilder sb){
+  	utility.addString(sb,utility.addStartDottedLine()+"--The following defines no extended relation rule for class "+
+  		firstClassName+"\n"+utility.addEndDottedLine());
+  }
+  
+  //This method prints no extended relation fact
+  private void printNoExtendedRelationFact(StringBuilder sb){
+  	utility.addString(sb,factHeader()+"no disj "+makeVarDeclaration(firstClassName,3)+" |"+
+  	  noExtRelContent()+"\n}");
+  }
+    
+  //This method generates content no extended relation
+  private String noExtRelContent(){
+  	return "\n    "+makeVarName(firstClassName,1)+" in "+
+  		rName2+"["+makeVarName(firstClassName,2)+"] && "+makeVarName(firstClassName,1)
+  		+" in "+rName2+"["+makeVarName(firstClassName,3)+"]";
+  }
   public void print(StringBuilder sb){
-  	switch(factName){
-  		case "BidirectionalityRule" : commentBidirectionality(sb); 
-  					printBidirectionFact(sb);
-  		default: ;
-  	}
-  } 
+  	commentNoExtendedFact(sb);
+  	printNoExtendedRelationFact(sb);
+  }
+}
+
+class NoSelfRelation {
+  depend java.lang.StringBuilder;
+  depend cruise.umple.compiler.*; 
+  isA Fact;
+  
+  public NoSelfRelation(Association assoc){
+  	super(assoc);
+  	factName = "NoSelfRelation";
+  }
+  
+  private void commentNoSelfRelation(StringBuilder sb){
+  	utility.addString(sb,utility.addStartDottedLine()+"--The following defines no self relation rule for class "+
+  		firstClassName+"\n"+utility.addEndDottedLine());
+  }
+  
+  private String decPart(){
+  	return "no "+makeVarDeclaration(firstClassName,1)+" |\n";
+  }
+  
+  //This method prints no extended relation fact
+  private void printNoSelfRelationFact(StringBuilder sb){
+  	utility.addString(sb,factHeader()+decPart()+"    "+noSelfRelContent()+"\n}");
+  }
+  
+  //This method generates content no extended relation
+  private String noSelfRelContent(){
+  	return makeVarName(firstClassName,1)+" in "+
+  		makeVarName(firstClassName,1)+".^"+rName2;
+  }
+  
+  public void print(StringBuilder sb){
+  	commentNoSelfRelation(sb);
+  	printNoSelfRelationFact(sb);
+  }
+}
+
+class BidirectionRule {
+  depend java.lang.StringBuilder;
+  depend cruise.umple.compiler.*; 
+  isA Fact;
+  
+  public BidirectionRule(Association assoc){
+  	super(assoc);
+  	factName = "BidirectionalityRule";
+  }
+  
+  //This methods comments bidirectionality rule
+  private void commentBidirectionality(StringBuilder sb){
+  	utility.addString(sb,utility.addStartDottedLine()+"--The following defines bidirectionality rule between class "+
+  		firstClassName+" and class "+secondClassName+"\n"+utility.addEndDottedLine());
+  }
+  
+  //This method computes the content of a bidirectionality rule
+  private String bidirectionalContent(){
+  	return "\n    "+makeVarName(firstClassName,1)+" in "+rName1+"["+
+  		makeVarName(secondClassName,1)+"] <=> "+makeVarName(secondClassName,1)+" in "+rName2+
+  			"["+makeVarName(firstClassName,1)+"]";
+  }
+  //This method is responsible for printing bidirectionality fact
+  private void printBidirectionFact(StringBuilder sb){
+  	utility.addString(sb,factHeader()+"all "+makeVarDeclaration(firstClassName,1)+", "+
+  		makeVarDeclaration(secondClassName,1)+" |"+ bidirectionalContent()+"\n}");
+  }
+  
+  public void print(StringBuilder sb){
+  	commentBidirectionality(sb); 
+  	printBidirectionFact(sb);
+  }
 }

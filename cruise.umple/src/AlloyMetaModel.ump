@@ -18,12 +18,23 @@ class Function {
 	targetMult;
 	targetClassName;
 	Utility utility;
+	 
+	
 	public Function(Association assoc){
-		utility =  new Utility();
-		beginEndRoleName = utility.getRightRoleName(assoc);
-		targetMult = utility.getAlloyMultiplicity(utility.getRightEnd(assoc));
-		targetClassName = utility.getRightEndName(assoc);
+	  utility =  new Utility();
+	  beginEndRoleName = utility.getRightRoleName(assoc);
+	  targetMult = utility.getAlloyMultiplicity(utility.getRightEnd(assoc));
+	  targetClassName = utility.getRightEndName(assoc);
 	}
+	
+	//Reflexive relation
+	public Function(Association assoc, String cName){
+	  utility =  new Utility();
+	  beginEndRoleName = utility.getLeftRoleName(assoc);
+	  targetMult = utility.getAlloyMultiplicity(utility.getLeftEnd(assoc));
+	  targetClassName = cName;
+	}
+	
 	public void printFunction(StringBuilder code){
 		utility.addTab(code,2);
 		utility.addString(code,beginEndRoleName);

@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
--- This Alloy file is generated using Umple from AssociationWithNumericBounds.ump
+-- This Alloy file is generated using Umple from AlloyReflexiveRelation.ump
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -13,23 +13,12 @@ abstract sig UmpleObject { }
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines a signature for class Man
+--The following defines a signature for class Person
 
 ------------------------------------------------------------------------------------------------------------------
 
-sig Man extends UmpleObject {
-  children : some Child
-}
-
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Child
-
-------------------------------------------------------------------------------------------------------------------
-
-sig Child extends UmpleObject {
-  father : lone Man
+sig Person extends UmpleObject {
+  children : set Person
 }
 
 
@@ -37,11 +26,22 @@ sig Child extends UmpleObject {
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines bidirectionality rule between class Man and class Child
+--The following defines no extended relation rule for class Person
 
 ------------------------------------------------------------------------------------------------------------------
 
-fact BidirectionalityRule {
-  all man_1 : Man, child_1 : Child |
-    man_1 in father[child_1] <=> child_1 in children[man_1]
+fact NoExtendedRelation {
+  no disj person_1, person_2, person_3 : Person |
+    person_1 in children[person_2] && person_1 in children[person_3]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines no self relation rule for class Person
+
+------------------------------------------------------------------------------------------------------------------
+
+fact NoSelfRelation {
+  no person_1 : Person |
+    person_1 in person_1.^children
 }

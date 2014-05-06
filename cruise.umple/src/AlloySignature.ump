@@ -18,8 +18,8 @@ class Signature {
 		name = uClass.getName();
 		Multiplicity mult = new Multiplicity();
 		isBounded = mult.setBound("1");
+		Set<Association> processedAssociations = new HashSet<Association>();
 		for(Association assoc : uClass.getAssociations()){
-			Set<Association> processedAssociations = new HashSet<Association>();
 			if(processedAssociations.contains(assoc)) continue;
 			processedAssociations.add(assoc);	
 
@@ -27,23 +27,26 @@ class Signature {
 			AssociationEnd beginEnd = new AssociationEnd(null,null,null,null,mult);
 			
 			if(utility.getRightEndName(assoc).equals(uClass.getName())) {
-          		endToOutput = utility.getLeftEnd(assoc);
-          		beginEnd = utility.getRightEnd(assoc);
+          	  endToOutput = utility.getLeftEnd(assoc);
+          	  beginEnd = utility.getRightEnd(assoc);
         	}
         	else {
-          		endToOutput = utility.getRightEnd(assoc);  
-          		beginEnd = utility.getLeftEnd(assoc); 
+          	  endToOutput = utility.getRightEnd(assoc);  
+          	  beginEnd = utility.getLeftEnd(assoc); 
         	}
+        	        	     	
 			Association uAssoc = utility.convertEndsToAssociation(beginEnd,endToOutput);
 			Function funct = new Function(uAssoc);
+			//Reflexive association case 
+        	if(endToOutput.getClassName().equals(beginEnd.getClassName())){
+        	  funct = new Function(uAssoc,endToOutput.getClassName());	
+        	}
 			isBounded = function.add(funct);
-			
 		}
 	}
 	private void comment(StringBuilder code){
-  		utility.addStartDottedLine(code);
-  		utility.addString(code,"--The following defines a signature for class "+name+"\n");
-  		utility.addEndDottedLine(code);
+  		utility.addString(code,utility.addStartDottedLine()+
+  			"--The following defines a signature for class "+name+"\n"+utility.addEndDottedLine());
   	}
 	
 	public void printSignature(StringBuilder code){
