@@ -5,14 +5,14 @@ package example;
 import cruise.util.StringTracer;
 import java.util.Date;
 
-public class NestedState
+public class Tracer
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //NestedState State Machines
+  //Tracer State Machines
   enum Stm { sLevel1, outsideNested }
   enum StmSLevel1 { Null, sLevel2a, sLevel2b }
   enum StmSLevel1SLevel2a { Null, sLevel2aLevel3a, sLevel2aLevel3b }
@@ -26,7 +26,7 @@ public class NestedState
   // CONSTRUCTOR
   //------------------------
 
-  public NestedState()
+  public Tracer()
   {
     setStmSLevel1(StmSLevel1.Null);
     setStmSLevel1SLevel2a(StmSLevel1SLevel2a.Null);
@@ -76,7 +76,7 @@ public class NestedState
     switch (aStm)
     {
       case sLevel1:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceDeepNestedStatesLevel2.ump,35,NestedState,"+System.identityHashCode(this)+",sm_t,sLevel1,e1,sLevel2b" );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceDeepNestedStatesLevel2.ump,35,Tracer,"+System.identityHashCode(this)+",sm_t,sLevel1,e1,sLevel2b" );
         setStmSLevel1(StmSLevel1.sLevel2b);
         wasEventProcessed = true;
         break;
@@ -183,7 +183,7 @@ public class NestedState
     switch (aStmSLevel1)
     {
       case sLevel2b:
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceDeepNestedStatesLevel2.ump,35,NestedState,"+System.identityHashCode(this)+",sm_t,sLevel2b,e2,sLevel2aLevel3a" );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceDeepNestedStatesLevel2.ump,35,Tracer,"+System.identityHashCode(this)+",sm_t,sLevel2b,e2,sLevel2aLevel3a" );
         setStmSLevel1SLevel2a(StmSLevel1SLevel2a.sLevel2aLevel3a);
         wasEventProcessed = true;
         break;

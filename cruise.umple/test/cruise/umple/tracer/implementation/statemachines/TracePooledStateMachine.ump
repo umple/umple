@@ -1,6 +1,6 @@
 namespace example;
 
-class Course
+class Tracer
 {
   pooled status
   {
