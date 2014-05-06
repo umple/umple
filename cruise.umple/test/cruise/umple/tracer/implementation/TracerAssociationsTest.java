@@ -17,7 +17,7 @@ import org.junit.*;
 public class TracerAssociationsTest extends TracerTemplateTest
 {
 
-  @Test
+  @Test @Ignore
   public void TraceAssociationCardinality1()
   {
     AssertAssoc("TraceAssociationCardinality1.ump","TraceAssociationCardinality1.");
