@@ -18,175 +18,204 @@ namespace cruise.umple;
  */
 class UmpleConsoleMain
 {
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.exceptions.*;
+  depend java.util.List;
+  depend java.util.Arrays;
+  depend joptsimple.*;
+  depend java.io.IOException;
+  depend java.io.*;
 
-    depend cruise.umple.compiler.*;
-    depend cruise.umple.compiler.exceptions.*;
-    depend java.util.List;
-    depend java.util.Arrays;
-    depend joptsimple.*;
-    depend java.io.IOException;
-    depend java.io.*;
-
-    public static void main(String[] args) 
+  public static void main(String[] args)
+  {
+    OptionParser optparser = initializeOptionParser();
+    OptionSet optset = optParse(optparser, args);
+    if (preModelOptionProcess(optparser, optset))
     {
-        OptionSet optset = optParse(args);
-        if (preModelOptionProcess(optset)) {
-            return;
-        }
+      return;
+    }
+    
+    List<String> nonOpt = optset.nonOptionArguments();
 
-        List<String> nonOpt = optset.nonOptionArguments();
+    if (nonOpt.isEmpty())
+    {
+      System.out.println("Please specify <umple_file> to process");
+      printUsage(optparser);
+      return;
+    }
 
-        if (nonOpt.isEmpty()) {
-            println("Please specify <umple_file> to process");
-            printUsage();
-            return;
-        }
+    String filename = nonOpt.get(0);
+    System.out.println(filename);
+    UmpleFile umpleFile = new UmpleFile(filename);
+    //this loop is used to add command-based linked umple files and to show names of them.
+    for (int i=1;i<nonOpt.size(); i++)
+    {
+      if (new File(nonOpt.get(i)).exists())
+      {
+        umpleFile.addLinkedFiles(nonOpt.get(i));
+        System.out.println(nonOpt.get(i)); 		
+      } else
+      {
+        System.out.println("The file "+nonOpt.get(i)+" doesn't exist."); 		
+      }
+    }
 
-        String filename = nonOpt.get(0);
-        println(filename);
-        UmpleFile umpleFile = new UmpleFile(filename);
-        //this loop is used to add command-based linked umple files and to show names of them.
-        for (int i=1;i<nonOpt.size(); i++) {
-        	if (new File(nonOpt.get(i)).exists()) {
-                umpleFile.addLinkedFiles(nonOpt.get(i));
-                println(nonOpt.get(i)); 		
-        	} else {
-                println("The file "+nonOpt.get(i)+" doesn't exist."); 		
-        		
-        	}
-        }
+    UmpleModel model = new UmpleModel(umpleFile);
 
-        UmpleModel model = new UmpleModel(umpleFile);
+    if (postModelOptionProcess(optset, model))
+    {
+      return;
+    }
 
-        if (postModelOptionProcess(optset, model)) {
-            return;
-        }
-
-        try {
-          try
-          {
-              model.run();
-          }
-          catch(UmpleCompilerException e)
-          {
-              printerr(e.getMessage());
-              if(!model.isShouldGenerate())
-                  System.exit(-1);
-          }
-          
-          // Compile success means the output was generated
-          boolean compileSuccess = model.getLastResult().getWasSuccess();
-
-          // The "c" option causes an attempt to compile the resulting base language
-          // code. Not completely tested at current time.
-          if (compileSuccess && optset.has("c")) {
-              CodeCompiler compiler = new CodeCompiler();
-              compileSuccess = compiler.compile(model, (String)optset.valueOf("c"));
-          }
-
-          String successWord = compileSuccess ? "Success! " : "";
-          for (int i=0;i<nonOpt.size(); i++) {
-        	  if (new File(nonOpt.get(i)).exists()) {
-        		  println(successWord + "Processed "+ nonOpt.get(i) +".");
-        	  }
-		  }
-		  if(compileSuccess)
-		  {
-		    return;
-		  }
-          System.exit(compileSuccess ? 0 : 1); 
-        }
-        catch(Exception ex) {
-          System.err.println("Umple compiler error. Stack trace follows");
-          cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
+    try
+    {
+      try
+      {
+        model.run();
+      }
+      catch(UmpleCompilerException e)
+      {
+        System.err.print(e.getMessage());
+        if (!model.isShouldGenerate())
+        {
           System.exit(-1);
         }
-        System.exit(0);
-    }
+      }
 
-    private static void println(String output)
+      // Compile success means the output was generated
+      boolean compileSuccess = model.getLastResult().getWasSuccess();
+
+      // The "c" option causes an attempt to compile the resulting base language
+      // code. Not completely tested at current time.
+      if (compileSuccess && optset.has("c"))
+      {
+        CodeCompiler compiler = new CodeCompiler();
+        compileSuccess = compiler.compile(model, (String)optset.valueOf("c"));
+      }
+
+      String successWord = compileSuccess ? "Success! " : "";
+      for (int i=0;i<nonOpt.size(); i++)
+      {
+        if (new File(nonOpt.get(i)).exists())
+        {
+          System.out.println(successWord + "Processed "+ nonOpt.get(i) +".");
+        }
+      }
+      if (compileSuccess)
+      {
+        return;
+      }
+      System.exit(compileSuccess ? 0 : 1); 
+    }
+    catch(Exception ex)
     {
-        System.out.println(output);
+      System.err.println("Umple compiler error. Stack trace follows");
+      cruise.umple.util.ExceptionDumper.dumpCompilerError(ex);
+      System.exit(-1);
     }
-    private static void printerr(String err)
-    {
-        System.err.print(err);
-    }
-    
-    private static void printUsage() {
-        println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
-        try{
-            optparser.printHelpOn(System.out);
-        } catch (IOException e) {
-        }
-    }
-    
-    private static void generateUmple(String xmi) {
-	  boolean isSuccess = false;
-	  try {    
-		EcoreImportHandler handler = new EcoreImportHandler();
-		UmpleImportModel umple = handler.readDataFromXML(xmi);
-		isSuccess = umple.generateUmpleFile(xmi+".ump");
-	  } catch (Exception e) {
-		printerr(e.getMessage());
-	  } 
-	  if(isSuccess)
-	    println("Success! Processed "+ xmi + ".");
-	  else
-	    printerr("No file generated, parsing error.");
-    }
-  
-    /**
-     * optionProcess: process the option arguments which does not require UmpleModel
-     * Argument: optSet - set of the options and corresponding arguments
-     * Return: boolean - If application should terminate immediately after return
-     */
-    private static boolean preModelOptionProcess(OptionSet optSet) {
-        if (optSet == null) {
-            return true;
-        }
-        if (optSet.has("version")) {
-            println("Version: " + UmpleModel.versionNumber);
-            return true;
-        }
-        if (optSet.has("help")) {
-            printUsage();
-            return true;
-        }
-        if (optSet.has("import")) {
-        	String xmi = (String)optSet.valueOf("import");
-        	generateUmple(xmi);
-        	return true;
-        }
-        return false;
-    }
+    System.exit(0);
+  }
 
-    private static boolean postModelOptionProcess(OptionSet optset, UmpleModel model) {
-        if (optset.has("generate")) {
-            boolean override=false;
-            String path = "";
-            if (optset.has("override")) {
-                override = true;
-            }
-            if (optset.has("path")) {
-                path = (String)optset.valueOf("path");
-            }
-            String lang = (String)optset.valueOf("generate");
-            GenerateTarget gt = new GenerateTarget(lang, path);
-            gt.setOverrideAll(override);
-            if (optset.has("s")) {
-              for (Object s : optset.valuesOf("s")) {
-                gt.addSuboption((String) s); 
-              }
-            }
-            model.addGenerate(Arrays.asList(gt));
-        }
-        return false;
-    }
-
-  private static OptionSet optParse(String[] args)
+  private static void printUsage(OptionParser optparser)
   {
-    optparser = new OptionParser();
+    System.out.println("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump");
+      try
+      {
+        optparser.printHelpOn(System.out);
+      } 
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+    }
+    
+  private static void generateUmple(String xmi)
+  {
+    boolean isSuccess = false;
+    try
+    {
+      EcoreImportHandler handler = new EcoreImportHandler();
+      UmpleImportModel umple = handler.readDataFromXML(xmi);
+      isSuccess = umple.generateUmpleFile(xmi+".ump");
+    }
+    catch (Exception e)
+    {
+      System.err.print(e.getMessage());
+    } 
+    if (isSuccess)
+    {
+      System.out.println("Success! Processed "+ xmi + ".");
+    }
+    else
+    {
+      System.err.print("No file generated, parsing error.");
+    }
+  }
+
+  /**
+    * optionProcess: process the option arguments which does not require UmpleModel
+    * Argument: optSet - set of the options and corresponding arguments
+    * Return: boolean - If application should terminate immediately after return
+    */
+  private static boolean preModelOptionProcess(OptionParser optparser, OptionSet optSet)
+  {
+    if (optSet == null)
+    {
+      
+    }
+    else if (optSet.has("version"))
+    {
+      System.out.println("Version: " + UmpleModel.versionNumber);
+    }
+    else if (optSet.has("help"))
+    {
+      printUsage(optparser);
+    }
+    else if (optSet.has("import"))
+    {
+      String xmi = (String)optSet.valueOf("import");
+      generateUmple(xmi);
+    }
+    else
+    {
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean postModelOptionProcess(OptionSet optset, UmpleModel model)
+  {
+    if (optset.has("generate"))
+    {
+      boolean override=false;
+      String path = "";
+      if (optset.has("override"))
+      {
+        override = true;
+      }
+      if (optset.has("path"))
+      {
+        path = (String)optset.valueOf("path");
+      }
+      String lang = (String)optset.valueOf("generate");
+      GenerateTarget gt = new GenerateTarget(lang, path);
+      gt.setOverrideAll(override);
+      if (optset.has("s"))
+      {
+        for (Object s : optset.valuesOf("s"))
+        {
+          gt.addSuboption((String) s); 
+        }
+      }
+      model.addGenerate(Arrays.asList(gt));
+    }
+    return false;
+  }
+  
+  private static OptionParser initializeOptionParser()
+  {
+    OptionParser optparser = new OptionParser();
+    
     optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
     optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
     optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp,RTCpp,SimpleCpp,Php,Ruby,SQL,Ruby,Json,Ecore,TextUml,GvStateDiagram,GvClassDiagram,Alloy,Yuml,SimpleMetrics,Uigu2").withRequiredArg().ofType(String.class);
@@ -196,22 +225,25 @@ class UmpleConsoleMain
     optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
     optparser.acceptsAll(Arrays.asList("suboption","s"), "Indicate to generate files with suboptions").withRequiredArg().ofType(String.class);
     
+    return optparser;
+  }
+  
+  private static OptionSet optParse(OptionParser optparser, String[] args)
+  {
     OptionSet optSet = null;
 
-    try 
+    try
     {
       optSet = optparser.parse(args);
     } 
-    catch (joptsimple.OptionException e) 
+    catch (joptsimple.OptionException e)
     {
-       println("Option:" + e.getMessage());
-       printUsage();
+      System.out.println("Option:" + e.getMessage());
+      printUsage(optparser);
     }
 
     return optSet;
   }
-
-  private static OptionParser optparser;
 }
 
 /*
@@ -220,99 +252,84 @@ class UmpleConsoleMain
 class UmpleRunMain
 {
 
-    depend cruise.umple.compiler.*;
-    depend cruise.umple.compiler.exceptions.*;
-    depend cruise.umple.builder.*;
-    depend cruise.umple.util.*;
-    depend java.net.*;
-    depend java.io.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.builder.*;
+  depend cruise.umple.util.*;
+  depend java.net.*;
+  depend java.io.*;
 
-    public static void main(String[] args) 
+  public static void main(String[] args)
+  {
+    if (args.length < 2)
     {
-        if (args.length < 2)
+      System.out.println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd");
+      return;
+    }
+
+    String filename = args[0];
+    String cmdFilename = args[1];
+    UmpleFile umpleFile = new UmpleFile(filename);
+    UmpleModel model = new UmpleModel(umpleFile);
+    boolean shouldDebug = args.length >= 3 && args[2].equals("--debug");
+    boolean shouldCompile = !shouldDebug;
+
+    try
+    {
+      if (shouldCompile)
+      {
+        System.out.print("Compiling "+ filename +"... ");
+        model.run();
+        System.out.println("success.");
+      }
+      else
+      {
+        System.out.print("Skipping compilation, entering debug mode");
+      }
+
+      System.out.print("Building model... ");
+      Builder b = new Builder();
+      URL jarfile = b.compile(".",umpleFile.getSimpleFileName() + ".jar",umpleFile.getSimpleFileName(),"1.6");
+
+      if (jarfile == null)
+      {
+        System.out.println("failed");
+        return;
+      }
+      System.out.println("success.");
+
+      System.out.print("Loading model into memory... ");
+      URL urls [] = { jarfile };
+      URLClassLoader cl = new URLClassLoader(urls);
+      System.out.println("success.");
+
+      Command cmd = new Command(cl);
+
+      System.out.println("Running commands:");
+      boolean isFirst = true;
+      for (String input : SampleFileWriter.readContent(new File(cmdFilename)).split("\n"))
+      {
+        if (isFirst)
         {
-            println("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd");
-            return;
+          cmd.addAttributes(input);
+          isFirst = false;
+          continue;
         }
-
-        String filename = args[0];
-        String cmdFilename = args[1];
-        UmpleFile umpleFile = new UmpleFile(filename);
-        UmpleModel model = new UmpleModel(umpleFile);
-        boolean shouldDebug = args.length >= 3 && args[2].equals("--debug");
-        boolean shouldCompile = !shouldDebug;
-
-        try
+        cmd.exec(input);
+        for (String message : cmd.popMessages())
         {
-            if (shouldCompile)
-            {
-                print("Compiling "+ filename +"... ");
-                model.run();
-                println("success.");
-            }
-            else
-            {
-                print("Skipping compilation, entering debug mode");
-            }
-
-            print("Building model... ");
-            Builder b = new Builder();
-            URL jarfile = b.compile(".",umpleFile.getSimpleFileName() + ".jar",umpleFile.getSimpleFileName(),"1.6");
-
-            if (jarfile == null)
-            {
-                println("failed");
-                return;
-            }
-            println("success.");
-
-            print("Loading model into memory... ");
-            URL urls [] = { jarfile };
-            URLClassLoader cl = new URLClassLoader(urls);
-            println("success.");
-
-            Command cmd = new Command(cl);
-
-            println("Running commands:");
-            boolean isFirst = true;
-            for (String input : SampleFileWriter.readContent(new File(cmdFilename)).split("\n")) 
-            {
-                if (isFirst)
-                {
-                    cmd.addAttributes(input);
-                    isFirst = false;
-                    continue;
-                }
-                cmd.exec(input);
-                for(String message : cmd.popMessages())
-                {
-                    println("  " + message);
-                }
-            }
-
-            println("Done.");
+          System.out.println("  " + message);
         }
-        catch(Exception e)
-        {
-            println("failed.");
-            printerr(e.getMessage());
-        }
-    }
+      }
 
-    private static void print(String output)
-    {
-      System.out.print(output);
+      System.out.println("Done.");
     }
-
-    private static void println(String output)
+    catch(Exception e)
     {
-      print(output + "\n");
+      System.out.println("failed.");
+      System.err.print(e.getMessage());
     }
-
-    private static void printerr(String err)
-    {
-      System.err.print(err);
-    }
+  }
 }
 
 /*
@@ -324,181 +341,176 @@ class UmpleRunMain
  */
 class PlaygroundMain 
 {
-    depend cruise.umple.sync.*;
-    depend cruise.umple.compiler.*;
-    depend cruise.umple.compiler.exceptions.*;
-    depend cruise.umple.util.*;
-    depend java.io.*;
+  depend cruise.umple.sync.*;
+  depend cruise.umple.compiler.*;
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.util.*;
+  depend java.io.*;
 
-    public static void main(String[] args)
+  public static void main(String[] args)
+  {
+    String answer = "";
+
+    if (args.length == 0)
     {
-        String answer = "";
-
-        if (args.length == 0)
-        {
-            print("Invalid format, please try again specifying:\n");
-            print("-classList <filename>\n");
-            print("-interfaceList <filename>\n");
-            print("-source <filename>\n");
-            print("-generate <Ecore|Papyrus|TextUml|GvStateDiagram|GvClassDiagram|Alloy|Violet|Umlet> <filename>\n");
-            print("<action> <deltaCode> <filename>\n");
-            return;
-        }
-
-        if (args.length >= 3 && !"-generate".equals(args[0]))
-        {
-            String actionType = args[0];
-            String deltaCode = args[1];
-            String filename = args[2];
-            String umpleCode = SampleFileWriter.readContent(new File(filename));
-
-            SynchronizationAction action = action(actionType,deltaCode,umpleCode);
-            if (action != null)
-            {
-                action.go();
-                print(action.getUmpleCode());
-                return;
-            }
-        }
-
-        UmpleFile umpleFile = null;
-        UmpleModel model = null;
-
-        // Valid values include Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
-        // GvStateDiagram, GvClassDiagram, Alloy
-        if ("-generate".equals(args[0]) && args.length >= 2)
-        {
-            String filename = args[2];
-            GenerateTarget target = new GenerateTarget(args[1], ""); // output path goes here
-            // Add any suboptions specified as -s blah -s blah
-            for(int argno = 3; argno <= args.length-2; argno += 2) {
-              if(args[argno].equals("-s")) target.addSuboption(args[argno+1]); 
-            }
-            
-            umpleFile = new UmpleFile(filename);
-            model = new UmpleModel(umpleFile);
-            target.setOverrideAll(true);
-            model.addGenerate(target);
-        }
-        else
-        {
-            String filename = args[1];
-            umpleFile = new UmpleFile(filename);
-            model = new UmpleModel(umpleFile);
-        }
-
-        try
-        {
-            model.run();
-        }
-        catch(UmpleCompilerException e)
-        {
-            System.err.print(model.getLastResult().toJSON());
-        }
-        
-        
-        
-        if ("-classList".equals(args[0]))
-        {
-            for (UmpleClass aClass : model.getUmpleClasses())
-            {
-                if (answer.length() > 0)
-                {
-                    answer += ",";
-                }
-                answer += aClass.getName();
-            }
-        }
-        if ("-interfaceList".equals(args[0]))
-        {
-            for (UmpleInterface aInterface : model.getUmpleInterfaces())
-            {
-                if (answer.length() > 0)
-                {
-                    answer += ",";
-                }
-                answer += aInterface.getName();
-            }
-        }
-        else if ("-source".equals(args[0]))
-        {
-            for (String generatedCode : model.getGeneratedCode().values())
-            {
-                if (answer.length() > 0)
-                {
-                    answer += "\n\n\n\n";
-                }
-                answer += generatedCode;
-            }
-        }
-        else if ("-generate".equals(args[0]))
-        {
-            answer = model.getCode();
-        }
-
-        print(answer);
+      System.out.print("Invalid format, please try again specifying:\n");
+      System.out.print("-classList <filename>\n");
+      System.out.print("-interfaceList <filename>\n");
+      System.out.print("-source <filename>\n");
+      System.out.print("-generate <Ecore|Papyrus|TextUml|GvStateDiagram|GvClassDiagram|Alloy|Violet|Umlet> <filename>\n");
+      System.out.print("<action> <deltaCode> <filename>\n");
+      return;
     }
 
-    private static void print(String output)
+    if (args.length >= 3 && !"-generate".equals(args[0]))
     {
-        System.out.print(output);
+      String actionType = args[0];
+      String deltaCode = args[1];
+      String filename = args[2];
+      String umpleCode = SampleFileWriter.readContent(new File(filename));
+
+      SynchronizationAction action = action(actionType,deltaCode,umpleCode);
+      if (action != null)
+      {
+        action.go();
+        System.out.print(action.getUmpleCode());
+        return;
+      }
     }
 
-    private static SynchronizationAction action(String type, String deltaCode, String umpleCode)
+    UmpleFile umpleFile = null;
+    UmpleModel model = null;
+
+    // Valid values include Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
+    // GvStateDiagram, GvClassDiagram, Alloy
+    if ("-generate".equals(args[0]) && args.length >= 2)
     {
-        if ("-addClass".equals(type))
+      String filename = args[2];
+      GenerateTarget target = new GenerateTarget(args[1], ""); // output path goes here
+      // Add any suboptions specified as -s blah -s blah
+      for (int argno = 3; argno <= args.length-2; argno += 2)
+      {
+        if (args[argno].equals("-s"))
         {
-            return new NewAction(deltaCode,umpleCode);
+          target.addSuboption(args[argno+1]);
         }
-        else if ("-addInterface".equals(type))
-        {
-            return new NewAction(deltaCode,umpleCode);
-        }
-        else if ("-removeClass".equals(type))
-        {
-            return new DeleteAction(deltaCode,umpleCode);
-        }
-        else if ("-editClass".equals(type))
-        {
-            return new EditAction(deltaCode,umpleCode);
-        }
-        else if ("-removeInterface".equals(type))
-        {
-            return new DeleteAction(deltaCode,umpleCode);
-        }
-        else if ("-editInterface".equals(type))
-        {
-            return new EditAction(deltaCode,umpleCode);
-        }
-        else if ("-addAssociation".equals(type))
-        {
-            return new NewAssociationAction(deltaCode,umpleCode);
-        }
-        else if ("-editAssociation".equals(type))
-        {
-            return new EditAssociationAction(deltaCode,umpleCode);
-        }
-        else if ("-removeAssociation".equals(type))
-        {
-            return new DeleteAssociationAction(deltaCode,umpleCode);
-        }
-        else if ("-addGeneralization".equals(type))
-        {
-            return new NewGeneralizationAction(deltaCode,umpleCode);
-        }
-        else if ("-removeGeneralization".equals(type))
-        {
-            return new DeleteGeneralizationAction(deltaCode,umpleCode);
-        }
-        else if ("-addPositioning".equals(type))
-        {
-            return new UpdatePositioningAction(deltaCode,umpleCode);
-        }
-        else
-        {
-            return null;
-        }
+      }
+      
+      umpleFile = new UmpleFile(filename);
+      model = new UmpleModel(umpleFile);
+      target.setOverrideAll(true);
+      model.addGenerate(target);
     }
+    else
+    {
+      String filename = args[1];
+      umpleFile = new UmpleFile(filename);
+      model = new UmpleModel(umpleFile);
+    }
+
+    try
+    {
+      model.run();
+    }
+    catch(UmpleCompilerException e)
+    {
+      System.err.print(model.getLastResult().toJSON());
+    }
+
+    if ("-classList".equals(args[0]))
+    {
+      for (UmpleClass aClass : model.getUmpleClasses())
+      {
+        if (answer.length() > 0)
+        {
+          answer += ",";
+        }
+        answer += aClass.getName();
+      }
+    }
+    if ("-interfaceList".equals(args[0]))
+    {
+      for (UmpleInterface aInterface : model.getUmpleInterfaces()) {
+        if (answer.length() > 0)
+        {
+          answer += ",";
+        }
+        answer += aInterface.getName();
+      }
+    }
+    else if ("-source".equals(args[0]))
+    {
+      for (String generatedCode : model.getGeneratedCode().values()) {
+        if (answer.length() > 0)
+        {
+          answer += "\n\n\n\n";
+        }
+        answer += generatedCode;
+      }
+    }
+    else if ("-generate".equals(args[0]))
+    {
+      answer = model.getCode();
+    }
+
+    System.out.print(answer);
+  }
+
+  private static SynchronizationAction action(String type, String deltaCode, String umpleCode)
+  {
+    if ("-addClass".equals(type))
+    {
+      return new NewAction(deltaCode,umpleCode);
+    }
+    else if ("-addInterface".equals(type))
+    {
+      return new NewAction(deltaCode,umpleCode);
+    }
+    else if ("-removeClass".equals(type))
+    {
+      return new DeleteAction(deltaCode,umpleCode);
+    }
+    else if ("-editClass".equals(type))
+    {
+      return new EditAction(deltaCode,umpleCode);
+    }
+    else if ("-removeInterface".equals(type))
+    {
+      return new DeleteAction(deltaCode,umpleCode);
+    }
+    else if ("-editInterface".equals(type))
+    {
+      return new EditAction(deltaCode,umpleCode);
+    }
+    else if ("-addAssociation".equals(type))
+    {
+      return new NewAssociationAction(deltaCode,umpleCode);
+    }
+    else if ("-editAssociation".equals(type))
+    {
+      return new EditAssociationAction(deltaCode,umpleCode);
+    }
+    else if ("-removeAssociation".equals(type))
+    {
+      return new DeleteAssociationAction(deltaCode,umpleCode);
+    }
+    else if ("-addGeneralization".equals(type))
+    {
+      return new NewGeneralizationAction(deltaCode,umpleCode);
+    }
+    else if ("-removeGeneralization".equals(type))
+    {
+      return new DeleteGeneralizationAction(deltaCode,umpleCode);
+    }
+    else if ("-addPositioning".equals(type))
+    {
+      return new UpdatePositioningAction(deltaCode,umpleCode);
+    }
+    else
+    {
+      return null;
+    }
+  }
 }
 
 use Compiler.ump;
