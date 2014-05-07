@@ -39,9 +39,12 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  // state machine sm: transition to: s2 
 	  // state machine sm1: transition to: s22
 	  numChecks=200; // we will check for a second
-	  while((!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s2) && !qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22)) && numChecks>0) {
-		Thread.sleep(5);
-	    numChecks--;
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
+		if(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s2) && !qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s2, qsm.getSm());
@@ -55,9 +58,12 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  // state machine sm: transition to: s3 
 	  // state machine sm1: transition to: s22
 	  numChecks=200; // we will check for a second
-	  while(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s3) && numChecks>0) {
-		Thread.sleep(5);
-	    numChecks--;
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
+		if(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s3))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
@@ -69,18 +75,9 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  qsm.ev2();//event ev2 is added to the queue
 	  //event ev2 is unspecified, it is ignored, current states are not changed
 	  numChecks=200; // we will check for a second
-	  while(numChecks>0 && (qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s3) && qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22))) {
-		if(!qsm.queue.messages.isEmpty()){
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
 		  Thread.sleep(5);
-	      numChecks--;
-		}
-		else
-		{
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, qsm.getSm1());
-			Assert.assertEquals(true, qsm.queue.messages.isEmpty());
-		  break;
-	    }
+		  numChecks--;
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
@@ -92,18 +89,9 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  qsm.ev4();//event ev4 is added to the queue
 	  //event ev4 is unspecified, it is ignored, current states are not changed
 	  numChecks=200; // we will check for a second
-	  while(numChecks>0 && (qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s3) && qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22))) {
-		if(!qsm.queue.messages.isEmpty()){
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
 		  Thread.sleep(5);
-	      numChecks--;
-		}
-		else
-		{
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, qsm.getSm1());
-			Assert.assertEquals(true, qsm.queue.messages.isEmpty());
-		  break;
-	    }
+		  numChecks--;
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
@@ -115,18 +103,9 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  qsm.ev1();//event ev1 is added to the queue
 	  //event ev1 is unspecified, it is ignored, current states are not changed
 	  numChecks=200; // we will check for a second
-	  while(numChecks>0 && (qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s3) && qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22))) {
-		if(!qsm.queue.messages.isEmpty()){
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
 		  Thread.sleep(5);
-	      numChecks--;
-		}
-		else
-		{
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, qsm.getSm1());
-			Assert.assertEquals(true, qsm.queue.messages.isEmpty());
-		  break;
-	    }
+		  numChecks--;
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
@@ -138,34 +117,28 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  qsm.ev1();//event ev1 is added to the queue
 	  //event ev1 is unspecified, it is ignored, current states are not changed
 	  numChecks=200; // we will check for a second
-	  while(numChecks>0 && (qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s3) && qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22))) {
-		if(!qsm.queue.messages.isEmpty()){
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
 		  Thread.sleep(5);
-	      numChecks--;
-		}
-		else
-		{
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, qsm.getSm1());
-			Assert.assertEquals(true, qsm.queue.messages.isEmpty());
-		  break;
-	    }
+		  numChecks--;
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, qsm.getSm1());
 	  // queue is empty
 	  Assert.assertEquals(0, qsm.queue.messages.size());
-	 
+
 	  //event ev3 is called
 	  qsm.ev3();//event ev3 is added to the queue
 	  // event ev3 is taken off the queue and is processed 
 	  // state machine sm: transition to: s4 
 	  // state machine sm1: transition to: s22
 	  numChecks=200; // we will check for a second
-	  while(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s4) && numChecks>0) {
-		Thread.sleep(5);
-	    numChecks--;
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
+		if(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s4))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s4, qsm.getSm());
@@ -177,18 +150,9 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  qsm.ev3();//event ev3 is added to the queue
 	  //event ev3 is unspecified, it is ignored, current states are not changed
 	  numChecks=200; // we will check for a second
-	  while(numChecks>0 && (qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s4) && qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22))) {
-		if(!qsm.queue.messages.isEmpty()){
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
 		  Thread.sleep(5);
-	      numChecks--;
-		}
-		else
-		{
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s4, qsm.getSm());
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s22, qsm.getSm1());
-			Assert.assertEquals(true, qsm.queue.messages.isEmpty());
-		  break;
-	    }
+		  numChecks--;
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s4, qsm.getSm());
@@ -202,9 +166,12 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  // state machine sm: transition to: s1 
 	  // state machine sm1: transition to: s22
 	  numChecks=200; // we will check for a second
-	  while(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s1) && numChecks>0) {
-		Thread.sleep(5);
-	    numChecks--;
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
+		if(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s1))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s1, qsm.getSm());
@@ -218,33 +185,26 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  // state machine sm: transition to: s1 
 	  // state machine sm1: transition to: s21
 	  numChecks=200; // we will check for a second
-	  while(!qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s21) && numChecks>0) {
-		Thread.sleep(5);
-	    numChecks--;
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
+		if(!qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s21))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s1, qsm.getSm());
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s21, qsm.getSm1());
 	  // queue is empty
-	  Assert.assertEquals(0, qsm.queue.messages.size());
-	  
+	  Assert.assertEquals(0, qsm.queue.messages.size());	  
 	  
 	  //event ev4 is called
 	  qsm.ev4();//event ev4 is added to the queue
 	  //event ev4 is unspecified, it is ignored, current states are not changed
 	  numChecks=200; // we will check for a second
-	  while(numChecks>0 && (qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s1) && qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s21))) {
-		if(!qsm.queue.messages.isEmpty()){
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
 		  Thread.sleep(5);
-	      numChecks--;
-		}
-		else
-		{
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s1, qsm.getSm());
-			Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm1.s21, qsm.getSm1());
-			Assert.assertEquals(true, qsm.queue.messages.isEmpty());
-		  break;
-	    }
+		  numChecks--;
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s1, qsm.getSm());
@@ -258,9 +218,12 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  // state machine sm: transition to: s2 
 	  // state machine sm1: transition to: s22
 	  numChecks=200; // we will check for a second
-	  while((!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s2) && !qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22)) && numChecks>0) {
-		Thread.sleep(5);
-	    numChecks--;
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
+		if(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s2) && !qsm.getSm1().equals(MultipleQueuedSMs_sameEvents.Sm1.s22))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s2, qsm.getSm());
@@ -274,9 +237,12 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  // state machine sm: transition to: s3 
 	  // state machine sm1: transition to: s22
 	  numChecks=200; // we will check for a second
-	  while(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s3) && numChecks>0) {
-		Thread.sleep(5);
-	    numChecks--;
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
+		if(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s3))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s3, qsm.getSm());
@@ -291,9 +257,12 @@ public class MultipleQueuedStateMachinesTest_sameEvents
 	  // state machine sm1: transition to: s22
 	  // process event ev4 state machine sm: transition to: s1
 	  numChecks=200; // we will check for a second
-	  while(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s4) && numChecks>0) {
-		Thread.sleep(5);
-	    numChecks--;
+	  while(!qsm.queue.messages.isEmpty() && numChecks>0) {
+		if(!qsm.getSm().equals(MultipleQueuedSMs_sameEvents.Sm.s4))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
 	  }
 	  assertThat(numChecks, not(equalTo(0)));
 	  Assert.assertEquals(MultipleQueuedSMs_sameEvents.Sm.s4, qsm.getSm());
