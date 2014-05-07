@@ -27,7 +27,7 @@ digraph "<<=filename>>" {
   rankdir="BT"
   node [shape=record; href="javascript:Action.selectClass(&quot;\N&quot;);"];
 !>>
-  emit graphStart(String filename)(graphStart(UmpleModel.versionNumber));
+  emit graphStart(String filename)(graphStart(UmpleModel.VERSION_NUMBER));
 
 
   // CENTRAL GENERATE METHOD

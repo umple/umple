@@ -618,7 +618,7 @@ class TemplateDefinitionWalker {
 //can instantiate the analysis if required
 class UmpleInternalParser
 {
-  lazy internal TemplateDefinitionWalker walker = new TemplateDefinitionWalker(this);
+  internal TemplateDefinitionWalker walker = new TemplateDefinitionWalker(this);
   
   private void analyzeTemplateToken(Token token, int analysisStep) {  	
   	walker.analyze(token, analysisStep);

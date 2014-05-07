@@ -63,7 +63,7 @@ public class UmpleModelGenerationPolicy{
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.VERSION_NUMBER)
 	public static String getVersionNumber() {
-		return UmpleModel.versionNumber;
+		return UmpleModel.VERSION_NUMBER;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.GENERATES)

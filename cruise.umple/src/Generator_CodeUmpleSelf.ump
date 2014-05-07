@@ -12,7 +12,7 @@ namespace cruise.umple.compiler;
 class UmpleSelfGenerator
 {
 
-lazy fileExtension= ".umpself";
+  fileExtension= ".umpself";
 
   public void generate()
   {

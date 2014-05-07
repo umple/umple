@@ -46,7 +46,6 @@ class VmlSystem
 class Concern
 {
   name;
-  0..1 -- * VariationPoint;
   
   key { name }
 }
@@ -61,13 +60,14 @@ class VariationPoint
   kind { Optional, Alternative }
   0..1 -> 0..1 CodeSnippet;
   0..1 -- * Variant;
+  * -- 0..1 Concern concern;
   * -> * VariationPoint requires;
   
   key { concern, name, kind, codeSnippet }
 }
 
 /* 
- * A named code snippet within a variabt
+ * A named code snippet within a variant
  */
 class Variant
 {

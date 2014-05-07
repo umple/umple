@@ -165,7 +165,7 @@ class UmpleConsoleMain
     }
     else if (optSet.has("version"))
     {
-      System.out.println("Version: " + UmpleModel.versionNumber);
+      System.out.println("Version: " + UmpleModel.VERSION_NUMBER);
     }
     else if (optSet.has("help"))
     {
