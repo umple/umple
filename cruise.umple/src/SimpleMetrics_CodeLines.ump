@@ -58,92 +58,92 @@ use SimpleMetrics_Util.ump;
 
 class CodeMetrics {
   isA SimpleMetricsGenerator;
-  StringBuilder code = null;
-  UmpleModel model=null;
+  StringBuilder input = null;
+  UmpleModel model = null;
   
-  void calculate(){
-      int totalLineCount = 0; //count lines per file
-      int totalLoc = 0;
-      int totalComments = 0;
-      int totalBlanks = 0;
+  void calculate() {
+    int totalLineCount = 0; //count lines per file
+    int totalLoc = 0;
+    int totalComments = 0;
+    int totalBlanks = 0;
     CountLines cl = new CountLines();
   
-      java.util.Set<String> allUmpFiles = new java.util.HashSet<String>();
-      String fn = null;
+    java.util.Set<String> allUmpFiles = new java.util.HashSet<String>();
+    String fn = null;
   
-      // Iterate through all the classes in the system, gathering statistics
-      for (UmpleClass uClass : model.getUmpleClasses()) {
-        // Loop through all the places where parts of this class were
-        // found in the code, gathering all the files
-        for (Position p : uClass.getPositions()) {
-          fn=p.getFilename();
-          allUmpFiles.add(fn); // allUmpFiles is a set, so duplicates are removed
-        }
+    // Iterate through all the classes in the system, gathering statistics
+    for (UmpleClass uClass : model.getUmpleClasses()) {
+      // Loop through all the places where parts of this class were
+      // found in the code, gathering all the files
+      for (Position p : uClass.getPositions()) {
+        fn=p.getFilename();
+        allUmpFiles.add(fn); // allUmpFiles is a set, so duplicates are removed
       }
+    }
 
-    code.append( "\n\n\n");
-      code.append("<h1>Code Line Measures</h1>\n");      
+    input.append( "\n\n\n");
+    input.append("<h1>Code Line Measures</h1>\n");      
     
-      java.util.List<String>title  = new java.util.ArrayList<String>();
-      title.add(" file                                                     ");
-      title.add("    LOC    ");
-      title.add(" Comment Lines ");
-      title.add(" Blank Lines ");
-      title.add(" Total of Lines ");
+    java.util.List<String>title  = new java.util.ArrayList<String>();
+    title.add(" file                                                     ");
+    title.add("    LOC    ");
+    title.add(" Comment Lines ");
+    title.add(" Blank Lines ");
+    title.add(" Total of Lines ");
       
-      code.append("<table border=\"1\"><tbody>\n");
+    input.append("<table border=\"1\"><tbody>\n");
       
-      code.append("<tr>");
-      for (int i=0;i<title.size();i++){
-          code.append("<td>"+title.get(i)+"</td>");
-      }
-      code.append("</tr>");
+    input.append("<tr>");
+    for (int i=0;i<title.size();i++) {
+      input.append("<td>"+title.get(i)+"</td>");
+    }
+    input.append("</tr>");
       
     
-      for( String fn1 : allUmpFiles){
-          int fileLineCount = 0;
-        code.append("<tr>");
-     
-         try {
-             cl = countLinesInFile(fn1);
+    for( String fn1 : allUmpFiles) {
+      int fileLineCount = 0;
+      input.append("<tr>");
+      
+      try {
+        cl = countLinesInFile(fn1);
             
-             code.append( "<td>"+fn1+"</td>");
-             code.append( "<td>"+cl.getCountCode()+"</td>");
-             code.append( "<td>"+cl.getCountComments()+"</td>");
-             code.append( "<td>"+cl.getCountBlanks()+"</td>");
-             code.append( "<td>"+cl.getCountLines()+"</td>");
-          }
-       catch (java.io.IOException e) {
-             try {
-                 cl = countLinesInFile(model.getUmpleFile().getPath()+java.io.File.separator+fn1);
-         
-             code.append( "<td>"+fn1+"</td>");
-             code.append( "<td>"+cl.getCountCode()+"</td>");
-             code.append( "<td>"+cl.getCountComments()+"</td>");
-             code.append( "<td>"+cl.getCountBlanks()+"</td>");
-             code.append( "<td>"+cl.getCountLines()+"</td>");
+        input.append( "<td>"+fn1+"</td>");
+        input.append( "<td>"+cl.getCountCode()+"</td>");
+        input.append( "<td>"+cl.getCountComments()+"</td>");
+        input.append( "<td>"+cl.getCountBlanks()+"</td>");
+        input.append( "<td>"+cl.getCountLines()+"</td>");
+      } catch (java.io.IOException e) {
+        try {
+          cl = countLinesInFile(model.getUmpleFile().getPath()+java.io.File.separator+fn1);
+        
+          input.append( "<td>"+fn1+"</td>");
+          input.append( "<td>"+cl.getCountCode()+"</td>");
+          input.append( "<td>"+cl.getCountComments()+"</td>");
+          input.append( "<td>"+cl.getCountBlanks()+"</td>");
+          input.append( "<td>"+cl.getCountLines()+"</td>");
           
-              }
-              catch (java.io.IOException e2) {  
-                 fileLineCount = 0;
-                 cl.setCountLines(0);
-                 code.append("Unreadable\n");
-              } 
-            }
-             totalLoc += cl.getCountCode();
-            totalComments += cl.getCountComments();
-            totalBlanks += cl.getCountBlanks();
-            totalLineCount += cl.getCountLines();  
-            
-        code.append("</tr>");
+        } catch (java.io.IOException e2) {  
+          fileLineCount = 0;
+          cl.setCountLines(0);
+          input.append("Unreadable\n");
+        } 
       }
-      code.append("</tbody></table>");
-        code.append("\n\n<ul>");
-        code.append("\n  <li>Total Line of Code = "+totalLoc);
-        code.append("\n  <li>Total Comment Lines  = "+totalComments );
-        code.append("\n  <li>Total Blank Lines  = "+totalBlanks);
-        code.append("\n  <li>Total of Lines = "+totalLineCount + "\n");
-      code.append("</ul>\n\n");
+      totalLoc += cl.getCountCode();
+      totalComments += cl.getCountComments();
+      totalBlanks += cl.getCountBlanks();
+      totalLineCount += cl.getCountLines();  
+            
+      input.append("</tr>");
+    }
+    input.append("</tbody></table>");
+    input.append("\n\n<ul>");
+    input.append("\n  <li>Total Line of Code = "+totalLoc);
+    input.append("\n  <li>Total Comment Lines  = "+totalComments );
+    input.append("\n  <li>Total Blank Lines  = "+totalBlanks);
+    input.append("\n  <li>Total of Lines = "+totalLineCount + "\n");
+    input.append("</ul>\n\n");
+    
+    super.setCode(input);
     return;
   }
   

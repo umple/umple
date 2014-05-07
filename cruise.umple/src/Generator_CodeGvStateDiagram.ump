@@ -41,7 +41,7 @@ digraph "<<=filename>>" {
   compound = true;
   size="80,10"
 !>>
-  emit graphStart(String filename)(graphStart(UmpleModel.versionNumber));
+  emit graphStart(String filename)(graphStart(UmpleModel.VERSION_NUMBER));
 
   // Template for what will appear at the end of each graph file
   graphEnd <<!

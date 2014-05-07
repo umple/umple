@@ -12,11 +12,12 @@ in your umple file, or the command line option
 
  */
 
-namespace cruise.umple.compiler;
 use AlloyMetaModel.ump;
 use AlloyUtility.ump;
 use AlloySignature.ump;
 use AlloyFact.ump;
+
+namespace cruise.umple.compiler;
 
 class AlloyGenerator
 {

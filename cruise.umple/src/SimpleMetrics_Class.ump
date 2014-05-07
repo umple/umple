@@ -41,7 +41,7 @@ class ClassMetrics{
   depend java.util.*;
     depend java.text.*;
   isA SimpleMetricsGenerator;
-  StringBuilder code = null;
+  StringBuilder input = null;
   UmpleModel model=null;
   
   void calculate(){
@@ -50,8 +50,8 @@ class ClassMetrics{
       int classCount = 0;
     boolean FirstTime= true;
 
-      code.append( "\n\n\n");
-      code.append("<h1>Class Measures</h1>\n");
+      input.append( "\n\n\n");
+      input.append("<h1>Class Measures</h1>\n");
    
     // CALCULATE SOME CLASS METRICS
       // create a map in order to have several metric objects about the same class
@@ -60,7 +60,7 @@ class ClassMetrics{
       // Iterate through all the classes in the system, gathering statistics
       for (UmpleClass uClass : model.getUmpleClasses()) {           
         // Loop through all the places where parts of this class were
-        // found in the code, gathering all the files
+        // found in the input, gathering all the files
         for (Position p : uClass.getPositions()) {
           fn=p.getFilename();
           allUmpFiles.add(fn); // allUmpFiles is a set, so duplicates are removed
@@ -77,13 +77,13 @@ class ClassMetrics{
       title.add("#Methods");
       title.add("#Method Parameters");
       
-      code.append("<table border=\"1\"><tbody>\n");
+      input.append("<table border=\"1\"><tbody>\n");
       
-      code.append("<tr>");
+      input.append("<tr>");
       for (int i=0;i<title.size();i++){
-          _genCell(0,code,title.get(i));
+          _genCell(0,input,title.get(i));
       }
-      code.append("</tr>");
+      input.append("</tr>");
     
     classCount=0;
       smCount=0;
@@ -91,17 +91,17 @@ class ClassMetrics{
     for ( UmpleClass uClass : model.getUmpleClasses() ) {
       cc.countDataClass( uClass ); 
 
-      code.append("<tr>");
+      input.append("<tr>");
   
       classCount++;         
-      genCellString(code, uClass.getName());
-      genCellInt(code, cc.getCountStateMachines());
-      genCellInt(code,cc.getCountAssociations());
-      genCellInt(code,cc.getCountSubclasses());             
-      genCellInt(code,cc.getCountDeepestSubclass());             
-      genCellInt(code,cc.getCountAttributes());
-      genCellInt(code,cc.getCountMethods());
-      genCellInt(code,cc.getCountParameters());                          
+      genCellString(input, uClass.getName());
+      genCellInt(input, cc.getCountStateMachines());
+      genCellInt(input,cc.getCountAssociations());
+      genCellInt(input,cc.getCountSubclasses());             
+      genCellInt(input,cc.getCountDeepestSubclass());             
+      genCellInt(input,cc.getCountAttributes());
+      genCellInt(input,cc.getCountMethods());
+      genCellInt(input,cc.getCountParameters());                          
                                        
     
     if (FirstTime){
@@ -112,73 +112,73 @@ class ClassMetrics{
     cc.calcMinMax();
     cc.reset();
     
-       code.append("</tr>");
+       input.append("</tr>");
     
      } 
 
 
       // TOTAL OF CLASSES, STATE MACHINES, SOURCE FILES 
-      code.append("<tr>");
-      genCellString(code,"TOTAL");
-      genCellInt(code, cc.getCountTotalStateMachines());
-      genCellInt(code,cc.getCountTotalAssociations());
-      genCellInt(code,cc.getCountTotalSubclasses());             
-      genCellString(code,"");          
-      genCellInt(code,cc.getCountTotalAttributes());
-      genCellInt(code,cc.getCountTotalMethods());
-      genCellInt(code,cc.getCountTotalParameters());           
-      code.append("</tr>");
+      input.append("<tr>");
+      genCellString(input,"TOTAL");
+      genCellInt(input, cc.getCountTotalStateMachines());
+      genCellInt(input,cc.getCountTotalAssociations());
+      genCellInt(input,cc.getCountTotalSubclasses());             
+      genCellString(input,"");          
+      genCellInt(input,cc.getCountTotalAttributes());
+      genCellInt(input,cc.getCountTotalMethods());
+      genCellInt(input,cc.getCountTotalParameters());           
+      input.append("</tr>");
       
     // Print Averages
-      code.append("<tr>");
-      genCellString(code,"AVERAGE");
-      genCellFloat(code,(float)cc.getCountTotalStateMachines()/classCount);
-      genCellFloat(code,(float)cc.getCountTotalAssociations()/classCount);
-      genCellFloat(code,(float)cc.getCountTotalSubclasses()/classCount);             
-      genCellString(code,"");              
-      genCellFloat(code,(float)cc.getCountTotalAttributes()/classCount);
-      genCellFloat(code,(float)cc.getCountTotalMethods()/classCount);
-      genCellFloat(code,(float)cc.getCountTotalParameters()/classCount);           
-      code.append("</tr>");
+      input.append("<tr>");
+      genCellString(input,"AVERAGE");
+      genCellFloat(input,(float)cc.getCountTotalStateMachines()/classCount);
+      genCellFloat(input,(float)cc.getCountTotalAssociations()/classCount);
+      genCellFloat(input,(float)cc.getCountTotalSubclasses()/classCount);             
+      genCellString(input,"");              
+      genCellFloat(input,(float)cc.getCountTotalAttributes()/classCount);
+      genCellFloat(input,(float)cc.getCountTotalMethods()/classCount);
+      genCellFloat(input,(float)cc.getCountTotalParameters()/classCount);           
+      input.append("</tr>");
     
     // Print MAXs
-      code.append("<tr>");
-      genCellString(code,"MAX");
-      genCellInt(code, cc.getCountStateMachinesMax());
-      genCellInt(code,cc.getCountAssociationsMax());
-      genCellInt(code,cc.getCountSubclassesMax());             
-      genCellInt(code,cc.getCountDeepestSubclassMax());             
-      genCellInt(code,cc.getCountAttributesMax());
-      genCellInt(code,cc.getCountMethodsMax());
-      genCellInt(code,cc.getCountParametersMax());           
-      code.append("</tr>");    
+      input.append("<tr>");
+      genCellString(input,"MAX");
+      genCellInt(input, cc.getCountStateMachinesMax());
+      genCellInt(input,cc.getCountAssociationsMax());
+      genCellInt(input,cc.getCountSubclassesMax());             
+      genCellInt(input,cc.getCountDeepestSubclassMax());             
+      genCellInt(input,cc.getCountAttributesMax());
+      genCellInt(input,cc.getCountMethodsMax());
+      genCellInt(input,cc.getCountParametersMax());           
+      input.append("</tr>");    
 
     // Print MINs
-      code.append("<tr>");
-      genCellString(code,"MIN");
-      genCellInt(code, cc.getCountStateMachinesMin());
-      genCellInt(code,cc.getCountAssociationsMin());
-      genCellInt(code,cc.getCountSubclassesMin());             
-      genCellInt(code,cc.getCountDeepestSubclassMin());             
-      genCellInt(code,cc.getCountAttributesMin());
-      genCellInt(code,cc.getCountMethodsMin());
-      genCellInt(code,cc.getCountParametersMin());           
-      code.append("</tr>");    
+      input.append("<tr>");
+      genCellString(input,"MIN");
+      genCellInt(input, cc.getCountStateMachinesMin());
+      genCellInt(input,cc.getCountAssociationsMin());
+      genCellInt(input,cc.getCountSubclassesMin());             
+      genCellInt(input,cc.getCountDeepestSubclassMin());             
+      genCellInt(input,cc.getCountAttributesMin());
+      genCellInt(input,cc.getCountMethodsMin());
+      genCellInt(input,cc.getCountParametersMin());           
+      input.append("</tr>");    
 
-      code.append("</tbody></table>");
+      input.append("</tbody></table>");
 
     // Print Legend
-    code.append("<h3>Legend of Class Metrics:</h3>\n<ul>\n");
-    code.append("   <li>#State Machines - Total of SM per class.\n");
-    code.append("   <li>#Associations - Total of associaions per class.\n");
-    code.append("   <li>#Subclasses - Total of subclasses conected directly per class.\n");
-    code.append("   <li>#Depth Subclasses - Amount of classes up to deepest subclasse.\n");
-    code.append("   <li>#Attributes - Total of attributes per class, disregarding attribute modifiers.\n");
-    code.append("   <li>#Methods - Total of methods per class, disregarding class modifiers. \n");
-    code.append("   <li>#Method Parameters - Total of parameters in the class. \n</ul>\n\n");
+    input.append("<h3>Legend of Class Metrics:</h3>\n<ul>\n");
+    input.append("   <li>#State Machines - Total of SM per class.\n");
+    input.append("   <li>#Associations - Total of associaions per class.\n");
+    input.append("   <li>#Subclasses - Total of subclasses conected directly per class.\n");
+    input.append("   <li>#Depth Subclasses - Amount of classes up to deepest subclasse.\n");
+    input.append("   <li>#Attributes - Total of attributes per class, disregarding attribute modifiers.\n");
+    input.append("   <li>#Methods - Total of methods per class, disregarding class modifiers. \n");
+    input.append("   <li>#Method Parameters - Total of parameters in the class. \n</ul>\n\n");
     
     
-    super.setCode(code);
+    super.setCode(input);
     return;
   }// end of method
   
