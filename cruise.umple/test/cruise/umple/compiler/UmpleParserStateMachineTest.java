@@ -162,9 +162,17 @@ public class UmpleParserStateMachineTest
   
   @Test
   public void historyStatePlacement(){
-    //assertNoWarnings("historyState_placement.ump")
+    assertNoWarnings("238_historyState.ump");
     
-    //UmpleClass c = model.getUmpleClass("X");
+    UmpleClass c = model.getUmpleClass("X");
+    StateMachine sm = c.getStateMachine(0);
+    StateMachine s2 = sm.getState(1).getNestedStateMachine(0);
+    StateMachine ss1 = s2.getState(0).getNestedStateMachine(0);
+    Assert.assertEquals(true, ss1.getContainsHistoryState());
+    Assert.assertEquals(false, s2.getContainsHistoryState());
+    Assert.assertEquals(3, ss1.numberOfStates());
+    Assert.assertEquals("H", ss1.getState(2).getName());
+    Assert.assertEquals(true, ss1.getState(2).getIsHistoryState());
     //TODO: finish
     
     //TODO: failure if History state declared
@@ -172,6 +180,13 @@ public class UmpleParserStateMachineTest
     //TODO: multiple transitions to same history/deep state
     //TODO: concurrent/pooled/queued
     
+  }
+  
+  @Test 
+  public void invalidHistoryStateTransition(){
+    assertFailedParse("239_deepHistory_nonExistantState.ump", new Position("239_deepHistory_nonExistantState.ump", 2,2, 11), 64); 
+    //assertFailedParse("239_deepHistory_noSubstates.ump", new Position("239_deepHistory_nonExistantState.ump", 2,2, 11), 65); 
+    assertFailedParse("239_deepHistory_declaredHistoryState.ump", new Position("239_deepHistory_declaredHistoryState.ump", 24, 4, 259), 63);
   }
   
   @Test
