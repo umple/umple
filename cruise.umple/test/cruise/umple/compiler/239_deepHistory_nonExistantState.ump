@@ -1,0 +1,25 @@
+class X{
+  sm{
+    s1{
+      ss1{
+        e -> s3.HStar;
+      }
+      ss2{
+        e1 -> s2.ss2;
+      }
+    }
+    s2{
+      ss1{
+        sss1{
+          
+        }
+        sss2{
+          
+        }
+      }
+      ss2{
+        
+      }
+    }
+  }
+}
