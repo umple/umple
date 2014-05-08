@@ -1,46 +1,35 @@
 namespace cruise.umple.alloy;
 
 class AlloyObject {
-	depend java.lang.StringBuilder;
-	Utility utility =  new Utility();
-	public void printObject(String cName,StringBuilder code){
-		utility.addNewLine(code,1);
-		utility.addString(code,"abstract sig "+cName+" { }");
-		utility.addNewLine(code,1);
-	}
+  public String printObject(String cName){
+	return "\nabstract sig "+cName+" { }\n";
+  }
 }
 
 class Function {
-	depend cruise.umple.compiler.*;
-	depend java.lang.StringBuilder;
+  depend cruise.umple.compiler.*;
+		
+  beginEndRoleName;
+  targetMult;
+  targetClassName;
+  1 -> 1 Utility utility;
+ 
+  public Function(Association assoc){
+	utility =  new Utility();
+	beginEndRoleName = utility.getRightRoleName(assoc);
+	targetMult = utility.getAlloyMultiplicity(utility.getRightEnd(assoc));
+	targetClassName = utility.getRightEndName(assoc);
+  }
 	
-	beginEndRoleName;
-	targetMult;
-	targetClassName;
-	Utility utility;
-	 
+  //Reflexive relation
+  public Function(Association assoc, String cName){
+	utility =  new Utility();
+	beginEndRoleName = utility.getLeftRoleName(assoc);
+	targetMult = utility.getAlloyMultiplicity(utility.getLeftEnd(assoc));
+	targetClassName = cName;
+  }
 	
-	public Function(Association assoc){
-	  utility =  new Utility();
-	  beginEndRoleName = utility.getRightRoleName(assoc);
-	  targetMult = utility.getAlloyMultiplicity(utility.getRightEnd(assoc));
-	  targetClassName = utility.getRightEndName(assoc);
-	}
-	
-	//Reflexive relation
-	public Function(Association assoc, String cName){
-	  utility =  new Utility();
-	  beginEndRoleName = utility.getLeftRoleName(assoc);
-	  targetMult = utility.getAlloyMultiplicity(utility.getLeftEnd(assoc));
-	  targetClassName = cName;
-	}
-	
-	public void printFunction(StringBuilder code){
-		utility.addTab(code,2);
-		utility.addString(code,beginEndRoleName);
-		utility.addString(code," : ");
-		utility.addString(code,targetMult);
-		utility.addTab(code,1);
-		utility.addString(code,targetClassName);
-	}
+  public String printFunction(){
+	return "  "+beginEndRoleName+" : "+targetMult+" "+targetClassName;
+  }
 }
