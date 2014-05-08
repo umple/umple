@@ -167,6 +167,11 @@ public class UmpleParserStateMachineTest
     //UmpleClass c = model.getUmpleClass("X");
     //TODO: finish
     
+    //TODO: failure if History state declared
+    //TODO: failure if History state or deep transitioned to when no sub states
+    //TODO: multiple transitions to same history/deep state
+    //TODO: concurrent/pooled/queued
+    
   }
   
   @Test
