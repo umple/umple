@@ -2,3 +2,5 @@
     <%=gen.translate("setMethod",nestedSm)%>(<%=gen.translate("type",nestedSm)%>.<%=gen.translate("stateNull",nestedSm)%>);
     <%if (nestedSm.getContainsDeepHistoryState()){%>
     <%=gen.translate("stateMachineOne",nestedSm)%>HStar = <%=gen.translate("type",nestedSm)%>.<%=nestedSm.getState(1).getName()%>;<%}%>
+    <%if (nestedSm.getContainsHistoryState()){%>
+    <%=gen.translate("stateMachineOne",nestedSm)%>H = <%=gen.translate("type",nestedSm)%>.<%=nestedSm.getState(1).getName()%>;<%}%>

@@ -506,7 +506,6 @@ class UmpleInternalParser
                 if (s.getIsDeepHistoryState())
                 {
                   possiblyUnknownStates.remove(s);
-                  //TODO: if there was a state declared as HStar this point will never be reached
                   s.getStateMachine().setContainsDeepHistoryState(true);
                   addDeepHistoryStatesToNestedStateMachines(s);
                 }
@@ -516,6 +515,10 @@ class UmpleInternalParser
               {
                 //TODO: check to make sure there are no other states at this level with same name
                 s.setName(stateNames[stateNames.length - 1]);
+                if (s.getIsHistoryState() || s.getIsDeepHistoryState())
+                {
+                  setFailedPosition(stateMachineToken.getPosition(), 64, sm.getName());
+                }
                 s.setStateMachine(sm);
               }
             }
@@ -524,7 +527,11 @@ class UmpleInternalParser
       }
       else
       {
-        //if H or HSTar raise error
+        if (s.getIsHistoryState() || s.getIsDeepHistoryState())
+        {
+          //TODO: find transition token to raise error at correct position
+          setFailedPosition(stateMachineToken.getPosition(), 65, sm.getName());
+        }
         s.setStateMachine(sm);
       }
     }
