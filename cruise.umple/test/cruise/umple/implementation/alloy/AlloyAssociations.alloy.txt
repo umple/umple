@@ -117,7 +117,9 @@ sig G extends UmpleObject {
 
 ------------------------------------------------------------------------------------------------------------------
 
-sig H extends UmpleObject { }
+sig H extends UmpleObject {
+
+}
 
 
 

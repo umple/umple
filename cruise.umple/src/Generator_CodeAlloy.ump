@@ -36,7 +36,7 @@ class AlloyGenerator
     AlloyObject aObj = new AlloyObject();
     
     //Prints AlloyObject signature to be inherited by other signatures
-    aObj.printObject(className,code);
+    utility.addString(code,aObj.printObject(className));
   
     // Iterate through all classes and generate Alloy
     Set<UmpleClass> processedClass = new HashSet<UmpleClass>(); // needed to prevent double reflexive count
@@ -44,7 +44,7 @@ class AlloyGenerator
     {
        //Set<Association> processedAssociations = new HashSet<Association>(); // needed to prevent double reflexive count
        Signature sig = new Signature(uClass,className);
-       sig.printSignature(code);
+       utility.addString(code,sig.printSignature());
        processedClass.add(uClass);
     }
     
@@ -53,13 +53,13 @@ class AlloyGenerator
     	utility.addNewLine(code,2);
     	if(analyzeAssociation(assoc) == 2){
     		BidirectionRule bidirect = new BidirectionRule(assoc);
-    		bidirect.print(code);
+    		utility.addString(code,bidirect.print());
     	}
     	else{
     		NoExtendedRule nExt = new NoExtendedRule(assoc); 
-    		nExt.print(code);
+    		utility.addString(code,nExt.print());
     		NoSelfRelation nsr = new NoSelfRelation(assoc);
-    		nsr.print(code);
+    		utility.addString(code,nsr.print());
     	}
     }
     terminateCode(code);
