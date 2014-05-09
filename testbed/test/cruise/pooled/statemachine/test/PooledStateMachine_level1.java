@@ -1,7 +1,10 @@
 package cruise.pooled.statemachine.test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PooledStateMachine_level1
@@ -61,31 +64,67 @@ public class PooledStateMachine_level1
 	  Assert.assertEquals(5, PooledSM_NestedState_L1.stateMessageMap.size());
   }
   
-  @Ignore
   @Test 
   public void processEvents() throws InterruptedException
   {
 	  PooledSM_NestedState_L1 psm = new PooledSM_NestedState_L1();
+	  int numChecks;
+
 	  // check initial state is s1
 	  Assert.assertEquals(PooledSM_NestedState_L1.Sm.s1, psm.getSm());
 	  
 	  psm.e1();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(!psm.pool.messages.isEmpty() && numChecks>0) {
+		if(!psm.getSm().equals(PooledSM_NestedState_L1.Sm.s2))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
+	  }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.Sm.s2, psm.getSm());
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
 	  psm.e3();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(!psm.pool.messages.isEmpty() && numChecks>0) {
+		if(!psm.getSm().equals(PooledSM_NestedState_L1.Sm.s1))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
+	  }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.Sm.s1, psm.getSm());
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
 	  psm.e2();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(!psm.pool.messages.isEmpty() && numChecks>0) {
+		if(!psm.getSmS2().equals(PooledSM_NestedState_L1.SmS2.s2b))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
+	  }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2b, psm.getSmS2());
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
 	  psm.e1();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM_NestedState_L1.MessageType.e1_M))
+		  {
+			  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2b, psm.getSmS2());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2b, psm.getSmS2());
 	  Assert.assertEquals(1, psm.pool.messages.size());
 	  for (PooledSM_NestedState_L1.Message msg: psm.pool.messages)
@@ -94,12 +133,31 @@ public class PooledStateMachine_level1
       }
 	  
 	  psm.e5();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0 && psm.pool.messages.size() != 1) {
+		  if(!psm.getSmS2().equals(PooledSM_NestedState_L1.SmS2.s2a))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2a, psm.getSmS2());
 	  Assert.assertEquals(1, psm.pool.messages.size());
 	  
 	  psm.e2();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 2)
+		  {
+			  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2a, psm.getSmS2());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2a, psm.getSmS2());
 	  Assert.assertEquals(2, psm.pool.messages.size());	  
 	  for (PooledSM_NestedState_L1.Message msg: psm.pool.messages)
@@ -111,7 +169,18 @@ public class PooledStateMachine_level1
       }
 	  
 	  psm.e3();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM_NestedState_L1.MessageType.e2_M))
+		  {
+			  Assert.assertEquals(PooledSM_NestedState_L1.Sm.s2, psm.getSm());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.Sm.s2, psm.getSm());
 	  Assert.assertEquals(1, psm.pool.messages.size());	  
 	  for (PooledSM_NestedState_L1.Message msg: psm.pool.messages)
@@ -120,7 +189,18 @@ public class PooledStateMachine_level1
       }
 	  
 	  psm.e5();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 2)
+		  {
+			  Assert.assertEquals(PooledSM_NestedState_L1.Sm.s2, psm.getSm());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.Sm.s2, psm.getSm());
 	  Assert.assertEquals(2, psm.pool.messages.size());	  
 	  for (PooledSM_NestedState_L1.Message msg: psm.pool.messages)
@@ -132,7 +212,18 @@ public class PooledStateMachine_level1
       }
 	  
 	  psm.e4();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM_NestedState_L1.MessageType.e2_M))
+		  {
+			  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2a, psm.getSmS2());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2a, psm.getSmS2());
 	  Assert.assertEquals(1, psm.pool.messages.size());
 	  for (PooledSM_NestedState_L1.Message msg: psm.pool.messages)
@@ -141,17 +232,44 @@ public class PooledStateMachine_level1
       }
 	  
 	  psm.e3();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSmS2().equals(PooledSM_NestedState_L1.SmS2.s2b))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2b, psm.getSmS2());
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
 	  psm.e5();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSmS2().equals(PooledSM_NestedState_L1.SmS2.s2a))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2a, psm.getSmS2());
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
 	  psm.e1();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM_NestedState_L1.MessageType.e1_M))
+		  {
+			  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2a, psm.getSmS2());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.SmS2.s2a, psm.getSmS2());
 	  Assert.assertEquals(1, psm.pool.messages.size());
 	  for (PooledSM_NestedState_L1.Message msg: psm.pool.messages)
@@ -160,7 +278,12 @@ public class PooledStateMachine_level1
       }
 	  
 	  psm.e3();
-	  Thread.sleep(10);
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  Thread.sleep(5);
+		  numChecks--;
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_NestedState_L1.Sm.s2, psm.getSm());
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
