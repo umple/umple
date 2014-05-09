@@ -134,6 +134,7 @@
 2554: 1, "http://umple.org", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'.;
 2555: 1, "http://umple.org", The required method '{0}' in trait '{1}' is not available in class '{2}'.;
 2556: 1, "http://umple.org", The defined name '{0}' in trait '{1}' is not available in the trait's header.;
+2557: 1, "http://umple.org", The defined method '{0}' in trait '{1}' is duplicated in another traits;
 
 # Messages related to templates
 3500: 2, "http://umple.org", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;

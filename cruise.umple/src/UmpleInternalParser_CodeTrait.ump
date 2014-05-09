@@ -2,12 +2,17 @@ namespace cruise.umple.compiler;
 
 class UmpleInternalParser
 {
-   private boolean isUmpleTrait(String elementName){
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------   
+
+  private boolean isUmpleTrait(String elementName){
     return (model.getUmpleTrait(elementName) != null) ? true: false;
   }
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void analyzeTraitToken(Token t, int analysisStep)
   {
    if (analysisStep != 2)
@@ -21,9 +26,9 @@ class UmpleInternalParser
     }
     
   }
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private UmpleTrait analyzeTrait (Token traitToken) {
    String traitName = traitToken.getValue("name").split(" ")[traitToken.getValue("name").split(" ").length-1];
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
@@ -114,9 +119,9 @@ class UmpleInternalParser
     return aTrait; 
   }
 
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void analyzeAllTokens(Token rootToken, UmpleTrait aTrait){
     int analysisStep = 0;
     shouldProcessClassAgain = true;
@@ -136,9 +141,9 @@ class UmpleInternalParser
     while (shouldProcessClassAgain);
   }
 
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void analyzeToken(Token t, UmpleTrait aTrait, int analysisStep){
 
   	analyzeCoreToken(t,aTrait,analysisStep);
@@ -147,16 +152,16 @@ class UmpleInternalParser
     analyzeDependentTokens(t,aTrait,analysisStep);
   }
 
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
   private void analyzeCoreToken(Token t, UmpleTrait aTrait, int analysisStep){
     
   } 
 
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void analyzeTraitToken(Token token, UmpleTrait aTrait, int analysisStep){
     if (analysisStep != 1)
     {
@@ -245,9 +250,9 @@ class UmpleInternalParser
     }
   }
   
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeAttribute(Token attributeToken, UmpleTrait aTrait){
     boolean isAutounique = attributeToken.getValue("autounique") != null;
     boolean isUnique = attributeToken.getValue("unique") != null;
@@ -439,9 +444,9 @@ class UmpleInternalParser
     lastassoc = null;
   }  
 
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeExtraCode(Token token, UmpleTrait aTrait){
     //This is a catch all and will be used less often as the grammar gets updated.
     
@@ -469,9 +474,9 @@ class UmpleInternalParser
     }
   }
   
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeinlineAssociation(Token inlineAssociationToken, UmpleTrait aTrait){
     
     Association association = analyzeAssociation(inlineAssociationToken,aTrait.getName());
@@ -536,9 +541,9 @@ class UmpleInternalParser
     
   }
 
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeSymmetricReflexiveAssociation(Token symmetricReflexiveAssociationToken, UmpleTrait aTrait){
     /*
     String myName = symmetricReflexiveAssociationToken.getValue("roleName");
@@ -563,11 +568,9 @@ class UmpleInternalParser
     aTrait.addAssociation(assoc);
     */
   } 
-
-
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void analyzeException(Token exception, UmpleTrait aTrait){
     Token sub = exception.getSubToken(0);
     if(sub.is("misnamedAttribute"))
@@ -666,9 +669,9 @@ class UmpleInternalParser
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }
   }
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
    private void analyzeDependentTokens(Token t, UmpleTrait uTrait, int analysisStep){
     if(analysisStep == 1 || shouldProcessClassAgain)
     {
@@ -695,9 +698,9 @@ class UmpleInternalParser
     //analyzeTraceToken(t,aClass);
     //analyzeLayoutToken(t,aClass,analysisStep);
   }
-//----------------------------------------------------------------------------  
-//---------------------------------the Method---------------------------------
-//----------------------------------------------------------------------------
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
 
   private void applyTraits(){
   	if (getParseResult().getWasSuccess()) {
@@ -710,7 +713,9 @@ class UmpleInternalParser
 		}
 	}	
   }
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void recursiveApplyTraits(UmpleClass inClass, UmpleTrait inTrait) {
 	  if (inTrait.hasExtendsTraits()) {
 		  applyTraitProperties(inClass, inTrait);
@@ -721,7 +726,9 @@ class UmpleInternalParser
 		  applyTraitProperties(inClass, inTrait);
 	  }
   }
-  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
   private void applyTraitProperties(UmpleClass inClass, UmpleTrait inTrait) {
 		//set the singleton pattern
 		if (! inClass.getIsSingleton()) inClass.setIsSingleton(inTrait.getIsSingleton());
@@ -742,7 +749,25 @@ class UmpleInternalParser
 							
 		// copy methods
 		for(Method aMethod : inTrait.getMethods()) {
-			if(!aMethod.isIsAbstract()) inClass.addMethod(aMethod);
+			if(!aMethod.isIsAbstract()) {
+				for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+					if (uTrait.hasCascadeMethod(aMethod,false)){
+						getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),aMethod.getName(),uTrait.getName()));	
+						return;	
+					}					
+				}
+				for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+					if(!uTrait.equals(inTrait)){
+						if (uTrait.hasCascadeMethod(aMethod,false) ){
+							getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),aMethod.getName(),inTrait.getName()));	
+							return;	
+						}					
+					}
+				}
+				if(!inClass.hasMethod(aMethod)){
+					inClass.addMethod(aMethod);
+				}
+			}
 		}
 							
 		// copy Precondition
@@ -820,7 +845,9 @@ class UmpleInternalParser
 	       inClass.addAssociationVariable(aVariable);    
        }	  
   }
-  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
 	private void postTokenTraitAnalysis() {
 		addUnlinkedExtendTraits();
 		if ( getParseResult().getWasSuccess() ) {
@@ -831,7 +858,9 @@ class UmpleInternalParser
 			checkAllRequiredMethods();
 		}
 	}
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void addUnlinkedExtendTraits()
   {  
     for (UmpleClassifier c : unlinkedExtends.keySet())
@@ -891,7 +920,9 @@ class UmpleInternalParser
       }
     }
   }  
-	
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
 	//Check traits to have unique names;
 	private void checkTraitsNamesWithClasses() {
 		for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
@@ -903,7 +934,9 @@ class UmpleInternalParser
 			}
 		}
 	}
-	
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
   private void checkTraitsNameWithInterfaces() {
 	  for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
 		  for (UmpleInterface uInterface : getModel().getUmpleInterfaces()) {
@@ -914,7 +947,9 @@ class UmpleInternalParser
 		  }
 	  }
   }
-	
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
   private void checkTheSameAttributes() {
 	  for(UmpleClass uClass : getModel().getUmpleClasses()) {
 		  if (uClass.hasExtendsTraits()) {
@@ -932,7 +967,9 @@ class UmpleInternalParser
 		  }
 	  }
   }	
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
 	private void checkCyclicTraitInheritance() {
 		 for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
 			if (uTrait.hasExtendsTraits()) {
@@ -940,7 +977,9 @@ class UmpleInternalParser
 			}
 		}
 	 }
-	  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	  
 	 private void checkCyclicTraitInheritance(UmpleTrait base, UmpleTrait root) {
 		 if (base.getExtendsTraits().contains(root)) {
 			 getParseResult().addErrorMessage(new ErrorMessage(2553,base.getPosition(0),base.getName(), root.getName()));
@@ -952,7 +991,9 @@ class UmpleInternalParser
 			 }
 		 }
 	 }
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void checkAllRequiredMethods() {
 	  if ( getParseResult().getWasSuccess() ) {
 	  for(UmpleClass uClass : getModel().getUmpleClasses()) {
@@ -965,7 +1006,9 @@ class UmpleInternalParser
 	  }
 	  }
   }  
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void recursiveCheckRequiredMethods(UmpleClass inClass, UmpleTrait inTrait) {
 	  checkRequiredMethod(inClass, inTrait);
 	  if (inTrait.hasExtendsTraits()) {	  
@@ -974,20 +1017,50 @@ class UmpleInternalParser
 		  }
 	  }
   }
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void checkRequiredMethod(UmpleClass inClass, UmpleTrait inTrait) {
 	for (Method uMethod : inTrait.getMethods() ) {
-		if (uMethod.isIsAbstract() && ! inClass.hasMethod(uMethod)) {
-			getParseResult().addErrorMessage(new ErrorMessage(2555,uMethod.getPosition(),uMethod.getName(),inTrait.getName(),inClass.getName()));
-			return;
+		if (uMethod.isIsAbstract()) {
+			if(!checkConcreteMethodAvailability(uMethod,inClass)){
+				getParseResult().addErrorMessage(new ErrorMessage(2555,uMethod.getPosition(),uMethod.getName(),inTrait.getName(),inClass.getName()));
+				return;
+			}
 		}
 	}
   }  
-  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+  private Boolean checkConcreteMethodAvailability(Method inMethod, UmpleClass inClass){
+	if (inClass.hasImplementedMethodIncludingWithinParentClasses(inMethod)) return true;
+    for(UmpleTrait uTrait : inClass.getExtendsTraits()){
+    	if (checkConcreteMethodInTraits(inMethod,uTrait)) return true;
+  	}
+  	return false;
+  }
 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+  private Boolean checkConcreteMethodInTraits(Method inMethod, UmpleTrait inTrait) {
+	if(inTrait.hasMethod(inMethod)){
+		if (!inTrait.getMethod(inMethod).isIsAbstract()) return true;
+	}
+	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+		if (checkConcreteMethodInTraits(inMethod,uTrait))return true;
+	}
+	return false;
+  }
+ 
+  
+//****************************************************************************************
 //This section is related to codes which is going to support general templates for traits
-//--------------------------------------------------------------------------------------
-//----------------------------------start-----------------------------------------------
+//****************************************************************************************
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
   private void proccessGeneralTemplateParameters(Token mainToken, UmpleTrait aTrait) {
 	// TODO Auto-generated method stub
 	  for (Token subToken : mainToken.getSubTokens()) {
@@ -997,7 +1070,9 @@ class UmpleInternalParser
 		  }
 	  }
   }
-  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
 private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
 	GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
 	for(Token subToken : mainToken.getSubTokens()) {
@@ -1012,10 +1087,12 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 	}
 	
 }
-//--------------------------------------------------------------------------------------
-//------------------------------------end-----------------------------------------------
-
-  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+//****************************************************************************************
+//end of a special section
+//****************************************************************************************  
 }
 
 use UmpleInternalParser_FIXML.ump;
