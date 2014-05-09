@@ -172,6 +172,21 @@ public class UmpleTraitTest {
 		Assert.assertEquals("fname", model.getUmpleClass("A").getAttribute(0).getName());	
 		
 	}	
+	
+	@Test
+	public void checkDuplicatedMethodsInY() {
+		String code = "class A{isA T1; isA T2;} trait T1 { String test(){}} trait T2 { String test(){}}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2557");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {

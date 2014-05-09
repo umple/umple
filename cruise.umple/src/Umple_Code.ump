@@ -669,23 +669,26 @@ class UmpleInterface
   public boolean hasMethod(Method comparedMethod){
     boolean isMethod=false;
     String methodName = comparedMethod.getName();
+    String methodType = comparedMethod.getType();
     int numberOfParams = comparedMethod.getMethodParameters().size();
     for (Method aMethod : this.getMethods()){
       // Compare method names
-      if (aMethod.getName().equals(methodName)){  
-        // Now compare parameters
-        if (numberOfParams == aMethod.getMethodParameters().size()){
-          for (MethodParameter param: aMethod.getMethodParameters()){
-            for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
-              if (param.getType().equals(paramToCompare.getType())){
-                isMethod=true;        
-              }
-              else{
-                return false;
-              }
-            }
-          }
-        }
+      if (aMethod.getName().equals(methodName)){
+      	if(aMethod.getType().equals(methodType)){  
+	        // Now compare parameters
+	        if (numberOfParams == aMethod.getMethodParameters().size()){
+	          for (MethodParameter param: aMethod.getMethodParameters()){
+	            for (MethodParameter paramToCompare: comparedMethod.getMethodParameters()){
+	              if (param.getType().equals(paramToCompare.getType())){
+	                isMethod=true;        
+	              }
+	              else{
+	                return false;
+	              }
+	            }
+	          }
+	        }
+	    }    
       }
     }
     return isMethod;  
@@ -749,11 +752,11 @@ class UmpleClass
 
   public boolean hasMethodInTraits (Method aMethod) {
 	  for (UmpleTrait uTrait : getExtendsTraits()) {
-		  if (uTrait.hasCascadeMethod(aMethod)) {
+		  if (uTrait.hasCascadeMethod(aMethod,true) || uTrait.hasCascadeMethod(aMethod,false)) {
 			  return true;
 		  }
 	}
-	  return false;  
+	  return false; 
   }
 
   after setExtendsClass {
@@ -971,27 +974,30 @@ class UmpleClass
 
   public boolean hasMethod(Method comparedMethod){
     String methodName = comparedMethod.getName();
+    String methodType = comparedMethod.getType();
     int numberOfParams = comparedMethod.getMethodParameters().size();
     for (Method aMethod : this.getMethods()){
       // Compare method names
       if (aMethod.getName().equals(methodName)){  
-        // Now compare parameters
-        if (numberOfParams == aMethod.getMethodParameters().size())
-        {
-          boolean allSame = true;
-          for (int i = 0; i < numberOfParams; i++)
-          {
-            if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
-            {
-              allSame = false;
-              break;
-            }
-          }
-          if(allSame)
-          {
-            return true;
-          }
-        }
+    	  if(aMethod.getType().equals(methodType)){
+	        // Now compare parameters
+	        if (numberOfParams == aMethod.getMethodParameters().size())
+	        {
+	          boolean allSame = true;
+	          for (int i = 0; i < numberOfParams; i++)
+	          {
+	            if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
+	            {
+	              allSame = false;
+	              break;
+	            }
+	          }
+	          if(allSame)
+	          {
+	            return true;
+	          }
+	        }
+    	  }  
       }
     }
     return false;  
