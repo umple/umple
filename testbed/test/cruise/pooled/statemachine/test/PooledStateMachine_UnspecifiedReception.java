@@ -1,7 +1,10 @@
 package cruise.pooled.statemachine.test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PooledStateMachine_UnspecifiedReception
@@ -52,10 +55,10 @@ public class PooledStateMachine_UnspecifiedReception
 	  Assert.assertEquals(3, PooledSMwithUnspecifiedReception.stateMessageMap.size());
   }
   
-  @Ignore
   @Test 
   public void processEvents() throws InterruptedException
   {
+	  int numChecks;
 	  //Unspecified error handling is not compatible with pooled state machine
 	  //unspecified event is treated like any regular event, is not special any more
 	  PooledSMwithUnspecifiedReception psm = new PooledSMwithUnspecifiedReception();
@@ -65,16 +68,35 @@ public class PooledStateMachine_UnspecifiedReception
 	  
 	  //event unspecified is called
 	  psm.unspecified();//event unspecified is added to the pool
-	  Thread.sleep(10);	  
+	  numChecks=200;
 	  // event unspecified is taken off the pool and is processed: transition to state s1 
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.isEmpty())
+		  {
+			  Assert.assertEquals(PooledSMwithUnspecifiedReception.Sm.s1, psm.getSm());
+			  Assert.assertEquals(true, psm.pool.messages.isEmpty());
+	    	  break;
+	      }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSMwithUnspecifiedReception.Sm.s1, psm.getSm());
 	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
 	  
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the pool
-	  Thread.sleep(10);
+	  numChecks=200;
 	  // event e1 is taken off the pool and is processed: transition to state s2 
+	  while(!psm.pool.messages.isEmpty() && numChecks>0) {
+		if(!psm.getSm().equals(PooledSMwithUnspecifiedReception.Sm.s2))
+		{
+			Thread.sleep(5);
+		    numChecks--;
+		}
+	  }
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSMwithUnspecifiedReception.Sm.s2, psm.getSm());
 	  // pool is empty
 	  Assert.assertEquals(0, psm.pool.messages.size());
