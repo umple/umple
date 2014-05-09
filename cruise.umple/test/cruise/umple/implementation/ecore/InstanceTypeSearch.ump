@@ -1,0 +1,33 @@
+generate Ecore;
+namespace example;
+
+class A{  
+  Throwable t1;
+  Throwable[] t2;
+  
+  StringBuilder s1;
+  StringBuilder[] s2;
+  
+  // Use primitive type instead of java.lang.Float
+  Float f1;
+  Float[] f2;
+}
+
+class B{
+  depend java.io.File;
+  
+  File file1;
+  File[] file2;
+}
+
+class C{
+  depend java.math.*;
+  
+  BigInteger bigInt1;
+  BigInteger[] bigInt2;
+}
+
+class D{
+  BigDecimal bigDec1;
+  BigDecimal[] bigDec2;
+}

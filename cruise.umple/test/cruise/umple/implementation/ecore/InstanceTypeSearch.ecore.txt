@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="example" nsURI="example" nsPrefix="example">
+  <eClassifiers xsi:type="ecore:EDataType" name="Throwable" instanceClassName="java.lang.Throwable" />
+  <eClassifiers xsi:type="ecore:EDataType" name="StringBuilder" instanceClassName="java.lang.StringBuilder" />
+  <eClassifiers xsi:type="ecore:EDataType" name="File" instanceClassName="java.io.File" />
+  <eClassifiers xsi:type="ecore:EDataType" name="BigInteger" instanceClassName="java.math.BigInteger" />
+  <eClassifiers xsi:type="ecore:EDataType" name="BigDecimal" instanceClassName="BigDecimal" />
+  <eClassifiers xsi:type="ecore:EClass" name="A">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="t1" eType="#//Throwable" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="t2" upperBound="-1" eType="#//Throwable" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="s1" eType="#//StringBuilder" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="s2" upperBound="-1" eType="#//StringBuilder" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="f1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="f2" upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat" />
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="B">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="file1" eType="#//File" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="file2" upperBound="-1" eType="#//File" />
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="C">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigInt1" eType="#//BigInteger" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigInt2" upperBound="-1" eType="#//BigInteger" />
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="D">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigDec1" eType="#//BigDecimal" />
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="bigDec2" upperBound="-1" eType="#//BigDecimal" />
+  </eClassifiers>
+</ecore:EPackage>

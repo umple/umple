@@ -1,0 +1,402 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class EcoreGenModel {
+  0..1 -> * EcorePackage packages;
+  
+  static Map<String, String> ecorePrimitiveTypeMap;
+  static Map<String, String> umplePrimitiveTypeMap;
+  
+  static {
+    // Map for Ecore primitive Types
+      ecorePrimitiveTypeMap = new HashMap<String, String>();
+      ecorePrimitiveTypeMap.put("Integer", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt");
+      ecorePrimitiveTypeMap.put("Float", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFloat");
+      ecorePrimitiveTypeMap.put("String", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString");
+      ecorePrimitiveTypeMap.put("Double", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble");
+      ecorePrimitiveTypeMap.put("Boolean", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean");
+      
+      umplePrimitiveTypeMap = new HashMap<String, String>();
+      umplePrimitiveTypeMap.put("Time", "java.sql.Time");
+      umplePrimitiveTypeMap.put("Date", "java.sql.Date");
+    }
+}
+
+class EcoreGenericNode {
+  depend java.util.*;
+  depend java.util.Map.Entry;
+  
+  String name;
+  lazy immutable String tagName;
+  Integer intent;
+  
+  Map<String,String> getNodeAttributes(){return new LinkedHashMap<String, String>();}
+  List<EcoreGenericNode> getNodeChildren(){return new ArrayList<EcoreGenericNode>();}
+  Integer getNodeChildCount(){return 0;}
+  
+  key {name}
+  
+    const String Xmltagstart = "<";  
+    const String Xmltagend = ">";
+  
+    cr <<!
+!>>
+  
+  code <<!<<#
+    for(int i=0; i<<<=intent>>; i++)
+      #>>  <<#
+    #>><<=Xmltagstart>><<=tagName>><<#
+    for(Entry<String,String> entry : getNodeAttributes().entrySet()){
+      #>> <<=entry.getKey()>>="<<=entry.getValue()>>"<<#
+    }
+    if(getNodeChildCount()==0){#>> /><<#
+    }else{
+    #>><<=Xmltagend>>
+<<#    for(EcoreGenericNode node : getNodeChildren()){
+    #>><<=node.getCode()>><<#
+    }for(int i=0; i<<<=intent>>; i++)
+      #>>  <<#
+    #>><<=Xmltagstart>>/<<=tagName>><<=Xmltagend>><<#}#>>
+!>>
+
+  emit getCode()(code, cr);
+}
+
+class EcorePackage {
+  isA EcoreGenericNode;
+
+  String nsURI;
+  String nsPrefix;
+  0..1 -> * EcoreDataType dataTypes;
+  0..1 -> * EcoreClass classes;
+  0..1 -> * EcoreEnum enums;
+  
+  before constructor {
+    setTagName("ecore:EPackage");
+  }
+  
+  String getExistingType(String dependString, String typeName){
+    try{
+      String fullyQualifiedName = "";
+      if(dependString.endsWith(".*")){
+        fullyQualifiedName = dependString.substring(0, dependString.length()-3) + "." + typeName;
+      }else{
+        fullyQualifiedName = dependString + '.' + typeName;
+      }
+      
+      // If no exception, type exists
+      Class.forName(fullyQualifiedName);
+      return fullyQualifiedName;
+    }catch(Exception e){
+      return null;
+    }
+  }
+  
+  String getActualEType(UmpleClass uClass, String eType){
+    if(EcoreGenModel.ecorePrimitiveTypeMap.containsKey(eType)){
+      return EcoreGenModel.ecorePrimitiveTypeMap.get(eType);
+    }else if(EcoreGenModel.umplePrimitiveTypeMap.containsKey(eType)){
+      String existingType = EcoreGenModel.umplePrimitiveTypeMap.get(eType);
+      EcoreDataType dataType = new EcoreDataType(eType, getIntent()+1, existingType);
+      addDataType(dataType);
+      return "#//"+eType;
+    }else{
+      String actualEType = "";
+      String existingType = "";
+    
+      // Dirty fix for generic type argument, will solve in next patch
+      int startTag = eType.indexOf("<");
+      if(startTag >= 0)
+        actualEType = eType.substring(0, eType.indexOf("<"));
+      else
+        actualEType = eType;
+    
+      String checkingExistingType = getExistingType("java.lang", actualEType);
+      if(checkingExistingType == null){
+        for(Depend depend : uClass.getDepends()){
+          checkingExistingType = getExistingType(depend.getPackageName(), actualEType);
+          if(checkingExistingType != null){
+            break;
+          }
+        }
+      }
+      
+      existingType = (checkingExistingType != null ? checkingExistingType : actualEType);
+      
+      EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType);
+      addDataType(dataType);
+      
+      return "#//"+actualEType;
+    }
+  }
+  
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    map.put("xmi:version", "2.0");
+    map.put("xmlns:xmi", "http://www.omg.org/XMI");
+    map.put("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+    map.put("xmlns:ecore", "http://www.eclipse.org/emf/2002/Ecore");
+    map.put("name", getName());
+    map.put("nsURI", nsURI);
+    map.put("nsPrefix", nsPrefix);
+    return map;
+  }
+
+  List<EcoreGenericNode> getNodeChildren(){
+    List<EcoreGenericNode> nodes = super.getNodeChildren();
+    
+    nodes.addAll(getDataTypes());
+    nodes.addAll(getClasses());
+    nodes.addAll(getEnums());
+    
+    return nodes;
+  }
+  
+  Integer getNodeChildCount(){
+    return numberOfClasses() + numberOfDataTypes() + numberOfEnums();
+  }  
+
+  xmlHeader <<!<?xml version="1.0" encoding="UTF-8"?>!>>
+  emit getXmlHeader()(xmlHeader);
+  
+  String getCode(){
+    return getXmlHeader() + '\n' + super.getCode();
+  };
+}
+
+class EcoreDataType {
+  depend java.util.*;
+
+  isA EcoreGenericNode;
+  
+  String instanceType;
+  
+  before constructor {
+    setTagName("eClassifiers");
+  }
+  
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+
+    map.put("xsi:type", "ecore:EDataType");
+    map.put("name", getName());
+    map.put("instanceClassName", getInstanceType());
+
+    return map;
+  }
+}
+
+class EcoreClass {
+  isA EcoreGenericNode;
+
+  defaulted Boolean isAbstract = false;
+  defaulted Boolean isInterface = false;
+  String[] superTypes;
+  0..1 -> * EcoreAttribute attributes;
+  0..1 -> * EcoreReference references;
+  0..1 -> * EcoreEnum enums;
+  
+  before constructor {
+    setTagName("eClassifiers");
+  }
+  
+  superTypeString <<!<<#for(String s : getSuperTypes()){
+    #>>#//<<=s>> <<#}#>>!>>
+    
+  emit printSuperTypeString()(superTypeString);
+  
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    map.put("xsi:type", "ecore:EClass");
+    map.put("name", getName());
+    if(getIsInterface() != getDefaultIsInterface())
+      map.put("interface", String.valueOf(getIsInterface()));
+    if(getIsAbstract() != getDefaultIsAbstract())
+      map.put("abstract", String.valueOf(getIsAbstract()));
+    if(hasSuperTypes())
+      map.put("eSuperTypes", printSuperTypeString().trim());
+    
+      
+    return map;
+  }
+  
+  List<EcoreGenericNode> getNodeChildren(){
+    List<EcoreGenericNode> nodes = super.getNodeChildren();
+    
+    nodes.addAll(getAttributes());
+    nodes.addAll(getReferences());
+    
+    return nodes;
+  }
+  
+  Integer getNodeChildCount(){
+    return numberOfAttributes() + numberOfReferences();
+  }
+}
+
+class EcoreClassElement {
+  isA EcoreGenericNode;
+
+  String eType;
+
+  defaulted Boolean changeable = true;
+  defaulted Boolean unsettable = false;
+  defaulted Boolean ordered = false;
+  defaulted Boolean isUnique = false;
+  
+  defaulted String lowerBound = "0";
+  defaulted String upperBound = "1";
+  
+  before constructor {
+    setTagName("eStructuralFeatures");
+  }
+}
+
+class EcoreAttribute {
+  depend java.util.*;
+
+  isA EcoreClassElement;
+
+  defaulted Boolean id = false;
+    
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    map.put("xsi:type", "ecore:EAttribute");
+    map.put("name", getName());
+    
+    if(!getDefaultLowerBound().equals(getLowerBound()))
+      map.put("lowerBound", String.valueOf(getLowerBound()));
+    if(!getDefaultUpperBound().equals(getUpperBound()))
+      map.put("upperBound", String.valueOf(getUpperBound()));
+    
+    map.put("eType", getEType());
+    
+    return map;
+  }
+}
+
+class EcoreReference {
+  depend java.util.*;
+
+  isA EcoreClassElement;
+  
+  defaulted String eOppositeType = "";
+  defaulted String eOppositeName = "";
+    
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    map.put("xsi:type", "ecore:EReference");
+    map.put("name", getName());
+    
+    if(!getDefaultLowerBound().equals(getLowerBound()))
+      map.put("lowerBound", String.valueOf(getLowerBound()));
+    if(!getDefaultUpperBound().equals(getUpperBound()))
+      map.put("upperBound", String.valueOf(getUpperBound()));
+      
+    map.put("eType", "#//"+getEType());
+    if(!getDefaultEOppositeType().equals(getEOppositeType())
+      || !getDefaultEOppositeName().equals(getEOppositeName()))
+      map.put("eOpposite", String.format("#//%s/%s", getEOppositeType(), getEOppositeName()));
+    
+    return map;
+  }
+}
+
+class EcoreEnum {
+  depend java.util.*;
+
+  isA EcoreGenericNode;
+  
+  0..1 -> * EcoreEnumItem items;
+  
+  before constructor {
+    setTagName("eClassifiers");
+  }
+  
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    map.put("xsi:type", "ecore:EEnum");
+    map.put("name", getName());
+    
+    return map;
+  }
+  
+  List<EcoreGenericNode> getNodeChildren(){
+    List<EcoreGenericNode> nodes = super.getNodeChildren();
+    
+    nodes.addAll(getItems());
+    
+    return nodes;
+  }
+  
+  Integer getNodeChildCount(){
+    return numberOfItems();
+  }
+}
+
+class EcoreEnumItem {
+  depend java.util.*;
+
+  isA EcoreGenericNode;
+  
+  Integer value;
+  
+  before constructor {
+    setTagName("eLiterals");
+  }
+  
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    map.put("name", getName());
+    map.put("value", String.valueOf(getValue()));
+    
+    return map;
+  }
+}
+
+class EcoreNodeAttribute {
+  String name;
+  String value;
+}
+
+class EcoreNode {
+  Integer indent;
+  String tagName;
+  0..1 -> * EcoreNode childNodes;
+  EcoreNodeAttribute[] attributes;
+  
+    const String Xmltagstart = "<";  
+    const String Xmltagend = ">";
+  
+    cr <<!
+!>>
+    indent <<!<<# for (int i=0; i < <<=indent>>; i++) {#>> <<#}#>>!>>
+  
+  code <<!<<=Xmltagstart>><<=tagName>>
+    <<#if(numberOfAttributes() > 0)
+    #>><<=getAttributeString(attributes)>><<=Xmltagend>>
+    <<=getChildNodesString(childNodes)>>
+    <<=Xmltagstart>>/<<=tagName>><<=Xmltagend>>
+  !>>
+  
+  printAttributes <<!<<#
+    for (EcoreNodeAttribute attr: attributes){
+  #>> <<=attr.getName()>>="<<=attr.getValue()>>"<<#}#>>!>>
+  
+  printChildNodes <<!<<#
+    for (EcoreNode childNode: childNodes){
+  #>><<=childNode.getCode()>>
+  <<#}#>>!>>
+  
+  emit getCode()(code, cr);
+  emit getAttributeString(List<EcoreNodeAttribute> attributes)(printAttributes, cr);
+  emit getChildNodesString(List<EcoreNode> childNodes)(printChildNodes, cr);
+}

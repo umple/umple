@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="example" nsURI="example" nsPrefix="example">
+  <eClassifiers xsi:type="ecore:EClass" name="A">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b1" upperBound="-1" eType="#//B" eOpposite="#//B/a1" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b2" lowerBound="1" eType="#//B" eOpposite="#//B/a2" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b3" eType="#//B" eOpposite="#//B/a3" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b4" lowerBound="1" upperBound="-1" eType="#//B" eOpposite="#//B/a4" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b5" upperBound="-1" eType="#//B" eOpposite="#//B/a5" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b6" lowerBound="1" eType="#//B" eOpposite="#//B/a6" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b7" eType="#//B" eOpposite="#//B/a7" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b8" lowerBound="1" upperBound="-1" eType="#//B" eOpposite="#//B/a8" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b9" upperBound="-1" eType="#//B" eOpposite="#//B/a9" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b10" lowerBound="1" eType="#//B" eOpposite="#//B/a10" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b11" eType="#//B" eOpposite="#//B/a11" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b12" lowerBound="1" upperBound="-1" eType="#//B" eOpposite="#//B/a12" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b13" upperBound="-1" eType="#//B" eOpposite="#//B/a13" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b14" lowerBound="1" eType="#//B" eOpposite="#//B/a14" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b15" eType="#//B" eOpposite="#//B/a15" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="b16" lowerBound="1" upperBound="-1" eType="#//B" eOpposite="#//B/a16" />
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="B">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a1" upperBound="-1" eType="#//A" eOpposite="#//A/b1" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a2" upperBound="-1" eType="#//A" eOpposite="#//A/b2" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a3" upperBound="-1" eType="#//A" eOpposite="#//A/b3" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a4" upperBound="-1" eType="#//A" eOpposite="#//A/b4" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a5" lowerBound="1" eType="#//A" eOpposite="#//A/b5" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a6" lowerBound="1" eType="#//A" eOpposite="#//A/b6" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a7" lowerBound="1" eType="#//A" eOpposite="#//A/b7" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a8" lowerBound="1" eType="#//A" eOpposite="#//A/b8" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a9" eType="#//A" eOpposite="#//A/b9" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a10" eType="#//A" eOpposite="#//A/b10" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a11" eType="#//A" eOpposite="#//A/b11" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a12" eType="#//A" eOpposite="#//A/b12" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a13" lowerBound="1" upperBound="-1" eType="#//A" eOpposite="#//A/b13" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a14" lowerBound="1" upperBound="-1" eType="#//A" eOpposite="#//A/b14" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a15" lowerBound="1" upperBound="-1" eType="#//A" eOpposite="#//A/b15" />
+    <eStructuralFeatures xsi:type="ecore:EReference" name="a16" lowerBound="1" upperBound="-1" eType="#//A" eOpposite="#//A/b16" />
+  </eClassifiers>
+</ecore:EPackage>
