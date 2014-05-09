@@ -413,7 +413,7 @@ class UmpleInternalParser
     if (name == null)
     {
       String rawName = StringFormatter.toCamelCase(type); 
-      name = isList ? model.getGlossary().getPlural(rawName) : rawName;
+      name = isList ? Glossary.getInstance().getPlural(rawName) : rawName;
     }
 
     if (derivedValue != null)
@@ -811,10 +811,10 @@ class UmpleInternalParser
     	   aVariable.getRelatedAssociation().setUmpleClass(relatedAss);
     	   aVariable.getRelatedAssociation().setType(inClass.getName());
 	       String rawName = StringFormatter.toCamelCase(inTrait.getName());
-	       String name = aVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	       String name = aVariable.getRelatedAssociation().getMultiplicity().isMany() ? Glossary.getInstance().getPlural(rawName) : rawName;
 	       if (name.equals(aVariable.getRelatedAssociation().getName())){
 	    	   rawName = StringFormatter.toCamelCase(inClass.getName());
-	    	   name = aVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	    	   name = aVariable.getRelatedAssociation().getMultiplicity().isMany() ? Glossary.getInstance().getPlural(rawName) : rawName;
 	    	   aVariable.getRelatedAssociation().setName(name);
 	       }
 	       inClass.addAssociationVariable(aVariable);    

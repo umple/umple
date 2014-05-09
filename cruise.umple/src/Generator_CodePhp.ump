@@ -268,8 +268,8 @@ class PhpGenerator
       return translate(realKeyName,av,isMany);
     }
   
-    String singularName = isMany ? getModel().getGlossary().getSingular(av.getName()) : av.getName();
-    String pluralName = isMany ? av.getName() : getModel().getGlossary().getPlural(av.getName());
+    String singularName = isMany ? Glossary.getInstance().getSingular(av.getName()) : av.getName();
+    String pluralName = isMany ? av.getName() : Glossary.getInstance().getPlural(av.getName());
 
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -378,7 +378,7 @@ class PhpGenerator
   public String translate(String keyName, State state)
   {
     String singularName = state.getName();
-    String pluralName = getModel().getGlossary().getPlural(singularName);
+    String pluralName = Glossary.getInstance().getPlural(singularName);
     String fullStateName = StringFormatter.format("{0}{1}",getUpperCaseName(state.getStateMachine().getFullName()),getUpperCaseName(singularName));
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
@@ -420,7 +420,7 @@ class PhpGenerator
   public String translate(String keyName, StateMachine sm)
   {
     String singularName = sm.getFullName();
-    String pluralName = getModel().getGlossary().getPlural(singularName);
+    String pluralName = Glossary.getInstance().getPlural(singularName);
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -466,7 +466,7 @@ class PhpGenerator
   public String translate(String keyName, Event event)
   {
     String singularName = event.getName();
-    String pluralName = getModel().getGlossary().getPlural(singularName);
+    String pluralName = Glossary.getInstance().getPlural(singularName);
 
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -515,12 +515,12 @@ class PhpGenerator
     }
     else if (hasMultiple)
     {
-      //String pluralName = getModel().getGlossary().getPlural(name);
+      //String pluralName = Glossary.getInstance().getPlural(name);
       return "all" + StringFormatter.toPascalCase(name);
     }
     else
     {
-      //String singularName = getModel().getGlossary().getSingular(name);
+      //String singularName = Glossary.getInstance().getSingular(name);
       return "a" + StringFormatter.toPascalCase(name);
     }
   }
