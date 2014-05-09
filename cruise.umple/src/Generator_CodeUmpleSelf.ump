@@ -43,7 +43,7 @@ class UmpleSelfGenerator
       for (Attribute av : uClass.getAttributes())
       {
         String typeName = av.getType() == null ? "String" : av.getType();
-        String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
+        String attrName = av.getIsList() ? Glossary.getInstance().getPlural(av.getName()) : Glossary.getInstance().getSingular(av.getName());
 
         code.append(" ");
         if (av.isIsLazy())

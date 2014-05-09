@@ -110,7 +110,7 @@ class UmpleInternalParser
         continue;
       }
       Word word = new Word(wordToken.getValue("singular"),wordToken.getValue("plural"));
-      model.getGlossary().addWord(word);
+      Glossary.getInstance().addWord(word);
     }
   }
   

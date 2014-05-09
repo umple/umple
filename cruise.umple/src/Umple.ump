@@ -34,7 +34,6 @@ class UmpleModel
   defaultPackage = null;
   GenerateTarget[] generates;
   Boolean shouldGenerate = true;
-  Glossary glossary = new Glossary();
   String defaultNamespace = null;
   String code = null;
   Boolean debugMode = false;

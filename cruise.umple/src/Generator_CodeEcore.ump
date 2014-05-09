@@ -78,7 +78,7 @@ class EcoreGenerator
       {
         String typeName = av.getType() == null ? "String" : av.getType();
         String upperBound = av.getIsList() ? " upperBound=\"-1\"" : "";
-        String attrName = av.getIsList() ? model.getGlossary().getPlural(av.getName()) : model.getGlossary().getSingular(av.getName());
+        String attrName = av.getIsList() ? Glossary.getInstance().getPlural(av.getName()) : Glossary.getInstance().getSingular(av.getName());
 
         if (typeName.equals("String") || typeName.equals("Boolean") || typeName.equals("Double") || typeName.equals("Date"))
         {

@@ -14,12 +14,12 @@ import org.junit.*;
 public class GlossaryTest 
 {
   
-  Glossary g;
+  private Glossary g;
   
   @Before
   public void SetUp()
   {
-    g = new Glossary();
+    g = Glossary.getInstance();
   }
 
   @Test

@@ -1704,7 +1704,7 @@ public class UmpleParserTest
   public void glossary()
   {
     assertParse("017_glossary.ump");
-    Glossary g = model.getGlossary();
+    Glossary g = Glossary.getInstance();
     Assert.assertEquals("entities",g.getPlural("entity"));
     Assert.assertEquals("entity",g.getSingular("entities"));
   }
