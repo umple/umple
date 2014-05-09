@@ -1,0 +1,18 @@
+generate Ecore;
+namespace test;
+
+interface A{
+
+}
+
+class B{
+
+}
+
+interface C{
+
+}
+
+class D{
+  isA A,B,C;
+}

@@ -1,0 +1,26 @@
+generate Ecore;
+namespace example;
+
+class A{
+  * -- 0..1 B;
+  0..1 -- 1 C;
+  1 -- 1..* D;
+  1..* -- * E;
+  1..* a2 -- * E e2;
+}
+
+class B{
+  
+}
+
+class C{
+
+}
+
+class D{
+
+}
+
+class E{
+
+}
