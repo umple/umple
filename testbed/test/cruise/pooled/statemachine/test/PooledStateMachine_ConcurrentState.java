@@ -1,7 +1,10 @@
 package cruise.pooled.statemachine.test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PooledStateMachine_ConcurrentState
@@ -71,11 +74,12 @@ public class PooledStateMachine_ConcurrentState
 	  Assert.assertEquals(8, PooledSM_ConcurrentState.stateMessageMap.size());
   }
   
-  @Ignore
   @Test 
   public void processEvents() throws InterruptedException
   {
 	  PooledSM_ConcurrentState psm = new PooledSM_ConcurrentState();
+	  int numChecks;
+	  
 	  // check initial states are s1 - Null - Null
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.Null, psm.getSmS2a());
@@ -83,8 +87,16 @@ public class PooledStateMachine_ConcurrentState
 	  
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the pool
-	  Thread.sleep(10);
 	  // event e1 is taken off the pool and is processed: transition to: s2 - s2a - s2c
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSm().equals(PooledSM_ConcurrentState.Sm.s2))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+		  }		  
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s2, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.s2a, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.s2c, psm.getSmS2c());
@@ -93,8 +105,16 @@ public class PooledStateMachine_ConcurrentState
 	  
 	  //event e2 is called
 	  psm.e2();//event e2 is added to the pool
-	  Thread.sleep(10);
 	  // event e2 is taken off the pool and is processed: transition to: s1 - Null - Null 
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSm().equals(PooledSM_ConcurrentState.Sm.s1))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+		  }		  
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.Null, psm.getSmS2c());
@@ -103,8 +123,16 @@ public class PooledStateMachine_ConcurrentState
 
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the pool
-	  Thread.sleep(10);
 	  // event e1 is taken off the pool and is processed: transition to: s2 - s2a - s2c 
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSm().equals(PooledSM_ConcurrentState.Sm.s2))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+		  }		  
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s2, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.s2a, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.s2c, psm.getSmS2c());
@@ -113,8 +141,16 @@ public class PooledStateMachine_ConcurrentState
 	  
 	  //event e3 is called
       psm.e3();//event e3 is added to the pool
-	  Thread.sleep(10);
 	  // event e3 is taken off the pool and is processed: transition to: s2 - s2b - s2c 
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSmS2a().equals(PooledSM_ConcurrentState.SmS2a.s2b))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+		  }		  
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s2, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.s2b, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.s2c, psm.getSmS2c());
@@ -123,8 +159,16 @@ public class PooledStateMachine_ConcurrentState
 
 	  //event e4 is called
 	  psm.e4();//event e4 is added to the pool
-	  Thread.sleep(10);
 	  // event e4 is taken off the pool and is processed: transition to: s2 - s2b - s2d 
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSmS2c().equals(PooledSM_ConcurrentState.SmS2c.s2d))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+		  }		  
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s2, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.s2b, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.s2d, psm.getSmS2c());
@@ -133,8 +177,19 @@ public class PooledStateMachine_ConcurrentState
 	  
 	  //event e5 is called
 	  psm.e5();//event e5 is added to the pool
-	  Thread.sleep(10);
 	  //event e5 is unspecified, it is saved at the head of the queue, current states are not changed
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM_ConcurrentState.MessageType.e5_M) )
+		  {
+			  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s2, psm.getSm());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+		  }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s2, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.s2b, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.s2d, psm.getSmS2c());
@@ -148,9 +203,17 @@ public class PooledStateMachine_ConcurrentState
 
 	  //event e3 is called
 	  psm.e3();//event e3 is added to the pool
-	  Thread.sleep(10);
 	  // event e3 is taken off the pool and is processed: transition to: s2 - s2a - s2d
 	  // event e5 is taken off the pool and is processed: transition to: s1 - Null - Null
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSm().equals(PooledSM_ConcurrentState.Sm.s1))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+		  }		  
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.Null, psm.getSmS2c());
@@ -159,8 +222,19 @@ public class PooledStateMachine_ConcurrentState
 	  
 	  //event e2 is called
 	  psm.e2();//event e2 is added to the pool
-	  Thread.sleep(10);
 	  //event e2 is unspecified, it is saved at the head of the queue, current states are not changed
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM_ConcurrentState.MessageType.e2_M) )
+		  {
+			  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+		  }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.Null, psm.getSmS2c());
@@ -174,8 +248,19 @@ public class PooledStateMachine_ConcurrentState
 
 	  //event e3 is called
 	  psm.e3();//event e3 is added to the pool
-	  Thread.sleep(10);
 	  //event e3 is unspecified, it is saved at the head of the queue, current states are not changed
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 2)
+		  {
+			  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+		  }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.Null, psm.getSmS2c());
@@ -192,9 +277,20 @@ public class PooledStateMachine_ConcurrentState
 
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the pool
-	  Thread.sleep(10);
 	  // event e1 is taken off the pool and is processed: transition to: s2 - s2a - s2c
 	  // event e2 is taken off the pool and is processed: transition to: s1 - Null - Null
+	  numChecks=200;
+	  while(numChecks>0) {
+		  Thread.sleep(5);
+		  numChecks--;
+		  if(psm.pool.messages.size() == 1 && psm.pool.messages.element().type.equals(PooledSM_ConcurrentState.MessageType.e3_M) )
+		  {
+			  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
+			  Assert.assertEquals(false, psm.pool.messages.isEmpty());
+			  break;
+		  }
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s1, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.Null, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.Null, psm.getSmS2c());
@@ -208,9 +304,17 @@ public class PooledStateMachine_ConcurrentState
 	  
 	  //event e1 is called
 	  psm.e1();//event e1 is added to the pool
-	  Thread.sleep(10);
 	  // event e1 is taken off the pool and is processed: transition to: s2 - s2a - s2c 
 	  // event e3 is taken off the pool and is processed: transition to: s2 - s2b - s2c 
+	  numChecks=200;
+	  while(numChecks>0 && !psm.pool.messages.isEmpty()) {
+		  if(!psm.getSm().equals(PooledSM_ConcurrentState.Sm.s2))
+		  {
+			  Thread.sleep(5);
+			  numChecks--;
+		  }		  
+	  }	  
+	  assertThat(numChecks, not(equalTo(0)));		
 	  Assert.assertEquals(PooledSM_ConcurrentState.Sm.s2, psm.getSm());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2a.s2b, psm.getSmS2a());
 	  Assert.assertEquals(PooledSM_ConcurrentState.SmS2c.s2c, psm.getSmS2c());

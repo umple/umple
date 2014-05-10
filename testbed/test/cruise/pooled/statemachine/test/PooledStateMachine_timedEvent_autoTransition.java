@@ -1,7 +1,6 @@
 package cruise.pooled.statemachine.test;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PooledStateMachine_timedEvent_autoTransition
@@ -51,7 +50,6 @@ public class PooledStateMachine_timedEvent_autoTransition
 	  Assert.assertEquals(3, X.stateMessageMap.size());
   }
   
-  @Ignore
   @Test 
   public void processEvents() throws InterruptedException
   {
