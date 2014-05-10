@@ -708,6 +708,8 @@ class UmpleInternalParser
 			if (uClass.hasExtendsTraits()) {
 				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
 					recursiveApplyTraits(uClass,uTrait);
+					
+					copyMethodsFromTraitToClass(uTrait,uClass);
 				}
 			}
 		}
@@ -728,6 +730,44 @@ class UmpleInternalParser
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------    
+   private void copyMethodsFromTraitToClass(UmpleTrait inTrait, UmpleClass inClass){
+		for (Method fMethod : gatherConcreteMethods(inTrait)) {
+			for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+				if(!uTrait.equals(inTrait)){
+					if (uTrait.hasCascadeMethod(fMethod,false) & !inClass.hasMethod(fMethod) ){
+						getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),fMethod.getName(),inTrait.getName()));	
+						return;	
+					}					
+				}
+			}
+			if(!inClass.hasMethod(fMethod)){
+				inClass.addMethod(fMethod);
+			}
+		}
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------     
+   private List<Method> gatherConcreteMethods(UmpleTrait inTrait)
+   {
+     List<Method> methods = new ArrayList<Method>();
+     for (Method method : inTrait.getMethods()) {
+		if (! method.isIsAbstract()){
+			methods.add(method);
+		}
+	}
+     for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+		for (Method method : gatherConcreteMethods(uTrait)) {
+			if (!inTrait.hasMethod(method)){
+				methods.add(method);
+			}
+		}
+	}
+     return methods;
+   }  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
   private void applyTraitProperties(UmpleClass inClass, UmpleTrait inTrait) {
 		//set the singleton pattern
@@ -745,30 +785,6 @@ class UmpleInternalParser
 		for(Depend aDepend : inTrait.getDepends()) {
 			inClass.addDepend(aDepend);
 		}		
-		
-							
-		// copy methods
-		for(Method aMethod : inTrait.getMethods()) {
-			if(!aMethod.isIsAbstract()) {
-				for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-					if (uTrait.hasCascadeMethod(aMethod,false)){
-						getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),aMethod.getName(),uTrait.getName()));	
-						return;	
-					}					
-				}
-				for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
-					if(!uTrait.equals(inTrait)){
-						if (uTrait.hasCascadeMethod(aMethod,false) ){
-							getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),aMethod.getName(),inTrait.getName()));	
-							return;	
-						}					
-					}
-				}
-				if(!inClass.hasMethod(aMethod)){
-					inClass.addMethod(aMethod);
-				}
-			}
-		}
 							
 		// copy Precondition
 		for(Precondition aPrecondition : inTrait.getPreconditions()) {
