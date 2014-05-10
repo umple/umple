@@ -42,13 +42,6 @@ class CodeGeneratorWithSubptions
   }  
 }
 
-interface CodeFileWriter
-{
-
-  depend java.io.*;
-  public void writeFile(UmpleElement aClass) throws IOException;
-}
-
 interface CodeTranslator
 {
   String translate(String id, Attribute attribute);
@@ -305,7 +298,6 @@ class JsonGenerator
 class JavaGenerator
 {  
   isA CodeTranslator;
-  isA CodeFileWriter;
   isA SuperCodeGenerator;
   depend java.util.*;
   depend java.io.*;
