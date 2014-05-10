@@ -75,16 +75,6 @@ class UmpleInternalParser
   after setModel{if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}}
 }
 
-
-/*
-Simple name-value pair used in the Umple Parser
- */
-class Pair
-{
-  name;
-  value;
-}
-
 use UmpleParser.ump;
 use Parser.ump;
 use Umple.ump;
