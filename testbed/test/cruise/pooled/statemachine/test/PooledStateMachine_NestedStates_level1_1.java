@@ -1,7 +1,6 @@
 package cruise.pooled.statemachine.test;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PooledStateMachine_NestedStates_level1_1
@@ -71,172 +70,85 @@ public class PooledStateMachine_NestedStates_level1_1
 	  Assert.assertEquals(8, PooledSM_NestedState_L1_1.stateMessageMap.size());
   }
   
-  @Ignore
   @Test 
   public void processEvents() throws InterruptedException
   {
 	  PooledSM_NestedState_L1_1 psm = new PooledSM_NestedState_L1_1();
 	  // check initial state is s1
 	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s1, psm.getSm());
-	 
-	  //event e1 is called
-	  psm.e1();//event e1 is added to the pool
-	  Thread.sleep(10);
+
+	  psm.e1();//event e1 is called and is added to the pool
 	  // event e1 is taken off the pool and is processed: transition to state s1a 
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.SmS1.s1a, psm.getSmS1());
-	  // pool is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
-	  
-	  //event e2 is called
-	  psm.e2();//event e2 is added to the pool
-	  Thread.sleep(10);
+	  // Now, the pool is empty
+	  psm.e2();//event e2 is called and is added to the pool
 	  // event e2 is taken off the pool and is processed: transition to state s1b 
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.SmS1.s1b, psm.getSmS1());
-	  // pool is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
-	  
-	  //event e3 is called
-	  psm.e3();//event e3 is added to the pool
-	  Thread.sleep(10);
+	  // Now, the pool is empty
+	  psm.e3();//event e3 is called and is added to the pool
 	  // event e3 is taken off the pool and is processed: transition to state s2 
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s2, psm.getSm());
-	  // pool is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());
-	  
-	  //event e2 is called
-	  psm.e2();//event e2 is added to the pool
-	  Thread.sleep(10);
-	  //event e2 is unspecified, it is saved at the head of the queue, current sate is not changed
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s2, psm.getSm());
-	  //the pool has e2 event saved at its head
-	  Assert.assertEquals(1, psm.pool.messages.size());
-	  //check the pool to see if event e2 is saved in it
-	  for (PooledSM_NestedState_L1_1.Message msg: psm.pool.messages)
-      {
-		  Assert.assertEquals(PooledSM_NestedState_L1_1.MessageType.e2_M, msg.type);
-      }
-	  
-	  //event e6 is called
-	  psm.e6();//event e6 is added to the pool
-	  Thread.sleep(10);
-	  //event e6 is unspecified, it is saved at the head of the queue, current sate is not changed
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s2, psm.getSm());
-	  //the pool has e2,e6 event saved at its head
-	  Assert.assertEquals(2, psm.pool.messages.size());
-	  //check the pool to see if event e6 is saved in it
-	  for (PooledSM_NestedState_L1_1.Message msg: psm.pool.messages)
-      {
-		  if(msg.type.equals(PooledSM_NestedState_L1_1.MessageType.e6_M))
-		  {
-		    Assert.assertEquals(PooledSM_NestedState_L1_1.MessageType.e6_M, msg.type);
-		  }
-      }
-	  
-	  //event e5 is called
-	  psm.e5();//event e5 is added to the pool
-	  Thread.sleep(10);
+	  // Now, the pool is empty
+	  psm.e2();//event e2 is called and is added to the pool
+	  // event e2 is unspecified, it is saved at the head of the pool, current sate is not changed
+	  // The pool has e2 event saved at its head
+	  // The size of pool is 1: e2 
+	  psm.e6();//event e6 is called and is added to the pool
+	  // event e6 is unspecified, it is saved at the head of the pool, current sate is not changed
+	  // The pool has e2, and e6 events saved at its head
+	  // The size of pool is 2: e2 and e6
+	  psm.e5();//event e5 is called and is added to the pool
 	  // event e5 is taken off the pool and is processed: transition to state s2b 
 	  // event e6 is taken off the pool and is processed: transition to state s2a 
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.SmS2.s2a, psm.getSmS2());
-	  //the pool has e2 event saved at its head
-	  Assert.assertEquals(1, psm.pool.messages.size());	  
-	  //check the pool to see if event e2 is saved in it
-	  for (PooledSM_NestedState_L1_1.Message msg: psm.pool.messages)
-      {
-		  Assert.assertEquals(PooledSM_NestedState_L1_1.MessageType.e2_M, msg.type);
-      }
-	  
-	  //event e4 is called
-	  psm.e4();//event e4 is added to the pool
-	  Thread.sleep(10);
+	  // The pool has e2 event saved at its head
+	  // The size of pool is 1: e2 
+	  psm.e4();//event e4 is called and is added to the pool
 	  // event e4 is taken off the pool and is processed: transition to state s1 
 	  // event e2 is taken off the pool and is processed: transition to state s1b 
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.SmS1.s1b, psm.getSmS1());
-	  // pool is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());	  
-	  
-	  //event e1 is called
-	  psm.e1();//event e1 is added to the pool
-	  Thread.sleep(10);
+	  // Now, the pool is empty
+	  psm.e1();//event e1 is called and is added to the pool
 	  // event e1 is taken off the pool and is processed: transition to state s1a 
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.SmS1.s1a, psm.getSmS1());
-	  // pool is empty
-	  Assert.assertEquals(0, psm.pool.messages.size());	  
+	  // Now, the pool is empty
+	  psm.e3();//event e3 is called and is added to the pool
+	  // event e3 is unspecified, it is saved at the head of the pool, current sate is not changed
+	  // The pool has e3 event saved at its head
+	  // The size of pool is 1: e3 
+	  psm.e5();//event e5 is called and is added to the pool
+	  // event e5 is unspecified, it is saved at the head of the pool, current sate is not changed
+	  // The pool has e3, and e5 events saved at its head
+	  // The size of pool is 2: e3 and e5 
+	  psm.e3();//event e3 is called and is added to the pool
+	  // event e3 is unspecified, it is saved at the head of the pool, current sate is not changed
+	  // The pool has e3,e5, and e3 events saved at its head
+	  // The size of pool is 3: e3, e5, and e3
+	  psm.e4();//event e4 is called and is added to the pool
+	  // event e4 is unspecified, it is saved at the head of the pool, current sate is not changed
+	  // The pool has e3,e5,e3, and e4 events saved at its head
+	  // The size of pool is 4: e3, e5, e3 and e4 
+	  psm.e2();//event e2 is called and is added to the pool
+	  // event e2 is taken off the pool and is processed: transition to state s1b 
+	  // event e3 is taken off the pool and is processed: transition to state s2 
+	  // event e5 is taken off the pool and is processed: transition to state s2b
+	  // event e4 is taken off the pool and is processed: transition to state s1 
+	  // The pool has e3 event saved at its head
+	  // The size of pool is 1: e3 
 
-	  //event e3 is called
-	  psm.e3();//event e3 is added to the pool
-	  Thread.sleep(10);
-	  //event e3 is unspecified, it is saved at the head of the queue, current sate is not changed
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s1, psm.getSm());
-	  //the pool has e3 event saved at its head
-	  Assert.assertEquals(1, psm.pool.messages.size());
-	  //check the pool to see if event e3 is saved in it
+	  // Check that the pool has only one event
+	  while(psm.pool.messages.size() != 1)
+	  {
+		  Thread.sleep(10);
+	  }
+	  
+	  // There is only one event 'e3' left in the pool
 	  for (PooledSM_NestedState_L1_1.Message msg: psm.pool.messages)
       {
 		  Assert.assertEquals(PooledSM_NestedState_L1_1.MessageType.e3_M, msg.type);
       }
 	  
-	  //event e5 is called
-	  psm.e5();//event e5 is added to the pool
-	  Thread.sleep(10);
-	  //event e5 is unspecified, it is saved at the head of the queue, current sate is not changed
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s1, psm.getSm());
-	  //the pool has e3,e5 event saved at its head
-	  Assert.assertEquals(2, psm.pool.messages.size());
-	  //check the pool to see if event e5 is saved in it
-	  for (PooledSM_NestedState_L1_1.Message msg: psm.pool.messages)
-      {
-		  if(msg.type.equals(PooledSM_NestedState_L1_1.MessageType.e5_M))
-		  {
-			  Assert.assertEquals(PooledSM_NestedState_L1_1.MessageType.e5_M, msg.type);
-		  }
-      }
-	  
-	  //event e3 is called
-	  psm.e3();//event e3 is added to the pool
-	  Thread.sleep(10);
-	  //event e3 is unspecified, it is saved at the head of the queue, current sate is not changed
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s1, psm.getSm());
-	  //the pool has e3,e5,e3 event saved at its head
-	  Assert.assertEquals(3, psm.pool.messages.size());
-	  //check the pool to see if event e3 is saved in it
-	  for (PooledSM_NestedState_L1_1.Message msg: psm.pool.messages)
-      {
-		  if(msg.type.equals(PooledSM_NestedState_L1_1.MessageType.e3_M))
-		  {
-			  Assert.assertEquals(PooledSM_NestedState_L1_1.MessageType.e3_M, msg.type);
-		  }
-      }
+	  // The size of pool is 1
+	  Assert.assertEquals(1, psm.pool.messages.size());
 
-	  //event e4 is called
-	  psm.e4();//event e4 is added to the pool
-	  Thread.sleep(10);
-	  //event e4 is unspecified, it is saved at the head of the queue, current sate is not changed
-	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s1, psm.getSm());
-	  //the pool has e3,e5,e3,e4 event saved at its head
-	  Assert.assertEquals(4, psm.pool.messages.size());
-	  //check the pool to see if event e4 is saved in it
-	  for (PooledSM_NestedState_L1_1.Message msg: psm.pool.messages)
-      {
-		  if(msg.type.equals(PooledSM_NestedState_L1_1.MessageType.e4_M))
-		  {
-			  Assert.assertEquals(PooledSM_NestedState_L1_1.MessageType.e4_M, msg.type);
-		  }
-      }
 	  
-	  //event e2 is called
-	  psm.e2();//event e2 is added to the pool
-	  Thread.sleep(10);
-	  // event e2 is taken off the pool and is processed: transition to state s1b 
-	  // event e3 is taken off the pool and is processed: transition to state s2 
-	  // event e5 is taken off the pool and is processed: transition to state s2b
-	  // event e4 is taken off the pool and is processed: transition to state s1 
+	  // Check the current state is s1 and the current substate is s1a
 	  Assert.assertEquals(PooledSM_NestedState_L1_1.Sm.s1, psm.getSm());
-	  //the pool has e3 event saved at its head
-	  Assert.assertEquals(1, psm.pool.messages.size());
-	  
-	  //check that there is one event left in the queue
-	  Assert.assertEquals(1, psm.pool.messages.size());
+	  Assert.assertEquals(PooledSM_NestedState_L1_1.SmS1.s1a, psm.getSmS1());
 	  
   }
 }

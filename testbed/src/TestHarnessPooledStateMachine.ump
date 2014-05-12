@@ -52,8 +52,8 @@ class Mentor
 
   pooled status
   {
-    Ok { afterEvery(2) -> NotOk; }
-    NotOk { afterEvery(howLongUntilOk) -> Ok; } 
+    Ok { after(2) -> NotOk; }
+    NotOk {} 
   }
 }
 
