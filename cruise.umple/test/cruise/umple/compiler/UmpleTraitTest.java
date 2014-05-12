@@ -76,6 +76,34 @@ public class UmpleTraitTest {
 	}
 	
 	@Test
+	public void checkValidNameTest() {
+		String code = "class A{isA 12T;}trait 12T{}";
+		UmpleModel model = getModel(code);
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2500");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+
+	@Test
+	public void checkUniqueNameTest() {
+		String code = "class A{isA A;}trait A{}";
+		UmpleModel model = getModel(code);
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2550");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
 	public void selfInheritanceTest() {
 		String code = "class A{isA T;} trait T { isA T;}";
 		UmpleModel model = getModel(code);
@@ -143,14 +171,6 @@ public class UmpleTraitTest {
 	}
 	
 	@Test
-	public void interfaceMethodOverride() {
-		String code = "interface I { void dukeX();} class A { isA I; isA T; } trait T { void dukeX() {} }";
-		UmpleModel model = getRunModel(code);	
-		SampleFileWriter.destroy("I.java");
-		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
-	 }
-	
-	@Test
 	public void checkRequiredMethodTest() {
 		String code = "class A{isA T;} trait T { String test();}";
 		UmpleModel model = getModel(code);
@@ -174,7 +194,7 @@ public class UmpleTraitTest {
 	}	
 	
 	@Test
-	public void checkDuplicatedMethodsInY() {
+	public void checkDuplicatedMethods1Test() {
 		String code = "class A{isA T1; isA T2;} trait T1 { String test(){}} trait T2 { String test(){}}";
 		UmpleModel model = getModel(code);
 		
@@ -186,7 +206,122 @@ public class UmpleTraitTest {
 		} finally {
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
-	}	
+	}
+	
+	@Test
+	public void checkDuplicatedMethods2Test() {
+		String code = "class A{isA T;}trait T{isA T1;isA T2;}trait T1{void test(){/*T1*/}}trait T2{void test(){/*T2*/}}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2557");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void compositionTraitClassRule1Test() {
+		String code = "class A{isA T;void test() {/*A*/} } trait T{void test() {/*T*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("/*A*/",model.getUmpleClass("A").getMethod(0).getMethodBody().getExtraCode());	
+		
+	}
+	
+	@Test
+	public void compositionTraitClassRule2Test() {		
+		String code = "class A{void test() {/*A*/}}class B{isA A;isA T;}trait T{void test() {/*T*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("/*T*/",model.getUmpleClass("B").getMethod(0).getMethodBody().getExtraCode());	
+		
+	}
+	
+	@Test
+	public void compositionTraitClassRule3Test() {	
+		String code = "class A{void test() {/*A*/}}class B{isA A;isA T;void test(){/*B*/}}trait T{void test() {/*T*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("/*B*/",model.getUmpleClass("B").getMethod(0).getMethodBody().getExtraCode());		
+	}
+	
+	@Test
+	public void compositionTraitClassRule4Test() {	
+		String code = "interface I{void test();}class A{isA I;isA T;void test(){/*A*/}}trait T{void test() {/*T*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("/*A*/",model.getUmpleClass("A").getMethod(0).getMethodBody().getExtraCode());		
+	}
+	
+	@Test
+	public void compositionTraitClassRule5Test() {
+		String code = "interface I { void test();} class A { isA I; isA T; } trait T { void test() {/*T*/} }";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
+	 }
+	
+	@Test
+	public void compositionTraitClassRule6Test() {
+		String code = "class A{isA T;void need(){/*A*/}}trait T{void need();void show(){need();}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("/*A*/",model.getUmpleClass("A").getMethod(0).getMethodBody().getExtraCode());
+	 }
+	
+	@Test
+	public void compositionTraitClassRule7Test() {
+		String code = "class A{isA T1;void test1() {/*A*/}isA T4;}trait T4{void test1() {/*T4*/}}trait T1{void test1() {/*T1*/}isA T2;}trait T2{isA T3;	void test2() {/*T2*/}}trait T3{void test3() {/*T3*/}void test2() {/*T3*/}void test1() {/*T3*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(3, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("test1")){
+				Assert.assertEquals("/*A*/",method.getMethodBody().getExtraCode());
+			} else if (method.getName().equals("test2")){
+				Assert.assertEquals("/*T2*/",method.getMethodBody().getExtraCode());
+			} else if (method.getName().equals("test3")){
+				Assert.assertEquals("/*T3*/",method.getMethodBody().getExtraCode());
+			}
+		}
+
+	 }
+	
+	@Test
+	public void compositionTraitClassRule8Test() {
+		String code = "class A{isA T;}trait T{isA T1;void need(){/*T*/}}trait T1{void need();void show(){	need();}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("need")){
+				Assert.assertEquals("/*T*/",method.getMethodBody().getExtraCode());
+			}
+		}
+	 }	
+	
+	@Test
+	public void compositionTraitClassRule9Test() {
+		String code = "class A{isA T;void need(){/*A*/}	}trait T{isA T1;void need(){/*T*/}}trait T1{void need();void show(){need();}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("need")){
+				Assert.assertEquals("/*A*/",method.getMethodBody().getExtraCode());
+			}
+		}
+	 }
+	
+	@Test
+	public void compositionTraitClassRule10Test() {
+		String code = "class A{isA T1,T2;}trait T1{isA T;}trait T2{isA T;}trait T{void test(){/*T*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("/*T*/",model.getUmpleClass("A").getMethod(0).getMethodBody().getExtraCode());
+	 }
+	
+	@Test
+	public void compositionTraitClassRule11Test() {
+		String code = "class A{isA T;}trait T{void test1(){/*T*/}}trait T{void test2(){/*T*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+	 }	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {

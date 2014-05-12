@@ -1582,6 +1582,12 @@ class UmpleInternalParser
      //   boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
         if (!uTrait.hasMethod(aMethod)) // && shouldAddMethod)
         {
+        	String msg = "Please do not modify the following method.";
+			aMethod.addCommentAt(new Comment(msg),0);
+        	msg = "The following method comes from trait "+uTrait.getName()+".";
+			aMethod.addCommentAt(new Comment(msg),1);
+			msg = "Trait "+uTrait.getName()+" has been used in classes: ";
+			aMethod.addCommentAt(new Comment(msg),2);
         	uTrait.addMethod(aMethod); 
         } 
 
