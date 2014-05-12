@@ -452,7 +452,7 @@ public class PhpGeneratorTest
 
     GeneratedClass g = c.getGeneratedClass();
 
-    Assert.assertEquals("$aId, Mentor $aMentor",g.getLookup("constructorSignature"));
+    Assert.assertEquals("$aId, $aMentor",g.getLookup("constructorSignature"));
 
     Assert.assertEquals("$aId, $aMentor",g.getLookup("constructorSignature_caller"));
 
@@ -460,7 +460,7 @@ public class PhpGeneratorTest
 
     GeneratedClass g2 = c2.getGeneratedClass();
 
-    Assert.assertEquals("$aName, Student $aStudent",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("$aName, $aStudent",g2.getLookup("constructorSignature"));
 
     Assert.assertEquals("$aName, $aStudent",g2.getLookup("constructorSignature_caller"));
 
@@ -512,7 +512,7 @@ public class PhpGeneratorTest
 
     GeneratedClass g = c.getGeneratedClass();
 
-    Assert.assertEquals("$aId, Mentor $aMentor",g.getLookup("constructorSignature"));
+    Assert.assertEquals("$aId, $aMentor",g.getLookup("constructorSignature"));
 
     Assert.assertEquals("$aId, $aMentor",g.getLookup("constructorSignature_caller"));
 
@@ -614,7 +614,7 @@ public class PhpGeneratorTest
 
     GeneratedClass g2 = c2.getGeneratedClass();
 
-    Assert.assertEquals("$aName, array $allStudents",g2.getLookup("constructorSignature"));
+    Assert.assertEquals("$aName, $allStudents",g2.getLookup("constructorSignature"));
 
     Assert.assertEquals("$aName, $allStudents",g2.getLookup("constructorSignature_caller"));
 
@@ -660,7 +660,7 @@ public class PhpGeneratorTest
 
     GeneratedClass g = c.getGeneratedClass();
 
-    Assert.assertEquals("$aId, array $allStudents",g.getLookup("constructorSignature"));
+    Assert.assertEquals("$aId, $allStudents",g.getLookup("constructorSignature"));
 
     Assert.assertEquals("$aId, $allStudents",g.getLookup("constructorSignature_caller"));
 
@@ -716,7 +716,7 @@ public class PhpGeneratorTest
 
     GeneratedClass g = c.getGeneratedClass();
 
-    Assert.assertEquals("$aId, Mentor $aMentor",g.getLookup("constructorSignature"));
+    Assert.assertEquals("$aId, $aMentor",g.getLookup("constructorSignature"));
 
     Assert.assertEquals("$aId, $aMentor",g.getLookup("constructorSignature_caller"));
 

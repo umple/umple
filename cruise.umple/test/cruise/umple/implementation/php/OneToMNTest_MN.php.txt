@@ -19,7 +19,7 @@ class Pupil
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aNumber, Mentor $aMentor)
+  public function __construct($aNumber, $aMentor)
   {
     $this->number = $aNumber;
     $didAddMentor = $this->setMentor($aMentor);

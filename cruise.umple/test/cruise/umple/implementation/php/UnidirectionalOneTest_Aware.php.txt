@@ -19,7 +19,7 @@ class Mentor
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aName, Student $aStudent)
+  public function __construct($aName, $aStudent)
   {
     $this->name = $aName;
     if (!$this->setStudent($aStudent))

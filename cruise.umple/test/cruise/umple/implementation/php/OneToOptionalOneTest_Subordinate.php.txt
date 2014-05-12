@@ -19,7 +19,7 @@ class MySubordinate
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aNumber, MyDriver $aMyDriver)
+  public function __construct($aNumber, $aMyDriver)
   {
     $this->number = $aNumber;
     $didAddMyDriver = $this->setMyDriver($aMyDriver);
