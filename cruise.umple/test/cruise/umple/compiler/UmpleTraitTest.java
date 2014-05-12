@@ -322,6 +322,18 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
 	 }	
+	
+	@Test
+	public void compositionTraitClassRule12Test() {
+		String code = "class A{isA T; }trait T{ isA T1; void need(); void show(){test(); }}trait T1{ void need(){ /*T1*/ }} ";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("need")){
+				Assert.assertEquals("/*T1*/",method.getMethodBody().getExtraCode());
+			}
+		}
+	 }	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {
