@@ -56,6 +56,38 @@ class EcoreGenerator {
     }
   }
   
+  private void handleGenericAttribute(EcorePackage rootPackage, UmpleClass uClass, EcoreGenericTypeNode genericTypeNode, String[] parentTypeArgument, int numberOfTypeArgument){
+    for(int i=1; i<parentTypeArgument.length; i++){
+      String typeArgument = parentTypeArgument[i];
+      String[] typeArgumentActualType = null;
+      EcoreGenericTypeArgument genericTypeArgument = null;
+      
+      if(model.getUmpleClass(typeArgument) != null){
+        typeArgumentActualType = new String[]{"#//" + typeArgument};
+      }else{
+        typeArgumentActualType = rootPackage.getActualEType(uClass, typeArgument);
+      }
+      
+      if(EcoreGenModel.ecoreGenericTypeMap.containsKey(typeArgumentActualType[0])){
+        String[] value = EcoreGenModel.ecoreGenericTypeMap.get(typeArgumentActualType[0]);
+        genericTypeArgument = new EcoreGenericTypeArgument(value[1], genericTypeNode.getIntent()+1);
+        handleGenericAttribute(rootPackage, uClass, genericTypeArgument, typeArgumentActualType, Integer.parseInt(value[0]));
+      }else{
+        genericTypeArgument = new EcoreGenericTypeArgument(typeArgumentActualType[0], genericTypeNode.getIntent()+1);
+        handleGenericAttribute(rootPackage, uClass, genericTypeArgument, typeArgumentActualType, 0);
+      }
+      
+      genericTypeArgument.setOrder(i);
+      genericTypeNode.addTypeArgument(genericTypeArgument);
+    }
+    
+    for(int i=parentTypeArgument.length; i<=numberOfTypeArgument; i++){
+      EcoreGenericTypeArgument genericTypeArgument = new EcoreGenericTypeArgument("", genericTypeNode.getIntent()+1);
+      genericTypeArgument.setOrder(i);
+      genericTypeNode.addTypeArgument(genericTypeArgument);
+    }
+  }
+  
   private void handleAttributes(EcorePackage rootPackage){
     for(EcoreClass eClass : rootPackage.getClasses()){
       if(eClass.getIsInterface()){
@@ -75,10 +107,30 @@ class EcoreGenerator {
           }
           eClass.addReference(eReference);
         }else{
-          String actualTypeName = rootPackage.getActualEType(uClass, uAttribute.getType() == null ? "String" : uAttribute.getType());
-          EcoreAttribute eAttribute = new EcoreAttribute(attrName, eClass.getIntent()+1, actualTypeName);
-          if(uAttribute.getIsList()){
-            eAttribute.setUpperBound("-1");
+          String[] type = rootPackage.getActualEType(uClass, uAttribute.getType() == null ? "String" : uAttribute.getType());
+          String actualTypeName = type[0];        
+          EcoreAttribute eAttribute = null;
+          
+          if(EcoreGenModel.ecoreGenericTypeMap.containsKey(actualTypeName)){
+            String[] value = EcoreGenModel.ecoreGenericTypeMap.get(actualTypeName);
+            eAttribute = new EcoreAttribute(attrName, eClass.getIntent()+1, "");
+            eAttribute.setIsTransient(true);
+
+            EcoreGenericType genericType = new EcoreGenericType(value[1], eAttribute.getIntent()+1);
+            handleGenericAttribute(rootPackage, uClass, genericType, type, Integer.parseInt(value[0]));
+            eAttribute.setGenericType(genericType);
+          }else if(type.length > 1){
+            eAttribute = new EcoreAttribute(attrName, eClass.getIntent()+1, "");
+            eAttribute.setIsTransient(true);
+            
+            EcoreGenericType genericType = new EcoreGenericType(actualTypeName, eAttribute.getIntent()+1);
+            handleGenericAttribute(rootPackage, uClass, genericType, type, 0);
+            eAttribute.setGenericType(genericType);
+          }else{
+            eAttribute = new EcoreAttribute(attrName, eClass.getIntent()+1, actualTypeName);
+            if(uAttribute.getIsList()){
+              eAttribute.setUpperBound("-1");
+            }
           }
           eClass.addAttribute(eAttribute);
         }

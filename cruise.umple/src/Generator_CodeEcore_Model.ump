@@ -13,6 +13,7 @@ class EcoreGenModel {
   0..1 -> * EcorePackage packages;
   
   static Map<String, String> ecorePrimitiveTypeMap;
+  static Map<String, String[]> ecoreGenericTypeMap;
   static Map<String, String> umplePrimitiveTypeMap;
   
   static {
@@ -23,6 +24,16 @@ class EcoreGenModel {
       ecorePrimitiveTypeMap.put("String", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString");
       ecorePrimitiveTypeMap.put("Double", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDouble");
       ecorePrimitiveTypeMap.put("Boolean", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean");
+      ecorePrimitiveTypeMap.put("java.math.BigDecimal", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigDecimal");
+      ecorePrimitiveTypeMap.put("java.math.BigInteger", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBigInteger");
+      ecorePrimitiveTypeMap.put("char", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EChar");
+      ecorePrimitiveTypeMap.put("java.lang.Character", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ECharacterObject");
+      ecorePrimitiveTypeMap.put("java.lang.Object", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject");
+
+      ecoreGenericTypeMap = new HashMap<String, String[]>();
+      ecoreGenericTypeMap.put("java.util.List", new String[]{"1", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EEList"});
+      ecoreGenericTypeMap.put("java.util.Map", new String[]{"2", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EMap"});
+      ecoreGenericTypeMap.put("java.lang.Class", new String[]{"1", "ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaClass"});
       
       umplePrimitiveTypeMap = new HashMap<String, String>();
       umplePrimitiveTypeMap.put("Time", "java.sql.Time");
@@ -100,24 +111,38 @@ class EcorePackage {
     }
   }
   
-  String getActualEType(UmpleClass uClass, String eType){
+  String[] getActualEType(UmpleClass uClass, String eType){
+    List<String> typeArgs = new ArrayList<String>();
+
     if(EcoreGenModel.ecorePrimitiveTypeMap.containsKey(eType)){
-      return EcoreGenModel.ecorePrimitiveTypeMap.get(eType);
+      return new String[]{EcoreGenModel.ecorePrimitiveTypeMap.get(eType)};
     }else if(EcoreGenModel.umplePrimitiveTypeMap.containsKey(eType)){
       String existingType = EcoreGenModel.umplePrimitiveTypeMap.get(eType);
-      EcoreDataType dataType = new EcoreDataType(eType, getIntent()+1, existingType);
+      EcoreDataType dataType = new EcoreDataType(eType, getIntent()+1, existingType, 0);
       addDataType(dataType);
-      return "#//"+eType;
+      return new String[]{"#//"+eType};
     }else{
       String actualEType = "";
       String existingType = "";
     
-      // Dirty fix for generic type argument, will solve in next patch
+      // For non-nested generic type argument
       int startTag = eType.indexOf("<");
-      if(startTag >= 0)
+      if(startTag >= 0){
+      int comma = -1;
+        String argString = eType.substring(eType.indexOf("<")+1, eType.lastIndexOf(">"));
+
         actualEType = eType.substring(0, eType.indexOf("<"));
-      else
+      typeArgs.add(actualEType);
+      while((comma = argString.indexOf(",")) >= 0){
+          typeArgs.add(argString.substring(0, comma).trim());
+          argString = argString.substring(comma+1);
+        }
+        typeArgs.add(argString.trim());
+      }else{
         actualEType = eType;
+        typeArgs.add(actualEType);
+      }
+      
     
       String checkingExistingType = getExistingType("java.lang", actualEType);
       if(checkingExistingType == null){
@@ -130,11 +155,16 @@ class EcorePackage {
       }
       
       existingType = (checkingExistingType != null ? checkingExistingType : actualEType);
-      
-      EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType);
-      addDataType(dataType);
-      
-      return "#//"+actualEType;
+      if(EcoreGenModel.ecorePrimitiveTypeMap.containsKey(existingType)){
+        typeArgs.set(0, EcoreGenModel.ecorePrimitiveTypeMap.get(existingType));
+      }else if(EcoreGenModel.ecoreGenericTypeMap.containsKey(existingType)){
+        typeArgs.set(0, existingType);
+      }else{
+        EcoreDataType dataType = new EcoreDataType(actualEType, getIntent()+1, existingType, typeArgs.size()-1);
+        addDataType(dataType);
+        typeArgs.set(0, "#//"+actualEType);
+      }
+      return typeArgs.toArray(new String[0]);
     }
   }
   
@@ -178,6 +208,9 @@ class EcoreDataType {
   isA EcoreGenericNode;
   
   String instanceType;
+  Integer typeArgumentCount;
+  
+  key {instanceType}
   
   before constructor {
     setTagName("eClassifiers");
@@ -190,6 +223,38 @@ class EcoreDataType {
     map.put("name", getName());
     map.put("instanceClassName", getInstanceType());
 
+    return map;
+  }
+  
+  List<EcoreGenericNode> getNodeChildren(){
+    List<EcoreGenericNode> nodes = super.getNodeChildren();
+    
+    for(int i=1; i<=typeArgumentCount; i++){
+      nodes.add(new EcoreTypeParameter("Type"+i, getIntent()+1));
+    }
+        
+    return nodes;
+  }
+  
+  Integer getNodeChildCount(){
+    return typeArgumentCount;
+  }
+}
+
+class EcoreTypeParameter {
+  depend java.util.Map;
+
+  isA EcoreGenericNode;
+  
+  before constructor {
+    setTagName("eTypeParameters");
+  }
+  
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    
+    map.put("name", getName());
+      
     return map;
   }
 }
@@ -266,6 +331,8 @@ class EcoreAttribute {
   isA EcoreClassElement;
 
   defaulted Boolean id = false;
+  defaulted Boolean isTransient = false;
+  defaulted EcoreGenericType genericType = null;
     
   Map<String,String> getNodeAttributes(){
     Map<String,String> map = super.getNodeAttributes();
@@ -276,10 +343,92 @@ class EcoreAttribute {
       map.put("lowerBound", String.valueOf(getLowerBound()));
     if(!getDefaultUpperBound().equals(getUpperBound()))
       map.put("upperBound", String.valueOf(getUpperBound()));
-    
-    map.put("eType", getEType());
+    if(getEType() != null && !"".equals(getEType()))
+      map.put("eType", getEType());
+    if(getDefaultIsTransient() != getIsTransient())
+      map.put("transient", "true");    
     
     return map;
+  }
+  
+  List<EcoreGenericNode> getNodeChildren(){
+    List<EcoreGenericNode> nodes = super.getNodeChildren();
+    
+    nodes.add(getGenericType());
+    
+    return nodes;
+  }
+  
+  Integer getNodeChildCount(){
+    return getGenericType()!=null ? 1 : 0;
+  }
+}
+
+class EcoreGenericTypeNode {
+  isA EcoreGenericNode;
+  
+  0..1 -> * EcoreGenericTypeArgument typeArguments;
+}
+
+class EcoreGenericType {
+  isA EcoreGenericTypeNode;
+  
+  before constructor {
+    setTagName("eGenericType");
+  }
+  
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    map.put("eClassifier", getName());
+      
+    return map;
+  }
+  
+  List<EcoreGenericNode> getNodeChildren(){
+    List<EcoreGenericNode> nodes = super.getNodeChildren();
+    
+    nodes.addAll(getTypeArguments());
+    
+    return nodes;
+  }
+  
+  Integer getNodeChildCount(){
+    return numberOfTypeArguments();
+  }
+}
+
+class EcoreGenericTypeArgument {
+  depend java.util.*;
+
+  isA EcoreGenericTypeNode;
+  
+  defaulted Integer order = 0;
+  
+  before constructor {
+    setTagName("eTypeArguments");
+  }
+  
+  key {order}
+  
+  Map<String,String> getNodeAttributes(){
+    Map<String,String> map = super.getNodeAttributes();
+    
+    if(getName() != null && !"".equals(getName()))
+      map.put("eClassifier", getName());
+      
+    return map;
+  }
+  
+  List<EcoreGenericNode> getNodeChildren(){
+    List<EcoreGenericNode> nodes = super.getNodeChildren();
+    
+    nodes.addAll(getTypeArguments());
+    
+    return nodes;
+  }
+  
+  Integer getNodeChildCount(){
+    return numberOfTypeArguments();
   }
 }
 
@@ -360,43 +509,4 @@ class EcoreEnumItem {
     
     return map;
   }
-}
-
-class EcoreNodeAttribute {
-  String name;
-  String value;
-}
-
-class EcoreNode {
-  Integer indent;
-  String tagName;
-  0..1 -> * EcoreNode childNodes;
-  EcoreNodeAttribute[] attributes;
-  
-    const String Xmltagstart = "<";  
-    const String Xmltagend = ">";
-  
-    cr <<!
-!>>
-    indent <<!<<# for (int i=0; i < <<=indent>>; i++) {#>> <<#}#>>!>>
-  
-  code <<!<<=Xmltagstart>><<=tagName>>
-    <<#if(numberOfAttributes() > 0)
-    #>><<=getAttributeString(attributes)>><<=Xmltagend>>
-    <<=getChildNodesString(childNodes)>>
-    <<=Xmltagstart>>/<<=tagName>><<=Xmltagend>>
-  !>>
-  
-  printAttributes <<!<<#
-    for (EcoreNodeAttribute attr: attributes){
-  #>> <<=attr.getName()>>="<<=attr.getValue()>>"<<#}#>>!>>
-  
-  printChildNodes <<!<<#
-    for (EcoreNode childNode: childNodes){
-  #>><<=childNode.getCode()>>
-  <<#}#>>!>>
-  
-  emit getCode()(code, cr);
-  emit getAttributeString(List<EcoreNodeAttribute> attributes)(printAttributes, cr);
-  emit getChildNodesString(List<EcoreNode> childNodes)(printChildNodes, cr);
 }
