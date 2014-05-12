@@ -1,18 +1,17 @@
-body { background-color:White; overflow: auto }
+body { background-color:White; overflow: auto; overflow-y:scroll; }
 p, ol, ul, div, h1, h2, h3, h4, b { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000; }
 table.pagetitle { white-space:nowrap;}
 p.pagedescription { width:703px; margin-left:5px; }
 
 /* MAIN APPLICATION TABLE */
 table.container td { padding-top: 3px; text-align:left; vertical-align:top; border-collapse:collapse; }
-table.container td.textEditorColumn { padding: 2px; width: 420px; border: White solid 1px; -moz-border-radius: 5px; -webkit-border-radius: 5px;} 
+table.container td.textEditorColumn { padding: 2px; width: 284px; border: White solid 1px; -moz-border-radius: 5px; -webkit-border-radius: 5px; } 
 table.container td.umpleCanvasColumn { padding: 2px; width: 420px; border: White solid 1px; -moz-border-radius: 5px; -webkit-border-radius: 5px;} 
 
 /* TEXT EDITORS and CANVAS */
 textArea { padding-top: 2px; padding-left: 5px; background-color: White; border:Gray solid 1px; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
-textArea.umpleModelEditor { width: 420px; height:343px; margin:0; padding-bottom: 2px;}
-textArea.umpleLayoutEditor { width: 420px; height:140px; border-top: none; margin:0;}
-
+textArea.umpleModelEditor { width: 284px; height:343px; margin:0; padding-bottom: 2px; }
+textArea.umpleLayoutEditor { width: 284px; height:140px; border-top: none; margin:0;}
 
 div.surface { overflow:auto; width:420px; height:490px; background-color: white; border: Gray solid 1px; padding:5px; -moz-border-radius: 4px; -webkit-border-radius: 4px;}
 div.surface:focus { outline:none; }
@@ -20,9 +19,11 @@ div.surface img { border:0; }
 div.photoReady { border:0; overflow:visible; }
 div.syncNeededMessage{ color: Gray; margin-left: 5px;}
 
+.ui-resizable-e { width: 15px; right: -10px; } /* Tweaks for the size and positioning of the resizing handle of the editor */
+
 /* UMPLE PALETTE */
 div.paletteWrapper { border: 1px solid Gray; background-color: GhostWhite; padding:  1px 1px 1px 1px; -moz-border-radius: 4px; -webkit-border-radius: 4px;}
-div.palette { height: 507px; width: 165px; font-family: Verdana; font-size: 9.5pt;}
+div.palette { height: 507px; width: 175px; font-family: Verdana; font-size: 9.5pt;}
 div.palette img { cursor:pointer; margin-left: 8px; padding:2px; vertical-align:middle;}
 div.palette input.checkbox { cursor:pointer; margin-left: 10px; padding:2px; vertical-align:middle;  }
 
@@ -66,7 +67,7 @@ div.umpleClass tr.width img { margin:0; padding:0; }
 div.umpleClass tr.height td { border:black solid 0px; margin:0; padding:0; border-collapse: collapse; }
 div.umpleClass tr.height img { margin:0; padding:0; }
 div.umpleClass tr.classArea td { height:1px; overflow:on; }
-xdiv.umpleClass tr.attributeArea td  {height:1px;overflow:on; }
+div.umpleClass tr.attributeArea td  {height:1px;overflow:on; }
 div.umpleClass span.editable { cursor:text;}
 div.umpleClass span.uneditable { cursor:move; }
 

@@ -59,6 +59,11 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramT
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
   
+  jQuery("#mainApplicationContainer").resizable({
+    stop: function(event, ui){Action.mainApplicationHeightResizing(event, ui);},
+    autoHide: true,
+    handles:"s"});
+  
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
 
   Action.loadFile();
@@ -213,16 +218,16 @@ Page.enableCheckBoxItem = function(boxId, listItemId, doEnable)
   
   if (doEnable)
   {
-  	checkbox.attr('disabled', false);
-  	checkbox.css('cursor', 'pointer');
-  	listItem.css('color', 'Black');
-  	
+    checkbox.attr('disabled', false);
+    checkbox.css('cursor', 'pointer');
+    listItem.css('color', 'Black');
+    
   }
   else
   {
-  	checkbox.attr('disabled', true);
-	checkbox.css('cursor', 'not-allowed');
-	listItem.css('color', 'Silver');
+    checkbox.attr('disabled', true);
+  checkbox.css('cursor', 'not-allowed');
+  listItem.css('color', 'Silver');
   }
 }
 
@@ -235,16 +240,16 @@ Page.enablePaletteItem = function(id, doEnable)
   
   if (doEnable)
   {
-  	item.removeClass();
-  	item.attr('disabled', true);
-  	Page.initHighlighter(id);
+    item.removeClass();
+    item.attr('disabled', true);
+    Page.initHighlighter(id);
   }
   else
   {
-  	item.removeClass();
-  	item.addClass("disabled");
-  	item.attr('disabled', false);
-  	Page.removeHighlighter(id);
+    item.removeClass();
+    item.addClass("disabled");
+    item.attr('disabled', false);
+    Page.removeHighlighter(id);
   }
 }
 
@@ -277,19 +282,30 @@ Page.initAction = function(id)
 
 Page.initUmpleTextArea = function()
 {
-  jQuery("#umpleModelEditor").keyup(function(eventObject){Action.umpleTyped(eventObject);});
+  var modelEditor = jQuery("#umpleModelEditor");
+  var layoutEditor = jQuery("#umpleLayoutEditor");
+  
+  modelEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
 
-jQuery("#umpleModelEditor").mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
-  jQuery("#umpleLayoutEditor").keyup(function(eventObject){Action.umpleTyped(eventObject);});
-  jQuery("#umpleModelEditor").focus(function(){Action.focusOn("umpleModelEditor", true);});
-  jQuery("#umpleLayoutEditor").focus(function(){Action.focusOn("umpleLayoutEditor", true);});
-  jQuery("#umpleModelEditor").blur(function(){Action.focusOn("umpleModelEditor", false);});
-  jQuery("#umpleLayoutEditor").blur(function(){Action.focusOn("umpleLayoutEditor", false);});
+  modelEditor.mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
+  layoutEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
+  modelEditor.focus(function(){Action.focusOn("umpleModelEditor", true);});
+  layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditor", true);});
+  modelEditor.blur(function(){Action.focusOn("umpleModelEditor", false);});
+  layoutEditor.blur(function(){Action.focusOn("umpleLayoutEditor", false);});
+  
+  jQuery("#umpleTextEditor").resizable({
+      stop: function(event, ui){Action.umpleTextEditorResizing(event, ui);},
+      autoHide: true,
+      minWidth: Action.minEditorSize.width,
+      maxWidth: Action.maxEditorSize.width,
+      handles:"e"});
 
   // Uncomment the following line to turn CodeMirror on by default; comment out to
   // require the user to type cm1 to turn code mirror on
   Page.initCodeMirrorEditor();
-  Page.resizeCodeMirrorEditor( jQuery("#umpleModelEditor").height());
+  Page.resizeCodeMirrorEditor( modelEditor.height());
+  Page.setTextEditorWidth(508);
   if (Page.showText==false) {Action.showHideTextEditor(false);}
 }
 
@@ -360,10 +376,24 @@ Page.clickToggleMethods = function() {
   jQuery('#buttonToggleMethods').trigger('click');
 }
 
+Page.setTextEditorWidth = function(width) 
+{
+  var umpleTextEditor = jQuery("#umpleTextEditor");
+  
+  if(width < Action.minEditorSize.width) 
+  {
+    width = Action.minEditorSize.width;
+  }
+  umpleTextEditor.width(width);
+  
+  var leftoverWidth = jQuery(window).innerWidth() - 2*Page.padding - jQuery("#paletteColumn").width();
 
+  leftoverWidth = leftoverWidth - jQuery("#textEditorColumn").width();
+  Page.setUmpleCanvasSize(leftoverWidth, jQuery("#umpleCanvas").height());
+}
 
-Page.resizeCodeMirrorEditor = function(newHeight) {
-
+Page.resizeCodeMirrorEditor = function(newHeight) 
+{
    Page.codeMirrorEditor.getWrapperElement().style.height=newHeight+"px";
    Page.codeMirrorEditor.refresh();
 }
@@ -401,7 +431,14 @@ Page.initCanvasArea = function()
   
   var defaultWidth = canvas.width();
   var defaultHeight = canvas.height();
+  
   Action.minCanvasSize = new UmplePosition(0,0,defaultWidth,defaultHeight);
+  Action.minEditorSize = new UmplePosition(0,0,jQuery("#textEditorColumn").width(),0);
+  Action.maxEditorSize = new UmplePosition(
+      0,
+      0,
+      jQuery(window).innerWidth() - 2*Page.padding - jQuery("#paletteColumn").width() - Action.minCanvasSize.width,
+      0);
   
   var windowHeight = jQuery(window).height()-35;
   var windowWidth = jQuery(window).width();
@@ -418,13 +455,14 @@ Page.initCanvasArea = function()
   canvas.delegate("[class$='editableDoubleClick']", 'dblclick', InlineEditor.handleOnClick);
   canvas.delegate("[class$='editableSingleClick']", 'click', InlineEditor.handleOnClick);
   canvas.resizable({stop: function(event, ui){Action.umpleCanvasResizing(event, ui);},
-  							  autoHide: true,
-  							  minHeight: Action.minCanvasSize.height,
-  							  minWidth: Action.minCanvasSize.width});
+                  autoHide: true,
+                  minHeight: Action.minCanvasSize.height,
+                  minWidth: Action.minCanvasSize.width,
+                  handles: {'se': '#canvasGrip'}});
   
   // remove the jquery resizable handle
-  jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
-  jQuery(".ui-icon").removeClass("ui-icon");
+  //jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
+  //jQuery(".ui-icon").removeClass("ui-icon");
 }
 
 Page.initExamples = function()
@@ -438,8 +476,6 @@ Page.initExamples = function()
   jQuery("#inputExample2").change(Action.loadExample);
   jQuery("#defaultExampleOption2").attr("selected",true);
   jQuery("#itemLoadExamples2").hide();
-
-  
 }
 
 Page.highlightItem = function(id)
@@ -468,17 +504,17 @@ Page.enableEditDragAndResize = function(doEnable)
 {
   if (doEnable)
   {
-  	jQuery("span.editable").removeClass("uneditable");
-  	jQuery("div.umpleClass").removeClass("unselectable");
-  	jQuery("div.umpleClass.ui-draggable").draggable("option", "disabled", false);
-  	jQuery("div.umpleClass.ui-resizable").resizable("option", "disabled", false);
+    jQuery("span.editable").removeClass("uneditable");
+    jQuery("div.umpleClass").removeClass("unselectable");
+    jQuery("div.umpleClass.ui-draggable").draggable("option", "disabled", false);
+    jQuery("div.umpleClass.ui-resizable").resizable("option", "disabled", false);
   } 
   else
   {
-  	jQuery("span.editable").addClass("uneditable");
-  	jQuery("div.umpleClass").addClass("unselectable");
-  	jQuery("div.umpleClass.ui-draggable").draggable("option", "disabled", true);
-  	jQuery("div.umpleClass.ui-resizable").resizable("option", "disabled", true);
+    jQuery("span.editable").addClass("uneditable");
+    jQuery("div.umpleClass").addClass("unselectable");
+    jQuery("div.umpleClass.ui-draggable").draggable("option", "disabled", true);
+    jQuery("div.umpleClass.ui-resizable").resizable("option", "disabled", true);
   }
 }
 
@@ -566,8 +602,8 @@ Page.splitUmpleCode = function(umpleCode)
   var splitIndex = umpleCode.indexOf(Page.modelDelimiter);
   if (splitIndex == -1)
   {
-  	model = umpleCode;
-  	positioning = "";
+    model = umpleCode;
+    positioning = "";
   }
   else
   {
@@ -609,15 +645,15 @@ Page.showDiagramSyncNeeded = function(doShow)
 {
   var canvas = jQuery("#umpleCanvas");
   var messageDiv =  '<div id="syncNeededMessage" class="syncNeededMessage unselectable">' +
-  				    'Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text. ' +
-  					'</div>';
+              'Diagram is out of synchronization with the text due to selecting Manual Sync or an error in the text. ' +
+            '</div>';
   if (doShow)
   {
-  	canvas.append(messageDiv);
+    canvas.append(messageDiv);
   }
   else
   {
-  	jQuery("#syncNeededMessage").remove();
+    jQuery("#syncNeededMessage").remove();
   }
   
 }
@@ -649,7 +685,7 @@ Page.showLayoutLoading = function()
   var layoutEditor = jQuery("#umpleLayoutEditor");
   if (layoutEditor.is(":visible")) 
   {
-  	layoutEditor.showLoading();
+    layoutEditor.showLoading();
   }
   jQuery(".bookmarkableUrl").addClass("disabled");
 }
@@ -659,7 +695,7 @@ Page.showCanvasLoading = function()
   var canvas = jQuery("#umpleCanvas");
   if (canvas.is(":visible"))
   {
-  	canvas.showLoading();
+    canvas.showLoading();
   }
   jQuery(".bookmarkableUrl").addClass("disabled");
 }
@@ -671,31 +707,23 @@ Page.resetCanvasSize = function()
 
 Page.setUmpleCanvasSize = function(width, height)
 {
-  
+  var maxWidth = jQuery(window).innerWidth() - 2*Page.padding - Action.minEditorSize.width - 
+    jQuery("#paletteColumn").width();
+
   if (width < Action.minCanvasSize.width)
   {
-  	width = Action.minCanvasSize.width;
+    width = Action.minCanvasSize.width;
   }
   if (height < Action.minCanvasSize.height)
   {
-  	height = Action.minCanvasSize.height;
+    height = Action.minCanvasSize.height;
+  }
+  if (width > maxWidth)
+  {
+    width = maxWidth;
   }
   
-  if (jQuery("#buttonShowHideLayoutEditor").attr('checked'))
-  {
-    jQuery("#umpleModelEditor").height(height*0.7 + 3);
-    if(Page.codeMirrorOn) {
-       Page.resizeCodeMirrorEditor(height*0.7 + 3);
-    }
-    jQuery("#umpleLayoutEditor").height(height*0.3);
-  }
-  else
-  {
-    jQuery("#umpleModelEditor").height(height + 6);
-    if(Page.codeMirrorOn) {
-       Page.resizeCodeMirrorEditor(height + 6);
-    }
-  }
+  Action.adjustTextEditorHeight(height);
   
   jQuery("#palette").height(height + 7);
   jQuery("#umpleCanvas").width(width);
@@ -709,7 +737,7 @@ Page.setUmpleCanvasSize = function(width, height)
   }
   else
   {
-  	Page.enablePaletteItem("buttonSmaller", true);
+    Page.enablePaletteItem("buttonSmaller", true);
   }
 }
 
