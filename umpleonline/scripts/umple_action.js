@@ -11,6 +11,7 @@ Action.newClass = null;
 Action.newAssociation = null;
 Action.newGeneralization = null;
 Action.minCanvasSize = null;
+Action.minEditorSize = null;
 Action.elementClicked = false;
 Action.textUpdateQueue = [];
 Action.canCreateByDrag = true;
@@ -524,6 +525,20 @@ Action.simulateCodeCallback = function(response)
   Page.showViewDone(); 
 }
 
+Action.mainApplicationHeightResizing = function(event, ui)
+{
+  var currentHeight = ui.size.height;
+  
+  Page.setUmpleCanvasSize(jQuery("#umpleCanvas").width(), currentHeight);
+}
+
+Action.umpleTextEditorResizing = function(event, ui)
+{
+  var currentWidth = ui.size.width;
+  
+  Page.setTextEditorWidth(currentWidth);
+}
+
 Action.umpleCanvasResizing = function(event, ui)
 {
   var currentHeight = ui.size.height;
@@ -533,7 +548,7 @@ Action.umpleCanvasResizing = function(event, ui)
 }
 
 Action.umpleCanvasResized = function(factor)
-{
+{ 
   canvasSelector = "#" + Page.umpleCanvasId();
   var currentHeight = jQuery(canvasSelector).height();
   var currentWidth = jQuery(canvasSelector).width();
@@ -543,6 +558,26 @@ Action.umpleCanvasResized = function(factor)
   var newWidth=currentWidth + inc*factor;
   
   Page.setUmpleCanvasSize(newWidth,newHeight);
+}
+
+Action.adjustTextEditorHeight = function(height) 
+{  
+  if (jQuery("#buttonShowHideLayoutEditor").attr('checked'))
+  {
+    jQuery("#umpleModelEditor").height(height*0.7 + 3);
+    if(Page.codeMirrorOn) {
+       Page.resizeCodeMirrorEditor(height*0.7 + 3);
+    }
+    jQuery("#umpleLayoutEditor").height(height*0.3);
+  }
+  else
+  {
+    jQuery("#umpleModelEditor").height(height + 6);
+    if(Page.codeMirrorOn) {
+       Page.resizeCodeMirrorEditor(height + 6);
+    }
+  }
+  jQuery("#umpleTextEditor").height(height + 6);
 }
 
 Action.classSelected = function(obj)
