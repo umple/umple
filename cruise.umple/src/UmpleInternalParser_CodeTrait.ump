@@ -740,7 +740,9 @@ class UmpleInternalParser
 		   List<Method> postDeleteMethod = new ArrayList<Method>();
 		   for (Method method : traitMethods.get(t1)) {
 		  		 if (inClass.hasMethod(method)){		  			
-		  			postDeleteMethod.add(method);
+		  			if (!inClass.getMethod(method).isIsAbstract()){	
+		  				 postDeleteMethod.add(method);
+		  			 }
 		  		 } else
 		  		 {
 		  			for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
@@ -795,7 +797,9 @@ class UmpleInternalParser
     		 List<Method> postDeleteMethod = new ArrayList<Method>();
     		 for (Method method : tempTraitMethods.get(t1)) {
         		 if (inTrait.hasMethod(method)){
-        			 postDeleteMethod.add(method);
+        			 if (!inTrait.getMethod(method).isIsAbstract()){	
+		  				 postDeleteMethod.add(method);
+		  			 }
         		 } else
         		 {
         			 if (!traitMethods.containsKey(t1)){
