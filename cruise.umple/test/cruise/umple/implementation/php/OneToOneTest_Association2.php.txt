@@ -20,7 +20,7 @@ class Student
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aName = null, $aNumber = null, Mentor $aMentor = null)
+  public function __construct($aName = null, $aNumber = null, $aMentor = null)
   {
     if (func_num_args() == 0) { return; }
 

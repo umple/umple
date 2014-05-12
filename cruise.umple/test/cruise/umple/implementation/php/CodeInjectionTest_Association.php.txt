@@ -21,7 +21,7 @@ class Student
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct(Mentor $aM2, array $allM3s, array $allM4s, array $allM5s)
+  public function __construct($aM2, $allM3s, $allM4s, $allM5s)
   {
     $didAddM2 = $this->setM2($aM2);
     if (!$didAddM2)

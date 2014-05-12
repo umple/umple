@@ -16,7 +16,7 @@ class OneSymmetricNoParam
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct(OneSymmetricNoParam $aFriend = null)
+  public function __construct($aFriend = null)
   {
     if (func_num_args() == 0) { return; }
 

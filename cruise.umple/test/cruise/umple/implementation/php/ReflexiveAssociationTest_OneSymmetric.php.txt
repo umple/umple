@@ -20,7 +20,7 @@ class OneSymmetric
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aName = null, $aNumber = null, OneSymmetric $aFriend = null)
+  public function __construct($aName = null, $aNumber = null, $aFriend = null)
   {
     if (func_num_args() == 0) { return; }
 

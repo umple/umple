@@ -16,7 +16,7 @@ class OneToMany
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct(OneToMany $aOneToMany)
+  public function __construct($aOneToMany)
   {
     if (!$this->setOneToMany($aOneToMany))
     {
