@@ -37,6 +37,7 @@ public class EcoreGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/ecore/InstanceTypeSearch.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/AssociationsHideDefaultMultiplicity.ecore");
     SampleFileWriter.destroy(pathToInput + "/ecore/AssociationsRoleNamePluralFormNaming.ecore");
+    SampleFileWriter.destroy(pathToInput + "/ecore/TypeArgument.ecore");
   }
 
   @Test
@@ -120,5 +121,12 @@ public class EcoreGeneratorTest extends TemplateTest
     language = null;
     assertUmpleTemplateFor("ecore/AssociationsRoleNamePluralFormNaming.ump","ecore/AssociationsRoleNamePluralFormNaming.ecore.txt");
     Assert.assertEquals(true, (new File(pathToInput + "/ecore/AssociationsRoleNamePluralFormNaming.ecore")).exists());
+  }
+  
+  @Test
+  public void Type_Argument(){
+    language = null;
+    assertUmpleTemplateFor("ecore/TypeArgument.ump","ecore/TypeArgument.ecore.txt");
+    Assert.assertEquals(true, (new File(pathToInput + "/ecore/TypeArgument.ecore")).exists());
   }
 }

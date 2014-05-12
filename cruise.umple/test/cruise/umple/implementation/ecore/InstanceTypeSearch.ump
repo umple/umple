@@ -21,13 +21,31 @@ class B{
 }
 
 class C{
-  depend java.math.*;
-  
-  BigInteger bigInt1;
-  BigInteger[] bigInt2;
+  depend java.util.*;
+
+  HashSet set1;
+  HashSet set2;
 }
 
 class D{
   BigDecimal bigDec1;
   BigDecimal[] bigDec2;
+}
+
+class E{
+  depend java.math.*;
+  
+  BigInteger bigInt1;
+  BigInteger[] bigInt2;
+  
+  BigDecimal bigDec1;
+  BigDecimal[] bigDec2;
+  
+  char c1;
+  char[] c2;
+  Character c3;
+  Character[] c4;
+  
+  Object o1;
+  Object[] o2;
 }

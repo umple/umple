@@ -1,0 +1,34 @@
+generate Ecore;
+namespace example;
+
+class A{
+
+}
+
+class C{
+
+}
+
+class D{
+  depend java.util.*;
+  depend java.math.*;
+
+  Map<String,String> m1;
+  Map<A, BigInteger> m2;
+  Map < A , D >  m3;
+  Map m4;
+  List<String> l1;
+  List<BigDecimal> l2;
+  List<C> l3;
+  List l4;
+  Class<String> c1;
+  Class<BigDecimal> c2;
+  Class<C> c3;
+  Class c4;
+  HashSet<String> s1;
+  HashSet<A> s2;
+  //HashSet s3;  // Possible fix, but it may be hard to determine from code 
+  HashMap<String, BigDecimal> m5;
+  HashMap<BigDecimal, A> m6;
+  //HashMap m7;  // Possible fix, but it may be hard to determine from code
+}
