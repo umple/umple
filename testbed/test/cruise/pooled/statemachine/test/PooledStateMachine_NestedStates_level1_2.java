@@ -205,7 +205,7 @@ public class PooledStateMachine_NestedStates_level1_2
 	  Assert.assertEquals(PooledSM_NestedState_L1_2.MessageType.e9_M, msg2.type);
 	  Assert.assertEquals(PooledSM_NestedState_L1_2.MessageType.e8_M, msg3.type);
 	  
-	  // The size of pool is 1
+	  // The size of pool is 3
 	  Assert.assertEquals(3, psm.pool.messages.size());
 	  
 	  // Check the current state is s2 and the current substate is s2a
