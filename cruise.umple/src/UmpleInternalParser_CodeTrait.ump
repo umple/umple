@@ -708,8 +708,8 @@ class UmpleInternalParser
 			if (uClass.hasExtendsTraits()) {
 				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
 					recursiveApplyTraits(uClass,uTrait);
-					
 					copyMethodsFromTraitToClass(uTrait,uClass);
+					if ( ! getParseResult().getWasSuccess() ) return;
 				}
 			}
 		}
@@ -732,40 +732,94 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------    
    private void copyMethodsFromTraitToClass(UmpleTrait inTrait, UmpleClass inClass){
-		for (Method fMethod : gatherConcreteMethods(inTrait)) {
-			for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
-				if(!uTrait.equals(inTrait)){
-					if (uTrait.hasCascadeMethod(fMethod,false) & !inClass.hasMethod(fMethod) ){
-						getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),fMethod.getName(),inTrait.getName()));	
-						return;	
-					}					
-				}
-			}
-			if(!inClass.hasMethod(fMethod)){
-				inClass.addMethod(fMethod);
-			}
-		}
-   }
+       Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
+	   Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+	   traitMethods = gatherConcreteMethods(inTrait);
+	   if ( ! getParseResult().getWasSuccess() ) return;    
+	   for (UmpleTrait t1 : traitMethods.keySet()) {
+		   List<Method> postDeleteMethod = new ArrayList<Method>();
+		   for (Method method : traitMethods.get(t1)) {
+		  		 if (inClass.hasMethod(method)){		  			
+		  			postDeleteMethod.add(method);
+		  		 } else
+		  		 {
+		  			for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+						if(!uTrait.equals(inTrait)){
+							tempTraitMethods = gatherConcreteMethods(uTrait);
+							if ( ! getParseResult().getWasSuccess() ) return;
+							for (UmpleTrait t2 : tempTraitMethods.keySet()) {
+								if (!tempTraitMethods.containsKey(t1)){
+									for (Method internalMethod : tempTraitMethods.get(t2)){
+		           						 if (compareTwoMethdos(internalMethod, method)){
+		                 					 		getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),"class", inTrait.getName(),method.getName(),t1.getName(),t2.getName()));	
+		                 					 		return;
+		                 					 }
+		           					 }
+								}
+							}
+						}	 
+		  			}
+		  		 }
+	       }
+		   for (Method method : postDeleteMethod) {
+			   traitMethods.get(t1).remove(method);
+		   }
+	   }
+	   for (UmpleTrait t1 : traitMethods.keySet()) {
+		   for (Method method : traitMethods.get(t1)) {
+		   	   method.getComment(2).setText(method.getComment(2).getText()+"'"+inClass.getName()+"' ");
+			   inClass.addMethod(method);   
+		   }
+	   }
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------     
-   private List<Method> gatherConcreteMethods(UmpleTrait inTrait)
-   {
-     List<Method> methods = new ArrayList<Method>();
-     for (Method method : inTrait.getMethods()) {
-		if (! method.isIsAbstract()){
-			methods.add(method);
-		}
-	}
+   private Map<UmpleTrait, List<Method>> gatherConcreteMethods (UmpleTrait inTrait) 
+  {
+	 Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>(); 
+ 	 Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+ 	 List<Method> methods = new ArrayList<Method>();	  
+     if (inTrait.numberOfMethods()>0){
+	 	 for (Method method : inTrait.getMethods()) {
+	    	 if (! method.isIsAbstract()){ 
+	 			 methods.add(method);
+		 	 }
+		 }
+	     traitMethods.put(inTrait,methods);
+     }
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-		for (Method method : gatherConcreteMethods(uTrait)) {
-			if (!inTrait.hasMethod(method)){
-				methods.add(method);
-			}
-		}
+    	 tempTraitMethods = gatherConcreteMethods(uTrait);
+    	 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
+    	 for (UmpleTrait t1 : tempTraitMethods.keySet()) {
+    		 List<Method> postDeleteMethod = new ArrayList<Method>();
+    		 for (Method method : tempTraitMethods.get(t1)) {
+        		 if (inTrait.hasMethod(method)){
+        			 postDeleteMethod.add(method);
+        		 } else
+        		 {
+        			 if (!traitMethods.containsKey(t1)){
+	        			 for (UmpleTrait t2 : traitMethods.keySet()) {
+	        				 if(!inTrait.equals(t2)){
+	        					 for (Method internalMethod : traitMethods.get(t2)){
+	        						 if (compareTwoMethdos(internalMethod, method)){
+	              					 		getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),"trait", inTrait.getName(),method.getName(),t1.getName(),t2.getName()));	
+	              					 		return traitMethods;
+	              					 }
+	        					 }
+	        				 }
+	        			  }
+     				  }
+        		 }
+        	 }
+    		 for (Method method : postDeleteMethod) {
+    			 tempTraitMethods.get(t1).remove(method);
+    		 }
+		 }
+    	 traitMethods.putAll(tempTraitMethods);
 	}
-     return methods;
-   }  
+     return traitMethods;
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
@@ -1108,7 +1162,34 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 //---------------------------------Start--------------------------------------
 //****************************************************************************************
 //end of a special section
-//****************************************************************************************  
+//****************************************************************************************
+
+  private boolean compareTwoMethdos(Method method1, Method method2) {
+	  if (method1.getName().equals(method2.getName())){
+		  if(method1.getType().equals(method2.getType())){
+			  Integer numberOfParams = method1.getMethodParameters().size();
+			  if ( numberOfParams== method2.getMethodParameters().size()) {
+		          boolean allSame = true;
+		          for (int i = 0; i < numberOfParams; i++)
+		          {
+		            if(!method1.getMethodParameter(i).getType().equals(method2.getMethodParameter(i).getType()))
+		            {
+		              allSame = false;
+		              break;
+		            }
+		          }
+		          if(allSame)
+		          {
+		            return true;
+		          }
+		     }
+		  }  
+      }
+	  return false;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
 }
 
 use UmpleInternalParser_FIXML.ump;

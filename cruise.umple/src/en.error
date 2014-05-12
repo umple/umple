@@ -132,9 +132,9 @@
 2552: 4, "http://umple.org", Attribute '{0}' is available in both class '{1}' and trait '{2}'. Solution: Please just remove the attribute from the trait.;
 2553: 1, "http://umple.org", Trait '{0}' cannot cyclically extend '{1}'.;  
 2554: 1, "http://umple.org", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'.;
-2555: 1, "http://umple.org", The required method '{0}' in trait '{1}' is not available in class '{2}'.;
-2556: 1, "http://umple.org", The defined name '{0}' in trait '{1}' is not available in the trait's header.;
-2557: 1, "http://umple.org", The defined method '{0}' in trait '{1}' is duplicated in another traits;
+2555: 1, "http://umple.org", Required method '{0}' in trait '{1}' is not available in class '{2}'.;
+2556: 1, "http://umple.org", Defined name '{0}' in trait '{1}' is not available in the trait's header.;
+2557: 1, "http://umple.org", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'.;
 
 # Messages related to templates
 3500: 2, "http://umple.org", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
