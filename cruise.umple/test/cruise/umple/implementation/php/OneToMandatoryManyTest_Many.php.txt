@@ -19,7 +19,7 @@ class Student
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aNumber, $aMentor)
+  public function __construct($aNumber, Mentor $aMentor)
   {
     $this->number = $aNumber;
     $didAddMentor = $this->setMentor($aMentor);

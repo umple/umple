@@ -23,7 +23,7 @@ class Student
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aNumber, $allMentors)
+  public function __construct($aNumber, array $allMentors)
   {
     $this->number = $aNumber;
     $this->canSetNumber = false;

@@ -331,7 +331,8 @@ class PhpGenerator
       {
         UmpleClass classToRemove = getModel().getUmpleClass(getType(assVar.getRelatedAssociation()));
         GeneratedClass generatedClassToRemove = classToRemove.getGeneratedClass();
-        String parameterNameToRemove = StringFormatter.format("${0}", translate("parameterOne",assVar));
+        String typeHint = assVar.isMany() ? "array" : typeOf(assVar);
+        String parameterNameToRemove = StringFormatter.format("{0} ${1}", typeHint, translate("parameterOne",assVar));
         return StringFormatter.replaceParameter(generatedClassToRemove.getLookup("constructorSignature"), parameterNameToRemove, ""); 
       }
       else if ("associationCanSet".equals(keyName))
@@ -524,24 +525,27 @@ class PhpGenerator
       return "a" + StringFormatter.toPascalCase(name);
     }
   }
+
+  private static String typeOf(UmpleVariable var)
+  {
+    String aType = var.getType();
+    return typeOf(aType);
+  }
   
+  /* Strings chosen to be consistent with PHP function gettype */
   public static String typeOf(String aType)
   {
     if (aType == null || aType.length() == 0)
     {
-      return "String";
+      return "string";
     }
     else if (aType.equals("Integer"))
     {
-      return "int";
+      return "integer";
     }
-    else if (aType.equals("Double"))
+    else if (aType.equals("Double") || aType.equals("Float"))
     {
       return "double";
-    }
-    else if (aType.equals("Float"))
-    {
-      return "float";
     }
     else if (aType.equals("Boolean"))
     {
@@ -855,8 +859,8 @@ class PhpGenerator
         signature.append(", ");
         signatureCaller.append(", ");
       }
-      
-      signature.append(StringFormatter.format("${0}",nameOf(av)));
+      String typeHint = av.isMany() ? "array" : typeOf(av);
+      signature.append(StringFormatter.format("{0} ${1}",typeHint,nameOf(av)));
       signatureCaller.append(StringFormatter.format("${0}",nameOf(av)));      
     }
 
@@ -900,13 +904,13 @@ class PhpGenerator
         UmpleClass relatedClass = getModel().getUmpleClass(av.getType());
         GeneratedClass relatedGen = relatedClass.getGeneratedClass();
         
-        String selfParameter = StringFormatter.format("${0}",nameOf(relatedAv));
+        String selfParameter = StringFormatter.format("{0} ${1}",typeOf(relatedAv),nameOf(relatedAv));
         String selfFor = StringFormatter.format("For{0}",av.getUpperCaseName());
         String newParameters = relatedGen.getLookup("constructorSignature");
         newParameters = StringFormatter.replaceParameter(newParameters, selfParameter, null);
         newParameters = StringFormatter.appendParameter(newParameters, selfFor);
 
-        String relatedParameter = StringFormatter.format("${0}",nameOf(av));
+        String relatedParameter = StringFormatter.format("{0} ${1}",typeOf(av),nameOf(av));
         
         mandatorySignature = StringFormatter.replaceParameter(mandatorySignature, relatedParameter, newParameters);
         genClass.setLookup("constructorSignature_mandatory", mandatorySignature);

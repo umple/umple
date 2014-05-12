@@ -19,7 +19,7 @@ class Mentor
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aName, $allStudents)
+  public function __construct($aName, array $allStudents)
   {
     $this->name = $aName;
     $this->students = array();
