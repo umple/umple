@@ -17,10 +17,16 @@ import org.junit.*;
 public class TracerAssociationsTest extends TracerTemplateTest
 {
 
-  @Test @Ignore
+  @Test
   public void TraceAssociationCardinality1()
   {
     AssertAssoc("TraceAssociationCardinality1.ump","TraceAssociationCardinality1.");
+  }
+  
+  @Test
+  public void TraceAssociationManyToManyAdd()
+  {
+    AssertAssoc("TraceAssociationManyToManyAdd.ump","TraceAssociationManyToManyAdd.");
   }
 
   @Test @Ignore

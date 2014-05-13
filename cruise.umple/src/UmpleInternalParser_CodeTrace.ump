@@ -521,8 +521,8 @@ class UmpleInternalParser
     }
   }
 
-   private void analyzeAssociationTraceItem(Token traceToken){
     
+  private void analyzeAssociationTraceItem(Token traceToken){
     AssociationTraceItem tracedAssoc = new AssociationTraceItem(traceDirective);
 
     for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
@@ -547,10 +547,12 @@ class UmpleInternalParser
           if( "add".equals(sub2.getValue("option")) )
           {
             tracedAssoc.setTraceAdd(true);
+            tracedAssoc.setTraceCardinality(false);
           }
           if( "remove".equals(sub2.getValue("option")) )
           {
             tracedAssoc.setTraceRemove(true);
+            tracedAssoc.setTraceCardinality(false);
           }
         }
       }

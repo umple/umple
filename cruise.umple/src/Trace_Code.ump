@@ -246,12 +246,19 @@ class State
 class AssociationVariable
 {
     public TraceItem getTraced(String method, UmpleClass uClass){
-    
     for(TraceDirective td: uClass.getTraceDirectives())
     {
       for(AssociationTraceItem ast: td.getAssociationTraceItems())
       {
-        if((method.equals("setMethod") && ast.getTraceCardinality()))
+        if(( (method.equals("associationAdd")||method.equals("associationRemove")) && ast.getTraceCardinality()))
+        {
+          return ast;
+        }
+        if((method.equals("associationAdd") && ast.getTraceAdd()))
+        {
+          return ast;
+        }
+        if((method.equals("associationRemove") && ast.getTraceRemove()))
         {
           return ast;
         }
@@ -259,25 +266,8 @@ class AssociationVariable
     }
     
     return null;
-  
   }
-  
-  public AssociationTraceItem getTrace(String method, UmpleClass uClass){
-    
-    for(TraceDirective td: uClass.getTraceDirectives())
-    {
-      for(AssociationTraceItem ast: td.getAssociationTraceItems())
-      {
-        if((method.equals("setMethod") && ast.getTraceCardinality()))
-        {
-          return ast;
-        }
-      }
-    }
-    
-    return null;
-  
-  }
+
 }
 
 class AttributeTraceItem

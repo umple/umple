@@ -156,7 +156,8 @@ class AssociationTraceItem
   
   0..* -- 0..* AssociationVariable;
   
-  boolean traceCardinality = false;
+  //default case tracing Cardinality
+  boolean traceCardinality = true;
   boolean traceAdd = false;
   boolean traceRemove = false;
   
