@@ -5210,7 +5210,7 @@ for (StateMachine smq : uClass.getStateMachines())
       continue;
     } 
     
-    TraceItem traceItem = av.getTraced("setMethod", uClass);
+    TraceItem traceItem = av.getTraced("associationAdd", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -5661,6 +5661,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     }
     
+    traceItem = av.getTraced("associationRemove", uClass);
     if (hasRemoveManyTemplateMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
@@ -5720,6 +5721,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     
     
+    traceItem = av.getTraced("associationAdd", uClass);
     // How do you dynamically include a file in JET?!?
     if (includeFile == "association_SetUnidirectionalOptionalOne.jet")
     {

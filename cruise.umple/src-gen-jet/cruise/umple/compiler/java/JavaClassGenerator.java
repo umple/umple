@@ -18,7 +18,7 @@ public class JavaClassGenerator implements ILang
   }
 
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
-  protected final String TEXT_1 = "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE ${last.version} modeling language!*/";
+  protected final String TEXT_1 = "/*PLEASE DO NOT EDIT THIS CODE*/" + NL + "/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/";
   protected final String TEXT_2 = NL;
   protected final String TEXT_3 = NL;
   protected final String TEXT_4 = NL;
@@ -5210,7 +5210,7 @@ for (StateMachine smq : uClass.getStateMachines())
       continue;
     } 
     
-    TraceItem traceItem = av.getTraced("setMethod", uClass);
+    TraceItem traceItem = av.getTraced("associationAdd", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -5661,6 +5661,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     }
     
+    traceItem = av.getTraced("associationRemove", uClass);
     if (hasRemoveManyTemplateMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
@@ -5720,6 +5721,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     
     
+    traceItem = av.getTraced("associationAdd", uClass);
     // How do you dynamically include a file in JET?!?
     if (includeFile == "association_SetUnidirectionalOptionalOne.jet")
     {
