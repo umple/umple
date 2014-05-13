@@ -135,6 +135,8 @@
 2555: 1, "http://umple.org", Required method '{0}' in trait '{1}' is not available in class '{2}'.;
 2556: 1, "http://umple.org", Defined name '{0}' in trait '{1}' is not available in the trait's header.;
 2557: 1, "http://umple.org", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'.;
+2558: 1, "http://umple.org", In modification level of trait '{0}', method '{1}' has been defined two times.;
+2559: 1, "http://umple.org", Method '{0}' is not available in trait '{1}' for modification.;
 
 # Messages related to templates
 3500: 2, "http://umple.org", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
