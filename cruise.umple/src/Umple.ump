@@ -506,6 +506,28 @@ class GeneralTemplateParameter {
 class GeneralTPApplied {
 	inheritanceName;
 	String[] parameters;
+	1 -> * MethodTemplateSignature;
+	
+	boolean hasMethodTemplateSignature(MethodTemplateSignature inMTSignature) {
+		for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
+		if (mTSignature.getMethod().getName().equals(inMTSignature.getMethod().getName())){
+			if (mTSignature.getMethod().numberOfMethodParameters() == inMTSignature.getMethod().numberOfMethodParameters()){
+				for (int i = 0; i < mTSignature.getMethod().numberOfMethodParameters(); i++) {
+					if (!mTSignature.getMethod().getMethodParameter(i).getType().equals(inMTSignature.getMethod().getMethodParameter(i).getType())){
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+	}
+	return false;
+	}
+}
+
+class MethodTemplateSignature{
+	modifier;
+	 1 -> 1 Method; 
 }
 
 /*

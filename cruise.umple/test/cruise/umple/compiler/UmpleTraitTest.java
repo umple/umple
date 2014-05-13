@@ -185,7 +185,7 @@ public class UmpleTraitTest {
 		}	
 	}	
 	
-	@Test
+	@Ignore
 	public void GeneraParameterTest() {
 		String code = "class A{isA T<fname>;} trait T<p1> { %p1;}";
 		UmpleModel model = getRunModel(code);
@@ -334,6 +334,142 @@ public class UmpleTraitTest {
 			}
 		}
 	 }	
+	
+	@Test
+	public void includeExcludeRule1Test() {
+		String code = "class A{isA T1;}trait T1{isA T2 <-test2()>;void test1(){/*T1*/}  }trait T2{void test2(){/*T2*/}void test3(){/*T2*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("test1")){
+				Assert.assertEquals("/*T1*/",method.getMethodBody().getExtraCode());
+			} else if (method.getName().equals("test3")){
+				Assert.assertEquals("/*T2*/",method.getMethodBody().getExtraCode());
+			} 
+		}
+	 }
+	
+	@Test
+	public void includeExcludeRule2Test() {
+		String code = "class A{isA T1;}trait T1{isA T2 <+test2()>;void test1(){/*T1*/}  }trait T2{void test2(){/*T2*/}void test3(){/*T2*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("test1")){
+				Assert.assertEquals("/*T1*/",method.getMethodBody().getExtraCode());
+			} else if (method.getName().equals("test2")){
+				Assert.assertEquals("/*T2*/",method.getMethodBody().getExtraCode());
+			} 
+		}
+	 }
+	
+	@Test
+	public void includeExcludeRule3Test() {
+		String code = "class A{isA T1;}trait T1{isA T2 <-show()>;void test(){/*T1*/}  }trait T2{}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2559");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void includeExcludeRule4Test() {
+		String code = "class A{isA T1;}trait T1{isA T2 <+show()>;void test(){/*T1*/}  }trait T2{}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2559");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void includeExcludeRule5Test() {
+		String code = "class A{isA T1;}trait T1{isA T2 <+show(),+show()>;void test(){/*T1*/}  }trait T2{void show(){/*T2*/}}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2558");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void includeExcludeRule6Test() {
+		String code = "class A{isA T1;}trait T1{isA T2 <-show(),+show()>;void test(){/*T1*/}  }trait T2{void show(){/*T2*/}}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2558");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void includeExcludeRule7Test() {
+		String code = "class A{isA T1;}trait T1{isA T2 <+display()>;}trait T2{void show(){/*T2*/}}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2559");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void includeExcludeRule8Test() {
+		String code = "class A{isA T1<-display1()>,T2<+show2()>;}trait T1{void display1(){/*T1*/}void show1(){/*T1*/}}trait T2{void display2(){/*T2*/}void show2(){/*T2*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("display1")){
+				Assert.assertEquals("/*T1*/",method.getMethodBody().getExtraCode());
+			} else if (method.getName().equals("show2")){
+				Assert.assertEquals("/*T2*/",method.getMethodBody().getExtraCode());
+			} 
+		}	
+		
+	}
+	
+	@Test
+	public void includeExcludeRule9Test() {
+		String code = "class A{isA T;}trait T{isA T1<-test()>;isA T2;}trait T1{void test(){/*T1*/}}trait T2{void test(){/*T2*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("/*T2*/",model.getUmpleClass("A").getMethod(0).getMethodBody().getExtraCode());
+	}
+	
+	
+	@Test
+	public void includeExcludeRule10Test() {
+		String code = "class A{isA T1<-test()>,T2;}trait T1{void test(){/*T1*/}}trait T2{void test(){/*T2*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("/*T2*/",model.getUmpleClass("A").getMethod(0).getMethodBody().getExtraCode());
+	}
+	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {
