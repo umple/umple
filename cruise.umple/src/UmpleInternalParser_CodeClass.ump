@@ -2172,7 +2172,7 @@ class UmpleInternalParser
     if (firstEnd.getRoleName().length() == 0)
     { 
       String rawName = StringFormatter.toCamelCase(firstEnd.getClassName());
-      String name = firstEnd.getMultiplicity().isMany() ? Glossary.getInstance().getPlural(rawName) : rawName;
+      String name = firstEnd.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
       firstEnd.setRoleName(name);
       firstEnd.setIsDefaultRoleName(true);
     }
@@ -2180,7 +2180,7 @@ class UmpleInternalParser
     if (secondEnd.getRoleName().length() == 0)
     {
       String rawName = StringFormatter.toCamelCase(secondEnd.getClassName());
-      String name = secondEnd.getMultiplicity().isMany() ? Glossary.getInstance().getPlural(rawName) : rawName;
+      String name = secondEnd.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
       secondEnd.setRoleName(name);
       secondEnd.setIsDefaultRoleName(true);
     }
@@ -2462,7 +2462,7 @@ class UmpleInternalParser
     if (name == null)
     {
       String rawName = StringFormatter.toCamelCase(type); 
-      name = isList ? Glossary.getInstance().getPlural(rawName) : rawName;
+      name = isList ? model.getGlossary().getPlural(rawName) : rawName;
     }
 
     if (derivedValue != null)

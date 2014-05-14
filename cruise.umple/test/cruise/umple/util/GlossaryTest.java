@@ -19,7 +19,7 @@ public class GlossaryTest
   @Before
   public void SetUp()
   {
-    g = Glossary.getInstance();
+    g = new Glossary();
   }
 
   @Test

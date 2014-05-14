@@ -411,10 +411,6 @@ class UmpleModel
     
     return allTranslators;
   }
-  
-  public Glossary getGlossary() {
-    return Glossary.getInstance();
-  }
 }
 
 /*
