@@ -4,6 +4,14 @@ import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
 import org.apache.commons.lang.WordUtils;
 
+/* --------------- RULES ------------------ /*
+/* Rules in Drools perform trasnformations to UmpleElements*/
+
+/* These rules extracts the name and type of a FieldDeclaration
+and sets the correponding fields for an UmpleAttribute.
+Finally, the UmpleAttribute is inserted into the working memory (forward chaining). 
+*/
+
 rule "JavaField_IsUmpleAttribute"
     when
         fieldDeclaration: FieldDeclaration(fieldDeclaration.getType().isPrimitiveType())
@@ -66,7 +74,17 @@ then
 end
 */
 
+/* ---------------QUERIES ------------------ /*
+/* Queries search for the working memory for facts that match the stated condition */
+ 
+//query 
+
+
 /*Helper Functions */
+
+function boolean hasAuteHasGetter(){
+	return true;
+}
 
 function String getMethodName(MethodDeclaration method){
 	return method.getName().getFullyQualifiedName();
@@ -93,8 +111,8 @@ function String getFieldType(FieldDeclaration field){
 }
 
 function String getValue(FieldDeclaration field){
-   	VariableDeclarationFragment declarationFragment =  (VariableDeclarationFragment) field.fragments().get(0);
-   	Expresion expression = declarationFragment.getInitializer();
+   	//VariableDeclarationFragment declarationFragment =  (VariableDeclarationFragment) field.fragments().get(0);
+   	//Expresion expression = declarationFragment.getInitializer();
    	return "";
 }
 
