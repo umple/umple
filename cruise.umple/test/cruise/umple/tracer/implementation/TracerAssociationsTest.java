@@ -17,13 +17,13 @@ import org.junit.*;
 public class TracerAssociationsTest extends TracerTemplateTest
 {
 
-  @Test @Ignore
+  @Test
   public void TraceAssociationCardinality1()
   {
     AssertAssoc("TraceAssociationCardinality1.ump","TraceAssociationCardinality1.");
   }
   
-  @Test @Ignore
+  @Test
   public void TraceAssociationManyToManyAdd()
   {
     AssertAssoc("TraceAssociationManyToManyAdd.ump","TraceAssociationManyToManyAdd.");
@@ -40,6 +40,6 @@ public class TracerAssociationsTest extends TracerTemplateTest
     assertUmpleTemplateFor( "associations/" + inputUmplefile,
         languagePath + tracerPath + expectedOutputFile + languagePath +".txt",
         "Company",
-        false);
+        true);
   }
 }
