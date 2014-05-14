@@ -57,7 +57,7 @@ class <<=uClass.getName()>><<# if(uClass.getExtendsClass() != null) { #>><<=uCla
   attributes
 <<# } #>>
 <<# for(Attribute av : uClass.getAttributes()) { #>>
-    <<# if(av.getIsList()) { #>><<=Glossary.getInstance().getPlural(av.getName())>><<# } else { #>><<=Glossary.getInstance().getSingular(av.getName())>><<# } #>> : <<=getUSEType(av)>>
+    <<# if(av.getIsList()) { #>><<=getModel().getGlossary().getPlural(av.getName())>><<# } else { #>><<=getModel().getGlossary().getSingular(av.getName())>><<# } #>> : <<=getUSEType(av)>>
 
 <<# } #>>
 <<# for(CodeInjection ci : uClass.getCodeInjections()) { #>>

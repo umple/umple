@@ -191,8 +191,8 @@ class EcoreGenerator {
   }
   
   private EcoreReference createEcoreAssociation(AssociationEnd thisEnd, AssociationEnd thatEnd, boolean isBiDirectional, int intent){    
-    String thisRoleName = thisEnd.getIsDefaultRoleName() ? (thisEnd.getMultiplicity().isMany() ? Glossary.getInstance().getPlural(thisEnd.getRoleName()) : Glossary.getInstance().getSingular(thisEnd.getRoleName())) : thisEnd.getRoleName();
-    String thatRoleName = thatEnd.getIsDefaultRoleName() ? (thatEnd.getMultiplicity().isMany() ? Glossary.getInstance().getPlural(thatEnd.getRoleName()) : Glossary.getInstance().getSingular(thatEnd.getRoleName())) : thatEnd.getRoleName();
+    String thisRoleName = thisEnd.getIsDefaultRoleName() ? (thisEnd.getMultiplicity().isMany() ? getModel().getGlossary().getPlural(thisEnd.getRoleName()) : getModel().getGlossary().getSingular(thisEnd.getRoleName())) : thisEnd.getRoleName();
+    String thatRoleName = thatEnd.getIsDefaultRoleName() ? (thatEnd.getMultiplicity().isMany() ? getModel().getGlossary().getPlural(thatEnd.getRoleName()) : getModel().getGlossary().getSingular(thatEnd.getRoleName())) : thatEnd.getRoleName();
     EcoreReference thisAssociation = new EcoreReference(thisRoleName, intent, thisEnd.getClassName());
     
     if(isBiDirectional){

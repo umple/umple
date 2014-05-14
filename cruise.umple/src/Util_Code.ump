@@ -628,7 +628,6 @@ class Word
 
 class Glossary
 {
-  singleton;
   Word[] words;
 
   after constructor { init(); }

@@ -262,8 +262,8 @@ class RubyGenerator
       return translate(realKeyName,av,isMany);
     }
   
-    String singularName = isMany ? Glossary.getInstance().getSingular(av.getName()) : av.getName();
-    String pluralName = isMany ? av.getName() : Glossary.getInstance().getPlural(av.getName());
+    String singularName = isMany ? getModel().getGlossary().getSingular(av.getName()) : av.getName();
+    String pluralName = isMany ? av.getName() : getModel().getGlossary().getPlural(av.getName());
 
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -368,7 +368,7 @@ class RubyGenerator
   public String translate(String keyName, State state)
   {
     String singularName = state.getName();
-    String pluralName = Glossary.getInstance().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
     String stateMachinePlusState = StringFormatter.format("{0}{1}",getUpperCaseName(state.getStateMachine().getName()),getUpperCaseName(singularName));
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
@@ -406,7 +406,7 @@ class RubyGenerator
   public String translate(String keyName, StateMachine sm)
   {
     String singularName = sm.getFullName();
-    String pluralName = Glossary.getInstance().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
   
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -430,7 +430,7 @@ class RubyGenerator
   public String translate(String keyName, Event event)
   {
     String singularName = event.getName();
-    String pluralName = Glossary.getInstance().getPlural(singularName);
+    String pluralName = getModel().getGlossary().getPlural(singularName);
 
     if (UpperCasePluralLookupMap.containsKey(keyName))
     {
@@ -474,12 +474,12 @@ class RubyGenerator
     }
     else if (hasMultiple)
     {
-      //String pluralName = Glossary.getInstance().getPlural(name);
+      //String pluralName = getModel().getGlossary().getPlural(name);
       return "all_" + name;
     }
     else
     {
-      //String singularName = Glossary.getInstance().getSingular(name);
+      //String singularName = getModel().getGlossary().getSingular(name);
       return "a_" + name;
     }
   }
