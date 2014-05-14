@@ -15,6 +15,7 @@ public KieSession startRuleEngine(){
     try {
 		runner.addRuleFile("cruise/umplificator/rules", "Rules_Fields.drl");
 		runner.addRuleFile("cruise/umplificator/rules", "Rules_ClassLevel.drl");
+		runner.addRuleFile("cruise/umplificator/rules", "Rules_Associations.drl");
 		return runner.buildKnowledgeSession();
 	} catch (FileNotFoundException e) {
 		logger.error("RuleService.startRuleEngine - FileNotFoundException");

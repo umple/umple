@@ -1,0 +1,28 @@
+package cruise.umplificator.rules
+
+import org.eclipse.jdt.core.dom.*;
+import cruise.umple.compiler.*;
+
+// These rules verify one association end to detect multiplicities
+rule "isAssociation"
+    when
+        fieldDeclaration: FieldDeclaration(!fieldDeclaration.getType().isPrimitiveType())
+        uClass: UmpleClass()
+    then
+    	Association uAssoc = new Association(false, false, null);
+		// TODO ADD association names
+		uClass.addAssociation(uAssoc);
+    	// We insert the association into the Working memory,
+    	// so it can accessed and modified by other Rules
+    	insert(uAssoc);
+end
+
+/*
+rule "isOneToUnknownAssociation"
+	//
+end
+
+rule "isManyToUnknownAssociation"
+	//
+end
+*/
