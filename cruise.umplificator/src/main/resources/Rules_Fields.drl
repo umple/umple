@@ -29,21 +29,18 @@ end
 rule "JavaField_hasGetter"
 	when
 		fieldDeclaration: FieldDeclaration()
-	 	method: MethodDeclaration(getMethodName(method).equals(getGetterName(fieldDeclaration)) &&
-	 	        getMethodType(method).equals(getFieldType(fieldDeclaration)))
-	 	attribute: Attribute(name.equals(getFieldName(fieldDeclaration)))
+		method: MethodDeclaration(getMethodName(method).equals(getGetterName(fieldDeclaration)) && getMethodType(method).equals(getFieldType(fieldDeclaration)))
+		attribute: Attribute(name.equals(getFieldName(fieldDeclaration)))
 	then
 		System.out.println("Field has a getter");
 		System.out.println(getGetterName(fieldDeclaration));
 end
 
-rule "hasEmptyConstructor"
+rule "JavaField_isLazyAttribute"
 	when
-		uClass: UmpleClass()
-		method: MethodDeclaration(getMethodName(method).equals(uClass.getName) &&
-				(method.parameters().size() == 0) &&
-				method.isConstructor())
-	    attribute: Attribute()		
+	   	uClass: UmpleClass()
+		method: MethodDeclaration(getMethodName(method).equals(uClass.getName) && (method.parameters().size() == 0) && method.isConstructor())
+		attribute: Attribute()
 	then
 		attribute.setIsLazy(true);
 		insert(attribute);
@@ -76,15 +73,20 @@ end
 
 /* ---------------QUERIES ------------------ /*
 /* Queries search for the working memory for facts that match the stated condition */
- 
-//query 
 
+query "Classes having empty constructors" 
+	uClass: UmpleClass()
+	method: MethodDeclaration(getMethodName(method).equals(uClass.getName) && (method.parameters().size() == 0) && method.isConstructor())
+	attribute: Attribute()
+end
 
-/*Helper Functions */
+query "Fields having a Getter"
+	fieldDeclaration: FieldDeclaration()
+	method: MethodDeclaration(getMethodName(method).equals(getGetterName(fieldDeclaration)) && getMethodType(method).equals(getFieldType(fieldDeclaration)))
+	attribute: Attribute(name.equals(getFieldName(fieldDeclaration)))
+end
 
-function boolean hasAuteHasGetter(){
-	return true;
-}
+/* ---------------FUNCTIONS------------------ */
 
 function String getMethodName(MethodDeclaration method){
 	return method.getName().getFullyQualifiedName();
