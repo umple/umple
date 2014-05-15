@@ -1,0 +1,10 @@
+
+class X {
+  isA A;
+  isA Y;
+  isA Z;
+}
+
+interface A{}
+
+class Z {}
