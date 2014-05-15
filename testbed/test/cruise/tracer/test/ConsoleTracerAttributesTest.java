@@ -50,8 +50,8 @@ public class ConsoleTracerAttributesTest extends ConsoleTracerTestTemplate
 
       String[] expected = concatAll(attrTraceExpected, attrTraceCondExpected, recordTraceExpected);
 
-      Integer[] testField = {0,9,9};
-      @Override
+      //--------------------------------------- Prepare Console tracer
+      
       public void println(String x){
         if(index<expected.length){
 
@@ -65,9 +65,8 @@ public class ConsoleTracerAttributesTest extends ConsoleTracerTestTemplate
 
           index++;
         }
-        else {
+        else 
           Assert.assertTrue(false);
-        }
       }
     };
     System.setErr(ps);
@@ -147,17 +146,4 @@ public class ConsoleTracerAttributesTest extends ConsoleTracerTestTemplate
 
   }
 
-  public static <String> String[] concatAll(String[] first, String[]... rest) {
-    int totalLength = first.length;
-    for (String[] array : rest) {
-      totalLength += array.length;
-    }
-    String[] result = Arrays.copyOf(first, totalLength);
-    int offset = first.length;
-    for (String[] array : rest) {
-      System.arraycopy(array, 0, result, offset, array.length);
-      offset += array.length;
-    }
-    return result;
-  }
 }

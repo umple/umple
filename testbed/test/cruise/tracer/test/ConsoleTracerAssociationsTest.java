@@ -1,7 +1,6 @@
 package cruise.tracer.test;
 
 import java.io.PrintStream;
-import java.util.Arrays;
 
 import org.junit.*;
 
@@ -36,36 +35,23 @@ public class ConsoleTracerAssociationsTest extends ConsoleTracerTestTemplate
 
       String[] expected = concatAll(assocTraceExpected);
 
+      //--------------------------------------- Prepare Console tracer
 
-      Integer[] testField = {0,9,9};
-      @Override
       public void println(String x){
-        for(int i = 0 ; i<expected.length;++i )
-          System.out.println("expected["+i+"]"+" = "+expected[i]);
         if(index<expected.length){
 
-          System.out.println("out from println = "+x);
           String[] actualOutput = x.split(",");
           String[] expectedOutput = expected[index].split(",");
 
-          for(int i = 0 ; i<actualOutput.length;++i )
-            System.out.println("actualOutput["+i+"]"+" = "+actualOutput[i]);
-          for(int i = 0 ; i<expectedOutput.length;++i )
-            System.out.println("expectedOutput["+i+"]"+" = "+expectedOutput[i]);
           // header skip
           if( index != 0 )
             for( int i = 0 ; i < expectedOutput.length ; ++i )
-            {
-              System.out.println("e = "+expectedOutput[i]);
-              System.out.println("a = "+actualOutput[i+6]);
               Assert.assertEquals(expectedOutput[i],actualOutput[i+6]);
-            }
 
           index++;
         }
-        else {
+        else 
           Assert.assertTrue(false);
-        }
       }
     };
     System.setErr(ps);
@@ -102,54 +88,6 @@ public class ConsoleTracerAssociationsTest extends ConsoleTracerTestTemplate
     compMC.removeManagerC(m2);
     compMC.removeManagerC(m1);
 
-    //    CompanyManyToManyRole compM = new CompanyManyToMany();
-    //
-    //    ManagerA ma1 = new ManagerA();
-    //    ManagerA ma2 = new ManagerA();
-    //    ManagerA ma3 = new ManagerA();
-    //
-    //    compM.addManagerA(ma1);
-    //    compM.addManagerA(ma2);
-    //    compM.addManagerA(ma3);
-    //    compM.removeManagerA(ma3);
-    //    compM.addManagerA(ma3);
-    //
-    //    ManagerB mb1 = new ManagerB();
-    //    ManagerB mb2 = new ManagerB();
-    //    ManagerB mb3 = new ManagerB();
-    //
-    //    compM.addManagerB(mb1);
-    //    compM.addManagerB(mb2);
-    //    compM.addManagerB(mb3);
-    //    compM.removeManagerB(mb3);
-    //    compM.addManagerB(mb3);
-    //    
-    //    ManagerC mc1 = new ManagerC();
-    //    ManagerC mc2 = new ManagerC();
-    //    ManagerC mc3 = new ManagerC();
-    //    
-    //    compM.addManagerC(mc1);
-    //    compM.addManagerC(mc2);
-    //    compM.addManagerC(mc3);
-    //    compM.removeManagerC(mc3);
-    //    compM.removeManagerC(mc2);
-    //    compM.removeManagerC(mc1);
-  }
-
-  public static <String> String[] concatAll(String[] first, String[]... rest) {
-    int totalLength = first.length;
-    for (String[] array : rest) {
-      totalLength += array.length;
-    }
-    String[] result = Arrays.copyOf(first, totalLength);
-    int offset = first.length;
-    for (String[] array : rest) {
-      System.arraycopy(array, 0, result, offset, array.length);
-      offset += array.length;
-    }
-    for(int i = 0 ; i<result.length;++i )
-      System.out.println("result[i] = "+result[i]);
-    return result;
   }
 
 }
