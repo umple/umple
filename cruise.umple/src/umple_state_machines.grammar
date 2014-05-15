@@ -14,7 +14,8 @@ activeDefinition : [=active] [name]? [[moreCode]]+
 inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] )* }
 referencedStateMachine : [name] as [definitionName] ( { [[extendedStateMachine]] } | ; )
 
-extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
+//Issue 547
+extendedStateMachine#: ( [[comment]] | [=changeType:+| - |- |*]? [[state]] )*
 
 // An enum is a state machine that has no events
 // 	stateName is prefixed with ~ to match alphanumeric names only.
@@ -22,7 +23,9 @@ extendedStateMachine : ( [[comment]] | [=changeType:+|-|*]? [[state]] )*
 enum : [~name:key] { [~stateName]? (, [~stateName])* }
 
 state : [=final]? [stateName] { [[stateInternal]]* } 
-stateInternal- : [[comment]] | [=changeType:+|-|*]? [[stateEntity]] | [**extraCode]
+
+//Issue 547
+stateInternal-# : [[comment]] | [=changeType:+| - |- |*]? [[stateEntity]] | [**extraCode]
 stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]] | ;
 
 autoTransition : [[activity]]? [[autoTransitionBlock]]

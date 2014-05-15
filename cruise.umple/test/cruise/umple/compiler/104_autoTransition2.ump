@@ -1,0 +1,14 @@
+class LightFixture
+{ 
+  bulb 
+  {
+    On 
+    {
+      ->/ {checksComplete=0;} Off;
+    }
+    Off
+    {
+    
+    } 
+  }
+}

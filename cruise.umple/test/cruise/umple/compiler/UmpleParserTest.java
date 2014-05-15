@@ -856,6 +856,9 @@ public class UmpleParserTest
   @Test 
   public void is_A_NonExistingExtendsClass(){
 	assertHasWarningsParse("007_isANonExistingSuperClass.ump", 33);
+	assertHasWarningsParse("007_isANonExistingSuperClass2.ump", 33);
+	assertHasWarningsParse("007_isANonExistingSuperClass3.ump", 33);
+	assertHasWarningsParse("007_isANonExistingSuperClass4.ump", 33);
   }
 
   @Test

@@ -1,0 +1,7 @@
+
+class X {
+  isA Y;
+  isA Z;
+}
+
+class Z {}
