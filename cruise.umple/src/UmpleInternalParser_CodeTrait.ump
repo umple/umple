@@ -844,8 +844,9 @@ class UmpleInternalParser
 		 if (gTPApplied.getInheritanceName().equals(uTrait.getName()) ) {
 			 Map<UmpleTrait, List<Method>> shouldTraitMethods = new HashMap<UmpleTrait, List<Method>>();
 			 
-			boolean add = false, found = false;
+			boolean add = false, found;
 			for(MethodTemplateSignature mTSignature :  gTPApplied.getMethodTemplateSignatures()){
+				found = false;
 				for (UmpleTrait iETrait : tempTraitMethods.keySet()) {
 					List<Method> shouldBeIncluded = new ArrayList<Method>();
 					for (int i = 0; i < tempTraitMethods.get(iETrait).size(); i++) {
@@ -853,14 +854,26 @@ class UmpleInternalParser
 							if (mTSignature.getModifier().equals("-")){
 								tempTraitMethods.get(iETrait).remove(i);
 							} else if (mTSignature.getModifier().equals("+")){
+								Method tempAiasNethod =	tempTraitMethods.get(iETrait).get(i);
+								if (!mTSignature.getAlias().equals("")){
+									tempAiasNethod.setName(mTSignature.getAlias());
+									//here I must check this new name is unique.
+								}
 								shouldBeIncluded.add(tempTraitMethods.get(iETrait).get(i));
 								add = true;
+							} else if (mTSignature.getModifier().equals("")){
+								//here I must check this new name is unique.
+								tempTraitMethods.get(iETrait).get(i).setName(mTSignature.getAlias());
 							}
 							found = true;
 						}
 					}
-					if (add){
+					if (add) {
+						if (shouldTraitMethods.containsKey(iETrait)){
+							shouldTraitMethods.get(iETrait).addAll(shouldBeIncluded);
+						}else {
 						shouldTraitMethods.put(iETrait, shouldBeIncluded);
+						}
 					}
 				}
 				if (!found){
@@ -1200,13 +1213,16 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
-	GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
+	 GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
 	for(Token subToken : mainToken.getSubTokens()) {
-//		if (subToken.is("parameter")) {
-//				aGeneralTPApplied.addParameter(subToken.getValue());
-//		}
-		if (subToken.is("functionIncludeExclude")) {
-			processIncludeExludeFunctions(subToken,aGeneralTPApplied);
+		if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
+			MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
+				if (! aGeneralTPApplied.hasMethodTemplateSignature(mtSignature)){	
+					aGeneralTPApplied.addMethodTemplateSignature(mtSignature);
+				} else {
+					getParseResult().addErrorMessage(new ErrorMessage(2558,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
+				    return;
+			}
 		}
 	}
 	if (aClassifier instanceof UmpleClass) {
@@ -1215,35 +1231,27 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 		((UmpleTrait)aClassifier).addGeneralTPApplied(aGeneralTPApplied);
 	}	
 }
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------
-   private void processIncludeExludeFunctions(Token inToken, GeneralTPApplied inGeneralTPApplied) {
- 		for(Token subToken : inToken.getSubTokens()) {
- 			if (subToken.is("iEFunction")) {
- 				MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
- 				if (! inGeneralTPApplied.hasMethodTemplateSignature(mtSignature)){	
- 					inGeneralTPApplied.addMethodTemplateSignature(mtSignature);
- 				} else {
- 					getParseResult().addErrorMessage(new ErrorMessage(2558,subToken.getPosition(),inGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
- 				    return;
- 				}
- 			}
- 		}	
-   }
+
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
   private MethodTemplateSignature obtainMethodTemplateSignature(Token inToken) {
-	  String iEFunctionModifier = inToken.getValue("iEFunctionModifier");
+	  String iEFunctionModifier="",methodAliasName ="";
 	  String methodName = inToken.getValue("methodName");
+
+      if (inToken.getValue("iEFunctionModifier") != null) iEFunctionModifier = inToken.getValue("iEFunctionModifier");
+	  if (inToken.getValue("methodAliasName") != null) methodAliasName = inToken.getValue("methodAliasName");
 	  Method method = new Method("", methodName, "", false);
-	  for (Token subToken : inToken.getSubToken("iEParameterList").getSubTokens()){
-		  if (subToken.is("parameter")){
-			  method.addMethodParameter(new MethodParameter("", subToken.getValue(), "", "", false));
-		  }
-	  }
-	  MethodTemplateSignature mtSignature = new MethodTemplateSignature(iEFunctionModifier, method); 
+	  if (inToken.getSubToken("iEParameterList") != null){
+			for (Token subToken : inToken.getSubToken("iEParameterList")
+					.getSubTokens()) {
+				if (subToken.is("parameter")) {
+					method.addMethodParameter(new MethodParameter("", subToken
+							.getValue(), "", "", false));
+				}
+			}
+	   }
+	  MethodTemplateSignature mtSignature = new MethodTemplateSignature(iEFunctionModifier,methodAliasName, method); 
 	return mtSignature;
 }
 
