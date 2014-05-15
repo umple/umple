@@ -1,0 +1,3 @@
+class Course {
+  * self mutuallyExclusiveWith;
+}

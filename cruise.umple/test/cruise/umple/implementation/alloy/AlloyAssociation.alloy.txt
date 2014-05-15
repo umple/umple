@@ -46,7 +46,6 @@ sig Child extends UmpleObject {
 
 
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class Man and class Woman
@@ -57,7 +56,6 @@ fact BidirectionalityRule {
   all man_1 : Man, woman_1 : Woman |
     man_1 in husband[woman_1] <=> woman_1 in wives[man_1]
 }
-
 
 
 ------------------------------------------------------------------------------------------------------------------

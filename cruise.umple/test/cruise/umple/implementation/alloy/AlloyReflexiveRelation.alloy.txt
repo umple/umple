@@ -23,7 +23,6 @@ sig Person extends UmpleObject {
 
 
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines no extended relation rule for class Person

@@ -34,7 +34,6 @@ sig Child extends UmpleObject {
 
 
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class Man and class Child

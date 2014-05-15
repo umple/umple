@@ -60,7 +60,6 @@ sig D extends UmpleObject {
 
 
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class A and class B
@@ -71,7 +70,6 @@ fact BidirectionalityRule {
   all a_1 : A, b_1 : B |
     a_1 in a[b_1] <=> b_1 in bs[a_1]
 }
-
 
 
 ------------------------------------------------------------------------------------------------------------------
@@ -86,7 +84,6 @@ fact BidirectionalityRule {
 }
 
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class C and class A
@@ -97,7 +94,6 @@ fact BidirectionalityRule {
   all c_1 : C, a_1 : A |
     c_1 in cs[a_1] <=> a_1 in as[c_1]
 }
-
 
 
 ------------------------------------------------------------------------------------------------------------------
