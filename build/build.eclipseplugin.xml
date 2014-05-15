@@ -130,6 +130,8 @@
     <mkdir dir="${plugin.build.out}" />
     
     <copy file="cruise.umple.eclipse/META-INF/MANIFEST.MF" todir="${plugin.build.temp}" />
+
+<!--
     <replace file="${plugin.build.temp}/MANIFEST.MF">
       <replacefilter token=":=" value="=" />
       <replacefilter token=":" value="=" />
@@ -137,6 +139,7 @@
       <replacevalue>
       </replacevalue>
     </replace>  
+-->
 
     <property file="${plugin.build.temp}/MANIFEST.MF" />
     <property name="plugin.dir" value="cruise.umple.eclipse_${umple.version}" />
