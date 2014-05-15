@@ -16,6 +16,7 @@ import org.junit.*;
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
+@Ignore
 public class TracerTemplateTest extends TemplateTest
 {
   @Before

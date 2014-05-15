@@ -1,0 +1,12 @@
+namespace example;
+
+class Company
+{
+  * -- * Manager manager;
+  trace remove manager;
+}
+
+class Manager
+{
+
+}

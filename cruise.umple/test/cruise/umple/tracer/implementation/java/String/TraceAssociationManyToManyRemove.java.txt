@@ -1,0 +1,155 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+package example;
+import cruise.util.StringTracer;
+import java.util.Date;
+import java.util.*;
+
+public class Company
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Company Associations
+  private List<Manager> manager;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Company()
+  {
+    manager = new ArrayList<Manager>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Manager getManager(int index)
+  {
+    Manager aManager = manager.get(index);
+    return aManager;
+  }
+
+  public List<Manager> getManager()
+  {
+    List<Manager> newManager = Collections.unmodifiableList(manager);
+    return newManager;
+  }
+
+  public int numberOfManager()
+  {
+    int number = manager.size();
+    return number;
+  }
+
+  public boolean hasManager()
+  {
+    boolean has = manager.size() > 0;
+    return has;
+  }
+
+  public int indexOfManager(Manager aManager)
+  {
+    int index = manager.indexOf(aManager);
+    return index;
+  }
+
+  public static int minimumNumberOfManager()
+  {
+    return 0;
+  }
+
+  public boolean addManager(Manager aManager)
+  {
+    boolean wasAdded = false;
+    if (manager.contains(aManager)) { return false; }
+    manager.add(aManager);
+    if (aManager.indexOfCompany(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aManager.addCompany(this);
+      if (!wasAdded)
+      {
+        manager.remove(aManager);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeManager(Manager aManager)
+  {
+    boolean wasRemoved = false;
+    if (!manager.contains(aManager))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = manager.indexOf(aManager);
+    manager.remove(oldIndex);
+    if (aManager.indexOfCompany(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aManager.removeCompany(this);
+      if (!wasRemoved)
+      {
+        manager.add(oldIndex,aManager);
+      }
+    }
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationManyToManyRemove.ump,6,Company,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
+    return wasRemoved;
+  }
+
+  public boolean addManagerAt(Manager aManager, int index)
+  {  
+    boolean wasAdded = false;
+    if(addManager(aManager))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfManager()) { index = numberOfManager() - 1; }
+      manager.remove(aManager);
+      manager.add(index, aManager);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveManagerAt(Manager aManager, int index)
+  {
+    boolean wasAdded = false;
+    if(manager.contains(aManager))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfManager()) { index = numberOfManager() - 1; }
+      manager.remove(aManager);
+      manager.add(index, aManager);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addManagerAt(aManager, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    ArrayList<Manager> copyOfManager = new ArrayList<Manager>(manager);
+    manager.clear();
+    for(Manager aManager : copyOfManager)
+    {
+      aManager.removeCompany(this);
+    }
+  }
+
+}

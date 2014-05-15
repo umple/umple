@@ -28,6 +28,12 @@ public class TracerAssociationsTest extends TracerTemplateTest
   {
     AssertAssoc("TraceAssociationManyToManyAdd.ump","TraceAssociationManyToManyAdd.");
   }
+  
+  @Test
+  public void TraceAssociationManyToManyRemove()
+  {
+    AssertAssoc("TraceAssociationManyToManyRemove.ump","TraceAssociationManyToManyRemove.");
+  }
 
   @Test @Ignore
   public void TracesSupportAssoiations()
