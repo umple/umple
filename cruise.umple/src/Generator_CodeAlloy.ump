@@ -41,35 +41,67 @@ class AlloyGenerator
     // Iterate through all classes and generate Alloy
     Set<UmpleClass> processedClass = new HashSet<UmpleClass>(); // needed to prevent double reflexive count
     for (UmpleClass uClass : model.getUmpleClasses())
-    {
-       //Set<Association> processedAssociations = new HashSet<Association>(); // needed to prevent double reflexive count
-       Signature sig = new Signature(uClass,className);
-       utility.addString(code,sig.printSignature());
-       processedClass.add(uClass);
+    {      
+      signaturePrep(uClass,className,code);
+      for(Association assoc : uClass.getAssociations()){
+        //Case of SymmetricReflexive Association
+        if(analyzeAssociation(assoc) == 3){
+                    
+          NonReflexiveFact nrf = new NonReflexiveFact(assoc);
+          utility.addString(code,nrf.print());
+          
+          //Symmetric relations
+          SymmetricFact sf = new SymmetricFact(assoc);
+          utility.addString(code,sf.print());
+        }
+      }
+      //processedClass.add(uClass);
+    }
+    
+    //Set<Association> processedAssociations = new HashSet<Association>(); // needed to prevent double reflexive count
+             
+    for(Association assoc : model.getAssociations()){
+      utility.addNewLine(code,1);         
+      //Case of Asymmetric association
+      if(analyzeAssociation(assoc) == 1){
+          
+    	NoExtendedFact nExt = new NoExtendedFact(assoc); 
+    	utility.addString(code,nExt.print());
+    	NoSelfRelationFact nsr = new NoSelfRelationFact(assoc);
+    	utility.addString(code,nsr.print()); 
+      }
+        
+      //Case of bidirectional association
+      if(analyzeAssociation(assoc) == 2){
+        
+    	BidirectionFact bidirect = new BidirectionFact(assoc);
+    	utility.addString(code,bidirect.print());
+      }
     }
     
     //This generates bidirectionality rules for every association within Umple model 
-    for(Association assoc : model.getAssociations()){
-    	utility.addNewLine(code,2);
-    	if(analyzeAssociation(assoc) == 2){
-    		BidirectionRule bidirect = new BidirectionRule(assoc);
-    		utility.addString(code,bidirect.print());
-    	}
-    	else{
-    		NoExtendedRule nExt = new NoExtendedRule(assoc); 
-    		utility.addString(code,nExt.print());
-    		NoSelfRelation nsr = new NoSelfRelation(assoc);
-    		utility.addString(code,nsr.print());
-    	}
-    }
     terminateCode(code);
+  }
+  
+  private void signaturePrep(UmpleClass uClass, String className,StringBuilder code){
+    Signature sig = new Signature(uClass,className);
+    utility.addString(code,sig.printSignature());
   }
   
   private Integer analyzeAssociation(Association assoc){
   	String rEndName = utility.getRightEndName(assoc),
   		lEndName = utility.getLeftEndName(assoc);
-  	if(lEndName.equals(rEndName)) return 1;
-  	else return 2;
+  	if(lEndName.equals(rEndName)){
+  	  if(compareRoleNames(assoc) == true)
+  	    return 3;
+  	  return 1;
+  	}
+  	return 2;
+  }
+  
+  private boolean compareRoleNames(Association assoc){
+    if(assoc.getEnd(0).getDisplayRoleName().equals("")) return true;
+    return false;
   }
   
   private void terminateCode(StringBuilder code) {

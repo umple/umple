@@ -22,7 +22,7 @@ class Signature {
 	  Function funct = new Function(uAssoc);
 	  AssociationEnd beginEnd = uAssoc.getEnd(0), endToOutput = uAssoc.getEnd(1); 
 			
-		//Reflexive association case 
+	  //Reflexive association case 
       if(endToOutput.getClassName().equals(beginEnd.getClassName())){
         funct = new Function(uAssoc,endToOutput.getClassName());	
       }

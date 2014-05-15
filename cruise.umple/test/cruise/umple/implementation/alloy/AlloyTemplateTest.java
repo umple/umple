@@ -34,64 +34,70 @@ public class AlloyTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/alloy/UmpleClass.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AssociationWithNumericBounds.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyReflexiveRelation.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloySymmetricReflexive.als");
 	  }
 
 	  @Test //@Ignore
 	  public void AlloyAssociations()
 	  {
-		  assertUmpleTemplateFor("alloy/AlloyAssociations.ump","alloy/AlloyAssociations.alloy.txt");
-		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyAssociations.als")).exists());
+		assertUmpleTemplateFor("alloy/AlloyAssociations.ump","alloy/AlloyAssociations.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyAssociations.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
 	  public void AlloySophisticatedAssociations()
 	  {
-		  assertUmpleTemplateFor("alloy/AlloySophisticatedAssociations.ump","alloy/AlloySophisticatedAssociations.alloy.txt");
-		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloySophisticatedAssociations.als")).exists());
+		assertUmpleTemplateFor("alloy/AlloySophisticatedAssociations.ump","alloy/AlloySophisticatedAssociations.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloySophisticatedAssociations.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
 	  public void oneToOneAssociation()
 	  {
-		  assertUmpleTemplateFor("alloy/Alloy_AssociationOneToOne.ump","alloy/AlloyAssociationOneToOne.alloy.txt");
-		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/Alloy_AssociationOneToOne.als")).exists());
+		assertUmpleTemplateFor("alloy/Alloy_AssociationOneToOne.ump","alloy/AlloyAssociationOneToOne.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/Alloy_AssociationOneToOne.als")).exists());
 	  } 
 	  
 	  @Test //@Ignore
 	  public void oneToManyAssociation()
 	  {
-		  assertUmpleTemplateFor("alloy/Alloy_AssociationOneToMany.ump","alloy/AlloyAssociationOneToMany.alloy.txt");
-		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/Alloy_AssociationOneToMany.als")).exists());
+		assertUmpleTemplateFor("alloy/Alloy_AssociationOneToMany.ump","alloy/AlloyAssociationOneToMany.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/Alloy_AssociationOneToMany.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
 	  public void Association()
 	  {
-		  assertUmpleTemplateFor("alloy/AlloyAssociation.ump","alloy/AlloyAssociation.alloy.txt");
-		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyAssociation.als")).exists());
+		assertUmpleTemplateFor("alloy/AlloyAssociation.ump","alloy/AlloyAssociation.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyAssociation.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
 	  public void UmpleClass()
 	  {
-		  assertUmpleTemplateFor("alloy/UmpleClass.ump","alloy/UmpleClass.alloy.txt");
-		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/UmpleClass.als")).exists());
+		assertUmpleTemplateFor("alloy/UmpleClass.ump","alloy/UmpleClass.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/UmpleClass.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
 	  public void AssociationWithNumericBounds()
 	  {
-		  assertUmpleTemplateFor("alloy/AssociationWithNumericBounds.ump","alloy/AssociationWithNumericBounds.alloy.txt");
-		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/AssociationWithNumericBounds.als")).exists());
+		assertUmpleTemplateFor("alloy/AssociationWithNumericBounds.ump","alloy/AssociationWithNumericBounds.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AssociationWithNumericBounds.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
 	  public void AlloyReflexiveRelation()
 	  {
-		  assertUmpleTemplateFor("alloy/AlloyReflexiveRelation.ump","alloy/AlloyReflexiveRelation.alloy.txt");
-		  Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyReflexiveRelation.als")).exists());
+		assertUmpleTemplateFor("alloy/AlloyReflexiveRelation.ump","alloy/AlloyReflexiveRelation.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyReflexiveRelation.als")).exists());
+	  }
+	  @Test //@Ignore
+	  public void AlloySymmetricReflexive()
+	  { 
+		assertUmpleTemplateFor("alloy/AlloySymmetricReflexive.ump","alloy/AlloySymmetricReflexive.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloySymmetricReflexive.als")).exists()); 
 	  }
 	  @Test @Ignore
-	  public void Temp()
-	  { }
+	  public void temp(){}
 }

@@ -34,7 +34,6 @@ sig B extends UmpleObject {
 
 
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class A and class B
