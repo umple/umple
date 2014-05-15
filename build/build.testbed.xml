@@ -26,6 +26,10 @@
   <!-- ```````````````````````````
     Clean up and initialize any potential byproduct
   ``````````````````````````` -->
+  <target name="clean">
+	<delete dir="${project.path}/src-gen-umple" failonerror="false"/>	
+  </target>
+
 
   <target name="init">
     <antcall target="template.init" />
@@ -152,6 +156,7 @@
     as your code will be run against the "latest" Umpled Umple.
    -->
   <target name="build" >
+    <antcall target="clean" />
     <antcall target="template.clean" />
     <antcall target="init" />
     <antcall target="compile" />
