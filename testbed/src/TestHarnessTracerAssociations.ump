@@ -4,7 +4,6 @@ namespace cruise.tracer.test;
 class CompanyManyToManyRole
 {
   * -- * Manager managerA;
-  
   //----- trace role name (i.e. both addition and removal of links)
   trace managerA;
 }
@@ -22,15 +21,6 @@ class CompanyManyToManyRemove
   //----- trace addition of links
   trace remove managerC;
 }
-
-class CompanyA
-{
-  * -- * Manager manager;
-  
-  //----- trace Many to Many association * -- *
-  trace cardinality manager;
-}
-
 
 class Manager {}
 class ManagerA {}
