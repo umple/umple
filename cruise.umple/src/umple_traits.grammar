@@ -9,4 +9,4 @@ functionIncludeExcludeAlias -: [[functionInExAlias]]  ( , [[functionInExAlias]] 
 functionInExAlias- : [[functionAliasName]] | [[iEFunction]]
 iEFunction : [=iEFunctionModifier:+|-] [methodName] [[iEParameterList]]
 iEParameterList : OPEN_ROUND_BRACKET ( [parameter] ( , [parameter] )* )? CLOSE_ROUND_BRACKET
-functionAliasName : ([=iEFunctionModifier:+])? [~methodName] [[iEParameterList]] as [methodAliasName]
+functionAliasName : ([=iEFunctionModifier:+])? [~methodName] [[iEParameterList]] as [~methodAliasName]
