@@ -18,9 +18,9 @@ public class TracerAssociationsTest extends TracerTemplateTest
 {
 
   @Test
-  public void TraceAssociationCardinality1()
+  public void TraceAssociationCardinality()
   {
-    AssertAssoc("TraceAssociationCardinality1.ump","TraceAssociationCardinality1.");
+    AssertAssoc("TraceAssociationCardinality.ump","TraceAssociationCardinality.");
   }
   
   @Test
@@ -33,6 +33,12 @@ public class TracerAssociationsTest extends TracerTemplateTest
   public void TraceAssociationManyToManyRemove()
   {
     AssertAssoc("TraceAssociationManyToManyRemove.ump","TraceAssociationManyToManyRemove.");
+  }
+  
+  @Test
+  public void TraceAssociationManyToManyRole()
+  {
+    AssertAssoc("TraceAssociationManyToManyRole.ump","TraceAssociationManyToManyRole.");
   }
 
   @Test @Ignore
