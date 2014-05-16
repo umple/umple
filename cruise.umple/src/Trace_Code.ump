@@ -549,7 +549,7 @@ class AssociationTraceItem
            gen.translate("traceThread",this),
            getPosition().getFilename().replace("\\","\\\\"),
            getPosition().getLineNumber(),
-           uClass.getName(),
+           uClass.getName()+"+"+type,
            StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
            methodname,
            name        

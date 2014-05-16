@@ -106,7 +106,7 @@ public class Company
         manager.add(oldIndex,aManager);
       }
     }
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationManyToManyRemove.ump,6,Company,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationManyToManyRemove.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
     return wasRemoved;
   }
 
