@@ -78,7 +78,7 @@ public class UmpleConsoleMainTest
    String[] args = new String[] { "--IDONTEXIST"  };
    
    UmpleConsoleMain.main(args);
-   Assert.assertTrue(outErrIntercept.toString().startsWith(String.format("Option:\'IDONTEXIST\' is not a recognized option%nUsage: java -jar umple.jar [options] <umple_file>%nExample: java -jar umple.jar airline.ump%n")));
+   Assert.assertTrue(outErrIntercept.toString().startsWith("Option:\'IDONTEXIST\' is not a recognized option"+System.getProperty("line.separator")+"Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump"+System.getProperty("line.separator")));
   }
   
    // Ignore the following - currently does exit

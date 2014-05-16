@@ -48,7 +48,7 @@ public class UmpleRunMainTest
    String[] args = new String[0];
    
    UmpleRunMain.main(args);
-   Assert.assertEquals(String.format("Usage: java -jar umplerun.jar <umple_file> <cmd_file>%nExample: java -jar umple.jar airline.ump airline.cmd%n"), outErrIntercept.toString());
+   Assert.assertEquals("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd"+System.getProperty("line.separator"),outErrIntercept.toString() );
   }
   
  @Test @Ignore
