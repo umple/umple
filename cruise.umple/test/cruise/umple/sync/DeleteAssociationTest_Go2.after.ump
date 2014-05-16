@@ -1,6 +1,6 @@
 class Student
 {
-  3..5 -- 1..2 Mentor;
+  3..5 -> 1..2 Mentor;
 }
 
 class Student
