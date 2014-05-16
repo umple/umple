@@ -69,7 +69,7 @@ public class Company
     boolean wasAdded = false;
     if (manager.contains(aManager)) { return false; }
     manager.add(aManager);
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
     if (aManager.indexOfCompany(this) != -1)
     {
       wasAdded = true;
@@ -107,7 +107,7 @@ public class Company
         manager.add(oldIndex,aManager);
       }
     }
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
     return wasRemoved;
   }
 
@@ -120,7 +120,7 @@ public class Company
       if(index > numberOfManager()) { index = numberOfManager() - 1; }
       manager.remove(aManager);
       manager.add(index, aManager);
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
       wasAdded = true;
     }
     return wasAdded;
@@ -135,13 +135,13 @@ public class Company
       if(index > numberOfManager()) { index = numberOfManager() - 1; }
       manager.remove(aManager);
       manager.add(index, aManager);
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
       wasAdded = true;
     } 
     else 
     {
       wasAdded = addManagerAt(aManager, index);
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationCardinality1.ump,5,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
     }
     return wasAdded;
   }
