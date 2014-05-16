@@ -52,7 +52,7 @@ public class UmpleConsoleMainTest
    String[] args = new String[0];
    
    UmpleConsoleMain.main(args);
-   Assert.assertEquals("Usage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n", outErrIntercept.toString());
+   Assert.assertEquals(String.format("Usage: java -jar umple.jar [options] <umple_file>%nExample: java -jar umple.jar airline.ump%n"), outErrIntercept.toString());
   }
   
 
@@ -62,13 +62,13 @@ public class UmpleConsoleMainTest
     String[] args = new String[] { "--version"};
 
     UmpleConsoleMain.main(args);
-    Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.VERSION_NUMBER +"\n", outErrIntercept.toString());
+    Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.VERSION_NUMBER +System.getProperty("line.separator"), outErrIntercept.toString());
 
     outErrIntercept.reset();
     args = new String[] { "-v"};
 
     UmpleConsoleMain.main(args);
-    Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.VERSION_NUMBER +"\n", outErrIntercept.toString());
+    Assert.assertEquals("Version: "+ cruise.umple.compiler.UmpleModel.VERSION_NUMBER +System.getProperty("line.separator"), outErrIntercept.toString());
   }
 
 
@@ -78,7 +78,7 @@ public class UmpleConsoleMainTest
    String[] args = new String[] { "--IDONTEXIST"  };
    
    UmpleConsoleMain.main(args);
-   Assert.assertTrue(outErrIntercept.toString().startsWith("Option:\'IDONTEXIST\' is not a recognized option\nUsage: java -jar umple.jar [options] <umple_file>\nExample: java -jar umple.jar airline.ump\n"));
+   Assert.assertTrue(outErrIntercept.toString().startsWith(String.format("Option:\'IDONTEXIST\' is not a recognized option%nUsage: java -jar umple.jar [options] <umple_file>%nExample: java -jar umple.jar airline.ump%n")));
   }
   
    // Ignore the following - currently does exit
@@ -181,7 +181,7 @@ public class UmpleConsoleMainTest
 		    File fileOut = new File("Testclass1.java");
 		    Assert.assertEquals(true, fileOut.exists());
 			fileOut.delete();
-		    Assert.assertEquals("testclass1.ump\ntestclass2.ump\nSuccess! Processed testclass1.ump.\nSuccess! Processed testclass2.ump.\n", outErrIntercept.toString());
+		    Assert.assertEquals(String.format("testclass1.ump%ntestclass2.ump%nSuccess! Processed testclass1.ump.%nSuccess! Processed testclass2.ump.%n"), outErrIntercept.toString());
 		    new File("testclass1.ump").delete();
 		    new File("testclass2.ump").delete();
 		} catch (IOException e) {
@@ -195,18 +195,19 @@ public class UmpleConsoleMainTest
 	   try {
 		BufferedWriter in = new BufferedWriter(new FileWriter("testclass.ecore"));
 		//load simple ECore
-		in.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-		in.write("<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"base\" nsURI=\"cruise.example.base\" nsPrefix=\"base\">\n");
-		in.write("<eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>\n");
-		in.write("<eClassifiers xsi:type=\"ecore:EClass\" name=\"ICart\" interface=\"true\" abstract=\"true\">\n");
-		in.write("</eClassifiers>\n");
-		in.write("<eClassifiers xsi:type=\"ecore:EClass\" name=\"Cart\" eSuperTypes=\"#//ICart\">\n");
-		in.write("</eClassifiers>\n");
-		in.write("</ecore:EPackage>\n");
+		String cr = System.getProperty("line.separator");
+		in.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+cr);
+		in.write("<ecore:EPackage xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:ecore=\"http://www.eclipse.org/emf/2002/Ecore\" name=\"base\" nsURI=\"cruise.example.base\" nsPrefix=\"base\">"+cr);
+		in.write("<eClassifiers xsi:type=\"ecore:EDataType\" name=\"Time\" instanceClassName=\"java.sql.Time\"/>"+cr);
+		in.write("<eClassifiers xsi:type=\"ecore:EClass\" name=\"ICart\" interface=\"true\" abstract=\"true\">"+cr);
+		in.write("</eClassifiers>"+cr);
+		in.write("<eClassifiers xsi:type=\"ecore:EClass\" name=\"Cart\" eSuperTypes=\"#//ICart\">"+cr);
+		in.write("</eClassifiers>"+cr);
+		in.write("</ecore:EPackage>"+cr);
 		in.close();
 		
 		UmpleConsoleMain.main(args);
-    Assert.assertEquals("Success! Processed testclass.ecore.\n", outErrIntercept.toString());
+    Assert.assertEquals("Success! Processed testclass.ecore."+cr, outErrIntercept.toString());
 		
 		File fileOut = new File("testclass.ecore.ump");
 	    Assert.assertEquals(true, fileOut.exists());
