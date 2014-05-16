@@ -541,7 +541,6 @@ public class UmpleTraitTest {
 		Assert.assertEquals("changedTestI",model.getUmpleClass("A").getMethod(0).getName());
 	}
 	
-	
 	@Test
 	public void includeExcludeRuleAlias5Test() {
 		String code = "class A{isA T1< +test(Integer), +test(String) as changedTestS >;	}trait T1{void test(String str){/*T1-S*/}void test(Integer inData){/*T1-I*/}void test(String str, Integer inData){/*T1-SI*/}void test(Integer inData, String str){/*T1-IS*/}}";
@@ -557,6 +556,19 @@ public class UmpleTraitTest {
 		
 	}
 	
+	@Test
+	public void includeExcludeRuleAlias6Test() {
+		String code = "class A{isA T;}class B{isA T<test1() as show1,test2() as show2>;}trait T{void test1(){/**/}void test2(){/**/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("test1", model.getUmpleClass("A").getMethod(0).getName());
+		Assert.assertEquals("test2", model.getUmpleClass("A").getMethod(1).getName());
+		Assert.assertEquals(2, model.getUmpleClass("B").numberOfMethods());	
+		Assert.assertEquals("show1", model.getUmpleClass("B").getMethod(0).getName());
+		Assert.assertEquals("show2", model.getUmpleClass("B").getMethod(1).getName());
+	}
+	
+
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {

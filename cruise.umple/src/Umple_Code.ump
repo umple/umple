@@ -451,6 +451,21 @@ class Depend
  */
 class Method
 {  
+  //this is for cloning	
+  public Method(Method another) {
+	  this.isAbstract = another.getIsAbstract();
+	  this.modifier = another.getModifier();
+	  this.name = another.getName() ;
+	  this.position = another.getPosition();
+	  this.codePosition = another.getCodePosition();
+	  this.endPosition = another.getEndPosition();
+	  this.type = another.getType();
+	  this.isImplemented = another.getIsImplemented();
+	  this. methodParameters = another.getMethodParameters();
+	  this.methodBody = another.getMethodBody();
+	  this. comments = another.getComments();  
+  }
+  
   public boolean getExistsInLanguage(String lang) 
   {
     if(getMethodBody().getExtraCode(lang)==null)
