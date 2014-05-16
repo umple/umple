@@ -854,16 +854,19 @@ class UmpleInternalParser
 							if (mTSignature.getModifier().equals("-")){
 								tempTraitMethods.get(iETrait).remove(i);
 							} else if (mTSignature.getModifier().equals("+")){
-								Method tempAiasNethod =	tempTraitMethods.get(iETrait).get(i);
+								Method tempAiasNethod = new Method(tempTraitMethods.get(iETrait).get(i));
 								if (!mTSignature.getAlias().equals("")){
 									tempAiasNethod.setName(mTSignature.getAlias());
 									//here I must check this new name is unique.
 								}
-								shouldBeIncluded.add(tempTraitMethods.get(iETrait).get(i));
+								shouldBeIncluded.add(tempAiasNethod);
 								add = true;
 							} else if (mTSignature.getModifier().equals("")){
 								//here I must check this new name is unique.
-								tempTraitMethods.get(iETrait).get(i).setName(mTSignature.getAlias());
+								Method tempAiasNethod = new Method(tempTraitMethods.get(iETrait).get(i));
+								tempTraitMethods.get(iETrait).remove(i);
+								tempAiasNethod.setName(mTSignature.getAlias());
+								tempTraitMethods.get(iETrait).add(tempAiasNethod);
 							}
 							found = true;
 						}
