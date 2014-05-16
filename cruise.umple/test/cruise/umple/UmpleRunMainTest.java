@@ -48,7 +48,7 @@ public class UmpleRunMainTest
    String[] args = new String[0];
    
    UmpleRunMain.main(args);
-   Assert.assertEquals("Usage: java -jar umplerun.jar <umple_file> <cmd_file>\nExample: java -jar umple.jar airline.ump airline.cmd\n", outErrIntercept.toString());
+   Assert.assertEquals(String.format("Usage: java -jar umplerun.jar <umple_file> <cmd_file>%nExample: java -jar umple.jar airline.ump airline.cmd%n"), outErrIntercept.toString());
   }
   
  @Test @Ignore
@@ -60,12 +60,12 @@ public class UmpleRunMainTest
    
    UmpleRunMain.main(args);
    
-   String expected = "Compiling myfile.ump... success.\n" +
-                     "Building model... success.\n" +
-                     "Loading model into memory... success.\n" +
-                     "Running commands:\n" +
-                     "  >>> new test_package.One\n" +
-                     "Done.\n";
+   String expected = String.format("Compiling myfile.ump... success.%n" +
+                     "Building model... success.%n" +
+                     "Loading model into memory... success.%n" +
+                     "Running commands:%n" +
+                     "  >>> new test_package.One%n" +
+                     "Done.%n");
    
    Assert.assertEquals(expected, outErrIntercept.toString());
  }
