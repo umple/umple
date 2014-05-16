@@ -28,14 +28,28 @@ class UpdatePositioningAction
     try
     {
       textParser = new TextParser(getUmpleCode());
-      umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
       if (!result.getWasSuccess())
       {
-        //uncomment for testing purposes
+        //Uncomment for debug
         //textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
-        return;
+        //setUmpleCode(textParser.getText());
+        //return;
+      }
+      
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        //Uncomment for debug
+        //textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        //setUmpleCode(textParser.getText());
+        //return;
       }
       
       jsonParser = new JsonParser("json");
@@ -43,10 +57,12 @@ class UpdatePositioningAction
       
       if (!jsonResult.getWasSuccess())
       {
+        //Uncomment for debug
         //uncomment for testing purposes
         //setUmpleCode("//****Failed at: " + jsonResult.getPosition() + "\n\n//" + getDeltaCode() + "\n\n" + getUmpleCode());
         return;
       }
+      
       json = jsonParser.analyze();
       verifySubClasses(umpleParser.getRootToken());
       
@@ -126,7 +142,6 @@ class UpdatePositioningAction
     }
     return hasPositioning;
   }
-  
   
   private boolean classHasDefinition(Token root, Token t)
   {
@@ -219,6 +234,7 @@ class UpdatePositioningAction
   private void handleException(Exception e, String message)
   {
     String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
+    
     for (StackTraceElement trace : e.getStackTrace())
     {
       output += trace.toString() + "\n";
@@ -235,24 +251,39 @@ class NewAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
-      JsonParser parser = new JsonParser("json");
-      ParseResult jsonResult = parser.parse("json", getDeltaCode());
-      Json json = parser.analyze();
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
       
       if (!result.getWasSuccess())
       {
-        //textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
+        //Uncomment for Debug
+        //textParser.insert("//Unable to update umple code due to error at " + result.getPosition()  + "\n");
         //setUmpleCode(textParser.getText());
         //return;
       }
       
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        //Uncomment for debug
+        //textParser.insert("//Unable to update umple code due to error at " + result.getPosition()  + "\n");
+        //setUmpleCode(textParser.getText());
+        //return;
+      }
+
+      JsonParser jsonParser = new JsonParser("json");
+      ParseResult jsonResult = jsonParser.parse("json", getDeltaCode());
+      Json json = jsonParser.analyze();
+      
       if (!jsonResult.getWasSuccess())
       {
+        //Uncomment for debug
         //setUmpleCode("//Failed at: " + jsonResult.getPosition() + "\n\n//" + getDeltaCode() + "\n\n" + getUmpleCode());
-        //return;
+        return;
       }
 
       Json position = json.getAttribute("position");
@@ -287,7 +318,7 @@ class NewAction
         {
           if(!t.is("toplevelException"))
           {
-        	  addAfterModel = t;
+              addAfterModel = t;
           }
           continue;
         }
@@ -345,12 +376,24 @@ class EditAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
       if (!result.getWasSuccess())
       {
-        textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        setUmpleCode(textParser.getText());
+        return;
+      }
+      
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
         setUmpleCode(textParser.getText());
         return;
       }
@@ -433,19 +476,19 @@ class EditAction
             else if (subT.is("associationPosition"))
             {
               Token type = subT.getSubToken("name");
-			  String temp = type.getValue();
-			  String[] names = temp.split("_");
-			  String res = "";
-			  for (int i=0; i<names.length; i++)
-			  {
-			  	if (names[i].equals(oldClassName))
-			  		names[i] = newClassName;
-			  	if (i != names.length-1)
-			  		res += names[i] + "_";
-			  	else
-			  		res += names[i];
-			  }
-			  textParser.replace(type,res);
+              String temp = type.getValue();
+              String[] names = temp.split("_");
+              String res = "";
+              for (int i=0; i<names.length; i++)
+              {
+                if (names[i].equals(oldClassName))
+                    names[i] = newClassName;
+                if (i != names.length-1)
+                  res += names[i] + "_";
+                else
+                  res += names[i];
+              }
+              textParser.replace(type,res);
             }            
           }
         }
@@ -728,21 +771,32 @@ class DeleteAction
 {
 
   public void go()
-  {
+  { 
     try
     {
-      
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
       if (!result.getWasSuccess())
       {
-        textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
         setUmpleCode(textParser.getText());
         return;
       }
       
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        setUmpleCode(textParser.getText());
+        return;
+      }
+
       JsonParser jsonParser = new JsonParser("json");
       ParseResult jsonResult = jsonParser.parse("json", getDeltaCode());
       
@@ -753,12 +807,11 @@ class DeleteAction
       }
       
       Json json = jsonParser.analyze();
-      
       String className = json.getValue("name");
       
-      for(Token t : umpleParser.getRootToken().getSubTokens())
+      for(Token t : umpleParser.getRootToken().getSubTokens()) 
       {
-        if (!t.is("classDefinition"))
+        if (!t.is("classDefinition") && !t.is("associationClassDefinition"))
         {
           continue;
         }
@@ -781,7 +834,7 @@ class DeleteAction
       }
       setUmpleCode(output);
     }
-  }  
+  }
 }
 
 
@@ -808,12 +861,24 @@ class NewAssociationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
       if (!result.getWasSuccess())
       {
-        textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        setUmpleCode(textParser.getText());
+        return false;
+      }
+      
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
         setUmpleCode(textParser.getText());
         return false;
       }
@@ -900,8 +965,30 @@ class NewAssociationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      umpleParser.parse("program", getUmpleCode());
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
+      if (!result.getWasSuccess())
+      {
+        //Uncomment for debug
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        setUmpleCode(textParser.getText());
+        return false;
+      }
+      
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        //Uncomment for debug
+        //textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        //setUmpleCode(textParser.getText());
+        return false;
+      }
+      
       JsonParser jsonParser = new JsonParser("json");
       jsonParser.parse("json", getDeltaCode());
       
@@ -972,12 +1059,24 @@ class EditAssociationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
       if (!result.getWasSuccess())
       {
-        textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        setUmpleCode(textParser.getText());
+        return;
+      }
+      
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
         setUmpleCode(textParser.getText());
         return;
       }
@@ -1002,7 +1101,7 @@ class EditAssociationAction
       String y2 = position2.getValue("y");  
       String associationName = json.getValue("name");
       
-	  Token lastAssociationPositionT = null;  
+      Token lastAssociationPositionT = null;  
       Token classPositionT = null;
       boolean didEdit = false;
       boolean isInline = false;
@@ -1031,22 +1130,22 @@ class EditAssociationAction
         {
           String currentName = "";
           String firstClassName = t.getValue("name");
-    	  String secondClassName = "";
+          String secondClassName = "";
           String firstRole = "";
-    	  String secondRole = "";
+          String secondRole = "";
           
           if (subT.is("inlineAssociation"))
           {
             secondClassName = subT.getSubToken("associationEnd").getValue("type");
             firstRole = subT.getSubToken("inlineAssociationEnd").getValue("roleName");
-    	    secondRole = subT.getSubToken("associationEnd").getValue("roleName");
-    	    firstRole = firstRole == null? "" : ":" + firstRole; 
-    	    secondRole = secondRole == null? "" : ":" + secondRole;
-    	  
-    	    String firstHalf = firstClassName + firstRole;
-    	    String secondHalf = secondClassName + secondRole;
-    	    
-    	    if (firstHalf.compareTo(secondHalf) <= 0)
+            secondRole = subT.getSubToken("associationEnd").getValue("roleName");
+            firstRole = firstRole == null? "" : ":" + firstRole; 
+            secondRole = secondRole == null? "" : ":" + secondRole;
+          
+            String firstHalf = firstClassName + firstRole;
+            String secondHalf = secondClassName + secondRole;
+            
+            if (firstHalf.compareTo(secondHalf) <= 0)
             {
               currentName = firstHalf + "__" + secondHalf;
             }
@@ -1064,9 +1163,9 @@ class EditAssociationAction
           {
             secondClassName = subT.getValue("type");
             secondRole = subT.getValue("roleName");
-    	    secondRole = secondRole == null? "" : ":" + secondRole;
-    	  
-    	    if (firstClassName.compareTo(secondClassName) < 0)
+            secondRole = secondRole == null? "" : ":" + secondRole;
+          
+            if (firstClassName.compareTo(secondClassName) < 0)
             {
               currentName = firstClassName + firstRole + "__" + secondClassName + secondRole;
             }
@@ -1161,15 +1260,20 @@ class DeleteAssociationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
       if (!result.getWasSuccess())
       {
-        textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
         setUmpleCode(textParser.getText());
         return;
       }
+      
+      result = umpleParser.analyze(false);
 
       JsonParser jsonParser = new JsonParser("json");
       ParseResult jsonResult = jsonParser.parse("json", getDeltaCode());
@@ -1296,12 +1400,24 @@ class DeleteGeneralizationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
       if (!result.getWasSuccess())
       {
-        textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        setUmpleCode(textParser.getText());
+        return;
+      }
+      
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
         setUmpleCode(textParser.getText());
         return;
       }
@@ -1378,12 +1494,24 @@ class NewGeneralizationAction
     try
     {
       TextParser textParser = new TextParser(getUmpleCode());
-      UmpleParser umpleParser = new UmpleInternalParser();
-      ParseResult result = umpleParser.parse("program", getUmpleCode());
-
+      UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
+      UmpleModel umpleModel = new UmpleModel(umpleFile);
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
+      ParseResult result = parser.parse(umpleFile);
+      
       if (!result.getWasSuccess())
       {
-        textParser.insert("//Unable to update umple code due to error at " + result.getPosition());
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
+        setUmpleCode(textParser.getText());
+        return;
+      }
+      
+      result = umpleParser.analyze(false);
+      
+      if (!result.getWasSuccess())
+      {
+        textParser.insert("//Unable to update umple code due to error at " + result.getPosition() + "\n");
         setUmpleCode(textParser.getText());
         return;
       }

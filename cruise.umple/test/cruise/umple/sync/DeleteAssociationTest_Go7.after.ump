@@ -1,6 +1,6 @@
 class Student
 {
-  0..1 -- * Mentor m;
+  0..1 -> * Mentor m;
   position 52 30 109 41;
 }
 

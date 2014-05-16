@@ -369,7 +369,7 @@ class PlaygroundMain
       String filename = args[2];
       String umpleCode = SampleFileWriter.readContent(new File(filename));
 
-      SynchronizationAction action = action(actionType,deltaCode,umpleCode);
+      SynchronizationAction action = action(actionType,deltaCode,umpleCode,filename);
       if (action != null)
       {
         action.go();
@@ -456,55 +456,55 @@ class PlaygroundMain
     System.out.print(answer);
   }
 
-  private static SynchronizationAction action(String type, String deltaCode, String umpleCode)
+  private static SynchronizationAction action(String type, String deltaCode, String umpleCode, String filename)
   {
     if ("-addClass".equals(type))
     {
-      return new NewAction(deltaCode,umpleCode);
+      return new NewAction(deltaCode,umpleCode,filename);
     }
     else if ("-addInterface".equals(type))
     {
-      return new NewAction(deltaCode,umpleCode);
+      return new NewAction(deltaCode,umpleCode,filename);
     }
     else if ("-removeClass".equals(type))
     {
-      return new DeleteAction(deltaCode,umpleCode);
+      return new DeleteAction(deltaCode,umpleCode,filename);
     }
     else if ("-editClass".equals(type))
     {
-      return new EditAction(deltaCode,umpleCode);
+      return new EditAction(deltaCode,umpleCode,filename);
     }
     else if ("-removeInterface".equals(type))
     {
-      return new DeleteAction(deltaCode,umpleCode);
+      return new DeleteAction(deltaCode,umpleCode,filename);
     }
     else if ("-editInterface".equals(type))
     {
-      return new EditAction(deltaCode,umpleCode);
+      return new EditAction(deltaCode,umpleCode,filename);
     }
     else if ("-addAssociation".equals(type))
     {
-      return new NewAssociationAction(deltaCode,umpleCode);
+      return new NewAssociationAction(deltaCode,umpleCode,filename);
     }
     else if ("-editAssociation".equals(type))
     {
-      return new EditAssociationAction(deltaCode,umpleCode);
+      return new EditAssociationAction(deltaCode,umpleCode,filename);
     }
     else if ("-removeAssociation".equals(type))
     {
-      return new DeleteAssociationAction(deltaCode,umpleCode);
+      return new DeleteAssociationAction(deltaCode,umpleCode,filename);
     }
     else if ("-addGeneralization".equals(type))
     {
-      return new NewGeneralizationAction(deltaCode,umpleCode);
+      return new NewGeneralizationAction(deltaCode,umpleCode,filename);
     }
     else if ("-removeGeneralization".equals(type))
     {
-      return new DeleteGeneralizationAction(deltaCode,umpleCode);
+      return new DeleteGeneralizationAction(deltaCode,umpleCode,filename);
     }
     else if ("-addPositioning".equals(type))
     {
-      return new UpdatePositioningAction(deltaCode,umpleCode);
+      return new UpdatePositioningAction(deltaCode,umpleCode,filename);
     }
     else
     {

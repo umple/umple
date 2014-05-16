@@ -497,7 +497,7 @@ class SampleFileWriter
           { //Ignore the line, go to next
             actualLine = actualReader.readLine();
           }
-      }
+        }
         expectedLine = expectedReader.readLine();
         
         line++;

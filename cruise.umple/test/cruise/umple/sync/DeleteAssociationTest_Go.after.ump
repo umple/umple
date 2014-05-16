@@ -1,6 +1,6 @@
 class Student
 {
-  0..1 -- * Mentor m;
+  0..1 -> * Mentor m;
   position 52 30 109 42;
   position.association Mentor:m__Student 0,21 42,0;
   }

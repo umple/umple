@@ -1,7 +1,7 @@
 class Student
 {
-  0..1 -- * Mentor m;
-  1 -- 1 Mentor;
+  0..1 -> * Mentor m;
+  1 -> 1 Mentor;
   position 52 30 109 42;
   position.association Mentor:m__Student 0,21 42,0;
   position.association Mentor__Student 1,2 3,4;
