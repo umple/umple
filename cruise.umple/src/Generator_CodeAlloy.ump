@@ -77,6 +77,16 @@ class AlloyGenerator
     	BidirectionFact bidirect = new BidirectionFact(assoc);
     	utility.addString(code,bidirect.print());
       }
+      
+      AssociationEnd lEnd = assoc.getEnd(0), rEnd = assoc.getEnd(1);
+      if(lEnd.getMultiplicity().isValid()){
+        NumericBoundFact nbf = new NumericBoundFact(assoc,0);
+        utility.addString(code,nbf.print());
+      }
+      if(rEnd.getMultiplicity().isValid()){
+        NumericBoundFact nbf = new NumericBoundFact(assoc,1);
+        utility.addString(code,nbf.print());
+      }
     }
     
     //This generates bidirectionality rules for every association within Umple model 

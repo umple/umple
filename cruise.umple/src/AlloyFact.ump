@@ -29,6 +29,8 @@ class Fact {
   	return end.getRoleName();
   }
   
+  protected String newMe(){ return " |\n    "; }
+  
   //This method generates the header for any given fact
   protected String factHeader(){  	
   	return "fact "+factName+" {\n  ";
@@ -71,12 +73,12 @@ class NoExtendedFact {
   //This method prints no extended relation fact
   private String printNoExtendedRelationFact(){
   	return factHeader()+"no disj "+makeVarDeclaration(firstClassName,3)+
-  	  noExtRelContent()+"\n}";
+  	  newMe()+noExtRelContent()+"\n}";
   }
     
   //This method generates content no extended relation
   private String noExtRelContent(){
-  	return " |\n    "+makeVarName(firstClassName,1)+" in "+
+  	return makeVarName(firstClassName,1)+" in "+
   		rName2+"["+makeVarName(firstClassName,2)+"] && "+makeVarName(firstClassName,1)
   		+" in "+rName2+"["+makeVarName(firstClassName,3)+"]";
   }
@@ -105,7 +107,7 @@ class NoSelfRelationFact {
   
   //This method prints no extended relation fact
   private String printNoSelfRelationFact(){
-  	return factHeader()+decPart()+" |\n    "+noSelfRelContent()+"\n}";
+  	return factHeader()+decPart()+newMe()+noSelfRelContent()+"\n}";
   }
   
   //This method generates content no extended relation
@@ -136,14 +138,14 @@ class BidirectionFact {
   
   //This method computes the content of a bidirectionality rule
   private String bidirectionalContent(){
-  	return " |\n    "+makeVarName(firstClassName,1)+" in "+rName1+"["+
+  	return makeVarName(firstClassName,1)+" in "+rName1+"["+
   	  makeVarName(secondClassName,1)+"] <=> "+makeVarName(secondClassName,1)+" in "+rName2+
   		"["+makeVarName(firstClassName,1)+"]";
   }
   //This method is responsible for printing bidirectionality fact
   private String printBidirectionFact(){
   	return factHeader()+"all "+makeVarDeclaration(firstClassName,1)+", "+
-  		makeVarDeclaration(secondClassName,1)+ bidirectionalContent()+"\n}";
+  		makeVarDeclaration(secondClassName,1)+ newMe() +bidirectionalContent()+"\n}";
   }
   
   public String print(){
@@ -161,7 +163,7 @@ class NonReflexiveFact{
   }  
   
   private String content(){
-  	return " |\n    "+makeVarName(secondClassName,1)+" in "+
+  	return makeVarName(secondClassName,1)+" in "+
   	  rName2+"["+makeVarName(secondClassName,1)+"]\n}";
   }
   
@@ -176,11 +178,12 @@ class NonReflexiveFact{
   }
   
   public String print(){
-  	return comment()+factHeader()+declaration()+content();
+  	return comment()+factHeader()+declaration()+newMe()+content();
   }
 } 
 
 class SymmetricFact {
+  
   depend cruise.umple.compiler.*;
   isA Fact;
   
@@ -190,7 +193,7 @@ class SymmetricFact {
   }
   
   private String declaration(){
-    return "all "+makeVarDeclaration(secondClassName,2);
+    return "all "+makeVarDeclaration(secondClassName,2)+newMe();
   }
   
   private String comment(){
@@ -199,7 +202,7 @@ class SymmetricFact {
   }
   
   private String content(){
-    return " |\n    "+makeVarName(secondClassName,1)+" in "+
+    return makeVarName(secondClassName,1)+" in "+
   	  rName2+"["+makeVarName(secondClassName,2)+"] <=> "+makeVarName(secondClassName,2)+" in "+
   	  rName2+"["+makeVarName(secondClassName,1)+"]\n}";
   }
@@ -207,4 +210,87 @@ class SymmetricFact {
   public String print(){
     return comment()+factHeader()+declaration()+content();
   }
+}
+
+
+class NumericBoundFact {
+  isA Fact;
+  depend cruise.umple.compiler.*;
+  
+  String className;
+  String rName;
+  Multiplicity mult;
+  Integer index;
+  
+  after constructor
+  {
+    factName = "NumericBoundFact";
+  }
+  
+  public NumericBoundFact(Association assoc,int endIndex)
+  {
+    super(assoc);
+    factName = "NumericBoundFact";
+    index = endIndex;
+    mult = assoc.getEnd(index).getMultiplicity();
+    initializeExtraVar();
+  }
+  
+  private void initializeExtraVar()
+  {
+    if(index == 0)
+    {
+      className = secondClassName;
+      rName = rName1;
+    }
+    else 
+    {
+      className = firstClassName;
+      rName = rName2;
+    }
+  }
+  
+  private Integer analyzeEndMult()
+  { 
+    int m = mult.getUpperBound(), n = mult.getLowerBound();
+    if(m == n && m != 1) return 1;
+    if(n == 0 && m != 1 && m != -1) return 3;
+    if(m != n && m != -1 && n != -1 && m != 1) return 2; 
+    return 0;
+  }
+  
+  private String declaration()
+  {
+    return "no "+makeVarDeclaration(className,1)+newMe();
+  }
+  
+  private String temp()
+  {
+    return "#"+makeVarName(className,1)+"."+rName;
+  }
+  
+  private String content()
+  {
+    if(analyzeEndMult() == 1)
+      return temp()+" != "+mult.getUpperBound()+"\n}";
+    if(analyzeEndMult() == 2)
+      return temp()+" < "+mult.getLowerBound()+" || "+
+        temp()+" > "+mult.getUpperBound()+"\n}";
+    if(analyzeEndMult() == 3)
+      return temp()+" > "+mult.getUpperBound()+"\n}";
+    return "";
+  }
+  
+  private String comment()
+  {
+  	return utility.addStartDottedLine()+"-- The following defines numeric bound rule for class "+
+  	  className+"\n"+utility.addEndDottedLine();
+  }
+  
+  public String print()
+  {
+    if(content() != "")
+      return comment()+factHeader()+declaration()+content();
+    return "";
+  } 
 }
