@@ -34,7 +34,7 @@ use Trace.ump;
 use Template.ump;
 use UmpleDiagram.ump;
 use UmpleExceptions.ump;
-use UmpleHelper.ump;
+use util/UmpleHelper.ump;
 use UmpleParser.ump;
 use UmpleInternalParser.ump;
 use UmpleXtextParser.ump;
@@ -46,5 +46,5 @@ use UmpleImport.ump;
 
 use Main_Code.ump;
 use UmpleStats_Code.ump;
-use Util_Code.ump;
+use util/Util_Code.ump;
 use Builder_Code.ump;
