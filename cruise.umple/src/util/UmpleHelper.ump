@@ -68,4 +68,4 @@ class UmpleParserFactory
  
 }
 
-use UmpleHelper_Code.ump;
+use util/UmpleHelper_Code.ump;
