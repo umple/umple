@@ -57,6 +57,17 @@ fact BidirectionalityRule {
     man_1 in husband[woman_1] <=> woman_1 in wives[man_1]
 }
 
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines numeric bound rule for class Man
+
+------------------------------------------------------------------------------------------------------------------
+
+fact NumericBoundFact {
+  no man_1 : Man |
+    #man_1.wives != 2
+}
+
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -67,4 +78,15 @@ fact BidirectionalityRule {
 fact BidirectionalityRule {
   all man_1 : Man, child_1 : Child |
     man_1 in father[child_1] <=> child_1 in children[man_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines numeric bound rule for class Man
+
+------------------------------------------------------------------------------------------------------------------
+
+fact NumericBoundFact {
+  no man_1 : Man |
+    #man_1.children < 1 || #man_1.children > 5
 }

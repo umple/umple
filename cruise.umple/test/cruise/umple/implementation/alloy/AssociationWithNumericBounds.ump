@@ -1,6 +1,6 @@
 
 class Man{
-	0..1 father -- 1..5 Child children;
+	0..1 father -- 5 Child children;
 }
 
 class Child{ }
