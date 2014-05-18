@@ -8,6 +8,7 @@ http://umple.org/license
 Helper classes that re needed by the Umple system, but are not key to understanding the metamodel
 
 */
+
 namespace cruise.umple.util;
 
 class Word
