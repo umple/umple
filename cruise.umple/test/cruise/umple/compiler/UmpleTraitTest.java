@@ -568,7 +568,67 @@ public class UmpleTraitTest {
 		Assert.assertEquals("show2", model.getUmpleClass("B").getMethod(1).getName());
 	}
 	
-
+	@Test
+	public void includeExcludeRuleVisibility1Test() {
+		String code = "class A{isA T<test1() as private,test2() as protected,test3() as public>;}trait T{void test1(){	/*T*/}void test2(){	/*T*/}void test3(){	/*T*/}}";
+		UmpleModel model = getRunModel(code);	
+		Assert.assertEquals(3, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("test1")){
+				Assert.assertEquals("private",method.getModifier());
+			} else if (method.getName().equals("test2")){
+				Assert.assertEquals("protected",method.getModifier());
+			} else if (method.getName().equals("test3")){
+				Assert.assertEquals("public",method.getModifier());
+			}
+		}
+	}
+	
+	@Test
+	public void includeExcludeRuleVisibility2Test() {
+		String code = "class A{isA T<test1() as private show1,test2() as protected show2,test3() as public show3>;}trait T{void test1(){/*T*/}void test2(){	/*T*/}void test3(){	/*T*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(3, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("show1",model.getUmpleClass("A").getMethod(0).getName());
+		Assert.assertEquals("private",model.getUmpleClass("A").getMethod(0).getModifier());
+		Assert.assertEquals("show2",model.getUmpleClass("A").getMethod(1).getName());
+		Assert.assertEquals("protected",model.getUmpleClass("A").getMethod(1).getModifier());
+		Assert.assertEquals("show3",model.getUmpleClass("A").getMethod(2).getName());
+		Assert.assertEquals("public",model.getUmpleClass("A").getMethod(2).getModifier());
+		/*//this is also an alternative.Above, consider order for methods 
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("show1")){
+				Assert.assertEquals("private",method.getModifier());
+			} else if (method.getName().equals("show2")){
+				Assert.assertEquals("protected",method.getModifier());
+			} else if (method.getName().equals("show3")){
+				Assert.assertEquals("public",method.getModifier());
+			}
+		}
+		*/
+	}
+	
+	@Test
+	public void includeExcludeRuleVisibility3Test() {
+		String code = "class A{isA T<+test1() as private,+test2() as protected>;}trait T{void test1(){	/*T*/}void test2(){	/*T*/}void test3(){	/*T*/}}";
+		UmpleModel model = getRunModel(code);	
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("test1",model.getUmpleClass("A").getMethod(0).getName());
+		Assert.assertEquals("private",model.getUmpleClass("A").getMethod(0).getModifier());
+		Assert.assertEquals("test2",model.getUmpleClass("A").getMethod(1).getName());
+		Assert.assertEquals("protected",model.getUmpleClass("A").getMethod(1).getModifier());
+	}
+	
+	@Test
+	public void includeExcludeRuleVisibility4Test() {
+		String code = "class A{isA T<+test1() as private show1,+test2() as protected show2>;}trait T{void test1(){	/*T*/}void test2(){	/*T*/}void test3(){	/*T*/}}";
+		UmpleModel model = getRunModel(code);	
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("show1",model.getUmpleClass("A").getMethod(0).getName());
+		Assert.assertEquals("private",model.getUmpleClass("A").getMethod(0).getModifier());
+		Assert.assertEquals("show2",model.getUmpleClass("A").getMethod(1).getName());
+		Assert.assertEquals("protected",model.getUmpleClass("A").getMethod(1).getModifier());
+	}
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {
