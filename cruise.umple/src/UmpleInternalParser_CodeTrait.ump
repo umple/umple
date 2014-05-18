@@ -910,7 +910,7 @@ class UmpleInternalParser
 		if (! inClass.getIsSingleton()) inClass.setIsSingleton(inTrait.getIsSingleton());
 		
 		//set abstract keyword
-		if (! inClass.getIsAbstract())	inClass.setIsAbstract(inTrait.getIsAbstract());
+		//if (! inClass.getIsAbstract())	inClass.setIsAbstract(inTrait.getIsAbstract());
 		
 		//set the comments
 		for(Comment aComment : inTrait.getComments()) {

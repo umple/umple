@@ -49,7 +49,7 @@ public class UmpleTraitTest {
 		Assert.assertEquals(1,uMode.getUmpleTrait("T").numberOfSubClasses());
 	}
 	
-	@Test 
+	@Ignore //we don't need this feature. maybe in the future we can find an application 
 	public void abstractionTest() {
 		Assert.assertEquals(true,uMode.getUmpleClass("A").isIsAbstract());
 	}
@@ -628,6 +628,13 @@ public class UmpleTraitTest {
 		Assert.assertEquals("private",model.getUmpleClass("A").getMethod(0).getModifier());
 		Assert.assertEquals("show2",model.getUmpleClass("A").getMethod(1).getName());
 		Assert.assertEquals("protected",model.getUmpleClass("A").getMethod(1).getModifier());
+	}
+	
+	@Test
+	public void generalRule1Test() {
+		String code = "class A{ isA T; void test(){/**/ }}trait T{ void test();}";
+		UmpleModel model = getRunModel(code);	
+		Assert.assertEquals(false,model.getUmpleClass("A").getIsAbstract());
 	}
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
