@@ -9,6 +9,8 @@ Helper classes that re needed by the Umple system, but are not key to understand
 
 */
 
+namespace cruise.umple.util;
+
 class SampleFileWriter 
 {
   
