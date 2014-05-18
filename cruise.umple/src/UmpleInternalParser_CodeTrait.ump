@@ -859,13 +859,23 @@ class UmpleInternalParser
 									tempAiasNethod.setName(mTSignature.getAlias());
 									//here I must check this new name is unique.
 								}
+								if (!mTSignature.getMethod().getModifier().equals("")){
+									tempAiasNethod.setModifier(mTSignature.getMethod().getModifier());
+									//here I must check this new name is unique.
+								}
 								shouldBeIncluded.add(tempAiasNethod);
 								add = true;
 							} else if (mTSignature.getModifier().equals("")){
 								//here I must check this new name is unique.
 								Method tempAiasNethod = new Method(tempTraitMethods.get(iETrait).get(i));
 								tempTraitMethods.get(iETrait).remove(i);
-								tempAiasNethod.setName(mTSignature.getAlias());
+								if (!mTSignature.getAlias().equals("")){
+									tempAiasNethod.setName(mTSignature.getAlias());
+									//here I must check this new name is unique.
+								}						
+								if (!mTSignature.getMethod().getModifier().equals("")){
+									tempAiasNethod.setModifier(mTSignature.getMethod().getModifier());
+								}
 								tempTraitMethods.get(iETrait).add(tempAiasNethod);
 							}
 							found = true;
@@ -1241,10 +1251,11 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
   private MethodTemplateSignature obtainMethodTemplateSignature(Token inToken) {
 	  String iEFunctionModifier="",methodAliasName ="";
 	  String methodName = inToken.getValue("methodName");
-
+	  String iEVisibility = "";
       if (inToken.getValue("iEFunctionModifier") != null) iEFunctionModifier = inToken.getValue("iEFunctionModifier");
 	  if (inToken.getValue("methodAliasName") != null) methodAliasName = inToken.getValue("methodAliasName");
-	  Method method = new Method("", methodName, "", false);
+	  if (inToken.getValue("iEVisibility") != null)  iEVisibility = inToken.getValue("iEVisibility");
+	  Method method = new Method(iEVisibility, methodName, "", false); 
 	  if (inToken.getSubToken("iEParameterList") != null){
 			for (Token subToken : inToken.getSubToken("iEParameterList")
 					.getSubTokens()) {
