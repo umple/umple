@@ -568,6 +568,21 @@ public class UmpleTraitTest {
 		Assert.assertEquals("show2", model.getUmpleClass("B").getMethod(1).getName());
 	}
 	
+	
+	@Test
+	public void includeExcludeRuleAlias7Test() {
+		String code = "class A{ isA T<require() as requireT>;isA D<require() as requireD>;}trait T{    isA T1;	void require(){	 /*T*/	}} trait T1{void require(); void testT1(){	 /*T1*/}}trait D{ isA D1;  void require(){  /*D*/  };}trait D1{  void require(); void testD1(){	 /*D1*/}}";
+		UmpleModel model = getModel(code);
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2555");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
 	@Test
 	public void includeExcludeRuleVisibility1Test() {
 		String code = "class A{isA T<test1() as private,test2() as protected,test3() as public>;}trait T{void test1(){	/*T*/}void test2(){	/*T*/}void test3(){	/*T*/}}";

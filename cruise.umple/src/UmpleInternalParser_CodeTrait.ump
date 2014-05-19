@@ -713,6 +713,7 @@ class UmpleInternalParser
 				}
 			}
 		}
+		checkAllRequiredMethods();
 	}	
   }
 //---------------------------------end----------------------------------------
@@ -755,7 +756,7 @@ class UmpleInternalParser
 								if (!tempTraitMethods.containsKey(t1)){
 									for (Method internalMethod : tempTraitMethods.get(t2)){
 		           						 if (compareTwoMethdos(internalMethod, method)){
-		                 					 		getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),"class", inTrait.getName(),method.getName(),t1.getName(),t2.getName()));	
+		                 					 		getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),"class", inClass.getName(),method.getName(),t1.getName(),t2.getName()));	
 		                 					 		return;
 		                 					 }
 		           					 }
@@ -1007,7 +1008,6 @@ class UmpleInternalParser
 			checkTraitsNameWithInterfaces();
 			checkTheSameAttributes();
 			checkCyclicTraitInheritance();
-			checkAllRequiredMethods();
 		}
 	}
 //---------------------------------end----------------------------------------
@@ -1148,65 +1148,33 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
   private void checkAllRequiredMethods() {
 	  if ( getParseResult().getWasSuccess() ) {
-	  for(UmpleClass uClass : getModel().getUmpleClasses()) {
-		  if (uClass.hasExtendsTraits()) {
+		  for(UmpleClass uClass : getModel().getUmpleClasses()) {
 			  for(UmpleTrait uTrait : uClass.getExtendsTraits())  {
 				recursiveCheckRequiredMethods(uClass,uTrait);
 			  }
-				  
 		  }
-	  }
 	  }
   }  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
   private void recursiveCheckRequiredMethods(UmpleClass inClass, UmpleTrait inTrait) {
-	  checkRequiredMethod(inClass, inTrait);
-	  if (inTrait.hasExtendsTraits()) {	  
-		  for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-			  recursiveCheckRequiredMethods(inClass,uTrait);
+	  if ( !getParseResult().getWasSuccess() ) return;  
+	  for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+		  recursiveCheckRequiredMethods(inClass,uTrait);
+      }
+	  for (Method uMethod : inTrait.getMethods() ) {
+		  if (uMethod.isIsAbstract()) {
+			  if(!inClass.hasImplementedMethodIncludingWithinParentClasses(uMethod)){
+				  getParseResult().addErrorMessage(new ErrorMessage(2555,uMethod.getPosition(),uMethod.getName(),inTrait.getName(),inClass.getName()));
+				  return;
+			  }
 		  }
 	  }
-  }
+  } 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------
-  private void checkRequiredMethod(UmpleClass inClass, UmpleTrait inTrait) {
-	for (Method uMethod : inTrait.getMethods() ) {
-		if (uMethod.isIsAbstract()) {
-			if(!checkConcreteMethodAvailability(uMethod,inClass)){
-				getParseResult().addErrorMessage(new ErrorMessage(2555,uMethod.getPosition(),uMethod.getName(),inTrait.getName(),inClass.getName()));
-				return;
-			}
-		}
-	}
-  }  
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------  
-  private Boolean checkConcreteMethodAvailability(Method inMethod, UmpleClass inClass){
-	if (inClass.hasImplementedMethodIncludingWithinParentClasses(inMethod)) return true;
-    for(UmpleTrait uTrait : inClass.getExtendsTraits()){
-    	if (checkConcreteMethodInTraits(inMethod,uTrait)) return true;
-  	}
-  	return false;
-  }
-
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------  
-  private Boolean checkConcreteMethodInTraits(Method inMethod, UmpleTrait inTrait) {
-	if(inTrait.hasMethod(inMethod)){
-		if (!inTrait.getMethod(inMethod).isIsAbstract()) return true;
-	}
-	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-		if (checkConcreteMethodInTraits(inMethod,uTrait))return true;
-	}
-	return false;
-  }
- 
-  
+//---------------------------------Start-------------------------------------- 
 //****************************************************************************************
 //This section is related to codes which is going to support general templates for traits
 //****************************************************************************************
