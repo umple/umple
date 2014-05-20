@@ -282,23 +282,19 @@ Action.showHideLayoutEditor = function(doShow)
 {
   var layoutEditor = jQuery("#umpleLayoutEditor");
   var modelEditor = jQuery("#umpleModelEditor");
-  var newHeight = "";
+  var newHeight = jQuery("#umpleCanvas").height();
    
   if (doShow == undefined) doShow = layoutEditor.is(":visible");
   
   if (doShow)  // warning: This works backwards to intuition
   {
-    newHeight = layoutEditor.height() + (modelEditor.height()) + 3;
-    layoutEditor.hide();   
+    layoutEditor.hide();
+    Action.adjustTextEditorHeight(newHeight);
   }
   else
   {
     layoutEditor.show();
-    newHeight = modelEditor.height() - (layoutEditor.height()) - 3; 
-  }
-  modelEditor.height(newHeight);
-  if(Page.codeMirrorOn) {
-    Page.resizeCodeMirrorEditor(newHeight);
+    Action.adjustTextEditorHeight(newHeight);
   }
 }
 

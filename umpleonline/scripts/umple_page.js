@@ -299,6 +299,7 @@ Page.initUmpleTextArea = function()
       autoHide: true,
       minWidth: Action.minEditorSize.width,
       maxWidth: Action.maxEditorSize.width,
+      alsoResize: layoutEditor,
       handles:"e"});
 
   // Uncomment the following line to turn CodeMirror on by default; comment out to
@@ -379,12 +380,15 @@ Page.clickToggleMethods = function() {
 Page.setTextEditorWidth = function(width) 
 {
   var umpleTextEditor = jQuery("#umpleTextEditor");
+  var umpleLayoutEditor = jQuery("#umpleLayoutEditor");
   
   if(width < Action.minEditorSize.width) 
   {
     width = Action.minEditorSize.width;
   }
+  
   umpleTextEditor.width(width);
+  umpleLayoutEditor.width(width);
   
   var leftoverWidth = jQuery(window).innerWidth() - 2*Page.padding - jQuery("#paletteColumn").width();
 
