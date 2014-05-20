@@ -5210,7 +5210,9 @@ for (StateMachine smq : uClass.getStateMachines())
       continue;
     } 
     
-    TraceItem traceItem = av.getTraced("associationAdd", uClass);
+    //TraceItem traceItem = av.getTraced("associationAdd", uClass);
+    TraceItem traceItemAssocAdd = av.getTraced("associationAdd", uClass);
+    TraceItem traceItemAssocRemove = av.getTraced("associationRemove", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -5631,7 +5633,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_569);
      } 
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_570);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -5639,7 +5641,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_572);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_573);
     stringBuffer.append(gen.translate("parameterOne",av));
@@ -5661,7 +5663,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     }
     
-    traceItem = av.getTraced("associationRemove", uClass);
+    //traceItem = av.getTraced("associationRemove", uClass);
     if (hasRemoveManyTemplateMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
@@ -5675,7 +5677,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_585);
     stringBuffer.append(
-    (traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+    (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
     );
      if (customRemovePrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePrefixCode,gen.translate("removeMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } 
@@ -5710,7 +5712,7 @@ for (StateMachine smq : uClass.getStateMachines())
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av));
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(
-    (traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+    (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
     );
     stringBuffer.append(TEXT_601);
     
@@ -5721,7 +5723,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     
     
-    traceItem = av.getTraced("associationAdd", uClass);
+    //traceItem = av.getTraced("associationAdd", uClass);
     // How do you dynamically include a file in JET?!?
     if (includeFile == "association_SetUnidirectionalOptionalOne.jet")
     {
@@ -5937,7 +5939,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("callerArgumentsExcept",relatedAssociation));
     stringBuffer.append(TEXT_697);
     stringBuffer.append( 
-(traceItem!=null?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterNew",av)):"")
+(traceItemAssocAdd!=null?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterNew",av)):"")
 );
     stringBuffer.append(TEXT_698);
     stringBuffer.append(gen.translate("parameterNew",av));
@@ -5975,7 +5977,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_714);
     stringBuffer.append(TEXT_715);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_716);
     stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
@@ -5991,7 +5993,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_723);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_724);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av));
@@ -6029,7 +6031,7 @@ for (StateMachine smq : uClass.getStateMachines())
       append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_739);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_740);
     stringBuffer.append(TEXT_741);
@@ -6038,7 +6040,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_743);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_744);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
@@ -6106,7 +6108,7 @@ for (StateMachine smq : uClass.getStateMachines())
       append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } 
     stringBuffer.append(TEXT_773);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_774);
     stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
@@ -6122,7 +6124,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_781);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_782);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -6161,7 +6163,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(TEXT_797);
     stringBuffer.append(TEXT_798);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_799);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -6169,7 +6171,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_801);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_802);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
@@ -6227,7 +6229,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_826);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_827);
     stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
@@ -6243,7 +6245,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_834);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_835);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -6411,7 +6413,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
     stringBuffer.append(TEXT_913);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_914);
     stringBuffer.append(gen.relatedTranslate("parameterIsNew",av));
@@ -6427,7 +6429,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_921);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_922);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -6451,7 +6453,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_931);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_932);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -6459,7 +6461,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_934);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_935);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
@@ -6581,13 +6583,13 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_991);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_992);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_993);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_994);
     stringBuffer.append(gen.translate("parameterOne",av));
@@ -6641,13 +6643,13 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1015);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1016);
     stringBuffer.append(gen.translate("associationMany",av));
     stringBuffer.append(TEXT_1017);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1018);
     stringBuffer.append(gen.translate("parameterOne",av));
@@ -6954,7 +6956,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1159);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1160);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
@@ -6984,7 +6986,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1175);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1176);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -7004,7 +7006,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1183);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1184);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7017,7 +7019,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
     stringBuffer.append(TEXT_1189);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1190);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
@@ -7102,7 +7104,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.relatedTranslate("getMethod",av));
     stringBuffer.append(TEXT_1226);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1227);
     stringBuffer.append(gen.relatedTranslate("parameterExisting",av));
@@ -7132,7 +7134,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1242);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1243);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -7152,7 +7154,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1250);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1251);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7160,7 +7162,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1253);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1254);
     stringBuffer.append(gen.translate("parameterOne",av));
@@ -7189,7 +7191,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1264);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1265);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7197,7 +7199,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1267);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1268);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -7227,7 +7229,7 @@ for (StateMachine smq : uClass.getStateMachines())
       append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "    ")); } 
     stringBuffer.append(TEXT_1279);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1280);
     stringBuffer.append(TEXT_1281);
@@ -7236,7 +7238,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1283);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1284);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
@@ -7296,7 +7298,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1308);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1309);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7304,7 +7306,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1311);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1312);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
@@ -7332,7 +7334,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("minimumNumberOfMethod",av));
     stringBuffer.append(TEXT_1323);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1324);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7340,7 +7342,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1326);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1327);
     stringBuffer.append(gen.relatedTranslate("setMethod",av));
@@ -7479,7 +7481,7 @@ for (StateMachine smq : uClass.getStateMachines())
      if (customAddPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1391);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7487,7 +7489,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1393);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1394);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -7507,7 +7509,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1401);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1402);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7515,7 +7517,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1404);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1405);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
@@ -7541,7 +7543,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("maximumNumberOfMethod",av));
     stringBuffer.append(TEXT_1413);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1414);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7549,7 +7551,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1416);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1417);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -7572,7 +7574,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1426);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1427);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7580,7 +7582,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1429);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1430);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
@@ -7601,7 +7603,7 @@ for (StateMachine smq : uClass.getStateMachines())
      if (customAddPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } 
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1436);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -7609,7 +7611,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1438);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1439);
      if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
@@ -7639,7 +7641,7 @@ for (StateMachine smq : uClass.getStateMachines())
       append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } 
     stringBuffer.append(TEXT_1450);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1451);
     stringBuffer.append(TEXT_1452);
@@ -7648,7 +7650,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1454);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
+(traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("parameterOne",av)):"")
 );
     stringBuffer.append(TEXT_1455);
      if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 
@@ -8538,7 +8540,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1873);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1874);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -8551,7 +8553,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1879);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1880);
     stringBuffer.append(gen.translate("addOrMoveAtMethod",av));
@@ -8569,7 +8571,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("numberOfMethod",av));
     stringBuffer.append(TEXT_1887);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1888);
     stringBuffer.append(gen.translate("associationMany",av));
@@ -8582,11 +8584,11 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1893);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1894);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1895);
     stringBuffer.append(gen.translate("addAtMethod",av));
@@ -8594,7 +8596,7 @@ for (StateMachine smq : uClass.getStateMachines())
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_1897);
     stringBuffer.append( 
-(traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
+(traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 );
     stringBuffer.append(TEXT_1898);
     

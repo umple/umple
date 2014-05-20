@@ -23,22 +23,42 @@ public class TracerAssociationsTest extends TracerTemplateTest
     AssertAssoc("TraceAssociationCardinality.ump","TraceAssociationCardinality.");
   }
   
+  // * -- *
   @Test
-  public void TraceAssociationManyToManyAdd()
+  public void TraceBiAssocManyToManyAdd()
   {
-    AssertAssoc("TraceAssociationManyToManyAdd.ump","TraceAssociationManyToManyAdd.");
+    AssertAssoc("TraceBiAssocManyToManyAdd.ump","TraceBiAssocManyToManyAdd.");
   }
   
   @Test
-  public void TraceAssociationManyToManyRemove()
+  public void TraceBiAssocManyToManyRemove()
   {
-    AssertAssoc("TraceAssociationManyToManyRemove.ump","TraceAssociationManyToManyRemove.");
+    AssertAssoc("TraceBiAssocManyToManyRemove.ump","TraceBiAssocManyToManyRemove.");
   }
   
   @Test
-  public void TraceAssociationManyToManyRole()
+  public void TraceBiAssocManyToManyRole()
   {
-    AssertAssoc("TraceAssociationManyToManyRole.ump","TraceAssociationManyToManyRole.");
+    AssertAssoc("TraceBiAssocManyToManyRole.ump","TraceBiAssocManyToManyRole.");
+  }
+  
+  // 1 -- *
+  @Test
+  public void TraceBiAssocOneToManyAdd()
+  {
+    AssertAssoc("TraceBiAssocOneToManyAdd.ump","TraceBiAssocOneToManyAdd.");
+  }
+  
+  @Test
+  public void TraceBiAssocOneToManyRemove()
+  {
+    AssertAssoc("TraceBiAssocOneToManyRemove.ump","TraceBiAssocOneToManyRemove.");
+  }
+  
+  @Test
+  public void TraceBiAssocOneToManyRole()
+  {
+    AssertAssoc("TraceBiAssocOneToManyRole.ump","TraceBiAssocOneToManyRole.");
   }
 
   @Test @Ignore

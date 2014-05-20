@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
 import cruise.util.ConsoleTracer;
@@ -64,50 +64,39 @@ public class Company
     return 0;
   }
 
+  public Manager addManager()
+  {
+    return new Manager(this);
+  }
+
   public boolean addManager(Manager aManager)
   {
     boolean wasAdded = false;
     if (manager.contains(aManager)) { return false; }
-    manager.add(aManager);
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationManyToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
-    if (aManager.indexOfCompany(this) != -1)
+    Company existingCompany = aManager.getCompany();
+    boolean isNewCompany = existingCompany != null && !this.equals(existingCompany);
+    if (isNewCompany)
     {
-      wasAdded = true;
+      aManager.setCompany(this);
     }
     else
     {
-      wasAdded = aManager.addCompany(this);
-      if (!wasAdded)
-      {
-        manager.remove(aManager);
-      }
+      manager.add(aManager);
     }
+    wasAdded = true;
     return wasAdded;
   }
 
   public boolean removeManager(Manager aManager)
   {
     boolean wasRemoved = false;
-    if (!manager.contains(aManager))
+    //Unable to remove aManager, as it must always have a company
+    if (!this.equals(aManager.getCompany()))
     {
-      return wasRemoved;
-    }
-
-    int oldIndex = manager.indexOf(aManager);
-    manager.remove(oldIndex);
-    if (aManager.indexOfCompany(this) == -1)
-    {
+      manager.remove(aManager);
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyRemove.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+aManager );
       wasRemoved = true;
     }
-    else
-    {
-      wasRemoved = aManager.removeCompany(this);
-      if (!wasRemoved)
-      {
-        manager.add(oldIndex,aManager);
-      }
-    }
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationManyToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
     return wasRemoved;
   }
 
@@ -120,7 +109,6 @@ public class Company
       if(index > numberOfManager()) { index = numberOfManager() - 1; }
       manager.remove(aManager);
       manager.add(index, aManager);
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationManyToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
       wasAdded = true;
     }
     return wasAdded;
@@ -135,24 +123,21 @@ public class Company
       if(index > numberOfManager()) { index = numberOfManager() - 1; }
       manager.remove(aManager);
       manager.add(index, aManager);
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationManyToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
       wasAdded = true;
     } 
     else 
     {
       wasAdded = addManagerAt(aManager, index);
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssociationManyToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
     }
     return wasAdded;
   }
 
   public void delete()
   {
-    ArrayList<Manager> copyOfManager = new ArrayList<Manager>(manager);
-    manager.clear();
-    for(Manager aManager : copyOfManager)
+    for(int i=manager.size(); i > 0; i--)
     {
-      aManager.removeCompany(this);
+      Manager aManager = manager.get(i - 1);
+      aManager.delete();
     }
   }
 

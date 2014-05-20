@@ -13,7 +13,9 @@
       continue;
     } 
     
-    TraceItem traceItem = av.getTraced("associationAdd", uClass);
+    //TraceItem traceItem = av.getTraced("associationAdd", uClass);
+    TraceItem traceItemAssocAdd = av.getTraced("associationAdd", uClass);
+    TraceItem traceItemAssocRemove = av.getTraced("associationRemove", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -304,7 +306,7 @@
       %><%@ include file="association_AddManyToManyMethod.jet" %><%
     }
     
-    traceItem = av.getTraced("associationRemove", uClass);
+    //traceItem = av.getTraced("associationRemove", uClass);
     if (hasRemoveManyTemplateMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
@@ -316,7 +318,7 @@
     addNewLine = true;
     
     %><%
-    traceItem = av.getTraced("associationAdd", uClass);
+    //traceItem = av.getTraced("associationAdd", uClass);
     // How do you dynamically include a file in JET?!?
     if (includeFile == "association_SetUnidirectionalOptionalOne.jet")
     {
