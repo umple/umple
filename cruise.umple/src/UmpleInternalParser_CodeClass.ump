@@ -35,6 +35,7 @@ class UmpleInternalParser
   // last association made.
   internal AssociationVariable lastassoc = null;
   Position lastassocPosition = null;
+  internal Map<Token, UmpleClass> attributeAutouniqueImmutable = null;
   /*
    * Analyze class definitions and related tokens.
    * 
@@ -350,8 +351,25 @@ class UmpleInternalParser
       //Solution to issue 543
       //checkExtendsClass();
       checkAbstractClass();
+      checkAttributeConflictImmutableAutounique();
     }
   }
+  
+  private void checkAttributeConflictImmutableAutounique(){
+	   if(attributeAutouniqueImmutable != null && attributeAutouniqueImmutable.size() > 0){
+		   for(Map.Entry<Token, UmpleClass> entry : attributeAutouniqueImmutable.entrySet()){
+		    	  String attrNameCapital = Character.toUpperCase(entry.getKey().getValue("name").charAt(0)) + entry.getKey().getValue("name").substring(1);
+		    	  if(entry.getKey().getValue("autounique") != null)
+			    	  for(Attribute attr : entry.getValue().getAttributes())
+				   		  if(attr.getName().equals("next"+attrNameCapital))
+				   			getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName())); 
+		    	  if(entry.getKey().getValue("modifier") !=null)
+		    		  for(Attribute attr : entry.getValue().getAttributes())
+				   		  if(attr.getName().equals("canSet"+attrNameCapital)||attr.getName().equals("can_set_"+entry.getKey().getValue("name")))
+				   			getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName())); 
+		   }
+	   }	   
+   }
 
   private void postTokenInterfaceAnalysis()
   {
@@ -2330,6 +2348,12 @@ class UmpleInternalParser
     String name = attributeToken.getValue("name");
     String value = attributeToken.getValue("value");
     String derivedValue = attributeToken.getValue("code");
+    
+    if(isAutounique || attributeToken.getValue("modifier") != null){
+    	if(attributeAutouniqueImmutable == null)
+    		attributeAutouniqueImmutable = new HashMap<Token, UmpleClass>();
+    	attributeAutouniqueImmutable.put(attributeToken, aClass);
+    }
     
     if(!validName)
     {

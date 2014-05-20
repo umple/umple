@@ -999,6 +999,12 @@ public class UmpleParserTest
     Attribute number = model.getUmpleClass("Student").getAttribute("number");
     Assert.assertTrue(number.getIsUnique());
   }
+  
+  @Test
+  public void attributeConflictImmutableAndAutounique()
+  {
+    assertFailedParse("008_attributeConflictImmutableAutounique.ump", 38);
+  }
 
   @Test
   public void attribute_assignedValue()
