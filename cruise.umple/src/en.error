@@ -43,6 +43,7 @@
 35: 4, "http://umple.org/W035UninitializedConstant.html", 'const' variable '{0}' of type '{1}' was not initialized and its value was thus set to '{2}' ;
 36: 3, "http://umple.org/W036UnmanagedMultiplicity.html", The specific multiplicity bounds {0} cannot be managed by generated code, since this is a directed association ;
 37: 2, "http://umple.org/E037UninitializedConstantObject.html", 'const' variable '{0}' of type '{1}' was not initialized. Since '{1}' is not a built-in Umple data type no default value could be found. '{0}' must be initialized. ;
+38: 2, "http://umple.org/W9999FeatureUnderDevelopment.html" , Attribute '{0}' conflicts with immutable or autounique auto generated attributes '{1}';
 
 44: 3, "http://umple.org/W044AttributeDuplicatedinSuperclass.html", Class '{0}' has attribute name {1} that duplicates an attribute inherited from a superclass '{2}' ;
 45: 4, "http://umple.org/W045InitializedValueinKey.html", Attribute '{0}' in class '{1}' is in the key. Initializing it will result in all instances having this same value and being treated as equal ;

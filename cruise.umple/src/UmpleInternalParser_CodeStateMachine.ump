@@ -20,9 +20,11 @@ class UmpleInternalParser
   internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
   internal Map<State,List<Token>> possiblyUnknownStates = new HashMap<State,List<Token>>();
   
+  
   // Allow to declare several active objects within the same class, the name of the generated state-machine
   // will be "stateMachine<numberOfActiveObjects>"
   private static int numberOfActiveObjects = 1;
+  
   
   //Check if "extra code" is likely a malformed state machine
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
@@ -605,7 +607,6 @@ class UmpleInternalParser
     }
     return nextState;
   }
-  
   private void addDeepHistoryStatesToNestedStateMachines(State deepState)
   {
     StateMachine sm = deepState.getStateMachine();
