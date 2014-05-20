@@ -143,7 +143,6 @@ $output = readTemporaryFile("ump/" . $filename);
 <tr class="mainApplication">   
     <td id="textEditorColumn"  tabIndex="2"  class="textEditorColumn">
       <div id="umpleTextEditor" class="umpleTextEditor">
-        <div class="ui-resizable-handle ui-resizable-se" id="editorGrip"></div>
         <textarea id="umpleModelEditor" class="umpleModelEditor" wrap="off">
         </textarea>
         <textarea id="umpleLayoutEditor" class="umpleLayoutEditor" wrap="off"> </textarea>
