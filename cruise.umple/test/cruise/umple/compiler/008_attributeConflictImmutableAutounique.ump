@@ -1,0 +1,16 @@
+class Student1a
+{
+  immutable String name;
+  canSetName;
+}
+
+class Student2
+{
+  autounique id;
+  nextId;
+}
+class Student1b
+{
+  immutable String name;
+  can_set_name;
+}
