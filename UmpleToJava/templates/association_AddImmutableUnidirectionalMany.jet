@@ -5,10 +5,10 @@
     <% if (customAddPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av));
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
     <%= gen.translate("attributeCanSet",av) %> = false;
-<%= (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av))+"\n":"")
+<%= (traceItemAssocAddAssocAdd!=null&&traceItemAssocAddAssocAdd.getIsPre()?traceItemAssocAddAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av))+"\n":"")
 %>    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
     wasAdded = true;
-<%= (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av))+"\n":"")
+<%= (traceItemAssocAddAssocAdd!=null&&traceItemAssocAddAssocAdd.getIsPost()?traceItemAssocAddAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("parameterOne",av))+"\n":"")
 %>    <% if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av));
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "    ")); } %>
     return wasAdded;
