@@ -25,7 +25,10 @@ class UmpleInternalParser
   // will be "stateMachine<numberOfActiveObjects>"
   private static int numberOfActiveObjects = 1;
   
-  
+  //Number of ocurrences of a given state in a state machine. 
+  //More than one means that the transition is ambiguous and should generate a warning message 
+  private int numberOfOcurrences;
+   
   //Check if "extra code" is likely a malformed state machine
   private boolean extraCodeIsMalformedStateMachine(Token extraCodeToken){
     String code = extraCodeToken.getValue();
@@ -612,9 +615,29 @@ class UmpleInternalParser
         possiblyUnknownStates.get(nextState).add(transitionToken);
       }
     }
+    numberOfOcurrences = 0;
+    for(State state: sm.getStates()){
+    	if(state.getName().equals(name))
+    		numberOfOcurrences++;
+    	if(state.hasNestedStateMachines())
+    		checkUnclearTransitions(state.getNestedStateMachines(),name);
+    }
+    if(numberOfOcurrences > 1){
+    	getParseResult().addErrorMessage(new ErrorMessage(66,transitionToken.getPosition(),name));
+    }
     return nextState;
   }
-  
+  private void checkUnclearTransitions(List<StateMachine> sm, String name){
+	   for(StateMachine stateMachine : sm){
+		   for(State state: stateMachine.getStates()){
+			   if(state.getName().equals(name))
+		    		numberOfOcurrences++;
+			   if(state.hasNestedStateMachines()){
+				   checkUnclearTransitions(state.getNestedStateMachines(), name);
+			   }
+		    }
+	   }
+   }
    private State createStateFromStandAloneTransition(Token transitionToken, StateMachine sm){
 	    checkStateNameOfToken(transitionToken);
 	    
