@@ -161,6 +161,11 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(true, t.getEvent().isAutoTransition());
   }
   
+  @Test 
+  public void unclearTransitionToState(){
+	  assertHasWarning("100_unclearTransitionToState.ump", 0, 66, new Position("100_unclearTransitionToState.ump", 24, 3, 158));
+  }
+  
   @Test
   public void historyStatePlacement(){
     assertNoWarnings("238_historyState.ump");
