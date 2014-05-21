@@ -60,6 +60,12 @@ public class JsonTemplateTest extends TemplateTest
   {
     assertUmpleTemplateFor("json/ClassTemplateTest_Attributes.ump", "json/ClassTemplateTest_Attributes.json.txt");
   }
+  
+  @Test
+  public void AttributesConst()
+  {
+    assertUmpleTemplateFor("json/ClassTemplateTest_Attributes2.ump", "json/ClassTemplateTest_Attributes2.json.txt");
+  }
 
   @Test
   public void Association()
