@@ -5,33 +5,75 @@ class UmplificatorMain {
 	depend java.util.List;
 	depend cruise.umplificator.core.*;
 	depend java.io.File;
+	depend java.util.Arrays;
+	depend java.io.IOException;
 	// Log4j dependencies
 	depend org.apache.log4j.*;
+	// jOPT Simple dependency
+	depend joptsimple.*;
 	
 	static Logger logger = Logger.getLogger(UmplificatorMain.class);
-	
-	public static String console ;
   
 	public static void main(String[] args) {
-	 // Configure Logger
-	 logger.debug("Configure Logger from log4j.properties");
-	 if (args != null && args.length== 1){ 
-	 	    logger.debug("Umplification process started!");
-			List<File> inputFiles = FileHelper.getListOfFilesFromPath(args[0]);
-			if (inputFiles.size() >= 0 ){
-				Umplificator umplificator = new Umplificator();
-				console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
-			}
-	 }
-	 else {
-		printUsage();
-	 }
+		 // Configure Logger
+		 logger.debug("Configure Logger from log4j.properties");
+		 OptionParser optparser = initializeOptionParser();
+	     OptionSet optset = optParse(optparser, args);
+		 List<String> nonOpt = optset.nonOptionArguments();
+		 
+		 if (nonOpt.isEmpty()){ 
+	      	System.out.println("Please specify <umple_file or java_file> to process");
+	      	printUsage(optparser);
+	     	return;	 
+		 }
+		 logger.debug("Umplification process started!");
+		 List<File> inputFiles = FileHelper.getListOfFilesFromPath(args[0]);
+		 if (inputFiles.size() >= 0 ){
+			Umplificator umplificator = new Umplificator();
+			String console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
+			System.out.println(console);
+		 }
 	}
+
+	private static  OptionParser initializeOptionParser(){
+    	OptionParser optparser = new OptionParser();
+    
+	    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
+	    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+	    optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp").withRequiredArg().ofType(String.class);
+	    optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
+	    optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
+	    
+   	    return optparser;
+    }
+   
+   private static  OptionSet optParse(OptionParser optparser, String [] args){
+	    OptionSet optSet = null;
+	    try
+	    {
+	      optSet = optparser.parse(args);
+	    } 
+	    catch (joptsimple.OptionException e)
+	    {
+	      System.out.println("Option:" + e.getMessage());
+	      printUsage(optparser);
+	    }
 	
-	private static  void printUsage(){
-		console = "Usage: java -jar umplificator.jar <file/folder>\nExample: java -jar umplificator.jar Student.java";
-	    logger.info(console);
-	}
+	    return optSet;
+   }
+	
+
+  private static  void printUsage(OptionParser optparser){
+    System.out.println("Usage:  java -jar umplificator.jar <file/folder>\nExample: java -jar umplificator.jar Student.java");
+      try
+      {
+        optparser.printHelpOn(System.out);
+      } 
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
+  }
 	
     after constructor {
     	PropertyConfigurator.configure(getClass().getResource("/log4j.properties"));
