@@ -42,8 +42,18 @@ class JsonGenerator
         {
           jsonForAttributes += ", "; 
         }
+        
         String attributeType = attribute.getFullType();
-        jsonForAttributes += StringFormatter.format("{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0} }","\"",attributeType,attribute.getName());
+        String modifier = "";
+        
+        if (attribute.isConstant()) 
+        {
+          modifier = "const";
+        }
+        
+        jsonForAttributes += StringFormatter.format(
+            "{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, {0}modifier{0} : {0}{3}{0} }",
+            "\"",attributeType,attribute.getName(),modifier);
       }
       for(Method method : aClass.getMethods())
       {

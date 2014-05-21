@@ -23,6 +23,10 @@ UmpleClassFactory.create = function(data)
 
   for (var i = 0; i < data.attributes.length; i++)
   {
+    if(data.attributes[i].modifier == "const") 
+    {
+      continue;
+    }
     umpleClass.attributes.push(UmpleAttributeFactory.create(data.attributes[i]));
   }
   for (var i = 0; i < data.methods.length; i++)
