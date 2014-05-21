@@ -468,7 +468,7 @@ function handleUmpleTextChange()
   $filename = saveFile($input);
   $umpleOutput = executeCommand("java -jar umplesync.jar -{$action} \"{$actionCode}\" {$filename}");
   saveFile($umpleOutput,$filename);
-  echo urldecode($umpleOutput);
+  echo $umpleOutput;
   return;
 }
 
