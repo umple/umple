@@ -362,11 +362,11 @@ class UmpleInternalParser
 		    	  if(entry.getKey().getValue("autounique") != null)
 			    	  for(Attribute attr : entry.getValue().getAttributes())
 				   		  if(attr.getName().equals("next"+attrNameCapital))
-				   			getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName())); 
+				   			getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName(),"autounique",entry.getKey().getValue("name")));
 		    	  if(entry.getKey().getValue("modifier") !=null)
 		    		  for(Attribute attr : entry.getValue().getAttributes())
 				   		  if(attr.getName().equals("canSet"+attrNameCapital)||attr.getName().equals("can_set_"+entry.getKey().getValue("name")))
-				   			getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName())); 
+				   			getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName(),"immutable",entry.getKey().getValue("name")));
 		   }
 	   }	   
    }
