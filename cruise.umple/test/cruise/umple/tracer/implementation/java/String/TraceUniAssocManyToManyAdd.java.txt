@@ -1,0 +1,128 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.StringTracer;
+import java.util.Date;
+import java.util.*;
+
+public class Company
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Company Associations
+  private List<Manager> manager;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Company()
+  {
+    manager = new ArrayList<Manager>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Manager getManager(int index)
+  {
+    Manager aManager = manager.get(index);
+    return aManager;
+  }
+
+  public List<Manager> getManager()
+  {
+    List<Manager> newManager = Collections.unmodifiableList(manager);
+    return newManager;
+  }
+
+  public int numberOfManager()
+  {
+    int number = manager.size();
+    return number;
+  }
+
+  public boolean hasManager()
+  {
+    boolean has = manager.size() > 0;
+    return has;
+  }
+
+  public int indexOfManager(Manager aManager)
+  {
+    int index = manager.indexOf(aManager);
+    return index;
+  }
+
+  public static int minimumNumberOfManager()
+  {
+    return 0;
+  }
+
+  public boolean addManager(Manager aManager)
+  {
+    boolean wasAdded = false;
+    if (manager.contains(aManager)) { return false; }
+    manager.add(aManager);
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceUniAssocManyToManyAdd.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+aManager );
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeManager(Manager aManager)
+  {
+    boolean wasRemoved = false;
+    if (manager.contains(aManager))
+    {
+      manager.remove(aManager);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+
+  public boolean addManagerAt(Manager aManager, int index)
+  {  
+    boolean wasAdded = false;
+    if(addManager(aManager))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfManager()) { index = numberOfManager() - 1; }
+      manager.remove(aManager);
+      manager.add(index, aManager);
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceUniAssocManyToManyAdd.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveManagerAt(Manager aManager, int index)
+  {
+    boolean wasAdded = false;
+    if(manager.contains(aManager))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfManager()) { index = numberOfManager() - 1; }
+      manager.remove(aManager);
+      manager.add(index, aManager);
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceUniAssocManyToManyAdd.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addManagerAt(aManager, index);
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceUniAssocManyToManyAdd.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    manager.clear();
+  }
+
+}
