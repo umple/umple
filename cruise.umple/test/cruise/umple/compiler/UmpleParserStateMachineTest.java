@@ -10,6 +10,7 @@
 package cruise.umple.compiler;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.*;
@@ -790,6 +791,84 @@ public class UmpleParserStateMachineTest
     UmpleClass uClass = model.getUmpleClass("DVDplayer");
     State final1 = uClass.getStateMachine(0).findState("NormalOperation").getNestedStateMachine(0).findState("Final");
     Assert.assertEquals(true,final1.isFinalState());
+  }
+  
+  //Issue 148
+  @Test
+  public void standAloneTransitions()
+  {
+	    assertParse("212_standAloneTransition.ump","[classDefinition][name:C][stateMachine][inlineStateMachine][name:stateMachineName][state][stateName:S1][state][stateName:S2][standAloneTransition][event:e1][fromState:S1][action][code:action][toState:S2][standAloneTransition][event:e2][fromState:S2][toState:S1]");
+	    
+	    UmpleClass uClass = model.getUmpleClass("C");
+	    StateMachine sm = uClass.getStateMachine(0);
+	    List<State> on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());
+	    
+	    ArrayList<Transition> transition = sm.getAllTransitions();
+	    
+	    for(int i = 0; i < transition.size(); i++)
+		      System.out.println(transition.get(i).toString());
+	    
+	    assertParse("212_standAloneTransition2.ump","[classDefinition][name:C][stateMachine][inlineStateMachine][name:stateMachineName][standAloneTransition][event:e2][fromState:S2][toState:S1][state][stateName:S1][state][stateName:a][state][stateName:b][state][stateName:S2][standAloneTransition][event:e1][fromState:a][toState:b]");
+	    
+	    uClass = model.getUmpleClass("C");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());
+	    
+	    transition = sm.getAllTransitions();
+	    
+	    for(int i = 0; i < transition.size(); i++)
+		  System.out.println(transition.get(i).getEvent().getName());
+	    
+	    assertParse("212_standAloneTransition3.ump","[classDefinition][name:C][stateMachine][inlineStateMachine][name:stateMachineName][state][stateName:S1][state][stateName:a][state][stateName:b][standAloneTransition][event:e1][fromState:a][toState:b][state][stateName:S2][standAloneTransition][event:e2][fromState:S2][toState:S1]");
+	    
+	    uClass = model.getUmpleClass("C");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());
+	    
+	    transition = sm.getAllTransitions();
+	    
+	    for(int i = 0; i < transition.size(); i++)
+		  System.out.println(transition.get(i).getEvent().getName());
+	    
+	    
+	    assertParse("212_standAloneTransition4.ump","[classDefinition][name:C][stateMachine][inlineStateMachine][name:stateMachineName][standAloneTransition][guard][numExpr][constraintName][name:getClassSize][constraintParameterList][moreOp:>][constraintName][name:getMaximumClassSize][constraintParameterList][event:e2][fromState:S2][toState:S1][state][stateName:S1][state][stateName:a][state][stateName:b][state][stateName:S2][standAloneTransition][event:e1][guard][numExpr][constraintName][name:i][moreOp:>][number:0][fromState:S1][toState:S2]");
+	    
+	    uClass = model.getUmpleClass("C");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());
+	    
+	    transition = sm.getAllTransitions();
+	    
+	    for(int i = 0; i < transition.size(); i++)
+		  System.out.println(transition.get(i).getEvent().getName());
+	    
+	    assertParse("212_standAloneTransition5.ump","[classDefinition][name:C][stateMachine][inlineStateMachine][name:stateMachineName][state][stateName:S1][state][stateName:S2][standAloneTransition][fromState:S1][toState:S2][standAloneTransition][fromState:S2][toState:S1]");
+	    
+	    uClass = model.getUmpleClass("C");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());
+	    
+	    transition = sm.getAllTransitions();
+	    
+	    for(int i = 0; i < transition.size(); i++)
+		  System.out.println(transition.get(i).getEvent().getName());
+		
+	    
   }
 
   @Test

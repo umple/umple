@@ -40,9 +40,16 @@ class UmpleInternalParser
     
     boolean shouldBeLast = false;
     
-    if (myToken.is("transition") || myToken.is("autoTransition"))
+    //Issue 148
+    if (myToken.is("transition") || myToken.is("autoTransition") || myToken.is("standAloneTransition"))
     {
-      String[] stateNames = myToken.getValue("stateName").split("\\.");
+      String[] stateNames;
+      
+      if(myToken.is("transition") || myToken.is("autoTransition") )	
+        stateNames = myToken.getValue("stateName").split("\\.");
+      else
+    	stateNames = myToken.getValue("fromState").split("\\.");
+    	
       for(String stateName : stateNames)
       {
         if(shouldBeLast){setFailedPosition(myToken.getPosition(), 152, myToken.getValue("stateName"));}
@@ -607,6 +614,38 @@ class UmpleInternalParser
     }
     return nextState;
   }
+  
+   private State createStateFromStandAloneTransition(Token transitionToken, StateMachine sm){
+	    checkStateNameOfToken(transitionToken);
+	    
+	    String name = transitionToken.getValue("toState");
+	    State nextState;
+	    
+	    nextState = sm.findState(name);
+	    
+	    if ("Final".equals(name))
+	    {
+	      nextState = new State(name,sm);
+	    }
+	    else
+	    {
+	      if (nextState == null)
+	      {
+	        nextState = placeholderStateMachine.findState(name);
+	        if(nextState != null)possiblyUnknownStates.get(nextState).add(transitionToken);
+	      }
+
+	      if (nextState == null)
+	      {
+	        nextState = new State(name,placeholderStateMachine);
+	        possiblyUnknownStates.put(nextState, new ArrayList<Token>());
+	        possiblyUnknownStates.get(nextState).add(transitionToken);
+	      }
+	    }
+	    return nextState;
+	  }
+	  
+	  
   private void addDeepHistoryStatesToNestedStateMachines(State deepState)
   {
     StateMachine sm = deepState.getStateMachine();
@@ -684,6 +723,15 @@ class UmpleInternalParser
         sm.setQueued(true);
       }    
       
+      //Issue 148
+      if(stateToken.is("standAloneTransition"))
+      {
+    	  if(stateToken.getValue("event") != null)
+    	    analyzeStandAloneTransition(false,stateToken, stateToken.getValue("fromState"), null, sm);
+    	  else
+    		analyzeStandAloneTransition(true,stateToken, stateToken.getValue("fromState"), null, sm);
+      }
+      
       // Concurrency is only allowed between nested state-machines
       if (stateToken.is("||"))
       {
@@ -722,6 +770,14 @@ class UmpleInternalParser
         isFinalState = false;
         analyzeState(stateToken, s);
         changeType = null;
+        
+        for(Token state : stateToken.getSubTokens())
+        {
+        	 if(state.is("standAloneTransition"))
+             {
+           	  analyzeStandAloneTransition(false,state, state.getValue("fromState"), null, sm); 
+             }
+        }
       }
     }
     checkStateMachineForDuplicateEvents(stateMachineToken);
@@ -806,6 +862,183 @@ class UmpleInternalParser
       }
     }
   }
+  
+  //Issue 148
+   
+   private void analyzeStandAloneTransition(boolean isAutoTransition, Token transitionToken, String state, String changeType, StateMachine sm2){
+	   
+	   State fromState;
+	   
+	   fromState = sm2.findState(state);
+	   
+	   if (fromState == null)
+	   {
+		    
+		   fromState = placeholderStateMachine.findState(state);
+	       if(fromState != null)possiblyUnknownStates.get(fromState).add(transitionToken);
+	   }
+
+	   if (fromState == null)
+	   {
+		    fromState = new State(state,placeholderStateMachine);
+	        possiblyUnknownStates.put(fromState, new ArrayList<Token>());
+	        possiblyUnknownStates.get(fromState).add(transitionToken);
+	   }
+	   
+	   State nextState = createStateFromStandAloneTransition(transitionToken,fromState.getStateMachine());
+	    
+	    Transition t; 
+	    if ("-".equals(changeType))
+	    {
+	      t = Transition.createPlaceholder(nextState);
+	    }
+	    else
+	    {
+	      t = new Transition(fromState, nextState);
+	    }
+
+	    t.setAutoTransition(isAutoTransition);
+
+	    String eventName = transitionToken.getValue("event");
+	    String eventTimerAmount = transitionToken.getValue("timer");
+	    String name="";
+	    String type="";
+	    String paramType="";
+	    String paramName="";
+	    if (eventName == null && eventTimerAmount != null)
+	    {
+	      eventName = fromState.newTimedEventName(nextState);
+	    }
+
+	    Token guardToken = transitionToken.getSubToken("guard");
+	    if (guardToken != null)
+	    {
+	      List <ConstraintVariable> cvs = analyzeConstraint(guardToken, fromState.getStateMachine().getRootStateMachine().getUmpleClass()); //adds all identifiers to constraints
+	      Guard constraint = new Guard();
+	      for(ConstraintVariable cv: cvs)
+	      {
+	        constraint.addExpression(cv);
+	      }
+	      constraint.setPosition(guardToken.getPosition());
+	      constraint.setEndPosition(guardToken.getEndPosition());
+	      t.setGuard(constraint);//analyzeGuard(guardToken, fromState));
+	    }
+
+	    Token actionToken = transitionToken.getSubToken("action");
+	    if (actionToken != null)
+	    {
+	      
+	      t.setAction(analyzeAction(actionToken,fromState));
+	    }
+	    if (eventName != null || isAutoTransition)
+	    {
+	      StateMachine sm = fromState.getStateMachine();
+	      UmpleClass uClass = sm.getUmpleClass();
+	      Event event = isAutoTransition ? Event.createAutoTransition() : uClass == null ? sm.findOrCreateEvent(eventName) : uClass.findOrCreateEvent(eventName);
+	      if (eventTimerAmount != null)
+	      {
+	        event.setIsTimer(true);
+	        event.setTimerInSeconds(eventTimerAmount);
+	      }
+	      
+	      if(event.getName().equals("unspecified") && !sm.getPooled())
+	      {
+	        event.setUnspecified(true);
+	      }
+	      
+	      if(event.getName().equals("unspecified") && sm.getPooled())
+	      {
+	        Token eventToken = transitionToken.getSubToken("event");
+	        setFailedPosition(eventToken.getPosition(),62, sm.getName());
+	      }
+	      
+	      t.setEvent(event);
+	      
+	      if ("-".equals(changeType))
+	      {
+	        fromState.removeTransition(t);      
+	      }
+	     
+	     for (Token subEventToken : transitionToken.getSubTokens())
+	     {
+	     	Event aEvent = sm.getEvent(event.getName());
+	        
+	      	if (subEventToken.is("parameterList"))
+	      	{
+	      		if ( aEvent == event && ! event.hasParams() )
+	      		{
+	      			for(Token parameterToken : subEventToken.getSubTokens())
+	      			{
+	      				boolean isList = false;
+	      				if (parameterToken.is("parameter"))
+	      				{
+	      					if (parameterToken.getSubToken("type") != null)
+	      					{
+	      						paramType = parameterToken.getSubToken("type").getValue();
+	      					}
+	      					if (parameterToken.getSubToken("list") != null)
+	      					{
+	      						isList = parameterToken.getSubToken("list").getValue() != null;
+	      					}
+	      					
+	      					paramName = parameterToken.getSubToken("name").getValue();
+	      					MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
+	      					aParameter.setIsList(isList);
+	      					if (event.getParams().contains(aParameter))
+	      					{
+	      						break;
+	      					}
+	      					else
+	      					{
+	      						event.addParam(aParameter);
+	      					}
+	      				}
+	      			}
+	      		}
+	      		else
+	      		{ 
+	      			for(Token parameterSecondToken : subEventToken.getSubTokens())
+	      			{
+	      				boolean isListt = false;
+	      				if (parameterSecondToken.is("parameter"))
+	      				{
+	      					String paramTypee="";
+	      					if (parameterSecondToken.getSubToken("type") != null)
+	      					{
+	      						type = parameterSecondToken.getSubToken("type").getValue();
+	      					}
+	      					if (parameterSecondToken.getSubToken("list") != null)
+	      					{
+	      						isListt = parameterSecondToken.getSubToken("list").getValue() != null;
+	      					}
+	      					name = parameterSecondToken.getSubToken("name").getValue();
+	      				}	
+	      			}
+	      		
+	      			for (int i=1; i <= event.getParams().size(); i++)
+	      			{
+	      			    if (!event.getArgs().contains(type) || !event.getArgs().contains(name))
+	      			    {
+	      			    	setFailedPosition(transitionToken.getPosition(), 51, event.getArgs());
+	      			    	
+	      			    }
+	      			}
+	      		}
+	      	}
+	      }
+	      
+	      for(Token subToken : transitionToken.getSubTokens())
+	      {
+	        if (subToken.is("activity"))
+	        {
+	          t.setAutoTransition(false);
+	          Activity act = analyzeActivity(subToken, fromState);
+	          act.setOnCompletionEvent(event);
+	        }
+	    }      
+	    
+	    }
+	  }
 
 	//Code written by Eric Telmer
   private void checkStateMachineForDuplicateEvents(Token stateMachineToken){

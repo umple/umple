@@ -11,11 +11,12 @@ stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] | 
 
 activeDefinition : [=active] [name]? [[moreCode]]+
 
-inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] )* }
+//Issue 148
+inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] | [[standAloneTransition]])* }
 referencedStateMachine : [name] as [definitionName] ( { [[extendedStateMachine]] } | ; )
 
-//Issue 547
-extendedStateMachine#: ( [[comment]] | [=changeType:+| - |- |*]? [[state]] )*
+//Issue 547 and 148
+extendedStateMachine#: ( [[comment]] | [=changeType:+| - |- |*]? [[state]] | [[standAloneTransition]] )*
 
 // An enum is a state machine that has no events
 // 	stateName is prefixed with ~ to match alphanumeric names only.
@@ -24,8 +25,8 @@ enum : [~name:key] { [~stateName]? (, [~stateName])* }
 
 state : [=final]? [stateName] { [[stateInternal]]* } 
 
-//Issue 547
-stateInternal-# : [[comment]] | [=changeType:+| - |- |*]? [[stateEntity]] | [**extraCode]
+//Issue 547 and 148
+stateInternal-# : [[comment]] | [=changeType:+| - |- |*]? [[stateEntity]] | [[standAloneTransition]] |[**extraCode] 
 stateEntity- : [=-||] | [[entryOrExitAction]] | [[autoTransition]] | [[transition]] | [[activity]] | [[state]] | [[trace]] | ;
 
 autoTransition : [[activity]]? [[autoTransitionBlock]]
@@ -38,6 +39,9 @@ autoTransitionBlock- : [[guard]]? ( [[action]] -> | -> [[action]] | -> ) [stateN
 // A transition guard can come before or after the arrow
 // The order of guard and event definition can also be interchanged
 transition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? ( [[action]] -> | -> [[action]] | -> ) [stateName] ; 
+
+//Issue148
+standAloneTransition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? [fromState] ( [[action]] -> | -> [[action]] | -> ) [toState] ;
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event] ( [[parameterList]] )?
 afterEveryEvent- : afterEvery -( [timer] -)
