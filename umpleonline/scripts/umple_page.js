@@ -542,9 +542,9 @@ Page.toggleToolItem = function(id, doubleClicked)
 
 Page.unselectAllToggleTools = function()
 {
-  Action.removeNewClass();
-  Action.removeNewAssociation();
-  Action.removeNewGeneralization();
+  DiagramEdit.removeNewClass();
+  DiagramEdit.removeNewAssociation();
+  DiagramEdit.removeNewGeneralization();
   
   var allSelectedItems = "ul.toggle li.selected"; 
   jQuery(allSelectedItems).removeClass("selected highlight");
@@ -558,9 +558,9 @@ Page.selectToggleTool = function(toolSelected)
 {
   if (Page.selectedItem != null)
   {
-    Action.removeNewClass();
-    Action.removeNewAssociation();
-    Action.removeNewGeneralization();
+    DiagramEdit.removeNewClass();
+    DiagramEdit.removeNewAssociation();
+    DiagramEdit.removeNewGeneralization();
   }
   
   Page.enableEditDragAndResize(false);

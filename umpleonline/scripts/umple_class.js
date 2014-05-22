@@ -231,7 +231,7 @@ function UmpleClass()
         }
         else
         {
-          attributesInnerHtml += format('<div class="umpleAttribute"><span id="{2}_attribute_{3}" name="attributeEdit" class="editable editableDoubleClick">{0} : {1}</span> <img src="scripts/delete2.jpg" onclick="Action.attributeDelete({4}{2}{4},{4}{3}{4})" /></div>',attr.name,attr.type,this.id,i,"'");
+          attributesInnerHtml += format('<div class="umpleAttribute"><span id="{2}_attribute_{3}" name="attributeEdit" class="editable editableDoubleClick">{0} : {1}</span> <img src="scripts/delete2.jpg" onclick="DiagramEdit.attributeDelete({4}{2}{4},{4}{3}{4})" /></div>',attr.name,attr.type,this.id,i,"'");
         }
       }
     } // End of loop adding attributes

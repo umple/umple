@@ -69,6 +69,7 @@ document.write('<script type="text/javascript" src="scripts/umple_attribute.js">
 document.write('<script type="text/javascript" src="scripts/umple_method.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_history.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_restore.js"><\/script>');
+document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"><\/script>');
 
 // Code mirror
 document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/codemirror.js"><\/script>');
