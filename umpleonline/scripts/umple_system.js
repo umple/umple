@@ -121,7 +121,7 @@ UmpleSystem.addClass = function(umpleClass)
      if (!Page.readOnly) {classObj.draggable
       ({
           containment:'parent', 
-          stop:function(event,ui){Action.classMoved(event.target)}
+          stop:function(event,ui){DiagramEdit.classMoved(event.target)}
       });
  /*     classObj.resizable
       ({
@@ -129,8 +129,8 @@ UmpleSystem.addClass = function(umpleClass)
           minWidth:UmpleClassFactory.defaultSize.width, 
           autoHide:true,
           containment:'parent',
-          resize:function(event,ui){Action.classResizing(event,ui);},
-          stop:function(event,ui){Action.classResized(event,ui);}
+          resize:function(event,ui){DiagramEditclassResizing(event,ui);},
+          stop:function(event,ui){DiagramEditclassResized(event,ui);}
       }); */
     }
     
@@ -279,8 +279,8 @@ UmpleSystem.updateClass = function(umpleClass)
     minWidth:UmpleClassFactory.defaultSize.width, 
     autoHide:true,
     containment:'parent',
-    resize:function(event,ui){Action.classResizing(event,ui);},
-    stop:function(event,ui){Action.classResized(event,ui);}
+    resize:function(event,ui){DiagramEditclassResizing(event,ui);},
+    stop:function(event,ui){DiagramEditclassResized(event,ui);}
   }); */
   
   //remove the jquery resizable handle
@@ -435,15 +435,12 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
       if (!oldOffsetOne.equalsIgnoreSize(umpleAssociation.offsetOnePosition) ||
           !oldOffsetTwo.equalsIgnoreSize(umpleAssociation.offsetTwoPosition))
       {
-      	// redraw the association
-      	UmpleSystem.redrawAssociation(umpleAssociation);
-      	
+        // redraw the association
+        UmpleSystem.redrawAssociation(umpleAssociation);
+        
         // prepare an update call to the back and add it to the queue
         var editAssociation = Json.toString(umpleAssociation);
-        var update = new Object();
-    	update.callback = Action.updateUmpleTextCallback;
-    	update.post = format("action=editAssociation&actionCode={0}",editAssociation);
-    	Action.textUpdateQueue.push(update);
+        DiagramEdit.updateUmpleText(format("action=editAssociation&actionCode={0}",editAssociation));
       }
     }
   }
@@ -489,8 +486,8 @@ UmpleSystem.setDragableAssociationAnchor = function(umpleAssociation,anchorNbr)
     
     jQuery(anchorSel).draggable
     ({
-    	drag: function(event, ui) {Action.reflexiveAssociationMoving("#" + event.target.id);},
-    	stop: function(event, ui) {Action.associationMoved("#" + event.target.id);},
+    	drag: function(event, ui) {DiagramEdit.reflexiveAssociationMoving("#" + event.target.id);},
+    	stop: function(event, ui) {DiagramEdit.associationMoved("#" + event.target.id);},
     	cursor: 'pointer',
     	snap: '#' + umpleClassId,
     	snapTolerance: 5,
@@ -505,8 +502,8 @@ UmpleSystem.setDragableAssociationAnchor = function(umpleAssociation,anchorNbr)
     
     jQuery(anchorSel).draggable
     ({
-    	drag: function(event, ui) {Action.regularAssociationMoving("#" + event.target.id);},
-    	stop: function(event, ui) {Action.associationMoved("#" + event.target.id);},
+    	drag: function(event, ui) {DiagramEdit.regularAssociationMoving("#" + event.target.id);},
+    	stop: function(event, ui) {DiagramEdit.associationMoved("#" + event.target.id);},
     	cursor: 'pointer',
     	snap: '#' + umpleClassId,
     	snapTolerance: 5,

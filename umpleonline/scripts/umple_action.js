@@ -4,16 +4,15 @@
 //
 // Actions triggered by UI elements in UmpleOnline
 // plus helper functions
+// Actions associated with editing the graphical diagram are
+// located in the umple_action_diagram.js file.
+//
 Action = new Object();
 Action.waiting_time = 1500;
 Action.oldTimeout = null;
-Action.newClass = null;
-Action.newAssociation = null;
-Action.newGeneralization = null;
 Action.minCanvasSize = null;
 Action.minEditorSize = null;
 Action.elementClicked = false;
-Action.textUpdateQueue = [];
 Action.canCreateByDrag = true;
 Action.manualSync = false;
 Action.diagramInSync = true;
@@ -23,7 +22,7 @@ Action.savedCanonical = "";
 
 Action.clicked = function(event)
 {
-  Page.clickCount += 1;
+  Page.clickCount += 1;  
   
   var obj = event.currentTarget;
   var action = obj.id.substring(6);
@@ -663,31 +662,31 @@ Action.classClicked = function(event)
   
   if (Page.selectedItem == "DeleteEntity")
   {
-    Action.classDeleted(obj.id);
+    DiagramEdit.classDeleted(obj.id);
   }
   else if (Page.selectedItem == "AddAssociation")
   {
-    if (Action.newAssociation == null)
+    if (DiagramEdit.newAssociation == null)
     {
       Action.canCreateByDrag = false;
-      Action.createAssociationPartOne(event);
+      DiagramEdit.createAssociationPartOne(event);
     }
     else
     {
-      Action.createAssociationPartTwo(event);
+      DiagramEdit.createAssociationPartTwo(event);
       setTimeout(function(){ Action.canCreateByDrag = true; }, 500);
     }
   }
   else if (Page.selectedItem == "AddGeneralization")
   {
-    if (Action.newGeneralization == null)
+    if (DiagramEdit.newGeneralization == null)
     {
-      var successful = Action.createGeneralizationPartOne(event);
+      var successful = DiagramEdit.createGeneralizationPartOne(event);
       if (successful) Action.canCreateByDrag = false;
     }
     else
     {
-      Action.createGeneralizationPartTwo(event);
+      DiagramEdit.createGeneralizationPartTwo(event);
       setTimeout(function(){ Action.canCreateByDrag = true; }, 500);
     }
   }
@@ -696,72 +695,6 @@ Action.classClicked = function(event)
   {
     Action.classSelected(obj);
   }
-}
-
-/* Creating an association (via diagram) is divided into two parts:
- * The first is selecting the first class, and
- * then anchoring the first end of the association line.  
- * The second is doing the same for the second chosen class, and then launching
- * necessary actions to add the association to the Umple System
- */
-Action.createAssociationPartOne = function(event)
-{
-  // get the position of the click and compute the first end's position
-  var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
-  var umpleSystem = UmpleSystem.position();
-  var classOneX = mousePosition.x - umpleSystem.x;
-  var classOneY = mousePosition.y - umpleSystem.y;
-  
-  // draw a dummy association line and anchor it to the location of the click
-  Action.classSelected(event.currentTarget);
-  Action.newAssociation = new UmpleAssociation();
-  Action.newAssociation.classOneId = event.currentTarget.id;
-  Action.newAssociation.classOnePosition = new UmplePosition(classOneX,classOneY,0,0); 
-}
-
-Action.createAssociationPartTwo = function(event)
-{
-  var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
-  Action.classSelected(event.currentTarget);
-  
-  if (Action.newAssociation.classOneId <= event.currentTarget.id)
-  {
-    Action.newAssociation.classTwoId = event.currentTarget.id;
-    Action.newAssociation.classTwoPosition = mousePosition.subtract(UmpleSystem.position());
-  }
-  else
-  {
-    Action.newAssociation.classTwoId = Action.newAssociation.classOneId;
-    Action.newAssociation.classTwoPosition = Action.newAssociation.classOnePosition;
-    Action.newAssociation.classOneId = event.currentTarget.id;
-    Action.newAssociation.classOnePosition = mousePosition.subtract(UmpleSystem.position());
-  }
-  
-  Action.addAssociation(Action.newAssociation);
-}
-
-Action.createGeneralizationPartOne = function(event)
-{
-  var childClass = UmpleSystem.find(event.currentTarget.id);
-  if (childClass.extendsClass != null) return false;
-      
-  Action.classSelected(event.currentTarget);
-  Action.newGeneralization = new UmpleGeneralization();
-  Action.newGeneralization.childId = event.currentTarget.id;
-  
-  umpleSystem = UmpleSystem.position();
-  childPositionX = Dom.x(event) - umpleSystem.x;
-  childPositionY = Dom.y(event) - umpleSystem.y;
-  Action.newGeneralization.childPosition = new UmplePosition(childPositionX,childPositionY,0,0);
-}
-
-Action.createGeneralizationPartTwo = function(event)
-{
-  Action.classSelected(event.currentTarget);
-    
-  Action.newGeneralization.parentId = event.currentTarget.id;
-  Action.newGeneralization.parentPosition = new UmplePosition(Dom.x(event),Dom.y(event),0,0);
-  Action.addGeneralization(Action.newGeneralization);
 }
 
 Action.associationClicked = function(event)
@@ -782,95 +715,6 @@ Action.generalizationClicked = function(event)
     
   var obj = event.currentTarget;
   Action.generalizationSelected(obj);
-}
-
-Action.classDeleted = function(diagramId)
-{
-  var addToQueue = true;
-  var umpleClass = UmpleSystem.find(diagramId);
-  var associationsAffected = [];
-  var generalizationsAffected = [];
-  
-  for (var i=0; i<UmpleSystem.umpleAssociations.length; i++)
-  {
-    var umpleAssociation = UmpleSystem.umpleAssociations[i];
-    if (umpleAssociation.contains(umpleClass))
-    {
-      associationsAffected.push(umpleAssociation.id);  
-    }
-  }
-  for (var i=0; i<UmpleSystem.umpleClasses.length; i++)
-  {
-    var currentClass = UmpleSystem.umpleClasses[i];
-    if (currentClass.extendsClass == umpleClass.id)
-    {
-      generalizationsAffected.push(currentClass.id + "_generalization");
-    }
-  }
-  
-  for (var i=0; i<associationsAffected.length; i++)
-  {
-    Action.associationDeleted(associationsAffected[i], addToQueue);
-  }
-  for (var i=0; i<generalizationsAffected.length; i++)
-  {
-    Action.generalizationDeleted(generalizationsAffected[i], addToQueue);
-  }
-    
-  var result = UmpleSystem.removeClass(diagramId);
-  var removeClass = Json.toString(result);
-  
-  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
-  Page.showModelLoading();
-  Page.showLayoutLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format("action=removeClass&actionCode={0}",removeClass));
-}
-
-Action.associationDeleted = function(diagramId, addToQueue)
-{
-  if (addToQueue == undefined) addToQueue = false;
-  var removed = UmpleSystem.removeAssociation(diagramId);
-  var json = Json.toString(removed);
-  
-  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
-  
-  if (addToQueue)
-  {
-    var update = new Object();
-    update.callback = Action.updateUmpleTextCallback;
-    update.post = format("action=removeAssociation&actionCode={0}",json);
-    Action.textUpdateQueue.push(update);
-  }
-  else
-  {
-    Page.showModelLoading();
-    Page.showLayoutLoading();
-    Action.ajax(Action.updateUmpleTextCallback,format("action=removeAssociation&actionCode={0}",json));
-  }
-}
-
-Action.generalizationDeleted = function(diagramId, addToQueue)
-{
-  if (addToQueue == undefined) addToQueue = false;
-  var removed = UmpleSystem.removeGeneralization(diagramId)
-  var json = Json.toString(removed);
-  
-  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
-  
-  if (addToQueue)
-  {
-    var update = new Object();
-    update.callback = Action.updateUmpleTextCallback;
-    update.post = format("action=removeGeneralization&actionCode={0}",json);
-    Action.textUpdateQueue.push(update);
-  }
-  else
-  {
-    Page.showModelLoading();
-    Page.showLayoutLoading();
-    Action.ajax(Action.updateUmpleTextCallback,format("action=removeGeneralization&actionCode={0}",json));
-  }
-  return;
 }
 
 Action.associationHover = function(event,isHovering)
@@ -916,7 +760,7 @@ Action.associationSelected = function(obj)
   if (Page.selectedItem == "DeleteEntity" && obj != null)
   {
     var addToQueue = false;
-    Action.associationDeleted(obj.id, addToQueue);
+    DiagramEdit.associationDeleted(obj.id, addToQueue);
     return;
   }  
   
@@ -952,7 +796,7 @@ Action.generalizationSelected = function(obj)
   if (Page.selectedItem == "DeleteEntity" && obj != null)
   {
     var addToQueue = false;
-    Action.generalizationDeleted(obj.id, addToQueue);
+    DiagramEdit.generalizationDeleted(obj.id, addToQueue);
     return;
   }  
   
@@ -1020,13 +864,13 @@ Action.classMouseDown = function(event)
 {
   if (!Action.canCreateByDrag) return;
   
-  if (Page.selectedItem == "AddAssociation" && Action.newAssociation == null)
+  if (Page.selectedItem == "AddAssociation" && DiagramEdit.newAssociation == null)
   {
-  Action.createAssociationPartOne(event);
+  DiagramEdit.createAssociationPartOne(event);
   }
-  else if (Page.selectedItem == "AddGeneralization" && Action.newGeneralization == null)
+  else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization == null)
   {
-  Action.createGeneralizationPartOne(event);
+  DiagramEdit.createGeneralizationPartOne(event);
   }
 }
 
@@ -1034,13 +878,13 @@ Action.classMouseUp = function(event)
 {
   if (!Action.canCreateByDrag) return;
   
-  if (Page.selectedItem == "AddAssociation" && Action.newAssociation != null)
+  if (Page.selectedItem == "AddAssociation" && DiagramEdit.newAssociation != null)
   {
-    Action.createAssociationPartTwo(event);
+    DiagramEdit.createAssociationPartTwo(event);
   }
-  else if (Page.selectedItem == "AddGeneralization" && Action.newGeneralization != null)
+  else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
   {
-    Action.createGeneralizationPartTwo(event);
+    DiagramEdit.createGeneralizationPartTwo(event);
   }
 }
 
@@ -1050,22 +894,22 @@ Action.mouseMove = function(event)
   
   if (Page.selectedItem == "AddClass")
   {
-    if (Action.newClass == null)
+    if (DiagramEdit.newClass == null)
     {
-      Action.newClass = new UmpleClass();
-      Action.newClass.name = "";
-      Action.newClass.id = "tempClass";
+      DiagramEdit.newClass = new UmpleClass();
+      DiagramEdit.newClass.name = "";
+      DiagramEdit.newClass.id = "tempClass";
     }
-    Action.drawClassOutline(event, Action.newClass);
+    Action.drawClassOutline(event, DiagramEdit.newClass);
   }
   
-  if (Action.newAssociation != null && Page.selectedItem == "AddAssociation")
+  if (DiagramEdit.newAssociation != null && Page.selectedItem == "AddAssociation")
   {
-    Action.drawAssociationLine(event, Action.newAssociation);
+    Action.drawAssociationLine(event, DiagramEdit.newAssociation);
   }
-  if (Action.newGeneralization != null && Page.selectedItem == "AddGeneralization")
+  if (DiagramEdit.newGeneralization != null && Page.selectedItem == "AddGeneralization")
   {
-    Action.drawGeneralizationLine(event, Action.newGeneralization);
+    Action.drawGeneralizationLine(event, DiagramEdit.newGeneralization);
   }
 }
 
@@ -1125,20 +969,20 @@ Action.umpleCanvasClicked = function(event)
   if (Page.selectedItem == "AddClass")
   {
     var position = new UmplePosition(Math.round(event.pageX),Math.round(event.pageY),0,0);
-    Action.addClass(position);
+    DiagramEdit.addClass(position);
   }
-  else if (Page.selectedItem == "AddAssociation" && Action.newAssociation != null)
+  else if (Page.selectedItem == "AddAssociation" && DiagramEdit.newAssociation != null)
   {
     if (Page.clickCount > 1)
     {
-      Action.removeNewAssociation();
+    	DiagramEdit.removeNewAssociation();
     }
   }
-  else if (Page.selectedItem == "AddGeneralization" && Action.newGeneralization != null)
+  else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization != null)
   {
     if (Page.clickCount > 1)
     {
-      Action.removeNewGeneralization();
+    	DiagramEdit.removeNewGeneralization();
     }
   }
   else
@@ -1159,16 +1003,15 @@ Action.updateUmpleTextCallback = function(response)
   // Page.setFeedbackMessage("update text callback -");
   // Page.catFeedbackMessage(response.responseText);
   // Page.catFeedbackMessage("-");
-
   
-  if (Action.textUpdateQueue.length > 0)
+  if (DiagramEdit.textChangeQueue.length == 0) 
   {
-    var update = Action.textUpdateQueue.shift();
-    Action.ajax(update.callback, update.post);
+    DiagramEdit.pendingChanges = false;
+    Page.hideLoading();
   }
   else
   {
-    Page.hideLoading();
+    DiagramEdit.doTextUpdate();
   }
   
   //Uncomment for testing purposes only - to update the image after updating the text
@@ -1341,18 +1184,18 @@ Action.keyboardShortcut = function(event)
   {
     if(Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0)
     {
-      Action.classDeleted(Page.selectedClass.id);
-	  event.preventDefault();	  
+      DiagramEdit.classDeleted(Page.selectedClass.id);
+      event.preventDefault();	  
     }
     else if(Page.selectedAssociation)
     {
-      Action.associationDeleted(Page.selectedAssociation.id);
-	  event.preventDefault();	  
+      DiagramEdit.associationDeleted(Page.selectedAssociation.id);
+      event.preventDefault();	  
     }
     else if(Page.selectedGeneralization)
     {
-      Action.generalizationDeleted(Page.selectedGeneralization.id);
-	  event.preventDefault();
+      DiagramEdit.generalizationDeleted(Page.selectedGeneralization.id);
+      event.preventDefault();
     }
   }
 
@@ -1827,75 +1670,6 @@ Action.updateUmpleDiagramCallback = function(response)
   Page.hideLoading();
 }
 
-Action.addClass = function(position)
-{
-  Action.removeNewClass();
-  var umpleClass = UmpleSystem.createClass(position);
-  var umpleJson = Json.toString(umpleClass);
-  
-  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
-  Page.showModelLoading();
-  Page.showLayoutLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format("action=addClass&actionCode={0}",umpleJson));
-}
-
-/* Create an association based on the temporary association
- * line drawn in the diagram using "add association" drawing tool
- */
-Action.addAssociation = function(line)
-{
-  // the line shown when selecting participating classes
-  // is a dummy - erase it and create association 
-  Action.removeNewAssociation();
-  var umpleAssociation = UmpleSystem.createAssociation( line.classOneId,
-                              line.classTwoId,
-                              line.classOnePosition.add(UmpleSystem.position()),
-                              line.classTwoPosition.add(UmpleSystem.position()));
-  // obtain the json representation of the association
-  var umpleJson = Json.toString(umpleAssociation);
-  
-  // unselect all drawing tools in the palette and show loading images
-  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
-  Page.showModelLoading();
-  Page.showLayoutLoading();
-  
-  Action.ajax(Action.updateUmpleTextCallback,format("action=addAssociation&actionCode={0}",umpleJson));
-}
-
-Action.addGeneralization = function(umpleGeneralization)
-{
-  Action.removeNewGeneralization();
-  UmpleSystem.createGeneralization(umpleGeneralization.childId, umpleGeneralization.parentId);
-  var umpleJson = Json.toString(umpleGeneralization);
-  
-  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
-  Page.showModelLoading();
-  Page.showLayoutLoading();
-  
-  Action.ajax(Action.updateUmpleTextCallback,format("action=addGeneralization&actionCode={0}",umpleJson));
-}
-
-Action.classMoved = function(targetClass)
-{
-  var umpleClassMoved = UmpleSystem.find(targetClass.id);
-  var classObj = jQuery("#" + umpleClassMoved.id);
- 
-  // assure the offsets are round numbers
-  newPositionX = Math.round(classObj.offset().left);
-  newPositionY = Math.round(classObj.offset().top);
-  UmpleSystem.updatePosition(umpleClassMoved,newPositionX,newPositionY);
-  
-  var editClass = Json.toString(umpleClassMoved);
-  var umpleCode = Page.getUmpleCode();
-  
-  // make call to the back end to update the umple code
-  Page.showLayoutLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-  Action.classSelected(targetClass);
-  
-  UmpleSystem.trimOverlappingAssociations(umpleClassMoved);
-}
-
 // This function is no longer being called as its caller has been commented out
 Action.classResizing = function(event, ui)
 {
@@ -1907,41 +1681,6 @@ Action.classResizing = function(event, ui)
   var newHeight = Math.round(jQuery(classSel).height());
   
   UmpleSystem.updatingSize(umpleClass,newWidth,newHeight);
-}
-
-// This function is no longer being called as its caller has been commented out
-Action.classResized = function(event, ui)
-{
-  var classDiv = event.target;
-  var id = classDiv.id;
-  var umpleClass = UmpleSystem.find(id);
-  
-  UmpleSystem.updateClass(umpleClass);
-  UmpleSystem.redrawGeneralizationsTo(umpleClass, addToQueue);
-  
-  // update the position (in umple code) of any association affected
-  for (var i=0; i<UmpleSystem.umpleAssociations.length; i++)
-  {
-    var umpleAssociation = UmpleSystem.umpleAssociations[i];
-    if (umpleAssociation.contains(umpleClass))
-    {
-      var isClassOne = umpleAssociation.classOneId == umpleClass.id;
-      var offset = isClassOne ? umpleAssociation.offsetOnePosition : umpleAssociation.offsetTwoPosition;
-    
-      var anchorId = isClassOne ? "_anchor0" : "_anchor1";
-      var dragDivSelector = "#" + umpleAssociation.id + anchorId;
-      var addToQueue = true;
-    
-      Action.associationMoved(dragDivSelector, addToQueue);
-    }
-  }
-  
-  var editClass = Json.toString(umpleClass);
-  var umpleCode = Page.getUmpleCode();
-  
-  Page.showLayoutLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format('action=editClass&actionCode={0}',editClass));
-  Action.classSelected(classDiv);
 }
 
 Action.associationSnap = function(x, y, dragDivSel) 
@@ -1959,76 +1698,6 @@ Action.associationSnapClassReady = function(x,y,umpleClass)
 {
   var perimeter = UmpleClassFactory.perimeterPosition(umpleClass,new UmplePosition(x,y,0,0),UmpleSystem.position());
   return [perimeter.x, perimeter.y];
-}
-
-Action.regularAssociationMoving = function(dragSelector)
-{
-  if (Action.newAssociation == null)
-  {
-    var dragId = jQuery(dragSelector).attr("id");
-    var id = dragId.substr(0,dragId.length - "_anchorX".length);
-
-    // get the association being moved and create a temporary one
-    // to display movement
-    var association = UmpleSystem.findAssociation(id);
-    var dragAssociation = new UmpleAssociation();
-    
-    // identify which end is being moved and update its attributes
-    if (dragId.endsWith("_anchor0"))
-    {
-      dragAssociation.classOneId = association.classTwoId;
-      dragAssociation.classOnePosition = association.classTwoPosition;
-      dragAssociation.offsetOnePosition = association.offsetTwoPosition;
-    }
-    else
-    {
-      dragAssociation.classOneId = association.classOneId;
-      dragAssociation.classOnePosition = association.classOnePosition;
-      dragAssociation.offsetOnePosition = association.offsetOnePosition;
-    } 
-    Action.newAssociation = dragAssociation;
-  }
-  
-  var dragOffset = jQuery(dragSelector).offset();
-  var xys = Action.associationSnap(Math.round(dragOffset.left),Math.round(dragOffset.top),dragSelector);
-  var screenPosition = new UmplePosition(xys[0],xys[1]);
-  Action.newAssociation.classTwoPosition = screenPosition.subtract(UmpleSystem.position());
-  Action.newAssociation.offsetTwoPosition = new UmplePosition(0,0,0,0);
-
-  var canvasSelector = "#" + Page.umpleCanvasId();
-  jQuery(canvasSelector).append(Action.newAssociation.drawable());
-}
-
-Action.reflexiveAssociationMoving = function(dragSelector)
-{
-  var dragId = jQuery(dragSelector).attr("id");
-  var id = dragId.substr(0,dragId.length - "_anchorX".length);
-  var association = UmpleSystem.findAssociation(id);
-  
-  if (Action.newAssociation == null)
-  {
-    Action.newAssociation = new UmpleAssociation();
-    Action.newAssociation.classOneId = association.classOneId;
-    Action.newAssociation.classTwoId = association.classTwoId;
-    Action.newAssociation.classOnePosition = association.classOnePosition;
-    Action.newAssociation.classTwoPosition = association.classTwoPosition;
-    Action.newAssociation.offsetOnePosition = association.offsetOnePosition;
-    Action.newAssociation.offsetTwoPosition = association.offsetTwoPosition;
-    Action.newAssociation.id = Action.newAssociation.getElementId();
-  }
-  
-  var dragOffset = jQuery(dragSelector).offset();
-  var xys = Action.associationSnap(Math.round(dragOffset.left),Math.round(dragOffset.top),dragSelector);
-  var screenPosition = (new UmplePosition(xys[0],xys[1],0,0));
-  var offset = screenPosition.subtract(UmpleSystem.position());
-  offset.x = offset.x - Action.newAssociation.classOnePosition.x;
-  offset.y = offset.y - Action.newAssociation.classOnePosition.y;
-  
-  if (dragId.endsWith("_anchor0")) Action.newAssociation.offsetOnePosition = offset;
-  else Action.newAssociation.offsetTwoPosition = offset;
-  
-  var canvasSelector = "#" + Page.umpleCanvasId();
-  jQuery(canvasSelector).append(Action.newAssociation.drawableReflexive());
 }
 
 Action.updateMovedAssociation = function(dragDivSel, association)
@@ -2057,59 +1726,6 @@ Action.updateMovedAssociation = function(dragDivSel, association)
   Action.associationSelected(null);
 }
 
-Action.associationMoved = function(dragDivSelector, addToQueue)
-{
-  if (Action.newAssociation != null) Action.removeNewAssociation();
-  if (addToQueue == undefined) addToQueue = false;
-  
-  var dragDivId = jQuery(dragDivSelector).attr("id");
-  var associationId = dragDivId.substr(0, dragDivId.length - "_anchorX".length);
-  var association = UmpleSystem.findAssociation(associationId);
-  
-  Action.updateMovedAssociation(dragDivSelector, association);
-    
-  var editAssociation = Json.toString(association);
-  
-  if (addToQueue)
-  {
-    var update = new Object();
-    update.callback = Action.updateUmpleTextCallback;
-    update.post = format("action=editAssociation&actionCode={0}",editAssociation);
-    Action.textUpdateQueue.push(update);
-  }
-  else
-  {
-    Page.showLayoutLoading();
-    Action.ajax(Action.updateUmpleTextCallback,format("action=editAssociation&actionCode={0}",editAssociation));
-  }
-}
-
-Action.classNameChanged = function(diagramId,oldName,newName)
-{
-  if(newName.length=0 || !newName.match(/^[_a-zA-Z0-9]+$/))
-  {
-
-    Action.updateUmpleDiagram();
-    var message="Class names must be alphanumeric. &lt;"+(newName.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
-)+"&gt is not valid.";
-    setTimeout(function() {Page.setFeedbackMessage(message);},2000);
-    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
-  }
-  else
-  {
-    var umpleClass = UmpleSystem.renameClass(diagramId,oldName,newName);
-    // Reset height and width to minimum - TRYING
-    umpleClass.position.width = UmpleClassFactory.defaultSize.width;
-
-    var editClass = Json.toString(umpleClass);
-    delete umpleClass.oldname;
-  
-    Page.showModelLoading();
-    Page.showLayoutLoading();
-     Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-    }
-}
-
 Action.validateAttributeName = function(newAttribute)
 {
   return newAttribute.length!=0  && (
@@ -2122,152 +1738,6 @@ Action.validateMethodName = function(newMethod)
 {
   return newMethod.length!=0 &&
      newMethod.match(/^[-+#]?\s*[_a-zA-Z0-9]+\s*\(([_a-zA-Z0-9]+(\[\])?(,\s*[_a-zA-Z0-9]+(\[\])?)*)?\)(\s*:\s*[_a-zA-Z0-9]+(\[\])?)?$/);
-}
-
-Action.attributeNameChanged = function(diagramId,index,oldName,newAttribute)
-{
-  if(!Action.validateAttributeName(newAttribute))
-  {
-    Action.updateUmpleDiagram();
-    setTimeout(function() {Page.setFeedbackMessage("UML Attributes must be alphanumeric with an optional type after a colon. &lt;"+(newAttribute.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
-)+"&gt is not valid.");},2000);
-    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
-  }
-  else
-  {
-    var umpleClass = UmpleSystem.find(diagramId);
-    umpleClass.attributes[index].set(newAttribute);
-    UmpleSystem.redraw(umpleClass);
-  
-    var editClass = Json.toString(umpleClass);
-    Page.showModelLoading();
-      Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-    umpleClass.resetAttribute(index);
-  }
-}
-
-Action.attributeNew = function(diagramId,attributeInput)
-{
-  if(!Action.validateAttributeName(attributeInput))
-  {
-     Action.updateUmpleDiagram();
-    setTimeout(function() {Page.setFeedbackMessage("UML Attributes must be alphanumeric with an optional type after a colon. &lt;"+(attributeInput.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
-)+"&gt is not valid.");},2000);
-    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
-  }
-  else // new attribute is valid
-  {
-    var umpleClass = UmpleSystem.find(diagramId);
-    var attributeIndex = umpleClass.addAttribute(attributeInput);
-
-    var editClass = Json.toString(umpleClass);
-    Page.showModelLoading();
-      Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-
-    umpleClass.resetAttribute(attributeIndex);
-    UmpleSystem.updateClass(umpleClass);
-    UmpleSystem.redrawGeneralizationsTo(umpleClass);
-    UmpleSystem.trimOverlappingAssociations(umpleClass);
-  }
-}
-
-Action.methodNew = function(diagramId, methodInput)
-{
-  if(!Action.validateMethodName(methodInput))
-  {
-    Action.updateUmpleDiagram();
-    setTimeout(function() {Page.setFeedbackMessage("Invalid UML Method. &lt;"+(methodInput.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.");},2000);
-    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
-  }
-  else
-  {
-    var umpleClass = UmpleSystem.find(diagramId);
-    var methodIndex = umpleClass.addMethod(methodInput);
-    var editClass = Json.toString(umpleClass);
-    Page.showModelLoading();
-    Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-    umpleClass.resetMethod(methodIndex);
-    UmpleSystem.updateClass(umpleClass);
-    UmpleSystem.redrawGeneralizationsTo(umpleClass);
-    UmpleSystem.trimOverlappingAssociations(umpleClass); 
-  }
-}
-
-Action.methodChanged = function(diagramId,index,oldName,newMethod)
-{
-  if(!Action.validateMethodName(newMethod))
-  {
-    Action.updateUmpleDiagram();
-    setTimeout(function() {Page.setFeedbackMessage("Invalid UML Method. &lt;"+(newMethod.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.");},2000);
-    setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
-  }
-  else
-  {
-    var umpleClass = UmpleSystem.find(diagramId);
-    umpleClass.methods[index].set(newMethod);
-    UmpleSystem.redraw(umpleClass);
-    var editClass = Json.toString(umpleClass);
-    Page.showModelLoading();
-    Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-    umpleClass.resetMethod(index);
-  }
-}
-
-
-Action.methodDelete = function(diagramId,index)
-{
-  var umpleClass = UmpleSystem.find(diagramId);
-  umpleClass.removeMethod(index);
-  // Reset height and width to sensible values
-  var classObj = jQuery("#" + umpleClass.id);
-  //  umpleClass.position.height = Math.round(classObj.height());
-  //  umpleClass.position.width = Math.round(classObj.width());
-
-  umpleClass.position.height = 28+17*(umpleClass.attributes.size()+umpleClass.methods.size());
-// This needs fixing so it picks up the correct width
-// Look trimOverlap, which seems to know the correct width
-  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
-
-//  umpleClass.position.height = UmpleClassFactory.defaultSize.height;
-//  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
-
-  var editClass = Json.toString(umpleClass);
-  Page.showModelLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-
-  umpleClass.resetMethod(index);
-  UmpleSystem.updateClass(umpleClass);
-  UmpleSystem.redrawGeneralizationsTo(umpleClass);
-  UmpleSystem.trimOverlappingAssociations(umpleClass);
-}
-
-
-
-Action.attributeDelete = function(diagramId,index)
-{
-  var umpleClass = UmpleSystem.find(diagramId);
-  umpleClass.removeAttribute(index);
-  // Reset height and width to sensible values
-  var classObj = jQuery("#" + umpleClass.id);
-//  umpleClass.position.height = Math.round(classObj.height());
-//  umpleClass.position.width = Math.round(classObj.width());
-
-  umpleClass.position.height = 28+17*(umpleClass.attributes.size()+umpleClass.methods.size());
-// This needs fixing so it picks up the correct width
-// Look trimOverlap, which seems to know the correct width
-  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
-
-//  umpleClass.position.height = UmpleClassFactory.defaultSize.height;
-//  umpleClass.position.width = UmpleClassFactory.defaultSize.width;
-
-  var editClass = Json.toString(umpleClass);
-  Page.showModelLoading();
-  Action.ajax(Action.updateUmpleTextCallback,format("action=editClass&actionCode={0}",editClass));
-
-  umpleClass.resetAttribute(index);
-  UmpleSystem.updateClass(umpleClass);
-  UmpleSystem.redrawGeneralizationsTo(umpleClass);    
-  UmpleSystem.trimOverlappingAssociations(umpleClass);
 }
 
 Action.toggleAttributes = function()
@@ -2306,59 +1776,29 @@ InlineEditor.elementChanged = function(obj, oldVal, newVal)
   if (editType == "className")
   {
     var id = objId.substr(0,objId.length - "_name".length);
-    Action.classNameChanged(id,oldVal,newVal);
+    DiagramEdit.classNameChanged(id,oldVal,newVal);
   }
   else if (editType == "attributeEdit")
   {
     var index = objId.substr(objId.lastIndexOf("_") + 1);
     var id = objId.substr(0,objId.length - "_attribute_".length - index.length);
-    Action.attributeNameChanged(id,index,oldVal,newVal);
+    DiagramEdit.attributeNameChanged(id,index,oldVal,newVal);
   }
   else if(editType == "methodEdit")
   {
     var index = objId.substr(objId.lastIndexOf("_") + 1);
     var id = objId.substr(0,objId.length - "_method_".length - index.length);
-    Action.methodChanged(id,index,oldVal,newVal);
+    DiagramEdit.methodChanged(id,index,oldVal,newVal);
   }
   else if (editType == "attributeNew")
   {
     var id = objId.substr(0,objId.length - "_newAttribute".length);
-    Action.attributeNew(id,newVal);
+    DiagramEdit.attributeNew(id,newVal);
   }
   else if(editType == "methodNew")
   {
     var id = objId.substr(0,objId.length - "_newMethod".length);
-    Action.methodNew(id,newVal);
-  }
-}
-
-Action.removeNewClass = function()
-{
-  if (Action.newClass != null)
-  {
-    var classSelector = "#" + Action.newClass.id;
-    Action.newClass = null;
-    jQuery(classSelector).remove();
-  }
-}
-
-Action.removeNewAssociation = function()
-{
-  if (Action.newAssociation != null)
-  {
-    var lineSelector = "#"+Action.newAssociation.getElementId();
-    jQuery(lineSelector).remove();
-    Action.newAssociation = null;
-  }
-}
-
-Action.removeNewGeneralization = function()
-{
-  if (Action.newGeneralization != null)
-  {
-    var lineSelector = "#" + Action.newGeneralization.getElementId();
-    jQuery(lineSelector).remove();
-    Action.newGeneralization = null;
+    DiagramEdit.methodNew(id,newVal);
   }
 }
 
