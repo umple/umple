@@ -94,7 +94,7 @@ public class Company
     if (!this.equals(aManager.getCompany()))
     {
       manager.remove(aManager);
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyRemove.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+aManager );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyRemove.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
       wasRemoved = true;
     }
     return wasRemoved;

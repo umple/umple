@@ -1,24 +1,44 @@
 
 namespace cruise.tracer.test;
 
-class CompanyManyToManyRole
+
+//------------------------------- Uni Association tracing
+
+class CompanyBiManyToManyRole
 {
   * -- * Manager managerA;
-  //----- trace role name (i.e. both addition and removal of links)
   trace managerA;
 }
 
-class CompanyManyToManyAdd
+class CompanyBiManyToManyAdd
 {
   * -- * Manager managerB;
-  //----- trace addition of links
   trace add managerB;
 }
 
-class CompanyManyToManyRemove
+class CompanyBiManyToManyRemove
 {
   * -- * Manager managerC;
-  //----- trace addition of links
+  trace remove managerC;
+}
+
+//------------------------------- Bi Association tracing
+
+class CompanyUniManyToManyRole
+{
+  * -> * Manager managerA;
+  trace managerA;
+}
+
+class CompanyUniManyToManyAdd
+{
+  * -> * Manager managerB;
+  trace add managerB;
+}
+
+class CompanyUniManyToManyRemove
+{
+  * -> * Manager managerC;
   trace remove managerC;
 }
 

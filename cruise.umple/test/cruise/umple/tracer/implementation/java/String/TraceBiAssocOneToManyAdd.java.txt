@@ -83,7 +83,7 @@ public class Company
     {
       manager.add(aManager);
     }
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyAdd.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+aManager );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyAdd.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
     wasAdded = true;
     return wasAdded;
   }

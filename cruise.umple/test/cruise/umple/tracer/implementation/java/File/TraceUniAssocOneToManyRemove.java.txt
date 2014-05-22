@@ -79,7 +79,7 @@ public class Company
     if (manager.contains(aManager))
     {
       manager.remove(aManager);
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceUniAssocOneToManyRemove.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+aManager );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceUniAssocOneToManyRemove.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
       wasRemoved = true;
     }
     return wasRemoved;
