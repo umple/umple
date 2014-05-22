@@ -1,0 +1,29 @@
+class C 
+{
+
+ stateMachineName {
+  S1 {}
+
+  S2 {}
+
+  e1 S1 -> /{action} S2;
+
+  e2 S2 -> S1;
+ }
+}
+
+
+class C 
+{
+  stateMachineName 
+  {
+
+    S3
+    {
+      e4 -> S1;
+    }
+    e4 S1 -> S3;
+
+  }
+
+}

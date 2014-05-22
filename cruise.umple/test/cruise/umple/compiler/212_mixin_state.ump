@@ -1,0 +1,22 @@
+statemachine OnOffStateMachine
+{
+  On { flip -> Off; }
+  Off { flip -> On; }
+}
+
+statemachine OnOffStateMachine
+{
+  Amber { flip -> On; }
+}
+
+statemachine OnOffStateMachine
+{
+  test1 {}
+  test2 {}
+}
+
+class X
+{
+  bulb as OnOffStateMachine;
+}
+

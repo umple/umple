@@ -872,10 +872,64 @@ public class UmpleParserStateMachineTest
 	    
 	    for(int i = 0; i < transition.size(); i++)
 		  System.out.println(transition.get(i).getEvent().getName());
+	    
+	    assertHasWarning("212_standAloneTransition6.ump", 0, 50, new Position("212_standAloneTransition6.ump", 4, 2, 33));
 		
 	    
   }
 
+  
+  //Issue 200
+  @Test
+  public void mixStateMachine()
+  {
+	    assertParse("212_mixin_state.ump","[stateMachineDefinition][name:OnOffStateMachine][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][stateName:On][state][stateName:Amber][transition][event:flip][stateName:On][state][stateName:test1][state][stateName:test2][stateMachineDefinition][name:OnOffStateMachine][state][stateName:Amber][transition][event:flip][stateName:On][stateMachineDefinition][name:OnOffStateMachine][state][stateName:test1][state][stateName:test2][classDefinition][name:X][stateMachine][referencedStateMachine][name:bulb][definitionName:OnOffStateMachine]");
+
+	    UmpleClass uClass = model.getUmpleClass("X");
+	    StateMachine sm = uClass.getStateMachine(0);
+	    List<State> on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());
+	        
+	    assertParse("212_mixin_state2.ump","[classDefinition][name:X][attribute][name:testattr][stateMachine][inlineStateMachine][name:sm1][state][stateName:s1][transition][event:e1][stateName:s2][classDefinition][name:X][attribute][name:anotherattr][stateMachine][inlineStateMachine][name:sm1][state][stateName:s2][transition][event:e1][stateName:s1]");
+	    
+	    uClass = model.getUmpleClass("X");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());
+
+	  
+	    assertParse("212_mixin_state3.ump","[stateMachineDefinition][name:Machine][state][stateName:On][transition][event:flip][stateName:Off][transition][event:flop][stateName:Off][state][stateName:Off][state][stateName:Test][stateMachineDefinition][name:Machine][state][stateName:Test][classDefinition][name:OnOffSwitch][stateMachine][referencedStateMachine][name:bulb][definitionName:Machine][extendedStateMachine][state][stateName:On][changeType:-][transition][event:flip][stateName:Off]");
+	    
+	    uClass = model.getUmpleClass("OnOffSwitch");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());
+	    
+	    assertParse("212_mixin_state4.ump","[stateMachineDefinition][name:OnOffStateMachine][state][stateName:On][transition][event:flip][stateName:Off][state][stateName:Off][transition][event:flip][stateName:On][classDefinition][name:X][stateMachine][referencedStateMachine][name:bulb][definitionName:OnOffStateMachine][extendedStateMachine][state][stateName:Amber]");
+	    
+	    uClass = model.getUmpleClass("X");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());	    
+	    
+	    assertParse("212_mixin_state5.ump","[classDefinition][name:C][stateMachine][inlineStateMachine][name:stateMachineName][state][stateName:S1][state][stateName:S2][standAloneTransition][event:e1][fromState:S1][action][code:action][toState:S2][standAloneTransition][event:e2][fromState:S2][toState:S1][classDefinition][name:C][stateMachine][inlineStateMachine][name:stateMachineName][state][stateName:S3][transition][event:e4][stateName:S1][standAloneTransition][event:e4][fromState:S1][toState:S3]");
+	    
+	    uClass = model.getUmpleClass("C");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());	   
+	    
+  }
   @Test
   public void addEvent()
   {

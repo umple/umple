@@ -1,0 +1,20 @@
+
+statemachine Machine
+{
+  On { flip -> Off; flop -> Off; }
+  Off {}
+}
+
+
+statemachine Machine
+{
+  Test {} 
+}
+
+class OnOffSwitch
+{
+  bulb as Machine
+  {
+    On { - flip -> Off;}
+  }
+}

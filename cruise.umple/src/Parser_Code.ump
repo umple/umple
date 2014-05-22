@@ -315,6 +315,22 @@ class Token
     }
     return stringSoFar;
   }
+  
+    //Issue 200
+   public Token copy()
+   {
+	   Token nToken = new Token(this.getName()+"", this.getValue()+"", 
+			   new Position(getPosition().getFilename(), getPosition().getLineNumber(), getPosition().getCharacterOffset(), getPosition().getOffset()));
+	   
+	   if(this.hasSubTokens())
+         for (Token t : subTokens)
+	     {
+	       nToken.addSubToken(t.copy());    
+	     }
+       
+       return nToken;
+   }
+  
 
 }
 
