@@ -29,6 +29,21 @@ public class ConsoleTracerAssociationsTest extends ConsoleTracerTestTemplate
           //---------------- CompanyManyToManyRemove
           "as_r,managerC,2",
           "as_r,managerC,1",
+          "as_r,managerC,0",
+          //---------------- CompanyManyToManyRole
+          "as_a,managerA,1",
+          "as_a,managerA,2",
+          "as_a,managerA,3",
+          "as_r,managerA,2",
+          "as_a,managerA,3",
+          //---------------- CompanyManyToManyAdd
+          "as_a,managerB,1",
+          "as_a,managerB,2",
+          "as_a,managerB,3",
+          "as_a,managerB,3",
+          //---------------- CompanyManyToManyRemove
+          "as_r,managerC,2",
+          "as_r,managerC,1",
           "as_r,managerC,0"
 
       };
@@ -43,6 +58,7 @@ public class ConsoleTracerAssociationsTest extends ConsoleTracerTestTemplate
           String[] actualOutput = x.split(",");
           String[] expectedOutput = expected[index].split(",");
 
+          System.out.println("x = "+x);
           // header skip
           if( index != 0 )
             for( int i = 0 ; i < expectedOutput.length ; ++i )
@@ -58,35 +74,59 @@ public class ConsoleTracerAssociationsTest extends ConsoleTracerTestTemplate
 
     //--------------------------------------- invoke associations tracing
 
-    CompanyManyToManyRole compMA = new CompanyManyToManyRole();
+    CompanyBiManyToManyRole compBiMA = new CompanyBiManyToManyRole();
 
     Manager m1 = new Manager();
     Manager m2 = new Manager();
     Manager m3 = new Manager();
 
-    compMA.addManagerA(m1);
-    compMA.addManagerA(m2);
-    compMA.addManagerA(m3);
-    compMA.removeManagerA(m1);
-    compMA.addManagerA(m1);
+    compBiMA.addManagerA(m1);
+    compBiMA.addManagerA(m2);
+    compBiMA.addManagerA(m3);
+    compBiMA.removeManagerA(m1);
+    compBiMA.addManagerA(m1);
 
+    CompanyBiManyToManyAdd compBiMB = new CompanyBiManyToManyAdd();
 
-    CompanyManyToManyAdd compMB = new CompanyManyToManyAdd();
+    compBiMB.addManagerB(m1);
+    compBiMB.addManagerB(m2);
+    compBiMB.addManagerB(m3);
+    compBiMB.removeManagerB(m3);
+    compBiMB.addManagerB(m3);
 
-    compMB.addManagerB(m1);
-    compMB.addManagerB(m2);
-    compMB.addManagerB(m3);
-    compMB.removeManagerB(m3);
-    compMB.addManagerB(m3);
+    CompanyBiManyToManyRemove compBiMC = new CompanyBiManyToManyRemove();
 
-    CompanyManyToManyRemove compMC = new CompanyManyToManyRemove();
+    compBiMC.addManagerC(m1);
+    compBiMC.addManagerC(m2);
+    compBiMC.addManagerC(m3);
+    compBiMC.removeManagerC(m3);
+    compBiMC.removeManagerC(m2);
+    compBiMC.removeManagerC(m1);
+    
+    CompanyUniManyToManyRole compUniMA = new CompanyUniManyToManyRole();
 
-    compMC.addManagerC(m1);
-    compMC.addManagerC(m2);
-    compMC.addManagerC(m3);
-    compMC.removeManagerC(m3);
-    compMC.removeManagerC(m2);
-    compMC.removeManagerC(m1);
+    compUniMA.addManagerA(m1);
+    compUniMA.addManagerA(m2);
+    compUniMA.addManagerA(m3);
+    compUniMA.removeManagerA(m1);
+    compUniMA.addManagerA(m1);
+
+    CompanyUniManyToManyAdd compUniMB = new CompanyUniManyToManyAdd();
+
+    compUniMB.addManagerB(m1);
+    compUniMB.addManagerB(m2);
+    compUniMB.addManagerB(m3);
+    compUniMB.removeManagerB(m3);
+    compUniMB.addManagerB(m3);
+
+    CompanyUniManyToManyRemove compUniMC = new CompanyUniManyToManyRemove();
+
+    compUniMC.addManagerC(m1);
+    compUniMC.addManagerC(m2);
+    compUniMC.addManagerC(m3);
+    compUniMC.removeManagerC(m3);
+    compUniMC.removeManagerC(m2);
+    compUniMC.removeManagerC(m1);
 
   }
 

@@ -69,7 +69,7 @@ public class Company
     boolean wasAdded = false;
     if (manager.contains(aManager)) { return false; }
     manager.add(aManager);
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceUniAssocManyToManyAdd.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+aManager );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceUniAssocManyToManyAdd.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
     wasAdded = true;
     return wasAdded;
   }

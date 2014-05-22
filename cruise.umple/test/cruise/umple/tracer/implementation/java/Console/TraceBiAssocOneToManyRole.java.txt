@@ -83,7 +83,7 @@ public class Company
     {
       manager.add(aManager);
     }
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+aManager );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager() );
     wasAdded = true;
     return wasAdded;
   }
@@ -95,7 +95,7 @@ public class Company
     if (!this.equals(aManager.getCompany()))
     {
       manager.remove(aManager);
-    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+aManager );
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocOneToManyRole.ump,6,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager() );
       wasRemoved = true;
     }
     return wasRemoved;
