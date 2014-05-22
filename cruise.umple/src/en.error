@@ -52,7 +52,7 @@
 48: 2, "http://umple.org/PageBeingDeveloped.html", Attribute '{0}' in class '{1}' generates method '{2}' which is duplicate;
 
 # State-Machine related messages
-50: 4, "http://umple.org/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an end state ;
+50: 4, "http://umple.org/W050TargetStateNotFound.html", State '{0}' has not been declared, it is being treated as an new state ;
 51: 2, "http://umple.org/E051EventParametersMustMatch.html", Event parameter(s) '{0}' inconsistent with previous declaration of the same event ; 
 52: 2, "http://umple.org/E052StateMachineNameClash.html", Association or attribute can not have same name as state machine '{0}' ;
 53: 2, "http://umple.org/E053NoConcurrencyAtTopLevel.html", State machine {0} has concurrent states, but concurrency is only allowed in nested substates or in 'active' blocks ;

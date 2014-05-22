@@ -242,7 +242,13 @@ class UmpleInternalParser
     	Map.Entry<State, List<Token>> entry = (Map.Entry<State, List<Token>>)i.next();
     	List<Token> tokens = (List<Token>)entry.getValue();
 		for(int j = 0; j < tokens.size(); j++){
-			setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue("stateName"));
+			//Issue 148
+			if(tokens.get(j).is("standAloneTransition"))
+			{
+			  setFailedPosition(tokens.get(j).getPosition(), 50, entry.getKey().getName());
+			}
+			else
+			  setFailedPosition(tokens.get(j).getPosition(), 50, tokens.get(j).getValue("stateName"));
 		}    
     }
     possiblyUnknownStates = new HashMap<State,List<Token>>();
@@ -447,9 +453,52 @@ class UmpleInternalParser
     	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
     }
 
-    stateMachineNameToToken.put(name,stateMachineToken);
+     //Issue200
+    StateMachine sm = null;
     
-    StateMachine sm = new StateMachine(name);
+    if ((uClassifier != null) && (uClassifier instanceof UmpleClass)) 
+    {
+	    if(((UmpleClass)uClassifier).getStateMachine(name) != null)
+	    {
+	      	sm = ((UmpleClass)uClassifier).getStateMachine(name);
+	    }
+    }
+    
+    if(sm == null)
+    {
+    
+	    if(model.getStateMachineDefinition(name) != null)
+	    {
+	      sm = model.getStateMachineDefinition(name);
+	      Token stateToken;
+	      
+	      List<Token> smToken = stateMachineToken.getSubTokens();
+	      int i = 0;
+	      
+	      while(i < stateMachineToken.numberOfSubTokens())
+	      {
+	    	  stateToken = smToken.get(i);
+	    	  if(stateToken.is("state"))
+	    	  {
+	    		  
+	    		  stateMachineNameToToken.get(name).addSubToken(stateToken.copy());
+	    		  i++;
+	    	  }
+	    	  else
+	    	  {
+	    		  i++;
+	    	  }
+	    		  
+	      }
+	      
+	    }
+	    else
+	    {
+	      sm = new StateMachine(name);
+	      stateMachineNameToToken.put(name,stateMachineToken);
+	    }
+    }
+    
     boolean wasSet = true;
     if (uClassifier instanceof UmpleClass) {
     	wasSet = sm.setUmpleClass((UmpleClass)uClassifier);
@@ -730,9 +779,14 @@ class UmpleInternalParser
 
   private void populateStateMachine(Token stateMachineToken, StateMachine sm, UmpleClassifier uClassifier)
   {
-    boolean isFirst = true;
+    boolean isFirst;
     boolean isFinalState = false;
     String changeType = null;
+    
+    if (sm.getStates().size() != 0)
+    	isFirst = false;
+    else
+    	isFirst = true;
     
     for(Token stateToken : stateMachineToken.getSubTokens())
     {

@@ -1,0 +1,6 @@
+class C {
+
+ stateMachineName {
+  e2 S8 -> S6;
+  }
+}
