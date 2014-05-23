@@ -2424,37 +2424,46 @@ for (StateMachine smq : uClass.getStateMachines())
     append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
     append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForQSM",uClass));   
   }
+
+  boolean foundQueuedSM = false;
   for(StateMachine sm : uClass.getStateMachines())
   {
     if(sm.isQueued())
     {
-       append(stringBuffer,"\n  ");
-       append(stringBuffer,"\n  MessageQueue queue;");
-       append(stringBuffer,"\n  Thread removal;");
+       foundQueuedSM = true;
     }
-    break;
   }
-  
+  if(foundQueuedSM == true)
+  {
+    append(stringBuffer,"\n  ");
+    append(stringBuffer,"\n  MessageQueue queue;");
+    append(stringBuffer,"\n  Thread removal;");
+  } 
+ 
+  boolean foundPooledSM = false;
   for(StateMachine sm : uClass.getStateMachines())
   {  
     if(sm.isPooled())
     {
-      append(stringBuffer,"\n  ");
-      append(stringBuffer,"\n  MessagePool pool;");
-      append(stringBuffer,"\n  Thread removal;");
-      append(stringBuffer,"\n  ");
-      append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
-      append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
+      foundPooledSM = true;
     }
-    break;
   }
+  if(foundPooledSM == true)
+  {
+    append(stringBuffer,"\n  ");
+    append(stringBuffer,"\n  MessagePool pool;");
+    append(stringBuffer,"\n  Thread removal;");
+    append(stringBuffer,"\n  ");
+    append(stringBuffer,"\n  //enumeration type of messages accepted by {0}", uClass.getName());
+    append(stringBuffer, "\n  enum MessageType { {0} }", gen.translate("listEventsForPooledSM",uClass));
+  } 
+
   boolean foundPooled = false;
   for(StateMachine sm : uClass.getStateMachines())
   {
     if (sm.isPooled()){
       foundPooled = true;
     }
-    break;
   }
   if(foundPooled == true)
   {

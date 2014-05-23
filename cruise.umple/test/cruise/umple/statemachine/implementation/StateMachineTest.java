@@ -499,54 +499,66 @@ public class StateMachineTest extends StateMachineTemplateTest
   @Test
   public void multiplePooledStateMachine()
   {
-  assertUmpleTemplateFor("multiplePooledStateMachine.ump",languagePath + "/multiplePooledStateMachine."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("multiplePooledStateMachine.ump",languagePath + "/multiplePooledStateMachine."+ languagePath +".txt","X");
   }
   
   @Test
   public void multiplePooledStateMachine_EventlessStateMachine()
   {
-  assertUmpleTemplateFor("multiplePooledStateMachine_EventlessStateMachine.ump",languagePath + "/multiplePooledStateMachine_EventlessStateMachine."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("multiplePooledStateMachine_EventlessStateMachine.ump",languagePath + "/multiplePooledStateMachine_EventlessStateMachine."+ languagePath +".txt","X");
   }
   
   @Test
   public void multiplePooledStateMachine_nestedStates()
   {
-  assertUmpleTemplateFor("multiplePooledStateMachine_nestedStates.ump",languagePath + "/multiplePooledStateMachine_nestedStates."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("multiplePooledStateMachine_nestedStates.ump",languagePath + "/multiplePooledStateMachine_nestedStates."+ languagePath +".txt","X");
   }
   
   @Test
   public void multiplePooledStateMachines_sameEvents()
   {
-  assertUmpleTemplateFor("multiplePooledStateMachines_sameEvents.ump",languagePath + "/multiplePooledStateMachines_sameEvents."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("multiplePooledStateMachines_sameEvents.ump",languagePath + "/multiplePooledStateMachines_sameEvents."+ languagePath +".txt","X");
   }
   
   @Test
   public void multipleQSM()
   {
-  assertUmpleTemplateFor("multipleQSM.ump",languagePath + "/multipleQSM."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("multipleQSM.ump",languagePath + "/multipleQSM."+ languagePath +".txt","X");
   }
 
   @Test
   public void multipleQSM_EventlessStateMachine()
   {
-  assertUmpleTemplateFor("multipleQSM_EventlessStateMachine.ump",languagePath + "/multipleQSM_EventlessStateMachine."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("multipleQSM_EventlessStateMachine.ump",languagePath + "/multipleQSM_EventlessStateMachine."+ languagePath +".txt","X");
   }
   
   @Test
   public void multipleQSMe_nestedStates()
   {
-  assertUmpleTemplateFor("multipleQSMe_nestedStates.ump",languagePath + "/multipleQSMe_nestedStates."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("multipleQSMe_nestedStates.ump",languagePath + "/multipleQSMe_nestedStates."+ languagePath +".txt","X");
   }
   
   @Test
   public void multipleQSM_sameEvents()
   {
-  assertUmpleTemplateFor("multipleQSM_sameEvents.ump",languagePath + "/multipleQSM_sameEvents."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("multipleQSM_sameEvents.ump",languagePath + "/multipleQSM_sameEvents."+ languagePath +".txt","X");
   }
   
   @Test
   public void testMultipleQSMs()
   {
-  assertUmpleTemplateFor("testMultipleQSMs.ump",languagePath + "/testMultipleQSMs."+ languagePath +".txt","X");
+    assertUmpleTemplateFor("testMultipleQSMs.ump",languagePath + "/testMultipleQSMs."+ languagePath +".txt","X");
+  }
+
+  @Test
+  public void eventlessStateMachine_before_QueuedStateMachine()
+  {
+    assertUmpleTemplateFor("eventlessStateMachine_QueuedStateMachine.ump",languagePath + "/eventlessStateMachine_QueuedStateMachine."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void eventlessStateMachine_before_PooledStateMachine()
+  {
+    assertUmpleTemplateFor("eventlessStateMachine_PooledStateMachine.ump",languagePath + "/eventlessStateMachine_PooledStateMachine."+ languagePath +".txt","X");
   }
 }
