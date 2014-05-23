@@ -8,7 +8,16 @@
 
 open util/ordering[UmpleObject]
 
-abstract sig UmpleObject { }
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class UmpleObject
+
+------------------------------------------------------------------------------------------------------------------
+
+abstract sig UmpleObject {
+
+}
 
 
 ------------------------------------------------------------------------------------------------------------------
@@ -122,7 +131,6 @@ sig H extends UmpleObject {
 }
 
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class A and class B
@@ -133,7 +141,6 @@ fact BidirectionalityRule {
   all a_1 : A, b_1 : B |
     a_1 in a[b_1] <=> b_1 in b[a_1]
 }
-
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -146,7 +153,6 @@ fact BidirectionalityRule {
     a_1 in a[c_1] <=> c_1 in c[a_1]
 }
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class A and class D
@@ -157,7 +163,6 @@ fact BidirectionalityRule {
   all a_1 : A, d_1 : D |
     a_1 in a[d_1] <=> d_1 in ds[a_1]
 }
-
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -170,7 +175,6 @@ fact BidirectionalityRule {
     a_1 in a[e_1] <=> e_1 in es[a_1]
 }
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class B and class C
@@ -181,7 +185,6 @@ fact BidirectionalityRule {
   all b_1 : B, c_1 : C |
     b_1 in b[c_1] <=> c_1 in c[b_1]
 }
-
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -194,7 +197,6 @@ fact BidirectionalityRule {
     b_1 in b[d_1] <=> d_1 in d[b_1]
 }
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class B and class E
@@ -205,7 +207,6 @@ fact BidirectionalityRule {
   all b_1 : B, e_1 : E |
     b_1 in b[e_1] <=> e_1 in es[b_1]
 }
-
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -218,7 +219,6 @@ fact BidirectionalityRule {
     b_1 in b[f_1] <=> f_1 in fs[b_1]
 }
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class C and class D
@@ -229,7 +229,6 @@ fact BidirectionalityRule {
   all c_1 : C, d_1 : D |
     c_1 in cs[d_1] <=> d_1 in d[c_1]
 }
-
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -242,7 +241,6 @@ fact BidirectionalityRule {
     c_1 in cs[e_1] <=> e_1 in e[c_1]
 }
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class C and class F
@@ -253,7 +251,6 @@ fact BidirectionalityRule {
   all c_1 : C, f_1 : F |
     c_1 in cs[f_1] <=> f_1 in fs[c_1]
 }
-
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -266,7 +263,6 @@ fact BidirectionalityRule {
     c_1 in cs[g_1] <=> g_1 in gs[c_1]
 }
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class D and class E
@@ -278,7 +274,6 @@ fact BidirectionalityRule {
     d_1 in ds[e_1] <=> e_1 in e[d_1]
 }
 
-
 ------------------------------------------------------------------------------------------------------------------
 
 --The following defines bidirectionality rule between class D and class F
@@ -289,7 +284,6 @@ fact BidirectionalityRule {
   all d_1 : D, f_1 : F |
     d_1 in ds[f_1] <=> f_1 in f[d_1]
 }
-
 
 ------------------------------------------------------------------------------------------------------------------
 

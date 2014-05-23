@@ -1,219 +1,275 @@
 namespace cruise.umple.alloy;
 
-class Fact {
-  depend cruise.umple.compiler.*; 
+class AlloyObject 
+{
   
-  protected Utility utility;
+  protected String addStartDottedLine(){
+  	return "\n\n------------------------------------------------------------------------------------------------------------------\n\n";
+  }
+  
+  protected String addEndDottedLine()
+  {
+  	return "\n------------------------------------------------------------------------------------------------------------------\n\n";
+  }
+}
+
+class Fact 
+{
+  depend cruise.umple.compiler.*;
+  abstract;
+  
+  isA AlloyObject; 
+  
   protected String factName;
   protected String firstClassName;
   protected String secondClassName;
   protected String rName1;
   protected String rName2;
   
-  abstract;
-  //This constructor builds a fact from a given name and an association
-  public Fact(Association assoc){
-	utility = new Utility();
-	factName = null;
-	firstClassName = utility.getLeftEndName(assoc);
-	secondClassName = utility.getRightEndName(assoc);
-	rName1 = utility.getLeftRoleName(assoc);
-	rName2 = utility.getRightRoleName(assoc);
+  public Fact(Association assoc)
+  {
+    factName = null;
+    firstClassName = assoc.getEnd(0).getClassName();
+    secondClassName = assoc.getEnd(1).getClassName();
+    if(assoc.getEnd(0).getRoleName().equals("as"))
+      rName1 = assoc.getEnd(0).getRoleName()+ "_"; 
+    else
+      rName1 = assoc.getEnd(0).getRoleName() ;
+    if(assoc.getEnd(1).getRoleName().equals("as"))
+      rName2 = assoc.getEnd(1).getRoleName()+ "_"; 
+    else 
+      rName2 = assoc.getEnd(1).getRoleName() ;
   }
   
-  private String getEndName(AssociationEnd end){
-  	return end.getClassName();
+  protected String suchThatPlusNewLine ()
+  {
+    return " |\n    ";
   }
   
-  private String getEndRoleName(AssociationEnd end){
-  	return end.getRoleName();
+  protected String factHeader()
+  {
+    return "fact "+factName+" {\n  ";
   }
   
-  protected String newMe(){ return " |\n    "; }
-  
-  //This method generates the header for any given fact
-  protected String factHeader(){  	
-  	return "fact "+factName+" {\n  ";
-  }
- 
-  protected String makeVarName(String name,Integer num){
-  	return name.toLowerCase()+"_"+num;
+  protected String makeVarName(String name, Integer num)
+  {
+    return name.toLowerCase()+"_"+num;
   }
   
-  private String temp(String cName){
-    return " : "+cName;
+  private String declarationEnd(String name)
+  {
+    return " : "+name;
   }
   
-  //This method handles variable declaration for a given object
-  protected String makeVarDeclaration(String cName, int num){
-	if(num == 1) return varDec(cName,1)+temp(cName);	 		
-	return varDec(cName,num)+temp(cName);
-  }
-  
-  private String varDec(String cName, int num){
+  private String varDec(String cName, Integer num)
+  {
   	if(num == 1) return makeVarName(cName,1);
   	return varDec(cName,num-1)+", "+makeVarName(cName,num); 
   }
+  
+  protected String makeVarDeclaration(String cName, Integer num)
+  {
+	if(num == 1) return varDec(cName,1)+declarationEnd(cName);	 		
+	return varDec(cName,num)+declarationEnd(cName);
+  }
+  
+  public String print()
+  {
+    return null;
+  }
+  
 }
 
-class NoExtendedFact {
+class NoExtendedFact 
+{
   depend cruise.umple.compiler.*; 
   isA Fact;
   
-  public NoExtendedFact(Association assoc){
+  public NoExtendedFact(Association assoc)
+  {
   	super(assoc);
   	factName = "NoExtendedRelation";
   }
   
-  private String commentNoExtendedFact(){
-  	return utility.addStartDottedLine()+"--The following defines no extended relation rule for class "+
-  		firstClassName+"\n"+utility.addEndDottedLine();
+  private String commentNoExtendedFact()
+  {
+  	return addStartDottedLine()+"-- The following defines no extended relation rule for class "+
+  		firstClassName+"\n"+addEndDottedLine();
   }
   
   //This method prints no extended relation fact
-  private String printNoExtendedRelationFact(){
+  private String printNoExtendedRelationFact()
+  {
   	return factHeader()+"no disj "+makeVarDeclaration(firstClassName,3)+
-  	  newMe()+noExtRelContent()+"\n}";
+  	  suchThatPlusNewLine()+noExtRelContent()+"\n}";
   }
     
   //This method generates content no extended relation
-  private String noExtRelContent(){
+  private String noExtRelContent()
+  {
   	return makeVarName(firstClassName,1)+" in "+
   		rName2+"["+makeVarName(firstClassName,2)+"] && "+makeVarName(firstClassName,1)
   		+" in "+rName2+"["+makeVarName(firstClassName,3)+"]";
   }
-  public String print(){
+  public String print()
+  {
   	return commentNoExtendedFact()+ printNoExtendedRelationFact();
   }
 }
 
-class NoSelfRelationFact {
+
+class NoSelfRelationFact 
+{
   depend cruise.umple.compiler.*; 
   isA Fact;
   
-  public NoSelfRelationFact(Association assoc){
+  public NoSelfRelationFact(Association assoc)
+  {
   	super(assoc);
   	factName = "NoSelfRelation";
   }
   
-  private String commentNoSelfRelation(){
-  	return utility.addStartDottedLine()+"--The following defines no self relation rule for class "+
-  		firstClassName+"\n"+utility.addEndDottedLine();
+  private String commentNoSelfRelation()
+  {
+  	return addStartDottedLine()+"-- The following defines no self relation rule for class "+
+  		firstClassName+"\n"+addEndDottedLine();
   }
   
-  private String decPart(){
+  private String decPart()
+  {
   	return "no "+makeVarDeclaration(firstClassName,1);
   }
   
   //This method prints no extended relation fact
-  private String printNoSelfRelationFact(){
-  	return factHeader()+decPart()+newMe()+noSelfRelContent()+"\n}";
+  private String printNoSelfRelationFact()
+  {
+  	return factHeader()+decPart()+suchThatPlusNewLine()+noSelfRelContent()+"\n}";
   }
   
   //This method generates content no extended relation
-  private String noSelfRelContent(){
+  private String noSelfRelContent()
+  {
   	return makeVarName(firstClassName,1)+" in "+
   		makeVarName(firstClassName,1)+".^"+rName2;
   }
   
-  public String print(){
+  public String print()
+  {
   	return commentNoSelfRelation()+printNoSelfRelationFact();
   }
 }
 
-class BidirectionFact {
+class BidirectionFact 
+{
   depend cruise.umple.compiler.*; 
   isA Fact;
   
-  public BidirectionFact(Association assoc){
+  public BidirectionFact(Association assoc)
+  {
   	super(assoc);
   	factName = "BidirectionalityRule";
   }
   
   //This methods comments bidirectionality rule
-  private String commentBidirectionality(){
-  	return utility.addStartDottedLine()+"--The following defines bidirectionality rule between class "+
-  		firstClassName+" and class "+secondClassName+"\n"+utility.addEndDottedLine();
+  private String commentBidirectionality()
+  {
+  	return addStartDottedLine()+"--The following defines bidirectionality rule between class "+
+  		firstClassName+" and class "+secondClassName+"\n"+addEndDottedLine();
   }
   
   //This method computes the content of a bidirectionality rule
-  private String bidirectionalContent(){
+  private String bidirectionalContent()
+  {
   	return makeVarName(firstClassName,1)+" in "+rName1+"["+
   	  makeVarName(secondClassName,1)+"] <=> "+makeVarName(secondClassName,1)+" in "+rName2+
   		"["+makeVarName(firstClassName,1)+"]";
   }
   //This method is responsible for printing bidirectionality fact
-  private String printBidirectionFact(){
+  private String printBidirectionFact()
+  {
   	return factHeader()+"all "+makeVarDeclaration(firstClassName,1)+", "+
-  		makeVarDeclaration(secondClassName,1)+ newMe() +bidirectionalContent()+"\n}";
+  		makeVarDeclaration(secondClassName,1)+suchThatPlusNewLine() +bidirectionalContent()+"\n}";
   }
   
-  public String print(){
+  public String print()
+  {
   	return commentBidirectionality()+printBidirectionFact();
   }
 }
 
-class NonReflexiveFact{
+class NonReflexiveFact
+{
   depend cruise.umple.compiler.*; 
   isA Fact;
   
-  public NonReflexiveFact(Association assoc){
+  public NonReflexiveFact(Association assoc)
+  {
   	super(assoc);
   	factName = "NonReflexiveRule";
   }  
   
-  private String content(){
+  private String content()
+  {
   	return makeVarName(secondClassName,1)+" in "+
   	  rName2+"["+makeVarName(secondClassName,1)+"]\n}";
   }
   
   //This methods comments non reflexive rule
-  private String comment(){
-  	return utility.addStartDottedLine()+"-- The following defines non-reflexive rule for class "+
-  	  secondClassName+"\n"+utility.addEndDottedLine();
+  private String comment()
+  {
+  	return addStartDottedLine()+"-- The following defines non-reflexive rule for class "+
+  	  secondClassName+"\n"+addEndDottedLine();
   }
   
-  private String declaration(){
+  private String declaration()
+  {
     return "no "+makeVarDeclaration(secondClassName,1);
   }
   
-  public String print(){
-  	return comment()+factHeader()+declaration()+newMe()+content();
+  public String print()
+  {
+  	return comment()+factHeader()+declaration()+suchThatPlusNewLine()+content();
   }
 } 
 
-class SymmetricFact {
-  
+class SymmetricFact 
+{  
   depend cruise.umple.compiler.*;
   isA Fact;
   
-  public SymmetricFact(Association assoc){
+  public SymmetricFact(Association assoc)
+  {
     super(assoc);
     factName = "SymmetricRelation";
   }
   
-  private String declaration(){
-    return "all "+makeVarDeclaration(secondClassName,2)+newMe();
+  private String declaration()
+  {
+    return "all "+makeVarDeclaration(secondClassName,2)+suchThatPlusNewLine();
   }
   
-  private String comment(){
-    return utility.addStartDottedLine()+"-- The following defines symmetric rule for class "+
-  	  secondClassName+"\n"+utility.addEndDottedLine();
+  private String comment()
+  {
+    return addStartDottedLine()+"-- The following defines symmetric rule for class "+
+  	  secondClassName+"\n"+addEndDottedLine();
   }
   
-  private String content(){
+  private String content()
+  {
     return makeVarName(secondClassName,1)+" in "+
   	  rName2+"["+makeVarName(secondClassName,2)+"] <=> "+makeVarName(secondClassName,2)+" in "+
   	  rName2+"["+makeVarName(secondClassName,1)+"]\n}";
   }
   
-  public String print(){
+  public String print()
+  {
     return comment()+factHeader()+declaration()+content();
   }
 }
 
 
-class NumericBoundFact {
+class NumericBoundFact 
+{
   isA Fact;
   depend cruise.umple.compiler.*;
   
@@ -261,7 +317,7 @@ class NumericBoundFact {
   
   private String declaration()
   {
-    return "no "+makeVarDeclaration(className,1)+newMe();
+    return "no "+makeVarDeclaration(className,1)+suchThatPlusNewLine();
   }
   
   private String temp()
@@ -283,8 +339,8 @@ class NumericBoundFact {
   
   private String comment()
   {
-  	return utility.addStartDottedLine()+"-- The following defines numeric bound rule for class "+
-  	  className+"\n"+utility.addEndDottedLine();
+  	return addStartDottedLine()+"-- The following defines numeric bound rule for class "+
+  	  className+"\n"+addEndDottedLine();
   }
   
   public String print()

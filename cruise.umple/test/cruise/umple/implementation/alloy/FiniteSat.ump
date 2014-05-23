@@ -1,0 +1,5 @@
+class Academic{
+  1 advisor -- 2 Graduate students;
+}
+
+class Graduate{}
