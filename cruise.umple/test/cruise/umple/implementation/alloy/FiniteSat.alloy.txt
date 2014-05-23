@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
--- This Alloy file is generated using Umple from Alloy_AssociationOneToOne.ump
+-- This Alloy file is generated using Umple from FiniteSat.ump
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -22,33 +22,44 @@ abstract sig UmpleObject {
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines a signature for class A
+--The following defines a signature for class Academic
 
 ------------------------------------------------------------------------------------------------------------------
 
-sig A extends UmpleObject {
-  b : one B
+sig Academic extends UmpleObject {
+  students : some Graduate
 }
 
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines a signature for class B
+--The following defines a signature for class Graduate
 
 ------------------------------------------------------------------------------------------------------------------
 
-sig B extends UmpleObject {
-  a : one A
+sig Graduate extends UmpleObject {
+  advisor : one Academic
 }
 
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines bidirectionality rule between class A and class B
+--The following defines bidirectionality rule between class Academic and class Graduate
 
 ------------------------------------------------------------------------------------------------------------------
 
 fact BidirectionalityRule {
-  all a_1 : A, b_1 : B |
-    a_1 in a[b_1] <=> b_1 in b[a_1]
+  all academic_1 : Academic, graduate_1 : Graduate |
+    academic_1 in advisor[graduate_1] <=> graduate_1 in students[academic_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines numeric bound rule for class Academic
+
+------------------------------------------------------------------------------------------------------------------
+
+fact NumericBoundFact {
+  no academic_1 : Academic |
+    #academic_1.students != 2
 }

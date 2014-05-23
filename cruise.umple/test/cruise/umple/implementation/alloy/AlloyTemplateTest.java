@@ -35,6 +35,10 @@ public class AlloyTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AssociationWithNumericBounds.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyReflexiveRelation.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloySymmetricReflexive.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/FiniteSat.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/isARelationship.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/singleton.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/abstractSingleton.als");
 	  }
 
 	  @Test //@Ignore
@@ -42,6 +46,27 @@ public class AlloyTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("alloy/AlloyAssociations.ump","alloy/AlloyAssociations.alloy.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyAssociations.als")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void abstractSingleton()
+	  {
+		assertUmpleTemplateFor("alloy/abstractSingleton.ump","alloy/abstractSingleton.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/abstractSingleton.als")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void singleton()
+	  {
+		assertUmpleTemplateFor("alloy/singleton.ump","alloy/singleton.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/singleton.als")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void isARelationship()
+	  {
+		assertUmpleTemplateFor("alloy/isARelationship.ump","alloy/isARelationship.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/isARelationship.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
@@ -77,6 +102,13 @@ public class AlloyTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("alloy/UmpleClass.ump","alloy/UmpleClass.alloy.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/alloy/UmpleClass.als")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void FiniteSat()
+	  {
+		assertUmpleTemplateFor("alloy/FiniteSat.ump","alloy/FiniteSat.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/FiniteSat.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
