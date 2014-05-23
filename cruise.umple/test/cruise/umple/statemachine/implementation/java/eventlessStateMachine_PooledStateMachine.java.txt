@@ -1,0 +1,362 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.util.*;
+import java.lang.Thread;
+
+public class X implements Runnable
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  enum Sm { q, s }
+  private Sm sm;
+  enum Sm1 { s1, s2 }
+  enum Sm1S1 { Null, s1a, s1b }
+  private Sm1 sm1;
+  private Sm1S1 sm1S1;
+  
+  MessagePool pool;
+  Thread removal;
+  
+  //enumeration type of messages accepted by X
+  enum MessageType { null_M, e1_M, e2_M, e5_M, e6_M }
+
+  // Map for a X pooled state machine that allows querying which events are possible in each map
+
+  public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();
+  static {
+    stateMessageMap.put(Sm1.s1,new HashSet<MessageType>(Arrays.asList(MessageType.e1_M)));
+    stateMessageMap.put(Sm1.s2,new HashSet<MessageType>(Arrays.asList(MessageType.e2_M)));
+    stateMessageMap.put(Sm1S1.Null,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
+    stateMessageMap.put(Sm1S1.s1a,new HashSet<MessageType>(Arrays.asList(MessageType.e5_M)));
+    stateMessageMap.put(Sm1S1.s1b,new HashSet<MessageType>(Arrays.asList(MessageType.e6_M)));
+  }
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public X()
+  {
+    setSm(Sm.q);
+    setSm1S1(Sm1S1.Null);
+    setSm1(Sm1.s1);
+    pool = new MessagePool();
+    removal=new Thread(this);
+    //start the thread of X
+    removal.start();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public String getSm1FullName()
+  {
+    String answer = sm1.toString();
+    if (sm1S1 != Sm1S1.Null) { answer += "." + sm1S1.toString(); }
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public Sm1 getSm1()
+  {
+    return sm1;
+  }
+
+  public Sm1S1 getSm1S1()
+  {
+    return sm1S1;
+  }
+
+  public boolean e1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm1 aSm1 = sm1;
+    switch (aSm1)
+    {
+      case s1:
+        setSm1S1(Sm1S1.s1a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e2()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm1 aSm1 = sm1;
+    switch (aSm1)
+    {
+      case s2:
+        setSm1(Sm1.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean enterS1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm1S1 aSm1S1 = sm1S1;
+    switch (aSm1S1)
+    {
+      case Null:
+        setSm1S1(Sm1S1.s1a);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private boolean exitS1()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm1S1 aSm1S1 = sm1S1;
+    switch (aSm1S1)
+    {
+      case s1a:
+        setSm1S1(Sm1S1.Null);
+        wasEventProcessed = true;
+        break;
+      case s1b:
+        setSm1S1(Sm1S1.Null);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e5()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm1S1 aSm1S1 = sm1S1;
+    switch (aSm1S1)
+    {
+      case s1a:
+        setSm1S1(Sm1S1.s1b);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean e6()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm1S1 aSm1S1 = sm1S1;
+    switch (aSm1S1)
+    {
+      case s1b:
+        exitSm1();
+        setSm1(Sm1.s2);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean setSm(Sm aSm)
+  {
+    sm = aSm;
+    return true;
+  }
+
+  private void exitSm1()
+  {
+    switch(sm1)
+    {
+      case s1:
+        exitS1();
+        break;
+    }
+  }
+
+  private void setSm1(Sm1 aSm1)
+  {
+    sm1 = aSm1;
+
+    // entry actions and do activities
+    switch(sm1)
+    {
+      case s1:
+        if (sm1S1 == Sm1S1.Null) { setSm1S1(Sm1S1.s1a); }
+        break;
+    }
+  }
+
+  private void setSm1S1(Sm1S1 aSm1S1)
+  {
+    sm1S1 = aSm1S1;
+    if (sm1 != Sm1.s1 && aSm1S1 != Sm1S1.Null) { setSm1(Sm1.s1); }
+  }
+
+  public void delete()
+  {}
+
+  protected class Message
+  {
+    MessageType type;
+    
+    //Message parameters
+    Vector<Object> param;
+    
+    public Message(MessageType t, Vector<Object> p)
+    {
+      type = t; 
+      param = p;
+    }
+
+    @Override
+    public String toString()
+    {
+      return type + "," + param;
+    }
+  }
+  
+  protected class MessagePool {
+    Queue<Message> messages = new LinkedList<Message>();
+    
+    public synchronized void put(Message m)
+    {
+      messages.add(m); 
+      notify();
+    }
+
+    public synchronized Message getNext()
+    {
+      Message message=null;
+
+      try {
+        message=getNextProcessableMessage();
+        while (message==null)
+        {
+          wait();
+          message=getNextProcessableMessage();
+        }
+      } catch (InterruptedException e) { e.printStackTrace(); }
+
+      // return the message
+      return (message);
+    }
+
+    public Message getNextProcessableMessage()
+    {
+      // Iterate through messages and remove the first message that matches one of the Messages list
+      // otherwise return null
+      for (Message msg: messages)
+      {
+        if(stateMessageMap.get(getSm1()).contains(msg.type))
+        {
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+        else if(stateMessageMap.get(getSm1S1()).contains(msg.type))
+        {
+          //The element to be removed
+          messages.remove(msg);
+          return (msg);
+        }
+      }
+      return null;
+    }
+  }
+
+  //------------------------------
+  //messages accepted 
+  //------------------------------
+
+  public void e1 ()
+  {
+    pool.put(new Message(MessageType.e1_M, null));
+  }
+
+  public void e2 ()
+  {
+    pool.put(new Message(MessageType.e2_M, null));
+  }
+
+  public void e5 ()
+  {
+    pool.put(new Message(MessageType.e5_M, null));
+  }
+
+  public void e6 ()
+  {
+    pool.put(new Message(MessageType.e6_M, null));
+  }
+
+  
+  @Override
+  public void run ()
+  {
+    boolean status=false;
+    while (true) 
+    {
+      Message m = pool.getNext();
+      
+      switch (m.type)
+      {
+        case e1_M:
+          status = _e1();
+          break;
+        case e2_M:
+          status = _e2();
+          break;
+        case e5_M:
+          status = _e5();
+          break;
+        case e6_M:
+          status = _e6();
+          break; 
+        default:
+      }
+      if(!status)
+      {
+        // Error message is written or  exception is raised
+      }
+    }
+  }
+}
