@@ -1365,7 +1365,7 @@ Action.selectMatchingText = function(text) {
   return false;
 }
 
-// Will select a class. Needs improving so does not match certain comments
+// Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) {
   if(Page.codeMirrorOn) {
     var scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class "+
@@ -1383,13 +1383,50 @@ Action.selectClass = function(className) {
     theEnd.line = Page.codeMirrorEditor.lineCount();
     theEnd.ch = 9999;
     
-    scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class [A-Z]"),scursor.to());
-    if(scursor.findNext()) {
-      // Found a subsequent class - back up one line from it
-      // TODO: This is weak since it can select a comment before the next class
+    scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class [A-Za-z]"),scursor.to());
+    
+    while(scursor.findNext()) 
+    {
       var endObject = scursor.from();
+      
+      //This is checking if the class declaration found was in a single line comment.
+      innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
+      var commentFound = innerCursor.findPrevious();
+      if(commentFound && innerCursor.from().line == endObject.line) 
+      {
+        //The class declaration found was actually in a single line comment, keep searching
+        continue;
+      }
+
+      //Check if the found class declaration is in a multiline comment
+      innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
+      //Search backwards for a /* or */
+      var commentFound = innerCursor.findPrevious();
+      if (commentFound) 
+      {
+        if(commentFound[0] === "/*") 
+        {
+          //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
+          
+          //Look for the exit marker
+          innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
+          var commentFound = innerCursor.findNext();
+          
+          if(commentFound) 
+          {
+            var commentEnd = innerCursor.from();
+            if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch))
+            {
+              //The class declaration found is in a multiline comment, keep looking
+              continue;
+            }
+          }
+        }
+      }
+      
       theEnd.line = endObject.line -1;
       theEnd.ch = 999;
+      break;
     }
 
     Page.codeMirrorEditor.setSelection(start,theEnd);
