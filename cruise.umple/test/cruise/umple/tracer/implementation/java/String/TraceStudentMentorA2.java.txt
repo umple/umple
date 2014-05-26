@@ -1,0 +1,82 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
+
+package example;
+import cruise.util.StringTracer;
+import java.util.Date;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Associations
+  private Student student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Student getStudent()
+  {
+    return student;
+  }
+
+  public boolean hasStudent()
+  {
+    boolean has = student != null;
+    return has;
+  }
+
+  public boolean setStudent(Student aNewStudent)
+  {
+    boolean wasSet = false;
+    if (aNewStudent == null)
+    {
+      Student existingStudent = student;
+      student = null;
+      
+      if (existingStudent != null && existingStudent.getMentor() != null)
+      {
+        existingStudent.setMentor(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    Student currentStudent = getStudent();
+    if (currentStudent != null && !currentStudent.equals(aNewStudent))
+    {
+      currentStudent.setMentor(null);
+    }
+
+    student = aNewStudent;
+    Mentor existingMentor = aNewStudent.getMentor();
+
+    if (!equals(existingMentor))
+    {
+      aNewStudent.setMentor(this);
+    }
+    wasSet = true;
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceStudentMentorA.ump,6,Mentor+Student,"+System.identityHashCode(this)+",as_a,students,"+1 );
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (student != null)
+    {
+      student.setMentor(null);
+    }
+  }
+
+}

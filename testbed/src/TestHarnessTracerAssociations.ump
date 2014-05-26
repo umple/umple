@@ -1,8 +1,9 @@
 
 namespace cruise.tracer.test;
 
+//------------------------------- Comapny - Manager semantic tests
 
-//------------------------------- Uni Association tracing
+// Bidirectional (--)
 
 class CompanyBiManyToManyRole
 {
@@ -22,7 +23,7 @@ class CompanyBiManyToManyRemove
   trace remove managerC;
 }
 
-//------------------------------- Bi Association tracing
+// Unidirectional (->)
 
 class CompanyUniManyToManyRole
 {
@@ -47,3 +48,15 @@ class ManagerA {}
 class ManagerB {}
 class ManagerC {}
 class ManagerD {}
+
+//------------------------------- Student - Mentor semantic tests
+
+/*
+class MentorA
+{
+  0..1 mentor -- 0..1 StudentA student;
+}
+
+class StudentA
+{}
+*/

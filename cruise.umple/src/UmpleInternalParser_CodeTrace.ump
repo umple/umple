@@ -528,9 +528,13 @@ class UmpleInternalParser
     for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
     {
       if( traceToken.getValue("trace_entity").equals(aVar.getName()))
-      {
         tracedAssoc.addAssociationVariable(aVar);
-      }
+    }
+    
+    for( Association assoc : traceDirective.getUmpleClass().getAssociations() )
+    {
+      if( assoc.getName().contains(traceToken.getValue("trace_entity") ))
+        tracedAssoc.addAssociation(assoc);
     }
     
     
@@ -591,10 +595,16 @@ class UmpleInternalParser
 	  }
 
 	  // --- check if association
-	  for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
+      for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
       {
-		  if( traceToken.getValue("trace_entity").equals(aVar.getName()))
-			  traceItemType = 3;
+        if( traceToken.getValue("trace_entity").equals(aVar.getName()))
+          traceItemType = 3;
+      }
+
+      for( Association a : traceDirective.getUmpleClass().getAssociations() )
+      {
+        if( a.getName().contains(traceToken.getValue("trace_entity") ))
+          traceItemType = 3;
       }
 	  
 	  // --- check if method

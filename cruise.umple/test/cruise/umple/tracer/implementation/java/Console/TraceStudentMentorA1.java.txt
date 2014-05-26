@@ -1,0 +1,80 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Associations
+  private Mentor mentor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Mentor getMentor()
+  {
+    return mentor;
+  }
+
+  public boolean hasMentor()
+  {
+    boolean has = mentor != null;
+    return has;
+  }
+
+  public boolean setMentor(Mentor aNewMentor)
+  {
+    boolean wasSet = false;
+    if (aNewMentor == null)
+    {
+      Mentor existingMentor = mentor;
+      mentor = null;
+      
+      if (existingMentor != null && existingMentor.getStudent() != null)
+      {
+        existingMentor.setStudent(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+
+    Mentor currentMentor = getMentor();
+    if (currentMentor != null && !currentMentor.equals(aNewMentor))
+    {
+      currentMentor.setStudent(null);
+    }
+
+    mentor = aNewMentor;
+    Student existingStudent = aNewMentor.getStudent();
+
+    if (!equals(existingStudent))
+    {
+      aNewMentor.setStudent(this);
+    }
+    wasSet = true;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",model.ump,5,Student+Mentor,"+System.identityHashCode(this)+",as_a,mentors,1" );
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    if (mentor != null)
+    {
+      mentor.setStudent(null);
+    }
+  }
+
+}

@@ -32,7 +32,8 @@
     {
       <%=gen.translate("parameterNew",av)%>.<%=gen.relatedTranslate("setMethod",av)%>(this);
     }
-    wasSet = true;
+    wasSet = true;<%=
+    (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,"1"):"")%>
     <% if (customSetPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } %>
     return wasSet;

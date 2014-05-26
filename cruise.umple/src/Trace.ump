@@ -74,12 +74,12 @@ class TraceDirective
   String tracerType = {getTracer().getName()}
   1 -> 1 Tracer ;
   
-    1 -- 0..* AttributeTraceItem;
-   1 -- 0..* StateMachineTraceItem;
-   0..* -- 0..* MethodTraceItem;
-   1 -- 0..* AssociationTraceItem;
-   1 -> 0..* TraceCondition condition;
-   1 -- 0..1 TraceRecord;
+  1 -- 0..* AttributeTraceItem;
+  1 -- 0..* StateMachineTraceItem;
+  0..* -- 0..* MethodTraceItem;
+  1 -- 0..* AssociationTraceItem;
+  1 -> 0..* TraceCondition condition;
+  1 -- 0..1 TraceRecord;
 }
 interface TraceItem
 {
@@ -155,6 +155,7 @@ class AssociationTraceItem
   tracerType = {getTraceDirective().getTracerType()}
   
   0..* -- 0..* AssociationVariable;
+  0..* -- 0..* Association;
   
   //default case tracing Cardinality
   boolean traceCardinality = true;
