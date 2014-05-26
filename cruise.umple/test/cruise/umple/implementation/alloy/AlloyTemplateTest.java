@@ -139,7 +139,7 @@ public class AlloyTemplateTest extends TemplateTest{
 		assertUmpleTemplateFor("alloy/AlloyReflexiveRelation.ump","alloy/AlloyReflexiveRelation.alloy.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyReflexiveRelation.als")).exists());
 	  }
-	  @Test @Ignore
+	  @Test //@Ignore
 	  public void AlloySymmetricReflexive()
 	  { 
 		assertUmpleTemplateFor("alloy/AlloySymmetricReflexive.ump","alloy/AlloySymmetricReflexive.alloy.txt");
