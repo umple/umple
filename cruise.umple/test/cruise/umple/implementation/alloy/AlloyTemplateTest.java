@@ -39,6 +39,14 @@ public class AlloyTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/alloy/singleton.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/abstractSingleton.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/Alloy_Unidirectional.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyExample1.als");
+	  }
+	  
+	  @Test //@Ignore
+	  public void Example1()
+	  {
+		assertUmpleTemplateFor("alloy/AlloyExample1.ump","alloy/AlloyExample1.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyExample1.als")).exists());
 	  }
 
 	  @Test //@Ignore
@@ -131,7 +139,7 @@ public class AlloyTemplateTest extends TemplateTest{
 		assertUmpleTemplateFor("alloy/AlloyReflexiveRelation.ump","alloy/AlloyReflexiveRelation.alloy.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyReflexiveRelation.als")).exists());
 	  }
-	  @Test //@Ignore
+	  @Test @Ignore
 	  public void AlloySymmetricReflexive()
 	  { 
 		assertUmpleTemplateFor("alloy/AlloySymmetricReflexive.ump","alloy/AlloySymmetricReflexive.alloy.txt");
