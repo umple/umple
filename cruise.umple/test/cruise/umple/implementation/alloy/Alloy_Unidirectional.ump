@@ -1,0 +1,9 @@
+class A{
+    1 -> * B;
+}
+
+class B {
+  1 <- * C;
+}
+
+class C{}

@@ -26,7 +26,6 @@ public class AlloyTemplateTest extends TemplateTest{
 	    super.tearDown();
 	    SampleFileWriter.destroy(pathToInput + "/alloy/Alloy_AssociationOneToOne.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/Alloy_AssociationOneToMany.als");
-	    
 	    SampleFileWriter.destroy(pathToInput + "/alloy/Alloy_Associations.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloySophisticatedAssociations.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyAssociation.als");
@@ -39,6 +38,7 @@ public class AlloyTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/alloy/isARelationship.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/singleton.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/abstractSingleton.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/Alloy_Unidirectional.als");
 	  }
 
 	  @Test //@Ignore
@@ -88,6 +88,13 @@ public class AlloyTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("alloy/Alloy_AssociationOneToMany.ump","alloy/AlloyAssociationOneToMany.alloy.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/alloy/Alloy_AssociationOneToMany.als")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void unidirectional()
+	  {
+		assertUmpleTemplateFor("alloy/Alloy_Unidirectional.ump","alloy/AlloyUnidirectional.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/Alloy_Unidirectional.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
