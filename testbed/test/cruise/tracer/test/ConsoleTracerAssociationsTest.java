@@ -15,33 +15,33 @@ public class ConsoleTracerAssociationsTest extends ConsoleTracerTestTemplate
       int index=0;
 
       String[] assocTraceExpected = {"Header",
-          //---------------- CompanyManyToManyRole
+          //---------------- CompanyBiManyToManyRole
           "as_a,managerA,1",
           "as_a,managerA,2",
           "as_a,managerA,3",
           "as_r,managerA,2",
           "as_a,managerA,3",
-          //---------------- CompanyManyToManyAdd
+          //---------------- CompanyBiManyToManyAdd
           "as_a,managerB,1",
           "as_a,managerB,2",
           "as_a,managerB,3",
           "as_a,managerB,3",
-          //---------------- CompanyManyToManyRemove
+          //---------------- CompanyBiManyToManyRemove
           "as_r,managerC,2",
           "as_r,managerC,1",
           "as_r,managerC,0",
-          //---------------- CompanyManyToManyRole
+          //---------------- CompanyUniManyToManyRole
           "as_a,managerA,1",
           "as_a,managerA,2",
           "as_a,managerA,3",
           "as_r,managerA,2",
           "as_a,managerA,3",
-          //---------------- CompanyManyToManyAdd
+          //---------------- CompanyUniManyToManyAdd
           "as_a,managerB,1",
           "as_a,managerB,2",
           "as_a,managerB,3",
           "as_a,managerB,3",
-          //---------------- CompanyManyToManyRemove
+          //---------------- CompanyManyUniToManyRemove
           "as_r,managerC,2",
           "as_r,managerC,1",
           "as_r,managerC,0"
