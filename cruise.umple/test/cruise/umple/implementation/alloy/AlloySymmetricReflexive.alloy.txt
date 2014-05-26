@@ -27,7 +27,7 @@ abstract sig UmpleObject {
 ------------------------------------------------------------------------------------------------------------------
 
 sig Course extends UmpleObject {
-
+  mutuallyExclusiveWith : set Course
 }
 
 
