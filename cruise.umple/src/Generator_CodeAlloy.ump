@@ -37,15 +37,6 @@ class AlloyGenerator
     
     for(Statement openSt : alloyModel.getImportStatements())
       utility.addString(code,openSt.print());
-    //AlloyObject aObj = new AlloyObject();
-    
-    //Prints AlloyObject signature to be inherited by other signatures
-    //utility.addString(code,aObj.printObject(className));
-  
-    //Iterate through all classes and generate Alloy
-    //Set<UmpleClass> processedClass = new HashSet<UmpleClass>(); // needed to prevent double reflexive count
-    
-    
     
     for(Signature sig : alloyModel.getSignatures())
       utility.addString(code,sig.printSignature());

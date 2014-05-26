@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
--- This Alloy file is generated using Umple from AlloySymmetricReflexive.ump
+-- This Alloy file is generated using Umple from Alloy_Unidirectional.ump
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -22,33 +22,32 @@ abstract sig UmpleObject {
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines a signature for class Course
+--The following defines a signature for class A
 
 ------------------------------------------------------------------------------------------------------------------
 
-sig Course extends UmpleObject {
+sig A extends UmpleObject {
+  bs : set B
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class B
+
+------------------------------------------------------------------------------------------------------------------
+
+sig B extends UmpleObject {
 
 }
 
 
 ------------------------------------------------------------------------------------------------------------------
 
--- The following defines non-reflexive rule for class Course
+--The following defines a signature for class C
 
 ------------------------------------------------------------------------------------------------------------------
 
-fact NonReflexiveRule {
-  no course_1 : Course |
-    course_1 in mutuallyExclusiveWith[course_1]
-}
-
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines symmetric rule for class Course
-
-------------------------------------------------------------------------------------------------------------------
-
-fact SymmetricRelation {
-  all course_1, course_2 : Course |
-    course_1 in mutuallyExclusiveWith[course_2] <=> course_2 in mutuallyExclusiveWith[course_1]
+sig C extends UmpleObject {
+  b : one B
 }

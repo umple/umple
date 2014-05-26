@@ -24,6 +24,7 @@ class OpenStatement
 
 class AlloyModel {
   depend cruise.umple.compiler.*; 
+  //depend java.util.*;
   isA AlloyObject;
   
   1 -> * Signature;
@@ -31,6 +32,7 @@ class AlloyModel {
   1 -> * Statement;
   
   name;
+  List<Association> unidirectionalList;
   
   public AlloyModel(UmpleModel model)
   {
@@ -47,12 +49,48 @@ class AlloyModel {
     genOtherConstraints(model);
     
     name = model.getUmpleFile().getFileName();
+    
+    for(Association assoc : model.getAssociations())
+    {
+      if(!assoc.isIsRightNavigable() && !assoc.isIsLeftNavigable()){
+        unidirectionalList.add(assoc);
+        //removeFunctionForNavigation();
+      }
+    }
+    //removeFunctionForNavigation();    
+  }
+  
+  private void removeFunctionForNavigation()
+  { 
+    String name0 = null, name1 = null;
+    for(Association assoc : unidirectionalList)
+    {
+      if(assoc.isIsRightNavigable())
+      {
+        name0 = assoc.getEnd(1).getClassName();
+        for(Signature sig : signatures)
+        {
+          if(name0.equals(sig.getName()))
+            for(Function fun : sig.getFunction())
+              if(name1.equals(fun.getTargetClassName()))
+                if(sig.removeFunction(fun));
+        }
+      }
+      for(Signature sig : signatures)
+      {
+        name1 = assoc.getEnd(0).getClassName();
+        if(name1.equals(sig.getName()))
+          for(Function fun : sig.getFunction())
+            if(name1.equals(fun.getTargetClassName()))
+              if(sig.removeFunction(fun));
+      }  
+    }
   }
   
   private void genSignatures(UmpleModel model)
   {
     for (UmpleClass uClass : model.getUmpleClasses())
-    {      
+    {       
       Signature sig = new Signature(uClass);      
       signatures.add(sig);
       
@@ -100,7 +138,9 @@ class AlloyModel {
   private void genOtherConstraints(UmpleModel model)
   {
     for(Association assoc : model.getAssociations())
-    {      
+    { 
+    
+           
       //Case of Asymmetric association
       if(analyzeAssociation(assoc) == 1)
       {
@@ -113,8 +153,11 @@ class AlloyModel {
       //Case of bidirectional association
       if(analyzeAssociation(assoc) == 2)
       {
-    	BidirectionFact bidirect = new BidirectionFact(assoc);
-    	facts.add(bidirect);
+        if(assoc.isIsLeftNavigable() && assoc.isIsRightNavigable())
+        { 
+    	  BidirectionFact bidirect = new BidirectionFact(assoc);
+    	  facts.add(bidirect);
+    	}
       }
       
       AssociationEnd lEnd = assoc.getEnd(0), rEnd = assoc.getEnd(1);
@@ -136,13 +179,15 @@ class AlloyModel {
   {
   	String rEndName = assoc.getEnd(1).getClassName(),
   		lEndName = assoc.getEnd(0).getClassName();
-  	if(lEndName.equals(rEndName))
-  	{
-  	  if(compareRoleNames(assoc) == true)
-  	    return 3;
-  	  return 1;
-  	}
-  	return 2;
+  	//if(assoc.){
+  	  if(lEndName.equals(rEndName))
+  	  {
+  	    if(compareRoleNames(assoc) == true)
+  	      return 3;
+  	    return 1;
+  	  }
+  	  return 2;
+  	//}
   }
   
   private boolean compareRoleNames(Association assoc)
@@ -157,7 +202,8 @@ class AlloyModel {
   }
 }
 
-class Signature {
+class Signature 
+{
   depend cruise.umple.compiler.*;
   isA AlloyObject;	
   name;
@@ -173,19 +219,26 @@ class Signature {
   { 
 	instantiateDataMembers(uClass);
 	Set<Association> processedAssociations = new HashSet<Association>();
-	for(Association assoc : uClass.getAssociations()){
+	for(Association assoc : uClass.getAssociations())
+	{
 	  if(processedAssociations.contains(assoc)) continue;
 	  processedAssociations.add(assoc);	
-	    
+	   
 	  Association uAssoc = reComposeAssociation(assoc,uClass);
+	    
 	  Function funct = new Function(uAssoc);
 	  AssociationEnd beginEnd = uAssoc.getEnd(0), endToOutput = uAssoc.getEnd(1); 
 			
 	  //Reflexive association case 
-      if(endToOutput.getClassName().equals(beginEnd.getClassName())){
+      if(endToOutput.getClassName().equals(beginEnd.getClassName()))
         funct = new Function(uAssoc,endToOutput.getClassName());	
-      }
-	  isBounded = addFunction(funct);
+        
+      if(!assoc.isIsRightNavigable()) 
+        if(name.equals(assoc.getEnd(0).getClassName())) continue;
+
+      if(!assoc.isIsLeftNavigable())
+        if(name.equals(assoc.getEnd(1).getClassName())) continue;
+	  isBounded = addFunction(funct);	
 	}
   }
   
@@ -217,11 +270,14 @@ class Signature {
 	AssociationEnd endToOutput = new AssociationEnd(null,null,null,null,mult);
 	AssociationEnd beginEnd = new AssociationEnd(null,null,null,null,mult);
 			
-	if(assoc.getEnd(1).getClassName().equals(uClass.getName())) {
+	//Case of reflexive association
+	if(assoc.getEnd(1).getClassName().equals(uClass.getName())) 
+	{
       endToOutput = assoc.getEnd(0);
       beginEnd = assoc.getEnd(1);
     }
-    else {
+    else 
+    {
       endToOutput = assoc.getEnd(1);  
       beginEnd = assoc.getEnd(0); 
     }
