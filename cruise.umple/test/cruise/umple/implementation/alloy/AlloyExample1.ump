@@ -1,0 +1,40 @@
+class Reaction
+{
+   
+}
+
+class Chemical
+{
+  1 -- 1..* Reaction substrate;
+}
+
+class Enzyme
+{
+  isA Protein;
+}
+
+class Protein
+{
+  isA Chemical;
+}
+
+class CatalyzedReaction
+{
+  isA Reaction;
+  1 -- 2 Enzyme catalyzed;
+}
+
+class DNA
+{
+  isA Chemical;
+  1 comprise -- 1..* DNASegment;
+}
+
+class DNASegment
+{
+  
+}
+
+
+
+

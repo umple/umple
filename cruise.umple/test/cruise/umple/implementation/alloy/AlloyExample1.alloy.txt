@@ -1,0 +1,142 @@
+
+
+------------------------------------------------------------------------------------------------------------------
+
+-- This Alloy file is generated using Umple from AlloyExample1.ump
+
+------------------------------------------------------------------------------------------------------------------
+
+open util/ordering[UmpleObject]
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class UmpleObject
+
+------------------------------------------------------------------------------------------------------------------
+
+abstract sig UmpleObject {
+
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Reaction
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Reaction extends UmpleObject {
+  chemical : one Chemical
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Chemical
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Chemical extends UmpleObject {
+  substrate : some Reaction
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Enzyme
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Enzyme extends Protein {
+  catalyzedReaction : one CatalyzedReaction
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Protein
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Protein extends Chemical {
+
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class CatalyzedReaction
+
+------------------------------------------------------------------------------------------------------------------
+
+sig CatalyzedReaction extends Reaction {
+  catalyzed : some Enzyme
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class DNA
+
+------------------------------------------------------------------------------------------------------------------
+
+sig DNA extends Chemical {
+  dNASegments : some DNASegment
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class DNASegment
+
+------------------------------------------------------------------------------------------------------------------
+
+sig DNASegment extends UmpleObject {
+  comprise : one DNA
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class Chemical and class Reaction
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all chemical_1 : Chemical, reaction_1 : Reaction |
+    chemical_1 in chemical[reaction_1] <=> reaction_1 in substrate[chemical_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class CatalyzedReaction and class Enzyme
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all catalyzedreaction_1 : CatalyzedReaction, enzyme_1 : Enzyme |
+    catalyzedreaction_1 in catalyzedReaction[enzyme_1] <=> enzyme_1 in catalyzed[catalyzedreaction_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines numeric bound rule for class CatalyzedReaction
+
+------------------------------------------------------------------------------------------------------------------
+
+fact NumericBoundFact {
+  no catalyzedreaction_1 : CatalyzedReaction |
+    #catalyzedreaction_1.catalyzed != 2
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class DNA and class DNASegment
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all dna_1 : DNA, dnasegment_1 : DNASegment |
+    dna_1 in comprise[dnasegment_1] <=> dnasegment_1 in dNASegments[dna_1]
+}
