@@ -175,7 +175,9 @@ digraph "<<=filename>>" {
       
       AssociationEnd leftEnd = uAssoc.getEnd(0);
       AssociationEnd rightEnd = uAssoc.getEnd(1);
-      String arrows, visualArrow, visualLeftEnd, visualRightEnd,toolTip;
+      String modifierOne = leftEnd.getModifier();
+      String modifierTwo = rightEnd.getModifier();
+      String arrows, visualArrow, visualLeftEnd, visualRightEnd, toolTip, label;
 
       // Only output them when visiting one class
       if(leftEnd.getClassName().equals(className)) {
@@ -197,17 +199,33 @@ digraph "<<=filename>>" {
           arrows = "dir=\"none\"";
           visualArrow = "--";
         }
-
-        visualLeftEnd = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
-        visualRightEnd = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
-        toolTip = leftEnd.getClassName() + " " + visualLeftEnd +
-          " " + visualArrow + " " + visualRightEnd + " " + rightEnd.getClassName();
-
-        associations.append("  \""+leftEnd.getClassName()+"\" -> \""+
-          rightEnd.getClassName()+"\" ["+arrows+
-          ", taillabel=\""+visualLeftEnd+"\""+
-          ", headlabel=\""+visualRightEnd+"\""+
-          ", tooltip=\""+toolTip+"\"];\n");
+        
+        if ("symmetricreflexive".equals(modifierOne) && "symmetricreflexive".equals(modifierTwo)) 
+        {
+          if ("undefined".equals(rightEnd.getDisplayRoleName()))
+            label = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
+          else label = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
+          
+          toolTip = leftEnd.getClassName() + " " + label + " " + rightEnd.getClassName();
+          
+          associations.append("  \""+leftEnd.getClassName()+"\" -> \""+
+              rightEnd.getClassName()+"\" ["+arrows+
+              ", label=\""+label+"\""+
+              ", tooltip=\""+toolTip+"\"];\n");
+        }
+        else 
+        {
+          visualLeftEnd = leftEnd.toSimpleString()+" "+leftEnd.getDisplayRoleName();
+          visualRightEnd = rightEnd.toSimpleString()+" "+rightEnd.getDisplayRoleName();
+          toolTip = leftEnd.getClassName() + " " + visualLeftEnd +
+              " " + visualArrow + " " + visualRightEnd + " " + rightEnd.getClassName();
+          
+          associations.append("  \""+leftEnd.getClassName()+"\" -> \""+
+              rightEnd.getClassName()+"\" ["+arrows+
+              ", taillabel=\""+visualLeftEnd+"\""+
+              ", headlabel=\""+visualRightEnd+"\""+
+              ", tooltip=\""+toolTip+"\"];\n");
+        }
       }
     }
   }

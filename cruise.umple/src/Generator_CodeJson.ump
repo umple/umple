@@ -137,6 +137,8 @@ class JsonGenerator
       String multTwo = aAssoc.getEnd(1).toSimpleString();
       String roleOne = aAssoc.getEnd(0).getRoleName();
       String roleTwo = aAssoc.getEnd(1).getRoleName();
+      String modifierOne = aAssoc.getEnd(0).getModifier();
+      String modifierTwo = aAssoc.getEnd(1).getModifier();
 
       if (roleOne.equals("") || aAssoc.getEnd(0).getIsDefaultRoleName()) roleOne = "undefined";
       if (roleTwo.equals("") || aAssoc.getEnd(1).getIsDefaultRoleName()) roleTwo = "undefined";
@@ -156,8 +158,18 @@ class JsonGenerator
       }
 
       String associationId = "umpleAssociation_" + index;
+      
+      if ("symmetricreflexive".equals(modifierOne) && "symmetricreflexive".equals(modifierTwo)) 
+      { 
+        String role = roleOne;
+        if ("undefined".equals("undefined")) role = roleTwo;
+        jsonForAssociations += StringFormatter.format("{\"offsetOnePosition\": {\"x\": {2}, \"y\": {3}, \"width\": 0, \"height\": 0}, \"offsetTwoPosition\": {\"x\": {4}, \"y\": {5}, \"width\": 0, \"height\": 0}, \"id\": \"{6}\", \"classOneId\": \"{0}\", \"classTwoId\": \"{1}\", \"multiplicityOne\": \"{7}\", \"multiplicityTwo\": \"{8}\", \"name\": \"{9}\", \"roleOne\": \"{10}\", \"roleTwo\": \"{11}\", \"role\": \"{12}\", \"isLeftNavigable\":\"{13}\", \"isRightNavigable\":\"{14}\"}", c1.getName(), c2.getName(), x1, y1, x2, y2,associationId, multOne, multTwo, name, roleOne, roleTwo, role, aAssoc.getIsLeftNavigable(), aAssoc.getIsRightNavigable());
+      }
+      else 
+      {
+        jsonForAssociations += StringFormatter.format("{\"offsetOnePosition\": {\"x\": {2}, \"y\": {3}, \"width\": 0, \"height\": 0}, \"offsetTwoPosition\": {\"x\": {4}, \"y\": {5}, \"width\": 0, \"height\": 0}, \"id\": \"{6}\", \"classOneId\": \"{0}\", \"classTwoId\": \"{1}\", \"multiplicityOne\": \"{7}\", \"multiplicityTwo\": \"{8}\", \"name\": \"{9}\", \"roleOne\": \"{10}\", \"roleTwo\": \"{11}\", \"isLeftNavigable\":\"{12}\", \"isRightNavigable\":\"{13}\"}", c1.getName(), c2.getName(), x1, y1, x2, y2,associationId, multOne, multTwo, name, roleOne, roleTwo, aAssoc.getIsLeftNavigable(), aAssoc.getIsRightNavigable());
+      }
 
-      jsonForAssociations += StringFormatter.format("{\"offsetOnePosition\": {\"x\": {2}, \"y\": {3}, \"width\": 0, \"height\": 0}, \"offsetTwoPosition\": {\"x\": {4}, \"y\": {5}, \"width\": 0, \"height\": 0}, \"id\": \"{6}\", \"classOneId\": \"{0}\", \"classTwoId\": \"{1}\", \"multiplicityOne\": \"{7}\", \"multiplicityTwo\": \"{8}\", \"name\": \"{9}\", \"roleOne\": \"{10}\", \"roleTwo\": \"{11}\", \"isLeftNavigable\":\"{12}\", \"isRightNavigable\":\"{13}\"}", c1.getName(), c2.getName(), x1, y1, x2, y2,associationId, multOne, multTwo, name, roleOne, roleTwo, aAssoc.getIsLeftNavigable(), aAssoc.getIsRightNavigable());
       index += 1;
     }
 
