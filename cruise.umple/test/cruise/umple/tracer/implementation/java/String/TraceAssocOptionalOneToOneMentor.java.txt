@@ -1,0 +1,79 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.StringTracer;
+import java.util.Date;
+
+public class Mentor
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Mentor Associations
+  private Student student;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Mentor(Student aStudent)
+  {
+    boolean didAddStudent = setStudent(aStudent);
+    if (!didAddStudent)
+    {
+      throw new RuntimeException("Unable to create mentor due to student");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public Student getStudent()
+  {
+    return student;
+  }
+
+  public boolean setStudent(Student aNewStudent)
+  {
+    boolean wasSet = false;
+    if (aNewStudent == null)
+    {
+      //Unable to setStudent to null, as mentor must always be associated to a student
+      return wasSet;
+    }
+    
+    Mentor existingMentor = aNewStudent.getMentor();
+    if (existingMentor != null && !equals(existingMentor))
+    {
+      //Unable to setStudent, the current student already has a mentor, which would be orphaned if it were re-assigned
+      return wasSet;
+    }
+    
+    Student anOldStudent = student;
+    student = aNewStudent;
+    student.setMentor(this);
+
+    if (anOldStudent != null)
+    {
+      anOldStudent.setMentor(null);
+    }
+    wasSet = true;
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssocOptionalOneToOne.ump,6,Mentor+Student,"+System.identityHashCode(this)+",as_a,students,"+1 );
+    return wasSet;
+  }
+
+  public void delete()
+  {
+    Student existingStudent = student;
+    student = null;
+    if (existingStudent != null)
+    {
+      existingStudent.setMentor(null);
+    }
+  }
+
+}

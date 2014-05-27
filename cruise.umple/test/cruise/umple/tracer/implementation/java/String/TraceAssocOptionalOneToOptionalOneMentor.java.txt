@@ -67,7 +67,7 @@ public class Mentor
       aNewStudent.setMentor(this);
     }
     wasSet = true;
-    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceStudentMentorA.ump,6,Mentor+Student,"+System.identityHashCode(this)+",as_a,students,"+1 );
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssocOptionalOneToOptionalOne.ump,6,Mentor+Student,"+System.identityHashCode(this)+",as_a,students,"+1 );
     return wasSet;
   }
 
