@@ -256,8 +256,6 @@ function UmpleAssociation()
     {
       roleOneHtml = "";
       roleTwoHtml = "";
-      //TODO draw centered role
-      var roleCenterHtml = this.roleDivHtml("", role, x, y)
     }
     
     currentHtml = associationDiv.html();
