@@ -2,6 +2,7 @@ namespace cruise.umple.compiler;
 
 class UmpleInternalParser
 {
+
 //----------------------------------------------------------------------------  
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------   
@@ -110,8 +111,8 @@ class UmpleInternalParser
       }
     }
 
-   if (traitToken.getValue("gTemplateParameter") != null ) {
-    	proccessGeneralTemplateParameters(traitToken.getSubToken("gTemplateParameter"), aTrait);
+   if (traitToken.getValue("traitParameters") != null ) {
+    	proccessGeneralTemplateParameters(traitToken.getSubToken("traitParameters"), aTrait);
     }
 	
     analyzeAllTokens(traitToken,aTrait);
@@ -1182,10 +1183,15 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
   private void proccessGeneralTemplateParameters(Token mainToken, UmpleTrait aTrait) {
-	// TODO Auto-generated method stub
-	  for (Token subToken : mainToken.getSubTokens()) {
+	  String name = "";
+	   for (Token subToken : mainToken.getSubTokens()) {
 		  if (subToken.is("parameter")) {
-			  GeneralTemplateParameter gtParameter = new GeneralTemplateParameter(subToken.getValue(),"");
+			  name = subToken.getValue();
+			  GeneralTemplateParameter gtParameter = new GeneralTemplateParameter(name,"");
+			  if (aTrait.hasGeneralTemplateParameter(name)){
+				  getParseResult().addErrorMessage(new ErrorMessage(2561,subToken.getPosition(),name,aTrait.getName() ));
+				  return;
+			  }
 			  aTrait.addGeneralTemplateParameter(gtParameter);
 		  }
 	  }
@@ -1194,7 +1200,8 @@ class UmpleInternalParser
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
-	 GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
+	GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
+    String parameterName;
 	for(Token subToken : mainToken.getSubTokens()) {
 		if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
 			MethodTemplateSignature mtSignature =obtainMethodTemplateSignature(subToken);
@@ -1204,6 +1211,13 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 					getParseResult().addErrorMessage(new ErrorMessage(2558,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
 				    return;
 			}
+		} else if (subToken.is("traitAppliedParameters")){
+				parameterName = subToken.getValue("pName");
+				if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
+					getParseResult().addErrorMessage(new ErrorMessage(2563,subToken.getPosition(),parameterName));
+					return;
+				}
+				aGeneralTPApplied.getParameterMapping().put(parameterName, subToken.getValue("rName"));				
 		}
 	}
 	if (aClassifier instanceof UmpleClass) {
@@ -1233,6 +1247,7 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 				}
 			}
 	   }
+	   
 	  MethodTemplateSignature mtSignature = new MethodTemplateSignature(iEFunctionModifier,methodAliasName, method); 
 	return mtSignature;
 }
@@ -1269,7 +1284,7 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
-//---------------------------------Start-------------------------------------- 
+//---------------------------------Start--------------------------------------
 }
 
 use UmpleInternalParser_FIXML.ump;
