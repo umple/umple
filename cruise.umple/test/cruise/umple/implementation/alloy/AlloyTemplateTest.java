@@ -58,7 +58,7 @@ public class AlloyTemplateTest extends TemplateTest{
 	  
 	  @Test //@Ignore
 	  public void abstractSingleton()
-	  {
+	  { 
 		assertUmpleTemplateFor("alloy/abstractSingleton.ump","alloy/abstractSingleton.alloy.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/alloy/abstractSingleton.als")).exists());
 	  }
