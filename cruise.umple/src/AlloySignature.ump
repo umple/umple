@@ -24,7 +24,6 @@ class OpenStatement
 
 class AlloyModel {
   depend cruise.umple.compiler.*; 
-  //depend java.util.*;
   isA AlloyObject;
   
   1 -> * Signature;
@@ -32,7 +31,6 @@ class AlloyModel {
   1 -> * Statement;
   
   name;
-  List<Association> unidirectionalList;
   
   public AlloyModel(UmpleModel model)
   {
@@ -48,43 +46,12 @@ class AlloyModel {
     genSignatures(model);
     genOtherConstraints(model);
     
-    name = model.getUmpleFile().getFileName();
-    
-    for(Association assoc : model.getAssociations())
-    {
-      if(!assoc.isIsRightNavigable() && !assoc.isIsLeftNavigable()){
-        unidirectionalList.add(assoc);
-        //removeFunctionForNavigation();
-      }
-    }
-    //removeFunctionForNavigation();    
+    name = model.getUmpleFile().getFileName();   
   }
   
-  private void removeFunctionForNavigation()
-  { 
-    String name0 = null, name1 = null;
-    for(Association assoc : unidirectionalList)
-    {
-      if(assoc.isIsRightNavigable())
-      {
-        name0 = assoc.getEnd(1).getClassName();
-        for(Signature sig : signatures)
-        {
-          if(name0.equals(sig.getName()))
-            for(Function fun : sig.getFunction())
-              if(name1.equals(fun.getTargetClassName()))
-                if(sig.removeFunction(fun));
-        }
-      }
-      for(Signature sig : signatures)
-      {
-        name1 = assoc.getEnd(0).getClassName();
-        if(name1.equals(sig.getName()))
-          for(Function fun : sig.getFunction())
-            if(name1.equals(fun.getTargetClassName()))
-              if(sig.removeFunction(fun));
-      }  
-    }
+  public String printHeader()
+  {
+    return "module "+name.substring(0,name.length()-4);
   }
   
   private void genSignatures(UmpleModel model)
@@ -179,7 +146,6 @@ class AlloyModel {
   {
   	String rEndName = assoc.getEnd(1).getClassName(),
   		lEndName = assoc.getEnd(0).getClassName();
-  	//if(assoc.){
   	  if(lEndName.equals(rEndName))
   	  {
   	    if(compareRoleNames(assoc) == true)
@@ -187,7 +153,6 @@ class AlloyModel {
   	    return 1;
   	  }
   	  return 2;
-  	//}
   }
   
   private boolean compareRoleNames(Association assoc)
