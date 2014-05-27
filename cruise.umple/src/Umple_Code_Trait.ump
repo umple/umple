@@ -35,6 +35,13 @@ class UmpleModel {
 //------------------------------------class start----------------------------------------------
 //---------------------------------------------------------------------------------------------
 class UmpleTrait {
+	
+	public boolean hasGeneralTemplateParameter(String name){
+		for (GeneralTemplateParameter gtParameter : getGeneralTemplateParameters()) {
+			if (gtParameter.getName().equals(name)) return true;
+		}
+		return false;	
+	}
 
   public boolean hasCascadeMethod (Method aMethod, Boolean inAbstract) {
 	  if (hasMethod(aMethod) && getMethod(aMethod).isIsAbstract() ==inAbstract ) return  true;

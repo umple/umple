@@ -502,6 +502,35 @@ public class UmpleTraitTest {
 		}	
 	}
 	
+	@Test
+	public void includeExcludeRule13Test() {
+		String code = "class A{isA T;}trait T<X,X>{}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2561");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	public void includeExcludeRule14Test() {
+		String code = "class A{isA T< A = String, A = Integer >;}trait T<X,Z>{}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2563");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
 	@Ignore
 	public void includeExcludeRuleAlias1Test() {
 		String code = "class A{isA T1<+test(Integer), -test(String) as t >;}trait T1{void test(String str){/*T1-S*/}void test(Integer inData){/*T1-I*/}void test(String str,Integer inData){/*T1-SI*/}}";

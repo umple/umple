@@ -974,7 +974,7 @@ class UmpleClass
 
   public boolean hasImplementedMethodIncludingWithinParentClasses(Method comparedMethod) {
     Method aMethod = getMethod(comparedMethod);
-    if(aMethod!=null&&!"".equals(aMethod.getMethodBody().getExtraCode(""))){
+    if(aMethod!=null&&!aMethod.isIsAbstract()){
       return true;
     }
     else if(getExtendsClass()!=null&&getExtendsClass().hasImplementedMethodIncludingWithinParentClasses(comparedMethod)){
@@ -2336,4 +2336,27 @@ class Comment
     return output.trim();
   }
 }
+
+
+class GeneralTPApplied {
+	Map<String,String> parameterMapping = new HashMap<String,String>();
+	
+	boolean hasMethodTemplateSignature(MethodTemplateSignature inMTSignature) {
+		for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
+		if (mTSignature.getMethod().getName().equals(inMTSignature.getMethod().getName())){
+			if (mTSignature.getMethod().numberOfMethodParameters() == inMTSignature.getMethod().numberOfMethodParameters()){
+				for (int i = 0; i < mTSignature.getMethod().numberOfMethodParameters(); i++) {
+					if (!mTSignature.getMethod().getMethodParameter(i).getType().equals(inMTSignature.getMethod().getMethodParameter(i).getType())){
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+	}
+	return false;
+	}
+}
+
+
 use Umple_Code_Trait.ump;

@@ -140,6 +140,10 @@
 2558: 1, "http://umple.org", In modification level of trait '{0}', method '{1}' has been defined two times.;
 2559: 1, "http://umple.org", Method '{0}' is not available in trait '{1}' for modification.;
 2560: 1, "http://umple.org", It is impossible to remove method '{0}' while changing its name.;
+2561: 1, "http://umple.org", It is impossible to have two parameters with the same name '{0}' in trait'{1}'.;
+2562: 1, "http://umple.org", Parameter '{0}' is not available.;
+2563: 1, "http://umple.org", Parameter '{0}' cannot be allocated two times.;
+
 
 # Messages related to templates
 3500: 2, "http://umple.org", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;

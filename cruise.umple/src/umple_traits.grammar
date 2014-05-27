@@ -6,7 +6,7 @@ traitParameters : < [~parameter] ( , [~parameter] )* >
 
 //iE = Include Exclude
 functionIncludeExcludeAlias -: [[functionInExAlias]]  ( , [[functionInExAlias]]  )*
-functionInExAlias- : [[functionAliasName]] | [[iEFunction]]
+functionInExAlias- : [[functionAliasName]] | [[iEFunction]] | [[traitAppliedParameters]]
 iEFunction : [=iEFunctionModifier:+|-] [methodName] [[iEParameterList]]
 iEParameterList : OPEN_ROUND_BRACKET ( [parameter] ( , [parameter] )* )? CLOSE_ROUND_BRACKET
 functionAliasName : ([=iEFunctionModifier:+])? [~methodName] [[iEParameterList]] as [[IEVisiAlias]]
@@ -14,3 +14,4 @@ IEVisiAlias-: [[IEVisiAlias1]] | [[IEVisiAlias2]] | [[IEVisiAlias3]]
 IEVisiAlias1-: [=iEVisibility:public|private|protected] [~methodAliasName]
 IEVisiAlias2-: [=iEVisibility:public|private|protected]
 IEVisiAlias3-: [~methodAliasName]
+traitAppliedParameters : [~pName] = [~rName]
