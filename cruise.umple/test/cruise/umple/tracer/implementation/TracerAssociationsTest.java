@@ -108,10 +108,17 @@ public class TracerAssociationsTest extends TracerTemplateTest
   //---------------------------------------- Student-Mentor examples
   
   @Test
-  public void TraceStudentMentorA()
+  public void TraceAssocOptionalOneToOptionalOne()
   {
-//    AssertAssoc("TraceStudentMentorA.ump","TraceStudentMentorA1.","Student");
-    AssertAssoc("TraceStudentMentorA.ump","TraceStudentMentorA2.","Mentor");
+//    AssertAssoc("OptionalOneToOptionalOne.ump","OptionalOneToOptionalOneStudent.","Student");
+    AssertAssoc("TraceAssocOptionalOneToOptionalOne.ump","TraceAssocOptionalOneToOptionalOneMentor.","Mentor");
+  }
+  
+  @Test
+  public void TraceAssocOptionalOneToOne()
+  {
+//    AssertAssoc("OptionalOneToOne.ump","OptionalOneToOneStudent.","Student");
+    AssertAssoc("TraceAssocOptionalOneToOne.ump","TraceAssocOptionalOneToOneMentor.","Mentor");
   }
 
   //----------------------------------------

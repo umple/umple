@@ -65,7 +65,7 @@ public class Student
       aNewMentor.setStudent(this);
     }
     wasSet = true;
-    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",model.ump,5,Student+Mentor,"+System.identityHashCode(this)+",as_a,mentors,1" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceAssocOptionalOneToOptionalOneStudent.ump,5,Student+Mentor,"+System.identityHashCode(this)+",as_a,mentors,1" );
     return wasSet;
   }
 
