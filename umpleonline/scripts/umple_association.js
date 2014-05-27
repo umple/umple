@@ -19,6 +19,7 @@ UmpleAssociationFactory.create = function(data)
   umpleAssociation.name = data.name;
   umpleAssociation.roleOne = data.roleOne;
   umpleAssociation.roleTwo = data.roleTwo;
+  umpleAssociation.role = data.role;
   umpleAssociation.isLeftNavigable = (data.isLeftNavigable == "true" || data.isLeftNavigable == true) ? true : false;
   umpleAssociation.isRightNavigable = (data.isRightNavigable == "true" || data.isRightNavigable == true) ? true : false;
   return umpleAssociation;
@@ -38,6 +39,7 @@ function UmpleAssociation()
   this.name = "";
   this.roleOne = "undefined";
   this.roleTwo = "undefined";
+  this.role = "";
   this.isLeftNavigable = true;
   this.isRightNavigable = true;
   
@@ -234,19 +236,29 @@ function UmpleAssociation()
     var multiTwoHtml = this.multiplicityDivHtml("two",this.multiplicityTwo,multiplicityTwoPosition.x,multiplicityTwoPosition.y);
     
     // draw the role names
-    if (this.roleOne != "undefined")
+    if (this.role == "") 
     {
-      roleOnePosition = this.rolePosition(true);
-      var roleOneHtml = this.roleDivHtml("one",this.roleOne,roleOnePosition.x,roleOnePosition.y);
+      if (this.roleOne != "undefined")
+      {
+        roleOnePosition = this.rolePosition(true);
+        var roleOneHtml = this.roleDivHtml("one",this.roleOne,roleOnePosition.x,roleOnePosition.y);
+      }
+      else roleOneHtml = "";
+      
+      if (this.roleTwo != "undefined") 
+      {
+        roleTwoPosition = this.rolePosition(false);
+        var roleTwoHtml = this.roleDivHtml("two",this.roleTwo,roleTwoPosition.x,roleTwoPosition.y);
+      }
+      else roleTwoHtml = "";
     }
-    else roleOneHtml = "";
-    
-    if (this.roleTwo != "undefined") 
+    else 
     {
-      roleTwoPosition = this.rolePosition(false);
-      var roleTwoHtml = this.roleDivHtml("two",this.roleTwo,roleTwoPosition.x,roleTwoPosition.y);
+      roleOneHtml = "";
+      roleTwoHtml = "";
+      //TODO draw centered role
+      var roleCenterHtml = this.roleDivHtml("", role, x, y)
     }
-    else roleTwoHtml = "";
     
     currentHtml = associationDiv.html();
     associationDiv.html(multiOneHtml + multiTwoHtml + roleOneHtml + roleTwoHtml + hoverHtml + currentHtml);
@@ -502,6 +514,8 @@ function UmpleAssociation()
   {
     if (leftOrRight == "one") idExtension = "roleOne";
     if (leftOrRight == "two") idExtension = "roleTwo";
+    if (leftOrRight == "") idExtension = "centerRole";
+    //TODO add center role HTML div
     return format('<div id="{0}_{1}" class="role" name="{1}" style="left: {2}px; top: {3}px; cursor: pointer;">{4}</div>',this.id,idExtension,x,y,role);
   }
   
@@ -664,7 +678,7 @@ function UmpleAssociation()
   
   this.rolePosition = function(isEndOne)
   {
-	var multiplicity = isEndOne? this.multiplicityOne : this.multiplicityTwo;
+    var multiplicity = isEndOne? this.multiplicityOne : this.multiplicityTwo;
   	var role = isEndOne? this.roleOne : this.roleTwo;
   	var perimeterOne = isEndOne? this.classOnePosition.add(this.offsetOnePosition):
   								 this.classTwoPosition.add(this.offsetTwoPosition);
@@ -672,7 +686,7 @@ function UmpleAssociation()
   								 this.classOnePosition.add(this.offsetOnePosition);
   	
   	// length of multiplicity plus a space character
-	var multLength = new UmplePosition(5*(multiplicity.length),0,0,0);
+    var multLength = new UmplePosition(5*(multiplicity.length),0,0,0);
   	var roleLength = new UmplePosition(6*(role.length),0,0,0,0);
   	var multHeight = new UmplePosition(0,16,0,0);
   	var roleHeight = multHeight;

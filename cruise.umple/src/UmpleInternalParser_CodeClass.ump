@@ -2012,6 +2012,7 @@ class UmpleInternalParser
     AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
     Association assoc = new Association(true, true, leftEnd, rightEnd);
     aClass.addAssociation(assoc);
+    model.addAssociation(assoc);
   }
 
   private Association createAssociation(String navigation, AssociationEnd firstEnd, AssociationEnd secondEnd)
