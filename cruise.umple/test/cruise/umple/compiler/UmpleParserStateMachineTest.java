@@ -160,12 +160,18 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(false,t.isAutoTransition());
     Assert.assertEquals(true, t.getEvent().isAutoTransition());
   }
-  
+
   @Test 
   public void unclearTransitionToState(){
-	  assertHasWarning("100_unclearTransitionToState.ump", 0, 66, new Position("100_unclearTransitionToState.ump", 24, 3, 158));
+	  assertHasWarning("100_unclearTransitionToState.ump", 0, 66, new Position("100_unclearTransitionToState.ump", 4, 3, 25));
   }
   
+  @Test 
+  public void unclearTransitionToStateNested(){
+	  assertHasWarning("100_unclearTransitionToStateNested.ump", 0, 66, new Position("100_unclearTransitionToStateNested.ump", 5, 7, 44));
+  }
+  
+
   @Test
   public void historyStatePlacement(){
     assertNoWarnings("238_historyState.ump");
@@ -199,12 +205,14 @@ public class UmpleParserStateMachineTest
   public void dotNotationInvalid(){
     assertHasWarning("519_dotNotationInvalidState.ump", 0, 50, new Position("519_dotNotationInvalidState.ump", 12, 6, 120));
     assertFailedParse("519_dotNotationInvalidStateName.ump", new Position("519_dotNotationInvalidStateName.ump", 12, 6, 120), 152);
+    
   }
   
   @Test
   public void dotNotationAtLevelAbove(){
-    assertNoWarnings("519_dotNotationAtLevelAbove.ump");
-    
+    //assertNoWarnings("519_dotNotationAtLevelAbove.ump");
+    assertHasWarning("519_dotNotationAtLevelAbove.ump", 0, 66, new Position("519_dotNotationAtLevelAbove.ump", 5, 8, 44));
+       
     UmpleClass c = model.getUmpleClass("X");
 
     StateMachine sm = c.getStateMachine(0);
@@ -1164,7 +1172,7 @@ public class UmpleParserStateMachineTest
   
   @Test
   public void pooledStateMachine_UnspecifiedReception(){
-	assertHasWarning("106_invalid_PooledStateMachine_UnspecifiedReception.ump", 0, 62, new Position("106_invalid_PooledStateMachine_UnspecifiedReception.ump", 5, 6, 84));
+	assertHasWarning("106_invalid_PooledStateMachine_UnspecifiedReception.ump", 1, 62, new Position("106_invalid_PooledStateMachine_UnspecifiedReception.ump", 5, 6, 84));
   }
   
   @Test

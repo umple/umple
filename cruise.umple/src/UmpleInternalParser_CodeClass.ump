@@ -36,6 +36,7 @@ class UmpleInternalParser
   internal AssociationVariable lastassoc = null;
   Position lastassocPosition = null;
   internal Map<Token, UmpleClass> attributeAutouniqueImmutable = null;
+   
   /*
    * Analyze class definitions and related tokens.
    * 
@@ -351,6 +352,8 @@ class UmpleInternalParser
       //Solution to issue 543
       //checkExtendsClass();
       checkAbstractClass();
+      
+      //Solution to issue 502
       checkAttributeConflictImmutableAutounique();
     }
   }
