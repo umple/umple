@@ -1,6 +1,7 @@
 class Test{
 	sm{
 		a{
+			e -> s1;
 			s1{
 				x{
 					y{
@@ -14,6 +15,7 @@ class Test{
 			s2{}
 		}
 		b{
+		   e -> s1;	
 		   s1{}
 		   s2{}
 		}

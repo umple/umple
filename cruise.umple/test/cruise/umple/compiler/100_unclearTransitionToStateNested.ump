@@ -1,0 +1,27 @@
+class X {
+   attr;
+   sm {
+     s1 {
+       e -> sa;
+     }
+     s2 {
+       f -> s1;
+       sa {
+         g -> sb;
+       }
+       sb {
+         h -> sa; 
+       }
+     }
+     s3 {
+       sa {
+         g -> s1;
+         h -> sc;
+       }
+       sb{} 
+       sc {
+         k -> sa;
+       }
+     }
+   }
+}

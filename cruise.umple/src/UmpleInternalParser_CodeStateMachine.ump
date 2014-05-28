@@ -19,13 +19,15 @@ class UmpleInternalParser
   internal StateMachine placeholderStateMachine = null;
   internal Map<String,Token> stateMachineNameToToken = new HashMap<String, Token>();
   internal Map<State,List<Token>> possiblyUnknownStates = new HashMap<State,List<Token>>();
+  internal List<Token> stateNames = null;
+  internal List<Token> transitionNames = null;
   
   
   // Allow to declare several active objects within the same class, the name of the generated state-machine
   // will be "stateMachine<numberOfActiveObjects>"
   private static int numberOfActiveObjects = 1;
   
-  //Number of ocurrences of a given state in a state machine. 
+  //Issue 531. Number of ocurrences of a given state in a state machine. 
   //More than one means that the transition is ambiguous and should generate a warning message 
   private int numberOfOcurrences;
    
@@ -443,6 +445,17 @@ class UmpleInternalParser
     }
 
   }
+  //Issue 531
+  private void checkUnclearTransition(Token t){
+       for(Token subToken : t.getSubTokens()){
+           if(subToken.getValue("stateName") != null && subToken.is("state"))
+               stateNames.add(subToken);
+           if((subToken.is("transition")||subToken.is("autoTransition")) && subToken.getValue("stateName") != null)
+               transitionNames.add(subToken);
+           if(subToken.hasSubTokens())
+               checkUnclearTransition(subToken);
+       }       
+   }
 
   private StateMachine analyzeStateMachine(Token stateMachineToken, UmpleClassifier uClassifier)
   {
@@ -451,6 +464,19 @@ class UmpleInternalParser
 
     if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){
     	setFailedPosition(stateMachineToken.getPosition(), 150, stateMachineToken.getValue("name"));
+    }
+    
+    //Issue 531
+    stateNames = new ArrayList<Token>();
+    transitionNames = new ArrayList<Token>();   
+    checkUnclearTransition(stateMachineToken);
+    for(Token transition : transitionNames){
+        numberOfOcurrences = 0;
+        for(Token state : stateNames)
+            if(transition.getValue("stateName").equals(state.getValue("stateName")))
+                numberOfOcurrences++;
+        if(numberOfOcurrences > 1)
+            getParseResult().addErrorMessage(new ErrorMessage(66,transition.getPosition(), transition.getValue("stateName")));
     }
 
      //Issue200
@@ -664,29 +690,10 @@ class UmpleInternalParser
         possiblyUnknownStates.get(nextState).add(transitionToken);
       }
     }
-    numberOfOcurrences = 0;
-    for(State state: sm.getStates()){
-    	if(state.getName().equals(name))
-    		numberOfOcurrences++;
-    	if(state.hasNestedStateMachines())
-    		checkUnclearTransitions(state.getNestedStateMachines(),name);
-    }
-    if(numberOfOcurrences > 1){
-    	getParseResult().addErrorMessage(new ErrorMessage(66,transitionToken.getPosition(),name));
-    }
+    
     return nextState;
   }
-  private void checkUnclearTransitions(List<StateMachine> sm, String name){
-	   for(StateMachine stateMachine : sm){
-		   for(State state: stateMachine.getStates()){
-			   if(state.getName().equals(name))
-		    		numberOfOcurrences++;
-			   if(state.hasNestedStateMachines()){
-				   checkUnclearTransitions(state.getNestedStateMachines(), name);
-			   }
-		    }
-	   }
-   }
+  
    private State createStateFromStandAloneTransition(Token transitionToken, StateMachine sm){
 	    checkStateNameOfToken(transitionToken);
 	    
