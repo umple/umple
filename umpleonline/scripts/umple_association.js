@@ -19,7 +19,7 @@ UmpleAssociationFactory.create = function(data)
   umpleAssociation.name = data.name;
   umpleAssociation.roleOne = data.roleOne;
   umpleAssociation.roleTwo = data.roleTwo;
-  umpleAssociation.role = data.role;
+  umpleAssociation.isSymmetricReflexive = (data.isSymmetricReflexive == "true" || data.isSymmetricReflexive == true) ? true : false;
   umpleAssociation.isLeftNavigable = (data.isLeftNavigable == "true" || data.isLeftNavigable == true) ? true : false;
   umpleAssociation.isRightNavigable = (data.isRightNavigable == "true" || data.isRightNavigable == true) ? true : false;
   return umpleAssociation;
@@ -34,12 +34,12 @@ function UmpleAssociation()
   this.classTwoPosition = null;
   this.offsetOnePosition = null;
   this.offsetTwoPosition = null;
-  this.multiplicityOne = "*";
-  this.multiplicityTwo = "*";
+  this.multiplicityOne = "";
+  this.multiplicityTwo = "";
   this.name = "";
-  this.roleOne = "undefined";
-  this.roleTwo = "undefined";
-  this.role = "";
+  this.roleOne = "";
+  this.roleTwo = "";
+  this.isSymmetricReflexive = false;
   this.isLeftNavigable = true;
   this.isRightNavigable = true;
   
@@ -50,21 +50,27 @@ function UmpleAssociation()
     this.name = this.getName();
   }
   
+  this.setDefaultMultiplicities = function()
+  {
+    this.multiplicityOne = "*";
+    this.multiplicityTwo = "*";
+  }
+  
   this.setRoles = function(aRole1, aRole2)
   {
-  	this.roleOne = aRole1;
-  	this.roleTwo = aRole2;
+    this.roleOne = aRole1;
+    this.roleTwo = aRole2;
   }
   
   this.setName = function(aName)
   {
-  	this.name = aName;
+    this.name = aName;
   }
   
   this.getName = function()
   {
-  	if (this.name == null || this.name == "") return this.deriveName();
-  	else return this.name;
+    if (this.name == null || this.name == "") return this.deriveName();
+    else return this.name;
   }
   
   this.deriveName = function()
@@ -93,26 +99,26 @@ function UmpleAssociation()
   
   this.setOffsetOnePosition = function(offsetOnePosition)
   {
-  	var classOne = UmpleSystem.find(this.classOneId);
-  	this.classOnePosition = classOne.position;
-  	this.offsetOnePosition = offsetOnePosition.subtract(classOne.position).subtract(UmpleSystem.position());
+    var classOne = UmpleSystem.find(this.classOneId);
+    this.classOnePosition = classOne.position;
+    this.offsetOnePosition = offsetOnePosition.subtract(classOne.position).subtract(UmpleSystem.position());
     this.offsetOnePosition.width = 0;
     this.offsetOnePosition.height = 0;
   }
   
   this.setOffsetTwoPosition = function(offsetTwoPosition)
   {
-  	var classTwo = UmpleSystem.find(this.classTwoId);
-  	this.classTwoPosition = classTwo.position;
-  	this.offsetTwoPosition = offsetTwoPosition.subtract(classTwo.position).subtract(UmpleSystem.position());
+    var classTwo = UmpleSystem.find(this.classTwoId);
+    this.classTwoPosition = classTwo.position;
+    this.offsetTwoPosition = offsetTwoPosition.subtract(classTwo.position).subtract(UmpleSystem.position());
     this.offsetTwoPosition.width = 0;
     this.offsetTwoPosition.height = 0;
   }
   
   this.trimOverlap = function()
   {
-  	// set up needed variables
-  	var associationLine = new UmpleLine(this.offsetOnePosition.add(this.classOnePosition), this.offsetTwoPosition.add(this.classTwoPosition));
+    // set up needed variables
+    var associationLine = new UmpleLine(this.offsetOnePosition.add(this.classOnePosition), this.offsetTwoPosition.add(this.classTwoPosition));
     var classOneBorders = UmpleSystem.find(this.classOneId).borderLines();
     var classTwoBorders = UmpleSystem.find(this.classTwoId).borderLines();
     var currentOne = this.offsetOnePosition.add(this.classOnePosition);
@@ -162,33 +168,36 @@ function UmpleAssociation()
   
   this.drawable = function()
   {
-  	if (this.id == null)
-  	{
-  	  associationDiv = this.drawableTemp();	
-  	}
-  	else if (this.isReflexive())
-  	{
-  	  associationDiv = this.drawableReflexive();
-  	}
-  	else if (this.isBidirectional())
-  	{
-  	  associationDiv = this.drawableBidirectional();
-  	}
-  	else
-  	{
-  	  associationDiv = this.drawableUnidirectional();
-  	}
-  	return associationDiv;
+    if (this.id == null)
+    {
+      associationDiv = this.drawableTemp();  
+    }
+    else if (this.isReflexive())
+    {
+      associationDiv = this.drawableReflexive();
+    }
+    else if (this.isBidirectional())
+    {
+      associationDiv = this.drawableBidirectional();
+    }
+    else
+    {
+      associationDiv = this.drawableUnidirectional();
+    }
+    return associationDiv;
   }
   
+  ///////////////////////////////////////////////
+  //Main rendering functions for the associations
+  ///////////////////////////////////////////////
   this.drawableTemp = function()
   {
     var associationSel = "#" + this.getElementId();
     jQuery(associationSel).remove();
     
     var associationDiv = jQuery("<div></div>");
-  	associationDiv.addClass("umpleAssociation");
-  	associationDiv.attr("id", "newassociation");
+    associationDiv.addClass("umpleAssociation");
+    associationDiv.attr("id", "newassociation");
     
     var line = new UmpleLine(this.classOnePosition.add(this.offsetOnePosition), this.classTwoPosition.add(this.offsetTwoPosition));
     associationDiv.append(line.drawable());
@@ -199,19 +208,19 @@ function UmpleAssociation()
   this.drawableBidirectional = function()
   {
     var associationSel = "#" + this.id;
-  	jQuery(associationSel).remove();
-  	
-  	var associationDiv = jQuery("<div></div>");
-  	associationDiv.addClass("umpleAssociation");
+    jQuery(associationSel).remove();
+    
+    var associationDiv = jQuery("<div></div>");
+    associationDiv.addClass("umpleAssociation");
     associationDiv.attr("id", this.id);
-  	
+    
     var classOne = UmpleSystem.find(this.classOneId);
     var classTwo = UmpleSystem.find(this.classTwoId);
-	
-	//If the classes are undefined quite operation
-	if(classOne == null || classOne == undefined || classTwo == null || classTwo == undefined)
-		return associationDiv;
-	
+  
+  //If the classes are undefined quite operation
+  if(classOne == null || classOne == undefined || classTwo == null || classTwo == undefined)
+    return associationDiv;
+  
     this.classOnePosition = classOne.position;
     this.classTwoPosition = classTwo.position;
     var perimeterOne = this.classOnePosition.add(this.offsetOnePosition);
@@ -235,29 +244,21 @@ function UmpleAssociation()
     var multiOneHtml = this.multiplicityDivHtml("one",this.multiplicityOne,multiplicityOnePosition.x,multiplicityOnePosition.y); 
     var multiTwoHtml = this.multiplicityDivHtml("two",this.multiplicityTwo,multiplicityTwoPosition.x,multiplicityTwoPosition.y);
     
-    // draw the role names
-    if (this.role == "") 
+    // draw the role names 
+    if (this.roleOne != "")
     {
-      if (this.roleOne != "undefined")
-      {
-        roleOnePosition = this.rolePosition(true);
-        var roleOneHtml = this.roleDivHtml("one",this.roleOne,roleOnePosition.x,roleOnePosition.y);
-      }
-      else roleOneHtml = "";
-      
-      if (this.roleTwo != "undefined") 
-      {
-        roleTwoPosition = this.rolePosition(false);
-        var roleTwoHtml = this.roleDivHtml("two",this.roleTwo,roleTwoPosition.x,roleTwoPosition.y);
-      }
-      else roleTwoHtml = "";
+      roleOnePosition = this.rolePosition(true);
+      var roleOneHtml = this.roleDivHtml("one",this.roleOne,roleOnePosition.x,roleOnePosition.y);
     }
-    else 
-    {
-      roleOneHtml = "";
-      roleTwoHtml = "";
-    }
+    else roleOneHtml = "";
     
+    if (this.roleTwo != "") 
+    {
+      roleTwoPosition = this.rolePosition(false);
+      var roleTwoHtml = this.roleDivHtml("two",this.roleTwo,roleTwoPosition.x,roleTwoPosition.y);
+    }
+    else roleTwoHtml = "";
+  
     currentHtml = associationDiv.html();
     associationDiv.html(multiOneHtml + multiTwoHtml + roleOneHtml + roleTwoHtml + hoverHtml + currentHtml);
     
@@ -266,29 +267,29 @@ function UmpleAssociation()
   
   this.drawableUnidirectional = function()
   {
-  	var associationDiv = this.drawableBidirectional();
-  	var peak = null;
-  	
-  	if (this.isLeftNavigable)
-  	{
-  	  peak = this.classOnePosition.add(this.offsetOnePosition);
-  	  otherEnd = this.classTwoPosition.add(this.offsetTwoPosition);
-  	}
-  	else
-  	{
+    var associationDiv = this.drawableBidirectional();
+    var peak = null;
+    
+    if (this.isLeftNavigable)
+    {
+      peak = this.classOnePosition.add(this.offsetOnePosition);
+      otherEnd = this.classTwoPosition.add(this.offsetTwoPosition);
+    }
+    else
+    {
       peak = this.classTwoPosition.add(this.offsetTwoPosition);
       otherEnd = this.classOnePosition.add(this.offsetOnePosition);
     }
-  	
-  	var associationLineSlopeAngle = peak.slopeAngle360(otherEnd);
-  	var edge1SlopeAngle = associationLineSlopeAngle + 30;
-  	var edge2SlopeAngle = associationLineSlopeAngle - 30;
-  	var distance = 10;
-  	
-  	var vertice1 = peak.travelForward(distance, edge1SlopeAngle);
-  	var vertice2 = peak.travelForward(distance, edge2SlopeAngle);
-  	
-  	var edge1 = new UmpleLine(peak.add(UmpleClassFactory.verticalError), vertice1.add(UmpleClassFactory.verticalError));
+    
+    var associationLineSlopeAngle = peak.slopeAngle360(otherEnd);
+    var edge1SlopeAngle = associationLineSlopeAngle + 30;
+    var edge2SlopeAngle = associationLineSlopeAngle - 30;
+    var distance = 10;
+    
+    var vertice1 = peak.travelForward(distance, edge1SlopeAngle);
+    var vertice2 = peak.travelForward(distance, edge2SlopeAngle);
+    
+    var edge1 = new UmpleLine(peak.add(UmpleClassFactory.verticalError), vertice1.add(UmpleClassFactory.verticalError));
     var edge2 = new UmpleLine(peak.add(UmpleClassFactory.verticalError), vertice2.add(UmpleClassFactory.verticalError));
     associationDiv.append(edge1.drawable());
     associationDiv.append(edge2.drawable());
@@ -296,20 +297,20 @@ function UmpleAssociation()
     return associationDiv;
   }
   
-  this.drawableReflexive = function()
+  this.drawableReflexive = function() 
   {
-  	// replace the old association div with a fresh one
-  	var associationSel = "#" + this.id;
-  	jQuery(associationSel).remove();
-  	var associationDiv = jQuery("<div></div>");
-  	associationDiv.addClass("umpleAssociation");
+    // replace the old association div with a fresh one
+    var associationSel = "#" + this.id;
+    jQuery(associationSel).remove();
+    var associationDiv = jQuery("<div></div>");
+    associationDiv.addClass("umpleAssociation");
     associationDiv.attr("id", this.id);
-  	
-  	// set the class positions
-  	var umpleClass = UmpleSystem.find(this.classOneId);
-  	this.classOnePosition = umpleClass.position;
-  	this.classTwoPosition = umpleClass.position;
-  	var classHeight = umpleClass.position.height;
+    
+    // set the class positions
+    var umpleClass = UmpleSystem.find(this.classOneId);
+    this.classOnePosition = umpleClass.position;
+    this.classTwoPosition = umpleClass.position;
+    var classHeight = umpleClass.position.height;
     var classWidth = umpleClass.position.width;
     
     // initialize variables to be used
@@ -323,7 +324,7 @@ function UmpleAssociation()
     // set the start and end points of segment one (small line starting at offset one and perpendicular to class wall)
     var segmentOneStart = this.offsetOnePosition.add(this.classOnePosition);
     var segmentOneEnd = this.offsetOnePosition.add(this.classOnePosition).add(new UmplePosition(segmentLength*factorX, segmentLength*factorY,0,0));
-    if (endOneWall == "South") segmentOneStart.y = segmentOneStart.y - 1;
+    if(endOneWall == "South") segmentOneStart.y = segmentOneStart.y - 1;
     var segmentOne = new UmpleLine(segmentOneStart, segmentOneEnd);
     
     // identify which class wall (N,S,E or W) end two sits on
@@ -334,17 +335,41 @@ function UmpleAssociation()
     // set the start and end points of segment two (small line starting at offset two and perpendicular to class wall)
     var segmentTwoStart = this.offsetTwoPosition.add(this.classTwoPosition);
     var segmentTwoEnd = this.offsetTwoPosition.add(this.classTwoPosition).add(new UmplePosition(segmentLength*factorX, segmentLength*factorY,0,0));
-    if (endTwoWall == "South") segmentTwoStart.y = segmentTwoStart.y - 2;
+    if(endTwoWall == "South") segmentTwoStart.y = segmentTwoStart.y - 2;
     var segmentTwo = new UmpleLine(segmentTwoStart, segmentTwoEnd);
     
     // add both segments to the div
     associationDiv.append(segmentOne.drawable());
     associationDiv.append(segmentTwo.drawable());
     
+    // The point(s) to add the label to
+    var labelPositionOne = new UmplePosition(0, 0, 0, 0);
+    
     // if both ends are on same wall connect them with one line
-    if (endOneWall == endTwoWall)
+    // also set the position for the label
+    if(endOneWall == endTwoWall)
     {
       var connector = new UmpleLine(segmentOneEnd, segmentTwoEnd);
+      
+      if(endOneWall == "North" || endOneWall == "South") 
+      {
+        if(this.isSymmetricReflexive) 
+        {
+          // Set the label position to the midpoint of the connector
+          labelPositionOne.x = (segmentOneEnd.x + segmentTwoEnd.x)/2;
+          labelPositionOne.y = segmentOneEnd.y;
+        }
+      }
+      else 
+      {
+        if(this.isSymmetricReflexive) 
+        {
+          // Set the the label position to the midpoint of the connector
+          labelPositionOne.x = segmentOneEnd.x;
+          labelPositionOne.y = (segmentOneEnd.y + segmentTwoEnd.y)/2;
+        }
+      }
+      
       associationDiv.append(connector.drawable());
     }
     
@@ -364,6 +389,12 @@ function UmpleAssociation()
       var connectorTwo = new UmpleLine(segmentTwoEnd, meetingPoint);
       associationDiv.append(connectorOne.drawable());
       associationDiv.append(connectorTwo.drawable());
+      
+      if(this.isSymmetricReflexive) 
+      {
+        // Set the label position to the connection point of the two added line segments
+        labelPositionOne.set(meetingPoint.x, meetingPoint.y);
+      }
     }
     
     // otherwise, ends are on opposite walls - connect them using three lines
@@ -396,14 +427,20 @@ function UmpleAssociation()
           start = segmentTwoEnd;
           end = segmentOneEnd;
         }
+        
+        if(this.isSymmetricReflexive) 
+        {
+          labelPositionOne.x = meetingPoint1.x;
+          labelPositionOne.y = (meetingPoint1.y + meetingPoint2.y)/2;
+        }
       }
       // if left and right, go around the bottom of the class
       else
       {
-      	// connecting points at bottom left and bottom right
-      	meetingPoint1.x = this.classOnePosition.x - segmentLength;
+        // connecting points at bottom left and bottom right
+        meetingPoint1.x = this.classOnePosition.x - segmentLength;
         meetingPoint1.y = this.classOnePosition.y + classHeight + segmentLength;
-      	meetingPoint2.x = this.classOnePosition.x + classWidth + segmentLength;
+        meetingPoint2.x = this.classOnePosition.x + classWidth + segmentLength;
         meetingPoint2.y = meetingPoint1.y;
         
         if (endTwoWall == "East")
@@ -416,6 +453,12 @@ function UmpleAssociation()
           start = segmentTwoEnd;
           end = segmentOneEnd;
         }
+        
+        if(this.isSymmetricReflexive) 
+        {
+          labelPositionOne.x = (meetingPoint1.x + meetingPoint2.x)/2;
+          labelPositionOne.y = meetingPoint1.y;
+        }
       }
       connector1 = new UmpleLine(start, meetingPoint1);
       connector2 = new UmpleLine(meetingPoint1, meetingPoint2);
@@ -426,6 +469,37 @@ function UmpleAssociation()
       associationDiv.append(connector3.drawable()); 
     }
     
+    // Set the label positions for non-symmetric reflexive associations.
+    // If it is not symmetric, then the labels are always at the midpoints of the line
+    // segments that are attached to the class
+    if(!this.isSymmetricReflexive) 
+    {
+      var labelPositionTwo = new UmplePosition(0, 0, 0, 0);
+      
+      if(endOneWall == "North" || endOneWall == "South")
+      {
+        labelPositionOne.x = segmentOneEnd.x;
+        labelPositionOne.y = (segmentOneStart.y + segmentOneEnd.y)/2;
+      }
+      else 
+      {
+        labelPositionOne.x = (segmentOneStart.x + segmentOneEnd.x)/2;
+        labelPositionOne.y = segmentOneEnd.y;
+      }
+      
+      if(endTwoWall == "North" || endTwoWall == "South")
+      {
+        labelPositionTwo.x = segmentTwoEnd.x;
+        labelPositionTwo.y = (segmentTwoStart.y + segmentTwoEnd.y)/2;
+      }
+      else 
+      {
+        labelPositionTwo.x = (segmentTwoStart.x + segmentTwoEnd.x)/2;
+        labelPositionTwo.y = segmentTwoEnd.y;
+      }
+    }
+    
+    // Create the markup for the anchors to move the associations
     var hoverHtml = "";
     var hover0 = segmentOneStart;
     var hover1 = segmentTwoStart;
@@ -435,30 +509,37 @@ function UmpleAssociation()
     hoverHtml += this.anchorDivHtml("hover",1,hover1.x - centerHover, hover1.y - centerHover);
     hoverHtml += this.anchorDivHtml("anchor",1,hover1.x - centerHover, hover1.y - centerHover);
     
-    var perimeterOne = this.classOnePosition.add(this.offsetOnePosition);
-    var perimeterTwo = this.classTwoPosition.add(this.offsetTwoPosition); 
-    
-    var isReflexive = true;
-    this.multiplicityOnePosition = this.multiplicityPosition(true);
-    this.multiplicityTwoPosition = this.multiplicityPosition(false);
-    
-    // draw the role names
-    if (this.roleOne != "undefined")
+    // Create the markup for the association labels and multiplicities
+    if(this.isSymmetricReflexive)
     {
-      roleOnePosition = this.rolePosition(true);
-      var roleOneHtml = this.roleDivHtml("one",this.roleOne,roleOnePosition.x,roleOnePosition.y);
+      var multiplicityPosition = UmplePositionFactory.copy(this.centerMultiplicityPosition(labelPositionOne));
+      
+      // draw the role names
+      var rolePosition = this.adjustRolePosition(labelPositionOne, true);
+      var roleHtml = this.roleDivHtml("center", this.roleOne, rolePosition.x, rolePosition.y)
+
+      //draw the multiplicities
+      var multiHtml = this.multiplicityDivHtml("center", this.multiplicityOne, 
+          multiplicityPosition.x, multiplicityPosition.y); 
     }
-    else roleOneHtml = "";
-    
-    if (this.roleTwo != "undefined") 
-    {
-      roleTwoPosition = this.rolePosition(false);
-      var roleTwoHtml = this.roleDivHtml("two",this.roleTwo,roleTwoPosition.x,roleTwoPosition.y);
+    else
+    { 
+      var multiplicityPositionOne = UmplePositionFactory.copy(
+          this.reflexiveMultiplicityPosition(labelPositionOne, labelPositionTwo, true));
+      var multiplicityPositionTwo = UmplePositionFactory.copy(
+          this.reflexiveMultiplicityPosition(labelPositionTwo, labelPositionOne, false));
+      
+      // draw the role names
+      var rolePositionOne = this.adjustRolePosition(labelPositionOne, true);
+      var rolePositionTwo = this.adjustRolePosition(labelPositionTwo, false);
+      var roleHtml = (this.roleDivHtml("one", this.roleOne, rolePositionOne.x, rolePositionOne.y)
+          + this.roleDivHtml("two", this.roleTwo, rolePositionTwo.x, rolePositionTwo.y));
+      
+      //draw the multiplicities
+      var multiHtml = 
+        (this.multiplicityDivHtml("one", this.multiplicityOne, multiplicityPositionOne.x, multiplicityPositionOne.y)
+        + this.multiplicityDivHtml("two", this.multiplicityTwo, multiplicityPositionTwo.x, multiplicityPositionTwo.y)); 
     }
-    else roleTwoHtml = "";
-    
-    var multiOneHtml = this.multiplicityDivHtml("one",this.multiplicityOne,this.multiplicityOnePosition.x,this.multiplicityOnePosition.y); 
-    var multiTwoHtml = this.multiplicityDivHtml("two",this.multiplicityTwo,this.multiplicityTwoPosition.x,this.multiplicityTwoPosition.y);
     
     if (this.id == null)
     {
@@ -467,29 +548,32 @@ function UmpleAssociation()
     } 
     
     var currentHtml = associationDiv.html();
-    associationDiv.html(multiOneHtml + multiTwoHtml + roleOneHtml + roleTwoHtml + hoverHtml + currentHtml);
+    associationDiv.html(multiHtml + roleHtml + hoverHtml + currentHtml);
     
     return associationDiv;
   }
   
+  /////////////////////////////////////////////////
+  //Helper functions for rendering the associations
+  /////////////////////////////////////////////////
   this.isReflexive = function()
   {
-  	return this.classOneId == this.classTwoId;
+    return this.classOneId == this.classTwoId || this.isSymmetricReflexive;
   }
   
   this.isBidirectional = function()
   {
-  	if (this.isRightNavigable == undefined || this.isLeftNavigable == undefined)
-  	{
-  	  return true;
-  	}
-  	return this.isRightNavigable && this.isLeftNavigable;
+    if (this.isRightNavigable == undefined || this.isLeftNavigable == undefined)
+    {
+      return true;
+    }
+    return this.isRightNavigable && this.isLeftNavigable;
   }
   
   this.endHasArrow = function(isEndOne)
   {
-  	if (isEndOne) return this.isLeftNavigable;
-  	else return this.isRightNavigable;
+    if (isEndOne) return this.isLeftNavigable;
+    else return this.isRightNavigable;
   }
 
   this.contains = function(umpleClass)
@@ -508,12 +592,12 @@ function UmpleAssociation()
     return format('<div id="{0}_{1}" class="multiplicity" name="{1}" style="left: {2}px; top: {3}px; cursor: pointer;">{4}&nbsp;&nbsp;{5}</div>',this.id,leftOrRight,x,y,multiplicity,role);
   }
   
-  this.roleDivHtml = function(leftOrRight,role,x,y)
+  this.roleDivHtml = function(position,role,x,y)
   {
-    if (leftOrRight == "one") idExtension = "roleOne";
-    if (leftOrRight == "two") idExtension = "roleTwo";
-    if (leftOrRight == "") idExtension = "centerRole";
-    //TODO add center role HTML div
+    if (position == "one") idExtension = "roleOne";
+    else if (position == "two") idExtension = "roleTwo";
+    else if (position == "center") idExtension = "role";
+    else idExtension = "";
     return format('<div id="{0}_{1}" class="role" name="{1}" style="left: {2}px; top: {3}px; cursor: pointer;">{4}</div>',this.id,idExtension,x,y,role);
   }
   
@@ -553,7 +637,7 @@ function UmpleAssociation()
   
   this.multiplicityPosition = function(isEndOne)
   {
-  	// perimeters are the offset positions relative to the umple canvas
+    // perimeters are the offset positions relative to the umple canvas
     // (as opposed to their end class)
     if (isEndOne)
     {
@@ -574,31 +658,6 @@ function UmpleAssociation()
     var multHeight = multiplicity == "*"? new UmplePosition(0,10,0,0):new UmplePosition(0,16,0,0);
     var multWidth = new UmplePosition(5*multiplicity.length+1,0,0,0);
     
-    // special case for reflexive associations
-    if (this.isReflexive())
-    {
-      var segment = 17;
-      if (wall == "North") 
-      {
-        var multPosition = perimeterOne.subtract(new UmplePosition(multWidth.x/2,segment+multHeight.y-2,0,0));
-      }
-      else if (wall == "West")
-      {
-        var vertOffset = (perimeterOne.y >= perimeterTwo.y)? 1 : 0;
-        var multPosition = perimeterOne.subtract(new UmplePosition(segment+multWidth.x,vertOffset*multHeight.y,0,0));
-      }
-      else if (wall == "South")
-      {
-        var multPosition = perimeterOne.subtract(new UmplePosition(multWidth.x/2,-segment,0,0));
-      }
-      else
-      {
-        var vertOffset = (perimeterOne.y >= perimeterTwo.y)? 1 : 0;
-        var multPosition = perimeterOne.subtract(new UmplePosition(-segment,vertOffset*multHeight.y,0,0));
-      }
-      return multPosition;
-    }
-    
     // allow extra space for arrow in undirectional associations
     // reduce space if multiplicity is *
     var space = 3;
@@ -613,15 +672,15 @@ function UmpleAssociation()
     {
       if (angle < 90)
       {
-      	var halfWaySlope = (180-angle)/2 + angle;
+        var halfWaySlope = (180-angle)/2 + angle;
         var multPosition = perimeterOne.travelForward(space,halfWaySlope);
         multPosition = multPosition.subtract(multWidth);
         multPosition = multPosition.subtract(multHeight);
       }
       else
       {
-      	var halfWaySlope = angle/2;
-      	var multPosition = perimeterOne.travelForward(space,halfWaySlope);
+        var halfWaySlope = angle/2;
+        var multPosition = perimeterOne.travelForward(space,halfWaySlope);
         multPosition = multPosition.subtract(multHeight);
       }
     }
@@ -629,13 +688,13 @@ function UmpleAssociation()
     {
       if (angle >= 0 && angle <= 90)
       {
-      	var halfWaySlope = (angle+90)/2 + 270;
+        var halfWaySlope = (angle+90)/2 + 270;
         var multPosition = perimeterOne.travelForward(space,halfWaySlope);
       }
       else
       {
-      	var halfWaySlope = ((360-angle+90)/2 + angle)%360;
-      	var multPosition = perimeterOne.travelForward(space,halfWaySlope);
+        var halfWaySlope = ((360-angle+90)/2 + angle)%360;
+        var multPosition = perimeterOne.travelForward(space,halfWaySlope);
         multPosition = multPosition.subtract(multHeight);
       }
     }
@@ -643,15 +702,15 @@ function UmpleAssociation()
     {
       if (angle <= 270)
       {
-      	var halfWaySlope = (360-angle)/2 + angle;
+        var halfWaySlope = (360-angle)/2 + angle;
         var multPosition = perimeterOne.travelForward(space,halfWaySlope);
         var temp = multPosition;
       }
       else
       {
-      	var halfWaySlope = (angle-180)/2 + 180;
-      	var multPosition = perimeterOne.travelForward(space,halfWaySlope);
-      	var temp = multPosition;
+        var halfWaySlope = (angle-180)/2 + 180;
+        var multPosition = perimeterOne.travelForward(space,halfWaySlope);
+        var temp = multPosition;
         multPosition = multPosition.subtract(multWidth);
       }
     }
@@ -659,80 +718,189 @@ function UmpleAssociation()
     {
       if (angle <= 180)
       {
-      	var halfWaySlope = (270-angle)/2 + angle;
+        var halfWaySlope = (270-angle)/2 + angle;
         var multPosition = perimeterOne.travelForward(space,halfWaySlope);
         multPosition = multPosition.subtract(multWidth);
       }
       else
       {
-      	var halfWaySlope = (angle-90)/2 + 90;
-      	var multPosition = perimeterOne.travelForward(space,halfWaySlope);
-      	multPosition = multPosition.subtract(multHeight);
+        var halfWaySlope = (angle-90)/2 + 90;
+        var multPosition = perimeterOne.travelForward(space,halfWaySlope);
+        multPosition = multPosition.subtract(multHeight);
         multPosition = multPosition.subtract(multWidth);
       }
     }
     return multPosition;
   }
   
-  this.rolePosition = function(isEndOne)
+  //Sets the location of a multiplicity label for symmetric reflexive associations.
+  // An UmplePosition is returned that includes the width of the role name.
+  this.centerMultiplicityPosition = function(labelPosition) 
   {
-    var multiplicity = isEndOne? this.multiplicityOne : this.multiplicityTwo;
-  	var role = isEndOne? this.roleOne : this.roleTwo;
-  	var perimeterOne = isEndOne? this.classOnePosition.add(this.offsetOnePosition):
-  								 this.classTwoPosition.add(this.offsetTwoPosition);
-  	var perimeterTwo = isEndOne? this.classTwoPosition.add(this.offsetTwoPosition):
-  								 this.classOnePosition.add(this.offsetOnePosition);
-  	
-  	// length of multiplicity plus a space character
-    var multLength = new UmplePosition(5*(multiplicity.length),0,0,0);
-  	var roleLength = new UmplePosition(6*(role.length),0,0,0,0);
-  	var multHeight = new UmplePosition(0,16,0,0);
-  	var roleHeight = multHeight;
-  	var space = new UmplePosition(5,0,0,0);
-  	var multPosition = this.multiplicityPosition(isEndOne);
-  	
-  	// new algorithm: reuse angles from multiplicity to know which side it goes on
-    // 8 cases in total
-    var wall = this.whichWall(isEndOne); 
+    var wallOne = this.whichWall(true);
+    var wallTwo = this.whichWall(false);
     
-    // special case for reflexive associations
-    if (this.isReflexive())
+    var offset = 1;
+    var space = 5;
+    
+    labelPosition.width = 5*this.multiplicityOne.length + space + 6*this.roleOne.length;
+    labelPosition.height = 16; 
+    
+    if((wallOne == "West" && wallTwo == "West") 
+      || (wallOne == "North" && wallTwo == "South")
+      || (wallOne == "South" && wallTwo == "North")) 
     {
-      if (wall == "North" || wall == "South") 
+      //label is offset to left
+      labelPosition.x -= (labelPosition.width + offset);
+      labelPosition.y -= labelPosition.height/2;
+    } 
+    else if(wallOne == "East" && wallTwo == "East") 
+    {
+      //label is offset to right
+      labelPosition.x += offset;
+      labelPosition.y -= labelPosition.height/2;
+    } 
+    else if(wallOne == "North" || wallTwo == "North") 
+    {
+      //label is offset upwards
+      labelPosition.y -= (offset + labelPosition.height);
+      labelPosition.x -= labelPosition.width/2;
+    } 
+    else 
+    {
+      //label is offset downwards
+      labelPosition.y += offset;
+      labelPosition.x -= labelPosition.width/2;
+    } 
+    
+    return labelPosition;
+  }
+  
+  // Sets the location of a multiplicity label for non-symmetric reflexive associations.
+  // An UmplePosition is returned that includes the width of the role name.
+  this.reflexiveMultiplicityPosition = function(position, otherPosition, isAssociationOne) 
+  {
+    var space = 5;
+    var offset = 1;
+    
+    if(isAssociationOne) 
+    {
+      var wall = this.whichWall(true);
+      var otherWall = this.whichWall(false);
+      var multiplicityLength = this.multiplicityOne.length;
+      var roleLength = this.roleOne.length;
+    }
+    else 
+    {
+      var wall = this.whichWall(false);
+      var otherWall = this.whichWall(true);
+      var multiplicityLength = this.multiplicityTwo.length;
+      var roleLength = this.roleTwo.length;
+    }
+    
+    position.width = 5*multiplicityLength + space + 6*roleLength;
+    position.height = 16; 
+    
+    if(wall == "North") 
+    {
+      position.y -= position.height/2;
+      if((otherWall == "North" && position.x < otherPosition.x) 
+          || otherWall == "East")
       {
-        if (perimeterOne.x >= perimeterTwo.x) 
-          var rolePosition = multPosition.subtract(roleLength).subtract(space).subtract(space);
-        else
-          var rolePosition = multPosition.add(multLength).add(space);
-      }
-      else if (wall == "West")
-      {
-        var rolePosition = multPosition.subtract(roleLength).subtract(space);        
+        // label is offset to the left
+        position.x -= (position.width + offset);
       }
       else
       {
-        var rolePosition = multPosition.add(multLength).add(space);	
+        // label is offset to the right
+        position.x += offset;
       }
-      return rolePosition;
     }
+    else if (wall == "East")
+    {
+      if((otherWall == "East" && position.y < otherPosition.y)
+          || otherWall == "South" || otherWall == "West")
+      {
+        //label is offset upwards
+        position.y -= (position.height);
+      }
+      else 
+      {
+        //label is offset downwards
+        position.y += offset;
+      }
+    }
+    else if(wall == "South")
+    {
+      position.y -= position.height/2;
+      if((otherWall == "South" && position.x < otherPosition.x)
+          || otherWall == "East")
+      {
+        // label is offset to the left
+        position.x -= (position.width + offset);
+      }
+      else 
+      {
+        // label is offset to the right
+        position.x += offset;
+      }
+    }
+    else if (wall == "West")
+    {
+      position.x -= position.width;
+      if((otherWall == "West" && position.y < otherPosition.y)
+          || otherWall == "East" || otherWall == "South")
+      {
+        //label is offset upwards 
+        position.y -= (position.height);
+      }
+      else
+      {
+        //label is offset downwards 
+        position.y += offset;
+      }
+    }
+    return position;
+  }
+  
+  this.rolePosition = function(isEndOne)
+  {
+    var multiplicity = isEndOne? this.multiplicityOne : this.multiplicityTwo;
+    var role = isEndOne? this.roleOne : this.roleTwo;
+    var perimeterOne = isEndOne? this.classOnePosition.add(this.offsetOnePosition):
+                   this.classTwoPosition.add(this.offsetTwoPosition);
+    var perimeterTwo = isEndOne? this.classTwoPosition.add(this.offsetTwoPosition):
+                   this.classOnePosition.add(this.offsetOnePosition);
+    
+    // length of multiplicity plus a space character
+    var multLength = new UmplePosition(5*(multiplicity.length),0,0,0);
+    var roleLength = new UmplePosition(6*(role.length),0,0,0,0);
+    var multHeight = new UmplePosition(0,16,0,0);
+    var roleHeight = multHeight;
+    var space = new UmplePosition(5,0,0,0);
+    var multPosition = this.multiplicityPosition(isEndOne);
+    
+    // new algorithm: reuse angles from multiplicity to know which side it goes on
+    // 8 cases in total
+    var wall = this.whichWall(isEndOne); 
     
     // slope angle of the association
     var angle = perimeterOne.slopeAngle360(perimeterTwo);
     if (wall == "North")
     {
-  	  if (angle < 90)
+      if (angle < 90)
       {
-      	// role goes on left of multiplicity
-      	rolePosition = multPosition.subtract(roleLength).subtract(multLength);
+        // role goes on left of multiplicity
+        rolePosition = multPosition.subtract(roleLength).subtract(multLength);
       }
       else
       {
-      	// role goes on right of multiplicity
-      	rolePosition = multPosition.add(multLength).add(space);
+        // role goes on right of multiplicity
+        rolePosition = multPosition.add(multLength).add(space);
       }
       // re adjust position if multiplicity is "*"
       if (multiplicity == "*") rolePosition = rolePosition.subtract(new UmplePosition(0,6,0,0));
-  	}
+    }
     else if (wall == "East")
     {
       // role goes on right 
@@ -742,13 +910,13 @@ function UmpleAssociation()
     {
       if (angle <= 270)
       {
-      	// role goes on right 
-      	rolePosition = multPosition.add(multLength).add(space);
+        // role goes on right 
+        rolePosition = multPosition.add(multLength).add(space);
       }
       else
       {
-      	// role goes on left
-      	rolePosition = multPosition.subtract(roleLength).subtract(multLength);
+        // role goes on left
+        rolePosition = multPosition.subtract(roleLength).subtract(multLength);
       }
     }
     else
@@ -759,8 +927,11 @@ function UmpleAssociation()
     return rolePosition;  
   }
   
-  this.multiplicityPositionReflexive = function(isEndOne)
+  this.adjustRolePosition = function(labelPosition, isAssociationEndOne)
   {
-  
+    var multiplicityLength = isAssociationEndOne ? this.multiplicityOne.length : this.multiplicityTwo.length;
+    //Move the label over by the length of the multiplicity label and a space
+    labelPosition.x += 5*multiplicityLength + 6;
+    return labelPosition;
   }
 }

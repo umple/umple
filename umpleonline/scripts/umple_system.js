@@ -57,6 +57,7 @@ UmpleSystem.createAssociation = function(classOneId, classTwoId, screenOnePositi
   umpleAssociation.setClasses(classOneId, classTwoId);
   umpleAssociation.setOffsetOnePosition(screenOnePosition);
   umpleAssociation.setOffsetTwoPosition(screenTwoPosition);
+  umpleAssociation.setDefaultMultiplicities();
   umpleAssociation.setRoles("undefined","undefined");
   
   // trim association line in case it overlaps end classes

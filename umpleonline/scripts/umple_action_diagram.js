@@ -62,6 +62,7 @@ DiagramEdit.addAssociation = function(line)
                               line.classTwoId,
                               line.classOnePosition.add(UmpleSystem.position()),
                               line.classTwoPosition.add(UmpleSystem.position()));
+
   // obtain the json representation of the association
   var umpleJson = Json.toString(umpleAssociation);
   
@@ -268,7 +269,7 @@ DiagramEdit.reflexiveAssociationMoving = function(dragSelector)
   var dragId = jQuery(dragSelector).attr("id");
   var id = dragId.substr(0,dragId.length - "_anchorX".length);
   var association = UmpleSystem.findAssociation(id);
-  
+
   if (DiagramEdit.newAssociation == null)
   {
     DiagramEdit.newAssociation = new UmpleAssociation();
