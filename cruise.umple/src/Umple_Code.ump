@@ -2341,6 +2341,12 @@ class Comment
 class GeneralTPApplied {
 	Map<String,String> parameterMapping = new HashMap<String,String>();
 	
+	public GeneralTPApplied(GeneralTPApplied another) {
+	  this.parameterMapping = another.parameterMapping;
+	  this.inheritanceName = another.inheritanceName;
+	  this.methodTemplateSignatures = another.methodTemplateSignatures;	  
+  	}
+	
 	boolean hasMethodTemplateSignature(MethodTemplateSignature inMTSignature) {
 		for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
 		if (mTSignature.getMethod().getName().equals(inMTSignature.getMethod().getName())){
