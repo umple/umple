@@ -96,7 +96,12 @@ public class JsonTemplateTest extends TemplateTest
   {
     assertUmpleTemplateFor("json/AssociationClassPositionsSeparate.ump", "json/AssociationClassPositionsSeparate.json.txt");
   }
-
+  
+  @Test
+  public void SymmetricReflexiveAssociation()
+  {
+    assertUmpleTemplateFor("json/SymmetricReflexiveAssociation.ump", "json/SymmetricReflexiveAssociation.json.txt");
+  }
   // @Test
   // public void ExtraCode()
   // {

@@ -1436,7 +1436,7 @@ Action.selectClass = function(className) {
 }
 
 Action.selectStateInClass = function(stateName, classname) {
-  // TODO
+
   if(Page.codeMirrorOn) {
   }
 }
