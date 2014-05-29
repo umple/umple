@@ -1129,6 +1129,7 @@ class UmpleInternalParser
         Attribute attr = uClass.getAttribute(possibleAttributeName);
         if (attr != null && !"internal".equals(attr.getModifier()))
         {
+          getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attr.getName()));	
           return false;
         }
       }
