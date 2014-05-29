@@ -502,34 +502,7 @@ public class UmpleTraitTest {
 		}	
 	}
 	
-	@Test
-	public void includeExcludeRule13Test() {
-		String code = "class A{isA T;}trait T<X,X>{}";
-		UmpleModel model = getModel(code);
-		
-		try {
-			model.run();	
-		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2561");
-			Assert.assertTrue(result);
-		} finally {
-			SampleFileWriter.destroy("traitTest.ump");
-		}	
-	}
-	
-	public void includeExcludeRule14Test() {
-		String code = "class A{isA T< A = String, A = Integer >;}trait T<X,Z>{}";
-		UmpleModel model = getModel(code);
-		
-		try {
-			model.run();	
-		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2563");
-			Assert.assertTrue(result);
-		} finally {
-			SampleFileWriter.destroy("traitTest.ump");
-		}	
-	}
+
 	
 	@Ignore
 	public void includeExcludeRuleAlias1Test() {
@@ -679,6 +652,75 @@ public class UmpleTraitTest {
 		String code = "class A{ isA T; void test(){/**/ }}trait T{ void test();}";
 		UmpleModel model = getRunModel(code);	
 		Assert.assertEquals(false,model.getUmpleClass("A").getIsAbstract());
+	}
+
+	
+	@Test
+	public void TypeParameterTest00() {
+		String code = "class A{isA T;}trait T<X,X>{}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2561");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	@Test	
+	public void TypeParameterTest01() {
+		String code = "class A{isA T< A = String, A = Integer >;}trait T<X,Z>{}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2563");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	@Test	
+	public void TypeParameterTest02() {
+		String code = "class A{isA T< Y = String>;}trait T<X,Z>{}";
+		UmpleModel model = getModel(code);
+		
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2562");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void TypeParameterTest03() {
+		String code = "class A{isA T< X = ABC1, Z=ABC2>;}trait T<X,Z>{X test(Z inData1, X inData2){}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("ABC1", model.getUmpleClass("A").getMethod(0).getType());
+		Assert.assertEquals("ABC2", model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType());
+		Assert.assertEquals("ABC1", model.getUmpleClass("A").getMethod(0).getMethodParameter(1).getType());
+
+	}
+	
+	@Test
+	public void TypeParameterTest04() {
+		String code = "class A{isA T< X = String>;}trait T<X,Z>{isA T1 < A = X >;X test(X inData){}}trait T1<A>{void test1(A z){}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		for (Method method : model.getUmpleClass("A").getMethods()) {
+			if (method.getName().equals("test1")){
+				Assert.assertEquals("String",method.getMethodParameter(0).getType());
+			} else if (method.getName().equals("test")){
+				Assert.assertEquals("String",method.getType());
+				Assert.assertEquals("String",method.getMethodParameter(0).getType());
+			}
+		}
 	}
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------

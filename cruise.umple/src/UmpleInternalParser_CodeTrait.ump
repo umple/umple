@@ -736,7 +736,8 @@ class UmpleInternalParser
    private void copyMethodsFromTraitToClass(UmpleTrait inTrait, UmpleClass inClass){
        Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
 	   Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
-	   traitMethods = gatherConcreteMethods(inTrait);
+	   
+	   traitMethods = gatherConcreteMethods(inTrait,inClass.getGeneralTPAppliedByName(inTrait.getName()));
 	   applyIncludeExcludeMethods(traitMethods, inTrait, inClass);
 	   if ( ! getParseResult().getWasSuccess() ) return;    
 	   for (UmpleTrait t1 : traitMethods.keySet()) {
@@ -750,7 +751,7 @@ class UmpleInternalParser
 		  		 {
 		  			for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 						if(!uTrait.equals(inTrait)){
-							tempTraitMethods = gatherConcreteMethods(uTrait);
+							tempTraitMethods = gatherConcreteMethods(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
 							applyIncludeExcludeMethods(tempTraitMethods, uTrait, inClass);
 							if ( ! getParseResult().getWasSuccess() ) return;
 							for (UmpleTrait t2 : tempTraitMethods.keySet()) {
@@ -781,21 +782,31 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------     
-   private Map<UmpleTrait, List<Method>> gatherConcreteMethods (UmpleTrait inTrait) 
+   private Map<UmpleTrait, List<Method>> gatherConcreteMethods (UmpleTrait inTrait, GeneralTPApplied inGTPApplied) 
   {
 	 Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>(); 
  	 Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+ 	 checkTypeParameterAvailability(inGTPApplied,inTrait);
+ 	 //----------------------------------------------------------------------------------------
  	 List<Method> methods = new ArrayList<Method>();	  
-     if (inTrait.numberOfMethods()>0){
-	 	 for (Method method : inTrait.getMethods()) {
-	    	 if (! method.isIsAbstract()){ 
-	 			 methods.add(method);
-		 	 }
-		 }
-	     traitMethods.put(inTrait,methods);
-     }
+ 	 for (Method method : inTrait.getMethods()) {
+    	 if (! method.isIsAbstract()){ 
+    	 	 Method newMethod = new Method(method);
+    	 	 ApplyTypeParametersToMethod(newMethod,inGTPApplied);
+ 			 methods.add(newMethod);
+	 	 }
+	 }
+     traitMethods.put(inTrait,methods);
+     //----------------------------------------------------------------------------------------
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-    	 tempTraitMethods = gatherConcreteMethods(uTrait);
+     	 //----------------------------------------------------------------------------------------
+     	 GeneralTPApplied newGeneralTPApplied = null;
+     	 if (inTrait.getGeneralTPAppliedByName(uTrait.getName()) !=null) {
+     	 	newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
+  	     	ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGTPApplied);
+  	     }
+  	    //----------------------------------------------------------------------------------------
+    	 tempTraitMethods = gatherConcreteMethods(uTrait,newGeneralTPApplied);
     	 //The first parameter works as in and out
     	 applyIncludeExcludeMethods(tempTraitMethods,uTrait,inTrait);
     	 
@@ -903,6 +914,58 @@ class UmpleInternalParser
 		 }
 	 }
   } 
+
+ //---------------------------------end----------------------------------------
+ //----------------------------------------------------------------------------   
+ //---------------------------------Start--------------------------------------    
+
+  private void ApplyTypeParametersToTypeParameters(GeneralTPApplied newGTPA, GeneralTPApplied currentGTPA) {
+  	 if (currentGTPA == null) return;
+	 for (String strType : currentGTPA.getParameterMapping().keySet()){
+			for(String key : newGTPA.getParameterMapping().keySet()){
+				if (newGTPA.getParameterMapping().get(key).equals(strType)){
+					newGTPA.getParameterMapping().put(key, currentGTPA.getParameterMapping().get(strType));
+				}
+			}
+		}
+  } 
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  	
+  private void checkTypeParameterAvailability(GeneralTPApplied inGeneralTPApplied, UmpleTrait inTrait) {
+	/*
+	for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()) {
+		if (!inParameterMapping.containsKey(gtp.getName())){
+			//error: this is when we want to have full coverage for type parameters 
+			return;
+		}
+	}
+	*/
+	if (inGeneralTPApplied == null ) return;
+	for (String	typeName : inGeneralTPApplied.getParameterMapping().keySet()) {
+		if (!inTrait.hasGeneralTemplateParameter(typeName)){
+			getParseResult().addErrorMessage(new ErrorMessage(2562,inTrait.getPosition(0),typeName)); 
+			return;
+		}
+	}	
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------    
+  private void ApplyTypeParametersToMethod(Method newMethod, GeneralTPApplied inGeneralTPApplied) {
+  	if (inGeneralTPApplied == null) return;
+	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+		String newName = inGeneralTPApplied.getParameterMapping().get(strType);
+		if (newMethod.getType().equals(strType)){
+			newMethod.setType(newName);
+		}
+		for (int i = 0; i < newMethod.numberOfMethodParameters(); i++) {
+            if(newMethod.getMethodParameter(i).getType().equals(strType)){
+            	newMethod.getMethodParameter(i).setType(newName);
+            }
+	    }
+	}
+  }
   
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1151,7 +1214,7 @@ class UmpleInternalParser
 	  if ( getParseResult().getWasSuccess() ) {
 		  for(UmpleClass uClass : getModel().getUmpleClasses()) {
 			  for(UmpleTrait uTrait : uClass.getExtendsTraits())  {
-				recursiveCheckRequiredMethods(uClass,uTrait);
+				recursiveCheckRequiredMethods(uClass,uTrait,uClass.getGeneralTPAppliedByName(uTrait.getName()));
 			  }
 		  }
 	  }
@@ -1159,15 +1222,20 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-  private void recursiveCheckRequiredMethods(UmpleClass inClass, UmpleTrait inTrait) {
+  private void recursiveCheckRequiredMethods(UmpleClass inClass, UmpleTrait inTrait, GeneralTPApplied inGeneralTPApplied) {
 	  if ( !getParseResult().getWasSuccess() ) return;  
+	  if (inGeneralTPApplied == null) return;
 	  for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-		  recursiveCheckRequiredMethods(inClass,uTrait);
+		  GeneralTPApplied newGeneralTPApplied =null;
+		  if (inTrait.getGeneralTPAppliedByName(uTrait.getName())!=null)  newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
+		  recursiveCheckRequiredMethods(inClass,uTrait,newGeneralTPApplied);
       }
 	  for (Method uMethod : inTrait.getMethods() ) {
 		  if (uMethod.isIsAbstract()) {
-			  if(!inClass.hasImplementedMethodIncludingWithinParentClasses(uMethod)){
-				  getParseResult().addErrorMessage(new ErrorMessage(2555,uMethod.getPosition(),uMethod.getName(),inTrait.getName(),inClass.getName()));
+			  Method newMethod = new Method(uMethod);
+			  ApplyTypeParametersToMethod(newMethod,inGeneralTPApplied);
+			  if(!inClass.hasImplementedMethodIncludingWithinParentClasses(newMethod)){
+				  getParseResult().addErrorMessage(new ErrorMessage(2555,newMethod.getPosition(),newMethod.getName(),inTrait.getName(),inClass.getName()));
 				  return;
 			  }
 		  }

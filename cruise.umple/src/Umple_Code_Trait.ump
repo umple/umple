@@ -35,7 +35,15 @@ class UmpleModel {
 //------------------------------------class start----------------------------------------------
 //---------------------------------------------------------------------------------------------
 class UmpleTrait {
-	
+
+	public GeneralTPApplied getGeneralTPAppliedByName(String name){
+	    for (GeneralTPApplied gTPApplied : getGeneralTPApplieds()) {
+			if (gTPApplied.getInheritanceName().equals(name)) {
+				return gTPApplied;
+			}
+		}
+		return null;
+    }
 	public boolean hasGeneralTemplateParameter(String name){
 		for (GeneralTemplateParameter gtParameter : getGeneralTemplateParameters()) {
 			if (gtParameter.getName().equals(name)) return true;
