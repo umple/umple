@@ -2,18 +2,44 @@
 <%
 { 
   boolean hasTimedEvents = false;
+  boolean hasTimedEvents_NestedStates = false;
   for(StateMachine sm : uClass.getStateMachines())
   {
-    for (Event e : sm.getEvents())
+    if(sm.getNestedStateMachines().isEmpty())
     {
-      if (e.getIsTimer())
+      for (Event e : sm.getEvents())
       {
-        hasTimedEvents = true;
-        %><%@ include file="state_machine_Event_StartStopTimer.jet" %><%
+        if (e.getIsTimer())
+        {
+          hasTimedEvents = true;
+          %><%@ include file="state_machine_Event_StartStopTimer.jet" %><%
+        }
+      }
+    }
+    else if(!sm.getNestedStateMachines().isEmpty())
+    {
+      for (Event e : sm.getEvents())
+      {
+        if (e.getIsTimer())
+        {
+          hasTimedEvents = true;
+          %><%@ include file="state_machine_Event_StartStopTimer.jet" %><%
+        }
+      }
+      for(StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for(Event event : nsm.getEvents())
+        {
+          if(event.getIsTimer())
+          {
+            hasTimedEvents_NestedStates = true;
+            %><%@ include file="state_machine_Event_StartStopTimer_NestedStates.jet" %><%
+          }
+        }
       }
     }
   }
-  if (hasTimedEvents)
+  if (hasTimedEvents || hasTimedEvents_NestedStates)
   {
     %><%@ include file="state_machine_timedEvent_Handler.jet" %><%
   }

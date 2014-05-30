@@ -1,0 +1,20 @@
+class X{
+  sm{
+    s1{
+      s1a{
+        after(2) -> s1b;
+      }
+      s1b{
+        e1 -> s2;
+      }
+    }
+    s2{
+      s2a{
+        e2 ->s1;
+      }
+      s2b{
+        after(3) -> s1b;
+      }
+    }
+  }
+}

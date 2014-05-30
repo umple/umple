@@ -1809,28 +1809,58 @@ class JavaGenerator
     lookups.put("ifStatement","  if ( {0} )\n  {\n  {1}\n  }");
     lookups.put("callHandle","{0}.handle(name+\" = \"+value);");
     GeneratorHelper.prepareAllTracers(this,getModel(),aClass,lookups);
-//    prepareAllTraces(this,getModel(),aClass,lookups);
+    //prepareAllTraces(this,getModel(),aClass,lookups);
     
     //Add  entry / exit methods to start and stop the timed events in Java
     boolean hasTimedEvents = false;
-    StateMachine smq = null;
+    boolean foundQueued = false;    
+    boolean foundPooled = false;
     for (StateMachine sm : aClass.getStateMachines())
     {
       prepareNestedStatesFor(sm,null,0);
       hasTimedEvents = prepareTimedEvents(sm) || hasTimedEvents;
-      smq = sm;
+      if(sm.isQueued()){
+        foundQueued = true;
+      }
+      if(sm.isPooled()){
+        foundPooled = true;
+      }
     }
         
     if (hasTimedEvents)
     {
-      if (!smq.isQueued())
+      if(!foundQueued && !foundPooled)
       {
-        if (!smq.isPooled())
+        aClass.addDepend(new Depend("java.util.*"));
+      }
+    } 
+    
+    boolean hasTimedEvent_NestedState = false;
+    for (StateMachine sm : aClass.getStateMachines())
+    {
+      if(!sm.getNestedStateMachines().isEmpty())
+      {
+        for (StateMachine nsm : sm.getNestedStateMachines())
         {
-          aClass.addDepend(new Depend("java.util.*"));
+          for (Event event : nsm.getEvents())
+          {
+            if(event.getIsTimer())
+            {
+              hasTimedEvent_NestedState =  true;
+            }
+          }
         }
       }
     }
+     
+   
+    if (hasTimedEvent_NestedState)
+    {
+      if(!foundQueued && !foundPooled)
+      {
+        aClass.addDepend(new Depend("java.util.*"));
+      }
+    }            
   }
   
   
@@ -1838,24 +1868,53 @@ class JavaGenerator
   private boolean prepareTimedEvents(StateMachine sm)
   {
     boolean hasTimedEvents = false;
-    for (State s : sm.getStates())
+    if(sm.getNestedStateMachines().isEmpty())
     {
-      for (Transition t : s.getTransitions())
+      for (State s : sm.getStates())
       {
-        Event e = t.getEvent();
-        if (!e.getIsTimer())
+        for (Transition t : s.getTransitions())
         {
-          continue;
-        }
-        hasTimedEvents = true;
-        Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
-        entryAction.setActionType("entry");
+          Event e = t.getEvent();
+          if (!e.getIsTimer())
+          {
+            continue;
+          }
+          hasTimedEvents = true;
+          Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
+          entryAction.setActionType("entry");
         
-        Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
-        exitAction.setActionType("exit");
+          Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
+          exitAction.setActionType("exit");
 
-        t.getFromState().addAction(entryAction);
-        t.getFromState().addAction(exitAction);
+          t.getFromState().addAction(entryAction);
+          t.getFromState().addAction(exitAction);
+        }
+      }
+    } 
+    else if(!sm.getNestedStateMachines().isEmpty())
+    {
+      for (StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for (State s : nsm.getStates())
+        {
+          for (Transition t : s.getTransitions())
+          {
+            Event e = t.getEvent();
+            if (!e.getIsTimer())
+            {
+              continue;
+            }
+            hasTimedEvents = true;
+            Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
+            entryAction.setActionType("entry");
+        
+            Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
+            exitAction.setActionType("exit");
+
+            t.getFromState().addAction(entryAction);
+            t.getFromState().addAction(exitAction);
+          }
+        }
       }
     }
     return hasTimedEvents;

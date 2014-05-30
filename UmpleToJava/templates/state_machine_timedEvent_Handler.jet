@@ -29,11 +29,34 @@
 <%
   for(StateMachine sm : uClass.getStateMachines())
   {
-    for (Event e : sm.getEvents())
+    if(sm.getNestedStateMachines().isEmpty())
     {
-      if (e.getIsTimer())
+      for (Event e : sm.getEvents())
       {
-        %><%@ include file="state_machine_timedEvent_run.jet" %><%
+        if (e.getIsTimer())
+        {
+          %><%@ include file="state_machine_timedEvent_run.jet" %><%
+        }
+      }
+    }
+    else if(!sm.getNestedStateMachines().isEmpty())
+    {
+      for (Event e : sm.getEvents())
+      {
+        if (e.getIsTimer())
+        {
+          %><%@ include file="state_machine_timedEvent_run.jet" %><%
+        }
+      }
+      for(StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for(Event event : nsm.getEvents())
+        {
+          if(event.getIsTimer())
+          {
+            %><%@ include file="state_machine_timedEvent_run_NestedStates.jet" %><%
+          }
+        }
       }
     }
   }
