@@ -29,4 +29,10 @@ public @interface GenerationLoopAnnotation {
 	String[] processes() default {};	//If blank means that it processes the root element
 	String id();
 	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.METHOD })
+	public @interface GenerationLoopAnnotationFilter {
+		String[] id();
+		
+	}
 }
