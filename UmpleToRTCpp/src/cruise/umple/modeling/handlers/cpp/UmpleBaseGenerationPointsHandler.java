@@ -38,6 +38,7 @@ import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationCallback.GenerationStringSegment;
+import cruise.umple.core.GenerationLoopAnnotation.GenerationLoopAnnotationFilter;
 import cruise.umple.core.GenerationPoint;
 import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.GenerationPolicyRegistryPriorities;
@@ -779,5 +780,19 @@ public class UmpleBaseGenerationPointsHandler{
 		}
 		
 		return contents;
+	}
+	
+	
+	/////////////////////////////////Extern keyword/////////////////////////////////////////
+	
+	@DecisionPoint(watchIf= {IModelingDecisions.DEPENDS_GENERATION_POINT})
+	public static boolean filterDependExternals(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+	@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object dependObject) {
+		return !generationValueGetter.getBoolean(dependObject, IModelingElementDefinitions.EXTERNAL);
+	}
+	
+	@GenerationLoopAnnotationFilter(id = {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR})
+	public static boolean filterExternals(@GenerationElementParameter(id =IModelingElementDefinitions.EXTERNAL) boolean isExternal){
+		return isExternal;
 	}
 }

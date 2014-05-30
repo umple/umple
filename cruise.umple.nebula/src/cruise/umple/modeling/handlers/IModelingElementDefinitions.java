@@ -21,6 +21,7 @@ package cruise.umple.modeling.handlers;
 public interface IModelingElementDefinitions {
 	
 	//TODO: Move
+	public static final String EXTERNAL= "external"; //$NON-NLS-1$
 	public static final String IS_LAZY= "isLazy"; //$NON-NLS-1$
 	public static final String IS_IMMUTABLE= "isImmutable"; //$NON-NLS-1$
 	public static final String IS_SINGLETON= "isSingleton"; //$NON-NLS-1$

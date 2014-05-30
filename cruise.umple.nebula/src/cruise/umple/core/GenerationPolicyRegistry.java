@@ -47,6 +47,7 @@ import cruise.umple.core.GenerationCallback.GenerationProcedureParameter;
 import cruise.umple.core.GenerationCallback.GenerationRegistry;
 import cruise.umple.core.GenerationCallback.GenerationStringSegment;
 import cruise.umple.core.GenerationCallback.WatchedObjectValue;
+import cruise.umple.core.GenerationLoopAnnotation.GenerationLoopAnnotationFilter;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
 import cruise.umple.core.GenerationPoint.ReturnGenerationObject;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
@@ -65,6 +66,8 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 	private static Map<String, List<GenerationPointObject>> _pointsInvocations= new HashMap<String, List<GenerationPointObject>>();
 	private static Map<String, List<Object>> _parsedDecisionClasses= new HashMap<String, List<Object>>();
 	private static Map<String, Map<String, List<LoopObject>>> _loopInvocations= new HashMap<String, Map<String, List<LoopObject>>>();
+	private static Map<String, List<LoopFilterObject>> _loopFilterInvocations= new HashMap<String, List<LoopFilterObject>>();
+	
 	protected static Map<String, GenerationGroupDefinition> groupDefnitions= new HashMap<String, GenerationGroupDefinition>();
 	private static Map<String, List<Object>> _parsedClasses= new WeakHashMap<String, List<Object>>();
 	
@@ -158,8 +161,15 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					if(invoke instanceof List<?>){
 						List<?> sub= (List<?>) invoke;
 						
+						List<LoopFilterObject> filterList = _loopFilterInvocations.get(id);
+						
 						if(processors!= null&& !processors.isEmpty()){
 							for(Object subObject: sub){
+								
+								if(isFiltered(loopObject, filterList, subObject)){
+									continue;
+								}
+								
 								TreeMap<String, Object> newMap = new TreeMap<String, Object>(values);
 								newMap.put(id, subObject);
 								this.objectsPathMap.put(subObject, newMap);
@@ -169,6 +179,10 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 							}
 						}else{
 							for(Object subObject: sub){
+								if(isFiltered(loopObject, filterList, subObject)){
+									continue;
+								}
+								
 								HashMap<String, Object> newMap = new HashMap<String, Object>(values);
 								newMap.put(id, subObject);
 								process(subObject, newPath, newMap, id, aspect);
@@ -180,6 +194,22 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				}
 			}
 		}
+	}
+
+	private boolean isFiltered(LoopObject loopObject, List<LoopFilterObject> filterList, Object subObject)
+			throws IllegalAccessException, InvocationTargetException {
+		if(filterList!= null){
+			for(LoopFilterObject loopFilterObject: filterList){
+				Object filter = loopFilterObject.fMethod.invoke(loopObject.fInstance, getParameters(subObject, this, loopFilterObject.fMethod));
+				if(filter!= null){
+					if(filter instanceof Boolean&& ((Boolean)filter).booleanValue()){
+						return true;
+					}
+				}
+			}
+		}
+		
+		return false;
 	}
 	
 	private void processRoot(Object obj, String aspect) {
@@ -483,6 +513,20 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 					list.add(new LoopObject(method, handler, generationLoopAnnotation));
 				}
 				continue;
+			}
+			
+			GenerationLoopAnnotationFilter generationLoopFilterAnnotation = method.getAnnotation(GenerationLoopAnnotationFilter.class);
+			if(generationLoopFilterAnnotation!= null){
+				String[] ids = generationLoopFilterAnnotation.id();
+				
+				for(String id: ids){
+					List<LoopFilterObject> list = _loopFilterInvocations.get(id);
+					if(list== null){
+						list= new ArrayList<LoopFilterObject>();
+						_loopFilterInvocations.put(id, list);
+					}
+					list.add(new LoopFilterObject(method));
+				}
 			}
 			
 			LoopProcessorAnnotation loopProcessorAnnotation = method.getAnnotation(LoopProcessorAnnotation.class);
@@ -1108,6 +1152,14 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			this.fMethod= method;
 			this.fInstance= instance;
 			this.fGenerationLoopAnnotation= generationLoopAnnotation;
+		}
+	}
+	
+	private class LoopFilterObject{
+		protected Method fMethod;
+		
+		public LoopFilterObject(Method method) {
+			this.fMethod= method;
 		}
 	}
 	

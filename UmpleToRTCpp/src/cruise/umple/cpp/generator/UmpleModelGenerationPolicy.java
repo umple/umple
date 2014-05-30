@@ -63,7 +63,7 @@ public class UmpleModelGenerationPolicy{
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.VERSION_NUMBER)
 	public static String getVersionNumber() {
-		return UmpleModel.VERSION_NUMBER;
+		return UmpleModel.versionNumber;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.GENERATES)
@@ -618,6 +618,26 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.MODIFIER)
 	public static String modifier(@GenerationBaseElement Attribute attribute){
 		return attribute.getModifier();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.MODIFIER)
+	public static String modifier(@GenerationBaseElement UmpleInterface umpleInterface){
+		return umpleInterface.getModifier();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.MODIFIER)
+	public static String modifier(@GenerationBaseElement UmpleClass umpleClass){
+		return umpleClass.getModifier();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.EXTERNAL)
+	public static boolean external(@GenerationBaseElement UmpleClass umpleClass){
+		return IModelingElementDefinitions.EXTERNAL.equals(umpleClass.getModifier());
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.EXTERNAL)
+	public static boolean external(@GenerationBaseElement UmpleInterface umpleInterface){
+		return IModelingElementDefinitions.EXTERNAL.equals(umpleInterface.getModifier());
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.HAS_KEY_MEMBERS)
