@@ -810,7 +810,13 @@ Page.showGeneratedCode = function(code,language)
     }
   }
   else { 
-      jQuery("#generatedCodeRow").html(format('{0}',code));
+    //Remove the redundant <svg> tags for properly sized diagram
+    if(language == "stateDiagram" || language == "classDiagram")
+    {
+      codeParts = code.split("<svg width=");
+      code = "<svg width=" + codeParts[1].replace(/<\/svg$/, "");
+    }
+    jQuery("#generatedCodeRow").html(format('{0}',code));
   }
 }
 
