@@ -561,4 +561,16 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("eventlessStateMachine_PooledStateMachine.ump",languagePath + "/eventlessStateMachine_PooledStateMachine."+ languagePath +".txt","X");
   }
+  
+  @Test
+  public void nestedStates_timedTransition()
+  {
+    assertUmpleTemplateFor("nestedStates_timedTransition.ump",languagePath + "/nestedStates_timedTransition."+ languagePath +".txt","X");
+  }
+
+  @Test
+  public void nestedStates_Two_TimedTransition()
+  {
+    assertUmpleTemplateFor("nestedStates_Two_TimedTransition.ump",languagePath + "/nestedStates_Two_TimedTransition."+ languagePath +".txt","X");
+  }
 }

@@ -93,5 +93,35 @@
       append(stringBuffer, "  private TimedEventHandler {0};", gen.translate("eventHandler",e));
     }
   }
+
+  for (StateMachine sm : uClass.getStateMachines())
+  {
+    if(!sm.getNestedStateMachines().isEmpty())
+    {
+      for (StateMachine nsm : sm.getNestedStateMachines())
+      {
+        for (Event event : nsm.getEvents())
+        {
+          if(!event.getIsTimer())
+          {
+            continue;
+          }
+         
+          if (isFirst)
+          {
+            isFirst = false;
+            appendln(stringBuffer, "");
+            appendln(stringBuffer, "");
+            appendln(stringBuffer,"  //Helper Variables");
+          }
+          else
+          {
+            appendln(stringBuffer, "");
+          }
+          append(stringBuffer, "  private TimedEventHandler {0};", gen.translate("eventHandler", event));
+        }
+      }
+    }
+  }
 }
 %>
