@@ -1580,6 +1580,27 @@ class UmpleInternalParser
       
       // Add Getter/Setter/Constructor to Class
       boolean shouldAddMethod = verifyIfMethodIsConstructorOrGetSet(uClass, aMethod);
+     
+      //Issue 559
+      if(uClass.hasMethod(aMethod))
+      {
+    	  Method actualMethod = uClass.getMethod(aMethod);
+    	  
+    	  if ((actualMethod.getMethodBody().getExtraCode().isEmpty()) &&
+    	      (!aMethod.getMethodBody().getExtraCode().isEmpty()))
+    	  {
+    		  actualMethod.setMethodBody(aMethod.getMethodBody());
+    		  actualMethod.setPosition(aMethod.getPosition());
+    	  }
+    	  else
+    	  {
+    	    getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+    		  	  aMethod.getName(),uClass.getName(), actualMethod.getPosition().getLineNumber()+"",
+    			  aMethod.getPosition().getLineNumber()+""));
+    	  }    
+    	  
+      }
+     
       if (!uClass.hasMethod(aMethod) && shouldAddMethod)
       {
         uClass.addMethod(aMethod); 

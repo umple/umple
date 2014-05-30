@@ -1,0 +1,9 @@
+class X{
+	void test(){
+	 int x = 1;
+	}
+	
+	void test(){
+	 int x = 2;
+	}
+}
