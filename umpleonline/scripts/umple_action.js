@@ -1047,76 +1047,11 @@ Action.loadExample = function loadExample()
   var largerSelector = "#buttonLarger";
   var smallerSelector = "#buttonSmaller";
   var canvasSelector = "#" + Page.umpleCanvasId();
- 
+  
   umpleCanvasWidth = jQuery(canvasSelector).width();
   umpleCanvasHeight = jQuery(canvasSelector).height();
   
-  Page.resetCanvasSize();
   var sel = Page.getSelectedExample();
-  
-  if (sel=="2DShapes.ump"){Page.setUmpleCanvasSize(620,550);}
-  else if (sel=="AccessControl.ump"){Page.setUmpleCanvasSize(620,550);}
-  else if (sel=="Accidents.ump"){Page.setUmpleCanvasSize(620,550);}
-  else if (sel=="Accommodations.ump"){Page.setUmpleCanvasSize(780,550);}
-  else if (sel=="AfghanRainDesign.ump"){Page.setUmpleCanvasSize(920,600);}
-  else if (sel=="AirlineExample.ump"){Page.setUmpleCanvasSize(700,550);}
-  else if (sel=="BankingSystemA.ump"){Page.setUmpleCanvasSize(840,550);}
-  else if (sel=="BankingSystemB.ump"){Page.setUmpleCanvasSize(820,550);}
-  else if (sel=="CanalSystem.ump"){Page.setUmpleCanvasSize(850,600);}
-  else if (sel=="OhHellWhist.ump"){Page.setUmpleCanvasSize(700,550);}
-  else if (sel=="Claim.ump"){Page.setUmpleCanvasSize(550,550);}
-  else if (sel=="CommunityAssociation.ump"){Page.setUmpleCanvasSize(720,590);}
-  else if (sel=="CoOpSystem.ump"){Page.setUmpleCanvasSize(700,550);}
-  else if (sel=="DMMOverview.ump"){Page.setUmpleCanvasSize(650,550);}
-  else if (sel=="DMMModelElementHierarchy.ump"){Page.setUmpleCanvasSize(935,600);}
-  else if (sel=="DMMSourceObjectHierarchy.ump"){Page.setUmpleCanvasSize(1000,550);}
-  else if (sel=="DMMRelationshipHierarchy.ump"){Page.setUmpleCanvasSize(1200,570);}
-  else if (sel=="DMMExtensionCTF.ump"){Page.setUmpleCanvasSize(1100,620);}
-  else if (sel=="Decisions.ump"){Page.setUmpleCanvasSize(780,720);}
-  else if (sel=="ElectionSystem.ump"){Page.setUmpleCanvasSize(680,550);}
-  else if (sel=="ElevatorSystemA.ump"){Page.setUmpleCanvasSize(550,550);}
-  else if (sel=="ElevatorSystemB.ump"){Page.setUmpleCanvasSize(820,550);}
-  else if (sel=="GenealogyA.ump"){Page.setUmpleCanvasSize(550,550);}
-  else if (sel=="GenealogyB.ump"){Page.setUmpleCanvasSize(550,550);}
-  else if (sel=="GenealogyC.ump"){Page.setUmpleCanvasSize(550,550);}  
-  else if (sel=="GeographicalInformationSystem.ump"){Page.setUmpleCanvasSize(765,550);}
-  else if (sel=="Hospital.ump"){Page.setUmpleCanvasSize(650,550);}
-  else if (sel=="Hotel.ump"){Page.setUmpleCanvasSize(820,550);}
-  else if (sel=="Insurance.ump"){Page.setUmpleCanvasSize(650,575);}
-  else if (sel=="InventoryManagement.ump"){Page.setUmpleCanvasSize(625,570);}
-  else if (sel=="Library.ump"){Page.setUmpleCanvasSize(780,550);}
-  else if (sel=="MailOrderSystemClientOrder.ump"){Page.setUmpleCanvasSize(780,550);}
-// old mis-spelling for historical record
-  else if (sel=="ManufactoringPlantController.ump"){Page.setUmpleCanvasSize(750,550);}
-  else if (sel=="ManufacturingPlantController.ump"){Page.setUmpleCanvasSize(750,550);}
-  else if (sel=="Pizza.ump"){Page.setUmpleCanvasSize(700,570);}
-  else if (sel=="PoliceSystem.ump"){Page.setUmpleCanvasSize(800,700);} 
-  else if (sel=="PoliticalEntities.ump"){Page.setUmpleCanvasSize(550,550);}
-  else if (sel=="realestate.ump"){Page.setUmpleCanvasSize(730,700);}
-  else if (sel=="RoutesAndLocations.ump"){Page.setUmpleCanvasSize(750,680);}
-  else if (sel=="School.ump"){Page.setUmpleCanvasSize(700,550);}
-  else if (sel=="TelephoneSystem.ump"){Page.setUmpleCanvasSize(700,550);}
-  else if (sel=="UniversitySystem.ump"){Page.setUmpleCanvasSize(600,550);}  
-  else if (sel=="VendingMachineClassDiagram.ump"){Page.setUmpleCanvasSize(650,650);}
-  else if (sel=="WarehouseSystem.ump"){Page.setUmpleCanvasSize(750,700);}
-
-// State diagrams
-  else {
-    diagramType="&diagramtype=state"
-    if (sel=="Booking.ump"){Page.setUmpleCanvasSize(400,550);}
-    else if (sel=="CanalLockStateMachine.ump"){Page.setUmpleCanvasSize(800,800);}
-    else if (sel=="CarTransmission.ump"){Page.setUmpleCanvasSize(1000,600);}  
-    else if (sel=="ComplexStateMachine.ump"){Page.setUmpleCanvasSize(600,600);}  
-    else if (sel=="DigitalWatchNested.ump"){Page.setUmpleCanvasSize(1350,750);}  
-    else if (sel=="DigitalWatchFlat.ump"){Page.setUmpleCanvasSize(1000,800);}  
-    else if (sel=="Elevator_State_Machine.ump"){Page.setUmpleCanvasSize(1200,900);}  
-    else if (sel=="GarageDoor.ump"){Page.setUmpleCanvasSize(550,550);}    
-    else if (sel=="Phone.ump"){Page.setUmpleCanvasSize(1000,600);}
-    else if (sel=="SpecificFlight.ump"){Page.setUmpleCanvasSize(900,800);}  
-    else if (sel=="SpecificFlightFlat.ump"){Page.setUmpleCanvasSize(900,800);}  
-    else if (sel=="TrafficLightsA.ump"){Page.setUmpleCanvasSize(1100,700);}
-    else {Page.setUmpleCanvasSize(1100,900);}
-  }
   
   var newURL="?example="+exampleName+diagramType;
   Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+exampleName+" example</a>");
@@ -1654,7 +1589,7 @@ Action.updateUmpleDiagramCallback = function(response)
     umpleJson=codeparts[1];
   }
   else {  // GraphViz diagram to display
-    var codeparts = toDisplay.split('<svg xmlns=');
+    var codeparts = toDisplay.split('<svg width=');
     var miscStuffAndErrorMessages = codeparts[0];
     var prelimparts = miscStuffAndErrorMessages.split('errorRow');
     if(prelimparts.length > 1) {
@@ -1662,8 +1597,11 @@ Action.updateUmpleDiagramCallback = function(response)
       isError = true;    
     }
     
+    //Put the start of the svg back together. 
     if(codeparts.length>1 && codeparts[1].length>100) {
-      umpleJson="<svg xmlns="+codeparts[1];
+      umpleJson="<svg width="+codeparts[1];
+      //remove the redundant svg closing tag
+      umpleJson = umpleJson.replace(/<\/svg>$/, "");
     }
   }
   
