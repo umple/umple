@@ -1,0 +1,28 @@
+class X{
+	void test(){
+	}
+}
+
+class X{
+	void test(){
+	 int x = 2;
+	}
+}
+
+class X{
+
+	int test()
+	{
+	  int x = 3;
+	}
+	
+	void test()
+	{
+	  int x = 4;
+	}
+	
+	void test(int a)
+	{
+	  int x = 5;
+	}
+}

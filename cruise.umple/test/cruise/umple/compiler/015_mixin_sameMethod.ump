@@ -1,0 +1,11 @@
+class X{
+	void test(){
+	 int x = 1;
+	}
+}
+
+class X{
+	void test(){
+	 int x = 2;
+	}
+} 

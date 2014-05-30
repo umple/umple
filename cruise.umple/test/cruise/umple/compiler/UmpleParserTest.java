@@ -275,6 +275,18 @@ public class UmpleParserTest
     Assert.assertEquals(false,model.getUmpleClass("Mentor").isImmutable());
   }
   
+  //Issue 559
+  @Test
+  public void mixin_redefiningAMethod()
+  { 
+    assertHasWarningsParse("015_mixin_sameMethod.ump", 49);
+    assertHasWarningsParse("015_mixin_sameMethod2.ump", 49);
+    assertHasWarningsParse("015_mixin_sameMethod3.ump", 49);
+    assertSimpleParse("015_mixin_sameMethod4.ump"); 
+    assertHasWarningsParse("015_mixin_sameMethod5.ump", 49);
+    
+  }
+  
   @Test
   public void validAssociationsForImmutableClass()
   {

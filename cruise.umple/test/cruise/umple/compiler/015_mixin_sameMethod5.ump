@@ -1,0 +1,18 @@
+class X{
+	void test(){
+	}
+	
+    void test(){
+	 int x = 3;
+	}
+}
+
+class X{
+	void test(){
+	}
+	
+    void test(){
+	 int x = 44;
+	}
+}
+
