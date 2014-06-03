@@ -58,6 +58,7 @@ document.write('<script type="text/javascript" src="scripts/inlineeditor.js"><\/
 //Umple System
 document.write('<link href="scripts/styles.css" rel="stylesheet" type="text/css" />');
 document.write('<script type="text/javascript" src="scripts/umple_page.js"><\/script>');
+document.write('<script type="text/javascript" src="scripts/umple_layout.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_action.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_position.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_line.js"><\/script>');

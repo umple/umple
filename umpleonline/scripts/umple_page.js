@@ -2,7 +2,8 @@
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
 //
-// Initializing and maintaining the various areas on the screen in UmpleOnline
+// Initializing and maintaining the features on the screen in UmpleOnline
+// Layout initialization and maintenance is located in umple_layout.js.
 
 Page = new Object();
 Page.selectedItem = null;
@@ -14,16 +15,12 @@ Page.clickCount = 0;
 Page.repeatToolItem = false;
 Page.shortcutsEnabled = true;
 Page.modelDelimiter = "//$?[End_of_model]$?";
-Page.padding = 30;
 
 Page.codeMirrorOn = false;
 Page.codeMirrorEditor = null;
 Page.hLine = null;
 
 // Global options
-Page.showDiagram = true; // initially show the diagram
-Page.showText = true; // initially show the text
-Page.showMenu = true; // initially show the menu
 Page.readOnly = false; // initially allow editing
 Page.useEditableClassDiagram = true;
 Page.useGvClassDiagram = false;
@@ -36,9 +33,9 @@ Page.modifiedDiagrams = false;
 // The following is set called from umple.php
 Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramType)
 { 
-  Page.showDiagram = doShowDiagram;  
-  Page.showText = doShowText;  
-  Page.showMenu = doShowMenu;  
+  Layout.isDiagramVisible = doShowDiagram;  
+  Layout.isTextVisible = doShowText;  
+  Layout.isPaletteVisible = doShowMenu;  
   Page.readOnly = doReadOnly; 
 
   // Set diagram type - anything else means use the default editable class diagram
@@ -58,12 +55,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramT
   Page.initCanvasArea();
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
-  
-  jQuery("#mainApplicationContainer").resizable({
-    stop: function(event, ui){Action.mainApplicationHeightResizing(event, ui);},
-    autoHide: true,
-    handles:"s"});
-  
+
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
 
   Action.loadFile();
@@ -156,11 +148,11 @@ Page.initPaletteArea = function()
     jQuery("#buttonLarger").hide();
     jQuery("#menuBookmarkable").hide();
   }
-  if(Page.readOnly || !Page.showMenu) {  
+  if(Page.readOnly || !Layout.isPaletteVisible) {  
     jQuery("#topBookmarkable").hide();
   }
-  if(!Page.showMenu) {jQuery("#paletteColumn").hide();}
-  if(!Page.showText) {
+  if(!Layout.isPaletteVisible) {jQuery("#paletteColumn").hide();}
+  if(!Layout.isTextVisible) {
     if(Page.readOnly) {
       jQuery("#topLine").hide(); 
     }
@@ -173,8 +165,8 @@ Page.initPaletteArea = function()
 Page.initOptions = function()
 {
   jQuery("#buttonShowHideLayoutEditor").attr('checked', false);
-  jQuery("#buttonShowHideTextEditor").attr('checked', Page.showText);
-  jQuery("#buttonShowHideCanvas").attr('checked', Page.showDiagram);
+  jQuery("#buttonShowHideTextEditor").attr('checked', Layout.isTextVisible);
+  jQuery("#buttonShowHideCanvas").attr('checked', Layout.isDiagramVisible);
   jQuery("#buttonToggleAttributes").attr('checked',true);
   jQuery("#buttonToggleActions").attr('checked',true);
 
@@ -193,7 +185,7 @@ if(Page.useGvStateDiagram)
   jQuery("#buttonPhotoReady").attr('disabled', false);
   jQuery("#buttonManualSync").attr('disabled', false);
   
-  Action.showHideLayoutEditor(true); // hide the layout editor
+  Layout.showHideLayoutEditor(true); // hide the layout editor
 }
 
 Page.initHighlighter = function(id)
@@ -286,7 +278,6 @@ Page.initUmpleTextArea = function()
   var layoutEditor = jQuery("#umpleLayoutEditor");
   
   modelEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
-
   modelEditor.mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
   layoutEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
   modelEditor.focus(function(){Action.focusOn("umpleModelEditor", true);});
@@ -294,20 +285,13 @@ Page.initUmpleTextArea = function()
   modelEditor.blur(function(){Action.focusOn("umpleModelEditor", false);});
   layoutEditor.blur(function(){Action.focusOn("umpleLayoutEditor", false);});
   
-  jQuery("#umpleTextEditor").resizable({
-      stop: function(event, ui){Action.umpleTextEditorResizing(event, ui);},
-      autoHide: true,
-      minWidth: Action.minEditorSize.width,
-      maxWidth: Action.maxEditorSize.width,
-      alsoResize: layoutEditor,
-      handles:"e"});
+  
 
   // Uncomment the following line to turn CodeMirror on by default; comment out to
   // require the user to type cm1 to turn code mirror on
   Page.initCodeMirrorEditor();
-  Page.resizeCodeMirrorEditor( modelEditor.height());
-  Page.setTextEditorWidth(508);
-  if (Page.showText==false) {Action.showHideTextEditor(false);}
+  Layout.initUmpleTextAreaSize();
+  if (!Layout.isTextVisible) {Layout.showHideTextEditor(false);}
 }
 
 Page.initCodeMirrorEditor = function() {
@@ -377,31 +361,6 @@ Page.clickToggleMethods = function() {
   jQuery('#buttonToggleMethods').trigger('click');
 }
 
-Page.setTextEditorWidth = function(width) 
-{
-  var umpleTextEditor = jQuery("#umpleTextEditor");
-  var umpleLayoutEditor = jQuery("#umpleLayoutEditor");
-  
-  if(width < Action.minEditorSize.width) 
-  {
-    width = Action.minEditorSize.width;
-  }
-  
-  umpleTextEditor.width(width);
-  umpleLayoutEditor.width(width);
-  
-  var leftoverWidth = jQuery(window).innerWidth() - 2*Page.padding - jQuery("#paletteColumn").width();
-
-  leftoverWidth = leftoverWidth - jQuery("#textEditorColumn").width();
-  Page.setUmpleCanvasSize(leftoverWidth, jQuery("#umpleCanvas").height());
-}
-
-Page.resizeCodeMirrorEditor = function(newHeight) 
-{
-   Page.codeMirrorEditor.getWrapperElement().style.height=newHeight+"px";
-   Page.codeMirrorEditor.refresh();
-}
-
 Page.isPhotoReady = function()
 {
   if(Page.readOnly) {
@@ -427,30 +386,8 @@ Page.hideGeneratedCode = function()
 
 Page.initCanvasArea = function()
 {
-  var canvas = jQuery("#" + Page.umpleCanvasId());
-  if (Page.showDiagram==false) {Action.showHideCanvas(false);}
-  
-  var offsetTop = Math.round(canvas.position().top);
-  var offsetLeft = Math.round(canvas.position().left);
-  
-  var defaultWidth = canvas.width();
-  var defaultHeight = canvas.height();
-  
-  Action.minCanvasSize = new UmplePosition(0,0,defaultWidth,defaultHeight);
-  Action.minEditorSize = new UmplePosition(0,0,jQuery("#textEditorColumn").width(),0);
-  Action.maxEditorSize = new UmplePosition(
-      0,
-      0,
-      jQuery(window).innerWidth() - 2*Page.padding - jQuery("#paletteColumn").width() - Action.minCanvasSize.width,
-      0);
-  
-  var windowHeight = jQuery(window).height()-35;
-  var windowWidth = jQuery(window).width();
-  
-  var startupWidth = windowWidth - offsetLeft - Page.padding;
-  var startupHeight = windowHeight - offsetTop - Page.padding;
-  
-  Page.setUmpleCanvasSize(startupWidth,startupHeight);
+  var canvas = jQuery("#umpleCanvas");
+  Layout.initUmpleCanvasSize();
   
   canvas.click(function(event){Action.umpleCanvasClicked(event);});
   canvas.mousemove(Action.mouseMove);
@@ -458,10 +395,10 @@ Page.initCanvasArea = function()
   canvas.blur(function(){Action.focusOn(Page.umpleCanvasId(), false);});
   canvas.delegate("[class$='editableDoubleClick']", 'dblclick', InlineEditor.handleOnClick);
   canvas.delegate("[class$='editableSingleClick']", 'click', InlineEditor.handleOnClick);
-  canvas.resizable({stop: function(event, ui){Action.umpleCanvasResizing(event, ui);},
+  canvas.resizable({stop: function(event, ui){Layout.umpleCanvasResizing(event, ui);},
                   autoHide: true,
-                  minHeight: Action.minCanvasSize.height,
-                  minWidth: Action.minCanvasSize.width,
+                  minHeight: Layout.minCanvasSize.height,
+                  minWidth: Layout.minCanvasSize.width,
                   handles: {'se': '#canvasGrip'}});
   
   // remove the jquery resizable handle
@@ -560,7 +497,7 @@ Page.selectToggleTool = function(toolSelected)
   {
     DiagramEdit.removeNewClass();
     DiagramEdit.removeNewAssociation();
-    DiagramEdit.removeNewGeneralization();
+    DiagramEdit.removeNewGeneralization();f
   }
   
   Page.enableEditDragAndResize(false);
@@ -706,43 +643,7 @@ Page.showCanvasLoading = function()
 
 Page.resetCanvasSize = function()
 {
-  Page.setUmpleCanvasSize(Action.minCanvasSize.width, Action.minCanvasSize.height);
-}
-
-Page.setUmpleCanvasSize = function(width, height)
-{
-  var maxWidth = jQuery(window).innerWidth() - 2*Page.padding - Action.minEditorSize.width - 
-    jQuery("#paletteColumn").width();
-
-  if (width < Action.minCanvasSize.width)
-  {
-    width = Action.minCanvasSize.width;
-  }
-  if (height < Action.minCanvasSize.height)
-  {
-    height = Action.minCanvasSize.height;
-  }
-  if (width > maxWidth)
-  {
-    width = maxWidth;
-  }
-  
-  Action.adjustTextEditorHeight(height);
-  
-  jQuery("#palette").height(height + 7);
-  jQuery("#umpleCanvas").width(width);
-  jQuery("#umpleCanvas").height(height);
-  jQuery("#palette").accordion("resize");
-    
-  if (width == Action.minCanvasSize.width && 
-      height == Action.minCanvasSize.height)
-  {
-    Page.enablePaletteItem("buttonSmaller", false);
-  }
-  else
-  {
-    Page.enablePaletteItem("buttonSmaller", true);
-  }
+  Page.setUmpleCanvasSize(Layout.minCanvasSize.width, Layout.minCanvasSize.height);
 }
 
 Page.getSelectedExample = function()
@@ -873,4 +774,4 @@ jQuery.fn.selectRange = function(start, end) {
        range.select();
     }
   });
-};
+}
