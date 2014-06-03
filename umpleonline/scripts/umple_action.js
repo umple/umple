@@ -7,11 +7,9 @@
 // Actions associated with editing the graphical diagram are
 // located in the umple_action_diagram.js file.
 //
-Action = new Object();
+var Action = new Object();
 Action.waiting_time = 1500;
 Action.oldTimeout = null;
-Action.minCanvasSize = null;
-Action.minEditorSize = null;
 Action.elementClicked = false;
 Action.canCreateByDrag = true;
 Action.manualSync = false;
@@ -94,11 +92,11 @@ Action.clicked = function(event)
   }
   else if (action == "Larger")
   {
-    Action.umpleCanvasResized(1);
+    Layout.umpleCanvasResized(1);
   }
   else if (action == "Smaller")
   {
-    Action.umpleCanvasResized(-1);
+    Layout.umpleCanvasResized(-1);
   }
   else if (action == "Copy")
   {
@@ -118,11 +116,11 @@ Action.clicked = function(event)
   }
   else if (action == "ShowHideTextEditor")
   {
-    Action.showHideTextEditor();
+    Layout.showHideTextEditor();
   }
   else if (action == "ShowHideCanvas")
   {
-    Action.showHideCanvas();
+    Layout.showHideCanvas();
   }
   else if (action == "ShowEditableClassDiagram")
   {
@@ -138,7 +136,7 @@ Action.clicked = function(event)
   }
   else if (action == "ShowHideLayoutEditor")
   {
-    Action.showHideLayoutEditor();
+    Layout.showHideLayoutEditor();
   }
   else if (action == "ManualSync")
   {
@@ -277,75 +275,6 @@ Action.saveNewFileCallback = function(response)
   Page.setFilename(response.responseText);
 }
 
-Action.showHideLayoutEditor = function(doShow)
-{
-  var layoutEditor = jQuery("#umpleLayoutEditor");
-  var modelEditor = jQuery("#umpleModelEditor");
-  var newHeight = jQuery("#umpleCanvas").height();
-   
-  if (doShow == undefined) doShow = layoutEditor.is(":visible");
-  
-  if (doShow)  // warning: This works backwards to intuition
-  {
-    layoutEditor.hide();
-    Action.adjustTextEditorHeight(newHeight);
-  }
-  else
-  {
-    layoutEditor.show();
-    Action.adjustTextEditorHeight(newHeight);
-  }
-}
-
-Action.showHideTextEditor = function(doShow)
-{ 
-  var textEditor = jQuery("#textEditorColumn");
-  var layoutBox = jQuery("#buttonShowHideLayoutEditor");
-  var layoutListItem = jQuery("#layoutListItem");
-  var canvas = jQuery("#" + Page.umpleCanvasId());
-  var canvasColumn = jQuery("#umpleCanvasColumn");
-  var canvasVisible = canvasColumn.is(":visible");
-  
-  if (doShow == undefined) doShow = !textEditor.is(":visible"); 
-    
-  if (doShow)
-  {
-    textEditor.show();
-    
-    // canvas must be visible in order to change width
-    // if hidden, show temporarily
-    if (!canvasVisible) canvasColumn.show();
-    canvas.width(Action.minCanvasSize.width);
-    if (!canvasVisible) canvasColumn.hide();
-    
-    // disable the show/hide layout editor option
-    layoutBox.attr('disabled', false);
-    layoutBox.css('cursor', 'pointer');
-    layoutListItem.css('color', 'Black');
-    if(Page.readOnly) {
-      jQuery("#topLine").show(); 
-    }
-    else {
-      jQuery("#linetext").show();
-    }
-    Page.setUmpleCode(Page.getUmpleCode()); // force reset
-  }
-  else
-  {
-    canvas.width(canvas.width() + textEditor.width());
-    textEditor.hide();
-  layoutBox.attr('disabled', true);
-  layoutBox.css('cursor', 'not-allowed');
-  layoutListItem.css('color', 'DimGray');
-  if(Page.readOnly) {
-      jQuery("#topLine").hide(); 
-    }
-    else {
-      jQuery("#linetext").hide();
-    }
-  }
-}
-
 Action.changeDiagramType = function(newDiagramType)
 {
   var changedType = false;
@@ -391,63 +320,6 @@ Action.showHideMenu = function(doShow)
   else
   {
     menu.hide();
-  }
-}
-
-Action.showHideCanvas = function(doShow)
-{ 
-  var canvas = jQuery("#umpleCanvasColumn");
-  
-  if (doShow == undefined) doShow = !canvas.is(":visible"); 
-  if (doShow)
-  {
-    canvas.show();
-    Action.manualSync = jQuery("#buttonManualSync").attr('checked');
-    jQuery("#buttonShowHideCanvas").attr('checked',true);
-    
-    if (!Action.manualSync) 
-    {
-      Action.updateUmpleDiagram();
-      Action.diagramInSync = true;
-      Page.enableDiagram(true);
-    }
-    if (Action.manualSync && !Action.diagramInSync) Page.enablePaletteItem('buttonSyncDiagram', true);
-    if (!Action.manualSync || Action.diagramInSync)
-    {
-      Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", true);
-      Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", true);
-
-     Page.enablePaletteItem('buttonAddClass', true);
-      Page.enablePaletteItem('buttonAddAssociation', true);
-      Page.enablePaletteItem('buttonAddGeneralization', true);
-      Page.enablePaletteItem('buttonDeleteEntity', true);
-    
-      Page.initToggleTool('buttonAddClass');
-      Page.initToggleTool('buttonAddAssociation');
-      Page.initToggleTool('buttonAddGeneralization');
-      Page.initToggleTool('buttonDeleteEntity');
-    }
-  }
-  else
-  {
-    canvas.hide();
-    Action.manualSync = true;
-    jQuery("#buttonShowHideCanvas").attr('checked',false);
-
-  Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", false);
-    Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", false);
-
-    
-  Page.enablePaletteItem('buttonAddClass', false);
-    Page.enablePaletteItem('buttonAddAssociation', false);
-    Page.enablePaletteItem('buttonAddGeneralization', false);
-    Page.enablePaletteItem('buttonDeleteEntity', false);
-  Page.enablePaletteItem('buttonSyncDiagram', false);
-
-    Page.removeToggleTool('buttonAddClass');
-    Page.removeToggleTool('buttonAddAssociation');
-    Page.removeToggleTool('buttonAddGeneralization');
-    Page.removeToggleTool('buttonDeleteEntity');
   }
 }
 
@@ -518,61 +390,6 @@ Action.simulateCodeCallback = function(response)
   var modelId = response.responseText;
   window.open("../umpleonline/simulate.php?model=" + modelId, "umpleSimulator");
   Page.showViewDone(); 
-}
-
-Action.mainApplicationHeightResizing = function(event, ui)
-{
-  var currentHeight = ui.size.height;
-  
-  Page.setUmpleCanvasSize(jQuery("#umpleCanvas").width(), currentHeight);
-}
-
-Action.umpleTextEditorResizing = function(event, ui)
-{
-  var currentWidth = ui.size.width;
-  
-  Page.setTextEditorWidth(currentWidth);
-}
-
-Action.umpleCanvasResizing = function(event, ui)
-{
-  var currentHeight = ui.size.height;
-  var currentWidth = ui.size.width;
-  
-  Page.setUmpleCanvasSize(currentWidth, currentHeight);
-}
-
-Action.umpleCanvasResized = function(factor)
-{ 
-  canvasSelector = "#" + Page.umpleCanvasId();
-  var currentHeight = jQuery(canvasSelector).height();
-  var currentWidth = jQuery(canvasSelector).width();
-  
-  var inc = 100;
-  var newHeight=currentHeight + 0.25*inc*factor;
-  var newWidth=currentWidth + inc*factor;
-  
-  Page.setUmpleCanvasSize(newWidth,newHeight);
-}
-
-Action.adjustTextEditorHeight = function(height) 
-{  
-  if (jQuery("#buttonShowHideLayoutEditor").attr('checked'))
-  {
-    jQuery("#umpleModelEditor").height(height*0.7 + 3);
-    if(Page.codeMirrorOn) {
-       Page.resizeCodeMirrorEditor(height*0.7 + 3);
-    }
-    jQuery("#umpleLayoutEditor").height(height*0.3);
-  }
-  else
-  {
-    jQuery("#umpleModelEditor").height(height + 6);
-    if(Page.codeMirrorOn) {
-       Page.resizeCodeMirrorEditor(height + 6);
-    }
-  }
-  jQuery("#umpleTextEditor").height(height + 6);
 }
 
 Action.classSelected = function(obj)
@@ -1070,7 +887,6 @@ Action.loadExampleCallback = function(response)
   Action.updateUmpleDiagram();
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
-
 }
 
 Action.customSizeTyped = function()
@@ -1133,7 +949,6 @@ Action.keyboardShortcut = function(event)
       event.preventDefault();
     }
   }
-
 }
 
 Action.getCaretPosition = function() // TIM Returns the line number
@@ -1158,71 +973,86 @@ Action.getCaretPosition = function() // TIM Returns the line number
 }
 
 // The following from http://stackoverflow.com/questions/263743/how-to-get-cursor-position-in-textarea/3373056#3373056
-Action.getInputSelectionStart = function(el) {
-    var start = 0, normalizedValue, range, textInputRange, len, endRange;
+Action.getInputSelectionStart = function(el) 
+{
+  var start = 0, normalizedValue, range, textInputRange, len, endRange;
 
-    if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
-      start = el.selectionStart;
-      // The following for debugging
-    if (Page.getAdvancedMode() == 2) { // debug
+  if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") 
+  {
+    start = el.selectionStart;
+    // The following for debugging
+    if (Page.getAdvancedMode() == 2) 
+    { // debug
       Page.setFeedbackMessage("Non-IE browser ");
-      }
     }
-    else { // IE Support
-      // The following for debugging
-    if (Page.getAdvancedMode() == 2) { // debug
+  }
+  else 
+  { // IE Support
+    // The following for debugging
+    if (Page.getAdvancedMode() == 2) // debug
+    { 
       Page.setFeedbackMessage("IE-type browser ");
-      }
-        range = document.selection.createRange();
-
-        if (range && range.parentElement() == el) {
-            len = el.value.length;
-            normalizedValue = el.value.replace(/\r\n/g, "\n");
-
-            // Create a working TextRange that lives only in the input
-            textInputRange = el.createTextRange();
-            textInputRange.moveToBookmark(range.getBookmark());
-
-            // Check if the start and end of the selection are at the very end
-            // of the input, since moveStart/moveEnd doesn't return what we want
-            // in those cases
-            endRange = el.createTextRange();
-            endRange.collapse(false);
-
-            if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) {
-                start = len;
-            } else {
-                start = -textInputRange.moveStart("character", -len);
-                start += normalizedValue.slice(0, start).split("\n").length - 1;
-            }
-        }
     }
+    range = document.selection.createRange();
+    
+    if (range && range.parentElement() == el) {
+      len = el.value.length;
+      normalizedValue = el.value.replace(/\r\n/g, "\n");
+    
+      // Create a working TextRange that lives only in the input
+      textInputRange = el.createTextRange();
+      textInputRange.moveToBookmark(range.getBookmark());
+    
+      // Check if the start and end of the selection are at the very end
+      // of the input, since moveStart/moveEnd doesn't return what we want
+      // in those cases
+      endRange = el.createTextRange();
+      endRange.collapse(false);
+    
+      if (textInputRange.compareEndPoints("StartToEnd", endRange) > -1) 
+      {
+        start = len;
+      } 
+      else 
+      {
+        start = -textInputRange.moveStart("character", -len);
+        start += normalizedValue.slice(0, start).split("\n").length - 1;
+      }
+    }
+  }
 
-    return start;
+  return start;
 }
 
-Action.setCaretPosition = function(line){
-  if(isNaN(line-0)) {
+Action.setCaretPosition = function(line)
+{
+  if(isNaN(line-0)) 
+  {
     // It is not a number so must be a special hidden command
-    if(line=="av") {
+    if(line=="av") 
+    {
       // Special backdoor to turn on experimental features
       document.getElementById('advancedMode').value=1;
       Page.setFeedbackMessage("");
       return;
     }
-    if(line=="db") { // turn on debugging and do certain debugging options
+    if(line=="db") 
+    { // turn on debugging and do certain debugging options
       document.getElementById('advancedMode').value=2;
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
-    if(line.substr(0,2)=="cm") {
-      if(line.substr(2,1)=="0" && Page.codeMirrorOn) {
+    if(line.substr(0,2)=="cm") 
+    {
+      if(line.substr(2,1)=="0" && Page.codeMirrorOn) 
+      {
         Page.setFeedbackMessage("Turning code mirroring off");
         Page.codeMirrorEditor.toTextArea();
         Page.codeMirrorOn=false;
         jQuery("#linenum").val("0");
       }
-      else if(line.substr(2,1)=="1" && !Page.codeMirrorOn) {
+      else if(line.substr(2,1)=="1" && !Page.codeMirrorOn) 
+      {
         Page.initCodeMirrorEditor();
         jQuery("#linenum").val("0");
       }
@@ -1230,13 +1060,16 @@ Action.setCaretPosition = function(line){
     }
     else
     {
-      if(!Action.selectMatchingText(line)) {
+      if(!Action.selectMatchingText(line)) 
+      {
         Page.setFeedbackMessage("Line number or word \""+line+"\" not located");
-        setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},3000);      }
+        setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},3000);
+      }
       return;
     }
   }
-  if(Page.codeMirrorOn) {
+  if(Page.codeMirrorOn) 
+  {
     Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
     Page.codeMirrorEditor.focus();
     return;
@@ -1286,7 +1119,8 @@ Action.setCaretPosition = function(line){
 
 // Searches for the matching text in the code mirror editor
 // Does not span lines
-Action.selectMatchingText = function(text) {
+Action.selectMatchingText = function(text) 
+{
   // Does nothing if CodeMirror is off
   if(Page.codeMirrorOn) {
     var scursor = Page.codeMirrorEditor.getSearchCursor(text);
@@ -1301,7 +1135,8 @@ Action.selectMatchingText = function(text) {
 }
 
 // Highlights the text of the class that is currently selected.
-Action.selectClass = function(className) {
+Action.selectClass = function(className) 
+{
   if(Page.codeMirrorOn) {
     var scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class "+
        className+"($|\\\s|[{])"));
@@ -1370,13 +1205,13 @@ Action.selectClass = function(className) {
   return;  // false - important do not return a value or it won't work in Firefox/Opera
 }
 
-Action.selectStateInClass = function(stateName, classname) {
-
-  if(Page.codeMirrorOn) {
-  }
+Action.selectStateInClass = function(stateName, classname) 
+{
+  if(Page.codeMirrorOn) {}
 }
 
-Action.delayedFocus = function(ms) {
+Action.delayedFocus = function(ms) 
+{
   var ctrl=document.getElementById('umpleModelEditor');
   setTimeout(function() {ctrl.focus();},ms);
 }
@@ -1427,7 +1262,8 @@ Action.trimMultipleNonPrintingAndComments = function(text) {
   return text;
 }
 
-Action.removeComments = function(str) {
+Action.removeComments = function(str) 
+{
    // From http://james.padolsey.com/javascript/javascript-comment-removal-revisted/
  
     var uid = '_' + +new Date(),
@@ -1473,7 +1309,6 @@ Action.removeComments = function(str) {
             return primatives[n];
         })
     );
- 
 }
 
 Action.umpleTypingActivity = function(target) {
