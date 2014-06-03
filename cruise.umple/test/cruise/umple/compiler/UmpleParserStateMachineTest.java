@@ -1108,6 +1108,8 @@ public class UmpleParserStateMachineTest
     //make sure no warnings are raised when the event in the super state is guarded
     assertNoWarnings("485_duplicateEventInSuperStateGuarded.ump");
     
+    // Fix: if timed transition comes before an event in the same state, the warning should not be raised
+    assertNoWarnings("485_timedTransitionANDevent_noWarning_issue575.ump");    
   }
   
   @Test

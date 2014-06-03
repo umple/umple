@@ -1164,7 +1164,9 @@ class UmpleInternalParser
         }
         if(subToken.getValue("guard") == null){
           if(subToken.getValue("event") == null){
-            priorAutoTransitionExists = true;
+            if(subToken.getValue("timer") == null){
+              priorAutoTransitionExists = true;
+            }
           }
           //System.out.println("added: " + subToken.getValue("event"));
           unguardedEvents.add(subToken.getValue("event"));
