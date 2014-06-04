@@ -1270,6 +1270,23 @@ class UmpleVariable
  */
 class Attribute
 {
+  public Attribute(Attribute another){
+  	super(another.getName(), another.getType(), another.getModifier(), another.getValue());
+  	isAutounique = another.getIsAutounique() ;
+	isUnique = another.getIsUnique();
+	isList = another.getIsList();
+	isDerived = another.getIsDerived();
+	codeblock = another.getCodeblock();
+	isLazy = another.getIsLazy();
+	//Attribute Associations
+	comments = another.getComments();
+	position = another.getPosition();
+	endPosition = another.getEndPosition();
+	umpleClass = another.getUmpleClass();
+	umpleTrait = another.getUmpleTrait();
+	traceRecords = another.getTraceRecords();
+  }
+  	
   public boolean isConstant()
   {
     return "const".equals(getModifier());
