@@ -707,9 +707,12 @@ class UmpleInternalParser
   	if (getParseResult().getWasSuccess()) {
 	    for (UmpleClass uClass : getModel().getUmpleClasses()) {
 			if (uClass.hasExtendsTraits()) {
+				copyAttributesFromTraitsToClass(uClass);
+				copyMethodsFromTraitToClass(uClass);
 				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
 					recursiveApplyTraits(uClass,uTrait);
-					copyMethodsFromTraitToClass(uTrait,uClass);
+					
+					
 					if ( ! getParseResult().getWasSuccess() ) return;
 				}
 			}
@@ -733,52 +736,27 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------    
-   private void copyMethodsFromTraitToClass(UmpleTrait inTrait, UmpleClass inClass){
-       Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
-	   Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
-	   
-	   traitMethods = gatherConcreteMethods(inTrait,inClass.getGeneralTPAppliedByName(inTrait.getName()));
-	   applyIncludeExcludeMethods(traitMethods, inTrait, inClass);
-	   if ( ! getParseResult().getWasSuccess() ) return;    
-	   for (UmpleTrait t1 : traitMethods.keySet()) {
-		   List<Method> postDeleteMethod = new ArrayList<Method>();
-		   for (Method method : traitMethods.get(t1)) {
-		  		 if (inClass.hasMethod(method)){		  			
-		  			if (!inClass.getMethod(method).isIsAbstract()){	
-		  				 postDeleteMethod.add(method);
-		  			 }
-		  		 } else
-		  		 {
-		  			for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
-						if(!uTrait.equals(inTrait)){
-							tempTraitMethods = gatherConcreteMethods(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
-							applyIncludeExcludeMethods(tempTraitMethods, uTrait, inClass);
-							if ( ! getParseResult().getWasSuccess() ) return;
-							for (UmpleTrait t2 : tempTraitMethods.keySet()) {
-								if (!tempTraitMethods.containsKey(t1)){
-									for (Method internalMethod : tempTraitMethods.get(t2)){
-		           						 if (compareTwoMethdos(internalMethod, method)){
-		                 					 		getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),"class", inClass.getName(),method.getName(),t1.getName(),t2.getName()));	
-		                 					 		return;
-		                 					 }
-		           					 }
-								}
-							}
-						}	 
-		  			}
-		  		 }
-	       }
-		   for (Method method : postDeleteMethod) {
-			   traitMethods.get(t1).remove(method);
-		   }
-	   }
-	   for (UmpleTrait t1 : traitMethods.keySet()) {
-		   for (Method method : traitMethods.get(t1)) {
-		   	   method.getComment(2).setText(method.getComment(2).getText()+"'"+inClass.getName()+"' ");
-			   inClass.addMethod(method);   
-		   }
-	   }
-  }
+private void copyMethodsFromTraitToClass(UmpleClass inClass){
+    Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
+	Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+		tempTraitMethods = gatherConcreteMethods(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
+		applyIncludeExcludeMethods(tempTraitMethods, uTrait, inClass);
+		if ( ! getParseResult().getWasSuccess() ) return;
+		checkMethodComeFromTraitsIsAvaiableInClass(tempTraitMethods,inClass);
+		if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inClass)) return;
+		//traitMethods.putAll(tempTraitMethods);
+		Map<UmpleTrait, List<Method>> tmp = new HashMap<UmpleTrait, List<Method>>(tempTraitMethods);
+		tmp.keySet().removeAll(traitMethods.keySet());
+		traitMethods.putAll(tmp);
+	}
+	for (UmpleTrait t1 : traitMethods.keySet()) {
+		for (Method method : traitMethods.get(t1)) {
+			method.getComment(2).setText(method.getComment(2).getText()+"'"+inClass.getName()+"' ");
+			inClass.addMethod(method);   
+		}
+	}
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------     
@@ -786,7 +764,6 @@ class UmpleInternalParser
   {
 	 Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>(); 
  	 Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
- 	 checkTypeParameterAvailability(inGTPApplied,inTrait);
  	 //----------------------------------------------------------------------------------------
  	 List<Method> methods = new ArrayList<Method>();	  
  	 for (Method method : inTrait.getMethods()) {
@@ -799,47 +776,16 @@ class UmpleInternalParser
      traitMethods.put(inTrait,methods);
      //----------------------------------------------------------------------------------------
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-     	 //----------------------------------------------------------------------------------------
-     	 GeneralTPApplied newGeneralTPApplied = null;
-     	 if (inTrait.getGeneralTPAppliedByName(uTrait.getName()) !=null) {
-     	 	newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
-  	     	ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGTPApplied);
-  	     }
-  	    //----------------------------------------------------------------------------------------
-    	 tempTraitMethods = gatherConcreteMethods(uTrait,newGeneralTPApplied);
+     	tempTraitMethods = gatherConcreteMethods(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));
     	 //The first parameter works as in and out
-    	 applyIncludeExcludeMethods(tempTraitMethods,uTrait,inTrait);
-    	 
+    	 applyIncludeExcludeMethods(tempTraitMethods,uTrait,inTrait);  	 
     	 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
-    	 for (UmpleTrait t1 : tempTraitMethods.keySet()) {
-    		 List<Method> postDeleteMethod = new ArrayList<Method>();
-    		 for (Method method : tempTraitMethods.get(t1)) {
-        		 if (inTrait.hasMethod(method)){
-        			 if (!inTrait.getMethod(method).isIsAbstract()){	
-		  				 postDeleteMethod.add(method);
-		  			 }
-        		 } else
-        		 {
-        			 if (!traitMethods.containsKey(t1)){
-	        			 for (UmpleTrait t2 : traitMethods.keySet()) {
-	        				 if(!inTrait.equals(t2)){
-	        					 for (Method internalMethod : traitMethods.get(t2)){
-	        						 if (compareTwoMethdos(internalMethod, method)){
-	              					 		getParseResult().addErrorMessage(new ErrorMessage(2557,inTrait.getPosition(0),"trait", inTrait.getName(),method.getName(),t1.getName(),t2.getName()));	
-	              					 		return traitMethods;
-	              					 }
-	        					 }
-	        				 }
-	        			  }
-     				  }
-        		 }
-        	 }
-    		 for (Method method : postDeleteMethod) {
-    			 tempTraitMethods.get(t1).remove(method);
-    		 }
-		 }
-    	 traitMethods.putAll(tempTraitMethods);
-	}
+    	 if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inTrait)) return traitMethods;
+    	 //traitMethods.putAll(tempTraitMethods);
+    	 Map<UmpleTrait, List<Method>> tmp = new HashMap<UmpleTrait, List<Method>>(tempTraitMethods);
+ 		tmp.keySet().removeAll(traitMethods.keySet());
+ 		traitMethods.putAll(tmp);
+	 }
      return traitMethods;
   }
   
@@ -931,9 +877,22 @@ class UmpleInternalParser
   } 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+	private void ApplyTypeParametersToAttribute(Attribute newAttribute,	GeneralTPApplied inGTPApplied) {
+	    if (inGTPApplied == null) return;
+		for (String strType : inGTPApplied.getParameterMapping().keySet()) {
+			String newName = inGTPApplied.getParameterMapping().get(strType);
+			if (newAttribute.getType().equals(strType)){
+				newAttribute.setType(newName);
+			}
+		}	
+	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  	
-  private void checkTypeParameterAvailability(GeneralTPApplied inGeneralTPApplied, UmpleTrait inTrait) {
-	/*
+  private void checkTypeParameterAvailability(GeneralTPApplied inGeneralTPApplied) {
+	UmpleTrait localTrait = getModel().getUmpleTrait(inGeneralTPApplied.getInheritanceName());
+	   /*
 	for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()) {
 		if (!inParameterMapping.containsKey(gtp.getName())){
 			//error: this is when we want to have full coverage for type parameters 
@@ -941,10 +900,11 @@ class UmpleInternalParser
 		}
 	}
 	*/
+	   
 	if (inGeneralTPApplied == null ) return;
 	for (String	typeName : inGeneralTPApplied.getParameterMapping().keySet()) {
-		if (!inTrait.hasGeneralTemplateParameter(typeName)){
-			getParseResult().addErrorMessage(new ErrorMessage(2562,inTrait.getPosition(0),typeName)); 
+		if (!localTrait.hasGeneralTemplateParameter(typeName)){
+			getParseResult().addErrorMessage(new ErrorMessage(2562,localTrait.getPosition(0),typeName)); 
 			return;
 		}
 	}	
@@ -998,6 +958,7 @@ class UmpleInternalParser
 		}						
 
 		//copy attributes
+		/*
 		for(Attribute aAttribute : inTrait.getAttributes()) {
 			//check for attributes which have already existed.
 			Integer index = inTrait.getGeneralTemplateParameterIndexByName(aAttribute.getName(),"attribute");
@@ -1014,6 +975,7 @@ class UmpleInternalParser
 				inClass.addAttribute(aAttribute);
 			}
 		}
+		*/
 		
 		// copy Constraints
 		for(Constraint aConstraint : inTrait.getConstraints()) {
@@ -1070,8 +1032,8 @@ class UmpleInternalParser
 		if ( getParseResult().getWasSuccess() ) {
 			checkTraitsNamesWithClasses();
 			checkTraitsNameWithInterfaces();
-			checkTheSameAttributes();
 			checkCyclicTraitInheritance();
+			checkTypeParametersAvailability();
 		}
 	}
 //---------------------------------end----------------------------------------
@@ -1138,6 +1100,22 @@ class UmpleInternalParser
   }  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	 
+  private void checkTypeParametersAvailability() {
+	for (UmpleClass uClass : getModel().getUmpleClasses()) {
+		for (GeneralTPApplied gTPApplied : uClass.getGeneralTPApplieds()) {
+			checkTypeParameterAvailability(gTPApplied);
+		}
+	}
+	for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+		for (GeneralTPApplied gTPApplied : uTrait.getGeneralTPApplieds()) {
+			checkTypeParameterAvailability(gTPApplied);
+		}
+	}
+	
+ }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------	
 	//Check traits to have unique names;
 	private void checkTraitsNamesWithClasses() {
@@ -1163,26 +1141,6 @@ class UmpleInternalParser
 		  }
 	  }
   }
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------	
-  private void checkTheSameAttributes() {
-	  for(UmpleClass uClass : getModel().getUmpleClasses()) {
-		  if (uClass.hasExtendsTraits()) {
-			  for(UmpleTrait uTrait : uClass.getExtendsTraits())  {
-				  for (Attribute utAtt : uTrait.getAttributes() ) {
-					  for(Attribute ucAtt : uClass.getAttributes()) {
-						  if (utAtt.getName().equals(ucAtt.getName())) {
-							getParseResult().addErrorMessage(new ErrorMessage(2552,utAtt.getPosition(),utAtt.getName(),uClass.getName(),uTrait.getName()));
-			          		return;
-						  }
-					  }
-				  }
-			  }
-				  
-		  }
-	  }
-  }	
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
@@ -1319,14 +1277,69 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 	  MethodTemplateSignature mtSignature = new MethodTemplateSignature(iEFunctionModifier,methodAliasName, method); 
 	return mtSignature;
 }
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void copyAttributesFromTraitsToClass(UmpleClass inClass){
+	Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+		tempTraitAttributes = gatherAttributes(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
+		if ( ! getParseResult().getWasSuccess() ) return;
+		if (checkAttComeFromTraitsIsAvaiableInClass(tempTraitAttributes,inClass) ) return;
+		if (CheckAttComeFromTraitsIsAvaialbleInOtherTraits(traitAttributes,tempTraitAttributes)) return;
+		traitAttributes.putAll(tempTraitAttributes);
+	}
+	for (UmpleTrait t1 : traitAttributes.keySet()) {
+		for (Attribute attribute : traitAttributes.get(t1)) {
+			//I need some comment for users in generated code;
+			//attribute.getComment(2).setText(attribute.getComment(2).getText()+"'"+inClass.getName()+"' ");
+			inClass.addAttribute(attribute);  
+		}
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, GeneralTPApplied inGTPApplied) {
+	 Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>(); 
+	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	 //----------------------------------------------------------------------------------------
+	 List<Attribute> attributes = new ArrayList<Attribute>();	  
+	 for (Attribute attribute : inTrait.getAttributes()) {
+		 Attribute newAttribute = new Attribute(attribute);
+	 	 ApplyTypeParametersToAttribute(newAttribute,inGTPApplied);
+		 attributes.add(newAttribute);
+	 }
+    traitAttributes.put(inTrait,attributes);
+    //----------------------------------------------------------------------------------------
+    for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+    	tempTraitAttributes = gatherAttributes(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));   	 
+   	 	if ( ! getParseResult().getWasSuccess() ) return traitAttributes;
+   	 	if (CheckAttComeFromTraitsIsAvaialbleInOtherTraits(traitAttributes, tempTraitAttributes)) return traitAttributes;
+   	 	traitAttributes.putAll(tempTraitAttributes);
+	}
+    return traitAttributes;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private boolean isMethdoAvailable(Map<UmpleTrait, List<Method>> inTraitMethods, Method inMethod) {
+	for (UmpleTrait uTrait : inTraitMethods.keySet()) {
+		for(Method method : inTraitMethods.get(uTrait)){
+			if(compareTwoMethdos(method, inMethod)){		
+				return true;
+			}
+		}
+	}
+	return false;
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 //****************************************************************************************
 //end of a special section
 //****************************************************************************************
-
   private boolean compareTwoMethdos(Method method1, Method method2) {
 	  if (method1.getName().equals(method2.getName())){
 		 // if(method1.getType().equals(method2.getType())){
@@ -1350,6 +1363,101 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
       }
 	  return false;
   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private boolean checkAttComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Attribute>> inTraitAttributes, UmpleClass inClass) {
+	for (UmpleTrait uTrait : inTraitAttributes.keySet()){
+		for (Attribute attribute : inTraitAttributes.get(uTrait)) {
+			if (inClass.getAttribute(attribute.getName())!=null) {
+				getParseResult().addErrorMessage(new ErrorMessage(2552,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
+				return true;
+			}
+		}
+	}
+	return false;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private boolean CheckAttComeFromTraitsIsAvaialbleInOtherTraits(	Map<UmpleTrait, List<Attribute>> inTraitAttributes,Map<UmpleTrait, List<Attribute>> inTempTraitAttributes) {
+	for (UmpleTrait uTrait : inTempTraitAttributes.keySet()){
+		for (Attribute attribute : inTempTraitAttributes.get(uTrait)) {
+			for (UmpleTrait internalTrait : inTraitAttributes.keySet()) {
+				for (int i = 0; i < inTraitAttributes.get(internalTrait).size(); i++) {
+					Attribute internalAttribute = inTraitAttributes.get(internalTrait).get(i);
+					if (attribute.getName().equals(internalAttribute.getName())){
+						if (uTrait.equals(internalTrait) && attribute.getType().equals(internalAttribute.getType())){
+							//inTraitAttributes.get(internalTrait).remove(internalAttribute);
+						} else {
+							if (uTrait.equals(internalTrait)){
+								getParseResult().addErrorMessage(new ErrorMessage(2564,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),attribute.getType() ,internalAttribute.getType()));	
+							} else{
+								getParseResult().addErrorMessage(new ErrorMessage(2552,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),internalTrait.getName() ));	
+								
+							}
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}	
+	return false;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private GeneralTPApplied getNewGeneralTPAppliedWithP2P(UmpleTrait inTrait, UmpleTrait uTrait,GeneralTPApplied inGTPApplied) {
+	 GeneralTPApplied newGeneralTPApplied = null;
+	 if (inTrait.getGeneralTPAppliedByName(uTrait.getName()) !=null) {
+	 	newGeneralTPApplied = new GeneralTPApplied(inTrait.getGeneralTPAppliedByName(uTrait.getName()));
+     	ApplyTypeParametersToTypeParameters(newGeneralTPApplied,inGTPApplied);
+     }
+	return newGeneralTPApplied;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void checkMethodComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Method>> inTempTraitMethods, UmpleClass inClass) {
+	for (UmpleTrait uTrait : inTempTraitMethods.keySet()){
+		for (int i = 0; i < inTempTraitMethods.get(uTrait).size(); i++) {
+			if (inClass.hasMethod(inTempTraitMethods.get(uTrait).get(i))){
+				inTempTraitMethods.get(uTrait).remove(i);
+			}
+		}
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private boolean CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(Map<UmpleTrait, List<Method>> inTraitMethods,Map<UmpleTrait, List<Method>> inTempTraitMethods, UmpleClassifier inClassifier) {
+	for (UmpleTrait uTrait : inTraitMethods.keySet()){
+		for (Method method : inTraitMethods.get(uTrait)) {
+			for (UmpleTrait internalTrait : inTempTraitMethods.keySet()) {
+				for (int i = 0; i < inTempTraitMethods.get(internalTrait).size(); i++) {
+					Method internalMethod = inTempTraitMethods.get(internalTrait).get(i);
+					if (compareTwoMethdos(method, internalMethod)){
+						if (uTrait.equals(internalTrait)){
+							inTempTraitMethods.get(internalTrait).remove(i);
+						} else if (inClassifier instanceof UmpleTrait){
+							if (uTrait.equals((UmpleTrait)inClassifier)){
+								inTempTraitMethods.get(internalTrait).remove(i);
+							}
+						} else {
+							String type = "trait";	
+							if (inClassifier instanceof UmpleClass) type = "class";
+		
+							getParseResult().addErrorMessage(new ErrorMessage(2557,inClassifier.getPosition(0),type, inClassifier.getName(),method.getName(),uTrait.getName(),internalTrait.getName()));	
+							return true;
+						}
+					}
+				}
+			}
+		}
+	}	
+	return false;
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------

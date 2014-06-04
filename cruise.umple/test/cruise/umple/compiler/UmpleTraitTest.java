@@ -722,6 +722,114 @@ public class UmpleTraitTest {
 			}
 		}
 	}
+	
+	@Test
+	public void Attribute01Test() {
+		String code = "class A{name;isA T;}trait T{name;}";
+		UmpleModel model = getModel(code);
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2552");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void Attribute02Test() {
+		String code = "class A{isA T;}trait T{	isA T1;}trait T1{name;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAttributes());
+	}
+	
+	@Test
+	public void Attribute03Test() {
+		String code = "class A{isA T;}trait T{name;isA T1;}trait T1{name;}";
+		UmpleModel model = getModel(code);
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2552");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void Attribute04Test() {
+		String code = "class A{name;isA T;}trait T{isA T1;}trait T1{name;}";
+		UmpleModel model = getModel(code);
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2552");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void Attribute05Test() {
+		String code = "class A{isA T;}trait T{isA T1;isA T2;}trait T1{isA Share;}trait T2{isA Share;}trait Share{name;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAttributes());
+	}
+	
+	@Test
+	public void Attribute06Test() {
+		String code = "class A{isA T1;isA T2;}trait T1{isA Share;}trait T2{isA Share;}trait Share{name;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAttributes());
+	}
+	
+	@Test
+	public void Attribute07Test() {
+		String code = "class A{isA T1;isA T2;}trait T1{name;}trait T2{name;}";
+		UmpleModel model = getModel(code);
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2552");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
+	@Test
+	public void Attribute08Test() {
+		String code = "class A{isA T<X=String>;}trait T<X>{X name;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAttributes());
+		Assert.assertEquals("String", model.getUmpleClass("A").getAttribute(0).getType());
+	}
+	
+	@Test
+	public void Attribute09Test() {
+		String code = "class A{isA T<X=String>;}trait T<X>{X name;isA T1<Y=X>;}trait T1<Y>{Y address;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfAttributes());
+		Assert.assertEquals("String", model.getUmpleClass("A").getAttribute(0).getType());
+		Assert.assertEquals("String", model.getUmpleClass("A").getAttribute(1).getType());
+	}
+	
+	@Test
+	public void Attribute10Test() {
+		String code = "class A{isA T<X=String>;}trait T<X>{isA T1;	isA T2;}trait T1{isA Share<Type = Integer>;}trait T2{isA Share<Type = String>;}trait Share<Type> {Type name;}";
+		UmpleModel model = getModel(code);
+		try {
+			model.run();	
+		} catch (Exception e) {
+			boolean result = e.getMessage().contains("2564");
+			Assert.assertTrue(result);
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {
