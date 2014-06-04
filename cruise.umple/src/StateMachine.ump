@@ -59,6 +59,7 @@ class State
   Boolean finalState = false;
   //State mostRecentState; //will be in dot notation, if used by historyState, only look at first part?
   
+  Position position = null;
   before getIsHistoryState { if ("H".equals(name)) { isHistoryState = true; } }
   before getIsDeepHistoryState { if ("HStar".equals(name)) { isDeepHistoryState = true; } }
   before isFinalState { if ("Final".equals(name)) { finalState = true; } }
