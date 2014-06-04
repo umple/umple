@@ -938,8 +938,16 @@ class UmpleInternalParser
         StateMachine nestedStateMachine = null;
         if (addNewSm)
         {
-          nestedStateMachine = new StateMachine(fromState.getName());
-          fromState.addNestedStateMachine(nestedStateMachine);
+          //Issue 580
+          for(StateMachine nested : fromState.getNestedStateMachines())
+            if (nested.getName() == fromState.getName())
+            	nestedStateMachine = nested;
+          
+          if(nestedStateMachine == null)
+          {	  
+            nestedStateMachine = new StateMachine(fromState.getName());
+            fromState.addNestedStateMachine(nestedStateMachine);
+          }
         }
         else
         {
