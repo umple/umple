@@ -1,0 +1,37 @@
+class BigStateMachineTest {
+  sm {
+    Zxab {
+     Zx {
+       Z {
+         e3-> X;
+         e2 -> A;
+       }
+       X {
+       }
+       e5 -> G;
+     }
+     A {
+       e5 -> D;
+       e3 -> B;
+     }
+     B {
+       e3 -> Ge;
+     }
+    e1 -> E;
+    e4 -> Ge;
+    }
+    D {
+      e5 -> X;
+      e2 -> E;
+    }
+    Ge {
+     G {
+       e1 -> B;
+     }
+     E {
+       e1 -> G;
+       e2 -> G;
+     }
+    }
+  }
+}

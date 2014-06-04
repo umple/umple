@@ -355,8 +355,117 @@ class UmpleInternalParser
       
       //Solution to issue 502
       checkAttributeConflictImmutableAutounique();
+      //Issue 492
+      checkNonReachableStates();
     }
   }
+   
+   //Issue 492
+   private void checkNonReachableStates()
+   {
+	   List<State> lStates = new ArrayList<State>();
+	   List<State> lParentStates = new ArrayList<State>();
+	   
+	   for (UmpleClass uClass:  model.getUmpleClasses())
+	   { 
+		   for (StateMachine sm: uClass.getStateMachines())
+		   {
+		       //Enum check
+		       if(((sm.getAllEvents().size() > 0) && (sm.getAllTransitions().size() > 0)) || (sm.getNestedStateMachines().size() >0))
+			   {
+				   lStates = new ArrayList<State>();
+				   
+				   State state  = sm.getStartState();
+				   
+				   checkReachableStates(state, lStates, lParentStates);
+				   
+				   for(State sp : lParentStates)
+				   {
+					   if(!lStates.contains(sp))
+					   {
+						   lStates.add(sp);
+					   }
+				   }
+				   
+				   raiseWarningUnreachable(sm, lStates);
+			   }
+		   }
+	   }
+   }
+   
+   //Issue 492
+   private void checkReachableStates(State s, List<State> ls, List<State> lp)
+   {
+	   if(s == null)
+		   return;
+	   
+	   if(!ls.contains(s))
+		     ls.add(s);
+	   
+	   for ( Transition transition: s.getTransitions())
+	   {
+		   if(!ls.contains(transition.getNextState()))
+			   checkReachableStates(transition.getNextState(), ls, lp);
+	   }
+	   
+	   if(s.hasNestedStateMachines())
+	   {
+		   for(StateMachine nestedSm: s.getNestedStateMachines())
+		   {
+		     checkReachableStates(nestedSm.getStartState(), ls, lp);
+		   } 
+	   }
+	   
+	   StateMachine aux = s.getStateMachine();
+	   State fatherState = null;
+	   
+	   
+	   while(aux.getParentState() != null)
+	   {
+		   
+		   fatherState = aux.getParentState();
+		   if(!lp.contains(fatherState))
+			     lp.add(fatherState);
+		   
+		   if (fatherState.getStateMachine() == null)
+			   return;
+		   
+		   aux = fatherState.getStateMachine();
+		     
+	   }
+	   
+	   
+   }
+   
+   private void raiseWarningUnreachable(StateMachine sm, List<State> lStates)
+   {
+	   boolean error = false;
+	   
+	   if(!sm.hasStates())
+		   return;
+	   
+	   for(State s : sm.getStates())
+	   {
+		   
+		   if(!lStates.contains(s))
+		   {
+		       if(s.getPosition() != null)
+			   {
+			     getParseResult().addErrorMessage(new ErrorMessage(67,s.getPosition(),s.getName(), sm.getName()));      
+		         error = true;
+		       }
+		   }
+		   
+		   if (s.hasNestedStateMachines() && !error)
+		   {
+			   for(StateMachine sm2 : s.getNestedStateMachines())
+			     raiseWarningUnreachable(sm2, lStates);
+		   }
+		   
+	   }
+	   
+	   
+   }
   
   private void checkAttributeConflictImmutableAutounique(){
 	   if(attributeAutouniqueImmutable != null && attributeAutouniqueImmutable.size() > 0){

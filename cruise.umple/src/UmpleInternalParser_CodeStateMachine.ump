@@ -674,6 +674,9 @@ class UmpleInternalParser
     if ("Final".equals(name))
     {
       nextState = new State(name,sm);
+      //Issue492
+      nextState.setPosition(transitionToken.getSubToken("stateName").getPosition());
+ 
     }
     else
     {
@@ -686,11 +689,14 @@ class UmpleInternalParser
       if (nextState == null)
       {
         nextState = new State(name,placeholderStateMachine);
+        //Issue492
+        nextState.setPosition(transitionToken.getSubToken("stateName").getPosition());
         possiblyUnknownStates.put(nextState, new ArrayList<Token>());
         possiblyUnknownStates.get(nextState).add(transitionToken);
       }
     }
     
+   
     return nextState;
   }
   
@@ -705,6 +711,8 @@ class UmpleInternalParser
 	    if ("Final".equals(name))
 	    {
 	      nextState = new State(name,sm);
+	      //Issue 492
+	      nextState.setPosition(transitionToken.getSubToken("toState").getPosition());
 	    }
 	    else
 	    {
@@ -717,10 +725,13 @@ class UmpleInternalParser
 	      if (nextState == null)
 	      {
 	        nextState = new State(name,placeholderStateMachine);
+	        //Issue 492
+	        nextState.setPosition(transitionToken.getSubToken("toState").getPosition());
 	        possiblyUnknownStates.put(nextState, new ArrayList<Token>());
 	        possiblyUnknownStates.get(nextState).add(transitionToken);
 	      }
 	    }
+	    
 	    return nextState;
 	  }
 	  
@@ -775,12 +786,16 @@ class UmpleInternalParser
     if (s == null)
     {
       s = new State(stateToken.getValue("stateName"),sm);
+      //Issue 492
+      s.setPosition(stateToken.getPosition());
     }
     if (s.getIsHistoryState() || s.getIsDeepHistoryState())
     {
       setFailedPosition(stateToken.getPosition(), 63, stateToken.getName());
     }
     possiblyUnknownStates.remove(s);
+    
+
     return s;
   }
 
@@ -942,6 +957,7 @@ class UmpleInternalParser
           s.setIsStartState(true);
         }
         addNewSm = false;
+        
         analyzeState(subToken, s);
       }
     }
@@ -965,6 +981,11 @@ class UmpleInternalParser
 	   if (fromState == null)
 	   {
 		    fromState = new State(state,placeholderStateMachine);
+		    
+		    //Issue 492
+		    
+		    fromState.setPosition(transitionToken.getSubToken("fromState").getPosition());
+		    
 	        possiblyUnknownStates.put(fromState, new ArrayList<Token>());
 	        possiblyUnknownStates.get(fromState).add(transitionToken);
 	   }

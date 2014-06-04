@@ -32,6 +32,39 @@ public class UmpleParserStateMachineTest
     pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler");
   }
   
+  //Issue 492
+  @Test
+  public void nonReachableState()
+  {
+	assertNoWarnings("100_nonReachableState6.ump");
+	
+	assertHasWarning("100_nonReachableState2.ump", 1, 67, new Position("100_nonReachableState2.ump", 13, 6, 140));  
+	
+	for( ErrorMessage er: parser.getParseResult().getErrorMessages())
+		System.out.println(er.getFormattedMessage());
+	
+	assertHasWarning("100_nonReachableState4.ump", 0, 67, new Position("100_nonReachableState4.ump", 5, 5, 52));
+	for( ErrorMessage er: parser.getParseResult().getErrorMessages())
+		System.out.println(er.getFormattedMessage());
+	
+	assertHasWarning("100_nonReachableState3.ump", 0, 67, new Position("100_nonReachableState3.ump", 5, 5, 52));
+	for( ErrorMessage er: parser.getParseResult().getErrorMessages())
+		System.out.println(er.getFormattedMessage());
+	
+	//Enum does not raise warning about unreachable state
+	assertNoWarnings("100_nonReachableState.ump");
+	for( ErrorMessage er: parser.getParseResult().getErrorMessages())
+		System.out.println(er.getFormattedMessage());
+  
+	assertHasWarning("100_nonReachableState5.ump", 0, 67, new Position("100_nonReachableState5.ump", 11, 8, 106));
+	for( ErrorMessage er: parser.getParseResult().getErrorMessages())
+		System.out.println(er.getFormattedMessage());
+	
+	assertHasWarning("100_nonReachableState7.ump", 0, 67, new Position("100_nonReachableState7.ump", 7, 4, 56));
+	for( ErrorMessage er: parser.getParseResult().getErrorMessages())
+		System.out.println(er.getFormattedMessage());
+  }
+  
   @Test
   public void stateMachineComments()
   {
@@ -881,7 +914,7 @@ public class UmpleParserStateMachineTest
 	    for(int i = 0; i < transition.size(); i++)
 		  System.out.println(transition.get(i).getEvent().getName());
 	    
-	    assertHasWarning("212_standAloneTransition6.ump", 0, 50, new Position("212_standAloneTransition6.ump", 4, 2, 33));
+	    assertHasWarning("212_standAloneTransition6.ump", 2, 50, new Position("212_standAloneTransition6.ump", 4, 2, 33));
 		
 	    
   }
@@ -1119,8 +1152,8 @@ public class UmpleParserStateMachineTest
 	  assertParse("105_multipleTransitionsUsingDeclaredState.ump","[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:state1][transition][event:e1][stateName:state2][state][stateName:state2][transition][event:e2][stateName:state4][state][stateName:state3][transition][event:e3][stateName:state4][state][stateName:state4][transition][event:e4][stateName:state3]");
 	  //Make sure it throws an warning when a state in a transition has not been declared.
 	  assertHasWarning("105_transitionUsingUndeclaredState.ump", 0, 50, new Position("105_transitionUsingUndeclaredState.ump", 7, 6, 75));
-	  assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 0, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 7, 6, 75));
-	  assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 1, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 10, 6, 113));
+	  assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 1, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 7, 6, 75));
+	  assertHasWarning("105_multipleTransitionsUsingUndeclaredState.ump", 2, 50, new Position("105_multipleTransitionsUsingUndeclaredState.ump", 10, 6, 113));
   }
   
   @Test

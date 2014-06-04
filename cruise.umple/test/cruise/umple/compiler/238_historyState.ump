@@ -1,25 +1,29 @@
-class X{
-  sm{
-    s1{
-      ss1{
-        e -> s2.ss1.H;
-      }
-      ss2{
-        e1 -> s2.ss2;
-      }
-    }
-    s2{
-      ss1{
-        sss1{
-          
-        }
-        sss2{
-          
-        }
-      }
-      ss2{
-        
-      }
-    }
-  }
-}
+	class X{
+	  sm{
+	    s1{
+	      ss1{
+	        e -> s2.ss1.H;
+	        e2 -> sss1;
+	        e3 -> s2.ss2;
+	        e4 -> s1.ss2;
+	        e5 -> sss2;
+	      }
+	      ss2{
+	        e1 -> s2.ss2;
+	      }
+	    }
+	    s2{
+	      ss1{
+	        sss1{
+	          
+	        }
+	        sss2{
+	          
+	        }
+	      }
+	      ss2{
+	        
+	      }
+	    }
+	  }
+	}
