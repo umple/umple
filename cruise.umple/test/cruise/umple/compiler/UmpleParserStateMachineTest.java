@@ -968,7 +968,27 @@ public class UmpleParserStateMachineTest
 	    on = sm.getStates();
 	    
 	    for(int i = 0; i < on.size(); i++)
-	      System.out.println(on.get(i).getName());	   
+	      System.out.println(on.get(i).getName());	  
+	    
+	    
+	    //Issue 580
+	    assertParse("212_mixin_state6.ump","[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][state][stateName:s1a][state][stateName:s1b][state][stateName:s1][state][stateName:s1c]");
+	    
+	    uClass = model.getUmpleClass("X");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());	  
+	    
+	    assertParse("212_mixin_state7.ump","[classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][state][stateName:s1a][state][stateName:s1b][state][stateName:s1][state][stateName:s1c][classDefinition][name:X][stateMachine][inlineStateMachine][name:sm][state][stateName:s1][state][stateName:s1d][state][stateName:s1e][state][stateName:s1][state][stateName:s1a][state][stateName:s1a2]");
+	    
+	    uClass = model.getUmpleClass("X");
+	    sm = uClass.getStateMachine(0);
+	    on = sm.getStates();
+	    
+	    for(int i = 0; i < on.size(); i++)
+	      System.out.println(on.get(i).getName());	  
 	    
   }
   @Test
