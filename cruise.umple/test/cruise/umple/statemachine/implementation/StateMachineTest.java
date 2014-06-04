@@ -573,4 +573,28 @@ public class StateMachineTest extends StateMachineTemplateTest
   {
     assertUmpleTemplateFor("nestedStates_Two_TimedTransition.ump",languagePath + "/nestedStates_Two_TimedTransition."+ languagePath +".txt","X");
   }
+
+  @Test
+  public void queuedStateMachine_timedTransition_1()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_timedTransition_1.ump",languagePath + "/queuedStateMachine_timedTransition_1."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void pooledStateMachine_timedTransition_1()
+  {
+    assertUmpleTemplateFor("pooledStateMachine_timedTransition_1.ump",languagePath + "/pooledStateMachine_timedTransition_1."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void queuedStateMachine_timedTransition_2()
+  {
+    assertUmpleTemplateFor("queuedStateMachine_timedTransition_2.ump",languagePath + "/queuedStateMachine_timedTransition_2."+ languagePath +".txt","X");
+  }
+  
+  @Test
+  public void pooledStateMachine_timedTransition_2()
+  {
+    assertUmpleTemplateFor("pooledStateMachine_timedTransition_2.ump",languagePath + "/pooledStateMachine_timedTransition_2."+ languagePath +".txt","X");
+  }
 }

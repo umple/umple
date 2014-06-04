@@ -1,0 +1,22 @@
+class X {
+  queued sm {
+    s0 {
+      entry / {a();}
+      ev0 -> s1;
+    }
+    s1 {
+      after(2) -> s2;
+      ev1 -> s3;
+    }
+    s2 {
+      ev2 -> s4;
+    }
+    s3 {
+      ev3 -> s4;
+    }
+    s4 {}
+  }
+  void a() {
+    System.out.println("a running");
+  }
+}

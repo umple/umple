@@ -9,8 +9,9 @@ public class PooledStateMachine_timedEvent
   public void numberOfMessagesInMessageType()
   {
 	  // compare the number of messages in MessageType is equal to the number of events in State Machine except timed events and auto-transition
-	  Assert.assertEquals(1, Mentor.MessageType.values().length);
+	  Assert.assertEquals(2, Mentor.MessageType.values().length);
 	  Assert.assertEquals(true, Mentor.MessageType.valueOf("null_M").equals(Mentor.MessageType.null_M));
+	  Assert.assertEquals(true, Mentor.MessageType.valueOf("timeoutOkToNotOk_M").equals(Mentor.MessageType.timeoutOkToNotOk_M));
   }
   
   @Test 

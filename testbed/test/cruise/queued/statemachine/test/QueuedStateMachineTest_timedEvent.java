@@ -11,7 +11,7 @@ public class QueuedStateMachineTest_timedEvent
   public void numberOfMessagesInMessageType()
   {
     // compare the number of messages in MessageType is equal to the number of events in State Machine except timed events and auto-transition
-    Assert.assertEquals(0, QueuedSM_timedEvent.MessageType.values().length); 
+    Assert.assertEquals(1, QueuedSM_timedEvent.MessageType.values().length); 
   }
   
   @Test

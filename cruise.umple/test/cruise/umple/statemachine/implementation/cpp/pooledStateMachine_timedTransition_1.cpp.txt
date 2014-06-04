@@ -1,0 +1,197 @@
+/* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+#include "X.h"
+
+	
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  
+ X::X()
+  {
+    setSm(s0);
+  }
+  
+  //------------------------
+  // COPY CONSTRUCTOR
+  //------------------------
+
+ X::X(const X & x)
+  {  }
+  	
+  //------------------------
+  // Operator =
+  //------------------------
+
+ X X::operator=(const X & x)
+  {  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  string X::getSmFullName()
+  {
+    string answer = getSmStringName(sm);
+    return answer;
+  }
+  
+  X::Sm X::getSm()
+  {
+    return sm;
+  }
+
+  string X::getSmStringName (Sm sm)
+  {
+    switch (sm)  {
+      case 0 : {return "s0"; break;}
+      case 1 : {return "s1"; break;}
+      case 2 : {return "s2"; break;}
+      case 3 : {return "s3"; break;}
+      case 4 : {return "s4"; break;}
+      default: {return ""; break;}
+    }
+  }
+
+  bool X::ev0()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s0:
+        setSm(s1);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::timeouts1Tos2()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s1:
+        exitSm();
+        setSm(s2);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::ev2()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s2:
+        setSm(s4);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  bool X::ev3()
+  {
+    bool wasEventProcessed = false;
+
+    switch (sm)
+    {
+      case s3:
+        setSm(s4);
+        wasEventProcessed = true;
+        break;
+    }
+
+    return wasEventProcessed;
+  }
+
+  void X::exitSm()
+  {
+    switch(sm)
+    {
+      case s1:
+        stopTimeouts1Tos2Handler();
+        break;
+    }
+  }
+
+  void X::setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case s0:
+        a();
+        break;
+      case s1:
+        startTimeouts1Tos2Handler();
+        break;
+    }
+  }
+  
+
+  void startTimeouts1Tos2Handler();
+  void stopTimeouts1Tos2Handler();
+  
+
+
+  public static class TimedEventHandler extends TimerTask  
+  {
+    private X controller;
+    private String timeoutMethodName;
+    private double howLongInSeconds;
+    private Timer timer;
+    
+    public TimedEventHandler(X aController, String aTimeoutMethodName, double aHowLongInSeconds)
+    {
+      controller = aController;
+      timeoutMethodName = aTimeoutMethodName;
+      howLongInSeconds = aHowLongInSeconds;
+      timer = new Timer();
+      timer.schedule(this, (long)howLongInSeconds*1000);
+    }
+    
+    public void X::stop()
+    {
+      timer.cancel();
+    }
+    
+    public void X::run ()
+    {
+      if ("timeouts1Tos2" == timeoutMethodName)
+      {
+        boolean shouldRestart = !controller.timeouts1Tos2();
+        if (shouldRestart)
+        {
+          controller.startTimeouts1Tos2Handler();
+        }
+        return;
+      }
+    }
+  }
+
+  
+  //------------------------
+  // DESTRUCTOR
+  //------------------------
+  
+X::~X()
+  {}
+
+
+   void X::a(){
+      System.out.println("a running");
+  }

@@ -260,24 +260,20 @@ class JavaGenerator
             {
               if(!t.getEvent().isAutoTransition())
               {
-                if(!t.getEvent().getIsTimer())
+                if(!t.getEvent().isUnspecified())
                 {
-                  if(!t.getEvent().isUnspecified())
+                  if (allEventEnums.length() > 0)
                   {
-                    if (allEventEnums.length() > 0)
-                    {
-                      allEventEnums += ", ";
-                    }
-                    allEventEnums += "MessageType.";
-                    allEventEnums += t.getEvent().getName();
-                    allEventEnums += "_M";
+                    allEventEnums += ", ";
                   }
+                  allEventEnums += "MessageType.";
+                  allEventEnums += t.getEvent().getName();
+                  allEventEnums += "_M";
                 }
               }
             }
           
             int countingAutoTrans = 0;
-            int countingTimer = 0;
             int countingUnspec = 0;
             int countingResult = 0;
             int countingSize = state.getTransitions().size();
@@ -287,16 +283,12 @@ class JavaGenerator
               {
                 countingAutoTrans++;
               }
-              if(t.getEvent().getIsTimer())
-              {
-                countingTimer++;
-              }
               if(t.getEvent().isUnspecified())
               {
                 countingUnspec++;
               }    
             }
-            countingResult = countingAutoTrans+countingTimer+countingUnspec;
+            countingResult = countingAutoTrans+countingUnspec;
             if(countingResult == countingSize)
             {
               allEventEnums += "MessageType.null_M";
@@ -330,24 +322,20 @@ class JavaGenerator
             {
               if(!t.getEvent().isAutoTransition())
               {
-                if(!t.getEvent().getIsTimer())
+                if(!t.getEvent().isUnspecified())
                 {
-                  if(!t.getEvent().isUnspecified())
+                  if (allEventEnums.length() > 0)
                   {
-                    if (allEventEnums.length() > 0)
-                    {
-                      allEventEnums += ", ";
-                    }
-                    allEventEnums += "MessageType.";
-                    allEventEnums += t.getEvent().getName();
-                    allEventEnums += "_M";
+                    allEventEnums += ", ";
                   }
+                  allEventEnums += "MessageType.";
+                  allEventEnums += t.getEvent().getName();
+                  allEventEnums += "_M";
                 }
               }
             }
           
             int countAutoTrans = 0;
-            int countTimer = 0;
             int countUnspec = 0;
             int result = 0;
             int size = state.getTransitions().size();
@@ -357,16 +345,12 @@ class JavaGenerator
               {
                 countAutoTrans++;
               }
-              if(t.getEvent().getIsTimer())
-              {
-                countTimer++;
-              }
               if(t.getEvent().isUnspecified())
               {
                 countUnspec++;
               }
             }
-            result = countAutoTrans+countTimer+countUnspec;
+            result = countAutoTrans+countUnspec;
             if(result == size)
             {
               allEventEnums += "MessageType.null_M";
@@ -422,26 +406,23 @@ class JavaGenerator
               {
                 if(!t.getEvent().isAutoTransition())
                 {
-                  if(!t.getEvent().getIsTimer())
+                  if(!t.getEvent().isUnspecified())
                   {
-                    if(!t.getEvent().isUnspecified())
+                    if(!t.getEvent().getName().equals(exitEve))
                     {
-                      if(!t.getEvent().getName().equals(exitEve))
+                      if(!t.getEvent().getName().equals(enterEve))
                       {
-                        if(!t.getEvent().getName().equals(enterEve))
+                        if(!t.getEvent().getName().equals(exitEveName))
                         {
-                          if(!t.getEvent().getName().equals(exitEveName))
+                          if(!t.getEvent().getName().equals(enterEveName))
                           {
-                            if(!t.getEvent().getName().equals(enterEveName))
+                            if (allEventEnums.length() > 0)
                             {
-                              if (allEventEnums.length() > 0)
-                              {
-                                allEventEnums += ", ";
-                              }
-                              allEventEnums += "MessageType.";
-                              allEventEnums += t.getEvent().getName();
-                              allEventEnums += "_M";
+                              allEventEnums += ", ";
                             }
+                            allEventEnums += "MessageType.";
+                            allEventEnums += t.getEvent().getName();
+                            allEventEnums += "_M";
                           }
                         }
                       }
@@ -451,7 +432,6 @@ class JavaGenerator
               }
             
               int countNestedAutoTrans = 0;
-              int countNestedTimer = 0;
               int countNestedUnspec = 0;
               int nestedResult = 0;
               int nestedSize = state.getTransitions().size();
@@ -461,16 +441,12 @@ class JavaGenerator
                 {
                   countNestedAutoTrans++;
                 }
-                if(t.getEvent().getIsTimer())
-                {
-                  countNestedTimer++;
-                }
                 if(t.getEvent().isUnspecified())
                 {
                   countNestedUnspec++;
                 }
               }
-              nestedResult = countNestedAutoTrans+countNestedTimer+countNestedUnspec;
+              nestedResult = countNestedAutoTrans+countNestedUnspec;
               if(nestedResult == nestedSize)
               {
                 allEventEnums += "MessageType.null_M";
@@ -646,22 +622,19 @@ class JavaGenerator
               {
                 if (!event.isAutoTransition())
                 {
-                  if(!event.getIsTimer())
+                  if(!event.isUnspecified())
                   {
-                    if(!event.isUnspecified())
+                    if(!evName.equals(event.getName()))
                     {
-                      if(!evName.equals(event.getName()))
+                      evList.add(event.getName());
+             
+                      if (allEnums.length() > 0)
                       {
-                        evList.add(event.getName());
-               
-                        if (allEnums.length() > 0)
-                        {
-                          allEnums += ", ";
-                        }
-                        allEnums += translate("eventMethod",event);
-                        allEnums += "_M";
-                        evName=event.getName();
+                        allEnums += ", ";
                       }
+                      allEnums += translate("eventMethod",event);
+                      allEnums += "_M";
+                      evName=event.getName();
                     }
                   }
                 }
@@ -688,12 +661,9 @@ class JavaGenerator
                   {
                     if (!event.isAutoTransition())
                     {
-                      if(!event.getIsTimer())
+                      if(!event.isUnspecified())
                       {
-                        if(!event.isUnspecified())
-                        {
-                          found =true;
-                        }
+                        found =true;
                       }
                     }
                   }
@@ -725,23 +695,20 @@ class JavaGenerator
                   {
                     if (!event.isAutoTransition())
                     {
-                      if(!event.getIsTimer())
+                      if(!event.isUnspecified())
                       {
-                        if(!event.isUnspecified())
+                        if(!evName.equals(event.getName()))
                         {
-                          if(!evName.equals(event.getName()))
-                          {
-                            evList.add(event.getName());
+                          evList.add(event.getName());
               
-                            if (allNesEvenEnums.length() > 0)
-                            {
-                              allNesEvenEnums += ", ";
-                            }
-                            allNesEvenEnums += translate("eventMethod",event);
-                            allNesEvenEnums += "_M"; 
-                            evName=event.getName();
-                          } 
-                        }
+                          if (allNesEvenEnums.length() > 0)
+                          {
+                            allNesEvenEnums += ", ";
+                          }
+                          allNesEvenEnums += translate("eventMethod",event);
+                          allNesEvenEnums += "_M"; 
+                          evName=event.getName();
+                        } 
                       }
                     }
                   }
@@ -768,22 +735,19 @@ class JavaGenerator
               {
                 if (!event.isAutoTransition())
                 {
-                  if(!event.getIsTimer())
+                  if(!event.isUnspecified())
                   {
-                    if(!event.isUnspecified())
+                    if( !evName.equals(event.getName()))
                     {
-                      if( !evName.equals(event.getName()))
+                      evList.add(event.getName());
+             
+                      if (allEnums.length() > 0)
                       {
-                        evList.add(event.getName());
-              
-                        if (allEnums.length() > 0)
-                        {
-                          allEnums += ", ";
-                        }
-                        allEnums += translate("eventMethod",event);
-                        allEnums += "_M";
-                        evName=event.getName();
+                        allEnums += ", ";
                       }
+                      allEnums += translate("eventMethod",event);
+                      allEnums += "_M";
+                      evName=event.getName();
                     }
                   }
                 }
@@ -812,22 +776,19 @@ class JavaGenerator
                 {
                   if (!event.isAutoTransition())
                   {
-                    if(!event.getIsTimer())
+                    if(!event.isUnspecified())
                     {
-                      if(!event.isUnspecified())
+                      if( !evName.equals(event.getName()))
                       {
-                        if( !evName.equals(event.getName()))
+                        evList.add(event.getName());
+             
+                        if (allEnums.length() > 0 )
                         {
-                          evList.add(event.getName());
-              
-                          if (allEnums.length() > 0 )
-                          {
-                            allEnums += ", ";
-                          }
-                          allEnums += translate("eventMethod",event);
-                          allEnums += "_M"; 
-                          evName=event.getName();
+                          allEnums += ", ";
                         }
+                        allEnums += translate("eventMethod",event);
+                        allEnums += "_M"; 
+                        evName=event.getName();
                       }
                     } 
                   }
@@ -854,22 +815,19 @@ class JavaGenerator
             {
               if (!event.isAutoTransition())
               {
-                if(!event.getIsTimer())
+                if(!event.isUnspecified())
                 {
-                  if(!event.isUnspecified())
+                  if( !evName.equals(event.getName()))
                   {
-                    if( !evName.equals(event.getName()))
-                    {
-                      evList.add(event.getName());
+                    evList.add(event.getName());
               
-                      if (allEnums.length() > 0)
-                      {
-                        allEnums += ", ";
-                      }
-                      allEnums += translate("eventMethod",event);
-                      allEnums += "_M";
-                      evName=event.getName();
+                    if (allEnums.length() > 0)
+                    {
+                      allEnums += ", ";
                     }
+                    allEnums += translate("eventMethod",event);
+                    allEnums += "_M";
+                    evName=event.getName();
                   }
                 }
               }
@@ -924,21 +882,18 @@ class JavaGenerator
               {
                 if (!event.isAutoTransition())
                 {
-                  if(!event.getIsTimer())
+                  if(!event.isUnspecified())
                   {
-                    if(!event.isUnspecified())
+                    if( !evName.equals(event.getName()))
                     {
-                      if( !evName.equals(event.getName()))
+                      evList.add(event.getName());
+                      if (allEnums.length() > 0)
                       {
-                        evList.add(event.getName());
-                        if (allEnums.length() > 0)
-                        {
-                          allEnums += ", ";
-                        }
-                        allEnums += translate("eventMethod",event);
-                        allEnums += "_M";
-                        evName=event.getName();
+                        allEnums += ", ";
                       }
+                      allEnums += translate("eventMethod",event);
+                      allEnums += "_M";
+                      evName=event.getName();
                     }
                   }
                 }
@@ -983,22 +938,19 @@ class JavaGenerator
                   {
                     if (!event.isAutoTransition())
                     {
-                      if(!event.getIsTimer())
+                      if(!event.isUnspecified())
                       {
-                        if(!event.isUnspecified())
+                        if( !evName.equals(event.getName()))
                         {
-                          if( !evName.equals(event.getName()))
+                          evList.add(event.getName());
+             
+                          if (allNesEvenEnums.length() > 0)
                           {
-                            evList.add(event.getName());
-              
-                            if (allNesEvenEnums.length() > 0)
-                            {
-                              allNesEvenEnums += ", ";
-                            }
-                            allNesEvenEnums += translate("eventMethod",event);
-                            allNesEvenEnums += "_M"; 
-                            evName=event.getName();
-                          } 
+                            allNesEvenEnums += ", ";
+                          }
+                          allNesEvenEnums += translate("eventMethod",event);
+                          allNesEvenEnums += "_M"; 
+                          evName=event.getName();
                         }
                       }
                     }
@@ -1028,21 +980,18 @@ class JavaGenerator
               {
                 if (!event.isAutoTransition())
                 {
-                  if(!event.getIsTimer())
+                  if(!event.isUnspecified())
                   {
-                    if(!event.isUnspecified())
+                    if( !evName.equals(event.getName()))
                     {
-                      if( !evName.equals(event.getName()))
+                      evList.add(event.getName());
+                      if (allEnums.length() > 0)
                       {
-                        evList.add(event.getName());
-                        if (allEnums.length() > 0)
-                        {
-                          allEnums += ", ";
-                        }
-                        allEnums += translate("eventMethod",event);
-                        allEnums += "_M";
-                        evName=event.getName();
+                        allEnums += ", ";
                       }
+                      allEnums += translate("eventMethod",event);
+                      allEnums += "_M";
+                      evName=event.getName();
                     }
                   }
                 }
@@ -1071,22 +1020,19 @@ class JavaGenerator
                 {
                   if (!event.isAutoTransition())
                   {
-                    if(!event.getIsTimer())
+                    if(!event.isUnspecified())
                     {
-                      if(!event.isUnspecified())
+                      if(!evName.equals(event.getName()))
                       {
-                        if(!evName.equals(event.getName()))
+                        evList.add(event.getName());
+             
+                        if (allEnums.length() > 0 )
                         {
-                          evList.add(event.getName());
-              
-                          if (allEnums.length() > 0 )
-                          {
-                            allEnums += ", ";
-                          }
-                          allEnums += translate("eventMethod",event);
-                          allEnums += "_M"; 
-                          evName=event.getName();
+                          allEnums += ", ";
                         }
+                        allEnums += translate("eventMethod",event);
+                        allEnums += "_M"; 
+                        evName=event.getName();
                       }
                     } 
                   }
@@ -1113,21 +1059,18 @@ class JavaGenerator
             {
               if (!event.isAutoTransition())
               {
-                if(!event.getIsTimer())
+                if(!event.isUnspecified())
                 {
-                  if(!event.isUnspecified())
+                  if(!evName.equals(event.getName()))
                   {
-                    if(!evName.equals(event.getName()))
+                    evList.add(event.getName());
+                    if (allEnums.length() > 0)
                     {
-                      evList.add(event.getName());
-                      if (allEnums.length() > 0)
-                      {
-                        allEnums += ", ";
-                      }
-                      allEnums += translate("eventMethod",event);
-                      allEnums += "_M";
-                      evName=event.getName();
+                      allEnums += ", ";
                     }
+                    allEnums += translate("eventMethod",event);
+                    allEnums += "_M";
+                    evName=event.getName();
                   }
                 }
               }
@@ -1144,7 +1087,6 @@ class JavaGenerator
             if(!state.getTransitions().isEmpty())
             {
               int cAutoTrans = 0;
-              int cTimer = 0;
               int cUnspec = 0;
               int cResult = 0;
               int cSize = state.getTransitions().size();
@@ -1154,16 +1096,12 @@ class JavaGenerator
                 {
                   cAutoTrans++;
                 }
-                if(t.getEvent().getIsTimer())
-                {
-                  cTimer++;
-                }
                 if(t.getEvent().isUnspecified())
                 {
                   cUnspec++;
                 }
               }
-              cResult = cAutoTrans+cTimer+cUnspec;
+              cResult = cAutoTrans+cUnspec;
               if(cSize == cResult)
               {
                 if (!allEnums.contains("null_M"))
@@ -1202,7 +1140,6 @@ class JavaGenerator
             if(!state.getTransitions().isEmpty())
             {
               int countAutoTrans = 0;
-              int countTimer = 0;
               int countUnspec = 0;
               int result = 0;
               int size = state.getTransitions().size();
@@ -1212,16 +1149,12 @@ class JavaGenerator
                 {
                   countAutoTrans++;
                 }
-                if(t.getEvent().getIsTimer())
-                {
-                  countTimer++;
-                }
                 if(t.getEvent().isUnspecified())
                 {
                   countUnspec++;
                 }
               }
-              result = countAutoTrans+countTimer+countUnspec;
+              result = countAutoTrans+countUnspec;
               if(result == size)
               {
                 if (!allEnums.contains("null_M")) 
@@ -1269,7 +1202,6 @@ class JavaGenerator
               if(!state.getTransitions().isEmpty())
               { 
                 int countNestedAutoTrans = 0;
-                int countNestedTimer = 0;
                 int countNestedUnspec = 0;
                 int countExit = 0;
                 int countEnter = 0;
@@ -1280,10 +1212,6 @@ class JavaGenerator
                   if(t.getEvent().isAutoTransition())
                   {
                     countNestedAutoTrans++;
-                  }
-                  if(t.getEvent().getIsTimer())
-                  {
-                    countNestedTimer++;
                   }
                   if(t.getEvent().isUnspecified())
                   {
@@ -1298,7 +1226,7 @@ class JavaGenerator
                     countEnter++;
                   }
                 }
-                nestedResult = countNestedAutoTrans+countNestedTimer+countNestedUnspec+countExit+countEnter;
+                nestedResult = countNestedAutoTrans+countNestedUnspec+countExit+countEnter;
                 if(nestedResult == nestedSize)
                 {
                   if (!allEnums.contains("null_M")) 

@@ -29,51 +29,73 @@
         {
           if(event.isAutoTransition() == false)
           {
-            if(!event.getIsTimer())
+            if(event.getIsTimer())
             {
-              if(!event.isUnspecified())
-              {
-                if( !evName.equals(event.getName()))
-                {
-                  evList.add(event.getName());
-                  append(stringBuffer,"\n");
-                  append(stringBuffer,"  public void ");
-                  append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
-                  append(stringBuffer,"\n  {");
+               evList.add(event.getName());
+               append(stringBuffer,"\n");
+               append(stringBuffer,"  public boolean ");
+               append(stringBuffer,"{0} ()",gen.translate("eventMethod",event));
+               append(stringBuffer,"\n  {");
+               append(stringBuffer,"\n    boolean wasAdded = false;");
           
-                  if (!event.getArgs().equals(""))
+               if(sm.isQueued())
+               {
+                 append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+               }
+               if(sm.isPooled())
+               {
+                 append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+               }
+               append(stringBuffer,"_M, null));");
+       
+               append(stringBuffer,"\n    wasAdded = true;");
+               append(stringBuffer,"\n    return wasAdded;");
+               append(stringBuffer,"\n  }");
+               append(stringBuffer,"\n");
+               evName = event.getName();
+            }
+            if(!event.isUnspecified())
+            {
+              if( !evName.equals(event.getName()))
+              {
+                evList.add(event.getName());
+                append(stringBuffer,"\n");
+                append(stringBuffer,"  public void ");
+                append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",event), event.getArgs());
+                append(stringBuffer,"\n  {");
+          
+                if (!event.getArgs().equals(""))
+                {
+                  append(stringBuffer,"\n    Vector v = new Vector({0});", event.getParams().size());
+                  for ( int i=0; i < event.getParams().size(); i++)
                   {
-                    append(stringBuffer,"\n    Vector v = new Vector({0});", event.getParams().size());
-                    for ( int i=0; i < event.getParams().size(); i++)
-                    {
-                      append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
-                    }
-                    if(sm.isQueued())
-                    {
-                      append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
-                    }
-                    if(sm.isPooled())
-                    {
-                      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
-                    }
-                    append(stringBuffer,"_M, v));");
+                    append(stringBuffer,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
                   }
-                  else
+                  if(sm.isQueued())
                   {
-                    if(sm.isQueued())
-                    {
-                      append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
-                    }
-                    if(sm.isPooled())
-                    {
-                      append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
-                    }
-                    append(stringBuffer,"_M, null));");
+                    append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
                   }
-                  append(stringBuffer,"\n  }");
-                  append(stringBuffer,"\n");
-                  evName = event.getName();
+                  if(sm.isPooled())
+                  {
+                    append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                  }
+                  append(stringBuffer,"_M, v));");
                 }
+                else
+                {
+                  if(sm.isQueued())
+                  {
+                    append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                  }
+                  if(sm.isPooled())
+                  {
+                    append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",event));
+                  }
+                  append(stringBuffer,"_M, null));");
+                }
+                append(stringBuffer,"\n  }");
+                append(stringBuffer,"\n");
+                evName = event.getName();
               }
             }
           }
@@ -98,54 +120,76 @@
           {
             if(e.isAutoTransition() == false)
             {
-              if(!e.getIsTimer())
+              if(e.getIsTimer())
               {
-                if(!e.isUnspecified())
+                evList.add(e.getName());
+                append(stringBuffer,"\n");
+                append(stringBuffer,"  public boolean ");
+                append(stringBuffer,"{0} ()",gen.translate("eventMethod",e));
+                append(stringBuffer,"\n  {");
+                append(stringBuffer,"\n    boolean wasAdded = false;");
+          
+                if(sm.isQueued())
                 {
-                   if(e.getIsInternal() == false)
+                  append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                }
+                if(sm.isPooled())
+                {
+                  append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                }
+                append(stringBuffer,"_M, null));");
+       
+                append(stringBuffer,"\n    wasAdded = true;");
+                append(stringBuffer,"\n    return wasAdded;");
+                append(stringBuffer,"\n  }");
+                append(stringBuffer,"\n");
+                evName = e.getName();
+              }
+              if(!e.isUnspecified())
+              {
+                 if(e.getIsInternal() == false)
+                 {
+                   if( !evName.equals(e.getName()))
                    {
-                     if( !evName.equals(e.getName()))
+                     evList.add(e.getName());
+                     append(stringBuffer,"\n");
+                     append(stringBuffer,"  public void ");
+                     append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
+                     append(stringBuffer,"\n  {");
+        
+                     if (!e.getArgs().equals(""))
                      {
                        evList.add(e.getName());
-                       append(stringBuffer,"\n");
-                       append(stringBuffer,"  public void ");
-                       append(stringBuffer,"{0} ({1})",gen.translate("eventMethod",e), e.getArgs());
-                       append(stringBuffer,"\n  {");
-        
-                       if (!e.getArgs().equals(""))
+                       append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
+                       for ( int i=0; i < e.getParams().size(); i++)
                        {
-                         evList.add(e.getName());
-                         append(stringBuffer,"\n    Vector v = new Vector({0});", e.getParams().size());
-                         for ( int i=0; i < e.getParams().size(); i++)
-                         {
-                           append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
-                         }
-                         if(sm.isQueued())
-                         {
-                           append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-                         }
-                         if(sm.isPooled())
-                         {
-                           append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-                         } 
-                         append(stringBuffer,"_M, v));"); 
+                         append(stringBuffer,"\n    v.add({0}, {1});",i, e.getParam(i).getName());
                        }
-                       else
+                       if(sm.isQueued())
                        {
-                         if(sm.isQueued())
-                         {
-                           append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-                         }
-                         if(sm.isPooled())
-                         {
-                           append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
-                         }
-                         append(stringBuffer,"_M, null));");
+                         append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
                        }
-                       append(stringBuffer,"\n  }");
-                       append(stringBuffer,"\n");
-                       evName = e.getName();
+                       if(sm.isPooled())
+                       {
+                         append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       } 
+                       append(stringBuffer,"_M, v));"); 
                      }
+                     else
+                     {
+                       if(sm.isQueued())
+                       {
+                         append(stringBuffer,"\n    queue.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       }
+                       if(sm.isPooled())
+                       {
+                         append(stringBuffer,"\n    pool.put(new Message(MessageType.{0}",gen.translate("eventMethod",e));
+                       }
+                       append(stringBuffer,"_M, null));");
+                     }
+                     append(stringBuffer,"\n  }");
+                     append(stringBuffer,"\n");
+                     evName = e.getName();
                    }
                  }
                }

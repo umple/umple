@@ -41,37 +41,34 @@
              {
                if(event.isAutoTransition() == false)
                {
-                 if(!event.getIsTimer())
+                 if(!event.isUnspecified())
                  {
-                   if(!event.isUnspecified())
+                   if( !eveNameSM.equals(event.getName()))
                    {
-                     if( !eveNameSM.equals(event.getName()))
+                     eventListSM.add(event.getName());
+                     append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
+                     append(stringBuffer,"_M:");
+                     if (!event.getArgs().equals(""))
                      {
-                       eventListSM.add(event.getName());
-                       append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",event));
-                       append(stringBuffer,"_M:");
-                       if (!event.getArgs().equals(""))
+                       append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",event));
+                       String allParameters="";
+                       for ( int i=0; i < event.getParams().size(); i++)
                        {
-                         append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",event));
-                         String allParameters="";
-                         for ( int i=0; i < event.getParams().size(); i++)
+                         if (allParameters.length() > 0)
                          {
-                           if (allParameters.length() > 0)
-                           {
-                             allParameters += ", ";
-                           }
-                           allParameters += "("+event.getParam(i).getType()+") m.param.elementAt("+i+")";
+                           allParameters += ", ";
                          }
-                         append(stringBuffer,"{0});",allParameters);
+                         allParameters += "("+event.getParam(i).getType()+") m.param.elementAt("+i+")";
                        }
-                       else
-                       {
-                         append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
-                         append(stringBuffer,"();");
-                       }
-                       append(stringBuffer,"\n          break;");
-                       eveNameSM = event.getName();
+                       append(stringBuffer,"{0});",allParameters);
                      }
+                     else
+                     {
+                       append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",event));
+                       append(stringBuffer,"();");
+                     }
+                     append(stringBuffer,"\n          break;");
+                     eveNameSM = event.getName();
                    }
                  }
                }
@@ -96,39 +93,36 @@
                {
                  if(e.isAutoTransition() == false)
                  {
-                   if(!e.getIsTimer())
+                   if(!e.isUnspecified())
                    {
-                     if(!e.isUnspecified())
+                     if(e.getIsInternal() == false)
                      {
-                       if(e.getIsInternal() == false)
+                       if( !eveNameSM.equals(e.getName()))
                        {
-                         if( !eveNameSM.equals(e.getName()))
+                         eventListSM.add(e.getName());
+                         append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",e));
+                         append(stringBuffer,"_M:");
+                         if (!e.getArgs().equals(""))
                          {
-                           eventListSM.add(e.getName());
-                           append(stringBuffer,"\n        case {0}",gen.translate("eventMethod",e));
-                           append(stringBuffer,"_M:");
-                           if (!e.getArgs().equals(""))
+                           append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",e));
+                           String allParameters="";
+                           for ( int i=0; i < e.getParams().size(); i++)
                            {
-                             append(stringBuffer,"\n          status = _{0}(",gen.translate("eventMethod",e));
-                             String allParameters="";
-                             for ( int i=0; i < e.getParams().size(); i++)
+                             if (allParameters.length() > 0)
                              {
-                               if (allParameters.length() > 0)
-                               {
-                                 allParameters += ", ";
-                               }
-                               allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
+                               allParameters += ", ";
                              }
-                             append(stringBuffer,"{0});",allParameters);
+                             allParameters += "("+e.getParam(i).getType()+") m.param.elementAt("+i+")";
                            }
-                           else
-                           {
-                             append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",e));
-                             append(stringBuffer,"();");
-                           }
-                           append(stringBuffer,"\n          break;");
-                           eveNameSM = e.getName();
+                           append(stringBuffer,"{0});",allParameters);
                          }
+                         else
+                         {
+                           append(stringBuffer,"\n          status = _{0}",gen.translate("eventMethod",e));
+                           append(stringBuffer,"();");
+                         }
+                         append(stringBuffer,"\n          break;");
+                         eveNameSM = e.getName();
                        }
                      }
                    }
