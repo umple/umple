@@ -208,7 +208,7 @@
   
   String scope = e.getIsInternal() || e.isAutoTransition() ? "private" : "public";
   String eventOutput = allDeclarations.toString() + allCases.toString();%>
-  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.getIsTimer() && !e.isUnspecified()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false  && !e.getIsTimer() && !e.isUnspecified())){append(stringBuffer,"_");}break;}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%><%if(e.isUnspecified()){append(stringBuffer,"String state, String event");}%>)
+  <%= scope %> boolean <%for (StateMachine sm : uClass.getStateMachines()){if((sm.isQueued() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.isUnspecified()) || (sm.isPooled() && e.getIsInternal() == false && e.isAutoTransition() == false && !e.isUnspecified())){append(stringBuffer,"_");}break;}%><%=gen.translate("eventMethod",e)%>(<%= (e.getArgs()==null?"":e.getArgs())%><%if(e.isUnspecified()){append(stringBuffer,"String state, String event");}%>)
   {<% if (customEventPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customEventPrefixCode,gen.translate("eventMethod",e));
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customEventPrefixCode, "    ")); } %>
     boolean wasEventProcessed = false;

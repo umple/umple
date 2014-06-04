@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3544 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
 import java.util.*;
@@ -20,7 +20,7 @@ public class Mentor implements Runnable
   private Status status;
   
   //enumeration type of messages accepted by Mentor
-  enum MessageType {  }
+  enum MessageType { timeoutOkToNotOk_M, timeoutNotOkToOk_M }
   
   MessageQueue queue;
   Thread removal;
@@ -71,7 +71,7 @@ public class Mentor implements Runnable
     return status;
   }
 
-  public boolean timeoutOkToNotOk()
+  public boolean _timeoutOkToNotOk()
   {
     boolean wasEventProcessed = false;
     
@@ -90,7 +90,7 @@ public class Mentor implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean timeoutNotOkToOk()
+  public boolean _timeoutNotOkToOk()
   {
     boolean wasEventProcessed = false;
     
@@ -253,6 +253,22 @@ public class Mentor implements Runnable
   //messages accepted 
   //------------------------------
 
+  public boolean timeoutOkToNotOk ()
+  {
+    boolean wasAdded = false;
+    queue.put(new Message(MessageType.timeoutOkToNotOk_M, null));
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean timeoutNotOkToOk ()
+  {
+    boolean wasAdded = false;
+    queue.put(new Message(MessageType.timeoutNotOkToOk_M, null));
+    wasAdded = true;
+    return wasAdded;
+  }
+
   
   @Override
   public void run ()
@@ -263,7 +279,13 @@ public class Mentor implements Runnable
       Message m = queue.getNext();
       
       switch (m.type)
-      { 
+      {
+        case timeoutOkToNotOk_M:
+          status = _timeoutOkToNotOk();
+          break;
+        case timeoutNotOkToOk_M:
+          status = _timeoutNotOkToOk();
+          break; 
         default:
       }
       if(!status)

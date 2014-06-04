@@ -1,0 +1,126 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+class X
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X State Machines
+  private static $SmS0 = 1;
+  private static $SmS1 = 2;
+  private static $SmS2 = 3;
+  private static $SmS3 = 4;
+  private static $SmS4 = 5;
+  private $sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->setSm(self::$SmS0);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmS0) { return "SmS0"; }
+    elseif ($this->sm == self::$SmS1) { return "SmS1"; }
+    elseif ($this->sm == self::$SmS2) { return "SmS2"; }
+    elseif ($this->sm == self::$SmS3) { return "SmS3"; }
+    elseif ($this->sm == self::$SmS4) { return "SmS4"; }
+    return null;
+  }
+
+  public function ev0()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS0)
+    {
+      $this->setSm(self::$SmS1);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function timeouts1Tos2()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS1)
+    {
+      $this->setSm(self::$SmS2);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function ev2()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS2)
+    {
+      $this->setSm(self::$SmS4);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  public function ev3()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmS3)
+    {
+      $this->setSm(self::$SmS4);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmS0)
+    {
+      a();
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  public function a()
+  {
+    System.out.println("a running");
+  }
+
+}
+?>

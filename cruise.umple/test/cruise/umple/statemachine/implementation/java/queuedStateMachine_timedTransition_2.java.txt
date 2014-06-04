@@ -13,17 +13,17 @@ public class X implements Runnable
   //------------------------
 
   //X State Machines
-  enum Sm { s1, s2, s3 }
+  enum Sm { s0, s1, s2, s3, s4 }
   private Sm sm;
   
   //enumeration type of messages accepted by X
-  enum MessageType { e1_M, timeouts2Tos3_M }
+  enum MessageType { ev0_M, timeouts1Tos2_M, ev1_M, ev2_M, ev3_M }
   
   MessageQueue queue;
   Thread removal;
 
   //Helper Variables
-  private TimedEventHandler timeouts2Tos3Handler;
+  private TimedEventHandler timeouts1Tos2Handler;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,7 +31,7 @@ public class X implements Runnable
 
   public X()
   {
-    setSm(Sm.s1);
+    setSm(Sm.s0);
     queue = new MessageQueue();
     removal=new Thread(this);
     //start the thread of X
@@ -53,7 +53,25 @@ public class X implements Runnable
     return sm;
   }
 
-  public boolean _e1()
+  public boolean _ev0()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s0:
+        setSm(Sm.s1);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _timeouts1Tos2()
   {
     boolean wasEventProcessed = false;
     
@@ -61,6 +79,7 @@ public class X implements Runnable
     switch (aSm)
     {
       case s1:
+        exitSm();
         setSm(Sm.s2);
         wasEventProcessed = true;
         break;
@@ -71,7 +90,7 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  private boolean __autotransition1__()
+  public boolean _ev1()
   {
     boolean wasEventProcessed = false;
     
@@ -79,6 +98,7 @@ public class X implements Runnable
     switch (aSm)
     {
       case s1:
+        exitSm();
         setSm(Sm.s3);
         wasEventProcessed = true;
         break;
@@ -89,7 +109,7 @@ public class X implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean _timeouts2Tos3()
+  public boolean _ev2()
   {
     boolean wasEventProcessed = false;
     
@@ -97,8 +117,25 @@ public class X implements Runnable
     switch (aSm)
     {
       case s2:
-        exitSm();
-        setSm(Sm.s3);
+        setSm(Sm.s4);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean _ev3()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case s3:
+        setSm(Sm.s4);
         wasEventProcessed = true;
         break;
       default:
@@ -112,8 +149,8 @@ public class X implements Runnable
   {
     switch(sm)
     {
-      case s2:
-        stopTimeouts2Tos3Handler();
+      case s1:
+        stopTimeouts1Tos2Handler();
         break;
     }
   }
@@ -125,23 +162,23 @@ public class X implements Runnable
     // entry actions and do activities
     switch(sm)
     {
-      case s1:
-        __autotransition1__();
+      case s0:
+        a();
         break;
-      case s2:
-        startTimeouts2Tos3Handler();
+      case s1:
+        startTimeouts1Tos2Handler();
         break;
     }
   }
 
-  private void startTimeouts2Tos3Handler()
+  private void startTimeouts1Tos2Handler()
   {
-    timeouts2Tos3Handler = new TimedEventHandler(this,"timeouts2Tos3",10);
+    timeouts1Tos2Handler = new TimedEventHandler(this,"timeouts1Tos2",2);
   }
 
-  private void stopTimeouts2Tos3Handler()
+  private void stopTimeouts1Tos2Handler()
   {
-    timeouts2Tos3Handler.stop();
+    timeouts1Tos2Handler.stop();
   }
 
   public static class TimedEventHandler extends TimerTask  
@@ -167,12 +204,12 @@ public class X implements Runnable
     
     public void run ()
     {
-      if ("timeouts2Tos3".equals(timeoutMethodName))
+      if ("timeouts1Tos2".equals(timeoutMethodName))
       {
-        boolean shouldRestart = !controller.timeouts2Tos3();
+        boolean shouldRestart = !controller.timeouts1Tos2();
         if (shouldRestart)
         {
-          controller.startTimeouts2Tos3Handler();
+          controller.startTimeouts1Tos2Handler();
         }
         return;
       }
@@ -230,17 +267,32 @@ public class X implements Runnable
   //messages accepted 
   //------------------------------
 
-  public void e1 ()
+  public void ev0 ()
   {
-    queue.put(new Message(MessageType.e1_M, null));
+    queue.put(new Message(MessageType.ev0_M, null));
   }
 
-  public boolean timeouts2Tos3 ()
+  public boolean timeouts1Tos2 ()
   {
     boolean wasAdded = false;
-    queue.put(new Message(MessageType.timeouts2Tos3_M, null));
+    queue.put(new Message(MessageType.timeouts1Tos2_M, null));
     wasAdded = true;
     return wasAdded;
+  }
+
+  public void ev1 ()
+  {
+    queue.put(new Message(MessageType.ev1_M, null));
+  }
+
+  public void ev2 ()
+  {
+    queue.put(new Message(MessageType.ev2_M, null));
+  }
+
+  public void ev3 ()
+  {
+    queue.put(new Message(MessageType.ev3_M, null));
   }
 
   
@@ -254,11 +306,20 @@ public class X implements Runnable
       
       switch (m.type)
       {
-        case e1_M:
-          status = _e1();
+        case ev0_M:
+          status = _ev0();
           break;
-        case timeouts2Tos3_M:
-          status = _timeouts2Tos3();
+        case timeouts1Tos2_M:
+          status = _timeouts1Tos2();
+          break;
+        case ev1_M:
+          status = _ev1();
+          break;
+        case ev2_M:
+          status = _ev2();
+          break;
+        case ev3_M:
+          status = _ev3();
           break; 
         default:
       }
@@ -268,4 +329,8 @@ public class X implements Runnable
       }
     }
   }
+  public void a(){
+    System.out.println("a running");
+  }
+
 }
