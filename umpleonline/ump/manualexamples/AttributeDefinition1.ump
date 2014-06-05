@@ -30,7 +30,7 @@ class Group
   // internal: No getter and setter methods created. Only for private
   // use in internal methods. However in this case it is initalized using =
   // The code following = is in the 'base' language, here Java.
-  internal Time t2 = new Time();
+  internal Time t2 = new Time(System.currentTimeMillis());
 
   // autounique: Every new object created will have a new integer assigned.
   // You can get the value (an integer) but not set it.  

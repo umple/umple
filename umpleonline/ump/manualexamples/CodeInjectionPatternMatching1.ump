@@ -1,6 +1,7 @@
 
 class Student
 {
+  const Boolean DEBUG = true;
   firstName;
   lastName;
   cityOfBirth;

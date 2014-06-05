@@ -11,3 +11,4 @@ class LanguageSpecific {
     return 1;
   }
 }
+// @@@skipcompile - Generated Java currently doesn't compile

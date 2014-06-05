@@ -10,5 +10,6 @@ class Car {
   }
   after radioToggle {soundBeep();}
 }
+// @@@skipcompile - No soundBeep method
 
 

@@ -32,3 +32,4 @@ class C
   position 50 150 109 45;
   position.association C__D 75,46 76,0;
 }
+// @@@skipcompile -- can only be compiled with a system that also has D

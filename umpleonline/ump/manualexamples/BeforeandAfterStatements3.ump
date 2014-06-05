@@ -1,4 +1,5 @@
 class Operation {
+  const Boolean DEBUG=true;
   query;
   before constructor {
     if (aQuery == null)

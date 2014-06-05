@@ -1,6 +1,7 @@
 
 class Student
 {
+  const Boolean DEBUG = true;
   firstName;
   lastName;
   cityOfBirth;
@@ -8,4 +9,4 @@ class Student
     if ( DEBUG) { System.out.println("accessing the name"); }
   }
 }
-
+// @@@skipcompile - currently can't combine get* and !getCityOfBirth
