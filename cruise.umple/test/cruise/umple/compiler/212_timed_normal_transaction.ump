@@ -1,0 +1,28 @@
+class X {
+  sm {
+    s1 {
+      e1 -> a;
+    }
+
+    a {
+      entry / {System.out.println("entering a");}
+      after(1) -> b;
+      e3 -> c;
+    }
+
+    b {
+      entry / {System.out.println("entering b");}
+      e2 -> c;
+    }
+
+    c {
+      entry / {System.out.println("entering c");}
+    }
+
+  }
+  public static void main(String [ ] args) {
+    X x = new X();
+    x.e1();
+    x.e2();
+  }
+}

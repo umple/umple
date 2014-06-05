@@ -1192,8 +1192,8 @@ class UmpleInternalParser
           setFailedPosition(subToken.getPosition(), 55, subToken.getValue("event"));
         }
         if(subToken.getValue("guard") == null){
-          if(subToken.getValue("event") == null){
-            if(subToken.getValue("timer") == null){
+          if((subToken.getValue("event") == null) && (subToken.getValue("timer") == null)){
+            {
               priorAutoTransitionExists = true;
             }
           }

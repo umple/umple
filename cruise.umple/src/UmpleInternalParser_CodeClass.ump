@@ -1704,8 +1704,8 @@ class UmpleInternalParser
     	  else
     	  {
     	    getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
-    		  	  aMethod.getName(),uClass.getName(), actualMethod.getPosition().getLineNumber()+"",
-    			  aMethod.getPosition().getLineNumber()+""));
+    		  	  aMethod.getName(),uClass.getName(), actualMethod.getPosition().getLineNumber()+"", actualMethod.getPosition().getFilename(),
+    			  aMethod.getPosition().getLineNumber()+"", aMethod.getPosition().getFilename()));
     	  }    
     	  
       }

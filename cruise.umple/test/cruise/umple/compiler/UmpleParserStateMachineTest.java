@@ -988,9 +988,19 @@ public class UmpleParserStateMachineTest
 	    on = sm.getStates();
 	    
 	    for(int i = 0; i < on.size(); i++)
-	      System.out.println(on.get(i).getName());	  
+	      System.out.println(on.get(i).getName());	
 	    
   }
+  
+  
+  //Issue 575
+  @Test
+  public void timedTransictionFollowedByTransiction()
+  {
+    assertNoWarnings("212_timed_normal_transaction.ump");
+    assertNoWarnings("212_timed_normal_transaction2.ump");
+  }
+  
   @Test
   public void addEvent()
   {

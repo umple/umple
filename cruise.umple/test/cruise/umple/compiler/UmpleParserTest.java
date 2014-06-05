@@ -284,6 +284,8 @@ public class UmpleParserTest
     assertHasWarningsParse("015_mixin_sameMethod3.ump", 49);
     assertSimpleParse("015_mixin_sameMethod4.ump"); 
     assertHasWarningsParse("015_mixin_sameMethod5.ump", 49);
+    assertHasWarningsParse("015_mixin_sameMethod6.ump", 49);
+    
     
   }
   
