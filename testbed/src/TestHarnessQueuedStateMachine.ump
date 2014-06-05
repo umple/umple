@@ -304,3 +304,47 @@ class MultipleQueuedSMs_sameEvents {
   }
   sm2 {q{} s{}}
 }
+
+
+
+class QueuedSM_timedTransition_1 {
+  String log = "initial value";
+  queued sm {
+    s0 {
+      entry / {log = "running";}
+      ev0 -> s1;
+    }
+    s1 {
+      after(2) -> s2;
+    }
+    s2 {
+      ev2 -> s4;
+    }
+    s3 {
+      ev3 -> s4;
+    }
+    s4 {}
+  }
+}
+
+
+class QueuedSM_timedTransition_2 {
+  String log = "initial value";
+  queued sm {
+    s0 {
+      entry / {log = "running";}
+      ev0 -> s1;
+    }
+    s1 {
+      after(2) -> s2;
+      ev1 -> s3;
+    }
+    s2 {
+      ev2 -> s4;
+    }
+    s3 {
+      ev3 -> s4;
+    }
+    s4 {}
+  }
+}
