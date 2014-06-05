@@ -10449,7 +10449,7 @@ if (p != null) {
         
         if (p != null) {
 //        use annotations instead
-//        positionHeader = "\n  // line " + p.getLineNumber() + " \"" + p.getRelativePath(uClass, "Java") + "\"";
+        positionHeader = "  // line " + p.getLineNumber() + " \"" + p.getRelativePath(uClass, "Java") + "\"\n";
 //        positionHeader = "\n  @umplesourcefile(line={"+p.getLineNumber()+"},file={\""+p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/","")+ "\"},javaline={"+(javaline+4)+"},length={"+(aMethod.getIsImplemented()?2: aMethod.getMethodBody().getExtraCode().split("\\n").length+2)+"})";          
         }
         else 
@@ -10538,8 +10538,10 @@ if (p != null) {
           if(!"".equals(lineNumbers.toString())){
             String positionEndHeader = "\n";
           }
+                    
+          append(stringBuffer,positionHeader);
           append(stringBuffer,override);
-          append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
+          append(stringBuffer, "{5}  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, positionHeader);
         
           appendln(stringBuffer, "{");
           if(!"".equals(methodType)&&!"void".equals(methodType))
@@ -10564,7 +10566,7 @@ if (p != null) {
         else
         {
           append(stringBuffer,override);
-          append(stringBuffer, "  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams);
+          append(stringBuffer, "{5}  {0}{1} {2} {3}({4})", methodModifier, methodImplementationModifier, methodType, methodName, finalParams, positionHeader);
         }
         if(aMethod.getIsAbstract())
         {
