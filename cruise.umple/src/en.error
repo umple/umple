@@ -129,30 +129,30 @@
 9999: 5, "http://umple.org/W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;
 
 # Messages related to traits
-2500: 2, "http://umple.org", Trait name '{0}' must be alphanumeric and start with an alpha character, or _  ;
-2501: 4, "http://umple.org", Trait name '{0}' should start with a capital letter ;
-2502: 1, "http://umple.org", The trait named '{0}' is not available. ;
-2550: 1, "http://umple.org", There is a class and a trait with the same name '{0}'. Solution: Please just change the name of trait or class and give it an unique name.;
-2551: 1, "http://umple.org", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance.;
-2552: 1, "http://umple.org", There is a conflict for attribute '{0}' in traits or classes '{1}' and '{2}'.;
-2553: 1, "http://umple.org", Trait '{0}' cannot cyclically extend '{1}'.;  
-2554: 1, "http://umple.org", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'.;
-2555: 1, "http://umple.org", Required method '{0}' in trait '{1}' is not available in class '{2}'.;
-2556: 1, "http://umple.org", Defined name '{0}' in trait '{1}' is not available in the trait's header.;
-2557: 1, "http://umple.org", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'.;
-2558: 1, "http://umple.org", In modification level of trait '{0}', method '{1}' has been defined two times.;
-2559: 1, "http://umple.org", Method '{0}' is not available in trait '{1}' for modification.;
-2560: 1, "http://umple.org", It is impossible to remove method '{0}' while changing its name.;
-2561: 1, "http://umple.org", It is impossible to have two parameters with the same name '{0}' in trait'{1}'.;
-2562: 1, "http://umple.org", Parameter '{0}' is not available.;
-2563: 1, "http://umple.org", Parameter '{0}' cannot be allocated two times.;
-2564: 1, "http://umple.org", There is a conflict for attribute '{0}' in traits '{1}' because of assigning two different types '{2}' and '{3}'.;
-2565: 3, "http://umple.org", Attribute '{0}' which comes from trait '{1}' is available also in {2} '{3}'.;
+2500: 2, "http://umple.org/PageBeingDeveloped.html", Trait name '{0}' must be alphanumeric and start with an alpha character, or _  ;
+2501: 4, "http://umple.org/PageBeingDeveloped.html", Trait name '{0}' should start with a capital letter ;
+2502: 1, "http://umple.org/PageBeingDeveloped.html", The trait named '{0}' is not available. ;
+2550: 1, "http://umple.org/PageBeingDeveloped.html", There is a class and a trait with the same name '{0}'. Solution: Please just change the name of trait or class and give it an unique name.;
+2551: 1, "http://umple.org/PageBeingDeveloped.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance.;
+2552: 1, "http://umple.org/PageBeingDeveloped.html", There is a conflict for attribute '{0}' in traits or classes '{1}' and '{2}'.;
+2553: 1, "http://umple.org/PageBeingDeveloped.html", Trait '{0}' cannot cyclically extend '{1}'.;  
+2554: 1, "http://umple.org/PageBeingDeveloped.html", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'.;
+2555: 1, "http://umple.org/PageBeingDeveloped.html", Required method '{0}' in trait '{1}' is not available in class '{2}'.;
+2556: 1, "http://umple.org/PageBeingDeveloped.html", Defined name '{0}' in trait '{1}' is not available in the trait's header.;
+2557: 1, "http://umple.org/PageBeingDeveloped.html", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'.;
+2558: 1, "http://umple.org/PageBeingDeveloped.html", In modification level of trait '{0}', method '{1}' has been defined two times.;
+2559: 1, "http://umple.org/PageBeingDeveloped.html", Method '{0}' is not available in trait '{1}' for modification.;
+2560: 1, "http://umple.org/PageBeingDeveloped.html", It is impossible to remove method '{0}' while changing its name.;
+2561: 1, "http://umple.org/PageBeingDeveloped.html", It is impossible to have two parameters with the same name '{0}' in trait'{1}'.;
+2562: 1, "http://umple.org/PageBeingDeveloped.html", Parameter '{0}' is not available.;
+2563: 1, "http://umple.org/PageBeingDeveloped.html", Parameter '{0}' cannot be allocated two times.;
+2564: 1, "http://umple.org/PageBeingDeveloped.html", There is a conflict for attribute '{0}' in traits '{1}' because of assigning two different types '{2}' and '{3}'.;
+2565: 3, "http://umple.org/PageBeingDeveloped.html", Attribute '{0}' which comes from trait '{1}' is available also in {2} '{3}'.;
 
 # Messages related to templates
-3500: 2, "http://umple.org", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
-3501: 2, "http://umple.org", Template emit method can not be a main;
-3502: 1, "http://umple.org", Template name '{0}' can not be resolved;
+3500: 2, "http://umple.org/PageBeingDeveloped.html", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;
+3501: 2, "http://umple.org/PageBeingDeveloped.html", Template emit method can not be a main;
+3502: 1, "http://umple.org/PageBeingDeveloped.html", Template name '{0}' can not be resolved;
 
 # Messages related to fixml
-4500: 1,  "http://umple.org", The tag '{0}' is not closed correctly.  ;
+4500: 1,  "http://umple.org/PageBeingDeveloped.html", The tag '{0}' is not closed correctly.  ;
