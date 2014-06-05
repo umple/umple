@@ -447,11 +447,16 @@ class Depend
   }
 }
 
-/*
- */
+  /**
+   * This is for cloning
+   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning 
+   */
 class Method
 {  
-  //this is for cloning	
+    /**
+   * This is for cloning
+   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning 
+   */	
   public Method(Method another) {
 	  this.isAbstract = another.getIsAbstract();
 	  this.modifier = another.getModifier();
@@ -461,7 +466,10 @@ class Method
 	  this.endPosition = another.getEndPosition();
 	  this.type = another.getType();
 	  this.isImplemented = another.getIsImplemented();
-	  this. methodParameters = another.getMethodParameters();
+	  this.methodParameters = new ArrayList<MethodParameter>();
+	  for (MethodParameter mParameter : another.getMethodParameters()) {
+		  this.methodParameters.add(new MethodParameter(mParameter));
+	  }
 	  this.methodBody = another.getMethodBody();
 	  this. comments = another.getComments();  
   }
@@ -531,6 +539,17 @@ class MethodBody
 
 class MethodParameter
 {
+  /**
+   * This is for cloning
+   * Note: This code doesn't cover deep cloning. It's a combination of  shallow and deep cloning 
+   */
+  public MethodParameter(MethodParameter another){
+	super(another.getName(), another.getType(), another.getModifier(), another.getValue());
+	this.isAutounique = another.getIsAutounique();
+	this.isList = another.getIsList();
+	this.isDerived = another.getIsDerived();
+	this.isLazy = another.getIsLazy();
+  }
   public String getFullType()
   {
     return this.getType() + (this.getIsList() ? "[]" : "");
