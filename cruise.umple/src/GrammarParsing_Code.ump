@@ -134,7 +134,7 @@ class RuleBasedParser
         analyzer.getKeys().put("<<##>>", new String[]{"<<#","#>>"});
         analyzer.getKeys().put("<<=>>", new String[]{"<<=",">>"});    
         analyzer.getKeys().put("<</**/>>", new String[]{"<</*","*/>>"});
-        analyzer.getKeys().put("<</**/>>", new String[]{"<<$",">>"});
+        analyzer.getKeys().put("<<$>>", new String[]{"<<$",">>"});
 
         while(currentLine!=null){    
           if(currentLine.equals("//END DECLARE")){
