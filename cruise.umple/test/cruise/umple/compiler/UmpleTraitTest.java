@@ -166,8 +166,7 @@ public class UmpleTraitTest {
 		String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
 		UmpleModel model = getRunModel(code);
 		SampleFileWriter.destroy("B.java");	
-		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());	
-		Assert.assertEquals(1, model.getUmpleClass("B").numberOfAssociationVariables());
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
 	}
 	
 	@Test
@@ -853,6 +852,13 @@ public class UmpleTraitTest {
 		} finally {
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
+	}
+	
+	@Test
+	public void associations001Test() {
+		String code = "class A{isA T<X=B>;}trait T<X>{0..1 -- * X;} class B{}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
 	}
 	
 //-------------------------------------------------------------------------------------	

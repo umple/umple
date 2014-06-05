@@ -118,7 +118,7 @@ class UmpleInternalParser
       if (numberOfPositions < 2)
       {
         Coordinate[] defaults = model.getDefaultAssociationPosition(a);
-
+		if (defaults==null) continue;
         a.addPosition(defaults[0]);
         a.addPosition(defaults[1]);
         a.getPosition(0).setStatus(Coordinate.Status.Defaulted);
