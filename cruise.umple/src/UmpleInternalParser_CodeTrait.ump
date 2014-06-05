@@ -741,7 +741,6 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 	Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		tempTraitMethods = gatherConcreteMethods(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
-		applyIncludeExcludeMethods(tempTraitMethods, uTrait, inClass);
 		if ( ! getParseResult().getWasSuccess() ) return;
 		checkMethodComeFromTraitsIsAvaiableInClass(tempTraitMethods,inClass);
 		if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inClass)) return;
@@ -770,12 +769,10 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
  			 methods.add(newMethod);
 	 	 }
 	 }
-     traitMethods.put(inTrait,methods);
+     traitMethods.put(inTrait,ApplyExludeIncludeAliasToMethod(methods, inGTPApplied));
      //----------------------------------------------------------------------------------------
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
-     	tempTraitMethods = gatherConcreteMethods(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));
-    	 //The first parameter works as in and out
-    	 applyIncludeExcludeMethods(tempTraitMethods,uTrait,inTrait);  	 
+     	 tempTraitMethods = gatherConcreteMethods(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));	 
     	 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
     	 if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inTrait)) return traitMethods;
     	 AddMethodMapToAnother(traitMethods,tempTraitMethods);
@@ -783,78 +780,6 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
      return traitMethods;
   }
   
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------    
-	private void applyIncludeExcludeMethods(Map<UmpleTrait, List<Method>> tempTraitMethods, UmpleTrait uTrait, UmpleClassifier inUmpleClassifier){
-	   List<GeneralTPApplied> applied = new ArrayList<GeneralTPApplied>();
-	   if (inUmpleClassifier instanceof UmpleClass){
-		   applied = ((UmpleClass)inUmpleClassifier).getGeneralTPApplieds();
-	   } else if (inUmpleClassifier instanceof UmpleTrait){
-		   applied = ((UmpleTrait)inUmpleClassifier).getGeneralTPApplieds(); 
-	   }
-	   for(GeneralTPApplied gTPApplied : applied){
-		 if (gTPApplied.getInheritanceName().equals(uTrait.getName()) ) {
-			 Map<UmpleTrait, List<Method>> shouldTraitMethods = new HashMap<UmpleTrait, List<Method>>();
-			 
-			boolean add = false, found;
-			for(MethodTemplateSignature mTSignature :  gTPApplied.getMethodTemplateSignatures()){
-				found = false;
-				for (UmpleTrait iETrait : tempTraitMethods.keySet()) {
-					List<Method> shouldBeIncluded = new ArrayList<Method>();
-					for (int i = 0; i < tempTraitMethods.get(iETrait).size(); i++) {
-						if (compareTwoMethdos(tempTraitMethods.get(iETrait).get(i),mTSignature.getMethod())){
-							if (mTSignature.getModifier().equals("-")){
-								tempTraitMethods.get(iETrait).remove(i);
-							} else if (mTSignature.getModifier().equals("+")){
-								Method tempAiasNethod = new Method(tempTraitMethods.get(iETrait).get(i));
-								if (!mTSignature.getAlias().equals("")){
-									tempAiasNethod.setName(mTSignature.getAlias());
-									//here I must check this new name is unique.
-								}
-								if (!mTSignature.getMethod().getModifier().equals("")){
-									tempAiasNethod.setModifier(mTSignature.getMethod().getModifier());
-									//here I must check this new name is unique.
-								}
-								shouldBeIncluded.add(tempAiasNethod);
-								add = true;
-							} else if (mTSignature.getModifier().equals("")){
-								//here I must check this new name is unique.
-								Method tempAiasNethod = new Method(tempTraitMethods.get(iETrait).get(i));
-								tempTraitMethods.get(iETrait).remove(i);
-								if (!mTSignature.getAlias().equals("")){
-									tempAiasNethod.setName(mTSignature.getAlias());
-									//here I must check this new name is unique.
-								}						
-								if (!mTSignature.getMethod().getModifier().equals("")){
-									tempAiasNethod.setModifier(mTSignature.getMethod().getModifier());
-								}
-								tempTraitMethods.get(iETrait).add(tempAiasNethod);
-							}
-							found = true;
-						}
-					}
-					if (add) {
-						if (shouldTraitMethods.containsKey(iETrait)){
-							shouldTraitMethods.get(iETrait).addAll(shouldBeIncluded);
-						}else {
-						shouldTraitMethods.put(iETrait, shouldBeIncluded);
-						}
-					}
-				}
-				if (!found){
-					getParseResult().addErrorMessage(new ErrorMessage(2559,inUmpleClassifier.getPosition(0),mTSignature.getMethod().getName(),uTrait.getName()));	
-			 		return; 
-				}
-			}
-				if (add){
-				tempTraitMethods.clear();
-				tempTraitMethods.putAll(shouldTraitMethods);
-				}
-		 }
-	 }
-  } 
-
  //---------------------------------end----------------------------------------
  //----------------------------------------------------------------------------   
  //---------------------------------Start--------------------------------------    
@@ -1477,6 +1402,43 @@ private void AddAttMapToAnother(Map<UmpleTrait, List<Attribute>> inTraitAttribut
 			inTraitAttributes.put(uTrait, inTempTraitAttributes.get(uTrait));
 		}	
 	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private List<Method> ApplyExludeIncludeAliasToMethod(List<Method> inMethods, GeneralTPApplied inGTPApplied){
+   if (inGTPApplied == null) return inMethods;
+    List<Method> shouldBeIncluded = new ArrayList<Method>();
+    for (int i = 0; i < inMethods.size(); i++) {
+		Method newMethod = inMethods.get(i);
+	    MethodTemplateSignature mTSignature = inGTPApplied.hasMethod(newMethod);
+	    if (mTSignature!=null){
+		   if (mTSignature.getModifier().equals("-")){
+			   inMethods.remove(newMethod);
+		   } else if (mTSignature.getModifier().equals("+")){
+				if (!mTSignature.getAlias().equals("")){
+					newMethod.setName(mTSignature.getAlias());
+					//here I must check this new name is unique.
+				}
+				if (!mTSignature.getMethod().getModifier().equals("")){
+					newMethod.setModifier(mTSignature.getMethod().getModifier());
+					//here I must check this new name is unique.
+				}
+				shouldBeIncluded.add(newMethod);
+		   } else if (mTSignature.getModifier().equals("")){
+				//here I must check this new name is unique.
+				if (!mTSignature.getAlias().equals("")){
+					newMethod.setName(mTSignature.getAlias());
+					//here I must check this new name is unique.
+				}						
+				if (!mTSignature.getMethod().getModifier().equals("")){
+					newMethod.setModifier(mTSignature.getMethod().getModifier());
+				}
+		   }
+	   }
+   }
+   if (shouldBeIncluded.size()>0) return shouldBeIncluded;
+   return inMethods;
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   

@@ -2376,28 +2376,61 @@ class Comment
 
 class GeneralTPApplied {
 	Map<String,String> parameterMapping = new HashMap<String,String>();
-	
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
 	public GeneralTPApplied(GeneralTPApplied another) {
 	  this.parameterMapping = another.parameterMapping;
 	  this.inheritanceName = another.inheritanceName;
 	  this.methodTemplateSignatures = another.methodTemplateSignatures;	  
   	}
-	
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
 	boolean hasMethodTemplateSignature(MethodTemplateSignature inMTSignature) {
 		for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
-		if (mTSignature.getMethod().getName().equals(inMTSignature.getMethod().getName())){
-			if (mTSignature.getMethod().numberOfMethodParameters() == inMTSignature.getMethod().numberOfMethodParameters()){
-				for (int i = 0; i < mTSignature.getMethod().numberOfMethodParameters(); i++) {
-					if (!mTSignature.getMethod().getMethodParameter(i).getType().equals(inMTSignature.getMethod().getMethodParameter(i).getType())){
-						return false;
-					}
-				}
-				return true;
-			}
+			if (compareTwoMethdos(mTSignature.getMethod(),inMTSignature.getMethod())) return true;
 		}
+		return false;
 	}
-	return false;
-	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------		
+  public MethodTemplateSignature hasMethod(Method inMethod){
+    for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
+			if (compareTwoMethdos(mTSignature.getMethod(),inMethod)) return mTSignature;
+		}
+		return null;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------	
+  private boolean compareTwoMethdos(Method method1, Method method2){
+    if (method1.getName().equals(method2.getName())){
+		 // if(method1.getType().equals(method2.getType())){
+			  Integer numberOfParams = method1.getMethodParameters().size();
+			  if ( numberOfParams== method2.getMethodParameters().size()) {
+		          boolean allSame = true;
+		          for (int i = 0; i < numberOfParams; i++)
+		          {
+		            if(!method1.getMethodParameter(i).getType().equals(method2.getMethodParameter(i).getType()))
+		            {
+		              allSame = false;
+		              break;
+		            }
+		          }
+		          if(allSame)
+		          {
+		            return true;
+		          }
+		     }
+		 // }  
+      }
+	  return false;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   
 }
 
 
