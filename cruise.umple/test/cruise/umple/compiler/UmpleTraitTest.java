@@ -584,6 +584,20 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
+	@Test
+	public void includeExcludeRuleAlias8Test() {
+		String code = "class A{isA T<test() as test1>;}trait T{isA T1;void test(){/*T*/}}trait T1{void test1(){/*T1*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("/*T*/", model.getUmpleClass("A").getMethod(0).getMethodBody().getExtraCode());
+	}
+	
+	@Test
+	public void includeExcludeRuleAlias9Test() {
+		String code = "class A{isA T< test() as test1>;}trait T{isA T1;void test(){/*T*/}}trait T1{void testA(){/*T1*/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+	}
 	
 	@Test
 	public void includeExcludeRuleVisibility1Test() {
