@@ -745,10 +745,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 		if ( ! getParseResult().getWasSuccess() ) return;
 		checkMethodComeFromTraitsIsAvaiableInClass(tempTraitMethods,inClass);
 		if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inClass)) return;
-		//traitMethods.putAll(tempTraitMethods);
-		Map<UmpleTrait, List<Method>> tmp = new HashMap<UmpleTrait, List<Method>>(tempTraitMethods);
-		tmp.keySet().removeAll(traitMethods.keySet());
-		traitMethods.putAll(tmp);
+		AddMethodMapToAnother(traitMethods,tempTraitMethods);
 	}
 	for (UmpleTrait t1 : traitMethods.keySet()) {
 		for (Method method : traitMethods.get(t1)) {
@@ -781,10 +778,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
     	 applyIncludeExcludeMethods(tempTraitMethods,uTrait,inTrait);  	 
     	 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
     	 if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inTrait)) return traitMethods;
-    	 //traitMethods.putAll(tempTraitMethods);
-    	 Map<UmpleTrait, List<Method>> tmp = new HashMap<UmpleTrait, List<Method>>(tempTraitMethods);
- 		tmp.keySet().removeAll(traitMethods.keySet());
- 		traitMethods.putAll(tmp);
+    	 AddMethodMapToAnother(traitMethods,tempTraitMethods);
 	 }
      return traitMethods;
   }
@@ -1288,7 +1282,7 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 		if ( ! getParseResult().getWasSuccess() ) return;
 		if (checkAttComeFromTraitsIsAvaiableInClass(tempTraitAttributes,inClass) ) return;
 		if (CheckAttComeFromTraitsIsAvaialbleInOtherTraits(traitAttributes,tempTraitAttributes)) return;
-		traitAttributes.putAll(tempTraitAttributes);
+		AddAttMapToAnother(traitAttributes,tempTraitAttributes);
 	}
 	for (UmpleTrait t1 : traitAttributes.keySet()) {
 		for (Attribute attribute : traitAttributes.get(t1)) {
@@ -1317,22 +1311,9 @@ private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, Ge
     	tempTraitAttributes = gatherAttributes(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));   	 
    	 	if ( ! getParseResult().getWasSuccess() ) return traitAttributes;
    	 	if (CheckAttComeFromTraitsIsAvaialbleInOtherTraits(traitAttributes, tempTraitAttributes)) return traitAttributes;
-   	 	traitAttributes.putAll(tempTraitAttributes);
+   	 	AddAttMapToAnother(traitAttributes,tempTraitAttributes);
 	}
     return traitAttributes;
-}
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------
-private boolean isMethdoAvailable(Map<UmpleTrait, List<Method>> inTraitMethods, Method inMethod) {
-	for (UmpleTrait uTrait : inTraitMethods.keySet()) {
-		for(Method method : inTraitMethods.get(uTrait)){
-			if(compareTwoMethdos(method, inMethod)){		
-				return true;
-			}
-		}
-	}
-	return false;
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1368,11 +1349,18 @@ private boolean isMethdoAvailable(Map<UmpleTrait, List<Method>> inTraitMethods, 
 //---------------------------------Start--------------------------------------
 private boolean checkAttComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Attribute>> inTraitAttributes, UmpleClass inClass) {
 	for (UmpleTrait uTrait : inTraitAttributes.keySet()){
-		for (Attribute attribute : inTraitAttributes.get(uTrait)) {
-			if (inClass.getAttribute(attribute.getName())!=null) {
-				getParseResult().addErrorMessage(new ErrorMessage(2552,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
-				return true;
-			}
+    	for (int i = 0; i < inTraitAttributes.get(uTrait).size(); i++) {
+    		Attribute attribute= inTraitAttributes.get(uTrait).get(i);
+			Attribute internalAttribute = inClass.getAttribute(attribute.getName());
+			if (internalAttribute !=null) {
+				if (internalAttribute.getType().equals(attribute.getType())){
+					setFailedPosition(internalAttribute.getPosition(), 2565, internalAttribute.getName(),uTrait.getName(),"class", inClass.getName());
+					inTraitAttributes.get(uTrait).remove(i);
+				} else{
+					getParseResult().addErrorMessage(new ErrorMessage(2552,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
+					return true;
+				}
+			}			
 		}
 	}
 	return false;
@@ -1381,14 +1369,18 @@ private boolean checkAttComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Att
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private boolean CheckAttComeFromTraitsIsAvaialbleInOtherTraits(	Map<UmpleTrait, List<Attribute>> inTraitAttributes,Map<UmpleTrait, List<Attribute>> inTempTraitAttributes) {
-	for (UmpleTrait uTrait : inTempTraitAttributes.keySet()){
-		for (Attribute attribute : inTempTraitAttributes.get(uTrait)) {
+	for (UmpleTrait uTrait : inTempTraitAttributes.keySet()){    	
+    	for (int j = 0; j < inTempTraitAttributes.get(uTrait).size(); j++) {
+    		Attribute attribute = inTempTraitAttributes.get(uTrait).get(j);
 			for (UmpleTrait internalTrait : inTraitAttributes.keySet()) {
 				for (int i = 0; i < inTraitAttributes.get(internalTrait).size(); i++) {
 					Attribute internalAttribute = inTraitAttributes.get(internalTrait).get(i);
 					if (attribute.getName().equals(internalAttribute.getName())){
-						if (uTrait.equals(internalTrait) && attribute.getType().equals(internalAttribute.getType())){
-							//inTraitAttributes.get(internalTrait).remove(internalAttribute);
+						if(attribute.getType().equals(internalAttribute.getType()) && !uTrait.equals(internalTrait)){
+							setFailedPosition(internalAttribute.getPosition(), 2565, internalAttribute.getName(),uTrait.getName(),"trait", internalTrait.getName());
+							inTempTraitAttributes.get(uTrait).remove(j);
+						} else if (uTrait.equals(internalTrait) && attribute.getType().equals(internalAttribute.getType())){
+							inTraitAttributes.get(internalTrait).remove(internalAttribute);
 						} else {
 							if (uTrait.equals(internalTrait)){
 								getParseResult().addErrorMessage(new ErrorMessage(2564,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),attribute.getType() ,internalAttribute.getType()));	
@@ -1457,6 +1449,34 @@ private boolean CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(Map<UmpleTrait
 		}
 	}	
 	return false;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void AddMethodMapToAnother(Map<UmpleTrait, List<Method>> inTraitMethods,Map<UmpleTrait, List<Method>> inTempTraitMethods) {
+	for (UmpleTrait uTrait : inTempTraitMethods.keySet()) {
+		if (inTraitMethods.containsKey(uTrait)){
+			for (Method method : inTempTraitMethods.get(uTrait)) {
+				inTraitMethods.get(uTrait).add(method);
+			}
+		} else{
+			inTraitMethods.put(uTrait, inTempTraitMethods.get(uTrait));
+		}	
+	}	
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void AddAttMapToAnother(Map<UmpleTrait, List<Attribute>> inTraitAttributes,Map<UmpleTrait, List<Attribute>> inTempTraitAttributes) {
+	for (UmpleTrait uTrait : inTempTraitAttributes.keySet()) {
+		if (inTraitAttributes.containsKey(uTrait)){
+			for (Attribute attribute : inTempTraitAttributes.get(uTrait)) {
+				inTraitAttributes.get(uTrait).add(attribute);
+			}
+		} else{
+			inTraitAttributes.put(uTrait, inTempTraitAttributes.get(uTrait));
+		}	
+	}
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   

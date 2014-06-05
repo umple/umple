@@ -147,6 +147,7 @@
 2562: 1, "http://umple.org", Parameter '{0}' is not available.;
 2563: 1, "http://umple.org", Parameter '{0}' cannot be allocated two times.;
 2564: 1, "http://umple.org", There is a conflict for attribute '{0}' in traits '{1}' because of assigning two different types '{2}' and '{3}'.;
+2565: 3, "http://umple.org", Attribute '{0}' which comes from trait '{1}' is available also in {2} '{3}'.;
 
 # Messages related to templates
 3500: 2, "http://umple.org", Template name '{0}' must be alphanumeric and start with an alpha character, or _  ;

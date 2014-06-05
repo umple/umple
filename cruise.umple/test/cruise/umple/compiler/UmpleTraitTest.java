@@ -724,13 +724,23 @@ public class UmpleTraitTest {
 	}
 	
 	@Test
+	public void TypeParameterTest05() {
+		String code = "class A{isA T1,T2;}trait T1{isA T<X=Integer>;}trait T2{isA T<X=String>;}trait T<X>{void test(X in){/**/}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("Integer", model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType());
+		Assert.assertEquals("String", model.getUmpleClass("A").getMethod(1).getMethodParameter(0).getType());
+	}
+
+	
+	@Test
 	public void Attribute01Test() {
 		String code = "class A{name;isA T;}trait T{name;}";
 		UmpleModel model = getModel(code);
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2552");
+			boolean result = e.getMessage().contains("2565");
 			Assert.assertTrue(result);
 		} finally {
 			SampleFileWriter.destroy("traitTest.ump");
@@ -751,7 +761,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2552");
+			boolean result = e.getMessage().contains("2565");
 			Assert.assertTrue(result);
 		} finally {
 			SampleFileWriter.destroy("traitTest.ump");
@@ -765,7 +775,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2552");
+			boolean result = e.getMessage().contains("2565");
 			Assert.assertTrue(result);
 		} finally {
 			SampleFileWriter.destroy("traitTest.ump");
@@ -793,7 +803,7 @@ public class UmpleTraitTest {
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2552");
+			boolean result = e.getMessage().contains("2565");
 			Assert.assertTrue(result);
 		} finally {
 			SampleFileWriter.destroy("traitTest.ump");
@@ -830,6 +840,7 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
+	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {
