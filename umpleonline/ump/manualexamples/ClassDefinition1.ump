@@ -8,7 +8,7 @@ class Student
   
   public String fullName()  // Method, whose content is not processed by Umple
   {
-    return getFirstName()   " "   getLastName();
+    return getFirstName() + " " + getLastName();
   } 
 }
 
