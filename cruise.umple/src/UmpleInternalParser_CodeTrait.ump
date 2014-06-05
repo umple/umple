@@ -1,5 +1,24 @@
 namespace cruise.umple.compiler;
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
+class UmpleModel{
 
+boolean getUmpleTraitTypeParameter(String value) {
+	for(UmpleTrait uTrait : getUmpleTraits()){
+		for(GeneralTemplateParameter gTParameter : uTrait.getGeneralTemplateParameters()){
+			if (gTParameter.getName().equals(value)) return true;
+		}
+	}
+	return false;
+}
+//----------------------------------------------------------------------------  
+//---------------------------------Start--------------------------------------
+//----------------------------------------------------------------------------   
+}
+//************************************************************************************* 
+//************************************NEW CLASS****************************************
+//*************************************************************************************  
 class UmpleInternalParser
 {
 
@@ -709,6 +728,7 @@ class UmpleInternalParser
 			if (uClass.hasExtendsTraits()) {
 				copyAttributesFromTraitsToClass(uClass);
 				copyMethodsFromTraitToClass(uClass);
+				copyAssociationsFromTraitToClass(uClass);
 				for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
 					recursiveApplyTraits(uClass,uTrait);
 					
@@ -796,6 +816,23 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
   } 
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------    
+  private void ApplyTypeParametersToMethod(Method newMethod, GeneralTPApplied inGeneralTPApplied) {
+  	if (inGeneralTPApplied == null) return;
+	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+		String newName = inGeneralTPApplied.getParameterMapping().get(strType);
+		if (newMethod.getType().equals(strType)){
+			newMethod.setType(newName);
+		}
+		for (int i = 0; i < newMethod.numberOfMethodParameters(); i++) {
+            if(newMethod.getMethodParameter(i).getType().equals(strType)){
+            	newMethod.getMethodParameter(i).setType(newName);
+            }
+	    }
+	}
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
 //---------------------------------Start-------------------------------------- 
 	private void ApplyTypeParametersToAttribute(Attribute newAttribute,	GeneralTPApplied inGTPApplied) {
 	    if (inGTPApplied == null) return;
@@ -806,6 +843,38 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 			}
 		}	
 	}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationVariable, GeneralTPApplied inGeneralTPApplied,UmpleClass inClass) {
+    if (inGeneralTPApplied == null) return;
+	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
+		String newName = inGeneralTPApplied.getParameterMapping().get(strType);
+		if (inAssociationVariable.getType().equals(strType)){
+			inAssociationVariable.setType(newName);
+	        String rawName = StringFormatter.toCamelCase(newName);
+	        String name = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	        if (name.equals(inAssociationVariable.getName())){
+	    	   rawName = StringFormatter.toCamelCase(newName);
+	    	   name = inAssociationVariable.getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	        } 
+	        inAssociationVariable.setName(name);
+			inAssociationVariable.setUmpleClass(inClass);
+   	        //-----------------			
+			UmpleClass relatedClass = getModel().getUmpleClass(newName);
+	 	    inAssociationVariable.getRelatedAssociation().setUmpleClass(relatedClass);
+	 	    inAssociationVariable.getRelatedAssociation().setType(inClass.getName());
+	        rawName = StringFormatter.toCamelCase(inClass.getName());
+	        name = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	        if (name.equals(inAssociationVariable.getRelatedAssociation().getName())){
+	    	   rawName = StringFormatter.toCamelCase(inGeneralTPApplied.getInheritanceName());
+	    	   name = inAssociationVariable.getRelatedAssociation().getMultiplicity().isMany() ? model.getGlossary().getPlural(rawName) : rawName;
+	        }
+    	    inAssociationVariable.getRelatedAssociation().setName(name);
+    	    //-----------------
+		}
+	}	
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  	
@@ -828,23 +897,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 		}
 	}	
   }
-//---------------------------------end----------------------------------------
-//----------------------------------------------------------------------------   
-//---------------------------------Start--------------------------------------    
-  private void ApplyTypeParametersToMethod(Method newMethod, GeneralTPApplied inGeneralTPApplied) {
-  	if (inGeneralTPApplied == null) return;
-	for (String strType : inGeneralTPApplied.getParameterMapping().keySet()) {
-		String newName = inGeneralTPApplied.getParameterMapping().get(strType);
-		if (newMethod.getType().equals(strType)){
-			newMethod.setType(newName);
-		}
-		for (int i = 0; i < newMethod.numberOfMethodParameters(); i++) {
-            if(newMethod.getMethodParameter(i).getType().equals(strType)){
-            	newMethod.getMethodParameter(i).setType(newName);
-            }
-	    }
-	}
-  }
+
   
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -928,6 +981,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
        inClass.appendExtraCode(inTrait.getExtraCode());
        
        // copy associations
+       /*
        for (AssociationVariable aVariable : inTrait.getAssociationVariables()) {
     	   aVariable.setUmpleClass(inClass);
     	   UmpleClass relatedAss =  model.getUmpleClass(aVariable.getType()); 	   
@@ -941,7 +995,8 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 	    	   aVariable.getRelatedAssociation().setName(name);
 	       }
 	       inClass.addAssociationVariable(aVariable);    
-       }	  
+       }
+       */	  
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1220,6 +1275,27 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
+    Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+		tempTraitAssociationVariables = gatherAssociations(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
+		if ( ! getParseResult().getWasSuccess() ) return;
+		//checkMethodComeFromTraitsIsAvaiableInClass(tempTraitAssociations,inClass);
+		//if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitAssociations,inClass)) return;
+		AddAssociationMapToAnother(traiAssociationVariables,tempTraitAssociationVariables);
+	}
+	for (UmpleTrait t1 : traiAssociationVariables.keySet()) {
+		for (AssociationVariable associationVariable : traiAssociationVariables.get(t1)) {
+			//association.getComment(2).setText(association.getComment(2).getText()+"'"+inClass.getName()+"' ");
+			//associationVariable.getRelatedAssociation().getUmpleClass().addAssociationVariable(associationVariable.getRelatedAssociation());
+			inClass.addAssociationVariable(associationVariable);   
+		}
+	}	
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
 private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, GeneralTPApplied inGTPApplied) {
 	 Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>(); 
 	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
@@ -1239,6 +1315,31 @@ private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, Ge
    	 	AddAttMapToAnother(traitAttributes,tempTraitAttributes);
 	}
     return traitAttributes;
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait inTrait, GeneralTPApplied inGTPApplied, UmpleClass inClass) {
+     Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>(); 
+ 	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+ 	 //----------------------------------------------------------------------------------------
+ 	 List<AssociationVariable> associationVariables = new ArrayList<AssociationVariable>();	  
+ 	 for (AssociationVariable associationVariable : inTrait.getAssociationVariables()) {
+ 		 	AssociationVariable newAssociationVariable = new AssociationVariable(associationVariable);
+ 		 	AssociationVariable tempAssociationVariable = new AssociationVariable(newAssociationVariable.getRelatedAssociation());
+ 		 	newAssociationVariable.setRelatedAssociation(tempAssociationVariable);
+    	 	ApplyTypeParametersToAssociation(newAssociationVariable,inGTPApplied,inClass);
+    	 	associationVariables.add(newAssociationVariable);
+	 }
+ 	traitAssociationVariables.put(inTrait,associationVariables);
+     //----------------------------------------------------------------------------------------
+     for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+    	 tempTraitAssociationVariables = gatherAssociations(uTrait,inGTPApplied,inClass);	 
+    	 if ( ! getParseResult().getWasSuccess() ) return traitAssociationVariables;
+//    	 if (CheckAssociationsComeFromTraitsIsAvaialbleInOtherTraits(traitAssociations,tempTraitAssociations,inTrait)) return traitAssociations;
+    	 AddAssociationMapToAnother(traitAssociationVariables,tempTraitAssociationVariables);
+	 }
+     return traitAssociationVariables;
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1402,6 +1503,20 @@ private void AddAttMapToAnother(Map<UmpleTrait, List<Attribute>> inTraitAttribut
 			inTraitAttributes.put(uTrait, inTempTraitAttributes.get(uTrait));
 		}	
 	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void AddAssociationMapToAnother(Map<UmpleTrait, List<AssociationVariable>> inTraitAssociations,Map<UmpleTrait, List<AssociationVariable>> inTempTraitAssociations) {
+    for (UmpleTrait uTrait : inTempTraitAssociations.keySet()) {
+		if (inTraitAssociations.containsKey(uTrait)){
+			for (AssociationVariable associationVariable : inTraitAssociations.get(uTrait)) {
+				inTraitAssociations.get(uTrait).add(associationVariable);
+			}
+		} else{
+			inTraitAssociations.put(uTrait, inTempTraitAssociations.get(uTrait));
+		}	
+	}	
 }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   

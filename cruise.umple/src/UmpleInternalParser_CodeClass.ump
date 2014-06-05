@@ -1021,8 +1021,9 @@ class UmpleInternalParser
       boolean isAClass = model.getUmpleClass(e.getValue()) != null;
       boolean isAInterface = model.getUmpleInterface(e.getValue()) != null;
 	  boolean isATrait = model.getUmpleTrait(e.getValue()) != null;
+	  boolean isTraitTypeParameter = model.getUmpleTraitTypeParameter(e.getValue());
 	  
-      if (!isATrait && !isAClass && !isAInterface) //item referenced not a class or interface or a trait
+      if (!isATrait && !isAClass && !isAInterface && !isTraitTypeParameter) //item referenced not a class or interface or a trait or a type parameter
       {
       	//TODO traits' error
         UmpleClass aClass = model.addUmpleClass(e.getValue());
@@ -1380,7 +1381,10 @@ class UmpleInternalParser
       
       AssociationEnd myEnd = association.getEnd(0);
       AssociationEnd yourEnd = association.getEnd(1);
-
+	  
+	  if(getModel().getUmpleTraitTypeParameter(myEnd.getClassName()) || getModel().getUmpleTrait(myEnd.getClassName())!=null) return ;
+	  if(getModel().getUmpleTraitTypeParameter(yourEnd.getClassName()) || getModel().getUmpleTrait(yourEnd.getClassName())!=null) return ;
+	  
       UmpleClass myClass = model.getUmpleClass(myEnd.getClassName());
       UmpleClass yourClass = model.getUmpleClass(yourEnd.getClassName());
 

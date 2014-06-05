@@ -252,6 +252,10 @@ class UmpleModel
 
     String classOne = a.getEnd(0).getClassName();
     String classTwo = a.getEnd(1).getClassName();
+    
+    if(getUmpleTraitTypeParameter(classOne) || getUmpleTrait(classOne)!=null) return null;
+    if(getUmpleTraitTypeParameter(classTwo) || getUmpleTrait(classTwo)!=null) return null;
+    
     Coordinate classOnePos = getUmpleClass(classOne).getCoordinates();
     Coordinate classTwoPos = getUmpleClass(classTwo).getCoordinates();
 
@@ -1362,7 +1366,30 @@ class Attribute
  */
 class Association
 {
-
+   public  Association(Association another){
+    //Association Attributes
+	  this.name = another.getName();
+	  this.isLeftNavigable = another.getIsLeftNavigable();
+	  this.isRightNavigable = another.getIsRightNavigable();
+	  this.positions = new ArrayList<Coordinate>();
+	  for (Coordinate coordinate : another.getPositions()) {
+		this.positions.add(coordinate);
+	  }  
+	  this.tokenPosition = another.getTokenPosition();
+	  this.tokenEndPosition = another.getTokenEndPosition();
+	  this.immutable = another.immutable;
+	
+	  //Association Associations
+	  this.ends = new ArrayList<AssociationEnd>();
+	  for (AssociationEnd associationEnd : another.getEnds()) {
+		  this.ends.add(new AssociationEnd(associationEnd));
+	  }
+	  this.associationTraceItems = new ArrayList<AssociationTraceItem>();
+	  for (AssociationTraceItem associationTraceItems : another.getAssociationTraceItems()) {
+		  this.associationTraceItems.add(associationTraceItems);
+	  }
+  }
+  
   public void setLeftAndRight()
   {
     String name = this.getName();
@@ -1609,6 +1636,27 @@ class Constraint
 class AssociationEnd
 {
 
+  public AssociationEnd(AssociationEnd another) {
+  	//AssociationEnd Attributes
+  	this.roleName = another.getRoleName();
+  	this.className = another.getClassName();
+  	this.modifier = another.getModifier();
+  	this.referenceToClassName = another.getReferenceToClassName();
+  	this.multiplicity = another.getMultiplicity();
+  	this.isDefaultRoleName = another.getIsDefaultRoleName();
+  	this.priority = another.getPriority();
+	
+  	//AssociationEnd Associations	
+  	this.association = another.getAssociation();
+	
+  	//Helper Variables
+  	this.cachedHashCode = another.cachedHashCode;
+  	this.canSetMultiplicity = another.canSetMultiplicity;
+  	this.canSetRoleName = another.canSetRoleName;
+	this.canSetClassName = another.canSetClassName;
+	this.canSetModifier = another.canSetModifier;
+	this.canSetReferenceToClassName = another.canSetReferenceToClassName;	
+  }
   private static int MULT_MANY = -1;
 
   public boolean isNavigable()
@@ -1732,6 +1780,30 @@ class AssociationEnd
  */
 class AssociationVariable
 {
+  public AssociationVariable(AssociationVariable another){
+	  super(another.getName(), another.getType(),another.getModifier(), another.getValue());
+	  //AssociationVariable Attributes
+	  this.multiplicity = another.getMultiplicity();
+	  this.isNavigable = another.getIsNavigable();
+	  this.priority  = another.getPriority();
+
+	  //AssociationVariable Associations
+	  this.relatedAssociation = another.getRelatedAssociation();
+	  this.comments = new ArrayList<Comment>();
+	  for (Comment comment : another.getComments()) {
+		  this.comments.add(comment);
+	  }
+	
+	  this.umpleClass = another.getUmpleClass();
+	  this.umpleTrait = another.getUmpleTrait();
+	  this.associationTraceItems = new ArrayList<AssociationTraceItem>();
+	  for (AssociationTraceItem associationTraceItem : another.getAssociationTraceItems()) {
+		  this.associationTraceItems.add(associationTraceItem);
+	  }
+	  //Helper Variables
+	  this.canSetIsNavigable = another.canSetIsNavigable;
+  }	
+
   public boolean isReflexive()
   {
     return getRelatedAssociation() != null && getType().equals(getRelatedAssociation().getType());
