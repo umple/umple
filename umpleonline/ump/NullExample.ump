@@ -73,11 +73,11 @@ class B {
    
     medium
     {
-      entry / {i++;}
+      entry / {setI(getI()+1);}
        
       goUp -> high;
 
-      goDown ->/{i -= 10;} low;
+      goDown ->/{setI(getI()-10);} low;
        
     }
     low { goUp -> medium; }

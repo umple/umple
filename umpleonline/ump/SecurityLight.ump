@@ -46,7 +46,6 @@ class ExternalSecurityLight{
   after constructor{
     setExternalSecurityLightStateMachineNight(ExternalSecurityLightStateMachineNight.Null);
     setExternalSecurityLightStateMachine(ExternalSecurityLightStateMachine.day);
-    pool = new MessagePool();
     removal=new Thread(this);
     //start the thread of ExternalSecurityLight
     removal.start();

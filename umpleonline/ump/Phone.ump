@@ -73,6 +73,7 @@ class PhoneLine {
   const String Dial="dial";
   const String Beep="beep";
   const String Hello="hello";
+  const String RingRing="ring ring";
   state {
     onHook {
       entry / {
@@ -85,7 +86,7 @@ class PhoneLine {
       incomingCall -> ringing;
     }
     ringing {
-      entry / {say(ring);} 
+      entry / {say(RingRing);} 
       pickUp -> / {getOtherParty().otherPartyPickUp();} communicating;
       otherPartyHangUp -> onHook;
       autoPickup -> / {getOtherParty().otherPartyPickUp();} communicating;

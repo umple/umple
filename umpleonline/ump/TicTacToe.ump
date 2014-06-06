@@ -18,4 +18,7 @@ class TicTacToe {
    tie {
    }
  }
+ // The following need to be implemented 
+ Boolean isThreeInARow() {return false;}
+ Boolean spaceAvailable() {return true;}
 }

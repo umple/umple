@@ -179,7 +179,7 @@
     <foreach target="userManualAndExampleTest" param="manualFile" parallel="false">
       <path>
         <fileset dir="${exampleumpfiles.path}" includes="*.ump" />
-        <fileset dir="${manualumpfiles.path}" includes="*.ump" />
+        <fileset dir="${manualumpfiles.path}" includes="T*.ump" excludes="E*.ump" />
        </path>
     </foreach>  
   </target>
