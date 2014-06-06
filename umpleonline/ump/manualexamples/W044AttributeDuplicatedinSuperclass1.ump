@@ -7,4 +7,4 @@ class B {
   isA A;
   attr;
 }
-
+// @@@skipcompile - the result won't compile in Java because there are two attr

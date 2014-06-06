@@ -4,6 +4,6 @@
 class Student
 {
   name;
-  trace name until name == "john";
+  trace name until [name == "john"];
 }
 

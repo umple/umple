@@ -18,3 +18,4 @@ class Student
     s.setName("Tim");
   }
 }
+// @@@skipcompile - won't accept string in record and list of entities - issue 583

@@ -5,4 +5,4 @@ class X {
     b -> c
   }
 }
-
+// @@@skipcompile - the resulting Java code cannot be compiled

@@ -6,8 +6,8 @@ trait Identifiable {
   firstName;
   lastName;
   address;
-  phone number;
-  fullName = {firstName   " "   lastName;}
+  phoneNumber;
+  fullName = {firstName + " " + lastName}
   Boolean isLongName() {return lastName.length() > 1;}  
 }
 

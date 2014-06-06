@@ -4,6 +4,6 @@
 class Student
 {
   name;
-  trace name after name == "john";
+  trace name after [name == "john"];
 }
 
