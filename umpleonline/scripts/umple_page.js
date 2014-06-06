@@ -50,7 +50,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramT
 
   jQuery.noConflict();
   jQuery(document).keydown(function(event){Action.keyboardShortcut(event);});
-
+  
+  Layout.init();
   Page.initPaletteArea();
   Page.initCanvasArea();
   Page.initUmpleTextArea();
@@ -65,8 +66,10 @@ Page.initPaletteArea = function()
 {
   var palette = "#palette";
   var paletteItems = palette + " *";
-  jQuery(palette).accordion({fillSpace: true, active: 1, collapsible: true});
+  jQuery(palette).accordion({heightStyle: "fill", fillSpace: true, active: 1, collapsible: true});
   jQuery(paletteItems).addClass("unselectable");
+  
+  Layout.initPaletteSize()
   
   Page.initJQueryButton("buttonGenerateCode");
   Page.initJQueryButton("buttonStartOver");
@@ -170,12 +173,12 @@ Page.initOptions = function()
   jQuery("#buttonToggleAttributes").attr('checked',true);
   jQuery("#buttonToggleActions").attr('checked',true);
 
-if(Page.useEditableClassDiagram)
- jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
-if(Page.useGvClassDiagram)
-  jQuery("#buttonShowGvClassDiagram").attr('checked', true);
-if(Page.useGvStateDiagram)
-  jQuery("#buttonShowGvStateDiagram").attr('checked', true);     
+  if(Page.useEditableClassDiagram)
+   jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
+  if(Page.useGvClassDiagram)
+    jQuery("#buttonShowGvClassDiagram").attr('checked', true);
+  if(Page.useGvStateDiagram)
+    jQuery("#buttonShowGvStateDiagram").attr('checked', true);     
 
   jQuery("#buttonPhotoReady").attr('checked', false);
   jQuery("#buttonManualSync").attr('checked', false);
@@ -274,21 +277,17 @@ Page.initAction = function(id)
 
 Page.initUmpleTextArea = function()
 {
-  var modelEditor = jQuery("#umpleModelEditor");
-  var layoutEditor = jQuery("#umpleLayoutEditor");
+  var modelEditor = jQuery("#umpleModelEditorText");
+  var layoutEditor = jQuery("#umpleLayoutEditorText");
   
   modelEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
   modelEditor.mousedown(function(){setTimeout("jQuery(\"#linenum\").val(Action.getCaretPosition())",25)});
   layoutEditor.keyup(function(eventObject){Action.umpleTyped(eventObject);});
-  modelEditor.focus(function(){Action.focusOn("umpleModelEditor", true);});
-  layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditor", true);});
-  modelEditor.blur(function(){Action.focusOn("umpleModelEditor", false);});
-  layoutEditor.blur(function(){Action.focusOn("umpleLayoutEditor", false);});
+  modelEditor.focus(function(){Action.focusOn("umpleModelEditorText", true);});
+  layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditorText", true);});
+  modelEditor.blur(function(){Action.focusOn("umpleModelEditorText", false);});
+  layoutEditor.blur(function(){Action.focusOn("umpleLayoutEditorText", false);});
   
-  
-
-  // Uncomment the following line to turn CodeMirror on by default; comment out to
-  // require the user to type cm1 to turn code mirror on
   Page.initCodeMirrorEditor();
   Layout.initUmpleTextAreaSize();
   if (!Layout.isTextVisible) {Layout.showHideTextEditor(false);}
@@ -297,12 +296,14 @@ Page.initUmpleTextArea = function()
 Page.initCodeMirrorEditor = function() {
   var foldFunc = CodeMirror.newFoldFunction(CodeMirror.braceRangeFinder);
   Page.codeMirrorEditor = CodeMirror.fromTextArea(
-     document.getElementById('umpleModelEditor'),{
+     document.getElementById('umpleModelEditorText'),{
         lineNumbers: true,
         matchBrackets: true,
         readOnly: Page.readOnly,
         mode: "text/x-umple",
         lineWrapping: true,
+        onFocus: function(id, gained) {Action.focusOn("CodeMirror", true)},
+        onBlur: function(id, gained) {Action.focusOn("CodeMirror", false)},
         onGutterClick: foldFunc,
         onChange: function(ed, changes) {Action.umpleCodeMirrorTypingActivity();},
         onCursorActivity: function() {
@@ -517,13 +518,13 @@ Page.canShowHovers = function()
 
 Page.getRawUmpleCode = function()
 {
-  return document.getElementById('umpleModelEditor').value;
+  return document.getElementById('umpleModelEditorText').value;
 }
 
 Page.getUmpleCode = function()
 {
   var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
-  var positioning = jQuery("#umpleLayoutEditor").val().replace(Page.modelDelimiter, "");
+  var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
   
   var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
   return umpleCode;
@@ -563,18 +564,18 @@ Page.setUmpleCode = function(umpleCode, reason)
  
   Page.hideGeneratedCode();
   
-  jQuery("#umpleLayoutEditor").val(modelAndPositioning[1]);
+  jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
 
   if(Page.codeMirrorOn) {
     Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
   }
-  jQuery("#umpleModelEditor").val(modelAndPositioning[0]);
+  jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 }
 
 Page.setUmplePositioningCode = function(positioning)
 {
-  jQuery("#umpleLayoutEditor").val(positioning);
+  jQuery("#umpleLayoutEditorText").val(positioning);
 }
 
 Page.umpleCanvasId = function()
@@ -601,8 +602,8 @@ Page.showDiagramSyncNeeded = function(doShow)
 
 Page.hideLoading = function()
 {
-  var modelEditor = "#umpleModelEditor";
-  var layoutEditor = "#umpleLayoutEditor";
+  var modelEditor = "#topTextEditor";
+  var layoutEditor = "#bottomTextEditor";
   var canvas = "#" + Page.umpleCanvasId();  
   
   jQuery(modelEditor).hideLoading();
@@ -613,7 +614,7 @@ Page.hideLoading = function()
 
 Page.showModelLoading = function()
 {
-  var modelEditor = jQuery("#umpleModelEditor");
+  var modelEditor = jQuery("#topTextEditor");
   if (jQuery("#textEditorColumn").is(":visible"))
   {
     modelEditor.showLoading();
@@ -623,7 +624,7 @@ Page.showModelLoading = function()
 
 Page.showLayoutLoading = function()
 {
-  var layoutEditor = jQuery("#umpleLayoutEditor");
+  var layoutEditor = jQuery("#bottomTextEditor");
   if (layoutEditor.is(":visible")) 
   {
     layoutEditor.showLoading();

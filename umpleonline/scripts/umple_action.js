@@ -144,7 +144,7 @@ Action.clicked = function(event)
   }
   else if (action == "SyncDiagram")
   {
-    Action.processTyping("umpleModelEditor", true);
+    Action.processTyping("umpleModelEditorText", true);
   }
   else if (action == "PhotoReady")
   {
@@ -167,14 +167,17 @@ Action.clicked = function(event)
 Action.focusOn = function(id, gained)
 {
   var selector = "#" + id;
-  var textEditor = (id == "umpleLayoutEditor" || id == "umpleModelEditor");
+  var isPlainEditor = ((id == "umpleModelEditorText" || id == "umpleLayoutEditorText") || id == "CodeMirror");
+
+  if(id == "CodeMirror") selector = ".CodeMirror-scroll"
   
   if (gained) 
   {
-    if (textEditor || !Page.isPhotoReady())
+    if (!Page.isPhotoReady() || isPlainEditor)
     {
       jQuery(selector).parent().addClass("focus");
-      if (textEditor)
+      jQuery(selector).addClass("visibleFocus");
+      if (isPlainEditor)
       {
         Page.shortcutsEnabled = false;
         if (Page.selectedItem != null) Page.unselectAllToggleTools();
@@ -183,9 +186,10 @@ Action.focusOn = function(id, gained)
     }
   }
   else
-  {
+  { 
     jQuery(selector).parent().removeClass("focus");
-    if (textEditor)
+    jQuery(selector).removeClass("visibleFocus");
+    if (isPlainEditor || id == "CodeMirror")
     {
       Page.shortcutsEnabled = true;
     }
@@ -304,7 +308,7 @@ Action.changeDiagramType = function(newDiagramType)
     UmpleSystem.merge(null);    // Clear the diagram
     var canvas = jQuery("#umpleCanvas");
     canvas.html("");
-    Action.showHideCanvas(true);
+    Layout.showHideCanvas(true);
   }
 }
 
@@ -469,7 +473,7 @@ Action.classClicked = function(event)
 {
   if (!Action.diagramInSync) return;
   Action.focusOn("umpleCanvas", true);
-  Action.focusOn("umpleModelEditor", false);
+  Action.focusOn("umpleModelEditorText", false);
 
   Action.unselectAll();
   Action.elementClicked = true;
@@ -953,7 +957,7 @@ Action.keyboardShortcut = function(event)
 
 Action.getCaretPosition = function() // TIM Returns the line number
 {
-  var ctrl = document.getElementById('umpleModelEditor');
+  var ctrl = document.getElementById('umpleModelEditorText');
   
   var CaretPos = Action.getInputSelectionStart(ctrl);
   
@@ -1074,7 +1078,7 @@ Action.setCaretPosition = function(line)
     Page.codeMirrorEditor.focus();
     return;
   }
-  var ctrl = document.getElementById('umpleModelEditor');
+  var ctrl = document.getElementById('umpleModelEditorText');
   var startPos=0;
   var endPos=-1;
 
@@ -1212,7 +1216,7 @@ Action.selectStateInClass = function(stateName, classname)
 
 Action.delayedFocus = function(ms) 
 {
-  var ctrl=document.getElementById('umpleModelEditor');
+  var ctrl=document.getElementById('umpleModelEditorText');
   setTimeout(function() {ctrl.focus();},ms);
 }
 
@@ -1333,7 +1337,7 @@ Action.processTyping = function(target, manuallySynchronized)
   Page.setExampleMessage("");
   if (!Action.manualSync || manuallySynchronized)
   {
-    if (target == "umpleModelEditor" || target == "codeMirrorEditor") {
+    if (target == "umpleModelEditorText" || target == "codeMirrorEditor") {
       Action.updateLayoutEditorAndDiagram();
     }
     else Action.updateUmpleDiagramForce(false);
@@ -1575,7 +1579,7 @@ Action.redrawDiagram = function()
     UmpleSystem.merge(null);    // Clear the diagram
     var canvas = jQuery("#umpleCanvas");
     canvas.html("");
-    Action.showHideCanvas(true);
+    Layout.showHideCanvas(true);
 }
 
 InlineEditor.elementChanged = function(obj, oldVal, newVal)
@@ -1625,7 +1629,7 @@ Action.enableManualSync = function(enable)
   else
   {
     Action.manualSync = false;
-    Action.processTyping("umpleModelEditor",true);
+    Action.processTyping("umpleModelEditorText",true);
     Page.enablePaletteItem("buttonSyncDiagram", false);
   }
 }
