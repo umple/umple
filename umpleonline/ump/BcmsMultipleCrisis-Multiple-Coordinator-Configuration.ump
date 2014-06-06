@@ -11,7 +11,7 @@
  * files to be present in the same directory.
  */
 use RoutesAndLocations.ump;
-use CoordinationStateMachine.ump
+use CoordinationStateMachine.ump;
 use BcmsCore.ump;
 
 class CrisisManagementSystem {
@@ -24,3 +24,4 @@ class StationCoordinator {
   // is the lead
   Boolean lead;
 }
+// @@@skipcompile -- there is a need to add methods to turn this model to a compilable system

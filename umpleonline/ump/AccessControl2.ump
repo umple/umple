@@ -11,14 +11,14 @@ namespace accessControlSystem;
 //User: a person with known identity and authorization "correct access right" to enter specific access zone
 //User Name: a user name
 class User{
-  1..* mayEnterThrough -- 1..* AccessPoint;
-  1..* mayEnter -- 1..* AccessZone mayAccept;
+  * mayEnterThrough -- * AccessPoint;
+  * mayEnter -- * AccessZone mayAccept;
   1 owns -- 0..1 Card;
   
   name;
   
   public void insertCard(String cardId){
-    System.out.println("User [" getName() "] is inserting his/her card"  getCard().getCardId());
+    System.out.println("User [" + getName() + "] is inserting his/her card" +getCard().getCardId());
   }
 
   public List enterPIN( int no1, int no2, int no3, int no4){
@@ -31,7 +31,7 @@ class User{
   }
   
   public void cardOut(){
-    System.out.println("User [" getName() "] is taking his/her card out"  getCard());
+    System.out.println("User ["+getName()+"] is taking his/her card out" + getCard());
   }  
 }
 
@@ -98,7 +98,7 @@ class Authorizer{
     System.out.println("Error is detected");
   }
   public void authorize(List PIN){
-    System.out.println("User carries Card has a valid PIN [" PIN "]");
+    System.out.println("User carries Card has a valid PIN [" + PIN + "]");
   }
 }
 
@@ -108,11 +108,11 @@ class Door{
 
   public void unLock(){
     setLock(false);
-    System.out.println("Door is unLocked  Lock= " getLock());
+    System.out.println("Door is unLocked  Lock= " + getLock());
   }
   public void lock(){
     setLock(true);
-    System.out.println("Door is Locked Lock= " getLock());
+    System.out.println("Door is Locked Lock= " + getLock());
   }
   public void pushDoor(){
     System.out.println("User pushes the door");
@@ -221,3 +221,4 @@ class AccessZone
   position.association AccessZone:accessedThrough__Door 36,46 30,0;
   position 83 230 109 45;
 }
+// @@@skipcompile - issue relating to more than one 1..* creating problem constructor
