@@ -1,14 +1,12 @@
 generate Java;
 
-// A class with a method that uses non-recognized syntax 'public'.
-// This method will still be emitted by Umple as 'arbitrary code' but
-// will not be recognized as a formal UML/umple method.
+// A class with a method that uses 'public'.
 class Person
 {
   name;
   
   public String displayName()
   {
-    System.out.println("Hello, my name is " + getName());
+    return("Hello, my name is " + getName());
   }
 }

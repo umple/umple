@@ -1,4 +1,3 @@
-
 // Example with an opportunity to nest states, to avoid repeating
 // transitions
 
@@ -42,48 +41,26 @@ class CourseSection
   boolean requestToRegister(Student aStudent)
   {
     register();
-    setClassSize(getClassSize()+1);
+    return setClassSize(getClassSize()+1);
   }
+}
+
+class Student {
+  // Remainder of class defined elsewhere
 }//$?[End_of_model]$?
 
 class Course
 {
-  position 49 22 149 80;
-}
-
-class CourseSection
-{
-  position 50 151 214 114;
-}
-
-class Course
-{
-  position 49 22 149 80;
-  position.association Course__CourseSection 30,80 30,0;
-}
-
-class CourseSection
-{
-  position 50 151 214 114;
-}
-
-class Course
-{
   position 50 30 109 45;
+  position.association Course__CourseSection 106,80 30,0;
 }
 
 class CourseSection
 {
-  position 50 151 214 114;
+  position 40 149 201 111;
 }
 
-class Course
+class Student
 {
-  position 49 30 149 80;
+  position 260 65 109 45;
 }
-
-class Course
-{
-  position.association Course__CourseSection 31,80 30,0;
-}
-

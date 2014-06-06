@@ -7,7 +7,7 @@ class Person
   
   String displayName(String greeting, String property)
   {
-    System.out.println(
+    return(
       greeting +
       ", my " +
       property +
