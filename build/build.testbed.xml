@@ -18,6 +18,8 @@
 
   <property name="manualumpfiles.path" value="umpleonline/ump/manualexamples"/>
   <property name="manualumpfiles.bin.path" value="${manualumpfiles.path}/bin"/>
+  <property name="exampleumpfiles.path" value="umpleonline/ump"/>
+  <property name="exampleumpfiles.bin.path" value="${exampleumpfiles.path}/bin"/>
 
   <import file="_${myenv}.xml" />
   <import file="_template.xml" />
@@ -29,6 +31,7 @@
 
   <path id="manualumpfiles.classpath">
     <pathelement location="${manualumpfiles.bin.path}"/>
+    <pathelement location="${exampleumpfiles.bin.path}"/>
     <path refid="junit4.classpath"/>
   </path>
 
@@ -169,23 +172,27 @@
     <delete failonerror="false" >
        <fileset dir="${manualumpfiles.path}/src-gen-umple" />
        <fileset dir="${manualumpfiles.path}/bin"  />
+       <fileset dir="${exampleumpfiles.path}/src-gen-umple" />
+       <fileset dir="${exampleumpfiles.path}/bin"  />
     </delete>
       
     <foreach target="userManualAndExampleTest" param="manualFile" parallel="false">
       <path>
+        <fileset dir="${exampleumpfiles.path}" includes="*.ump" />
         <fileset dir="${manualumpfiles.path}" includes="*.ump" />
-      </path>
+       </path>
     </foreach>  
   </target>
 
   <target name="userManualAndExampleTest">
     <sequential>
       <basename file="${manualFile}" property="manualfileshort" suffix="ump" />
+      <dirname file="${manualFile}" property="exampledir" />
       <property name="fullump" value="${manualumpfiles.path}/${manualfileshort}.ump" />
-      <echo>Will test ${fullump} </echo>
-
+      <echo>Will test ${manualFile} </echo>
+      
       <!-- Compile in umple -->
-      <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${manualumpfiles.path}">
+      <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${exampledir}">
         <arg value="-g" />
         <arg value="Java" />
         <arg value="--path" />
@@ -195,14 +202,14 @@
 
       <!-- Compile the resulting Java if OK to do so -->
       <if>
-        <resourcecontains resource="../${fullump}" substring="@@@skipcompile" />
+        <resourcecontains resource="${manualFile}" substring="@@@skipcompile" />
         <then>
           <echo>Skipping Java compile due to presence of @@@skip</echo>
         </then>
         <else>
-          <mkdir dir="${manualumpfiles.path}/bin"  />
-          <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${manualumpfiles.bin.path}" source="1.7" target="1.7">
-            <src path="${manualumpfiles.path}/src-gen-umple"/>
+          <mkdir dir="${exampledir}/bin"  />
+          <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${exampledir}/bin" source="1.7" target="1.7">
+            <src path="${exampledir}/src-gen-umple"/>
             <classpath refid="manualumpfiles.classpath"/>
           </javac>
         </else>
@@ -211,8 +218,8 @@
 
       <!-- Delete the generated stuff after success -->
       <delete failonerror="false" >
-        <fileset dir="${manualumpfiles.path}/src-gen-umple" />
-        <fileset dir="${manualumpfiles.path}/bin"  />
+        <fileset dir="${exampledir}/src-gen-umple" />
+        <fileset dir="${exampledir}/bin"  />
       </delete>
       
     </sequential>

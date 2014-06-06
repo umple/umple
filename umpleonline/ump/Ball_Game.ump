@@ -1,4 +1,6 @@
 // UML state machine diagram written in Umple representing a game involving balls
+// This example needs maintenance since there are unreachable states and so on
+// It is currently excluded from the UmpleOnline official example list
 
 namespace generatedCode;
 
@@ -56,4 +58,4 @@ class Ball_Game {
     }        
   }
 }
-  
+// @@@skipcompile - example needs polishing it has missing methods and unreachable states

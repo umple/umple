@@ -1,8 +1,8 @@
-// UML class diagram for a Booking on an airline, represented in Umple
+// UML state diagram for a Booking on an airline, represented in Umple
 
 class Booking {
   state {
-    new { 
+    newBooking { 
       assignSeat -> seatAssigned;
       cancel -> cancelled;
     }
