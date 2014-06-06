@@ -11,6 +11,8 @@ package cruise.umple.implementation.cpp;
 
 import org.junit.*;
 
+
+import cruise.umple.analysis.*;
 import cruise.umple.implementation.*;
 import cruise.umple.util.SampleFileWriter;
 

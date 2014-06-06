@@ -1026,15 +1026,9 @@ class UmpleInternalParser
 	    Token guardToken = transitionToken.getSubToken("guard");
 	    if (guardToken != null)
 	    {
-	      List <ConstraintVariable> cvs = analyzeConstraint(guardToken, fromState.getStateMachine().getRootStateMachine().getUmpleClass()); //adds all identifiers to constraints
-	      Guard constraint = new Guard();
-	      for(ConstraintVariable cv: cvs)
-	      {
-	        constraint.addExpression(cv);
-	      }
-	      constraint.setPosition(guardToken.getPosition());
-	      constraint.setEndPosition(guardToken.getEndPosition());
-	      t.setGuard(constraint);//analyzeGuard(guardToken, fromState));
+	      ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier( fromState.getStateMachine().getRootStateMachine().getUmpleClass());
+              ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t);
+              model.getAnalyzer("guard").analyzeToken(guardToken);
 	    }
 
 	    Token actionToken = transitionToken.getSubToken("action");
@@ -1308,15 +1302,11 @@ class UmpleInternalParser
     Token guardToken = transitionToken.getSubToken("guard");
     if (guardToken != null)
     {
-      List <ConstraintVariable> cvs = analyzeConstraint(guardToken, fromState.getStateMachine().getRootStateMachine().getUmpleClass()); //adds all identifiers to constraints
-      Guard constraint = new Guard();
-      for(ConstraintVariable cv: cvs)
-      {
-        constraint.addExpression(cv);
+      if(((GuardAnalyzer)model.getAnalyzer("guard"))!=null){
+        ((GuardAnalyzer)model.getAnalyzer("guard")).setUClassifier(fromState.getStateMachine().getRootStateMachine().getUmpleClass());
+        ((GuardAnalyzer)model.getAnalyzer("guard")).setT(t);
+        model.getAnalyzer("guard").analyzeToken(guardToken);
       }
-      constraint.setPosition(guardToken.getPosition());
-      constraint.setEndPosition(guardToken.getEndPosition());
-      t.setGuard(constraint);//analyzeGuard(guardToken, fromState));
     }
 
     Token actionToken = transitionToken.getSubToken("action");

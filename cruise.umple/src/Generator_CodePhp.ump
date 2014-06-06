@@ -1004,6 +1004,7 @@ class PhpGenerator
     ConstraintLookupMap.put(".","->{0}");
     ConstraintLookupMap.put("this","$this");
     ConstraintLookupMap.put("[]","{1}[{0}]");
+    ConstraintLookupMap.put("concatenate",".{0}");
     ConstraintLookupMap.put("initialise","new {0}");
     ConstraintLookupMap.put("has","in_array({0},{1})");
     ConstraintLookupMap.put("hasAll","in_array({0},{1})");

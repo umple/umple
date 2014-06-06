@@ -980,7 +980,6 @@ class Parser
           addRule(nextRule);
           numberOfRulesProcessed += 1;
         }
-
       } 
       while (nextRule != null);
     }
@@ -992,7 +991,7 @@ class Parser
     {
       SampleFileWriter.closeAsRequired(reader);
       SampleFileWriter.closeAsRequired(resourceStream);
-    }    
+    }
     return numberOfRulesProcessed;
   }
 

@@ -571,7 +571,7 @@ class UmpleGenerator
       return;
     }
     
-    parser = new cruise.umple.parser.analysis.RuleBasedParser();
+    parser = new cruise.umple.parser.analysis.RuleBasedParser(getModel());
 
     // Populate the parser with Umple's grammar (see GrammarParsing_Code.ump)
     parser.addGrammarFile("/umple_core.grammar");

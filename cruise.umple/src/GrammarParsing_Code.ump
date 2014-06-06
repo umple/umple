@@ -60,7 +60,7 @@ class RuleBasedParser
 
   public void setupRules()
   {
-    setupRules(false);
+    setupRules(true);
   }
 
   /**
@@ -71,7 +71,7 @@ class RuleBasedParser
   {
     BufferedReader reader = null;
     InputStream resourceStream = null;
-    boolean mustParse = false;
+    boolean mustParse = true;
     try {
       File rulesfile = new File(new File("cruise.umple").getAbsolutePath()+File.separator+"bin"+File.separator+"rules.grammar");
 
@@ -98,6 +98,7 @@ class RuleBasedParser
         if(rulesfile.exists()&&rulesfile.canWrite()){
           rulesfile.delete();
         }
+        /*
         if(!rulesfile.exists())
         {
           if(new File("cruise.umple"+File.separator+"bin"+File.separator+"umple_core.grammar").canWrite())
@@ -121,12 +122,16 @@ class RuleBasedParser
 
           analyzer.getRules().get("$ROOT$").resetDeclare();
         }
+        */
       }
       else if(reader!=null)
       {
         String program = null;
         String currentLine = reader.readLine();
-        analyzer = new GrammarAnalyzer();
+        if(analyzer==null)
+        {
+          analyzer = new GrammarAnalyzer(getModel());
+        }
 
         analyzer.getKeys().put("{}", new String[]{"{","}"});    
         analyzer.getKeys().put("\"", new String[]{"\"","\""});
@@ -203,6 +208,7 @@ class RuleBasedParser
     }
     analyzer.init(file);
     analyzer.execute();
+    getModel().setAnalyzers(analyzer.getAnalyzerMap());
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
@@ -216,6 +222,7 @@ class RuleBasedParser
     }
     analyzer.init(ruleName, input);
     analyzer.execute();
+    getModel().setAnalyzers(analyzer.getAnalyzerMap());
     setRootToken(analyzer.getRootToken());
     setParseResult(analyzer.getParseResult());
     return getParseResult();
@@ -304,6 +311,17 @@ class RuleBasedParser
     {
 
     }
+    if(analyzer.makeAnalyzer(choicerules.get(hash).getName()))
+    {
+      analyzer.addAnalyzerRule(choicerules.get(hash));
+      analyzer.addAnalyzerFromStack();
+      analyzer.setMustSetupAnalyzers(true);
+    }
+    
+    for(int i=0;i<choicerules.get(hash).size();++i)
+    {
+      choicerules.get(hash).get(i);
+    }
     return true;
   }
   
@@ -361,7 +379,7 @@ class RuleBasedParser
         }
       }
     }
-    analyzer = new GrammarAnalyzer();
+    analyzer = new GrammarAnalyzer(getModel());
     analyzer.analyze(rootToken);
     analyzer.setupTerminals();
   }
@@ -483,7 +501,7 @@ class RuleBasedParserThread
     data.setParseResult(parseResult);
     data.init(token.getPosition());
     Token temp = new Token("ROOT","");
-    RuleBasedParser parser = new RuleBasedParser();
+    RuleBasedParser parser = new RuleBasedParser(getModel());
     parser.parse(root,temp,filename,data);
     Token answer = parser.getRootToken();
     synchronized(token)
@@ -523,7 +541,7 @@ class GrammarAnalyzer {
               rules.get("$ROOT$"),
               token,
               umpleFile.getPath() + File.separator+value,
-              data);
+              data,getModel());
             threads.add(thread);
             thread.start();
           }
@@ -548,7 +566,7 @@ class GrammarAnalyzer {
     setData(new ParserDataPackage(input));
     getData().setKeys(keys);
     getData().init(null);
-	getData().AddExtraFiles(file);
+	getData().AddExtraFiles(file);	
   }
   
   public void init(String ruleName, String input2) {
@@ -564,7 +582,7 @@ class GrammarAnalyzer {
   public void execute()
   {
     setRootToken(new Token("ROOT",""));
-    RuleBasedParser parser = new RuleBasedParser();
+    RuleBasedParser parser = new RuleBasedParser(getModel());
     parser.parse(rules.get("$ROOT$"),getRootToken(), input,getData());
     setRootToken(parser.getRootToken());
     while(threads.size()>0)
@@ -583,6 +601,11 @@ class GrammarAnalyzer {
     }
     setFailedPosition(parser.getFailedPosition());
     setParseResult(getData().getParseResult());
+    if(mustSetupAnalyzers)
+	{
+      setupAnalyzers();
+      mustSetupAnalyzers = false;
+    }
   }
 //--Analyze Rule Methods
 
@@ -593,6 +616,27 @@ class GrammarAnalyzer {
     analyze(token);    
   }
 
+  Stack<Analyzer> analyzerStack = new Stack<Analyzer>(); 
+  public boolean makeAnalyzer(String name)
+  {
+    boolean wasMade = false;
+    if(!getAnalyzerMap().containsKey(name))
+    try {
+      String className = "cruise.umple.analysis."+name.substring(0,1).toUpperCase()+name.substring(1)+"Analyzer";
+      Class cls = Class.forName(className);
+      Analyzer a = (Analyzer) cls.newInstance();
+      a.setName(name);
+      a.setModel(getModel());
+      getAnalyzerMap().put(name,a);
+      analyzerStack.push(a);
+      wasMade = true;
+   } 
+   catch (ClassNotFoundException c){} catch( InstantiationException | IllegalAccessException | IllegalArgumentException  e)
+   {
+     e.printStackTrace();
+   }
+   return wasMade;
+  }
   /*
     The rule token denotes the beginning of a rule definition.
   */
@@ -608,6 +652,7 @@ class GrammarAnalyzer {
       }
     }
     ChoiceRule self = rules.get(getValue(token,"rulename"));
+    boolean hasAnalyzer = makeAnalyzer(self.getName());
     String modifier = getValue(token,"modifier");
     noSpaces = false;
     if(modifier!=null)
@@ -629,6 +674,16 @@ class GrammarAnalyzer {
     stacks.get("stack").push(self);
     analyze(token);
     stacks.get("stack").pop();
+    if(hasAnalyzer)
+    {
+      addAnalyzerFromStack();
+      analyzerRules.add(self);
+    }
+  }
+
+  public void addAnalyzerFromStack()
+  {
+    analyzers.add(analyzerStack.pop());
   }
 
   /*
@@ -678,10 +733,17 @@ class GrammarAnalyzer {
     {
       set(getValue(token,"rulename"),new ChoiceRule(getValue(token,"rulename")));
     }
-    stacks.get("stack").peek().add(rules.get(getValue(token,"rulename")));  
+    ChoiceRule self = rules.get(getValue(token,"rulename"));
+    stacks.get("stack").peek().add(self);  
     if(modifier!=null&&modifier.length()>0)
     {
       stacks.get("stack").pop();
+    }
+   
+    if(makeAnalyzer(self.getName()))
+    {
+      analyzers.add(analyzerStack.pop());
+      analyzerRules.add(self);
     }
   }
   /*
@@ -1231,6 +1293,77 @@ class GrammarAnalyzer {
         braced(token);
       }
     }
+  }
+  public List<Analyzer> setupAnalyzers()
+  {
+    for(int i=0;i<analyzerRules.size();++i)
+    {
+      List<ChoiceRule> checked = new ArrayList<ChoiceRule>();
+      if(analyzerRules.get(i)!=null)
+      {
+        List<Analyzer> children = setupAnalyzers(analyzers.get(i), analyzerRules.get(i),checked);
+      
+        int size = -1;
+        while(children.size()!=size)
+        {
+          size = children.size();
+          if(analyzerRules.get(i)!=null)
+          {
+            children.addAll(setupAnalyzers(analyzers.get(i), analyzerRules.get(i),checked));
+          }
+        }
+        for(Analyzer analyzer:children)
+        {
+          analyzers.get(i).addChild(analyzer);
+        }
+      }
+    }
+    return null;
+  }
+  
+  public List<Analyzer>  setupAnalyzers(Analyzer analyzer, ChoiceRule parent, List<ChoiceRule> checked)
+  {
+    List<Analyzer> children = new ArrayList<Analyzer>();
+    if(parent==null)return children;
+    for(int i=0;i<parent.size();++i)
+    {
+      if(!checked.contains(parent.get(i)))
+      {
+        checked.add(parent.get(i));
+        
+        if(parent.get(i) instanceof Terminal)
+        {
+          if(makeAnalyzer(analyzer.getName()+parent.get(i).getName().substring(0,1).toUpperCase()+parent.get(i).getName().substring(1)))
+          {
+            Analyzer a = analyzerStack.pop();
+            a.setName(parent.get(i).getName());
+            children.add(a);
+            analyzers.add(a);
+            analyzerRules.add(parent.get(i));
+          }
+          else if(makeAnalyzer(parent.get(i).getName()))
+          {
+            Analyzer a = analyzerStack.pop();
+            children.add(a);
+            analyzers.add(a);
+            analyzerRules.add(parent.get(i)); 
+          }
+          else if(analyzerRules.contains(parent.get(i)))
+          {
+            children.add(analyzers.get(analyzerRules.indexOf(parent.get(i))));
+          }
+        }
+        else if(analyzerRules.contains(parent.get(i)))
+        {
+          children.add(analyzers.get(analyzerRules.indexOf(parent.get(i))));
+        }
+        else
+        {
+          children.addAll(setupAnalyzers(analyzer,parent.get(i),checked));
+        }
+      }
+    }
+    return children;
   }
 }
 

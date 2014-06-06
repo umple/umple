@@ -65,17 +65,17 @@ class WidgetF
 
 class LanguageSpecificCodeBlock
 {
-	name;
+  name;
+
+  before setName Java {String lang = "My lang is ";} Php {$lang = "I am ";}
+  after setName Java {name = lang + "java";} Php {$this->name = $lang + "php";}
+  boolean isJava() Java {return true;} Php {return false;}
 	
-	before setName Java {String lang = "My lang is ";} Php {$lang = "I am ";}
-	after setName Java {name = lang + "java";} Php {$this->name = $lang + "php";}
-	boolean isJava() Java {return true;} Php {return false;}
-	
-	String languageImplementedIn = Java {"Java"} Php {"Php"}
-	
-	state{
-	  allLanguages{
-	    applySpecificAction [this.isJava()] / Java {name = "action=java";} Php {$this->name = "actionphp";} -> to;
+  String languageImplementedIn = Java {"Java"} Php {"Php"}
+
+  state{
+    allLanguages{
+      applySpecificAction [this.isJava()] / Java {name = "action=java";} Php {$this->name = "actionphp";} -> to;
     }
     to{
     }

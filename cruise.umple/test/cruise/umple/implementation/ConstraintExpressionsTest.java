@@ -2,6 +2,9 @@ package cruise.umple.implementation;
 
 import org.junit.*;
 
+
+import cruise.umple.analysis.*;
+
 import cruise.umple.compiler.UmpleParserTest;
 import cruise.umple.util.SampleFileWriter;
 

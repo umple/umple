@@ -2337,6 +2337,7 @@ class JavaGenerator
     ConstraintLookupMap.put("ifstatement","if ({0})\n{");
     ConstraintLookupMap.put("end","}");
     ConstraintLookupMap.put("[]","{1}.get({0})");
+    ConstraintLookupMap.put("concatenate","+{0}");
     ConstraintLookupMap.put("initialise","new {0}");
     ConstraintLookupMap.put("has",".contains({0})");
     ConstraintLookupMap.put("hasAll",".contains({0})");

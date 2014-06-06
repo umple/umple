@@ -13,6 +13,7 @@ import java.io.File;
 
 import org.junit.*;
 
+import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.SampleFileWriter;
 
 public class UmpleParserTracerTest
@@ -216,7 +217,7 @@ public class UmpleParserTracerTest
   public void traceSingleAttributeUntilCondition()
   {
 	  code = "class Tracer{Integer id; String name; trace name until [name == \"tim\"]; trace id until [id == 6];}";
-	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:until][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][traceWhen][conditionType:until][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:6]");
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:until][constraintToken][stringExpr][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][traceWhen][conditionType:until][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:6]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
@@ -236,7 +237,7 @@ public class UmpleParserTracerTest
   public void traceSingleAttributeAfterCondition()
   {
 	  code = "class Tracer{Integer id; String name; trace name after [name == \"tim\"]; trace id after [id == 6];}";
-	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:after][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][traceWhen][conditionType:after][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:6]");
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][traceWhen][conditionType:after][constraintToken][stringExpr][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][traceWhen][conditionType:after][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:6]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
@@ -489,7 +490,7 @@ public class UmpleParserTracerTest
   public void traceMultipleAttributeWithCondition()
   {
 	  code = "class Tracer{Integer id; String name; trace name , id where [name == \"tim\"]; trace id , name where [id == 234];}";
-	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][trace_entity:name][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:id][trace_entity:name][traceWhen][conditionType:where][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -509,7 +510,7 @@ public class UmpleParserTracerTest
   public void traceMultipleAttributeUntilCondition()
   {
 	  code = "class Tracer{Integer id; String name; trace name , id until [name == \"tim\"]; trace name,id until [id == 234];}";
-	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][constraintToken][stringExpr][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:until][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -529,7 +530,7 @@ public class UmpleParserTracerTest
   public void traceMultipleAttributeAfterCondition()
   {
 	  code = "class Tracer{Integer id; String name; trace name, id after [name == \"tim\"]; trace name , id after [id == 234];}";
-	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][constraintToken][stringExpr][constraintName][name:name][equalsOp:==][quote:tim][trace][trace_entity:name][trace_entity:id][traceWhen][conditionType:after][constraintToken][numExpr][constraintName][name:id][equalsOp:==][number:234]");
 	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
@@ -927,7 +928,7 @@ public class UmpleParserTracerTest
   @Test
   public void traceCaseMultipleTD()
   {
-	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][stringExprPlain][constraintName][name:name][equalsOp:==][quote:tim]",true);
+	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][constraintName][name:name][equalsOp:==][quote:tim]",true);
 	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
@@ -972,18 +973,20 @@ public class UmpleParserTracerTest
   
   private void assertParse(String filename, String expectedOutput, boolean expected)
   {
-	  
-    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
-    model = new UmpleModel(new UmpleFile(pathToInput,filename));
-    model.setShouldGenerate(false);
-    parser = UmpleParserFactory.create(umpleParserName,model,true);
-    
-    boolean answer = parser.parse("program", input).getWasSuccess();
-    
-    if (answer)
-    {
-      answer = parser.analyze(false).getWasSuccess();
-    }
+	UmpleFile file = new UmpleFile(pathToInput,filename);
+	ErrorTypeSingleton.getInstance().reset();
+	model = new UmpleModel(new UmpleFile(pathToInput,filename));
+	model.setShouldGenerate(false);
+	RuleBasedParser rbp = new RuleBasedParser(model);
+	parser = new UmpleInternalParser(umpleParserName,model,rbp);
+	ParseResult result = rbp.parse(file);
+	model.setLastResult(result);
+	
+	boolean answer = result.getWasSuccess();
+	if (answer)
+	{
+	  answer = parser.analyze(false).getWasSuccess();
+	}
 
     if (answer == false && expected)
     {

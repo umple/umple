@@ -39,14 +39,14 @@ class ChoiceRule
   */
   public ChoiceRule get(int index)
   {
-	if(index<rules.size())
-	{
+    if(index<rules.size())
+    {
       return rules.get(index);
     }
-	if(subrules!=null)
-	{
-	  synchronized(RuleBasedParser.choicerules)
-	  {
+    if(subrules!=null)
+    {
+      synchronized(RuleBasedParser.choicerules)
+      {
         if(RuleBasedParser.choicerules.get(subrules[index])!=null)
         {
           if(index==rules.size())
@@ -57,12 +57,12 @@ class ChoiceRule
 	    }
 	    else 
 	    {
-		  RuleBasedParser.evaluate(subrules[index]);
-		  if(index==rules.size())
+          RuleBasedParser.evaluate(subrules[index]);
+          if(index==rules.size())
           {
             rules.add(RuleBasedParser.choicerules.get(subrules[index]));
           }
-		  return RuleBasedParser.choicerules.get(subrules[index]);
+	      return RuleBasedParser.choicerules.get(subrules[index]);
 	    }
 	  }
 	}
@@ -99,12 +99,12 @@ class ChoiceRule
   {
     if(subrules!=null)
     {
-	  return subrules.length;
-	}
-	else 
-	{
-	  return rules.size();
-	}      
+      return subrules.length;
+    }
+    else 
+    {
+      return rules.size();
+    }      
   }
   /*
     Adds the self token to the parent token with the proper positions set for the self token.

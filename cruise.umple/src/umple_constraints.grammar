@@ -22,11 +22,9 @@ constraint- :  [[constraintBody]] |  [[constraintExpr]] [[linkingOp]]?
 negativeConstraint : ! [[constraint]] | not [[constraint]] | ~ [[constraint]]
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
-constraintBody- : [=brace:OPEN_ROUND_BRACKET] [[constraint]] [=brace:CLOSE_ROUND_BRACKET]
-linkingOp : ( [=||] | [=andOp:and|&&|&] | [=orOp:or] ) [[constraintToken]]
+constraintBody : OPEN_ROUND_BRACKET [[constraint]] CLOSE_ROUND_BRACKET
+linkingOp- : ( [=andOp:and|&&|&] | [!orOp:OPEN_ROUND_BRACKETor|\Q||\ECLOSE_ROUND_BRACKET] ) [[constraint]]
 constraintExpr- : [[negativeConstraint]] | [[statemachineExpr]] | [[stringExpr]] | [[boolExpr]] | [[numExpr]] | [[associationExpr]]  | [[genExpr]] | [[loneBoolean]] | { [!fakeContraint:[^\n]+] } 
-
-compoundExpr- : [[stringExpr]]|[[numExpr]]|[[boolExpr]]|[[genExpr]]
 
 loneBoolean : [[constraintName]]
 
@@ -36,8 +34,8 @@ boolLiteral : [=literal:true|false]
 
 //must be string
 stringExpr : [[stringExprOperator]] | [[stringExprPlain]] 
-stringExprPlain : [[constraintName]] [[equalityOperator]] [[stringLiteral]] | [[stringLiteral]] [[equalityOperator]] [[constraintName]]
-stringExprOperator : [[stringPlusOperator]] [[equalityOperator]] [[stringPlusOperator]] | [[stringPlusOperator]] [[equalityOperator]] [[stringName]] | [[stringName]] [[equalityOperator]] [[stringPlusOperator]]
+stringExprPlain- : [[constraintName]] [[equalityOperator]] [[stringLiteral]] | [[stringLiteral]] [[equalityOperator]] [[constraintName]]
+stringExprOperator- : [[stringPlusOperator]] [[equalityOperator]] [[stringPlusOperator]] | [[stringPlusOperator]] [[equalityOperator]] [[stringName]] | [[stringName]] [[equalityOperator]] [[stringPlusOperator]]
 stringLiteral- : " [**quote] " | ' [**quote] '
 stringName- : [[stringLiteral]] | [[constraintName]]
 stringPlusOperator- : [[stringName]] ( [=operator:+] [[stringPlusOperator]] )+
@@ -46,15 +44,16 @@ stringPlusOperator- : [[stringName]] ( [=operator:+] [[stringPlusOperator]] )+
 genExpr : [[constraintName]] [[equalityOperator]] [[constraintName]]
 
 //for floats, doubles and ints
-numExpr : [[numberExpression1]] | [[numberExpression2]] | [[numberExpression3]]
+numExpr : [[numberExpression1]] | [[numberExpression2]] | [[numberExpression3]] | [[numberExpression4]]
 numberExpression1 -: ( [[arithmeticCall]] | [[numberName]] ) [[ordinalOp]] ( [[arithmeticCall]] | [[numberName]] )
 numberExpression2 -: ( [[arithmeticCall]] | [[constraintName]] ) [[equalityOperator]] ( [[arithmeticCall]] | [[numberLiteral]] )
-numberExpression3 -: ( [[arithmeticCall]] | [[numberLiteral]] ) [[numberLiteral]]    ( [[arithmeticCall]] | [[constraintName]] )
-numberLiteral- : [!number:[0-9]+OPEN_ROUND_BRACKET[\\.][0-9]+CLOSE_ROUND_BRACKET?]
+numberExpression3 -: ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[constraintName]] )
+numberExpression4 -: ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[numberLiteral]] )
+numberLiteral- : [!number:[0-9]+([\\.][0-9]+)?]
 numberName- : [[numberLiteral]] | [[constraintName]]
 arithmeticCall : [[lowArithmeticOperatorCall]] | [[highArithmeticOperatorCall]]
-lowArithmeticOperatorCall : ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] )? [=operator:+|-] ( [[arithmeticCall]] | [[arithmeticResolve]] ) 
-highArithmeticOperatorCall : [[arithmeticResolve]] [=operator:*|/|^] ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] ) 
+lowArithmeticOperatorCall- : ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] )? [=operator:+|-] ( [[arithmeticCall]] | [[arithmeticResolve]] ) 
+highArithmeticOperatorCall- : [[arithmeticResolve]] [=operator:*|/|^] ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] ) 
 arithmeticResolve -: -( [[arithmeticCall]] -) | [[numberName]]
 
 equalityOperator- :  [=equalsOp:==|equals] | [=notequalsOp:!=|/=|=!|=/=]
@@ -62,7 +61,8 @@ ordinalOp- : [=greaterOp:greater|>=|=>|=>=] | [=lessOp:less|<=|=<|=<=] | [=moreO
 
 associationExpr : [[constraintName]] [[associationOperators]] [[associationLit]]
 associationOperators- : [=firstOp:cardinality|has] ( [[ordinalOp]] | [[equalityOperator]] | [=all] )?
-associationLit : [[numberLiteral]] [=elements]? | [[stringLiteral]] | [[constraintName]] | { [[associationLit]] ( , [[associationLit]] )* }
+associationLit- : [[associationResolve]] | { [[associationLit]] ( , [[associationLit]] )* }
+associationResolve : [[constraintParameter]]
 
 statemachineExpr : [[constraintName]] [[statemachineOperators]] [[statemachineLiteral]]
 statemachineOperators- : [=isInOp:is|state] [=ignore:==|in] | [=isNotInOp:is|state] ( [=ignore:!=] | [=ignore:not] [=ignore:in] )
