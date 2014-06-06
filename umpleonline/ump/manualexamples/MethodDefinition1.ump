@@ -7,6 +7,6 @@ class Person
   
   String displayName()
   {
-    System.out.println("Hello, my name is " + getName());
+    return("Hello, my name is " + getName());
   }
 }

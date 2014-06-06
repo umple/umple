@@ -13,5 +13,17 @@ class LightFixture
     }
     Off {}
   }
-}
 
+  void doEntry() {System.out.println("Entry");}
+  void doExit() {System.out.println("Exit");}
+  void doTransition() {System.out.println("Transition");}
+  void doThisContinuouslyWhileOn() {
+    while (true) {
+      System.out.println("Still on");
+      try {
+        Thread.sleep(1000);
+      }
+      catch (InterruptedException e) {}
+    }
+  }
+}
