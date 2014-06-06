@@ -97,7 +97,7 @@
     <antcall target="testPhp" />
     <antcall target="testRuby" />
     <!--
-    <antcall target="allUserManualTests" />
+    <antcall target="allUserManualAndExampleTests" />
     -->
   </target>
 
@@ -162,23 +162,23 @@
   <!-- ```````````````````````````
     Under development - user manual tests
   ``````````````````````````` -->
-  <target name="allUserManualTests">
+  <target name="allUserManualAndExampleTests">
   
-    <echo>Building User Manual Examples</echo>
+    <echo>Building User Manual and UmpleOnline Examples</echo>
     
     <delete failonerror="false" >
        <fileset dir="${manualumpfiles.path}/src-gen-umple" />
        <fileset dir="${manualumpfiles.path}/bin"  />
     </delete>
       
-    <foreach target="userManualTest" param="manualFile" parallel="false">
+    <foreach target="userManualAndExampleTest" param="manualFile" parallel="false">
       <path>
         <fileset dir="${manualumpfiles.path}" includes="*.ump" />
       </path>
     </foreach>  
   </target>
 
-  <target name="userManualTest">
+  <target name="userManualAndExampleTest">
     <sequential>
       <basename file="${manualFile}" property="manualfileshort" suffix="ump" />
       <property name="fullump" value="${manualumpfiles.path}/${manualfileshort}.ump" />

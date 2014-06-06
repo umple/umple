@@ -6,3 +6,4 @@ class X {
   Boolean b = 1;
   Time t = "120000";
 }
+// @@@skipcompile - the resulting Java code will not compile

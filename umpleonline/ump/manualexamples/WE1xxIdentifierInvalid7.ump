@@ -4,4 +4,4 @@ class X {
     s*1 {}
   }
 }
-
+// @@@skipcompile

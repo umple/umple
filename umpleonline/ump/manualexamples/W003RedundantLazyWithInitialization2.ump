@@ -1,4 +1,4 @@
-This shows how the warning can be removed.
+// This shows how the warning can be removed.
 class X3lazy {
   Integer a = 1;
 }

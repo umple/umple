@@ -3,4 +3,4 @@ class X {
   blah blah blah;
   1 - * X;
 }
-
+// @@@skipcompile - the resulting Java code cannot be compiled
