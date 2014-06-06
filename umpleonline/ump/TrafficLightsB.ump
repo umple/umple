@@ -15,12 +15,18 @@ class IntersectionTimerDriven {
   flow {
     FourWayStop 
     {
-      entry / {direction_One_Light = DirectionOneLight.FlashingRed; direction_Two_Light = directionOneLight.FlashingRed; }
+      entry / {
+        directionOneLight = DirectionOneLight.FlashingRed;
+        directionTwoLight = directionTwoLight.FlashingRed;
+      }
       initiateRegularOperation -> DirectionOneGo;    
     }
     DirectionOneGo
     {
-      entry / {directionOneLight = directionOneLight.Green; directionTwoLight = directionTwoLight.Red; }
+      entry / {
+        directionOneLight = directionOneLight.Green;
+        directionTwoLight = directionTwoLight.Red;
+      }
       after(directionOneGoTime) -> DirectionOneHalting;
       detectMalfunction -> FourWayStop;
     }
@@ -32,7 +38,10 @@ class IntersectionTimerDriven {
     }
     DirectionTwoGo
     {
-      entry / {directionOneLight = directionOneLight.Red; directionTwoLight = directionTwoLight.Green; }
+      entry / {
+        directionOneLight = directionOneLight.Red;
+        directionTwoLight = directionTwoLight.Green;
+      }
       after(directionOneGoTime) -> DirectionTwoHalting;
       detectMalfunction -> FourWayStop;
     }
@@ -59,7 +68,7 @@ class IntersectionTimerDriven {
     }
     P1Halting
     {
-      entry / {P1Light = P1Light.FlashingP1Light;}
+      entry / {P1Light = P1Light.Flashing;}
       after(extraPedestrianWarning+yellowTime) -> P2Go;
       detectMalfunction -> FourWayStop;
     }

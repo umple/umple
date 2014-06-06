@@ -49,4 +49,12 @@ class Runway {
           Maintenance {
             do { performMaintenanceWork();}
           }
-} } } } }
+        }
+      }
+    }
+  }
+  void closeRunway() {}
+  void turnOffGreenLight() {}
+  void turnOnGreenLight() {}
+  void performMaintenanceWork() {}
+}
