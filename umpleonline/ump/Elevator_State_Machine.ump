@@ -50,4 +50,10 @@ class Elevator {
       }
     } 
   }
+  Integer timer = 100;
+  void goUp(){}
+  void goDown(){}
+  void stop(){}
+  void openDoor(){}  
+  Boolean floorRequested() {return false;}
 }

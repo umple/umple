@@ -107,4 +107,20 @@ class DigitalWatch {
      s3 -> time;
     } 
   }
+  Integer day=0;
+  Integer month=0;
+  Integer year=2014;
+  Integer hour=0;
+  Integer minute=0;
+  Integer second=0;
+  Integer alarmHour=0;
+  Integer alarmMinute=0;
+  Integer alarmSecond=0;
+  Integer timer=0;
+  void secondzero() {
+    setSecond(0);
+  }
+  void zero() {
+    setTimer(0);
+  }
 }

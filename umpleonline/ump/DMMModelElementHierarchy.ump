@@ -35,13 +35,13 @@ class Accesses{
   * -- 1 StructuralElement;
 }
 
-class Package{
+class DMMPackage{
   isA ModelElement;
-  * -- 0..1 Package isSubpackageOf;
+  * -- 0..1 DMMPackage isSubpackageOf;
 }
 
 class Contains{
-  * contain -- 1 Package partOf;
+  * contain -- 1 DMMPackage partOf;
   0..1 -- 1 ModelElement;
 }
 
@@ -118,19 +118,19 @@ class IsParameterOf{
   * -- 1 BehaviouralElement;
 }
 
-class Class{
+class DMMClass{
   isA StructuredType;
   isSubclassable;
 }
 
 class InheritsFrom{
-  1 transmits -- * Class inherits;
-  1 inherits -- * Class transmits;
+  1 transmits -- * DMMClass inherits;
+  1 inherits -- * DMMClass transmits;
 }
 
 class Imports{
-  * -- 1 Package;
-  * -- 1 Class;
+  * -- 1 DMMPackage;
+  * -- 1 DMMClass;
 }
 
 class ExecutableValue{
@@ -147,7 +147,7 @@ class Method{
 }
 
 class IsMethodOf{
-  * -- 1 Class methodOf;
+  * -- 1 DMMClass methodOf;
   0..1 -- 1 Method hasMethod;
 }
 
@@ -161,7 +161,7 @@ class Method
   position 678 455 216 128;
 }
 
-class Class
+class DMMClass
 {
   position 21 527 172 56;
 }
@@ -232,7 +232,7 @@ class Type
   position 152 204 109 60;
 }
 
-class Package
+class DMMPackage
 {
   position 28 113 108 60;
 }
@@ -266,7 +266,7 @@ class Invokes
 class Contains
 {
   position 24 14 109 41;
-  position.association Contains:contain__Package:partOf 24,41 20,0;
+  position.association Contains:contain__DMMPackage:partOf 24,41 20,0;
   position.association Contains__ModelElement 109,23 0,26;
 }
 
@@ -280,8 +280,8 @@ class IsOfType
 class Imports
 {
   position 6 226 109 41;
-  position.association Imports__Package 62,0 40,60;
-  position.association Class__Imports 26,41 11,0;
+  position.association Imports__DMMPackage 62,0 40,60;
+  position.association DMMClass__Imports 26,41 11,0;
 
 }
 
@@ -316,15 +316,15 @@ class IsFieldOf
 class IsMethodOf
 {
   position 363 551 109 41;
-  position.association Class:methodOf__IsMethodOf 0,10 172,34;
+  position.association DMMClass:methodOf__IsMethodOf 0,10 172,34;
   position.association IsMethodOf__Method:hasMethod 109,10 0,106;
 }
 
 class InheritsFrom
 {
   position 50 610 109 41;
-  position.association Class:inherits__InheritsFrom 0,30 0,56;
-  position.association Class:transmits__InheritsFrom 109,30 172,56;
+  position.association DMMClass:inherits__InheritsFrom 0,30 0,56;
+  position.association DMMClass:transmits__InheritsFrom 109,30 172,56;
 }
 
 class MethodInProperty

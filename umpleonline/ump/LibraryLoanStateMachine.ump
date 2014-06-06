@@ -10,20 +10,20 @@ class Loan
   Integer loanStartTime;
 
   // Number of ms to the loan becoming due from entry to current state
-  Integer deadline;
+  Integer deadline = 1209600000; // 2 weeks
 
   state {
     initial {
       entry / {
-        deadline = loanTime;
+        deadline = getLoanTime();
         loanStartTime = currentTime();
       };
       -> outstanding;
     }
     outstanding {
       // regular loan, can be extended
-      extend -> / {deadline = extensionTime;} outstanding;
-      return -> returned;
+      extend -> / {deadline = getExtensionTime();} outstanding;
+      returnitem -> returned;
       recall -> / {sendRecallNotice();} recalled;
       after(deadline) -> overdue;
       declareLost -> lost;
@@ -31,14 +31,14 @@ class Loan
     recalled {
       // Not overdue, but cannot extend
       entry / {deadline = deadline - (currentTime() - loanStartTime);}
-      return -> returned;
+      returnitem -> returned;
       after(deadline) -> overdue;
       declareLost -> lost;      
     }
     overdue {
       entry / {assessFine(); sendOverdueNotice();}
-      afterEvery(fineIncrementInterval) -> overdue;
-      return -> returned;
+      afterEvery(getFineIncrementInterval()) -> overdue;
+      returnitem -> returned;
       declareLost -> lost;      
     }
     returned {
@@ -49,7 +49,14 @@ class Loan
       entry / {assessReplacementCost();}
       
       // Perhaps found later ...
-      return / {refundReplacementCost();} -> returned;
+      returnitem / {refundReplacementCost();} -> returned;
     }
   }
+  void refundReplacementCost() {}
+  void sendRecallNotice() {}
+  void assessFine() {}
+  void sendOverdueNotice() {}
+  void assessReplacementCost() {}
+  int currentTime() {return 1;}
+  
 }

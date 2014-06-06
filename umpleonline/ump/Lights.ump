@@ -25,6 +25,7 @@ class Light1 {
 // Version of the light with just one state
 class Light2 {
   light { OFF{} ON{} }
+  Integer brightness = 0;  
   sm {
     s2 {
       on [light == Light.OFF]-> / {light = Light.ON; brightness = 0;} s2;

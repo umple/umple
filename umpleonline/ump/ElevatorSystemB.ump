@@ -6,6 +6,7 @@
 namespace Elevator.core;
 
 class Elevator{
+ depend Elevator.core.Buttons.*;
  identifier;
  state;
  directionOfMovement;
@@ -14,13 +15,16 @@ class Elevator{
  1..* -- 0..* UpCallButton;
 }
 class Floor{
+ depend Elevator.core.Buttons.*;
  1 -- * ConsoleCallButton;
  * -- * Elevator;
 }
 class FullSystem{
+ depend Elevator.core.Buttons.*;
  1 -- * Elevator;
 }
 class FloorNumberDisplay{
+ depend Elevator.core.Buttons.*;
  0..1 -- 1 Floor;
 }
 
