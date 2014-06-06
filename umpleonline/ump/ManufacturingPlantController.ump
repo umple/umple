@@ -40,6 +40,7 @@ class RobotAllocation {
 
 namespace MFP.core.black;
 class ProductType{
+ depend MFP.core.blue.*;
  description;
 
  1 -- * AssemblyStep;//ordered association
@@ -58,6 +59,7 @@ class ProductRun{
 
 namespace MFP.core.blue;
 class OrderLineItem {
+ depend MFP.core.black.*;
  1 -- * Product;
 }
 
@@ -84,6 +86,7 @@ class OrderLineItem {
 
 class ProductRun
 {
+  displayColour lightgrey;
   position 33 49 145 79;
   position.association ProductRun__ProductType 145,79 0,0;
   position.association AssemblyLine__ProductRun 70,79 62,0;
@@ -92,11 +95,13 @@ class ProductRun
 
 class AssemblyLine
 {
+  displayColour lightgrey;
   position 41 185 125 60;
 }
 
 class ProductType
 {
+  displayColour lightgrey;
   position 266 188 149 62;
   position.association AssemblyStep__ProductType 0,58 149,0;
   position.association Bin:keptIn__ProductType 149,58 0,0;
@@ -105,6 +110,7 @@ class ProductType
 
 class RobotAllocation
 {
+  displayColour pink;
   position 39 440 145 58;
   position.association AssemblyStep__RobotAllocation 70,0 73,58;
   position.association Robot__RobotAllocation 145,15 0,13;
@@ -112,12 +118,14 @@ class RobotAllocation
 
 class OrderLineItem
 {
+  displayColour lightblue;
   position 501 60 109 41;
   position.association OrderLineItem__Product 0,12 160,22;
 }
 
 class BillOfMaterialsLineItem
 {
+  displayColour lightgreen;
   position 255 316 181 74;
   position.association BillOfMaterialsLineItem__BillOfMaterialsLineItem:bill 0,62 9,74;
   position.association BillOfMaterialsLineItem:bill__ProductType 61,0 50,62;
@@ -126,22 +134,26 @@ class BillOfMaterialsLineItem
 
 class Product
 {
+  displayColour lightgreen;
   position 256 50 160 79;
   position.association Product__Product:packagedWith 0,64 11,79;
 }
 class AssemblyStep
 {
+  displayColour pink;
   position 36 317 149 62;
   position.association AssemblyStep__BillOfMaterialsLineItem 149,15 0,17;
 }
 
 class Robot
 {
+  displayColour pink;
   position 291 442 125 58;
 }
 
 class Supplier
 {
+  displayColour lightgreen;
   position 497 185 112 62;
   position.association ProductType__Supplier 0,32 150,28;
   position.association Product__Supplier 0,0 160,79;
@@ -149,5 +161,6 @@ class Supplier
 
 class Bin
 {
+  displayColour lightgreen;
   position 493 315 125 58;
 }

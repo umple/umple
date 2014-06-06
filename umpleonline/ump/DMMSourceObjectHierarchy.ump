@@ -25,7 +25,7 @@ class SourcePart{
 }
 
 class Contains{
-  1 -- 1 SourcePart;
+  0..1 containedBy -- 0..1 SourcePart;
   * -- 1 SourceObject;
 }
 
@@ -74,7 +74,7 @@ class Comment{
 
 class Describes{
   * -- 1 SourceObject;
-  1 -- 1 Comment;
+  0..1 foundIn -- 0..1 Comment;
 }
 
 class MacroDefinition{

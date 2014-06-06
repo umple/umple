@@ -277,3 +277,4 @@ class Crisis {
     // machine
 } // End of state machine mixin for 
   // Crisis
+// @@@skipcompile - many methods need to be added to turn this into a functioning system

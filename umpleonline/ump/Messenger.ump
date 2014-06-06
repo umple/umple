@@ -13,12 +13,12 @@ class Messenger {
     Sent {
       transmitViaGateway [externalContact]  -> InTransit;
       transmit [internalContact] -> Delivered;
-      delete -> Deleted;
+      deleteMessage -> Deleted;
     }
     
     InTransit {
       reachRecipient -> delivered;
-      delete -> Deleted;
+      deleteMessage -> Deleted;
     }
     
     Delivered {
@@ -26,5 +26,8 @@ class Messenger {
     }
     Deleted { } 
   }
+  Boolean internalContact = false;
+  Boolean externalContact = false;
+
 }
   
