@@ -1,0 +1,903 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+namespace cruise.umple.analysis;
+class Analyzer
+{
+  depend java.util.*;
+  depend cruise.umple.compiler.*;
+  depend java.io.*;  
+  depend java.lang.reflect.*;
+  abstract;
+  name = null;
+  UmpleModel model = null;
+  0..* parent -- 0..* Analyzer children;
+  void analyzeToken(Token token)
+  {
+    prepare(token);
+    for(Token subtoken:token.getSubTokens())
+    {
+      for(Analyzer analyzer:children)
+      {
+        if(analyzer.getName().equals(subtoken.getName()))
+        {
+          List<Class> classes = new ArrayList<Class>();
+          List<String> variables = new ArrayList<String>();
+          for(Field field:analyzer.getClass().getDeclaredFields())
+          {
+            Class<? extends Analyzer> clazz = this.getClass();
+            while(clazz!=null&&!"Analyzer".equals(clazz.getSimpleName()))
+            {
+              for(Field mfield:clazz.getDeclaredFields())
+              {
+                if(field.getName().equals(mfield.getName()))
+       	        {
+       	          try 
+                  {
+	            classes.add(field.getType());
+	            variables.add(field.getName().substring(0,1).toUpperCase()+field.getName().substring(1));
+                    break;
+                  } 
+                  catch (IllegalArgumentException e)
+                  {
+	            e.printStackTrace();
+	          } 
+                  catch (NullPointerException nullPointerException)
+                  {
+                  }
+                }
+              }
+              clazz = (Class<? extends Analyzer>)clazz.getSuperclass();
+            }
+          }
+          try 
+          {
+            List<Analyzer> originalChildren = analyzer.getChildren();
+            analyzer = analyzer.getClass().newInstance();
+            for(Analyzer child:originalChildren)
+            {
+              analyzer.addChild(child);
+            }
+	        for(int i=0;i<classes.size();++i)
+	        {
+	          Object object = this.getClass().getMethod("get"+variables.get(i),new Class[]{}).invoke(this);
+	          analyzer.getClass().getMethod("set"+variables.get(i),new Class[]{classes.get(i)}).invoke(analyzer,object);
+	        }
+	      } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
+	        e.printStackTrace();
+	      }
+          analyzer.analyzeToken(subtoken);
+          break;
+        }
+      }
+    }
+    analyze(token);
+  }
+  public void prepare(Token token){}
+  public void analyze(Token token){}
+
+  public String toString()
+  {
+    StringBuilder children = new StringBuilder();
+    return "Analyzer:"+getName();
+  }
+}
+
+class GuardAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  lazy UmpleClassifier uClassifier;
+  lazy Transition t;
+  void analyze(Token token)
+  {
+    Guard constraint = new Guard();
+    for(ConstraintVariable cv: rawLine)
+    {
+      constraint.addExpression(cv);
+    }
+    constraint.setPosition(token.getPosition());
+    constraint.setEndPosition(token.getEndPosition());
+    t.setGuard(constraint);
+    rawLine = new ArrayList<ConstraintVariable>();
+  }
+}
+
+
+
+class PreconditionAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  lazy UmpleClassifier uClassifier;
+  lazy Method method;
+  void analyze(Token token)
+  {
+    Precondition precondition = new Precondition(method);
+    
+    for(ConstraintVariable cv: rawLine)
+    {
+    	precondition.addExpression(cv);
+    }  
+	if (uClassifier instanceof UmpleClass) {
+		((UmpleClass)(uClassifier)).addPrecondition(precondition);
+	} else if (uClassifier instanceof UmpleTrait){
+		((UmpleTrait)(uClassifier)).addPrecondition(precondition);  
+	}
+    rawLine = new ArrayList<ConstraintVariable>();
+  }
+}
+
+class PostconditionAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  lazy UmpleClassifier uClassifier;
+  lazy Method method;
+  void analyze(Token token)
+  {
+    Postcondition postcondition = new Postcondition(method);
+    
+    for(ConstraintVariable cv: rawLine)
+    {
+    	postcondition.addExpression(cv);
+    }
+    postcondition.setPosition(token.getPosition());
+    if (uClassifier instanceof UmpleClass) {
+    	((UmpleClass)(uClassifier)).addPostcondition(postcondition);
+  	} else if (uClassifier instanceof UmpleTrait){
+  		((UmpleTrait)(uClassifier)).addPostcondition(postcondition);  
+  	}
+    rawLine = new ArrayList<ConstraintVariable>();
+  }
+}
+
+class ConstraintTokenAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  lazy UmpleClassifier uClassifier;
+  Constraint constraint = null;
+  public void analyze(Token token)
+  {
+    constraint = new Constraint();   
+    for(ConstraintVariable cv: rawLine)
+    {
+    	constraint.addExpression(cv);
+    }
+    rawLine = new ArrayList<ConstraintVariable>();
+  }
+}
+
+class InvariantAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  lazy UmpleClassifier uClassifier;
+  lazy Method method;
+  public void analyze(Token token)
+  {
+    Constraint constraint = new Constraint();    
+    for(ConstraintVariable cv: rawLine)
+    {
+    	constraint.addExpression(cv);
+    }  
+    if (uClassifier instanceof UmpleClass)
+    {
+      ((UmpleClass)uClassifier).addConstraint(constraint);
+    } 
+    else if (uClassifier instanceof UmpleTrait)
+    {
+      
+      ((UmpleTrait)uClassifier).addConstraint(constraint);  
+    }
+    rawLine = new ArrayList<ConstraintVariable>();
+  }
+}
+
+class GenExprAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  boolean mustBeInClass = false;
+  List<String> type = new ArrayList<String>();  
+}
+
+class StringExprAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  boolean mustBeInClass = false;
+  List<String> type = new ArrayList<String>();
+}
+
+class LoneBooleanAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  boolean mustBeInClass = false;
+  List<String> type = new ArrayList<String>();
+}
+
+class BoolExprAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  boolean mustBeInClass = false;
+  List<String> type = new ArrayList<String>();
+}
+
+class NumExprAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  boolean mustBeInClass = false;
+  List<String> type = new ArrayList<String>();
+}
+
+class ConstraintBodyAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  public void prepare(Token token){
+    rawLine.add(new ConstraintVariable("SYNTAX","("));
+  }
+  public void analyze(Token token){
+    rawLine.add(new ConstraintVariable("SYNTAX",")"));
+  }
+}
+
+class NegativeConstraintAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  public void prepare(Token token){
+    rawLine.add(new ConstraintVariable("OPERATOR","!"));    
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+    rawLine.add(new ConstraintVariable("SYNTAX","("));
+  }
+  public void analyze(Token token){
+    rawLine.add(new ConstraintVariable("SYNTAX",")"));
+  }
+}
+
+class AndOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class OrOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","||"));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class ArithmeticCallOperatorAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR",token.getValue()));
+  }
+}
+
+class ArithmeticCallAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  lazy boolean mustBeInClass;
+  lazy List<String> type;
+  ConstraintVariable cv = null;
+   
+  lazy List<ConstraintVariable> personalRawLine;
+  
+  public void prepare(Token token)
+  {
+    cv = new ConstraintVariable("NAME","");
+    cv.setSubConstraint(new Constraint());
+    personalRawLine = rawLine;
+    rawLine = new ArrayList<ConstraintVariable>();
+  }
+  
+  public void analyze(Token token)
+  {
+    for (ConstraintVariable var:rawLine)
+    {
+      cv.getSubConstraint().addExpression(var);
+    }
+    personalRawLine.add(cv);
+  }
+}
+
+class NumExprNumberAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR",token.getValue()));
+  }
+}
+
+class BoolLiteralAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR",token.getValue("literal")));
+  }
+}
+
+class StatemachineExprAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  lazy UmpleClassifier uClassifier;
+  ConstraintVariable cv = new ConstraintVariable("NAME","");
+  boolean isStateMachine = true;
+}
+
+class AssociationExprAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  lazy UmpleClassifier uClassifier;
+  
+  ConstraintVariable cv = new ConstraintVariable("NAME","");
+  ConstraintVariable operator = new ConstraintVariable("OPERATOR","");
+}
+
+class AssociationExprFirstOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable operator;
+  public void analyze(Token token)
+  {
+    operator.setValue(token.getValue());
+    operator.setIsPrimitive(false);
+  }
+}
+
+class AssociationExprMoreOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable operator;
+  public void analyze(Token token)
+  {
+    operator.setValue("cardinality>");
+  }
+}
+
+class AssociationExprSmallerOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable operator;
+  public void analyze(Token token)
+  {
+    operator.setValue("cardinality<");
+  }
+}
+
+class AssociationExprEqualsOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable operator;
+  public void analyze(Token token)
+  {
+    operator.setValue("cardinality==");
+  }
+}
+
+class AssociationExprNotequalsOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable operator;
+  public void analyze(Token token)
+  {
+    operator.setValue("cardinality!=");
+  }
+}
+
+class AssociationExprLessOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable operator;
+  public void analyze(Token token)
+  {
+    operator.setValue("cardinality<=");
+  }
+}
+
+class AssociationExprGreaterOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable operator;
+  public void analyze(Token token)
+  {
+    operator.setValue("cardinality>=");
+  }
+}
+
+class AssociationExprAllAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable operator;
+  public void analyze(Token token)
+  {
+    operator.setValue("hasAll");
+  }
+}
+
+class AssociationResolveAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  lazy UmpleClassifier uClassifier;
+  
+  lazy ConstraintVariable cv;
+  lazy ConstraintVariable operator;
+  boolean firstName = true;
+  ConstraintVariable subject = null;
+  boolean asIs = true;
+  public void prepare(Token token)
+  {
+    if(subject == null)
+    {
+      subject = cv;
+      cv = null;
+    }
+    if(!firstName)
+    {
+      if("hasAll".equals(operator.getValue()))
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+      }
+      else 
+      {
+        rawLine.add(new ConstraintVariable("OPERATOR","||"));
+      }
+      rawLine.add(subject);
+    }    
+    rawLine.add(operator);
+  }
+  public void analyze(Token token)
+  {
+  }
+}
+
+
+class IsNotInOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","in!="));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+    
+  }
+}
+
+class IsInOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","in=="));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class ConstraintParameterListAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy ConstraintVariable cv;
+  public void prepare(Token nameToken)
+  {
+    cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX","("));
+  }
+  public void analyze(Token nameToken)
+  {
+    cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",")"));
+  }
+}
+
+class ConstraintParameterAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;  
+  lazy ConstraintVariable cv;
+  
+  List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+  boolean mustBeInClass = false;
+  boolean asIs = false;
+  void analyze(Token token)
+  {
+    if(!asIs)
+    {
+      ConstraintVariable comma = new ConstraintVariable("SYNTAX","");
+      for(ConstraintVariable constraintVariable:rawLine)
+      {
+        if(!"".equals(comma.getValue()))
+        {
+          cv.getSubConstraint().addExpression(comma);
+        }
+        cv.getSubConstraint().addExpression(constraintVariable);
+        comma = new ConstraintVariable("SYNTAX",",");
+      }
+    }	
+  }
+}
+
+class ConstraintNameAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy List<ConstraintVariable> rawLine;
+  lazy boolean mustBeInClass;
+  lazy List<String> type;
+  boolean mustWarn = true;
+  Token grandparentToken = null;
+  ConstraintVariable cv = null;
+  boolean isNew = false;
+  boolean isComplex = false;
+  boolean isStateMachine = false;
+  lazy List<ConstraintVariable> personalRawLine;
+  public void prepare(Token nameToken)
+  {
+    Token grandparentToken = nameToken.getParentToken().getParentToken();
+    if(cv==null)
+    {
+      cv = new ConstraintVariable("NAME","");
+      cv.setSubConstraint(new Constraint());
+    }
+    isComplex = nameToken.numberOfSubTokens()>1;
+    personalRawLine = rawLine;
+    rawLine = new ArrayList<ConstraintVariable>();
+  }
+  public void analyze(Token nameToken)
+  {
+    StateMachine stateMachine = null;
+    if(isStateMachine)
+    {
+      if(uClassifier instanceof UmpleClass)
+      {
+        stateMachine = ((UmpleClass)uClassifier).getStateMachine(cv.getValue());
+      }
+      else if(uClassifier instanceof UmpleTrait)
+      {
+        stateMachine = ((UmpleTrait)uClassifier).getStateMachine(cv.getValue());
+      }
+      if(stateMachine!=null){
+        cv.setStateMachine(stateMachine);
+      }
+    }
+    personalRawLine.add(cv);
+  }
+}
+
+class StatemachineExprStateNameAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;  
+  lazy ConstraintVariable cv;
+  List<ConstraintVariable> rawLine= new ArrayList<ConstraintVariable>();
+  public void analyze(Token token)
+  {
+    if(cv.getStateMachine()!=null)
+    {
+      State state = cv.getStateMachine().findState(token.getValue());
+      ConstraintVariable var = new ConstraintVariable("STATE",token.getValue());
+      var.setState(state);
+      rawLine.add(var);
+    }
+    else
+    {
+      //TODO: add error
+    }
+  }
+}
+
+class ConstraintNameNameAnalyzer
+{
+  isA Analyzer;
+  
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable cv;
+  lazy UmpleClassifier uClassifier;
+  
+  public void analyze(Token token)
+  {
+    cv.setValue(token.getValue());
+    cv.getAttribute(uClassifier);
+    ConstraintVariable name = new ConstraintVariable(/*TODO: this should probably be of type SYNTAX*/"",token.getValue());
+    name.getAttribute(uClassifier);
+    cv.getSubConstraint().addExpression(name);
+  }
+}
+
+class ConstraintNameNewAnalyzer
+{
+  isA Analyzer;
+  
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable cv;
+  public void analyze(Token token)
+  {
+    ConstraintVariable newCV = new ConstraintVariable("OPERATOR","initialise");
+    newCV.setIsPrimitive(false);
+    cv.getSubConstraint().addExpression(newCV);
+  }
+}
+
+class ConstraintNameIndexAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ConstraintVariable cv;
+  public void analyze(Token token)
+  {
+    ConstraintVariable var = cv.getSubConstraint().getExpression(cv.getSubConstraint().numberOfExpressions()-1);
+    try
+    {
+      int i = Integer.parseInt(token.getValue());
+      if(var.getIsAssociation())
+      {
+        var.setIndex(i);
+      }
+      else
+      {
+        //setFailedPosition(token.getPosition(), 29, var.getValue(), "association or list");
+      }
+    } 
+    catch (NumberFormatException e)
+    {
+      //setFailedPosition(token.getPosition(), 29, token.getValue(), "integer");
+    }
+  }
+}
+
+class ConstraintBodyBraceAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("SYNTAX",token.getValue()));
+  }
+}
+
+class ConstraintScopeOperatorAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy UmpleClassifier uClassifier;
+  lazy ConstraintVariable cv;
+
+  lazy List<ConstraintVariable> rawLine;
+  lazy boolean mustBeInClass;
+  lazy List<String> type;
+  
+  public void prepare(Token token)
+  {
+    ConstraintVariable dot = new ConstraintVariable("OPERATOR",".");
+    dot.setIsPrimitive(false);
+    cv.getSubConstraint().addExpression(dot);
+  }
+  
+  public void analyze(Token token)
+  {
+  }
+}
+
+class StringExprQuoteAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","\""+token.getValue()+"\""));
+  }
+}
+
+class StringExprOperatorAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","concatenate"));    
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class NumExprEqualsOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","=="));
+  }
+}
+
+class EqualsOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","=="));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class NotequalsOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","!="));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class SmallerOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","<"));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class MoreOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR",">"));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class LessOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR","<="));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+
+
+
+namespace cruise.umple.compiler;
