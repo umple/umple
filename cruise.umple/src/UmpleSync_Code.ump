@@ -12,8 +12,7 @@ Code for methods mixed into the UmpleSync.ump model
 namespace cruise.umple.sync;
 
 class SynchronizationAction
-{
-  
+{  
   public void go()
   {
   
@@ -30,7 +29,7 @@ class UpdatePositioningAction
       textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -253,7 +252,7 @@ class NewAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -378,7 +377,7 @@ class EditAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -777,7 +776,7 @@ class DeleteAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -863,7 +862,7 @@ class NewAssociationAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -967,7 +966,7 @@ class NewAssociationAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -1061,7 +1060,7 @@ class EditAssociationAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -1262,7 +1261,7 @@ class DeleteAssociationAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -1402,7 +1401,7 @@ class DeleteGeneralizationAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       
@@ -1496,7 +1495,7 @@ class NewGeneralizationAction
       TextParser textParser = new TextParser(getUmpleCode());
       UmpleFile umpleFile = new UmpleFile(new File(getFilename()));    
       UmpleModel umpleModel = new UmpleModel(umpleFile);
-      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser();
+      cruise.umple.parser.analysis.RuleBasedParser parser = new cruise.umple.parser.analysis.RuleBasedParser(umpleModel);
       UmpleParser umpleParser = new UmpleInternalParser("UmpleInternalParser", umpleModel, parser);
       ParseResult result = parser.parse(umpleFile);
       

@@ -26,6 +26,7 @@ class UmpleInternalParser
   isA Parser;
   depend java.io.*;
   depend cruise.umple.util.*;
+  depend cruise.umple.analysis.*;
   depend cruise.umple.parser.analysis.*;
   
   currentPackageName = "";

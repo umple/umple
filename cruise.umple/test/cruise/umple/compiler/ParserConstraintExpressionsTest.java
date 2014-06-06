@@ -12,7 +12,7 @@ public class ParserConstraintExpressionsTest extends UmpleParserTest {
 		assertParse("700_DateConstraint.ump");
 	}
 	
-	@Test
+	@Test @Ignore
 	public void BasicConstraint2(){ // [agedfd > 12]
 		assertHasWarningsParse("700_BasicConstraint2.ump",28);
 	}

@@ -102,18 +102,22 @@ class UmpleInternalParser
           
           pos = 2;
         }
-        List <ConstraintVariable> cvs = analyzeConstraint(traceToken.getSubToken(pos), aClass); //adds all identifiers to constraints
-        Constraint constraint = new Constraint();
-        List<Attribute> others = new ArrayList<Attribute>();
-        for(ConstraintVariable cv: cvs)
+        
+        if(((ConstraintTokenAnalyzer)model.getAnalyzer("constraintToken"))!=null)
         {
-          constraint.addExpression(cv);
+          ((ConstraintTokenAnalyzer)model.getAnalyzer("constraintToken")).setUClassifier(aClass);
+          model.getAnalyzer("constraintToken").analyzeToken(traceToken.getSubToken(pos));
+        }
+        Constraint constraint = ((ConstraintTokenAnalyzer)model.getAnalyzer("constraintToken")).getConstraint();
+        List<Attribute> others = new ArrayList<Attribute>();
+        for(ConstraintVariable cv: constraint.getExpressions())
+        {
           if(("after".equals(traceAttr.getConditionType())||
           	  "until".equals(traceAttr.getConditionType()))&&
           	  cv.getIsAttribute()
           )
           {
-          	UmpleVariable av = cv.getAttribute(aClass);
+            UmpleVariable av = cv.getAttribute(aClass);
             if(av instanceof Attribute)
             {
               others.add((Attribute)av);
@@ -418,20 +422,20 @@ class UmpleInternalParser
     }
     
     for( StateMachine ss : stms )
-  	  for( State s : ss.getStates() )
-  		  for( Transition tsn : s.getTransitions() )
-  			  if( tsn.getEvent().getName().equals(traceToken.getValue()) )
-  			  {
-  				  StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
-  				  tracedStm.setIsOut(false);
-  				  tracedStm.setIsIn(false);
-  				  tracedStm.setPosition(traceToken.getPosition());
-  				  tracedStm.setTransition(tsn);
-  				  tracedStm.setStateMachine(ss);
-  				  tracedStm.setState(s);
-  				  traceDirective.addStateMachineTraceItem(tracedStm);
-  				  break;
-  			  }
+      for( State s : ss.getStates() )
+        for( Transition tsn : s.getTransitions() )
+  	  if( tsn.getEvent().getName().equals(traceToken.getValue()) )
+  	  {
+            StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
+  	    tracedStm.setIsOut(false);
+  	    tracedStm.setIsIn(false);
+  	    tracedStm.setPosition(traceToken.getPosition());
+  	    tracedStm.setTransition(tsn);
+  	    tracedStm.setStateMachine(ss);
+  	    tracedStm.setState(s);
+  	    traceDirective.addStateMachineTraceItem(tracedStm);
+  	    break;
+  	  }
     
     if( stmTraceItem != null && stmTraceItem.contains("."))
     {

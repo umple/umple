@@ -24,7 +24,7 @@ class student
     @deleted = false
     @age = a_age
     @weight = a_weight
-    if  !((!(a_age>18))) then
+    if  !((!((a_age>18)))) then
       raise RuntimeError, 'Please provide a valid age'
     end
     @initialized = true
@@ -36,7 +36,7 @@ class student
 
   def set_age(a_age)
     was_set = false
-    if !(a_age>18) then
+    if !((a_age>18)) then
     @age = a_age
     was_set = true
     end

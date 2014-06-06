@@ -24,6 +24,7 @@ external interface Runnable {}
  */
 class UmpleModel
 {
+  depend cruise.umple.analysis.*;
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
   isA Runnable;
@@ -41,6 +42,7 @@ class UmpleModel
   ParseResult lastResult = null;
 
   Map<String,String> generatedCode = new HashMap<String,String>();
+  Map<String,Analyzer> analyzers = new HashMap<String,Analyzer>();
 
   // data for default class positioning
   internal Coordinate levelOffset = new Coordinate(200,100,0,0);
@@ -211,26 +213,20 @@ class ConstraintVariable{
   boolean isAssociation = false;
   Integer index = -1;
   boolean isPrimitive = true;
+  boolean isStateMachine = false;
+  boolean isState = false;
   boolean isNotPrimitive = { !isPrimitive };
   boolean isNumeric = {"integer".equals(type.toLowerCase())||
     "float".equals(type.toLowerCase())||
      "double".equals(type.toLowerCase())};
   UmpleVariable foundAttribute = null;
+  State state = null;
+  StateMachine stateMachine = null;
   
   attributeType = { (getFoundAttribute() == null) ? null : getFoundAttribute().getType() }
 
   key { value, subConstraint }
 
-}
-
-class ConstraintStateVariable {
-  isA ConstraintVariable;
-  State state;
-}
-
-class ConstraintStateMachineVariable {
-  isA ConstraintVariable;
-  StateMachine stateMachine;
 }
 
 /*

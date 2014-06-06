@@ -120,7 +120,6 @@ DISABLED BECAUSE OF MAJOR CHANGES WHEN GENERATING USER MANUAL
     
     Assert.assertEquals(true,(new File("example/myTitle.html")).exists());
     Assert.assertEquals(true,(new File("example/myTitle3.html")).exists());
-    
     Assert.assertEquals(2,documenter.numberOfMessages());
     AssertHelper.assertPathEquals("Created: example\\myTitle.html",documenter.getMessage(0));
     AssertHelper.assertPathEquals("Created: example\\myTitle3.html",documenter.getMessage(1));
@@ -256,7 +255,7 @@ DISABLED BECAUSE OF MAJOR CHANGES WHEN GENERATING USER MANUAL
     {
       answer = parser.analyze().getWasSuccess();
     }
-    
+
     Assert.assertEquals(true, answer);
   }
   

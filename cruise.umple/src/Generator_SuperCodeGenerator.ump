@@ -81,7 +81,7 @@ class SuperCodeGenerator {
       }
       else if(expr.getType().equals("STATE"))
       {
-        String value = translate("stateOne",((ConstraintStateVariable)expr).getState());
+        String value = translate("stateOne",(expr).getState());
         if(insertNext){
           expression = StringFormatter.format(expression,value,previousName);
           insertNext = false;
@@ -92,7 +92,8 @@ class SuperCodeGenerator {
       } 
       else if(expr.getType().equals("STATEMACHINE"))
       {
-        String value = translate("getFullMethod",((ConstraintStateMachineVariable)expr).getStateMachine());
+        
+        String value = translate("getFullMethod",(expr).getStateMachine());
         if(insertNext){
           expression = StringFormatter.format(expression,value,previousName);
           insertNext = false;
@@ -217,7 +218,8 @@ class SuperCodeGenerator {
       {
          value = translate("associationMany",(AssociationVariable)expr.getFoundAttribute());
       }
-      else {
+      else 
+      {
         value = translate("associationMany",(AssociationVariable)expr.getFoundAttribute());
         value = StringFormatter.format(ConstraintLookupMap.get("[]"),""+expr.getIndex(), value);
       }

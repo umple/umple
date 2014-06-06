@@ -31,6 +31,8 @@ class RuleBasedParser
 
   //List of umple grammar files which will dictate the rule graph that is contructed.
   String[] grammarFiles;
+  
+  UmpleModel model;
 }
 
 /*
@@ -122,6 +124,8 @@ class RuleBasedParserThread
 
   //The data package of the previous parse, so that things like keys and the filenames already parsed can be passed along
   ParserDataPackage data;
+  
+  UmpleModel model;
 }
 
 /*
@@ -134,7 +138,9 @@ class GrammarAnalyzer
   depend java.util.*;
   depend cruise.umple.compiler.*;
   depend cruise.umple.parser.rules.*;
-  depend java.io.*;
+  depend java.io.*;  
+  depend java.lang.reflect.*;
+  depend cruise.umple.analysis.*;
 
   /*
     Inner class which is a wrapper for the objects that will go into the global hashmap
@@ -150,6 +156,7 @@ class GrammarAnalyzer
       return ((T)global.get(name));
     }
   }
+
   /*
     This funciton is used for putting things into the global hashmap that contains all objects
   */
@@ -160,6 +167,7 @@ class GrammarAnalyzer
 
   boolean done = false;
   boolean first = true;
+
 
   //hashmap of global variables(local to the class, not local to methods)
   HashMap<String,Object> global = new HashMap<String,Object>();
@@ -178,7 +186,6 @@ class GrammarAnalyzer
 
   Getter<ChoiceRule> rules = new Getter<ChoiceRule>();
   Getter<Stack<ChoiceRule>> stacks = new Getter<Stack<ChoiceRule>>();
-  Getter<GrammarAnalyzer> analyzers = new Getter<GrammarAnalyzer>();
   Getter<String> strings = new Getter<String>();
   Getter<Integer> ints = new Getter<Integer>();
 
@@ -200,6 +207,11 @@ class GrammarAnalyzer
   //if a balanced rule is created, it needs to know if the current context is nospaces or not
   noSpaces = false;
 
+  //umple model object that will become the meta model
+  UmpleModel model;
+  
+  Map<String,Analyzer> analyzerMap = new HashMap<String,Analyzer>();  
+
   //resulting parse result from the parse
   ParseResult parseResult = null;
 
@@ -208,5 +220,10 @@ class GrammarAnalyzer
   
   //List of tokens of the form [~token], which are closed minded enough to only accept alphanumerics, but still need to know if there are keyswords following them which cannot be the token's value, such as sorted being a rolename for an association. 
   Terminal[] closeTerminal;
+  
+  ChoiceRule[] analyzerRules;
+  Analyzer[] analyzers;
+  boolean mustSetupAnalyzers = true;
 }
 use GrammarParsing_Code.ump;
+

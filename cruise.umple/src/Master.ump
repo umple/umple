@@ -36,6 +36,7 @@ use UmpleDiagram.ump;
 use UmpleExceptions.ump;
 use util/UmpleHelper.ump;
 use UmpleParser.ump;
+use UmpleAnalysis.ump;
 use UmpleInternalParser.ump;
 use UmpleXtextParser.ump;
 use UmpleSync.ump;
