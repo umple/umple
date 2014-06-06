@@ -9,68 +9,75 @@ var Layout = {};
 Layout.isTextVisible = true;
 Layout.isDiagramVisible = true;
 Layout.isPaletteVisible = true;
-Layout.padding = 30;
-
-Layout.minEditorSize;
-Layout.maxEditorSize;
-Layout.minCanvasSize;
 
 // The handles for the main layout controlling features
-var canvasHandle = "umpleCanvas";
-var modelEditorHandle = "umpleTextEditor";
-var paletteHandle = "paletteColumn";
-var layoutEditorHandle = "umpleLayoutEditor";
+var canvasHandle = "#umpleCanvasColumn";
+var editorHandle = "#textEditorColumn";
+var modelEditorHandle = "#topTextEditor";
+var paletteHandle = "#paletteColumn";
+var layoutEditorHandle = "#bottomTextEditor";
 
 /////////////////////////////////////
 // Layout initialization functions //
 /////////////////////////////////////
 
+//Initializes any constants the layout depends on
+Layout.init = function()
+{
+  Layout.padding = 2*parseInt(jQuery('body').css('marginLeft')) 
+    + parseInt(jQuery(editorHandle).css('paddingRight'))
+    + parseInt(jQuery(canvasHandle).css('paddingLeft'));
+  
+  this.minCanvasSize = new UmplePosition(0,0,420,490);
+  this.minEditorSize = new UmplePosition(0,0,284,0);
+  this.maxEditorSize = new UmplePosition(
+      0,
+      0,
+      jQuery(window).innerWidth() - this.padding - jQuery(paletteHandle).outerWidth() - Layout.minCanvasSize.width,
+      0);
+}
+
 // Initializes the canvas size
 Layout.initUmpleCanvasSize = function()
 {
-  var canvas = jQuery("#" + canvasHandle);
+  var canvas = jQuery(canvasHandle);
   if (this.isDiagramVisible==false) {this.showHideCanvas(false);}
   
   var offsetTop = Math.round(canvas.position().top);
   var offsetLeft = Math.round(canvas.position().left);
   
-  var defaultWidth = canvas.width();
-  var defaultHeight = canvas.height();
-  
-  this.minCanvasSize = new UmplePosition(0,0,defaultWidth,defaultHeight);
-  this.minEditorSize = new UmplePosition(0,0,jQuery("#" + modelEditorHandle).width(),0);
-  this.maxEditorSize = new UmplePosition(
-      0,
-      0,
-      jQuery(window).innerWidth() - 2*this.padding - jQuery("#" + paletteHandle).width() - Layout.minCanvasSize.width,
-      0);
-  
-  var startupWidth = jQuery(window).width() - offsetLeft - this.padding;
-  var startupHeight = jQuery(window).height() - offsetTop - this.padding;
-  
-  canvas.width(startupWidth);
-  canvas.height(startupHeight);
+  canvas.width(jQuery(window).width() - offsetLeft - this.padding);
+  canvas.height(jQuery(window).height() - offsetTop - this.padding);
 }
 
 // Initializes the text editor size
 Layout.initUmpleTextAreaSize = function()
 {
-  var umpleTextEditor = jQuery("#" + modelEditorHandle);
-  var umpleLayoutEditor = jQuery("#" + layoutEditorHandle);
-  
-  umpleTextEditor.resizable({
-    stop: function(event, ui){Layout.umpleTextEditorResizing(event, ui);},
+  jQuery(editorHandle).resizable({
+    start: function(event, ui)
+      {
+        Layout.canvasStartingWidth = jQuery(canvasHandle).outerWidth()
+          - parseInt(jQuery(editorHandle).css('paddingRight'));
+          - parseInt(jQuery(canvasHandle).css('paddingLeft')); 
+        Layout.editorStartingWidth = jQuery(editorHandle).outerWidth();
+      },
+    resize: function(event, ui){Layout.umpleTextEditorResizing(event, ui);},
+    stop: function(event, ui){Layout.umpleTextEditorResized(event, ui);},
     autoHide: true,
     minWidth: this.minEditorSize.width,
     maxWidth: this.maxEditorSize.width,
-    alsoResize: umpleLayoutEditor,
     handles:"e"});
   
-  this.resizeCodeMirrorEditor(jQuery("#" + modelEditorHandle).height());
-  umpleTextEditor.width(508);
-  umpleLayoutEditor.width(508);
+  this.resizeCodeMirrorEditor(jQuery(modelEditorHandle).height());
+  jQuery(editorHandle).width(508);
   
-  this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery("#" + canvasHandle).width(), undefined);
+  this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
+}
+
+Layout.initPaletteSize = function()
+{
+  jQuery("#paletteColumn").height(jQuery(window).innerHeight() - jQuery("#header").outerHeight() - 
+      jQuery("#topLine").outerHeight() - Layout.padding);
 }
 
 ///////////////////////////////////////////
@@ -79,10 +86,9 @@ Layout.initUmpleTextAreaSize = function()
 
 Layout.setTextEditorSize = function(width, height) 
 {
-  var umpleTextEditor = jQuery("#" + modelEditorHandle);
-  var umpleLayoutEditor = jQuery("#" + layoutEditorHandle);
+  var umpleTextEditor = jQuery(editorHandle);
   
-  if(width == undefined) width = umpleTextEditor.width();
+  if(width == undefined) width = umpleTextEditor.outerWidth();
   if(height == undefined) height = this.calculateMainHeight();
   
   if(width < Layout.minEditorSize.width) 
@@ -91,26 +97,22 @@ Layout.setTextEditorSize = function(width, height)
   }
   
   umpleTextEditor.width(width);
-  umpleTextEditor.height(height);
-  umpleLayoutEditor.width(width);
-  umpleLayoutEditor.height(height);
+  
+  this.adjustTextEditorHeight(height);
 
   if(this.isDiagramVisible)
-    this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery("#" + canvasHandle).width(), undefined);
+    this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
 }
 
 //Sets the size of the canvas. If either the height or width are undefined, they are unchanged.
 Layout.setUmpleCanvasSize = function(width, height)
 {
-  var umpleCanvas = jQuery("#" + canvasHandle);
+  var umpleCanvas = jQuery(canvasHandle);
+
+  var maxWidth = jQuery(window).innerWidth() - this.padding - this.minEditorSize.width 
+    - jQuery(paletteHandle).outerWidth();
   
-  //Note, the maxWidth is needed to stop the canvas from horizontally resizing beyond the window width, but ONLY if 
-  //the resize buttons are used. The maxWidth stops the canvas from resizing nicely when disabling then enabling the 
-  //text editor
-  var maxWidth = jQuery(window).innerWidth() - 2*this.padding - this.minEditorSize.width 
-    - jQuery("#" + paletteHandle).width();
-  
-  if(width == undefined) width = umpleCanvas.width();
+  if(width == undefined) width = umpleCanvas.outerWidth();
   if(height == undefined) height = this.calculateMainHeight();
   
   if (width < this.minCanvasSize.width)
@@ -128,7 +130,6 @@ Layout.setUmpleCanvasSize = function(width, height)
   
   this.adjustTextEditorHeight(height);
   
-  jQuery("#palette").height(height + 7);
   umpleCanvas.width(width);
   umpleCanvas.height(height);
   jQuery("#palette").accordion("resize");
@@ -144,15 +145,40 @@ Layout.setUmpleCanvasSize = function(width, height)
   }
 }
 
+//Sets the height of the model and layout text editors, depending on what is enabled
+Layout.adjustTextEditorHeight = function(height) 
+{  
+  if (jQuery("#buttonShowHideLayoutEditor").attr('checked'))
+  {
+    jQuery(modelEditorHandle).height(height*0.7);
+    if(Page.codeMirrorOn) this.resizeCodeMirrorEditor(height*0.7);
+    jQuery(layoutEditorHandle).height(height*0.3);
+  }
+  else
+  {
+    jQuery(modelEditorHandle).height(height);
+    if(Page.codeMirrorOn) this.resizeCodeMirrorEditor(height);
+  }
+  jQuery(editorHandle).height(height);
+}
+
+Layout.resizeCodeMirrorEditor = function(newHeight) 
+{
+  if(Page.codeMirrorOn)
+  {
+    Page.codeMirrorEditor.getWrapperElement().style.height=newHeight+"px";
+    Page.codeMirrorEditor.refresh();
+  }
+}
+
 ////////////////////////////////////////////
 // Functions to show and hide UI elements //
 ////////////////////////////////////////////
 
 Layout.showHideLayoutEditor = function(doShow)
 {
-  var layoutEditor = jQuery("#" + layoutEditorHandle);
-  var modelEditor = jQuery("#" + modelEditorHandle);
-  var newHeight = jQuery("#" + canvasHandle).height();
+  var layoutEditor = jQuery(layoutEditorHandle);
+  var newHeight = jQuery(canvasHandle).height();
    
   if (doShow == undefined) doShow = layoutEditor.is(":visible");
   
@@ -170,10 +196,10 @@ Layout.showHideLayoutEditor = function(doShow)
 
 Layout.showHideTextEditor = function(doShow)
 {
-  var modelEditor = jQuery("#" + modelEditorHandle);
+  var modelEditor = jQuery(editorHandle);
   var layoutBox = jQuery("#buttonShowHideLayoutEditor");
   var layoutListItem = jQuery("#layoutListItem");
-  var canvas = jQuery("#" + canvasHandle);
+  var canvas = jQuery(canvasHandle);
   
   if (doShow == undefined) doShow = !this.isTextVisible; 
     
@@ -198,15 +224,14 @@ Layout.showHideTextEditor = function(doShow)
   
   // Resize the canvas and/or the text editor appropriately
   if(this.isDiagramVisible)
-    this.setUmpleCanvasSize(this.calculateLeftoverWidth() + canvas.width(), undefined);
+    this.setUmpleCanvasSize(this.calculateLeftoverWidth() + canvas.outerWidth(), undefined);
   if(this.isTextVisible)
-    this.setTextEditorSize(this.calculateLeftoverWidth() + modelEditor.width(), undefined);
+    this.setTextEditorSize(this.calculateLeftoverWidth() + modelEditor.outerWidth(), undefined);
 }
 
 Layout.showHideCanvas = function(doShow)
 { 
-  var canvas = jQuery("#" + canvasHandle);
-  var modelEditor = jQuery("#" + modelEditorHandle);
+  var canvas = jQuery(canvasHandle);
   
   if (doShow == undefined) doShow = !this.isDiagramVisible;
   
@@ -265,35 +290,9 @@ Layout.showHideCanvas = function(doShow)
   
   // Resize the text editor appropriately 
   if(this.isDiagramVisible)
-    this.setUmpleCanvasSize(this.calculateLeftoverWidth() + canvas.width(), undefined);
+    this.setUmpleCanvasSize(this.calculateLeftoverWidth() + canvas.outerWidth(), undefined);
   if(this.isTextVisible)
-    this.setTextEditorSize(this.calculateLeftoverWidth() + modelEditor.width(), undefined);
-}
-
-Layout.resizeCodeMirrorEditor = function(newHeight) 
-{
-   Page.codeMirrorEditor.getWrapperElement().style.height=newHeight+"px";
-   Page.codeMirrorEditor.refresh();
-}
-
-Layout.adjustTextEditorHeight = function(height) 
-{  
-  if (jQuery("#buttonShowHideLayoutEditor").attr('checked'))
-  {
-    jQuery("#" + modelEditorHandle).height(height*0.7 + 3);
-    if(Page.codeMirrorOn) {
-       this.resizeCodeMirrorEditor(height*0.7 + 3);
-    }
-    jQuery("#" + layoutEditorHandle).height(height*0.3);
-  }
-  else
-  {
-    jQuery("#" + modelEditorHandle).height(height + 6);
-    if(Page.codeMirrorOn) {
-       this.resizeCodeMirrorEditor(height + 6);
-    }
-  }
-  jQuery("#" + modelEditorHandle).height(height + 6);
+    this.setTextEditorSize(this.calculateLeftoverWidth() + jQuery(editorHandle).outerWidth(), undefined);
 }
 
 /////////////////////////////////////////
@@ -304,13 +303,24 @@ Layout.mainApplicationHeightResizing = function(event, ui)
 {
   var currentHeight = ui.size.height;
   
-  this.setUmpleCanvasSize(jQuery("#" + canvasHandle).width(), currentHeight);
+  this.setUmpleCanvasSize(jQuery(canvasHandle).outerWidth(), currentHeight);
 }
 
 Layout.umpleTextEditorResizing = function(event, ui)
 {
   var currentWidth = ui.size.width;
-  
+  var deltaWidth = Layout.editorStartingWidth - currentWidth;
+  jQuery(canvasHandle).width(Layout.canvasStartingWidth + deltaWidth);
+  jQuery(editorHandle).width(currentWidth);
+  jQuery(modelEditorHandle).width(currentWidth);
+  jQuery(layoutEditorHandle).width(currentWidth);
+}
+
+Layout.umpleTextEditorResized = function(event, ui)
+{
+  var currentWidth = ui.size.width;
+  jQuery(modelEditorHandle).css('width', 'auto');
+  jQuery(layoutEditorHandle).css('width', 'auto');
   this.setTextEditorSize(currentWidth, undefined);
 }
 
@@ -324,8 +334,8 @@ Layout.umpleCanvasResizing = function(event, ui)
 
 Layout.umpleCanvasResized = function(factor)
 { 
-  var currentHeight = jQuery("#" + canvasHandle).height();
-  var currentWidth = jQuery("#" + canvasHandle).width();
+  var currentHeight = jQuery(canvasHandle).outerHeight();
+  var currentWidth = jQuery(canvasHandle).outerWidth();
   
   var inc = 100;
   var newHeight=currentHeight + 0.25*inc*factor;
@@ -337,24 +347,15 @@ Layout.umpleCanvasResized = function(factor)
 // A helper function to calculate the unused width of the page, depending on what is currently visible
 Layout.calculateLeftoverWidth = function() 
 {
-  var width = jQuery(window).innerWidth() - 2*this.padding;
-  if(this.isTextVisible) 
-  {
-    width -= jQuery("#" + modelEditorHandle).width();
-  }
-  if(this.isDiagramVisible)
-  {
-    width -= jQuery("#" + canvasHandle).width();
-  }
-  if(this.isPaletteVisible)
-  {
-    width -= jQuery("#" + paletteHandle).width();
-  }
+  var width = jQuery(window).innerWidth() - this.padding;
+  if(this.isTextVisible) width -= jQuery(editorHandle).outerWidth();
+  if(this.isDiagramVisible) width -= jQuery(canvasHandle).outerWidth();
+  if(this.isPaletteVisible) width -= jQuery(paletteHandle).outerWidth();
   return width;
 }
 
 // Helper function to calculate the height of the canvas, textEditor, and palette
 Layout.calculateMainHeight = function() 
 {
-  return jQuery("#" + canvasHandle).height();
+  return jQuery(paletteHandle).outerHeight();
 }

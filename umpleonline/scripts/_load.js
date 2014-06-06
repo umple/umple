@@ -55,6 +55,20 @@ document.write('<link href="scripts/shThemeDefault.css" rel="stylesheet" type="t
 //INLINE EDITING
 document.write('<script type="text/javascript" src="scripts/inlineeditor.js"><\/script>');
 
+// Code mirror
+document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/codemirror.js"><\/script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/mode/clike/clike.js"><\/script>');  // contains C-like mode
+document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/foldcode.js"><\/script>');
+document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/searchcursor.js"><\/script>');
+document.write('<link href="scripts/CodeMirror/lib/codemirror.css" rel="stylesheet" type="text/css" />');
+
+// DROPBOX
+document.write('<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="akix6305j3tm11i"></script>');
+document.write('<script type="text/javascript" src="scripts/dropbox/dropbox.js"></script>');
+document.write('<script type="text/javascript" src="scripts/dropbox/chooser.js"></script>');
+document.write('<script type="text/javascript" src="scripts/dropbox/saver.js"></script>');
+document.write('<link href="scripts/dropbox/dropbox.css" rel="stylesheet" type="text/css"/>');
+
 //Umple System
 document.write('<link href="scripts/styles.css" rel="stylesheet" type="text/css" />');
 document.write('<script type="text/javascript" src="scripts/umple_page.js"><\/script>');
@@ -71,18 +85,4 @@ document.write('<script type="text/javascript" src="scripts/umple_method.js"><\/
 document.write('<script type="text/javascript" src="scripts/umple_history.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_restore.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"><\/script>');
-
-// Code mirror
-document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/codemirror.js"><\/script>');
-document.write('<script type="text/javascript" src="scripts/CodeMirror/mode/clike/clike.js"><\/script>');  // contains C-like mode
-document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/foldcode.js"><\/script>');
-document.write('<script type="text/javascript" src="scripts/CodeMirror/lib/util/searchcursor.js"><\/script>');
-document.write('<link href="scripts/CodeMirror/lib/codemirror.css" rel="stylesheet" type="text/css" />');
-
-// DROPBOX
-document.write('<script type="text/javascript" src="https://www.dropbox.com/static/api/1/dropins.js" id="dropboxjs" data-app-key="akix6305j3tm11i"></script>');
-document.write('<script type="text/javascript" src="scripts/dropbox/dropbox.js"></script>');
-document.write('<script type="text/javascript" src="scripts/dropbox/chooser.js"></script>');
-document.write('<script type="text/javascript" src="scripts/dropbox/saver.js"></script>');
-document.write('<link href="scripts/dropbox/dropbox.css" rel="stylesheet" type="text/css"/>');
 
