@@ -269,7 +269,7 @@ class VariableElement
 {
   isA TemplateElement;
 
-  int index;
+  Integer index;
 
   void emit(EmitResponse responseBuffer, UmpleClass template)
   {
