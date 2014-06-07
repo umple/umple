@@ -57,6 +57,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("stateDiagram","stateDiagram");
   }
+  else if (action == "StructureDiagram")
+  {
+    Action.generateCode("structureDiagram","structureDiagram");
+  }
   else if (action == "classDiagram")
   {
     Action.generateCode("classDiagram","classDiagram");
@@ -133,6 +137,10 @@ Action.clicked = function(event)
   else if (action == "ShowGvStateDiagram")
   {
     Action.changeDiagramType(3);
+  }
+  else if (action == "ShowStructureDiagram")
+  {
+    Action.changeDiagramType(4);
   }
   else if (action == "ShowHideLayoutEditor")
   {
@@ -287,6 +295,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useEditableClassDiagram = true;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
     changedType = true;
   }
   else   if(newDiagramType == 2) { // GV class
@@ -294,6 +303,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useEditableClassDiagram = false;
     Page.useGvClassDiagram = true;
     Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
     changedType = true;
   }
   else   if(newDiagramType == 3) { // GV state
@@ -301,6 +311,15 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useEditableClassDiagram = false;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = true;
+    Page.useStructureDiagram = false;
+    changedType = true;
+  }
+  else   if(newDiagramType == 4) { // Structure Diagram
+    if(Page.useGvStructureDiagram) return;
+    Page.useEditableClassDiagram = false;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useGvStructureDiagram = true;
     changedType = true;
   }
   if (changedType) {
@@ -1401,6 +1420,7 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Page.showCanvasLoading();
   if(Page.useEditableClassDiagram) {language="language=Json"}
   else if(Page.useGvClassDiagram) {language="language=classDiagram"}
+  else if(Page.useStructureDiagram) {language="language=structureDiagram"}
   else {language="language=stateDiagram"}
   
   // append any suboptions needed for GvStateDiagram
