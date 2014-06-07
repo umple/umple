@@ -1,0 +1,42 @@
+class Shape2D {
+ 1 -> 1 Point center;
+}
+
+class Point {
+  Integer x;
+  Integer y;
+}
+
+//Abstract
+class EllipticalShape {
+ isA Shape2D;
+ semiMajorAxis;
+}
+//Abstract
+class Polygon { 
+ isA Shape2D;
+}
+class Circle {
+ isA EllipticalShape;
+}
+class Ellipse{
+ isA EllipticalShape;
+}
+class SimplePolygon {
+ //orientation;
+ isA Polygon;
+}
+class ArbitraryPolygon {
+ Integer points;
+ isA Polygon;
+}
+class Rectangle {
+ isA SimplePolygon;
+ Integer height;
+ Integer width;
+}
+class RegularPolygon {
+ Integer numPoints;
+ Integer radius;
+ isA SimplePolygon;
+}
