@@ -23,6 +23,15 @@ class Function {
 	targetMult = utility.getAlloyMultiplicity(utility.getRightEnd(assoc));
 	targetClassName = utility.getRightEndName(assoc);
   }
+  
+  public Function(Attribute attr){
+    beginEndRoleName = attr.getName();
+    targetMult = "one";
+    if(attr.getType().equals("Integer"))
+      targetClassName = "Int";
+    if(attr.getType().equals("String") || attr.getType().equals(""))
+      targetClassName = "String";
+  }
 	
   //Reflexive relation
   public Function(Association assoc, String cName){

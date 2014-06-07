@@ -30,8 +30,7 @@ class AlloyGenerator
     StringBuilder code = new StringBuilder(); 
     
     AlloyModel alloyModel = new AlloyModel(model);
-    utility.addString(code,alloyModel.printHeader());
-    //This statement adds comment to model
+    utility.addString(code,alloyModel.getModelNamespace());
     utility.addString(code,alloyModel.comment());
     
     for(Statement openSt : alloyModel.getImportStatements())

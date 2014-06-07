@@ -1,4 +1,4 @@
-
+//namespace numericBound;
 class Man{
 	0..1 father -- 5 Child children;
 }
