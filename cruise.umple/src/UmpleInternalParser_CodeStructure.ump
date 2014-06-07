@@ -1,0 +1,1674 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Please refer to UmpleInternalParser.ump for more details.
+
+*/
+
+//@author Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+//@author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+namespace cruise.umple.compiler;
+
+
+//Used as a helper class to analyze tokens in a given component
+class CompositeStructureTokenAnalyzer {
+	depend java.util.HashMap;
+	depend java.util.Map;
+	depend cruise.umple.compiler.Port.Direction;
+	depend cruise.umple.compiler.ActiveMethod.ActiveType;
+	depend cruise.umple.compiler.ActiveDirectionHandler.DirectionHandler;
+	depend cruise.umple.compiler.Trigger.TimeType;
+	depend cruise.umple.compiler.DeferredFunction.DeferredCallType;
+	depend cruise.umple.compiler.ActiveDirectionHandlerBody.BodyType;
+	depend cruise.umple.compiler.TimerConstraint.TimeConstraintType;
+	depend cruise.umple.compiler.Port.Type;
+	depend cruise.umple.compiler.MessageHandler.CommunicationType;
+
+	UmpleInternalParser parser;
+	lazy UmpleClass componentClass;
+	0..1 -- * UmpleClass components;
+	
+	void prepare(final Token token) {
+		String componentName = token.getValue("name");
+    	componentClass = parser.getModel().getUmpleClass(componentName);
+    	if(componentClass != null) {
+    		addComponent(componentClass);
+    	} 
+	}
+	
+	
+  void logError(Position position, int errorCode, String... messages){
+	  getParser().getParseResult().setPosition(position);
+	  getParser().getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,messages));
+  }
+  
+   public String analyzeInlineComment(Token token){
+    String txt = token.getValue();
+	  return !txt.startsWith("@outputumplesource") && !txt.equals("$?[End_of_model]$?") ? txt : null;
+  }
+
+   public List<Comment> analyzeMultiComment(Token token){
+    List<Comment> cmtList = new ArrayList<Comment>();
+	  String inlineComments[] = token.getValue().split("\n");
+	  
+	  for (int i = 0; i < inlineComments.length; i++) 
+	  {
+		  if(!inlineComments[i].startsWith("@outputumplesource")) {
+			  cmtList.add(new Comment(inlineComments[i]));
+		  }
+	  }
+
+	  return cmtList;
+  }
+
+   public void analyzePortBindingDefinition(Token token){
+    if(token!=null) {
+		   String from = null , to = null , code = null, toPortClass = null, fromPortClass = null;
+		   for(Token portParamToken: token.getSubTokens()) {
+			   if(portParamToken.is("fromPort")) {
+				   from = portParamToken.getValue();
+			   } else if(portParamToken.is("toPort")) {
+				   to = portParamToken.getValue();
+			   } else if(portParamToken.is("bindinHandler")) {
+				   Token codeToken = portParamToken.getSubToken("code");
+				   if(codeToken != null) {
+					   code = codeToken.getValue();
+				   }
+			   } else if(portParamToken.is("fromClassname")) {
+				   fromPortClass = portParamToken.getValue();
+			   } else if(portParamToken.is("toClassname")) {
+				   toPortClass = portParamToken.getValue();
+			   }
+		   }
+		   if(from != null && to != null ) {
+			   PortBindingInformation pbi = new PortBindingInformation(fromPortClass, from,toPortClass, to, code);
+			   componentClass.addPortBindingInformation(pbi);
+		   }
+	   }
+  }
+
+   public void analyzePortDefinition(Token token){
+    if(token!=null) { 
+    	String name = null, type = "String";
+    	Direction direction = null;
+    	String modifier = "public";
+    	boolean isConjugated = false, isReplicated = false;
+    	int multiplicity = 0;
+    	for(Token portParamToken: token.getSubTokens()) {
+    		if(portParamToken.is("typedPortName")) {
+    			Token portNameToken = portParamToken.getSubToken("portName");
+    			Token portTypeToken = portParamToken.getSubToken("type");
+    			Token portMulToken = portParamToken.getSubToken("portMultiplicity");
+    			if(portNameToken != null) {
+        			name = portNameToken.getValue("portName");
+        			if(!Token.isValidIdentifier(name)){
+        				logError(token.getPosition(), 150, portParamToken.getValue("portName"));
+        			}
+        		}
+    			if(portTypeToken != null) {
+        			type = portTypeToken.getValue("type");
+        		}
+    			if(portMulToken != null) {
+        			isReplicated = true;
+        			Token mulToken = portMulToken.getSubToken(0);
+        			String mulValue = mulToken.getValue();
+        			if(mulValue != null 
+        					&& mulValue.length() > 0) {
+        				mulValue = mulValue.substring(1, mulValue.length()-1);
+        			}
+        			if(mulValue.matches("\\d")) {
+        				multiplicity = Integer.parseInt(mulValue);
+        			}
+        		}
+    		} else if (portParamToken.is("modifier")){
+    			if(portParamToken.getValue() != null && portParamToken.getValue().length() > 0){
+    				modifier = portParamToken.getValue();
+    			}
+    		} else if(portParamToken.is("direction")) {
+    			String dirStr = portParamToken.getValue("direction");
+    			if(dirStr.equalsIgnoreCase("in")) {
+    				direction = Direction.IN;
+    			} else if(dirStr.equalsIgnoreCase("out")) {
+    				direction = Direction.OUT;
+    			} else if(dirStr.equalsIgnoreCase("port")) {
+    				direction = Direction.BOTH;
+    			}
+    			if(direction == null){
+    				logError(token.getPosition(), 9999, portParamToken.getValue("direction")); // Error msg
+    			}
+    		} else if(portParamToken.is("inverse")) {
+    			isConjugated = true;
+    		} 
+    	}
+    	Port portDef = new Port(name,modifier ,isConjugated, multiplicity, isReplicated, type);
+    	componentClass.addPort(portDef);
+      }
+  }
+
+
+   private DeferredFunction createAnonymousBody(Token activeTriggerToken, ActiveMethod aMethod){
+    CodeBlock cb = new CodeBlock();
+	   Token codeToken = activeTriggerToken.getSubToken("code");
+	   if(codeToken != null) {
+		   cb.setCode(codeToken.getValue());
+		   DeferredFunction anonymousDeferredFunc = new DeferredFunction();
+		   anonymousDeferredFunc.setDeferredCallType(DeferredCallType.ANONYMOUS);
+		   AnonymousFunction anonymousFunc = new AnonymousFunction();
+		   anonymousFunc.setCodeblock(cb);
+		   anonymousDeferredFunc.setAnonymousFunction(anonymousFunc);
+		   return anonymousDeferredFunc;
+	   }
+	   return null;
+  }
+
+   private void analyzeAnonymousBody(Trigger trig, Token activeTriggerToken, ActiveMethod aMethod){
+    DeferredCall anonymousCall = new DeferredCall();
+	   anonymousCall.addList(createAnonymousBody(activeTriggerToken, aMethod));
+	   trig.setDeferredCall(anonymousCall);
+  }
+
+   private void analyzeHitchConstraint(Trigger trig, Token activeTriggerToken, ActiveMethod aMethod){
+    Token clauseToken = activeTriggerToken.getSubToken("clause");
+	   Token timerToken = activeTriggerToken.getSubToken("timer");
+	   if(clauseToken != null && timerToken != null ) {
+		   String clause = clauseToken.getValue();
+		   String timer = timerToken.getValue();
+		   if(clause.equalsIgnoreCase("after")) {
+			   trig.setTimeType(TimeType.AFTER);
+		   } else if(clause.equalsIgnoreCase("poll")) {
+			   trig.setTimeType(TimeType.POLL);
+		   } else if(clause.equalsIgnoreCase("timeout")) {
+			   trig.setTimeType(TimeType.TIMEOUT);
+		   }
+		   trig.setTimerPSec(timer);
+	   }
+  }
+
+   private void analyzeTriggerConstraintList(Trigger trig, Token constraintToken, ActiveMethod aMethod){
+    if(constraintToken.getSubToken("messageConstraint") != null) {
+		   Token msgToken = constraintToken.getSubToken("messageConstraint");
+		   Token priorityToken = msgToken.getSubToken("priorityValue");
+		   if(priorityToken != null) {
+			   MessageConstraint msgConstraint = new MessageConstraint(priorityToken.getValue());
+			   trig.setMessageConstraint(msgConstraint);
+		   }
+
+	   } else if(constraintToken.getSubToken("timeConstraint") != null) {
+		   Token timeToken = constraintToken.getSubToken("timeConstraint");
+		   Token clauseToken = timeToken.getSubToken("clause");
+		   Token timerToken = timeToken.getSubToken("timer");
+		   if(clauseToken != null && timerToken != null ) {
+			   String clause = clauseToken.getValue();
+			   String timer = timerToken.getValue();
+			   TimerConstraint tc = new TimerConstraint();
+			   tc.setPosition(constraintToken.getPosition());
+			   tc.setEndPosition(constraintToken.getEndPosition());
+			   if(clause.equalsIgnoreCase("latency")) {
+				   tc.setTimeConstraintType(TimeConstraintType.LTENCY);
+			   } else if(clause.equalsIgnoreCase("period")) {
+				   tc.setTimeConstraintType(TimeConstraintType.PERIOD);
+			   } else if(clause.equalsIgnoreCase("timeout")) {
+				   tc.setTimeConstraintType(TimeConstraintType.TIMEOUT);
+			   }
+			   tc.setTimer(timer);
+			   trig.addTimerConstraint(tc);
+		   }
+	   } else {
+		   List<ConstraintVariable> cvs = analyzeInvariantConstraint(constraintToken);
+		   BasicConstraint constraint = new BasicConstraint();
+		   constraint.setPosition(constraintToken.getPosition());
+		   constraint.setEndPosition(constraintToken.getEndPosition());
+		   for(ConstraintVariable cv: cvs)
+		   {
+			   constraint.addExpression(cv);
+		   }
+		   trig.addConstraint(constraint);
+	   }
+  }
+
+   private void analyzeConstraintList(Monitor pw, Token constraintListToken, ActiveMethod aMethod){
+    for(Token constraintToken : constraintListToken.getSubTokens()) {   
+		   if(constraintToken.is("timeConstraint")) {
+			   Token timeToken = constraintToken.getSubToken("timeConstraint");
+			   Token clauseToken = timeToken.getSubToken("clause");
+			   Token timerToken = timeToken.getSubToken("timer");
+			   if(clauseToken != null && timerToken != null ) {
+				   String clause = clauseToken.getValue();
+				   String timer = timerToken.getValue();
+				   TimerConstraint tc = new TimerConstraint();
+				   tc.setPosition(constraintToken.getPosition());
+				   tc.setEndPosition(constraintToken.getEndPosition());
+				   if(clause.equalsIgnoreCase("latency")) {
+					   tc.setTimeConstraintType(TimeConstraintType.LTENCY);
+				   } else if(clause.equalsIgnoreCase("period")) {
+					   tc.setTimeConstraintType(TimeConstraintType.PERIOD);
+				   } else if(clause.equalsIgnoreCase("timeout")) {
+					   tc.setTimeConstraintType(TimeConstraintType.TIMEOUT);
+				   }
+				   tc.setTimer(timer);
+				   pw.addTimerConstraint(tc);
+			   }
+		   } else if(constraintToken.getValue() != "STATIC") {
+			   List<ConstraintVariable> cvs = analyzeInvariantConstraint(constraintToken);
+			   BasicConstraint constraint = new BasicConstraint();
+			   constraint.setPosition(constraintToken.getPosition());
+			   constraint.setEndPosition(constraintToken.getEndPosition());
+			   
+			   if(cvs.size() == 0) {
+				   Token portToken = constraintToken.getSubToken("constraintName");
+				   if(portToken != null) {
+					   Token nameToken = portToken.getSubToken("name");
+					   ConstraintVariable cv = new ConstraintVariable("STATIC", nameToken.getValue());
+					   constraint.addExpression(cv);
+				   }
+			   } else {
+				   for(ConstraintVariable cv: cvs)
+				   {
+					   constraint.addExpression(cv);
+				   }
+			   }
+			   pw.addConstraint(constraint);
+		   }
+	   }
+  }
+
+   private void analyzeInvoke(Trigger trig, Token activeTriggerToken, ActiveMethod a){
+    DeferredCall invokeCall = new DeferredCall();
+	   DeferredFunction invokeDeferredFunc = new DeferredFunction();
+	   invokeDeferredFunc.setDeferredCallType(DeferredCallType.METHOD);
+	   for(Token invokeToken : activeTriggerToken.getSubTokens())
+	   {
+		   if (invokeToken.is("name"))
+		   {
+			   invokeDeferredFunc.setMethodInvoke(invokeToken.getValue());
+		   }
+		   if (invokeToken.is("parameter"))
+		   {
+			   invokeDeferredFunc.addParameter(invokeToken.getValue());
+		   }
+	   }
+	   invokeCall.addList(invokeDeferredFunc);
+	   trig.setDeferredCall(invokeCall);
+  }
+
+   private void analyzeActiveTrigger(boolean normalHandler, Token activeTriggerToken, ActiveMethod aMethod){
+    for(Token activeToken : activeTriggerToken.getSubTokens()) {
+		   Trigger trig = new Trigger();
+		   trig.setTimeType(TimeType.NONE);
+		   DeferredFunction thenDef = null , resolveDef = null;
+		   if(activeToken.is("anonymousTriggerBody")) {
+			   analyzeAnonymousBody(trig, activeToken, aMethod);
+		   } else if(activeToken.is("hitchConstraint")) {
+			   analyzeHitchConstraint(trig, activeToken, aMethod);
+		   } else if(activeToken.is("constraintList")) {
+			   analyzeTriggerConstraintList(trig, activeToken, aMethod);
+		   } else if(activeToken.is("invoke")) {
+			   analyzeInvoke(trig, activeToken, aMethod);
+		   } else if(activeToken.is("thenDefinition")) {
+			   Token annoyToken = activeToken.getSubToken("anonymousTriggerBody");
+			   if(annoyToken != null) {
+				   thenDef = createAnonymousBody(annoyToken, aMethod);
+			   }
+		   } else if(activeToken.is("resolveDefinition")) {
+			   Token annoyToken = activeToken.getSubToken("anonymousTriggerBody");
+			   if(annoyToken != null) {
+				   resolveDef = createAnonymousBody(annoyToken, aMethod);
+			   }
+		   }
+		   if(trig != null) {
+			   if(trig.getDeferredCall() != null ) {
+				   trig.getDeferredCall().setThen(thenDef);
+				   trig.getDeferredCall().setThen(resolveDef);
+			   }
+			   ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
+			   abh.setBodyType(BodyType.TRIGGER);
+			   abh.setTrigger(trig);
+			   if(normalHandler) {
+				   aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
+			   } else {
+				   aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
+			   }
+		   }
+	   }
+  }
+
+   private void analyzeMethodBody(Token activeMethodBody, ActiveMethod aMethod){
+    boolean normalHandler = true;
+	  for(Token methodToken : activeMethodBody.getSubTokens())
+	  {
+		  if(methodToken.is("activeDirectionHandler")) {
+			  Token methodDirectionToken = methodToken.getSubToken("direction");
+			  if(methodDirectionToken != null ) {
+				  String methodDirection = methodDirectionToken.getValue();
+				  if(methodDirection.equalsIgnoreCase("forward")) {
+					  normalHandler = true;
+					  aMethod.getMethodBody().get(0).setPosition(activeMethodBody.getPosition());
+					  aMethod.getMethodBody().get(0).setEndPosition(activeMethodBody.getEndPosition());
+				  } else if(methodDirection.equalsIgnoreCase("inverse")) {
+					  normalHandler = false;
+					  aMethod.getMethodBody().get(1).setPosition(activeMethodBody.getPosition());
+					  aMethod.getMethodBody().get(1).setEndPosition(activeMethodBody.getEndPosition());
+				  }
+			  }
+		  }
+		  else if (methodToken.is("inlineComment"))
+		  {
+			  String txt = analyzeInlineComment(methodToken);
+			  if(txt != null) {
+				  ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
+				  abh.setBodyType(BodyType.COMMENT);
+				  abh.setComment(new Comment(txt));
+				  if(normalHandler) {
+					  aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
+				  } else {
+					  aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
+				  }
+			  }
+		  } 
+		  else if (methodToken.is("multilineComment"))
+		  {
+			  List<Comment> cmtList = analyzeMultiComment(methodToken);
+			  if(cmtList.size() > 0) {
+				  for(Comment cmt : cmtList) {
+					  ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
+					  abh.setBodyType(BodyType.COMMENT);
+					  abh.setComment(cmt);
+					  if(normalHandler) {
+						  aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
+					  } else {
+						  aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh);
+					  }
+				  }
+			  }
+		  }
+		  else if (methodToken.is("code"))
+		  {
+			  ActiveDirectionHandlerBody abh = new ActiveDirectionHandlerBody();
+			  CodeBlock cb = new CodeBlock(methodToken.getValue());
+			  abh.setCodeblock(cb);
+			  if(normalHandler) {
+				 aMethod.getMethodBody().get(0).addActiveDirectionHandlerBody(abh);
+			  } else {
+				 aMethod.getMethodBody().get(1).addActiveDirectionHandlerBody(abh); 
+			  }
+		  } else if (methodToken.is("activeTrigger")){
+			  analyzeActiveTrigger(normalHandler, methodToken, aMethod);
+		  }
+
+	  }
+  }
+
+   private void analyzeMethodDeclarator(Token activeMethodDeclarator, ActiveMethod aMethod){
+    for(Token methodToken : activeMethodDeclarator.getSubTokens())
+	  {
+		  if (methodToken.is("methodName"))
+		  {
+			  aMethod.setName(methodToken.getValue());
+		  }
+		  if (methodToken.is("parameterList"))
+		  {
+			  for(Token parameterToken : methodToken.getSubTokens())
+			  {
+				  boolean isList = false;
+				  if (parameterToken.is("parameter"))
+				  {
+					  String paramType="";
+					  if (parameterToken.getSubToken("type") != null)
+					  {
+						  paramType = parameterToken.getSubToken("type").getValue();
+					  }
+					  if (parameterToken.getSubToken("list") != null)
+					  {
+						  isList = parameterToken.getSubToken("list").getValue() != null;        
+					  }
+					  String paramName = parameterToken.getSubToken("name").getValue();
+					  MethodParameter aParameter  = new MethodParameter(paramName,paramType,null,null, false);
+					  aParameter.setIsList(isList);
+					  aMethod.addMethodParameter(aParameter);
+				  }
+			  }
+		  }
+	  }
+  }
+
+   public void analyzeActiveMethodDefinition(Token activeMethodToken){
+    if(activeMethodToken != null) {      
+    	ActiveDirectionHandler forwardBody = new ActiveDirectionHandler();
+    	ActiveDirectionHandler inverseBody = new ActiveDirectionHandler();
+    	inverseBody.setDirectionHandler(DirectionHandler.INVERSE);
+    	ActiveMethod aMethod = new ActiveMethod("", "", "", new ActiveDirectionHandler [] { forwardBody, inverseBody });
+    	
+    	// TODO
+    	Protocol protocol = new Protocol();
+    	// Set method position
+    	aMethod.setPosition(activeMethodToken.getPosition());
+    	aMethod.setEndPosition(activeMethodToken.getEndPosition());
+
+    	//    List<String> langs = new ArrayList<String>();
+    	//    CodeBlock cb = new CodeBlock("");
+    	for(Token token : activeMethodToken.getSubTokens())
+    	{
+    		if (token.is("modifier"))
+    		{
+    			aMethod.setModifier(token.getValue());
+    		}
+    		if (token.is("constraintList"))
+    		{
+    			Monitor pw = new Monitor(aMethod);
+    			analyzeConstraintList(pw, token, aMethod);
+    			aMethod.addWatchList(pw);
+    		}
+    		else if (token.is("type"))
+    		{
+    			aMethod.setType(token.getValue());
+    		}
+    		else if (token.is("activeType"))
+    		{
+    			String activeType = token.getValue("activeType");
+    			if(activeType.equalsIgnoreCase("atomic")) {
+    				aMethod.setActiveType(ActiveType.ATOMIC);
+    			} else if(activeType.equalsIgnoreCase("synchronous")) {
+    				aMethod.setActiveType(ActiveType.SYNCH);
+    			} else if(activeType.equalsIgnoreCase("intercept")) {
+    				aMethod.setActiveType(ActiveType.INTERCEPTOR);
+    			} else {
+    				aMethod.setActiveType(ActiveType.ASYNCH);
+    			}
+    		}
+    		else if (token.is("activeMethodDeclarator"))
+    		{
+    			analyzeMethodDeclarator(token, aMethod);
+    		}
+    		else if (token.is("activeMethodBody"))
+    		{
+    			analyzeMethodBody(token, aMethod);
+    		}
+    		
+    		componentClass.addActiveMethod(aMethod);
+    		
+    	} 
+
+    }
+  }
+
+    public Attribute getSubcomponentVariable(UmpleClass cmpClass, String cls, String varName){
+       Attribute att = null;
+	   if(varName != null && varName.length() > 0 && cls != null) {
+		   if(cls.equalsIgnoreCase("this")) {
+			   att = null; // No var, it is in the same class
+		   } else {
+			   att = cmpClass.getAttribute(cls);
+		   }
+	   }
+	   return att;
+  }
+
+   private void buildBindingPortData(){
+    for(UmpleClass cmpClass : getComponents()) {
+			  // Build Binding Ports
+			  for(PortBindingInformation pbi : cmpClass.getPortBindingInformation()) {
+				  boolean errorFound = false;
+				  UmpleClass fromClass = null, toClass = null;
+				  Port from = null, to = null;
+
+				  boolean bindfromSubcomponent = pbi.getFromPortClass() != null && pbi.getFromPortClass().length() > 0;
+				  boolean bindtoSubcomopnent = pbi.getToPortClass() != null && pbi.getToPortClass().length() > 0;
+				  
+				  Attribute fromVar = getSubcomponentVariable(cmpClass, pbi.getFromPortClass(), pbi.getFromPort());
+				  Attribute toVar = getSubcomponentVariable(cmpClass, pbi.getToPortClass(), pbi.getToPort());
+				  
+				  if(bindfromSubcomponent) {				  
+					  if(fromVar == null) {
+						  fromClass = cmpClass;
+					  } else {
+						  String type = fromVar.getType();
+						  fromClass = parser.getModel().getUmpleClass(type);
+						  if(fromClass == null) {
+							  // log error comp doesn't exist
+						  }
+					  } 
+				  }
+				  if(bindtoSubcomopnent) {
+					  if(toVar == null) {
+						  toClass = cmpClass;
+					  } else {
+						  String type = toVar.getType();
+						  toClass = parser.getModel().getUmpleClass(type);
+						  if(toClass == null) {
+							  // log error comp doesn't exist
+						  }
+					  } 
+				  }
+				  
+				  if(bindfromSubcomponent && fromClass == null ) {
+					  // Log Error
+					  errorFound = true;
+				  }
+				  
+				  if(bindtoSubcomopnent && toClass == null ) {
+					  // Log Error
+					  errorFound = true;
+				  }
+				  
+				  if(pbi.getFromPort() == null || pbi.getFromPort().length() == 0 ) {
+					  // Log Error
+					  errorFound = true;
+				  }
+				  
+				  if(pbi.getToPort() == null || pbi.getToPort().length() == 0 ) {
+					  // Log Error
+					  errorFound = true;
+				  }
+
+				  if(!errorFound) {
+					  if(bindfromSubcomponent) {
+						  if(fromClass == null) {
+							  from = cmpClass.getPort(pbi.getFromPort());
+						  } else {
+							  from = fromClass.getPort(pbi.getFromPort());
+						  }
+					  } else {
+						  from = cmpClass.getPort(pbi.getFromPort());
+					  }
+					  if(bindtoSubcomopnent) {
+						  if(toClass == null) {
+							  to = cmpClass.getPort(pbi.getToPort());
+						  } else {
+							  to = toClass.getPort(pbi.getToPort());
+						  }
+					  } else {
+						  to = cmpClass.getPort(pbi.getToPort());
+					  }
+					  
+					  if(from == null || to == null) {
+						  // Log Error
+						  errorFound = true;  
+					  } else {
+						  PortBinding pb = new PortBinding(from, to);
+						  pb.setFromSubcomponent(fromVar);
+						  pb.setToSubcomponent(toVar);
+						  
+						  if(pbi.getCode() != null && pbi.getCode().length() > 0) {
+							  AnonymousFunction af = new AnonymousFunction();
+							  af.setCodeblock(new CodeBlock(pbi.getCode()));
+							  pb.setSpecialHandler(af);
+						  }
+						  cmpClass.addPortBinding(pb);
+					  }
+					  
+				  }  
+			  }
+		  }
+   }
+
+   private void processConstraintsData(){
+    for(UmpleClass cmpClass : getComponents()) {
+		   for(ActiveMethod am : cmpClass.getActiveMethods()) {
+			   for(Monitor mt : am.getWatchList()) {
+//				   List<ConstraintVariable> removeList = new ArrayList<ConstraintVariable>();
+				   for(BasicConstraint bs : mt.getConstraints()) {					   
+					   for(ConstraintVariable cv : bs.getExpressions()) {
+						   if(cv.getIsAttribute()) {
+							   String checkPortName = cv.getValue();
+							   Port portFound = cmpClass.getPort(checkPortName);
+							   if(portFound != null) {
+								   PortConstraint pc = mt.getPortConstraint(checkPortName);
+								   if(pc == null) {
+									   pc = new PortConstraint(portFound);
+									   mt.addPortConstraint(pc);
+//									   removeList.add(cv);
+								   }
+							   }
+						   }
+					   }
+//					   for(ConstraintVariable cv : removeList) {
+//						   bs.removeExpression(cv);
+//					   }
+					   
+				   }
+				   
+			   }
+		   }
+	   }
+  }
+
+   private boolean isMonitored(Port portName, ActiveMethod am){
+    for(Monitor mt : am.getWatchList()) {
+			for(PortConstraint pc : mt.getPortConstraints()) {
+				if(portName.equals(pc.getPort())) {	
+					return true;
+				}
+			}
+		}
+		return false;
+  }
+
+   private void buildIncomingProtocolData(Protocol pr, Port portName){
+    for(UmpleClass cmpClass : getComponents()) {
+		   for(ActiveMethod am : cmpClass.getActiveMethods()) {
+			   for(ActiveDirectionHandler hdl : am.getMethodBody()) {
+				   for(ActiveDirectionHandlerBody bdy : hdl.getActiveDirectionHandlerBodies()) {
+					   if( bdy.getBodyType() == BodyType.TRIGGER ) {
+						   Trigger trg = bdy.getTrigger();
+
+						   DeferredCall call = trg.getDeferredCall();
+						   if(call != null) {
+							   for(DeferredFunction df : call.getList()) {
+								   if(df.getPortFunction() != null) {
+									   PortFunction pFunc = df.getPortFunction();
+									   // check modifier
+									   if(pFunc.getName().equals(portName)) {
+										   pr.addIncomingList(trg);
+									   }
+								   }
+							   }
+						   }
+					   }
+				   }
+
+			   }
+		   }
+	   }
+  }
+
+   private void buildOutgoingProtocolData(Protocol pr, Port portName){
+    for(Monitor mt : pr.getWatchList()) {
+		   ActiveMethod am  = mt.getActiveMethod();
+		   for(ActiveDirectionHandler hdl : am.getMethodBody()) {
+			   for(ActiveDirectionHandlerBody bdy : hdl.getActiveDirectionHandlerBodies()) {
+				   if( bdy.getBodyType() == BodyType.TRIGGER ) {
+					   Trigger trg = bdy.getTrigger();
+
+					   DeferredCall call = trg.getDeferredCall();
+					   if(call != null ) {
+						   for(DeferredFunction df : call.getList()) {
+							   if(df.getPortFunction() != null) {
+								   PortFunction pFunc = df.getPortFunction();
+								   // check modifier
+								   if(pFunc.getName().equals(portName)) {
+									   pr.addOutgoingList(trg);
+								   }
+							   }
+						   }
+					   }
+				   }
+			   }
+
+		   }
+	   }
+  }
+
+   private void inferPortTypeData(Port port){
+    Protocol protocol = port.getProtocol();
+	   String modifier = port.getModifier();
+	   ActiveType acType = ActiveType.ASYNCH;
+	   for(Monitor mt : protocol.getWatchList()) {
+		   ActiveMethod am = mt.getActiveMethod();
+		   acType = am.getActiveType();
+		   if(acType == ActiveType.ATOMIC || acType == ActiveType.SYNCH)
+			   break;
+	   }
+	   
+	   if(modifier.contains("public")) {
+		   if(acType == ActiveType.ASYNCH ) {
+			   port.setType(Type.RELAY);
+		   }
+		   if((acType == ActiveType.SYNCH) ) {
+			   port.setType(Type.END);
+		   }
+		   if((acType == ActiveType.ATOMIC) ) {
+			   port.setType(Type.SERVICE);
+		   }
+	   } else if(modifier.contains("private") 
+			   		|| modifier.contains("protected")) {
+		   if((acType == ActiveType.SYNCH || acType == ActiveType.ASYNCH) ) {
+			   port.setType(Type.END);
+		   }
+		   if((acType == ActiveType.ATOMIC) ) {
+			   port.setType(Type.SERVICE);
+		   }
+	   }
+  }
+
+   private void createMessageStructureData(MessageStructure msgStruct, Port port, String signalType){
+    msgStruct.addParam(new MessageField(port.getName(), signalType));
+//	   UmpleClass typeClass = parser.getModel().getUmpleClass(signalType);
+//	   if(typeClass == null) {
+//		   msgStruct.addParam(new MessageField(port.getName(), signalType));
+//	   } else {
+//		   for(Attribute attr : typeClass.getAttributes()) {
+//			   
+//		   }
+//	   }
+  }
+
+   private void createMessageHandlerData(Port port){
+    Protocol protocol = port.getProtocol();
+	   Type portType = port.getType();
+	   MessageStructure msgStruct = new MessageStructure();
+	   createMessageStructureData(msgStruct, port, port.getSignalType());
+	   MessageHandler msgHdl = new MessageHandler(msgStruct);
+	   if(portType == Type.RELAY) {
+		   msgHdl.setCommunicationType(CommunicationType.DATA);
+	   } else if(portType == Type.END) {
+		   msgHdl.setCommunicationType(CommunicationType.QUEUED);
+	   } else if(portType == Type.SERVICE) {
+		   msgHdl.setCommunicationType(CommunicationType.QUEUED);
+	   } else {
+		   msgHdl.setCommunicationType(CommunicationType.NONE);
+	   }
+  }
+
+   private void buildProtocolData(){
+    for(UmpleClass cmpClass : getComponents()) {
+		   for(Port port : cmpClass.getPorts()) { 
+			   Protocol protocol = new Protocol();
+
+			   for(ActiveMethod am : cmpClass.getActiveMethods()) {
+				   if( isMonitored(port, am) ) {
+					   for(Monitor mt : am.getWatchList()) {
+						   protocol.addWatchList(mt);
+					   }
+				   }
+			   }
+			   buildIncomingProtocolData(protocol, port);
+			   buildOutgoingProtocolData(protocol, port);
+			   port.setProtocol(protocol);
+			   inferPortTypeData(port);
+			   createMessageHandlerData(port);
+		   }
+	   }
+  }
+
+   private void processTriggersData(){
+    for(UmpleClass cmpClass : getComponents()) {
+		   for(ActiveMethod am : cmpClass.getActiveMethods()) {
+
+			   for(ActiveDirectionHandler hdl : am.getMethodBody()) {
+
+				   for(ActiveDirectionHandlerBody bdy : hdl.getActiveDirectionHandlerBodies()) {
+
+					   if( bdy.getBodyType() == BodyType.TRIGGER ) {
+
+						   Trigger trg = bdy.getTrigger();
+						   DeferredCall call = trg.getDeferredCall();
+						   if(call != null) {
+							   for(DeferredFunction df : call.getList()) {
+								   if(df.getMethodInvoke() != null) {
+									   String checkPortName = df.getMethodInvoke();
+									   Port portFound = cmpClass.getPort(checkPortName);
+									   if(portFound != null) {
+										   PortFunction pFunc = new PortFunction();
+										   pFunc.setName(portFound);
+										   for(String param : df.getParameters()) {
+											   pFunc.addParameter(param);
+										   }
+										   df.setPortFunction(pFunc);
+									   }
+								   }
+							   }
+						   }
+					   }
+				   }
+
+			   }
+		   }
+	   }
+  }
+
+
+   /**
+    * /////////////////////////////////////////////// TO BE REMOVED AFTER FIXING ERRORS WITH LATEST CHANGES ///////////////////////////////////////////////////////////////////////
+    */
+
+   boolean mustWarn = true;
+
+
+
+   private ConstraintVariable analyzeConstraintName(Token nameToken, UmpleClassifier uClassifier, boolean mustBeInClass, String... type)
+   {
+	   Token grandparentToken = nameToken.getParentToken().getParentToken();
+	   ConstraintVariable cv = new ConstraintVariable("NAME","");
+	   cv.setSubConstraint(new Constraint());
+	   boolean isNew = false;
+	   boolean isComplex = nameToken.numberOfSubTokens()>1;
+	   for(Token sub:nameToken.getSubTokens())
+	   {
+		   if(sub.is("constraintParameterList"))
+		   {
+			   for(Token param: sub.getSubTokens())
+			   {
+				   if(param.is("constraintParameter"))
+				   {
+					   Token value = param.getSubToken(0);
+					   int i=1;
+					   while(value.getValue().equals("STATIC"))
+					   {
+						   value = param.getSubToken(i);
+						   ++i;
+					   }
+					   if(value.is("boolLit"))
+					   {
+						   cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",value.getValue()));
+					   }
+					   else if(value.is("quote"))
+					   {
+						   cv.getSubConstraint().addExpression(new ConstraintVariable("OPERATOR","\""+value.getValue()+"\""));
+					   }
+					   else if(value.is("number"))
+					   {
+						   cv.getSubConstraint().addExpression(analyzeConstraintNumber(value));
+					   }
+					   else if(value.is("constraintName")){
+						   cv.getSubConstraint().addExpression(analyzeConstraintName(value,uClassifier,false));
+					   }
+				   }
+				   else
+				   {
+					   cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",param.getName()));
+				   }
+			   }
+		   }
+		   else if(sub.is("index"))
+		   {
+			   analyzeConstraintIndex(sub,cv);
+		   }
+		   else if(sub.is("new"))
+		   {
+			   isNew = true;
+			   ConstraintVariable newCV = new ConstraintVariable("OPERATOR","initialise");
+			   newCV.setIsPrimitive(false);
+			   cv.getSubConstraint().addExpression(newCV);
+		   }
+		   else if(sub.is("constraintScopeOperator"))
+		   {
+			   ConstraintVariable dot = new ConstraintVariable("OPERATOR",".");
+			   dot.setIsPrimitive(false);
+			   cv.getSubConstraint().addExpression(dot);
+			   mustWarn = false;
+			   for(Token subsub:sub.getSubTokens()){
+				   if(subsub.is("constraintName"))
+				   {
+					   cv.getSubConstraint().addExpression(analyzeConstraintName(subsub,uClassifier,true));
+				   }
+			   }
+			   mustWarn = false;
+		   }
+		   else if(sub.is("name"))
+		   {
+			   cv.setValue(sub.getValue());
+			   cv.getAttribute(uClassifier);
+			   ConstraintVariable name = new ConstraintVariable("",sub.getValue());
+			   cv.getSubConstraint().addExpression(name);
+			   if("this".equals(name.getValue()))
+			   {
+				   continue;
+			   }
+			   UmpleVariable attribute;
+			   if(mustBeInClass)
+			   {
+				   attribute = name.getAttribute(uClassifier);
+
+				   if(attribute!=null||isNew)
+				   {
+					   if(type!=null&&type.length!=0)
+					   {
+						   boolean isType = false;
+						   String typesFailed = "";
+						   String comma = "";
+						   for(String t: type)
+						   {
+							   if((isNew?sub.getValue():attribute.getType()).toLowerCase().equals(t))
+							   {
+								   isType = true;
+							   }
+							   else
+							   {
+								   typesFailed += comma+t;
+							   }
+							   comma = ",";
+						   }
+					   }
+					   name.setType(isNew?sub.getValue():attribute.getType());
+				   }
+				   else if (grandparentToken.is("precondition")||grandparentToken.is("postcondition"))
+				   { //if it was a precondition or postcondition, check if it matches any of the method arguments
+					   Token concreteMethod = grandparentToken.getParentToken();
+					   ArrayList<MethodParameter> methodparams = new ArrayList<MethodParameter>();
+					   for (Token t : concreteMethod.getSubTokens())
+					   {
+						   if (t.getName().equals("methodDeclarator"))
+						   {
+							   for (Token st : t.getSubTokens())
+							   {
+								   if (st.getName().equals("parameterList"))
+								   {
+									   for (Token sst : st.getSubTokens())
+									   {
+										   if(sst.getName().equals("parameter"))
+										   {
+											   String paramName = null;
+											   String paramType = null;
+											   for (Token ssst: sst.getSubTokens())
+											   {
+												   if (ssst.getName().equals("type"))
+												   {
+													   paramType = ssst.getValue();
+												   }
+												   if (ssst.getName().equals("name"))
+												   {
+													   paramName = ssst.getValue();
+												   }
+											   }
+											   MethodParameter mp = new MethodParameter(paramName, paramType, null, null, false);
+											   methodparams.add(mp);
+										   }
+									   }
+								   }
+							   }
+						   }
+						   boolean matchesAnyMethodParams = false;
+						   for (MethodParameter mp : methodparams)
+						   {
+							   if (mp.getName().equals(sub.getValue()))
+							   {
+								   matchesAnyMethodParams = true;
+								   cv.setType(mp.getType());
+							   }
+						   }
+					   }
+				   }
+				   else if(attribute==null)
+				   {
+					   if(grandparentToken.is("postcondition")&&sub.getValue().equals("result")){
+						   //don't throw error if the attribute is named "result" the result is the return value from the original function
+					   }
+					   else if(!isComplex&&mustWarn&&uClassifier!=null){
+						   if (uClassifier instanceof UmpleClass)
+							   logError(sub.getPosition(), 28, sub.getValue(), uClassifier.getName());
+					   }
+				   }
+			   }
+		   }
+	   }
+	   mustWarn = true;
+	   return cv;
+   }
+
+   private ConstraintVariable analyzeConstraintNumber(Token numberToken)
+   {
+	   return new ConstraintVariable("OPERATOR",numberToken.getValue());
+   }
+
+   private void analyzeConstraintIndex(Token indexToken, ConstraintVariable cv)
+   {
+	   Token sub = indexToken;
+	   try {
+		   int i = Integer.parseInt(sub.getValue());
+		   if(cv.getIsAssociation())
+		   {
+			   cv.setIndex(i);
+		   }
+		   else
+		   {
+			   logError(sub.getPosition(), 29, cv.getValue(), "association or list");
+		   }
+	   } catch (NumberFormatException e) {
+		   logError(sub.getPosition(), 29, sub.getValue(), "integer");
+	   }
+
+   } 
+   private List<ConstraintVariable> analyzeGeneralConstraintExpression(Token generalExpressionToken, UmpleClassifier uClassifier)
+   {
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   List<Token> generalExpressionSubtokens = generalExpressionToken.getSubTokens();
+	   for(Token sub : generalExpressionSubtokens)
+	   {
+		   if (sub.getValue().equals("STATIC"))
+		   {
+			   if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
+				   rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+		   }
+		   else if(sub.is("constraintName"))
+		   {
+			   rawLine.add(analyzeConstraintName(sub,uClassifier,true));
+		   }
+		   else if(sub.is("equalsOp"))
+		   {
+			   ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+			   cv.setIsPrimitive(false);
+			   rawLine.add(cv);
+		   }
+		   else if(sub.is("notequalsOp"))
+		   {
+			   ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+			   cv.setIsPrimitive(false);
+			   rawLine.add(cv);
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeConstraint(Token invariantToken, UmpleClassifier uClassifier)
+   {
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   List<Token> subs = invariantToken.getSubTokens();
+	   for (Token sub : subs)
+	   {
+		   if (sub.is("brace"))
+		   {
+			   rawLine.add(new ConstraintVariable("SYNTAX",sub.getValue()));
+		   }
+		   if (!sub.getValue().equals("STATIC"))
+		   {
+			   if (sub.is("genExpr"))
+			   {
+				   rawLine.addAll(analyzeGeneralConstraintExpression(sub,uClassifier));
+			   }
+			   else if (sub.is("boolExpr"))
+			   {
+				   rawLine.addAll(analyzeBooleanConstraintExpression(sub,uClassifier));
+			   }
+			   else if (sub.is("stringExpr"))
+			   {
+				   rawLine.addAll(analyzeStringConstraintExpression(sub,uClassifier));
+			   }
+			   else if (sub.is("numExpr"))
+			   {
+				   rawLine.addAll(analyzeNumberConstraintExpression(sub,uClassifier));
+			   }
+			   else if (sub.is("associationExpr"))
+			   {
+				   rawLine.addAll(analyzeAssociationConstraintExpression(sub,uClassifier));
+			   }
+			   else if (sub.is("statemachineExpr"))
+			   {
+				   rawLine.addAll(analyzeStateMachineConstraintExpression(sub,uClassifier));
+			   }
+			   else if(sub.is("loneBoolean"))
+			   {
+				   rawLine.add(analyzeConstraintName(sub.getSubToken(0),uClassifier,true));
+			   }
+			   else if (sub.is("linkingOp")){
+				   rawLine.addAll(analyzeLinkingOpExpression(sub,uClassifier));
+			   }
+			   else if (sub.is("negativeConstraint")){
+				   rawLine.addAll(analyzeNegativeConstraint(sub, uClassifier));
+			   }
+			   else if (sub.is("fakeContraint")){
+				   rawLine.add(new ConstraintVariable("STATIC",sub.getValue()));
+			   }
+			   else
+			   {
+				   rawLine.addAll(analyzeConstraint(sub,uClassifier));
+			   }
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeLinkingOpExpression(Token linkingOpExpressionToken , UmpleClassifier uClassifier)
+   {
+	   List<Token> LinkingOpExpressionSubtokens = linkingOpExpressionToken.getSubTokens();
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+
+	   Token subOp = LinkingOpExpressionSubtokens.get(0); //the linking Expr (ie) &&, ||
+
+
+	   if (subOp.is("||")||subOp.is("orOp"))
+	   {
+		   rawLine.add(new ConstraintVariable("OPERATOR","||"));
+	   }
+	   else if (subOp.is("andOp"))
+	   {
+		   rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+	   }
+	   rawLine.addAll(analyzeConstraint(linkingOpExpressionToken.getSubToken(1), uClassifier));
+
+	   return rawLine;
+
+   }
+
+   private List<ConstraintVariable> analyzeBooleanConstraintExpression(Token booleanExpressionToken , UmpleClassifier uClassifier)
+   {
+	   List<Token> BooleanExpressionSubtokens = booleanExpressionToken.getSubTokens();
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   for(Token sub : BooleanExpressionSubtokens)
+	   {
+		   if (sub.getValue().equals("STATIC"))
+		   {
+			   if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
+				   rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+		   }
+		   else if(sub.is("boolLiteral"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR",sub.getValue("literal")));
+		   }
+		   else if(sub.is("constraintName"))
+		   {
+			   rawLine.add(analyzeConstraintName(sub,uClassifier,true,"boolean"));
+		   }
+		   else if(sub.is("equalsOp"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR","=="));
+		   }
+		   else if(sub.is("notequalsOp"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR","!="));
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeStringConstraintExpression(Token stringExpressionToken , UmpleClassifier uClassifier)
+   {
+	   Token innerTokens = stringExpressionToken.getSubToken(0);
+	   String[] mustBeTypes = new String[]{"string"};
+	   if(innerTokens.is("stringExprOperator"))
+	   {
+		   mustBeTypes = new String[]{"string","integer","float","double"};
+	   }
+	   List<Token> stringExpressionSubtokens = innerTokens.getSubTokens();
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   for(Token sub : stringExpressionSubtokens)
+	   {
+		   if (sub.getValue().equals("STATIC"))
+		   {
+			   if(!sub.getName().equals("}")&&!sub.getName().equals("{")&&!sub.getName().equals("[")&&!sub.getName().equals("]")&&!sub.getName().equals("\'")&&!sub.getName().equals("\""))
+				   rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+		   }
+		   else if (sub.is("quote"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR","\""+sub.getValue()+"\""));
+		   }
+		   else if(sub.is("constraintName"))
+		   {
+			   rawLine.add(analyzeConstraintName(sub,uClassifier,true,mustBeTypes));
+		   }
+		   else if(sub.is("operator"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR",sub.getValue()));
+		   }
+		   else if(sub.is("equalsOp"))
+		   {
+			   ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+			   cv.setIsPrimitive(false);
+			   rawLine.add(cv);
+		   }
+		   else if(sub.is("notequalsOp"))
+		   {
+			   ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
+			   cv.setIsPrimitive(false);
+			   rawLine.add(cv);
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeArithmeticCall(Token numberExpressionToken, UmpleClassifier uClassifier)
+   {
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
+	   for(Token sub : numberExpressionSubtokens)
+	   {
+		   if (sub.getValue().equals("STATIC"))
+		   {
+			   if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+				   rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+		   }
+		   else if(sub.is("constraintName"))
+		   {
+			   rawLine.add(analyzeConstraintName(sub,uClassifier,true,"integer","float","double"));
+		   }
+		   else if(sub.is("number"))
+		   {
+			   rawLine.add(analyzeConstraintNumber(sub));
+		   }
+		   else if(sub.is("operator"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR",sub.getValue()));
+		   }
+		   else if(sub.is("arithmeticCall")||sub.is("lowArithmeticOperatorCall")||sub.is("highArithmeticOperatorCall"))
+		   {
+			   rawLine.addAll(analyzeArithmeticCall(sub,uClassifier));
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeNumberConstraintExpression(Token numberExpressionToken, UmpleClassifier uClassifier)
+   {
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   List<Token> numberExpressionSubtokens = numberExpressionToken.getSubTokens();
+	   for(Token sub : numberExpressionSubtokens)
+	   {
+		   if (sub.getValue().equals("STATIC"))
+		   {
+			   if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+				   rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+		   }
+		   else if(sub.is("constraintName"))
+		   {
+			   rawLine.add(analyzeConstraintName(sub,uClassifier,true,"integer","float","double", "date"));
+		   }
+		   else if(sub.is("arithmeticCall"))
+		   {
+			   rawLine.addAll(analyzeArithmeticCall(sub,uClassifier));
+		   }
+		   else if(sub.is("number"))
+		   {
+			   rawLine.add(analyzeConstraintNumber(sub));
+		   }
+		   else if(sub.is("moreOp"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR",">"));
+		   }
+		   else if(sub.is("smallerOp"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR","<"));
+		   }
+		   else if(sub.is("greaterOp"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR",">="));
+		   }
+		   else if(sub.is("lessOp"))
+		   {
+			   rawLine.add(new ConstraintVariable("OPERATOR","<="));
+		   }
+		   else if(sub.is("equalsOp"))
+		   {
+			   ConstraintVariable cv = new ConstraintVariable("OPERATOR","==");
+			   rawLine.add(cv);
+		   }
+		   else if(sub.is("notequalsOp"))
+		   {
+			   ConstraintVariable cv = new ConstraintVariable("OPERATOR","!=");
+			   rawLine.add(cv);
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeAssociationLiteralConstraintExpression(Token literalToken, UmpleClassifier uClassifier, boolean cardinal, boolean all, boolean firstName, List<ConstraintVariable> subject, ConstraintVariable operator)
+   {
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   for(Token sub:literalToken.getSubTokens())
+	   {
+		   if(sub.is("associationLit"))
+		   {
+			   rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub, uClassifier, cardinal, all, firstName, subject, operator));
+			   firstName = false;
+		   }
+		   else if(sub.is("constraintName"))
+		   {
+			   if(!firstName)
+			   {
+				   if(all&&!cardinal)
+				   {
+					   rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+				   }
+				   else
+				   {
+					   rawLine.add(new ConstraintVariable("OPERATOR","||"));
+				   }
+			   }
+			   else
+			   {
+				   firstName = false;
+			   }
+			   rawLine.addAll(subject);
+			   rawLine.add(operator);
+			   rawLine.add(analyzeConstraintName(sub,uClassifier,true));
+		   }
+		   else if(sub.is("elements"))
+		   {
+			   if(!cardinal)
+			   {
+				   operator.setValue("cardinality==");
+			   }
+		   }
+		   else if(sub.is("number"))
+		   {
+			   if(!firstName)
+			   {
+				   if(all&&!cardinal)
+				   {
+					   rawLine.add(new ConstraintVariable("OPERATOR","&&"));
+				   }
+				   else
+				   {
+					   rawLine.add(new ConstraintVariable("OPERATOR","||"));
+				   }
+			   }
+			   else
+			   {
+				   firstName = false;
+			   }
+			   rawLine.addAll(subject);
+			   rawLine.add(operator);
+			   rawLine.add(analyzeConstraintNumber(sub));
+			   firstName = false;
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeAssociationConstraintExpression(Token associationExpressionToken , UmpleClassifier uClassifier)
+   {
+	   List<Token> associationExpressionSubtokens = associationExpressionToken.getSubTokens();
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   List<ConstraintVariable> subject = new ArrayList<ConstraintVariable>();
+	   boolean card = associationExpressionToken.getValue("firstOp").equals("cardinality");
+	   boolean all = false;
+	   ConstraintVariable operator = new ConstraintVariable("OPERATOR",associationExpressionToken.getValue("firstOp"));
+	   operator.setIsPrimitive(false);
+	   for(Token sub : associationExpressionSubtokens)
+	   {
+		   if(sub.is("constraintName"))
+		   {
+			   subject.add(analyzeConstraintName(sub,uClassifier,true));
+		   }
+		   else if(sub.is("associationLit"))
+		   {
+			   rawLine.addAll(analyzeAssociationLiteralConstraintExpression(sub,uClassifier,card,all,true,subject,operator));
+		   }
+		   else if(sub.is("all"))
+		   {
+			   if(!card)
+			   {
+				   operator.setValue("hasAll");
+				   all = true;
+			   }
+			   else
+			   {
+				   //warning that cardinality all is not supported
+			   }
+		   }
+		   else if(sub.is("moreOp"))
+		   {
+			   if(!card)
+			   {
+				   card = true;
+			   }
+			   operator.setValue("cardinality>");
+		   }
+		   else if(sub.is("smallerOp"))
+		   {
+			   if(!card)
+			   {
+				   card = true;
+			   }
+			   operator.setValue("cardinality<");
+		   }
+		   else if(sub.is("greaterOp"))
+		   {
+			   if(!card)
+			   {
+				   card = true;
+			   }
+			   operator.setValue("cardinality>=");
+		   }
+		   else if(sub.is("lessOp"))
+		   {
+			   if(!card)
+			   {
+				   card = true;
+			   }
+			   operator.setValue("cardinality<=");
+		   }
+		   else if(sub.is("equalsOp"))
+		   {
+			   if(!card)
+			   {
+				   card = true;
+			   }
+			   operator.setValue("cardinality==");
+		   }
+		   else if(sub.is("notequalsOp"))
+		   {
+			   if(!card)
+			   {
+				   card = true;
+			   }
+			   operator.setValue("cardinality!=");
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeStateMachineConstraintExpression(Token statemachineExpressionToken, UmpleClassifier uClassifier)
+   {
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+	   List<Token> numberExpressionSubtokens = statemachineExpressionToken.getSubTokens();
+	   StateMachine stateMachine = null;
+	   for(Token sub : numberExpressionSubtokens)
+	   {
+
+		   if (sub.getValue().equals("STATIC"))
+		   {
+			   if(!sub.is("}")&&!sub.is("{")&&!sub.is("[")&&!sub.is("]")&&!sub.is("\'")&&!sub.is("\""))
+				   rawLine.add(new ConstraintVariable("SYNTAX",sub.getName()));
+		   }
+		   else if(sub.is("constraintName"))
+		   {
+			   ConstraintVariable cv = analyzeConstraintName(sub,uClassifier,true);
+			   if(uClassifier instanceof UmpleClass)
+			   {
+				   stateMachine = ((UmpleClass)uClassifier).getStateMachine(cv.getValue());
+			   }
+			   else if(uClassifier instanceof UmpleTrait)
+			   {
+				   stateMachine = ((UmpleTrait)uClassifier).getStateMachine(cv.getValue());
+
+			   }
+			   if(stateMachine==null)
+			   {
+				   stateMachine = new StateMachine(cv.getValue());
+				   rawLine.add(cv);
+			   }
+
+
+
+		   }
+		   else if(sub.is("isInOp"))
+		   {
+			   ConstraintVariable cv = new ConstraintVariable("OPERATOR","in==");
+			   cv.setIsPrimitive(false);
+			   rawLine.add(cv);
+		   }
+		   else if(sub.is("isNotInOp"))
+		   {
+			   ConstraintVariable cv = new ConstraintVariable("OPERATOR","in!=");
+			   cv.setIsPrimitive(false);
+			   rawLine.add(cv);
+		   }
+	   }
+	   return rawLine;
+   }
+
+   public List<ConstraintVariable> analyzeInvariantConstraint(Token invariantToken){
+	   List<ConstraintVariable> rawLine = analyzeConstraint(invariantToken, null);
+	   if(rawLine.size() == 0) {
+		   if (invariantToken.is("brace"))
+		   {
+			   rawLine.add(new ConstraintVariable("SYNTAX",invariantToken.getValue()));
+		   }
+		   if (!invariantToken.getValue().equals("STATIC"))
+		   { 
+			   if (invariantToken.is("genExpr"))
+			   {
+				   rawLine.addAll(analyzeGeneralConstraintExpression(invariantToken,null));  
+			   }        
+			   else if (invariantToken.is("boolExpr"))
+			   {
+				   rawLine.addAll(analyzeBooleanConstraintExpression(invariantToken,null));
+			   } 
+			   else if (invariantToken.is("stringExpr"))
+			   {
+				   rawLine.addAll(analyzeStringConstraintExpression(invariantToken,null));
+			   }
+			   else if (invariantToken.is("numExpr"))
+			   {
+				   rawLine.addAll(analyzeNumberConstraintExpression(invariantToken,null));
+			   }
+			   else if (invariantToken.is("associationExpr"))
+			   {
+				   rawLine.addAll(analyzeAssociationConstraintExpression(invariantToken,null));
+			   }
+			   else if (invariantToken.is("statemachineExpr"))
+			   {
+				   rawLine.addAll(analyzeStateMachineConstraintExpression(invariantToken,null));
+			   }
+			   else if(invariantToken.is("loneBoolean"))
+			   {
+				   rawLine.add(analyzeConstraintName(invariantToken.getSubToken(0),null,true));
+			   }
+			   else if (invariantToken.is("linkingOp")){
+				   rawLine.addAll(analyzeLinkingOpExpression(invariantToken,null));
+			   }
+			   else if (invariantToken.is("negativeConstraint")){
+				   rawLine.addAll(analyzeNegativeConstraint(invariantToken, null));
+			   }
+			   else if (invariantToken.is("fakeContraint")){
+				   rawLine.add(new ConstraintVariable("STATIC",invariantToken.getValue()));
+			   }
+			   else
+			   {
+				   rawLine.addAll(analyzeConstraint(invariantToken,null));
+			   }
+
+		   }
+	   }
+	   return rawLine;
+   }
+
+   private List<ConstraintVariable> analyzeNegativeConstraint(Token negativeConstraintToken, UmpleClassifier uClassifier){
+	   List<Token> negativeConstraintSubtokens = negativeConstraintToken.getSubTokens();
+	   List<Token> subtokensCopy = new ArrayList<Token> ();
+	   subtokensCopy.addAll(negativeConstraintSubtokens);
+
+	   List<ConstraintVariable> rawLine = new ArrayList<ConstraintVariable>();
+
+	   rawLine.add(new ConstraintVariable("OPERATOR","!"));
+
+	   for (Token s :subtokensCopy){
+		   String name = s.getName();
+		   if (name.equals("!")|name.equals("not")|name.equals("~")){
+			   negativeConstraintToken.removeSubToken(s);
+		   }
+	   }
+
+	   rawLine.addAll(analyzeConstraint(negativeConstraintToken, uClassifier));
+
+
+	   return rawLine; //rawLine = !(constraintBodystuff)
+   }
+
+
+   /**
+    * /////////////////////////////////////////////// TO BE REMOVED ///////////////////////////////////////////////////////////////////////
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * Analyzer Events
+   */
+   public void done(){
+    buildBindingPortData();
+	processConstraintsData();
+	processTriggersData();
+	buildProtocolData();
+  }
+  
+}
+
+//Walk through template tree while analyzing template tokens
+interface IAnalysisWalker {
+    void accept(CompositeStructureTokenAnalyzer analyzer);
+}
+
+//Walk through definition tree while analyzing template tokens
+class CompositeStructureDefinitionWalker {
+	depend java.util.List;
+	isA IWalker;
+	UmpleInternalParser parser;
+	
+	lazy Token rootToken;
+	lazy int rootAnalysisStep;
+	lazy internal CompositeStructureTokenAnalyzer compAnalyzer;
+	Boolean reAnalyze = false;
+	after constructor {
+		compAnalyzer = new CompositeStructureTokenAnalyzer(parser);
+	}
+	
+    void accept(CompositeStructureTokenAnalyzer analyzer) {
+    	if (rootToken.is("classDefinition")) {  
+    		analyzer.prepare(rootToken);
+    	}
+    	analyzeSubTokens(rootToken, analyzer);
+    }
+    
+    void done() {
+    	compAnalyzer.done();
+    }
+    
+    private void analyzeToken(Token aToken, CompositeStructureTokenAnalyzer analyzer, int analysisStep){
+    	if (analysisStep != 2) {
+    		parser.reAnalyze(parser.reAnalyze() || (analysisStep == 1));
+	      	return;
+	  	}
+	  	if (aToken.is("portDefinition")) {
+    		analyzer.analyzePortDefinition(aToken);
+    	} else if (aToken.is("activeMethodDefinition")) {
+    		analyzer.analyzeActiveMethodDefinition(aToken);
+    	}  else if (aToken.is("portBindingDefinition")) {
+    		analyzer.analyzePortBindingDefinition(aToken);
+    	}
+    }
+    
+    private void analyzeSubTokens(Token aToken, CompositeStructureTokenAnalyzer analyzer) {
+//    	reAnalyze = true;
+//    	parser.reAnalyze(true);
+//    	do {
+//    		analysisStep+= 1;
+//      		reAnalyze = false;
+//      		parser.reAnalyze(false);
+      		for(Token subToken : aToken.getSubTokens()) {
+      			analyzeToken(subToken,analyzer,rootAnalysisStep);
+      			if (!parser.getParseResult().getWasSuccess()) {
+      				return;
+      			}
+      		}
+//    	} while (reAnalyze);
+    }
+    
+    void analyze(Token mainToken, int rootAnalysisStep) {
+    	setRootToken(mainToken);
+    	setRootAnalysisStep(rootAnalysisStep);
+    	accept(compAnalyzer);
+    }
+}
+
+//Internal invocation for internal umple parser in order to invoke walkers calls which 
+//can instantiate the analysis if required
+class UmpleInternalParser
+{
+  internal CompositeStructureDefinitionWalker compWalker = new CompositeStructureDefinitionWalker(this);
+  
+  private void analyzeComponentToken(Token token, int analysisStep) {  	
+  	compWalker.analyze(token, analysisStep);
+  }
+  
+  private void postTokenComponentAnalysis(){
+    compWalker.done();
+  }
+  
+  
+} 

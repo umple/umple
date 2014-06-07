@@ -1,0 +1,254 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+Composite-Structure meta-model.
+
+*/
+
+//@author Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+//@author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+namespace cruise.umple.compiler;
+
+
+//----------------------------------------------------------
+class UmpleClass {	
+	depend java.util.*;
+
+	0..1 -- * Port;
+  	0..1 -- * ActiveMethod;
+  	0..1 -- * PortBinding;
+  	PortBindingInformation [] portBindingInformation;
+  	
+  	public Port getPort(String name){
+    	for (Port aPort : getPorts())
+    	{
+      		if (aPort.getName().equals(name))
+      		{
+        		return aPort;
+      		}
+    	}
+    	return null;
+  	}  	
+}
+
+class Primitive {
+	name;
+	* -> 0..* BasicConstraint constraints;
+}
+// component
+
+class Port {
+	
+	direction { IN{} OUT{} BOTH{} }
+	type { END{} RELAY{} SERVICE{} CUSTOM{} }
+	//* -- 0..1 UmpleClass;
+	* -> 0..* PortBinding bindings;
+	* -> 0..1 Protocol protocol;
+	
+	name;
+	modifier;	
+	boolean conjugated;
+	int multiplicity;
+	boolean replicated;
+	
+	String signalType;
+		
+	before setUmpleClass { if (aUmpleClass != null && aUmpleClass.isImmutable()) { return false; } }
+	
+	1 -> 0..1 Position;
+  	1 -> 0..1 Position endPosition;
+}
+
+class PortBindingInformation {
+	fromPortClass;
+	fromPort;
+	toPortClass;
+	toPort;
+	code;
+}
+
+class PortBinding
+{ 
+  * -- 1 Port fromPort;  
+  * connector -- 1 Port toPort;
+  
+  lazy Attribute fromSubcomponent;
+  lazy Attribute toSubcomponent; 
+  
+  * -> 0..1 AnonymousFunction specialHandler; // Incompatible Types Handling
+}
+
+class Monitor {
+  depend cruise.umple.util.*;
+  
+  * -> 0..* BasicConstraint constraints;
+  * -> 0..* TimerConstraint;
+  * -> 0..* PortConstraint;
+  1 -> 1 ActiveMethod;
+  
+  public PortConstraint getPortConstraint(String name){
+    	for (PortConstraint aPort : getPortConstraints())
+    	{
+      		if (aPort.getPort().getName().equals(name))
+      		{
+        		return aPort;
+      		}
+    	}
+    	return null;
+  }
+}
+
+class BasicConstraint
+{
+  depend cruise.umple.compiler.Position;
+  isA Constraint;
+  lazy Position position;
+  lazy Position endPosition;
+}
+
+class PortConstraint
+{
+  depend cruise.umple.compiler.Position;
+  lazy Position position;
+  lazy Position endPosition;
+  
+  Port port;
+  * -> 0..* BasicConstraint constraints;
+}
+
+class TimerConstraint
+{
+  depend cruise.umple.compiler.Position;
+  lazy Position position;
+  lazy Position endPosition;
+  
+  timeConstraintType { LTENCY{} PERIOD{} TIMEOUT{} }
+  timer = "0";
+}
+
+class MessageConstraint
+{
+  depend cruise.umple.compiler.Position;
+  lazy Position position;
+  lazy Position endPosition;
+  
+  priority;
+}
+
+class ActiveMethod
+{
+	depend cruise.umple.compiler.Position;
+
+	activeType { ASYNCH{} SYNCH{} ATOMIC{} INTERCEPTOR{} }
+  	modifier; 
+  	name;
+  	type;
+  
+	lazy Position position;
+  	lazy Position codePosition;
+  	lazy Position endPosition;
+
+	0..1 -> * Monitor watchList;
+  	1 -> 0..* MethodParameter;
+  	1 -> * Comment;
+  	1 -> 1..2 ActiveDirectionHandler methodBody;
+}
+
+class ActiveDirectionHandler
+{  
+  directionHandler { FORWARD{} INVERSE{} }
+  
+  1 -> * ActiveDirectionHandlerBody;
+  
+  lazy Position position;
+  lazy Position codePosition;
+  lazy Position endPosition; 
+}
+
+class ActiveDirectionHandlerBody {
+	bodyType { CODE{} TRIGGER{} COMMENT{} }
+	lazy CodeBlock codeblock;
+	lazy Comment comment;
+	lazy Trigger trigger;
+	
+	lazy Position position;
+  	lazy Position codePosition;
+  	lazy Position endPosition;
+}
+
+class Trigger
+{
+  timeType { AFTER{} POLL{} TIMEOUT{} NONE{} }
+  timerPSec = "0";
+  
+  * -> 0..* BasicConstraint constraints;
+  * -> 0..* TimerConstraint;
+  * -> 0..1 MessageConstraint;
+  * -> 0..1 DeferredCall;  
+}
+
+class DeferredCall {
+	0..1 -> * DeferredFunction list;
+	* -> 0..1 DeferredFunction then;
+	* -> 0..1 DeferredFunction timeout;
+	* -> 0..1 DeferredFunction resolve;
+}
+
+class DeferredFunction {
+	deferredCallType { PORT{} ANONYMOUS{} METHOD{} }
+	* -> 0..1 PortFunction;
+	* -> 0..1 AnonymousFunction;
+	
+	lazy methodInvoke;
+	String[] parameters;
+}
+
+class PortFunction
+{
+  key { name }
+  lazy Port name;  
+  // Signal parameter
+  String[] parameters;
+//  1 -> 0..* MethodParameter params;
+}
+
+class AnonymousFunction
+{
+  depend cruise.umple.compiler.Position;
+  
+  lazy Position position;
+  lazy Position endPosition; 
+  CodeBlock codeblock = null;
+  after constructor {codeblock =new CodeBlock();} 
+}
+
+class Protocol {
+	0..1 -> * Monitor watchList;
+	0..1 -> * Trigger incomingList;
+	0..1 -> * Trigger outgoingList;
+	lazy MessageHandler msgHandler;
+}
+
+// pririoriy constraint
+class MessageStructure {
+	//priorityType { HIGH{} MEDIUM{} LOW{} NONE{} }
+//	int priority;
+	0..1 -> * MessageField params;
+}
+
+class MessageField {
+	name;
+	type;
+}
+
+class MessageHandler {	
+	communicationType { QUEUED{} DATA{} SYNC{} NONE{} }
+	1 -> 1 MessageStructure messageStructure;	
+}
+
+
+//use Structure_Code.ump;

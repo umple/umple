@@ -1,0 +1,234 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+ */
+
+namespace cruise.umple.compiler;
+
+class PairDescriptor {
+	id;
+	value;
+}
+
+class ComponentDescriptor {
+	type;
+	PairDescriptor [] descriptors;
+}
+
+class BindingDescriptor {
+	fromPort;
+	toPort;
+	String [] connectors;
+}
+
+class StructureDiagramGenerator
+{
+	depend java.util.List;
+	depend java.util.ArrayList;
+	depend cruise.umple.compiler.Port.Type;
+	depend java.io.*;
+  	depend java.util.*;
+  	depend cruise.umple.util.*;
+  	depend cruise.umple.compiler.exceptions.*;
+	
+	
+	componentPartHighlightColor = "#5DBCD2";
+	componentPartContainerHighlightColor= "#FFFFFF";
+	componentPartContainerLabelHighlightColor= "#e6e6e6";
+	portFillColor=  "#FFFFCC";	
+
+emit getColorSettings()(colorSettings);
+colorSettings <<!
+	settings: {
+		part_highlight_color: "<<=componentPartHighlightColor>>",
+		part_container_highlight_color: "<<=componentPartContainerHighlightColor>>",
+		part_container_label_highlight_color: "<<=componentPartContainerLabelHighlightColor>>",
+		portFillColor: "<<=portFillColor>>"
+	} !>> 
+
+emit getDiagramSettings(String modelName)(diagramSettings);
+diagramSettings <<! container: "svgCanvas", id: "<<=modelName>>", style: "display: block; margin: auto; border: #111 1px solid;" !>>	
+
+emit getComponentDescriptor(PairDescriptor[] node)(componentDescriptionTemplate);
+componentDescriptionTemplate <<! { <<#int i = 0; #>> <<#  for(PairDescriptor n : node) {#>><<=n.getId()>>:"<<=n.getValue()>>" <<#if((i++) < node.length -1)#>>, <<#}#>> }!>>
+
+emit getComponent(ComponentDescriptor node)(componentTemplate);
+componentTemplate <<! {args: <<=getComponentDescriptor(node.getDescriptors())>>, descriptor: "<<=node.getType()>>"} !>>
+
+emit createBindingNode(BindingDescriptor bnd)(bindingNode);
+bindingNode <<! {args: { <<#int i = 0; #>> sources: ["<<=bnd.getFromPort()>>"], targets: ["<<=bnd.getToPort()>>"]}, <<# if(bnd.getConnectors().length > 0) {#>> connectorType: [<<# for(String s : bnd.getConnectors()) {#>>"<<=s>>"<<#if((i++) < bnd.getConnectors().length -1)#>>, <<#}#>>]},<<#}#>> descriptor: "PortConnector"} !>>
+
+
+emit createJavaScriptCall(String modelName, List<ComponentDescriptor> cmpList, List<BindingDescriptor> bndList)(javascriptCall);
+
+javascriptCall <<!
+	ShapesRegistry.paint({
+		descriptor: "StrucutreDiagram",
+		args: {
+			<<#int i = 0; #>>
+			<<=getColorSettings()>>,	
+			
+			<<=getDiagramSettings(modelName)>> ,
+			nodes: [
+				<<# for(ComponentDescriptor node : cmpList) {#>> <<=getComponent(node)>> <<#if(bndList.size() > 0 || (i++) < cmpList.size() -1)#>>,
+				 <<#}#>>
+				<<#i = 0; #>>
+				
+				<<# for(BindingDescriptor node : bndList) {#>> <<=createBindingNode(node)>> <<#if((i++) < bndList.size() -1)#>>, 
+				<<#}#>>
+				
+			]
+		},
+	}, true);
+!>> 
+
+emit createHtmlPage(String modelName, List<ComponentDescriptor> cmpList, List<BindingDescriptor> bndList)(htmlPage);
+htmlPage <<!
+<html xmlns="http://www.w3.org/1999/xhtml">	
+<div style= "overflow: auto; max-height: 800px; width: 100%">
+<svg id="canvas"></svg>
+</div>
+<script type="text/javascript">
+	<<=createJavaScriptCall(modelName, cmpList, bndList)>>
+</script>
+!>> 
+  
+  String createJavaScriptCall() {
+  	List<ComponentDescriptor> cmpList = new ArrayList<ComponentDescriptor>();
+   	List<BindingDescriptor> bndList = new ArrayList<BindingDescriptor>();
+    for (UmpleClass aClass : model.getUmpleClasses()) {
+    	if(aClass.numberOfPorts() > 0 
+    			|| aClass.numberOfActiveMethods() > 0) {
+    		// Component
+    		ComponentDescriptor comp = new ComponentDescriptor("Part");
+    		comp.addDescriptor(new PairDescriptor("id", aClass.getName()));
+    		comp.addDescriptor(new PairDescriptor("name", aClass.getName()));
+    		cmpList.add(comp);
+    		for(Attribute attr : aClass.getAttributes()) {
+    			String type = attr.getType();
+    			UmpleClass subC = model.getUmpleClass(type);
+    			if(subC != null 
+    					&& ( subC.numberOfPorts() > 0
+    					|| subC.numberOfActiveMethods() > 0 )) {
+    				// Sub-Component
+    				ComponentDescriptor subComp = new ComponentDescriptor("Part");
+//    				subComp.addDescriptor(new PairDescriptor("id", aClass.getName() + "_" +subC.getName()));
+    				subComp.addDescriptor(new PairDescriptor("id", subC.getName()));
+    				subComp.addDescriptor(new PairDescriptor("name", subC.getName()));
+    				subComp.addDescriptor(new PairDescriptor("parent", aClass.getName()));
+    				cmpList.add(subComp);
+    			}
+    		}
+    		for(Port port : aClass.getPorts()) {
+    			ComponentDescriptor portDesc = new ComponentDescriptor("Port");
+    			portDesc.addDescriptor(new PairDescriptor("id", aClass.getName() + "_" + port.getName()));
+        		portDesc.addDescriptor(new PairDescriptor("name", port.getName()));
+        		portDesc.addDescriptor(new PairDescriptor("parent", aClass.getName() ));
+        		Type portType = port.getType();
+        		if(portType == Type.RELAY) {
+        			if(port.getConjugated()) {
+            			portDesc.addDescriptor(new PairDescriptor("portType", "conjucatedRelayPort" ));
+            			if(port.getReplicated()) {
+            				portDesc.addDescriptor(new PairDescriptor("portType", "conjucatedReplicatedRelayPort" ));
+            			}
+        			} else {
+        				portDesc.addDescriptor(new PairDescriptor("portType", "relayPort" ));
+        				if(port.getReplicated()) {
+            				portDesc.addDescriptor(new PairDescriptor("portType", "replicatedRelayPort" ));
+            			}
+        			}
+        			if(port.getMultiplicity() > 0) {
+        				portDesc.addDescriptor(new PairDescriptor("multiplicity", String.valueOf(port.getMultiplicity()) ));
+        			}
+        			if(!port.getModifier().matches(".*public.*")) {
+        				portDesc.addDescriptor(new PairDescriptor("isPrivate", "true" ));
+        			}
+        		} else if(portType == Type.END) {
+        			if(port.getConjugated()) {
+            			portDesc.addDescriptor(new PairDescriptor("portType", "conjucatedEndPort" ));
+            			if(port.getReplicated()) {
+            				portDesc.addDescriptor(new PairDescriptor("portType", "conjucatedReplicatedEndPort" ));
+            			}
+        			} else {
+        				portDesc.addDescriptor(new PairDescriptor("portType", "endPort" ));
+        				if(port.getReplicated()) {
+            				portDesc.addDescriptor(new PairDescriptor("portType", "replicatedEndPort" ));
+            			}
+        			}
+        			if(port.getMultiplicity() > 0) {
+        				portDesc.addDescriptor(new PairDescriptor("multiplicity", String.valueOf(port.getMultiplicity()) ));
+        			}
+        			if(!port.getModifier().matches(".*public.*")) {
+        				portDesc.addDescriptor(new PairDescriptor("isPrivate", "true" ));
+        			}
+        		} else if(portType == Type.SERVICE) {
+        			if(port.getConjugated()) {
+            			portDesc.addDescriptor(new PairDescriptor("portType", "conjugated" ));
+            			if(port.getReplicated()) {
+            				portDesc.addDescriptor(new PairDescriptor("portType", "conjugatedReplicated" ));
+            			}
+        			} else {
+        				portDesc.addDescriptor(new PairDescriptor("portType", "twoArrows" ));
+        				if(port.getReplicated()) {
+            				portDesc.addDescriptor(new PairDescriptor("portType", "replicated" ));
+            			}
+        			}
+        			if(port.getMultiplicity() > 0) {
+        				portDesc.addDescriptor(new PairDescriptor("multiplicity", String.valueOf(port.getMultiplicity()) ));
+        			}
+        			if(!port.getModifier().matches(".*public.*")) {
+        				portDesc.addDescriptor(new PairDescriptor("isPrivate", "true" ));
+        			}
+        		}
+        		cmpList.add(portDesc);
+    		}
+    		
+    		for(PortBinding pb : aClass.getPortBindings() ) {
+    			String from = pb.getFromPort().getUmpleClass().getName() +  "_" +pb.getFromPort().getName();
+    			String to = pb.getToPort().getUmpleClass().getName() +  "_" +pb.getToPort().getName();
+    			BindingDescriptor bnd = new BindingDescriptor(from, to);
+        		//bnd.addConnector("require");
+    			//bnd.addConnector("provide");
+        		bndList.add(bnd);
+    		}
+    		
+    	}
+    }
+
+    String html = createJavaScriptCall("GeneratedDiagram", cmpList,bndList);
+    return html;
+  }  
+
+  public void generate()
+  {
+//    String html = buildHtmlPage();
+    String js = createJavaScriptCall();
+    model.setCode(js);
+    writeModel();
+  }
+  
+  // Output the metrics to a file 
+  void writeModel()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + ".html";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("Structure Diagram Exception: " + e, e);
+    }
+  } 
+}
+

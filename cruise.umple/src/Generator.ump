@@ -295,6 +295,15 @@ class JsonGenerator
   String output = "";
 }
 
+class StructureDiagramGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend cruise.umple.util.*;
+
+  UmpleModel model = null;
+  String output = "";
+}
+
 class JavaGenerator
 {  
   isA CodeTranslator;
@@ -429,6 +438,7 @@ use Generator_CodeSimulate.ump;
 use Generator_CodeYuml.ump;
 use Generator_CodeXtext.ump;
 use Generator_CodeJson.ump;
+use Generator_CodeStructureDiagram.ump;
 use Generator_SuperCodeGenerator.ump;
 use Generator_Html.ump;
 use Generator_UmpleModelWalker.ump;

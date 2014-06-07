@@ -1,0 +1,46 @@
+// The master of this part of the Umple grammar is available at
+// [*http://code.google.com/p/umple/source/browse/trunk/cruise.umple/src/umple_structure.grammar*]
+//@author Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+//@author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+
+primitiveDefinition : primitive [name] { [[primitiveBody]]* }
+primitiveBody- : [[isA]] | [[constraint]]
+
+// Port Definition
+portName : ( [~classname] . )? [name]
+portMultiplicity : [!portMultiplicity:\[[0-9]+\]]
+
+typedPortName : [~type]? [~portName] [[portMultiplicity]]?
+portDefinition : [=modifier:public|protected|private]? [=inverse:conjugated]? [=direction:in|out|port] [[typedPortName]] ;
+
+// Port Connectors
+portBindingDefinition :  ( [~fromClassname] . )? [fromPort] -> ( [~toClassname] . )? [toPort] [[bindinHandler]]
+bindinHandler : { [**code] } | ;
+
+// Port Watchlist Definition
+portWatch- : ( [[constraintList]] | [[comment]] )*
+
+// Active Method Definition
+activeMethodDefinition :  [[portWatch]]? [=modifier:public|protected|private]? [type]? [=activeType:atomic|synchronous|intercept]? [=active] [[activeMethodDeclarator]] [[activeMethodBody]]+
+activeMethodDeclarator : [~methodName] [[parameterList]]?
+
+//activeMethodBody : [[activeDirectionHandler]] { ( [[activeTrigger]] )* [**code] }
+activeMethodBody : [[activeDirectionHandler]]? { ( [[comment]] | [[activeTrigger]] | [**code] )* }
+activeDirectionHandler : [=direction:forward|inverse] ( , [=direction:forward|inverse] )*
+
+activeTrigger : [[hitchConstraint]]? [[constraintList]]? [=trigger:/] [[activeTriggerBody]] [[thenDefinition]]? [[resolveDefinition]]?
+activeTriggerBody- : ( [[deferredList]] | [[activeTriggerDefinition]] )
+deferredList : [ [[activeTriggerDefinition]] ( , [[activeTriggerDefinition]] )* ]
+activeTriggerDefinition- : [[anonymousTriggerBody]] | [[invoke]]
+
+thenDefinition : .then -( [[anonymousTriggerBody]]? -)
+resolveDefinition : .resolve -( [[anonymousTriggerBody]]? -)
+
+hitchConstraint : [=clause:after|poll] OPEN_ROUND_BRACKET [timer] CLOSE_ROUND_BRACKET
+constraintList : [ [[basicConstraint]] ( , [[basicConstraint]] )* ]
+basicConstraint- : [[timeConstraint]] | [[messageConstraint]] | [[constraint]]
+timeConstraint : [=clause:latency|period|timeout] OPEN_ROUND_BRACKET [timer] CLOSE_ROUND_BRACKET
+messageConstraint : [=clause:priority] OPEN_ROUND_BRACKET [priorityValue] CLOSE_ROUND_BRACKET
+invoke : ( [~classname] . )? [name] -( ( [parameter] ( , [parameter] )* )? -) ;
+anonymousTriggerBody : { [**code] }
+
