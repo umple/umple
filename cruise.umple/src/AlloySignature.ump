@@ -31,6 +31,7 @@ class AlloyModel {
   1 -> * Statement;
   
   name;
+  modelNamespace;
   
   public AlloyModel(UmpleModel model)
   {
@@ -46,12 +47,11 @@ class AlloyModel {
     genSignatures(model);
     genOtherConstraints(model);
     
-    name = model.getUmpleFile().getFileName();   
-  }
-  
-  public String printHeader()
-  {
-    return "module "+name.substring(0,name.length()-4);
+    name = model.getUmpleFile().getFileName(); 
+    if(model.getDefaultNamespace() != null)
+      modelNamespace = "module "+model.getDefaultNamespace();  
+    else 
+      modelNamespace = "";
   }
   
   private void genSignatures(UmpleModel model)
@@ -205,6 +205,14 @@ class Signature
         if(name.equals(assoc.getEnd(1).getClassName())) continue;
 	  isBounded = addFunction(funct);	
 	}
+	
+	//This handles attributes of integer types
+	for(Attribute attr : uClass.getAttributes())
+	{
+	  Function funct = new Function(attr);
+	  isBounded = addFunction(funct);
+	}
+	
   }
   
   private String getExtendsClass(UmpleClass uClass)
@@ -296,6 +304,8 @@ class Signature
 
   private String print()
   {
-	return funPart()+"\n"+compute(function.size())+"\n}\n";
+    if(function.size() != 0)
+		return funPart()+"\n"+compute(function.size())+"\n}\n";
+	return funPart()+compute(function.size())+" }\n";
   }
 }

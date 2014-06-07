@@ -40,6 +40,14 @@ public class AlloyTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/alloy/abstractSingleton.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/Alloy_Unidirectional.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyExample1.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyShapes.als");
+	  }
+	  
+	  @Test //@Ignore
+	  public void Shapes()
+	  {
+		assertUmpleTemplateFor("alloy/AlloyShapes.ump","alloy/AlloyShapes.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyShapes.als")).exists());
 	  }
 	  
 	  @Test //@Ignore
