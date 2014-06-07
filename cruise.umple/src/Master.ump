@@ -31,6 +31,7 @@ use TextParser.ump;
 use Umlet.ump;
 use Umple.ump;
 use Trace.ump;
+use Structure.ump;
 use Template.ump;
 use UmpleDiagram.ump;
 use UmpleExceptions.ump;
