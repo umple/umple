@@ -378,11 +378,13 @@ Page.initSourceCodeArea = function()
   SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
   var generatedCodeRowSelector = "#generatedCodeRow";
   jQuery(generatedCodeRowSelector).hide();
+  jQuery("#svgCanvasContainer").hide();
 }
 
 Page.hideGeneratedCode = function()
 {
   jQuery("#generatedCodeRow").hide();
+  jQuery("#svgCanvasContainer").hide();
 }
 
 Page.initCanvasArea = function()
@@ -691,9 +693,13 @@ Page.showViewDone = function()
 
 Page.showGeneratedCode = function(code,language)
 {
-  jQuery("#generatedCodeRow").show();
+  if(language !="structureDiagram") {
+  	jQuery("#generatedCodeRow").show();
+  } else {
+  	jQuery("#svgCanvasContainer").show();
+  }
 
-  if(language!="html" && language!="javadoc" && language !="stateDiagram" && language !="classDiagram" && language !="diagramUpdate" && language != "uigu" && language != "yumlDiagram") {
+  if(language!="html" && language!="javadoc" && language !="stateDiagram" && language !="classDiagram" && language !="structureDiagram" && language !="diagramUpdate" && language != "uigu" && language != "yumlDiagram") {
     var codeparts = code.split('URL_SPLIT');
     var zipurl = "";
     var bodycode = "";
@@ -717,8 +723,26 @@ Page.showGeneratedCode = function(code,language)
     {
       codeParts = code.split("<svg width=");
       code = "<svg width=" + codeParts[1].replace(/<\/svg$/, "");
+      jQuery("#generatedCodeRow").html(format('{0}',code));
+    } else if(language == "structureDiagram") {
+    	var codeparts = code.split('URL_SPLIT');
+    	var zipurl = "";
+    	var bodycode = "";
+    	var warningToggleLoc = 0;
+    	if(codeparts.length == 1) {
+	        bodycode = codeparts[0];
+	    }
+	    else {
+        	zipurl = codeparts[0];
+        	bodycode = codeparts[1];
+    	}
+    	var decoded = jQuery("<div/>").html(bodycode).text();
+    	eval(decoded);
+    	warningToggleLoc = zipurl.indexOf("Show/Hide errors and warnings");
+    	if(warningToggleLoc > 30 || warningToggleLoc == -1) {
+      		SyntaxHighlighter.highlight("code");
+    	}
     }
-    jQuery("#generatedCodeRow").html(format('{0}',code));
   }
 }
 
