@@ -97,12 +97,50 @@ htmlPage <<!
 </script>
 !>> 
   
-  String createJavaScriptCall() {
-  	List<ComponentDescriptor> cmpList = new ArrayList<ComponentDescriptor>();
+    public boolean hasSubComponents(UmpleClass cmp) {
+	  for(Attribute attr : cmp.getAttributes()) {
+			String type = attr.getType();
+			UmpleClass subC = model.getUmpleClass(type);
+			// Only one level checking
+			if(subC != null 
+					&& ( subC.numberOfPorts() > 0
+					|| subC.numberOfActiveMethods() > 0 )) {
+				return true;
+			}
+		}
+	  return false;
+  }
+  
+  public boolean matchBindingDescriptor(ComponentDescriptor cmp, String cmpName) {
+	  if(cmp.getType().equalsIgnoreCase("Part")) {
+		  for(PairDescriptor pd : cmp.getDescriptors()) {
+			  if(pd.getValue().equals(cmpName)) {
+				  return true;
+			  }
+		  }
+	  }
+	  return false;
+  }
+  
+  public void removeComponentConflicts(List<ComponentDescriptor> cmpList, String cmpName) {
+	  Iterator<ComponentDescriptor> iter = cmpList.iterator();
+	  while (iter.hasNext()) {
+		  ComponentDescriptor cmp = iter.next();
+		  if (cmp.numberOfDescriptors() > 0) {
+			  if(matchBindingDescriptor(cmp, cmpName)) {
+				  iter.remove();
+			  }
+		  }
+	  }
+  }
+
+  public String createJavaScriptCall(){
+    List<ComponentDescriptor> cmpList = new ArrayList<ComponentDescriptor>();
    	List<BindingDescriptor> bndList = new ArrayList<BindingDescriptor>();
     for (UmpleClass aClass : model.getUmpleClasses()) {
     	if(aClass.numberOfPorts() > 0 
-    			|| aClass.numberOfActiveMethods() > 0) {
+    			|| aClass.numberOfActiveMethods() > 0
+    			|| hasSubComponents(aClass)) {
     		// Component
     		ComponentDescriptor comp = new ComponentDescriptor("Part");
     		comp.addDescriptor(new PairDescriptor("id", aClass.getName()));
@@ -120,6 +158,7 @@ htmlPage <<!
     				subComp.addDescriptor(new PairDescriptor("id", subC.getName()));
     				subComp.addDescriptor(new PairDescriptor("name", subC.getName()));
     				subComp.addDescriptor(new PairDescriptor("parent", aClass.getName()));
+    				removeComponentConflicts(cmpList, subC.getName());
     				cmpList.add(subComp);
     			}
     		}
@@ -201,7 +240,8 @@ htmlPage <<!
 
     String html = createJavaScriptCall("GeneratedDiagram", cmpList,bndList);
     return html;
-  }  
+  }
+  
 
   public void generate()
   {
