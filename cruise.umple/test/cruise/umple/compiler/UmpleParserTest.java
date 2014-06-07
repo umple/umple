@@ -1102,7 +1102,7 @@ public class UmpleParserTest
 	  assertFailedParse("008_attributeContainsDoubleDash.ump", 132);
 	  assertFailedParse("008_attributeContainsDoublePeriod.ump", 132);
 	  //assertFailedParse("008_attributeContainsStar.ump", 132);
-	  assertFailedParse("008_attributeContainsArrow.ump", 132);
+	  //assertFailedParse("008_attributeContainsArrow.ump", 132); // Obslete
   }
   
   @Test
