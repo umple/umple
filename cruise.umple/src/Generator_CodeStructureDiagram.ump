@@ -158,7 +158,7 @@ htmlPage <<!
     				subComp.addDescriptor(new PairDescriptor("id", subC.getName()));
     				subComp.addDescriptor(new PairDescriptor("name", subC.getName()));
     				subComp.addDescriptor(new PairDescriptor("parent", aClass.getName()));
-    				removeComponentConflicts(cmpList, subC.getName());
+    				//removeComponentConflicts(cmpList, subC.getName());
     				cmpList.add(subComp);
     			}
     		}
