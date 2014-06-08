@@ -54,6 +54,56 @@ class AlloyModel {
       modelNamespace = "";
   }
   
+  //For general hierachy pattern
+  private Association checkAssocitaionBtw(String n1, String n2, UmpleModel model)
+  {
+    String endName1, endName2;
+    for(Association assoc : model.getAssociations())
+    {
+      endName1 = assoc.getEnd(0).getClassName();
+      endName2 = assoc.getEnd(1).getClassName();
+      if(n1.equals(endName1) && n2.equals(endName2))
+        
+          return assoc;
+      if(n1.equals(endName2) && n2.equals(endName1))
+        
+          return assoc;
+    }
+    return null;
+  }
+  
+  //For general hierarchy pattern
+  private Association analyzeClassForH(UmpleModel model,UmpleClass uClass)
+  {
+    String name1, name2;
+  	name1 = uClass.getName();
+  	
+  	if(uClass.hasExtendsClass())
+  	{
+  	  Multiplicity mult = new Multiplicity();
+	  if(mult.setBound("1") == true) ;
+  	  AssociationEnd lEnd = new AssociationEnd(null,null,null,null,mult);
+  	  AssociationEnd rEnd = new AssociationEnd(null,null,null,null,mult);
+  	  name2 = uClass.getExtendsClass().getName();
+  	  if(checkAssocitaionBtw(name1,name2,model) != null)
+  	  {
+  	    Association assoc = checkAssocitaionBtw(name1,name2,model);
+  	    if(assoc.getEnd(0).getClassName().equals(name1))
+  	    {
+  	      lEnd = assoc.getEnd(0);
+  	      rEnd = assoc.getEnd(1);
+  	    }
+  	    else 
+  	    {
+  	      lEnd = assoc.getEnd(1);
+  	      rEnd = assoc.getEnd(0);
+  	    }
+  	    return convertEndsToAssociation(lEnd,rEnd);
+  	  }
+  	}
+  	return null;
+  }
+  
   private void genSignatures(UmpleModel model)
   {
     for (UmpleClass uClass : model.getUmpleClasses())
@@ -138,6 +188,15 @@ class AlloyModel {
       {
         NumericBoundFact nbf = new NumericBoundFact(assoc,1);
         facts.add(nbf);
+      }
+    }
+    
+    for(UmpleClass uClass : model.getUmpleClasses())
+    {
+      if(analyzeClassForH(model,uClass) != null)
+      {
+        GenHierarchyFact ghf = new GenHierarchyFact(analyzeClassForH(model,uClass));
+        facts.add(ghf);
       }
     }
   }
@@ -255,15 +314,6 @@ class Signature
       beginEnd = assoc.getEnd(0); 
     }
     return convertEndsToAssociation(beginEnd,endToOutput); 
-  }
-  
-  private Association convertEndsToAssociation(AssociationEnd beginEnd,AssociationEnd endToOutput){
-     AssociationEnd [] ends = new AssociationEnd[2];
-     ends[0] = new AssociationEnd(beginEnd.getRoleName(),beginEnd.getClassName(),
-					beginEnd.getModifier(),beginEnd.getReferenceToClassName(),beginEnd.getMultiplicity());
-     ends[1] = new AssociationEnd(endToOutput.getRoleName(),endToOutput.getClassName(),
-					endToOutput.getModifier(),endToOutput.getReferenceToClassName(),endToOutput.getMultiplicity());
-     return new Association(true,true,ends);
   }
 	
   private String comment()

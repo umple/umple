@@ -1,8 +1,18 @@
 namespace cruise.umple.alloy;
 
 class AlloyObject {
+  depend cruise.umple.compiler.*;
   public String printObject(String cName){
 	return "\nabstract sig "+cName+" { }\n";
+  }
+  
+  protected Association convertEndsToAssociation(AssociationEnd beginEnd,AssociationEnd endToOutput){
+     AssociationEnd [] ends = new AssociationEnd[2];
+     ends[0] = new AssociationEnd(beginEnd.getRoleName(),beginEnd.getClassName(),
+					beginEnd.getModifier(),beginEnd.getReferenceToClassName(),beginEnd.getMultiplicity());
+     ends[1] = new AssociationEnd(endToOutput.getRoleName(),endToOutput.getClassName(),
+					endToOutput.getModifier(),endToOutput.getReferenceToClassName(),endToOutput.getMultiplicity());
+     return new Association(true,true,ends);
   }
 }
 

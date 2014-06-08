@@ -2,7 +2,7 @@
 
 ------------------------------------------------------------------------------------------------------------------
 
--- This Alloy file is generated using Umple from AlloyExample1.ump
+-- This Alloy file is generated using Umple from AlloyGenHierarchy.ump
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -20,53 +20,62 @@ abstract sig UmpleObject { }
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines a signature for class Academic
+--The following defines a signature for class Employee
 
 ------------------------------------------------------------------------------------------------------------------
 
-sig Academic extends UmpleObject {
-  student : set Graduate
+sig Employee extends UmpleObject {
+  manager : lone Manager
 }
 
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines a signature for class FacultyMember
+--The following defines a signature for class Secretary
 
 ------------------------------------------------------------------------------------------------------------------
 
-sig FacultyMember extends Academic { }
+sig Secretary extends Employee { }
 
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines a signature for class Graduate
+--The following defines a signature for class Technician
 
 ------------------------------------------------------------------------------------------------------------------
 
-sig Graduate extends Academic {
-  advisor : lone Academic
+sig Technician extends Employee { }
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Manager
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Manager extends Employee {
+  supervises : set Employee
 }
 
 
 ------------------------------------------------------------------------------------------------------------------
 
---The following defines bidirectionality rule between class Academic and class Graduate
+--The following defines bidirectionality rule between class Manager and class Employee
 
 ------------------------------------------------------------------------------------------------------------------
 
 fact BidirectionalityRule {
-  all academic_1 : Academic, graduate_1 : Graduate |
-    academic_1 in advisor[graduate_1] <=> graduate_1 in student[academic_1]
+  all manager_1 : Manager, employee_1 : Employee |
+    manager_1 in manager[employee_1] <=> employee_1 in supervises[manager_1]
 }
 
 ------------------------------------------------------------------------------------------------------------------
 
--- The following defines generalization hierarchy rule between class Academic and Graduate
+-- The following defines generalization hierarchy rule between class Employee and Manager
 
 ------------------------------------------------------------------------------------------------------------------
 
 fact GenHierarchyFact {
-  no graduate_1 : Graduate |
-    graduate_1.advisor = graduate_1
+  no manager_1 : Manager |
+    manager_1.supervises = manager_1
 }

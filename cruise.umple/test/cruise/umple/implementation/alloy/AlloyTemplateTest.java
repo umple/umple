@@ -41,6 +41,7 @@ public class AlloyTemplateTest extends TemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/alloy/Alloy_Unidirectional.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyExample1.als");
 	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyShapes.als");
+	    SampleFileWriter.destroy(pathToInput + "/alloy/AlloyGenHierarchy.als");
 	  }
 	  
 	  @Test //@Ignore
@@ -55,6 +56,13 @@ public class AlloyTemplateTest extends TemplateTest{
 	  {
 		assertUmpleTemplateFor("alloy/AlloyExample1.ump","alloy/AlloyExample1.alloy.txt");
 		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyExample1.als")).exists());
+	  }
+	  
+	  @Test //@Ignore
+	  public void AlloyGenHierarchy()
+	  {
+		assertUmpleTemplateFor("alloy/AlloyGenHierarchy.ump","alloy/AlloyGenHierarchy.alloy.txt");
+		Assert.assertEquals(true, (new File(pathToInput + "/alloy/AlloyGenHierarchy.als")).exists());
 	  }
 
 	  @Test //@Ignore

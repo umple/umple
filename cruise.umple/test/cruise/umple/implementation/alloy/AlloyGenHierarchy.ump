@@ -1,0 +1,18 @@
+/*
+  Source - Lecture Notes on OOSE by T.C. Lethbridge
+*/
+
+class Employee{ }
+
+class Secretary {
+  isA Employee;
+}
+
+class Technician {
+ isA Employee;
+}
+
+class Manager {
+  isA Employee;
+  0..1 -- * Employee supervises;
+}

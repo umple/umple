@@ -2,6 +2,6 @@ class A{
 
 }
 
-class B{
+class B {
   isA A;
 }
