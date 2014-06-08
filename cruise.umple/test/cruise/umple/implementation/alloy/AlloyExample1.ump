@@ -2,9 +2,9 @@ class Academic {
   0..1 advisor -- * Graduate student;
 }
 
-//class FacultyMember {
-  //isA Academic;
-//}
+class FacultyMember {
+  isA Academic;
+}
 
 class Graduate {
   isA Academic;

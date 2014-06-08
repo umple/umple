@@ -197,6 +197,39 @@ class BidirectionFact
   }
 }
 
+class GenHierarchyFact {
+  depend cruise.umple.compiler.*;
+  isA Fact;
+  
+  public GenHierarchyFact(Association assoc)
+  {
+    super(assoc);
+    factName = "GenHierarchyFact";
+  }
+  private String content()
+  {
+  	return makeVarName(firstClassName,1)+"."+
+  	  rName2+" = "+makeVarName(firstClassName,1)+"\n}";
+  }
+  
+  private String declaration()
+  {
+    return "no "+makeVarDeclaration(firstClassName,1);
+  }
+  
+  //This methods comments non reflexive rule
+  private String comment()
+  {
+  	return addStartDottedLine()+"-- The following defines generalization hierarchy rule between class "+
+  	  secondClassName+" and "+firstClassName+"\n"+addEndDottedLine();
+  }
+  public String print()
+  {
+  	return comment()+factHeader()+declaration()+suchThatPlusNewLine()+content();
+  }
+  
+}
+
 class NonReflexiveFact
 {
   depend cruise.umple.compiler.*; 
