@@ -301,7 +301,6 @@ class UmpleTrait {
     for (Method aMethod : this.getMethods()){
       // Compare method names
       if (aMethod.getName().equals(methodName)){  
-    	  if(aMethod.getType().equals(methodType)){
 	        // Now compare parameters
 	        if (numberOfParams == aMethod.getMethodParameters().size())
 	        {
@@ -319,7 +318,6 @@ class UmpleTrait {
 	            return true;
 	          }
 	        }
-    	  }  
       }
     }
     return false;

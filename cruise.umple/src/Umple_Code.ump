@@ -2465,7 +2465,10 @@ class GeneralTPApplied {
 	public GeneralTPApplied(GeneralTPApplied another) {
 	  this.parameterMapping = another.parameterMapping;
 	  this.inheritanceName = another.inheritanceName;
-	  this.methodTemplateSignatures = another.methodTemplateSignatures;	  
+	  methodTemplateSignatures = new ArrayList<MethodTemplateSignature>();
+	  for (MethodTemplateSignature mtSignature : another.getMethodTemplateSignatures()) {
+		  methodTemplateSignatures.add(new MethodTemplateSignature(mtSignature));
+	  } 
   	}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -2510,6 +2513,18 @@ class GeneralTPApplied {
 		 // }  
       }
 	  return false;
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------   
+}
+
+class MethodTemplateSignature{
+  MethodTemplateSignature(MethodTemplateSignature another)
+  {
+    this.modifier = another.getModifier();
+    this.alias = another.getAlias();
+    this.method = new Method(another.getMethod());
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   

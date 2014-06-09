@@ -79,12 +79,13 @@ public class UmpleTraitTest {
 	public void checkValidNameTest() {
 		String code = "class A{isA 12T;}trait 12T{}";
 		UmpleModel model = getModel(code);
+		boolean result =false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2500");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2500");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -93,12 +94,14 @@ public class UmpleTraitTest {
 	public void checkUniqueNameTest() {
 		String code = "class A{isA A;}trait A{}";
 		UmpleModel model = getModel(code);
+		boolean result =false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2550");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2550");
+			
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -107,12 +110,13 @@ public class UmpleTraitTest {
 	public void selfInheritanceTest() {
 		String code = "class A{isA T;} trait T { isA T;}";
 		UmpleModel model = getModel(code);
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2551");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2551");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -121,13 +125,13 @@ public class UmpleTraitTest {
 	public void cyclicInheritanceTest() {
 		String code = "class A{isA T;} trait T { isA T1;} trait T1 {isA T;}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2553");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2553");			
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}	
@@ -161,7 +165,7 @@ public class UmpleTraitTest {
 		Assert.assertEquals(false, model.getUmpleClass("A").getExtraCode().isEmpty());		
 	}	
 
-	@Test
+	@Ignore
 	public void associationTraitsTest() {
 		String code = "class A {isA T;} class B {} trait T { 1 -- * B;} ";
 		UmpleModel model = getRunModel(code);
@@ -173,13 +177,13 @@ public class UmpleTraitTest {
 	public void checkRequiredMethodTest() {
 		String code = "class A{isA T;} trait T { String test();}";
 		UmpleModel model = getModel(code);
-		
+		boolean happened = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2555");
-			Assert.assertTrue(result);
+			happened = e.getMessage().contains("2555");		
 		} finally {
+			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}	
@@ -196,13 +200,13 @@ public class UmpleTraitTest {
 	public void checkDuplicatedMethods1Test() {
 		String code = "class A{isA T1; isA T2;} trait T1 { String test(){}} trait T2 { String test(){}}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2557");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2557");			
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -211,13 +215,13 @@ public class UmpleTraitTest {
 	public void checkDuplicatedMethods2Test() {
 		String code = "class A{isA T;}trait T{isA T1;isA T2;}trait T1{void test(){/*T1*/}}trait T2{void test(){/*T2*/}}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2557");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2557");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -366,13 +370,13 @@ public class UmpleTraitTest {
 	public void includeExcludeRule3Test() {
 		String code = "class A{isA T1;}trait T1{isA T2 <-show()>;void test(){/*T1*/}  }trait T2{}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2559");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2559");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -381,13 +385,13 @@ public class UmpleTraitTest {
 	public void includeExcludeRule4Test() {
 		String code = "class A{isA T1;}trait T1{isA T2 <+show()>;void test(){/*T1*/}  }trait T2{}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2559");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2559");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -396,13 +400,13 @@ public class UmpleTraitTest {
 	public void includeExcludeRule5Test() {
 		String code = "class A{isA T1;}trait T1{isA T2 <+show(),+show()>;void test(){/*T1*/}  }trait T2{void show(){/*T2*/}}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2558");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2558");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -411,13 +415,13 @@ public class UmpleTraitTest {
 	public void includeExcludeRule6Test() {
 		String code = "class A{isA T1;}trait T1{isA T2 <-show(),+show()>;void test(){/*T1*/}  }trait T2{void show(){/*T2*/}}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2558");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2558");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -426,13 +430,13 @@ public class UmpleTraitTest {
 	public void includeExcludeRule7Test() {
 		String code = "class A{isA T1;}trait T1{isA T2 <+display()>;}trait T2{void show(){/*T2*/}}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2559");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2559");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -490,30 +494,28 @@ public class UmpleTraitTest {
 	public void includeExcludeRule12Test() {
 		String code = "class A{isA T1< +test(String),+test()>;}trait T1{void test(String str){/*T1-S*/}void test(Integer inData){/*T1-I*/}void test(String str,Integer inData){/*T1-SI*/}}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2559");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2559");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
-	
-
-	
+		
 	@Ignore
 	public void includeExcludeRuleAlias1Test() {
 		String code = "class A{isA T1<+test(Integer), -test(String) as t >;}trait T1{void test(String str){/*T1-S*/}void test(Integer inData){/*T1-I*/}void test(String str,Integer inData){/*T1-SI*/}}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2560");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2560");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -574,12 +576,13 @@ public class UmpleTraitTest {
 	public void includeExcludeRuleAlias7Test() {
 		String code = "class A{ isA T<require() as requireT>;isA D<require() as requireD>;}trait T{    isA T1;	void require(){	 /*T*/	}} trait T1{void require(); void testT1(){	 /*T1*/}}trait D{ isA D1;  void require(){  /*D*/  };}trait D1{  void require(); void testD1(){	 /*D1*/}}";
 		UmpleModel model = getModel(code);
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2555");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2555");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -672,13 +675,13 @@ public class UmpleTraitTest {
 	public void TypeParameterTest00() {
 		String code = "class A{isA T;}trait T<X,X>{}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2561");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2561");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -686,13 +689,13 @@ public class UmpleTraitTest {
 	public void TypeParameterTest01() {
 		String code = "class A{isA T< A = String, A = Integer >;}trait T<X,Z>{}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2563");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2563");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -700,14 +703,14 @@ public class UmpleTraitTest {
 	public void TypeParameterTest02() {
 		String code = "class A{isA T< Y = String>;}trait T<X,Z>{}";
 		UmpleModel model = getModel(code);
-		
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2562");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2562");
 		} finally {
 			SampleFileWriter.destroy("traitTest.ump");
+			Assert.assertTrue(result);
 		}	
 	}
 	
@@ -750,12 +753,13 @@ public class UmpleTraitTest {
 	public void Attribute01Test() {
 		String code = "class A{name;isA T;}trait T{name;}";
 		UmpleModel model = getModel(code);
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2565");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2565");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -771,12 +775,13 @@ public class UmpleTraitTest {
 	public void Attribute03Test() {
 		String code = "class A{isA T;}trait T{name;isA T1;}trait T1{name;}";
 		UmpleModel model = getModel(code);
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2565");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2565");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -785,12 +790,13 @@ public class UmpleTraitTest {
 	public void Attribute04Test() {
 		String code = "class A{name;isA T;}trait T{isA T1;}trait T1{name;}";
 		UmpleModel model = getModel(code);
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2565");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2565");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -813,12 +819,13 @@ public class UmpleTraitTest {
 	public void Attribute07Test() {
 		String code = "class A{isA T1;isA T2;}trait T1{name;}trait T2{name;}";
 		UmpleModel model = getModel(code);
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2565");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2565");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -844,12 +851,13 @@ public class UmpleTraitTest {
 	public void Attribute10Test() {
 		String code = "class A{isA T<X=String>;}trait T<X>{isA T1;	isA T2;}trait T1{isA Share<Type = Integer>;}trait T2{isA Share<Type = String>;}trait Share<Type> {Type name;}";
 		UmpleModel model = getModel(code);
+		boolean result = false;
 		try {
 			model.run();	
 		} catch (Exception e) {
-			boolean result = e.getMessage().contains("2564");
-			Assert.assertTrue(result);
+			result = e.getMessage().contains("2564");
 		} finally {
+			Assert.assertTrue(result);
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
@@ -859,6 +867,7 @@ public class UmpleTraitTest {
 		String code = "class A{isA T<X=B>;}trait T<X>{0..1 -- * X;} class B{}";
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
+		Assert.assertEquals(1, model.getUmpleClass("B").numberOfAssociationVariables());
 	}
 	
 //-------------------------------------------------------------------------------------	
