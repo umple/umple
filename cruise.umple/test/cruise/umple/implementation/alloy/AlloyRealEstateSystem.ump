@@ -1,0 +1,79 @@
+// UML class diagram of a Real Estate system
+namespace realestate;
+
+class Address
+{
+  Integer numberOnStreet;
+  Integer apartmentOrUnit;
+  String street;
+  String city;
+  String postalCode;
+}
+
+class GPSCoord
+{
+  Double lattitude;
+  Double longitude;
+}
+
+class Property
+{
+  Address propertyAddress;
+  Integer numberBedrooms;
+  Integer numberBathrooms;
+  Integer squareFeet;
+  Integer numFloors;
+  GPSCoord gpsCoord;
+
+  * -- 1 Neighbourhood;
+}
+
+class Neighbourhood
+{
+  String description;
+  GPSCoord[] gpsCoordsOfBoundary;
+}
+
+class PropertySale
+{
+
+  Integer salePrice;
+  String seller;
+  String buyer;
+
+  * -- 1 Property;
+}
+
+
+class OpenHouse
+{
+  Date date;
+  Time startTime;
+  Time endTime;
+
+  * -- 1 PropertyForSale;
+  * -- 0..1 Agent agentInCharge;
+}
+
+class Agent
+{
+  String name;
+  String licenseNumber;
+  String emailAddress;
+  String officePhoneNumber;
+  String cellPhoneNumber;
+  Address officeAddress;
+
+  * -- * Neighbourhood specializingNeighbourhoods;
+}
+
+class PropertyForSale
+{
+  Integer listingNumber;
+  Integer askingPrice;
+  Date dateListedForSale;
+
+  * -- 1 Property listedProperty;
+  * -- 0..1 Agent listingAgent;
+  0..1 --  0..1 PropertySale;
+}

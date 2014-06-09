@@ -34,13 +34,17 @@ class Function {
 	targetClassName = utility.getRightEndName(assoc);
   }
   
-  public Function(Attribute attr){
+  public Function(Attribute attr)
+  {
     beginEndRoleName = attr.getName();
     targetMult = "one";
-    if(attr.getType().equals("Integer"))
+    if(attr.getType().equals("Integer") || attr.getType().equals("Double"))
       targetClassName = "Int";
-    if(attr.getType().equals("String") || attr.getType().equals(""))
+    else if(attr.getType().equals("String") || attr.getType().equals("")
+    	|| attr.getType().equals("Date") || attr.getType().equals("Time"))
       targetClassName = "String";
+    else 
+    	targetClassName = attr.getType();
   }
 	
   //Reflexive relation
