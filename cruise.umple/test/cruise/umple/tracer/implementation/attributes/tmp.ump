@@ -1,0 +1,21 @@
+namespace example;
+
+class Tracer
+{
+  lazy Integer id;
+  lazy name;
+  
+  // It is possible to specify multiple UML entities to trace as follows
+  // It is also possible to indicate interesting information to record
+  // in addition to the value of the element being traced
+  trace id, name record "interesting behavior";
+  trace id record "Even more interesting";
+
+  // Traces will be triggered for each call to a 'set' method
+  // and twice for id, since there are two trace statements for id  
+  public static void main(String [ ] args) {
+    Student s = new Student();
+    s.setId(9); 
+    s.setName("Tim");
+  }
+}

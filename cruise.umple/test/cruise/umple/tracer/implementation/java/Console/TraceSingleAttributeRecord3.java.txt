@@ -1,7 +1,6 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
-
 package example;
+import cruise.util.ConsoleTracer;
+import java.util.Date;
 
 public class Tracer
 {
@@ -39,10 +38,9 @@ public class Tracer
   public boolean setName(String aName)
   {
     boolean wasSet = false;
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeRecord3.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name+","+(""+aName).toString().replace("\n","").replace(",",";")+",i am tracing name" );
     name = aName;
     wasSet = true;
-    System.err.println("name=" + aName);
-    System.err.println("RecordString=" + "i am tracing name");
     return wasSet;
   }
 
@@ -58,15 +56,3 @@ public class Tracer
 
   public void delete()
   {}
-
-
-  public String toString()
-  {
-	  String outputString = "";
-	  
-    return super.toString() + "["+
-            "id" + ":" + getId()+ "," +
-            "name" + ":" + getName()+ "]"
-     + outputString;
-  }
-}
