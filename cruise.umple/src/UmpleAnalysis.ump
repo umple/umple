@@ -608,19 +608,19 @@ class ConstraintParameterAnalyzer
   boolean asIs = false;
   void analyze(Token token)
   {
-    if(!asIs)
-    {
-      ConstraintVariable comma = new ConstraintVariable("SYNTAX","");
-      for(ConstraintVariable constraintVariable:rawLine)
-      {
-        if(!"".equals(comma.getValue()))
-        {
-          cv.getSubConstraint().addExpression(comma);
-        }
-        cv.getSubConstraint().addExpression(constraintVariable);
-        comma = new ConstraintVariable("SYNTAX",",");
-      }
-    }	
+  }
+}
+
+class ConstraintParameterListCommaAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+
+  lazy ConstraintVariable cv;
+  public void analyze(Token token)
+  {
+    cv.getSubConstraint().addExpression(new ConstraintVariable("SYNTAX",","));
   }
 }
 
@@ -854,6 +854,19 @@ class NotequalsOpAnalyzer
   public void analyze(Token token)
   {
     rawLine.add(new ConstraintVariable("OPERATOR","!="));
+    rawLine.get(rawLine.size()-1).setIsPrimitive(false);
+  }
+}
+
+class GreaterOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  public void analyze(Token token)
+  {
+    rawLine.add(new ConstraintVariable("OPERATOR",">="));
     rawLine.get(rawLine.size()-1).setIsPrimitive(false);
   }
 }
