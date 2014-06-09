@@ -443,17 +443,18 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),record.getAttribute(0));
   }
   
-  @Test @Ignore
+  @Test
   public void traceSingleAttributeRecord3()
   {
 	  code = "class Tracer{Integer id; String name; trace name record \"i am tracing name\";}";
-	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record:\"i am tracing name\"]");
+	  assertParse(code,"[classDefinition][name:Tracer][attribute][type:Integer][name:id][attribute][type:String][name:name][trace][trace_entity:name][trace_record_string:i am tracing name]");
 
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
 	  TraceRecord record = traceDirective1.getTraceRecord();
-	  Assert.assertEquals((Object)record.getRecord(),"\"i am tracing name\"");
+	  System.out.println("R = "+record);
+	  Assert.assertEquals((Object)record.getRecord(0),"i am tracing name");
 	  Assert.assertEquals((Object)record.getRecordOnly(),false);
   }
   

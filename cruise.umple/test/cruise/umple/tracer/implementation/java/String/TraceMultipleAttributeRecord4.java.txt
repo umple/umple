@@ -1,7 +1,7 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
+import cruise.util.StringTracer;
+import java.util.Date;
 
 public class Tracer
 {
@@ -14,18 +14,16 @@ public class Tracer
   private int id;
   private int contact;
   private String name;
-  private String address;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Tracer(int aId, int aContact, String aName, String aAddress)
+  public Tracer(int aId, int aContact, String aName)
   {
     id = aId;
     contact = aContact;
     name = aName;
-    address = aAddress;
   }
 
   //------------------------
@@ -37,9 +35,6 @@ public class Tracer
     boolean wasSet = false;
     id = aId;
     wasSet = true;
-    System.err.println("id=" + aId);
-    System.err.println("address=" + address);
-    System.err.println("contact=" + contact);
     return wasSet;
   }
 
@@ -54,18 +49,8 @@ public class Tracer
   public boolean setName(String aName)
   {
     boolean wasSet = false;
+    StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeRecord4.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name+","+(""+aName).toString().replace("\n","").replace(",",";")+","+id+","+contact );
     name = aName;
-    wasSet = true;
-    System.err.println("name=" + aName);
-    System.err.println("address=" + address);
-    System.err.println("contact=" + contact);
-    return wasSet;
-  }
-
-  public boolean setAddress(String aAddress)
-  {
-    boolean wasSet = false;
-    address = aAddress;
     wasSet = true;
     return wasSet;
   }
@@ -85,24 +70,17 @@ public class Tracer
     return name;
   }
 
-  public String getAddress()
-  {
-    return address;
-  }
-
   public void delete()
   {}
 
 
   public String toString()
   {
-	  String outputString = "";
-	  
+    String outputString = "";
     return super.toString() + "["+
             "id" + ":" + getId()+ "," +
             "contact" + ":" + getContact()+ "," +
-            "name" + ":" + getName()+ "," +
-            "address" + ":" + getAddress()+ "]"
+            "name" + ":" + getName()+ "]"
      + outputString;
   }
 }

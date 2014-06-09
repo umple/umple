@@ -51,9 +51,9 @@ class ConditionRhs
  */
 class TraceRecord
 {
-    boolean recordOnly = false;
-    0..* -- 0..* Attribute;
-    0..* -- 0..* StateMachine;
+  boolean recordOnly = false;
+  0..* -- 0..* Attribute;
+  0..* -- 0..* StateMachine;
   String[] record;
 }
 

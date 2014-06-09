@@ -202,7 +202,7 @@ class UmpleInternalParser
       {
         traceAttr.setDuringClause(token.getValue("trace_duration"));
       }
-      else if( traceToken.is("trace_record") || traceToken.getName().equals("only") )
+      else if( traceToken.is("trace_record") || traceToken.getName().equals("only")  || traceToken.is("trace_record_string") )
       {
         if( isFirst )
         {
@@ -231,15 +231,15 @@ class UmpleInternalParser
   /**
    * Analyze trace record in a trace directive
    */
-   private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord){
-    String record = token.getValue("trace_record");
+  private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord){
+    String record = token.getValue("trace_record_string");
     Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("trace_record"));
-    
+
     // trace only what is in the record entity
     if( token.getName().equals("only") )
       traceRecord.setRecordOnly(true);  
     // recording a String 
-    else if( record.contains("\"") )
+    else if( record != null )
       traceRecord.addRecord(record);
     // recording an attribute
     else if( attr != null )

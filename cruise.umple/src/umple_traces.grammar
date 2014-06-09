@@ -32,7 +32,7 @@ traceLevel- : level [trace_level]
 tracePeriod- : period [trace_period]
 traceDuring- : during [trace_duration]
 traceRecord- : record [[recordEntity]]
-recordEntity- : ( only )? [trace_record] ( , [trace_record] )*
+recordEntity- : ( only )? ( " [**trace_record_string] " | [trace_record] ) ( , [trace_record] )*
 
 traceCondition- : [LHS] [[conditionRHS]]
 conditionRHS- : [comparison_operator] [RHS]
