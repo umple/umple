@@ -71,7 +71,7 @@ statemachineLiteral- : [=state]? [~stateName]
 constraintName : [=new]? [!name:[a-zA-Z_][a-zA-Z0-9_-]*] [[constraintIndexOperator]]* [[constraintParameterList]]? [[constraintScopeOperator]]?
 constraintIndexOperator- : [ [!index:[0-9]+] ]
 constraintScopeOperator :  ( . | -> ) [[constraintName]]
-constraintParameterList : OPEN_ROUND_BRACKET [[constraintParameter]]? ( , [[constraintParameter]] )* CLOSE_ROUND_BRACKET
+constraintParameterList : OPEN_ROUND_BRACKET [[constraintParameter]]? ( [=comma:,] [[constraintParameter]] )* CLOSE_ROUND_BRACKET
 constraintParameter : [=boolLit:true|false] | [[stringLiteral]] | [[constraintName]] | [[numberLiteral]]
 
 // NOTE: Additional grammar parts deleted while testing is ongoing.
