@@ -483,7 +483,7 @@ class Method
 	  for (MethodParameter mParameter : another.getMethodParameters()) {
 		  this.methodParameters.add(new MethodParameter(mParameter));
 	  }
-	  this.methodBody = new MethodBody(another.getMethodBody());
+	  this.methodBody = another.getMethodBody();
 	  this. comments = another.getComments();  
   }
   
@@ -531,9 +531,6 @@ class Method
  */
 class MethodBody
 {
-  public MethodBody(MethodBody another){
-	this.codeblock = new CodeBlock(another.getCodeblock());
-  }
   public MethodBody(String aValue)
   {
     this(new CodeBlock(aValue!=null ? aValue : ""));
@@ -576,46 +573,7 @@ class MethodParameter
  */
 class CodeBlock
 {
-  public CodeBlock(CodeBlock another) {
-	this.codes = new HashMap<String,String>();
-	this.codes.putAll(another.codes);
-  }
-  public void ApplyTypeParameters(GeneralTPApplied inGeneralTPApplied){
-	   if (inGeneralTPApplied == null) return;
-	   Integer start=0,end=0;
-	   boolean inProcess = false;
-	   String internalCode = "";
-	   for (String language : codes.keySet()) {
-		   String code = codes.get(language);
-		   start=0;
-		   end=0;
-		   inProcess = false;
-		   internalCode = "";
-		   for (int i=0;i<code.length();i++) {
-		  		if (code.charAt(i)=='#' &&!inProcess){
-		  			inProcess=true;
-		  			start = i;
-		  			continue;
-		  		}
-		  		if (code.charAt(i)=='#' && inProcess){
-		  			inProcess=false;
-		  			end=i;
-		  			String strTemp = code.substring(start+1, end);
-		  			if (inGeneralTPApplied.getParameterMapping().containsKey(strTemp)){
-		  				internalCode = internalCode+inGeneralTPApplied.getParameterMapping().get(strTemp);
-		  				continue;
-		  			} else {
-		  				internalCode = internalCode+"#"+strTemp+"#";
-		  			}
-		  			
-		  		}			
-		  		if (!inProcess){
-		  			internalCode = internalCode+code.charAt(i);
-		  		}	
-			}
-		   codes.put(language, internalCode);
-	   }
-  }
+  
   public CodeBlock(String add)
   {
     this();
