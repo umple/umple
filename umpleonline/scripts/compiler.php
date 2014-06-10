@@ -290,7 +290,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else // This is where the Java, PHP and other output is placed on the screen
     {
 	   exec("cd $thedir; rm {$language}FromUmple.zip; /usr/bin/zip -r {$language}FromUmple {$language}");
-	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
+	   echo "<a href=\"umpleonline/$thedir/{$language}FromUmple.zip\" class=\"zipDownloadLink\">Download the following as a zip file</a>&nbsp;{$errhtml}<p>URL_SPLIT";
        echo $sourceCode;
     }
   }
