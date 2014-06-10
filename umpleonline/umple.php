@@ -85,7 +85,6 @@ $output = readTemporaryFile("ump/" . $filename);
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
-  <script src="scripts/structureDiagram.js" type="text/javascript"></script>
   <title>UmpleOnline: Generate Java, C++, PHP, or Ruby code from Umple</title>
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
 </head>
@@ -296,7 +295,7 @@ $output = readTemporaryFile("ump/" . $filename);
             <li> <input id="buttonShowEditableClassDiagram" class="radio" type="radio" title="Editable class diagram" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> Editable class diagram <small style="font-size:8px">[ctrl+e]</small></li>
             <li> <input id="buttonShowGvClassDiagram" class="radio" type="radio" title="GraphViz class diagram" name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> GraphViz class diagram <small style="font-size:8px">[ctrl+g]</small></li>
             <li> <input id="buttonShowGvStateDiagram" class="radio" type="radio" title="GraphViz state" name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> GraphViz state diagram <small style="font-size:8px">[ctrl+s]</small></li>
-            <li> <input id="buttonShowGvStructureDiagram" class="radio" type="radio" title="Structure Diagram" name="buttonCanvasType" value="buttonCanvasTypeGVStructureDiagram"/> Composite Structure diagram <small style="font-size:8px">[ctrl+l]</small></li>
+            <li> <input id="buttonShowStructureDiagram" class="radio" type="radio" title="Structure Diagram" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> Composite Structure diagram <small style="font-size:8px">[ctrl+l]</small></li>
           </ul>
           <ul>
             <li id="preferencesTitle" class="subtitle"> Preferences </li>
@@ -324,10 +323,11 @@ $output = readTemporaryFile("ump/" . $filename);
       </div>
     </div>
   </div>
-  <div id="generatedCodeRow" class="row"></div>
-  <div id="svgCanvasContainer" tabIndex="1" class="surface fillContainer">
-     <svg id="svgCanvas"></svg>
+  <div id="errorCodeRow" class="row"></div>
+  <div id="generatedCodeRow" class="row">
+    <svg id="svgCanvas"></svg>
   </div>
+  
 
   <script language="JavaScript">
     Page.init(

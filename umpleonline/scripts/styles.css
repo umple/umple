@@ -3,11 +3,11 @@ p, ol, ul, div, h1, h2, h3, h4, b { font-family: Verdana, Arial, Helvetica, sans
 p.pagedescription { margin-left:5px; }
 
 /* UNIVERSAL LAYOUT STYLES */ 
-.inRow { float:left; }
-.row { clear:both; overflow:auto; }
+.inRow { float: left; }
+.row { clear: both; overflow: auto; }
 
 /* HEADER */
-.logo { margin-top:10px; }
+.logo { margin-top: 10px; }
 
 /* MAIN APPLICATION CONTAINER */
 #paletteColumn { box-sizing:border-box; -moz-box-sizing:border-box; border: 1px solid gray; background-color: GhostWhite; padding: 1px 1px 1px 1px; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
@@ -27,6 +27,18 @@ div.surface:focus { outline:none; }
 div.surface img { border:0; }
 div.photoReady { border:0; overflow:visible; }
 div.syncNeededMessage{ color: Gray; margin-left: 5px;}
+
+/* GENERATED CODE AREA */
+#generatedCodeRow { 
+  box-sizing:border-box; -moz-box-sizing:border-box; margin-right: 5px; margin-top: 5px;
+  -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
+  }
+.generatedDiagram { padding: 10px; overflow-x:auto; border: 1px solid grey; }
+.generatedCode { overflow-x: hidden; border: 1px solid grey; }
+
+.zipDownloadLink { margin-left: 10px; }
+#errorRow { margin-left: 10px; }
+#errorClick { margin-left: 10px; }
 
 /* UMPLE PALETTE */
 div.paletteWrapper { border: 1px solid Gray; background-color: GhostWhite; padding:  1px 1px 1px 1px; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
@@ -53,7 +65,6 @@ a.button:link { color:black; text-decoration:none; }
 a.button:visited { color:black; text-decoration:none; }
 a.button:hover { color:black; text-decoration:none; }
 a.button:active { color:black; text-decoration:none; }
-
 
 /* DISABLING DIVS ON THE SCREEN */
 .disabled { text-decoration: line-through; color: #d6d6d6; }

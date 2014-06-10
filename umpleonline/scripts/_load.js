@@ -85,4 +85,5 @@ document.write('<script type="text/javascript" src="scripts/umple_method.js"><\/
 document.write('<script type="text/javascript" src="scripts/umple_history.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_restore.js"><\/script>');
 document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"><\/script>');
+document.write('<script src="scripts/structureDiagram.js" type="text/javascript"></script>');
 

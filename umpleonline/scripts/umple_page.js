@@ -178,7 +178,9 @@ Page.initOptions = function()
   if(Page.useGvClassDiagram)
     jQuery("#buttonShowGvClassDiagram").attr('checked', true);
   if(Page.useGvStateDiagram)
-    jQuery("#buttonShowGvStateDiagram").attr('checked', true);     
+    jQuery("#buttonShowGvStateDiagram").attr('checked', true);
+  if(Page.useStructureDiagram)
+    jQuery("#buttonShowStructureDiagram").attr('checked', true);
 
   jQuery("#buttonPhotoReady").attr('checked', false);
   jQuery("#buttonManualSync").attr('checked', false);
@@ -378,13 +380,11 @@ Page.initSourceCodeArea = function()
   SyntaxHighlighter.config.clipboardSwf = 'scripts/clipboard.swf';
   var generatedCodeRowSelector = "#generatedCodeRow";
   jQuery(generatedCodeRowSelector).hide();
-  jQuery("#svgCanvasContainer").hide();
 }
 
 Page.hideGeneratedCode = function()
 {
   jQuery("#generatedCodeRow").hide();
-  jQuery("#svgCanvasContainer").hide();
 }
 
 Page.initCanvasArea = function()
@@ -693,13 +693,34 @@ Page.showViewDone = function()
 
 Page.showGeneratedCode = function(code,language)
 {
-  if(language !="structureDiagram") {
-  	jQuery("#generatedCodeRow").show();
-  } else {
-  	jQuery("#svgCanvasContainer").show();
+  var generatedArea = jQuery("#generatedCodeRow");
+  jQuery("#svgCanvas").hide();
+  generatedArea.show();
+
+  //Modify styles depending on the content
+  //Error message
+  if(language == "diagramUpdate") 
+  {
+    generatedArea.removeClass('generatedCode');
+    generatedArea.removeClass('generatedDiagram');
+  }
+  //One of the diagram types
+  else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram")
+  {
+    generatedArea.removeClass('generatedCode');
+    generatedArea.addClass('generatedDiagram');
+  }
+  //Generated code
+  else
+  {
+    generatedArea.removeClass('generatedDiagram');
+    generatedArea.addClass('generatedCode');
   }
 
-  if(language!="html" && language!="javadoc" && language !="stateDiagram" && language !="classDiagram" && language !="structureDiagram" && language !="diagramUpdate" && language != "uigu" && language != "yumlDiagram") {
+  if(language!="html" && language!="javadoc" && language !="stateDiagram" && language !="classDiagram"
+      && language !="structureDiagram" && language !="diagramUpdate" && language != "uigu" 
+      && language != "yumlDiagram") 
+  {
     var codeparts = code.split('URL_SPLIT');
     var zipurl = "";
     var bodycode = "";
@@ -711,38 +732,46 @@ Page.showGeneratedCode = function(code,language)
         zipurl = codeparts[0];
         bodycode = codeparts[1];
     }
-    jQuery("#generatedCodeRow").html(formatOnce(zipurl+'<pre class="brush: {1};">{0}</pre>',bodycode,language));
+    generatedArea.html(formatOnce(zipurl+'<pre class="brush: {1};">{0}</pre>',bodycode,language));
     warningToggleLoc = zipurl.indexOf("Show/Hide errors and warnings");
     if(warningToggleLoc > 30 || warningToggleLoc == -1) {
       SyntaxHighlighter.highlight("code");
     }
   }
-  else { 
-    //Remove the redundant <svg> tags for properly sized diagram
+  //Rendering a structural diagram
+  else if(language == "structureDiagram") 
+  {  
+    jQuery("#svgCanvas").show();
+    var codeparts = code.split('URL_SPLIT');
+    var zipurl = "";
+    var bodycode = "";
+    var warningToggleLoc = 0;
+    if(codeparts.length == 1) 
+    {
+        bodycode = codeparts[0];
+    }
+    else 
+    {
+        zipurl = codeparts[0];
+        bodycode = codeparts[1];
+    }
+    var decoded = jQuery("<div/>").html(bodycode).text();
+    eval(decoded);
+    warningToggleLoc = zipurl.indexOf("Show/Hide errors and warnings");
+    if(warningToggleLoc > 30 || warningToggleLoc == -1) 
+    {
+      SyntaxHighlighter.highlight("code");
+    }
+  }
+  else 
+  { 
+    //Remove the redundant <svg> tags for properly sized diagram for graphvis diagrams
     if(language == "stateDiagram" || language == "classDiagram")
     {
       codeParts = code.split("<svg width=");
       code = "<svg width=" + codeParts[1].replace(/<\/svg$/, "");
-      jQuery("#generatedCodeRow").html(format('{0}',code));
-    } else if(language == "structureDiagram") {
-    	var codeparts = code.split('URL_SPLIT');
-    	var zipurl = "";
-    	var bodycode = "";
-    	var warningToggleLoc = 0;
-    	if(codeparts.length == 1) {
-	        bodycode = codeparts[0];
-	    }
-	    else {
-        	zipurl = codeparts[0];
-        	bodycode = codeparts[1];
-    	}
-    	var decoded = jQuery("<div/>").html(bodycode).text();
-    	eval(decoded);
-    	warningToggleLoc = zipurl.indexOf("Show/Hide errors and warnings");
-    	if(warningToggleLoc > 30 || warningToggleLoc == -1) {
-      		SyntaxHighlighter.highlight("code");
-    	}
     }
+    jQuery("#generatedCodeRow").html(format('{0}',code));
   }
 }
 

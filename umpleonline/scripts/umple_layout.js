@@ -274,7 +274,6 @@ Layout.showHideCanvas = function(doShow)
     
     Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", false);
     Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", false);
-
     
     Page.enablePaletteItem('buttonAddClass', false);
     Page.enablePaletteItem('buttonAddAssociation', false);

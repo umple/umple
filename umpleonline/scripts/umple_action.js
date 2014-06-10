@@ -128,19 +128,19 @@ Action.clicked = function(event)
   }
   else if (action == "ShowEditableClassDiagram")
   {
-    Action.changeDiagramType(1);
+    Action.changeDiagramType({type:"editableClass"});
   }
   else if (action == "ShowGvClassDiagram")
   {
-    Action.changeDiagramType(2);
+    Action.changeDiagramType({type:"GVClass"});
   }
   else if (action == "ShowGvStateDiagram")
   {
-    Action.changeDiagramType(3);
+    Action.changeDiagramType({type:"GVState"});
   }
   else if (action == "ShowStructureDiagram")
   {
-    Action.changeDiagramType(4);
+    Action.changeDiagramType({type:"structure"});
   }
   else if (action == "ShowHideLayoutEditor")
   {
@@ -290,7 +290,7 @@ Action.saveNewFileCallback = function(response)
 Action.changeDiagramType = function(newDiagramType)
 {
   var changedType = false;
-  if(newDiagramType == 1) { // Editable
+  if(newDiagramType.type == "editableClass") { 
     if(Page.useEditableClassDiagram) return;
     Page.useEditableClassDiagram = true;
     Page.useGvClassDiagram = false;
@@ -298,7 +298,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
   }
-  else   if(newDiagramType == 2) { // GV class
+  else if(newDiagramType.type == "GVClass") { 
     if(Page.useGvClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useGvClassDiagram = true;
@@ -306,7 +306,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
   }
-  else   if(newDiagramType == 3) { // GV state
+  else if(newDiagramType.type == "GVState") {
     if(Page.useGvStateDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useGvClassDiagram = false;
@@ -314,7 +314,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     changedType = true;
   }
-  else   if(newDiagramType == 4) { // Structure Diagram
+  else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useGvClassDiagram = false;
