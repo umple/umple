@@ -870,6 +870,13 @@ public class UmpleTraitTest {
 		Assert.assertEquals(1, model.getUmpleClass("B").numberOfAssociationVariables());
 	}
 	
+	@Test
+	public void templateInCode01Test() {
+		String code = "class A{isA T<X=B>;}trait T<X>{void test(){#X# b=new #X#();}} class B{}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("B b=new B();", model.getUmpleClass("A").getMethod(0).getMethodBody().getCodeblock().getCode());
+	}	
+	
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {
