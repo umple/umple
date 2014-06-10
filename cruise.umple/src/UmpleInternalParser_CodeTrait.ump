@@ -795,6 +795,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
     	 if (! method.isIsAbstract()){ 
     	 	 Method newMethod = new Method(method);
     	 	 ApplyTypeParametersToMethod(newMethod,inGTPApplied);
+    	 	 newMethod.getMethodBody().getCodeblock().ApplyTypeParameters(inGTPApplied);
  			 methods.add(newMethod);
 	 	 }
 	 }
