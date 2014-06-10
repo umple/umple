@@ -1310,7 +1310,15 @@ private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
 		for (AssociationVariable associationVariable : traiAssociationVariables.get(t1)) {
 			//association.getComment(2).setText(association.getComment(2).getText()+"'"+inClass.getName()+"' ");
 			inClass.addAssociationVariable(associationVariable); 
-			model.getUmpleClass(associationVariable.getType()).addAssociationVariable(associationVariable.getRelatedAssociation());			
+			model.getUmpleClass(associationVariable.getType()).addAssociationVariable(associationVariable.getRelatedAssociation());
+			if (associationVariable.getIsNavigable())
+	      	{
+	    		model.getUmpleClass(associationVariable.getType()).addReferencedPackage(inClass.getPackageName());
+	      	}
+	      	if (associationVariable.getRelatedAssociation().getIsNavigable())
+	      	{
+	        	inClass.addReferencedPackage(model.getUmpleClass(associationVariable.getType()).getPackageName());
+	      	}			
 		}
 	}	
 }
