@@ -16,6 +16,7 @@
   <property name="test.output.path.ruby" value="dist/qa/testbed_ruby"/>
   <property name="myenv" value="cc" />
 
+  <property name="examplepattern" value="*" />
   <property name="manualumpfiles.path" value="umpleonline/ump/manualexamples"/>
   <property name="manualumpfiles.bin.path" value="${manualumpfiles.path}/bin"/>
   <property name="exampleumpfiles.path" value="umpleonline/ump"/>
@@ -178,8 +179,14 @@
       
     <foreach target="userManualAndExampleTest" param="manualFile" parallel="false">
       <path>
-        <fileset dir="${exampleumpfiles.path}" includes="*.ump" />
-        <fileset dir="${manualumpfiles.path}" includes="T*.ump" excludes="E*.ump" />
+        <fileset dir="${exampleumpfiles.path}" includes="${examplepattern}.ump" />
+        <fileset dir="${manualumpfiles.path}">
+           <include name="${examplepattern}.ump" />
+           <exclude name="E*.ump" />
+           <!-- Special cases - temporary until error detection-->
+           <exclude name="UseStatements1.ump" />
+           <exclude name="WE1xxIdentifierInvalid1.ump" />
+         </fileset>        
        </path>
     </foreach>  
   </target>
@@ -202,7 +209,12 @@
 
       <!-- Compile the resulting Java if OK to do so -->
       <if>
-        <resourcecontains resource="${manualFile}" substring="@@@skipcompile" />
+        <and>
+          <not>
+            <equals arg1="${forcecompile}" arg2="true" />
+          </not>
+          <resourcecontains resource="${manualFile}" substring="@@@skipcompile" />
+        </and>
         <then>
           <echo>Skipping Java compile due to presence of @@@skip</echo>
         </then>
