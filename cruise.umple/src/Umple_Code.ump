@@ -494,7 +494,7 @@ class Method
   public boolean getExistsInLanguage(String lang) 
   {
     if(getMethodBody().getExtraCode(lang)==null)
-      return isImplemented;
+      return false;
     else 
       return true;
   }

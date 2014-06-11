@@ -150,14 +150,18 @@ class Method
   
 }
 
-/*
+ /*
  * The contents of a method, such as the code within it.
  */
 class MethodBody
 {
+
+  depend java.util.*;
+  
   // The code within the method body.
   extraCode = {codeblock.getCode() != null ? codeblock.getCode() : ""}
   CodeBlock codeblock;
+  Map<String,Position> implementationPositions = new HashMap<String,Position>();
 }
 
 /*

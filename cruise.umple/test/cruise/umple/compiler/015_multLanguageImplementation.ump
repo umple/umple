@@ -1,0 +1,12 @@
+class X {
+  m1 () 
+  Java{int a;}
+  Cpp{}
+  Php{}
+}
+
+class X {
+  m1 () 
+  Cpp{int b;}
+  Php{int c;}
+}

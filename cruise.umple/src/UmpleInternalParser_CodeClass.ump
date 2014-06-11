@@ -1608,6 +1608,11 @@ class UmpleInternalParser
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     List<String> langs = new ArrayList<String>();
     CodeBlock cb = new CodeBlock("");
+    
+    //559b
+    Map<String,Position> implementationPositions = new HashMap<String,Position>();
+    List<String> langsImplementation = new ArrayList<String>();
+    
     boolean canClear = false;
     for(Token token : method.getSubTokens())
     {
@@ -1649,17 +1654,23 @@ class UmpleInternalParser
         {
           cb.setCode(token.getValue());
           aMethod.setCodePosition(token.getPosition());
+          
+          //559b
+          implementationPositions.put("", token.getPosition());
+          langsImplementation.add("");
         }
         else
         {
           for(String str: langs)
           {
-            cb.setCode(str,(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+token.getValue());
+            cb.setCode(str,/*(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+*/ token.getValue());
             if("Java".equals(str))
             {
               aMethod.setCodePosition(token.getPosition());
             }
           }
+          //559b
+          langs.clear();
         }
         canClear = true;
       }
@@ -1671,6 +1682,10 @@ class UmpleInternalParser
           canClear = false;
         }
         langs.add(token.getValue());
+        
+        //559b
+        langsImplementation.add(token.getValue());
+        implementationPositions.put(token.getValue(), token.getPosition());
       }
       else if (token.is("precondition")){ 
         if (uElement instanceof UmpleClass){
@@ -1684,6 +1699,7 @@ class UmpleInternalParser
       }
     }
     MethodBody meth = new MethodBody(cb);
+    meth.setImplementationPositions(implementationPositions);
     aMethod.setMethodBody(meth);
 
     // Handle Class/Interface Modifications
@@ -1699,6 +1715,46 @@ class UmpleInternalParser
       {
     	  Method actualMethod = uClass.getMethod(aMethod);
     	  
+    	  List<String> implementations = new ArrayList<String>();
+    	  
+    	  for(String l : langsImplementation)
+    		  if(actualMethod.getExistsInLanguage(l))
+    			  implementations.add(l);
+    		  else
+    		  {
+    			  if(!l.equals(""))
+    			    actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
+    			  else
+    				actualMethod.getMethodBody().setExtraCode("", aMethod.getMethodBody().getExtraCode(l));
+				  
+    			  actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
+    		  }
+    		  
+    	  if(!implementations.isEmpty())
+    	  {
+    		  for(String l : implementations)
+    		  {
+    			  if((actualMethod.getMethodBody().getExtraCode(l).equals("") || 
+    				  actualMethod.getMethodBody().getExtraCode(l).equals("\n"))&&
+    				 (!aMethod.getMethodBody().getExtraCode(l).equals("") ||
+    			      !aMethod.getMethodBody().getExtraCode(l).equals("\n")) &&
+    			     (!actualMethod.getMethodBody().getExtraCode(l).equals(aMethod.getMethodBody().getExtraCode(l))))
+    			  {
+    				  actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
+    				  actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
+    			  }
+    			  else
+    			  {
+    				  getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+    		    		  	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getPosition().getFilename(),
+    		    		  	  aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+    			  }
+    			  
+    		  }
+    	  }
+    	  
+    	  /*
+    	  
     	  if ((actualMethod.getMethodBody().getExtraCode().isEmpty()) &&
     	      (!aMethod.getMethodBody().getExtraCode().isEmpty()))
     	  {
@@ -1711,6 +1767,8 @@ class UmpleInternalParser
     		  	  aMethod.getName(),uClass.getName(), actualMethod.getPosition().getLineNumber()+"", actualMethod.getPosition().getFilename(),
     			  aMethod.getPosition().getLineNumber()+"", aMethod.getPosition().getFilename()));
     	  }    
+    	  
+    	  */
     	  
       }
      

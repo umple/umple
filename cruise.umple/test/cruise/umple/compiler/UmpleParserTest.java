@@ -40,6 +40,18 @@ public class UmpleParserTest
     Assert.assertEquals(0,model.numberOfUmpleClasses());
   }
   
+  //Issue 559b
+  @Test
+  public void multLanguageImplementation()
+  {
+	  assertNoWarningsParse("015_multLanguageImplementation.ump");
+	  assertNoWarningsParse("015_multLanguageImplementation2.ump");
+	  assertHasWarningsParse("015_multLanguageImplementation3.ump", 49);
+	  assertHasWarningsParse("015_multLanguageImplementation4.ump", 49);
+	  assertHasWarningsParse("015_multLanguageImplementation5.ump", 49);
+
+  }
+  
   @Test
   public void emptyComment()
   {
