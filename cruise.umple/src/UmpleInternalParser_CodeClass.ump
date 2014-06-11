@@ -359,129 +359,135 @@ class UmpleInternalParser
       checkNonReachableStates();
     }
   }
+  
+  //Issue 492
+  private void checkNonReachableStates()
+  {
+    List<State> lStates = new ArrayList<State>();
+    List<State> lParentStates = new ArrayList<State>();
+    
+    for (UmpleClass uClass:  model.getUmpleClasses())
+    { 
+      for (StateMachine sm: uClass.getStateMachines())
+      {
+        //Enum check
+        if(((sm.getAllEvents().size() > 0) && (sm.getAllTransitions().size() > 0)) || (sm.getNestedStateMachines().size() >0))
+        {
+          lStates = new ArrayList<State>();
+          
+          State state  = sm.getStartState();
+          
+          checkReachableStates(state, lStates, lParentStates);
+          
+          for(State sp : lParentStates)
+          {
+            if(!lStates.contains(sp))
+            {
+              lStates.add(sp);
+            }
+          }
+          
+          raiseWarningUnreachable(sm, lStates);
+        }
+      }
+    }
+  }
    
    //Issue 492
-   private void checkNonReachableStates()
-   {
-	   List<State> lStates = new ArrayList<State>();
-	   List<State> lParentStates = new ArrayList<State>();
-	   
-	   for (UmpleClass uClass:  model.getUmpleClasses())
-	   { 
-		   for (StateMachine sm: uClass.getStateMachines())
-		   {
-		       //Enum check
-		       if(((sm.getAllEvents().size() > 0) && (sm.getAllTransitions().size() > 0)) || (sm.getNestedStateMachines().size() >0))
-			   {
-				   lStates = new ArrayList<State>();
-				   
-				   State state  = sm.getStartState();
-				   
-				   checkReachableStates(state, lStates, lParentStates);
-				   
-				   for(State sp : lParentStates)
-				   {
-					   if(!lStates.contains(sp))
-					   {
-						   lStates.add(sp);
-					   }
-				   }
-				   
-				   raiseWarningUnreachable(sm, lStates);
-			   }
-		   }
-	   }
-   }
-   
-   //Issue 492
-   private void checkReachableStates(State s, List<State> ls, List<State> lp)
-   {
-	   if(s == null)
-		   return;
-	   
-	   if(!ls.contains(s))
-		     ls.add(s);
-	   
-	   for ( Transition transition: s.getTransitions())
-	   {
-		   if(!ls.contains(transition.getNextState()))
-			   checkReachableStates(transition.getNextState(), ls, lp);
-	   }
-	   
-	   if(s.hasNestedStateMachines())
-	   {
-		   for(StateMachine nestedSm: s.getNestedStateMachines())
-		   {
-		     checkReachableStates(nestedSm.getStartState(), ls, lp);
-		   } 
-	   }
-	   
-	   StateMachine aux = s.getStateMachine();
-	   State fatherState = null;
-	   
-	   
-	   while(aux.getParentState() != null)
-	   {
-		   
-		   fatherState = aux.getParentState();
-		   if(!lp.contains(fatherState))
-			     lp.add(fatherState);
-		   
-		   if (fatherState.getStateMachine() == null)
-			   return;
-		   
-		   aux = fatherState.getStateMachine();
-		     
-	   }
-	   
-	   
-   }
-   
-   private void raiseWarningUnreachable(StateMachine sm, List<State> lStates)
-   {
-	   boolean error = false;
-	   
-	   if(!sm.hasStates())
-		   return;
-	   
-	   for(State s : sm.getStates())
-	   {
-		   
-		   if(!lStates.contains(s))
-		   {
-		       if(s.getPosition() != null)
-			   {
-			     getParseResult().addErrorMessage(new ErrorMessage(67,s.getPosition(),s.getName(), sm.getName()));      
-		         error = true;
-		       }
-		   }
-		   
-		   if (s.hasNestedStateMachines() && !error)
-		   {
-			   for(StateMachine sm2 : s.getNestedStateMachines())
-			     raiseWarningUnreachable(sm2, lStates);
-		   }
-		   
-	   }
-	   
-	   
-   }
+  private void checkReachableStates(State s, List<State> ls, List<State> lp)
+  {
+    if(s == null)
+      return;
+    
+    if(!ls.contains(s))
+        ls.add(s);
+    
+    for ( Transition transition: s.getTransitions())
+    {
+      if(!ls.contains(transition.getNextState()))
+        checkReachableStates(transition.getNextState(), ls, lp);
+    }
+    
+    if(s.hasNestedStateMachines())
+    {
+      for(StateMachine nestedSm: s.getNestedStateMachines())
+      {
+        checkReachableStates(nestedSm.getStartState(), ls, lp);
+      } 
+    }
+    
+    StateMachine aux = s.getStateMachine();
+    State fatherState = null;
+    
+    while(aux.getParentState() != null)
+    {
+      fatherState = aux.getParentState();
+      if(!lp.contains(fatherState))
+          lp.add(fatherState);
+      
+      if (fatherState.getStateMachine() == null)
+        return;
+      
+      aux = fatherState.getStateMachine();
+    }
+  }
+  
+  private void raiseWarningUnreachable(StateMachine sm, List<State> lStates)
+  {
+    boolean error = false;
+    
+    if(!sm.hasStates())
+      return;
+    
+    for(State s : sm.getStates())
+    {
+      
+      if(!lStates.contains(s))
+      {
+          if(s.getPosition() != null)
+        {
+          getParseResult().addErrorMessage(new ErrorMessage(67,s.getPosition(),s.getName(), sm.getName()));      
+            error = true;
+          }
+      }
+      
+      if (s.hasNestedStateMachines() && !error)
+      {
+        for(StateMachine sm2 : s.getNestedStateMachines())
+          raiseWarningUnreachable(sm2, lStates);
+      }
+    }
+  }
   
   private void checkAttributeConflictImmutableAutounique(){
-	   if(attributeAutouniqueImmutable != null && attributeAutouniqueImmutable.size() > 0){
-		   for(Map.Entry<Token, UmpleClass> entry : attributeAutouniqueImmutable.entrySet()){
-		    	  String attrNameCapital = Character.toUpperCase(entry.getKey().getValue("name").charAt(0)) + entry.getKey().getValue("name").substring(1);
-		    	  if(entry.getKey().getValue("autounique") != null)
-			    	  for(Attribute attr : entry.getValue().getAttributes())
-				   		  if(attr.getName().equals("next"+attrNameCapital))
-				   			getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName(),"autounique",entry.getKey().getValue("name")));
-		    	  if(entry.getKey().getValue("modifier") !=null)
-		    		  for(Attribute attr : entry.getValue().getAttributes())
-				   		  if(attr.getName().equals("canSet"+attrNameCapital)||attr.getName().equals("can_set_"+entry.getKey().getValue("name")))
-				   			getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName(),"immutable",entry.getKey().getValue("name")));
-		   }
-	   }	   
-   }
+    if(attributeAutouniqueImmutable != null && attributeAutouniqueImmutable.size() > 0)
+    {
+      for(Map.Entry<Token, UmpleClass> entry : attributeAutouniqueImmutable.entrySet())
+      {
+        String attrNameCapital = Character.toUpperCase(entry.getKey().getValue("name").charAt(0)) + entry.getKey().getValue("name").substring(1);
+        if(entry.getKey().getValue("autounique") != null)
+        {
+          for(Attribute attr : entry.getValue().getAttributes())
+          {
+            if(attr.getName().equals("next"+attrNameCapital))
+            {
+              getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName(),"autounique",entry.getKey().getValue("name")));
+            }
+          }
+        }
+        if(entry.getKey().getValue("modifier") !=null)
+        {
+          for(Attribute attr : entry.getValue().getAttributes())
+          {
+            if(attr.getName().equals("canSet"+attrNameCapital)||attr.getName().equals("can_set_"+entry.getKey().getValue("name")))
+            {
+              getParseResult().addErrorMessage(new ErrorMessage(38,attr.getPosition(),attr.getName(),"immutable",entry.getKey().getValue("name")));
+            }
+          }
+        }
+      }
+    }
+  }
 
   private void postTokenInterfaceAnalysis()
   {
@@ -491,30 +497,29 @@ class UmpleInternalParser
   
   private List <UmpleInterface> recursiveCycleCheckInterface(List <UmpleInterface> extend,UmpleInterface parent, HashMap<UmpleInterface, Boolean> map)
   {
-
+    
     List <UmpleInterface> temp = new ArrayList <UmpleInterface>();
-
+    
     if(extend == null|| extend.isEmpty())
       return temp;
-
-
+    
     for (UmpleInterface I: extend){
       if(map.containsKey(I)){
         temp.add(I);
         return temp;
       }
-      map.put(I, true);    
-
+      map.put(I, true);
+      
       for (UmpleInterface EI: I.getExtendsInterface()){
         if(parent.equals(EI)){
           temp.add(EI);
           return temp;
-        }  
+        }
       }
       List <UmpleInterface> temptemp = recursiveCycleCheckInterface(I.getExtendsInterface(), parent, map);
       temp.addAll(temptemp);
-    }  
-
+    }
+    
     return temp;
   }
 
@@ -525,12 +530,13 @@ class UmpleInternalParser
       HashMap<UmpleInterface, Boolean> vistedMap = new HashMap<UmpleInterface, Boolean>();
       if(I.getExtendsInterface() != null)
       {
-        if(recursiveCycleCheckInterface(I.getExtendsInterface(), I, vistedMap).contains(I)){
+        if(recursiveCycleCheckInterface(I.getExtendsInterface(), I, vistedMap).contains(I))
+        {
           Token t = I.getExtendsToken();
-              if(t.getValue().equals(I.getName()))
-                getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Interface",I.getName()));
-              else
-                getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),"Interface",t.getValue(),I.getName()));
+          if(t.getValue().equals(I.getName()))
+            getParseResult().addErrorMessage(new ErrorMessage(11,t.getPosition(),"Interface",I.getName()));
+          else
+            getParseResult().addErrorMessage(new ErrorMessage(12,t.getPosition(),"Interface",t.getValue(),I.getName()));
         }
       }
     }
@@ -539,22 +545,22 @@ class UmpleInternalParser
   private UmpleClass recursiveCycleCheck(UmpleClass extend, UmpleClass parent, HashMap<UmpleClass, Boolean> map)
   {
     UmpleClass temp = null;
-
+    
     if(extend == null)
       return null;
-
+    
     if(map.containsKey(extend))
       return extend;
-
+    
     map.put(extend, true);
-
+    
     if(parent.equals(extend.getExtendsClass()))
       return extend.getExtendsClass();
-
+    
     temp = recursiveCycleCheck(extend.getExtendsClass(), parent, map);
     return temp;
   }
-
+  
   private void checkExtendsForCycles()
   {
     for(UmpleClass C : model.getUmpleClasses())
@@ -573,7 +579,7 @@ class UmpleInternalParser
       }
     }
   }
-
+  
   // Check for classes that should be abstract
   private void checkAbstractClass(){
     for(UmpleClass uClass : model.getUmpleClasses()) 
@@ -582,14 +588,14 @@ class UmpleInternalParser
       {
         // no work needs to be done on this class.
         continue;
-      }     
-
+      }
+      
       if(uClass.getUnimplementedMethods().length > 0) 
       {
         uClass.setIsAbstract(true);
         continue;
-      }      
-
+      }
+      
       // Check if class should be abstract based on properties of ancestors
       HashMap<String, Integer> uChildren = new HashMap<String, Integer>();
       checkAbstractClassRecursive(uClass, uChildren);
@@ -627,17 +633,25 @@ class UmpleInternalParser
   }
 
   // Check for the existence of a a parent class
-  private void checkExtendsClass(){
-    for(UmpleClass child : model.getUmpleClasses()) {
-      if(child.getExtendsToken() != null) {
-        if (child.getExtendsClass() != null ) {
+  private void checkExtendsClass()
+  {
+    for(UmpleClass child : model.getUmpleClasses()) 
+    {
+      if(child.getExtendsToken() != null) 
+      {
+        if (child.getExtendsClass() != null ) 
+        {
           // check to make sure attribute doesn't share a name with inherited attribute - F.K.
           UmpleClass extend = child.getExtendsClass();
-          for(Attribute aAttribute : child.getAttributes()){
-            while(extend!=null) {
-              for(Attribute extendAttr : extend.getAttributes()) {
+          for(Attribute aAttribute : child.getAttributes())
+          {
+            while(extend!=null && child != extend) 
+            {
+              for(Attribute extendAttr : extend.getAttributes()) 
+              {
                 String currentName = aAttribute.getName();
-                if (extendAttr.getName().equals(currentName)) {
+                if (extendAttr.getName().equals(currentName)) 
+                {
                   setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
                 }
               }
@@ -648,8 +662,7 @@ class UmpleInternalParser
         }
         else{
           Token t = child.getExtendsToken();
-          getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),
-            child.getName()));      
+          getParseResult().addErrorMessage(new ErrorMessage(33,t.getPosition(),t.getValue(),child.getName()));      
         }
       }
     }
