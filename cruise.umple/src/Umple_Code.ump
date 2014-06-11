@@ -2507,6 +2507,22 @@ class GeneralTPApplied {
 	Map<String,String> parameterMapping = new HashMap<String,String>();
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+  private void ApplyTypeParametersToMethod(Method newMethod){   
+	for (String strType : this.getParameterMapping().keySet()) {
+		String newName = this.getParameterMapping().get(strType);
+		if (newMethod.getType().equals(strType)){
+			newMethod.setType(newName);
+		}
+		for (int i = 0; i < newMethod.numberOfMethodParameters(); i++) {
+            if(newMethod.getMethodParameter(i).getType().equals(strType)){
+            	newMethod.getMethodParameter(i).setType(newName);
+            }
+	    }
+	}
+  }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------	
 	public GeneralTPApplied(GeneralTPApplied another) {
 	  this.parameterMapping = another.parameterMapping;
@@ -2530,9 +2546,11 @@ class GeneralTPApplied {
 //---------------------------------Start--------------------------------------		
   public MethodTemplateSignature hasMethod(Method inMethod){
     for (MethodTemplateSignature mTSignature : getMethodTemplateSignatures()) {
-			if (compareTwoMethdos(mTSignature.getMethod(),inMethod)) return mTSignature;
+    		Method newMethod = new Method(mTSignature.getMethod());
+    		ApplyTypeParametersToMethod(newMethod);
+			if (compareTwoMethdos(newMethod,inMethod)) return mTSignature;
 		}
-		return null;
+	return null;
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
