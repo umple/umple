@@ -602,6 +602,14 @@ public class UmpleTraitTest {
 	}
 	
 	@Test
+	public void includeExcludeRuleAlias10Test() {
+		String code = "class A{isA T<X=B, -test1(X)>;}class B{}trait T<X>{void test1(X t){}void test2(X t){}}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
+		Assert.assertEquals("test2", model.getUmpleClass("A").getMethod(0).getName());
+	}
+	
+	@Test
 	public void includeExcludeRuleVisibility1Test() {
 		String code = "class A{isA T<test1() as private,test2() as protected,test3() as public>;}trait T{void test1(){	/*T*/}void test2(){	/*T*/}void test3(){	/*T*/}}";
 		UmpleModel model = getRunModel(code);	
@@ -662,6 +670,7 @@ public class UmpleTraitTest {
 		Assert.assertEquals("show2",model.getUmpleClass("A").getMethod(1).getName());
 		Assert.assertEquals("protected",model.getUmpleClass("A").getMethod(1).getModifier());
 	}
+
 	
 	@Test
 	public void generalRule1Test() {
