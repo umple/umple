@@ -10,6 +10,7 @@ class Car {
   }
   after radioToggle {soundBeep();}
 }
+//$?[End_of_model]$?
 // @@@skipcompile - No soundBeep method
 
 
