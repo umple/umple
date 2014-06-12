@@ -8,4 +8,5 @@ class Point
     Float rho = {Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2))}
     Float theta = {Math.toDegrees(Math.atan2(getY(),getX()))}
 }
+//$?[End_of_model]$?
 // @@@skipcompile - issue 582 - extra f in generated code

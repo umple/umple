@@ -9,4 +9,5 @@ class Student
     if ( DEBUG) { System.out.println("accessing the name"); }
   }
 }
-// @@@skipcompile - currently can't combine get* and !getCityOfBirth
+//$?[End_of_model]$?
+// @@@skipcompile - Issue 594 currently can't combine get* and !getCityOfBirth
