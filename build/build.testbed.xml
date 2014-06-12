@@ -182,10 +182,15 @@
         <fileset dir="${exampleumpfiles.path}" includes="${examplepattern}.ump" />
         <fileset dir="${manualumpfiles.path}">
            <include name="${examplepattern}.ump" />
-           <exclude name="E*.ump" />
            <!-- Special cases - temporary until error detection-->
+           <exclude name="E0*.ump" />
+           <exclude name="E1*.ump" />
            <exclude name="UseStatements1.ump" />
            <exclude name="WE1xxIdentifierInvalid1.ump" />
+           <exclude name="WE1xxIdentifierInvalid3.ump" />
+           <exclude name="WE1xxIdentifierInvalid5.ump" />
+           <exclude name="WE1xxIdentifierInvalid6.ump" />
+           <exclude name="WE1xxIdentifierInvalid7.ump" />
          </fileset>        
        </path>
     </foreach>  
