@@ -25,6 +25,7 @@ Page.readOnly = false; // initially allow editing
 Page.useEditableClassDiagram = true;
 Page.useGvClassDiagram = false;
 Page.useGvStateDiagram = false;
+Page.useStructureDiagram = false;
 Page.showAttributes = true;
 Page.showMethods = false;
 Page.showActions = true;
@@ -39,12 +40,19 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramT
   Page.readOnly = doReadOnly; 
 
   // Set diagram type - anything else means use the default editable class diagram
-  if(diagramType == "GvState")   {
+  if(diagramType == "GvState")   
+  {
     Page.useGvStateDiagram = true;
     Page.useEditableClassDiagram = false;
   }
-  else if(diagramType == "GvClass")   {
+  else if(diagramType == "GvClass")   
+  {
     Page.useGvClassDiagram = true;
+    Page.useEditableClassDiagram = false;
+  }
+  else if(diagramType == "structureDiagram")
+  {
+    Page.useStructureDiagram = true;
     Page.useEditableClassDiagram = false;
   }
 
@@ -114,6 +122,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowEditableClassDiagram");
   Page.initAction("buttonShowGvClassDiagram");
   Page.initAction("buttonShowGvStateDiagram");
+  Page.initAction("buttonShowStructureDiagram");
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopy");
@@ -385,6 +394,8 @@ Page.initSourceCodeArea = function()
 Page.hideGeneratedCode = function()
 {
   jQuery("#generatedCodeRow").hide();
+  jQuery("#innerGeneratedCodeRow").hide();
+  jQuery("#svgCanvas").hide();
 }
 
 Page.initCanvasArea = function()
@@ -693,86 +704,144 @@ Page.showViewDone = function()
 
 Page.showGeneratedCode = function(code,language)
 {
-  var generatedArea = jQuery("#generatedCodeRow");
-  jQuery("#svgCanvas").hide();
-  generatedArea.show();
+  Page.applyGeneratedCodeAreaStyles(language);
+  
+  var errorMarkup = Page.getErrorMarkup(code, language);
+  var generatedMarkup = Page.getGeneratedMarkup(code, language);
+  
+  //Set any error or warning messages
+  jQuery("#messageArea").html(errorMarkup);
+  
+  //Set the generated content
+  if(language == "java" || language == "php" || language == "cpp" || language == "ruby" || language == "xml")
+  {
+    jQuery("#innerGeneratedCodeRow").html(
+        formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)
+        )
+    SyntaxHighlighter.highlight("code");
+  }
+  else if(language == "structureDiagram")
+  {
+    eval(generatedMarkup);
+  }
+  else
+  {
+    jQuery("#innerGeneratedCodeRow").html(generatedMarkup);
+  }
+}
 
-  //Modify styles depending on the content
+Page.applyGeneratedCodeAreaStyles = function(language)
+{
+  var generatedArea = jQuery("#generatedCodeRow");
+  jQuery("#generatedCodeRow").show();
+
+  //Modify styles and show or hide containers depending on the content
   //Error message
   if(language == "diagramUpdate") 
   {
+    if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
+    jQuery("#innerGeneratedCodeRow").show();
     generatedArea.removeClass('generatedCode');
     generatedArea.removeClass('generatedDiagram');
   }
-  //One of the diagram types
+  //One of the svg diagram types
   else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram")
   {
+    if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
+    jQuery("#innerGeneratedCodeRow").show();
     generatedArea.removeClass('generatedCode');
     generatedArea.addClass('generatedDiagram');
+    
+    if(language == "structureDiagram")
+    {
+      //Remove and re-add the svgCanvas to ensure it is in the right place
+      jQuery("#svgCanvas").remove();
+      jQuery("#generatedCodeRow").html(jQuery("#generatedCodeRow").html() + "<svg id=\"svgCanvas\"></svg>");
+      
+      //Then, to make the canvas non-empty, switch back to editable class diagram
+      Action.changeDiagramType({type: "editableClass"});
+      
+      //Show the structure diagram
+      jQuery("#svgCanvas").show();
+      jQuery("#innerGeneratedCodeRow").hide();
+    }
   }
   //Generated code
   else
   {
+    if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
+    jQuery("#innerGeneratedCodeRow").show();
     generatedArea.removeClass('generatedDiagram');
     generatedArea.addClass('generatedCode');
   }
+}
 
-  if(language!="html" && language!="javadoc" && language !="stateDiagram" && language !="classDiagram"
-      && language !="structureDiagram" && language !="diagramUpdate" && language != "uigu" 
-      && language != "yumlDiagram") 
-  {
-    var codeparts = code.split('URL_SPLIT');
-    var zipurl = "";
-    var bodycode = "";
-    var warningToggleLoc = 0;
-    if(codeparts.length == 1) {
-        bodycode = codeparts[0];
-    }
-    else {
-        zipurl = codeparts[0];
-        bodycode = codeparts[1];
-    }
-    generatedArea.html(formatOnce(zipurl+'<pre class="brush: {1};">{0}</pre>',bodycode,language));
-    warningToggleLoc = zipurl.indexOf("Show/Hide errors and warnings");
-    if(warningToggleLoc > 30 || warningToggleLoc == -1) {
-      SyntaxHighlighter.highlight("code");
-    }
+// Pulls any error and warning markup from the response from code generation
+Page.getErrorMarkup = function(code, language)
+{
+  var output = "";
+  
+  if(language == "classDiagram" || language == "stateDiagram")
+  { // Covers Graphviz class and state diagrams
+    output = code.split("<svg xmlns=")[0];
+    output = output.replace(/&nbsp;\s*$/, "");
   }
-  //Rendering a structural diagram
+  else if(language == "javadoc" || language == "yumlDiagram")
+  { // Covers javadoc and YUML diagrams
+    output = code.split("<iframe ")[0];
+  }
+  else if(language == "html")
+  { // Covers SimpleMetrics and Code Analysis
+    output = code.split("<html xmlns")[0];
+  }
+  else if(language == "diagramUpdate")
+  { // Covers simple right-hand side canvas updates
+    output = code.replace(/<p>$/, "");
+  }
+  else
+  { //Covers the rest of the generated languages
+    output = code.split("<p>URL_SPLIT")[0];
+  }
+
+  return output;
+}
+
+// Removes any extraneous code from the generated code to display
+Page.getGeneratedMarkup = function(code, language)
+{
+  var output = "";
+  
+  if(language == "classDiagram" || language == "stateDiagram")
+  { // Covers Graphviz class and state diagrams
+    output = code.split("<svg width=")[1];
+    output = "<svg width=" + output;
+    output = output.replace(/<\/svg>$/, "");
+  }
+  else if(language == "javadoc" || language == "yumlDiagram")
+  { // Covers javadoc and YUML diagrams
+    output = code.split("<iframe ")[1];
+    output = "<iframe " + output;
+  }
+  else if(language == "html")
+  { // Covers SimpleMetrics and Code Analysis
+    output = code.split("<html xmlns")[1];
+    output = "<html xmlns" + output;
+  }
+  else if(language == "diagramUpdate")
+  { // Covers simple right-hand side canvas updates
+    // No generated code to extract
+  }
   else if(language == "structureDiagram") 
-  {  
-    jQuery("#svgCanvas").show();
-    var codeparts = code.split('URL_SPLIT');
-    var zipurl = "";
-    var bodycode = "";
-    var warningToggleLoc = 0;
-    if(codeparts.length == 1) 
-    {
-        bodycode = codeparts[0];
-    }
-    else 
-    {
-        zipurl = codeparts[0];
-        bodycode = codeparts[1];
-    }
-    var decoded = jQuery("<div/>").html(bodycode).text();
-    eval(decoded);
-    warningToggleLoc = zipurl.indexOf("Show/Hide errors and warnings");
-    if(warningToggleLoc > 30 || warningToggleLoc == -1) 
-    {
-      SyntaxHighlighter.highlight("code");
-    }
+  {// Covers the structure diagram code
+    output = code.split("<p>URL_SPLIT")[1];
+    // Converts html encoded special characters to plaintext
+    output = jQuery("<div/>").html(output).text();
   }
-  else 
-  { 
-    //Remove the redundant <svg> tags for properly sized diagram for graphvis diagrams
-    if(language == "stateDiagram" || language == "classDiagram")
-    {
-      codeParts = code.split("<svg width=");
-      code = "<svg width=" + codeParts[1].replace(/<\/svg$/, "");
-    }
-    jQuery("#generatedCodeRow").html(format('{0}',code));
+  else
+  { //Covers the rest of the generated languages
+    output = code.split("<p>URL_SPLIT")[1];
   }
+  return output;
 }
 
 Page.setFilename = function(filename)

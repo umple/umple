@@ -297,6 +297,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
+    jQuery("#buttonShowEditableClassDiagram").attr('checked', 'checked');
   }
   else if(newDiagramType.type == "GVClass") { 
     if(Page.useGvClassDiagram) return;
@@ -305,6 +306,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
+    jQuery("#buttonShowGvClassDiagram").attr('checked', 'checked');
   }
   else if(newDiagramType.type == "GVState") {
     if(Page.useGvStateDiagram) return;
@@ -313,14 +315,16 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = true;
     Page.useStructureDiagram = false;
     changedType = true;
+    jQuery("#buttonShowGvStateDiagram").attr('checked', 'checked');
   }
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
-    Page.useGvStructureDiagram = true;
+    Page.useStructureDiagram = true;
     changedType = true;
+    jQuery("#buttonShowStructureDiagram").attr('checked', 'checked');
   }
   if (changedType) {
     // Page.setFeedbackMessage("DEBUG New Diagram type "+newDiagramType);
@@ -1420,8 +1424,8 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Page.showCanvasLoading();
   if(Page.useEditableClassDiagram) {language="language=Json"}
   else if(Page.useGvClassDiagram) {language="language=classDiagram"}
-  else if(Page.useStructureDiagram) {language="language=structureDiagram"}
-  else {language="language=stateDiagram"}
+  else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
+  else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
   
   // append any suboptions needed for GvStateDiagram
   if(Page.useGvStateDiagram) { 
@@ -1437,71 +1441,142 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
 
 Action.updateUmpleDiagramCallback = function(response)
 {
-  var toDisplay = response.responseText;
-  var umpleJson = "";
+  var diagramCode = "";
   var errorMessage = "";
-  var isError = false;
   
-  if(Page.useEditableClassDiagram) {	  
-    var codeparts = toDisplay.split('URL_SPLIT');
-    errorMessage=codeparts[0];
-    umpleJson=codeparts[1];
-  }
-  else {  // GraphViz diagram to display
-    var codeparts = toDisplay.split('<svg width=');
-    var miscStuffAndErrorMessages = codeparts[0];
-    var prelimparts = miscStuffAndErrorMessages.split('errorRow');
-    if(prelimparts.length > 1) {
-      errorMessage= "<div id='errorRow"+(prelimparts[1].split('<script'))[0];
-      isError = true;    
-    }
-    
-    //Put the start of the svg back together. 
-    if(codeparts.length>1 && codeparts[1].length>100) {
-      umpleJson="<svg width="+codeparts[1];
-      //remove the redundant svg closing tag
-      umpleJson = umpleJson.replace(/<\/svg>$/, "");
-    }
-  }
+  diagramCode = Action.getDiagramCode(response.responseText);
+  errorMessage = Action.getErrorCode(response.responseText);
   
-  if(umpleJson == "null" || umpleJson == "" || isError) {
+  if(diagramCode == null || diagramCode == "") 
+  {
     Page.enableDiagram(false);
     Action.diagramInSync = false;
     Page.setFeedbackMessage("The Umple model/code cannot be compiled; <a href=\"\#errorClick\">see explanation at the bottom.</a> To fix: edit the text or click undo");
-    Page.showGeneratedCode(errorMessage,"diagramUpdate");
   }
-  else {  // reset feedback message when error is corrected
+  else 
+  {
+    // reset error message
     if(!Action.diagramInSync)
     {
       Page.enableDiagram(true);
       Action.diagramInSync=true;
     }
     Page.setFeedbackMessage("");
-    if (new Date().getTime()-Action.gentime > 5000)
+    if (new Date().getTime()-Action.gentime > 60000)
     {
       // Erase generated code if it was generated a long time ago
       Page.hideGeneratedCode();
     }
+    
+    // Display editable class diagram
     if(Page.useEditableClassDiagram) {
-      var newSystem = Json.toObject(umpleJson);
+      jQuery("#umpleCanvas").show();
+      jQuery("#svgDummy").hide();
+      var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
       if(Page.showMethods || !Page.showAttributes)
-       UmpleSystem.update(); 
+      UmpleSystem.update(); 
+      
+      //Apply readonly styles
+      if (Page.readOnly) {
+        jQuery("span.editable").addClass("uneditable");
+        // jQuery("div.umpleClass").addClass("unselectable");
+      }
     }
-
-    if (Page.readOnly) {
-      jQuery("span.editable").addClass("uneditable");
-      // jQuery("div.umpleClass").addClass("unselectable");
+    // Display static svg diagram
+    else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+    {
+      jQuery("#umpleCanvas").show();
+      jQuery("#svgDummy").hide();
+      jQuery("#umpleCanvas").html(format('{0}', diagramCode));
+    }
+    //Display structure diagram
+    else if(Page.useStructureDiagram)
+    {
+      Action.renderStructureDiagram(diagramCode);
     }
   }
   
-  if(!Page.useEditableClassDiagram) {
-    // GV diagram - always output
-    // JSON must actually be svg code
-    var canvas = jQuery("#umpleCanvas");
-    canvas.html(format('{0}',umpleJson));
+  //Show the error message
+  if(errorMessage != "")
+  {
+    Page.showGeneratedCode(errorMessage,"diagramUpdate");
   }
+  
   Page.hideLoading();
+}
+
+// Gets the code to display from the AJAX response
+Action.getDiagramCode = function(responseText)
+{
+  var output = "";
+  
+  if(Page.useEditableClassDiagram)
+  {
+    output = responseText.split('URL_SPLIT')[1];
+    
+    if(output == "null") output = "";
+    
+  }
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+  {
+    // The graphviz diagrams are taken from the inner svg tag only. 
+    // This allows the website to have a dynamic canvas size around the diagram
+    var codeparts = responseText.split('<svg width=');
+    
+    //Put the start of the svg back together. 
+    if(codeparts.length>1 && codeparts[1].length>100) {
+      output = "<svg width="+codeparts[1];
+      //remove the redundant svg closing tag
+      output = output.replace(/<\/svg>$/, "");
+    }
+  }
+  else if(Page.useStructureDiagram)
+  {
+    output = responseText.split("<p>URL_SPLIT")[1];
+    // Converts html encoded special characters to plaintext
+    output = jQuery("<div/>").html(output).text();
+  }
+  
+  return output;
+}
+
+// Gets any error code from the AJAX response
+Action.getErrorCode = function(responseText)
+{
+  var output = "";
+  if(Page.useEditableClassDiagram)
+  {
+    output = responseText.split('URL_SPLIT')[0];
+    
+    if(output == "<p>") output = "";
+  }
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
+  {
+    var miscStuffAndErrorMessages = responseText.split('<svg width=')[0];
+    var prelimparts = miscStuffAndErrorMessages.split('errorRow');
+    if(prelimparts.length > 1) {
+      output = miscStuffAndErrorMessages.split("</script>&nbsp;")[0];
+    }
+  }
+  return output;
+}
+
+Action.renderStructureDiagram = function(diagramCode)
+{
+  // Remove any existing svgCanvas
+  jQuery("#svgCanvas").remove();
+  
+  // Hide the standard canvas
+  jQuery("#umpleCanvas").hide();
+  
+  // Place a new svgCanvas in the canvas area
+  jQuery("#svgDummy").show();
+  jQuery("#svgDummy").html("<svg id=\"svgCanvas\"></svg>");
+  
+  // eval the javascript that was returned
+  eval(diagramCode);
+  jQuery("#svgDummy").addClass("structureInCanvas");
 }
 
 // This function is no longer being called as its caller has been commented out
