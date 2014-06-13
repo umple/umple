@@ -318,13 +318,15 @@ $output = readTemporaryFile("ump/" . $filename);
     </div>
    
     <div id="umpleCanvasColumn" class="umpleCanvasColumn inRow">
-      <div id="umpleCanvas"  tabIndex="1" class="surface fillContainer">
+      <div id="umpleCanvas"  tabIndex="1" class="surface">
         <div class="ui-resizable-handle ui-resizable-se" id="canvasGrip"></div>
       </div>
+      <div id="svgDummy"></div>
     </div>
   </div>
-  <div id="errorCodeRow" class="row"></div>
   <div id="generatedCodeRow" class="row">
+    <div id="messageArea"></div>
+    <div id="innerGeneratedCodeRow"></div>
     <svg id="svgCanvas"></svg>
   </div>
   

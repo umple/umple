@@ -27,18 +27,21 @@ div.surface:focus { outline:none; }
 div.surface img { border:0; }
 div.photoReady { border:0; overflow:visible; }
 div.syncNeededMessage{ color: Gray; margin-left: 5px;}
+.structureInCanvas { 
+  width: 100%; height: 100%; border: 1px solid gray; -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; border-radius: 4px; overflow: auto;
+  box-sizing:border-box; -moz-box-sizing:border-box;
+}
 
 /* GENERATED CODE AREA */
 #generatedCodeRow { 
   box-sizing:border-box; -moz-box-sizing:border-box; margin-right: 5px; margin-top: 5px;
   -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
   }
+#innerGeneratedCodeRow { margin-top: 5px; }
+#messageArea { margin-left: 10px; }
 .generatedDiagram { padding: 10px; overflow-x:auto; border: 1px solid grey; }
 .generatedCode { overflow-x: hidden; border: 1px solid grey; }
-
-.zipDownloadLink { margin-left: 10px; }
-#errorRow { margin-left: 10px; }
-#errorClick { margin-left: 10px; }
 
 /* UMPLE PALETTE */
 div.paletteWrapper { border: 1px solid Gray; background-color: GhostWhite; padding:  1px 1px 1px 1px; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
