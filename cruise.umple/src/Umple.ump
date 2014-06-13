@@ -506,7 +506,8 @@ class GeneralTemplateParameter {
 //This class is used to assign parameters in classes and traits.
 class GeneralTPApplied {
 	inheritanceName;
-	String[] parameters;	
+	String[] parameters;
+	1 -> 0..1 Position positions;	
 	1 -> * MethodTemplateSignature;
 	
 }

@@ -294,33 +294,9 @@ class UmpleTrait {
     return null;
   }
  //**************************	
-   public boolean hasMethod(Method comparedMethod){
-    String methodName = comparedMethod.getName();
-    String methodType = comparedMethod.getType();
-    int numberOfParams = comparedMethod.getMethodParameters().size();
-    for (Method aMethod : this.getMethods()){
-      // Compare method names
-      if (aMethod.getName().equals(methodName)){  
-	        // Now compare parameters
-	        if (numberOfParams == aMethod.getMethodParameters().size())
-	        {
-	          boolean allSame = true;
-	          for (int i = 0; i < numberOfParams; i++)
-	          {
-	            if(!aMethod.getMethodParameter(i).getType().equals(comparedMethod.getMethodParameter(i).getType()))
-	            {
-	              allSame = false;
-	              break;
-	            }
-	          }
-	          if(allSame)
-	          {
-	            return true;
-	          }
-	        }
-      }
-    }
-    return false;
+  public boolean hasMethod(Method comparedMethod){
+  	if (getMethod(comparedMethod) != null) return true;
+	return false;
   }
 
 
