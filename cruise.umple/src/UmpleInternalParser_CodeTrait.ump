@@ -783,7 +783,8 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
  	 //----------------------------------------------------------------------------------------
   	 if (inGTPApplied!=null){
 	 	 for (MethodTemplateSignature mTSignature : inGTPApplied.getMethodTemplateSignatures()) {
-		 	if (!inTrait.hasMethod(mTSignature.getMethod())){
+	 		Method tempMethod = inTrait.getMethod(mTSignature.getMethod()); 
+		 	if ( tempMethod == null || (tempMethod != null && tempMethod.isIsAbstract())){
 				getParseResult().addErrorMessage(new ErrorMessage(2559,inTrait.getPosition(0),mTSignature.getMethod().getName(),inTrait.getName()));	
 				return traitMethods;
 			}
@@ -799,7 +800,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
  			 methods.add(newMethod);
 	 	 }
 	 }
-     traitMethods.put(inTrait,ApplyExludeIncludeAliasToMethod(methods, inGTPApplied));
+     traitMethods.put(inTrait,methods);
      //----------------------------------------------------------------------------------------
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
      	 tempTraitMethods = gatherConcreteMethods(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));	 
@@ -807,6 +808,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
     	 if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inTrait)) return traitMethods;
     	 AddMethodMapToAnother(traitMethods,tempTraitMethods);
 	 }
+	 ApplyExludeIncludeAliasToMethod(traitMethods, inGTPApplied);
      return traitMethods;
   }
   
@@ -901,26 +903,22 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  	
   private void checkTypeParameterAvailability(GeneralTPApplied inGeneralTPApplied) {
-	UmpleTrait localTrait = getModel().getUmpleTrait(inGeneralTPApplied.getInheritanceName());
-	   /*
-	for (GeneralTemplateParameter gtp : inTrait.getGeneralTemplateParameters()) {
-		if (!inParameterMapping.containsKey(gtp.getName())){
-			//error: this is when we want to have full coverage for type parameters 
-			return;
-		}
-	}
-	*/
-	   
 	if (inGeneralTPApplied == null ) return;
-	for (String	typeName : inGeneralTPApplied.getParameterMapping().keySet()) {
-		if (!localTrait.hasGeneralTemplateParameter(typeName)){
-			getParseResult().addErrorMessage(new ErrorMessage(2562,localTrait.getPosition(0),typeName)); 
-			return;
-		}
-	}	
+    UmpleTrait localTrait = getModel().getUmpleTrait(inGeneralTPApplied.getInheritanceName());
+    for (GeneralTemplateParameter gtp : localTrait.getGeneralTemplateParameters()) {
+	    if (! inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())){
+	 	   getParseResult().addErrorMessage(new ErrorMessage(2566,inGeneralTPApplied.getPositions(),gtp.getName(),localTrait.getName())); 
+	 	   return;
+	    }
+    }	
+    for (String	typeName : inGeneralTPApplied.getParameterMapping().keySet()) {
+	    if (!localTrait.hasGeneralTemplateParameter(typeName)){
+	 	   getParseResult().addErrorMessage(new ErrorMessage(2562,inGeneralTPApplied.getPositions(),typeName)); 
+	 	   return;
+	    }
+    }	
   }
 
-  
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
@@ -1222,6 +1220,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------Start--------------------------------------
 private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifier aClassifier, String extendName) {
 	GeneralTPApplied aGeneralTPApplied = new GeneralTPApplied(extendName);
+	aGeneralTPApplied.setPositions(mainToken.getPosition());
     String parameterName;
 	for(Token subToken : mainToken.getSubTokens()) {
 		if (subToken.is("iEFunction") || subToken.is("functionAliasName")) {
@@ -1553,40 +1552,64 @@ private void AddAssociationMapToAnother(Map<UmpleTrait, List<AssociationVariable
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-private List<Method> ApplyExludeIncludeAliasToMethod(List<Method> inMethods, GeneralTPApplied inGTPApplied){
-   if (inGTPApplied == null) return inMethods;
-    List<Method> shouldBeIncluded = new ArrayList<Method>();
-    for (int i = 0; i < inMethods.size(); i++) {
-		Method newMethod = inMethods.get(i);
-	    MethodTemplateSignature mTSignature = inGTPApplied.hasMethod(newMethod);
-	    if (mTSignature!=null){
-		   if (mTSignature.getModifier().equals("-")){
-			   inMethods.remove(newMethod);
-		   } else if (mTSignature.getModifier().equals("+")){
-				if (!mTSignature.getAlias().equals("")){
-					newMethod.setName(mTSignature.getAlias());
-					//here I must check this new name is unique.
-				}
-				if (!mTSignature.getMethod().getModifier().equals("")){
-					newMethod.setModifier(mTSignature.getMethod().getModifier());
-					//here I must check this new name is unique.
-				}
-				shouldBeIncluded.add(newMethod);
-		   } else if (mTSignature.getModifier().equals("")){
-				//here I must check this new name is unique.
-				if (!mTSignature.getAlias().equals("")){
-					newMethod.setName(mTSignature.getAlias());
-					//here I must check this new name is unique.
-				}						
-				if (!mTSignature.getMethod().getModifier().equals("")){
-					newMethod.setModifier(mTSignature.getMethod().getModifier());
-				}
+private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intraitMethods, GeneralTPApplied inGTPApplied){
+	   if (inGTPApplied == null) return;
+	   for (UmpleTrait uTrait : intraitMethods.keySet()) {
+		   List<Method> shouldBeIncluded = new ArrayList<Method>();
+		   for (int i = 0; i < intraitMethods.get(uTrait).size(); i++) {
+			   Method newMethod = intraitMethods.get(uTrait).get(i);
+			   MethodTemplateSignature mTSignature = inGTPApplied.hasMethod(newMethod);
+			   if (mTSignature!=null){
+				   if (mTSignature.getModifier().equals("-")){
+					   intraitMethods.get(uTrait).remove(newMethod);
+				   } else if (mTSignature.getModifier().equals("+")){
+					   if (!mTSignature.getAlias().equals("")){
+						   Method temMethod = new Method(newMethod);
+						   temMethod.setName(mTSignature.getAlias());
+						   if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
+							   getParseResult().addErrorMessage(new ErrorMessage(2567,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));	
+							   return;
+						   }
+						   newMethod.setName(mTSignature.getAlias());
+
+				       }
+					   if (!mTSignature.getMethod().getModifier().equals("")){
+						   newMethod.setModifier(mTSignature.getMethod().getModifier());
+						   //here I must check this new name is unique.
+					   }
+					   shouldBeIncluded.add(newMethod);
+				  } else if (mTSignature.getModifier().equals("")){
+					  if (!mTSignature.getAlias().equals("")){
+						   Method temMethod = new Method(newMethod);
+						   temMethod.setName(mTSignature.getAlias());
+						   if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
+							   getParseResult().addErrorMessage(new ErrorMessage(2567,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));	
+							   return;
+						   }
+						  newMethod.setName(mTSignature.getAlias());
+					  }						
+					  if (!mTSignature.getMethod().getModifier().equals("")){
+						  newMethod.setModifier(mTSignature.getMethod().getModifier());
+					  }
+				  }
+			   }
+		   }
+		   if (shouldBeIncluded.size()>0)  intraitMethods.put(uTrait, shouldBeIncluded) ;
+	}  
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+   private Method checkMethodInMapTraitsMethod(Map<UmpleTrait, List<Method>> inTraitMethods, Method inMethod){
+	   for (UmpleTrait uTrait : inTraitMethods.keySet()) {
+		   for (Method method : inTraitMethods.get(uTrait)) {
+			   if (compareTwoMethdos(method, inMethod)){
+				   return method;
+			   }	
 		   }
 	   }
+	   return null;
    }
-   if (shouldBeIncluded.size()>0) return shouldBeIncluded;
-   return inMethods;
-}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------

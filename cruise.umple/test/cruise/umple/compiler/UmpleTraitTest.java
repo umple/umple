@@ -29,6 +29,7 @@ public class UmpleTraitTest {
 		SampleFileWriter.destroy("traitTest.ump");
 		SampleFileWriter.destroy("A.java");
 		SampleFileWriter.destroy("B.java");
+		SampleFileWriter.destroy("C.java");
 		SampleFileWriter.destroy("I.java");
 	}
 	
@@ -504,6 +505,22 @@ public class UmpleTraitTest {
 			SampleFileWriter.destroy("traitTest.ump");
 		}	
 	}
+	
+	@Test
+	public void includeExcludeRule13Test() {
+		String code = "class A{isA T<test() as private>;}trait T{void test();}";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("2559");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
+	}
+	
 		
 	@Ignore
 	public void includeExcludeRuleAlias1Test() {
@@ -589,9 +606,16 @@ public class UmpleTraitTest {
 	@Test
 	public void includeExcludeRuleAlias8Test() {
 		String code = "class A{isA T<test() as test1>;}trait T{isA T1;void test(){/*T*/}}trait T1{void test1(){/*T1*/}}";
-		UmpleModel model = getRunModel(code);
-		Assert.assertEquals(1, model.getUmpleClass("A").numberOfMethods());
-		Assert.assertEquals("/*T*/", model.getUmpleClass("A").getMethod(0).getMethodBody().getExtraCode());
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("2567");
+		} finally {
+			Assert.assertTrue(result);
+			SampleFileWriter.destroy("traitTest.ump");
+		}	
 	}
 	
 	@Test
@@ -710,7 +734,7 @@ public class UmpleTraitTest {
 	}
 	@Test	
 	public void TypeParameterTest02() {
-		String code = "class A{isA T< Y = String>;}trait T<X,Z>{}";
+		String code = "class A{isA T< X= Integer, Y = String>;}trait T<X>{}";
 		UmpleModel model = getModel(code);
 		boolean result = false;
 		try {
@@ -735,7 +759,7 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void TypeParameterTest04() {
-		String code = "class A{isA T< X = String>;}trait T<X,Z>{isA T1 < A = X >;X test(X inData){}}trait T1<A>{void test1(A z){}}";
+		String code = "class A{isA T< X = String>;}trait T<X>{isA T1 < A = X >;X test(X inData){}}trait T1<A>{void test1(A z){}}";
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(2, model.getUmpleClass("A").numberOfMethods());
 		for (Method method : model.getUmpleClass("A").getMethods()) {
@@ -756,6 +780,25 @@ public class UmpleTraitTest {
 		Assert.assertEquals("Integer", model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType());
 		Assert.assertEquals("String", model.getUmpleClass("A").getMethod(1).getMethodParameter(0).getType());
 	}
+	
+	@Test	
+	public void TypeParameterTest06() {
+		String code = "class A{isA T1<X = B>;}class B{}trait T1<X,Y>{}";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("2566");
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+			Assert.assertTrue(result);
+		}	
+	}
+	
+	
+	
+	
 
 	
 	@Test
@@ -878,6 +921,16 @@ public class UmpleTraitTest {
 		Assert.assertEquals(1, model.getUmpleClass("A").numberOfAssociationVariables());
 		Assert.assertEquals(1, model.getUmpleClass("B").numberOfAssociationVariables());
 	}
+	
+	@Test
+	public void associations002Test() {
+		String code = "class A{isA T<X=B, Z=C>;   }trait T<X,Z>{0..1 -- * X;0..1 -- * Z;} class B{}class C{isA T<X=A,Z=B>;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(3, model.getUmpleClass("A").numberOfAssociationVariables());
+		Assert.assertEquals(2, model.getUmpleClass("B").numberOfAssociationVariables());
+		Assert.assertEquals(3, model.getUmpleClass("C").numberOfAssociationVariables());
+	}
+	
 	@Test
 	public void templateInCode01Test() {
 		String code = "class A{isA T<X=B>;} class B{isA T<X=A>;} trait T<X>{void test(){#X# b=new #X#();}}";
