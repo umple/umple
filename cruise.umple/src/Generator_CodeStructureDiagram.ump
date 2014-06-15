@@ -51,7 +51,7 @@ colorSettings <<!
 	} !>> 
 
 emit getDiagramSettings(String modelName)(diagramSettings);
-diagramSettings <<! container: "svgCanvas", id: "<<=modelName>>", style: "display: block; margin: auto; border: #111 1px solid;" !>>	
+diagramSettings <<! container: "##CANVAS_ID##", id: "<<=modelName>>", style: "display: block; margin: auto; border: #111 1px solid;" !>>	
 
 emit getComponentDescriptor(PairDescriptor[] node)(componentDescriptionTemplate);
 componentDescriptionTemplate <<! { <<#int i = 0; #>> <<#  for(PairDescriptor n : node) {#>><<=n.getId()>>:"<<=n.getValue()>>" <<#if((i++) < node.length -1)#>>, <<#}#>> }!>>
@@ -86,16 +86,11 @@ javascriptCall <<!
 	}, true);
 !>> 
 
-emit createHtmlPage(String modelName, List<ComponentDescriptor> cmpList, List<BindingDescriptor> bndList)(htmlPage);
-htmlPage <<!
-<html xmlns="http://www.w3.org/1999/xhtml">	
-<div style= "overflow: auto; max-height: 800px; width: 100%">
-<svg id="canvas"></svg>
-</div>
-<script type="text/javascript">
-	<<=createJavaScriptCall(modelName, cmpList, bndList)>>
-</script>
+emit createEmptyCanvas(String label)(emptyCanvas);
+emptyCanvas <<!
+	ShapesRegistry.showMessage("##CANVAS_ID##", "<<=label>>");
 !>> 
+
   
     public boolean hasSubComponents(UmpleClass cmp) {
 	  for(Attribute attr : cmp.getAttributes()) {
@@ -237,9 +232,14 @@ htmlPage <<!
     		
     	}
     }
-
-    String html = createJavaScriptCall("GeneratedDiagram", cmpList,bndList);
-    return html;
+    String jsCall = createJavaScriptCall("GeneratedDiagram", cmpList,bndList);
+    if(bndList.size() > 0 || cmpList.size() >0 ) {
+    	jsCall = createJavaScriptCall("GeneratedDiagram", cmpList,bndList);
+    } else {
+    	jsCall = createEmptyCanvas(" No composite structure found in the input Umple model");
+    }
+    
+    return jsCall;
   }
   
 
