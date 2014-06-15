@@ -24,10 +24,12 @@ class Function {
   targetClassName;
   1 -> 1 Utility utility;
  
-  public Function(Association assoc){
+  public Function(Association assoc)
+  {
 	utility =  new Utility();
 	beginEndRoleName = assoc.getEnd(1).getRoleName();	
-	if(assoc.getEnd(1).getRoleName().equals("as")){
+	if(assoc.getEnd(1).getRoleName().equals("as"))
+	{
       beginEndRoleName = assoc.getEnd(1).getRoleName()+ "_";  
     }
 	targetMult = utility.getAlloyMultiplicity(utility.getRightEnd(assoc));
@@ -37,8 +39,11 @@ class Function {
   public Function(Attribute attr)
   {
     beginEndRoleName = attr.getName();
-    targetMult = "one";
-    if(attr.getType().equals("Integer") || attr.getType().equals("Double"))
+    if(attr.getIsList())
+      targetMult = "set";
+    else
+      targetMult = "";
+    if(attr.getType().equals("Integer") || attr.getType().equals("Double") || attr.getType().equals("Float"))
       targetClassName = "Int";
     else if(attr.getType().equals("String") || attr.getType().equals("")
     	|| attr.getType().equals("Date") || attr.getType().equals("Time"))
@@ -48,7 +53,8 @@ class Function {
   }
 	
   //Reflexive relation
-  public Function(Association assoc, String cName){
+  public Function(Association assoc, String cName)
+  {
 	utility =  new Utility();
 	beginEndRoleName = assoc.getEnd(0).getRoleName();
 	if(assoc.getEnd(0).getRoleName().equals("as")){
@@ -59,6 +65,8 @@ class Function {
   }
 	
   public String printFunction(){
+    if(targetMult.equals(""))
+	  return "  "+beginEndRoleName+" : "+targetClassName;
 	return "  "+beginEndRoleName+" : "+targetMult+" "+targetClassName;
   }
 }

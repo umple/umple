@@ -1,0 +1,348 @@
+module BankingSystem/core/humanResources
+
+------------------------------------------------------------------------------------------------------------------
+
+-- This Alloy file is generated using Umple from BankingSystem.ump
+
+------------------------------------------------------------------------------------------------------------------
+
+open util/ordering[UmpleObject]
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class UmpleObject
+
+------------------------------------------------------------------------------------------------------------------
+
+abstract sig UmpleObject { }
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class TempObject
+
+------------------------------------------------------------------------------------------------------------------
+
+abstract sig TempObject {
+  tempName : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class PersonRole
+
+------------------------------------------------------------------------------------------------------------------
+
+sig PersonRole extends UmpleObject {
+  person : one Person
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Person
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Person extends UmpleObject {
+  personRoles : set PersonRole,
+  name : String,
+  address : String,
+  phoneNumber : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Employee
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Employee extends PersonRole {
+  manager : lone Manager,
+  division : one Division
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Client
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Client extends PersonRole {
+  accounts : some Account,
+  name : String,
+  address : String,
+  phoneNumber : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Manager
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Manager extends Employee {
+  employees : set Employee
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Account
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Account extends UmpleObject {
+  accountType : one AccountType,
+  clients : some Client,
+  branch : one Branch,
+  accountNumber : Int,
+  balance : Int,
+  creditLimit : Int
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class AccountType
+
+------------------------------------------------------------------------------------------------------------------
+
+sig AccountType extends UmpleObject {
+  privileges : set Privilege,
+  monthlyFee : Int,
+  interestRate : Int
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Privilege
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Privilege extends UmpleObject {
+  accountTypes : set AccountType,
+  description : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class CreditCardAccount
+
+------------------------------------------------------------------------------------------------------------------
+
+sig CreditCardAccount extends Account {
+  cards : some Card,
+  expiryDate : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class MortgageAccount
+
+------------------------------------------------------------------------------------------------------------------
+
+sig MortgageAccount extends Account {
+  collateral : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Card
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Card extends UmpleObject {
+  creditCardAccount : one CreditCardAccount,
+  holderName : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Branch
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Branch extends Division {
+  accounts : set Account,
+  address : String,
+  branchNumber : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines a signature for class Division
+
+------------------------------------------------------------------------------------------------------------------
+
+sig Division extends UmpleObject {
+  employees : set Employee,
+  subDivision : set Division,
+  name : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines a rule that enhances visualizing model with String type
+
+------------------------------------------------------------------------------------------------------------------
+
+fact VisualizationFact {
+  no tempobject_1 : TempObject |
+    tempobject_1.tempName = "null"
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines non-reflexive rule for class Division
+
+------------------------------------------------------------------------------------------------------------------
+
+fact NonReflexiveRule {
+  no division_1 : Division |
+    division_1 in subDivision[division_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines symmetric rule for class Division
+
+------------------------------------------------------------------------------------------------------------------
+
+fact SymmetricRelation {
+  all division_1, division_2 : Division |
+    division_1 in subDivision[division_2] <=> division_2 in subDivision[division_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines non-reflexive rule for class Division
+
+------------------------------------------------------------------------------------------------------------------
+
+fact NonReflexiveRule {
+  no division_1 : Division |
+    division_1 in subDivision[division_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines symmetric rule for class Division
+
+------------------------------------------------------------------------------------------------------------------
+
+fact SymmetricRelation {
+  all division_1, division_2 : Division |
+    division_1 in subDivision[division_2] <=> division_2 in subDivision[division_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class Person and class PersonRole
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all person_1 : Person, personrole_1 : PersonRole |
+    person_1 in person[personrole_1] <=> personrole_1 in personRoles[person_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class Client and class Account
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all client_1 : Client, account_1 : Account |
+    client_1 in clients[account_1] <=> account_1 in accounts[client_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines numeric bound rule for class Account
+
+------------------------------------------------------------------------------------------------------------------
+
+fact NumericBoundFact {
+  no account_1 : Account |
+    #account_1.clients < 1 || #account_1.clients > 2
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class Manager and class Employee
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all manager_1 : Manager, employee_1 : Employee |
+    manager_1 in manager[employee_1] <=> employee_1 in employees[manager_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class AccountType and class Privilege
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all accounttype_1 : AccountType, privilege_1 : Privilege |
+    accounttype_1 in accountTypes[privilege_1] <=> privilege_1 in privileges[accounttype_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class CreditCardAccount and class Card
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all creditcardaccount_1 : CreditCardAccount, card_1 : Card |
+    creditcardaccount_1 in creditCardAccount[card_1] <=> card_1 in cards[creditcardaccount_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class Branch and class Account
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all branch_1 : Branch, account_1 : Account |
+    branch_1 in branch[account_1] <=> account_1 in accounts[branch_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+--The following defines bidirectionality rule between class Division and class Employee
+
+------------------------------------------------------------------------------------------------------------------
+
+fact BidirectionalityRule {
+  all division_1 : Division, employee_1 : Employee |
+    division_1 in division[employee_1] <=> employee_1 in employees[division_1]
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines generalization hierarchy rule between class Employee and Manager
+
+------------------------------------------------------------------------------------------------------------------
+
+fact GenHierarchyFact {
+  no manager_1 : Manager |
+    manager_1.employees = manager_1
+}

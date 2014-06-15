@@ -1,4 +1,4 @@
-// UML class diagram of a Real Estate system
+//UML class diagram of a Real Estate system
 namespace realestate;
 
 class Address
