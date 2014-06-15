@@ -1,0 +1,83 @@
+// Sample UML class diagram for a banking system, written in Umple
+
+//Namespace for core of the system.
+namespace BankingSystem.core.humanResources;
+class PersonRole{}
+
+class Person {
+ name;
+ address;
+ phoneNumber;
+ 
+ 1 -- * PersonRole;
+}
+
+class Employee{
+ isA PersonRole;
+}
+
+class Client
+{
+ isA PersonRole;
+ name;
+ address;
+ phoneNumber;
+ 1..2 -- 1..* Account;
+}
+
+class Manager {
+ isA Employee;
+ 0..1 -- * Employee;
+}
+
+class Account{
+ Integer accountNumber;
+ Float balance;
+ Float creditLimit;
+ * -> 1 AccountType;
+}
+
+class AccountType
+{
+ Float monthlyFee;
+ Float interestRate;
+ 
+ * -- * Privilege;
+}
+
+class Privilege
+{
+ description;
+}
+
+class CreditCardAccount{
+ isA Account;
+ Date expiryDate;
+
+ 1 -- 1..* Card;
+}
+
+class MortgageAccount {
+ isA Account;
+ collateral;
+}
+
+class Card
+{
+ holderName;
+}
+
+class Branch {
+ isA Division;
+ address;
+ branchNumber;
+
+ 1 -- * Account;
+}
+
+class Division{
+ name;
+ 
+ 1 -- * Employee; 
+ 0..1 -- 0..* Division subDivision;
+}

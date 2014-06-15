@@ -20,6 +20,17 @@ abstract sig UmpleObject { }
 
 ------------------------------------------------------------------------------------------------------------------
 
+--The following defines a signature for class TempObject
+
+------------------------------------------------------------------------------------------------------------------
+
+abstract sig TempObject {
+  tempName : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
 --The following defines a signature for class Shape2D
 
 ------------------------------------------------------------------------------------------------------------------
@@ -36,8 +47,8 @@ sig Shape2D extends UmpleObject {
 ------------------------------------------------------------------------------------------------------------------
 
 sig Point extends UmpleObject {
-  x : one Int,
-  y : one Int
+  x : Int,
+  y : Int
 }
 
 
@@ -48,7 +59,7 @@ sig Point extends UmpleObject {
 ------------------------------------------------------------------------------------------------------------------
 
 sig EllipticalShape extends Shape2D {
-  semiMajorAxis : one String
+  semiMajorAxis : String
 }
 
 
@@ -95,7 +106,7 @@ sig SimplePolygon extends Polygon { }
 ------------------------------------------------------------------------------------------------------------------
 
 sig ArbitraryPolygon extends Polygon {
-  points : one Int
+  points : Int
 }
 
 
@@ -106,8 +117,8 @@ sig ArbitraryPolygon extends Polygon {
 ------------------------------------------------------------------------------------------------------------------
 
 sig Rectangle extends SimplePolygon {
-  height : one Int,
-  width : one Int
+  height : Int,
+  width : Int
 }
 
 
@@ -118,6 +129,18 @@ sig Rectangle extends SimplePolygon {
 ------------------------------------------------------------------------------------------------------------------
 
 sig RegularPolygon extends SimplePolygon {
-  numPoints : one Int,
-  radius : one Int
+  numPoints : Int,
+  radius : Int
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines a rule that enhances visualizing model with String type
+
+------------------------------------------------------------------------------------------------------------------
+
+fact VisualizationFact {
+  no tempobject_1 : TempObject |
+    tempobject_1.tempName = "null"
 }

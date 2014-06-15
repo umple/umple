@@ -26,7 +26,7 @@ abstract sig UmpleObject { }
 
 sig A extends UmpleObject {
   bs : set B,
-  a : one Int
+  a : Int
 }
 
 

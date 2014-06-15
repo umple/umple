@@ -16,7 +16,7 @@ class AlloyObject
 class Fact 
 {
   depend cruise.umple.compiler.*;
-  abstract;
+  //abstract;
   
   isA AlloyObject; 
   
@@ -39,6 +39,13 @@ class Fact
       rName2 = assoc.getEnd(1).getRoleName()+ "_"; 
     else 
       rName2 = assoc.getEnd(1).getRoleName() ;
+  }
+  
+  public Fact(UmpleClass uClass)
+  {
+    factName = "VisualizationFact";
+    firstClassName = uClass.getName();
+    rName1 = uClass.getAttribute(0).getName();    
   }
   
   protected String suchThatPlusNewLine ()
@@ -73,9 +80,16 @@ class Fact
 	return varDec(cName,num)+declarationEnd(cName);
   }
   
-  public String print()
+  private String comment()
   {
-    return null;
+  	return addStartDottedLine()+"-- The following defines a rule that enhances visualizing model with String type\n"+addEndDottedLine();
+  }
+  
+  public String print()
+  { 
+    String me = "null";
+    return comment()+ factHeader()+"no "+makeVarDeclaration(firstClassName,1)
+      +suchThatPlusNewLine()+varDec(firstClassName,1)+"."+rName1+" = "+'"'+me+'"'+"\n}";
   }
   
 }

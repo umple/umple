@@ -20,16 +20,27 @@ abstract sig UmpleObject { }
 
 ------------------------------------------------------------------------------------------------------------------
 
+--The following defines a signature for class TempObject
+
+------------------------------------------------------------------------------------------------------------------
+
+abstract sig TempObject {
+  tempName : String
+}
+
+
+------------------------------------------------------------------------------------------------------------------
+
 --The following defines a signature for class Address
 
 ------------------------------------------------------------------------------------------------------------------
 
 sig Address extends UmpleObject {
-  numberOnStreet : one Int,
-  apartmentOrUnit : one Int,
-  street : one String,
-  city : one String,
-  postalCode : one String
+  numberOnStreet : Int,
+  apartmentOrUnit : Int,
+  street : String,
+  city : String,
+  postalCode : String
 }
 
 
@@ -40,8 +51,8 @@ sig Address extends UmpleObject {
 ------------------------------------------------------------------------------------------------------------------
 
 sig GPSCoord extends UmpleObject {
-  lattitude : one Int,
-  longitude : one Int
+  lattitude : Int,
+  longitude : Int
 }
 
 
@@ -55,12 +66,12 @@ sig Property extends UmpleObject {
   neighbourhood : one Neighbourhood,
   propertySales : set PropertySale,
   propertyForSales : set PropertyForSale,
-  propertyAddress : one Address,
-  numberBedrooms : one Int,
-  numberBathrooms : one Int,
-  squareFeet : one Int,
-  numFloors : one Int,
-  gpsCoord : one GPSCoord
+  propertyAddress : Address,
+  numberBedrooms : Int,
+  numberBathrooms : Int,
+  squareFeet : Int,
+  numFloors : Int,
+  gpsCoord : GPSCoord
 }
 
 
@@ -73,8 +84,8 @@ sig Property extends UmpleObject {
 sig Neighbourhood extends UmpleObject {
   properties : set Property,
   agents : set Agent,
-  description : one String,
-  gpsCoordsOfBoundary : one GPSCoord
+  description : String,
+  gpsCoordsOfBoundary : set GPSCoord
 }
 
 
@@ -87,9 +98,9 @@ sig Neighbourhood extends UmpleObject {
 sig PropertySale extends UmpleObject {
   property : one Property,
   propertyForSale : lone PropertyForSale,
-  salePrice : one Int,
-  seller : one String,
-  buyer : one String
+  salePrice : Int,
+  seller : String,
+  buyer : String
 }
 
 
@@ -102,9 +113,9 @@ sig PropertySale extends UmpleObject {
 sig OpenHouse extends UmpleObject {
   propertyForSale : one PropertyForSale,
   agentInCharge : lone Agent,
-  date : one String,
-  startTime : one String,
-  endTime : one String
+  date : String,
+  startTime : String,
+  endTime : String
 }
 
 
@@ -118,12 +129,12 @@ sig Agent extends UmpleObject {
   specializingNeighbourhoods : set Neighbourhood,
   openHouses : set OpenHouse,
   propertyForSales : set PropertyForSale,
-  name : one String,
-  licenseNumber : one String,
-  emailAddress : one String,
-  officePhoneNumber : one String,
-  cellPhoneNumber : one String,
-  officeAddress : one Address
+  name : String,
+  licenseNumber : String,
+  emailAddress : String,
+  officePhoneNumber : String,
+  cellPhoneNumber : String,
+  officeAddress : Address
 }
 
 
@@ -138,11 +149,22 @@ sig PropertyForSale extends UmpleObject {
   listingAgent : lone Agent,
   propertySale : lone PropertySale,
   openHouses : set OpenHouse,
-  listingNumber : one Int,
-  askingPrice : one Int,
-  dateListedForSale : one String
+  listingNumber : Int,
+  askingPrice : Int,
+  dateListedForSale : String
 }
 
+
+------------------------------------------------------------------------------------------------------------------
+
+-- The following defines a rule that enhances visualizing model with String type
+
+------------------------------------------------------------------------------------------------------------------
+
+fact VisualizationFact {
+  no tempobject_1 : TempObject |
+    tempobject_1.tempName = "null"
+}
 
 ------------------------------------------------------------------------------------------------------------------
 

@@ -44,15 +44,61 @@ class AlloyModel {
     
     Signature umpleObject = new Signature("UmpleObject","",false,true,false);
     signatures.add(umpleObject);
+    
+    if(hasStringAttribute(model))
+    {
+      Signature tempObject = new Signature("TempObject","",false,true,false);
+      UmpleClass uClass = new UmpleClass("TempObject");
+      Attribute abute = new Attribute("tempName","","","",false,uClass);
+      uClass.addAttribute(abute);
+    
+      Fact viz = new Fact(uClass);
+      facts.add(viz);
+      Function tempFun = new Function(abute);
+      tempObject.addFunction(tempFun);
+      signatures.add(tempObject);
+    }
+ 
     genSignatures(model);
     genOtherConstraints(model);
     
     name = model.getUmpleFile().getFileName(); 
     if(model.getDefaultNamespace() != null)
-      modelNamespace = "module "+model.getDefaultNamespace();  
+      if(namespace(model.getDefaultNamespace()) != "")
+        modelNamespace = "module "+namespace(model.getDefaultNamespace());
+      else  modelNamespace = "module "+model.getDefaultNamespace();  
     else 
       modelNamespace = "";
   }
+  
+  private boolean hasStringAttribute(UmpleModel model)
+  {
+    for(UmpleClass uClass : model.getUmpleClasses())
+    {
+      for(Attribute attr : uClass.getAttributes())
+        if(attr.getType().equals("String") || attr.getType().equals(""))
+       return true;
+    }
+    return false;
+  }
+  
+  private String namespace(String addr)
+  {
+    int i = 0, size = addr.length();
+    String temp = "";
+	while(i < size)
+	{
+	  if(addr.charAt(i) == '.')
+	  { 
+	    for(int k = 0;k < i;k++)
+	      temp += addr.charAt(k); 
+	    addr = namespace(temp + "/"+addr.substring(i+1,addr.length())); 
+	  } 
+	  i++;
+	}
+	return addr;
+  }
+  
   
   //For general hierachy pattern
   private Association checkAssocitaionBtw(String n1, String n2, UmpleModel model)
