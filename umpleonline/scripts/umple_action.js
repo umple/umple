@@ -1534,6 +1534,7 @@ Action.getDiagramCode = function(responseText)
   else if(Page.useStructureDiagram)
   {
     output = responseText.split("<p>URL_SPLIT")[1];
+    output = output.replace(/##CANVAS_ID##/g, "svgCanvas");
     // Converts html encoded special characters to plaintext
     output = jQuery("<div/>").html(output).text();
   }
