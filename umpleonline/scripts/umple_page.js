@@ -665,18 +665,18 @@ Page.getSelectedExample = function()
   var inputExample = "";
   if(Page.getExampleType() == "cdModels") {
     inputExample = jQuery("#inputExample option:selected").val();
-    // if diagram type is state machine, set it to class
-    if(Page.useGvStateDiagram) {
-     jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
-      Action.changeDiagramType(1);
+    // if diagram type not a class diagram, set it to a class diagram
+    if(!(Page.useEditableClassDiagram || Page.useGvClassDiagram)) {
+      jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
+      Action.changeDiagramType({type: "editableClass"});
     }
   }
   else {
     inputExample = jQuery("#inputExample2 option:selected").val();
-    // set diagramtype if not already state machine.
+    // if diagram type is not a state machine, set to state machine
     if( !Page.useGvStateDiagram) {
        jQuery("#buttonShowGvStateDiagram").attr('checked', true); 
-      Action.changeDiagramType(3);
+       Action.changeDiagramType({type: "GVState"});
     }
   }
   return inputExample;
