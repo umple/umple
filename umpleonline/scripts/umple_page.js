@@ -325,6 +325,7 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
           "Ctrl-G": function(cm) {Page.clickShowGvClassDiagram()},
           "Ctrl-S": function(cm) {Page.clickShowGvStateDiagram()},
+          "Ctrl-L": function(cm) {Page.clickShowStructureDiagram()},
           "Ctrl-T": function(cm) {Page.clickShowHideText()},
           "Ctrl-D": function(cm) {Page.clickShowHideCanvas()},
           "Ctrl-N": function(cm) {Page.clickShowHideMenu()},
@@ -349,7 +350,9 @@ Page.clickShowGvClassDiagram = function() {
 Page.clickShowGvStateDiagram = function() {
   jQuery('#buttonShowGvStateDiagram').trigger('click');
 }
-
+Page.clickShowStructureDiagram = function() {
+  jQuery('#buttonShowStructureDiagram').trigger('click');
+}
 Page.clickShowHideText = function() {
   jQuery('#buttonShowHideTextEditor').trigger('click');
 }
@@ -395,7 +398,7 @@ Page.hideGeneratedCode = function()
 {
   jQuery("#generatedCodeRow").hide();
   jQuery("#innerGeneratedCodeRow").hide();
-  jQuery("#svgCanvas").hide();
+  if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
 }
 
 Page.initCanvasArea = function()

@@ -1829,6 +1829,10 @@ Mousetrap.bind(['ctrl+s'], function(e){
   Page.clickShowGvStateDiagram();
 });
 
+Mousetrap.bind(['ctrl+l'], function(e){
+  Page.clickShowStructureDiagram();
+});
+
 //Functions for showing and hiding parts of the view
 Mousetrap.bind(['ctrl+t'], function(e){
   Page.clickShowHideText();
