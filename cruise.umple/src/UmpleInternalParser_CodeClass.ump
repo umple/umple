@@ -1603,8 +1603,7 @@ class UmpleInternalParser
    * @param method The token flagged to be the method.
    * @param uElement The Umple element for which the method will be added.
    */
-  private void analyzeMethod(Token method, UmpleElement uElement)
-  {
+  private void analyzeMethod(Token method, UmpleElement uElement){
     String modifier = "";
     Method aMethod = new Method("","","",false);
 
@@ -1621,6 +1620,8 @@ class UmpleInternalParser
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     List<String> langs = new ArrayList<String>();
     CodeBlock cb = new CodeBlock("");
+    String iValue = null;
+    Position iPosition = null;
     
     //559b
     Map<String,Position> implementationPositions = new HashMap<String,Position>();
@@ -1665,22 +1666,37 @@ class UmpleInternalParser
       {        
         if(langs.isEmpty())
         {
-          cb.setCode(token.getValue());
-          aMethod.setCodePosition(token.getPosition());
-          
-          //559b
-          implementationPositions.put("", token.getPosition());
-          langsImplementation.add("");
+        	if( (cb.getCode("") != null) && (!cb.getCode("").equals("")) && (!cb.getCode("").equals("\n")))	  
+        	getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+	    		  	  aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get("").getLineNumber()+"", implementationPositions.get("").getFilename(),
+	    		  	  token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), ""));
+          else
+          {
+	          cb.setCode(token.getValue());
+	          aMethod.setCodePosition(token.getPosition());
+	          
+	          //559b
+	          implementationPositions.put("", token.getPosition());
+	          langsImplementation.add("");
+          }
         }
         else
         {
           for(String str: langs)
           {
-            cb.setCode(str,/*(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+*/ token.getValue());
-            if("Java".equals(str))
-            {
-              aMethod.setCodePosition(token.getPosition());
-            }
+        	  if( (cb.getCode(str) != null) && (!cb.getCode(str).equals("")) && (!cb.getCode(str).equals("\n")))	  
+	        	  getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+	    	    		  	  aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get(str).getLineNumber()+"", implementationPositions.get(str).getFilename(),
+	    	    		  	  token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), str));
+        	  else
+        	  {
+        		implementationPositions.put(iValue, iPosition);
+	            cb.setCode(str,/*(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+*/ token.getValue());
+	            if("Java".equals(str))
+	            {
+	              aMethod.setCodePosition(token.getPosition());
+	            }
+        	  }
           }
           //559b
           langs.clear();
@@ -1698,7 +1714,9 @@ class UmpleInternalParser
         
         //559b
         langsImplementation.add(token.getValue());
-        implementationPositions.put(token.getValue(), token.getPosition());
+        iPosition = token.getPosition();
+        iValue = token.getValue();
+        //implementationPositions.put(token.getValue(), token.getPosition());
       }
       else if (token.is("precondition")){ 
         if (uElement instanceof UmpleClass){
@@ -1759,7 +1777,7 @@ class UmpleInternalParser
     			  else
     			  {
     				  getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
-    		    		  	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getPosition().getFilename(),
+    		    		  	  aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
     		    		  	  aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
     			  }
     			  
@@ -1843,8 +1861,9 @@ class UmpleInternalParser
       {
         uInterface.addMethod(aMethod); 
       }
-    }  
+    }
   }
+
 
   /*
    * Analyzes a method header, from a token flagged to be one, to populate a method instance for things such as the

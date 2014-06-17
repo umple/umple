@@ -1,0 +1,11 @@
+class X{
+  void test(){
+    //Java, C++, and others
+  }Php{
+    return 1;
+    //Just Php
+  }Php{
+    return 2;
+    //Just Php again
+  }
+}
