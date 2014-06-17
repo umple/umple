@@ -49,6 +49,8 @@ public class UmpleParserTest
 	  assertHasWarningsParse("015_multLanguageImplementation3.ump", 49);
 	  assertHasWarningsParse("015_multLanguageImplementation4.ump", 49);
 	  assertHasWarningsParse("015_multLanguageImplementation5.ump", 49);
+	  assertHasWarningsParse("015_multLanguageImplementation6.ump", 49);
+	  assertNoWarningsParse("015_multLanguageImplementation7.ump");
 
   }
   

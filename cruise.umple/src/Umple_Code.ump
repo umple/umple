@@ -650,7 +650,7 @@ class CodeBlock
   }
   public String getCode(String lang)
   {
-    return codes.containsKey(lang)? codes.get(lang) : codes.get("");
+    return codes.containsKey(lang)? codes.get(lang) : "";
   }
   public String toString(){
     String out = "";
