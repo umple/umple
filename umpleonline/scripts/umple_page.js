@@ -834,6 +834,7 @@ Page.getGeneratedMarkup = function(code, language)
   else if(language == "structureDiagram") 
   {// Covers the structure diagram code
     output = code.split("<p>URL_SPLIT")[1];
+    output = output.replace(/##CANVAS_ID##/g, "svgCanvas");
     // Converts html encoded special characters to plaintext
     output = jQuery("<div/>").html(output).text();
   }
