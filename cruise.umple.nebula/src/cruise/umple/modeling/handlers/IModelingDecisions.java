@@ -91,6 +91,7 @@ public interface IModelingDecisions {
 	
 	public final static String DEPENDS_PRIORITY= "depends.priority.object.argument";  //$NON-NLS-1$
 	public final static String DEPENDS_TYPE_OBJECT_ARGUMENT= "depends.type.object.argument";  //$NON-NLS-1$
+	public final static String DEPENDS_INCOMPLETE= "depends.incomplete";  //$NON-NLS-1$
 	public final static String DEPENDS_IS_ROOT_ARGUMENT= "depends.is.root.object.argument";  //$NON-NLS-1$
 	public final static String DEPENDS_IS_CUSTOM_ARGUMENT= "depends.is.custom.argument";  //$NON-NLS-1$
 	public final static String DEPENDS_INCLUDE_ID_ARGUMENT= "depends.include.id.argument";  //$NON-NLS-1$

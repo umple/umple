@@ -100,97 +100,158 @@ public class CPPDependsPointsHandler{
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.INCLUDES)
-	public static String getHeaderIncludes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
-			@GenerationLoopElement Object modelPackage){
-		List<Object> values = generationValueGetter.getValues(ICppDefinitions.HEADER_INCLUDES_TRACKER, element);
+	public static String getHeaderIncludes(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object baseElement,
+			@GenerationLoopElement Object modelPackage,
+			@GenerationArgument(id= IModelingConstants.DEPENDS_LIST) List<Object> collections){
 		
-		List<Object> incompleteObjects = getIncompleteDelcarations(generationValueGetter, modelPackage, element);
-		
-		List<Object> parentObjects = generationValueGetter.getValues(PARENT_OBJECTS_TRACKER, element);
-		
-		List<Object> declarations= new ArrayList<Object>();
-		for(Object object: values){
-			if(object instanceof SimpleEntry){
-				SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
-				Object value= entry.getValue();
-				Object key = entry.getKey();
-				if(value instanceof String== false|| (!parentObjects.contains(key)&& incompleteObjects.contains(key))){
-					continue;
-				}
-				
-				declarations.add(value);
-			}
+		List<Object> elements= new ArrayList<Object>();
+		if(collections!= null&& !collections.isEmpty()){
+			elements.addAll(collections);
+		}else{
+			elements.add(baseElement);
 		}
 		
-		return getIncludedReferences(generationValueGetter, GenerationUtil.listToGeneratedString(0, 0, declarations), ICppDefinitions.HEADER_INCLUDES_TRACKER, element, false);
-	}
-
-	@GenerationPoint(generationPoint = ICppDefinitions.BODY_INCLUDES)
-	public static String getBodyIncludes(@GenerationRegistry final GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement final Object element,
-			@GenerationLoopElement Object modelPackage){
-		List<Object> values = generationValueGetter.getValues(ICppDefinitions.BODY_INCLUDES_TRACKER, element);
-		List<Object> incompleteObjects = getIncompleteDelcarations(generationValueGetter, modelPackage, element);
+		StringBuffer declarationContents= new StringBuffer();
+		StringBuffer librariesIncludes= new StringBuffer();
+		StringBuffer librariesUses= new StringBuffer();
 		
-		List<Object> declarations= new ArrayList<Object>();
-		List<Object> incompleteDeclaration= new ArrayList<Object>();
+		List<Object> all= new ArrayList<Object>();
 		
-		List<SimpleEntry<?, ?>> sortedValues= new ArrayList<SimpleEntry<?, ?>>();
-		for(Object object: values){
-			if(object instanceof SimpleEntry){
-				sortedValues.add((SimpleEntry<?, ?>) object);
-			}
-		}
-		
-		Collections.sort(sortedValues, new Comparator<SimpleEntry<?, ?>>() {
-
-			@Override
-			public int compare(SimpleEntry<?, ?> entry1, SimpleEntry<?, ?> entry2) {
-				int entry1Priority= ((Integer)generationValueGetter.getValues(IModelingDecisions.DEPENDS_PRIORITY, entry1, element).get(0)).intValue();
-				int entry2Priority= ((Integer)generationValueGetter.getValues(IModelingDecisions.DEPENDS_PRIORITY, entry2, element).get(0)).intValue();
-				
-				if(entry1Priority== entry2Priority){
-					return 0;
-				}
-				
-				return entry1Priority>entry2Priority?-1:1;
-			}
+		for(Object element: elements){
+			List<Object> values = generationValueGetter.getValues(ICppDefinitions.HEADER_INCLUDES_TRACKER, element);
 			
-		});
-		
-		for(Object object: values){
-			if(object instanceof SimpleEntry){
-				SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
-				Object key = entry.getKey();
-				if(incompleteObjects.contains(key)){
-					String modelPath = generationValueGetter.generationPointString(key, IModelingDecisions.MODEL_PATH);
-					String typeName = generationValueGetter.getString(key, IModelingElementDefinitions.NAME);
-					incompleteDeclaration.add(generationValueGetter.use(ICppDefinitions.INCLUDE_STATEMENT, typeName, modelPath));
-				}else{
+			List<Object> incompleteObjects = getIncompleteDelcarations(generationValueGetter, modelPackage, element);
+			
+			List<Object> parentObjects = generationValueGetter.getValues(PARENT_OBJECTS_TRACKER, element);
+			
+			List<Object> declarations= new ArrayList<Object>();
+			for(Object object: values){
+				if(object instanceof SimpleEntry){
+					SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
 					Object value= entry.getValue();
-					if(value instanceof String== false){
+					Object key = entry.getKey();
+					if(value instanceof String== false|| (!parentObjects.contains(key)&& incompleteObjects.contains(key))){
 						continue;
 					}
+					
+					if(all.contains(value)){
+						continue;
+					}
+					
+					all.add(value);
 					declarations.add(value);
 				}
 			}
+			
+			if(!declarationContents.toString().isEmpty()&& !declarations.isEmpty()){
+				declarationContents.append(CommonConstants.NEW_LINE);
+			}
+			
+			declarationContents.append(GenerationUtil.listToGeneratedString(0, 0, declarations));
+			
+			setReferenceDetails(generationValueGetter, ICppDefinitions.HEADER_INCLUDES_TRACKER, element, false, declarationContents, librariesIncludes, librariesUses);
 		}
 		
-		String contents= GenerationUtil.listToGeneratedString(0, 0, declarations);
-		String incompleteContents= GenerationUtil.listToGeneratedString(0, 0, incompleteDeclaration);
+		return generationValueGetter.use(ICppDefinitions.INCLUDES_DECLARATIONS, declarationContents.toString(), librariesIncludes.toString(), 
+				librariesUses.toString());
+	}
+
+	@GenerationPoint(generationPoint = ICppDefinitions.BODY_INCLUDES)
+	public static String getBodyIncludes(@GenerationRegistry final GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object baseElement,
+			@GenerationLoopElement Object modelPackage,
+			@GenerationArgument(id= IModelingConstants.DEPENDS_LIST) List<Object> collections){
 		
-		if(!contents.isEmpty()&& !incompleteContents.isEmpty()){
-			contents= contents+ CommonConstants.NEW_LINE;
+		List<Object> elements= new ArrayList<Object>();
+		if(collections!= null&& !collections.isEmpty()){
+			elements.addAll(collections);
+		}else{
+			elements.add(baseElement);
 		}
-		contents= contents+ incompleteContents;
 		
-		return getIncludedReferences(generationValueGetter, contents, ICppDefinitions.BODY_INCLUDES_TRACKER, element, false);
+		StringBuffer declarationContents= new StringBuffer();
+		StringBuffer librariesIncludes= new StringBuffer();
+		StringBuffer librariesUses= new StringBuffer();
+		
+		List<Object> all= new ArrayList<Object>();
+		
+		for(final Object element: elements){
+			List<Object> values = generationValueGetter.getValues(ICppDefinitions.BODY_INCLUDES_TRACKER, element);
+			List<Object> incompleteObjects = getIncompleteDelcarations(generationValueGetter, modelPackage, element);
+			
+			List<Object> declarations= new ArrayList<Object>();
+			List<Object> incompleteDeclaration= new ArrayList<Object>();
+			
+			List<SimpleEntry<?, ?>> sortedValues= new ArrayList<SimpleEntry<?, ?>>();
+			for(Object object: values){
+				if(object instanceof SimpleEntry){
+					sortedValues.add((SimpleEntry<?, ?>) object);
+				}
+			}
+			
+			Collections.sort(sortedValues, new Comparator<SimpleEntry<?, ?>>() {
+
+				@Override
+				public int compare(SimpleEntry<?, ?> entry1, SimpleEntry<?, ?> entry2) {
+					int entry1Priority= ((Integer)generationValueGetter.getValues(IModelingDecisions.DEPENDS_PRIORITY, entry1, element).get(0)).intValue();
+					int entry2Priority= ((Integer)generationValueGetter.getValues(IModelingDecisions.DEPENDS_PRIORITY, entry2, element).get(0)).intValue();
+					
+					if(entry1Priority== entry2Priority){
+						return 0;
+					}
+					
+					return entry1Priority>entry2Priority?-1:1;
+				}
+				
+			});
+			
+			for(Object object: values){
+				if(object instanceof SimpleEntry){
+					SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
+					Object key = entry.getKey();
+					if(incompleteObjects.contains(key)){
+						String modelPath = generationValueGetter.generationPointString(key, IModelingDecisions.MODEL_PATH);
+						String typeName = generationValueGetter.getString(key, IModelingElementDefinitions.NAME);
+						incompleteDeclaration.add(generationValueGetter.use(ICppDefinitions.INCLUDE_STATEMENT, typeName, modelPath));
+					}else{
+						Object value= entry.getValue();
+						if(value instanceof String== false){
+							continue;
+						}
+						
+						if(all.contains(value)){
+							continue;
+						}
+						
+						all.add(value);
+						declarations.add(value);
+					}
+				}
+			}
+			
+			if(!declarations.isEmpty()){
+				if(!declarationContents.toString().isEmpty()){
+					declarationContents.append(CommonConstants.NEW_LINE);
+				}
+				
+				declarationContents.append(GenerationUtil.listToGeneratedString(0, 0, declarations));
+			}
+			
+			String incompleteContents= GenerationUtil.listToGeneratedString(0, 0, incompleteDeclaration);
+			
+			if(!declarationContents.toString().isEmpty()&& !incompleteContents.isEmpty()){
+				declarationContents.append(CommonConstants.NEW_LINE);
+			}
+			declarationContents.append(incompleteContents);
+			
+			setReferenceDetails(generationValueGetter, ICppDefinitions.BODY_INCLUDES_TRACKER, element, false, declarationContents, librariesIncludes, librariesUses);
+		}
+		
+		return generationValueGetter.use(ICppDefinitions.INCLUDES_DECLARATIONS, declarationContents.toString(), librariesIncludes.toString(), 
+				librariesUses.toString());
 	}
 	
-	public static String getIncludedReferences(GenerationPolicyRegistry generationValueGetter, String contents, String id, Object element, boolean out){
-		String includes= contents;
-		
-		String librariesUses= CommonConstants.BLANK;
-		String librariesIncludes= CommonConstants.BLANK;
+	public static void setReferenceDetails(GenerationPolicyRegistry generationValueGetter, String id, Object element, boolean out,
+			StringBuffer contents, StringBuffer librariesIncludes, StringBuffer librariesUses){
 		
 		List<Object> values = generationValueGetter.getValues(ICppModelingDecisions.CPP_USED_LIBRARIES, element);
 		List<Object> outValues = generationValueGetter.getValues(ICppModelingDecisions.CPP_USED_LIBRARIES, element, Boolean.TRUE);
@@ -217,37 +278,41 @@ public class CPPDependsPointsHandler{
 				use= CPPCommonConstants.DECLARATION_COMMON_PREFIX+ use;
 			}
 			
-			librariesUses = librariesUses+ use;
+			librariesUses.append(use);
 			
 			String implementationDetails = GenerationUtil.getImplementationDetails(generationValueGetter, id+ library, element);
 			if(!implementationDetails.isEmpty()){
-				librariesIncludes= librariesIncludes+ implementationDetails;
+				librariesIncludes.append(implementationDetails);
 			}
 			
 			
 			if(iterator.hasNext()){
-				librariesUses= librariesUses+ CommonConstants.NEW_LINE;
+				librariesUses.append(CommonConstants.NEW_LINE);
 				
 				if(!implementationDetails.isEmpty()){
-					librariesIncludes= librariesIncludes+ CommonConstants.NEW_LINE;
+					librariesIncludes.append(CommonConstants.NEW_LINE);
 				}
 			}
 		}
 		
 		String directDepends = GenerationUtil.getImplementationDetails(generationValueGetter, DEPEND_DIRECT_INCLUDES, element);
 		if(!directDepends.isEmpty()){
-			if(!librariesIncludes.isEmpty()){
-				librariesIncludes= librariesIncludes+ CommonConstants.NEW_LINE;
+			if(!librariesIncludes.toString().isEmpty()){
+				librariesIncludes.append(CommonConstants.NEW_LINE);
 			}
-			librariesIncludes+= directDepends;
+			librariesIncludes.append(directDepends);
 		}
 		
-		return generationValueGetter.use(ICppDefinitions.INCLUDES_DECLARATIONS, out?CommonConstants.BLANK:includes, librariesUses, librariesIncludes);
+		
+		if(out){
+			contents.delete(0, contents.length());
+		}
 	}
 	
 	@GenerationPoint(generationPoint = ICppDefinitions.INCOMPLETE_DECLARATIONS)
 	public static String inlineDeclarations(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationLoopElement Object modelPackage, @GenerationBaseElement Object element){
+			@GenerationLoopElement Object modelPackage, @GenerationBaseElement Object element,
+			@GenerationArgument(id= IModelingConstants.DEPENDS_LIST) List<Object> collections){
 		
 		List<Object> incompleteDEfinitions = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_NAMESPACES_DEFNITION, element, modelPackage);
 		HashMap<Object, SimpleEntry<?, ?>> map= new HashMap<Object, SimpleEntry<?, ?>>();
@@ -260,6 +325,9 @@ public class CPPDependsPointsHandler{
 		SimpleEntry<?, ?> simpleEntry = map.get(element);
 		
 		Map<SimpleEntry<?, ?>, HashSet<String>> outsideDeclarations= new HashMap<SimpleEntry<?, ?>, HashSet<String>>();
+		
+		
+		List<Object> generationTypes = generationValueGetter.getValues(IModelingConstants.GENERATION_HELPER_TYPE);
 		
 		List<Object> values = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_DECLARATIONS, element);
 		for(Object object: values){
@@ -300,7 +368,14 @@ public class CPPDependsPointsHandler{
 			}
 		}
 		
-		String implementationDetails= getExtenrnalIncompleteDefinitions(generationValueGetter, modelPackage, element);
+		List<Object> processingObjects= new ArrayList<Object>();
+		if(collections!= null&& !collections.isEmpty()){
+			processingObjects.addAll(collections);
+		}else{
+			processingObjects.add(element);
+		}
+		
+		String implementationDetails= getExtenrnalIncompleteDefinitions(generationValueGetter, modelPackage, processingObjects);
 		
 		Iterator<SimpleEntry<?, ?>> iterator = outsideDeclarations.keySet().iterator();
 		while(iterator.hasNext()){
@@ -318,6 +393,10 @@ public class CPPDependsPointsHandler{
 		String externalReferences = CommonConstants.BLANK;
 		List<Object> external = generationValueGetter.getValues(ICppModelingDecisions.CPP_USED_LIBRARIES, element, Boolean.TRUE);
 		for(Object item: external){
+			if(item.toString().isEmpty()){
+				continue;
+			}
+			
 			externalReferences= externalReferences+
 					generationValueGetter.use(ICppDefinitions.USE_NAMESPACE, CPPCommonConstants.DECLARATION_COMMON_PREFIX+item)+ CommonConstants.NEW_LINE;
 		}
@@ -337,8 +416,13 @@ public class CPPDependsPointsHandler{
 	}
 
 	private static String getExtenrnalIncompleteDefinitions(GenerationPolicyRegistry generationValueGetter,
-			Object modelPackage, Object element) {
-		List<Object> extenralDefinitions = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_EXTERNAL_NAMESPACES_DEFNITION, element, modelPackage);
+			Object modelPackage, List<Object> elements) {
+		
+		
+		List<Object> extenralDefinitions= new ArrayList<Object>();
+		for(Object element: elements){
+			extenralDefinitions.addAll(generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_EXTERNAL_NAMESPACES_DEFNITION, element, modelPackage));
+		}
 		
 		Map<SimpleEntry<?,?>, List<String>> map= new HashMap<SimpleEntry<?, ?>, List<String>>();
 		for(Object object: extenralDefinitions){
@@ -396,33 +480,49 @@ public class CPPDependsPointsHandler{
 
 	@GenerationPoint(generationPoint = ICppDefinitions.INCOMPLETE_TYPES_DEFNITION)
 	public static String incompleteTypeDefinition(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationLoopElement Object modelPackage, @GenerationBaseElement Object element) {
+			@GenerationLoopElement Object modelPackage, @GenerationBaseElement Object baseElement,
+			@GenerationArgument(id= IModelingConstants.DEPENDS_LIST) List<Object> collections) {
+		 
+		List<Object> elements= new ArrayList<Object>();
+		if(collections!= null&& !collections.isEmpty()){
+			elements.addAll(collections);
+		}else{
+			elements.add(baseElement);
+		}
 		
-		List<Object> values = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_DECLARATIONS, element);
 		List<Object> declarations= new ArrayList<Object>();
-		for(Object object: values){
-			if(object instanceof SimpleEntry){
-				SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
-				Object key = entry.getKey();
-				
-				List<Object> types = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, key);
-				
-				Object value= entry.getValue();
-				if(value instanceof String== false){
-					continue;
+		
+		for(Object element: elements){
+			List<Object> values = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_DECLARATIONS, element);
+			
+			for(Object object: values){
+				if(object instanceof SimpleEntry){
+					SimpleEntry<?, ?> entry= (SimpleEntry<?, ?>) object;
+					Object key = entry.getKey();
+					
+					List<Object> types = generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, key);
+					
+					Object value= entry.getValue();
+					if(value instanceof String== false){
+						continue;
+					}
+					
+					if(types.isEmpty()){
+						continue;
+					}
+					
+					Object type = types.get(0);
+					
+					if(type.equals(element)){
+						continue;
+					}
+					
+					if(declarations.contains(value)){
+						continue;
+					}
+					
+					declarations.add(value);
 				}
-				
-				if(types.isEmpty()){
-					continue;
-				}
-				
-				Object type = types.get(0);
-				
-				if(type.equals(element)){
-					continue;
-				}
-				
-				declarations.add(value);
 			}
 		}
 		
@@ -436,7 +536,7 @@ public class CPPDependsPointsHandler{
 			return implementationDetails;
 		}
 		
-		return implementationDetails+ CommonConstants.NEW_LINE+ CommonConstants.NEW_LINE;
+		return implementationDetails+ CommonConstants.NEW_LINE;
 	}
 	
 	private static List<Object> getIncompleteDelcarations(GenerationPolicyRegistry generationValueGetter,Object modelPackage, Object element) {
@@ -1046,7 +1146,7 @@ public class CPPDependsPointsHandler{
 		Object typeObject = types.get(0);
 		String typeNamespace= generationValueGetter.getString(typeObject, IModelingElementDefinitions.NAMESPACE);
 		String containerNamespace= generationValueGetter.getString(container, IModelingElementDefinitions.NAMESPACE);
-		if(typeNamespace!= containerNamespace){
+		if(typeNamespace==null|| typeNamespace.isEmpty()?(containerNamespace!= null&& !containerNamespace.isEmpty()):typeNamespace!= containerNamespace){
 			generationValueGetter.generationPointString(container, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, typeNamespace),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_OUTSIDE_ARGUMENT, Boolean.TRUE),

@@ -236,6 +236,7 @@ public interface ICppDefinitions {
 	
 	public final static String PRE_PROCESSING_DEFINITION_NAME= "cpp.pre.processing.name"; //$NON-NLS-1$
 	public final static String PREDEFINED_PACKAGE_CONTENTS= "cpp.package.prdefined.contents";   //$NON-NLS-1$
+	public final static String PREDEFINED_PACKAGE_IMPORTS= "cpp.package.prdefined.imports";   //$NON-NLS-1$
 	
 	public final static String POINTER_STRING= "cpp.pointer.string"; //$NON-NLS-1$
 	public final static String REFERENCE_STRING= "cpp.reference.string"; //$NON-NLS-1$
@@ -260,4 +261,11 @@ public interface ICppDefinitions {
 	public final static String CONSTRUCTOR_EXTENDED_USED_PARAMETERS_LIST= "cpp.constructor.extended.used.all.parameters.list";	 //$NON-NLS-1$
 	
 	public final static String MAIN_CONTENTS= "cpp.main.contents";	 //$NON-NLS-1$
+	
+	public final static String ENUM_IMPLEMENTATION= "cpp.element.enum.implementation"; //$NON-NLS-1$
+	public final static String ENUM_VALUE= "cpp.element.enum.value"; //$NON-NLS-1$
+	public final static String ENUM_CASE_STRING= "cpp.structure.enum.case.string"; //$NON-NLS-1$
+	public static final String ATTRIBUTE_DECLARATION = "attributeDeclaration"; //$NON-NLS-1$
+	public static final String STRUCT_DECLARATION = "structDeclaration"; //$NON-NLS-1$
+	public static final String INTERNAL_DEFINED_TYPES = "internalDefinedTypes"; //$NON-NLS-1$
 }

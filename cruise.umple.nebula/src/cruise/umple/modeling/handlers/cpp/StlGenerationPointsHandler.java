@@ -125,22 +125,26 @@ public class StlGenerationPointsHandler{
 		return !isConstant;
 	}
 	
-	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.COPY_CONSTRUCTOR_GENERATION_POINT, priority= IGenerationPointPriorityConstants.HIGHEST,  
+	@GenerationPoint(generationPoint = {IModelingConstructorDefinitionsConstants.COPY_CONSTRUCTOR_GENERATION_POINT, 
+			ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEPEND, ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_DEPEND}, priority= IGenerationPointPriorityConstants.HIGHEST,  
 			unique= true)
 	public static void dataTimeConditionsCopyConstructor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
-			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName){
+			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationArgument Object containerObject){
 		if(!Arrays.asList(new String[] {ISTLConstants.TIME, ISTLConstants.DATE}).contains(typeName)){
 			return;
 		}
 		
+		Object container= containerObject!= null? containerObject: parent;
+		
 		//Now, we are using STD library
-		generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+		generationValueGetter.generationPointString(container, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.C_TIME), 
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		
-		generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
+		generationValueGetter.generationPointString(container, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT,
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.C_TIME), 
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY), 
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
@@ -211,21 +215,25 @@ public class StlGenerationPointsHandler{
 		}
 	}
 	
-	@GenerationPoint(generationPoint = IModelingDecisions.ATTRIBUTE_GENERATION_POINT, priority= IGenerationPointPriorityConstants.HIGH)
+	@GenerationPoint(generationPoint = {IModelingDecisions.ATTRIBUTE_GENERATION_POINT, 
+			ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEPEND, ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_DEPEND}, priority= IGenerationPointPriorityConstants.HIGH)
 	public static void basicAttributeDeclaration(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationArgument Object containerObject,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
 		if(!ISTLConstants.STRING.equals(typeName)){
 			return;
 		}
 		
-		generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
+		Object container= containerObject!= null? containerObject: parent;
+		
+		generationValueGetter.generationPointString(container, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.STRING),
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
 		
-		generationValueGetter.generationPointString(parent, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
+		generationValueGetter.generationPointString(container, ICppModelingDecisions.CPP_LIBRARY_DEPENDS_GENERATION_POINT, 
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_INCLUDE_ARGUMENT, ISTLConstants.STRING),
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));

@@ -32,7 +32,7 @@ public abstract class UmpleCppPoliciesProcessor extends CppPoliciesProcessor{
 		GenerationPolicyRegistry generationPolicyRegistry = this.getGenerationPolicyRegistry();
 		generationPolicyRegistry.registerGenerationPolicy(new UmpleModelGenerationPolicy());
 		generationPolicyRegistry.registerGenerationPolicy(new UmpleStatemachineGenerationPolicy());
-		
+		generationPolicyRegistry.registerGenerationPolicy(new UmpleStructureGenerationPolicy());
 	}
 	
 	@Override

@@ -66,7 +66,6 @@ public class CppStatemachinePointsHandler{
 	private final static String SETTERS_IMPLEMENTATION= "cpp.setters.implementation"; //$NON-NLS-1$
 	private final static String FULL_NAME_IMPLEMENTATION= "cpp.full.name.implementation"; //$NON-NLS-1$
 	
-	private final static String ENUM_IMPLEMENTATION= "cpp.enum.implementation"; //$NON-NLS-1$
 	private final static String AUTO_STATES= "cpp.auto.states.internal"; //$NON-NLS-1$
 	
 	private final static String TIMER_STATES= "cpp.timer.states.internal"; //$NON-NLS-1$
@@ -187,16 +186,6 @@ public class CppStatemachinePointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_VISIBILITY_ARGUMENT, VisibilityConstants.PRIVATE));
 	}
 	
-	@GenerationPoint(generationPoint = ICppDefinitions.INCOMPLETE_TYPES_DEFNITION, priority= IGenerationPointPriorityConstants.HIGH)
-	public static String enumsImplementation(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationBaseElement Object element){
-		String implementationAndSeparateDetails = GenerationUtil.getImplementationAndSeparateDetails(generationValueGetter,ENUM_IMPLEMENTATION, 0, element);
-		if(implementationAndSeparateDetails.isEmpty()){
-			return implementationAndSeparateDetails;
-		}
-		return CommonConstants.NEW_LINE+ implementationAndSeparateDetails+ CommonConstants.NEW_LINE;
-	}
-	
 	@GenerationPoint(generationPoint = ICppDefinitions.PRIVATE_DECLARATIONS, group= IModelingStatemachinePriorityHandler.ENUM_ATTRIBUTES)
 	public static String publicStaicAttributesDeclaraions(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationBaseElement Object element){
@@ -299,7 +288,7 @@ public class CppStatemachinePointsHandler{
 			String stringValues = generationValueGetter.generationPointString(statemachine, ICppStatemachinesDefinitions.ENUM_CASES_STRING,
 					Boolean.valueOf(isNested));
 			
-			String enumImplementation = generationValueGetter.generate(ICppStatemachinesDefinitions.ENUM_IMPLEMENTATION, uClass,
+			String enumImplementation = generationValueGetter.generate(ICppDefinitions.ENUM_IMPLEMENTATION, uClass,
 					CommonConstants.UNDERSCORE+ statemachineQualifiedTypeName, 
 					enumValues, first, second,stringValues, GenerationArgumentDescriptor.arg(ICppDefinitions.OWING_NAMESPACE_OBJECT, uClass));
 			
@@ -308,7 +297,7 @@ public class CppStatemachinePointsHandler{
 					GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 					GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
 			
-			generationValueGetter.addValue(ENUM_IMPLEMENTATION, enumImplementation, uClass);
+			generationValueGetter.addValue(ICppDefinitions.ENUM_IMPLEMENTATION, enumImplementation, uClass);
 			
 			String declaration = generationValueGetter.generate(ICppDefinitions.DECLARE_STATEMENET, statemachine,
 					GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_TYPE_ARGUMENT, languageStatemachineQualifiedTypeName),
@@ -1275,7 +1264,7 @@ public class CppStatemachinePointsHandler{
 		
 		String values= CommonConstants.BLANK;
 		if(isNested){
-			values= values+ generationValueGetter.use(ICppStatemachinesDefinitions.ENUM_CASE_STRING, CPPCommonConstants.NIL);
+			values= values+ generationValueGetter.use(ICppDefinitions.ENUM_CASE_STRING, CPPCommonConstants.NIL);
 		}
 		
 		if(!values.isEmpty()){
@@ -1288,7 +1277,7 @@ public class CppStatemachinePointsHandler{
 		while(iterator.hasNext()){
 			Object next = iterator.next();
 			String value= generationValueGetter.getString(next, IModelingElementDefinitions.NAME);
-			values= values+ generationValueGetter.use(ICppStatemachinesDefinitions.ENUM_CASE_STRING, value);
+			values= values+ generationValueGetter.use(ICppDefinitions.ENUM_CASE_STRING, value);
 			if(iterator.hasNext()){
 				values= values+ CommonConstants.NEW_LINE;
 			}

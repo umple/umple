@@ -622,9 +622,15 @@ public class CPPBaseGenerationPointsHandler{
 			}
 		}
 		
+		List<Object> visited= new ArrayList<Object>();
 		for(int index=0; index<roots.size(); index++){
+			List<String> list = roots.get(index);
+			if(visited.contains(list)){
+				continue;
+			}
+			visited.add(list);
 			generationValueGetter.addUniqueValue(ICppDefinitions.NAMESPACES_ROOTS, 
-					new SimpleEntry<Object, Object>(roots.get(index), objects.get(index)), model);
+					new SimpleEntry<Object, Object>(list, objects.get(index)), model);
 		}
 	}
 	
@@ -1093,6 +1099,7 @@ public class CPPBaseGenerationPointsHandler{
 	public static boolean isPointer(@GenerationProcedureParameter(id = IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType,
 			@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_STRING) String typeString,
 			@GenerationArgument(id= IModelingConstants.NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT) Object type,
 			@GenerationArgument(id= IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT) Object dependType,
 			@GenerationLoopElement Object modelPackage){
@@ -1101,6 +1108,7 @@ public class CPPBaseGenerationPointsHandler{
 		if(!isPrimitiveType){
 			//Only set pointers for the defined classes; otherwise, it will be the user's responsability to add custom primitive types or so to get it defined as pointers
 			return !generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeName).isEmpty()||
+					(typeString!= null&& !typeString.isEmpty()&& !generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, typeString).isEmpty())||
 					!generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, type).isEmpty()||
 					!generationValueGetter.getValues(IModelingConstants.TYPES_TRACKER, modelPackage, dependType).isEmpty();
 		}
@@ -1110,6 +1118,7 @@ public class CPPBaseGenerationPointsHandler{
 	@GenerationPoint(generationPoint = IModelingConstants.NORMALIZED_TYPE_NAME)
 	public static String typeName(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationArgument(id = IModelingConstants.NORMALIZED_TYPE_STRING) String typeString,
 			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
 			@GenerationProcedureParameter(id = ICppDefinitions.IS_POINTER_TYPE) boolean isPointer,
 			@GenerationBaseElement Object element,
@@ -1122,7 +1131,7 @@ public class CPPBaseGenerationPointsHandler{
 			@GenerationLoopElement Object modelPackage,
 			@GenerationArguments Object... arguments){
 		
-		String normalizedType= typeName;
+		String normalizedType= typeString!= null&& !typeString.isEmpty()?typeString: typeName;
 		boolean isConstParameter= false;
 		
 		setParameters: {
@@ -1634,6 +1643,16 @@ public class CPPBaseGenerationPointsHandler{
 		}
 		
 		return contents;
+	}
+	
+	@GenerationPoint(generationPoint = ICppDefinitions.INCOMPLETE_TYPES_DEFNITION, priority= IGenerationPointPriorityConstants.HIGH)
+	public static String enumsImplementation(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element){
+		String implementationAndSeparateDetails = GenerationUtil.getImplementationAndSeparateDetails(generationValueGetter,ICppDefinitions.ENUM_IMPLEMENTATION, 0, element);
+		if(implementationAndSeparateDetails.isEmpty()){
+			return implementationAndSeparateDetails;
+		}
+		return CommonConstants.NEW_LINE+ implementationAndSeparateDetails+ CommonConstants.NEW_LINE;
 	}
 	
 	//////////////////////////////////////////////////////////////Experimental////////////////////////////////////////////////////////////////////////

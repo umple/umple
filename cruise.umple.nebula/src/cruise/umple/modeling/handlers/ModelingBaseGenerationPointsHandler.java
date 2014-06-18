@@ -128,7 +128,7 @@ public class ModelingBaseGenerationPointsHandler {
 		return generationValueGetter.getList(operationObject, IModelingElementDefinitions.OPERATION_PARAMETERS);
 	}
 	
-	@LoopProcessorAnnotations(aspect= LoopAspectConstants.BEFORE, loopProcessorAnnotations ={ 
+	@LoopProcessorAnnotations(aspect= LoopAspectConstants.INITIAL, loopProcessorAnnotations ={ 
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
 	})

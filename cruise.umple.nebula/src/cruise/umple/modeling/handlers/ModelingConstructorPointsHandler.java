@@ -191,8 +191,8 @@ public class ModelingConstructorPointsHandler{
 			//other call
 			
 			//Languages such as C++ require initliazing objects, and if we did not do that in the constructor, this will yield to an error. We have this flag, when we rely
-			//on the constructorBody segment to do that, but it will be the responsability for the caller to make sure that their body will initilaize the variable
 			if(!ignoreInitilization|| constructorBody== null|| constructorBody.isEmpty()){
+			//on the constructorBody segment to do that, but it will be the responsability for the caller to make sure that their body will initilaize the variable
 				if(!(filterDefaultAssign&& IModelingConstructorDefinitionsConstants.DEFAULT_ASSIGN.equals(id))){
 					contents= contents+ generationValueGetter.generate(id, element, typeParameterName, constructorArguments);
 					
