@@ -54,6 +54,16 @@ public class UmpleParserTest
 
   }
   
+  //Issue 595
+  @Test
+  public void unknownInterface()
+  {
+	  assertHasWarningsParse("014_unknownInterface.ump", 39);
+	  assertHasWarningsParse("014_unknownInterface2.ump", 39);
+	  
+  }
+
+  
   @Test
   public void emptyComment()
   {

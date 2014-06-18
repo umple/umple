@@ -1,0 +1,8 @@
+interface A {
+  isA B;
+}
+
+interface B
+{
+  isA C;
+}
