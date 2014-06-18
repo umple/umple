@@ -33,6 +33,7 @@ public interface IModelingConstants {
 	
 	public final static String NORMALIZED_DEFAULT_VALUE= "normalized.defaultValue"; //$NON-NLS-1$
 	
+	public final static String GENERATION_HELPER_TYPE= "generation.helper.type"; //$NON-NLS-1$
 	public final static String TYPES_TRACKER= "cpp.types.tracker"; //$NON-NLS-1$
 	public final static String NAMESPACES_TRACKER= "cpp.namespaces.tracker"; //$NON-NLS-1$
 	public final static String TYPES_BY_NAMESPACES_TRACKER= "cpp.types.by.namespaces.tracker"; //$NON-NLS-1$
@@ -121,6 +122,7 @@ public interface IModelingConstants {
 	
 	public final static String NORMALIZED_NAME= "modeling.normalized.name"; //$NON-NLS-1$
 	public final static String NORMALIZED_TYPE_NAME= "modeling.normalizedTypeName"; //$NON-NLS-1$
+	public final static String NORMALIZED_TYPE_STRING= "modeling.normalizedTypeString"; //$NON-NLS-1$
 	public final static String NORMALIZED_VISIBILITY= "modeling.normalized.visibility"; //$NON-NLS-1$
 	public final static String NORMALIZED_TYPE_IS_CONSTRUCTION_ARGUMENT= "modeling.normalizedTypeName.is.construction.argument"; //$NON-NLS-1$
 	public final static String NORMALIZED_TYPE_CRUD_TYPE_ARGUMENT= "modeling.normalizedTypeName.crud.type.argument"; //$NON-NLS-1$
@@ -137,4 +139,6 @@ public interface IModelingConstants {
 	public final static String WAS_ADDED= "wasAdded"; //$NON-NLS-1$
 	public final static String WAS_SET= "wasSet"; //$NON-NLS-1$
 	public final static String WAS_REMOVED= "wasRemoved"; //$NON-NLS-1$
+	
+	public final static String DEPENDS_LIST= "dependsList"; //$NON-NLS-1$
 }

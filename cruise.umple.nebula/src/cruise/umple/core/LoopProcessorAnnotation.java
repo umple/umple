@@ -45,6 +45,7 @@ public @interface LoopProcessorAnnotation {
 	}
 	
 	public interface LoopAspectConstants{
+		public static final int INITIAL= -2;
 		public static final int BEFORE= -1;
 		public static final int DEFAULT= 0;
 		public static final int PRE= 10;

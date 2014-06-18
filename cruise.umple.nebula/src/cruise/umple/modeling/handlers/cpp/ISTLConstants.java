@@ -29,6 +29,7 @@ public interface ISTLConstants {
 	
 	public static final String LIST= "list"; //$NON-NLS-1$
 	public static final String ALGORITHM= "algorithm"; //$NON-NLS-1$
+	public static final String MAP= "map"; //$NON-NLS-1$
 	public static final String MEMORY= "memory"; //$NON-NLS-1$
 	public static final String BINARY_FUNCTION= "binary_function"; //$NON-NLS-1$
 	public static final String IO_STREAM= "iostream"; //$NON-NLS-1$

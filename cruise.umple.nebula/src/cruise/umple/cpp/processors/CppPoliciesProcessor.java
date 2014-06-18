@@ -27,6 +27,7 @@ import cruise.umple.cpp.core.ContentsDescriptor;
 import cruise.umple.cpp.core.IGenerationCommonConstants;
 import cruise.umple.cpp.jet.CppHeader;
 import cruise.umple.cpp.jet.CppStatemachine;
+import cruise.umple.cpp.jet.CppStructure;
 import cruise.umple.cpp.jet.util.CppAddHandler;
 import cruise.umple.cpp.jet.util.CppAttributeGetterImpl;
 import cruise.umple.cpp.jet.util.CppAttributeSetterImpl;
@@ -50,6 +51,7 @@ import cruise.umple.modeling.handlers.cpp.CppCustomGetterFunctionsPointsHandler;
 import cruise.umple.modeling.handlers.cpp.CppStatemachinePointsHandler;
 import cruise.umple.modeling.handlers.cpp.ICppModelingPriorityHandler;
 import cruise.umple.modeling.handlers.cpp.StlGenerationPointsHandler;
+import cruise.umple.modeling.handlers.cpp.StructurePointsHandler;
 
 abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 	
@@ -85,6 +87,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		new CppAttributeSetterImpl().init(this.getGenerationPolicyRegistry());
 		new CppHeader().init(this.getGenerationPolicyRegistry());
 		new CppStatemachine().init(this.getGenerationPolicyRegistry());
+		new CppStructure().init(this.getGenerationPolicyRegistry());
 		new CppConstructor().init(this.getGenerationPolicyRegistry());
 		new CppStlTemplateHelper().init(this.getGenerationPolicyRegistry());
 		
@@ -109,6 +112,7 @@ abstract public class CppPoliciesProcessor implements IPoliciesProcessor{
 		this.getGenerationPolicyRegistry().register(new CPPContentsPointsHandler());
 		
 		this.getGenerationPolicyRegistry().register(new CppStatemachinePointsHandler());
+		this.getGenerationPolicyRegistry().register(new StructurePointsHandler());
 		
 		//this.getGenerationPolicyRegistry().register(new CppTestsPointsHandler());
 	}
