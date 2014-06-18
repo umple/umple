@@ -45,19 +45,19 @@ class SimpleMetricsGenerator {
     // GET DATA ABOUT LINES (CODE, BLANKS, COMMENTS)
     CodeMetrics codemetrics = new CodeMetrics();
     codemetrics.setModel(model);
-    codemetrics.setCode(code);
-    codemetrics.calculate(); 
+    codemetrics.setResultCode(code);
+    codemetrics.calculate();
     
     // GET DATA FROM CLASSES
     ClassMetrics classmetrics = new ClassMetrics();
     classmetrics.setModel(model);
-    classmetrics.setCode(codemetrics.getCode());
+    classmetrics.setResultCode(code);
     classmetrics.calculate(); 
     
     // GET DATA FROM STATE MACHINES
     StateMachineMetrics SMMeasure = new StateMachineMetrics();    
     SMMeasure.setModel(model);
-    SMMeasure.setCode(classmetrics.getCode());
+    SMMeasure.setResultCode(code);
     SMMeasure.calculate();
     
     model.setCode(code.toString());
