@@ -46,13 +46,13 @@ class StateMachineMetrics{
   depend java.text.*;
   depend java.util.*;
   isA SimpleMetricsGenerator;
-  StringBuilder input = null;
+  StringBuilder resultCode = new StringBuilder();
   UmpleModel model=null;
 
   void calculate() {
     // Output basic file header
       
-    input.append("<h1>State Machine (SM) Measures</h1>");
+    resultCode.append("<h1>State Machine (SM) Measures</h1>");
     
     // Preparing Head (columns) of output file
     List<String>title = new ArrayList<String>();
@@ -68,13 +68,13 @@ class StateMachineMetrics{
     title.add(" #Cycles ");
     title.add(" #Self Cycles ");
     
-    input.append("<table border=\"1\"><tbody>\n");    
+    resultCode.append("<table border=\"1\"><tbody>\n");    
     
-    input.append("<tr>");
+    resultCode.append("<tr>");
     for (int i=0;i<title.size();i++){
-      _genCell(0,input,title.get(i));
+      _genCell(0,resultCode,title.get(i));
     }
-    input.append("</tr>");
+    resultCode.append("</tr>");
 
     DecimalFormat df = new DecimalFormat( "###,##0.0###");
 
@@ -85,23 +85,23 @@ class StateMachineMetrics{
       
       if (uClass!=null) {
 
-        input.append("<tr>");
-        genCellString(input, uClass.getName());
+        resultCode.append("<tr>");
+        genCellString(resultCode, uClass.getName());
 
         // CALCULATING STATE MACHINE METRICS
         countPerClass.calculate(uClass);
       
         // writing and formating string to record in output file
-        genCellInt(input,countPerClass.getTotalStateMachinesPerClass());
-        genCellInt(input,countPerClass.getTotalStatesPerClass());
-        genCellInt(input,countPerClass.getTotalTransitionsPerClass());
-        genCellInt(input,countPerClass.getTotalDifferentTransitionsPerClass());
-        genCellInt(input,countPerClass.getTotalEventsPerClass());
-        genCellInt(input,countPerClass.getTotalGuardsPerClass());
-        genCellInt(input,countPerClass.getTotalActionsPerClass());
-        genCellInt(input,countPerClass.getTotalNestedStateMachinePerClass());
-        genCellInt(input,countPerClass.getTotalCyclesPerClass());
-        genCellInt(input,countPerClass.getTotalSelfCyclesPerClass());
+        genCellInt(resultCode,countPerClass.getTotalStateMachinesPerClass());
+        genCellInt(resultCode,countPerClass.getTotalStatesPerClass());
+        genCellInt(resultCode,countPerClass.getTotalTransitionsPerClass());
+        genCellInt(resultCode,countPerClass.getTotalDifferentTransitionsPerClass());
+        genCellInt(resultCode,countPerClass.getTotalEventsPerClass());
+        genCellInt(resultCode,countPerClass.getTotalGuardsPerClass());
+        genCellInt(resultCode,countPerClass.getTotalActionsPerClass());
+        genCellInt(resultCode,countPerClass.getTotalNestedStateMachinePerClass());
+        genCellInt(resultCode,countPerClass.getTotalCyclesPerClass());
+        genCellInt(resultCode,countPerClass.getTotalSelfCyclesPerClass());
 
       
         // Sum all values per class in Totals
@@ -116,90 +116,89 @@ class StateMachineMetrics{
         countPerClass = new CountSM(); // Class that keep values of counting about State Machine Metrics
       }
         
-      input.append("</tr>");        
+      resultCode.append("</tr>");        
     }
 
     // printing totals
-    input.append("<tr>");    
-    genCellString(input,"TOTAL");
-    genCellInt(input,countTotals.getTotalStateMachines());
-    genCellInt(input,countTotals.getTotalStates());
-    genCellInt(input,countTotals.getTotalTransitions());
-    genCellInt(input,countTotals.getTotalDifferentTransitions());
-    genCellInt(input,countTotals.getTotalEvents());
-    genCellInt(input,countTotals.getTotalGuards());
-    genCellInt(input,countTotals.getTotalActions());
-    genCellInt(input,countTotals.getTotalNestedStateMachine());
-    genCellInt(input,countTotals.getTotalCycles());
-    genCellInt(input,countTotals.getTotalSelfCycles());
-    input.append("</tr>");
+    resultCode.append("<tr>");    
+    genCellString(resultCode,"TOTAL");
+    genCellInt(resultCode,countTotals.getTotalStateMachines());
+    genCellInt(resultCode,countTotals.getTotalStates());
+    genCellInt(resultCode,countTotals.getTotalTransitions());
+    genCellInt(resultCode,countTotals.getTotalDifferentTransitions());
+    genCellInt(resultCode,countTotals.getTotalEvents());
+    genCellInt(resultCode,countTotals.getTotalGuards());
+    genCellInt(resultCode,countTotals.getTotalActions());
+    genCellInt(resultCode,countTotals.getTotalNestedStateMachine());
+    genCellInt(resultCode,countTotals.getTotalCycles());
+    genCellInt(resultCode,countTotals.getTotalSelfCycles());
+    resultCode.append("</tr>");
       
     // printing averages
     int tc = countTotals.getTotalClass();
     String res;
-    input.append("<tr>");    
-    genCellString(input,"AVERAGE");
-    genCellFloat(input,(float)countTotals.getTotalStateMachines()/tc);
-    genCellFloat(input,(float)countTotals.getTotalStates()/tc);
-    genCellFloat(input,(float)countTotals.getTotalTransitions()/tc);
-    genCellFloat(input,(float)countTotals.getTotalDifferentTransitions()/tc);
-    genCellFloat(input,(float)countTotals.getTotalEvents()/tc);
-    genCellFloat(input,(float)countTotals.getTotalGuards()/tc);
-    genCellFloat(input,(float)countTotals.getTotalActions()/tc);
-    genCellFloat(input,(float)countTotals.getTotalNestedStateMachine()/tc);
-    genCellFloat(input,(float)countTotals.getTotalCycles()/tc);
-    genCellFloat(input, (float)countTotals.getTotalSelfCycles()/tc);
-    input.append("</tr>");
+    resultCode.append("<tr>");    
+    genCellString(resultCode,"AVERAGE");
+    genCellFloat(resultCode,(float)countTotals.getTotalStateMachines()/tc);
+    genCellFloat(resultCode,(float)countTotals.getTotalStates()/tc);
+    genCellFloat(resultCode,(float)countTotals.getTotalTransitions()/tc);
+    genCellFloat(resultCode,(float)countTotals.getTotalDifferentTransitions()/tc);
+    genCellFloat(resultCode,(float)countTotals.getTotalEvents()/tc);
+    genCellFloat(resultCode,(float)countTotals.getTotalGuards()/tc);
+    genCellFloat(resultCode,(float)countTotals.getTotalActions()/tc);
+    genCellFloat(resultCode,(float)countTotals.getTotalNestedStateMachine()/tc);
+    genCellFloat(resultCode,(float)countTotals.getTotalCycles()/tc);
+    genCellFloat(resultCode, (float)countTotals.getTotalSelfCycles()/tc);
+    resultCode.append("</tr>");
 
     // printing MAX values
-    input.append("<tr>");    
-    genCellString(input,"MAX");
-    genCellInt(input,countTotals.getTotalStateMachinesPerClassMax());
-    genCellInt(input,countTotals.getTotalStatesPerClassMax());
-    genCellInt(input,countTotals.getTotalTransitionsPerClassMax());
-    genCellInt(input,countTotals.getTotalDifferentTransitionsPerClassMax());
-    genCellInt(input,countTotals.getTotalEventsPerClassMax());
-    genCellInt(input,countTotals.getTotalGuardsPerClassMax());
-    genCellInt(input,countTotals.getTotalActionsPerClassMax());
-    genCellInt(input,countTotals.getTotalNestedStateMachinePerClassMax());
-    genCellInt(input,countTotals.getTotalCyclesPerClassMax());
-    genCellInt(input,countTotals.getTotalSelfCyclesPerClassMax());
-    input.append("</tr>");    
+    resultCode.append("<tr>");    
+    genCellString(resultCode,"MAX");
+    genCellInt(resultCode,countTotals.getTotalStateMachinesPerClassMax());
+    genCellInt(resultCode,countTotals.getTotalStatesPerClassMax());
+    genCellInt(resultCode,countTotals.getTotalTransitionsPerClassMax());
+    genCellInt(resultCode,countTotals.getTotalDifferentTransitionsPerClassMax());
+    genCellInt(resultCode,countTotals.getTotalEventsPerClassMax());
+    genCellInt(resultCode,countTotals.getTotalGuardsPerClassMax());
+    genCellInt(resultCode,countTotals.getTotalActionsPerClassMax());
+    genCellInt(resultCode,countTotals.getTotalNestedStateMachinePerClassMax());
+    genCellInt(resultCode,countTotals.getTotalCyclesPerClassMax());
+    genCellInt(resultCode,countTotals.getTotalSelfCyclesPerClassMax());
+    resultCode.append("</tr>");    
     
     // printing MIN values
-    input.append("<tr>");      
-    genCellString(input,"MIN");
-    genCellInt(input,countTotals.getTotalStateMachinesPerClassMin());
-    genCellInt(input,countTotals.getTotalStatesPerClassMin());
-    genCellInt(input,countTotals.getTotalTransitionsPerClassMin());
-    genCellInt(input,countTotals.getTotalDifferentTransitionsPerClassMin());
-    genCellInt(input,countTotals.getTotalEventsPerClassMin());
-    genCellInt(input,countTotals.getTotalGuardsPerClassMin());
-    genCellInt(input,countTotals.getTotalActionsPerClassMin());
-    genCellInt(input,countTotals.getTotalNestedStateMachinePerClassMin());
-    genCellInt(input,countTotals.getTotalCyclesPerClassMin());
-    genCellInt(input,countTotals.getTotalSelfCyclesPerClassMin());
-    input.append("</tr>");      
+    resultCode.append("<tr>");      
+    genCellString(resultCode,"MIN");
+    genCellInt(resultCode,countTotals.getTotalStateMachinesPerClassMin());
+    genCellInt(resultCode,countTotals.getTotalStatesPerClassMin());
+    genCellInt(resultCode,countTotals.getTotalTransitionsPerClassMin());
+    genCellInt(resultCode,countTotals.getTotalDifferentTransitionsPerClassMin());
+    genCellInt(resultCode,countTotals.getTotalEventsPerClassMin());
+    genCellInt(resultCode,countTotals.getTotalGuardsPerClassMin());
+    genCellInt(resultCode,countTotals.getTotalActionsPerClassMin());
+    genCellInt(resultCode,countTotals.getTotalNestedStateMachinePerClassMin());
+    genCellInt(resultCode,countTotals.getTotalCyclesPerClassMin());
+    genCellInt(resultCode,countTotals.getTotalSelfCyclesPerClassMin());
+    resultCode.append("</tr>");      
       
       
     
-    input.append("</tbody></table>");
+    resultCode.append("</tbody></table>");
       
-    input.append("\n\n");
+    resultCode.append("\n\n");
     
-    input.append("<h3>Legend of State Machine Metrics:</h3>\n<ul>\n");
-    input.append("   <li>#State Machines - Total of SM per class.\n");
-    input.append("   <li>#States - Total of States per class.\n");
-    input.append("   <li>#Transitions - Total of Transitions per class: All transitions are counted. Transitions with same name are counted the same number of times they appear.\n");
-    input.append("   <li>#Different Transitions - Total of Different per SM: Transitions with the same name are counted once\n");
-    input.append("   <li>#Events - Total of Events per class without repetition. \n");
-    input.append("   <li>#Guards - Total of Guards per class without repetition. \n");
-    input.append("   <li>#Actions - Total of Actions per SM. \n");
-    input.append("   <li>#Nested SM - Total of Nested SM: Total of states that is other state machine.\n");
-    input.append("   <li>#States with Cycles - Total of Cycles: Total of Cycles (self cycles + cycles).\n");
-    input.append("   <li>#Self Cycles - Total of Self Cycles: Total of self Cycles.\n</ul>\n\n");
+    resultCode.append("<h3>Legend of State Machine Metrics:</h3>\n<ul>\n");
+    resultCode.append("   <li>#State Machines - Total of SM per class.\n");
+    resultCode.append("   <li>#States - Total of States per class.\n");
+    resultCode.append("   <li>#Transitions - Total of Transitions per class: All transitions are counted. Transitions with same name are counted the same number of times they appear.\n");
+    resultCode.append("   <li>#Different Transitions - Total of Different per SM: Transitions with the same name are counted once\n");
+    resultCode.append("   <li>#Events - Total of Events per class without repetition. \n");
+    resultCode.append("   <li>#Guards - Total of Guards per class without repetition. \n");
+    resultCode.append("   <li>#Actions - Total of Actions per SM. \n");
+    resultCode.append("   <li>#Nested SM - Total of Nested SM: Total of states that is other state machine.\n");
+    resultCode.append("   <li>#States with Cycles - Total of Cycles: Total of Cycles (self cycles + cycles).\n");
+    resultCode.append("   <li>#Self Cycles - Total of Self Cycles: Total of self Cycles.\n</ul>\n\n");
     
-    super.setCode(input);
     return;    
   }// End of method calculate()
   
