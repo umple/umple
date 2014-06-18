@@ -933,8 +933,7 @@ class UmpleInternalParser
     }
   }
 
-  private void addUnlinkedInterfaceExtends()
-  {  
+   private void addUnlinkedInterfaceExtends(){
     for (UmpleClassifier c : unlinkedInterfaceExtends.keySet())
     {
       UmpleInterface child = null; //unlinkedInterfaceExtends guaranteed to contain only UmpleInterfaces
@@ -955,31 +954,41 @@ class UmpleInternalParser
       {
         String extendName= extendsNames.get(i);
         UmpleInterface uInterface=  model.getUmpleInterface(extendName);
-        boolean wasSet = child.addExtendsInterface(uInterface);
         
-        if (!wasSet)
+        //Issue 595
+        if(uInterface == null)
         {
-          Position pos;
-          try
-          {
-            pos = extendsToken.get(i).getPosition();
-          }
-          catch(Exception e)
-          {
-            pos = new Position("",0,0,0);
-          }
-          setFailedPosition(pos, 16, child.getName(), uInterface.getName());
-          return;
+        	getParseResult().addErrorMessage(new ErrorMessage(39,extendsToken.get(i).getPosition(),child.getName(),extendName));
         }
-        try
+        else
         {
-          child.setExtendsToken(extendsToken.get(i));
-        }
-        
-        catch(Exception e){}
+	        
+	        boolean wasSet = child.addExtendsInterface(uInterface);
+	        
+	        if (!wasSet)
+	        {
+	          Position pos;
+	          try
+	          {
+	            pos = extendsToken.get(i).getPosition();
+	          }
+	          catch(Exception e)
+	          {
+	            pos = new Position("",0,0,0);
+	          }
+	          setFailedPosition(pos, 16, child.getName(), uInterface.getName());
+	          return;
+	        }
+	        try
+	        {
+	          child.setExtendsToken(extendsToken.get(i));
+	        }
+	        
+	        catch(Exception e){}
+	      }
       }
     }
-  }  
+  }
 
   private void analyzeInterfaceMembers(Token interfaceMemberToken, UmpleInterface aInterface)
   {
