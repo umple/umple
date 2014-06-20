@@ -62,6 +62,15 @@ public class UmpleParserTest
 	  assertHasWarningsParse("014_unknownInterface2.ump", 39);
 	  
   }
+  
+  //Issue 596
+  @Test
+  public void interfaceBodyWithComments()
+  {
+	  assertHasWarningsParse("014_interfaceTest.ump", 39);
+	  assertHasWarningsParse("014_interfaceTest2.ump", 39);
+	  
+  }
 
   
   @Test
