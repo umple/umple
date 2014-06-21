@@ -1237,7 +1237,7 @@ public class CppStatemachinePointsHandler{
 		
 		int incrementer=0;
 		if(isNested){
-			values= values+ generationValueGetter.use(ICppStatemachinesDefinitions.ENUM_VALUE, CPPCommonConstants.NIL, Integer.valueOf(0));
+			values= values+ generationValueGetter.use(ICppDefinitions.ENUM_VALUE, CPPCommonConstants.NIL, Integer.valueOf(0));
 			incrementer++;
 			if(size>0){
 				values= values+ CommonConstants.COMMA_SEPARATOR+ CommonConstants.SPACE;
@@ -1246,7 +1246,7 @@ public class CppStatemachinePointsHandler{
 		
 		for(int index=0; index<states.size(); index++){
 			Object next = states.get(index);
-			values= values+ generationValueGetter.use(ICppStatemachinesDefinitions.ENUM_VALUE, 
+			values= values+ generationValueGetter.use(ICppDefinitions.ENUM_VALUE, 
 					generationValueGetter.getString(next, IModelingElementDefinitions.NAME), Integer.valueOf(index+incrementer));
 			
 			if(index<states.size()-1){

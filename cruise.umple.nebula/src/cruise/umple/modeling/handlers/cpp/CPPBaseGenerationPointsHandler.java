@@ -1211,8 +1211,11 @@ public class CPPBaseGenerationPointsHandler{
 	}
 	
 	@GenerationPoint(generationPoint = IModelingConstants.NORMALIZED_RETURN_TYPE, unique= true)
-	public static String getNormalizedReturnType(@GenerationElementParameter(id = IModelingElementDefinitions.RETURN_TYPE) String returnType){
-		return returnType==null? CPPTypesConstants.VOID: returnType; 
+	public static String getNormalizedReturnType(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element,
+			@GenerationElementParameter(id = IModelingElementDefinitions.RETURN_TYPE) String returnType){
+		return returnType==null? CPPTypesConstants.VOID:  
+			generationValueGetter.generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME); 
 	}
 	
 	@GenerationPoint(intercept = {IModelingElementDefinitions.RETURN_TYPE})
@@ -1235,9 +1238,10 @@ public class CPPBaseGenerationPointsHandler{
 			return new InterceptorResponse(CPPTypesConstants.FLOAT);
 		}else if(CommonTypesConstants.INTEGER.equals(typeName)){
 			return new InterceptorResponse(CPPTypesConstants.INTEGER);
-		}else if(CommonTypesConstants.BOOLEAN.equals(typeName)){
+		}else if(CommonTypesConstants.BOOLEAN.toUpperCase().equals(typeName.toUpperCase())){
 			return new InterceptorResponse(CPPTypesConstants.BOOL);
 		} 
+		
 		return null;
 	}
 	
@@ -1319,6 +1323,7 @@ public class CPPBaseGenerationPointsHandler{
 		}
 		
 		generationValueGetter.addUniqueValue(IModelingConstants.METHODS_GROUPS, group, element, visibility);
+		
 		generationValueGetter.addUniqueValue(IModelingConstants.METHODS_OBJECTS, object, element, visibility);
 		
 		String contents= CommonConstants.BLANK;
@@ -1357,11 +1362,13 @@ public class CPPBaseGenerationPointsHandler{
 			}
 			
 			//Pure does not have implementation
-			generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, group, object, visibility);
+			generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, new SimpleEntry<Object, Object>(map, declaration), 
+					element, group, object, visibility);
 			return;
 		}
 		
-		generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, declaration, element, group, object, visibility);
+		generationValueGetter.addUniqueValue(ICppDefinitions.HEADER_CONTENTS, new SimpleEntry<Object, Object>(map, declaration), 
+				element, group, object, visibility);
 		
 		String parentName= generationValueGetter.getString(element, IModelingElementDefinitions.NAME);
 		
@@ -1376,7 +1383,8 @@ public class CPPBaseGenerationPointsHandler{
 		if(comments instanceof String&& !((String)comments).isEmpty()){
 			implementation= comments+ CommonConstants.NEW_LINE+ implementation;
 		}
-		generationValueGetter.addUniqueValue(ICppDefinitions.BODY_CONTENTS, implementation, element, group, object, visibility);
+		
+		generationValueGetter.addUniqueValue(ICppDefinitions.BODY_CONTENTS, new SimpleEntry<Object, Object>(map, implementation), element, group, object, visibility);
 	}
 	
 	
@@ -1518,6 +1526,7 @@ public class CPPBaseGenerationPointsHandler{
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@GenerationPoint(generationPoint = IModelingConstants.METHOD_DETAILS, unique= true)
 	public static String methodDetails(@GenerationRegistry final GenerationPolicyRegistry generationValueGetter, 
 			@GenerationBaseElement Object element,
@@ -1554,7 +1563,6 @@ public class CPPBaseGenerationPointsHandler{
 		int totalLength= 0;
 		while(iterator.hasNext()){
 			Object group = iterator.next();
-			
 			List<Object> baseDeclarations = generationValueGetter.getValues(id, element, group, visibility);
 			for(Object declaration: baseDeclarations){
 				String newString = declaration+ CommonConstants.NEW_LINE;
@@ -1562,27 +1570,59 @@ public class CPPBaseGenerationPointsHandler{
 				totalLength= totalLength+ newString.length();
 			}
 			
+			Collections.sort(objects, new Comparator<Object>() {
+
+				@Override
+				public int compare(Object element1, Object element2) {
+					TreeMap<String, Object> pathMap1 = generationValueGetter.getPathMap(element1);
+					Object p1 = pathMap1== null? null: pathMap1.get(IModelingElementDefinitions.CLASSES_PROCESSOR);
+					TreeMap<String, Object> pathMap2 = generationValueGetter.getPathMap(element2);
+					Object p2 = pathMap2== null? null: pathMap2.get(IModelingElementDefinitions.CLASSES_PROCESSOR);
+					return p1== p2?0: (p1== null? 1: -1);
+				}
+			});
+			
+			List<Object> visitedIds= new ArrayList<Object>();
+			List<String> declarationValues= new ArrayList<String>();
 			for(Object object: objects){
 				List<Object> declarations = generationValueGetter.getValues(id, element, group, object, visibility);
 				for(Object declaration: declarations){
-					if(declaration instanceof String== false){
+					if(declaration instanceof String){
+						declarationValues.add((String) declaration);
 						continue;
 					}
 					
-					String value= (String) declaration;
-					if(value.isEmpty()){
+					if(declaration instanceof SimpleEntry== false){
 						continue;
 					}
-					String newString = value+ CommonConstants.NEW_LINE;
-					strings.add(newString);
-					totalLength= totalLength+ newString.length();
 					
-					if(separator){
-						strings.add(CommonConstants.NEW_LINE);
-						totalLength= totalLength+ CommonConstants.NEW_LINE.length();
+					SimpleEntry<Object, Object> simpleEntry= (SimpleEntry<Object, Object>) declaration;
+					
+					HashMap<Object, Object> hashMap= (HashMap<Object, Object>) simpleEntry.getKey();
+					
+					Object currentMethodId = hashMap.get(IModelingConstants.METHOD_NAME).toString()+ hashMap.get(IModelingConstants.METHOD_PARAMETERS_STRING);
+					if(visitedIds.contains(currentMethodId)){
+						continue;
 					}
+					visitedIds.add(currentMethodId);
+					declarationValues.add((String) simpleEntry.getValue());
 				}
 			}
+			
+			for(String value: declarationValues){
+				if(value.isEmpty()){
+					continue;
+				}
+				String newString = value+ CommonConstants.NEW_LINE;
+				strings.add(newString);
+				totalLength= totalLength+ newString.length();
+				
+				if(separator){
+					strings.add(CommonConstants.NEW_LINE);
+					totalLength= totalLength+ CommonConstants.NEW_LINE.length();
+				}
+			}
+			
 			if(!strings.isEmpty()){
 				if(iterator.hasNext()&& !separator){
 					strings.add(CommonConstants.NEW_LINE);

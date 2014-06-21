@@ -159,7 +159,7 @@ public class UmpleStatemachineGenerationPolicy{
 			code = action.getActionCode();
 		}
 		
-		if(code== null|| code.isEmpty()){
+		if(code== null|| code.isEmpty()|| code.equals("null")){ //$NON-NLS-1$
 			return CommonConstants.BLANK;
 		}
 		
