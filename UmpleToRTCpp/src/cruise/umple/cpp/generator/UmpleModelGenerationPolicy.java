@@ -406,7 +406,17 @@ public class UmpleModelGenerationPolicy{
 	public static String getElementVisibility(@GenerationBaseElement Object element){
 		if(element instanceof Attribute){
 			return ((Attribute)element).isConstant()? VisibilityConstants.PUBLIC: VisibilityConstants.PRIVATE;
-		}else if(element instanceof Method|| element instanceof UmpleElement){
+		}else if(element instanceof Method){
+			String modifier = ((Method) element).getModifier();
+			if(modifier.contains(VisibilityConstants.PUBLIC)){
+				return VisibilityConstants.PUBLIC;
+			}else if(modifier.contains(VisibilityConstants.PRIVATE)){
+				return VisibilityConstants.PRIVATE;
+			}else if(modifier.contains(VisibilityConstants.PROTECTED)){
+				return VisibilityConstants.PROTECTED;
+			}
+			return VisibilityConstants.PUBLIC;
+		}else if(element instanceof UmpleElement){
 			//TODO (Discussion): Return public static for all cases
 			return VisibilityConstants.PUBLIC;
 		}

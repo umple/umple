@@ -104,8 +104,9 @@ public class StlGenerationPointsHandler{
 	public static String copyConstructor(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
+			@GenerationProcedureParameter(id = IModelingDecisions.ATTRIBUTE_IS_MANY) boolean isMany,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name){
-		if(!ISTLConstants.STRING.equals(typeName)){
+		if(!ISTLConstants.STRING.equals(typeName)|| isMany){
 			return null;
 		}
 		

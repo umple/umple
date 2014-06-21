@@ -63,7 +63,6 @@ public interface ICppStatemachinesDefinitions {
 	public final static String EVENTS= "events"; //$NON-NLS-1$
 	public final static String ENUM_VALUES= "cpp.statemachine.enum.values"; //$NON-NLS-1$
 	public final static String ENUM_CASES_STRING= "cpp.statemachine.enum.cases.strings"; //$NON-NLS-1$
-	public final static String ENUM_VALUE= "cpp.statemachine.enum.value"; //$NON-NLS-1$
 	public final static String ALL_STATES= "cpp.statemachine.all.states"; //$NON-NLS-1$
 	public final static String STATEMCHAINE_EXIT_PROCEDURE_IMPLEMENTATION= "cpp.statemachine.exit.procedure.implementation"; //$NON-NLS-1$
 	public final static String STATEMCHAINE_ENTRY_EXIT_PROCEDURE_STATE_IMPLEMENTATION= "cpp.statemachine.exit.procedure.state.implementation"; //$NON-NLS-1$

@@ -141,9 +141,7 @@ public class StructurePointsHandler{
 			@GenerationLoopElement Object modelPackage,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
 		
-		String modelPath = generationValueGetter.generationPointString(model, IModelingConstants.ROOT_PATH,
-				GenerationArgumentDescriptor.arg(IModelingConstants.GENERATION_LANGUAGE, CPPCommonConstants.CPP_LANGUAGE),
-				GenerationArgumentDescriptor.arg(IModelingDecisions.MODEL_PATH, generationValueGetter.generationPointString(parent, IModelingDecisions.MODEL_PATH)));
+		String modelPath = generationValueGetter.generationPointString(parent, IModelingDecisions.MODEL_PATH);
 		
 		//Add depend on the protocol class in the class body
 		String portProtocol = generationValueGetter.generate(ICppStructureDefinitions.PORT_CLASS_NAME, parent);
