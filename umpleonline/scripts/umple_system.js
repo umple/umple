@@ -12,8 +12,8 @@ UmpleSystem.umpleAssociations = [];
 UmpleSystem.position = function()
 {
   var canvas = jQuery("#umpleCanvas");
-  var x = Math.round(canvas.position().left - canvas.scrollLeft()); 
-  var y = Math.round(canvas.position().top - canvas.scrollTop());
+  var x = Math.round(canvas.offset().left - canvas.scrollLeft()); 
+  var y = Math.round(canvas.offset().top - canvas.scrollTop());
   var p = new UmplePosition(x,y,0,0);
   return p;
 }

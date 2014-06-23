@@ -297,7 +297,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
-    jQuery("#buttonShowEditableClassDiagram").attr('checked', 'checked');
+    jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
   }
   else if(newDiagramType.type == "GVClass") { 
     if(Page.useGvClassDiagram) return;
@@ -306,7 +306,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     changedType = true;
-    jQuery("#buttonShowGvClassDiagram").attr('checked', 'checked');
+    jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
   }
   else if(newDiagramType.type == "GVState") {
     if(Page.useGvStateDiagram) return;
@@ -315,7 +315,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = true;
     Page.useStructureDiagram = false;
     changedType = true;
-    jQuery("#buttonShowGvStateDiagram").attr('checked', 'checked');
+    jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
   }
   else if(newDiagramType.type == "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
@@ -324,7 +324,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = true;
     changedType = true;
-    jQuery("#buttonShowStructureDiagram").attr('checked', 'checked');
+    jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
   }
   if (changedType) {
     // Page.setFeedbackMessage("DEBUG New Diagram type "+newDiagramType);
@@ -870,11 +870,11 @@ Action.setExampleType = function setExampleType()
      
   if(Page.getExampleType() == "cdModels") {
      jQuery("#itemLoadExamples").show();
-     jQuery("#defaultExampleOption").attr("selected",true);
+     jQuery("#defaultExampleOption").prop("selected",true);
    }
    else {
      jQuery("#itemLoadExamples2").show();
-     jQuery("#defaultExampleOption2").attr("selected",true);
+     jQuery("#defaultExampleOption2").prop("selected",true);
    }
 }
 
@@ -1595,7 +1595,7 @@ Action.classResizing = function(event, ui)
 
 Action.associationSnap = function(x, y, dragDivSel) 
 {
-  var id = jQuery(dragDivSel).attr("id");
+  var id = jQuery(dragDivSel).prop("id");
   var elementId = id.substr(0,id.lastIndexOf("_"));
   var index = id.substr(id.lastIndexOf("_") + "anchor".length + 1);
   var association = UmpleSystem.findAssociation(elementId);
@@ -1614,7 +1614,7 @@ Action.updateMovedAssociation = function(dragDivSel, association)
 {
   jQuery(dragDivSel).show();
   var dragOffset = jQuery(dragDivSel).offset();
-  var dragDivId = jQuery(dragDivSel).attr("id");
+  var dragDivId = jQuery(dragDivSel).prop("id");
   jQuery(dragDivSel).hide();
   
   var left = Math.round(dragOffset.left);
@@ -1680,8 +1680,8 @@ Action.redrawDiagram = function()
 
 InlineEditor.elementChanged = function(obj, oldVal, newVal)
 {
-  var editType = obj.attr("name");
-  var objId = obj.attr("id");
+  var editType = obj.prop("name");
+  var objId = obj.prop("id");
   
   if (editType == "className")
   {

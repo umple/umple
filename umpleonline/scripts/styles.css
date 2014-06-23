@@ -1,5 +1,7 @@
 body { background-color:White; overflow: auto; overflow-y:scroll; margin:10px; }
-p, ol, ul, div, h1, h2, h3, h4, b { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000; }
+p, ol, ul, div, h1, h2, h3, h4, b { 
+  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000; 
+}
 p.pagedescription { margin-left:5px; }
 
 /* UNIVERSAL LAYOUT STYLES */ 
@@ -10,19 +12,36 @@ p.pagedescription { margin-left:5px; }
 .logo { margin-top: 10px; }
 
 /* MAIN APPLICATION CONTAINER */
-#paletteColumn { box-sizing:border-box; -moz-box-sizing:border-box; border: 1px solid gray; background-color: GhostWhite; padding: 1px 1px 1px 1px; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
-#umpleCanvasColumn { padding-left:5px; }
-#textEditorColumn { padding-right:5px; }
+#mainApplication { overflow: hidden; }
+
+#paletteColumn { 
+  box-sizing:border-box; -moz-box-sizing:border-box; border: 1px solid gray; 
+  background-color: GhostWhite; padding: 1px 1px 1px 1px; -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; border-radius: 4px; 
+}
+.ui-resizable-s { bottom: 0px; }
 
 /* TEXT EDITORS */
-textArea { box-sizing:border-box; -moz-box-sizing:border-box; background-color: White; -moz-border-radius: 4px; -webkit-border-radius: 4px; width:100%; height:100%; margin:0px; }
+textArea { 
+  box-sizing:border-box; -moz-box-sizing:border-box; background-color: White; -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; width:100%; height:100%; margin:0px; 
+}
 textArea.umpleModelEditor { resize:none; }
-textArea.umpleLayoutEditor {overflow-y: scroll; resize: none; border:1px solid gray; }
-.CodeMirror-scroll { box-sizing:border-box; -moz-box-sizing:border-box; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;}
-.ui-resizable-e { width: 15px; right: -10px; } /* Tweaks for the size and positioning of the resizing handle of the editor */
+textArea.umpleLayoutEditor {overflow-y: scroll; resize: none; border: 1px solid gray; }
+.CodeMirror-scroll { 
+  box-sizing:border-box; -moz-box-sizing:border-box; -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; border-radius: 4px;
+}
+
+/* Tweaks for the size and positioning of the resizing handle of the editor */
+.ui-resizable-e { width: 15px; right: -10px; } 
 
 /* CANVAS */
-div.surface { box-sizing:border-box; -moz-box-sizing:border-box; overflow:auto; display:block; width:100%; height:100%; background-color: white; border: 1px solid gray; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
+div.surface { 
+  box-sizing:border-box; -moz-box-sizing:border-box; overflow:auto; display: block; width:100%; 
+  height:100%; background-color: white; border: 1px solid gray; -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; border-radius: 4px; position: relative;
+}
 div.surface:focus { outline:none; }
 div.surface img { border:0; }
 div.photoReady { border:0; overflow:visible; }
@@ -32,10 +51,18 @@ div.syncNeededMessage{ color: Gray; margin-left: 5px;}
   -webkit-border-radius: 4px; border-radius: 4px; overflow: auto;
   box-sizing:border-box; -moz-box-sizing:border-box;
 }
+.smallScreenCanvasWithEditor { margin-top: 5px; margin-left: 0px; }
+.smallScreenCanvasNoEditor { margin-top: 0px; margin-left: 5px }
+.largeScreenCanvas { margin-left:5px; }
+.smallScreenEditor { margin-right: 5px; } 
+.largeScreenEditor { margin-right: 5px; }
+
+/* Tweaks for the size and positioning of the resizing handle of the canvas */
+.ui-resizable-w { width: 15px; left:- -10px; } 
 
 /* GENERATED CODE AREA */
 #generatedCodeRow { 
-  box-sizing:border-box; -moz-box-sizing:border-box; margin-right: 5px; margin-top: 5px;
+  box-sizing:border-box; -moz-box-sizing:border-box; margin-top: 5px;
   -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;
   }
 #innerGeneratedCodeRow { margin-top: 5px; }
@@ -44,26 +71,54 @@ div.syncNeededMessage{ color: Gray; margin-left: 5px;}
 .generatedCode { overflow-x: hidden; border: 1px solid grey; }
 
 /* UMPLE PALETTE */
-div.paletteWrapper { border: 1px solid Gray; background-color: GhostWhite; padding:  1px 1px 1px 1px; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
-div.palette { box-sizing:border-box; -moz-box-sizing:border-box; height: 100%; width: 175px; font-family: Verdana; font-size: 9.5pt;}
+div.paletteWrapper { 
+  box-sizing:border-box; -moz-box-sizing:border-box; border: 1px solid Gray; 
+  background-color: GhostWhite; padding:  1px 1px 1px 1px; -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; 
+}
+div.palette { height: 100%; width: 175px; font-family: Verdana; font-size: 9.5pt; }
 div.palette img { cursor:pointer; margin-left: 8px; padding:2px; vertical-align:middle;}
-div.palette input.checkbox { cursor:pointer; margin-left: 10px; padding:2px; vertical-align:middle;  }
+div.palette input.checkbox { 
+  cursor:pointer; margin-left: 10px; padding:2px; vertical-align:middle; 
+}
 
-div.palette ul { background-color: GhostWhite; margin:5px -25px -15px -25px; padding:6px 0px 10px 0px; border: Black solid 1px; border-top: 0; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
+div.palette ul { 
+  background-color: GhostWhite; margin:5px -25px -15px -25px; padding:6px 0px 10px 0px; 
+  border: Black solid 1px; border-top: 0; -moz-border-radius: 3px; -webkit-border-radius: 3px;
+}
 div.palette ul.first { margin-top:-10px; border-top: solid black 1px; }
 div.palette ul.second { margin-top:20px; border-top: solid black 1px; }
-div.palette h3 { letter-spacing: -1px; font-family: Verdana; line-height: 13px; height: 25px; font-size: 10.5pt;}
-div.palette li { z-index: 1; font-family: Verdana; margin:0; list-style-type: none; border: GhostWhite solid 1px; font-size: 9pt; }
+div.palette h3 { 
+  letter-spacing: -1px; font-family: Verdana; line-height: 13px; font-size: 10.5pt;
+}
+div.palette li { 
+  z-index: 1; font-family: Verdana; margin:0; list-style-type: none; border: GhostWhite solid 1px; 
+  font-size: 9pt; 
+}
 div.palette li.disabled { z-index: 2; background-color: GhostWhite; color: Silver;}
 div.palette li.disabled  img{ z-index: 1; cursor: not-allowed; opacity: 0.25;}
-div.palette li.subtitle { text-shadow: 1px 1px 4px White; font-weight: bold; text-transform: uppercase; letter-spacing: 0px; color: Black; margin: 0px 5px 8px 5px; text-indent: 8px; font-family: Verdana; text-align: left; font-size:10pt;x border-bottom: Silver double;}
-div.palette li.selected { z-index: 4; border: DarkGray solid 1px; color: Black; background-color:Gainsboro; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
-div.palette li.highlight { z-index: 3; border: DarkGray solid 1px; color: Black; background-color: Gainsboro; cursor:pointer; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
+div.palette li.subtitle { 
+  text-shadow: 1px 1px 4px White; font-weight: bold; text-transform: uppercase; letter-spacing: 0px;
+  color: Black; margin: 0px 5px 8px 5px; text-indent: 8px; font-family: Verdana; text-align: left; 
+  font-size:10pt; border-bottom: Silver double;
+}
+div.palette li.selected { 
+  z-index: 4; border: DarkGray solid 1px; color: Black; background-color:Gainsboro; 
+  -moz-border-radius: 3px; -webkit-border-radius: 3px;
+}
+div.palette li.highlight { 
+  z-index: 3; border: DarkGray solid 1px; color: Black; background-color: Gainsboro; cursor:pointer; 
+  -moz-border-radius: 3px; -webkit-border-radius: 3px;
+}
 div.palette .bookmarkableUrl { padding: 2px 14px 2px 14px; }
 .bookmarkableUrl { padding: 0px 0px 0px 8px; }
 
 /* BUTTONS */
-div.jQueryPaletteButton { font-family: Verdana; letter-spacing: 0.1px; color: black; border-color: DarkSlateGray; width: 132px; height: 25px; vertical-align: center; font-size: 10pt; margin:0px 5px 0px 10px; padding:0; cursor:hand; }
+div.jQueryPaletteButton { 
+  font-family: Verdana; letter-spacing: 0.1px; color: black; border-color: DarkSlateGray; 
+  width: 132px; height: 25px; vertical-align: center; font-size: 10pt; margin:0px 5px 0px 10px; 
+  padding:0; cursor:hand; 
+}
 a.button:link { color:black; text-decoration:none; }
 a.button:visited { color:black; text-decoration:none; }
 a.button:hover { color:black; text-decoration:none; }
@@ -74,21 +129,31 @@ a.button:active { color:black; text-decoration:none; }
 .disabled a { text-decoration: none; color: #d6d6d6;}
 
 /* SELECT and CUSTOM SIZE INPUTS */
-select.button { width:134px; border: DimGray solid 1px; font: Verdana; font-size: 10pt; padding: 0px; margin: 0 0px 5px 10px; cursor:pointer; }
+select.button { 
+  width:134px; border: DimGray solid 1px; font: Verdana; font-size: 10pt; padding: 0px; 
+  margin: 0 0px 5px 10px; cursor:pointer; 
+}
 input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
 
 /* UMPLE CLASSES, ASSOCIATIONS and GENERALIZATIONS */
-div.umpleClass {padding:0; margin:0; z-index: 1; cursor:move; position:absolute; font-family: arial, serif; background-color: White;}
+div.umpleClass {
+  padding:0; margin:0; z-index: 1; cursor:move; position: absolute; font-family: arial, serif; 
+  background-color: White;
+}
 div.umpleClass img { vertical-align:middle; margin:0 0 1px 0; }
 div.umpleClass table { border-collapse: collapse; }
 div.umpleClass td { border:#5F8BA5 solid 1px; }
 
-div.umpleClass tr.width td { border:white solid 0px; border-collapse: collapse; margin:0; padding:0; }
+div.umpleClass tr.width td { 
+  border:white solid 0px; border-collapse: collapse; margin:0; padding:0; 
+}
 div.umpleClass tr.width img { margin:0; padding:0; }
-div.umpleClass tr.height td { border:black solid 0px; margin:0; padding:0; border-collapse: collapse; }
+div.umpleClass tr.height td { 
+  border:black solid 0px; margin:0; padding:0; border-collapse: collapse; 
+}
 div.umpleClass tr.height img { margin:0; padding:0; }
 div.umpleClass tr.classArea td { height:1px; overflow:on; }
-div.umpleClass tr.attributeArea td  {height:1px;overflow:on; }
+div.umpleClass tr.attributeArea td  {height:1px; overflow:on; }
 div.umpleClass span.editable { cursor:text;}
 div.umpleClass span.uneditable { cursor:move; }
 
@@ -104,15 +169,27 @@ div.umpleMethod img { cursor:pointer; }
 div.umpleMethodNew  { margin:1px 1px 0 2px; }
 div.umpleMethodNew span { color:grey; cursor:text; }
 
-div.umpleAssociation { background-color:black; cursor: pointer; z-index: 2; }
-div.multiplicity { background-color:transparent; position: absolute; font-size:8pt; z-index:2; padding:0; margin:0; border:0;}
+div.umpleAssociation { background-color:black; cursor: pointer; z-index: 2; position: absolute; }
+div.multiplicity { 
+  background-color: transparent; position: absolute; font-size: 8pt; z-index: 2; padding: 0; 
+  margin: 0; border: 0;
+}
 div.role { background-color:transparent; position: absolute; font-size:8pt; z-index:2; }
 div.umpleGeneralization { cursor: pointer; background-color: white; }
 
 /* UMPLE HOVER STYLES  */
-.anchor { border: 1px solid #111111; width: 5px; height: 5px; position: absolute; display: none; background-color: #777777; z-index: 4; -moz-border-radius: 2px; -webkit-border-radius: 2px;}
-.hover { border: 1px solid #777777; width: 5px; height: 5px; position: absolute; display: block; background-color: #AAAAAA; z-index: 3; -moz-border-radius: 2px; -webkit-border-radius: 2px;}
+.anchor { 
+  border: 1px solid #111111; width: 5px; height: 5px; position: absolute; display: none; 
+  background-color: #777777; z-index: 4; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+}
+.hover { 
+  border: 1px solid #777777; width: 5px; height: 5px; position: absolute; display: block;
+  background-color: #AAAAAA; z-index: 3; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+}
 .focus {  }
-.visibleFocus { border: 1px solid gold !important; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px;}
+.visibleFocus {
+  border: 1px solid gold !important; -moz-border-radius: 4px; -webkit-border-radius: 4px; 
+  border-radius: 4px;
+}
 .unselectable { -moz-user-select: none; -khtml-user-select: none; user-select: none;}
 .unscrollable { overflow: hidden; scrolling:no }
