@@ -77,7 +77,7 @@ Page.initPaletteArea = function()
   jQuery(palette).accordion({heightStyle: "fill", fillSpace: true, active: 1, collapsible: true});
   jQuery(paletteItems).addClass("unselectable");
   
-  Layout.initPaletteSize()
+  Layout.initPaletteSize();
   
   Page.initJQueryButton("buttonGenerateCode");
   Page.initJQueryButton("buttonStartOver");
@@ -176,28 +176,28 @@ Page.initPaletteArea = function()
 
 Page.initOptions = function()
 {
-  jQuery("#buttonShowHideLayoutEditor").attr('checked', false);
-  jQuery("#buttonShowHideTextEditor").attr('checked', Layout.isTextVisible);
-  jQuery("#buttonShowHideCanvas").attr('checked', Layout.isDiagramVisible);
-  jQuery("#buttonToggleAttributes").attr('checked',true);
-  jQuery("#buttonToggleActions").attr('checked',true);
+  jQuery("#buttonShowHideLayoutEditor").prop('checked', false);
+  jQuery("#buttonShowHideTextEditor").prop('checked', Layout.isTextVisible);
+  jQuery("#buttonShowHideCanvas").prop('checked', Layout.isDiagramVisible);
+  jQuery("#buttonToggleAttributes").prop('checked',true);
+  jQuery("#buttonToggleActions").prop('checked',true);
 
   if(Page.useEditableClassDiagram)
-   jQuery("#buttonShowEditableClassDiagram").attr('checked', true); 
+   jQuery("#buttonShowEditableClassDiagram").prop('checked', true); 
   if(Page.useGvClassDiagram)
-    jQuery("#buttonShowGvClassDiagram").attr('checked', true);
+    jQuery("#buttonShowGvClassDiagram").prop('checked', true);
   if(Page.useGvStateDiagram)
-    jQuery("#buttonShowGvStateDiagram").attr('checked', true);
+    jQuery("#buttonShowGvStateDiagram").prop('checked', true);
   if(Page.useStructureDiagram)
-    jQuery("#buttonShowStructureDiagram").attr('checked', true);
+    jQuery("#buttonShowStructureDiagram").prop('checked', true);
 
-  jQuery("#buttonPhotoReady").attr('checked', false);
-  jQuery("#buttonManualSync").attr('checked', false);
+  jQuery("#buttonPhotoReady").prop('checked', false);
+  jQuery("#buttonManualSync").prop('checked', false);
   
-  jQuery("#buttonShowHideTextEditor").attr('disabled', false);
-  jQuery("#buttonShowHideCanvas").attr('disabled', false);
-  jQuery("#buttonPhotoReady").attr('disabled', false);
-  jQuery("#buttonManualSync").attr('disabled', false);
+  jQuery("#buttonShowHideTextEditor").prop('disabled', false);
+  jQuery("#buttonShowHideCanvas").prop('disabled', false);
+  jQuery("#buttonPhotoReady").prop('disabled', false);
+  jQuery("#buttonManualSync").prop('disabled', false);
   
   Layout.showHideLayoutEditor(true); // hide the layout editor
 }
@@ -224,14 +224,14 @@ Page.enableCheckBoxItem = function(boxId, listItemId, doEnable)
   
   if (doEnable)
   {
-    checkbox.attr('disabled', false);
+    checkbox.prop('disabled', false);
     checkbox.css('cursor', 'pointer');
     listItem.css('color', 'Black');
     
   }
   else
   {
-    checkbox.attr('disabled', true);
+    checkbox.prop('disabled', true);
   checkbox.css('cursor', 'not-allowed');
   listItem.css('color', 'Silver');
   }
@@ -247,14 +247,14 @@ Page.enablePaletteItem = function(id, doEnable)
   if (doEnable)
   {
     item.removeClass();
-    item.attr('disabled', true);
+    item.prop('disabled', true);
     Page.initHighlighter(id);
   }
   else
   {
     item.removeClass();
     item.addClass("disabled");
-    item.attr('disabled', false);
+    item.prop('disabled', false);
     Page.removeHighlighter(id);
   }
 }
@@ -412,11 +412,6 @@ Page.initCanvasArea = function()
   canvas.blur(function(){Action.focusOn(Page.umpleCanvasId(), false);});
   canvas.delegate("[class$='editableDoubleClick']", 'dblclick', InlineEditor.handleOnClick);
   canvas.delegate("[class$='editableSingleClick']", 'click', InlineEditor.handleOnClick);
-  canvas.resizable({stop: function(event, ui){Layout.umpleCanvasResizing(event, ui);},
-                  autoHide: true,
-                  minHeight: Layout.minCanvasSize.height,
-                  minWidth: Layout.minCanvasSize.width,
-                  handles: {'se': '#canvasGrip'}});
   
   // remove the jquery resizable handle
   //jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");

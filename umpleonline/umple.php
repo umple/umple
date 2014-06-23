@@ -129,7 +129,7 @@ $output = readTemporaryFile("ump/" . $filename);
   </div>
 
   <div id="mainApplication" class="row"> 
-    <div id="textEditorColumn"  tabIndex="2"  class="umpleTextColumn inRow"> <!-- TODO remove id class -->
+    <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
       <div id="topTextEditor">
         <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
       </div>
@@ -138,7 +138,7 @@ $output = readTemporaryFile("ump/" . $filename);
       </div>
     </div>
     
-    <div id="paletteColumn" class="inRow"> <!-- TODO remove id class -->
+    <div id="paletteColumn" class="inRow">
       <div id="palette" class="palette">
 
         <!-- GROUP 1 OF OPTIONS -->
@@ -319,7 +319,6 @@ $output = readTemporaryFile("ump/" . $filename);
    
     <div id="umpleCanvasColumn" class="umpleCanvasColumn inRow">
       <div id="umpleCanvas"  tabIndex="1" class="surface">
-        <div class="ui-resizable-handle ui-resizable-se" id="canvasGrip"></div>
       </div>
       <div id="svgDummy"></div>
     </div>
