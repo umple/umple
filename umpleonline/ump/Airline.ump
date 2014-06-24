@@ -103,4 +103,4 @@ class Airline
   position.association Airline__RegularFlight 49,42 49,0;
   position.association Airline__Person 49,0 49,80;
 }
-// @@@skipcompile - issue 584 - unique has a comparison between int and null
+

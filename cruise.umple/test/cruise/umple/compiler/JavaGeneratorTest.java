@@ -9,7 +9,10 @@
 
 package cruise.umple.compiler;
 
+import java.io.File;
+
 import cruise.umple.compiler.java.JavaInterfaceGenerator;
+import cruise.umple.util.SampleFileWriter;
 
 import org.junit.*;
 
@@ -1180,6 +1183,20 @@ public class JavaGeneratorTest
     UmpleInterface aInterface = new UmpleInterface("Student");
     Assert.assertEquals(JavaInterfaceGenerator.class,generator.getLanguageFor(aInterface).getClass());
   }
+  
+  @Test
+  public void attributesConstructionSetUnique()
+  {	
+	String pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/");
+    model = createModelFromFile(pathToInput, "047_attributesConstructionSetUnique.ump");
+    model.run();
+    String actual = model.getGeneratedCode().get("RegularFlight");
+    File generatedFile = new File(pathToInput+"RegularFlight.java");
+    
+    generatedFile.delete();
+    File expected = new File(pathToInput + "RegularFlight.java.txt");
+    SampleFileWriter.assertFileContent(expected, actual,true);
+  }
 
   @Test
   public void prepare_postpare_nestedStateMachine()
@@ -1547,6 +1564,14 @@ public class JavaGeneratorTest
     generator.prepare();
     return model;
   }
+  
+  private UmpleModel createModelFromFile(String pathToInput, String fileName){
+	    File umpleFile = new File(pathToInput + fileName);
+		UmpleFile umpFile  = new  UmpleFile(umpleFile);
+		UmpleModel umpModel = new UmpleModel(umpFile);   
+		model = umpModel;
+		return model;	  
+	  }
 
   private Multiplicity createMultiplicity(int lower, int upper)
   {

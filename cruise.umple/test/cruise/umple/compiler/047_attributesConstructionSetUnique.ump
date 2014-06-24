@@ -1,0 +1,7 @@
+class RegularFlight{
+  Time time;
+  unique Integer flightNumber;
+  unique Float flightNumber3;
+  unique Double flightNumber4;
+  unique String lala;    
+}
