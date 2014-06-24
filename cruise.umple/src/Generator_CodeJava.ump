@@ -1630,7 +1630,7 @@ class JavaGenerator
       if (av.getIsUnique())
       {
         injectIntoUniqueSet(
-          "{0} {2} = {3}();" + "\n" + 
+          av.getType() + " {2} = {3}();" + "\n" + 
           "if ({4}({1})) {" + "\n" + 
           "  return wasSet;" + "\n" +
           "}", "before", av, aClass);

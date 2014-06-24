@@ -1,0 +1,217 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+import java.sql.Time;
+import java.util.*;
+
+public class RegularFlight
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static Map<Integer, RegularFlight> regularflightsByFlightNumber = new HashMap<Integer, RegularFlight>();
+  private static Map<Float, RegularFlight> regularflightsByFlightNumber3 = new HashMap<Float, RegularFlight>();
+  private static Map<Double, RegularFlight> regularflightsByFlightNumber4 = new HashMap<Double, RegularFlight>();
+  private static Map<String, RegularFlight> regularflightsByLala = new HashMap<String, RegularFlight>();
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //RegularFlight Attributes
+  private Time time;
+  private int flightNumber;
+  private float flightNumber3;
+  private double flightNumber4;
+  private String lala;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public RegularFlight(Time aTime, int aFlightNumber, float aFlightNumber3, double aFlightNumber4, String aLala)
+  {
+    time = aTime;
+    if (!setFlightNumber(aFlightNumber))
+    {
+      throw new RuntimeException("Cannot create due to duplicate flightNumber");
+    }
+    if (!setFlightNumber3(aFlightNumber3))
+    {
+      throw new RuntimeException("Cannot create due to duplicate flightNumber3");
+    }
+    if (!setFlightNumber4(aFlightNumber4))
+    {
+      throw new RuntimeException("Cannot create due to duplicate flightNumber4");
+    }
+    if (!setLala(aLala))
+    {
+      throw new RuntimeException("Cannot create due to duplicate lala");
+    }
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setTime(Time aTime)
+  {
+    boolean wasSet = false;
+    time = aTime;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setFlightNumber(int aFlightNumber)
+  {
+    boolean wasSet = false;
+    Integer anOldFlightNumber = getFlightNumber();
+    if (hasWithFlightNumber(aFlightNumber)) {
+      return wasSet;
+    }
+    flightNumber = aFlightNumber;
+    wasSet = true;
+    if (anOldFlightNumber != null) {
+      regularflightsByFlightNumber.remove(anOldFlightNumber);
+    }
+    regularflightsByFlightNumber.put(aFlightNumber, this);
+    return wasSet;
+  }
+
+  public boolean setFlightNumber3(float aFlightNumber3)
+  {
+    boolean wasSet = false;
+    Float anOldFlightNumber3 = getFlightNumber3();
+    if (hasWithFlightNumber3(aFlightNumber3)) {
+      return wasSet;
+    }
+    flightNumber3 = aFlightNumber3;
+    wasSet = true;
+    if (anOldFlightNumber3 != null) {
+      regularflightsByFlightNumber3.remove(anOldFlightNumber3);
+    }
+    regularflightsByFlightNumber3.put(aFlightNumber3, this);
+    return wasSet;
+  }
+
+  public boolean setFlightNumber4(double aFlightNumber4)
+  {
+    boolean wasSet = false;
+    Double anOldFlightNumber4 = getFlightNumber4();
+    if (hasWithFlightNumber4(aFlightNumber4)) {
+      return wasSet;
+    }
+    flightNumber4 = aFlightNumber4;
+    wasSet = true;
+    if (anOldFlightNumber4 != null) {
+      regularflightsByFlightNumber4.remove(anOldFlightNumber4);
+    }
+    regularflightsByFlightNumber4.put(aFlightNumber4, this);
+    return wasSet;
+  }
+
+  public boolean setLala(String aLala)
+  {
+    boolean wasSet = false;
+    String anOldLala = getLala();
+    if (hasWithLala(aLala)) {
+      return wasSet;
+    }
+    lala = aLala;
+    wasSet = true;
+    if (anOldLala != null) {
+      regularflightsByLala.remove(anOldLala);
+    }
+    regularflightsByLala.put(aLala, this);
+    return wasSet;
+  }
+
+  public Time getTime()
+  {
+    return time;
+  }
+
+  public int getFlightNumber()
+  {
+    return flightNumber;
+  }
+
+  public static RegularFlight getWithFlightNumber(int aFlightNumber)
+  {
+    return regularflightsByFlightNumber.get(aFlightNumber);
+  }
+
+  public static boolean hasWithFlightNumber(int aFlightNumber)
+  {
+    return getWithFlightNumber(aFlightNumber) != null;
+  }
+
+  public float getFlightNumber3()
+  {
+    return flightNumber3;
+  }
+
+  public static RegularFlight getWithFlightNumber3(float aFlightNumber3)
+  {
+    return regularflightsByFlightNumber3.get(aFlightNumber3);
+  }
+
+  public static boolean hasWithFlightNumber3(float aFlightNumber3)
+  {
+    return getWithFlightNumber3(aFlightNumber3) != null;
+  }
+
+  public double getFlightNumber4()
+  {
+    return flightNumber4;
+  }
+
+  public static RegularFlight getWithFlightNumber4(double aFlightNumber4)
+  {
+    return regularflightsByFlightNumber4.get(aFlightNumber4);
+  }
+
+  public static boolean hasWithFlightNumber4(double aFlightNumber4)
+  {
+    return getWithFlightNumber4(aFlightNumber4) != null;
+  }
+
+  public String getLala()
+  {
+    return lala;
+  }
+
+  public static RegularFlight getWithLala(String aLala)
+  {
+    return regularflightsByLala.get(aLala);
+  }
+
+  public static boolean hasWithLala(String aLala)
+  {
+    return getWithLala(aLala) != null;
+  }
+
+  public void delete()
+  {
+    regularflightsByFlightNumber.remove(getFlightNumber());
+    regularflightsByFlightNumber3.remove(getFlightNumber3());
+    regularflightsByFlightNumber4.remove(getFlightNumber4());
+    regularflightsByLala.remove(getLala());
+  }
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "flightNumber" + ":" + getFlightNumber()+ "," +
+            "flightNumber3" + ":" + getFlightNumber3()+ "," +
+            "flightNumber4" + ":" + getFlightNumber4()+ "," +
+            "lala" + ":" + getLala()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }
+}
