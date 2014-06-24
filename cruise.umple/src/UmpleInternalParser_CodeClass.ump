@@ -2088,6 +2088,16 @@ class UmpleInternalParser
   {
     String type = injectToken.is("beforeCode") ? "before" : "after";    
     CodeBlock cb = new CodeBlock();
+    StringBuilder operationName = new StringBuilder();
+    String comma = "";
+    for(Token subToken:injectToken.getSubTokens())
+    {
+      if(subToken.is("operationName"))
+      {
+        operationName.append(comma+subToken.getValue());
+        comma = ",";
+      }
+    }
     CodeInjection injection = new CodeInjection(type,injectToken.getValue("operationName"),"",uClassifier);
     makeCodeInject(injectToken,injection,cb,uClassifier);
     injection.setSnippet(cb);
