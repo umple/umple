@@ -1420,7 +1420,7 @@ class JavaGenerator
       }
       else if ("Float".equals(av.getType()))
       {
-        return av.getValue() + "f";
+        return "(float) " + av.getValue();
       }
       else
       {

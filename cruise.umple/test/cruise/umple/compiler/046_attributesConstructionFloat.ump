@@ -1,11 +1,12 @@
-class Point 
+class FLoatGenerator
 {
     // Cartesian coordinates
     Float x;
     Float y;
-    
+    Float a = 7;
+    Float b = 1.0;
+    Float c = 2.0f;    
     // Polar coordinates
     Float rho = {Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2))}
     Float theta = {Math.toDegrees(Math.atan2(getY(),getX()))}
 }
-

@@ -1,0 +1,137 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+
+
+// line 1 "046_attributesConstructionFloat.ump"
+public class FLoatGenerator
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //FLoatGenerator Attributes
+  private float x;
+  private float y;
+  private float a;
+  private float b;
+  private float c;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public FLoatGenerator(float aX, float aY)
+  {
+    x = aX;
+    y = aY;
+    a = (float) 7;
+    b = (float) 1.0;
+    c = (float) 2.0;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(float aX)
+  {
+    boolean wasSet = false;
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setY(float aY)
+  {
+    boolean wasSet = false;
+    y = aY;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setA(float aA)
+  {
+    boolean wasSet = false;
+    a = aA;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setB(float aB)
+  {
+    boolean wasSet = false;
+    b = aB;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setC(float aC)
+  {
+    boolean wasSet = false;
+    c = aC;
+    wasSet = true;
+    return wasSet;
+  }
+
+  /**
+   * Cartesian coordinates
+   */
+  public float getX()
+  {
+    return x;
+  }
+
+  public float getY()
+  {
+    return y;
+  }
+
+  public float getA()
+  {
+    return a;
+  }
+
+  public float getB()
+  {
+    return b;
+  }
+
+  public float getC()
+  {
+    return c;
+  }
+
+  /**
+   * Polar coordinates
+   */
+
+  public float getRho()
+  {
+    return (float) Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2));
+  }
+
+  public float getTheta()
+  {
+    return (float) Math.toDegrees(Math.atan2(getY(),getX()));
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "x" + ":" + getX()+ "," +
+            "y" + ":" + getY()+ "," +
+            "a" + ":" + getA()+ "," +
+            "b" + ":" + getB()+ "," +
+            "c" + ":" + getC()+ "," +
+            "rho" + ":" + getRho()+ "," +
+            "theta" + ":" + getTheta()+ "]"
+     + outputString;
+  }
+}
