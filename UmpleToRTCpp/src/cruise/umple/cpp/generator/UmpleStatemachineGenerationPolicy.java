@@ -324,11 +324,6 @@ public class UmpleStatemachineGenerationPolicy{
 		return element.getStates();
 	}
 	
-	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.NESTED_STATEMACHINES)
-	public static List<?> getNestedStateMachines(@GenerationBaseElement StateMachine element){
-		return element.getNestedStateMachines();
-	}
-	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.OWING_STATEMACHINE)
 	public static StateMachine getOwingStateMachine(@GenerationBaseElement StateMachine element){
 		State parentState = element.getParentState();
