@@ -1197,6 +1197,19 @@ public class JavaGeneratorTest
     File expected = new File(pathToInput + "RegularFlight.java.txt");
     SampleFileWriter.assertFileContent(expected, actual,true);
   }
+  
+  @Test
+  public void attributesConstructionFloat()
+  {	
+	String pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/");
+    model = createModelFromFile(pathToInput, "046_attributesConstructionFloat.ump");
+    model.run();
+    String actual = model.getGeneratedCode().get("FLoatGenerator");
+    File generatedFile = new File(pathToInput+"FLoatGenerator.java");
+    generatedFile.delete();
+    File expected = new File(pathToInput + "FLoatGenerator.java.txt");
+    SampleFileWriter.assertFileContent(expected, actual,false);
+  }
 
   @Test
   public void prepare_postpare_nestedStateMachine()
