@@ -58,7 +58,7 @@ UmpleSystem.createAssociation = function(classOneId, classTwoId, screenOnePositi
   umpleAssociation.setOffsetOnePosition(screenOnePosition);
   umpleAssociation.setOffsetTwoPosition(screenTwoPosition);
   umpleAssociation.setDefaultMultiplicities();
-  umpleAssociation.setRoles("undefined","undefined");
+  umpleAssociation.setDefaultRoles();
   
   // trim association line in case it overlaps end classes
   umpleAssociation.trimOverlap();
@@ -441,7 +441,10 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
         
         // prepare an update call to the back and add it to the queue
         var editAssociation = Json.toString(umpleAssociation);
-        DiagramEdit.updateUmpleText(format("action=editAssociation&actionCode={0}",editAssociation));
+        DiagramEdit.updateUmpleText({
+          actionCode: format("action=editAssociation&actionCode={0}",editAssociation),
+          codeChange: false
+        });
       }
     }
   }

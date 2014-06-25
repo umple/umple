@@ -12,11 +12,8 @@ DiagramEdit.newAssociation = null;
 DiagramEdit.newGeneralization = null;
 
 //Queues and initiates updates to the text editor after the diagram is edited
-DiagramEdit.updateUmpleText = function(actionCode)
-{
-  update = new Object();
-  update.actionCode = actionCode;
-  
+DiagramEdit.updateUmpleText = function(update)
+{  
   if(DiagramEdit.textChangeQueue.length == 0 && !DiagramEdit.pendingChanges)
   {
     DiagramEdit.pendingChanges = true;
@@ -32,6 +29,10 @@ DiagramEdit.updateUmpleText = function(actionCode)
 DiagramEdit.doTextUpdate = function()
 {
   update = DiagramEdit.textChangeQueue.shift();
+
+  if(update.codeChange)
+    Page.hideGeneratedCode();
+
   Action.ajax(Action.updateUmpleTextCallback,update.actionCode);
 }
 
@@ -48,7 +49,10 @@ DiagramEdit.addClass = function(position)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
-  DiagramEdit.updateUmpleText(format("action=addClass&actionCode={0}",umpleJson));
+  DiagramEdit.updateUmpleText({ 
+    actionCode: format("action=addClass&actionCode={0}",umpleJson),
+    codeChange: true
+  });
 }
 
 // Create an association based on the temporary association
@@ -71,7 +75,10 @@ DiagramEdit.addAssociation = function(line)
   Page.showModelLoading();
   Page.showLayoutLoading();
   
-  DiagramEdit.updateUmpleText(format("action=addAssociation&actionCode={0}",umpleJson));
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=addAssociation&actionCode={0}",umpleJson),
+    codeChange: true
+  });
 }
 
 DiagramEdit.addGeneralization = function(umpleGeneralization)
@@ -84,7 +91,10 @@ DiagramEdit.addGeneralization = function(umpleGeneralization)
   Page.showModelLoading();
   Page.showLayoutLoading();
   
-  DiagramEdit.updateUmpleText(format("action=addGeneralization&actionCode={0}",umpleJson));
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=addGeneralization&actionCode={0}",umpleJson),
+    codeChange: true
+  });
 }
 
 /* Creating an association (via diagram) is divided into two parts:
@@ -168,7 +178,10 @@ DiagramEdit.classMoved = function(targetClass)
   
   // make call to the back end to update the umple code
   Page.showLayoutLoading();
-  DiagramEdit.updateUmpleText(format("action=editClass&actionCode={0}",editClass));
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=editClass&actionCode={0}",editClass),
+    codeChange: false
+  });
   Action.classSelected(targetClass);
   
   UmpleSystem.trimOverlappingAssociations(umpleClassMoved);
@@ -205,7 +218,10 @@ DiagramEdit.classResized = function(event, ui)
   var umpleCode = Page.getUmpleCode();
   
   Page.showLayoutLoading();
-  DiagramEdit.updateUmpleText(format('action=editClass&actionCode={0}',editClass));
+  DiagramEdit.updateUmpleText({
+    actionCode: format('action=editClass&actionCode={0}',editClass),
+    codeChange: false
+  });
   Action.classSelected(classDiv);
 }
 
@@ -221,9 +237,12 @@ DiagramEdit.associationMoved = function(dragDivSelector, addToQueue)
   Action.updateMovedAssociation(dragDivSelector, association);
     
   var editAssociation = Json.toString(association);
-  
+
   Page.showLayoutLoading();
-  DiagramEdit.updateUmpleText(format("action=editAssociation&actionCode={0}",editAssociation));
+  DiagramEdit.updateUmpleText({
+    codeChange: false,
+    actionCode: format("action=editAssociation&actionCode={0}",editAssociation)
+  });
 }
 
 DiagramEdit.regularAssociationMoving = function(dragSelector)
@@ -302,8 +321,9 @@ DiagramEdit.classNameChanged = function(diagramId,oldName,newName)
   {
 
     Action.updateUmpleDiagram();
-    var message="Class names must be alphanumeric. &lt;"+(newName.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
-)+"&gt is not valid.";
+    var message="Class names must be alphanumeric. &lt;"
+      +(newName.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;"))
+      +"&gt is not valid.";
     setTimeout(function() {Page.setFeedbackMessage(message);},2000);
     setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
   }
@@ -318,7 +338,10 @@ DiagramEdit.classNameChanged = function(diagramId,oldName,newName)
   
     Page.showModelLoading();
     Page.showLayoutLoading();
-    DiagramEdit.updateUmpleText(format("action=editClass&actionCode={0}",editClass));
+    DiagramEdit.updateUmpleText({
+      actionCode: format("action=editClass&actionCode={0}",editClass),
+      codeChange: true
+    });
   }
 }
 
@@ -339,7 +362,10 @@ DiagramEdit.attributeNameChanged = function(diagramId,index,oldName,newAttribute
   
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
-    DiagramEdit.updateUmpleText(format("action=editClass&actionCode={0}",editClass));
+    DiagramEdit.updateUmpleText({
+      actionCode: format("action=editClass&actionCode={0}",editClass),
+      codeChange: true
+    });
     umpleClass.resetAttribute(index);
   }
 }
@@ -349,8 +375,10 @@ DiagramEdit.attributeNew = function(diagramId,attributeInput)
   if(!Action.validateAttributeName(attributeInput))
   {
     Action.updateUmpleDiagram();
-    setTimeout(function() {Page.setFeedbackMessage("UML Attributes must be alphanumeric with an optional type after a colon. &lt;"+(attributeInput.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
-)+"&gt is not valid.");},2000);
+    setTimeout(function() {Page.setFeedbackMessage("UML Attributes must be alphanumeric with "
+      + "an optional type after a colon. &lt;"
+      + (attributeInput.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;"))
+      + "&gt is not valid.");},2000);
     setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
   }
   else // new attribute is valid
@@ -360,7 +388,10 @@ DiagramEdit.attributeNew = function(diagramId,attributeInput)
 
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
-    DiagramEdit.updateUmpleText(format("action=editClass&actionCode={0}",editClass));
+    DiagramEdit.updateUmpleText({
+      actionCode: format("action=editClass&actionCode={0}",editClass),
+      codeChange: true
+    });
 
     umpleClass.resetAttribute(attributeIndex);
     UmpleSystem.updateClass(umpleClass);
@@ -408,7 +439,10 @@ DiagramEdit.classDeleted = function(diagramId)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
-  DiagramEdit.updateUmpleText(format("action=removeClass&actionCode={0}",removeClass));
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=removeClass&actionCode={0}",removeClass),
+    codeChange: true
+  });
 }
 
 DiagramEdit.methodNew = function(diagramId, methodInput)
@@ -425,7 +459,10 @@ DiagramEdit.methodNew = function(diagramId, methodInput)
     var methodIndex = umpleClass.addMethod(methodInput);
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
-    DiagramEdit.updateUmpleText(format("action=editClass&actionCode={0}",editClass));
+    DiagramEdit.updateUmpleText({
+      actionCode: format("action=editClass&actionCode={0}",editClass),
+      codeChange: true
+    });
     umpleClass.resetMethod(methodIndex);
     UmpleSystem.updateClass(umpleClass);
     UmpleSystem.redrawGeneralizationsTo(umpleClass);
@@ -448,7 +485,10 @@ DiagramEdit.methodChanged = function(diagramId,index,oldName,newMethod)
     UmpleSystem.redraw(umpleClass);
     var editClass = Json.toString(umpleClass);
     Page.showModelLoading();
-    DiagramEdit.updateUmpleText(format("action=editClass&actionCode={0}",editClass));
+    DiagramEdit.updateUmpleText({
+      actionCode: format("action=editClass&actionCode={0}",editClass),
+      codeChange: true
+    });
     umpleClass.resetMethod(index);
   }
 }
@@ -472,7 +512,10 @@ DiagramEdit.methodDelete = function(diagramId,index)
 
   var editClass = Json.toString(umpleClass);
   Page.showModelLoading();
-  DiagramEdit.updateUmpleText(format("action=editClass&actionCode={0}",editClass));
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=editClass&actionCode={0}",editClass),
+    codeChange: true
+  });
 
   umpleClass.resetMethod(index);
   UmpleSystem.updateClass(umpleClass);
@@ -499,7 +542,10 @@ DiagramEdit.attributeDelete = function(diagramId,index)
 
   var editClass = Json.toString(umpleClass);
   Page.showModelLoading();
-  DiagramEdit.updateUmpleText(format("action=editClass&actionCode={0}",editClass));
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=editClass&actionCode={0}",editClass),
+    codeChange: true
+  });
 
   umpleClass.resetAttribute(index);
   UmpleSystem.updateClass(umpleClass);
@@ -517,7 +563,10 @@ DiagramEdit.associationDeleted = function(diagramId, addToQueue)
   
   Page.showModelLoading();
   Page.showLayoutLoading();
-  DiagramEdit.updateUmpleText(format("action=removeAssociation&actionCode={0}",json));
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=removeAssociation&actionCode={0}",json),
+    codeChange: true
+  });
 }
 
 DiagramEdit.generalizationDeleted = function(diagramId, addToQueue)
@@ -530,8 +579,10 @@ DiagramEdit.generalizationDeleted = function(diagramId, addToQueue)
   
   Page.showModelLoading();
   Page.showLayoutLoading();
-  DiagramEdit.updateUmpleText(format("action=removeGeneralization&actionCode={0}",json));
-  return;
+  DiagramEdit.updateUmpleText({
+    actionCode: format("action=removeGeneralization&actionCode={0}",json),
+    codeChange: true
+  });
 }
 
 /////////////////////////////////////

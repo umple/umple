@@ -328,6 +328,7 @@ $output = readTemporaryFile("ump/" . $filename);
     <div id="innerGeneratedCodeRow"></div>
     <svg id="svgCanvas"></svg>
   </div>
+  <div class="spacer row"></div>
   
 
   <script language="JavaScript">
