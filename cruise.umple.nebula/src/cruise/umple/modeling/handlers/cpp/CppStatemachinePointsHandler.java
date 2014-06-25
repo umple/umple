@@ -61,6 +61,7 @@ import cruise.umple.modeling.handlers.VisibilityConstants;
 public class CppStatemachinePointsHandler{
 	
 	private final static String EXIT_IMPLEMENTATION= "cpp.exit.implementation"; //$NON-NLS-1$
+	private static final String EXIT_IMPLEMENTATION_STATE = EXIT_IMPLEMENTATION+ "state"; //$NON-NLS-1$
 	private final static String EVENTS_IMPLEMENTATION= "cpp.events.implementation"; //$NON-NLS-1$
 	private final static String ENTER_IMPLEMENTATION= "cpp.enter.implementation"; //$NON-NLS-1$
 	private final static String SETTERS_IMPLEMENTATION= "cpp.setters.implementation"; //$NON-NLS-1$
@@ -125,11 +126,14 @@ public class CppStatemachinePointsHandler{
 				GenerationArgumentDescriptor.arg(ICppModelingDecisions.CPP_LIBRARY_DEPENDS_LIBRARY_ARGUMENT, ISTLConstants.STD_LIBRARY),
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
 		
+		//Locate nested first in order to build nested switch cases
+		findNestedExitDetails(generationValueGetter, element);
+		
 		findEnumVariables(generationValueGetter, element);
 		findEventsDetails(generationValueGetter, element);
 		findSetterDetails(generationValueGetter, element);
+		
 		findExitDetails(generationValueGetter, element);
-		findNestedExitDetails(generationValueGetter, element);
 		findEnterImplementations(generationValueGetter, element);
 	}
 	
@@ -305,9 +309,8 @@ public class CppStatemachinePointsHandler{
 					GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_PREFIXES_ARGUMENT, new ArrayList<Object>()),
 					GenerationArgumentDescriptor.arg(IModelingConstants.ATTRIBUTE_VALUE_ARGUMENT, null));
 			
-			generationValueGetter.addValue(STATEMACHINE_VARIABLE_VALUES, statemachineQualifiedName, uClass);
-			
-			generationValueGetter.addValue(ICppStatemachinesDefinitions.ENUM, declaration, VisibilityConstants.PRIVATE, uClass);
+			generationValueGetter.addUniqueValue(STATEMACHINE_VARIABLE_VALUES, statemachineQualifiedName, uClass);
+			generationValueGetter.addUniqueValue(ICppStatemachinesDefinitions.ENUM, declaration, VisibilityConstants.PRIVATE, uClass);
 		}
 	}
 
@@ -436,8 +439,12 @@ public class CppStatemachinePointsHandler{
 						switchCases = switchCases+ generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_SWITCH_CASE_DECLARATION,
 								shortendedQualifiedTypeName, nestedStateName, CommonConstants.NEW_LINE+ body);
 					}
-					swtichCalls= swtichCalls+ generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_ENTRY_EXIT_PROCEDURE_STATE_IMPLEMENTATION, 
+					
+					String use = generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_ENTRY_EXIT_PROCEDURE_STATE_IMPLEMENTATION, 
 							instanceName, switchCases);
+					
+					generationValueGetter.addValue(EXIT_IMPLEMENTATION_STATE, use, state);
+					swtichCalls= swtichCalls+ use;
 				}
 				
 				if(!list.isEmpty()){
@@ -447,12 +454,14 @@ public class CppStatemachinePointsHandler{
 			
 			String output= allDeclarations+ swtichCalls;
 			
-			String exitProcedureName= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_EXIT_PROCEDURE_NAME, stateName, IModelingElementDefinitions.NAME);
-			String body= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_METHOD_IMPLEMENTATION,output);
-			
-			addMethodDetails(generationValueGetter, EXIT_IMPLEMENTATION, 
-					CPPTypesConstants.BOOL, CPPTypesConstants.VOID, StringUtil.indent(body, 1), uClass, null, exitProcedureName, 
-					VisibilityConstants.PRIVATE, IModelingConstants.METHOD_OUTGOING_GROUP);
+			if(!output.trim().isEmpty()){
+				String exitProcedureName= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_EXIT_PROCEDURE_NAME, stateName, IModelingElementDefinitions.NAME);
+				String body= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_METHOD_IMPLEMENTATION,output);
+				
+				addMethodDetails(generationValueGetter, EXIT_IMPLEMENTATION, 
+						CPPTypesConstants.BOOL, CPPTypesConstants.VOID, StringUtil.indent(body, 1), uClass, null, exitProcedureName, 
+						VisibilityConstants.PRIVATE, IModelingConstants.METHOD_OUTGOING_GROUP);
+			}
 		}
 	}
 
@@ -499,6 +508,14 @@ public class CppStatemachinePointsHandler{
 					String stateName = generationValueGetter.getString(state, IModelingElementDefinitions.NAME);
 					String body= CommonConstants.BLANK;
 					
+					//TODO: Only for doActivity
+					if(exitableStatemachines.get(state)!= null){
+						String exitProcedureNameMain= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_EXIT_PROCEDURE_NAME,qualifiedTypeName);
+						
+						body = body+ generationValueGetter.use(ICppStatemachinesDefinitions.PROCEDURE_CALL_DECLARATION, 
+								exitProcedureNameMain)+ CommonConstants.NEW_LINE;
+					}
+					
 					for (Object transition : transitions) {
 						Object targetState = generationValueGetter.getObject(transition, ICppStatemachinesDefinitions.TRANSITION_TARGET_STATE);
 						
@@ -514,10 +531,11 @@ public class CppStatemachinePointsHandler{
 							targetStatePath = getQualifiedTypeName(generationValueGetter, targetStatemachineObject);
 						}
 						
+						
 						//FIXME: Weak condition as it is not generic and meant for umple transformation only
 						boolean isSameState = generationValueGetter.getBoolean(state, ICppStatemachinesDefinitions.IS_SAME_STATE, targetState, exitSm);
 
-						if(exitSm== null /*&& !isSameState&& !isInternal*/){
+						if(true|| exitSm== null /*&& !isSameState&& !isInternal*/){
 							//TODO: Checking for isSame and isInternal makes us avoid having an extra switch case for a state that will never be entered
 							if(isAuto){
 								List<Object> list = autoStates.get(sm);
@@ -537,7 +555,7 @@ public class CppStatemachinePointsHandler{
 								
 								list.add(state);
 								exitSm= sm;
-							} 
+							}
 						}
 						
 						if (exitSm != null && (exitSm!=sm|| isTimer) && !isInternal && !isSameState) {
@@ -720,22 +738,28 @@ public class CppStatemachinePointsHandler{
 			
 			String body= CommonConstants.BLANK;
 			String stateName = generationValueGetter.getString(state, IModelingElementDefinitions.NAME);
-			String exitCode = generationValueGetter.generationPointString(state, ICppStatemachinesDefinitions.STATE_EXIT_CODE_BODY);
-			if (exitCode != null && !exitCode.isEmpty()) {
-				body= body+ exitCode+ CommonConstants.NEW_LINE;
-				
-			}
 			
 			if(foundTimer){
 				body= body+ "//Timer exit"+ CommonConstants.NEW_LINE;	//TODO //$NON-NLS-1$
 			}
 			
-			if(exitSm!= null){
+			if(exitSm!= null/*&& generationValueGetter.getValue(EXIT_IMPLEMENTATION, uClass, VisibilityConstants.PRIVATE)!= null*/){
 				String exitProcedureName= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_EXIT_PROCEDURE_NAME, 
 						generationValueGetter.getString(exitSm, IModelingElementDefinitions.NAME));
+				
 				body= body+ generationValueGetter.use(ICppStatemachinesDefinitions.PROCEDURE_CALL_AND_CHECK_DECLARATION, exitProcedureName, Boolean.TRUE);
 			}else{
 				body= body+ generationValueGetter.use(ICppStatemachinesDefinitions.PROCEDURE_CALL_AND_CHECK_DECLARATION, CPPTypesConstants.TRUE);
+			}
+			
+			String exitCode = generationValueGetter.generationPointString(state, ICppStatemachinesDefinitions.STATE_EXIT_CODE_BODY);
+			if (exitCode != null && !exitCode.isEmpty()) {
+				if(!body.isEmpty()){
+					body= body+ CommonConstants.NEW_LINE;
+				}
+				
+				body= body+ exitCode+ CommonConstants.NEW_LINE;
+				
 			}
 			
 			String doActivityCode = generationValueGetter.generationPointString(state, ICppStatemachinesDefinitions.STATE_DO_ACTIVITY_CODE_BODY);
@@ -754,7 +778,7 @@ public class CppStatemachinePointsHandler{
 					shortendedQualifiedTypeName, stateName, body);
 		}
 		
-		if(!switchCases.isEmpty()){
+		if(!switchCases.trim().isEmpty()){
 			swtichCalls= swtichCalls+ generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_ENTRY_EXIT_PROCEDURE_STATE_IMPLEMENTATION, 
 					statemachineQualifiedName, switchCases);
 			
@@ -885,6 +909,7 @@ public class CppStatemachinePointsHandler{
 			}
 			
 			String output= allDeclarations+ swtichCalls;
+			
 			String body= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMACHINE_METHOD_IMPLEMENTATION,output);
 			String enterProcedureName= generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_ENTER_PROCEDURE_NAME, stateName, IModelingElementDefinitions.NAME);
 			
@@ -1009,7 +1034,7 @@ public class CppStatemachinePointsHandler{
 			generationValueGetter.addValue(ICppDefinitions.HELPER_ATTRIBUTES_DECLARATION, declaration, VisibilityConstants.PRIVATE, element);
 			
 			String content=  generationValueGetter.use(ICppDefinitions.DESTRUCT_ATTRIBUTE, threadInstance);
-			content= StringUtil.indent(content, 1);
+			//content= StringUtil.indent(content, 1);
 			generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.DESTRUCTOR_IMPLEMENTATION, content, element);
 			
 			String voidPointerName= generationValueGetter.use(ICppStatemachinesDefinitions.VOID_POINTER_NAME);
@@ -1115,7 +1140,7 @@ public class CppStatemachinePointsHandler{
 				}
 			}
 			
-			if(!entryBody.isEmpty()){
+			if(!entryBody.trim().isEmpty()){
 				String reply= CommonConstants.NEW_LINE+ generationValueGetter.use(ICppStatemachinesDefinitions.SETTER_SWITCH_COMMENT);
 				reply= reply+ generationValueGetter.use(ICppStatemachinesDefinitions.STATEMCHAINE_ENTRY_EXIT_PROCEDURE_STATE_IMPLEMENTATION, 
 						statemachineQualifiedName, entryBody);
@@ -1391,7 +1416,11 @@ public class CppStatemachinePointsHandler{
 		List<?> states = generationValueGetter.getList(sm, ICppStatemachinesDefinitions.STATES);
 		for (Object s : states) {
 			int nestedSmIndex = 0;
+			
 			for (Object nestedStateMachine : generationValueGetter.getList(s, ICppStatemachinesDefinitions.NESTED_STATEMACHINES)) {
+				exitableStatemachines.put(s, s);
+				nestedSmIndex += 1;
+				
 				prepareNestedStatesFor(generationValueGetter, exitableStatemachines, nestedStateMachine, nestedSmIndex);
 				nestedSmIndex += 1;
 			}
@@ -1422,7 +1451,13 @@ public class CppStatemachinePointsHandler{
 	
 	private static void addMethodDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, String id, String returnType, String parametersString,
 			String codeBody, Object parent, Object element, String name, String visibility, String groupId, String comment){
+		
+		if("exitStatus".equals(name)){
+			System.out.println();
+		}
+		
 		Map<String, Object> map= new HashMap<String, Object>();
+		
 		map.put(IModelingConstants.METHOD_RETURN_TYPE, returnType);
 		map.put(IModelingConstants.METHOD_PARAMETERS_STRING, parametersString);
 		map.put(IModelingConstants.CODY_BODY, codeBody);
