@@ -193,3 +193,6 @@ div.umpleGeneralization { cursor: pointer; background-color: white; }
 }
 .unselectable { -moz-user-select: none; -khtml-user-select: none; user-select: none;}
 .unscrollable { overflow: hidden; scrolling:no }
+
+/* FOOTER */
+.spacer { height: 50px; } /* Allows the user to always vertically resize */

@@ -55,6 +55,14 @@ function UmpleAssociation()
     this.multiplicityOne = "*";
     this.multiplicityTwo = "*";
   }
+
+  this.setDefaultRoles = function()
+  {
+    if(this.classOneId == this.classTwoId)
+    {
+      this.roleOne = "reflexiveEnd";
+    }
+  }
   
   this.setRoles = function(aRole1, aRole2)
   {

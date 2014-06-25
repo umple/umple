@@ -12,6 +12,7 @@ Layout.isPaletteVisible = true;
 Layout.layoutHandler = null;
 Layout.isInSmallScreenMode = false;
 Layout.screenThresholdWidth = 945;
+Layout.errorMessageSpace = 50;
 
 // The handles for the main layout controlling features
 var canvasHandle = "#umpleCanvasColumn";
@@ -535,12 +536,12 @@ function LargeScreenManager()
   
   this.verticallyResized = function(event, ui)
   {
-    this.heightFactor = jQuery("#mainApplication").outerHeight() 
+    this.heightFactor = jQuery("#mainApplication").outerHeight()
       / (jQuery(window).innerHeight() - jQuery("#header").outerHeight() 
       - jQuery("#topLine").outerHeight() - parseInt(jQuery("body").css('marginBottom'))
       - parseInt(jQuery("body").css('marginTop')));
     
-    this.setTextEditorSize(undefined, this.calculateHeight());
+    this.setTextEditorSize(undefined, ui.size.height);
     jQuery("#mainApplication").css('height', 'auto');
   }
   
@@ -601,7 +602,7 @@ function LargeScreenManager()
   {
     var newHeight = (jQuery(window).innerHeight() - jQuery("#header").outerHeight() 
       - jQuery("#topLine").outerHeight() - parseInt(jQuery("body").css('marginBottom'))
-      - parseInt(jQuery("body").css('marginTop'))) * this.heightFactor;
+      - parseInt(jQuery("body").css('marginTop')) - Layout.errorMessageSpace) * this.heightFactor;
     
     if(newHeight < this.minCanvasSize.height)
       return this.minCanvasSize.height;
@@ -822,7 +823,10 @@ function SmallScreenManager()
   
   this.calculateHeight = function()
   {
-    return jQuery("body").width()/2;
+    var height = (jQuery(window).innerHeight() - jQuery("#header").outerHeight(true)
+      - 2*jQuery("#topLine").outerHeight(true) - Layout.errorMessageSpace)/2;
+
+    return height;
   }
   
   this.pairResizables = function()

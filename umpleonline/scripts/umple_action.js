@@ -848,10 +848,11 @@ Action.updateUmpleTextCallback = function(response)
   // Page.catFeedbackMessage(response.responseText);
   // Page.catFeedbackMessage("-");
   
+  Page.hideLoading();
+
   if (DiagramEdit.textChangeQueue.length == 0) 
   {
     DiagramEdit.pendingChanges = false;
-    Page.hideLoading();
   }
   else
   {
@@ -1461,7 +1462,9 @@ Action.updateUmpleDiagramCallback = function(response)
       Page.enableDiagram(true);
       Action.diagramInSync=true;
     }
+
     Page.setFeedbackMessage("");
+    Page.hideGeneratedCode(); //TODO always hide generated code? as the code is updated?
     if (new Date().getTime()-Action.gentime > 60000)
     {
       // Erase generated code if it was generated a long time ago
@@ -1680,9 +1683,9 @@ Action.redrawDiagram = function()
 
 InlineEditor.elementChanged = function(obj, oldVal, newVal)
 {
-  var editType = obj.prop("name");
-  var objId = obj.prop("id");
-  
+  var editType = obj.attr("name");
+  var objId = obj.attr("id");
+
   if (editType == "className")
   {
     var id = objId.substr(0,objId.length - "_name".length);

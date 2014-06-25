@@ -572,9 +572,7 @@ Page.splitUmpleCode = function(umpleCode)
 Page.setUmpleCode = function(umpleCode, reason)
 {
   var modelAndPositioning = Page.splitUmpleCode(umpleCode);
- 
-  Page.hideGeneratedCode();
-  
+
   jQuery("#umpleLayoutEditorText").val(modelAndPositioning[1]);
 
 
