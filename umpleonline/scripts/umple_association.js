@@ -60,7 +60,7 @@ function UmpleAssociation()
   {
     if(this.classOneId == this.classTwoId)
     {
-      this.roleOne = "reflexiveEnd";
+      this.roleTwo = "roleName";
     }
   }
   
@@ -123,6 +123,7 @@ function UmpleAssociation()
     this.offsetTwoPosition.height = 0;
   }
   
+  // Used to trim non-reflexive associations to the edge of classes
   this.trimOverlap = function()
   {
     // set up needed variables
@@ -153,7 +154,7 @@ function UmpleAssociation()
     var min = new UmpleLine(currentOne, currentTwo);
     
     // identify the cutoff point (intersection) on end one that results 
-    // in the shortest associatione line
+    // in the shortest association line
     var current = new UmpleLine(min.pointOne, min.pointTwo);
     for (var i=0; i<intersections1.length; i++)
     {
@@ -162,7 +163,7 @@ function UmpleAssociation()
     }
     
     // identify the cutoff point (intersection) on end two that results 
-    // in the shortest associatione line
+    // in the shortest association line
     var current = new UmpleLine(min.pointOne, min.pointTwo);
     for (var i=0; i<intersections2.length; i++)
     {
@@ -172,6 +173,60 @@ function UmpleAssociation()
 
     this.setOffsetOnePosition(min.pointOne.add(UmpleSystem.position()));
     this.setOffsetTwoPosition(min.pointTwo.add(UmpleSystem.position()));
+  }
+
+  // Used to move the endpoints of a reflexive associations to the closest edges of the class they were placed
+  this.adjustReflexiveEndpoints = function()
+  {
+    var endOne = this.offsetOnePosition;
+    var endTwo = this.offsetTwoPosition;
+
+    var borders = UmpleSystem.find(this.classOneId).borderLines();
+
+    // move the first point to the closest edge
+    this.snapToClosestEdge(endOne, borders);
+
+    // move the second point to the closest edge
+    this.snapToClosestEdge(endTwo, borders);
+  }
+
+  this.snapToClosestEdge = function(point, borders)
+  {
+    var isNearTop = true;
+    var isNearLeft = true;
+
+    var adjustedX = point.x + this.classOnePosition.x;
+    var adjustedY = point.y + this.classOnePosition.y;
+
+    var topBottomDist = adjustedY - borders[0].pointOne.y;
+    var leftRightDist = adjustedX - borders[1].pointOne.x;
+
+    if(topBottomDist > borders[2].pointOne.y - adjustedY)
+    {
+      isNearTop = false;
+      topBottomDist = borders[2].pointOne.y - adjustedY;
+    }
+
+    if(leftRightDist > borders[3].pointOne.x - adjustedX)
+    {
+      isNearLeft = false;
+      leftRightDist = borders[3].pointOne.x - adjustedX;
+    }
+
+    if(topBottomDist <= leftRightDist)
+    { 
+      if(isNearTop) //Snap to top edge
+        point.y = 0; 
+      else //Snap to bottom edge
+        point.y = this.classOnePosition.height;
+    }
+    else
+    { 
+      if(isNearLeft) //Snap to left edge
+        point.x = 0;
+      else //Snap to right edge
+        point.x = this.classOnePosition.width;
+    }
   }
   
   this.drawable = function()

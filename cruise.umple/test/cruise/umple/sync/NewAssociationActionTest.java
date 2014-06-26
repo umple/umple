@@ -41,6 +41,12 @@ public class NewAssociationActionTest extends ActionTest
   @Test
   public void GoClassOneAlphabeticallyBefore()
   {
-	assertNewAssociationAction("NewAssociationTest_Go5");
+	 assertNewAssociationAction("NewAssociationTest_Go5");
+  }
+
+  @Test
+  public void GoReflexiveAssociationAdded()
+  {
+    assertNewAssociationAction("NewAssociationTest_Go6");
   }
 }
