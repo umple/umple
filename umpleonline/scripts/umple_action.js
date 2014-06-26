@@ -327,11 +327,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
   }
   if (changedType) {
-    // Page.setFeedbackMessage("DEBUG New Diagram type "+newDiagramType);
-    UmpleSystem.merge(null);    // Clear the diagram
-    var canvas = jQuery("#umpleCanvas");
-    canvas.html("");
-    Layout.showHideCanvas(true);
+    Action.redrawDiagram();
   }
 }
 
@@ -1678,7 +1674,28 @@ Action.redrawDiagram = function()
     UmpleSystem.merge(null);    // Clear the diagram
     var canvas = jQuery("#umpleCanvas");
     canvas.html("");
-    Layout.showHideCanvas(true);
+    if (!Action.manualSync) 
+    {
+      Action.updateUmpleDiagram();
+      Action.diagramInSync = true;
+      Page.enableDiagram(true);
+    }
+    if (Action.manualSync && !Action.diagramInSync) Page.enablePaletteItem('buttonSyncDiagram', true);
+    if (!Action.manualSync || Action.diagramInSync)
+    {
+      Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", true);
+      Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", true);
+
+      Page.enablePaletteItem('buttonAddClass', true);
+      Page.enablePaletteItem('buttonAddAssociation', true);
+      Page.enablePaletteItem('buttonAddGeneralization', true);
+      Page.enablePaletteItem('buttonDeleteEntity', true);
+    
+      Page.initToggleTool('buttonAddClass');
+      Page.initToggleTool('buttonAddAssociation');
+      Page.initToggleTool('buttonAddGeneralization');
+      Page.initToggleTool('buttonDeleteEntity');
+    }
 }
 
 InlineEditor.elementChanged = function(obj, oldVal, newVal)
