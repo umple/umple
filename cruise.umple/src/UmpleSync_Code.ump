@@ -995,6 +995,8 @@ class NewAssociationAction
       
       String classOneId = json.getValue("classOneId");
       String classTwoId = json.getValue("classTwoId");
+      String firstRole = json.getValue("roleOne");
+      String secondRole = json.getValue("roleTwo");
       Token addAfterLastAssociation = null;
       
       for(Token t : umpleParser.getRootToken().getSubTokens())
@@ -1025,7 +1027,21 @@ class NewAssociationAction
         break;
       }
       
-      String newAssociation = StringFormatter.format("  * -- * {0};\n",classTwoId);
+      if(firstRole == null) 
+      {
+        firstRole = "";
+      }
+
+      if(secondRole == null || secondRole.equals("")) 
+      {
+        secondRole = "";
+      }
+      else 
+      {
+        secondRole = " " + secondRole;
+      }
+
+      String newAssociation = StringFormatter.format(" {0} * -- * {1}{2};\n", firstRole, classTwoId, secondRole);
       textParser.insertAfter(addAfterLastAssociation, newAssociation);
       setUmpleCode(textParser.getText());
       return true;

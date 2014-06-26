@@ -1,0 +1,12 @@
+class Student
+{
+  * -- * Student roleName;
+}
+
+//$?[End_of_model]$?
+
+class Student
+{
+  position 68 52 109 42;
+  position.association Student__Student 42,45 0,20;
+}

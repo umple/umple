@@ -60,9 +60,16 @@ UmpleSystem.createAssociation = function(classOneId, classTwoId, screenOnePositi
   umpleAssociation.setDefaultMultiplicities();
   umpleAssociation.setDefaultRoles();
   
-  // trim association line in case it overlaps end classes
-  umpleAssociation.trimOverlap();
-  
+  // adjust the association start and end points to snap the association to the class edges
+  if(classOneId == classTwoId)
+  {
+    umpleAssociation.adjustReflexiveEndpoints();
+  }
+  else
+  {
+    umpleAssociation.trimOverlap();
+  }
+
   // add it to the Umple System
   return this.addAssociation(umpleAssociation);
 }
@@ -422,16 +429,16 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
   {
     var umpleAssociation = UmpleSystem.umpleAssociations[i];
     
-    // ignore reflexive associations
-    if (umpleAssociation.isReflexive()) continue;
-    
     if (umpleAssociation.contains(umpleClass))
     {
-      var oldOffsetOne = umpleAssociation.offsetOnePosition; 
-      var oldOffsetTwo = umpleAssociation.offsetTwoPosition;
-      
-      umpleAssociation.trimOverlap();
-    
+      var oldOffsetOne = UmplePositionFactory.copy(umpleAssociation.offsetOnePosition); 
+      var oldOffsetTwo = UmplePositionFactory.copy(umpleAssociation.offsetTwoPosition);
+
+      if(umpleAssociation.isReflexive()) 
+        umpleAssociation.adjustReflexiveEndpoints();
+      else 
+        umpleAssociation.trimOverlap();
+
       // if an offset position has changed, update the association
       if (!oldOffsetOne.equalsIgnoreSize(umpleAssociation.offsetOnePosition) ||
           !oldOffsetTwo.equalsIgnoreSize(umpleAssociation.offsetTwoPosition))

@@ -122,14 +122,16 @@ DiagramEdit.createAssociationPartTwo = function(event)
 {
   var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
   Action.classSelected(event.currentTarget);
-  
-  if (DiagramEdit.newAssociation.classOneId <= event.currentTarget.id)
+
+  if(DiagramEdit.newAssociation.classOneId <= event.currentTarget.id)
   {
+    //The inline association definition belongs in the first class clicked
     DiagramEdit.newAssociation.classTwoId = event.currentTarget.id;
     DiagramEdit.newAssociation.classTwoPosition = mousePosition.subtract(UmpleSystem.position());
   }
   else
   {
+    //The inline association definition belongs in the second class clicked
     DiagramEdit.newAssociation.classTwoId = DiagramEdit.newAssociation.classOneId;
     DiagramEdit.newAssociation.classTwoPosition = DiagramEdit.newAssociation.classOnePosition;
     DiagramEdit.newAssociation.classOneId = event.currentTarget.id;
