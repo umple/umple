@@ -672,7 +672,7 @@ Action.generateCode = function(languageStyle,languageName)
 {
   var generateCodeSelector = "#buttonGenerateCode";
   var actualLanguage = languageName;
-  if (Page.getAdvancedMode() == 0 && (languageName == "Cpp" || languageName == "Sql"))
+  if (Page.getAdvancedMode() == 0 && (languageName == "Cpp"))
   {
     actualLanguage = "Experimental-"+languageName;
   }
