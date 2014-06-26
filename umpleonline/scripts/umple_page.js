@@ -709,7 +709,7 @@ Page.showGeneratedCode = function(code,language)
   jQuery("#messageArea").html(errorMarkup);
   
   //Set the generated content
-  if(language == "java" || language == "php" || language == "cpp" || language == "ruby" || language == "xml")
+  if(language == "java" || language == "php" || language == "cpp" || language == "ruby" || language == "xml" || language == "sql")
   {
     jQuery("#innerGeneratedCodeRow").html(
         formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)
