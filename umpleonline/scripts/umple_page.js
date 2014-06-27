@@ -360,7 +360,7 @@ Page.clickShowHideCanvas = function() {
   jQuery('#buttonShowHideCanvas').trigger('click');
 }
 Page.clickShowHideMenu = function() {
-  Action.showHideMenu(); // No clickable button
+  Layout.showHideMenu(); // No clickable button
 }
 
 Page.clickButtonlarger = function() {

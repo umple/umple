@@ -331,21 +331,6 @@ Action.changeDiagramType = function(newDiagramType)
   }
 }
 
-Action.showHideMenu = function(doShow)
-{
-  var menu = jQuery("#paletteColumn");
-
-  if (doShow == undefined) doShow = !menu.is(":visible"); 
-  if (doShow)
-  {
-    menu.show();
-  }
-  else
-  {
-    menu.hide();
-  }
-}
-
 Action.pngImage = function()
 {
   var jsonText = Json.toString(UmpleSystem);
@@ -1461,11 +1446,6 @@ Action.updateUmpleDiagramCallback = function(response)
 
     Page.setFeedbackMessage("");
     Page.hideGeneratedCode(); //TODO always hide generated code? as the code is updated?
-    if (new Date().getTime()-Action.gentime > 60000)
-    {
-      // Erase generated code if it was generated a long time ago
-      Page.hideGeneratedCode();
-    }
     
     // Display editable class diagram
     if(Page.useEditableClassDiagram) {
