@@ -63,14 +63,14 @@ class Analyzer
             {
               analyzer.addChild(child);
             }
-	        for(int i=0;i<classes.size();++i)
-	        {
-	          Object object = this.getClass().getMethod("get"+variables.get(i),new Class[]{}).invoke(this);
-	          analyzer.getClass().getMethod("set"+variables.get(i),new Class[]{classes.get(i)}).invoke(analyzer,object);
-	        }
-	      } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
-	        e.printStackTrace();
-	      }
+	    for(int i=0;i<classes.size();++i)
+	    {
+	      Object object = this.getClass().getMethod("get"+variables.get(i),new Class[]{}).invoke(this);
+	      analyzer.getClass().getMethod("set"+variables.get(i),new Class[]{classes.get(i)}).invoke(analyzer,object);
+	    }
+	  } catch (SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException e) {
+	    e.printStackTrace();
+	  }
           analyzer.analyzeToken(subtoken);
           break;
         }
@@ -412,6 +412,9 @@ class AssociationExprAnalyzer
   
   ConstraintVariable cv = new ConstraintVariable("NAME","");
   ConstraintVariable operator = new ConstraintVariable("OPERATOR","");
+  public void prepare(Token token){
+    cv.setSubConstraint(new Constraint());
+  }
 }
 
 class AssociationExprFirstOpAnalyzer
@@ -422,7 +425,14 @@ class AssociationExprFirstOpAnalyzer
   lazy ConstraintVariable operator;
   public void analyze(Token token)
   {
-    operator.setValue(token.getValue());
+    if(token.getValue().equals("cardinality"))
+    {
+      operator.setValue("cardinality==");
+    }
+    else
+    {
+      operator.setValue(token.getValue());
+    }
     operator.setIsPrimitive(false);
   }
 }
@@ -511,7 +521,7 @@ class AssociationExprAllAnalyzer
   }
 }
 
-class AssociationResolveAnalyzer
+class AssociationLiteralAnalyzer
 {
   isA Analyzer;
   depend cruise.umple.compiler.*;
@@ -542,7 +552,8 @@ class AssociationResolveAnalyzer
         rawLine.add(new ConstraintVariable("OPERATOR","||"));
       }
       rawLine.add(subject);
-    }    
+    }
+    else firstName = false;    
     rawLine.add(operator);
   }
   public void analyze(Token token)

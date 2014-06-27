@@ -59,10 +59,9 @@ arithmeticResolve -: -( [[arithmeticCall]] -) | [[numberName]]
 equalityOperator- :  [=equalsOp:==|equals] | [=notequalsOp:!=|/=|=!|=/=]
 ordinalOp- : [=greaterOp:greater|>=|=>|=>=] | [=lessOp:less|<=|=<|=<=] | [=moreOp:larger|>] | [=smallerOp:smaller|<]
 
-associationExpr : [[constraintName]] [[associationOperators]] [[associationLit]]
+associationExpr : [[constraintName]] [[associationOperators]] [[associationLiteral]]
 associationOperators- : [=firstOp:cardinality|has] ( [[ordinalOp]] | [[equalityOperator]] | [=all] )?
-associationLit- : [[associationResolve]] | { [[associationLit]] ( , [[associationLit]] )* }
-associationResolve : [[constraintParameter]]
+associationLiteral : [[constraintParameter]] ( , [[associationLiteral]] )?
 
 statemachineExpr : [[constraintName]] [[statemachineOperators]] [[statemachineLiteral]]
 statemachineOperators- : [=isInOp:is|state] [=ignore:==|in] | [=isNotInOp:is|state] ( [=ignore:!=] | [=ignore:not] [=ignore:in] )
