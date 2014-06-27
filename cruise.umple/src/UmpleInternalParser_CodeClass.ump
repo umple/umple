@@ -633,8 +633,7 @@ class UmpleInternalParser
   }
 
   // Check for the existence of a a parent class
-  private void checkExtendsClass()
-  {
+   private void checkExtendsClass(){
     for(UmpleClass child : model.getUmpleClasses()) 
     {
       if(child.getExtendsToken() != null) 
@@ -642,22 +641,45 @@ class UmpleInternalParser
         if (child.getExtendsClass() != null ) 
         {
           // check to make sure attribute doesn't share a name with inherited attribute - F.K.
-          UmpleClass extend = child.getExtendsClass();
+
+          //Issue 578
+        	
+          List<Attribute> attRepetition = new ArrayList<Attribute>();
+          
           for(Attribute aAttribute : child.getAttributes())
           {
+
+            UmpleClass extend = child.getExtendsClass();
             while(extend!=null && child != extend) 
             {
               for(Attribute extendAttr : extend.getAttributes()) 
               {
+            	  
                 String currentName = aAttribute.getName();
                 if (extendAttr.getName().equals(currentName)) 
                 {
-                  setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
+                  if(extendAttr.getType().equals(aAttribute.getType()))
+                  {
+                    if(aAttribute.getValue() == null)
+                      attRepetition.add(aAttribute);
+                    else
+                      aAttribute.setIsRefinement(true);
+                  }
+                  else
+                  {
+                	attRepetition.add(aAttribute);
+                    setFailedPosition(aAttribute.getPosition(), 44, child.getName(), currentName, extend.getName());
+                
+                  }
                 }
               }
               extend = extend.getExtendsClass();
             }  
-          }     
+          }
+          
+          for(Attribute att : attRepetition)
+        	  child.deleteAttribute(att);
+        	  
           continue;
         }
         else{

@@ -1,0 +1,12 @@
+class X {
+  Integer b;
+  a;
+  c;
+}
+
+class Y {
+  isA X;
+  Integer b;
+  a="cat";
+  Integer c;
+}

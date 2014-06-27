@@ -1150,8 +1150,14 @@ public class UmpleParserTest
   // in a superclass.
   public void attributeSharedName()
   {
-	  assertHasWarningsParse("429_sharedAttributeName.ump", 44);
-  	  assertHasWarningsParse("429_sharedAttributeName_ML.ump", 44);
+	  assertNoWarningsParse("429_sharedAttributeName.ump");
+	  assertNoWarningsParse("429_sharedAttributeName_ML.ump");
+  	  
+  	  //Issue 587
+  	  assertHasWarningsParse("429_sharedAttributeName_MultCases1.ump", 44);
+  	  assertHasWarningsParse("429_sharedAttributeName_WrongTypes.ump", 44);
+  	  assertNoWarningsParse("429_sharedAttributeName_Refinements.ump");
+	   
   }
   
   @Test
