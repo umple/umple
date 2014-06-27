@@ -39,6 +39,8 @@ Layout.init = function()
     this.isInSmallScreenMode = true;
   }
   
+  this.layoutHandler.transition(true);
+
   jQuery(window).bind("resize", function(event)
     {
       // Stops resizing events from bubbling up from the page's resizable elements
@@ -156,7 +158,7 @@ Layout.showHideTextEditor = function(doShow)
   }
   
   //Resize the elements according to the layoutHandler
-  this.layoutHandler.showHideTextEditorResize();
+  this.layoutHandler.showHideResize();
 }
 
 Layout.showHideCanvas = function(doShow)
@@ -218,7 +220,26 @@ Layout.showHideCanvas = function(doShow)
   }
   
   //Resize the elements according to the layoutHandler
-  this.layoutHandler.showHideCanvasResize();
+  this.layoutHandler.showHideResize();
+}
+
+Layout.showHideMenu = function(doShow)
+{
+  var menu = jQuery("#paletteColumn");
+
+  if (doShow == undefined) doShow = !menu.is(":visible"); 
+  if (doShow)
+  {
+    Layout.isPaletteVisible = true;
+    menu.show();
+  }
+  else
+  {
+    Layout.isPaletteVisible = false;
+    menu.hide();
+  }
+
+  this.layoutHandler.showHideResize();
 }
 
 //Deals with any resize of the window. This includes browser zoom and resize within the OS.
@@ -250,7 +271,7 @@ Layout.toggleSmallScreenMode = function()
     this.layoutHandler = new SmallScreenManager();
   }
   
-  this.layoutHandler.transition();
+  this.layoutHandler.transition(false);
 }
 
 Layout.verticallyResizing = function(event, ui) {this.layoutHandler.verticallyResizing(event, ui);}
@@ -275,62 +296,52 @@ Layout.calculateMainHeight = function()
 // Layout Managers //
 /////////////////////
 
-
 // Controls the layout when the width of the screen is larger than the width threshold
 function LargeScreenManager()
 {
-  //Add the appropriate classes
-  jQuery(editorHandle).addClass('largeScreenEditor');
-  jQuery(canvasHandle).addClass('largeScreenCanvas');
-  
-  //Calculate the total empty space horizontally
-  this.marginSpace = parseInt(jQuery('body').css('marginLeft'))
-    + parseInt(jQuery('body').css('marginRight'))
-    + parseInt(jQuery(editorHandle).css('marginRight'))
-    + parseInt(jQuery(canvasHandle).css('marginLeft'));
-  
-  this.heightFactor = 1;
-  
-  this.minCanvasSize = new UmplePosition(0,0,420,50);
-  this.minEditorSize = new UmplePosition(0,0,284,0);
-  
-  var maxEditorWidth = jQuery(window).innerWidth() - this.marginSpace 
-    - jQuery(paletteHandle).outerWidth() - this.minCanvasSize.width;
-  var maxCanvasWidth = jQuery(window).innerWidth() - this.marginSpace
-    - jQuery(paletteHandle).outerWidth() - this.minEditorSize.width;
-  
-  this.maxEditorSize = new UmplePosition(0, 0, maxEditorWidth, 0);
-  this.maxCanvasSize = new UmplePosition(0, 0, maxCanvasWidth, 0);
-  
   //////////////////////////////
   // Initialization functions //
   //////////////////////////////
   
-  //Called when the layout is switching to this manager from another manager
-  this.transition = function()
+  // Called when the layout is switching to this manager from another manager
+  // Also called when the Layout is initializing
+  this.transition = function(firstTime)
   {
-    jQuery(editorHandle).resizable('destroy');
-    jQuery(paletteHandle).resizable('destroy');
-    jQuery(canvasHandle).resizable('destroy');
+    if(!firstTime)
+    {
+      jQuery(editorHandle).resizable('destroy');
+      jQuery(paletteHandle).resizable('destroy');
+      jQuery(canvasHandle).resizable('destroy');
+
+      //Remove unnecessary styles
+      jQuery(editorHandle).removeClass('smallScreenEditor smallScreenEditorNoMargin');
+      jQuery(canvasHandle).removeClass('smallScreenCanvas smallScreenCanvasNoEditor smallScreenCanvasNoEditorNoPalette');
+    }
+
+    // Adjust the margins appropriately
+    this.adjustMarginSpace();
+
+    // reset the height-tracking factor
+    this.heightFactor = 1;
+  
+    // set the minimum sizes
+    this.minCanvasSize = new UmplePosition(0,0,420,50);
+    this.minEditorSize = new UmplePosition(0,0,284,0);
+
+    var maxEditorWidth = jQuery(window).innerWidth() - this.marginSpace 
+      - jQuery(paletteHandle).outerWidth() - this.minCanvasSize.width;
+    var maxCanvasWidth = jQuery(window).innerWidth() - this.marginSpace
+      - jQuery(paletteHandle).outerWidth() - this.minEditorSize.width;
     
+    this.maxEditorSize = new UmplePosition(0, 0, maxEditorWidth, 0);
+    this.maxCanvasSize = new UmplePosition(0, 0, maxCanvasWidth, 0);
+
     //Allow horizontal resizing
     this.initEditorResizable();
     this.initCanvasResizable();
     
     //Allow vertical resizing
     this.initVerticalResizable();
-    
-    //Remove unnecessary styles
-    jQuery(editorHandle).removeClass('smallScreenEditor');
-    jQuery(canvasHandle).removeClass('smallScreenCanvasWithEditor');
-    jQuery(canvasHandle).removeClass('smallScreenCanvasNoEditor');
-    
-    var editorWidth = undefined;
-    
-    if(!Layout.isDiagramVisible)
-      editorWidth = this.calculateLeftoverWidth() + jQuery(editorHandle).outerWidth();
-    
-    this.setTextEditorSize(editorWidth, undefined);
   }
   
   //Initializes the canvas size and resizable properties
@@ -348,7 +359,7 @@ function LargeScreenManager()
     // Expands the text editor to 70 characters
     this.setTextEditorSize(508, undefined);
     
-    this.adjustAfterWindowResize();
+    this.adjustAfterWindowResize();  
   }
   
   this.initPaletteSize = function()
@@ -409,41 +420,16 @@ function LargeScreenManager()
   // Reaction resize functions //
   ///////////////////////////////
   
-  this.showHideTextEditorResize = function()
+  this.showHideResize = function()
   {
-    var canvas = jQuery(canvasHandle);
-    var editor = jQuery(editorHandle);
-    
     //Adjust margin spacing
-    if(Layout.isTextVisible)
-      this.marginSpace += parseInt(jQuery(editorHandle).css('marginRight'));
-    else
-      this.marginSpace -= parseInt(jQuery(editorHandle).css('marginRight'));
-    
+    this.adjustMarginSpace();    
       
     //Adjust sizes
     if(Layout.isDiagramVisible)
-      this.setUmpleCanvasSize(this.calculateLeftoverWidth() + canvas.outerWidth(), undefined);
+      this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
     if(Layout.isTextVisible)
-      this.setTextEditorSize(this.calculateLeftoverWidth() + editor.outerWidth(), undefined);
-  }
-  
-  this.showHideCanvasResize = function()
-  {
-    var canvas = jQuery(canvasHandle);
-    var editor = jQuery(editorHandle);
-    
-    //Adjust margin spacing
-    if(Layout.isDiagramVisible)
-      this.marginSpace += parseInt(jQuery(canvasHandle).css('marginLeft'));
-    else
-      this.marginSpace -= parseInt(jQuery(canvasHandle).css('marginLeft'));
-      
-    //Adjust sizes
-    if(Layout.isDiagramVisible)
-      this.setUmpleCanvasSize(this.calculateLeftoverWidth() + canvas.outerWidth(), undefined);
-    if(Layout.isTextVisible)
-      this.setTextEditorSize(this.calculateLeftoverWidth() + editor.outerWidth(), undefined);
+      this.setTextEditorSize(this.calculateLeftoverWidth() + jQuery(editorHandle).outerWidth(), undefined);
   }
   
   this.adjustAfterWindowResize = function()
@@ -473,7 +459,7 @@ function LargeScreenManager()
     }
     else
     {
-      this.setTextEditorSize(undefined, undefined);
+      this.setTextEditorSize(leftoverWidth + jQuery(editorHandle).outerWidth(), undefined);
     }
   }
   
@@ -588,13 +574,55 @@ function LargeScreenManager()
   // Helper functions //
   //////////////////////
   
+  this.adjustMarginSpace = function()
+  {
+    jQuery(editorHandle).removeClass("largeScreenEditor largeScreenEditorNoMargin");
+    jQuery(canvasHandle).removeClass("largeScreenCanvas largeScreenCanvasNoMargin");
+
+    if(Layout.isTextVisible)
+    {
+      if(Layout.isDiagramVisible && Layout.isPaletteVisible)
+      {
+        jQuery(editorHandle).addClass("largeScreenEditor");
+        jQuery(canvasHandle).addClass("largeScreenCanvas");
+      }
+      else if(Layout.isDiagramVisible || Layout.isPaletteVisible)
+      {
+        jQuery(editorHandle).addClass("largeScreenEditor");
+        jQuery(canvasHandle).addClass("largeScreenCanvasNoMargin");
+      }
+      else 
+      {
+        jQuery(editorHandle).addClass("largeScreenEditorNoMargin");
+        jQuery(canvasHandle).addClass("largeScreenCanvasNoMargin");
+      }
+    }
+    else
+    {
+      jQuery(editorHandle).addClass("largeScreenEditorNoMargin");
+
+      if(Layout.isDiagramVisible && Layout.isPaletteVisible)
+      {
+        jQuery(canvasHandle).addClass("largeScreenCanvas");
+      }
+      else
+      {
+        jQuery(canvasHandle).addClass("largeScreenCanvasNoMargin");
+      }
+    }
+
+    this.marginSpace = parseInt(jQuery('body').css('marginLeft'))
+      + parseInt(jQuery('body').css('marginRight'))
+      + parseInt(jQuery(canvasHandle).css("marginLeft")) 
+      + parseInt(jQuery(editorHandle).css("marginRight"));
+  }
+
   this.calculateLeftoverWidth = function() 
   {
     var width = jQuery(window).innerWidth() - this.marginSpace;
     if(Layout.isTextVisible) width -= jQuery(editorHandle).outerWidth();
     if(Layout.isDiagramVisible) width -= jQuery(canvasHandle).outerWidth();
     if(Layout.isPaletteVisible) width -= jQuery(paletteHandle).outerWidth();
-    
     return width;
   }
   
@@ -613,42 +641,30 @@ function LargeScreenManager()
 
 //Controls the layout when the width of the screen is smaller than the width threshold
 function SmallScreenManager()
-{
-  //Add the appropriate styles
-  jQuery(editorHandle).addClass('smallScreenEditor');
-  if(Layout.isTextVisible)
-    jQuery(canvasHandle).addClass('smallScreenCanvasWithEditor');
-  else
-    jQuery(canvasHandle).addClass('smallScreenCanvasNoEditor');
-  
-  this.marginSpace = 2*parseInt(jQuery('body').css('marginLeft')) 
-    + parseInt(jQuery(editorHandle).css('marginRight'));
-
-  this.minCanvasSize = new UmplePosition(0,0,420,50);
-  this.minEditorSize = new UmplePosition(0,0,284,0);
-  
-  var maxEditorWidth = jQuery(window).innerWidth() - this.marginSpace
-    - jQuery(paletteHandle).outerWidth();
-  var maxCanvasWidth = jQuery(window).innerWidth() - this.marginSpace;
-  
-  this.maxEditorSize = new UmplePosition(0, 0, maxEditorWidth, 0);
-  this.maxCanvasSize = new UmplePosition(0, 0, maxCanvasWidth, 0);
-  
+{  
   //////////////////////////////
   // Initialization functions //
   //////////////////////////////
   
   //Called when the layout is switching to this manager from another manager
-  this.transition = function()
+  this.transition = function(firstTime)
   {
-    //Reset any resizables
-    jQuery(editorHandle).resizable('destroy');
-    jQuery(canvasHandle).resizable('destroy');
-    jQuery("#mainApplication").resizable('destroy');
-    
-    //Remove the other styles
-    jQuery(editorHandle).removeClass('largeScreenEditor');
-    jQuery(canvasHandle).removeClass('largeScreenCanvas');
+    if(!firstTime)
+    {
+      //Reset any resizables
+      jQuery(editorHandle).resizable('destroy');
+      jQuery(canvasHandle).resizable('destroy');
+      jQuery("#mainApplication").resizable('destroy');
+      
+      //Remove the other styles
+      jQuery(editorHandle).removeClass('largeScreenEditor largeScreenEditorNoMargin');
+      jQuery(canvasHandle).removeClass('largeScreenCanvas largeScreenCanvasNoMargin');
+    }
+
+    this.adjustMarginSpace();
+
+    this.minCanvasSize = new UmplePosition(0,0,420,50);
+    this.minEditorSize = new UmplePosition(0,0,284,0);
     
     this.initEditorResizable();
     this.initCanvasResizable();
@@ -680,9 +696,18 @@ function SmallScreenManager()
   
   this.setTextEditorSize = function(width, height)
   {
+    var width = this.calculateLeftoverWidth();
+
     // This -1 exists to deal with any rounding errors that may occur during zooming
     // It ensures the layout does not float down in the page
-    jQuery(editorHandle).width(this.calculateLeftoverWidth() - 1);
+    if(Layout.isPaletteVisible)
+    {
+      jQuery(editorHandle).outerWidth(width - 1);
+    }
+    else
+    {
+      jQuery(editorHandle).outerWidth(width);
+    }
     
     if(height != undefined)
       Layout.adjustTextEditorHeight(height);
@@ -706,39 +731,29 @@ function SmallScreenManager()
   ///////////////////////////////
   // Reaction resize functions //
   ///////////////////////////////
-  
-  this.showHideTextEditorResize = function()
+
+  this.showHideResize = function()
   {
     var canvasHeight = undefined;
-    
+
+    this.adjustMarginSpace();
+
     if(Layout.isTextVisible)
     {
-      jQuery(canvasHandle).removeClass('smallScreenCanvasNoEditor');
-      jQuery(canvasHandle).addClass('smallScreenCanvasWithEditor');
       this.setTextEditorSize(undefined, jQuery(paletteHandle).outerHeight());
     }
     else
     {
-      jQuery(canvasHandle).removeClass('smallScreenCanvasWithEditor');
-      jQuery(canvasHandle).addClass('smallScreenCanvasNoEditor');
       canvasHeight = jQuery(paletteHandle).outerHeight();
     }
     
+    jQuery("#palette").accordion('refresh');
     this.pairResizables();
     this.setUmpleCanvasSize(undefined, canvasHeight);
   }
-  
-  this.showHideCanvasResize = function() {} //Unused function
-  
+
   this.adjustAfterWindowResize = function()
-  {
-    var maxEditorWidth = jQuery(window).innerWidth() - this.marginSpace
-      - jQuery(paletteHandle).outerWidth();
-    var maxCanvasWidth = jQuery(window).innerWidth() - this.marginSpace;
-    
-    this.maxEditorSize = new UmplePosition(0, 0, maxEditorWidth, 0);
-    this.maxCanvasSize = new UmplePosition(0, 0, maxCanvasWidth, 0);
-    
+  {   
     jQuery("#paletteColumn").outerHeight(this.calculateHeight());
     jQuery("#palette").accordion("refresh");
     
@@ -816,9 +831,53 @@ function SmallScreenManager()
   // Helper functions //
   //////////////////////
   
+  this.adjustMarginSpace = function()
+  {
+    jQuery(canvasHandle).removeClass('smallScreenCanvas smallScreenCanvasNoEditor smallScreenCanvasNoEditorNoPalette');
+    jQuery(editorHandle).removeClass('smallScreenEditor smallScreenEditorNoMargin');
+
+    if(Layout.isTextVisible)
+    {
+      jQuery(canvasHandle).addClass('smallScreenCanvas');
+      if(Layout.isPaletteVisible)
+      {
+        jQuery(editorHandle).addClass('smallScreenEditor');
+      }
+      else
+      {
+        jQuery(editorHandle).addClass('smallScreenEditorNoMargin');
+      }
+    }
+    else
+    {
+      jQuery(editorHandle).addClass('smallScreenEditorNoMargin');
+      if(Layout.isPaletteVisible && Layout.isDiagramVisible)
+      {
+        jQuery(canvasHandle).addClass('smallScreenCanvasNoEditor');
+      }
+      else
+      {
+        jQuery(canvasHandle).addClass('smallScreenCanvasNoEditorNoPalette');
+      }
+    }
+
+    this.marginSpace = parseInt(jQuery('body').css('marginLeft')) 
+    + parseInt(jQuery('body').css('marginRight'))
+    + parseInt(jQuery(editorHandle).css('marginRight'))
+    + parseInt(jQuery(canvasHandle).css('marginLeft'));
+  }
+
   this.calculateLeftoverWidth = function() 
   {
-    return jQuery(window).innerWidth() - this.marginSpace - jQuery(paletteHandle).outerWidth();
+    if(Layout.isPaletteVisible)
+    {
+      return jQuery(window).innerWidth() - this.marginSpace 
+        - jQuery(paletteHandle).outerWidth();
+    }
+    else
+    {
+      return jQuery(window).innerWidth() - this.marginSpace;
+    }
   }
   
   this.calculateHeight = function()
