@@ -1,0 +1,13 @@
+class B {
+  bAttr;
+}
+
+class C {
+  isA B;
+  cAttr;
+}
+
+class E { 
+  isA C; 
+  Integer bAttr;
+}

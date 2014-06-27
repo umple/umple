@@ -598,6 +598,7 @@ class Attribute
 
   // Specifies whether or not the method parameter is lazy.
   Boolean isLazy = false;
+  Boolean isRefinement = false;
 
   // The comments associated with the attribute (such as the Javadoc above it).
   1 -> * Comment;

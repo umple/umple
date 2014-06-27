@@ -1299,6 +1299,21 @@ class UmpleClass
 
     return immutabilityAssociationRulesSatisfied(myAV, this, myClassImmutable, relatedAV, relatedClass, relatedClassImmutable);
   }
+  
+  
+  public boolean deleteAttribute(Attribute aAttribute)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aAttribute, as it must always have a umpleClass
+    if (this.equals(aAttribute.getUmpleClass()))
+    {
+      attributes.remove(aAttribute);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  
+  
 
 }
 
