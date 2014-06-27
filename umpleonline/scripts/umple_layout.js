@@ -12,7 +12,6 @@ Layout.isPaletteVisible = true;
 Layout.layoutHandler = null;
 Layout.isInSmallScreenMode = false;
 Layout.screenThresholdWidth = 945;
-Layout.errorMessageSpace = 50;
 
 // The handles for the main layout controlling features
 var canvasHandle = "#umpleCanvasColumn";
@@ -28,6 +27,12 @@ var layoutEditorHandle = "#bottomTextEditor";
 //Initializes any constants the layout depends on
 Layout.init = function()
 {
+  Layout.errorMessageSpace = jQuery(".spacer").outerHeight();
+  if(Layout.errorMessageSpace === null)
+  {
+    Layout.errorMessageSpace = 0;
+  }
+
   if(jQuery(window).innerWidth() > this.screenThresholdWidth)
   {
     this.layoutHandler = new LargeScreenManager();

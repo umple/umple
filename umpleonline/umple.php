@@ -89,19 +89,21 @@ $output = readTemporaryFile("ump/" . $filename);
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> 
 </head>
 <body>
-  <div id="header" class="row">
-    <div class="inRow logo">
-      <img src="scripts/umpleonline_title.jpg" title="UmpleOnline - Draw and Type your next model" />
+  <?php if($showChrome) { ?> 
+    <div id="header" class="row">
+      <div class="inRow logo">
+        <img src="scripts/umpleonline_title.jpg" title="UmpleOnline - Draw and Type your next model" />
+      </div>
+      <div class="inRow">
+        <p class="pagedescription">
+          Draw on the right, write (Umple) model code on the left. Generate Java, C++, PHP or Ruby code from your models. <br/>
+          Visit <a href="http://manual.umple.org" target=helppage">the User Manual</a> or <a href="http://www.umple.org">the Umple Home Page</a> for help.
+          &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple</a>
+          &nbsp;&nbsp;&nbsp;<a href="http://code.google.com/p/umple/issues/entry" target="newissue">Report an Issue</a>
+        </p>
+      </div>
     </div>
-    <div class="inRow">
-      <p class="pagedescription">
-        Draw on the right, write (Umple) model code on the left. Generate Java, C++, PHP or Ruby code from your models. <br/>
-        Visit <a href="http://manual.umple.org" target=helppage">the User Manual</a> or <a href="http://www.umple.org">the Umple Home Page</a> for help.
-        &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple</a>
-        &nbsp;&nbsp;&nbsp;<a href="http://code.google.com/p/umple/issues/entry" target="newissue">Report an Issue</a>
-      </p>
-    </div>
-  </div>
+  <?php } ?>
 
   <noscript>
     <br/><font color="red">JavaScript is disabled so the dynamic features of this page will not work. To use UmpleOnline, turn Javascript on. Otherwise you can download the command-line Umple compiler or use Eclipse.</font>
@@ -323,13 +325,16 @@ $output = readTemporaryFile("ump/" . $filename);
       <div id="svgDummy"></div>
     </div>
   </div>
+  
   <div id="generatedCodeRow" class="row">
     <div id="messageArea"></div>
     <div id="innerGeneratedCodeRow"></div>
     <svg id="svgCanvas"></svg>
   </div>
-  <div class="spacer row"></div>
-  
+
+  <?php if($showChrome) { ?>
+    <div class="spacer row"></div>
+  <?php } ?>
 
   <script language="JavaScript">
     Page.init(
