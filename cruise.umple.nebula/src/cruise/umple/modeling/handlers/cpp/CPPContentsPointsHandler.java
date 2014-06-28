@@ -653,7 +653,7 @@ public class CPPContentsPointsHandler{
 		
 		if(!isProprty){
 			begin= begin+ generationValueGetter.use(IModelingConstructorDefinitionsConstants.STREAM_VALUE, 
-					CommonConstants.OPEN_BRACKET, Boolean.TRUE, Boolean.TRUE)+ CommonConstants.SPACE;
+					CommonConstants.OPEN_SQUARE_BRACKET, Boolean.TRUE, Boolean.TRUE)+ CommonConstants.SPACE;
 		}else{
 			begin= generationValueGetter.use(IModelingConstructorDefinitionsConstants.STREAM_VALUE, begin,
 					Boolean.FALSE, Boolean.TRUE, Boolean.TRUE)+ CommonConstants.SPACE;
@@ -685,7 +685,7 @@ public class CPPContentsPointsHandler{
 		}
 		
 		if(values.size()>1){
-			all= all+ generationValueGetter.use(IModelingConstructorDefinitionsConstants.STREAM_VALUE, CommonConstants.CLOSE_BRACKET, Boolean.TRUE, Boolean.FALSE);
+			all= all+ generationValueGetter.use(IModelingConstructorDefinitionsConstants.STREAM_VALUE, CommonConstants.CLOSE_SQUARE_BRACKET, Boolean.TRUE, Boolean.FALSE);
 		}
 		
 		if(!isProprty){

@@ -19,12 +19,17 @@
 
 package cruise.umple.modeling.handlers.cpp;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +37,7 @@ import cruise.umple.core.CommonConstants;
 import cruise.umple.core.DecisionPoint;
 import cruise.umple.core.GenerationArgumentDescriptor;
 import cruise.umple.core.GenerationCallback.GenerationArgument;
+import cruise.umple.core.GenerationCallback.GenerationArguments;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationElementParameter;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
@@ -44,6 +50,7 @@ import cruise.umple.core.GenerationPolicyRegistry;
 import cruise.umple.core.GenerationPolicyRegistryPriorities;
 import cruise.umple.core.IGenerationPointPriorityConstants;
 import cruise.umple.core.LoopProcessorAnnotation;
+import cruise.umple.core.OperatorConstants;
 import cruise.umple.core.LoopProcessorAnnotation.LoopAspectConstants;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
 import cruise.umple.cpp.utils.CPPCommonConstants;
@@ -55,12 +62,15 @@ import cruise.umple.modeling.handlers.IModelingConstructorDefinitionsConstants;
 import cruise.umple.modeling.handlers.IModelingDecisions;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.IModelingPriorityHandler;
+import cruise.umple.modeling.handlers.IStructureConstants;
 import cruise.umple.modeling.handlers.IUmpleModelingPriorities;
 import cruise.umple.modeling.handlers.VisibilityConstants;
 
 
 public class UmpleBaseGenerationPointsHandler{
 	
+	private static final String NAME = "NAME"; //$NON-NLS-1$
+
 	@GenerationPoint(generationPoint = IModelingConstants.COPY_RIGHT)
 	public static String getClassComment(@GenerationElementParameter(id = IModelingElementDefinitions.VERSION_NUMBER) String version){
 		StringBuffer buffer= new StringBuffer();
@@ -416,13 +426,31 @@ public class UmpleBaseGenerationPointsHandler{
 	public static String before(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
-			@GenerationBaseElement Object element,
 			@GenerationArgument(id= IModelingConstants.METHOD_ID) String methodId,
 			@GenerationElementParameter(id = IModelingElementDefinitions.IS_IMMUTABLE) boolean isImmutable,
 			@GenerationElementParameter(id = IModelingElementDefinitions.IS_LAZY) boolean isLazy) {
 		if(!ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION.equals(methodId)){
 			return null;
 		}
+		if(isLazy&& isImmutable|| generationValueGetter.getBoolean(parent, IModelingElementDefinitions.IS_IMMUTABLE)){
+			String canSet = generationValueGetter.use(ICppNameConstants.CAN_SET, name);
+			
+			//And, then update the setter method to have the lazy check code segment
+			return StringUtil.indent(generationValueGetter.use(ICppUmpleDefinitions.SETTER_CAN_SET_CHECK, canSet), 1)+ CommonConstants.NEW_LINE;
+		}
+		return null;
+	}
+	
+	@GenerationPoint(generationPoint = ICppAssociationsDefinitionsConstants.SETTER_GENERATION_POINT, ifConditionIds= IModelingDecisions.ATTRIBUTE_IS_SETTABLE, 
+			priority= IGenerationPointPriorityConstants.LOWEST)
+	public static void setSetterDetails(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationBaseElement Object element,
+			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
+			@GenerationArgument(id= ICppAssociationsDefinitionsConstants.SetterMessages.HANDLE_ID) String id, 
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
+			@GenerationElementParameter(id = IModelingElementDefinitions.IS_IMMUTABLE) boolean isImmutable,
+			@GenerationElementParameter(id = IModelingElementDefinitions.IS_LAZY) boolean isLazy) {
+		
 		if(isLazy&& isImmutable|| generationValueGetter.getBoolean(parent, IModelingElementDefinitions.IS_IMMUTABLE)){
 			String canSet = generationValueGetter.use(ICppNameConstants.CAN_SET, name);
 			
@@ -441,11 +469,7 @@ public class UmpleBaseGenerationPointsHandler{
 			String constructorCall= generationValueGetter.use(ICppDefinitions.ASSIGN_STATEMENET, thisCanSet, Boolean.TRUE.toString());
 			generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, 
 					new SimpleEntry<Object, String>(element, constructorCall), parent, Boolean.TRUE);
-			
-			//And, then update the setter method to have the lazy check code segment
-			return StringUtil.indent(generationValueGetter.use(ICppUmpleDefinitions.SETTER_CAN_SET_CHECK, canSet), 1);
 		}
-		return null;
 	}
 	
 	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_GENERATION_BODY)
@@ -563,8 +587,12 @@ public class UmpleBaseGenerationPointsHandler{
 	@GenerationPoint(generationPoint = ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION_CONDITION)
 	public static String setterImplementation(
 			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
+			@GenerationProcedureParameter(id = IModelingConstants.MODELING_DEFAULT_NEW_PARAMETER_NAME) String instnace,
 			@GenerationArgument(id= ICppAssociationsDefinitionsConstants.SETTER_IMPLEMENTATION_ARGUMENT) String contents) {
-		String all= generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS);
+		Map<Object, String> constraintVariables = new HashMap<Object, String>();
+		constraintVariables.put(element, instnace);
+		String all= generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS, constraintVariables, 
+				OperatorConstants.AND);
 		if(all.isEmpty()){
 			return null;
 		}
@@ -572,46 +600,103 @@ public class UmpleBaseGenerationPointsHandler{
 	}
 	
 	@GenerationPoint(generationPoint = IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS)
-	public static String constraintsExpressions(
-			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationElementParameter(id = IModelingElementDefinitions.CONSTRAINTS) List<?> constraints) {
-		return processConstraintsExpressions(generationValueGetter, constraints);
+	public static String constraintsExpressions(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationElementParameter(id = IModelingElementDefinitions.CONSTRAINTS) List<?> constraints,
+			@GenerationArgument Map<Object, String> constraintVariables,
+			@GenerationArgument String operator) {
+		return processConstraintsExpressions(generationValueGetter, constraints, constraintVariables, operator);
 	}
 
 	@GenerationPoint(generationPoint = IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS)
 	public static String processConstraintsExpressions(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationArgument Object constraint) {
-		StringBuffer stringBuffer= new StringBuffer();
+			@GenerationArgument Object constraint, @GenerationArgument Map<Object, String> constraintVariables,
+			@GenerationArgument String operator) {
 		List<?> list= constraint instanceof List? (List<?>) constraint: Arrays.asList(new Object[]{constraint});
+		Map<Object, StringBuffer> processedConstraints= new HashMap<Object, StringBuffer>();
+		processConstraintsExpressions(generationValueGetter, processedConstraints, list, constraintVariables, null);
 		
-		processConstraintsExpressions(generationValueGetter, stringBuffer, list);
-		return stringBuffer.toString();
+		String normalizedOperator= operator== null? OperatorConstants.OR: operator;
+		
+		String contraintString= CommonConstants.BLANK;
+		for(StringBuffer stringBuffer: processedConstraints.values()){
+			if(!contraintString.isEmpty()){
+				contraintString= contraintString+ normalizedOperator;
+			}
+			
+			contraintString= contraintString+ CommonConstants.OPEN_BRACKET+ stringBuffer+ CommonConstants.CLOSE_BRACKET;
+		}
+		return contraintString;
 	}
 	
-	private static void processConstraintsExpressions(GenerationPolicyRegistry generationValueGetter, StringBuffer stringBuffer, List<?> constraints) {
+	private static void processConstraintsExpressions(GenerationPolicyRegistry generationValueGetter, Map<Object, StringBuffer> processedConstraints, 
+			List<?> constraints, Map<Object, String> constraintVariables, Object parentConstraint) {
 		for(Object constraint: constraints){
+			StringBuffer stringBuffer = processedConstraints.get(constraint);
+			if(stringBuffer== null){
+				stringBuffer = processedConstraints.get(parentConstraint);
+			}
+			
+			if(stringBuffer== null){
+				stringBuffer = new StringBuffer();
+				processedConstraints.put(constraint, stringBuffer);
+			}
 			
 			List<?> expressions= generationValueGetter.getList(constraint, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS);
 			if(expressions== null){
 				continue;
 			}
 			
+			String type= null;
+			String value= null;
+			
 			for(Object expr: expressions){
-				String type= generationValueGetter.getString(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_TYPE);
+				String newType= generationValueGetter.getString(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_TYPE);
+				String newValue= generationValueGetter.getString(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_VALUE);
 				
-				if (type.equals("NAME")) { //$NON-NLS-1$
+				//////////////////////////////////////////////
+				checkMissingOperatorWorkaround: {
+					//FIXME: The >= operator is omitted by the parser, so we need to check and add the >= if necessary
+					if(NAME.equals(type)){
+						if( (!NAME.equals(newType))){
+							try {
+								Object parseObject = NumberFormat.getInstance().parseObject(newValue);
+								if(parseObject== null){
+									break checkMissingOperatorWorkaround;
+								}
+							} catch (ParseException e) {
+								break checkMissingOperatorWorkaround;
+							}
+						}
+						
+						stringBuffer.append(OperatorConstants.MORE_THAN);
+						stringBuffer.append(OperatorConstants.EQUAL);
+					}
+				}
+				//////////////////////////////////////////////
+				
+				type= newType;
+				value= newValue;
+				
+				if (type.equals(NAME)) {
 					List<?> subConstraints = generationValueGetter.getList(expr, IModelingElementDefinitions.CONSTRAINTS);
 					if(subConstraints== null){
 						continue;
 					}
-					processConstraintsExpressions(generationValueGetter, stringBuffer, subConstraints);
+					processConstraintsExpressions(generationValueGetter, processedConstraints, subConstraints, constraintVariables, constraint);
 					continue;
 				}
 				
 				boolean isAttribute= generationValueGetter.getBoolean(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_ATTRIBUTE);
-				String value= generationValueGetter.getString(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_VALUE);
-				
 				
 				if (isAttribute) {
+					if(constraintVariables!= null){
+						Object attribute = generationValueGetter.getObject(expr, IModelingElementDefinitions.ATTRIBUTE);
+						String paramValue = constraintVariables.get(attribute);
+						if(paramValue!= null){
+							value= paramValue;
+						}
+					}
+					
 					stringBuffer.append(value);
 					continue;
 				} 
@@ -639,27 +724,107 @@ public class UmpleBaseGenerationPointsHandler{
 		}
 	}
 	
-	
-	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_CONDITION)
-	public static String constructor(
-			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
-			@GenerationArgument(id= IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_ARGUMENT) String contents) {
+	@LoopProcessorAnnotations(priority= IGenerationPointPriorityConstants.HIGHEST, aspect= LoopAspectConstants.BEFORE, loopProcessorAnnotations ={ 
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR}),
+			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.INTERFACES_PROCESSOR})
+	})
+	public static void setConstructorConstraints(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
+			@GenerationBaseElement Object element,
+			@GenerationElementParameter(id = IModelingElementDefinitions.CONSTRAINTS) List<?> constraints,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent) {
 		
-		String all= generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS);
+		Map<Object, String> constraintVariables = getConstraintVariableParameters(generationValueGetter, constraints);
+		
+		String all= generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS, constraintVariables, 
+				OperatorConstants.OR);
 		if(all.isEmpty()){
-			return null;
+			return;
 		}
 		
 		String constraintCondition = generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINT_CHECK_THROW, all, Boolean.TRUE);
-		return constraintCondition+ CommonConstants.NEW_LINE+ contents;
+		if(!constraintCondition.isEmpty()){
+			generationValueGetter.addValue(IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION, 
+					new SimpleEntry<Object, String>(element, constraintCondition+ CommonConstants.NEW_LINE), parent, Boolean.TRUE);
+		}
 	}
+
+	private static Map<Object, String> getConstraintVariableParameters(GenerationPolicyRegistry generationValueGetter, List<?> constraints) {
+		Map<Object, String> constraintVariables= new HashMap<Object, String>();
+		for(Object constraint: constraints){
+			List<?> expressions= generationValueGetter.getList(constraint, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS);
+			if(expressions== null){
+				continue;
+			}
+			
+			for(Object expr: expressions){
+				String type= generationValueGetter.getString(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_TYPE);
+				if (!type.equals(NAME)) { //$NON-NLS-1$
+					continue;
+				}
+				
+				boolean isAttribute= generationValueGetter.getBoolean(expr, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_ATTRIBUTE);
+				
+				if(!isAttribute){
+					continue;
+				}
+				
+				Object attribute = generationValueGetter.getObject(expr, IModelingElementDefinitions.ATTRIBUTE);
+				String parameterName = generationValueGetter.generationPointString(attribute, IModelingElementDefinitions.TYPE_PARAMETER_NAME);
+				constraintVariables.put(attribute, parameterName);
+			}
+		}
+		return constraintVariables;
+	}
+	
+	
+//	@GenerationPoint(generationPoint = IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_CONDITION)
+//	public static String constructor(
+//			@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
+//			@GenerationArgument(id= IModelingConstructorDefinitionsConstants.CONSTRUCTOR_IMPLEMENTATION_ARGUMENT) String contents) {
+//		
+//		String all= generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINTS_EXPRESSIONS_CONTENTS, OperatorConstants.OR);
+//		if(all.isEmpty()){
+//			return null;
+//		}
+//		
+//		String constraintCondition = generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINT_CHECK_THROW, all, Boolean.TRUE);
+//		return constraintCondition+ CommonConstants.NEW_LINE+ contents;
+//	}
 	
 	@GenerationPoint(generationPoint = IModelingElementDefinitions.CONSTRAINT_CHECK_THROW)
 	public static String constraintCheck(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name,
+			@GenerationElementParameter(id = IModelingElementDefinitions.CONSTRAINTS) List<?> constraints,
+			@GenerationBaseElement Object element,
 			@GenerationArgument String conditions,
 			@GenerationArgument Boolean invert) {
-		String throwStatement = generationValueGetter.use(ICppDefinitions.THROW_STATEMENET, generationValueGetter.use(ICppUmpleDefinitions.CONSTRAINT_MESSAGE, name));
+		Map<Object, String> constraintVariables = constraints== null? new HashMap<Object, String>():getConstraintVariableParameters(generationValueGetter, constraints);
+		
+		Boolean isMany;
+		String asStringParameters;
+		
+		if(constraints== null){
+			Set<String> params= new HashSet<String>();
+			List<?> list = generationValueGetter.getList(element, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS);
+			for(Object obj: list){
+				String type= generationValueGetter.getString(obj, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_TYPE);
+				if(!NAME.equals(type)){
+					continue;
+				}
+				
+				String value= generationValueGetter.getString(obj, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_VALUE);
+				params.add(value);
+			}
+			
+			asStringParameters = GenerationUtil.asStringParameters(new ArrayList<String>(params), "and");
+			isMany = Boolean.valueOf(params.size()>1);
+			
+		}else{
+			isMany = Boolean.valueOf(constraintVariables.size()>1);
+			asStringParameters = GenerationUtil.asStringParameters(new ArrayList<String>(constraintVariables.values()), "and");
+		}
+		
+		String throwStatement = generationValueGetter.use(ICppDefinitions.THROW_STATEMENET, generationValueGetter.use(ICppUmpleDefinitions.CONSTRAINT_MESSAGE, 
+				asStringParameters, isMany));
 		String constraintCondition = generationValueGetter.use(ICppDefinitions.IF_CONDITION_BLOCK, conditions, 
 				StringUtil.indent(CommonConstants.NEW_LINE+ throwStatement, 1), invert);
 		return constraintCondition;

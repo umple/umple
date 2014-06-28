@@ -50,8 +50,11 @@ public interface CommonConstants {
 	public static final String OPEN_BRACE= "{"; 			//$NON-NLS-1$
 	public static final String CLOSE_BRACE= "}"; 			//$NON-NLS-1$
 	
-	public static final String OPEN_BRACKET= "["; 			//$NON-NLS-1$
-	public static final String CLOSE_BRACKET= "]"; 			//$NON-NLS-1$
+	public static final String OPEN_SQUARE_BRACKET= "["; 			//$NON-NLS-1$
+	public static final String CLOSE_SQUARE_BRACKET= "]"; 			//$NON-NLS-1$
+	
+	public static final String OPEN_BRACKET= "("; 			//$NON-NLS-1$
+	public static final String CLOSE_BRACKET= ")"; 			//$NON-NLS-1$
 	
 	public static final String QUOTATION= "\"";			//$NON-NLS-1$
 	

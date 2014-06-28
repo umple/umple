@@ -288,10 +288,11 @@ public class UmpleModelGenerationPolicy{
 	public static List<Constraint> constraints(@GenerationBaseElement Attribute element,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
 		List<Constraint> constraints= new ArrayList<Constraint>();
-		String name= element.getName();
 		for(Constraint constraint: parent.getConstraints()){
-			if(name.equals(constraint.toString())){
-				constraints.add(constraint);
+			for(ConstraintVariable expression: constraint.getExpressions()){
+				if(!constraints.contains(constraint)&& element.equals(expression.getAttribute(parent))){
+					constraints.add(constraint);
+				}
 			}
 		}
 		return constraints;
@@ -300,6 +301,11 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
 	public static List<Constraint> constraints(@GenerationBaseElement ConstraintVariable element){
 		return Arrays.asList(element.getSubConstraint());
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ATTRIBUTE)
+	public static UmpleVariable constraintAttribute(@GenerationBaseElement ConstraintVariable element){
+		return element.getFoundAttribute();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS)
