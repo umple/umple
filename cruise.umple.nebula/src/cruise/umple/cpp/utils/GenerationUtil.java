@@ -155,7 +155,7 @@ public class GenerationUtil {
 		return results.toString();
 	}
 	
-	public static String asStringParameters(List<?> list) {
+	public static String asStringParameters(List<?> list, String... sepratorMessage) {
 		String string= CommonConstants.BLANK;
 		
 		if(list== null|| list.isEmpty()){
@@ -165,6 +165,13 @@ public class GenerationUtil {
 		Iterator<?> eventsParametersIterator = list.iterator();
 		while(eventsParametersIterator.hasNext()){
 			Object next = eventsParametersIterator.next();
+			
+			if(!eventsParametersIterator.hasNext()){
+				if(sepratorMessage.length>0&& !string.isEmpty()){
+					string= string+ sepratorMessage[0]+ CommonConstants.SPACE;
+				}
+			}
+			
 			string= string+ next.toString().trim();
 			
 			if(eventsParametersIterator.hasNext()){

@@ -90,6 +90,7 @@ public interface IModelingElementDefinitions {
 	
 	public static final String ASSOCIATION_VARIABLES= "associationVariables"; //$NON-NLS-1$
 	public static final String NAVIGABLE_ASSOCIATION_VARIABLES= "navigableAssociationVariables"; //$NON-NLS-1$
+	public static final String ATTRIBUTE= "ownedAttribute"; //$NON-NLS-1$
 	public static final String ATTRIBUTES= "ownedAttributes"; //$NON-NLS-1$
 	public static final String OPERATIONS= "ownedOperations"; //$NON-NLS-1$
 	public static final String DEPENDS= "ownedDepends"; //$NON-NLS-1$

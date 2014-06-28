@@ -42,18 +42,19 @@ public class UmpleCppTemplateHelper extends CppGenerationTemplate{
   public final String NL = nl == null ? (System.getProperties().getProperty("line.separator")) : nl;
   protected final String TEXT_1 = "reset";
   protected final String TEXT_2 = "getDefault";
-  protected final String TEXT_3 = "Please provide a valid ";
-  protected final String TEXT_4 = "Singleton<";
-  protected final String TEXT_5 = ">";
-  protected final String TEXT_6 = NL + NL + "//Helper template to be extended by the classes that need to be used as singelton design pattern" + NL + "template<class T> class Singleton {" + NL + "\tSingleton(const Singleton&);" + NL + "\tSingleton& operator=(const Singleton&);" + NL + "\tprotected:" + NL + "\t\tSingleton() {}" + NL + "\t\tvirtual ~Singleton() {}" + NL + "\tpublic:" + NL + "\t\tstatic T& instance() {" + NL + "\t\t\tstatic MutexLock lock;" + NL + "\t\t\tsynchronized(lock) {" + NL + "\t\t\t\tstatic T theInstance;" + NL + "\t\t\t\treturn theInstance;" + NL + "\t\t\t}" + NL + "  \t\t}" + NL + "};";
-  protected final String TEXT_7 = "next";
-  protected final String TEXT_8 = "\tbool wasReset = false;" + NL + "\tthis->";
-  protected final String TEXT_9 = "= ";
-  protected final String TEXT_10 = "();" + NL + "\twasReset = true; " + NL + "\treturn wasReset;";
-  protected final String TEXT_11 = "if(!this->";
-  protected final String TEXT_12 = ") { " + NL + "\treturn false; " + NL + "}" + NL + "this->";
-  protected final String TEXT_13 = "= false;" + NL;
-  protected final String TEXT_14 = "//Autounique Attributes";
+  protected final String TEXT_3 = "Please provide ";
+  protected final String TEXT_4 = "valid ";
+  protected final String TEXT_5 = "Singleton<";
+  protected final String TEXT_6 = ">";
+  protected final String TEXT_7 = NL + NL + "//Helper template to be extended by the classes that need to be used as singelton design pattern" + NL + "template<class T> class Singleton {" + NL + "\tSingleton(const Singleton&);" + NL + "\tSingleton& operator=(const Singleton&);" + NL + "\tprotected:" + NL + "\t\tSingleton() {}" + NL + "\t\tvirtual ~Singleton() {}" + NL + "\tpublic:" + NL + "\t\tstatic T& instance() {" + NL + "\t\t\tstatic MutexLock lock;" + NL + "\t\t\tsynchronized(lock) {" + NL + "\t\t\t\tstatic T theInstance;" + NL + "\t\t\t\treturn theInstance;" + NL + "\t\t\t}" + NL + "  \t\t}" + NL + "};";
+  protected final String TEXT_8 = "next";
+  protected final String TEXT_9 = "\tbool wasReset = false;" + NL + "\tthis->";
+  protected final String TEXT_10 = "= ";
+  protected final String TEXT_11 = "();" + NL + "\twasReset = true; " + NL + "\treturn wasReset;";
+  protected final String TEXT_12 = "if(!this->";
+  protected final String TEXT_13 = ") { " + NL + "\treturn false; " + NL + "}" + NL + "this->";
+  protected final String TEXT_14 = "= false;" + NL;
+  protected final String TEXT_15 = "//Autounique Attributes";
 
   /**
   * @param argument
@@ -116,12 +117,18 @@ public StringBuffer execute(Object element, Object... arguments) {
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
 	@GenerationArgument String variable;
+	@GenerationArgument boolean many;
+	String article;
 	
 @Override
 public void execute() {
 
+article= many? "": "a ";
+
 
     stringBuffer.append(TEXT_3);
+    stringBuffer.append(article);
+    stringBuffer.append(TEXT_4);
     stringBuffer.append(variable);
     
 
@@ -142,9 +149,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_4);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_5);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_6);
     
 
 }});
@@ -162,7 +169,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_6);
+    stringBuffer.append(TEXT_7);
     
 }});
 
@@ -181,7 +188,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_7);
+    stringBuffer.append(TEXT_8);
     stringBuffer.append(StringUtil.firstCharacterToUpperCase(name, true));
     
 
@@ -203,11 +210,11 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_8);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_9);
-    stringBuffer.append(defaultGetter);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_10);
+    stringBuffer.append(defaultGetter);
+    stringBuffer.append(TEXT_11);
     
 
 }});
@@ -229,11 +236,11 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_11);
-    stringBuffer.append(canSetFlag);
     stringBuffer.append(TEXT_12);
     stringBuffer.append(canSetFlag);
     stringBuffer.append(TEXT_13);
+    stringBuffer.append(canSetFlag);
+    stringBuffer.append(TEXT_14);
     
 }
 
@@ -257,7 +264,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
-    stringBuffer.append(TEXT_14);
+    stringBuffer.append(TEXT_15);
     
 }});
 
