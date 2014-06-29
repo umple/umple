@@ -41,7 +41,7 @@ function generateMenu($buttonSuffix)
   //  <option value=\"cpp:Cpp\">Simple C++ (under development)</option>
   $generatemenu = "<ul class=\"second\">
         <li class=\"subtitle\"> Generate".$buttonSuffix."</li>
-        <li>
+        <li id=\"ttGeneratedCodeType\">
           <select id=\"inputGenerateCode".$buttonSuffix."\" name=\"inputLanguage\" class=\"button\">
             <option value=\"java:Java\">Java Code</option>
             <option value=\"javadoc:javadoc\">Java API Doc</option>
@@ -63,7 +63,9 @@ function generateMenu($buttonSuffix)
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
           </select>
         </li>
-        <li><div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div></li>
+        <li id=\"ttGenerateCode\">
+          <div id=\"buttonGenerateCode".$buttonSuffix."\" class=\"jQueryPaletteButton\" value=\"Generate Code\"></div> 
+        </li>
         <li><div id=\"genstatus\" align=\"center\">Done. See below</div><li>
       </ul>";
 

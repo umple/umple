@@ -1663,8 +1663,8 @@ Action.redrawDiagram = function()
     if (Action.manualSync && !Action.diagramInSync) Page.enablePaletteItem('buttonSyncDiagram', true);
     if (!Action.manualSync || Action.diagramInSync)
     {
-      Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", true);
-      Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", true);
+      Page.enableCheckBoxItem("buttonPhotoReady", "ttPhotoReady", true);
+      Page.enableCheckBoxItem("buttonManualSync", "ttManualSync", true);
 
       Page.enablePaletteItem('buttonAddClass', true);
       Page.enablePaletteItem('buttonAddAssociation', true);

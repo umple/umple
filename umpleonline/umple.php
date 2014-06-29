@@ -97,7 +97,7 @@ $output = readTemporaryFile("ump/" . $filename);
       <div class="inRow">
         <p class="pagedescription">
           Draw on the right, write (Umple) model code on the left. Generate Java, C++, PHP or Ruby code from your models. <br/>
-          Visit <a href="http://manual.umple.org" target=helppage">the User Manual</a> or <a href="http://www.umple.org">the Umple Home Page</a> for help.
+          Visit <a href="http://manual.umple.org" target="helppage">the User Manual</a> or <a href="http://www.umple.org">the Umple Home Page</a> for help.
           &nbsp;&nbsp;&nbsp;<a href="download_eclipse_umple_plugin.html">Download Umple</a>
           &nbsp;&nbsp;&nbsp;<a href="http://code.google.com/p/umple/issues/entry" target="newissue">Report an Issue</a>
         </p>
@@ -150,19 +150,35 @@ $output = readTemporaryFile("ump/" . $filename);
           <ul class="first">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($filename)) { ?>
-              <div id="menuBookmarkable" class="bookmarkableUrl"><a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmark this Link for Future Use</a></div>
+            <li id="ttSaveBookmark">
+              <div id="menuBookmarkable" class="bookmarkableUrl">
+                <a href="umple.php?model=<?php echo extractModelId($filename) ?>">Bookmark Model</a>
+              </div>
+            </li>
             <?php } else { ?>
-              <div id="menuBookmarkable" class="bookmarkableUrl"><a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model For Future Editing</a></div>
+            <li id="ttSaveModel"> 
+              <div id="menuBookmarkable" class="bookmarkableUrl">
+                <a href="bookmark.php?model=<?php echo extractModelId($filename) ?>">Save Model</a>
+              </div>
+            </li>
             <?php } ?>
-            <li id="buttonCopy" class="copy"><img src="scripts/copy.png" title="Copy" /> Source</li>
-            <li id="buttonCopyEncodedURL" class="copyEncoded"><img src="scripts/copy.png" title="Copy" /> Encoded URL</li>
+            <li id="buttonCopy" class="copy">
+              <img src="scripts/copy.png"/> 
+              Source
+            </li>
+            <li id="buttonCopyEncodedURL" class="copyEncoded">
+              <img src="scripts/copy.png"/> 
+              Encoded URL
+            </li>
           </ul>
         
           <ul class="dropbox-add-saver"></ul>
         
           <ul class="second">
             <li class="subtitle">RESET</li>
-            <li> <div id="buttonStartOver" class="jQueryPaletteButton" value="Start Over"></div> </li>
+            <li id="ttStartOver"> 
+              <div id="buttonStartOver" class="jQueryPaletteButton" value="Start Over"></div> 
+            </li>
           </ul>
         </div>
         
@@ -264,16 +280,40 @@ $output = readTemporaryFile("ump/" . $filename);
         
           <ul class="dropbox-add-chooser"></ul>
       
-          <ul id="mainDrawMenu" class = "second toggle">
+          <ul id="mainDrawMenu" class="second toggle">
             <li class="subtitle"> Draw </li>
-            <li id="buttonAddClass" class="toggleToolItem" name="paletteItem" title="Select and click on the canvas to add a new class."><img id="buttonAddClass" src="scripts/class.png" title="Add Class" /> Class <small style="font-size:8px">[c]</small></li>
-            <li id="buttonAddAssociation" class="toggleToolItem" name="paletteItem" title="Select and click on a class to draw an association."><img id="buttonAddAssociation" src="scripts/assoc.png" title="Add Assocation" /> Association <small style="font-size:8px">[a]</small></li>
-            <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem"><img id="buttonBendAssociation" src="scripts/assocbend.jpg" title="Bend Assocation" /> Bend Assoc.</li> -->
-            <li id="buttonAddGeneralization" class="toggleToolItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class."><img id="buttonAddGeneralization" src="scripts/generalization.png" title="Add Generalization" /> Generalization <small style="font-size:8px">[g]</small></li>
-            <li id="buttonDeleteEntity" class="toggleToolItem" name="paletteItem" title="Select and click on an element to remove it from your model."><img id="buttonDeleteEntity" src="scripts/delete.png" title="Delete" /> Delete <small style="font-size:8px">[DEL]</small></li>
-            <li id="buttonUndo" name="paletteItem"><img src="scripts/undo.png" title="Undo"> Undo <span id="undosmall" style="font-size:8px"></span></li>
-            <li id="buttonRedo" name="paletteItem"><img src="scripts/redo.png" title="Redo"> Redo <small id="redosmall" style="font-size:8px"></small></li>
-            <li id="buttonSyncDiagram" name="paletteItem"><img id="buttonSyncDiagram" src="scripts/sync_diagram.png" title="Manually sync the diagram" /> Sync Diagram </li>
+            <li id="buttonAddClass" class="toggleToolItem" name="paletteItem" title="Select and click on the canvas to add a new class.">
+              <img src="scripts/class.png"/> 
+              Class
+            </li>
+            <li id="buttonAddAssociation" class="toggleToolItem" name="paletteItem" title="Select and click on a class to draw an association.">
+              <img src="scripts/assoc.png"/> 
+              Association
+            </li>
+            <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
+              <img src="scripts/assocbend.jpg"/> 
+              Bend Assoc.
+            </li> -->
+            <li id="buttonAddGeneralization" class="toggleToolItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class.">
+              <img src="scripts/generalization.png"/> 
+              Generalization
+            </li>
+            <li id="buttonDeleteEntity" class="toggleToolItem" name="paletteItem" title="Select and click on an element to remove it from your model.">
+              <img src="scripts/delete.png"/>
+               Delete
+             </li>
+            <li id="buttonUndo" name="paletteItem">
+              <img src="scripts/undo.png"> 
+              Undo
+            </li>
+            <li id="buttonRedo" name="paletteItem">
+              <img src="scripts/redo.png"> 
+              Redo
+            </li>
+            <li id="buttonSyncDiagram" name="paletteItem">
+              <img src="scripts/sync_diagram.png" /> 
+              Sync Diagram 
+            </li>
         </ul>
         <?php generateMenu("") ?>
       </div>
@@ -285,35 +325,69 @@ $output = readTemporaryFile("ump/" . $filename);
         <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
           <ul class="first">
             <li class="subtitle"> Show View </li>
-            <li> <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" title="Show/hide the canvas" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> Diagram (Canvas) -> <small style="font-size:8px">[ctrl+d]</small></li>
-            <li> <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" title="Show/hide the text editor" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> Text Editor <- <small style="font-size:8px">[ctrl+t]</small></li>
-            <li id="layoutListItem"> <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" title="Show/hide the layout editor" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> Layout Editor </li>          
-            <li id="layoutListItem"> <input id="buttonToggleAttributes" class="checkbox" type="checkbox"  title="Show/hide Attributes"/> Attributes  <small style="font-size:8px">[ctrl+a]</small></li>
-            <li id="layoutListItem"> <input id="buttonToggleMethods" class="checkbox" type="checkbox"  title="Show/hide Methods"/> Methods <small style="font-size:8px">[ctrl+m]</small></li>
-            <li id="layoutListItem"> <input id="buttonToggleActions" class="checkbox" type="checkbox"  title="Show/hide Actions"/> Actions </li>
+            <li id="ttShowHideCanvas"> 
+              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
+              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
+            </li>
+            <li id="ttShowHideTextEditor"> 
+              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
+              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
+            </li>
+            <li id="ttShowHideLayoutEditor" class="layoutListItem"> 
+              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
+              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
+            </li>          
+            <li id="ttToggleAttributes" class="layoutListItem"> 
+              <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
+            </li>
+            <li id="ttToggleMethods" class="layoutListItem"> 
+              <input id="buttonToggleMethods" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleMethods" class="buttonExtend">Methods</a>
+            </li>
+            <li id="ttToggleActions" class="layoutListItem"> 
+              <input id="buttonToggleActions" class="checkbox" type="checkbox"/> 
+              <a id="labelToggleActions" class="buttonExtend">Actions</a> 
+            </li>
           </ul>
           <ul>
             <li id="diagramTypeTitle" class="subtitle"> Diagram Type </li>
-            <li> <input id="buttonShowEditableClassDiagram" class="radio" type="radio" title="Editable class diagram" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> Editable class diagram <small style="font-size:8px">[ctrl+e]</small></li>
-            <li> <input id="buttonShowGvClassDiagram" class="radio" type="radio" title="GraphViz class diagram" name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> GraphViz class diagram <small style="font-size:8px">[ctrl+g]</small></li>
-            <li> <input id="buttonShowGvStateDiagram" class="radio" type="radio" title="GraphViz state" name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> GraphViz state diagram <small style="font-size:8px">[ctrl+s]</small></li>
-            <li> <input id="buttonShowStructureDiagram" class="radio" type="radio" title="Structure Diagram" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> Composite Structure diagram <small style="font-size:8px">[ctrl+l]</small></li>
+            <li id="ttShowEditableClassDiagram"> 
+              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
+              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
+            </li>
+            <li id="ttShowGvClassDiagram"> 
+              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
+              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
+            </li>
+            <li id="ttShowGvStateDiagram"> 
+              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
+              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
+            </li>
+            <li id="ttShowStructureDiagram"> 
+              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
+              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
+            </li>
           </ul>
           <ul>
             <li id="preferencesTitle" class="subtitle"> Preferences </li>
-            <li id="photoReadyListItem"> <input id="buttonPhotoReady" class="checkbox" type="checkbox" title="Remove editing handles from diagram" name="photoReady" value="photoReady"/> Photo Ready </li>
-            <li id="manualSyncListItem"> <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> Manual Sync </li>          
-          </ul>
-          <ul>
-            <li id="canvasSizeTitle" class="subtitle"> Canvas Size </li>
-            <li id="buttonSmaller" name="paletteItem"><img id="buttonSmaller" src="scripts/smaller.png" title="Reduce the size of the canvas" /> Smaller <small style="font-size:8px">[ctrl-shift--]</small></li>
-            <li id="buttonLarger" name="paletteItem"><img id="buttonLarger" src="scripts/larger.png" title="Increase the size of the canvas" /> Larger <small style="font-size:8px">[ctrl-shift-+]</small></li>
+            <li id="ttPhotoReady"> 
+              <input id="buttonPhotoReady" class="checkbox" type="checkbox" name="photoReady" value="photoReady"/> 
+              <a id="labelPhotoReady" class="buttonExtend">Photo Ready</a> 
+            </li>
+            <li id="ttManualSync">
+              <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> 
+              <a id="labelManualSync" class="buttonExtend">Manual Sync</a> 
+            </li>          
           </ul>
           <ul>
             <li class="subtitle"> Other Views </li>
-            <!--<li id="buttonPngImage" class="png"><img src="scripts/png.png" title="Generate PNG Image" /> PNG View</li>-->
-            <li id="buttonYumlImage" class="yuml"><img src="scripts/yuml.png" title="Generate Yuml Image" /> Yuml View</li>
-            <li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li>
+            <!--<li id="buttonPngImage" class="png"><img src="scripts/png.png" title="Generate PNG Image" /> PNG View</li> //DISABLED -->
+            <li id="ttYumlImage">
+              <img id="buttonYumlImage" src="scripts/yuml.png"/> 
+              <a id="labelYumlImage" class="buttonExtend">Yuml View</a>
+            </li>
+            <!--<li id="buttonSimulateCode" class="simulate"><img src="scripts/simulate.png" title="Simulate Code" /> Simulate</li> //DISABLED -->
           </ul>
         </div>
       </div> 

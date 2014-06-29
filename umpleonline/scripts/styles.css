@@ -84,9 +84,6 @@ div.paletteWrapper {
 }
 div.palette { height: 100%; width: 175px; font-family: Verdana; font-size: 9.5pt; }
 div.palette img { cursor:pointer; margin-left: 8px; padding:2px; vertical-align:middle;}
-div.palette input.checkbox { 
-  cursor:pointer; margin-left: 10px; padding:2px; vertical-align:middle; 
-}
 
 div.palette ul { 
   background-color: GhostWhite; margin:5px -25px -15px -25px; padding:6px 0px 10px 0px; 
@@ -105,7 +102,7 @@ div.palette li.disabled { z-index: 2; background-color: GhostWhite; color: Silve
 div.palette li.disabled  img{ z-index: 1; cursor: not-allowed; opacity: 0.25;}
 div.palette li.subtitle { 
   text-shadow: 1px 1px 4px White; font-weight: bold; text-transform: uppercase; letter-spacing: 0px;
-  color: Black; margin: 0px 5px 8px 5px; text-indent: 8px; font-family: Verdana; text-align: left; 
+  color: Black; margin: 0px 5px 8px 5px; font-family: Verdana; text-align: center; 
   font-size:10pt; border-bottom: Silver double;
 }
 div.palette li.selected { 
@@ -125,11 +122,15 @@ div.jQueryPaletteButton {
   width: 132px; height: 25px; vertical-align: center; font-size: 10pt; margin:0px 5px 0px 10px; 
   padding:0; cursor:hand; 
 }
-.radio { margin-top: -3px; margin-bottom: 0px; vertical-align: middle; }
+
+.checkbox { cursor:pointer; margin-left: 10px; margin-top: 1px; padding:2px; vertical-align:middle; }
+.radio { margin-top: -2px; margin-bottom: 0px; margin-left: 10px; vertical-align: middle; cursor: pointer; }
 a.button:link { color:black; text-decoration:none; }
 a.button:visited { color:black; text-decoration:none; }
 a.button:hover { color:black; text-decoration:none; }
 a.button:active { color:black; text-decoration:none; }
+
+.buttonExtend:hover { cursor: pointer; }
 
 /* DISABLING DIVS ON THE SCREEN */
 .disabled { text-decoration: line-through; color: #d6d6d6; }

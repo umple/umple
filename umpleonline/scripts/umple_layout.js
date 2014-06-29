@@ -139,7 +139,7 @@ Layout.showHideTextEditor = function(doShow)
 {
   var editor = jQuery(editorHandle);
   var layoutBox = jQuery("#buttonShowHideLayoutEditor");
-  var layoutListItem = jQuery("#layoutListItem");
+  var layoutListItem = jQuery(".layoutListItem");
   
   if (doShow == undefined) doShow = !this.isTextVisible; 
     
@@ -188,8 +188,8 @@ Layout.showHideCanvas = function(doShow)
     if (Action.manualSync && !Action.diagramInSync) Page.enablePaletteItem('buttonSyncDiagram', true);
     if (!Action.manualSync || Action.diagramInSync)
     {
-      Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", true);
-      Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", true);
+      Page.enableCheckBoxItem("buttonPhotoReady", "ttPhotoReady", true);
+      Page.enableCheckBoxItem("buttonManualSync", "ttManualSync", true);
 
       Page.enablePaletteItem('buttonAddClass', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
@@ -209,8 +209,8 @@ Layout.showHideCanvas = function(doShow)
     Action.manualSync = true;
     jQuery("#buttonShowHideCanvas").prop('checked',false);
     
-    Page.enableCheckBoxItem("buttonPhotoReady", "photoReadyListItem", false);
-    Page.enableCheckBoxItem("buttonManualSync", "manualSyncListItem", false);
+    Page.enableCheckBoxItem("buttonPhotoReady", "ttPhotoReady", false);
+    Page.enableCheckBoxItem("buttonManualSync", "ttManualSync", false);
     
     Page.enablePaletteItem('buttonAddClass', false);
     Page.enablePaletteItem('buttonAddAssociation', false);
@@ -389,6 +389,11 @@ function LargeScreenManager()
     
     if(width < this.minEditorSize.width) width = this.minEditorSize.width;
     
+    // This -1 exists to deal with any rounding errors that may occur during zooming
+    // It ensures the layout does not float down in the page. Only applied here in
+    // the case that the diagram is not visible.
+    if(!Layout.isDiagramVisible) width = width - 1;
+
     umpleTextEditor.outerWidth(width);
     
     Layout.adjustTextEditorHeight(height);
@@ -431,10 +436,17 @@ function LargeScreenManager()
     this.adjustMarginSpace();    
       
     //Adjust sizes
-    if(Layout.isDiagramVisible)
+    if(Layout.isDiagramVisible && !Layout.isTextVisible)
       this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
     if(Layout.isTextVisible)
       this.setTextEditorSize(this.calculateLeftoverWidth() + jQuery(editorHandle).outerWidth(), undefined);
+
+    console.log(
+      "window:", jQuery(window).innerWidth(),
+      "margins:", this.marginSpace,
+      "editor:", jQuery(editorHandle).outerWidth(),
+      "palette:", jQuery(paletteHandle).outerWidth(),
+      "canvas", jQuery(canvasHandle).outerWidth());
   }
   
   this.adjustAfterWindowResize = function()
