@@ -61,6 +61,7 @@ public interface ICppStructureDefinitions {
 	
 	public final static String PROTOCOL_MESSAGE_TRACKER= "protocolMessageTracker"; //$NON-NLS-1$
 	public static final String PORT_PROTOCOL_MESSAGE_BODY_CONTENTS = "portProtocolMessageBodyConetns"; //$NON-NLS-1$
+	public static final String PORT_PROTOCOL_MESSAGE_NAME = "portProtocolMEssageName"; //$NON-NLS-1$
 	public static final String PORT_PROTOCOL_MESSAGE_DESCRIPTOR_NAME = "portProtocolMEssageDescriptorName]"; //$NON-NLS-1$
 	public static final String PORT_PROTOCOL_MESSAGE_DESCRIPTOR_COMMENT = "portProtocolMessageDescriptorComment"; //$NON-NLS-1$
 	public static final String PORT_PROTOCOL_MESSAGE_DESCRIPTOR = "portProtocolMessageDescriptor"; //$NON-NLS-1$

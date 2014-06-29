@@ -45,6 +45,8 @@ public interface IStructureConstants {
 	public static final String PORT_INIT_CONNECTIONS_METHODNAME = "initPortConnections"; //$NON-NLS-1$
 	public static final String PORT_DISCONNECT_CONNECTIONS_METHODNAME = "disconnectPortConnections"; //$NON-NLS-1$
 	
+	public static final String ACTIVE_METHODS= "activeMethods"; //$NON-NLS-1$
+	public static final String ACTIVE_METHOD_CODE_BLOCKS= "activeMethodCodeBlocks"; //$NON-NLS-1$
 	public static final String ACTIVE_METHOD_CODE_BODY= "activeMethodCodeBody"; //$NON-NLS-1$
 	
 	public static final String PORT_BINDINGS= "portBindings"; //$NON-NLS-1$

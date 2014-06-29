@@ -27,7 +27,9 @@ import java.util.regex.Pattern;
 import cruise.umple.compiler.AssociationEnd;
 import cruise.umple.compiler.AssociationVariable;
 import cruise.umple.compiler.Attribute;
+import cruise.umple.compiler.CodeBlock;
 import cruise.umple.compiler.CodeInjection;
+import cruise.umple.compiler.Comment;
 import cruise.umple.compiler.Constraint;
 import cruise.umple.compiler.ConstraintVariable;
 import cruise.umple.compiler.Depend;
@@ -114,6 +116,16 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CODE)
 	public static String getExtraCode(@GenerationBaseElement UmpleElement element){
 		return element.getExtraCode();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CODE)
+	public static String getCodeBody(@GenerationBaseElement Comment comment){
+		return comment.getText().trim();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CODE)
+	public static String getCodeBody(@GenerationBaseElement CodeBlock codeblock){
+		return codeblock.getCode().trim();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CODE_INJECTION)

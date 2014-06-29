@@ -619,6 +619,9 @@ public class UmpleBaseGenerationPointsHandler{
 		
 		String contraintString= CommonConstants.BLANK;
 		for(StringBuffer stringBuffer: processedConstraints.values()){
+			if(stringBuffer.toString().trim().isEmpty()){
+				continue;
+			}
 			if(!contraintString.isEmpty()){
 				contraintString= contraintString+ normalizedOperator;
 			}
@@ -816,8 +819,19 @@ public class UmpleBaseGenerationPointsHandler{
 			}
 			
 			asStringParameters = GenerationUtil.asStringParameters(new ArrayList<String>(params), "and");
-			isMany = Boolean.valueOf(params.size()>1);
 			
+			int size = params.size();
+			if(size>1){
+				isMany= Boolean.TRUE;
+			}else if(params.isEmpty()){
+				isMany= Boolean.FALSE;
+			}else/* if(size==1)*/{
+				//FIXME: shall have external dictionary for it
+				@SuppressWarnings("nls")
+				List<String> uncountableNouns= Arrays.asList(new String[]{"data", "information"});
+				
+				isMany= Boolean.valueOf(uncountableNouns.contains(params.iterator().next()));
+			}
 		}else{
 			isMany = Boolean.valueOf(constraintVariables.size()>1);
 			asStringParameters = GenerationUtil.asStringParameters(new ArrayList<String>(constraintVariables.values()), "and");
