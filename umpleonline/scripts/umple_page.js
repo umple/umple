@@ -64,6 +64,10 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramT
   Page.initCanvasArea();
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
+  jQuery(document).ready(function() {
+    initializeDropbox();
+    initTooltips();
+  });
 
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
 
@@ -140,6 +144,8 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleAttributes");
   Page.initAction("buttonToggleActions");
 
+  Page.initLabels();
+
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
@@ -151,10 +157,10 @@ Page.initPaletteArea = function()
   Page.initOptions();
   if(Page.readOnly) {
     jQuery("#mainDrawMenu").hide();
-    jQuery("#layoutListItem").hide();
+    jQuery(".layoutListItem").hide();
     jQuery("#preferencesTitle").hide();
-    jQuery("#photoReadyListItem").hide();
-    jQuery("#manualSyncListItem").hide();
+    jQuery("#ttPhotoReady").hide();
+    jQuery("#ttManualSync").hide();
     jQuery("#canvasSizeTitle").hide();
     jQuery("#buttonSmaller").hide();
     jQuery("#buttonLarger").hide();
@@ -232,8 +238,8 @@ Page.enableCheckBoxItem = function(boxId, listItemId, doEnable)
   else
   {
     checkbox.prop('disabled', true);
-  checkbox.css('cursor', 'not-allowed');
-  listItem.css('color', 'Silver');
+    checkbox.css('cursor', 'not-allowed');
+    listItem.css('color', 'Silver');
   }
 }
 
@@ -284,6 +290,23 @@ Page.initAction = function(id)
 {
   var selector = "#" + id;
   jQuery(selector).click(Action.clicked);
+}
+
+// Binds the label text on buttons to the button action
+// Allows the user to click the label or the actual button
+Page.initLabels = function()
+{
+  var labels = jQuery(".buttonExtend");
+  
+  for(var i = 0, len = labels.length; i < len; i++)
+  {
+    var labelId = "#" + jQuery(labels[i]).prop("id");
+    jQuery(labelId).click(function(x) {
+      return function() {
+        jQuery("#" + jQuery(x).prop("id").replace("label", "button")).trigger('click');
+      }
+    }(labelId));
+  }
 }
 
 Page.initUmpleTextArea = function()
