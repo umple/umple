@@ -1180,8 +1180,22 @@ public class CPPBaseGenerationPointsHandler{
 	public static String operationBody(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element){
 		
 		String all= CommonConstants.BLANK;
-		List<?> constraints= generationValueGetter.getList(element, IModelingElementDefinitions.CONSTRAINTS);
 		
+		all = all+ getContraintString(generationValueGetter, element);
+		
+		if(!all.isEmpty()){
+			all= all+ CommonConstants.NEW_LINE;
+		}
+		
+		all= all+ generationValueGetter.getString(element, IModelingElementDefinitions.OPERATION_BODY, CPPCommonConstants.CPP_LANGUAGE);
+		return all;
+	}
+	
+	@GenerationPoint(generationPoint = IModelingElementDefinitions.CONSTRAINT_BODY)
+	public static String getContraintString(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationBaseElement Object element) {
+		String all= CommonConstants.BLANK;
+		List<?> constraints= generationValueGetter.getList(element, IModelingElementDefinitions.CONSTRAINTS);
 		List<String> conditions= new ArrayList<String>();
 		for(Object constraint: constraints){
 			String current= generationValueGetter.generationPointString(constraint, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS,constraint);
@@ -1201,12 +1215,6 @@ public class CPPBaseGenerationPointsHandler{
 				all= all+ CommonConstants.NEW_LINE;
 			}
 		}
-		
-		if(!all.isEmpty()){
-			all= all+ CommonConstants.NEW_LINE;
-		}
-		
-		all= all+ generationValueGetter.getString(element, IModelingElementDefinitions.OPERATION_BODY, CPPCommonConstants.CPP_LANGUAGE);
 		return all;
 	}
 	

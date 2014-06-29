@@ -66,6 +66,7 @@ public interface IModelingElementDefinitions {
 	public static final String RETURN_TYPE= "returnType"; //$NON-NLS-1$
 	public static final String OPERATION_PARAMETERS= "operationParameters"; //$NON-NLS-1$
 	public static final String OPERATION_BODY= "operationBody"; //$NON-NLS-1$
+	public static final String CONSTRAINT_BODY= "constraintBody"; //$NON-NLS-1$
 	public static final String PARENT_INTERFACES= "parentInterfaces"; //$NON-NLS-1$
 	public static final String PARENT_CLASS= "parentClass"; //$NON-NLS-1$
 	

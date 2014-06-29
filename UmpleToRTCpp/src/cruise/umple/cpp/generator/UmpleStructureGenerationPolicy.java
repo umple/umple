@@ -18,27 +18,32 @@
 *******************************************************************************/
 package cruise.umple.cpp.generator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cruise.umple.compiler.ActiveDirectionHandler;
 import cruise.umple.compiler.ActiveDirectionHandlerBody;
 import cruise.umple.compiler.ActiveMethod;
 import cruise.umple.compiler.Attribute;
+import cruise.umple.compiler.BasicConstraint;
 import cruise.umple.compiler.CodeBlock;
 import cruise.umple.compiler.Comment;
+import cruise.umple.compiler.ConstraintVariable;
+import cruise.umple.compiler.Method;
 import cruise.umple.compiler.Monitor;
 import cruise.umple.compiler.Port;
 import cruise.umple.compiler.PortBinding;
 import cruise.umple.compiler.PortConstraint;
 import cruise.umple.compiler.Protocol;
 import cruise.umple.compiler.UmpleClass;
-import cruise.umple.core.GenerationCallback.GenerationArgument;
+import cruise.umple.compiler.UmpleElement;
+import cruise.umple.core.CommonConstants;
 import cruise.umple.core.GenerationCallback.GenerationBaseElement;
 import cruise.umple.core.GenerationCallback.GenerationLoopElement;
-import cruise.umple.core.CommonConstants;
 import cruise.umple.core.GenerationValueAnnotation;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.modeling.handlers.IStructureConstants;
+import cruise.umple.modeling.handlers.VisibilityConstants;
 
 public class UmpleStructureGenerationPolicy{
 	
@@ -113,14 +118,43 @@ public class UmpleStructureGenerationPolicy{
 		return binding.getToSubcomponent();
 	}
 	
-	@GenerationValueAnnotation(fieldName= IStructureConstants.ACTIVE_METHOD_CODE_BODY)
-	public static String getActiveMthodCodeBody(@GenerationBaseElement Port port,
-			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) UmpleClass clazz){
-//			if(!port.getProtocol().getWatchList().isEmpty()){
-//				System.out.println();
-//			}
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
+	public static List<BasicConstraint> getPortConstraints(@GenerationBaseElement Port port,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
 		
-		String all= CommonConstants.BLANK;
+		List<String> portStrings = new ArrayList<String>();
+		for(Port portObject: parent.getPorts()){
+			portStrings.add(portObject.getName());
+		}
+		
+		List<BasicConstraint> basicContraints= new ArrayList<BasicConstraint>();
+		Protocol protocol = port.getProtocol();
+		for(Monitor monitor: protocol.getWatchList()){
+			List<BasicConstraint> constraints = monitor.getConstraints();
+			for(BasicConstraint contraint: constraints){
+				ConstraintVariable[] expressions = contraint.getExpressions();
+				if(expressions.length==1){
+					ConstraintVariable constraintVariable = expressions[0];
+					if(constraintVariable.getFoundAttribute()== null){
+						String value = constraintVariable.getValue();
+						if(portStrings.contains(value)){
+							//Avoid the main port definition
+							continue;
+						}
+					}
+				}
+				
+				basicContraints.add(contraint);
+			}
+		}
+		return basicContraints;
+	}
+	
+	@GenerationValueAnnotation(fieldName= IStructureConstants.ACTIVE_METHODS)
+	public static List<Object> activeMethods(@GenerationBaseElement Port port,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) UmpleClass clazz){
+		
+		List<Object> activeMethods= new ArrayList<Object>();
 		List<Port> ports = clazz.getPorts();
 		for(Port currentPort: ports){
 			Protocol protocol = currentPort.getProtocol();
@@ -138,69 +172,55 @@ public class UmpleStructureGenerationPolicy{
 						}
 						
 						if(constraintPort.equals(port)){
-							List<ActiveDirectionHandler> handlers = activeMethod.getMethodBody();
-							for(ActiveDirectionHandler handler: handlers){
-								List<ActiveDirectionHandlerBody> activeDirectionHandlerBodies = handler.getActiveDirectionHandlerBodies();
-								for(ActiveDirectionHandlerBody activeDirectionHandlerBody: activeDirectionHandlerBodies){
-									Comment comment = activeDirectionHandlerBody.getComment();
-									if(comment!= null){
-										if(!all.isEmpty()){
-											all= all+ CommonConstants.NEW_LINE;
-										}
-										all= all+ CommonConstants.FORWARD_SLASH+ CommonConstants.FORWARD_SLASH+ comment.getText().trim();
-									}
-									
-									CodeBlock codeblock = activeDirectionHandlerBody.getCodeblock();
-									if(codeblock!= null){
-										if(!all.isEmpty()){
-											all= all+ CommonConstants.NEW_LINE;
-										}
-										
-										String code = codeblock.getCode();
-										all= all+ code.trim();
-									}
-								}
-							}
+							activeMethods.add(activeMethod);
 						}
 					}
 				}
 			}
 		}
 		
-		if(all.isEmpty()){
-			for(PortBinding portBinding: clazz.getPortBindings()){
-				Port toPort = portBinding.getToPort();
-				if(!port.equals(toPort)){
-					if(!all.isEmpty()){
-						all= all+ CommonConstants.NEW_LINE;
-					}
-					
-					//FIXME FIXME
-					all= all+ toPort.getName()+ "(data);";
-				}
-//				Port fromPort = portBinding.getFromPort();
-//				if(!port.equals(fromPort)){
-//					if(!all.isEmpty()){
-//						all= all+ CommonConstants.NEW_LINE;
-//					}
-//					//FIXME FIXME
-//					all= all+ fromPort.getName()+ "(data)";
-//				}else{
-//					Port toPort = portBinding.getToPort();
-//					if(!port.equals(toPort)){
-//						if(!all.isEmpty()){
-//							all= all+ CommonConstants.NEW_LINE;
-//						}
-//						
-//						//FIXME FIXME
-//						all= all+ toPort.getName()+ "(data)";
-//					}
-//				}
-			}
-			
-		}
-		return all;
+		return activeMethods;
 	}
 	
+	@GenerationValueAnnotation(fieldName= IStructureConstants.ACTIVE_METHOD_CODE_BLOCKS)
+	public static List<Object> getActiveMthodCodeBody(@GenerationBaseElement ActiveMethod activeMethod){
+		
+		List<Object> visited= new ArrayList<Object>();
+		List<ActiveDirectionHandler> handlers = activeMethod.getMethodBody();
+		for(ActiveDirectionHandler handler: handlers){
+			List<ActiveDirectionHandlerBody> activeDirectionHandlerBodies = handler.getActiveDirectionHandlerBodies();
+			for(ActiveDirectionHandlerBody activeDirectionHandlerBody: activeDirectionHandlerBodies){
+				Comment comment = activeDirectionHandlerBody.getComment();
+				if(comment!= null&& !visited.contains(comment)){
+					visited.add(comment);
+				}
+				
+				CodeBlock codeblock = activeDirectionHandlerBody.getCodeblock();
+				if(codeblock!= null&& !visited.contains(codeblock)){
+					visited.add(codeblock);
+				}
+			}
+		}
+		
+		return visited;
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.NAME)
+	public static String getName(@GenerationBaseElement ActiveMethod activeMethod){
+		return activeMethod.getName();
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ELEMENT_VISIBILITY)
+	public static String getElementVisibility(@GenerationBaseElement ActiveMethod activeMethod){
+		String modifier = activeMethod.getModifier();
+		if(modifier.contains(VisibilityConstants.PUBLIC)){
+			return VisibilityConstants.PUBLIC;
+		}else if(modifier.contains(VisibilityConstants.PRIVATE)){
+			return VisibilityConstants.PRIVATE;
+		}else if(modifier.contains(VisibilityConstants.PROTECTED)){
+			return VisibilityConstants.PROTECTED;
+		}
+		return VisibilityConstants.PUBLIC;
+	}
 	
 }

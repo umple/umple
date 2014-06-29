@@ -1240,7 +1240,6 @@ public class CPPContentsPointsHandler{
 		if(body!= null){
 			generationValueGetter.addUniqueValue(ICppDefinitions.BODY_CONTENTS, body, element, group, visiblity);
 		}
-		generationValueGetter.getValues(ICppDefinitions.BODY_CONTENTS, element, group, "public");
 		generationValueGetter.addUniqueValue(IModelingConstants.METHODS_GROUPS, group, element, visiblity);
 	}
 	

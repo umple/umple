@@ -141,4 +141,5 @@ public interface IModelingConstants {
 	public final static String WAS_REMOVED= "wasRemoved"; //$NON-NLS-1$
 	
 	public final static String DEPENDS_LIST= "dependsList"; //$NON-NLS-1$
+	
 }

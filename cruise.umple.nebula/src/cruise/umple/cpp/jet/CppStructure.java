@@ -47,147 +47,174 @@ public class CppStructure extends CppGenerationTemplate{
   protected final String TEXT_5 = "::";
   protected final String TEXT_6 = "_";
   protected final String TEXT_7 = ":" + NL + "\tif(sizeof(msg->data) == sizeof(";
-  protected final String TEXT_8 = ")) {" + NL + "\t\t";
-  protected final String TEXT_9 = " data = *((";
-  protected final String TEXT_10 = "*) msg->data);" + NL + "\t\t";
-  protected final String TEXT_11 = "_event.publish(data);" + NL + "\t} else {" + NL + "\t\tthrow \"Bad port data\";" + NL + "\t}" + NL + "\tbreak;";
-  protected final String TEXT_12 = NL + "\tpublic:" + NL + "\t\t";
-  protected final String TEXT_13 = NL + "\t\t" + NL + "\t\t//------------------------" + NL + "\t\t// CONSTRUCTOR" + NL + "\t\t//------------------------" + NL + "\t\t";
-  protected final String TEXT_14 = "_PortProtocol();" + NL + "\t" + NL + "\t\t//------------------------" + NL + "\t\t// DESTRUCTOR" + NL + "\t\t//------------------------" + NL + "\t\tvirtual ~";
-  protected final String TEXT_15 = "_PortProtocol();" + NL + "" + NL + "\t\tstring get";
-  protected final String TEXT_16 = "EventFullName(void);" + NL + "\t\t";
-  protected final String TEXT_17 = NL;
-  protected final String TEXT_18 = NL + NL + "\tprivate:" + NL + "\t\t\t" + NL + "\t\t";
-  protected final String TEXT_19 = " ";
-  protected final String TEXT_20 = ";" + NL + "\t\t";
-  protected final String TEXT_21 = " ";
-  protected final String TEXT_22 = ";" + NL + "\t\tMessageService* service;" + NL + "\t\t\t" + NL + "\t\tvoid sendMessage(short int portId,short int evtId, int size, void* data);" + NL + "\t\tvoid receive_";
-  protected final String TEXT_23 = "_PortProtocol_Message(const MessageHeader* msg);" + NL;
-  protected final String TEXT_24 = NL + "#define ";
-  protected final String TEXT_25 = "_BODY" + NL + "" + NL + "#if defined( PRAGMA ) && ! defined( PRAGMA_IMPLEMENTED )" + NL + "#pragma implementation <";
-  protected final String TEXT_26 = ".h>" + NL + "#endif";
-  protected final String TEXT_27 = NL + "//------------------------" + NL + "// CONSTRUCTOR IMPLEMENTATION" + NL + "//------------------------";
-  protected final String TEXT_28 = NL;
-  protected final String TEXT_29 = "_PortProtocol::";
-  protected final String TEXT_30 = "_PortProtocol() {" + NL + "\tservice = new MessageService(this, &";
-  protected final String TEXT_31 = "_PortProtocol::receive_";
-  protected final String TEXT_32 = "_PortProtocol_Message);" + NL + "}" + NL + "\t\t";
-  protected final String TEXT_33 = NL;
-  protected final String TEXT_34 = "_PortProtocol::~";
-  protected final String TEXT_35 = "_PortProtocol() {" + NL + "\tdelete service;" + NL + "}" + NL + "" + NL + "string ";
-  protected final String TEXT_36 = "_PortProtocol::get";
-  protected final String TEXT_37 = "EventFullName(void){" + NL + "\tstring answer = ";
-  protected final String TEXT_38 = "_Event;" + NL + "\treturn answer;" + NL + "}" + NL + "\t\t";
-  protected final String TEXT_39 = NL;
-  protected final String TEXT_40 = "\t\t" + NL + "" + NL + "void ";
-  protected final String TEXT_41 = "_PortProtocol::sendMessage(short int portId,short int evtId, int size, void* data) {" + NL + "\tMessageHeader* msg = service->getBufferedMessage();" + NL + "\tif (msg!=NULL) {" + NL + "\t\tmsg->portId = portId;" + NL + "\t\tmsg->eventId = evtId;" + NL + "\t\tif (size>0 && data!=NULL) {" + NL + "\t\t\tmsg->data = malloc(size);" + NL + "     \t\tmemcpy(msg->data, data, size);" + NL + "\t\t}" + NL + "\t\tservice->push(msg);" + NL + "\t}" + NL + "}" + NL + "\t\t" + NL + "void ";
-  protected final String TEXT_42 = "_PortProtocol::receive_";
-  protected final String TEXT_43 = "_PortProtocol_Message(const MessageHeader* msg){" + NL + "\tswitch(msg->eventId){";
-  protected final String TEXT_44 = NL;
-  protected final String TEXT_45 = NL + NL + "\t\tdefault:" + NL + "\t\t\tbreak;" + NL + "\t}" + NL + "}" + NL + ";\t";
-  protected final String TEXT_46 = NL;
-  protected final String TEXT_47 = NL;
+  protected final String TEXT_8 = ")) {";
+  protected final String TEXT_9 = NL + "\t\t";
+  protected final String TEXT_10 = "_event.publish(data);" + NL + "\t} else {" + NL + "\t\tthrow \"Bad port data\";" + NL + "\t}" + NL + "\tbreak;";
+  protected final String TEXT_11 = "\t\t" + NL + "\t\t";
+  protected final String TEXT_12 = " data = *((";
+  protected final String TEXT_13 = "*) msg->data);";
+  protected final String TEXT_14 = "\t\t" + NL + "\t\t";
+  protected final String TEXT_15 = "* messageData = new ";
+  protected final String TEXT_16 = "();" + NL + "\t\t";
+  protected final String TEXT_17 = "* data =  messageData->deserialize(*((";
+  protected final String TEXT_18 = "**) msg->data));" + NL + "\t\t";
+  protected final String TEXT_19 = " data = *((";
+  protected final String TEXT_20 = "*) msg->data);";
+  protected final String TEXT_21 = NL + "\tpublic:" + NL + "\t\t";
+  protected final String TEXT_22 = NL + "\t\t" + NL + "\t\t//------------------------" + NL + "\t\t// CONSTRUCTOR" + NL + "\t\t//------------------------" + NL + "\t\t";
+  protected final String TEXT_23 = "_PortProtocol();" + NL + "\t" + NL + "\t\t//------------------------" + NL + "\t\t// DESTRUCTOR" + NL + "\t\t//------------------------" + NL + "\t\tvirtual ~";
+  protected final String TEXT_24 = "_PortProtocol();" + NL + "" + NL + "\t\tstring get";
+  protected final String TEXT_25 = "EventFullName(void);" + NL + "\t\t";
+  protected final String TEXT_26 = NL;
+  protected final String TEXT_27 = NL + NL + "\tprivate:" + NL + "\t\t\t" + NL + "\t\t";
+  protected final String TEXT_28 = " ";
+  protected final String TEXT_29 = ";" + NL + "\t\t";
+  protected final String TEXT_30 = " ";
+  protected final String TEXT_31 = ";" + NL + "\t\tMessageService* service;" + NL + "\t\t\t" + NL + "\t\tvoid sendMessage(short int portId,short int evtId, int size, void* data);" + NL + "\t\tvoid receive_";
+  protected final String TEXT_32 = "_PortProtocol_Message(const MessageHeader* msg);" + NL;
+  protected final String TEXT_33 = NL + "#define ";
+  protected final String TEXT_34 = "_BODY" + NL + "" + NL + "#if defined( PRAGMA ) && ! defined( PRAGMA_IMPLEMENTED )" + NL + "#pragma implementation <";
+  protected final String TEXT_35 = ".h>" + NL + "#endif";
+  protected final String TEXT_36 = NL + "//------------------------" + NL + "// CONSTRUCTOR IMPLEMENTATION" + NL + "//------------------------";
+  protected final String TEXT_37 = NL;
+  protected final String TEXT_38 = "_PortProtocol::";
+  protected final String TEXT_39 = "_PortProtocol() {" + NL + "\tservice = new MessageService(this, &";
+  protected final String TEXT_40 = "_PortProtocol::receive_";
+  protected final String TEXT_41 = "_PortProtocol_Message);" + NL + "}" + NL + "\t\t";
+  protected final String TEXT_42 = NL;
+  protected final String TEXT_43 = "_PortProtocol::~";
+  protected final String TEXT_44 = "_PortProtocol() {" + NL + "\tdelete service;" + NL + "}" + NL + "" + NL + "string ";
+  protected final String TEXT_45 = "_PortProtocol::get";
+  protected final String TEXT_46 = "EventFullName(void){" + NL + "\tstring answer = ";
+  protected final String TEXT_47 = "_Event;" + NL + "\treturn answer;" + NL + "}" + NL + "\t\t";
   protected final String TEXT_48 = NL;
-  protected final String TEXT_49 = "_Event";
-  protected final String TEXT_50 = "_Event";
-  protected final String TEXT_51 = "_Port";
-  protected final String TEXT_52 = "_Port";
-  protected final String TEXT_53 = "\t";
-  protected final String TEXT_54 = " = ";
-  protected final String TEXT_55 = "::";
-  protected final String TEXT_56 = ";";
-  protected final String TEXT_57 = "\t";
-  protected final String TEXT_58 = " = ";
-  protected final String TEXT_59 = "::";
-  protected final String TEXT_60 = "_";
-  protected final String TEXT_61 = ";" + NL + "\tsendMessage(";
-  protected final String TEXT_62 = "::";
-  protected final String TEXT_63 = ",";
+  protected final String TEXT_49 = "\t\t" + NL + "" + NL + "void ";
+  protected final String TEXT_50 = "_PortProtocol::sendMessage(short int portId,short int evtId, int size, void* data) {" + NL + "\tMessageHeader* msg = service->getBufferedMessage();" + NL + "\tif (msg!=NULL) {" + NL + "\t\tmsg->portId = portId;" + NL + "\t\tmsg->eventId = evtId;" + NL + "\t\tif (size>0 && data!=NULL) {" + NL + "\t\t\tmsg->data = malloc(size);" + NL + "     \t\tmemcpy(msg->data, data, size);" + NL + "\t\t}" + NL + "\t\tservice->push(msg);" + NL + "\t}" + NL + "}" + NL + "\t\t" + NL + "void ";
+  protected final String TEXT_51 = "_PortProtocol::receive_";
+  protected final String TEXT_52 = "_PortProtocol_Message(const MessageHeader* msg){" + NL + "\tswitch(msg->eventId){";
+  protected final String TEXT_53 = NL;
+  protected final String TEXT_54 = NL + NL + "\t\tdefault:" + NL + "\t\t\tbreak;" + NL + "\t}" + NL + "}" + NL + ";\t";
+  protected final String TEXT_55 = NL;
+  protected final String TEXT_56 = NL;
+  protected final String TEXT_57 = NL;
+  protected final String TEXT_58 = "_Event";
+  protected final String TEXT_59 = "_Event";
+  protected final String TEXT_60 = "_Port";
+  protected final String TEXT_61 = "_Port";
+  protected final String TEXT_62 = "\t";
+  protected final String TEXT_63 = " = ";
   protected final String TEXT_64 = "::";
-  protected final String TEXT_65 = "_";
-  protected final String TEXT_66 = ", sizeof(";
-  protected final String TEXT_67 = "), &data);";
-  protected final String TEXT_68 = " = ";
-  protected final String TEXT_69 = ".";
-  protected final String TEXT_70 = ".subscribe(this, &";
+  protected final String TEXT_65 = ";";
+  protected final String TEXT_66 = "\t";
+  protected final String TEXT_67 = " = ";
+  protected final String TEXT_68 = "::";
+  protected final String TEXT_69 = "_";
+  protected final String TEXT_70 = ";" + NL + "\tsendMessage(";
   protected final String TEXT_71 = "::";
-  protected final String TEXT_72 = ");";
-  protected final String TEXT_73 = " = ";
-  protected final String TEXT_74 = "->";
-  protected final String TEXT_75 = ".";
-  protected final String TEXT_76 = ".subscribe(";
-  protected final String TEXT_77 = ", &";
-  protected final String TEXT_78 = "::";
-  protected final String TEXT_79 = ");";
-  protected final String TEXT_80 = ".";
-  protected final String TEXT_81 = ".disconnect(";
-  protected final String TEXT_82 = ");";
-  protected final String TEXT_83 = ".";
-  protected final String TEXT_84 = "(data);";
-  protected final String TEXT_85 = "this->disconnectPortConnections();";
-  protected final String TEXT_86 = "this->initPortConnections();";
-  protected final String TEXT_87 = "_Handle";
-  protected final String TEXT_88 = "_BindingHandle";
-  protected final String TEXT_89 = "_event";
-  protected final String TEXT_90 = "Event<void, ";
-  protected final String TEXT_91 = "> ";
-  protected final String TEXT_92 = ";";
-  protected final String TEXT_93 = "receive_";
-  protected final String TEXT_94 = "_Data";
-  protected final String TEXT_95 = "//Composite structure variables";
-  protected final String TEXT_96 = "_PortProtocol";
-  protected final String TEXT_97 = NL + "#ifndef ";
-  protected final String TEXT_98 = "_H" + NL + "#define ";
-  protected final String TEXT_99 = "_H" + NL + "" + NL + "#ifdef PRAGMA" + NL + "#pragma once" + NL + "#ifndef _MSC_VER" + NL + "#pragma interface \"";
-  protected final String TEXT_100 = ".h\"" + NL + "#endif" + NL + "#endif";
-  protected final String TEXT_101 = NL;
-  protected final String TEXT_102 = " {";
-  protected final String TEXT_103 = NL;
-  protected final String TEXT_104 = NL + "};";
-  protected final String TEXT_105 = NL;
-  protected final String TEXT_106 = NL + NL + "#endif";
-  protected final String TEXT_107 = NL;
-  protected final String TEXT_108 = "_Message_Descriptor";
-  protected final String TEXT_109 = "//Message descriptor for ";
-  protected final String TEXT_110 = "* msg = new ";
-  protected final String TEXT_111 = "();";
-  protected final String TEXT_112 = "msg->";
-  protected final String TEXT_113 = " = ";
-  protected final String TEXT_114 = "->";
-  protected final String TEXT_115 = "();";
-  protected final String TEXT_116 = "->";
-  protected final String TEXT_117 = "(msg->";
-  protected final String TEXT_118 = ");";
-  protected final String TEXT_119 = NL + "#define ";
-  protected final String TEXT_120 = "_BODY" + NL + "" + NL + "#if defined( PRAGMA ) && ! defined( PRAGMA_IMPLEMENTED )" + NL + "#pragma implementation <";
-  protected final String TEXT_121 = ".h>" + NL + "#endif";
-  protected final String TEXT_122 = NL + NL + "//------------------------" + NL + "// CONSTRUCTOR IMPLEMENTATION" + NL + "//------------------------";
+  protected final String TEXT_72 = ",";
+  protected final String TEXT_73 = "::";
+  protected final String TEXT_74 = "_";
+  protected final String TEXT_75 = ", sizeof(";
+  protected final String TEXT_76 = "), &data);";
+  protected final String TEXT_77 = " = ";
+  protected final String TEXT_78 = "->";
+  protected final String TEXT_79 = ".";
+  protected final String TEXT_80 = ".subscribe(";
+  protected final String TEXT_81 = ", &";
+  protected final String TEXT_82 = "::";
+  protected final String TEXT_83 = ");";
+  protected final String TEXT_84 = " = ";
+  protected final String TEXT_85 = "->";
+  protected final String TEXT_86 = ".";
+  protected final String TEXT_87 = ".subscribe(";
+  protected final String TEXT_88 = ", &";
+  protected final String TEXT_89 = "::";
+  protected final String TEXT_90 = ");";
+  protected final String TEXT_91 = ".";
+  protected final String TEXT_92 = ".disconnect(";
+  protected final String TEXT_93 = ");";
+  protected final String TEXT_94 = ".";
+  protected final String TEXT_95 = "(data);";
+  protected final String TEXT_96 = "this->disconnectPortConnections();";
+  protected final String TEXT_97 = "this->initPortConnections();";
+  protected final String TEXT_98 = "_Handle";
+  protected final String TEXT_99 = "_BindingHandle";
+  protected final String TEXT_100 = " = ";
+  protected final String TEXT_101 = ".";
+  protected final String TEXT_102 = ".subscribe(this, &";
+  protected final String TEXT_103 = "::";
+  protected final String TEXT_104 = ");";
+  protected final String TEXT_105 = "_event";
+  protected final String TEXT_106 = "Event<void, ";
+  protected final String TEXT_107 = "> ";
+  protected final String TEXT_108 = ";";
+  protected final String TEXT_109 = "receive_";
+  protected final String TEXT_110 = "_Data";
+  protected final String TEXT_111 = "//Composite structure variables";
+  protected final String TEXT_112 = "_PortProtocol";
+  protected final String TEXT_113 = NL + "#ifndef ";
+  protected final String TEXT_114 = "_H" + NL + "#define ";
+  protected final String TEXT_115 = "_H" + NL + "" + NL + "#ifdef PRAGMA" + NL + "#pragma once" + NL + "#ifndef _MSC_VER" + NL + "#pragma interface \"";
+  protected final String TEXT_116 = ".h\"" + NL + "#endif" + NL + "#endif";
+  protected final String TEXT_117 = NL;
+  protected final String TEXT_118 = " {";
+  protected final String TEXT_119 = NL;
+  protected final String TEXT_120 = NL + "};";
+  protected final String TEXT_121 = NL;
+  protected final String TEXT_122 = NL + NL + "#endif";
   protected final String TEXT_123 = NL;
-  protected final String TEXT_124 = "::";
-  protected final String TEXT_125 = "() {" + NL + "\t//Empty constructor" + NL + "}" + NL + "\t\t";
-  protected final String TEXT_126 = NL;
-  protected final String TEXT_127 = "::~";
-  protected final String TEXT_128 = "() {" + NL + "}" + NL;
-  protected final String TEXT_129 = NL;
-  protected final String TEXT_130 = "* ";
-  protected final String TEXT_131 = "::serialize(void){";
-  protected final String TEXT_132 = NL;
-  protected final String TEXT_133 = NL + "\treturn msg;" + NL + "}" + NL + "\t\t" + NL + "void ";
-  protected final String TEXT_134 = "::deserialize(";
-  protected final String TEXT_135 = "* msg) {";
-  protected final String TEXT_136 = NL;
-  protected final String TEXT_137 = NL + "}" + NL + "\t\t" + NL + ";\t";
-  protected final String TEXT_138 = NL;
-  protected final String TEXT_139 = NL;
+  protected final String TEXT_124 = "_Message_Descriptor";
+  protected final String TEXT_125 = "_Message";
+  protected final String TEXT_126 = "//Message descriptor for ";
+  protected final String TEXT_127 = "* msg = new ";
+  protected final String TEXT_128 = "();";
+  protected final String TEXT_129 = "msg->";
+  protected final String TEXT_130 = " = ";
+  protected final String TEXT_131 = "->";
+  protected final String TEXT_132 = "();";
+  protected final String TEXT_133 = "->";
+  protected final String TEXT_134 = "(msg->";
+  protected final String TEXT_135 = ");";
+  protected final String TEXT_136 = NL + "#define ";
+  protected final String TEXT_137 = "_BODY" + NL + "" + NL + "#if defined( PRAGMA ) && ! defined( PRAGMA_IMPLEMENTED )" + NL + "#pragma implementation <";
+  protected final String TEXT_138 = ".h>" + NL + "#endif";
+  protected final String TEXT_139 = NL + NL + "//------------------------" + NL + "// CONSTRUCTOR IMPLEMENTATION" + NL + "//------------------------";
   protected final String TEXT_140 = NL;
-  protected final String TEXT_141 = NL + "\tpublic:" + NL + "\t\t" + NL + "\t\t//------------------------" + NL + "\t\t// CONSTRUCTOR" + NL + "\t\t//------------------------" + NL + "\t\t";
-  protected final String TEXT_142 = "_Message();" + NL + "\t" + NL + "\t\t//------------------------" + NL + "\t\t// DESTRUCTOR" + NL + "\t\t//------------------------" + NL + "\t\tvirtual ~";
-  protected final String TEXT_143 = "_Message();" + NL + "" + NL + "\t\t";
-  protected final String TEXT_144 = "* serialize(void);" + NL + "\t\tvoid deserialize(";
-  protected final String TEXT_145 = "* ";
-  protected final String TEXT_146 = ");" + NL + "" + NL + "\tprivate:" + NL;
-  protected final String TEXT_147 = NL;
-  protected final String TEXT_148 = "\t\t\t" + NL;
+  protected final String TEXT_141 = "::";
+  protected final String TEXT_142 = "() {" + NL + "\t//Empty constructor" + NL + "}" + NL + "\t\t";
+  protected final String TEXT_143 = NL;
+  protected final String TEXT_144 = "::~";
+  protected final String TEXT_145 = "() {" + NL + "}" + NL;
+  protected final String TEXT_146 = NL;
+  protected final String TEXT_147 = "* ";
+  protected final String TEXT_148 = "::serialize(";
+  protected final String TEXT_149 = " ";
+  protected final String TEXT_150 = "){";
+  protected final String TEXT_151 = NL;
+  protected final String TEXT_152 = NL + "\treturn msg;" + NL + "}" + NL + "\t\t" + NL + "void ";
+  protected final String TEXT_153 = "::deserialize(";
+  protected final String TEXT_154 = " ";
+  protected final String TEXT_155 = ", ";
+  protected final String TEXT_156 = "* msg) {";
+  protected final String TEXT_157 = NL;
+  protected final String TEXT_158 = NL + "}" + NL + "\t\t" + NL + ";\t";
+  protected final String TEXT_159 = NL;
+  protected final String TEXT_160 = NL;
+  protected final String TEXT_161 = NL;
+  protected final String TEXT_162 = NL + "\tpublic:" + NL + "\t\t" + NL + "\t\t//------------------------" + NL + "\t\t// CONSTRUCTOR" + NL + "\t\t//------------------------" + NL + "\t\t";
+  protected final String TEXT_163 = "_Message();" + NL + "\t" + NL + "\t\t//------------------------" + NL + "\t\t// DESTRUCTOR" + NL + "\t\t//------------------------" + NL + "\t\tvirtual ~";
+  protected final String TEXT_164 = "_Message();" + NL + "" + NL + "\t\t";
+  protected final String TEXT_165 = "* serialize(";
+  protected final String TEXT_166 = " ";
+  protected final String TEXT_167 = ");" + NL + "\t\tvoid deserialize(";
+  protected final String TEXT_168 = " ";
+  protected final String TEXT_169 = ", ";
+  protected final String TEXT_170 = "* ";
+  protected final String TEXT_171 = ");";
+  protected final String TEXT_172 = "\t\t\t";
+  protected final String TEXT_173 = NL + NL + "\tprivate:" + NL;
+  protected final String TEXT_174 = NL;
+  protected final String TEXT_175 = "\t\t\t" + NL;
 
   /**
   * @param argument
@@ -255,6 +282,8 @@ public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
+	@GenerationProcedureParameter(id= IModelingDecisions.IS_LANGUAGE_PRIMITIVE_TYPE) boolean isPrimitiveType;
+
 	@GenerationArgument Object parent;
 	@GenerationArgument String portName;
 	@GenerationArgument String direction;
@@ -275,15 +304,49 @@ String portEventType= getRegistry().generate(IStructureConstants.PORT_EVENT_TYPE
     stringBuffer.append(TEXT_7);
     stringBuffer.append(type);
     stringBuffer.append(TEXT_8);
-    stringBuffer.append(type);
+    setData();
     stringBuffer.append(TEXT_9);
-    stringBuffer.append(type);
-    stringBuffer.append(TEXT_10);
     stringBuffer.append(portName);
-    stringBuffer.append(TEXT_11);
+    stringBuffer.append(TEXT_10);
     
 
-}});
+}
+
+private void setData(){
+
+if(true|| isPrimitiveType){
+
+    stringBuffer.append(TEXT_11);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_12);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_13);
+    
+return;
+}
+
+String descirptorStructName= getRegistry().generate(ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_DESCRIPTOR_NAME, parent);
+String protocolMesageName= getRegistry().generate(ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_NAME, parent);
+
+
+    stringBuffer.append(TEXT_14);
+    stringBuffer.append(protocolMesageName);
+    stringBuffer.append(TEXT_15);
+    stringBuffer.append(protocolMesageName);
+    stringBuffer.append(TEXT_16);
+    stringBuffer.append(descirptorStructName);
+    stringBuffer.append(TEXT_17);
+    stringBuffer.append(descirptorStructName);
+    stringBuffer.append(TEXT_18);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_19);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_20);
+    
+}
+
+
+});
 
 }
 
@@ -304,28 +367,28 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_12);
-    stringBuffer.append(StringUtil.indent(portEventAttributes,2));
-    stringBuffer.append(TEXT_13);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_14);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_15);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_16);
-    stringBuffer.append(TEXT_17);
-    stringBuffer.append(StringUtil.indent(portEventDeclarations,2));
-    stringBuffer.append(TEXT_18);
-    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_TYPE, element));
-    stringBuffer.append(TEXT_19);
-    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_NAME, element));
-    stringBuffer.append(TEXT_20);
-    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_TYPE, element));
     stringBuffer.append(TEXT_21);
-    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_NAME, element));
+    stringBuffer.append(StringUtil.indent(portEventAttributes,2));
     stringBuffer.append(TEXT_22);
     stringBuffer.append(name);
     stringBuffer.append(TEXT_23);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_24);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_25);
+    stringBuffer.append(TEXT_26);
+    stringBuffer.append(StringUtil.indent(portEventDeclarations,2));
+    stringBuffer.append(TEXT_27);
+    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_TYPE, element));
+    stringBuffer.append(TEXT_28);
+    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_NAME, element));
+    stringBuffer.append(TEXT_29);
+    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_TYPE, element));
+    stringBuffer.append(TEXT_30);
+    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_NAME, element));
+    stringBuffer.append(TEXT_31);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_32);
     
 
 }});
@@ -366,48 +429,48 @@ namespaceClosing= getRegistry().generationPointString(protocol, ICppDefinitions.
 
 
     stringBuffer.append(copyRight);
-    stringBuffer.append(TEXT_24);
+    stringBuffer.append(TEXT_33);
     stringBuffer.append( fullName );
-    stringBuffer.append(TEXT_25);
+    stringBuffer.append(TEXT_34);
     stringBuffer.append(fullPath);
-    stringBuffer.append(TEXT_26);
+    stringBuffer.append(TEXT_35);
     safeSet(bodyIncludes);
     safeSet(preProcessorDefnitionUse);
     stringBuffer.append(namespaceOpening);
-    stringBuffer.append(TEXT_27);
-    stringBuffer.append(TEXT_28);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_29);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_30);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_31);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_32);
-    stringBuffer.append(TEXT_33);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_34);
-    stringBuffer.append(name);
-    stringBuffer.append(TEXT_35);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_36);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_37);
-    stringBuffer.append(StringUtil.firstCharacterToLowerCase(name));
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_38);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_39);
-    stringBuffer.append(portEventImplementations);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_40);
     stringBuffer.append(name);
     stringBuffer.append(TEXT_41);
-    stringBuffer.append(name);
     stringBuffer.append(TEXT_42);
     stringBuffer.append(name);
     stringBuffer.append(TEXT_43);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_44);
-    stringBuffer.append(StringUtil.indent(portEventCases,2));
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_45);
+    stringBuffer.append(name);
     stringBuffer.append(TEXT_46);
+    stringBuffer.append(StringUtil.firstCharacterToLowerCase(name));
+    stringBuffer.append(TEXT_47);
+    stringBuffer.append(TEXT_48);
+    stringBuffer.append(portEventImplementations);
+    stringBuffer.append(TEXT_49);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_50);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_51);
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_52);
+    stringBuffer.append(TEXT_53);
+    stringBuffer.append(StringUtil.indent(portEventCases,2));
+    stringBuffer.append(TEXT_54);
+    stringBuffer.append(TEXT_55);
     stringBuffer.append(namespaceClosing);
     
 
@@ -418,9 +481,9 @@ if(val.isEmpty()){
 	return;
 }
 
-    stringBuffer.append(TEXT_47);
+    stringBuffer.append(TEXT_56);
     stringBuffer.append(val);
-    stringBuffer.append(TEXT_48);
+    stringBuffer.append(TEXT_57);
     
 
 }
@@ -443,7 +506,7 @@ public void execute() {
 
 
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_49);
+    stringBuffer.append(TEXT_58);
     
 
 }});
@@ -466,7 +529,7 @@ public void execute() {
 
 
     stringBuffer.append(StringUtil.firstCharacterToLowerCase(name));
-    stringBuffer.append(TEXT_50);
+    stringBuffer.append(TEXT_59);
     
 
 }});
@@ -489,7 +552,7 @@ public void execute() {
 
 
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_51);
+    stringBuffer.append(TEXT_60);
     
 
 }});
@@ -512,7 +575,7 @@ public void execute() {
 
 
     stringBuffer.append(StringUtil.firstCharacterToLowerCase(name));
-    stringBuffer.append(TEXT_52);
+    stringBuffer.append(TEXT_61);
     
 
 }});
@@ -535,13 +598,13 @@ public void execute() {
 
 
 
-    stringBuffer.append(TEXT_53);
+    stringBuffer.append(TEXT_62);
     stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_NAME, element));
-    stringBuffer.append(TEXT_54);
+    stringBuffer.append(TEXT_63);
     stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_TYPE, element));
-    stringBuffer.append(TEXT_55);
+    stringBuffer.append(TEXT_64);
     stringBuffer.append(portName);
-    stringBuffer.append(TEXT_56);
+    stringBuffer.append(TEXT_65);
     
 
 }});
@@ -566,66 +629,27 @@ public void execute() {
 
 
 
-    stringBuffer.append(TEXT_57);
-    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_NAME, element));
-    stringBuffer.append(TEXT_58);
-    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_TYPE, element));
-    stringBuffer.append(TEXT_59);
-    stringBuffer.append(direction);
-    stringBuffer.append(TEXT_60);
-    stringBuffer.append(portName);
-    stringBuffer.append(TEXT_61);
-    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_TYPE, element));
-    stringBuffer.append(TEXT_62);
-    stringBuffer.append(portName);
-    stringBuffer.append(TEXT_63);
-    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_TYPE, element));
-    stringBuffer.append(TEXT_64);
-    stringBuffer.append(direction);
-    stringBuffer.append(TEXT_65);
-    stringBuffer.append(portName);
     stringBuffer.append(TEXT_66);
-    stringBuffer.append(type);
+    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_NAME, element));
     stringBuffer.append(TEXT_67);
-    
-
-}});
-
-}
-
-});
-
-getRegistry().define(ICppStructureDefinitions.PORT_PROTOCOL_HANDLER_EVENT_CONNECT, new GenerationProcdure(this){
-	
-@Override
-public StringBuffer execute(Object element, Object... arguments) {
-	
-return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
-	
-	@GenerationArgument String portName;
-	@GenerationArgument Object parent;
-	@GenerationArgument String handleVariableGetter;
-	
-@Override
-public void execute() {
-
-String protocolClassName= getRegistry().generate(ICppStructureDefinitions.PORT_PROTOCOL_DEFAULT_VARIABLE_NAME, parent);
-String parentName= getRegistry().getString(parent, IModelingElementDefinitions.NAME);
-String receiveMethodName= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_RECEIVE_DATA_METHOD_NAME, portName);
-String handle= getRegistry().use(handleVariableGetter== null|| handleVariableGetter.isEmpty()?ICppStructureDefinitions.PORT_PROTOCOL_HANDLE_DEFAULT_NAME: handleVariableGetter, portName);
-String event= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEFAULT_NAME, portName);
- 
-
-    stringBuffer.append(handle);
+    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_TYPE, element));
     stringBuffer.append(TEXT_68);
-    stringBuffer.append(protocolClassName);
+    stringBuffer.append(direction);
     stringBuffer.append(TEXT_69);
-    stringBuffer.append(event);
+    stringBuffer.append(portName);
     stringBuffer.append(TEXT_70);
-    stringBuffer.append(parentName);
+    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_TYPE, element));
     stringBuffer.append(TEXT_71);
-    stringBuffer.append(receiveMethodName);
+    stringBuffer.append(portName);
     stringBuffer.append(TEXT_72);
+    stringBuffer.append(getRegistry().generate(IStructureConstants.PORT_EVENT_TYPE, element));
+    stringBuffer.append(TEXT_73);
+    stringBuffer.append(direction);
+    stringBuffer.append(TEXT_74);
+    stringBuffer.append(portName);
+    stringBuffer.append(TEXT_75);
+    stringBuffer.append(type);
+    stringBuffer.append(TEXT_76);
     
 
 }});
@@ -664,19 +688,65 @@ String event= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEF
 
 
     stringBuffer.append(handle);
-    stringBuffer.append(TEXT_73);
-    stringBuffer.append(fromSubComponentName);
-    stringBuffer.append(TEXT_74);
-    stringBuffer.append(protocolClassName);
-    stringBuffer.append(TEXT_75);
-    stringBuffer.append(event);
-    stringBuffer.append(TEXT_76);
-    stringBuffer.append(toSubComponentName);
     stringBuffer.append(TEXT_77);
-    stringBuffer.append(owingClass);
+    stringBuffer.append(fromSubComponentName);
     stringBuffer.append(TEXT_78);
-    stringBuffer.append(toPortName);
+    stringBuffer.append(protocolClassName);
     stringBuffer.append(TEXT_79);
+    stringBuffer.append(event);
+    stringBuffer.append(TEXT_80);
+    stringBuffer.append(toSubComponentName);
+    stringBuffer.append(TEXT_81);
+    stringBuffer.append(owingClass);
+    stringBuffer.append(TEXT_82);
+    stringBuffer.append(toPortName);
+    stringBuffer.append(TEXT_83);
+    
+
+}});
+
+}
+
+});
+
+getRegistry().define(ICppStructureDefinitions.PORT_PROTOCOL_HANDLER_EVENT_BINDING_CONNECT, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+	@GenerationArgument String fromSubComponentName;
+	@GenerationArgument String fromSubComponentType;
+	@GenerationArgument String fromPortName;
+	@GenerationArgument String toSubComponentName;
+	@GenerationArgument String owingClass;
+	@GenerationArgument String toPortName;
+
+	
+@Override
+public void execute() {
+String portName= fromPortName+ CommonConstants.UNDERSCORE+ toPortName;
+
+String handle= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_HANDLE_BINDING_DEFAULT_NAME, portName);
+String protocolClassName= StringUtil.firstCharacterToLowerCase(fromSubComponentType)+ "_PortProtocol";
+String event= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEFAULT_NAME, fromPortName);
+
+
+
+    stringBuffer.append(handle);
+    stringBuffer.append(TEXT_84);
+    stringBuffer.append(fromSubComponentName);
+    stringBuffer.append(TEXT_85);
+    stringBuffer.append(protocolClassName);
+    stringBuffer.append(TEXT_86);
+    stringBuffer.append(event);
+    stringBuffer.append(TEXT_87);
+    stringBuffer.append(toSubComponentName);
+    stringBuffer.append(TEXT_88);
+    stringBuffer.append(owingClass);
+    stringBuffer.append(TEXT_89);
+    stringBuffer.append(toPortName);
+    stringBuffer.append(TEXT_90);
     
 
 }});
@@ -704,11 +774,11 @@ String event= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEF
 
 
     stringBuffer.append(protocolClassName);
-    stringBuffer.append(TEXT_80);
+    stringBuffer.append(TEXT_91);
     stringBuffer.append(event);
-    stringBuffer.append(TEXT_81);
+    stringBuffer.append(TEXT_92);
     stringBuffer.append(handle);
-    stringBuffer.append(TEXT_82);
+    stringBuffer.append(TEXT_93);
     
 
 }});
@@ -734,9 +804,9 @@ String protocolClassName= getRegistry().generate(ICppStructureDefinitions.PORT_P
 
 
     stringBuffer.append(protocolClassName);
-    stringBuffer.append(TEXT_83);
+    stringBuffer.append(TEXT_94);
     stringBuffer.append(portName);
-    stringBuffer.append(TEXT_84);
+    stringBuffer.append(TEXT_95);
     
 
 }});
@@ -756,7 +826,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_85);
+    stringBuffer.append(TEXT_96);
     
 
 }});
@@ -776,7 +846,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_86);
+    stringBuffer.append(TEXT_97);
     
 
 }});
@@ -799,7 +869,7 @@ public void execute() {
 
 
     stringBuffer.append(portName);
-    stringBuffer.append(TEXT_87);
+    stringBuffer.append(TEXT_98);
     
 
 }});
@@ -822,7 +892,46 @@ public void execute() {
 
 
     stringBuffer.append(portName);
-    stringBuffer.append(TEXT_88);
+    stringBuffer.append(TEXT_99);
+    
+
+}});
+
+}
+
+});
+
+getRegistry().define(ICppStructureDefinitions.PORT_PROTOCOL_HANDLER_EVENT_CONNECT, new GenerationProcdure(this){
+	
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+	
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+	
+	@GenerationArgument String portName;
+	@GenerationArgument Object parent;
+	@GenerationArgument String handleVariableGetter;
+	
+@Override
+public void execute() {
+
+String protocolClassName= getRegistry().generate(ICppStructureDefinitions.PORT_PROTOCOL_DEFAULT_VARIABLE_NAME, parent);
+String parentName= getRegistry().getString(parent, IModelingElementDefinitions.NAME);
+String receiveMethodName= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_RECEIVE_DATA_METHOD_NAME, portName);
+String handle= getRegistry().use(handleVariableGetter== null|| handleVariableGetter.isEmpty()?ICppStructureDefinitions.PORT_PROTOCOL_HANDLE_DEFAULT_NAME: handleVariableGetter, portName);
+String event= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEFAULT_NAME, portName);
+ 
+
+    stringBuffer.append(handle);
+    stringBuffer.append(TEXT_100);
+    stringBuffer.append(protocolClassName);
+    stringBuffer.append(TEXT_101);
+    stringBuffer.append(event);
+    stringBuffer.append(TEXT_102);
+    stringBuffer.append(parentName);
+    stringBuffer.append(TEXT_103);
+    stringBuffer.append(receiveMethodName);
+    stringBuffer.append(TEXT_104);
     
 
 }});
@@ -845,7 +954,7 @@ public void execute() {
 
 
     stringBuffer.append(portName);
-    stringBuffer.append(TEXT_89);
+    stringBuffer.append(TEXT_105);
     
 
 }});
@@ -870,11 +979,11 @@ public void execute() {
 String eventMethodName= getRegistry().use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEFAULT_NAME, portName);
 
 
-    stringBuffer.append(TEXT_90);
+    stringBuffer.append(TEXT_106);
     stringBuffer.append(typeName);
-    stringBuffer.append(TEXT_91);
+    stringBuffer.append(TEXT_107);
     stringBuffer.append(eventMethodName);
-    stringBuffer.append(TEXT_92);
+    stringBuffer.append(TEXT_108);
     
 
 }});
@@ -896,9 +1005,9 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_93);
+    stringBuffer.append(TEXT_109);
     stringBuffer.append(portName);
-    stringBuffer.append(TEXT_94);
+    stringBuffer.append(TEXT_110);
     
 
 }});
@@ -963,7 +1072,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_95);
+    stringBuffer.append(TEXT_111);
     
 
 }});
@@ -986,7 +1095,7 @@ public void execute() {
 
 
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_96);
+    stringBuffer.append(TEXT_112);
     
 
 }});
@@ -1027,27 +1136,27 @@ classDeclarations= getRegistry().generationPointString(parent, IModelingConstant
 
 
     stringBuffer.append(copyRight);
-    stringBuffer.append(TEXT_97);
+    stringBuffer.append(TEXT_113);
     stringBuffer.append( definitionFullPath );
-    stringBuffer.append(TEXT_98);
+    stringBuffer.append(TEXT_114);
     stringBuffer.append( definitionFullPath );
-    stringBuffer.append(TEXT_99);
+    stringBuffer.append(TEXT_115);
     stringBuffer.append(fullPath);
-    stringBuffer.append(TEXT_100);
+    stringBuffer.append(TEXT_116);
     safeSet(includes);
     safeSet(preProcessorDefnitionUse);
     safeSet(namespaceOpening);
     safeSet(incompleteTypes);
     safeSet(internalDefinedTypes);
-    stringBuffer.append(TEXT_101);
+    stringBuffer.append(TEXT_117);
     stringBuffer.append(classDeclarations);
-    stringBuffer.append(TEXT_102);
-    stringBuffer.append(TEXT_103);
+    stringBuffer.append(TEXT_118);
+    stringBuffer.append(TEXT_119);
     stringBuffer.append(contents);
-    stringBuffer.append(TEXT_104);
-    stringBuffer.append(TEXT_105);
+    stringBuffer.append(TEXT_120);
+    stringBuffer.append(TEXT_121);
     stringBuffer.append(namespaceClosing);
-    stringBuffer.append(TEXT_106);
+    stringBuffer.append(TEXT_122);
     
 
 }
@@ -1058,7 +1167,7 @@ if(val.isEmpty()){
 }
 
     stringBuffer.append(val);
-    stringBuffer.append(TEXT_107);
+    stringBuffer.append(TEXT_123);
     
 
 }});
@@ -1081,7 +1190,7 @@ public void execute() {
 
 
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_108);
+    stringBuffer.append(TEXT_124);
     
 
 }});
@@ -1089,6 +1198,30 @@ public void execute() {
 }
 
 });
+
+getRegistry().define(ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_NAME, new GenerationProcdure(this){
+
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+		
+@Override
+public StringBuffer execute(Object element, Object... arguments) {
+
+return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+	
+@Override
+public void execute() {
+
+
+    stringBuffer.append(name);
+    stringBuffer.append(TEXT_125);
+    
+
+}});
+
+}
+
+});
+
 
 getRegistry().define(ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_DESCRIPTOR_COMMENT, new GenerationProcdure(this){
 
@@ -1103,7 +1236,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 public void execute() {
 
 
-    stringBuffer.append(TEXT_109);
+    stringBuffer.append(TEXT_126);
     stringBuffer.append(name);
     
 
@@ -1128,9 +1261,9 @@ String descirptorStructName= getRegistry().generate(ICppStructureDefinitions.POR
 
 
     stringBuffer.append(descirptorStructName);
-    stringBuffer.append(TEXT_110);
+    stringBuffer.append(TEXT_127);
     stringBuffer.append(descirptorStructName);
-    stringBuffer.append(TEXT_111);
+    stringBuffer.append(TEXT_128);
     
 
 }});
@@ -1156,13 +1289,13 @@ public void execute() {
 String variableName= StringUtil.firstCharacterToLowerCase(name);
 
 
-    stringBuffer.append(TEXT_112);
+    stringBuffer.append(TEXT_129);
     stringBuffer.append(attributeName);
-    stringBuffer.append(TEXT_113);
+    stringBuffer.append(TEXT_130);
     stringBuffer.append(variableName);
-    stringBuffer.append(TEXT_114);
+    stringBuffer.append(TEXT_131);
     stringBuffer.append(getterMethod);
-    stringBuffer.append(TEXT_115);
+    stringBuffer.append(TEXT_132);
     
 
 }});
@@ -1189,11 +1322,11 @@ String variableName= StringUtil.firstCharacterToLowerCase(name);
 
 
     stringBuffer.append(variableName);
-    stringBuffer.append(TEXT_116);
+    stringBuffer.append(TEXT_133);
     stringBuffer.append(setterMethod);
-    stringBuffer.append(TEXT_117);
+    stringBuffer.append(TEXT_134);
     stringBuffer.append(attributeName);
-    stringBuffer.append(TEXT_118);
+    stringBuffer.append(TEXT_135);
     
 
 }});
@@ -1208,6 +1341,9 @@ getRegistry().define(ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_BODY_CONTENT
 public StringBuffer execute(Object element, Object... arguments) {
 	
 return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
+
+	@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_TYPE_NAME) String normalizedType;
+	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
 	
 	@GenerationArgument Object parent;
 	@GenerationArgument String bodyIncludes;
@@ -1228,6 +1364,7 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 @Override
 public void execute() {
 
+String normalizedTypeName = StringUtil.firstCharacterToLowerCase(name);
 namespaceOpening= getRegistry().generationPointString(parent, ICppDefinitions.NAMESPACE_OPENING, Boolean.TRUE);
 namespaceClosing= getRegistry().generationPointString(parent, ICppDefinitions.NAMESPACE_CLOSING, Boolean.TRUE);
 fullPath= getRegistry().generationPointString(parent, IModelingConstants.FULL_PATH)+ "_"+ className;
@@ -1236,41 +1373,49 @@ String descirptorStructName= getRegistry().generate(ICppStructureDefinitions.POR
 
 
     stringBuffer.append(copyRight);
-    stringBuffer.append(TEXT_119);
+    stringBuffer.append(TEXT_136);
     stringBuffer.append( fullName );
-    stringBuffer.append(TEXT_120);
+    stringBuffer.append(TEXT_137);
     stringBuffer.append(fullPath);
-    stringBuffer.append(TEXT_121);
+    stringBuffer.append(TEXT_138);
     safeSet(bodyIncludes);
     safeSet(preProcessorDefnitionUse);
     stringBuffer.append(namespaceOpening);
-    stringBuffer.append(TEXT_122);
-    stringBuffer.append(TEXT_123);
+    stringBuffer.append(TEXT_139);
+    stringBuffer.append(TEXT_140);
     stringBuffer.append(className);
-    stringBuffer.append(TEXT_124);
+    stringBuffer.append(TEXT_141);
     stringBuffer.append(className);
-    stringBuffer.append(TEXT_125);
-    stringBuffer.append(TEXT_126);
+    stringBuffer.append(TEXT_142);
+    stringBuffer.append(TEXT_143);
     stringBuffer.append(className);
-    stringBuffer.append(TEXT_127);
+    stringBuffer.append(TEXT_144);
     stringBuffer.append(className);
-    stringBuffer.append(TEXT_128);
-    stringBuffer.append(TEXT_129);
+    stringBuffer.append(TEXT_145);
+    stringBuffer.append(TEXT_146);
     stringBuffer.append(descirptorStructName);
-    stringBuffer.append(TEXT_130);
+    stringBuffer.append(TEXT_147);
     stringBuffer.append(className);
-    stringBuffer.append(TEXT_131);
-    stringBuffer.append(TEXT_132);
+    stringBuffer.append(TEXT_148);
+    stringBuffer.append(normalizedType);
+    stringBuffer.append(TEXT_149);
+    stringBuffer.append(normalizedTypeName);
+    stringBuffer.append(TEXT_150);
+    stringBuffer.append(TEXT_151);
     stringBuffer.append(StringUtil.indent(serializeContents,1));
-    stringBuffer.append(TEXT_133);
+    stringBuffer.append(TEXT_152);
     stringBuffer.append(className);
-    stringBuffer.append(TEXT_134);
+    stringBuffer.append(TEXT_153);
+    stringBuffer.append(normalizedType);
+    stringBuffer.append(TEXT_154);
+    stringBuffer.append(normalizedTypeName);
+    stringBuffer.append(TEXT_155);
     stringBuffer.append(descirptorStructName);
-    stringBuffer.append(TEXT_135);
-    stringBuffer.append(TEXT_136);
+    stringBuffer.append(TEXT_156);
+    stringBuffer.append(TEXT_157);
     stringBuffer.append(StringUtil.indent(deserializeContents,1));
-    stringBuffer.append(TEXT_137);
-    stringBuffer.append(TEXT_138);
+    stringBuffer.append(TEXT_158);
+    stringBuffer.append(TEXT_159);
     stringBuffer.append(namespaceClosing);
     
 
@@ -1281,9 +1426,9 @@ if(val.isEmpty()){
 	return;
 }
 
-    stringBuffer.append(TEXT_139);
+    stringBuffer.append(TEXT_160);
     stringBuffer.append(val);
-    stringBuffer.append(TEXT_140);
+    stringBuffer.append(TEXT_161);
     
 
 }
@@ -1301,30 +1446,54 @@ return CodeProcedure.generate(new CodeProcedure(this, element, arguments) {
 
 	@GenerationArgument String privateContents;
 	@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name;
+	@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_TYPE_NAME) String normalizedType;
 	
 @Override
 public void execute() {
 
+String normalizedTypeName = StringUtil.firstCharacterToLowerCase(name);
 String descirptorStructName= getRegistry().generate(ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_DESCRIPTOR_NAME, element);
 
 
-    stringBuffer.append(TEXT_141);
+    stringBuffer.append(TEXT_162);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_142);
+    stringBuffer.append(TEXT_163);
     stringBuffer.append(name);
-    stringBuffer.append(TEXT_143);
+    stringBuffer.append(TEXT_164);
     stringBuffer.append(descirptorStructName);
-    stringBuffer.append(TEXT_144);
+    stringBuffer.append(TEXT_165);
+    stringBuffer.append(normalizedType);
+    stringBuffer.append(TEXT_166);
+    stringBuffer.append(normalizedTypeName);
+    stringBuffer.append(TEXT_167);
+    stringBuffer.append(normalizedType);
+    stringBuffer.append(TEXT_168);
+    stringBuffer.append(normalizedTypeName);
+    stringBuffer.append(TEXT_169);
     stringBuffer.append(descirptorStructName);
-    stringBuffer.append(TEXT_145);
+    stringBuffer.append(TEXT_170);
     stringBuffer.append(StringUtil.firstCharacterToLowerCase(descirptorStructName));
-    stringBuffer.append(TEXT_146);
-    stringBuffer.append(TEXT_147);
-    stringBuffer.append(StringUtil.indent(privateContents,2));
-    stringBuffer.append(TEXT_148);
+    stringBuffer.append(TEXT_171);
+    safeSet(privateContents);
+    stringBuffer.append(TEXT_172);
     
 
-}});
+}
+
+private void safeSet(String val){
+if(val.isEmpty()){
+	return;
+}
+
+    stringBuffer.append(TEXT_173);
+    stringBuffer.append(TEXT_174);
+    stringBuffer.append(StringUtil.indent(val,2));
+    stringBuffer.append(TEXT_175);
+    
+
+}
+
+});
 
 }
 
