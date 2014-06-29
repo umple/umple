@@ -7,7 +7,9 @@
 // This is a dictionary of all the tooltips that are not initialized using the title attribute.
 // The are in the following format: 'id: ["tag type", "tooltip HTML"]'
 // These tooltips can use full HTML and can be styled using css
-var tooltipEntries = {
+var ToolTips = {}
+
+ToolTips.tooltipEntries = {
 	// save model tooltips
 	ttSaveBookmark: ["li", "Click to bookmark this model"],
 	ttSaveModel: ["li", "Click to save this model for future editing"],
@@ -60,14 +62,14 @@ var tooltipEntries = {
 };
 
 
-initTooltips = function()
+ToolTips.initTooltips = function()
 {	
 	// Initialize the tooltips in the above tooltip dictionary
-	for(var id in tooltipEntries)
+	for(var id in this.tooltipEntries)
 	{
 		jQuery("#" + id).tooltip({
-			items: tooltipEntries[id][0],
-			content: tooltipEntries[id][1]
+			items: this.tooltipEntries[id][0],
+			content: this.tooltipEntries[id][1]
 		});
 	}
 

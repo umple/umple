@@ -65,8 +65,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramT
   Page.initUmpleTextArea();
   Page.initSourceCodeArea();
   jQuery(document).ready(function() {
-    initializeDropbox();
-    initTooltips();
+    DropboxInitializer.initializeDropbox();
+    ToolTips.initTooltips();
   });
 
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}

@@ -1,8 +1,9 @@
 // Copyright: All contributers to the Umple Project
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
+var DropboxInitializer = {}
 
-initializeDropbox = function() 
+DropboxInitializer.initializeDropbox = function() 
 {
   jQuery('.dropbox-add-saver')
     .addClass('dropbox-option')
