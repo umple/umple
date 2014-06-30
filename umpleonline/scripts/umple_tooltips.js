@@ -69,11 +69,12 @@ ToolTips.initTooltips = function()
 	{
 		jQuery("#" + id).tooltip({
 			items: this.tooltipEntries[id][0],
-			content: this.tooltipEntries[id][1]
+			content: this.tooltipEntries[id][1],
+			show: {delay: 1000}
 		});
 	}
 
 	// Sets the rest of the tooltips using the styling provided by the jQuery style.
 	// These tooltips use the title attribute as the content
-	jQuery(document).tooltip();
+	jQuery(document).tooltip({show: {delay: 1000}});
 }
