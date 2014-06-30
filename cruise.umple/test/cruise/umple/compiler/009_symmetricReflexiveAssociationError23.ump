@@ -1,0 +1,4 @@
+class A {
+	* self first;
+	String first;
+}

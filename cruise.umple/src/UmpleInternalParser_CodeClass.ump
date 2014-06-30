@@ -1315,16 +1315,16 @@ class UmpleInternalParser
               existingAttributeNames.add(attr.getName());
       }
       
-      Boolean roleMatchesClassName, hasMultipleAssocToSameClass;
+      Boolean roleMatchesClassName, hasMultipleAssocToSameClass, isSymmetricReflexive;
       List<String> classesWithAssociationsToCurrClass = new ArrayList<String>();
       List<String> roleNameSameAsClassName = new ArrayList<String>();
       List<String> existingNames = new ArrayList<String>();
       List<Association> visitedAssociations = new ArrayList<Association>();
       for(Association assoc : C.getAssociations())
       {  
-       roleMatchesClassName = false;
-       hasMultipleAssocToSameClass = false;
-       
+        roleMatchesClassName = false;
+        hasMultipleAssocToSameClass = false;
+
         if (visitedAssociations.contains(assoc))
         {
           continue;
@@ -1333,6 +1333,8 @@ class UmpleInternalParser
         AssociationEnd firstEnd = assoc.getEnd(0);
         AssociationEnd secondEnd = assoc.getEnd(1);  
         
+        isSymmetricReflexive = firstEnd.getModifier().equals("symmetricreflexive") || secondEnd.getModifier().equals("symmetricreflexive");
+
         Boolean checkFirstEnd = !firstEnd.getClassName().equals(C.getName());
         Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
         Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
@@ -1376,7 +1378,7 @@ class UmpleInternalParser
         }
 
         // check names on other-class end of associations to other classes
-        if ((checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
+        if (!isSymmetricReflexive && (checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
         { 
           if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
@@ -1391,7 +1393,7 @@ class UmpleInternalParser
             existingNames.add(firstEnd.getRoleName());
           }
         }
-        if ((checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
+        if (!isSymmetricReflexive && (checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
         {
           if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
           {
@@ -1407,6 +1409,31 @@ class UmpleInternalParser
           }
         }
         
+        // Special case for symmetric reflexive associations. Since only one end of the association is given
+        // a name, that one only needs to be checked, and the other needs to be ignored.
+        if(isSymmetricReflexive)
+        {
+          String roleNameToCheck = firstEnd.getRoleName();
+
+          if(roleNameToCheck.equals("") || roleNameToCheck == null)
+          {
+            roleNameToCheck = secondEnd.getRoleName();
+          }
+
+          if(existingNames.contains(roleNameToCheck))
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
+          }
+          else if(existingAttributeNames.contains(roleNameToCheck))
+          {
+            getParseResult().addErrorMessage(new ErrorMessage(23,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
+          }
+          else
+          {
+            existingNames.add(roleNameToCheck);
+          }
+        }
+
         if (associationIsReflexive)
         { 
           // The UmpleClass is only expected to have duplicate references to reflexive associations
@@ -2280,6 +2307,10 @@ class UmpleInternalParser
     AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
     AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
     Association assoc = new Association(true, true, leftEnd, rightEnd);
+
+    assoc.setTokenPosition(symmetricReflexiveAssociationToken.getPosition());
+    assoc.setTokenEndPosition(symmetricReflexiveAssociationToken.getEndPosition());
+
     aClass.addAssociation(assoc);
     model.addAssociation(assoc);
   }
