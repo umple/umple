@@ -1394,6 +1394,24 @@ public class UmpleParserTest
   }
 
   @Test
+  public void multipleSymmetricReflexiveAssociations()
+  {
+    assertParse("009_multipleSymmetricReflexiveAssociations.ump");
+  }
+
+  @Test
+  public void symmetricReflexiveAssociationError19()
+  {
+    assertFailedParse("009_symmetricReflexiveAssociationError19.ump", 19);
+  }
+
+  @Test 
+  public void symmetricReflexiveAssociationError23()
+  {
+    assertFailedParse("009_symmetricReflexiveAssociationError23.ump", 23);
+  }
+
+  @Test
   public void associationByItself()
   {
     assertParse("009_associationByItself.ump");
