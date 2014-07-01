@@ -1115,6 +1115,12 @@ public class CPPBaseGenerationPointsHandler{
 		return !isPrimitiveType;
 	}
 	
+	//For extension purposes
+	@GenerationPoint(generationPoint = IModelingConstants.NORMALIZED_NAME, priority= IGenerationPointPriorityConstants.LOWEST)
+	public static String normalizedName(@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name){
+		return name;
+	}
+			
 	@GenerationPoint(generationPoint = IModelingConstants.NORMALIZED_TYPE_NAME)
 	public static String typeName(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IModelingElementDefinitions.TYPE_NAME) String typeName,
@@ -1348,6 +1354,14 @@ public class CPPBaseGenerationPointsHandler{
 						
 			if(!after.isEmpty()|| !before.isEmpty()){
 				isConstant=Boolean.FALSE;
+			}
+			
+			if(!after.isEmpty()){
+				if(codeBody.toString().isEmpty()){
+					if(after.startsWith(CommonConstants.NEW_LINE)){
+						after= after.substring(CommonConstants.NEW_LINE.length());
+					}
+				}
 			}
 			
 			contents= before;

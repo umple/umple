@@ -119,6 +119,11 @@ public class UmpleStatemachineGenerationPolicy{
 		return element.exitableStateMachine(nextState);
 	}
 	
+	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.IS_HISTORY_STATE)
+	public static boolean isHistory(@GenerationBaseElement State state){
+		return state.isIsHistoryState();
+	}
+	
 	@GenerationValueAnnotation(fieldName= ICppStatemachinesDefinitions.IS_SAME_STATE)
 	public static boolean isSameState(@GenerationBaseElement State element,
 			State state, StateMachine relativeTo){
