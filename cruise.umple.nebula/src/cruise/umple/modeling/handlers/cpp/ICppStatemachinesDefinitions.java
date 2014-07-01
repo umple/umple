@@ -58,6 +58,7 @@ public interface ICppStatemachinesDefinitions {
 	
 	public final static String NESTED_STATEMACHINES= "nestedStatemachine"; //$NON-NLS-1$
 	public final static String IS_START_STATE= "isStartState"; //$NON-NLS-1$
+	public final static String IS_HISTORY_STATE= "isHistoryState"; //$NON-NLS-1$
 	public final static String STATES= "states"; //$NON-NLS-1$
 	public final static String TRANSITIONS= "transitions"; //$NON-NLS-1$
 	public final static String EVENTS= "events"; //$NON-NLS-1$
@@ -105,4 +106,5 @@ public interface ICppStatemachinesDefinitions {
 	public final static String STATEMCHAINE_THREAD_CONSTRUCTOR_DECLARATION= "cpp.statemachine.thread.constructor.declaration"; //$NON-NLS-1$
 	
 	public final static String STATEMACHINES_PROCESSOR= "statemachinesProcessor"; //$NON-NLS-1$
+	public static final String HISTORY_STATE_CHECK = "historyStateCheck"; //$NON-NLS-1$
 }

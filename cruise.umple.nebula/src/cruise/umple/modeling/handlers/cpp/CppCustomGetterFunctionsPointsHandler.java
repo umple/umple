@@ -593,7 +593,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 			ifNotConditionIds= {IModelingElementDefinitions.IS_DERIVED})
 	public static String afterGetter(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
 			@GenerationArgument(id= IModelingConstants.METHOD_ID) String methodId,
-			@GenerationElementParameter(id = IModelingElementDefinitions.NAME) String name) {
+			@GenerationProcedureParameter(id = IModelingConstants.NORMALIZED_NAME) String name) {
 		if(!ICppAssociationsDefinitionsConstants.GETTER_IMPLEMENTATION.equals(methodId)){
 			return null;
 		}
@@ -601,7 +601,6 @@ public class CppCustomGetterFunctionsPointsHandler{
 		String returnStatement= generationValueGetter.use(ICppDefinitions.RETURN_STATEMENET, thisName);
 		return CommonConstants.NEW_LINE+ StringUtil.indent(returnStatement, 1);
 	}
-	
 	
 	@GenerationPoint(generationPoint = ICppAssociationsDefinitionsConstants.IS_A_GETTER_IMPLEMENTATION)
 	public static void isAGetter(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, 
@@ -978,7 +977,8 @@ public class CppCustomGetterFunctionsPointsHandler{
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationBaseElement Object element, 
 			@GenerationArgument(id= IModelingConstants.METHOD_ID) String id, 
-			@GenerationArgument(id= IModelingConstants.METHOD_RETURN_TYPE) String returnType, 
+			@GenerationArgument(id= IModelingConstants.METHOD_RETURN_TYPE) String returnType,
+			@GenerationArgument(id= IModelingConstants.METHOD_OBJECT) Object methodObject, 
 			@GenerationArgument(id= IModelingConstants.METHOD_PARAMETERS_STRING) String parametersString,
 			@GenerationArgument(id= IModelingConstants.CODY_BODY) String codeBody,
 			@GenerationArgument(id= IModelingConstants.METHOD_NAME) String name,
@@ -999,7 +999,7 @@ public class CppCustomGetterFunctionsPointsHandler{
 		map.put(IModelingConstants.METHOD_NAME, name);
 		map.put(IModelingConstants.METHOD_ID, identifier);
 		map.put(IModelingConstants.METHOD_GROUP, groupId);
-		map.put(IModelingConstants.METHOD_OBJECT, element);
+		map.put(IModelingConstants.METHOD_OBJECT, methodObject== null? element: methodObject);
 		map.put(ICppDefinitions.METHOD_STATIC, Boolean.valueOf(isStatic));
 		map.put(ICppDefinitions.METHOD_CONST, Boolean.valueOf(isConstant));
 		map.put(IModelingConstants.METHOD_DEFAULTED_IMPLEMENTATION, Boolean.valueOf(isDefaultedImplementation));
