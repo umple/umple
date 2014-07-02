@@ -3,11 +3,10 @@ namespace cruise.umplificator;
 class FileHelper {
 
 depend java.io.File;
-depend java.util.ArrayList;
 depend java.util.Arrays;
 depend java.util.List;
 depend cruise.umple.compiler.UmpleModel;
-depend cruise.umple.compiler.UmpleSelfGenerator;
+depend cruise.umplificator.generator.UmpleToUmpleGenerator;
 // Logger log4j
 depend org.apache.log4j.Logger;
 
@@ -16,24 +15,25 @@ static Logger logger = Logger.getLogger(FileHelper.class);
 public static final String [] EXTENSIONS = new String [] {".java",".ump"};
 public static final String separator = System.getProperty("line.separator");
 
- public static  List<File> getListOfFilesFromPath(String path){
-    // Get File or a Folder from path
-	  List<File> inputFiles = new ArrayList<File> ();
+ public static  List<File> getListOfFilesFromPath(String path, List<File> inputFiles){
+     // Get File or a Folder from path
 	  File aFile = new File(path);
-	  if (aFile.isDirectory())
+	  if (!aFile.isDirectory())
 	  {
-		 for (File input: aFile.listFiles()){ 
-			 String extension = input.getName().substring(input.getName().lastIndexOf("."));
-			 if (Arrays.asList(EXTENSIONS).contains(extension)){
-				 inputFiles.add(input);
-			 }
-		 }	
+		  if (aFile.isFile()){
+			  int index = aFile.getName().lastIndexOf(".");
+			  if (index > 0) {
+				  String fileExtension = aFile.getName().substring(index);
+				  if (Arrays.asList(EXTENSIONS).contains(fileExtension)){
+						 inputFiles.add(aFile);
+				  }
+			  }
+		  }
 	  }
-	  else if (aFile.isFile()){
-		 String extension = aFile.getName().substring(aFile.getName().lastIndexOf("."));
-		 if (Arrays.asList(EXTENSIONS).contains(extension)){
-			 inputFiles.add(aFile);
-		 }
+	  else {
+			 for (File input: aFile.listFiles()){ 
+				 getListOfFilesFromPath(input.getAbsolutePath(), inputFiles);
+			 }	
 	  }
 	return inputFiles;
   }
@@ -59,10 +59,11 @@ public static void printFilesToUmplify(List<File> srcFiles){
 	logger.info(outMessage.toString());
 }
 
-  public static void writeFile(UmpleModel model){
-        UmpleSelfGenerator gen = new UmpleSelfGenerator();
+  public static void writeFile(UmpleModel model, String outputFolder){
+        UmpleToUmpleGenerator gen = new UmpleToUmpleGenerator();
         gen.setFileExtension(EXTENSIONS[1]);
         gen.setModel(model);
+        gen.setOutputFolder(outputFolder);
         gen.generate();
         logger.debug("--Output--");
         logger.debug(model.getCode());

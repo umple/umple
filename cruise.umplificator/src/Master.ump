@@ -16,9 +16,11 @@ strictness allow 1008;
 generate Java "../src-gen-umple";
 
 use Main.ump;
+use UmplificatorVersion.ump;
 use Umplificator_core.ump;
 use Umplificator_core_code.ump;
 use Parser_Java.ump;
 use CodeVisitors.ump;
 use FileHelper.ump;
 use RuleRunner.ump;
+use Generator_CodeUmple.ump;

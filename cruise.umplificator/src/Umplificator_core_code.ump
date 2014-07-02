@@ -1,5 +1,7 @@
 class Umplificator {
 
+lazy String outputFolder; 
+
 static Logger logger = Logger.getLogger(Umplificator.class);
 
 public boolean umplify(List<File> srcFiles) {
@@ -51,7 +53,7 @@ public boolean umplifyUmple(File file)
 			outputModel = new UmpleModel(umpleFile);
 			outputModel.addUmpleClass(uClass);
 			// generate Umple Code
-			FileHelper.writeFile(outputModel);
+			FileHelper.writeFile(outputModel, outputFolder);
 		} catch (IOException e) {
 			logger.error("IOException in Umplificator.umplifyUmpleFile");
 			logger.error(e.getStackTrace());
@@ -87,7 +89,7 @@ public boolean umplifyJava(File file)
 			outputModel = new UmpleModel(umpleFile);
 			outputModel.addUmpleClass(uClass);
 			// generate Umple Code
-			FileHelper.writeFile(outputModel);
+			FileHelper.writeFile(outputModel, outputFolder);
 		} catch (IOException e) {
 			logger.error("IOException in Umplificator.umplifyUmpleFile");
 			logger.error(e.getStackTrace());

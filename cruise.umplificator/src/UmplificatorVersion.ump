@@ -1,0 +1,6 @@
+namespace cruise.umplificator;
+
+class Umplificator
+{
+  const String VERSION_NUMBER = "@UMPLE_VERSION@";
+}
