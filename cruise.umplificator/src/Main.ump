@@ -2,7 +2,7 @@ namespace cruise.umplificator;
 
 class UmplificatorMain {
 
-	depend java.util.List;
+	depend java.util.*;
 	depend cruise.umplificator.core.*;
 	depend java.io.File;
 	depend java.util.Arrays;
@@ -19,6 +19,11 @@ class UmplificatorMain {
 		 logger.debug("Configure Logger from log4j.properties");
 		 OptionParser optparser = initializeOptionParser();
 	     OptionSet optset = optParse(optparser, args);
+	     
+	     if (preModelOptionProcess(optparser, optset))
+    	 {
+      		return;
+   		 }
 		 List<String> nonOpt = optset.nonOptionArguments();
 		 
 		 if (nonOpt.isEmpty()){ 
@@ -27,9 +32,10 @@ class UmplificatorMain {
 	     	return;	 
 		 }
 		 logger.debug("Umplification process started!");
-		 List<File> inputFiles = FileHelper.getListOfFilesFromPath(args[0]);
+		 List<File> inputFiles = FileHelper.getListOfFilesFromPath(nonOpt.get(0), new ArrayList<File>());
 		 if (inputFiles.size() >= 0 ){
 			Umplificator umplificator = new Umplificator();
+			umplificator.setOutputFolder((String)optset.valueOf("path"));
 			String console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
 			System.out.println(console);
 		 }
@@ -37,15 +43,36 @@ class UmplificatorMain {
 
 	private static  OptionParser initializeOptionParser(){
     	OptionParser optparser = new OptionParser();
-    
 	    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
 	    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
-	    optparser.acceptsAll(Arrays.asList("g", "generate"), "Specify the output language: Java,Cpp").withRequiredArg().ofType(String.class);
-	    optparser.acceptsAll(Arrays.asList("path"), "If a output language is specified using option -g, output source code will be placed to path").withRequiredArg().ofType(String.class);
-	    optparser.acceptsAll(Arrays.asList("import","i"), "Indicate to read in XMI model and generate ump files").withRequiredArg().ofType(String. class);
-	    
+	    optparser.acceptsAll(Arrays.asList("path"), "The output folder path");
    	    return optparser;
     }
+    
+/**
+   * 
+   * optionProcess: process the option arguments which does not require UmpleModel
+   * Argument: optSet - set of the options and corresponding arguments
+   * Return: boolean - If application should terminate immediately after return
+   */
+   private static  boolean preModelOptionProcess(OptionParser optparser, OptionSet optSet){
+    if (optSet == null)
+    { }
+    else if (optSet.has("version"))
+    {
+      System.out.println("Version: " + Umplificator.VERSION_NUMBER);
+    }
+    else if (optSet.has("help"))
+    {
+      printUsage(optparser);
+    }
+    else
+    {
+      return false;
+    }
+    return true;
+  }
+
    
    private static  OptionSet optParse(OptionParser optparser, String [] args){
 	    OptionSet optSet = null;
@@ -64,7 +91,7 @@ class UmplificatorMain {
 	
 
   private static  void printUsage(OptionParser optparser){
-    System.out.println("Usage:  java -jar umplificator.jar <file/folder>\nExample: java -jar umplificator.jar Student.java");
+    System.out.println("Usage:  java -jar umplificator.jar <file/folder>\nExample: java -jar umplificator.jar Student.java outputFolder");
       try
       {
         optparser.printHelpOn(System.out);
