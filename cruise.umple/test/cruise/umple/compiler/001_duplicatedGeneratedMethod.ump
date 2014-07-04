@@ -1,0 +1,6 @@
+class A{
+  name;
+  String getName() {
+    return name;
+  }
+}
