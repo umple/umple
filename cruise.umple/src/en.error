@@ -110,7 +110,7 @@
 1006: 3, "http://umple.org/W1006StateMachineNotParsed.html", State machine syntax could not be processed. It has been considered as Extra Code ;
 1007: 3, "http://umple.org/W1007ElementNotParsed.html", Attribute or Association syntax could not be processed. It has been considered as Extra Code ;
 1008: 3, "http://umple.org/W1008MethodNotParsed.html", Method syntax could not be processed. It has been considered as Extra Code ;
-1009: 4, "http://umple.org/PageBeingDeveloped.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}'. Please use a different name ;
+1009: 4, "http://umple.org/PageBeingDeveloped.html", Method '{0}' has a name conflict with automatic generated getter/setter methods for attribute '{1}'. The user definition is being disconsidered. Please use a different name ;
 
 1500 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "http://umple.org/E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 

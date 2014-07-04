@@ -1877,7 +1877,9 @@ class UmpleInternalParser
       // unimplemented methods
       if(!uClass.hasMethod(aMethod)) 
       {
-        uClass.addUnimplementedMethod(aMethod);
+        //Issue 567
+    	if(shouldAddMethod)
+          uClass.addUnimplementedMethod(aMethod);
       }
     }
     else if (uElement instanceof UmpleTrait)
