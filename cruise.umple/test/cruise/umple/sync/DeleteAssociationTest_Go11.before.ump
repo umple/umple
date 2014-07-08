@@ -1,0 +1,10 @@
+class A
+{
+  * self first;
+  * self second;
+}
+
+class A
+{
+  position 50 30 109 45;
+}

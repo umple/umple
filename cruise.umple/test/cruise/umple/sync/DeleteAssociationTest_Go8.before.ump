@@ -1,0 +1,9 @@
+class A 
+{
+  * -- * A first;
+}
+
+class A
+{
+  position 50 30 109 45;
+}

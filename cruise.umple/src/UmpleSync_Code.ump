@@ -1354,20 +1354,34 @@ class DeleteAssociationAction
         
         for (Token subT : t.getSubTokens())
         {
-          if (!subT.is("inlineAssociation"))
+          if (!(subT.is("inlineAssociation") || subT.is("symmetricReflexiveAssociation")))
           {
             continue;
           }
           
           String currentName = "";
           String firstClassName = t.getValue("name");
-          String secondClassName = subT.getSubToken("associationEnd").getValue("type");
-          String firstRole = subT.getSubToken("inlineAssociationEnd").getValue("roleName");
-          String secondRole = subT.getSubToken("associationEnd").getValue("roleName");
+          String secondClassName = null;
+          String firstRole = null;
+          String secondRole = null;
+          
+          if(subT.is("inlineAssociation"))
+          {
+            firstRole = subT.getSubToken("inlineAssociationEnd").getValue("roleName");
+            secondClassName = subT.getSubToken("associationEnd").getValue("type");
+            secondRole = subT.getSubToken("associationEnd").getValue("roleName");
+          }
+          else
+          {
+            //Covers symmetric reflexive associations
+            secondClassName = firstClassName;
+            secondRole = subT.getValue("roleName");
+          }
+
           firstRole = firstRole == null? "" : ":" + firstRole; 
           secondRole = secondRole == null? "" : ":" + secondRole;
-          
-          if (firstClassName.compareTo(secondClassName) < 0)
+
+          if (firstClassName.compareTo(secondClassName) <= 0)
           {
             currentName = firstClassName + firstRole + "__" + secondClassName + secondRole;
           }
@@ -1398,6 +1412,7 @@ class DeleteAssociationAction
       e.printStackTrace();
       String output = "FATAL ERROR PARSING UMPLE DIAGRAM\n\n";
       
+      output += e.toString() + "\n";
       for (StackTraceElement trace : e.getStackTrace())
       {
         output += trace.toString() + "\n";
@@ -1477,6 +1492,7 @@ class DeleteGeneralizationAction
             extendsNameToken = subT;
             semicolonToken = t.getSubToken(i+1);
             isAToken = t.getSubToken(i-1);
+            isAToken.getPosition();
             break;
           }
           i += 1;
