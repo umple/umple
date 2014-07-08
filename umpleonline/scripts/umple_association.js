@@ -86,9 +86,6 @@ function UmpleAssociation()
     var classOnePart = this.classOneId;
     var classTwoPart = this.classTwoId;
     
-    console.log(classOnePart, classTwoPart);
-    console.log(this.roleOne, this.roleTwo);
-
     if(!(this.roleOne == null || this.roleOne === ""))
     {
       classOnePart = this.classOneId + ":" + this.roleOne;
@@ -98,8 +95,6 @@ function UmpleAssociation()
     {
       classTwoPart = this.classTwoId + ":" + this.roleTwo;
     }
-
-    console.log(classOnePart, classTwoPart);
     
     if (this.classOneId <= this.classTwoId)
     {
