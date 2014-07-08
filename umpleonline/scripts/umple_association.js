@@ -47,7 +47,6 @@ function UmpleAssociation()
   {
     this.classOneId = aClassOneId;
     this.classTwoId = aClassTwoId;
-    this.name = this.getName();
   }
   
   this.setDefaultMultiplicities = function()
@@ -84,13 +83,31 @@ function UmpleAssociation()
   this.deriveName = function()
   {
     var derivedName = "";
+    var classOnePart = this.classOneId;
+    var classTwoPart = this.classTwoId;
+    
+    console.log(classOnePart, classTwoPart);
+    console.log(this.roleOne, this.roleTwo);
+
+    if(!(this.roleOne == null || this.roleOne === ""))
+    {
+      classOnePart = this.classOneId + ":" + this.roleOne;
+    }
+
+    if(!(this.roleTwo == null || this.roleTwo === ""))
+    {
+      classTwoPart = this.classTwoId + ":" + this.roleTwo;
+    }
+
+    console.log(classOnePart, classTwoPart);
+    
     if (this.classOneId <= this.classTwoId)
     {
-      derivedName = this.classOneId + "__" + this.classTwoId;
+      derivedName = classOnePart + "__" + classTwoPart;
     }
     else
     {
-      derivedName = this.classTwoId + "__" + this.classOneId;
+      derivedName = classTwoPart + "__" + classOnePart;
     }
     return derivedName;
   }

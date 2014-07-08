@@ -131,4 +131,95 @@ public class DeleteAssociationActionTest
     
     SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go7.after.ump"), action.getUmpleCode());
   } 
+
+  @Test
+  public void Go_deleteReflexiveAssociation()
+  {
+    String umple =  SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go8.before.ump"));
+    String json = SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go8.before.json"));
+    String filename = pathToInput + "/DeleteAssociationTest_Go8.before.ump";
+    
+    DeleteAssociationAction action = new DeleteAssociationAction(json,umple,filename);
+    action.go();
+    
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go8.after.ump"), action.getUmpleCode());
+  }
+
+  @Test
+  public void Go_deleteSymmetricReflexiveAssociation()
+  {
+    String umple =  SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go9.before.ump"));
+    String json = SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go9.before.json"));
+    String filename = pathToInput + "/DeleteAssociationTest_Go9.before.ump";
+    
+    DeleteAssociationAction action = new DeleteAssociationAction(json,umple,filename);
+    action.go();
+    
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go9.after.ump"), action.getUmpleCode());
+  }
+
+  @Test
+  public void Go_deleteOnlyOneReflexiveAssociation()
+  {
+    String umple =  SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go10.before.ump"));
+    String json = SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go10.before.json"));
+    String filename = pathToInput + "/DeleteAssociationTest_Go10.before.ump";
+    
+    DeleteAssociationAction action = new DeleteAssociationAction(json,umple,filename);
+    action.go();
+    
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go10.after.ump"), action.getUmpleCode());
+  }
+  
+  @Test
+  public void Go_deleteOnlyOneSymmetricReflexiveAssociation()
+  {
+    String umple =  SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go11.before.ump"));
+    String json = SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go11.before.json"));
+    String filename = pathToInput + "/DeleteAssociationTest_Go11.before.ump";
+    
+    DeleteAssociationAction action = new DeleteAssociationAction(json,umple,filename);
+    action.go();
+    
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go11.after.ump"), action.getUmpleCode());
+  }
+
+  @Test
+  public void Go_deleteOnlySymmetricReflexiveAssociation()
+  {
+    String umple =  SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go12.before.ump"));
+    String json = SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go12.before.json"));
+    String filename = pathToInput + "/DeleteAssociationTest_Go12.before.ump";
+    
+    DeleteAssociationAction action = new DeleteAssociationAction(json,umple,filename);
+    action.go();
+    
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go12.after.ump"), action.getUmpleCode());
+  }
+  
+  @Test
+  public void Go_deleteOnlyReflexiveAssociation()
+  {
+    String umple =  SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go13.before.ump"));
+    String json = SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go13.before.json"));
+    String filename = pathToInput + "/DeleteAssociationTest_Go13.before.ump";
+    
+    DeleteAssociationAction action = new DeleteAssociationAction(json,umple,filename);
+    action.go();
+    
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go13.after.ump"), action.getUmpleCode());
+  }
+  
+  @Test
+  public void Go_deleteOnlyNormalAssociation()
+  {
+    String umple =  SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go14.before.ump"));
+    String json = SampleFileWriter.readContent(new File(pathToInput,"DeleteAssociationTest_Go14.before.json"));
+    String filename = pathToInput + "/DeleteAssociationTest_Go14.before.ump";
+    
+    DeleteAssociationAction action = new DeleteAssociationAction(json,umple,filename);
+    action.go();
+    
+    SampleFileWriter.assertFileContent(new File(pathToInput,"DeleteAssociationTest_Go14.after.ump"), action.getUmpleCode());
+  }
 }

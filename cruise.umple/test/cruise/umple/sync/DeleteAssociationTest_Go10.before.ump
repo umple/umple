@@ -1,0 +1,10 @@
+class A
+{
+  * first -- * A second;
+  * -- * A third;
+}
+
+class A
+{
+  position 50 30 109 45;
+}

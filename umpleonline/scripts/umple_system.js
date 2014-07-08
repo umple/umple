@@ -59,7 +59,7 @@ UmpleSystem.createAssociation = function(classOneId, classTwoId, screenOnePositi
   umpleAssociation.setOffsetTwoPosition(screenTwoPosition);
   umpleAssociation.setDefaultMultiplicities();
   umpleAssociation.setDefaultRoles();
-  
+  umpleAssociation.setName(umpleAssociation.getName());
   // adjust the association start and end points to snap the association to the class edges
   if(classOneId == classTwoId)
   {

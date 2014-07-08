@@ -1,0 +1,21 @@
+class A
+{
+  * -- * B;
+  * -- * A reAssociation;
+  * self symReAssociation;
+}
+
+class B
+{
+  
+}
+
+class A
+{
+  position 50 30 109 45;
+}
+
+class B
+{
+  position 50 130 109 45;
+}
