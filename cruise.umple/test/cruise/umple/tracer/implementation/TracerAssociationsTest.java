@@ -44,6 +44,12 @@ public class TracerAssociationsTest extends TracerTemplateTest
   {
     AssertAssoc("TraceBiAssocManyToManyRole.ump","TraceBiAssocManyToManyRole.","Company");
   }
+  
+  @Test
+  public void TraceBiAssocManyToManyRoleCondition()
+  {
+    AssertAssoc("TraceBiAssocManyToManyRoleCondition.ump","TraceBiAssocManyToManyRoleCondition.","Company");
+  }
 
   // (1 -- *)
 

@@ -20,6 +20,7 @@ class UmpleInternalParser
   before getTraceFlagId {traceFlagId++;};
   TraceDirective traceDirective = null;
   AttributeTraceItem traceAttr = null;
+  AssociationTraceItem tracedAssoc = null;
   MethodTraceItem mte = null;
   
   //----------  Trace Glue Code  -------------
@@ -75,6 +76,7 @@ class UmpleInternalParser
    private void analyzeTraceStatement(UmpleClass aClass, Token token){
     traceDirective = new TraceDirective(model.getTracer());
     traceAttr = new AttributeTraceItem(traceDirective);
+    tracedAssoc = new AssociationTraceItem(traceDirective);
     mte = new MethodTraceItem();
     TraceRecord traceRecord = null;
     traceDirective.setUmpleClass(aClass);
@@ -132,6 +134,7 @@ class UmpleInternalParser
         if(others.isEmpty())
         {
           traceAttr.setConstraint(constraint);
+          tracedAssoc.setConstraint(constraint);
         }
         else
         {
@@ -527,7 +530,6 @@ class UmpleInternalParser
 
     
   private void analyzeAssociationTraceItem(Token traceToken){
-    AssociationTraceItem tracedAssoc = new AssociationTraceItem(traceDirective);
 
     for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
     {
