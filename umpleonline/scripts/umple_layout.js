@@ -9,6 +9,7 @@ var Layout = {};
 Layout.isTextVisible = true;
 Layout.isDiagramVisible = true;
 Layout.isPaletteVisible = true;
+Layout.isLayoutVisible = false;
 Layout.layoutHandler = null;
 Layout.isInSmallScreenMode = false;
 Layout.screenThresholdWidth = 945;
@@ -89,7 +90,7 @@ Layout.setUmpleCanvasSize = function(width, height)
 //Sets the height of the model and layout text editors, depending on what is enabled
 Layout.adjustTextEditorHeight = function(height) 
 {  
-  if(jQuery("#buttonShowHideLayoutEditor").prop('checked'))
+  if(this.isLayoutVisible)
   {
     jQuery(modelEditorHandle).outerHeight(height*0.7);
     if(Page.codeMirrorOn) this.resizeCodeMirrorEditor(height*0.7);
@@ -121,18 +122,20 @@ Layout.showHideLayoutEditor = function(doShow)
   var layoutEditor = jQuery(layoutEditorHandle);
   var newHeight = jQuery(editorHandle).height();
    
-  if (doShow == undefined) doShow = layoutEditor.is(":visible");
+  if (doShow == undefined) doShow = !this.isLayoutVisible;
   
-  if (doShow)  // warning: This works backwards to intuition
+  if (doShow)
   {
-    layoutEditor.hide();
-    this.adjustTextEditorHeight(newHeight);
+    Layout.isLayoutVisible = true;
+    layoutEditor.show();
   }
   else
   {
-    layoutEditor.show();
-    this.adjustTextEditorHeight(newHeight);
+    Layout.isLayoutVisible = false;
+    layoutEditor.hide();
   }
+
+  this.adjustTextEditorHeight(newHeight);
 }
 
 Layout.showHideTextEditor = function(doShow)
@@ -232,7 +235,7 @@ Layout.showHideMenu = function(doShow)
 {
   var menu = jQuery("#paletteColumn");
 
-  if (doShow == undefined) doShow = !menu.is(":visible"); 
+  if (doShow == undefined) doShow = !this.isPaletteVisible;
   if (doShow)
   {
     Layout.isPaletteVisible = true;
@@ -440,13 +443,6 @@ function LargeScreenManager()
       this.setUmpleCanvasSize(this.calculateLeftoverWidth() + jQuery(canvasHandle).outerWidth(), undefined);
     if(Layout.isTextVisible)
       this.setTextEditorSize(this.calculateLeftoverWidth() + jQuery(editorHandle).outerWidth(), undefined);
-
-    console.log(
-      "window:", jQuery(window).innerWidth(),
-      "margins:", this.marginSpace,
-      "editor:", jQuery(editorHandle).outerWidth(),
-      "palette:", jQuery(paletteHandle).outerWidth(),
-      "canvas", jQuery(canvasHandle).outerWidth());
   }
   
   this.adjustAfterWindowResize = function()

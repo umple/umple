@@ -741,7 +741,7 @@ Action.mouseMove = function(event)
 Action.drawClassOutline = function(event, newClass)
 {
   var canvasSelector = "#" + Page.umpleCanvasId();
-  var screenPosition = new UmplePosition(event.pageX, event.pageY,0,0);
+  var screenPosition = new UmplePosition(event.pageX, event.pageY + 1,0,0);
   var mousePosition = screenPosition.subtract(UmpleSystem.position());
   
   newClass.position = new UmplePosition(mousePosition.x, mousePosition.y, UmpleClassFactory.defaultSize.width, UmpleClassFactory.defaultSize.height);
@@ -793,7 +793,7 @@ Action.umpleCanvasClicked = function(event)
   
   if (Page.selectedItem == "AddClass")
   {
-    var position = new UmplePosition(Math.round(event.pageX),Math.round(event.pageY),0,0);
+    var position = new UmplePosition(Math.round(event.pageX),Math.round(event.pageY) + 1,0,0);
     DiagramEdit.addClass(position);
   }
   else if (Page.selectedItem == "AddAssociation" && DiagramEdit.newAssociation != null)

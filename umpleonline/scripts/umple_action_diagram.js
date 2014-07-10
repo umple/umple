@@ -171,8 +171,8 @@ DiagramEdit.classMoved = function(targetClass)
   var classObj = jQuery("#" + umpleClassMoved.id);
  
   // assure the offsets are round numbers
-  newPositionX = Math.round(classObj.offset().left);
-  newPositionY = Math.round(classObj.offset().top);
+  newPositionX = Math.floor(classObj.offset().left);
+  newPositionY = Math.floor(classObj.offset().top);
   UmpleSystem.updatePosition(umpleClassMoved,newPositionX,newPositionY);
   
   var editClass = Json.toString(umpleClassMoved);
