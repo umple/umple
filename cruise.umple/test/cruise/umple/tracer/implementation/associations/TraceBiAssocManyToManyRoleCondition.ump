@@ -1,0 +1,10 @@
+namespace example;
+
+class Company
+{
+  name;
+  * -- * Manager manager;
+  trace manager where [manager cardinality > 100] record name;
+}
+
+class Manager {}

@@ -1,0 +1,199 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.FileTracer;
+import java.util.Date;
+import java.util.*;
+
+public class Company
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Company Attributes
+  private String name;
+
+  //Company Associations
+  private List<Manager> manager;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Company(String aName)
+  {
+    name = aName;
+    manager = new ArrayList<Manager>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public Manager getManager(int index)
+  {
+    Manager aManager = manager.get(index);
+    return aManager;
+  }
+
+  public List<Manager> getManager()
+  {
+    List<Manager> newManager = Collections.unmodifiableList(manager);
+    return newManager;
+  }
+
+  public int numberOfManager()
+  {
+    int number = manager.size();
+    return number;
+  }
+
+  public boolean hasManager()
+  {
+    boolean has = manager.size() > 0;
+    return has;
+  }
+
+  public int indexOfManager(Manager aManager)
+  {
+    int index = manager.indexOf(aManager);
+    return index;
+  }
+
+  public static int minimumNumberOfManager()
+  {
+    return 0;
+  }
+
+  public boolean addManager(Manager aManager)
+  {
+    boolean wasAdded = false;
+    if (manager.contains(aManager)) { return false; }
+    manager.add(aManager);
+    if (manager.size()>100)
+    {
+      FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager()+","+name );
+    }
+    if (aManager.indexOfCompany(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aManager.addCompany(this);
+      if (!wasAdded)
+      {
+        manager.remove(aManager);
+      }
+    }
+    return wasAdded;
+  }
+
+  public boolean removeManager(Manager aManager)
+  {
+    boolean wasRemoved = false;
+    if (!manager.contains(aManager))
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = manager.indexOf(aManager);
+    manager.remove(oldIndex);
+    if (aManager.indexOfCompany(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aManager.removeCompany(this);
+      if (!wasRemoved)
+      {
+        manager.add(oldIndex,aManager);
+      }
+    }
+    if (manager.size()>100)
+    {
+      FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager()+","+name );
+    }
+    return wasRemoved;
+  }
+
+  public boolean addManagerAt(Manager aManager, int index)
+  {  
+    boolean wasAdded = false;
+    if(addManager(aManager))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfManager()) { index = numberOfManager() - 1; }
+      manager.remove(aManager);
+      manager.add(index, aManager);
+    if (manager.size()>100)
+    {
+      FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager()+","+name );
+    }
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveManagerAt(Manager aManager, int index)
+  {
+    boolean wasAdded = false;
+    if(manager.contains(aManager))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfManager()) { index = numberOfManager() - 1; }
+      manager.remove(aManager);
+      manager.add(index, aManager);
+    if (manager.size()>100)
+    {
+      FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager()+","+name );
+    }
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addManagerAt(aManager, index);
+    if (manager.size()>100)
+    {
+      FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager()+","+name );
+    }
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    ArrayList<Manager> copyOfManager = new ArrayList<Manager>(manager);
+    manager.clear();
+    for(Manager aManager : copyOfManager)
+    {
+      aManager.removeCompany(this);
+    }
+  }
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "name" + ":" + getName()+ "]"
+     + outputString;
+  }
+}

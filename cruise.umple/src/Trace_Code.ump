@@ -543,6 +543,22 @@ class AssociationTraceItem
          for(String str: args){
            extra+=concatinator+str;
          }
+         if(getTraceDirective().getTraceRecord()!=null)
+       	 {
+       	   for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+       	   {
+       	     extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+       	   }
+       	   if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+       	   {
+       	     extra+= concatinator+"\"";
+       	     for(String record:getTraceDirective().getTraceRecord().getRecord())
+       	     {
+       	       extra+=","+record.replace("\"","");
+       	     }
+       	     extra+= "\"";
+       	   }
+       	 }
          String message = messageLayout+extra;
          message = StringFormatter.format(
            message,gen.translate("traceTimestamp",this),
