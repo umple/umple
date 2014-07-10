@@ -103,27 +103,27 @@ function UmpleGeneralization()
     var lineBreak = new UmplePosition(lineStart.x, lineEnd.y);
     if (drawVertical)
     {
-      var verticalLine = new UmpleLine(lineBreak.add(UmpleClassFactory.verticalError), lineEnd.add(UmpleClassFactory.verticalError));
-      var horizontalLine = new UmpleLine(lineStart.add(UmpleClassFactory.verticalError), lineBreak.add(UmpleClassFactory.verticalError));
+      var verticalLine = new UmpleLine(lineBreak.add(UmpleClassFactory.offsetError), lineEnd.add(UmpleClassFactory.offsetError));
+      var horizontalLine = new UmpleLine(lineStart.add(UmpleClassFactory.offsetError), lineBreak.add(UmpleClassFactory.offsetError));
       generalizationDiv.append(verticalLine.drawable());
     }
     else
     { 
-      var horizontalLine = new UmpleLine(lineStart.add(UmpleClassFactory.verticalError), lineEnd.add(UmpleClassFactory.verticalError));
+      var horizontalLine = new UmpleLine(lineStart.add(UmpleClassFactory.offsetError), lineEnd.add(UmpleClassFactory.offsetError));
     } 
     generalizationDiv.append(horizontalLine.drawable());
     
     var tipStart = lineEnd;
     var tipEnd = lineEnd.subtract(tipLength);
-    var tipLine = new UmpleLine(tipStart.add(UmpleClassFactory.verticalError),tipEnd.add(UmpleClassFactory.verticalError));
+    var tipLine = new UmpleLine(tipStart.add(UmpleClassFactory.offsetError),tipEnd.add(UmpleClassFactory.offsetError));
     generalizationDiv.append(tipLine.drawable());
       	
     var verticeA = tipEnd.subtract(new UmplePosition(triangleBase.x/2,0,0,0));
     var verticeB = verticeA.add(triangleBase);
     var verticeC = tipEnd.subtract(triangleHeight);
-    var triangleBase = new UmpleLine(verticeA.add(UmpleClassFactory.verticalError), verticeB.add(UmpleClassFactory.verticalError));
-    var triangleLeft = new UmpleLine(verticeA.add(UmpleClassFactory.verticalError), verticeC.add(UmpleClassFactory.verticalError));
-    var triangleRight = new UmpleLine(verticeB.add(UmpleClassFactory.verticalError), verticeC.add(UmpleClassFactory.verticalError));
+    var triangleBase = new UmpleLine(verticeA.add(UmpleClassFactory.offsetError), verticeB.add(UmpleClassFactory.offsetError));
+    var triangleLeft = new UmpleLine(verticeA.add(UmpleClassFactory.offsetError), verticeC.add(UmpleClassFactory.offsetError));
+    var triangleRight = new UmpleLine(verticeB.add(UmpleClassFactory.offsetError), verticeC.add(UmpleClassFactory.offsetError));
     
     generalizationDiv.append(triangleBase.drawable());
     generalizationDiv.append(triangleRight.drawable());

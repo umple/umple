@@ -32,11 +32,12 @@ Page.showActions = true;
 Page.modifiedDiagrams = false;
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, diagramType)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType)
 { 
   Layout.isDiagramVisible = doShowDiagram;  
   Layout.isTextVisible = doShowText;  
   Layout.isPaletteVisible = doShowMenu;  
+  Layout.isLayoutVisible = doShowLayout;
   Page.readOnly = doReadOnly; 
 
   // Set diagram type - anything else means use the default editable class diagram
@@ -182,7 +183,7 @@ Page.initPaletteArea = function()
 
 Page.initOptions = function()
 {
-  jQuery("#buttonShowHideLayoutEditor").prop('checked', false);
+  jQuery("#buttonShowHideLayoutEditor").prop('checked', Layout.isLayoutVisible);
   jQuery("#buttonShowHideTextEditor").prop('checked', Layout.isTextVisible);
   jQuery("#buttonShowHideCanvas").prop('checked', Layout.isDiagramVisible);
   jQuery("#buttonToggleAttributes").prop('checked',true);
@@ -204,8 +205,6 @@ Page.initOptions = function()
   jQuery("#buttonShowHideCanvas").prop('disabled', false);
   jQuery("#buttonPhotoReady").prop('disabled', false);
   jQuery("#buttonManualSync").prop('disabled', false);
-  
-  Layout.showHideLayoutEditor(true); // hide the layout editor
 }
 
 Page.initHighlighter = function(id)
@@ -325,6 +324,7 @@ Page.initUmpleTextArea = function()
   Page.initCodeMirrorEditor();
   Layout.initUmpleTextAreaSize();
   if (!Layout.isTextVisible) {Layout.showHideTextEditor(false);}
+  if (!Layout.isLayoutVisible) {Layout.showHideLayoutEditor(false);}
 }
 
 Page.initCodeMirrorEditor = function() {
@@ -406,7 +406,7 @@ Page.isPhotoReady = function()
   }
   else {
     var selector = "#buttonPhotoReady";
-    return jQuery(selector).attr('checked');
+    return jQuery(selector).prop('checked');
   }
 }
 

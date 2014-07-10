@@ -72,8 +72,12 @@ if (isset($_REQUEST["diagramtype"])) {
 // ignored if nodiagram is also set
 if ($showDiagram && isset($_REQUEST["notext"])) {$showText=false;} else {$showText=true;}
 
+// showlayout means allow the layout editor to appear
+// ignored if notext is also set
+if ($showText && isset($_REQUEST["showlayout"])) {$showLayout=true;} else {$showLayout=false;}
+
 // nomenu means suppress display of menu. Can only happen if diagram OR text hidden
-if ((!$showDiagram || !$showText) && isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
+if (isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
 
 // readOnly means suppress ability to edit - passed to JavaScript
 $readOnly = isset($_REQUEST["readOnly"]);
@@ -416,6 +420,7 @@ $output = readTemporaryFile("ump/" . $filename);
       <?php if($showText) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if($showMenu) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if($readOnly) { ?> true  <?php } else { ?> false <?php } ?>,
+      <?php if($showLayout) { ?> true <?php } else { ?> false <?php } ?>,
       "<?php echo $diagramType ?>"); //
   </script>
 </body>

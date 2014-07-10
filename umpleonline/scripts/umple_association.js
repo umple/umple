@@ -301,7 +301,7 @@ function UmpleAssociation()
     var perimeterOne = this.classOnePosition.add(this.offsetOnePosition);
     var perimeterTwo = this.classTwoPosition.add(this.offsetTwoPosition);
     
-    var line = new UmpleLine(perimeterOne.add(UmpleClassFactory.verticalError),perimeterTwo.add(UmpleClassFactory.verticalError));
+    var line = new UmpleLine(perimeterOne.add(UmpleClassFactory.offsetError),perimeterTwo.add(UmpleClassFactory.offsetError));
     associationDiv.append(line.drawable());
     
     // initiate the hovers and anchors
@@ -364,8 +364,8 @@ function UmpleAssociation()
     var vertice1 = peak.travelForward(distance, edge1SlopeAngle);
     var vertice2 = peak.travelForward(distance, edge2SlopeAngle);
     
-    var edge1 = new UmpleLine(peak.add(UmpleClassFactory.verticalError), vertice1.add(UmpleClassFactory.verticalError));
-    var edge2 = new UmpleLine(peak.add(UmpleClassFactory.verticalError), vertice2.add(UmpleClassFactory.verticalError));
+    var edge1 = new UmpleLine(peak.add(UmpleClassFactory.offsetError), vertice1.add(UmpleClassFactory.offsetError));
+    var edge2 = new UmpleLine(peak.add(UmpleClassFactory.offsetError), vertice2.add(UmpleClassFactory.offsetError));
     associationDiv.append(edge1.drawable());
     associationDiv.append(edge2.drawable());
     
