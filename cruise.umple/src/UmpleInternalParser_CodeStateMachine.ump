@@ -1207,7 +1207,9 @@ class UmpleInternalParser
     unguardedEvents.addAll(superStateEvents);
     
     for(Token subState : subStates){
-      checkStateForDuplicateEvents(subState, unguardedEvents);
+      Set<String> unguardedEventsAux = new HashSet<String>();
+      unguardedEventsAux.addAll(unguardedEvents);
+      checkStateForDuplicateEvents(subState, unguardedEventsAux);
     }
     
     return;
