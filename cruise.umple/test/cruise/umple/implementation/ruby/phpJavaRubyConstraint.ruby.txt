@@ -24,7 +24,7 @@ class Range
     @deleted = false
     @start = a_start
     @end = a_end
-    if  !((a_start<a_end)) then
+    if  !(a_start<a_end) then
       raise RuntimeError, 'Please provide a valid start and end'
     end
     @initialized = true

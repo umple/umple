@@ -13,9 +13,9 @@
   {
     age = aAge;
     weight = aWeight;
-    if ( !((aWeight<3||aAge>18)))
+    if ( !(aWeight<3||aAge>18))
     {
-      throw "Please provide a valid weight, age, ";
+      throw "Please provide a valid weight and age";
     }
   }
   

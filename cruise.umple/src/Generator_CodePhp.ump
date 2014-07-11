@@ -998,7 +998,7 @@ class PhpGenerator
     ConstraintLookupMap.put("==","=={0}");
     ConstraintLookupMap.put("accessor","$");
     ConstraintLookupMap.put("paramaccessor","$");
-    ConstraintLookupMap.put("exception","throw new RuntimeException(\"Please provide a valid{0}\");");
+    ConstraintLookupMap.put("exception","throw new RuntimeException(\"Please provide a valid {0}\");");
     ConstraintLookupMap.put("ifstatement","if ({0})\n{");
     ConstraintLookupMap.put("end","}");
     ConstraintLookupMap.put(".","->{0}");

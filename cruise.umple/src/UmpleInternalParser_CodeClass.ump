@@ -2913,7 +2913,12 @@ class UmpleInternalParser
   private void analyzeException(Token exception, UmpleClass aClass)
   {
     Token sub = exception.getSubToken(0);
-    if(sub.is("misnamedAttribute"))
+    if(sub.is("malformedConstraint"))
+    {
+      setFailedPosition(sub.getPosition(), 1010, sub.getValue("stuff"));
+      aClass.appendExtraCode("  ["+sub.getValue("stuff")+"]\n");
+    }
+    else if(sub.is("misnamedAttribute"))
     {
       if(!Token.isValidIdentifier(sub.getValue("name")))
       {

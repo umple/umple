@@ -23,7 +23,7 @@ public class Range
   {
     start = aStart;
     end = aEnd;
-    if ( !((aStart<aEnd)))
+    if ( !(aStart<aEnd))
     {
       throw new RuntimeException("Please provide a valid start and end");
     }

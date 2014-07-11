@@ -22,9 +22,9 @@ public class student
   {
     age = aAge;
     weight = aWeight;
-    if ( !((aWeight<3||aAge>18)))
+    if ( !(aWeight<3||aAge>18))
     {
-      throw new RuntimeException("Please provide a valid weight, age, ");
+      throw new RuntimeException("Please provide a valid weight and age");
     }
   }
 

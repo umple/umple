@@ -35,10 +35,11 @@ boolLiteral : [=literal:true|false]
 //must be string
 stringExpr : [[stringExprOperator]] | [[stringExprPlain]] 
 stringExprPlain- : [[constraintName]] [[equalityOperator]] [[stringLiteral]] | [[stringLiteral]] [[equalityOperator]] [[constraintName]]
-stringExprOperator- : [[stringPlusOperator]] [[equalityOperator]] [[stringPlusOperator]] | [[stringPlusOperator]] [[equalityOperator]] [[stringName]] | [[stringName]] [[equalityOperator]] [[stringPlusOperator]]
+stringExprOperator- : [[stringComplexExpression]] [[equalityOperator]] [[stringComplexExpression]] | [[stringComplexExpression]] [[equalityOperator]] [[stringName]] | [[stringName]] [[equalityOperator]] [[stringComplexExpression]]
 stringLiteral- : " [**quote] " | ' [**quote] '
 stringName- : [[stringLiteral]] | [[constraintName]]
-stringPlusOperator- : [[stringName]] ( [=operator:+] [[stringPlusOperator]] )+
+stringComplexExpression : [[stringPlusOperator]]
+stringPlusOperator- : [[stringName]] ( [=concat:+] [[stringPlusOperator]] )?
 
 //basically the "other" catagory, contains everything that can be equal to something else
 genExpr : [[constraintName]] [[equalityOperator]] [[constraintName]]

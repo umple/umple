@@ -25,7 +25,7 @@ public class Client
   {
     minAge = aMinAge;
     age = aAge;
-    if ( !((aAge>aMinAge)))
+    if ( !(aAge>aMinAge))
     {
       throw new RuntimeException("Please provide a valid age and minAge");
     }

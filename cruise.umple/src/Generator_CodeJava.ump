@@ -2333,7 +2333,7 @@ class JavaGenerator
     ConstraintLookupMap.put("==",".equals({0})");
     ConstraintLookupMap.put("accessor","");
     ConstraintLookupMap.put("paramaccessor","");
-    ConstraintLookupMap.put("exception","throw new RuntimeException(\"Please provide a valid{0}\");");
+    ConstraintLookupMap.put("exception","throw new RuntimeException(\"Please provide a valid {0}\");");
     ConstraintLookupMap.put("ifstatement","if ({0})\n{");
     ConstraintLookupMap.put("end","}");
     ConstraintLookupMap.put("[]","{1}.get({0})");
