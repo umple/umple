@@ -909,7 +909,7 @@ class RubyGenerator
     ConstraintLookupMap.put("==","=={0}");
     ConstraintLookupMap.put("accessor","@");
     ConstraintLookupMap.put("paramaccessor","");
-    ConstraintLookupMap.put("exception","raise RuntimeError, \'Please provide a valid{0}\'");
+    ConstraintLookupMap.put("exception","raise RuntimeError, \'Please provide a valid {0}\'");
     ConstraintLookupMap.put("ifstatement","if {0} then");
     ConstraintLookupMap.put("end","end");
     ConstraintLookupMap.put("[]","{1}[{0}]");

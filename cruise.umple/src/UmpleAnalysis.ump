@@ -228,8 +228,65 @@ class StringExprAnalyzer
   depend java.util.*;
   lazy UmpleClassifier uClassifier;
   lazy List<ConstraintVariable> rawLine;
+  List<ConstraintVariable> mRawLine = null;
   boolean mustBeInClass = false;
   List<String> type = new ArrayList<String>();
+  public void prepare(Token token){
+    mRawLine = rawLine;
+    rawLine = new ArrayList<ConstraintVariable>();
+  }
+  public void analyze(Token token){
+    boolean leftIsQuotes = true;
+    boolean rightIsQuotes = true;
+    if(rawLine.get(0).getSubConstraint()!=null)
+    {
+      for(int i=1;i<rawLine.get(0).getSubConstraint().numberOfExpressions();i+=2)
+      {
+        if(!rawLine.get(0).getSubConstraint().getExpression(i).getValue().contains("\""))
+        {
+          leftIsQuotes = false;
+          break;
+        }
+      }
+      if(rawLine.get(0).getSubConstraint().numberOfExpressions()<=1)
+      {
+        leftIsQuotes = false;
+      }
+    }
+    else if(!rawLine.get(0).getValue().contains("\""))
+    {
+      leftIsQuotes = false;
+    }
+    if(rawLine.get(2).getSubConstraint()!=null)
+    {
+      for(int i=1;i<rawLine.get(2).getSubConstraint().numberOfExpressions();i+=2)
+      {
+        if(!rawLine.get(2).getSubConstraint().getExpression(i).getValue().contains("\""))
+        {
+          rightIsQuotes = false;
+          break;
+        }
+      }
+      if(rawLine.get(2).getSubConstraint().numberOfExpressions()<=1)
+      {
+        rightIsQuotes = false;
+      }
+    }
+    else if(!rawLine.get(2).getValue().contains("\""))
+    {
+      rightIsQuotes = false;
+    }
+    if(rightIsQuotes&&!leftIsQuotes)
+    {
+      mRawLine.add(rawLine.get(2));
+      mRawLine.add(rawLine.get(1));
+      mRawLine.add(rawLine.get(0));
+    }
+    else
+    {
+      mRawLine.addAll(rawLine);
+    }
+  }
 }
 
 class LoneBooleanAnalyzer
@@ -721,7 +778,7 @@ class ConstraintNameNameAnalyzer
   {
     cv.setValue(token.getValue());
     cv.getAttribute(uClassifier);
-    ConstraintVariable name = new ConstraintVariable(/*TODO: this should probably be of type SYNTAX*/"",token.getValue());
+    ConstraintVariable name = new ConstraintVariable("",token.getValue());
     name.getAttribute(uClassifier);
     cv.getSubConstraint().addExpression(name);
   }
@@ -818,7 +875,47 @@ class StringExprQuoteAnalyzer
   }
 }
 
-class StringExprOperatorAnalyzer
+class StringComplexExpressionAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy List<ConstraintVariable> rawLine;
+  lazy UmpleClassifier uClassifier;
+  List<ConstraintVariable> myRawLine = null;
+  public void prepare(Token token)
+  {
+    if(token.numberOfSubTokens()>1)
+    {
+      if(token.numberOfSubTokens()==3&&token.getSubToken(0).getName().equals("\""))
+      {} else {
+        myRawLine = rawLine;
+        rawLine = new ArrayList<ConstraintVariable>();
+        rawLine.add(new ConstraintVariable("STATIC","("));
+      }
+    }
+  }
+  public void analyze(Token token)
+  {
+    if(token.numberOfSubTokens()>1)
+    {
+      if(token.numberOfSubTokens()==3&&token.getSubToken(0).getName().equals("\""))
+      {} else {
+        rawLine.add(new ConstraintVariable("STATIC",")"));
+        ConstraintVariable cv = new ConstraintVariable("NAME","");
+        cv.setSubConstraint(new Constraint());
+        for(ConstraintVariable var:rawLine)
+        {
+          System.out.println(var.getValue());
+          cv.getSubConstraint().addExpression(var);
+        }
+        myRawLine.add(cv);
+      }
+    }
+  }
+}
+
+class StringComplexExpressionConcatAnalyzer
 {
   isA Analyzer;
   depend cruise.umple.compiler.*;

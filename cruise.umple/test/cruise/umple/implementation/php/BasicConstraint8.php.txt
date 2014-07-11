@@ -21,7 +21,7 @@ class student
   {
     $this->age = $aAge;
     $this->weight = $aWeight;
-    if ( !(($aAge<10&&($aAge<10))))
+    if ( !($aAge<10&&($aAge<10)))
     {
       throw new RuntimeException("Please provide a valid age");
     }

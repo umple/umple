@@ -13,7 +13,7 @@
   {
     d = aD;
     e = aE;
-    if ( !((aD>aE)))
+    if ( !(aD>aE))
     {
       throw "Please provide a valid d and e";
     }

@@ -12,7 +12,7 @@
  student::student(const int & aAge)
   {
     age = aAge;
-    if ( !((aAge>18)))
+    if ( !(aAge>18))
     {
       throw "Please provide a valid age";
     }

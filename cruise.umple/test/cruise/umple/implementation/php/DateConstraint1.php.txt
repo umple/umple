@@ -21,7 +21,7 @@ class X
   {
     $this->d = $aD;
     $this->e = $aE;
-    if ( !((strtotime($aD)>strtotime($aE))))
+    if ( !(strtotime($aD)>strtotime($aE)))
     {
       throw new RuntimeException("Please provide a valid d and e");
     }

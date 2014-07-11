@@ -23,7 +23,7 @@ public class X
   {
     d = aD;
     e = aE;
-    if ( !((aD.getTime()>aE.getTime())))
+    if ( !(aD.getTime()>aE.getTime()))
     {
       throw new RuntimeException("Please provide a valid d and e");
     }

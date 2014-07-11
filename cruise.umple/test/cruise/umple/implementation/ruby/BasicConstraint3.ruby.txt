@@ -25,7 +25,7 @@ class Client
     @deleted = false
     @minAge = a_minAge
     @age = a_age
-    if  !((a_age>a_minAge)) then
+    if  !(a_age>a_minAge) then
       raise RuntimeError, 'Please provide a valid age and minAge'
     end
     @initialized = true

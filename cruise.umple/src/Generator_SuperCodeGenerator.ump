@@ -25,14 +25,14 @@ class SuperCodeGenerator {
     else
     {
       return myType;
-   	}
+    }
   }
   	
   public String translate(String keyName, TraceItem ti)
   {
-	if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
-	{
-	  return TraceLookupMap.get(keyName.substring(5).toLowerCase());
+    if (keyName.length()>5&&"trace".equals(keyName.substring(0,5)))
+    {
+      return TraceLookupMap.get(keyName.substring(5).toLowerCase());
     }
     else 
     {
@@ -40,11 +40,13 @@ class SuperCodeGenerator {
     }
   }
   
-  public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
-  	return name;
+  public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr)
+  {
+    return name;
   }
   	
-  public String translate(String format, Constraint constraint){
+  public String translate(String format, Constraint constraint)
+  {
     if(constraint==null)
     {
       return "{0}";
@@ -57,7 +59,7 @@ class SuperCodeGenerator {
     List<String> names = Arrays.asList(format.split(":")[0].split(","));
     String previousName = "";
     for(int i=0;i<constraint.numberOfExpressions();i++)
-    {      
+    {
       ConstraintVariable expr = constraint.getExpression(i);
       if( expr.getType().equals("NAME"))
       {
@@ -129,15 +131,16 @@ class SuperCodeGenerator {
           value = (strictNext?"":ConstraintLookupMap.get("accessor"))+expr.getValue();
           strictNext=false;
         }
-        if(insertNext){
+        if(insertNext)
+        {
           expression = StringFormatter.format(expression,value,previousName);
           insertNext = false;
         }
-        else {
+        else
+        {
           expression += value;
         }
-      }
-      
+      }      
       else // STATIC OR OPERATOR
       { 
         if(expr.getValue().equals("."))
@@ -162,7 +165,7 @@ class SuperCodeGenerator {
           }
           else //Static
           {
-			if(insertNext)
+            if(insertNext)
             {
               expression = StringFormatter.format(expression,opValue,previousName);
               insertNext = false;
@@ -173,12 +176,17 @@ class SuperCodeGenerator {
             }
           }
         }
-        else if(insertNext){
-          expression = StringFormatter.format(expression,expr.getValue());
-          insertNext = false;
-        }
-        else {
-          expression += expr.getValue();
+        else
+        {
+          if(insertNext)
+          {
+            expression = StringFormatter.format(expression,expr.getValue());
+            insertNext = false;
+          }
+          else
+          {
+            expression += expr.getValue();
+          }
         }
       }
     }
@@ -234,6 +242,8 @@ class SuperCodeGenerator {
     constraint.setFormat("$constructor$Closed");
     constraint.setInject("");
     constraint.setGen(this);
+    
+    Map<String,Constraint> setters = new HashMap<String,Constraint>();
     for (Constraint ac : aClass.getConstraints())
     {      
       List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
@@ -253,59 +263,94 @@ class SuperCodeGenerator {
         
         if(cur.getIsAssociation())
         {
-          before = new CodeInjection("before", cur.getFoundAttribute()==null?("set"+cur.getValue()):translate("setMethod", (AssociationVariable)cur.getFoundAttribute()), setMethod_code, aClass);         
-          CodeInjection after = new CodeInjection("after", cur.getFoundAttribute()==null?("set"+cur.getValue()):translate("setMethod",(AssociationVariable)cur.getFoundAttribute()), ConstraintLookupMap.get("end"), aClass);
-          before.setIsInternal(true);
-          after.setIsInternal(true);
-          aClass.addCodeInjection(before);
-          aClass.addCodeInjection(after);
-          before = new CodeInjection("before", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod",(AssociationVariable)cur.getFoundAttribute()), setMethod_code, aClass);         
-          after = new CodeInjection("after", cur.getFoundAttribute()==null?("add"+cur.getValue()):translate("addMethod",(AssociationVariable)cur.getFoundAttribute()), ConstraintLookupMap.get("end"), aClass);
-          before.setIsInternal(true);
-          after.setIsInternal(true);
-          aClass.addCodeInjection(before);
-          aClass.addCodeInjection(after);
+          String methodName = "";
+          String addName = "";
+          if(cur.getFoundAttribute()==null)
+          {
+            methodName = "set"+cur.getValue();
+            addName = "add"+cur.getValue();
+          }
+          else
+          {
+            methodName = translate("setMethod", (AssociationVariable)cur.getFoundAttribute());
+            addName = translate("addMethod", (AssociationVariable)cur.getFoundAttribute());
+          }
+          if(!setters.containsKey(methodName))
+          {
+            Constraint tempConstraint = new Constraint();
+            tempConstraint.setFormat(cur.getValue()+":Open");
+            tempConstraint.setInject("");
+            tempConstraint.setGen(this);
+            setters.put(methodName,tempConstraint);
+            setters.put(addName, tempConstraint);
+          }
+          setters.get(methodName).mergeWith(ac);
+          setters.get(addName).mergeWith(ac);
         }
-        else {
-          before = new CodeInjection("before", cur.getFoundAttribute()==null?("set"+cur.getValue()):translate("setMethod", (Attribute)cur.getFoundAttribute()), setMethod_code, aClass);         
-          CodeInjection after = new CodeInjection("after", cur.getFoundAttribute()==null?("set"+cur.getValue()):translate("setMethod",(Attribute)cur.getFoundAttribute()), ConstraintLookupMap.get("end"), aClass);
-          before.setIsInternal(true);
-          after.setIsInternal(true);
-          aClass.addCodeInjection(before);
-          aClass.addCodeInjection(after);
+        else 
+        {
+          String methodName = "";
+          if(cur.getFoundAttribute()==null)
+          {
+            methodName = "set"+cur.getValue();
+          }
+          else
+          {
+            methodName = translate("setMethod", (Attribute)cur.getFoundAttribute());
+          }
+          if(!setters.containsKey(methodName))
+          {
+            Constraint tempConstraint = new Constraint();
+            tempConstraint.setFormat(cur.getValue()+":Open");
+            tempConstraint.setInject("");
+            tempConstraint.setGen(this);
+            setters.put(methodName,tempConstraint);
+          }
+          setters.get(methodName).mergeWith(ac);
         }
       }
       constraint.mergeWith(ac);
-      constraint.setInject(constraint.getInject()+" "+ac.toString());
+    }
+
+    for(String methodName:setters.keySet())
+    {
+      CodeInjection before = new CodeInjection("before", methodName, setters.get(methodName), aClass);
+      CodeInjection after = new CodeInjection("after", methodName, ConstraintLookupMap.get("end"), aClass);
+      before.setIsInternal(true);
+      after.setIsInternal(true);
+      aClass.addCodeInjection(before);
+      aClass.addCodeInjection(after);
     }
     if(constraint.numberOfExpressions()>0)
     {
-      constraint.setInject(StringFormatter.format(ConstraintLookupMap.get("exception"),constraint.getInject()));
+      constraint.setInject(StringFormatter.format(ConstraintLookupMap.get("exception"),constraint.toString()));
       CodeInjection constructor = new CodeInjection("after",  "constructor", constraint, aClass);  
       constructor.setIsInternal(true);
       aClass.addCodeInjection(constructor);
     }
     
-   for (Precondition pc : aClass.getPreconditions()){ 
-     String methodName = pc.getMethod().getName();
-     pc.setNegated(true);
-     pc.setGen(this);
-     pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
-     pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception")," "+pc.toString()));
-     CodeInjection before = new CodeInjection("before", methodName+"Precondition", pc, aClass);         
-     before.setIsInternal(true);
-     aClass.addCodeInjection(before);    
+    for (Precondition pc : aClass.getPreconditions())
+    { 
+      String methodName = pc.getMethod().getName();
+      pc.setNegated(true);
+      pc.setGen(this);
+      pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
+      pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception"),pc.toString()));
+      CodeInjection before = new CodeInjection("before", methodName+"Precondition", pc, aClass);         
+      before.setIsInternal(true);
+      aClass.addCodeInjection(before);    
     }
     
-    for (Postcondition pc : aClass.getPostconditions()){ 
-     String methodName = pc.getMethod().getName();
-     pc.setNegated(true);
-     pc.setGen(this);
-     pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
-     pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception")," "+pc.toString()));
-     CodeInjection before = new CodeInjection("before", methodName+"Postcondition", pc, aClass);         
-     before.setIsInternal(true);
-     aClass.addCodeInjection(before);    
+    for (Postcondition pc : aClass.getPostconditions())
+    { 
+      String methodName = pc.getMethod().getName();
+      pc.setNegated(true);
+      pc.setGen(this);
+      pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
+      pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception"),pc.toString()));
+      CodeInjection before = new CodeInjection("before", methodName+"Postcondition", pc, aClass);         
+      before.setIsInternal(true);
+      aClass.addCodeInjection(before);    
     }
   }
 }
