@@ -1,5 +1,13 @@
-class LightFixture
+class Tracer
 {
+	String name;
+	tracecase tc1 {
+  	trace name;
+	}
+	tracecase tc2 {
+		trace name;
+		trace id where [name == "Hamoud"];
+	}
 	deactivate tc1 onThisObject;
 	deactivate tc2 onThisObject for 1s;
 }
