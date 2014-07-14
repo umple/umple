@@ -8,89 +8,55 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Man
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Man
 sig Man extends UmpleObject {
   wives : some Woman,
   children : some Child
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Woman
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Woman
 sig Woman extends UmpleObject {
   husband : one Man
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Child
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Child
 sig Child extends UmpleObject {
   father : lone Man
 }
 
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between Woman and Man
+fact AssociationFact {
+  Woman <: husband in (Woman) some -> some (Man)
+}
 
---The following defines bidirectionality rule between class Man and class Woman
+-- Defines constraints on association between Child and Man
+fact AssociationFact {
+  Child <: father in (Child) some -> some (Man)
+}
 
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class Man and class Woman
 fact BidirectionalityRule {
   all man_1 : Man, woman_1 : Woman |
     man_1 in husband[woman_1] <=> woman_1 in wives[man_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class Man
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class Man
 fact NumericBoundFact {
   no man_1 : Man |
     #man_1.wives != 2
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class Man and class Child
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class Man and class Child
 fact BidirectionalityRule {
   all man_1 : Man, child_1 : Child |
     man_1 in father[child_1] <=> child_1 in children[man_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class Man
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class Man
 fact NumericBoundFact {
   no man_1 : Man |
     #man_1.children < 1 || #man_1.children > 5

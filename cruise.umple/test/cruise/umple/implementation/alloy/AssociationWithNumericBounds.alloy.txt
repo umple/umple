@@ -8,55 +8,32 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Man
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Man
 sig Man extends UmpleObject {
   children : some Child
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Child
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Child
 sig Child extends UmpleObject {
   father : lone Man
 }
 
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between Child and Man
+fact AssociationFact {
+  Child <: father in (Child) some -> some (Man)
+}
 
---The following defines bidirectionality rule between class Man and class Child
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class Man and class Child
 fact BidirectionalityRule {
   all man_1 : Man, child_1 : Child |
     man_1 in father[child_1] <=> child_1 in children[man_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class Man
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class Man
 fact NumericBoundFact {
   no man_1 : Man |
     #man_1.children != 5

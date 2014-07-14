@@ -8,42 +8,29 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class A
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class A
 sig A extends UmpleObject {
   bs : set B
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class B
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class B
 sig B extends UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class C
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class C
 sig C extends UmpleObject {
   b : one B
+}
+
+
+-- Defines constraints on association between A and B
+fact AssociationFact {
+  A <: bs in (A) one -> set (B)
+}
+
+-- Defines constraints on association between C and B
+fact AssociationFact {
+  C <: b in (C) set -> set (B)
 }

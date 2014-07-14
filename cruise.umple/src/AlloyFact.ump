@@ -26,6 +26,7 @@ class Fact
   protected String rName1;
   protected String rName2;
   
+  
   public Fact(Association assoc)
   {
     factName = null;
@@ -38,7 +39,7 @@ class Fact
     if(assoc.getEnd(1).getRoleName().equals("as"))
       rName2 = assoc.getEnd(1).getRoleName()+ "_"; 
     else 
-      rName2 = assoc.getEnd(1).getRoleName() ;
+      rName2 = assoc.getEnd(1).getRoleName() ;  
   }
   
   public Fact(UmpleClass uClass)
@@ -82,7 +83,7 @@ class Fact
   
   private String comment()
   {
-  	return addStartDottedLine()+"-- The following defines a rule that enhances visualizing model with String type\n"+addEndDottedLine();
+  	return "-- Defines a rule that enhances visualizing model with String type\n";
   }
   
   public String print()
@@ -107,8 +108,8 @@ class NoExtendedFact
   
   private String commentNoExtendedFact()
   {
-  	return addStartDottedLine()+"-- The following defines no extended relation rule for class "+
-  		firstClassName+"\n"+addEndDottedLine();
+  	return "\n\n-- Defines no extended relation rule for class "+
+  		firstClassName+"\n";
   }
   
   //This method prints no extended relation fact
@@ -145,8 +146,8 @@ class NoSelfRelationFact
   
   private String commentNoSelfRelation()
   {
-  	return addStartDottedLine()+"-- The following defines no self relation rule for class "+
-  		firstClassName+"\n"+addEndDottedLine();
+  	return "\n\n-- Defines no self relation rule for class "+
+  		firstClassName+"\n";
   }
   
   private String decPart()
@@ -187,8 +188,8 @@ class BidirectionFact
   //This methods comments bidirectionality rule
   private String commentBidirectionality()
   {
-  	return addStartDottedLine()+"--The following defines bidirectionality rule between class "+
-  		firstClassName+" and class "+secondClassName+"\n"+addEndDottedLine();
+  	return "\n\n-- Defines bidirectionality rule between class "+
+  		firstClassName+" and class "+secondClassName+"\n";
   }
   
   //This method computes the content of a bidirectionality rule
@@ -234,14 +235,59 @@ class GenHierarchyFact {
   //This methods comments non reflexive rule
   private String comment()
   {
-  	return addStartDottedLine()+"-- The following defines generalization hierarchy rule between class "+
-  	  secondClassName+" and "+firstClassName+"\n"+addEndDottedLine();
+  	return "\n\n-- Defines generalization hierarchy rule between class "+
+  	  secondClassName+" and "+firstClassName+"\n";
   }
   public String print()
   {
   	return comment()+factHeader()+declaration()+suchThatPlusNewLine()+content();
   }
+}
+
+class AssociationFact  {
+
+  depend cruise.umple.compiler.*; 
+  isA Fact;
+  fMult;
+  sMult;
+  1 -> 1 Utility utility;
   
+  public AssociationFact(Association assoc)
+  {
+  	super(assoc);
+  	factName = "AssociationFact";
+  	utility = new Utility();
+  	fMult = utility.getAlloyMultiplicity(assoc.getEnd(0));
+  	sMult = utility.getAlloyMultiplicity(assoc.getEnd(1));
+  	if(assoc.isIsLeftNavigable())
+  	{
+  	  String temp = fMult;
+  	  fMult = sMult;
+  	  sMult = fMult;
+  	  temp = firstClassName;
+      firstClassName = secondClassName;
+      secondClassName = temp;
+      temp = rName1;
+      rName1 = rName2;
+      rName2 = temp;
+  	}
+  }
+  
+  private String comment()
+  {
+    return "\n\n-- Defines constraints on association between "+ firstClassName +" and "+secondClassName;
+  }
+  
+  private String getAssociationFact()
+  {
+  	return "\n"+factHeader() +firstClassName+" <: "+rName2+" in ("+firstClassName+") "+
+  	  fMult+" -> "+ sMult + " ("+secondClassName+")\n}";
+  }
+  
+  public String print()
+  {
+    return comment() + getAssociationFact();
+  }
 }
 
 class NonReflexiveFact
@@ -264,8 +310,8 @@ class NonReflexiveFact
   //This methods comments non reflexive rule
   private String comment()
   {
-  	return addStartDottedLine()+"-- The following defines non-reflexive rule for class "+
-  	  secondClassName+"\n"+addEndDottedLine();
+  	return "\n\n-- Defines non-reflexive rule for class "+
+  	  secondClassName+"\n";
   }
   
   private String declaration()
@@ -297,8 +343,8 @@ class SymmetricFact
   
   private String comment()
   {
-    return addStartDottedLine()+"-- The following defines symmetric rule for class "+
-  	  secondClassName+"\n"+addEndDottedLine();
+    return "\n\n-- Defines symmetric rule for class "+
+  	  secondClassName+"\n";
   }
   
   private String content()
@@ -386,8 +432,7 @@ class NumericBoundFact
   
   private String comment()
   {
-  	return addStartDottedLine()+"-- The following defines numeric bound rule for class "+
-  	  className+"\n"+addEndDottedLine();
+  	return "\n\n-- Defines numeric bound rule for class "+className+"\n";
   }
   
   public String print()

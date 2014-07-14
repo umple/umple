@@ -8,45 +8,27 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class A
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class A
 sig A extends UmpleObject {
   bs : set B,
   a : Int
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class B
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class B
 sig B extends UmpleObject {
   a : one A
 }
 
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between B and A
+fact AssociationFact {
+  B <: a in (B) set -> set (A)
+}
 
---The following defines bidirectionality rule between class A and class B
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class A and class B
 fact BidirectionalityRule {
   all a_1 : A, b_1 : B |
     a_1 in a[b_1] <=> b_1 in bs[a_1]

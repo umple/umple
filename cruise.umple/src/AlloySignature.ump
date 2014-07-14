@@ -58,7 +58,7 @@ class AlloyModel {
       tempObject.addFunction(tempFun);
       signatures.add(tempObject);
     }
- 
+    genAssociationFact(model);
     genSignatures(model);
     genOtherConstraints(model);
     
@@ -69,6 +69,20 @@ class AlloyModel {
       else  modelNamespace = "module "+model.getDefaultNamespace();  
     else 
       modelNamespace = "";
+  }
+  
+  private void genAssociationFact(UmpleModel model)
+  {
+    String temp = "";
+    for(Association assoc : model.getAssociations())
+    {
+      if(!assoc.getEnd(0).getClassName().equals(assoc.getEnd(1).getClassName()))
+      {
+      	AssociationFact aFact = new AssociationFact(assoc);
+       	facts.add(aFact);
+      }
+    }
+    
   }
   
   private boolean hasStringAttribute(UmpleModel model)
@@ -224,12 +238,13 @@ class AlloyModel {
       }
       
       AssociationEnd lEnd = assoc.getEnd(0), rEnd = assoc.getEnd(1);
+     if(assoc.isIsLeftNavigable())
       if(lEnd.getMultiplicity().isValid())
       {
         NumericBoundFact nbf = new NumericBoundFact(assoc,0);
         facts.add(nbf);
       }
-      
+     if(assoc.isIsRightNavigable())
       if(rEnd.getMultiplicity().isValid())
       {
         NumericBoundFact nbf = new NumericBoundFact(assoc,1);
@@ -364,8 +379,8 @@ class Signature
 	
   private String comment()
   {
-  	return addStartDottedLine()+ 
-  	  "--The following defines a signature for class "+name+"\n"+addEndDottedLine();
+  	return 
+  	  "\n-- Defines a signature for class "+name+"\n";
   }
   
   private String addExtension()
