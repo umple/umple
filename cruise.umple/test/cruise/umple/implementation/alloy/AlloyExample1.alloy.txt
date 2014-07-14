@@ -8,65 +8,39 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
+-- Defines a signature for class Employee
+sig Employee extends UmpleObject {
+  worksIn : some Address
+}
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Academic
-
-------------------------------------------------------------------------------------------------------------------
-
-sig Academic extends UmpleObject {
-  student : set Graduate
+-- Defines a signature for class Address
+sig Address extends UmpleObject {
+  employees : some Employee
 }
 
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class FacultyMember
-
-------------------------------------------------------------------------------------------------------------------
-
-sig FacultyMember extends Academic { }
-
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Graduate
-
-------------------------------------------------------------------------------------------------------------------
-
-sig Graduate extends Academic {
-  advisor : lone Academic
+-- Defines constraints on association between Address and Employee
+fact AssociationFact {
+  Address <: employees in (Address) some -> some (Employee)
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class Academic and class Graduate
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class Employee and class Address
 fact BidirectionalityRule {
-  all academic_1 : Academic, graduate_1 : Graduate |
-    academic_1 in advisor[graduate_1] <=> graduate_1 in student[academic_1]
+  all employee_1 : Employee, address_1 : Address |
+    employee_1 in employees[address_1] <=> address_1 in worksIn[employee_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines numeric bound rule for class Address
+fact NumericBoundFact {
+  no address_1 : Address |
+    #address_1.employees != 5
+}
 
--- The following defines generalization hierarchy rule between class Academic and Graduate
-
-------------------------------------------------------------------------------------------------------------------
-
-fact GenHierarchyFact {
-  no graduate_1 : Graduate |
-    graduate_1.advisor = graduate_1
+-- Defines numeric bound rule for class Employee
+fact NumericBoundFact {
+  no employee_1 : Employee |
+    #employee_1.worksIn != 4
 }

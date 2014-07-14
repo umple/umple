@@ -8,73 +8,38 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Employee
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Employee
 sig Employee extends UmpleObject {
   manager : lone Manager
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Secretary
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Secretary
 sig Secretary extends Employee { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Technician
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Technician
 sig Technician extends Employee { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Manager
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Manager
 sig Manager extends Employee {
   supervises : set Employee
 }
 
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between Employee and Manager
+fact AssociationFact {
+  Employee <: manager in (Employee) set -> set (Manager)
+}
 
---The following defines bidirectionality rule between class Manager and class Employee
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class Manager and class Employee
 fact BidirectionalityRule {
   all manager_1 : Manager, employee_1 : Employee |
     manager_1 in manager[employee_1] <=> employee_1 in supervises[manager_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines generalization hierarchy rule between class Employee and Manager
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines generalization hierarchy rule between class Employee and Manager
 fact GenHierarchyFact {
   no manager_1 : Manager |
     manager_1.supervises = manager_1

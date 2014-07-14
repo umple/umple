@@ -8,55 +8,32 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Academic
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Academic
 sig Academic extends UmpleObject {
   students : some Graduate
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Graduate
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Graduate
 sig Graduate extends UmpleObject {
   advisor : one Academic
 }
 
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between Graduate and Academic
+fact AssociationFact {
+  Graduate <: advisor in (Graduate) some -> some (Academic)
+}
 
---The following defines bidirectionality rule between class Academic and class Graduate
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class Academic and class Graduate
 fact BidirectionalityRule {
   all academic_1 : Academic, graduate_1 : Graduate |
     academic_1 in advisor[graduate_1] <=> graduate_1 in students[academic_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class Academic
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class Academic
 fact NumericBoundFact {
   no academic_1 : Academic |
     #academic_1.students != 2

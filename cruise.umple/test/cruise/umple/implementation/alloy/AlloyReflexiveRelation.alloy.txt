@@ -8,44 +8,22 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Person
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Person
 sig Person extends UmpleObject {
   children : set Person
 }
 
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines no self relation rule for class Person
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines no self relation rule for class Person
 fact NoSelfRelation {
   no person_1 : Person |
     person_1 in person_1.^children
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines no extended relation rule for class Person
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines no extended relation rule for class Person
 fact NoExtendedRelation {
   no disj person_1, person_2, person_3 : Person |
     person_1 in children[person_2] && person_1 in children[person_3]

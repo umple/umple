@@ -8,139 +8,65 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class TempObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class TempObject
 abstract sig TempObject {
   tempName : String
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Shape2D
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Shape2D
 sig Shape2D extends UmpleObject {
   center : one Point
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Point
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Point
 sig Point extends UmpleObject {
   x : Int,
   y : Int
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class EllipticalShape
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class EllipticalShape
 sig EllipticalShape extends Shape2D {
   semiMajorAxis : String
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Polygon
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Polygon
 sig Polygon extends Shape2D { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Circle
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Circle
 sig Circle extends EllipticalShape { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Ellipse
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Ellipse
 sig Ellipse extends EllipticalShape { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class SimplePolygon
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class SimplePolygon
 sig SimplePolygon extends Polygon { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class ArbitraryPolygon
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class ArbitraryPolygon
 sig ArbitraryPolygon extends Polygon {
   points : Int
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class Rectangle
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class Rectangle
 sig Rectangle extends SimplePolygon {
   height : Int,
   width : Int
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class RegularPolygon
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class RegularPolygon
 sig RegularPolygon extends SimplePolygon {
   numPoints : Int,
   radius : Int
 }
-
-
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines a rule that enhances visualizing model with String type
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a rule that enhances visualizing model with String type
 fact VisualizationFact {
   no tempobject_1 : TempObject |
     tempobject_1.tempName = "null"
+}
+
+-- Defines constraints on association between Shape2D and Point
+fact AssociationFact {
+  Shape2D <: center in (Shape2D) one -> one (Point)
 }

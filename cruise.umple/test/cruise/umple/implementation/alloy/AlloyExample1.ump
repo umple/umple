@@ -1,11 +1,7 @@
-class Academic {
-  0..1 advisor -- * Graduate student;
+class Employee{
+ 5 -- 4 Address worksIn;
 }
 
-class FacultyMember {
-  isA Academic;
-}
+class Address{
 
-class Graduate {
-  isA Academic;
 }

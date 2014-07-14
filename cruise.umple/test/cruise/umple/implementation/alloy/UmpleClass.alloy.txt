@@ -8,20 +8,8 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class A
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class A
 sig A extends UmpleObject { }

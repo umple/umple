@@ -8,158 +8,103 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class A
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class A
 sig A extends UmpleObject {
   bs : set B,
   cs : some C
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class B
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class B
 sig B extends UmpleObject {
   cs : some C,
   a : lone A
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class C
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class C
 sig C extends UmpleObject {
   as_ : some A,
   b : one B,
   d : one D
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class D
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class D
 sig D extends UmpleObject {
   cs : some C
 }
 
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between B and A
+fact AssociationFact {
+  B <: a in (B) set -> set (A)
+}
 
---The following defines bidirectionality rule between class A and class B
+-- Defines constraints on association between C and B
+fact AssociationFact {
+  C <: b in (C) some -> some (B)
+}
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between A and C
+fact AssociationFact {
+  A <: cs in (A) some -> some (C)
+}
 
+-- Defines constraints on association between C and D
+fact AssociationFact {
+  C <: d in (C) some -> some (D)
+}
+
+-- Defines bidirectionality rule between class A and class B
 fact BidirectionalityRule {
   all a_1 : A, b_1 : B |
     a_1 in a[b_1] <=> b_1 in bs[a_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class A
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class A
 fact NumericBoundFact {
   no a_1 : A |
     #a_1.bs > 2
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class B and class C
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class B and class C
 fact BidirectionalityRule {
   all b_1 : B, c_1 : C |
     b_1 in b[c_1] <=> c_1 in cs[b_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class B
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class B
 fact NumericBoundFact {
   no b_1 : B |
     #b_1.cs < 1 || #b_1.cs > 3
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class C and class A
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class C and class A
 fact BidirectionalityRule {
   all c_1 : C, a_1 : A |
     c_1 in cs[a_1] <=> a_1 in as_[c_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class A
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class A
 fact NumericBoundFact {
   no a_1 : A |
     #a_1.cs < 3 || #a_1.cs > 5
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class C
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class C
 fact NumericBoundFact {
   no c_1 : C |
     #c_1.as_ < 3 || #c_1.as_ > 7
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class D and class C
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class D and class C
 fact BidirectionalityRule {
   all d_1 : D, c_1 : C |
     d_1 in d[c_1] <=> c_1 in cs[d_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
--- The following defines numeric bound rule for class D
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines numeric bound rule for class D
 fact NumericBoundFact {
   no d_1 : D |
     #d_1.cs != 4

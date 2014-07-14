@@ -8,22 +8,10 @@
 
 open util/ordering[UmpleObject]
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class UmpleObject
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class UmpleObject
 abstract sig UmpleObject { }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class A
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class A
 sig A extends UmpleObject {
   b : one B,
   c : lone C,
@@ -31,13 +19,7 @@ sig A extends UmpleObject {
   es : set E
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class B
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class B
 sig B extends UmpleObject {
   c : one C,
   d : lone D,
@@ -46,13 +28,7 @@ sig B extends UmpleObject {
   a : one A
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class C
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class C
 sig C extends UmpleObject {
   d : one D,
   e : lone E,
@@ -62,13 +38,7 @@ sig C extends UmpleObject {
   b : lone B
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class D
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class D
 sig D extends UmpleObject {
   e : one E,
   f : lone F,
@@ -78,13 +48,7 @@ sig D extends UmpleObject {
   cs : some C
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class E
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class E
 sig E extends UmpleObject {
   a : one A,
   b : lone B,
@@ -92,201 +56,183 @@ sig E extends UmpleObject {
   ds : set D
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class F
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class F
 sig F extends UmpleObject {
   b : lone B,
   cs : some C,
   ds : set D
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class G
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class G
 sig G extends UmpleObject {
   cs : some C,
   ds : set D
 }
 
-
-------------------------------------------------------------------------------------------------------------------
-
---The following defines a signature for class H
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines a signature for class H
 sig H extends UmpleObject { }
 
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between B and A
+fact AssociationFact {
+  B <: a in (B) one -> one (A)
+}
 
---The following defines bidirectionality rule between class A and class B
+-- Defines constraints on association between C and A
+fact AssociationFact {
+  C <: a in (C) lone -> lone (A)
+}
 
-------------------------------------------------------------------------------------------------------------------
+-- Defines constraints on association between D and A
+fact AssociationFact {
+  D <: a in (D) some -> some (A)
+}
 
+-- Defines constraints on association between E and A
+fact AssociationFact {
+  E <: a in (E) set -> set (A)
+}
+
+-- Defines constraints on association between C and B
+fact AssociationFact {
+  C <: b in (C) one -> one (B)
+}
+
+-- Defines constraints on association between D and B
+fact AssociationFact {
+  D <: b in (D) lone -> lone (B)
+}
+
+-- Defines constraints on association between E and B
+fact AssociationFact {
+  E <: b in (E) some -> some (B)
+}
+
+-- Defines constraints on association between F and B
+fact AssociationFact {
+  F <: b in (F) set -> set (B)
+}
+
+-- Defines constraints on association between D and C
+fact AssociationFact {
+  D <: cs in (D) one -> one (C)
+}
+
+-- Defines constraints on association between E and C
+fact AssociationFact {
+  E <: cs in (E) lone -> lone (C)
+}
+
+-- Defines constraints on association between F and C
+fact AssociationFact {
+  F <: cs in (F) some -> some (C)
+}
+
+-- Defines constraints on association between G and C
+fact AssociationFact {
+  G <: cs in (G) set -> set (C)
+}
+
+-- Defines constraints on association between E and D
+fact AssociationFact {
+  E <: ds in (E) one -> one (D)
+}
+
+-- Defines constraints on association between F and D
+fact AssociationFact {
+  F <: ds in (F) lone -> lone (D)
+}
+
+-- Defines constraints on association between G and D
+fact AssociationFact {
+  G <: ds in (G) some -> some (D)
+}
+
+-- Defines bidirectionality rule between class A and class B
 fact BidirectionalityRule {
   all a_1 : A, b_1 : B |
     a_1 in a[b_1] <=> b_1 in b[a_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class A and class C
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class A and class C
 fact BidirectionalityRule {
   all a_1 : A, c_1 : C |
     a_1 in a[c_1] <=> c_1 in c[a_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class A and class D
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class A and class D
 fact BidirectionalityRule {
   all a_1 : A, d_1 : D |
     a_1 in a[d_1] <=> d_1 in ds[a_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class A and class E
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class A and class E
 fact BidirectionalityRule {
   all a_1 : A, e_1 : E |
     a_1 in a[e_1] <=> e_1 in es[a_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class B and class C
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class B and class C
 fact BidirectionalityRule {
   all b_1 : B, c_1 : C |
     b_1 in b[c_1] <=> c_1 in c[b_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class B and class D
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class B and class D
 fact BidirectionalityRule {
   all b_1 : B, d_1 : D |
     b_1 in b[d_1] <=> d_1 in d[b_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class B and class E
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class B and class E
 fact BidirectionalityRule {
   all b_1 : B, e_1 : E |
     b_1 in b[e_1] <=> e_1 in es[b_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class B and class F
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class B and class F
 fact BidirectionalityRule {
   all b_1 : B, f_1 : F |
     b_1 in b[f_1] <=> f_1 in fs[b_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class C and class D
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class C and class D
 fact BidirectionalityRule {
   all c_1 : C, d_1 : D |
     c_1 in cs[d_1] <=> d_1 in d[c_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class C and class E
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class C and class E
 fact BidirectionalityRule {
   all c_1 : C, e_1 : E |
     c_1 in cs[e_1] <=> e_1 in e[c_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class C and class F
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class C and class F
 fact BidirectionalityRule {
   all c_1 : C, f_1 : F |
     c_1 in cs[f_1] <=> f_1 in fs[c_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class C and class G
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class C and class G
 fact BidirectionalityRule {
   all c_1 : C, g_1 : G |
     c_1 in cs[g_1] <=> g_1 in gs[c_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class D and class E
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class D and class E
 fact BidirectionalityRule {
   all d_1 : D, e_1 : E |
     d_1 in ds[e_1] <=> e_1 in e[d_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class D and class F
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class D and class F
 fact BidirectionalityRule {
   all d_1 : D, f_1 : F |
     d_1 in ds[f_1] <=> f_1 in f[d_1]
 }
 
-------------------------------------------------------------------------------------------------------------------
-
---The following defines bidirectionality rule between class D and class G
-
-------------------------------------------------------------------------------------------------------------------
-
+-- Defines bidirectionality rule between class D and class G
 fact BidirectionalityRule {
   all d_1 : D, g_1 : G |
     d_1 in ds[g_1] <=> g_1 in gs[d_1]
