@@ -20,7 +20,7 @@ if (isset($_REQUEST["model"])) {
 $diagramtype = "";
 $isCachedExample = false;
 $imageoutput="";
-$messageurl="";
+$messageURL="";
 if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
   $cachedimage= "ump/imagecache/".htmlspecialchars($_REQUEST['example']).".svg";
   if (file_exists($cachedimage))
@@ -196,6 +196,7 @@ $output = readTemporaryFile("ump/" . $filename);
               <select id="inputExampleType" name="inputExampleType" class="button" size = "1">
                 <option name = "optionExampleType" id = "cdModels" value="cdModels">Class Diagrams</option>
                 <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
+                <option name = "optionExampleType" id = "structureModels" value="structureModels">Composite Structure</option>
               </select>
             </li>
             <li id="itemLoadExamples">
@@ -280,6 +281,13 @@ $output = readTemporaryFile("ump/" . $filename);
                 <option name = "optionExample" value="TrafficLightsB.ump">Traffic Lights B</option>
               </select>
             </li>
+            <li id="itemLoadExamples3">
+              <select id="inputExample3" name="inputExample3" class="button" size = "1">
+                <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>              
+                <option name = "optionExample" value="CarSystem1.ump">Car System 1</option>
+                <option name = "optionExample" value="CarSystem2.ump">Car System 2</option>
+              </select>
+            </li>              
           </ul>
         
           <ul class="dropbox-add-chooser"></ul>

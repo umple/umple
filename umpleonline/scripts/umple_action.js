@@ -849,15 +849,20 @@ Action.setExampleType = function setExampleType()
   // Hide them all first
   jQuery("#itemLoadExamples").hide();
   jQuery("#itemLoadExamples2").hide();
+  jQuery("#itemLoadExamples3").hide();
      
   if(Page.getExampleType() == "cdModels") {
      jQuery("#itemLoadExamples").show();
      jQuery("#defaultExampleOption").prop("selected",true);
    }
-   else {
+   else if(Page.getExampleType() == "smModels") {
      jQuery("#itemLoadExamples2").show();
      jQuery("#defaultExampleOption2").prop("selected",true);
    }
+   else {
+     jQuery("#itemLoadExamples3").show();
+     jQuery("#defaultExampleOption3").prop("selected",true);
+   }   
 }
 
 Action.loadExample = function loadExample()
