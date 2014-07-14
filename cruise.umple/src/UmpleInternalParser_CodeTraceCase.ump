@@ -1,0 +1,113 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyzses trace related tokens to populate the Umple meta model for
+traces.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+	/**
+	 * Analyzes trace case token and its subtokens (i.e. trace directive tokens)
+	 */
+	public void analyzeTraceCaseToken(UmpleClass aClass, Token token){
+		TraceCase tca = new TraceCase();
+		TraceDirective td = new TraceDirective(model.getTracer());
+		td.setUmpleClass(aClass);
+		// set trace case name
+		tca.setName(token.getValue("tracecase_name"));
+
+		for( Token traceToken : token.getSubTokens() )
+		{ 
+			// "trace" indicates the beginning of a trace directive
+			if( traceToken.getName().equals("trace") )
+			{
+				td = new TraceDirective(model.getTracer());
+				td.setUmpleClass(aClass);
+			}
+			// ";" indicates the end of a trace directive, once true, then the trace directive is added to the trace case
+			else if( traceToken.getName().equals(";") )
+			{
+				tca.addTraceDirective(td);
+			}
+			else
+				analyzeTraceDirectiveFragments( td , aClass , traceToken, token );
+		}
+		aClass.addTraceCase(tca);
+	}
+
+	public void analyzeTraceCaseActivationToken(UmpleClass aClass, Token token){
+
+		for( Token traceToken : token.getSubTokens() )
+		{
+			for( TraceCase tc : aClass.getTraceCases() )
+				if( tc.getName().equals(traceToken.getValue()))
+				{
+					if( traceToken.is("tracecase_act_name"))
+						tc.setActivation(true);
+					else if( traceToken.is("tracecase_deact_name"))
+						tc.setActivation(false);
+				}
+		}
+
+	}
+
+
+
+	/**
+	 * Modified version of method "analyzeTraceDirective"
+	 * This method analyzes trace directive fragments inside a trace case
+	 */
+	private void analyzeTraceDirectiveFragments(TraceDirective traceDirective, UmpleClass aClass, Token traceToken, Token token){
+		traceAttr = new AttributeTraceItem(traceDirective);
+		mte = new MethodTraceItem();
+
+		if( traceToken.is("trace_entity") )  
+		{
+			analyzeTraceItem( traceToken );
+		}
+		else if( traceToken.getName().equals("entry") )
+		{
+			mte.setEntry(true);  
+		}  
+		else if( traceToken.getName().equals("exit") )  
+		{   
+			mte.setExit(true);      
+		}     
+		else if( traceToken.is("traceWhen") ) //for where/giving/after/until
+		{
+			//gets the string containing the condition's type
+			String conditionType = traceToken.getValue("conditionType");
+			TraceCondition tc = analyzeTraceCondition( traceToken, conditionType );
+			traceDirective.addCondition(tc);
+		}      
+		else if( traceToken.is("trace_for") )    
+		{  
+			//traceAttr.setForClause(Integer.parseInt(token.getValue("trace_for")));     
+		}          
+		else if( traceToken.is("trace_period") )     
+		{    
+			traceAttr.setPeriodClause(token.getValue("trace_period"));       
+		}         
+		else if( traceToken.is("trace_duration") )     
+		{     
+			traceAttr.setDuringClause(token.getValue("trace_duration"));       
+		}         
+		else if( traceToken.is("trace_execute") )     
+		{   
+			traceAttr.setExecuteClause(token.getValue("trace_execute"));     
+		}
+
+		if( traceAttr.numberOfUmpleVariables() > 0 )
+			traceDirective.addAttributeTraceItem(traceAttr);
+	}
+} 
