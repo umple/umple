@@ -24,6 +24,7 @@ ToolTips.tooltipEntries = {
 	exampleType: ["li", "Choose an example type to load"],
 	itemLoadExamples: ["li", "Choose a class diagram example to load"],
 	itemLoadExamples2: ["li", "Choose a state diagram example to load"],
+	itemLoadExamples3: ["li", "Choose a composite structure diagram example to load"],
 	ttDropboxChooser: ["li", "Click to load an example from dropbox"],
 
 	// diagram editing tools tooltips
