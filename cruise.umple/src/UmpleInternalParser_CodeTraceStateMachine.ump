@@ -1,0 +1,176 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+http://umple.org/license
+
+This file analyzses trace related tokens to populate the Umple meta model for
+traces.
+
+Please refer to UmpleInternalParser.ump for more details.
+
+ */
+
+namespace cruise.umple.compiler;
+
+class UmpleInternalParser
+{
+
+	private void analyzeStateMachineTraceItem(Token traceToken){
+		List<StateMachine> stms = traceDirective.getUmpleClass().getStateMachines();
+		StateMachine stm = null;
+		State state = null;
+		String stmTraceItem = traceToken.getValue("trace_entity");
+
+		if( traceToken.getParentToken().getSubToken(1).numberOfSubTokens()>0)
+		{
+
+			boolean isTransition = false;
+			boolean isIn = false;
+			boolean isOut = false;
+			for(Token token:traceToken.getParentToken().getSubToken(1).getSubTokens()){
+				if("transition".equals(token.getValue("option"))){
+					isTransition = true;
+				}
+				if("in".equals(token.getValue("option"))){
+					isIn = true;
+				}
+				if("out".equals(token.getValue("option"))){
+					isOut = true;
+				}
+			}
+
+			if(isTransition)
+			{
+				StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
+				tracedStm.setIsOut(isOut);
+				tracedStm.setIsIn(isIn);
+				tracedStm.setPosition(traceToken.getPosition());
+				if( traceToken.getParentToken().getValue("trace_level")!=null )
+				{
+					tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("trace_level")));
+				}
+				for( StateMachine sm:stms  )
+				{
+					for( State nestedState:sm.getStates())
+					{
+						for( Transition tsn:nestedState.getTransitions())
+						{
+							if( tsn.getEvent().getName().equals(traceToken.getValue()) )
+							{
+								tracedStm.setTransition(tsn);
+								tracedStm.setStateMachine(sm);
+								tracedStm.setState(nestedState);
+								traceDirective.addStateMachineTraceItem(tracedStm);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		for( StateMachine ss : stms )
+			for( State s : ss.getStates() )
+				for( Transition tsn : s.getTransitions() )
+					if( tsn.getEvent().getName().equals(traceToken.getValue()) )
+					{
+						StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
+						tracedStm.setIsOut(false);
+						tracedStm.setIsIn(false);
+						tracedStm.setPosition(traceToken.getPosition());
+						tracedStm.setTransition(tsn);
+						tracedStm.setStateMachine(ss);
+						tracedStm.setState(s);
+						traceDirective.addStateMachineTraceItem(tracedStm);
+						break;
+					}
+
+		if( stmTraceItem != null && stmTraceItem.contains("."))
+		{
+			String delimiter = "\\.";
+			String[] temp = stmTraceItem.split(delimiter);
+			stmTraceItem = temp[temp.length-1];
+		}
+		if(stm==null)
+		{
+			for( StateMachine sm:stms )
+			{
+				state=sm.findState(stmTraceItem, true);
+				if(state!=null)
+				{
+					stm=state.getStateMachine();
+					break;
+				}
+			}
+		}
+		if(stm==null)
+		{
+			for( StateMachine sm:stms )
+			{
+				if( sm.getFullName().equals(stmTraceItem))
+				{
+					stm = sm;
+					break;
+				}            
+			}
+		}
+		//System.out.println(stmTraceItem+"<>"+stm);  
+		// if trace entity is a state machine  
+		if( stm != null)
+		{  
+			StateMachineTraceItem tracedStm = new StateMachineTraceItem(traceDirective);
+			tracedStm.setPosition(traceToken.getPosition());  
+			tracedStm.setStateMachine(stm);
+			tracedStm.setState(state);
+			if( traceToken.getParentToken().getValue("trace_level")!=null )
+			{
+				tracedStm.setLevel(Integer.parseInt(traceToken.getParentToken().getValue("trace_level")));
+			}
+			for(Token sub: traceToken.getParentToken().getSubTokens())
+			{
+				if(sub.is("traceOptions"))
+				{
+					boolean wasSet = false;
+					boolean wasInOut = false;
+					for(Token sub2: sub.getSubTokens())
+					{
+						if( "entry".equals(sub2.getValue("option")) )
+						{
+							wasSet = true;
+							tracedStm.setEntry(true);
+						}
+						if( "exit".equals(sub2.getValue("option")) )
+						{
+							wasSet = true;
+							tracedStm.setExit(true);
+						}
+						if( "in".equals(sub2.getValue("option")) )
+						{
+							wasInOut = true;
+							tracedStm.setIsIn(true);
+						}
+						if( "out".equals(sub2.getValue("option")) )
+						{
+							wasInOut = true;
+							tracedStm.setIsOut(true);
+						}
+					}
+					if(!wasSet)
+					{
+						tracedStm.setEntry(false);
+						tracedStm.setExit(false);
+					}
+					if(!wasInOut)
+					{
+						tracedStm.setIsOut(true);
+						tracedStm.setIsIn(false);
+					}
+				}
+			}
+			tracedStm.setTraceStateMachineFlag(state == null);
+			traceDirective.addStateMachineTraceItem(tracedStm);
+
+		}
+	}
+} 
