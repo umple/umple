@@ -1,0 +1,53 @@
+// Example system representing constraint-based ping-pong example
+// Demonstrates the composite Structure Diagram in Umple
+
+class Component1 {
+  // Relay-Port
+  public in Integer pIn1;
+  public out Integer pOut1;
+  pIn1 -> pOut1;
+
+
+  [pIn1]
+  active increment {
+     pOut1(pIn1 + 1);
+  }
+
+  [pOut1]
+  active logOutPort1 {
+     cout << "CMP 1 : Out data = " << pOut1 << endl;
+  }
+  
+}
+
+class Component2 {
+  public in Integer pIn2;
+  public out Integer pOut2;
+  pIn2 -> pOut2;
+
+  [pIn2, pIn2 < 10]
+  active stop {
+       pOut2(pIn2 + 1);
+  }
+
+  [pOut2]
+  active logOutPort2 {
+     cout << "CMP 2 : Out data = " << pOut2 << endl;
+  }
+}
+
+
+class Atomic {
+Component1 cmp1;
+Component2 cmp2;
+Integer startValue;
+
+  after constructor {
+     cmp1->pIn1(startValue);
+     
+  }
+
+
+  cmp1.pOut1 -> cmp2.pIn2;
+  cmp2.pOut2 -> cmp1.pIn1;
+}

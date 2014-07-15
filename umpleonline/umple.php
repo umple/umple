@@ -295,8 +295,7 @@ $output = readTemporaryFile("ump/" . $filename);
             <li id="itemLoadExamples3">
               <select id="inputExample3" name="inputExample3" class="button" size = "1">
                 <option name = "optionExample3" id = "defaultExampleOption3" value="">Select Example</option>              
-                <option name = "optionExample" value="CarSystem1.ump">Car System 1</option>
-                <option name = "optionExample" value="CarSystem2.ump">Car System 2</option>
+                <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
               </select>
             </li>              
           </ul>
