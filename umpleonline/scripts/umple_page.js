@@ -627,7 +627,7 @@ Page.showDiagramSyncNeeded = function(doShow)
             '</div>';
   if (doShow)
   {
-    canvas.append(messageDiv);
+    canvas.html(messageDiv + canvas.html());
   }
   else
   {
@@ -747,7 +747,8 @@ Page.showGeneratedCode = function(code,language)
   jQuery("#messageArea").html(errorMarkup);
   
   //Set the generated content
-  if(language == "java" || language == "php" || language == "cpp" || language == "ruby" || language == "xml" || language == "sql")
+  if(language == "java" || language == "php" || language == "cpp" 
+    || language == "ruby" || language == "xml" || language == "sql")
   {
     jQuery("#innerGeneratedCodeRow").html(
         formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)
@@ -767,44 +768,31 @@ Page.showGeneratedCode = function(code,language)
 Page.applyGeneratedCodeAreaStyles = function(language)
 {
   var generatedArea = jQuery("#generatedCodeRow");
-  jQuery("#generatedCodeRow").show();
+  generatedArea.show();
+  jQuery("#innerGeneratedCodeRow").show();
 
   //Modify styles and show or hide containers depending on the content
   //Error message
   if(language == "diagramUpdate") 
   {
-    if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
-    jQuery("#innerGeneratedCodeRow").show();
     generatedArea.removeClass('generatedCode');
     generatedArea.removeClass('generatedDiagram');
   }
   //One of the svg diagram types
   else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram")
   {
-    if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
-    jQuery("#innerGeneratedCodeRow").show();
     generatedArea.removeClass('generatedCode');
     generatedArea.addClass('generatedDiagram');
     
     if(language == "structureDiagram")
     {
-      //Remove and re-add the svgCanvas to ensure it is in the right place
-      jQuery("#svgCanvas").remove();
-      jQuery("#generatedCodeRow").html(jQuery("#generatedCodeRow").html() + "<svg id=\"svgCanvas\"></svg>");
-      
-      //Then, to make the canvas non-empty, switch back to editable class diagram
-      Action.changeDiagramType({type: "editableClass"});
-      
-      //Show the structure diagram
-      jQuery("#svgCanvas").show();
-      jQuery("#innerGeneratedCodeRow").hide();
+      //Add an svg container to hold the structure diagram
+      jQuery("#innerGeneratedCodeRow").html('<svg id="generatedSVGCanvas"></svg>')
     }
   }
   //Generated code
   else
   {
-    if(!Page.useStructureDiagram) jQuery("#svgCanvas").hide();
-    jQuery("#innerGeneratedCodeRow").show();
     generatedArea.removeClass('generatedDiagram');
     generatedArea.addClass('generatedCode');
   }
@@ -868,7 +856,7 @@ Page.getGeneratedMarkup = function(code, language)
   else if(language == "structureDiagram") 
   {// Covers the structure diagram code
     output = code.split("<p>URL_SPLIT")[1];
-    output = output.replace(/##CANVAS_ID##/g, "svgCanvas");
+    output = output.replace(/##CANVAS_ID##/g, "generatedSVGCanvas");
     // Converts html encoded special characters to plaintext
     output = jQuery("<div/>").html(output).text();
   }

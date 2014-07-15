@@ -1436,7 +1436,7 @@ Action.updateUmpleDiagramCallback = function(response)
   diagramCode = Action.getDiagramCode(response.responseText);
   errorMessage = Action.getErrorCode(response.responseText);
   
-  if(diagramCode == null || diagramCode == "") 
+  if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
     Page.enableDiagram(false);
     Action.diagramInSync = false;
@@ -1448,23 +1448,22 @@ Action.updateUmpleDiagramCallback = function(response)
     if(!Action.diagramInSync)
     {
       Page.enableDiagram(true);
-      Action.diagramInSync=true;
+      Action.diagramInSync = true;
     }
 
     Page.setFeedbackMessage("");
-    Page.hideGeneratedCode(); //TODO always hide generated code? as the code is updated?
+    Page.hideGeneratedCode();
     
     // Display editable class diagram
     if(Page.useEditableClassDiagram) {
-      jQuery("#umpleCanvas").show();
-      jQuery("#svgDummy").hide();
       var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
       if(Page.showMethods || !Page.showAttributes)
       UmpleSystem.update(); 
       
       //Apply readonly styles
-      if (Page.readOnly) {
+      if (Page.readOnly) 
+      {
         jQuery("span.editable").addClass("uneditable");
         // jQuery("div.umpleClass").addClass("unselectable");
       }
@@ -1472,21 +1471,20 @@ Action.updateUmpleDiagramCallback = function(response)
     // Display static svg diagram
     else if(Page.useGvClassDiagram || Page.useGvStateDiagram)
     {
-      jQuery("#umpleCanvas").show();
-      jQuery("#svgDummy").hide();
       jQuery("#umpleCanvas").html(format('{0}', diagramCode));
     }
     //Display structure diagram
     else if(Page.useStructureDiagram)
     {
-      Action.renderStructureDiagram(diagramCode);
+      jQuery("#umpleCanvas").html('<svg id="svgCanvas"></svg>');
+      eval(diagramCode);
     }
   }
-  
+
   //Show the error message
   if(errorMessage != "")
   {
-    Page.showGeneratedCode(errorMessage,"diagramUpdate");
+    Page.showGeneratedCode(errorMessage, "diagramUpdate");
   }
   
   Page.hideLoading();
@@ -1532,7 +1530,7 @@ Action.getDiagramCode = function(responseText)
 Action.getErrorCode = function(responseText)
 {
   var output = "";
-  if(Page.useEditableClassDiagram)
+  if(Page.useEditableClassDiagram || Page.useStructureDiagram)
   {
     output = responseText.split('URL_SPLIT')[0];
     
@@ -1546,24 +1544,8 @@ Action.getErrorCode = function(responseText)
       output = miscStuffAndErrorMessages.split("</script>&nbsp;")[0];
     }
   }
-  return output;
-}
 
-Action.renderStructureDiagram = function(diagramCode)
-{
-  // Remove any existing svgCanvas
-  jQuery("#svgCanvas").remove();
-  
-  // Hide the standard canvas
-  jQuery("#umpleCanvas").hide();
-  
-  // Place a new svgCanvas in the canvas area
-  jQuery("#svgDummy").show();
-  jQuery("#svgDummy").html("<svg id=\"svgCanvas\"></svg>");
-  
-  // eval the javascript that was returned
-  eval(diagramCode);
-  jQuery("#svgDummy").addClass("structureInCanvas");
+  return output;
 }
 
 // This function is no longer being called as its caller has been commented out

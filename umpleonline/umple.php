@@ -417,16 +417,13 @@ $output = readTemporaryFile("ump/" . $filename);
     </div>
    
     <div id="umpleCanvasColumn" class="umpleCanvasColumn inRow">
-      <div id="umpleCanvas"  tabIndex="1" class="surface">
-      </div>
-      <div id="svgDummy"></div>
+      <div id="umpleCanvas"  tabIndex="1" class="surface"></div>
     </div>
   </div>
   
   <div id="generatedCodeRow" class="row">
     <div id="messageArea"></div>
     <div id="innerGeneratedCodeRow"></div>
-    <svg id="svgCanvas"></svg>
   </div>
 
   <?php if($showChrome) { ?>
