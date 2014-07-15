@@ -89,6 +89,9 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals(2, sm.numberOfStates());
     Assert.assertEquals("On",sm.getState(0).getName());
     Assert.assertEquals("Off",sm.getState(1).getName());
+    
+    assertHasWarning("100_transitionToUnknownState2.ump.ump", 0, 68, new Position("100_transitionToUnknownState2.ump.ump", 9, 8, 57));
+    assertHasWarning("100_transitionToUnknownState3.ump", 0, 68, new Position("100_transitionToUnknownState3.ump", 9, 8, 57));
   }
   
   @Test
