@@ -559,6 +559,8 @@ class UmpleInternalParser
     //TODO: start at level of transition
     //TOcheck: multiple transitions to same state?
     ArrayList<Transition> allTransitions = sm.getAllTransitions();
+    ArrayList<Transition> removeTransitions = new ArrayList<Transition>();
+    
     while (placeholderStateMachine.numberOfStates() > 0)
     {
       State s = placeholderStateMachine.getState(0);
@@ -566,6 +568,8 @@ class UmpleInternalParser
       {
         for (Transition t : allTransitions)
         {
+          boolean notFound = false;
+          
           if (t.getNextState().equals(s))
           {
             String toState = s.getName();
@@ -574,7 +578,7 @@ class UmpleInternalParser
             //Strip last state from dotNotation
             //If the super state does not have a state machine then the state will be added to the top level sm
             //TODO: check that the top level doesn't have a state with the same name
-            while(tmpName.contains(".")){
+            while(tmpName.contains(".") && !notFound){
               tmpName = tmpName.substring(0,tmpName.lastIndexOf('.'));
               State superState = sm.findState(tmpName);
               if(superState != null)
@@ -598,6 +602,9 @@ class UmpleInternalParser
                 }
                 break;
               }
+              else
+                notFound = true;
+              
               if(!tmpName.contains("."))
               {
                 //TODO: check to make sure there are no other states at this level with same name
@@ -607,8 +614,19 @@ class UmpleInternalParser
                   setFailedPosition(stateMachineToken.getPosition(), 64, sm.getName());
                 }
                 s.setStateMachine(sm);
+                break;
               }
             }
+            
+            if(notFound) 
+	        {
+	          notFound = true;
+	          removeTransitions.add(t);
+	          placeholderStateMachine.deleteState(s);
+	          possiblyUnknownStates.remove(s);
+	          t.getFromState().deleteTransition(t);
+	          getParseResult().addErrorMessage(new ErrorMessage(68,t.getPosition(), toState,t.getPosition().getLineNumber()+""));
+	        }
           }
         }
       }
@@ -621,6 +639,11 @@ class UmpleInternalParser
         }
         s.setStateMachine(sm);
       }
+    }
+    
+    for (Transition t : removeTransitions)
+    {
+    	sm.getAllTransitions().remove(t);
     }
     
     
@@ -1011,6 +1034,9 @@ class UmpleInternalParser
 	    }
 
 	    t.setAutoTransition(isAutoTransition);
+	    
+	    //Issue 519
+	    t.setPosition(transitionToken.getPosition());
 
 	    String eventName = transitionToken.getValue("event");
 	    String eventTimerAmount = transitionToken.getValue("timer");
@@ -1289,6 +1315,9 @@ class UmpleInternalParser
     }
 
     t.setAutoTransition(isAutoTransition);
+    
+    //Issue 519
+    t.setPosition(transitionToken.getPosition());
 
     String eventName = transitionToken.getValue("event");
     String eventTimerAmount = transitionToken.getValue("timer");

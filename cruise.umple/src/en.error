@@ -72,6 +72,7 @@
 65: 1, "http://umple.org/PageBeingDeveloped.html", You declared a History (H) or Deep History (HStar) state at a state without substates within state machine {0};
 66: 4, "http://umple.org/PageBeingDeveloped.html", Transition to '{0}' has multiple possible destinations. Please use dot notation to clarify what state the transition should go to. ;
 67: 4, "http://umple.org/PageBeingDeveloped.html",  State '{0}' from StateMachine '{1}' is non-reachable. ;
+68: 4, "http://umple.org/PageBeingDeveloped.html", Destiny state '{0}' of transition on line '{1}' has not been found. This transition is being disconsidered;
 
 80: 4, "http://umple.org/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 

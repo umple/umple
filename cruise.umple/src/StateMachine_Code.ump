@@ -134,6 +134,19 @@ class StateMachine
     }
     return allTransitions;
   }
+  
+  //Issue 519
+  public boolean deleteState(State aState)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aState, as it must always have a stateMachine
+    if (this.equals(aState.getStateMachine()))
+    {
+      states.remove(aState);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
 
   public State getDeepHistoryState()
   {
@@ -445,6 +458,19 @@ class State
       return findSuperState(me.getStateMachine().getParentState(),lookFor);
     }
   } 
+  
+  //Issue 519
+  public boolean deleteTransition(Transition aTransition)
+  {
+    boolean wasRemoved = false;
+    
+    if (this.equals(aTransition.getFromState()))
+    {
+      transitions.remove(aTransition);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
 
   public Transition addTransition(State nextState, int index)
   {
