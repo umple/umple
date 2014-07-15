@@ -17,16 +17,6 @@
     <ant antfile="build/build.umple.xml" target="codegen" inheritAll="true" />
   </target>
 
-  <!-- Move Umpleonline files back into the test data -->
-  <target name="umpleonlineToTest">
-    <ant antfile="build/build.umple.xml" target="umpleonlineToTest" inheritAll="true" />
-  </target>
-
-  <!-- Move test data into Umpleonline -->
-  <target name="testToUmpleonline">
-    <ant antfile="build/build.umple.xml" target="testToUmpleonline" inheritAll="true" />
-  </target>
-
   <!-- Re-code generate Umple -->
   <target name="umpleSelf">
     <ant antfile="build/build.umple.xml" target="codegen" inheritAll="true" />

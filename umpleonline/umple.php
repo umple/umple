@@ -35,6 +35,15 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
       $isCachedExample=true;
       $diagramtype="&diagramtype=state";
     }
+    else
+    {
+      $cachedimage= "ump/imagecachestructure/".htmlspecialchars($_REQUEST['example']).".svg";
+      if (file_exists($cachedimage))
+      {
+        $isCachedExample=true;
+        $diagramtype="&diagramtype=structureDiagram";
+      }    
+    }
   }
   if($isCachedExample) {
     $imageoutput = "<br/><iframe src=\"".$cachedimage."\"></iframe><br\>";
@@ -65,8 +74,10 @@ $diagramType = "class";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
-  else if ($diagramType !="GvState" && $diagramType !="GvClass") $diagramType = "class";
+  else if ($diagramType=="structure") $diagramType = "structureDiagram";  
+  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram") $diagramType = "class";
 }
+if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
 
 // notext means suppress creation of the text pane - passed to JavaScript
 // ignored if nodiagram is also set
