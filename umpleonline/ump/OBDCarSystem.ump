@@ -1,0 +1,221 @@
+// Example system representing aspects of a Car On-Board Diagnosis (OBD)
+// Demonstrates the composite Structure Diagram in Umple
+
+namespace OBDCarReader;
+
+class CarInformation {
+	int motorOilclientData;
+	int particleFilterclientData;
+	int sparkPlugclientData;
+	int wheelsclientData;
+}
+
+class BoardData {
+	int carsTime;
+	int kilometerage;
+}
+
+class RelativeData {
+	double relativeWear;
+	double initialAvailability;
+}
+
+class SensorData {
+	isA RelativeData;
+}
+
+class WheelsData {
+	isA RelativeData;
+}
+
+class MotorOilData {
+	isA RelativeData;
+}
+
+class SparkPlugData {
+	isA RelativeData;
+}
+
+class ParticleFilterData {
+	isA RelativeData;
+}
+
+class MotorRotationSpeed  {
+	public out int speed;
+}
+
+class MotorOilQuantity {
+	public out int motorOilQuantity;
+}
+
+class MotorOilViscosity {
+	public out int motorOilViscosity;
+}
+
+
+class ThrottleControl {
+	public in int motorRotationSpeed;
+	public out int throttleValue;
+}
+
+class Speedometer {
+	public out int speed;
+}
+
+
+class MotorOilCheck {
+	public in int motorRotationSpeed;
+	public in int motorOilViscosity;
+	public out boolean motorOilRenewal;
+}
+
+
+class ConditionCheckAdapter{
+	public in boolean ignition;
+	public in double wheelsclientData;
+	public in double motorOilclientData;
+	public in double particleFilterclientData;
+	public in double sparkPlugclientData;
+	public out CarInformation driverInterface;
+
+	CarInformation carInformation;
+
+	[wheelsclientData,motorOilclientData,particleFilterclientData,sparkPlugclientData]
+	void active computeData()  {
+		if (motorOilclientData < wheelsclientData) {
+			carInformation.setMotorOilclientData(motorOilclientData);
+		}
+
+		if (particleFilterclientData.status  != null) {
+			if (particleFilterclientData < wheelsclientData) {
+				carInformation.setParticleFilterclientData( particleFilterclientData );
+			}
+		}
+		if (sparkPlugclientData.status != null) {
+			if (sparkPlugclientData < wheelsclientData) {
+				carInformation.setParticleFilterclientData( sparkPlugclientData );
+			}
+		}
+		carInformation.setWheelsclientData(wheelsclientData);		
+		/ driverInterface(carInformation);
+	}
+
+	[ignition]
+	void active displayDriverInterface()  {
+		/ driverInterface(carInformation);
+	}
+}
+
+
+class SensorReader {
+
+	public in boolean ignition;
+	public in SensorData sensorData;
+	public in BoardData boardData;
+
+	public out double clientData;
+
+	double initialAvailability = 100;
+
+	[sensorData]
+	void active init()  {
+	  initialAvailability = sensorData.initialAvailability;
+	}
+	
+	[clientData, period(1), sensorData != null]
+	void active computeData {
+  	  double relativeAvailability= 100.0 - sensorData.relativeWear;
+	  / clientData((initialAvailability / 100.0) * relativeAvailability);
+	}
+}
+
+
+
+class CarSystem {
+	public in boolean ignition;
+	public in BoardData boardData;
+	public in WheelsData wheelsData;
+	public in MotorOilData motorOilData;
+	public in ParticleFilterData particleFilterData;
+	public in SparkPlugDataData sparkPlugData;
+
+
+	public out CarInformation driverInterface;
+	public out int throttleStatus;
+	public out boolean motorOilLed;
+
+	SensorReader clientWheels;
+	SensorReader clientMotorOil;
+	SensorReader clientParticleFilter;
+	SensorReader clientSparkPlugAdaptive;
+	ConditionCheckAdapter conditionCheckAdapter;
+	MotorRotationSpeed motorRotationSpeed;
+	MotorOilQuantity motorOilQuantity;
+	MotorOilViscosity motorOilViscosity;
+	ThrottleControl throttleControl;
+	MotorOilCheck motorOilCheck;
+
+
+	CarInformation carInformation;
+
+	[ignition]
+	active carTurnedOn {
+		/ driverInterface(carInformation);
+                / conditionCheckAdapter.displayDriverInterface();
+	}
+
+	[period(1), ignition,wheelsData, motorOilData,particleFilterData,sparkPlugData]
+	active computeData {
+		/ [clientWheels.computeData(), 
+		clientMotorOil.computeData(), 
+		clientParticleFilter.computeData(),
+		clientSparkPlug.computeData(),
+		conditionCheckAdapter.computeData()];
+
+	}
+
+	[driverInterface]
+	active displaySummary {
+		conditionCheckAdapter.driverInterface(driverInterface);
+	}
+
+
+	this.ignition -> clientWheels.ignition;
+	this.wheelsData -> clientWheels.sensorData {
+		return new SensorData(this.wheelsData.relativeWear,this.wheelsData.initialAvailability);
+	}
+	this.boardData -> clientWheels.boardData;
+
+	this.ignition -> clientMotorOil.ignition;
+	this.motorOilData -> clientMotorOil.sensorData {
+		return new SensorData(this.wheelsData.relativeWear,this.wheelsData.initialAvailability);
+	}
+	this.boardData -> clientMotorOil.boardData;
+
+
+	this.ignition -> clientParticleFilter.ignition;
+	this.particleFilter -> clientParticleFilter.sensorData {
+		return new SensorData(this.wheelsData.relativeWear,this.wheelsData.initialAvailability);
+	}
+	this.boardData -> clientParticleFilter.boardData;
+
+	this.ignition -> clientSparkPlug.ignition;
+	this.sparkPlug -> clientSparkPlug.sensorData {
+		return new SensorData(this.wheelsData.relativeWear,this.wheelsData.initialAvailability);
+	}
+	this.boardData -> clientSparkPlug.boardData;
+
+	this.ignition -> conditionCheckAdapter.ignition;
+	conditionCheckAdapter.driverInterface -> this.driverInterface;
+
+	clientWheels.clientData -> conditionCheckAdapter.wheelsclientData;
+	clientMotorOil.clientData -> conditionCheckAdapter.motorOilclientData;
+	clientParticleFilter.clientData -> conditionCheckAdapter.particleFilterclientData;
+	clientSparkPlug.clientData -> conditionCheckAdapter.sparkPlugclientData;
+
+	throttleControl.throttleValue -> this.throttleStatus;
+	motorOilCheck.motorOilRenewal -> this.motorOilLed;
+	motorRotationSpeed.motorRotationSpeed -> throttleControl.motorRotationSpeed;
+	motorOilQuantity.motorOilQuantity -> motorOilCheck.motorOilQuantity;
+	motorOilViscosity.motorOilViscosity -> motorOilCheck.motorOilViscosity;
+}
