@@ -150,7 +150,8 @@ function recursiveDelete($str){
 
 function ensureFullPath($relativeFilename)
 {
-  $prefixes = explode("/", explode("/umpleonline/", realpath(""))[1]);
+  $file_suffix = explode("/umpleonline/", realpath(""));
+  $prefixes = explode("/", $file_suffix[1]);
   $suffix = explode("../", $relativeFilename)[1];
 
   $filename = "../";
