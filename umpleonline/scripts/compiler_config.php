@@ -148,6 +148,28 @@ function recursiveDelete($str){
         }
     }
 
+function ensureFullPath($relativeFilename)
+{
+  $prefixes = explode("/", explode("/umpleonline/", realpath(""))[1]);
+  $suffix = explode("../", $relativeFilename)[1];
+
+  $filename = "../";
+
+  foreach($prefixes as $prefix)
+  {
+    if($prefix == "scripts")
+    {
+      continue;
+    }
+
+    $filename = "../" . $filename . $prefix . "/";
+  }
+
+  $filename .= $suffix;
+
+  return $filename;
+}
+
 function extractFilename()
 {
   // If the argument is model=X, then load that saved tmp or bookmarked model

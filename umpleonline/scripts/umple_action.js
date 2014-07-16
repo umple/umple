@@ -1740,7 +1740,7 @@ Action.generateStructureDiagramFile = function()
 Action.generateStructureDiagramFileCallback = function(response)
 {
   jQuery("#buttonStructureLink").hideLoading();
-  Page.toggleStructureDiagramLink(true);
+  Page.toggleStructureDiagramLink(true, response.responseText);
 }
 
 Action.ajax = function(callback,post,errors)

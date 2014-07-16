@@ -28,13 +28,22 @@ if (isset($_REQUEST["save"]))
   if(isset($_REQUEST["svgContent"]))
   {
     $input = $_REQUEST["svgContent"];
+
+    if(isset($_REQUEST["filename"]))
+    {
+      $filename = saveFile($input, ensureFullPath($_REQUEST["filename"]));
+    }
+    else
+    {
+      $filename = saveFile($input);
+    }
   }
   else
   {
     $input = $_REQUEST["umpleCode"];
+    $filename = saveFile($input);
   }
   
-  $filename = saveFile($input);
   echo $filename;
 }
 else if (isset($_REQUEST["load"]))
