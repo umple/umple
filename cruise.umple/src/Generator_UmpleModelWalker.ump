@@ -343,9 +343,9 @@ class UmpleModelWalker {
 							visitor.visit(smte);
 						}
 						
-						for(TraceCase tc : td.getTraceCases()) {
-							visitor.visit(tc);
-						}
+						//for(TraceCase tc : td.getTraceCases()) {
+							//visitor.visit(tc);
+						//}
 					}
 					
 					for(TraceCase tc: clazz.getTraceCases()){

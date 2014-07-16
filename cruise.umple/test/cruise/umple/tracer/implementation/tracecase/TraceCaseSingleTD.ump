@@ -4,7 +4,7 @@ class Tracer
 {
 	String name;
 	tracecase tc1 {
-  	trace name;
+  	  trace name;
 	}
-	//activate tc1;
+	activate tc1;
 }

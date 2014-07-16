@@ -10,7 +10,7 @@ The tracing meta model.
 It currently only supports tracing of attributes, but we are currently in the process
 of enhancing the Umple syntax and meta model to support richer trace objects.
 
-*/
+ */
 
 namespace cruise.umple.compiler;
 
@@ -19,11 +19,153 @@ class UmpleModel
   String traceType = {getTracer().getName()}
   Tracer tracer = new Tracer("Console");
 }
+
 class Tracer
 {
   String name;
   String[] argument;
   Boolean verbosity = false;
+}
+
+class UmpleClass
+{
+  0..1 -- * TraceDirective;
+  0..1 -- * TraceCase;
+}
+
+/*
+ * A statement found in Umple that directs code to be generated
+ * to trace a model element and generate output using some tracing tool
+ */
+class TraceDirective
+{
+  Integer id = 0;
+  String tracerType = {getTracer().getName()}
+  1 -> 1 Tracer ;
+
+  1 -- 0..* AttributeTraceItem;
+  1 -- 0..* StateMachineTraceItem;
+  0..* -- 0..* MethodTraceItem;
+  1 -- 0..* AssociationTraceItem;
+  1 -> 0..* TraceCondition condition;
+  1 -- 0..1 TraceRecord;
+}
+
+/*
+ * To be done. A group of trace directives that can be switched on or off by other
+ * trace directives
+ */
+class TraceCase
+{
+  name = null;
+  boolean activation = false;
+  1 -> * TraceDirective;
+}
+
+
+interface TraceItem
+{
+  depend java.util.*;
+  public String getTracerType();
+  public Boolean getIsPre();
+  public Boolean getIsPost();
+  public String trace(CodeTranslator gen, Object o, String template, UmpleClass uClass, String... args);//old
+  public String getPeriodClause();
+  public String getExtremities(CodeTranslator gen, String name);
+}
+/*
+ * An element of a trace directive that indicates to trace one or more attributes
+ */
+class AttributeTraceItem
+{
+  isA TraceItem;
+  Constraint constraint=null;
+  tracerType = {getTraceDirective().getTracerType()}
+
+  boolean traceSet = false;
+  boolean traceGet = false;
+  boolean traceConstructor = false;
+
+  forClause = null;
+  periodClause = null;
+  duringClause = null;
+  executeClause = null;
+  0..* -- 0..* UmpleVariable;
+
+  Position position = null;
+  Boolean conditionallyWhere = true; 
+  conditionType = "where";
+}
+
+/*
+ * An element of a trace directive that indicates to trace one or more state machines
+ * or transitions
+ */
+class StateMachineTraceItem
+{
+  isA TraceItem;
+
+  Constraint constraint=null;
+  tracerType = {getTraceDirective().getTracerType()}
+
+  boolean isIn = false;
+  boolean isOut = false;
+
+  boolean entry = false;
+  boolean exit = false;
+
+  int level = -1;
+
+  boolean traceStateMachineFlag = false;
+  0..* -- 0..1 StateMachine;
+  0..* -- 0..1 State;
+  0..* -- 0..1 Transition;
+
+  Position position = null;
+  periodClause = null;
+
+  Boolean conditionallyWhere = true;
+  conditionType = "where";
+}
+/*
+ * An element of a trace directive that indicates to trace one or more associations
+ */
+class AssociationTraceItem
+{
+  isA TraceItem;
+  Constraint constraint=null;
+  tracerType = {getTraceDirective().getTracerType()}
+
+  0..* -- 0..* AssociationVariable;
+  0..* -- 0..* Association;
+
+  //default case tracing Cardinality
+  boolean traceCardinality = true;
+  boolean traceAdd = false;
+  boolean traceRemove = false;
+
+  Position position = null;
+  periodClause = null;
+  Boolean conditionallyWhere = false; 
+  conditionType = "where";
+}
+
+class MethodTraceItem
+{
+  name = null;
+  boolean entry = false;
+  boolean exit = false;
+}
+
+/*
+ * Data to record in a trace directive
+ */
+class TraceRecord
+{
+  boolean recordOnly = false;
+  0..* -- 0..* Attribute;
+  0..* -- 0..* StateMachine;
+  String[] record;
 }
 
 /*
@@ -44,144 +186,6 @@ class ConditionRhs
 {
   rhs = null;
   comparisonOperator = null;
-}
-
-/*
- * Data to record in a trace directive
- */
-class TraceRecord
-{
-  boolean recordOnly = false;
-  0..* -- 0..* Attribute;
-  0..* -- 0..* StateMachine;
-  String[] record;
-}
-
-class MethodTraceItem
-{
-  name = null;
-  boolean entry = false;
-  boolean exit = false;
-}
-
-/*
- * A statement found in Umple that directs code to be generated
- * to trace a model element and generate output using some tracing tool
- */
-class TraceDirective
-{
-  Integer id = 0;
-  String tracerType = {getTracer().getName()}
-  1 -> 1 Tracer ;
-  
-  1 -- 0..* AttributeTraceItem;
-  1 -- 0..* StateMachineTraceItem;
-  0..* -- 0..* MethodTraceItem;
-  1 -- 0..* AssociationTraceItem;
-  1 -> 0..* TraceCondition condition;
-  1 -- 0..1 TraceRecord;
-}
-interface TraceItem
-{
-  depend java.util.*;
-  public String getTracerType();
-  public Boolean getIsPre();
-  public Boolean getIsPost();
-  public String trace(CodeTranslator gen, Object o, String template, UmpleClass uClass, String... args);//old
-  public String getPeriodClause();
-  public String getExtremities(CodeTranslator gen, String name);
-}
-/*
- * An element of a trace directive that indicates to trace one or more attributes
- */
-class AttributeTraceItem
-{
-  isA TraceItem;
-  Constraint constraint=null;
-  tracerType = {getTraceDirective().getTracerType()}
-  
-  boolean traceSet = false;
-  boolean traceGet = false;
-  boolean traceConstructor = false;
-  
-   forClause = null;
-   periodClause = null;
-   duringClause = null;
-   executeClause = null;
-   0..* -- 0..* UmpleVariable;
-  
-  Position position = null;
-  Boolean conditionallyWhere = true; 
-  conditionType = "where";
-}
-
-/*
- * An element of a trace directive that indicates to trace one or more state machines
- * or transitions
- */
-class StateMachineTraceItem
-{
-  isA TraceItem;
-  
-  Constraint constraint=null;
-  tracerType = {getTraceDirective().getTracerType()}
-  
-  boolean isIn = false;
-  boolean isOut = false;
-  
-  boolean entry = false;
-  boolean exit = false;
-  
-  int level = -1;
-  
-  boolean traceStateMachineFlag = false;
-  0..* -- 0..1 StateMachine;
-  0..* -- 0..1 State;
-  0..* -- 0..1 Transition;
-  
-  Position position = null;
-  periodClause = null;
-  
-  Boolean conditionallyWhere = true;
-  conditionType = "where";
-}
-/*
- * An element of a trace directive that indicates to trace one or more associations
- */
-class AssociationTraceItem
-{
-  isA TraceItem;
-  Constraint constraint=null;
-  tracerType = {getTraceDirective().getTracerType()}
-  
-  0..* -- 0..* AssociationVariable;
-  0..* -- 0..* Association;
-  
-  //default case tracing Cardinality
-  boolean traceCardinality = true;
-  boolean traceAdd = false;
-  boolean traceRemove = false;
-  
-  Position position = null;
-  periodClause = null;
-  Boolean conditionallyWhere = false; 
-  conditionType = "where";
-}
-/*
- * To be done. A group of trace directives that can be switched on or off by other
- * trace directives
- */
-class TraceCase
-{
-  name = null;
-  boolean activation = false;
-  0..* -- 0..* TraceDirective;
-}
-
-class UmpleClass
-{
-  0..1 -- * TraceDirective;
-  0..1 -- * TraceCase;
 }
 
 use Trace_Code.ump;

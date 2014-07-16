@@ -32,5 +32,4 @@ public class TracerTraceCaseTest extends TracerTemplateTest
         testClassName,
         true);
   }
-
 }
