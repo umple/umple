@@ -16,6 +16,26 @@ class Umplificator {
 	depend cruise.umplificator.rules.RuleService;
 	depend org.apache.log4j.Logger;
 	lazy UmpleModel outputModel;
+	lazy RefactoringLevel currentLevel;
+	lazy String outputFolder; 
+	
+	public enum RefactoringLevel
+	{
+    	CLASS(0),
+    	ATTRIBUTES(1),
+    	ASSOCIATIONS(2);
+ 
+	    /**
+	     * Value for this RefactoringLevel
+	     */
+    	public final int Value;
+ 
+	    private RefactoringLevel(int value)
+	    {
+	        Value = value;
+	    }
+	}
 }
+
 
 
