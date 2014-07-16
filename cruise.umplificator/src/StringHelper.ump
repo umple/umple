@@ -1,0 +1,38 @@
+namespace cruise.umplificator;
+
+class StringHelper {
+
+ depend java.util.regex.Pattern;
+ depend java.util.regex.Matcher;
+
+ // Use to get the class body from a compilation unit.
+ // Needed when the level of refactoring is CLASS.
+ // Another option is to parse the declarations in the class without converting them into Umple constructs, however this is not efficient. 
+ 
+   public static String getClassDeclaration(String source){
+	String regExp = "(public|protected|private)?\\sclass\\s([a-z][a-z_0-9]*)*";
+	Pattern pattern = Pattern.compile(regExp, Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+    Matcher matcher = pattern.matcher(source);
+    if (matcher.find())
+    {
+      return matcher.group();
+    }
+    return "";
+  }
+   
+   
+   public static String getClassBody(String source){ 
+	   int classDeclarationIndex = source.indexOf(getClassDeclaration(source));
+	   // Eliminate comments outside class	   
+	   String content = source.substring(classDeclarationIndex, source.length());
+	   String classBody = content.substring(content.indexOf("{")+1, content.lastIndexOf("}"));
+	   return classBody;
+   }
+ 
+    public static void main(String[] args)
+    {
+	 System.out.println(getClassDeclaration("//comments  class TestF {a; b; public void A(){int b=4; }}"));
+	 System.out.println( getClassBody("//comments  class TestF {a; b; public void A(){int b=4; }}"));
+    }
+
+}
