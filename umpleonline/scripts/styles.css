@@ -123,6 +123,10 @@ div.jQueryPaletteButton {
   padding:0; cursor:hand; 
 }
 
+#buttonStructureLink {
+  padding-top: 5px; padding-bottom: 5px;
+}
+
 .checkbox { cursor:pointer; margin-left: 10px; margin-top: 1px; padding:2px; vertical-align:middle; }
 .radio { margin-top: -2px; margin-bottom: 0px; margin-left: 10px; vertical-align: middle; cursor: pointer; }
 a.button:link { color:black; text-decoration:none; }

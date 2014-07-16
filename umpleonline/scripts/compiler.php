@@ -25,7 +25,15 @@ require_once("compiler_config.php");
 
 if (isset($_REQUEST["save"]))
 {
-  $input = $_REQUEST["umpleCode"];
+  if(isset($_REQUEST["svgContent"]))
+  {
+    $input = $_REQUEST["svgContent"];
+  }
+  else
+  {
+    $input = $_REQUEST["umpleCode"];
+  }
+  
   $filename = saveFile($input);
   echo $filename;
 }

@@ -742,10 +742,10 @@ Page.showGeneratedCode = function(code,language)
   
   var errorMarkup = Page.getErrorMarkup(code, language);
   var generatedMarkup = Page.getGeneratedMarkup(code, language);
-  
+
   //Set any error or warning messages
   jQuery("#messageArea").html(errorMarkup);
-  
+
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
     || language == "ruby" || language == "xml" || language == "sql")
@@ -757,7 +757,16 @@ Page.showGeneratedCode = function(code,language)
   }
   else if(language == "structureDiagram")
   {
+    //render the structure diagram
     eval(generatedMarkup);
+
+    //Add a download link to the top of the structure diagram
+    //This onclick ensures the href is not followed
+    var downloadLink = '<div id="diagramLinkContainer"></div>';
+    errorMarkup = downloadLink + errorMarkup;
+
+    jQuery("#messageArea").html(errorMarkup);
+    Page.toggleStructureDiagramLink(false);
   }
   else
   {
@@ -865,6 +874,27 @@ Page.getGeneratedMarkup = function(code, language)
     output = code.split("<p>URL_SPLIT")[1];
   }
   return output;
+}
+
+Page.toggleStructureDiagramLink = function(isGenerated)
+{
+  linkContainer = jQuery("#diagramLinkContainer");
+
+  if(isGenerated)
+  {
+    var filename = Page.getFilename().slice(0, -9) + "structureDiagram.svg";
+    linkContainer.html(format("<a href='{0}' target='_blank' id='structureLink'>Download the SVG for the following</a>", filename))
+    jQuery("#structureLink").on('click', function(event) 
+    {
+      Page.toggleStructureDiagramLink(false);
+    });
+  }
+  else
+  {
+    linkContainer.html('<div id="buttonStructureLink" value="Generate SVG"></div>');
+    Page.initJQueryButton("buttonStructureLink");
+    Page.initAction("buttonStructureLink");
+  }
 }
 
 Page.setFilename = function(filename)
