@@ -7,6 +7,8 @@ public boolean umplify(List<File> srcFiles) {
     for (File aFile : srcFiles){
     	 umplifyElement(aFile);
     }
+    // Generates a MasterFile if we have processed more than one file
+    FileHelper.writeMasterFile(filesUmplified, outputFolder);
     return true;
 }
 
@@ -50,6 +52,7 @@ public boolean umplifyUmple(File file)
 			// generate Umple Code
 			outputModel = new UmpleModel(umpleFile);
 			outputModel.addUmpleClass(uClass);
+			filesUmplified.add(umpleFile.getSimpleFileName());
 			// generate Umple Code
 			FileHelper.writeFile(outputModel, outputFolder);
 		} catch (IOException e) {
@@ -78,14 +81,17 @@ public boolean umplifyJava(File file)
 			ruleService.startRuleEngine(currentLevel);
 			// Insert Elements in Working Memory
 			String compilationUnitName= javaParser.getJavaVisitor().getName();
+			String classBody = javaParser.getJavaVisitor().getClassBody();
 			UmpleClass uClass = new UmpleClass(compilationUnitName);
 			ruleRunner.insertUmpleClass(uClass);
 			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
 			ruleRunner.fireAllRules();
+			uClass.appendExtraCode(classBody);
 			// generate Umple Code
 			UmpleFile umpleFile = new UmpleFile(file);
 			outputModel = new UmpleModel(umpleFile);
 			outputModel.addUmpleClass(uClass);
+		    filesUmplified.add(umpleFile.getSimpleFileName());
 			// generate Umple Code
 			FileHelper.writeFile(outputModel, outputFolder);
 		} catch (IOException e) {

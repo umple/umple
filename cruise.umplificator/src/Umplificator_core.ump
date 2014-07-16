@@ -18,6 +18,7 @@ class Umplificator {
 	lazy UmpleModel outputModel;
 	lazy RefactoringLevel currentLevel;
 	lazy String outputFolder; 
+	lazy String [] filesUmplified;
 	
 	public enum RefactoringLevel
 	{
