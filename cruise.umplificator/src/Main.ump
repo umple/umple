@@ -4,6 +4,7 @@ class UmplificatorMain {
 
 	depend java.util.*;
 	depend cruise.umplificator.core.*;
+	depend cruise.umplificator.core.Umplificator.RefactoringLevel;
 	depend java.io.File;
 	depend java.util.Arrays;
 	depend java.io.IOException;
@@ -11,7 +12,7 @@ class UmplificatorMain {
 	depend org.apache.log4j.*;
 	// jOPT Simple dependency
 	depend joptsimple.*;
-	
+
 	static Logger logger = Logger.getLogger(UmplificatorMain.class);
   
 	public static void main(String[] args) {
@@ -35,6 +36,8 @@ class UmplificatorMain {
 		 List<File> inputFiles = FileHelper.getListOfFilesFromPath(nonOpt.get(0), new ArrayList<File>());
 		 if (inputFiles.size() >= 0 ){
 			Umplificator umplificator = new Umplificator();
+			int level = (int)optset.valueOf("level");
+			umplificator.setCurrentLevel(RefactoringLevel.values()[level]);
 			umplificator.setOutputFolder((String)optset.valueOf("path"));
 			String console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
 			System.out.println(console);
@@ -45,7 +48,8 @@ class UmplificatorMain {
     	OptionParser optparser = new OptionParser();
 	    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
 	    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
-	    optparser.acceptsAll(Arrays.asList("path"), "The output folder path");
+	    optparser.accepts("path", "The output folder path");
+        optparser.accepts( "level","The level of Refactoring").withRequiredArg().ofType( Integer.class );
    	    return optparser;
     }
     
@@ -91,7 +95,7 @@ class UmplificatorMain {
 	
 
   private static  void printUsage(OptionParser optparser){
-    System.out.println("Usage:  java -jar umplificator.jar <file/folder>\nExample: java -jar umplificator.jar Student.java outputFolder");
+    System.out.println("Usage:  java -jar umplificator.jar <file/folder> --path=output_path --level=0\nExample: java -jar umplificator.jar Student.java outputFolder");
       try
       {
         optparser.printHelpOn(System.out);

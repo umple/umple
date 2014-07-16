@@ -7,15 +7,20 @@ static Logger logger = Logger.getLogger(RuleService.class);
 depend java.io.*;
 depend org.kie.api.runtime.KieSession;
 depend org.apache.log4j.Logger;
+depend cruise.umplificator.core.Umplificator.RefactoringLevel;
 
 RuleRunner runner;
   
-public KieSession startRuleEngine(){
+public KieSession startRuleEngine(RefactoringLevel level){
 	logger.debug("RuleService.startRuleEngine");
     try {
-		runner.addRuleFile("cruise/umplificator/rules", "Rules_Fields.drl");
-		runner.addRuleFile("cruise/umplificator/rules", "Rules_ClassLevel.drl");
-		runner.addRuleFile("cruise/umplificator/rules", "Rules_Associations.drl");
+    	// Depending on the desired level of refactoring, we activate the rule files
+    	runner.addRuleFile("cruise/umplificator/rules", "Rules_ClassLevel.drl");
+		if (level== RefactoringLevel.ATTRIBUTES) {runner.addRuleFile("cruise/umplificator/rules", "Rules_Fields.drl"); } 
+		if (level==RefactoringLevel.ASSOCIATIONS) {
+			runner.addRuleFile("cruise/umplificator/rules", "Rules_Fields.drl");
+			runner.addRuleFile("cruise/umplificator/rules", "Rules_Associations.drl");
+		}
 		return runner.buildKnowledgeSession();
 	} catch (FileNotFoundException e) {
 		logger.error("RuleService.startRuleEngine - FileNotFoundException");

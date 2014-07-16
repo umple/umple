@@ -1,7 +1,5 @@
 class Umplificator {
 
-lazy String outputFolder; 
-
 static Logger logger = Logger.getLogger(Umplificator.class);
 
 public boolean umplify(List<File> srcFiles) {
@@ -44,7 +42,7 @@ public boolean umplifyUmple(File file)
 		    // initialize drools engine
 		    RuleRunner ruleRunner = new RuleRunner();
 		    RuleService ruleService = new RuleService (ruleRunner);
-			ruleService.startRuleEngine();
+			ruleService.startRuleEngine(currentLevel);
 			//UmpleClass uClass = new UmpleClass(compilationUnitName);
 			ruleRunner.insertUmpleClass(uClass);
 			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
@@ -77,7 +75,7 @@ public boolean umplifyJava(File file)
 			// initialize drools engine
 		    RuleRunner ruleRunner = new RuleRunner();
 		    RuleService ruleService = new RuleService (ruleRunner);
-			ruleService.startRuleEngine();
+			ruleService.startRuleEngine(currentLevel);
 			// Insert Elements in Working Memory
 			String compilationUnitName= javaParser.getJavaVisitor().getName();
 			UmpleClass uClass = new UmpleClass(compilationUnitName);

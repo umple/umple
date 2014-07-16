@@ -13,6 +13,7 @@ import org.kie.api.runtime.KieSession;
 
 import cruise.umple.compiler.*;
 import cruise.umple.util.SampleFileWriter;
+import cruise.umplificator.core.Umplificator.RefactoringLevel;
 import cruise.umplificator.parser.JavaParser;
 import cruise.umplificator.rules.RuleRunner;
 import cruise.umplificator.rules.RuleService;
@@ -39,7 +40,7 @@ public class RulesTest {
 		javaParser.parseUnit(code);
 		visitor = javaParser.getJavaVisitor();
 		uClass = new UmpleClass("A");
-	    kieSession = ruleService.startRuleEngine();
+	    kieSession = ruleService.startRuleEngine(RefactoringLevel.CLASS);
 		kieSession.insert( uClass);
 	}
 
