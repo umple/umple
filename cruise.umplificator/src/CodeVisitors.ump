@@ -5,7 +5,8 @@ class JavaClassVisitor {
 static Logger logger = Logger.getLogger(JavaClassVisitor.class);
 
  isA ASTVisitor;
-
+ 
+ depend cruise.umplificator.StringHelper;
  depend org.eclipse.jdt.core.dom.ASTVisitor;
  depend org.eclipse.jdt.core.dom.TypeDeclaration;
  depend org.eclipse.jdt.core.dom.ImportDeclaration;
@@ -20,6 +21,7 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
  FieldDeclaration [] fieldDeclarations;
  lazy PackageDeclaration packageDeclaration;
  lazy String name;
+ lazy String classBody;
 
   @Override
   public boolean visit(ImportDeclaration node) {
@@ -44,9 +46,12 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
   
   @Override
   public boolean visit(TypeDeclaration node) {
+    // Main node to visit
     logger.debug("Visiting TypeDeclarations");
     name = node.getName().getFullyQualifiedName();
-    return super.visit(node);
+    String typeDeclarationCode = node.toString();
+    classBody = StringHelper.getClassBody(typeDeclarationCode);
+    return true; 
   }
   
   @Override

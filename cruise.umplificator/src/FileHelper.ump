@@ -2,11 +2,12 @@ namespace cruise.umplificator;
 
 class FileHelper {
 
-depend java.io.File;
+depend java.io.*;
 depend java.util.Arrays;
 depend java.util.List;
 depend cruise.umple.compiler.UmpleModel;
 depend cruise.umplificator.generator.UmpleToUmpleGenerator;
+depend cruise.umple.compiler.exceptions.UmpleCompilerException;
 // Logger log4j
 depend org.apache.log4j.Logger;
 
@@ -60,13 +61,40 @@ public static void printFilesToUmplify(List<File> srcFiles){
 }
 
   public static void writeFile(UmpleModel model, String outputFolder){
-        UmpleToUmpleGenerator gen = new UmpleToUmpleGenerator();
-        gen.setFileExtension(EXTENSIONS[1]);
-        gen.setModel(model);
-        gen.setOutputFolder(outputFolder);
-        gen.generate();
-        logger.debug("--Output--");
-        logger.debug(model.getCode());
+	    UmpleToUmpleGenerator gen = new UmpleToUmpleGenerator();
+	    gen.setFileExtension(EXTENSIONS[1]);
+	    gen.setModel(model);
+	    gen.setOutputFolder(outputFolder);
+	    gen.generate();
+	    logger.debug("--Output--");
+	    logger.debug(model.getCode());
   }
+  
+   public static void writeMasterFile(List<String> filenames, String outputFolder){
+	   StringBuffer sb =  new StringBuffer();
+	   for (String s: filenames)
+	   {
+	   	   if (s != null){
+		    sb.append("use " + s + ".ump;" );
+		    sb.append(System.getProperty("line.separator"));
+	   	   }
+	   }
+	   try
+	   {
+		   String path = outputFolder + File.separator;
+		   File file = new File(path);
+		   file.mkdirs();
+		   String masterFileName =  path + "Master.ump" ;
+		   BufferedWriter bw = new BufferedWriter(new FileWriter(masterFileName));
+		   bw.write(sb.toString());
+		   bw.flush();
+		   bw.close();
+	   }
+	   catch (Exception e)
+	   {
+		   throw new UmpleCompilerException("There was a problem with generating MasterFile." + e, e);
+	   }
+   }
+  
   
 }

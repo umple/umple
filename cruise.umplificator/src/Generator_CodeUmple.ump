@@ -45,12 +45,15 @@ class UmpleToUmpleGenerator
       {
         code.append(StringFormatter.format("  isA {0};\n", uClass.getExtendsClass().getName()));
       }
-      
+
       for (Depend aDepend : uClass.getDepends())
       {
     	 code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
       }
-
+      if (uClass.getExtraCode() != null)
+      {
+        code.append(uClass.getExtraCode());
+      }
       for (Attribute av : uClass.getAttributes())
       {
         String typeName = av.getType() == null ? "String" : av.getType();
