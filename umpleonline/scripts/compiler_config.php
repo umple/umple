@@ -152,7 +152,8 @@ function ensureFullPath($relativeFilename)
 {
   $file_suffix = explode("/umpleonline/", realpath(""));
   $prefixes = explode("/", $file_suffix[1]);
-  $suffix = explode("../", $relativeFilename)[1];
+  $suffix_array = explode("../", $relativeFilename);
+  $suffix = $suffix_array[1];
 
   $filename = "../";
 
