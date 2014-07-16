@@ -876,15 +876,12 @@ Page.getGeneratedMarkup = function(code, language)
   return output;
 }
 
-Page.toggleStructureDiagramLink = function(isGenerated)
+Page.toggleStructureDiagramLink = function(isGenerated, filename)
 {
   linkContainer = jQuery("#diagramLinkContainer");
 
   if(isGenerated)
   {
-    var filename = Page.getFilename().slice(0, -9) + "structureDiagram.svg";
-    filename = Page.resolveURL(filename);
-
     linkContainer.html(format("<a href='{0}' target='_blank' id='structureLink'>Download the SVG for the following</a>", filename))
     jQuery("#structureLink").on('click', function(event) 
     {
@@ -952,13 +949,4 @@ jQuery.fn.selectRange = function(start, end) {
        range.select();
     }
   });
-}
-
-Page.resolveURL = function(url)
-{
-  //Taken from http://stackoverflow.com/questions/7690784/how-to-get-absolute-path-from-a-relative-url-with-no-outside-info
-  var a = document.createElement('a');
-  a.href=url; // set string url
-  url = a.href; // get qualified url
-  return url;
 }
