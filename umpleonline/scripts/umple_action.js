@@ -160,15 +160,19 @@ Action.clicked = function(event)
   }
   else if (action == "ToggleAttributes")
   {
-       Action.toggleAttributes();
+    Action.toggleAttributes();
   }
   else if (action == "ToggleMethods")
   {
-       Action.toggleMethods();
+    Action.toggleMethods();
   }
   else if (action == "ToggleActions")
   {
-       Action.toggleActions();
+    Action.toggleActions();
+  }
+  else if(action == "StructureLink")
+  {
+    Action.generateStructureDiagramFile();
   }
 }
 
@@ -1719,6 +1723,26 @@ Action.enableManualSync = function(enable)
   }
 }
 
+Action.generateStructureDiagramFile = function()
+{
+  var filename = Page.getFilename().slice(0, -9) + "structureDiagram.svg";
+
+  var svgContents =  jQuery("#innerGeneratedCodeRow").html().slice(4, -1);
+
+  svgContents = format('<svg xmlns="http://www.w3.org/2000/svg" {0}>', svgContents);
+
+  jQuery("#buttonStructureLink").showLoading();
+
+  Ajax.sendRequest("scripts/compiler.php", Action.generateStructureDiagramFileCallback, 
+    format("save=1&filename={0}&svgContent={1}", filename, svgContents));
+}
+
+Action.generateStructureDiagramFileCallback = function(responseText)
+{
+  jQuery("#buttonStructureLink").hideLoading();
+  Page.toggleStructureDiagramLink(true);
+}
+
 Action.ajax = function(callback,post,errors)
 {
   var modelAndPositioning = Page.getUmpleCode();
@@ -1726,7 +1750,7 @@ Action.ajax = function(callback,post,errors)
   var filename = Page.getFilename();
   // var errors = typeof(errors) != 'undefined' ? errors : "false";
   var errors = "true";
-    Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
+  Ajax.sendRequest("scripts/compiler.php",callback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
 }
 
 //Mac Keyboard Shortcut
@@ -1874,7 +1898,7 @@ Mousetrap.bind(['a'], function(e){
     {
       document.getElementById('buttonAddAssociation').click();
     }
-  }
+  }Action.generateCompositeStructureLink()
 });
 
 Mousetrap.bind(['c'], function(e){
