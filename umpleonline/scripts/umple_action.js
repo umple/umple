@@ -1737,7 +1737,7 @@ Action.generateStructureDiagramFile = function()
     format("save=1&filename={0}&svgContent={1}", filename, svgContents));
 }
 
-Action.generateStructureDiagramFileCallback = function(responseText)
+Action.generateStructureDiagramFileCallback = function(response)
 {
   jQuery("#buttonStructureLink").hideLoading();
   Page.toggleStructureDiagramLink(true);
