@@ -1188,6 +1188,8 @@ class UmpleInternalParser
     Set<String> unguardedEvents = new HashSet<String>();
     List<Token> subStates = new ArrayList<Token>();
     boolean priorAutoTransitionExists = false;
+    List<Token> transitions = new ArrayList<Token>();
+    
     
     if(superStateEvents == null){
       superStateEvents = new HashSet<String>();
@@ -1198,8 +1200,22 @@ class UmpleInternalParser
     }
     
     for(Token subToken : stateToken.getSubTokens()){
-      if(subToken.is("transition")){
-        //If there is ever a transition past an auto transition, raise an error        
+      if(subToken.is("transition"))
+      {
+        transitions.add(subToken);  
+      }
+      else if(subToken.is("autoTransition")){
+        priorAutoTransitionExists = true;
+        superStateEvents.add(null);
+      }
+      else if(subToken.is("state")){
+        subStates.add(subToken);
+      }
+    }
+    
+    for(Token subToken : transitions)
+    {
+    	//If there is ever a transition past an auto transition, raise an error        
         if(priorAutoTransitionExists){
           setFailedPosition(subToken.getPosition(), 54, subToken.getValue("event"));
         }
@@ -1220,14 +1236,6 @@ class UmpleInternalParser
           //System.out.println("added: " + subToken.getValue("event"));
           unguardedEvents.add(subToken.getValue("event"));
         }
-      }
-      else if(subToken.is("autoTransition")){
-        priorAutoTransitionExists = true;
-        superStateEvents.add(null);
-      }
-      else if(subToken.is("state")){
-        subStates.add(subToken);
-      }
     }
     
     unguardedEvents.addAll(superStateEvents);
