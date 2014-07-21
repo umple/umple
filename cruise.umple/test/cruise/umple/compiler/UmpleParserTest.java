@@ -1769,11 +1769,6 @@ public class UmpleParserTest
     // fill me in with checks
     // make sure that "isWellDefined" is false
   } 
-  /*@Test
-  public void whitespaceCharacter()
-  {
-	  assertSimpleParse("048_codeWithWhitespaceCharacters.ump");	  
-  }*/
   
   @Test
   public void positionUnknownAssociation()
@@ -2072,7 +2067,7 @@ public class UmpleParserTest
     assertFailedParse("025_multipleAttributesWithSameName.ump", new Position("025_multipleAttributesWithSameName.ump",3,2,16),22);
   
   } 
-  @Test
+  @Test @Ignore
   public void whitespaceCharacter()
   {
 	  assertSimpleParse("048_codeWithWhitespaceCharacters.ump");	  

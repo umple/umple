@@ -553,7 +553,9 @@ class GrammarAnalyzer {
     set("stack",new Stack<ChoiceRule>());//new RuleStack());
     ChoiceRule root = new ChoiceRule("root");
     stacks.get("stack").push(root);
-    Terminal.space(" \\t\\n\\p{Z}");
+    // DEBUG - added extra space character issue 579
+    // Terminal.space(" \\t\\n\\p{Z}"); 
+    Terminal.space(" \\t\\n");
     ParsingCouple.ignoreLevel = -1;
   }
   /*
