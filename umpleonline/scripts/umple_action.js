@@ -1898,7 +1898,7 @@ Mousetrap.bind(['a'], function(e){
     {
       document.getElementById('buttonAddAssociation').click();
     }
-  }Action.generateCompositeStructureLink()
+  }
 });
 
 Mousetrap.bind(['c'], function(e){
