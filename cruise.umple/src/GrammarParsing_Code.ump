@@ -553,7 +553,7 @@ class GrammarAnalyzer {
     set("stack",new Stack<ChoiceRule>());//new RuleStack());
     ChoiceRule root = new ChoiceRule("root");
     stacks.get("stack").push(root);
-    Terminal.space(" \\t\\n");
+    Terminal.space(" \\t\\n\\p{Z}");
     ParsingCouple.ignoreLevel = -1;
   }
   /*
