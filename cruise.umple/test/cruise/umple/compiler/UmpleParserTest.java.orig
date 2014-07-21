@@ -14,7 +14,9 @@ import java.util.*;
 
 import org.junit.*;
 
+import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.*;
+import java.io.*;
 
 public class UmpleParserTest
 {
@@ -38,6 +40,38 @@ public class UmpleParserTest
     Assert.assertEquals(0,model.numberOfUmpleClasses());
   }
   
+  //Issue 559b
+  @Test
+  public void multLanguageImplementation()
+  {
+	  assertNoWarningsParse("015_multLanguageImplementation.ump");
+	  assertNoWarningsParse("015_multLanguageImplementation2.ump");
+	  assertHasWarningsParse("015_multLanguageImplementation3.ump", 49);
+	  assertHasWarningsParse("015_multLanguageImplementation4.ump", 49);
+	  assertHasWarningsParse("015_multLanguageImplementation5.ump", 49);
+	  assertHasWarningsParse("015_multLanguageImplementation6.ump", 49);
+	  assertNoWarningsParse("015_multLanguageImplementation7.ump");
+
+  }
+  
+  //Issue 595
+  @Test
+  public void unknownInterface()
+  {
+	  assertHasWarningsParse("014_unknownInterface.ump", 39);
+	  assertHasWarningsParse("014_unknownInterface2.ump", 39);
+	  
+  }
+  
+  //Issue 596
+  @Test
+  public void interfaceBodyWithComments()
+  {
+	  assertHasWarningsParse("014_interfaceTest.ump", 39);
+	  assertHasWarningsParse("014_interfaceTest2.ump", 39);
+	  
+  }
+
   @Test
   public void emptyComment()
   {
@@ -209,6 +243,18 @@ public class UmpleParserTest
   }
   
   @Test
+  public void internalAttributeGetterMethod()
+  {
+    assertSimpleParse("008_internalAttributeNotAllowedGetterMethod.ump");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
+    Assert.assertEquals(1, model.getUmpleClass(0).numberOfAttributes());
+    Assert.assertEquals("internal", model.getUmpleClass(0).getAttribute(0).getModifier());
+    Assert.assertEquals(1, model.getUmpleClass(0).numberOfMethods());
+    Assert.assertEquals("getTest",model.getUmpleClass(0).getMethod(0).getName());
+    Assert.assertEquals("MyOtherObject", model.getUmpleClass(0).getMethod(0).getType());
+  }
+
+  @Test
   public void languageDefault()
   {
     assertParse("001_empty.ump");
@@ -232,11 +278,47 @@ public class UmpleParserTest
   }
   
   @Test
+  public void abstractMethod()
+  {
+    assertSimpleParse("422_abstractMethod.ump");
+      
+    Assert.assertEquals(1, model.getUmpleClass("Foome").numberOfMethods());
+    Assert.assertEquals("barme", model.getUmpleClass("Foome").getMethod(0).getName());
+    Assert.assertEquals(true, model.getUmpleClass("Foome").getMethod(0).getIsAbstract());
+  }
+
+  @Test
+  public void abstractInheritanceClass()
+  {
+    assertSimpleParse("422_abstractInheritanceClass.ump");
+
+    Assert.assertEquals(true,model.getUmpleClass("A").getIsAbstract());
+    Assert.assertEquals(true,model.getUmpleClass("B").getIsAbstract());
+    Assert.assertEquals(true,model.getUmpleClass("C").getIsAbstract());
+    Assert.assertEquals(false,model.getUmpleClass("D").getIsAbstract());
+    Assert.assertEquals(false,model.getUmpleClass("E").getIsAbstract());
+  }
+
+  @Test
   public void immutableClass()
   {
     assertParse("022_immutableClass.ump");
     Assert.assertEquals(true,model.getUmpleClass("Student").isImmutable());
     Assert.assertEquals(false,model.getUmpleClass("Mentor").isImmutable());
+  }
+  
+  //Issue 559
+  @Test
+  public void mixin_redefiningAMethod()
+  { 
+    assertHasWarningsParse("015_mixin_sameMethod.ump", 49);
+    assertHasWarningsParse("015_mixin_sameMethod2.ump", 49);
+    assertHasWarningsParse("015_mixin_sameMethod3.ump", 49);
+    assertSimpleParse("015_mixin_sameMethod4.ump"); 
+    assertHasWarningsParse("015_mixin_sameMethod5.ump", 49);
+    assertHasWarningsParse("015_mixin_sameMethod6.ump", 49);
+    
+    
   }
   
   @Test
@@ -338,7 +420,7 @@ public class UmpleParserTest
   @Test
   public void classCanNotBeChangedToImmutableWithInvalidAssociations()
   {
-    assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22), 13);
+	  assertFailedParse("022_changeClassToImmutable.ump", new Position("022_changeClassToImmutable.ump",3,1,22), 13);
   }
   
   @Test
@@ -385,7 +467,7 @@ public class UmpleParserTest
   @Test
   public void otherLanguage()
   {
-    assertFailedParse("001_otherLanguage.ump", new Position("001_otherLanguage.ump", 1,9,9));
+    assertFailedParse("001_otherLanguage.ump", new Position("001_otherLanguage.ump", 1,0,0));
   }
 
   @Test
@@ -443,7 +525,7 @@ public class UmpleParserTest
   @Test
   public void invalidNamespace_noName()
   {
-    assertFailedParse("002_invalidNamespace_noName.ump", new Position("002_invalidNamespace_noName.ump",1,10,10));
+    assertFailedParse("002_invalidNamespace_noName.ump", new Position("002_invalidNamespace_noName.ump",1,0,0));
   }
 
   @Test
@@ -464,9 +546,10 @@ public class UmpleParserTest
         System.getProperty("line.separator") + "  moreblah",aClass.getExtraCode());
   }
   
-  @Test
+  @Test @Ignore
   public void constructorExtraCode()
   {
+	//This test no longer makes sense, because the method is parsed as an umple method
     assertParse("003_constructorExtraCode.ump");  
     UmpleClass aClass = model.getUmpleClass("Student");
      Assert.assertEquals(" public Student(String x)  {"+ 
@@ -570,6 +653,96 @@ public class UmpleParserTest
     assertFailedParse("042_invalidClassNamePartQuote.ump", 100);//name contains quotation marks
   }
   
+  
+  @Test
+  public void validInterfaceName()
+  {
+    //Test to ensure that the parser will compile Interfaces with valid names.
+
+    assertSimpleParse("043_validInterfaceNameLowerCase.ump");//all lower case name
+    assertSimpleParse("043_validInterfaceNameUpperCase.ump");//all upper case name
+    assertSimpleParse("043_validInterfaceNameMixedCase.ump");//mixed case name
+    assertSimpleParse("043_validInterfaceNameNumber.ump");//name with numbers
+    assertSimpleParse("043_validInterfaceNameUnderscore.ump");//name with underscore
+    assertSimpleParse("043_validInterfaceNameUnderNum.ump");//name with underscore and numbers
+  }
+  
+  @Test
+  public void invalidInterfaceNameStart()
+  {
+    //Test to ensure that the parser will not compile Interfaces with an invalid name.
+    //Specifically these tests target invalid starting characters.
+  
+    assertFailedParse("043_invalidInterfaceNameStartNum.ump", 110);//name starts with a number
+    assertFailedParse("043_invalidInterfaceNameStartUnder.ump", 110);//name starts with an underscore
+    assertFailedParse("043_invalidInterfaceNameStartExclaim.ump", 110);//name starts with an exclamation mark
+    assertFailedParse("043_invalidInterfaceNameStartAmper.ump", 110);//name starts with an ampersand
+    assertFailedParse("043_invalidInterfaceNameStartDollar.ump", 110);//name starts with a dollar sign
+    assertFailedParse("043_invalidInterfaceNameStartHash.ump", 110);//name starts with a hash sign
+  }
+  
+  @Test
+  public void invalidInterfaceNamePart()
+  {
+    //Test to ensure that the parser will not compile Interfaces with an invalid name.
+    //Specifically these tests target invalid characters in part of the name.
+  
+    assertFailedParse("043_invalidInterfaceNamePartQuest.ump", 110);//name contains a question mark
+    assertFailedParse("043_invalidInterfaceNamePartExclaim.ump", 110);//name contains an exclamation mark
+    assertFailedParse("043_invalidInterfaceNamePartAmper.ump", 110);//name contains an ampersand
+    assertFailedParse("043_invalidInterfaceNamePartDollar.ump", 110);//name contains a dollar sign
+    assertFailedParse("043_invalidInterfaceNamePartDot.ump", 110);//name contains a period
+    assertFailedParse("043_invalidInterfaceNamePartQuote.ump", 110);//name contains quotation marks
+  }
+  
+  @Test
+  public void warningClassNameCapitalLetter()
+  { // Test to make sure a warning is generated when a class name does not start with a capital letter
+    assertHasWarningsParse("043_warningClassNameNotCapital.ump", 101); 
+  }
+  
+  @Test
+  public void warningInterfaceNameCapitalLetter()
+  { // Test to make sure a warning is generated when an interface name does not start with a capital letter
+    assertHasWarningsParse("043_warningInterfaceNameNotCapital.ump", 111);
+  }
+
+  @Test
+  public void duplicateConstantNameInterface()
+  { // Test to make sure that a duplicate constant name in an interface throws a warning
+    assertFailedParse("044_duplicateConstantNameInInterface.ump", 112);
+  }
+
+  @Test
+  public void warningConstantDeprecated()
+  { // Ensures that a warning is thrown when deprecated keyword constant is used in an interface
+    assertHasWarningsParse("044_constantDeprecatedInterface.ump", 901);
+  }
+
+  @Test
+  public void warningUninitializedConstInterface()
+  { // Ensures that a warning is thrown when a constant isn't initialized in an interface
+    assertHasWarningsParse("044_uninitializedConstInterface.ump", 35);
+  }
+
+  @Test
+  public void warningUninitializedConstClass()
+  { // Ensures that a warning is thrown when deprecated keyword constant isn't initialized in a class
+    assertHasWarningsParse("044_uninitializedConstClass.ump", 35);
+  }
+
+  @Test
+  public void warningUninitializedConstObjectInterface()
+  { // Ensures an error is thrown when a constant that isn't of a default Umple data type isn't initialized in an interface
+    assertFailedParse("044_uninitializedConstObjectInterface.ump", 37);
+  }
+
+  @Test
+  public void warningUninitializedConstObjectClass()
+  { // Ensures an error is thrown when a constant that isn't of a default Umple data type isn't initialized in a class
+    assertFailedParse("044_uninitializedConstObjectClass.ump", 37);
+  }
+  
   @Test
   public void referencedPackages()
   {
@@ -665,17 +838,35 @@ public class UmpleParserTest
     // Root?
     Assert.assertEquals(false,aClass.isRoot());
   }
+
+	@Test
+  public void multiple_Class_Inheritance()
+  {
+		assertFailedParse("007_isA_MultipleInher.ump", 34);
+  }
+
+	@Test
+  public void singleIsA_MultipleClass_Inheritance()
+  {
+		assertFailedParse("007_single_isA.ump", 34);
+  }
   
+	@Test
+  public void multipleIsA_MultipleClass_Inheritance()
+  {
+		assertFailedParse("007_isA_MultipleInheritance_MultipleIsA.ump", 34);
+  }
+
   @Test
   public void isA_SimpleCycle()
   {
-    assertFailedParse("007_isA_SimpleCycle.ump", new Position("007_isA_SimpleCycle.ump",6,0,34)); 
+    assertFailedParse("007_isA_SimpleCycle.ump", new Position("007_isA_SimpleCycle.ump",3,6,22)); 
   }
   
   @Test
   public void isA_ComplexCycle()
   {
-    assertFailedParse("007_isA_ComplexCycle.ump", new Position("007_isA_ComplexCycle.ump",10,0,71)); 
+    assertFailedParse("007_isA_ComplexCycle.ump", new Position("007_isA_ComplexCycle.ump",3,6,22)); 
   }
   
   @Test
@@ -707,17 +898,31 @@ public class UmpleParserTest
     UmpleClass aClass = model.getUmpleClass("Airline");
     Assert.assertEquals(true,aClass.getIsSingleton());
   }
+  
+  @Test 
+  public void is_A_NonExistingExtendsClass(){
+	assertHasWarningsParse("007_isANonExistingSuperClass.ump", 33);
+	assertHasWarningsParse("007_isANonExistingSuperClass2.ump", 33);
+	assertHasWarningsParse("007_isANonExistingSuperClass3.ump", 33);
+	assertHasWarningsParse("007_isANonExistingSuperClass4.ump", 33);
+  }
 
   @Test
   public void singletonAttributeNotLazy()
   {
-	  assertHasWarningsParse("007_singletonAttributeNotLazy.ump", new Position("007_singletonAttributeNotLazy.ump",3,1,29));
+	assertHasWarningsParse("007_singletonAttributeNotLazy.ump", new Position("007_singletonAttributeNotLazy.ump",3,1,29));
+  }
+  
+  @Test
+  public void singletonWithConst()
+  {
+	assertNoWarningsParse("007_singletonWithConst.ump");
   }
   
   @Test
   public void isAttributeLazyRedundant()
   {
-	  assertHasWarningsParse("007_isAttributeLazyRedundant.ump", 3);
+	assertHasWarningsParse("007_isAttributeLazyRedundant.ump", 3);
   }
   
   @Test
@@ -826,14 +1031,33 @@ public class UmpleParserTest
     Assert.assertEquals("name5", variable.getName());
     Assert.assertEquals("Double", variable.getType());
   }
+  
+  @Test
+  public void attribute_ContainerType()
+  {
+    assertHasWarningsParse("276_AttributeTypeAngleBrackets.ump", 46); 
+  }
 
   @Test
   public void attribute_Unique()
   {
     assertParse("008_uniqueAttribute.ump");
-    UmpleClass aClass = model.getUmpleClass("Student");
-    UmpleVariable variable = aClass.getUniqueIdentifier();
-    Assert.assertEquals("number", variable.getName());
+    Attribute number = model.getUmpleClass("Student").getAttribute("number");
+    Assert.assertTrue(number.getIsUnique());
+  }
+  
+  @Test
+  public void attributeConflictImmutableAndAutounique()
+  {
+    assertFailedParse("008_attributeConflictImmutableAutounique.ump", 38);
+  }
+  @Test
+  public void methodConflictWithAutoGeneratedGetterAndSetter()
+  {
+    assertHasWarningsParse("001_methodConflictWithAutoGeneratedGetterAndSetter.ump", 1009);
+    
+    //Issue 567
+    assertHasWarningsParse("001_duplicatedGeneratedMethod.ump", 1009);
   }
 
   @Test
@@ -842,10 +1066,6 @@ public class UmpleParserTest
     assertParse("008_assignedValueAttribute.ump");
     UmpleClass aClass = model.getUmpleClass("Student");
     UmpleVariable variable;
-    
-    variable = aClass.getUniqueIdentifier();
-    Assert.assertEquals("number", variable.getName());    
-    Assert.assertEquals("1", variable.getValue());
 
     variable = aClass.getAttribute("s");
     Assert.assertEquals("\"s\"", variable.getValue());
@@ -875,6 +1095,22 @@ public class UmpleParserTest
     Assert.assertEquals("new Time(\"now\")",variable.getValue());
   }
   
+  @Test @Ignore
+  public void attributeFixml()
+  {
+    assertParse("008_fixmlAttribute.ump");
+    
+    UmpleClass aClass = model.getUmpleClass("Student");
+    Attribute variable = aClass.getAttribute("capacity");
+    Assert.assertEquals("\"31\"",variable.getValue());
+  }
+  
+  @Test
+  public void invalidClassKeyword()
+  {
+	  assertFailedParse("109_badClassKeyWord.ump", 1503);
+  }
+  
   @Test
   public void attributeInvalidName()
   {
@@ -886,15 +1122,22 @@ public class UmpleParserTest
   public void attributeProperNamingStyle()
   {
 	  assertHasWarningsParse("008_attributeUpperFirstChar.ump", 131);
+          assertSimpleParse("008_constAttributeUpperFirstChar.ump");
   }
   
+  @Test
+  public void TypeValueMismatchWarning()
+  {
+    assertHasWarningsParse("008_attributeTypeValueMismatch.ump",141);
+  }
+
   @Test
   public void attributeLooksLikeAssociation()
   {
 	  assertFailedParse("008_attributeContainsDoubleDash.ump", 132);
 	  assertFailedParse("008_attributeContainsDoublePeriod.ump", 132);
-	  assertFailedParse("008_attributeContainsStar.ump", 132);
-	  assertFailedParse("008_attributeContainsArrow.ump", 132);
+	  //assertFailedParse("008_attributeContainsStar.ump", 132);
+	  //assertFailedParse("008_attributeContainsArrow.ump", 132); // Obslete
   }
   
   @Test
@@ -902,6 +1145,21 @@ public class UmpleParserTest
   {
 	  assertFailedParse("008_attributeInvalidType.ump", 140);
 	  assertFailedParse("008_attributeAllNumericType.ump", 140);
+  }
+  
+  @Test
+  // test to make sure none of the attributes in a class share their name with attributes
+  // in a superclass.
+  public void attributeSharedName()
+  {
+	  assertNoWarningsParse("429_sharedAttributeName.ump");
+	  assertNoWarningsParse("429_sharedAttributeName_ML.ump");
+  	  
+  	  //Issue 587
+  	  assertHasWarningsParse("429_sharedAttributeName_MultCases1.ump", 44);
+  	  assertHasWarningsParse("429_sharedAttributeName_WrongTypes.ump", 44);
+  	  assertNoWarningsParse("429_sharedAttributeName_Refinements.ump");
+	   
   }
   
   @Test
@@ -1138,6 +1396,24 @@ public class UmpleParserTest
   }
 
   @Test
+  public void multipleSymmetricReflexiveAssociations()
+  {
+    assertParse("009_multipleSymmetricReflexiveAssociations.ump");
+  }
+
+  @Test
+  public void symmetricReflexiveAssociationError19()
+  {
+    assertFailedParse("009_symmetricReflexiveAssociationError19.ump", 19);
+  }
+
+  @Test 
+  public void symmetricReflexiveAssociationError23()
+  {
+    assertFailedParse("009_symmetricReflexiveAssociationError23.ump", 23);
+  }
+
+  @Test
   public void associationByItself()
   {
     assertParse("009_associationByItself.ump");
@@ -1202,6 +1478,11 @@ public class UmpleParserTest
     assertFailedParse("009_ReflexiveNonDirectedZeroOneSeparateAssocError21.ump",21);
   }
   
+  @Test 
+  public void TestReservedRoleNameError32() {
+	  assertFailedParse("009_ReflexiveReservedRoleNameError32.ump",32);  
+  }
+    
   @Test
   public void associationClass2()
   {
@@ -1237,7 +1518,7 @@ public class UmpleParserTest
   @Test
   public void associationClassMissingLeft()
   {
-    assertFailedParse("010_associationClassMissingLeft.ump", new Position("010_associationClassMissingLeft.ump",2,0,1));
+    assertFailedParse("010_associationClassMissingLeft.ump", new Position("010_associationClassMissingLeft.ump",1,0,0));
   }  
   
   @Test
@@ -1262,7 +1543,7 @@ public class UmpleParserTest
     Assert.assertEquals("type",aClass.getAttribute("type").getName());
     
     AssociationVariable av1 = aClass.getAssociationVariable("event");
-    Assert.assertEquals(0,av1.getMultiplicity().getLowerBound());
+    Assert.assertEquals(1,av1.getMultiplicity().getLowerBound());
     Assert.assertEquals(1,av1.getMultiplicity().getUpperBound());
     Assert.assertEquals("event",av1.getName());
     Assert.assertEquals("Event", av1.getType());
@@ -1274,7 +1555,7 @@ public class UmpleParserTest
     Assert.assertEquals("Ticket", relatedAv1.getType());
     
     AssociationVariable av2 = aClass.getAssociationVariable("location");
-    Assert.assertEquals(0,av2.getMultiplicity().getLowerBound());
+    Assert.assertEquals(1,av2.getMultiplicity().getLowerBound());
     Assert.assertEquals(1,av2.getMultiplicity().getUpperBound());
     Assert.assertEquals("location",av2.getName());
     Assert.assertEquals("Location", av2.getType());
@@ -1287,6 +1568,22 @@ public class UmpleParserTest
     
     List<Association> iter = model.getAssociations();
     Assert.assertEquals(2,iter.size());
+  }
+
+  @Test
+  public void associationClassNewSyntax()
+  {
+    assertParse("010_associationClassNewSyntaxAssociation.ump");
+  }
+
+  @Test
+  public void associationClassSeveralAssociationsAttributes()
+  {
+    assertParse("010_associationClassSeveralAssociationsAttributes.ump");
+    Assert.assertEquals(6,model.getAssociations().size());
+    UmpleClass aClass = model.getUmpleClass("G");
+    Assert.assertEquals(6,aClass.numberOfAssociationVariables());
+    Assert.assertEquals(5,aClass.numberOfAttributes());
   }
 
   @Test
@@ -1549,6 +1846,12 @@ public class UmpleParserTest
   }
   
   @Test
+  public void keyWithInitializedAttribute()
+  {
+    assertHasWarningsParse("306_keyWithInitializedAttribute.ump", 45);
+  }
+	  
+  @Test
   public void beforeKeyword()
   {
     assertParse("019_before.ump");
@@ -1576,6 +1879,18 @@ public class UmpleParserTest
     Assert.assertEquals("notReallyPossible();",inject.getCode());
   }
 
+  @Test
+  public void upperCaseAssociationKey()
+  {
+	assertSimpleParse("284_keyAssociationUpper.ump");
+	
+	UmpleClass A = model.getUmpleClass("A");
+	Key key = A.getKey();
+	Assert.assertEquals(1,key.numberOfMembers());
+	Assert.assertEquals("bbbB", key.getMember(0));
+  }
+  
+  
   @Test
   public void enumAttributeEmpty()
   {
@@ -1727,18 +2042,22 @@ public class UmpleParserTest
   @Test
   public void reflexiveMandatoryAssociationMayNotBeImmutable()
   {
-    assertFailedParse("023_immutableReflexiveMandatoryAssociation.ump", new Position("023_immutableReflexiveMandatoryAssociation.ump",8,2,48), 18);
+	assertFailedParse("023_immutableReflexiveMandatoryAssociation.ump", 36, 0);
+    assertFailedParse("023_immutableReflexiveMandatoryAssociation.ump", new Position("023_immutableReflexiveMandatoryAssociation.ump",8,2,48), 18, 1);
     assertFailedParse("023_immutableReflexiveMandatoryAssociation2.ump", new Position("023_immutableReflexiveMandatoryAssociation2.ump",4,2,31), 18);
-    
-    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation.ump",8,2,48), 18);
-    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation2.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation2.ump",4,2,31), 18);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation.ump",8,2,48), 18, 1);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation.ump", 36, 0);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation2.ump", new Position("023_immutableReflexiveMandatoryOtherWayAssociation2.ump",4,2,31), 18, 1);
+    assertFailedParse("023_immutableReflexiveMandatoryOtherWayAssociation2.ump", 36, 0);
   }
   
   @Test
   public void duplicateAssociationNames()
   {
-    assertFailedParse("024_multipleUnnamedAssociationsToSameClass.ump", new Position("024_multipleUnnamedAssociationsToSameClass.ump",7,0,97), 19);
-    assertFailedParse("024_multipleAssociationsWithSameName.ump", new Position("024_multipleAssociationsWithSameName.ump",9,0,104), 19);
+    assertFailedParse("024_multipleUnnamedAssociationsToSameClass.ump", new Position("024_multipleUnnamedAssociationsToSameClass.ump",5,2,74), 19);
+    assertFailedParse("024_multipleAssociationsWithSameName.ump", new Position("024_multipleAssociationsWithSameName.ump",7,2,79), 19);
+    assertFailedParse("024_roleNameSameAsClassWithMultiAssocToSameClass.ump", 19); 
+    assertFailedParse("024_multiAssocToSameClassNeedRoleName.ump", 19);  
     
     assertParse("024_multipleUnnamedOneWayAssociationsToSameClass.ump");
   }
@@ -1748,6 +2067,11 @@ public class UmpleParserTest
     assertFailedParse("025_multipleAttributesWithSameName.ump", new Position("025_multipleAttributesWithSameName.ump",3,2,16),22);
   
   } 
+  @Test
+  public void whitespaceCharacter()
+  {
+	  assertSimpleParse("048_codeWithWhitespaceCharacters.ump");	  
+  }
   
   @Test
   public void commentsBeforeClasses()
@@ -1796,7 +2120,27 @@ public class UmpleParserTest
     
   }
   
-
+  @Test
+  public void sameLineComments()
+  {
+    assertSimpleParse("427_CommentPosition.ump");
+	// check that attribute comments are attributing properly.
+	UmpleClass Test = model.getUmpleClass("Test");
+	Attribute a1 = Test.getAttribute("test");
+	Assert.assertEquals(2, a1.numberOfComments());
+	Attribute a2 = Test.getAttribute("test2");
+	Assert.assertEquals(0, a2.numberOfComments());
+	
+	// check that association comments are attributing properly.
+	UmpleClass X = model.getUmpleClass("X");
+	AssociationVariable av1 = X.getAssociationVariable("test");
+	Assert.assertEquals(2, av1.numberOfComments());
+	AssociationVariable av2 = X.getAssociationVariable("test2");
+	Assert.assertEquals(0, av2.numberOfComments());
+	
+  }
+  
+  
   @Test
   public void mixingRegularAndDerivedAttributes_bug201()
   {
@@ -1861,12 +2205,18 @@ public class UmpleParserTest
 	  assertFailedParse("024_unidirectional_many_to_one.ump",23);
 	  assertFailedParse("024_unidirectional_many_to_some.ump",23);
 	  assertFailedParse("024_unidirectional_many_to_many.ump",23);
-	  assertFailedParse("024_unidirectional_some_to_one.ump",23);
-	  assertFailedParse("024_unidirectional_some_to_some.ump",23);
-	  assertFailedParse("024_unidirectional_some_to_many.ump",23);
-	  assertFailedParse("024_unidirectional_one_to_one.ump",23);
-	  assertFailedParse("024_unidirectional_one_to_some.ump",23);
-	  assertFailedParse("024_unidirectional_one_to_many.ump",23);
+	  assertFailedParse("024_unidirectional_some_to_one.ump",36,0);
+	  assertFailedParse("024_unidirectional_some_to_one.ump",23,1);
+	  assertFailedParse("024_unidirectional_some_to_some.ump",36,0);
+	  assertFailedParse("024_unidirectional_some_to_some.ump",23,1);
+	  assertFailedParse("024_unidirectional_some_to_many.ump",36,0);
+	  assertFailedParse("024_unidirectional_some_to_many.ump",23,1);
+	  assertFailedParse("024_unidirectional_one_to_one.ump",36,0);
+	  assertFailedParse("024_unidirectional_one_to_one.ump",23,1);
+	  assertFailedParse("024_unidirectional_one_to_some.ump",36,0);
+	  assertFailedParse("024_unidirectional_one_to_some.ump",23,1);
+	  assertFailedParse("024_unidirectional_one_to_many.ump",36,0);
+	  assertFailedParse("024_unidirectional_one_to_many.ump",23,1);
 	  
   }
   @Test
@@ -1875,20 +2225,28 @@ public class UmpleParserTest
 	  assertFailedParse("024_back_unidirectional_many_to_one.ump",23);
 	  assertFailedParse("024_back_unidirectional_many_to_some.ump",23);
 	  assertFailedParse("024_back_unidirectional_many_to_many.ump",23);
-	  assertFailedParse("024_back_unidirectional_some_to_one.ump",23);
-	  assertFailedParse("024_back_unidirectional_some_to_some.ump",23);
-	  assertFailedParse("024_back_unidirectional_some_to_many.ump",23);
-	  assertFailedParse("024_back_unidirectional_one_to_one.ump",23);
-	  assertFailedParse("024_back_unidirectional_one_to_some.ump",23);
-	  assertFailedParse("024_back_unidirectional_one_to_many.ump",23);
+	  assertFailedParse("024_back_unidirectional_some_to_one.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_some_to_one.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_some_to_some.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_some_to_some.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_some_to_many.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_some_to_many.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_one_to_one.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_one_to_one.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_one_to_some.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_one_to_some.ump",23,1);
+	  assertFailedParse("024_back_unidirectional_one_to_many.ump",36,0);
+	  assertFailedParse("024_back_unidirectional_one_to_many.ump",23,1);
 	  
   }
   @Test
   public void attributeAndAssociationNameClashingSeparate(){
   	  
-  	  assertFailedParse("024_separate_back_unidirectional.ump",23);
+  	  assertFailedParse("024_separate_back_unidirectional.ump",36,0);
+  	assertFailedParse("024_separate_back_unidirectional.ump",23,1);
 	  assertFailedParse("024_separate_bidirectional.ump",23);
-	  assertFailedParse("024_separate_unidirectional.ump",23);
+	  assertFailedParse("024_separate_unidirectional.ump",36,0);
+	  assertFailedParse("024_separate_unidirectional.ump",23,1);
 	  
   }  
   
@@ -1907,15 +2265,88 @@ public class UmpleParserTest
   	  assertFailedParse("106_invalidNameStateMachineAndAssocRoleName4.ump",52);
   }
   
+  @Test
+  public void stateMachineConcurrencyBetweenStates()
+  {
+	  assertFailedParse("103_Concurrent_FirstStateLevel.ump", 53);
+  }
+  
+  @Test
+  public void externalDefinitionAndClassDefinitionCodeGeneration_externalFirst()
+  {
+    assertParse("026_externalDefinitionAndClassDefinition_first.ump");
+    
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(1,x.numberOfAttributes());
+  }
+   
+   @Test
+  public void externalDefinitionAndClassDefinitionCodeGeneration_externalMiddle()
+  {
+    assertParse("026_externalDefinitionAndClassDefinition_middle.ump");
+    
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(2,x.numberOfAttributes());
+  }
+  
+  @Test
+  public void externalDefinitionAndClassDefinitionCodeGeneration_externalLast()
+  {
+    assertParse("026_externalDefinitionAndClassDefinition_last.ump");
+    
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(1,x.numberOfAttributes());
+  }
+  
+  @Test
+  public void generateSuboption()
+  {
+	  assertParse("027_generateSuboption.ump");
+	  Assert.assertEquals("GvClassDiagram", model.getDefaultGenerate());
+	  Assert.assertEquals("hideattributes", model.getGenerate(0).getSuboption(0));
+	  Assert.assertEquals("showmethods", model.getGenerate(0).getSuboption(1));
+  }
+  
+  @Test
+  public void generateSuboptionOverride()
+  {
+	  assertParse("027_generateSuboptionOverride.ump");
+	  Assert.assertEquals("GvClassDiagram", model.getDefaultGenerate());
+	  Assert.assertEquals(true, model.getGenerate(0).getOverride());
+	  Assert.assertEquals("blah/blah/blah", model.getDefaultGeneratePath());
+	  Assert.assertEquals("hideattributes", model.getGenerate(0).getSuboption(0));
+  }
+  
+  @Test
+  public void methodNameConflictUsingDefaulted()
+  {
+    assertFailedParse("045_javaDefaultedNameConflict.ump", 48);  
+    assertFailedParse("045_phpDefaultedNameConflict.ump", 48);  
+    assertFailedParse("045_rubyDefaultedNameConflict.ump", 48);  
+  }
+  
+  
+  
+  // Test for issue 412 by F.K
+  @Test 
+  public void commentInAssociation()
+  {
+	assertParse("412_association_comment.ump");
+  }
   
   public boolean parse(String filename)
   {
-    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+    //String input = SampleFileWriter.readContent(new File(pathToInput, filename));
+	UmpleFile file = new UmpleFile(pathToInput,filename);
     ErrorTypeSingleton.getInstance().reset();
     model = new UmpleModel(new UmpleFile(pathToInput,filename));
     model.setShouldGenerate(false);
-    parser = UmpleParserFactory.create(umpleParserName,model,true);
-    boolean answer = parser.parse("program", input).getWasSuccess();
+    RuleBasedParser rbp = new RuleBasedParser(model);
+    parser = new UmpleInternalParser(umpleParserName,model,rbp);
+    ParseResult result = rbp.parse(file);
+    model.setLastResult(result);
+    System.out.println(rbp.getRootToken());
+    boolean answer = result.getWasSuccess();
     if (answer)
     {
       answer = parser.analyze(false).getWasSuccess();
@@ -1925,21 +2356,18 @@ public class UmpleParserTest
   
   public boolean parseWarnings(String filename)
   {
-    String input = SampleFileWriter.readContent(new File(pathToInput, filename));
-
-    // The error singleton really must be reset before use,
-    // other tests may have written into the error code entries 
-    // that you want to use. Resetting it fills it with the default
-    // entries from en.error
     ErrorTypeSingleton.getInstance().reset();
-    
-    model = new UmpleModel(new UmpleFile(pathToInput,filename));
+    UmpleFile file = new UmpleFile(pathToInput,filename);
+    model = new UmpleModel(file);
     model.setShouldGenerate(false);
-    parser = UmpleParserFactory.create(umpleParserName,model,true);
-    boolean answer = parser.parse("program", input).getWasSuccess();
+    RuleBasedParser rbp = new RuleBasedParser(model);
+    parser = new UmpleInternalParser(umpleParserName,model,rbp);
+    ParseResult result = rbp.parse(file);
+    model.setLastResult(result);
+    boolean answer = result.getWasSuccess();
     if (answer)
     {
-      answer = parser.analyze(false).getHasWarnings();
+      answer = parser.analyze(false).getWasSuccess();
     }
     return answer;
   }
@@ -1961,7 +2389,7 @@ public class UmpleParserTest
   {
     boolean answer = parse(filename);
     Assert.assertEquals(false, answer);
-    Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
+    Assert.assertEquals(expectedPosition, model.getLastResult().getErrorMessage(0).getPosition());
   }
 
   // Assertion for case where we expect parse to fail and care about the position and the error
@@ -1970,13 +2398,20 @@ public class UmpleParserTest
     assertFailedParse(filename, expectedPosition);
     Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
   }
-
+  
+  // Assertion for case where we expect parse to fail and care about the position, the error and the error Index per issue347
+  public void assertFailedParse(String filename, Position expectedPosition, int expectedError, int expectedErrorIndex)
+  {
+    assertFailedParse(filename, expectedPosition);
+    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+  }
+  
   // Assertion for case where we expect parse to fail care about the error number but not the position
   public void assertFailedParse(String filename, int expectedError)
   {
     boolean answer = parse(filename);
     Assert.assertEquals(false, answer);
-    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+    Assert.assertEquals(expectedError, model.getLastResult().getErrorMessage(0).getErrorType().getErrorCode());
   }
   
   // Assertion case where we expect warnings at certain positions but don't care about the warning number
@@ -1986,7 +2421,15 @@ public class UmpleParserTest
     Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
   }
-
+  
+  // Assertion for case where we expect parse to fail and care about the error number and error index per issue347
+  public void assertFailedParse(String filename, int expectedError, int expectedErrorIndex)
+  {
+    boolean answer = parse(filename);
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(expectedError, model.getLastResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+  }
+  
   // Assertion case where we expect warnings and care about the position and the warning number
   public void assertHasWarningsParse(String filename, Position expectedPosition, int expectedError)
   {
@@ -2000,6 +2443,22 @@ public class UmpleParserTest
     boolean answer = parseWarnings(filename);
     Assert.assertEquals(true, answer);
     Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+  
+  //Assertion case where we expect warnings and care about the  warning number but not the position
+  public void assertHasWarningsParse(String filename, int expectedError, int expectedErrorIndex)
+  {
+    boolean answer = parseWarnings(filename);
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+  }
+  
+  //Assertion case where we expect no warnings generated
+  public void assertNoWarningsParse(String filename)
+  {
+	boolean answer = parseWarnings(filename);
+	Assert.assertEquals(true, answer);
+	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
   
 }
