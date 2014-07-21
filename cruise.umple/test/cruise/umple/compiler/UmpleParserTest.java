@@ -1769,6 +1769,11 @@ public class UmpleParserTest
     // fill me in with checks
     // make sure that "isWellDefined" is false
   } 
+  /*@Test
+  public void whitespaceCharacter()
+  {
+	  assertSimpleParse("048_codeWithWhitespaceCharacters.ump");	  
+  }*/
   
   @Test
   public void positionUnknownAssociation()
