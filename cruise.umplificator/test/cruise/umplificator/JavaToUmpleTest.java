@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 
 import cruise.umple.util.SampleFileWriter;
 import cruise.umplificator.core.Umplificator;
+import cruise.umplificator.core.Umplificator.RefactoringLevel;
 
 public class JavaToUmpleTest {
 	
@@ -65,6 +66,48 @@ public class JavaToUmpleTest {
 		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
 		File umpleFile = new File(pathToRoot+fileName+"_umple.ump"); //OUTPUT
 		// Umplify file. Process must succeed!
+		assertTrue(umplificator.umplifyElement(javaFile));
+		// Get the output content
+		assertOuputAndFile(umpleFile);
+		// Clean files 
+		filesToDelete.add(fileName);
+	}
+	
+	@Test
+	public void JavaToUmple_Level0(){
+		String fileName = "Test";
+		File javaFile = new File(pathToRoot+fileName+".java"); //INPUT
+		File umpleFile = new File(pathToRoot+fileName+"_Level0.ump"); //OUTPUT
+		// Umplify file. Process must succeed!
+		umplificator.setCurrentLevel(RefactoringLevel.CLASS);
+		assertTrue(umplificator.umplifyElement(javaFile));
+		// Get the output content
+		assertOuputAndFile(umpleFile);
+		// Clean files 
+		filesToDelete.add(fileName);
+	}
+	
+	@Test
+	public void JavaToUmple_Level1(){
+		String fileName = "Test";
+		File javaFile = new File(pathToRoot+fileName+".java"); //INPUT
+		File umpleFile = new File(pathToRoot+fileName+"_Level1.ump"); //OUTPUT
+		// Umplify file. Process must succeed!
+		umplificator.setCurrentLevel(RefactoringLevel.ATTRIBUTES);
+		assertTrue(umplificator.umplifyElement(javaFile));
+		// Get the output content
+		assertOuputAndFile(umpleFile);
+		// Clean files 
+		filesToDelete.add(fileName);
+	}
+	
+	@Test
+	public void JavaToUmple_Level2(){
+		String fileName = "Test";
+		File javaFile = new File(pathToRoot+fileName+"_java.java"); //INPUT
+		File umpleFile = new File(pathToRoot+fileName+"_Level2.ump"); //OUTPUT
+		// Umplify file. Process must succeed!
+		umplificator.setCurrentLevel(RefactoringLevel.ASSOCIATIONS);
 		assertTrue(umplificator.umplifyElement(javaFile));
 		// Get the output content
 		assertOuputAndFile(umpleFile);

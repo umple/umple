@@ -1,0 +1,12 @@
+namespace cruise.umplificator;
+
+class Test
+{
+ depend java.io.File;
+
+  String testName;
+  Integer testId;
+  Boolean toRun=false;
+  public static void main(  String[] args){
+  }
+}
