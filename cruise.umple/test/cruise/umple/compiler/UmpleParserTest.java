@@ -2067,6 +2067,11 @@ public class UmpleParserTest
     assertFailedParse("025_multipleAttributesWithSameName.ump", new Position("025_multipleAttributesWithSameName.ump",3,2,16),22);
   
   } 
+  @Test
+  public void whitespaceCharacter()
+  {
+	  assertSimpleParse("048_codeWithWhitespaceCharacters.ump");	  
+  }
   
   @Test
   public void commentsBeforeClasses()
