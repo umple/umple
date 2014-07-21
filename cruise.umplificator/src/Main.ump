@@ -36,9 +36,10 @@ class UmplificatorMain {
 		 List<File> inputFiles = FileHelper.getListOfFilesFromPath(nonOpt.get(0), new ArrayList<File>());
 		 if (inputFiles.size() >= 0 ){
 			Umplificator umplificator = new Umplificator();
-			int level = (int)optset.valueOf("level");
-			umplificator.setCurrentLevel(RefactoringLevel.values()[level]);
-			umplificator.setOutputFolder((String)optset.valueOf("path"));
+			 int level = (optset.has("level"))?  (int)optset.valueOf("level"): -1;
+			 if (level != -1) { umplificator.setCurrentLevel(RefactoringLevel.values()[level]);}
+			 if (optset.has("path")) { umplificator.setOutputFolder((String)optset.valueOf("path")); }
+			umplificator.setNeedSubDirectories(optset.has("dir"));
 			String console = umplificator.umplify(inputFiles) ? "Success!":"Error" ;
 			System.out.println(console);
 		 }
@@ -48,6 +49,7 @@ class UmplificatorMain {
     	OptionParser optparser = new OptionParser();
 	    optparser.acceptsAll(Arrays.asList("version", "v"), "Print out the current Umple version number");
 	    optparser.acceptsAll(Arrays.asList("help"), "Display the help message");
+	    optparser.accepts("dir", "If present, subdirectories based on namespaces will be generated");
 	    optparser.accepts("path", "The output folder path").withRequiredArg();
         optparser.accepts( "level","The level of Refactoring").withRequiredArg().ofType( Integer.class );
    	    return optparser;

@@ -134,7 +134,7 @@ class UmpleToUmpleGenerator
     }
 
     model.setCode(code.toString());
-    writeModel();
+    writeModel(false);
     internalGen.postpare();
   }
 
@@ -265,6 +265,13 @@ class UmpleToUmpleGenerator
       space.append(" ");
     }
     return space.toString();
+  }
+
+  private void writeModel(boolean isDebug) {
+     if (isDebug==false) {
+         writeModel();
+     }
+     else {  /*DO NOTHING*/	}
   }
 
   private void writeModel()
