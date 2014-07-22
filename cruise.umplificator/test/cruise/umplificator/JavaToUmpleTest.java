@@ -26,6 +26,7 @@ public class JavaToUmpleTest {
 	@Before
 	public void setUp() throws Exception {
 		umplificator = new Umplificator();
+		umplificator.setTestMode(true);
 		pathToRoot = "test/cruise/umplificator/transformationTestFiles/";
 	}
 

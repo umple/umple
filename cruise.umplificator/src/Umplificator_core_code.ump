@@ -54,7 +54,7 @@ public boolean umplifyUmple(File file)
 			outputModel.addUmpleClass(uClass);
 			filesUmplified.add(umpleFile.getSimpleFileName());
 			// generate Umple Code
-			FileHelper.writeFile(outputModel, outputFolder);
+			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode);
 		} catch (IOException e) {
 			logger.error("IOException in Umplificator.umplifyUmpleFile");
 			logger.error(e.getStackTrace());
@@ -93,7 +93,7 @@ public boolean umplifyJava(File file)
 			outputModel.addUmpleClass(uClass);
 		    filesUmplified.add(umpleFile.getSimpleFileName());
 			// generate Umple Code
-			FileHelper.writeFile(outputModel, outputFolder);
+			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode);
 		} catch (IOException e) {
 			logger.error("IOException in Umplificator.umplifyUmpleFile");
 			logger.error(e.getStackTrace());

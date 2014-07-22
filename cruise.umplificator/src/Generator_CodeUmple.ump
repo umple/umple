@@ -12,18 +12,14 @@ namespace cruise.umplificator.generator;
 class UmpleToUmpleGenerator
 {
   isA CodeGeneratorWithSubptions;
-  depend java.io.*;
   depend java.util.*;
   depend cruise.umple.util.*;
-  depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.*;
 
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
   // off of what's contained in here.
   UmpleModel model = null;
   String output = "";
-  lazy String outputFolder;
-  fileExtension= ".umpself";
 
   public void generate()
   {
@@ -35,6 +31,9 @@ class UmpleToUmpleGenerator
 
     for (UmpleClass uClass : model.getUmpleClasses())
     {
+      if (uClass.hasNamespaces()) {
+         model.setDefaultNamespace( uClass.getNamespace(0));
+      }
       for (String aNamespace: uClass.getNamespaces())
       {
         code.append(StringFormatter.format("namespace {0};\n", aNamespace));   
@@ -134,7 +133,6 @@ class UmpleToUmpleGenerator
     }
 
     model.setCode(code.toString());
-    writeModel(false);
     internalGen.postpare();
   }
 
@@ -265,32 +263,6 @@ class UmpleToUmpleGenerator
       space.append(" ");
     }
     return space.toString();
-  }
-
-  private void writeModel(boolean isDebug) {
-     if (isDebug==false) {
-         writeModel();
-     }
-     else {  /*DO NOTHING*/	}
-  }
-
-  private void writeModel()
-  {
-    try
-    {
-      String path = outputFolder + File.separator;
-      File file = new File(path);
-      file.mkdirs();
-      String modelFilename =  path + model.getUmpleFile().getSimpleFileName() + this.fileExtension ;
-      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
-      bw.write(model.getCode());
-      bw.flush();
-      bw.close();
-    }
-    catch (Exception e)
-    {
-      throw new UmpleCompilerException("There was a problem with generating UmpleSelf code." + e, e);
-    }
   }
 
   private CodeGenerator generateBasedOn()
