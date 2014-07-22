@@ -9,7 +9,11 @@
 
 package cruise.umple.compiler;
 
+import java.io.File;
+
 import org.junit.*;
+
+import cruise.umple.util.SampleFileWriter;
 
 public class GeneratedClassTest
 {
@@ -94,6 +98,32 @@ public class GeneratedClassTest
     Assert.assertEquals(2,allLookups.length);
     Assert.assertEquals("a",allLookups[0]);
     Assert.assertEquals("b",allLookups[1]);
+  }
+  
+  @Test
+  public void multipleLanguageConstructor()
+  {	
+	String pathToInput = SampleFileWriter.rationalize("test/cruise/umple/compiler/");
+	UmpleModel model = createModelFromFile(pathToInput, "015_multLanguageConstructor.ump");
+	model.run();
+	File javaOutput = new File(pathToInput, "RangeX.java");
+	File rubyOutput = new File(pathToInput, "range_x.rb");
+	File phpOutput = new File(pathToInput, "RangeX.php");
+	javaOutput.deleteOnExit();   
+	rubyOutput.deleteOnExit();
+	phpOutput.deleteOnExit();
+	SampleFileWriter.assertFileContent(new File(pathToInput, "RangeX.java.txt"), javaOutput, true);
+	SampleFileWriter.assertFileContent(new File(pathToInput, "range_x.rb.txt"), rubyOutput, true);
+	SampleFileWriter.assertFileContent(new File(pathToInput, "RangeX.php.txt"), phpOutput, true);
+	javaOutput.delete();
+	rubyOutput.delete();
+	phpOutput.delete();
+  }
+  private UmpleModel createModelFromFile(String pathToInput, String fileName){
+    File umpleFile = new File(pathToInput + fileName);
+	UmpleFile umpFile  = new  UmpleFile(umpleFile);
+	UmpleModel umpModel = new UmpleModel(umpFile);   
+	return umpModel;	  
   }
 
 }

@@ -19,7 +19,7 @@ class Range
   # CONSTRUCTOR
   #------------------------
 
-  def initialize($aStart, $aEnd)
+  def initialize(a_start, a_end)
     @initialized = false
     @deleted = false
     @start = a_start
