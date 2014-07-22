@@ -624,6 +624,8 @@ class PhpGenerator
   {
     if (aClass.getGeneratedClass() != null)
     {
+      GeneratedClass genClass = aClass.createGeneratedClass(getModel());
+      generateConstructorSignature(genClass);
       //return;
     }
     else if (aClass.isRoot())

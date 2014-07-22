@@ -1,0 +1,8 @@
+generate Java;
+generate Ruby;
+generate Php;
+
+class RangeX {
+  Integer start;
+  Integer end;
+}

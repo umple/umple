@@ -1,17 +1,16 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3443 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 
 
-// line 5 "phpJavaRubyConstraint.ump"
-public class Range
+public class RangeX
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Range Attributes
+  //RangeX Attributes
   private int start;
   private int end;
 
@@ -19,14 +18,10 @@ public class Range
   // CONSTRUCTOR
   //------------------------
 
-  public Range(int aStart, int aEnd)
+  public RangeX(int aStart, int aEnd)
   {
     start = aStart;
     end = aEnd;
-    if ( !(aStart<aEnd))
-    {
-      throw new RuntimeException("Please provide a valid start and end");
-    }
   }
 
   //------------------------
@@ -36,22 +31,16 @@ public class Range
   public boolean setStart(int aStart)
   {
     boolean wasSet = false;
-    if (aStart<end)
-    {
     start = aStart;
     wasSet = true;
-    }
     return wasSet;
   }
 
   public boolean setEnd(int aEnd)
   {
     boolean wasSet = false;
-    if (start<aEnd)
-    {
     end = aEnd;
     wasSet = true;
-    }
     return wasSet;
   }
 
