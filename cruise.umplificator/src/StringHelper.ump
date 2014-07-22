@@ -18,8 +18,7 @@ class StringHelper {
       return matcher.group();
     }
     return "";
-  }
-   
+   }
    
    public static String getClassBody(String source){ 
 	   int classDeclarationIndex = source.indexOf(getClassDeclaration(source));
