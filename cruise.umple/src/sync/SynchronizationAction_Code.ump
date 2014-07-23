@@ -11,5 +11,10 @@ Code for methods mixed into the UmpleSync.ump model
 
 namespace cruise.umple.sync;
 
-// Everything that was here has been moved into sync/
-// This file left for versioning history.
+class SynchronizationAction
+{  
+  public void go()
+  {
+    
+  }
+}
