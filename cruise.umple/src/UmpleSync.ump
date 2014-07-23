@@ -109,13 +109,4 @@ class NewGeneralizationAction
 }
 
 use Parser.ump;
-use sync/DeleteAction_Code.ump;
-use sync/DeleteAssociationAction_Code.ump;
-use sync/DeleteGeneralizationAction_Code.ump;
-use sync/EditAction_Code.ump;
-use sync/EditAssociationAction_Code.ump;
-use sync/NewAction_Code.ump;
-use sync/NewAssociationAction_Code.ump;
-use sync/NewGeneralizationAction_Code.ump;
-use sync/SynchronizationAction_Code.ump;
-use sync/UpdatePositioningAction_Code.ump;
+use UmpleSync_Code.ump;
