@@ -1,7 +1,8 @@
-Â Â Â 
+   
 class X {
-Â Â Â  a;
+    a;
   
 }
 			
+// THis file must remain encoded as Latin 1
 
