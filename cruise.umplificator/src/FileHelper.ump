@@ -90,8 +90,16 @@ public static void printFilesToUmplify(List<File> srcFiles){
 	   }
    }
   
+   public static void writeMasterFile(List<String> filenames, String outputFolder, boolean needSubDirectories){
+	   if (needSubDirectories) { writePerPackageMasterFile(filenames, outputFolder);}
+	   else { writeSingleMasterFile(filenames, outputFolder); }
+   }
+   
+   private static  void writePerPackageMasterFile(List<String> filenames, String outputFolder){
+		// TODO
+   }
   
-   public static void writeMasterFile(List<String> filenames, String outputFolder){
+   private static void writeSingleMasterFile(List<String> filenames, String outputFolder){
 	   StringBuffer sb =  new StringBuffer();
 	   for (String s: filenames)
 	   {

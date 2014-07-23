@@ -10,8 +10,7 @@ class StringHelper {
  // Another option is to parse the declarations in the class without converting them into Umple constructs, however this is not efficient. 
  
    public static String getClassDeclaration(String source){
-	String regExp = "(public|protected|private)?\\sclass\\s([a-z][a-z_0-9]*)*";
-	Pattern pattern = Pattern.compile(regExp, Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+	Pattern pattern = Pattern.compile("\\s*(public|private)\\s+class\\s+(\\w+)\\s+((extends\\s+\\w+)|(implements\\s+\\w+( ,\\w+)*))?\\s*\\{");
     Matcher matcher = pattern.matcher(source);
     if (matcher.find())
     {
