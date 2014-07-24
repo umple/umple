@@ -209,7 +209,7 @@ Layout.showHideCanvas = function(doShow)
   {
     canvas.hide();
     this.isDiagramVisible = false;
-    Action.manualSync = true;
+    Action.manualSync = true; //allows editing without interruption from ajax calls
     jQuery("#buttonShowHideCanvas").prop('checked',false);
     
     Page.enableCheckBoxItem("buttonPhotoReady", "ttPhotoReady", false);
@@ -422,11 +422,6 @@ function LargeScreenManager()
     umpleCanvas.height(height);
     
     jQuery("#palette").accordion("refresh");
-      
-    if (width == this.minCanvasSize.width && height == this.minCanvasSize.height)
-      Page.enablePaletteItem("buttonSmaller", false);
-    else
-      Page.enablePaletteItem("buttonSmaller", true);
   }
   
   ///////////////////////////////

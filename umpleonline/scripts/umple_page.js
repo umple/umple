@@ -486,15 +486,13 @@ Page.enableEditDragAndResize = function(doEnable)
   {
     jQuery("span.editable").removeClass("uneditable");
     jQuery("div.umpleClass").removeClass("unselectable");
-    jQuery("div.umpleClass.ui-draggable").draggable("option", "disabled", false);
-    jQuery("div.umpleClass.ui-resizable").resizable("option", "disabled", false);
+    jQuery("div.umpleClass.ui-draggable").draggable({disabled: false});
   } 
   else
   {
     jQuery("span.editable").addClass("uneditable");
     jQuery("div.umpleClass").addClass("unselectable");
-    jQuery("div.umpleClass.ui-draggable").draggable("option", "disabled", true);
-    jQuery("div.umpleClass.ui-resizable").resizable("option", "disabled", true);
+    jQuery("div.umpleClass.ui-draggable").draggable({disabled: true});
   }
 }
 
