@@ -891,6 +891,17 @@ class UmpleClass
     }
     return all;
   }
+  
+  public List<TraceDirective> getAllTraceDirectives(){
+    ArrayList<TraceDirective> all = new ArrayList<TraceDirective>();
+    all.addAll(getTraceDirectives());
+    
+    for(TraceCase tc : getTraceCases())
+      for(TraceDirective td : tc.getTraceDirectives())
+        all.add(td);
+    
+    return all;
+  }
 
   public List<CodeInjection> getApplicableCodeInjections(String type, String method)
   {  
