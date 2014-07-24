@@ -17,7 +17,7 @@ import org.junit.*;
 public class TracerTraceCaseTest extends TracerTemplateTest
 {
 
-  @Test @Ignore
+  @Test
   public void TraceCaseSingleTD()
   {
   	AssertTraceCase("TraceCaseSingleTD.ump","TraceCaseSingleTD.","Tracer");
@@ -30,6 +30,6 @@ public class TracerTraceCaseTest extends TracerTemplateTest
     assertUmpleTemplateFor( "tracecase/" + inputUmplefile,
         languagePath + tracerPath + expectedOutputFile + languagePath +".txt",
         testClassName,
-        true);
+        false);
   }
 }
