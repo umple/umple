@@ -67,7 +67,12 @@ class UmpleInternalParser
 			{
 				model.setTracer(new Tracer("Console"));
 			}
-			analyzeTraceStatement(aClass, token);
+			for( Token traceToken : token.getSubTokens() )
+      {
+        if( traceToken.is("traceDirective") )
+          analyzeTraceStatement(aClass, traceToken);
+      }
+			//analyzeTraceStatement(aClass, token);
 		}
 	}
 
