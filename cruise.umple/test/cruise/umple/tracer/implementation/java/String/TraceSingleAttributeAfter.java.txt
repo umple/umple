@@ -23,7 +23,7 @@
       StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributeAfter.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name );
     }
     wasSet = true;
-    if (name.equals("tim"))
+    if ("tim".equals(name))
     {
       traceFlag1=true;
     }

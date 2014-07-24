@@ -17,47 +17,43 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
 
-	// if trace entity is an attribute
-	private void analyzeAttributeTraceItem(Token traceToken) {
+  // if trace entity is an attribute
+  private void analyzeAttributeTraceItem(Token traceToken) {
 
-		UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
-		attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
+    UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));
+    attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
 
-		if( attr != null )
-		{
-			traceAttr.setPosition(traceToken.getPosition());
-			traceAttr.addUmpleVariable(attr);
+    if( attr != null )
+    {
+      traceAttr.setPosition(traceToken.getPosition());
+      traceAttr.addUmpleVariable(attr);
 
-			boolean wasSet = false;
+      boolean wasSet = false;
 
-			for(Token sub: traceToken.getParentToken().getSubTokens())
-			{
-
-				if(sub.is("traceOptions"))
-				{
-					traceAttr.setTraceSet(false);
-					for(Token sub2: sub.getSubTokens())
-					{
-						if( "get".equals(sub2.getValue("option")) )
-						{
-							wasSet = true;
-							traceAttr.setTraceGet(true);
-						}
-						if( "set".equals(sub2.getValue("option")) )
-						{
-							wasSet = true;
-							traceAttr.setTraceSet(true);
-						}
-					}
-				}
-			}
-			if(!wasSet)
-			{
-				traceAttr.setTraceSet(true);
-			}
-
-		}
-
-	}
-
+      for(Token sub: traceToken.getParentToken().getSubTokens())
+      {
+        if(sub.is("traceOptions"))
+        {
+          traceAttr.setTraceSet(false);
+          for(Token sub2: sub.getSubTokens())
+          {
+            if( "get".equals(sub2.getValue("option")) )
+            {
+              wasSet = true;
+              traceAttr.setTraceGet(true);
+            }
+            if( "set".equals(sub2.getValue("option")) )
+            {
+              wasSet = true;
+              traceAttr.setTraceSet(true);
+            }
+          }
+        }
+      }
+      if(!wasSet)
+      {
+        traceAttr.setTraceSet(true);
+      }
+    }
+  }
 } 

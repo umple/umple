@@ -21,22 +21,21 @@ class UmpleVariable
    * @params uClass: the umple class to look within for the trace item
    * @return Attribute_Traceitem for this UmpleVariable(either association or attribute);   
    */
-  TraceItem getTraced(String method, UmpleClass uClass)
-  {
-  	//go through all of the trace directives from the passed umple class
+  public TraceItem getTraced(String method, UmpleClass uClass){
+    //go through all of the trace directives from the passed umple class
     for(TraceDirective td: uClass.getTraceDirectives())
     {
       //find all of its AttributeTraceItem
       for(AttributeTraceItem ati: td.getAttributeTraceItems())
       {
-      	//if the method passed and the method for which the trace attribute is applied, agree
+        //if the method passed and the method for which the trace attribute is applied, agree
         if(("setMethod".equals(method)&&ati.getTraceSet())||("getMethod".equals(method)&&ati.getTraceGet()))
         {
           //go through all the variables
           for(UmpleVariable variable: ati.getUmpleVariables())
           {
-          	//and try to find one that is the same as the one variable calling this method
-          	if(variable.getName().equals(this.getName()))
+            //and try to find one that is the same as the one variable calling this method
+            if(variable.getName().equals(this.getName()))
             {
             //return the trace item containing this umple variable
               return ati;
@@ -47,10 +46,37 @@ class UmpleVariable
         {
           for(UmpleVariable variable: ati.getUmpleVariables())
           {
-          	//and try to find one that is the same as the one variable calling this method 
+            //and try to find one that is the same as the one variable calling this method 
             if(variable.equals(this))
             //return the trace item containing this umple variable
               return ati;
+          }
+        }
+      }
+    }
+    for(TraceCase tc : uClass.getTraceCases())
+    {
+      for(TraceDirective tdInTc : tc.getTraceDirectives())
+      {
+        for(AttributeTraceItem ati: tdInTc.getAttributeTraceItems())
+        {
+          if(("setMethod".equals(method)&&ati.getTraceSet())||("getMethod".equals(method)&&ati.getTraceGet()))
+          {
+            for(UmpleVariable variable: ati.getUmpleVariables())
+            {
+              if(variable.getName().equals(this.getName()))
+              {
+                return ati;
+              }
+            }
+          }
+          else if("constructor".equals(method)&&ati.getTraceConstructor())
+          {
+            for(UmpleVariable variable: ati.getUmpleVariables())
+            {
+              if(variable.equals(this))
+                return ati;
+            }
           }
         }
       }
