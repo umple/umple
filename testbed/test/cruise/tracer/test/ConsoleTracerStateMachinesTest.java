@@ -33,10 +33,10 @@ public class ConsoleTracerStateMachinesTest extends ConsoleTracerTestTemplate
           "sm_t,Closing,buttonOrObstacle,Opening",
           "sm_t,Opening,buttonOrObstacle,HalfOpen",
           //=== LightFixtureA
-          "sm_t,Open,flip,Closed",
-          "sm_da,Closed,doActivitedStarted,status",
-          "sm_di,Closed,doActivitedInterrupted,status",
-          "sm_t,Closed,flip,Open",
+//          "sm_t,Open,flip,Closed",
+//          "sm_da,Closed,doActivitedStarted,status",
+//          "sm_di,Closed,doActivitedInterrupted,status",
+//          "sm_t,Closed,flip,Open",
           //=== LightFixtureB
           "sm_t,Off,flip,On",
           "sm_t,Normal,touch,Dimmed",
