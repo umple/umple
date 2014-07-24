@@ -34,8 +34,9 @@ private static void postpareTrace(UmpleModel aModel)
   public static boolean getWillGenerateString(){
   	return generateString;
   }
+  
   public static  void prepareAllTracers(CodeTranslator t, UmpleModel model, UmpleClass aClass, Map<String,String> templateLookups){
-    for(TraceDirective td: aClass.getTraceDirectives())
+    for(TraceDirective td: aClass.getAllTraceDirectives())
     {
       if(templateLookups.containsKey("dependTracer"))
       {
@@ -80,56 +81,8 @@ private static void postpareTrace(UmpleModel aModel)
         }
       }
     }
-    for(TraceCase tc : aClass.getTraceCases())
-    {
-      for(TraceDirective td: tc.getTraceDirectives())
-      {
-        if(templateLookups.containsKey("dependTracer"))
-        {
-          aClass.addDepend(new Depend(StringFormatter.format(templateLookups.get("dependTracer"),td.getTracerType())));
-        }
-        if(templateLookups.containsKey("dependDate"))
-        {
-          Depend dep = new Depend(templateLookups.get("dependDate"));
-          dep.setIsInternal(true);
-          aClass.addDepend(dep);
-        }
-        if ("Console".equals(td.getTracerType()))
-        {
-          if(generateConsole)
-          {
-            generateConsole=false;
-            prepareConsoleTracer(model,templateLookups);
-          }
-        }
-        else if ("File".equals(td.getTracerType()))
-        {
-          if(generateFile)
-          {
-            generateFile=false;          
-            if(model.getTracer().numberOfArgument()>0)
-            {
-              templateLookups.put("filename","\""+td.getTracer().getArgument(0)+"\"");
-            }
-            else
-            {
-              templateLookups.put("filename","\"trace.txt\"");
-            }
-            prepareFileTracer(model,templateLookups);
-          }
-        }
-        else if ("String".equals(td.getTracerType()))
-        {
-          if(generateString)
-          {
-            generateString=false;
-            prepareStringTracer(model,templateLookups);
-          }
-        }
-      }
-    }
   }
-
+  
   // Add a StringTracer class to support "String" tracing - typically used for testing, this methods 
   // expects the following action semantic lookups
   //  + packageName: What package should this class belong to?

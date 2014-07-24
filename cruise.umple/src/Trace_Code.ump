@@ -23,7 +23,7 @@ class UmpleVariable
    */
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all of the trace directives from the passed umple class
-    for(TraceDirective td: uClass.getTraceDirectives())
+    for(TraceDirective td: uClass.getAllTraceDirectives())
     {
       //find all of its AttributeTraceItem
       for(AttributeTraceItem ati: td.getAttributeTraceItems())
@@ -50,33 +50,6 @@ class UmpleVariable
             if(variable.equals(this))
             //return the trace item containing this umple variable
               return ati;
-          }
-        }
-      }
-    }
-    for(TraceCase tc : uClass.getTraceCases())
-    {
-      for(TraceDirective tdInTc : tc.getTraceDirectives())
-      {
-        for(AttributeTraceItem ati: tdInTc.getAttributeTraceItems())
-        {
-          if(("setMethod".equals(method)&&ati.getTraceSet())||("getMethod".equals(method)&&ati.getTraceGet()))
-          {
-            for(UmpleVariable variable: ati.getUmpleVariables())
-            {
-              if(variable.getName().equals(this.getName()))
-              {
-                return ati;
-              }
-            }
-          }
-          else if("constructor".equals(method)&&ati.getTraceConstructor())
-          {
-            for(UmpleVariable variable: ati.getUmpleVariables())
-            {
-              if(variable.equals(this))
-                return ati;
-            }
           }
         }
       }
