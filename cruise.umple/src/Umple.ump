@@ -322,8 +322,8 @@ class UmpleClassifier
 
   // The constants contained within the Umple Classifier.
   1 -> 0..* Constant;
+  1 -> 0..* ModelConstraint;
   * -> 0..1 Token extendsToken;
-  
 }
 
 /*

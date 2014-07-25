@@ -1,0 +1,7 @@
+class Client {
+  [ model : -> Mentor ]
+}
+
+class Mentor
+{
+}

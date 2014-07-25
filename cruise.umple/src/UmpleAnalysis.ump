@@ -128,11 +128,14 @@ class PreconditionAnalyzer
     {
     	precondition.addExpression(cv);
     }  
-	if (uClassifier instanceof UmpleClass) {
-		((UmpleClass)(uClassifier)).addPrecondition(precondition);
-	} else if (uClassifier instanceof UmpleTrait){
-		((UmpleTrait)(uClassifier)).addPrecondition(precondition);  
-	}
+    if (uClassifier instanceof UmpleClass)
+    {
+      ((UmpleClass)(uClassifier)).addPrecondition(precondition);
+    }
+    else if (uClassifier instanceof UmpleTrait)
+    {
+      ((UmpleTrait)(uClassifier)).addPrecondition(precondition);  
+    }
     rawLine = new ArrayList<ConstraintVariable>();
   }
 }
@@ -154,11 +157,14 @@ class PostconditionAnalyzer
     	postcondition.addExpression(cv);
     }
     postcondition.setPosition(token.getPosition());
-    if (uClassifier instanceof UmpleClass) {
-    	((UmpleClass)(uClassifier)).addPostcondition(postcondition);
-  	} else if (uClassifier instanceof UmpleTrait){
-  		((UmpleTrait)(uClassifier)).addPostcondition(postcondition);  
-  	}
+    if (uClassifier instanceof UmpleClass)
+    {
+      ((UmpleClass)(uClassifier)).addPostcondition(postcondition);
+    } 
+    else if (uClassifier instanceof UmpleTrait)
+    {
+      ((UmpleTrait)(uClassifier)).addPostcondition(postcondition);  
+    }
     rawLine = new ArrayList<ConstraintVariable>();
   }
 }
@@ -906,7 +912,6 @@ class StringComplexExpressionAnalyzer
         cv.setSubConstraint(new Constraint());
         for(ConstraintVariable var:rawLine)
         {
-          System.out.println(var.getValue());
           cv.getSubConstraint().addExpression(var);
         }
         myRawLine.add(cv);
@@ -1018,6 +1023,199 @@ class LessOpAnalyzer
   }
 }
 
+class ModelConstraintBodyAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+  public void prepare(Token token)
+  {
+    ModelConstraint parent = modelConstraint;
+    modelConstraint = new ModelConstraint(token.getPosition());
+    if(parent!=null)
+    {
+      parent.addModelConstraint(modelConstraint);
+    }
+  }
+  public void analyze(Token token)
+  {
+  }
+
+  public void reset()
+  {
+    modelConstraint = null;
+  }
+}
+
+class ModelLinkingOpAnalyzer
+{
+  isA Analyzer; 
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+  public void prepare(Token token)
+  {
+    if(token.getSubToken(0).is("and"))
+    {
+      modelConstraint.setLinkNext("and");
+    }
+    else if(token.getSubToken(0).is("or"))
+    {
+      modelConstraint.setLinkNext("or");
+    }
+  }
+}
+
+class ModelExprAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+
+  public void analyze(Token token)
+  {
+    String source = token.getValue("source");
+    String target = token.getValue("target");
+    if(source!=null)
+    {
+      modelConstraint.getMostRecent().setSource(source);
+    }
+    modelConstraint.getMostRecent().setTarget(target);
+  }
+}
+
+class ModelRelationOpInheritanceAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+}
+
+class ModelRelationOpInheritanceSubclassAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+  public void analyze(Token token)
+  {
+    modelConstraint.addModelConstraint(new ModelConstraintSubClass(token.getPosition()));
+  }
+}
+
+class ModelRelationOpInheritanceSuperclassAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+  public void analyze(Token token)
+  {
+    modelConstraint.addModelConstraint(new ModelConstraintSuperClass(token.getPosition()));
+  }
+}
+
+class ModelRelationOpAttributeAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+
+  public void analyze(Token token)
+  {
+    if(token.getValue("classification")==null)
+    {
+      modelConstraint.addModelConstraint(new ModelConstraintAttributeFromName(token.getPosition()));
+    }
+  }
+}
+
+class ModelRelationOpAttributeClassificationAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+
+  public void analyze(Token token)
+  {
+    if("named".equals(token.getValue()))
+    {
+      modelConstraint.addModelConstraint(new ModelConstraintAttributeFromName(token.getPosition()));
+    }
+    else if("of".equals(token.getValue()))
+    {
+      modelConstraint.addModelConstraint(new ModelConstraintAttributeFromClass(token.getPosition()));
+    }
+  }
+}
+
+class ModelRelationOpAssociationAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+
+  public void prepare(Token token)
+  {
+    modelConstraint.addModelConstraint(new ModelConstraintAssociation(token.getPosition()));
+  }
+}
+
+class ModelRelationOpAssociationOpAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  depend java.util.*;
+  lazy ModelConstraint modelConstraint;
+
+  public void analyze(Token token)
+  {
+    modelConstraint.setAssociationType(token.getValue());
+  }
+}
+
+class ModelRelationAssociationEndAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+  lazy ModelConstraint modelConstraint;
+
+  Multiplicity multiplicity = new Multiplicity();
+  public void analyze(Token token)
+  {
+    if(multiplicity.getMaximum() == null)
+    {
+      multiplicity.setBound(multiplicity.getMinimum());
+      multiplicity.setMinimum(null);
+    }
+    modelConstraint.addAssociationEnd(multiplicity);
+  }
+}
+
+class ModelRelationAssociationEndBoundAnalyzer
+{
+  isA Analyzer;
+  depend cruise.umple.compiler.*;
+
+  lazy Multiplicity multiplicity;
+  public void analyze(Token token)
+  {
+    if(multiplicity.getMinimum()==null)
+    {
+      multiplicity.setMinimum(token.getValue());
+    }
+    else
+    {
+      multiplicity.setMaximum(token.getValue());
+    }
+  }
+}
 
 
 

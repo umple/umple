@@ -1,0 +1,8 @@
+class Client {
+  [ model : has attribute of Mentor ]
+}
+
+class Mentor
+{
+}
+

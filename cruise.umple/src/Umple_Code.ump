@@ -2625,4 +2625,466 @@ class MethodTemplateSignature{
 }
 
 
+class ModelConstraintResult
+{
+  depend cruise.umple.compiler.*;
+  Position position;
+  int error;
+  target;
+  source;
+}
+
+class ModelConstraint
+{
+  depend cruise.umple.compiler.*;
+
+  Position position;
+  0..1 parentConstraint -- * ModelConstraint;
+  String source = "this";
+  lazy String target;
+  String linkNext = "";
+  lazy String link;
+  ModelConstraint mostRecent = { getModelConstraint(numberOfModelConstraints()-1) } ; 
+
+  const ModelConstraintResult SUCCESS = new ModelConstraintResult(null,-1,null,null);
+  const ModelConstraintResult AND = new ModelConstraintResult(null,-1,null,null);
+  const ModelConstraintResult OR = new ModelConstraintResult(null,-1,null,null);
+
+  before addModelConstraint { if(numberOfModelConstraints()>0)getMostRecent().setLink(getLinkNext()); }
+
+  public void addAssociationEnd(Multiplicity multiplicity)
+  {
+    if(getModelConstraint(numberOfModelConstraints()-1) instanceof ModelConstraintAssociation)
+    {
+      getModelConstraint(numberOfModelConstraints()-1).addAssociationEnd(multiplicity);
+    }
+  }
+  public void setAssociationType(String type)
+  {
+    if(getModelConstraint(numberOfModelConstraints()-1) instanceof ModelConstraintAssociation)
+    {
+      getModelConstraint(numberOfModelConstraints()-1).setAssociationType(type);
+    }
+  }
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier){
+    List<ModelConstraintResult> results = new ArrayList<ModelConstraintResult>();
+    for(ModelConstraint modelConstraint:getModelConstraints())
+    {
+      results.add(modelConstraint.evaluate(uClassifier));
+      if(!"".equals(modelConstraint.getLink()))
+      {
+        results.add("and".equals(modelConstraint.getLink())?ModelConstraint.AND:"or".equals(modelConstraint.getLink())?ModelConstraint.OR:null);
+      }
+    }
+    for(int i=1;i<results.size();)
+    {
+      if(results.get(i)==ModelConstraint.AND)
+      {
+        if(!results.get(i-1).equals(ModelConstraint.SUCCESS))
+        {
+          return results.get(i-1);
+        }
+        if(!results.get(i+1).equals(ModelConstraint.SUCCESS))
+        {
+          return results.get(i+1);
+        }
+        results.remove(i);
+        results.remove(i);
+      }
+      else
+      {
+        i+=2;
+      }
+    }
+    for(ModelConstraintResult i:results)
+    {
+      if(i==ModelConstraint.SUCCESS){
+        return ModelConstraint.SUCCESS;
+      }
+    }
+    return results.size()>0?results.get(0):ModelConstraint.SUCCESS;
+  }
+}
+class ModelConstraintAssociation
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+
+  Multiplicity leftHandMultiplicity = new Multiplicity();
+  Multiplicity rightHandMultiplicity = new Multiplicity();
+  type = "--";
+  boolean left = true;
+  after constructor { leftHandMultiplicity.setBound("*"); }
+  after constructor { rightHandMultiplicity.setBound("*"); }
+  public void addAssociationEnd(Multiplicity multiplicity)
+  {
+    if(left)
+    {
+      leftHandMultiplicity = multiplicity;
+    }
+    else
+    {
+      rightHandMultiplicity = multiplicity;
+    }
+    left = false;
+  }
+  public void setAssociationType(String aType)
+  {
+    type = aType;
+    left = false;
+  }
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+
+    if("this".equals(getSource()))
+    {
+      setSource(uClassifier.getName());
+    }
+    if(type.equals("<-"))
+    {
+      String temp = getSource();
+      setSource(getTarget());
+      setTarget(temp);
+      Multiplicity tempMultiplicity = rightHandMultiplicity;
+      rightHandMultiplicity = leftHandMultiplicity;
+      leftHandMultiplicity = tempMultiplicity;
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass uClass = null;
+      uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+
+      if(uClass == null)
+      {
+        return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
+      }
+
+      for(Association association:uClass.getAssociations())
+      {
+        AssociationEnd theirs = null;
+        AssociationEnd mine = null;
+        if(association.getEnd(0).getClassName().equals(uClass.getName()))
+        {
+          theirs = association.getEnd(1);
+          mine = association.getEnd(0);
+        }
+        else if(association.getEnd(1).getClassName().equals(uClass.getName()))
+        {
+          theirs = association.getEnd(0);
+          mine = association.getEnd(1);
+        }
+
+        if(!theirs.getClassName().equals(getTarget()))
+        {
+          boolean isNotMyConcern = true;
+          UmpleClass child = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(theirs.getClassName());
+
+          if(child!=null)
+          {
+            UmpleClass parent = child.getExtendsClass();
+            while(child!=null)
+            {
+              if(child.getName().equals(getTarget()))
+              {
+                isNotMyConcern = false;
+              }
+              UmpleClass temp = parent;
+              parent = child.getExtendsClass();
+              child = temp;
+            }
+          }
+          if(isNotMyConcern)
+          {
+            continue;
+          }
+        }
+
+        String tBound = theirs.getMultiplicity().getBound();
+
+        Integer rMax = 0;
+        Integer rMin = 0;
+          
+        if(rightHandMultiplicity.getBound()!=null)
+        {
+          rMax = Integer.parseInt(rightHandMultiplicity.getBound().replace("*",""+Integer.MAX_VALUE));
+          rMin = Integer.parseInt(rightHandMultiplicity.getBound().replace("*","0"));
+        }
+        else
+        {
+          rMax = Integer.parseInt(rightHandMultiplicity.getMaximum().replace("*",""+Integer.MAX_VALUE));
+          rMin = Integer.parseInt(rightHandMultiplicity.getMinimum().replace("*","0"));
+        }
+          
+        if("*".equals(rightHandMultiplicity.getBound()))
+        {
+        }
+        else if(tBound==null)
+        {
+          Integer tMin = Integer.parseInt(theirs.getMultiplicity().getMinimum().replace("*","0"));
+          Integer tMax = Integer.parseInt(theirs.getMultiplicity().getMaximum().replace("*",""+Integer.MAX_VALUE));
+          
+          if(tMax>rMax||tMin<rMin)
+          {
+            continue;
+          }
+        }
+        else
+        {
+          Integer itBound = Integer.parseInt(tBound.replace("*","0"));
+          if(itBound>rMax||itBound<rMin)
+          {
+            continue;
+          }
+        }
+
+        tBound = mine.getMultiplicity().getBound();
+
+        Integer lMax = 0;
+        Integer lMin = 0;
+
+        if(leftHandMultiplicity.getBound()!=null)
+        {
+          lMax = Integer.parseInt(leftHandMultiplicity.getBound().replace("*",""+Integer.MAX_VALUE));
+          lMin = Integer.parseInt(leftHandMultiplicity.getBound().replace("*","0"));
+        }
+        else
+        {
+          lMax = Integer.parseInt(leftHandMultiplicity.getMaximum().replace("*",""+Integer.MAX_VALUE));
+          lMin = Integer.parseInt(leftHandMultiplicity.getMinimum().replace("*","0"));
+        }
+
+        if("*".equals(leftHandMultiplicity.getBound()))
+        {
+        }
+        else if(tBound==null)
+        {
+          Integer tMin = Integer.parseInt(mine.getMultiplicity().getMinimum().replace("*","0"));
+          Integer tMax = Integer.parseInt(mine.getMultiplicity().getMaximum().replace("*",""+Integer.MAX_VALUE));
+
+          if(tMax>lMax||tMin<lMin)
+          {
+            continue;
+          }
+        }
+        else
+        {
+          Integer itBound = Integer.parseInt(tBound.replace("*","0"));
+          if(itBound>lMax||itBound<lMin)
+          {
+            continue;
+          }
+        }
+        return ModelConstraint.SUCCESS;
+      }
+      return new ModelConstraintResult(getPosition(),94,getTarget(),getSource());
+    }
+    return ModelConstraint.SUCCESS;
+  }
+}
+
+class ModelConstraintSuperClass
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+    if("this".equals(getSource()))
+    {
+      setSource(uClassifier.getName());
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass child = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getTarget());
+
+      if(child!=null)
+      {
+        UmpleClass parent = child.getExtendsClass();
+        while(child!=null)
+        {
+          if(child.getName().equals(getSource()))
+          {
+            return ModelConstraint.SUCCESS;
+          }
+          UmpleClass temp = parent;
+          parent = child.getExtendsClass();
+          child = temp;
+        }
+      }
+      else 
+      {
+        for(UmpleInterface i:child.getParentInterface())
+        {
+          if(i.getName().equals(getSource()))
+          {
+             return ModelConstraint.SUCCESS;
+          }
+        }
+      }
+      return new ModelConstraintResult(getPosition(),93,getTarget(),getSource());
+    }
+    return ModelConstraint.SUCCESS;
+  }
+}
+
+class ModelConstraintSubClass
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass child = null;
+      if("this".equals(getSource()))
+      {
+        child = (UmpleClass)uClassifier;
+        setSource(child.getName());
+      }
+      else
+      {
+        child = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+      }
+      if(child == null)
+      {
+        return new ModelConstraintResult(getPosition(),92,getTarget(),getSource());
+      }
+
+      if(child!=null)
+      {
+        UmpleClass parent = child.getExtendsClass();
+        while(child!=null)
+        {
+          if(child.getName().equals(getTarget()))
+          {
+            return ModelConstraint.SUCCESS;
+          }
+          for(UmpleInterface i:child.getParentInterface())
+          {
+            if(i.getName().equals(getTarget()))
+            {
+              return ModelConstraint.SUCCESS;
+            }
+          }
+          UmpleClass temp = parent;
+          parent = child.getExtendsClass();
+          child = temp;
+        }
+      }
+      return new ModelConstraintResult(getPosition(),92,getTarget(),getSource());
+    }
+
+    return ModelConstraint.SUCCESS;
+  }
+}
+
+class ModelConstraintAttributeFromName
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass uClass = null;
+      if("this".equals(getSource()))
+      {
+        uClass = (UmpleClass)uClassifier;
+        setSource(uClass.getName());
+      }
+      else
+      {
+        uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+      }
+      if(uClass == null)
+      {
+        return new ModelConstraintResult(getPosition(),90,getTarget(),getSource());
+      }
+      return uClass.getAttribute(getTarget())!=null?ModelConstraint.SUCCESS:new ModelConstraintResult(getPosition(),90,getTarget(),getSource());
+    }
+    return ModelConstraint.SUCCESS;
+  }
+}
+
+class ModelConstraintAttributeFromClass
+{
+  isA ModelConstraint;
+  depend cruise.umple.compiler.*;
+
+  public ModelConstraintResult evaluate(UmpleClassifier uClassifier)
+  {
+    ModelConstraintResult evaluation = super.evaluate(uClassifier);
+    if(!evaluation.equals(ModelConstraint.SUCCESS))
+    {
+      return evaluation;
+    }
+    if(uClassifier instanceof UmpleClass)
+    {
+      UmpleClass uClass = null;
+      if("this".equals(getSource()))
+      {
+        setSource(uClassifier.getName());
+      }
+      
+      uClass = ((UmpleClass)uClassifier).getSourceModel().getUmpleClass(getSource());
+      if(uClass == null)
+      {
+        return new ModelConstraintResult(getPosition(),91,getTarget(),getSource());
+      }
+
+      for(Attribute attribute:uClass.getAttributes())
+      {
+        if(getTarget().equals(attribute.getType()))
+        {
+          return ModelConstraint.SUCCESS;
+        }
+        else {
+          UmpleClass child = uClass.getSourceModel().getUmpleClass(attribute.getType());
+
+          if(child!=null)
+          {
+            UmpleClass parent = child.getExtendsClass();
+            while(child!=null)
+            {
+              if(child.getName().equals(getTarget()))
+              {
+                return ModelConstraint.SUCCESS;
+              }
+              UmpleClass temp = parent;
+              parent = child.getExtendsClass();
+              child = temp;
+            }
+          }
+        }
+      }
+      return new ModelConstraintResult(getPosition(),91,getTarget(),getSource());
+    }
+    return ModelConstraint.SUCCESS;
+  }
+}
+
 use Umple_Code_Trait.ump;

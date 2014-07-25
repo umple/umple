@@ -1,0 +1,8 @@
+class Client {
+  * -> 1..3 Mentor;
+  [ model : -> 1..2 Mentor ]
+}
+
+class Mentor
+{
+}

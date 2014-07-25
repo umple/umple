@@ -1,0 +1,8 @@
+class Client {
+  0..5 -- 1..* Mentor;
+  [ model : 0..6 -> 0..* Mentor ]
+}
+class Mentor
+{
+  [ model : Client <- Mentor ]
+}

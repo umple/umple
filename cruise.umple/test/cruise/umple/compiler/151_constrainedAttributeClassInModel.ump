@@ -1,0 +1,11 @@
+class Client {
+  [ model : Client has attr named home ]
+  [ model : has home ]
+  [ model : has attribute named home]
+  [ model : Mentor has named awayFromHome]
+  home;
+}
+class Mentor
+{
+  awayFromHome;
+}

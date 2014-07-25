@@ -38,7 +38,7 @@ class UmpleInternalParser
   /*
    * Analyzes a token recognized as a constraint
    * 
-   * @param invariantToken The token containting the constraintsub.
+   * @param invariantToken The token containing the constraint.
    * @param aClass The Umple class for which an attribute is being constrained.
    */
   private void analyzeInvariant (Token invariantToken, UmpleClassifier uClassifier)
@@ -50,4 +50,17 @@ class UmpleInternalParser
     }
   }
      
+/*
+ * Analyzes a token recognized as a model contraint.
+ *
+ * @param modelConstraintToken The token containing the constraint.
+ */
+  private void analyzeModelConstraint(Token modelConstraintToken, UmpleClassifier uClassifier)
+  {
+    if(((ModelConstraintBodyAnalyzer)model.getAnalyzer("modelConstraintBody"))!=null){
+      model.getAnalyzer("modelConstraintBody").analyzeToken(modelConstraintToken);
+      uClassifier.addModelConstraint(((ModelConstraintBodyAnalyzer)model.getAnalyzer("modelConstraintBody")).getModelConstraint());
+      ((ModelConstraintBodyAnalyzer)model.getAnalyzer("modelConstraintBody")).reset();
+    }
+  }
 }
