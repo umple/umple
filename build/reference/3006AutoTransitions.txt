@@ -12,5 +12,5 @@ to the next immediately after completing entry actions or upon completion of a d
 [[autoTransition]] [[autoTransitionBlock]] 
  
 @@example
-@@source manualexamples/Auto-Transitions1.ump
+@@source manualexamples/Auto-Transitions1.ump &diagramtype=state
 @@endexample

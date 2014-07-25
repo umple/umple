@@ -45,10 +45,10 @@ Details of each state can include:
 
 
 @@example
-@@source manualexamples/BasicStateMachines1.ump
+@@source manualexamples/BasicStateMachines1.ump &diagramtype=state
 @@endexample
 
 
 @@example
-@@source manualexamples/BasicStateMachines2.ump
+@@source manualexamples/BasicStateMachines2.ump &diagramtype=state
 @@endexample

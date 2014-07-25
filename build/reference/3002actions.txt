@@ -31,9 +31,9 @@ interrupted and cancelled when a transition is taken out of the state.</p>
 
 
 @@example
-@@source manualexamples/StateMachineActionsandDoActivities1.ump
+@@source manualexamples/StateMachineActionsandDoActivities1.ump &diagramtype=state
 @@endexample
 
 @@example
-@@source manualexamples/StateMachineActionsandDoActivities2.ump
+@@source manualexamples/StateMachineActionsandDoActivities2.ump &diagramtype=state
 @@endexample

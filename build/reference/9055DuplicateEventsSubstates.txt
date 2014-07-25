@@ -11,5 +11,5 @@ In the example below, the event e from the s1 superstate and the event e in the 
 </p>
 
 @@example
-@@source manualexamples/W055DuplicateEventsWithinSubstates1.ump
+@@source manualexamples/W055DuplicateEventsWithinSubstates1.ump &diagramtype=state
 @@endexample

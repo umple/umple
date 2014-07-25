@@ -20,5 +20,5 @@ A queued state machine will process events in the same order as a regular state 
 [[inlineStateMachine]]
 
 @@example
-@@source manualexamples/QueuedStateMachines1.ump
+@@source manualexamples/QueuedStateMachines1.ump &diagramtype=state
 @@endexample

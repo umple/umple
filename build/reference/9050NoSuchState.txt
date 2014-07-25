@@ -11,10 +11,10 @@ An end state (with no outgoing transitions) is generated. The purpose of the war
 
 
 @@example
-@@source manualexamples/W050TargetStateNotFound1.ump
+@@source manualexamples/W050TargetStateNotFound1.ump &diagramtype=state
 @@endexample
 
 @@example
-@@source manualexamples/W050TargetStateNotFound2.ump
+@@source manualexamples/W050TargetStateNotFound2.ump &diagramtype=state
 @@endexample
 

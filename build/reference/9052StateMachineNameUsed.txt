@@ -11,10 +11,10 @@ noreferences
 </p>
 
 @@example
-@@source manualexamples/E052StateMachineNameClash1.ump
+@@source manualexamples/E052StateMachineNameClash1.ump &diagramtype=state
 @@endexample
 
 @@example
-@@source manualexamples/E052StateMachineNameClash2.ump
+@@source manualexamples/E052StateMachineNameClash2.ump &diagramtype=state
 @@endexample
 

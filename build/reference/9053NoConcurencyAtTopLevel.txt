@@ -13,11 +13,11 @@ noreferences
 
 
 @@example
-@@source manualexamples/E053NoConcurrencyAtTopLevel1.ump
+@@source manualexamples/E053NoConcurrencyAtTopLevel1.ump &diagramtype=state
 @@endexample
 
 @@example
-@@source manualexamples/E053NoConcurrencyAtTopLevel2.ump
+@@source manualexamples/E053NoConcurrencyAtTopLevel2.ump &diagramtype=state
 @@endexample
 
 

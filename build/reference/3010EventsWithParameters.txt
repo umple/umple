@@ -17,5 +17,5 @@ type, or else <a href="E051EventParametersMustMatch.html">an error will be raise
 [[eventWithArgs]]
 
 @@example
-@@source manualexamples/EventsWithParameters1.ump
+@@source manualexamples/EventsWithParameters1.ump &diagramtype=state
 @@endexample

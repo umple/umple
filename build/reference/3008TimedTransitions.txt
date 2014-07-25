@@ -15,10 +15,10 @@ The 'afterEvery' keyword, tries to trigger a transition repeatedly at a specifie
 [[afterEveryEvent]] [[afterEvent]]
 
 @@example
-@@source manualexamples/TimedTransitions1.ump
+@@source manualexamples/TimedTransitions1.ump &diagramtype=state
 @@endexample
 
 
 @@example
-@@source manualexamples/TimedTransitions2.ump
+@@source manualexamples/TimedTransitions2.ump &diagramtype=state
 @@endexample
