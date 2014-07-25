@@ -1,0 +1,18 @@
+E202 Trait not defined
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error resulting from a trait not being defined </h2>
+
+<p>In Umple, when traits are used inside of classes or traits they have to be defined. The Umple compiler does not allow the use of traits that are not defined in the system.</p>
+
+
+@@example
+@@source manualexamples/E202NotAvailableTraits.ump
+@@endexample
+
+@@example
+@@source manualexamples/E202AvailableTraits.ump
+@@endexample

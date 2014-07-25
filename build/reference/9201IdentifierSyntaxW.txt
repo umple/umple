@@ -1,0 +1,22 @@
+W201 Trait Name Syntax
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple syntactic warning related to identifiers of traits </h2>
+
+<p>In Umple, identifiers used for traits, classes and interfaces should start with a capital letter (or "_"), and other elements should start with a lower case letter.</p>
+
+
+@@example
+@@source manualexamples/W201NotWellDefinedIdentifier.ump
+@@endexample
+
+@@example
+@@source manualexamples/E200ValidTraitIdentifier1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E200ValidTraitIdentifier2.ump
+@@endexample

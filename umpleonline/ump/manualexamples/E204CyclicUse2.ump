@@ -1,0 +1,11 @@
+// In this example, there is a cycle created in a hierarchy.
+class A{
+	isA T;
+}
+
+trait T{
+  isA T1;
+}
+trait T1{
+	isA T;
+}

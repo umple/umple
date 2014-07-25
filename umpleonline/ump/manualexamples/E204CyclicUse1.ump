@@ -1,0 +1,8 @@
+// In this example, there is a explicit use of a trait inside of itself.
+class A{
+	isA T;
+}
+
+trait T{
+  isA T;
+}

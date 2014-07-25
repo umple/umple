@@ -1,0 +1,18 @@
+E203 Not having an unique identifier
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to not using traits which do not have unique identifiers </h2>
+
+<p>In Umple, all elements which are capable of being reused should have unique identifiers. Traits, as reusable elements in Umple also have to follow the same rule. Identifiers of traits should be unique in the system. The conflict happens among classes, interfaces, and traits. Therefore, These three elements always should have unique identifiers. </p>
+
+
+@@example
+@@source manualexamples/E203NotHavingUniqueID.ump
+@@endexample
+
+@@example
+@@source manualexamples/E203HavingUniqueID.ump
+@@endexample
