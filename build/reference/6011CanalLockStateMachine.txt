@@ -10,5 +10,5 @@ noreferences
 
 
 @@example
-@@source CanalLockStateMachine.ump
+@@source CanalLockStateMachine.ump &diagramtype=state
 @@endexample

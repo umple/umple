@@ -9,5 +9,5 @@ noreferences
 <p>Note that this file is too large for the 'Open In UmpleOnline' to work in most browsers. You will need to copy the text to the clipboard and paste it into <a href="http://try.umple.org">UmpleOnline</a>.</p>
 
 @@example
-@@source CoordinationStateMachine.ump
+@@source CoordinationStateMachine.ump &diagramtype=state
 @@endexample

@@ -1,0 +1,34 @@
+Basic Composite Structure Diagrams
+Composite Structure
+noreferences
+
+@@description
+
+<p>A composite structure diagram is used to show how various instances of classes, called <em>parts</em>, are connected at run time in order communicate with each other.<p>
+
+<p>To specify composite structure, the following are the elements that need to be present in an Umple system:</p>
+
+<ul>
+
+<li><b>Classes</b>: Ordinary Umple classes, enhanced to have the items below.
+
+<li><b><a href="Ports.html">Ports</a></b>: (required for a composite structure diagram to be generated) These are special attributes used as the origin and/or destination of data to be transferred among the parts. .
+
+<li><b>Port bindings (Connectors)</b>: These specify how data is to be transferred among the various parts of the system. They connect ports using the -&gt; syntax. Output of one port is transferred to the input of another port.
+
+<li><b><a href="ActiveMethods.html"></b>Active method declarations</a>: These run in their own thread when constructed and are needed to ensure that data is sent and received on the ports without delay.
+
+</ul>
+
+<p>The example below first defines two classes with ports; a third class contains instances of the first two.</p>
+
+<p>Under development: Composite structure diagrams, ports and active methods are currently under development. Code generation only works in C++</p>
+
+<p>See also the <a href="http://en.wikipedia.org/wiki/Composite_structure_diagram">Wikipedia page on Composite Structure Diagrams</a>.</p>
+
+@@syntax
+[[portDefinition]] [[typedPortName]] [[portMultiplicity]] [[portBindingDefinition]]  [[bindinHandler]] [[activeMethodDefinition]] [[portWatch]] [[activeMethodDeclarator]] [[activeMethodBody]] [[activeDirectionHandler]] [[activeTrigger]] [[activeDirectionHandler]] [[activeTriggerBody]] [[deferredList]] [[activeTriggerDefinition]] [[thenDefinition]] [[resolveDefinition]] [[hitchConstraint]] [[constraintList]] [[basicConstraint]] [[timeConstraint]] [[messageConstraint]] [[invoke]] [[anonymousTriggerBody]]  [[primitiveDefinition]] 
+
+@@example
+@@source PingPong.ump &diagramtype=structure&generateDefault=cpp
+@@endexample

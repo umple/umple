@@ -286,8 +286,16 @@ class Documenter
       }
       else {
         // Use the actual filename in the URL but trim off the trailing .ump
+        // And add back any separate command line arguments
+        int spaceIndex=url.indexOf(' ');
+        String urlArguments="";
+        String urlMain=url;
+        if (spaceIndex != -1) {
+          urlArguments=url.substring(spaceIndex+1);
+          urlMain=url.substring(0,spaceIndex);
+        }
         nextExample = nextExample.replace("@@EXAMPLE_CODE_URL@@",
-          url.substring(0, url.lastIndexOf('.')));
+          url.substring(0, urlMain.lastIndexOf('.'))+urlArguments);
       }
       exampleOutput += nextExample;
     }
@@ -416,10 +424,14 @@ class ContentParser
             if(exampleText. startsWith("@@source")) {
               // obtain the example text from the ump directory in umpleonline
               try {
-                String exampleName=exampleText.substring(9).trim();
+                String exampleTextWithArguments=exampleText.substring(9).trim();
+                int spaceLocation = exampleTextWithArguments.indexOf(' ');
+                String exampleName = exampleTextWithArguments;
+                if (spaceLocation != -1) exampleName=exampleTextWithArguments.substring(
+                  0,spaceLocation);
                 exampleText = new String(Files.readAllBytes(Paths
                   .get("umpleonline/ump/"+exampleName) ));
-                exampleURL="?example="+exampleName;
+                exampleURL="?example="+exampleTextWithArguments;
               }
               catch (IOException e) {
                 exampleText = "Could not open example file "

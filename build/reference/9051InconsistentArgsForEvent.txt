@@ -11,10 +11,10 @@ noreferences
 
 
 @@example
-@@source manualexamples/E051EventParametersMustMatch1.ump
+@@source manualexamples/E051EventParametersMustMatch1.ump &diagramtype=state
 @@endexample
 
 @@example
-@@source manualexamples/E051EventParametersMustMatch2.ump
+@@source manualexamples/E051EventParametersMustMatch2.ump &diagramtype=state
 @@endexample
 

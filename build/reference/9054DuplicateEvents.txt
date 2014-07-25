@@ -11,5 +11,5 @@ In the example below, the second transition e from s1 can never be triggered bec
 </p>
 
 @@example
-@@source manualexamples/W054DuplicateEvents1.ump
+@@source manualexamples/W054DuplicateEvents1.ump &diagramtype=state
 @@endexample

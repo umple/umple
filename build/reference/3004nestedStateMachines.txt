@@ -16,16 +16,16 @@ illustrate the difference.
 
 
 @@example
-@@source manualexamples/NestedStateMachines1.ump
+@@source manualexamples/NestedStateMachines1.ump &diagramtype=state
 @@endexample
 
 
 @@example
-@@source manualexamples/NestedStateMachines2.ump
+@@source manualexamples/NestedStateMachines2.ump &diagramtype=state
 @@endexample
 
 
 
 @@example
-@@source manualexamples/NestedStateMachines3.ump
+@@source manualexamples/NestedStateMachines3.ump &diagramtype=state
 @@endexample
