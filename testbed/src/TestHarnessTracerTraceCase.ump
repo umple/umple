@@ -1,0 +1,27 @@
+
+namespace cruise.tracer.test;
+
+//-------------------------------
+
+class TraceCaseA
+{
+  name;
+  Integer id;
+  bulb 
+  {
+    Off { flip -> On; }
+    On 
+    {
+      flip -> Off;
+      Normal { touch -> Dimmed; }
+      Dimmed { touch -> Off; }
+    }
+  }
+  // tracecase has tracing of attributes and state machine
+  tracecase tc1 {
+      trace name;
+      trace id;
+      trace On;
+  }
+  activate tc1;
+}
