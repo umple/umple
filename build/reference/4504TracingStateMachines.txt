@@ -1,0 +1,21 @@
+Tracing State Machines
+Tracing
+noreferences
+
+@@description
+<p>
+State machines are representations of system behaviour. States can have entry or exit actions and do activities; they can also be composite (i.e. nested) or concurrent. MOTL provides modellers with the capability of specifying tracing for all these modelling elements. </p>
+
+<ul>
+<li><b>State machine</b>: Tracing a state involves the tracing of its entry/exit actions, incoming/outgoing events, and do-activities. In case of composite states, all nested states will be traced accordingly.</li>
+<li><b>State</b>: Tracing a state involves the tracing of its entry/exit actions, incoming/outgoing events, and do-activities. In case of composite states, all nested states will be traced accordingly.</li>
+<li><b>Event</b>: A targeted event can be traced specifically. Tracing an event records previous state before the triggering of the traced event with the resulting new state after the transition.</li>
+</ul>
+</p>
+
+@@syntax
+[[traceDirective]] [[traceItem]] [[traceEntity]] [[traceOption]] [[traceWhere]] 
+
+@@example
+@@source manualexamples/TracingStateMachines1.ump
+@@endexample
