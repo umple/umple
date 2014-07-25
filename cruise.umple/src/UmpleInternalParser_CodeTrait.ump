@@ -53,10 +53,10 @@ class UmpleInternalParser
    String traitName = traitToken.getValue("name").split(" ")[traitToken.getValue("name").split(" ").length-1];
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(traitName, "[A-Za-z]") != true) {
-      setFailedPosition(traitToken.getPosition(), 2500, traitName);
+      setFailedPosition(traitToken.getPosition(), 200, traitName);
     }
     else if ( traitName.matches("[a-z].*") ){ // Warn when class name does not start with a capital letter.    
-      setFailedPosition(traitToken.getPosition(), 2501, traitName);
+      setFailedPosition(traitToken.getPosition(), 201, traitName);
     }  
     UmpleTrait aTrait;
     aTrait = model.addUmpleTrait(traitToken.getValue("name"));
@@ -311,7 +311,7 @@ class UmpleInternalParser
     		aTrait.setDefinedParameterType(name,"attribute");
 
     	} else {
-        	setFailedPosition(attributeToken.getPosition(), 2556, name, aTrait.getName());
+        	setFailedPosition(attributeToken.getPosition(), 209, name, aTrait.getName());
         }
     }    
     
@@ -785,7 +785,7 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 	 	 for (MethodTemplateSignature mTSignature : inGTPApplied.getMethodTemplateSignatures()) {
 	 		Method tempMethod = inTrait.getMethod(mTSignature.getMethod()); 
 		 	if ( tempMethod == null || (tempMethod != null && tempMethod.isIsAbstract())){
-				getParseResult().addErrorMessage(new ErrorMessage(2559,inTrait.getPosition(0),mTSignature.getMethod().getName(),inTrait.getName()));	
+				getParseResult().addErrorMessage(new ErrorMessage(212,inTrait.getPosition(0),mTSignature.getMethod().getName(),inTrait.getName()));	
 				return traitMethods;
 			}
 		 }
@@ -907,13 +907,13 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
     UmpleTrait localTrait = getModel().getUmpleTrait(inGeneralTPApplied.getInheritanceName());
     for (GeneralTemplateParameter gtp : localTrait.getGeneralTemplateParameters()) {
 	    if (! inGeneralTPApplied.getParameterMapping().containsKey(gtp.getName())){
-	 	   getParseResult().addErrorMessage(new ErrorMessage(2566,inGeneralTPApplied.getPositions(),gtp.getName(),localTrait.getName())); 
+	 	   getParseResult().addErrorMessage(new ErrorMessage(219,inGeneralTPApplied.getPositions(),gtp.getName(),localTrait.getName())); 
 	 	   return;
 	    }
     }	
     for (String	typeName : inGeneralTPApplied.getParameterMapping().keySet()) {
 	    if (!localTrait.hasGeneralTemplateParameter(typeName)){
-	 	   getParseResult().addErrorMessage(new ErrorMessage(2562,inGeneralTPApplied.getPositions(),typeName)); 
+	 	   getParseResult().addErrorMessage(new ErrorMessage(215,inGeneralTPApplied.getPositions(),typeName)); 
 	 	   return;
 	    }
     }	
@@ -973,7 +973,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		for(Constraint aConstraint : inTrait.getConstraints()) {
 			for(ConstraintVariable cVariable : aConstraint.getExpressions() ) {			
 				if (cVariable.getType().equals("NAME") && inClass.getAttribute(cVariable.getValue()) == null && inTrait.getAttribute(cVariable.getValue()) == null) {
-					getParseResult().addErrorMessage(new ErrorMessage(2554,inTrait.getPosition(0),cVariable.getValue(),inTrait.getName(),inClass.getName()));	
+					getParseResult().addErrorMessage(new ErrorMessage(207,inTrait.getPosition(0),cVariable.getValue(),inTrait.getName(),inClass.getName()));	
 					return;
 				}
 			}
@@ -1065,7 +1065,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 			
 			//checking cyclically
 			if (child.getName().equals(extendName)) {
-				setFailedPosition(pos, 2551, child.getName());
+				setFailedPosition(pos, 204, child.getName());
 			    return;
 			}
 			
@@ -1086,7 +1086,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		    */     
 
 		} else {
-			setFailedPosition(pos, 2502, extendName);
+			setFailedPosition(pos, 202, extendName);
 			return;
 		}
       }
@@ -1116,7 +1116,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
 			for(UmpleClass uClass : getModel().getUmpleClasses()) {
 				if (uTrait.getName().equals(uClass.getName())) {
-          			getParseResult().addErrorMessage(new ErrorMessage(2550,uTrait.getPosition(0),uTrait.getName()));
+          			getParseResult().addErrorMessage(new ErrorMessage(203,uTrait.getPosition(0),uTrait.getName()));
           			return;
 				}
 			}
@@ -1129,7 +1129,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 	  for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
 		  for (UmpleInterface uInterface : getModel().getUmpleInterfaces()) {
 			  if (uTrait.getName().equals(uInterface.getName())) {
-        			getParseResult().addErrorMessage(new ErrorMessage(2551,uTrait.getPosition(0),uTrait.getName()));
+        			getParseResult().addErrorMessage(new ErrorMessage(204,uTrait.getPosition(0),uTrait.getName()));
         			return;
 				}
 		  }
@@ -1150,7 +1150,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------Start--------------------------------------	  
 	 private void checkCyclicTraitInheritance(UmpleTrait base, UmpleTrait root) {
 		 if (base.getExtendsTraits().contains(root)) {
-			 getParseResult().addErrorMessage(new ErrorMessage(2553,base.getPosition(0),base.getName(), root.getName()));
+			 getParseResult().addErrorMessage(new ErrorMessage(206,base.getPosition(0),base.getName(), root.getName()));
 			 return;
 		 } else {
 			 for (UmpleTrait uTrait :base.getExtendsTraits()) {
@@ -1186,7 +1186,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 			  Method newMethod = new Method(uMethod);
 			  ApplyTypeParametersToMethod(newMethod,inGeneralTPApplied);
 			  if(!inClass.hasImplementedMethodIncludingWithinParentClasses(newMethod)){
-				  getParseResult().addErrorMessage(new ErrorMessage(2555,newMethod.getPosition(),newMethod.getName(),inTrait.getName(),inClass.getName()));
+				  getParseResult().addErrorMessage(new ErrorMessage(208,newMethod.getPosition(),newMethod.getName(),inTrait.getName(),inClass.getName()));
 				  return;
 			  }
 		  }
@@ -1208,7 +1208,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 			  name = subToken.getValue();
 			  GeneralTemplateParameter gtParameter = new GeneralTemplateParameter(name,"");
 			  if (aTrait.hasGeneralTemplateParameter(name)){
-				  getParseResult().addErrorMessage(new ErrorMessage(2561,subToken.getPosition(),name,aTrait.getName() ));
+				  getParseResult().addErrorMessage(new ErrorMessage(214,subToken.getPosition(),name,aTrait.getName() ));
 				  return;
 			  }
 			  aTrait.addGeneralTemplateParameter(gtParameter);
@@ -1228,13 +1228,13 @@ private void processGTemplateParameterAssignment(Token mainToken, UmpleClassifie
 				if (! aGeneralTPApplied.hasMethodTemplateSignature(mtSignature)){	
 					aGeneralTPApplied.addMethodTemplateSignature(mtSignature);
 				} else {
-					getParseResult().addErrorMessage(new ErrorMessage(2558,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
+					getParseResult().addErrorMessage(new ErrorMessage(211,subToken.getPosition(),aGeneralTPApplied.getInheritanceName(),mtSignature.getMethod().getName() ));
 				    return;
 			}
 		} else if (subToken.is("traitAppliedParameters")){
 				parameterName = subToken.getValue("pName");
 				if (aGeneralTPApplied.getParameterMapping().containsKey(parameterName)){
-					getParseResult().addErrorMessage(new ErrorMessage(2563,subToken.getPosition(),parameterName));
+					getParseResult().addErrorMessage(new ErrorMessage(216,subToken.getPosition(),parameterName));
 					return;
 				}
 				aGeneralTPApplied.getParameterMapping().put(parameterName, subToken.getValue("rName"));				
@@ -1408,10 +1408,10 @@ private boolean checkAttComeFromTraitsIsAvaiableInClass(Map<UmpleTrait, List<Att
 			Attribute internalAttribute = inClass.getAttribute(attribute.getName());
 			if (internalAttribute !=null) {
 				if (internalAttribute.getType().equals(attribute.getType())){
-					setFailedPosition(internalAttribute.getPosition(), 2565, internalAttribute.getName(),uTrait.getName(),"class", inClass.getName());
+					setFailedPosition(internalAttribute.getPosition(), 218, internalAttribute.getName(),uTrait.getName(),"class", inClass.getName());
 					inTraitAttributes.get(uTrait).remove(i);
 				} else{
-					getParseResult().addErrorMessage(new ErrorMessage(2552,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
+					getParseResult().addErrorMessage(new ErrorMessage(205,inClass.getPosition(0),attribute.getName(), uTrait.getName(),inClass.getName() ));	
 					return true;
 				}
 			}			
@@ -1431,15 +1431,15 @@ private boolean CheckAttComeFromTraitsIsAvaialbleInOtherTraits(	Map<UmpleTrait, 
 					Attribute internalAttribute = inTraitAttributes.get(internalTrait).get(i);
 					if (attribute.getName().equals(internalAttribute.getName())){
 						if(attribute.getType().equals(internalAttribute.getType()) && !uTrait.equals(internalTrait)){
-							setFailedPosition(internalAttribute.getPosition(), 2565, internalAttribute.getName(),uTrait.getName(),"trait", internalTrait.getName());
+							setFailedPosition(internalAttribute.getPosition(), 218, internalAttribute.getName(),uTrait.getName(),"trait", internalTrait.getName());
 							inTempTraitAttributes.get(uTrait).remove(j);
 						} else if (uTrait.equals(internalTrait) && attribute.getType().equals(internalAttribute.getType())){
 							inTraitAttributes.get(internalTrait).remove(internalAttribute);
 						} else {
 							if (uTrait.equals(internalTrait)){
-								getParseResult().addErrorMessage(new ErrorMessage(2564,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),attribute.getType() ,internalAttribute.getType()));	
+								getParseResult().addErrorMessage(new ErrorMessage(217,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),attribute.getType() ,internalAttribute.getType()));	
 							} else{
-								getParseResult().addErrorMessage(new ErrorMessage(2552,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),internalTrait.getName() ));	
+								getParseResult().addErrorMessage(new ErrorMessage(205,uTrait.getPosition(0),attribute.getName(), uTrait.getName(),internalTrait.getName() ));	
 								
 							}
 							return true;
@@ -1490,14 +1490,14 @@ private boolean CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(Map<UmpleTrait
 							if (uTrait.equals((UmpleTrait)inClassifier)){
 								inTempTraitMethods.get(internalTrait).remove(i);
 							} else {
-								getParseResult().addErrorMessage(new ErrorMessage(2557,inClassifier.getPosition(0),"trait", inClassifier.getName(),method.getName(),uTrait.getName(),internalTrait.getName()));	
+								getParseResult().addErrorMessage(new ErrorMessage(210,inClassifier.getPosition(0),"trait", inClassifier.getName(),method.getName(),uTrait.getName(),internalTrait.getName()));	
 								return true;
 							}
 						} else {
 							String type = "trait";	
 							if (inClassifier instanceof UmpleClass) type = "class";
 		
-							getParseResult().addErrorMessage(new ErrorMessage(2557,inClassifier.getPosition(0),type, inClassifier.getName(),method.getName(),uTrait.getName(),internalTrait.getName()));	
+							getParseResult().addErrorMessage(new ErrorMessage(210,inClassifier.getPosition(0),type, inClassifier.getName(),method.getName(),uTrait.getName(),internalTrait.getName()));	
 							return true;
 						}
 					}
@@ -1567,7 +1567,7 @@ private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intra
 						   Method temMethod = new Method(newMethod);
 						   temMethod.setName(mTSignature.getAlias());
 						   if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
-							   getParseResult().addErrorMessage(new ErrorMessage(2567,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));	
+							   getParseResult().addErrorMessage(new ErrorMessage(220,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));	
 							   return;
 						   }
 						   newMethod.setName(mTSignature.getAlias());
@@ -1583,7 +1583,7 @@ private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intra
 						   Method temMethod = new Method(newMethod);
 						   temMethod.setName(mTSignature.getAlias());
 						   if (checkMethodInMapTraitsMethod(intraitMethods,temMethod)!=null){
-							   getParseResult().addErrorMessage(new ErrorMessage(2567,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));	
+							   getParseResult().addErrorMessage(new ErrorMessage(220,inGTPApplied.getPositions(),mTSignature.getAlias(),mTSignature.getMethod().getName()));	
 							   return;
 						   }
 						  newMethod.setName(mTSignature.getAlias());
