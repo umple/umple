@@ -70,7 +70,7 @@ class State
  */
   public TraceItem getTraced(String method, UmpleClass uClass){
     //go through all the trace directives of uClass
-    for(TraceDirective td: uClass.getTraceDirectives())
+    for(TraceDirective td: uClass.getAllTraceDirectives())
     {
       //for all the statemachine trace items
       for(StateMachineTraceItem smti: td.getStateMachineTraceItems())
@@ -172,7 +172,7 @@ class State
    public StateMachineTraceItem getTrace(String method, UmpleClass uClass, Transition t){
     State nextState = t.getNextState();
       
-      for( TraceDirective td : uClass.getTraceDirectives() )
+      for( TraceDirective td : uClass.getAllTraceDirectives() )
         for( StateMachineTraceItem smti : td.getStateMachineTraceItems() )
         if( ! smti.getTraceStateMachineFlag() )
         {
@@ -245,7 +245,7 @@ class State
 class AssociationVariable
 {
     public TraceItem getTraced(String method, UmpleClass uClass){
-    for(TraceDirective td: uClass.getTraceDirectives())
+    for(TraceDirective td: uClass.getAllTraceDirectives())
     {
       for(AssociationTraceItem ast: td.getAssociationTraceItems())
       {

@@ -1,0 +1,62 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
+
+package example;
+import cruise.util.FileTracer;
+import java.util.Date;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String name;
+  private int id;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aName, int aId)
+  {
+    name = aName;
+    id = aId;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setName(String aName)
+  {
+    boolean wasSet = false;
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceCaseMultipleTD.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name+","+(""+aName).toString().replace("\n","").replace(",",";") );
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceCaseMultipleTD.ump,9,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id+","+(""+aId).toString().replace("\n","").replace(",",";") );
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getName()
+  {
+    return name;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public void delete()
+  {}

@@ -897,8 +897,9 @@ class UmpleClass
     all.addAll(getTraceDirectives());
     
     for(TraceCase tc : getTraceCases())
-      for(TraceDirective td : tc.getTraceDirectives())
-        all.add(td);
+      if( tc.getActivation() ==  true )
+        for(TraceDirective td : tc.getTraceDirectives())
+          all.add(td);
     
     return all;
   }
