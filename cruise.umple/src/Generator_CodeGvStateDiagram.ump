@@ -353,14 +353,14 @@ node [shape = circle, fixedsize = true, width=.3];
         else {
           actionCode = action.getActionCode();
           if (actionCode.length() > 15) transitionAction = " / {...}";
-          else transitionAction = " / "+actionCode;
+          else transitionAction = " / "+actionCode.replaceAll("\"","&quot;");
         }
       
         guard = t.getGuard();
         if (guard == null || hideGuards) guardString = "";
         else {
           guardString = event.isAutoTransition() ? "[" : " ["
-            + guard.getCondition()+"]";
+            + guard.getCondition().replaceAll("\"","&quot;")+"]";
         }
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);
