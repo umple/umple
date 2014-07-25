@@ -44,8 +44,10 @@ transition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [
 standAloneTransition : ( [[eventDefinition]] [[guard]] | [[guard]] [[eventDefinition]] | [=unspecified]? [[guard]] | [[eventDefinition]])? [fromState] ( [[action]] -> | -> [[action]] | -> ) [toState] ;
 
 eventDefinition- : [[afterEveryEvent]] | [[afterEvent]] | [~event] ( [[parameterList]] )?
-afterEveryEvent- : afterEvery -( [timer] -)
-afterEvent- : after -( [timer] -)
+
+// The timer in a timed event can be an number, variable, function() or function(num)
+afterEveryEvent- : afterEvery -( [!timer:[+*/a-zA-Z0-9_\.-]+(\([0-9\.]*\))?] -)
+afterEvent- : after -( [!timer:[+*/a-zA-Z0-9_\.-]+(\([0-9\.]*\))?] -)
 
 // An action can be executed on a transition, or on entry or exit
 action : / [[moreCode]]+
