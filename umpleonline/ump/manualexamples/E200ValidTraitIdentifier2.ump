@@ -1,0 +1,4 @@
+//This example shows a valid name of traits
+trait Equality {
+	//traits elements
+}

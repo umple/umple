@@ -1,0 +1,4 @@
+//This example shows an error in the name of trait
+trait 1T {
+	//traits elements
+}

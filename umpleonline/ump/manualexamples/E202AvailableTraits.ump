@@ -1,0 +1,17 @@
+//In  this example, the error has been resolved just by defining trait T1. 
+interface I{
+	//elements
+}
+
+class A {
+	isA I;
+	isA T; 
+}
+
+trait T{
+  isA T1;
+}
+
+trait T1{
+	//elements
+}

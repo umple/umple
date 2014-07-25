@@ -1,0 +1,13 @@
+//In  this example, trait "T" uses trait "T1" which is not available. 
+interface I{
+	//elements
+}
+
+class A {
+	isA I;
+	isA T; 
+}
+
+trait T{
+  isA T1;
+}

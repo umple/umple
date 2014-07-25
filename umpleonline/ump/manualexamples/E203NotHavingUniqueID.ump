@@ -1,0 +1,12 @@
+//In  this example, Identifier of trait "I" is not unique;. 
+class A{
+	isA I;
+}
+
+class I {
+  //elements
+}
+
+trait I{
+  //elements
+}
