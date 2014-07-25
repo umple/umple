@@ -16,7 +16,7 @@ inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] |
 referencedStateMachine : [name] as [definitionName] ( { [[extendedStateMachine]] } | ; )
 
 //Issue 547 and 148
-extendedStateMachine#: ( [[comment]] | [=changeType:+| - |- |*]? [[state]] | [[standAloneTransition]] )*
+extendedStateMachine# : ( [[comment]] | [=changeType:+| - |- |*]? [[state]] | [[standAloneTransition]] )*
 
 // An enum is a state machine that has no events
 // 	stateName is prefixed with ~ to match alphanumeric names only.

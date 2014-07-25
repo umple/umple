@@ -934,6 +934,9 @@ class Parser
           } // End outputting rule
           queuedComments = new StringBuilder(); // clear them whether or not output
         }
+        else {
+          System.out.println("UNPROCESSABLE RULE in grammar when generating manual in Parser_Code.ump. Rule="+rule);
+        }
       }
     } // end for loop of every line in the rule file
     return answer.toString();
@@ -948,6 +951,7 @@ class Parser
   public int addRulesInFile(String filenameOrResourcePath)
   {
     InputStream resourceStream = null;
+    String nextRule = null;
     BufferedReader reader = null;
     int numberOfRulesProcessed = 0;
     try
@@ -962,7 +966,7 @@ class Parser
         reader = new BufferedReader(new InputStreamReader(resourceStream));
       }
 
-      String nextRule = null;
+      nextRule = null;
       do 
       {
         nextRule = reader.readLine();
@@ -985,7 +989,7 @@ class Parser
     }
     catch (Exception e)
     {
-
+        System.out.println("Exception processing grammar rule in"+filenameOrResourcePath+" Failing Rule Number = "+numberOfRulesProcessed+1+" Likely no space before colon or space after rule before -. \n Rule="+((nextRule==null)?"null":nextRule));
     }
     finally
     {
