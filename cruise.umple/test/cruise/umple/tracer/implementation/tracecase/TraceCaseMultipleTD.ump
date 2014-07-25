@@ -1,0 +1,12 @@
+namespace example;
+
+class Tracer
+{
+	String name;
+	Integer id;
+	tracecase tc1 {
+  	  trace name;
+  	  trace id;
+	}
+	activate tc1;
+}

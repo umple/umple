@@ -22,6 +22,18 @@ public class TracerTraceCaseTest extends TracerTemplateTest
   {
   	AssertTraceCase("TraceCaseSingleTD.ump","TraceCaseSingleTD.","Tracer");
   }
+  
+  @Test
+  public void TraceCaseMultipleTD()
+  {
+    AssertTraceCase("TraceCaseMultipleTD.ump","TraceCaseMultipleTD.","Tracer");
+  }
+  
+  @Test
+  public void TraceCaseAttrStm()
+  {
+    AssertTraceCase("TraceCaseAttrStm.ump","TraceCaseAttrStm.","Tracer");
+  }
 
   //----------------------------------------
   
