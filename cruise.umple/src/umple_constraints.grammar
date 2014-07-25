@@ -11,14 +11,14 @@
 // allows limiting the values of attributes. Code generation is not currently enabled.
 // Constraints may appear in classes (including association classes) 
 // as well as in states.
-precondition : [ [name]? pre: [[constraint]] ]
-postcondition : [ [name]? post: [[constraint]] ]
+precondition : [ [name]? pre : [[constraint]] ]
+postcondition : [ [name]? post : [[constraint]] ]
 
 invariant : [ ([name] :)? ([[constraint]]) ]
 constraintToken : [[constraint]]
 
 // A constraint is an expression optionally be surrounded in round brackets or negated
-constraint- :  [[constraintBody]] |  [[constraintExpr]] [[linkingOp]]?
+constraint- :  [[constraintBody]] [[linkingOp]]? |  [[constraintExpr]] [[linkingOp]]?
 negativeConstraint : ! [[constraint]] | not [[constraint]] | ~ [[constraint]]
 
 // A constraint body is a constraint expression (possibly with a linking operator such as && or ||). 
@@ -46,16 +46,16 @@ genExpr : [[constraintName]] [[equalityOperator]] [[constraintName]]
 
 //for floats, doubles and ints
 numExpr : [[numberExpression1]] | [[numberExpression2]] | [[numberExpression3]] | [[numberExpression4]]
-numberExpression1 -: ( [[arithmeticCall]] | [[numberName]] ) [[ordinalOp]] ( [[arithmeticCall]] | [[numberName]] )
-numberExpression2 -: ( [[arithmeticCall]] | [[constraintName]] ) [[equalityOperator]] ( [[arithmeticCall]] | [[numberLiteral]] )
-numberExpression3 -: ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[constraintName]] )
-numberExpression4 -: ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[numberLiteral]] )
+numberExpression1 - : ( [[arithmeticCall]] | [[numberName]] ) [[ordinalOp]] ( [[arithmeticCall]] | [[numberName]] )
+numberExpression2 - : ( [[arithmeticCall]] | [[constraintName]] ) [[equalityOperator]] ( [[arithmeticCall]] | [[numberLiteral]] )
+numberExpression3 - : ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[constraintName]] )
+numberExpression4 - : ( [[arithmeticCall]] | [[numberLiteral]] ) [[equalityOperator]]    ( [[arithmeticCall]] | [[numberLiteral]] )
 numberLiteral- : [!number:[0-9]+([\\.][0-9]+)?]
 numberName- : [[numberLiteral]] | [[constraintName]]
 arithmeticCall : [[lowArithmeticOperatorCall]] | [[highArithmeticOperatorCall]]
 lowArithmeticOperatorCall- : ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] )? [=operator:+|-] ( [[arithmeticCall]] | [[arithmeticResolve]] ) 
 highArithmeticOperatorCall- : [[arithmeticResolve]] [=operator:*|/|^] ( [[highArithmeticOperatorCall]] | [[arithmeticResolve]] ) 
-arithmeticResolve -: -( [[arithmeticCall]] -) | [[numberName]]
+arithmeticResolve - : -( [[arithmeticCall]] -) | [[numberName]]
 
 equalityOperator- :  [=equalsOp:==|equals] | [=notequalsOp:!=|/=|=!|=/=]
 ordinalOp- : [=greaterOp:greater|>=|=>|=>=] | [=lessOp:less|<=|=<|=<=] | [=moreOp:larger|>] | [=smallerOp:smaller|<]
@@ -73,5 +73,16 @@ constraintIndexOperator- : [ [!index:[0-9]+] ]
 constraintScopeOperator :  ( . | -> ) [[constraintName]]
 constraintParameterList : OPEN_ROUND_BRACKET [[constraintParameter]]? ( [=comma:,] [[constraintParameter]] )* CLOSE_ROUND_BRACKET
 constraintParameter : [=boolLit:true|false] | [[stringLiteral]] | [[constraintName]] | [[numberLiteral]]
+
+modelConstraint- : [ model : [[modelConstraintBody]] ]
+modelConstraintBody : -( [[modelConstraintBody]] -) [[modelLinkingOp]]? | [[modelExpr]] [[modelLinkingOp]]?
+modelLinkingOp : ( [=and:&|&&|and|,] | [!or:([|][|]?|or|;)] ) [[modelConstraintBody]]
+modelExpr : [~source]? [[modelRelationOp]] [~target]
+modelRelationOp - : [[modelRelationOpAssociation]] | [[modelRelationOpAttribute]] | [[modelRelationOpInheritance]]
+modelRelationOpInheritance : [=subclass:isA] | [=subclass:subclass|child|>>] ( of )? | [=subclass:inherits] ( from )? | [=superclass:parent|superclass|<<] ( of )?
+modelRelationOpAttribute : [=op:has] ( attribute | attr )? [=classification:named|of]?
+modelRelationOpAssociation : [[modelRelationAssociationEnd]]? [=op:--|->|<-] [[modelRelationAssociationEnd]]?
+modelRelationAssociationEnd :  [!bound:(\d+|[*])] ( .. [!bound:(\d+|[*])] )?
+
 
 // NOTE: Additional grammar parts deleted while testing is ongoing.

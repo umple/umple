@@ -76,6 +76,13 @@
 
 80: 4, "http://umple.org/PageBeingDeveloped.html", State '{0}' was not found in state machine '{1}'. Processed as if the state exists ;
 
+# Model Constraints' Error messages
+90: 2, "http://umple.org/PageBeingDeveloped.html", Attribute named {0} was not found in class {1}, as required in constraint. ;
+91: 2, "http://umple.org/PageBeingDeveloped.html", Attribute with type {0} was not found in class {1}, as required in constraint. ;
+92: 2, "http://umple.org/PageBeingDeveloped.html", Class {0} was not found to be a subclass of class {1}, as required in constraint. ;
+93: 2, "http://umple.org/PageBeingDeveloped.html", Class {0} was not found to be a superclass of class {1}, as required in constraint. ;
+94: 2, "http://umple.org/PageBeingDeveloped.html", Class {0} was not found to have an association to class {1}, as required in constraint. ;
+
 # Messages relating to format of identifiers.
 100: 2, "http://umple.org/WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _  ;
 101: 4, "http://umple.org/WE1xxIdentifierInvalid.html", Class name '{0}' should start with a capital letter ;

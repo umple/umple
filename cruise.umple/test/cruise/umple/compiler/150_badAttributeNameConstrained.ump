@@ -1,0 +1,3 @@
+class Client {
+  [ model : has attribute named david ]
+}

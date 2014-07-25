@@ -1,0 +1,11 @@
+class Client {
+  [ model : Client has attr of Mentor ]
+  [ model : has of Mentor]
+  [ model : has attribute of Mentor ]
+  [ model : Mentor has of Client]
+  Mentor mom;
+}
+class Mentor
+{
+  Client son;
+}

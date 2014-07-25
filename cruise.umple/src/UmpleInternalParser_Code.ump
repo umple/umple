@@ -251,6 +251,10 @@ class UmpleInternalParser
     {
       analyzeInvariant(t,aClass);
     }
+    if (t.is("modelConstraintBody"))
+    {
+      analyzeModelConstraint(t,aClass);
+    }
     else if (t.is("beforeCode") || t.is("afterCode"))
     {
       analyzeInjectionCode(t,aClass);
@@ -298,18 +302,36 @@ class UmpleInternalParser
     }
     
     if (getParseResult().getWasSuccess()) {
-    	postTokenTemplateAnalysis();
+      postTokenTemplateAnalysis();
     }
     
     if (getParseResult().getWasSuccess()) {
-    	postTokenComponentAnalysis();
+      postTokenComponentAnalysis();
     }
     
     if (getParseResult().getWasSuccess())
     {
-    	postTokenTraitAnalysis();
+      postTokenTraitAnalysis();
     }
 
+    if (getParseResult().getWasSuccess())
+    {
+      postTokenModelConstraintAnalysis();
+    }
+  }
+
+  private void postTokenModelConstraintAnalysis(){
+    for(UmpleClass uClass:model.getUmpleClasses())
+    {
+      for(ModelConstraint modelConstraint:uClass.getModelConstraints())
+      {
+        ModelConstraintResult result = modelConstraint.evaluate(uClass);
+        if(result!=ModelConstraint.SUCCESS)
+        {
+          setFailedPosition(result.getPosition(),result.getError(),result.getTarget(),result.getSource());
+        }
+      }
+    }
   }
 
 

@@ -1,0 +1,12 @@
+class Client {
+  [ model : subclass of Master ]
+}
+
+class Mentor
+{  
+  isA Master;
+}
+
+class Master
+{
+}

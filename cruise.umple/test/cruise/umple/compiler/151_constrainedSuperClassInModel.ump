@@ -1,0 +1,13 @@
+class Client {
+  isA Mentor;
+}
+class Mentor
+{
+  isA Master;
+  [ model: superclass of Client ]
+}
+
+class Master
+{  
+  [ model: superclass of Client ]
+}
