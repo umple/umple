@@ -23,6 +23,7 @@ public interface IModelingConstants {
 	public final static String COPY_RIGHT= "copy.right";  //$NON-NLS-1$
 	public final static String ROOT_PATH= "rootPath"; //$NON-NLS-1$
 	public final static String ROOT_NAME= "rootName"; //$NON-NLS-1$
+	public final static String ROOT= "root"; //$NON-NLS-1$
 	
 	public final static String PARENT_INTERFACES= "parentInterfaces"; //$NON-NLS-1$
 	public final static String PARENT_CLASS= "parentClass"; //$NON-NLS-1$

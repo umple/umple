@@ -21,8 +21,10 @@ package cruise.umple.modeling.handlers.cpp;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import cruise.umple.core.CommonConstants;
 import cruise.umple.core.GenerationArgumentDescriptor;
@@ -63,9 +65,11 @@ public class StructurePointsHandler{
 			@LoopProcessorAnnotation(processPath = {IModelingElementDefinitions.CLASSES_PROCESSOR, IStructureConstants.PORTS_PROCESSOR})
 	})
 	public static void createExternalProtocolClasses(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
-			@GenerationBaseElement Object port){
+			@GenerationBaseElement Object port,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
 		Object protocol = generationValueGetter.getObject(port, IStructureConstants.PORT_PROTOCOL);
 		generationValueGetter.addRelatedObject(protocol, port);
+		generationValueGetter.addRelatedObject(port, parent);
 	}
 	
 	@LoopProcessorAnnotations(aspect= LoopAspectConstants.INITIAL, loopProcessorAnnotations ={ 
@@ -338,13 +342,20 @@ public class StructurePointsHandler{
 					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_OBJECT, element));
 		}
 		
+		tt(generationValueGetter, element, portList);
+		
+	}
+
+	private static void tt(GenerationPolicyRegistry generationValueGetter,
+			Object element, List<?> portList) {
 		for(Object port: portList){
 			String portName= generationValueGetter.getString(port, IModelingElementDefinitions.NAME);
 
 			String receiveMethodName= generationValueGetter.use(ICppStructureDefinitions.PORT_PROTOCOL_EVENT_RECEIVE_DATA_METHOD_NAME, portName);
 			
 			String normalizedType= generationValueGetter.generationPointString(port, IModelingConstants.NORMALIZED_TYPE_NAME);
-			String parmString = generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, normalizedType, portName/*IStructureConstants.DATA*/);
+			String portData = portName/*+ CommonConstants.UNDERSCORE+IStructureConstants.DATA*/;
+			String parmString = generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, normalizedType, portData);
 			
 			String receiveBody= generationValueGetter.generationPointString(port, ICppStructureDefinitions.PORT_PROTOCOL_RECEIVE_METHOD_CONTENTS);
 			receiveBody= StringUtil.indent(receiveBody, 1);
@@ -360,7 +371,6 @@ public class StructurePointsHandler{
 					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_GROUP, IModelingConstants.METHOD_OPERATIONS_GROUP),
 					GenerationArgumentDescriptor.arg(IModelingConstants.METHOD_OBJECT, element));
 		}
-		
 	}
 
 	@LoopProcessorAnnotations(aspect= LoopAspectConstants.DEFAULT, loopProcessorAnnotations ={ 
@@ -413,7 +423,10 @@ public class StructurePointsHandler{
 		List<String> portHandleNames= new ArrayList<String>();
 		for(Object port: portList){ 
 			String portName = generationValueGetter.getString(port, IModelingElementDefinitions.NAME);
-			portHandleNames.add(generationValueGetter.use(ICppStructureDefinitions.PORT_PROTOCOL_HANDLE_DEFAULT_NAME, portName));
+			String use = generationValueGetter.use(ICppStructureDefinitions.PORT_PROTOCOL_HANDLE_DEFAULT_NAME, portName);
+			if(!portHandleNames.contains(use)){
+				portHandleNames.add(use);
+			}
 		}
 		
 		for(Object binding: portBindings){
@@ -423,7 +436,11 @@ public class StructurePointsHandler{
 			String fromPortName = generationValueGetter.getString(fromPort, IModelingElementDefinitions.NAME);
 			String toPortName = generationValueGetter.getString(toPort, IModelingElementDefinitions.NAME);
 			
-			portHandleNames.add(generationValueGetter.use(ICppStructureDefinitions.PORT_PROTOCOL_HANDLE_BINDING_DEFAULT_NAME, fromPortName+ CommonConstants.UNDERSCORE+ toPortName));
+			String use = generationValueGetter.use(ICppStructureDefinitions.PORT_PROTOCOL_HANDLE_BINDING_DEFAULT_NAME, fromPortName+ CommonConstants.UNDERSCORE+ toPortName);
+			
+			if(!portHandleNames.contains(use)){
+				portHandleNames.add(use);
+			}
 		}
 		
 		assign= assign+ generationValueGetter.use(ICppDefinitions.ATTRIBUTE_DECLARATION, IStructureConstants.SLOT_HANDLE, GenerationUtil.asStringParameters(portHandleNames));
@@ -565,6 +582,12 @@ public class StructurePointsHandler{
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_IS_ROOT_ARGUMENT, Boolean.TRUE),
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.EX_HIGHEST)),
 				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
+		
+		generationValueGetter.generationPointString(messageObject, IModelingDecisions.DEPENDS_GENERATION_POINT, 
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, type),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_IS_ROOT_ARGUMENT, Boolean.TRUE),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.EX_HIGHEST)),
+				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
 		
 		generationValueGetter.generationPointString(element, ICppStructureDefinitions.PORT_PROTOCOL_MESSAGE_DEPEND, messageObject);
 		
@@ -862,8 +885,28 @@ public class StructurePointsHandler{
 		String body = generationValueGetter.use(ICppStructureDefinitions.PORT_PROTOCOL_IMPLEMENTATION_PORT_ATTRIBUTE, name, normalizedType);
 		generationValueGetter.addUniqueValue(ICppStructureDefinitions.PORT_EVENT_IMPLEMENTATIONS_ATTRIBUTES, body, parent);
 		
-		Object protocol = generationValueGetter.getObject(port, IStructureConstants.PORT_PROTOCOL);
-		generationValueGetter.generationPointString(port, ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEPEND, protocol);
+		Object portProtocol = generationValueGetter.getObject(port, IStructureConstants.PORT_PROTOCOL);
+		generationValueGetter.generationPointString(port, ICppStructureDefinitions.PORT_PROTOCOL_EVENT_DEPEND, portProtocol);
+		
+		String portType= generationValueGetter.getString(port, IModelingElementDefinitions.TYPE_NAME);
+		
+//		generationValueGetter.generationPointString(portProtocol, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
+//				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, portType));
+//		generationValueGetter.generationPointString(protocol, IModelingDecisions.DEPENDS_GENERATION_POINT, 
+//				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, portType),
+//				//GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_IS_ROOT_ARGUMENT, Boolean.TRUE),
+//				//GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.EX_HIGHEST)),
+//				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.HEADER_INCLUDES_TRACKER));
+		
+//		generationValueGetter.generationPointString(parent, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
+//				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, portProtocol), model);
+//		
+//		generationValueGetter.generationPointString(protocol, IModelingDecisions.DEPENDS_GENERATION_POINT, 
+//				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, portType),
+//				//GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_IS_ROOT_ARGUMENT, Boolean.TRUE),
+//				//GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.EX_HIGHEST)),
+//				GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+		
 	}
 	
 	@GenerationPoint(generationPoint = ICppStructureDefinitions.PORT_EVENT_IMPLEMENTATIONS)
@@ -901,20 +944,38 @@ public class StructurePointsHandler{
 	public static String portProtocolReceiveMethodConstraint(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationBaseElement Object element){
 		String constraints= generationValueGetter.generationPointString(element, IModelingElementDefinitions.CONSTRAINT_BODY);
-		return constraints.isEmpty()?CommonConstants.BLANK: StringUtil.indent(constraints, 0);
+		String string = constraints.isEmpty()?CommonConstants.BLANK: StringUtil.indent(constraints, 0);
+		return string;
 	}
 	
 	@GenerationPoint(generationPoint = ICppStructureDefinitions.PORT_PROTOCOL_RECEIVE_METHOD_CONTENTS)
 	public static String portProtocolReceiveMEthodName(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
 			@GenerationElementParameter(id = IStructureConstants.ACTIVE_METHODS) List<Object> activeMethods,
+			@GenerationLoopElement Object model,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationBaseElement Object port){
+		 
 		
+		List<?> portList= generationValueGetter.getList(parent, IStructureConstants.PORTS);
 		String portName= generationValueGetter.getString(port, IModelingElementDefinitions.NAME);
+		String portNameData= portName/*+ CommonConstants.UNDERSCORE+IStructureConstants.DATA*/;
+		
+		String portType= generationValueGetter.getString(port, IModelingElementDefinitions.TYPE_NAME);
+		
 		String all= CommonConstants.BLANK;
 		for(Object activeMethod: activeMethods){
 			List<?> list = generationValueGetter.getList(activeMethod, IStructureConstants.ACTIVE_METHOD_CODE_BLOCKS);
+			
 			if(list== null){
+				continue;
+			}
+			
+			String activeMethodName= generationValueGetter.getString(activeMethod, IModelingElementDefinitions.NAME);
+			
+			List<?> activePorts = generationValueGetter.getList(activeMethod, IModelingElementDefinitions.ACTIVE_METHOD_PORTS,
+					GenerationArgumentDescriptor.arg(IModelingConstants.ROOT, parent));
+			
+			if(!activePorts.contains(port)){
 				continue;
 			}
 			
@@ -923,15 +984,35 @@ public class StructurePointsHandler{
 				if(item.toString().trim().isEmpty()){
 					continue;
 				}
-				strings.add(generationValueGetter.getString(item, IModelingElementDefinitions.CODE));
+				strings.add(generationValueGetter.getString(item, IModelingElementDefinitions.CODE, activeMethod));
 			}
 			all= GenerationUtil.listToGeneratedString(0, 0, strings);
 			
-			String activeMethodName= generationValueGetter.getString(activeMethod, IModelingElementDefinitions.NAME);
+			Set<String> paramStrings= new HashSet<String>();
+			
+			for(Object activePort: activePorts){
+				String activePortType= generationValueGetter.generationPointString(activePort, IModelingElementDefinitions.TYPE_NAME);
+				String normalizedActivePortType= generationValueGetter.generationPointString(activePort, IModelingConstants.NORMALIZED_TYPE_NAME);
+				String activePortName= generationValueGetter.getString(activePort, IModelingElementDefinitions.NAME);
+				String parmString = generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, normalizedActivePortType, activePortName);
+				paramStrings.add(parmString);
+				
+				
+				generationValueGetter.generationPointString(parent, ICppDefinitions.CLASS_INCOMPLETE_DECLARATION, 
+						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, activePortType), model);
+				
+				generationValueGetter.generationPointString(parent, IModelingDecisions.DEPENDS_GENERATION_POINT, 
+						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_TYPE_OBJECT_ARGUMENT, activePortType),
+						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_PRIORITY, Integer.valueOf(IGenerationPointPriorityConstants.EX_HIGHEST)),
+						GenerationArgumentDescriptor.arg(IModelingDecisions.DEPENDS_INCLUDE_ID_ARGUMENT, ICppDefinitions.BODY_INCLUDES_TRACKER));
+				
+			}
+			
 			String activeMethodVisibility= generationValueGetter.getString(activeMethod, IModelingElementDefinitions.ELEMENT_VISIBILITY);
 			
 			String normalizedType= generationValueGetter.generationPointString(port, IModelingConstants.NORMALIZED_TYPE_NAME);
-			String parmString = generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, normalizedType, portName);
+			String parmString = paramStrings.size()<2?generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, normalizedType, portName):
+				GenerationUtil.asStringParameters(new ArrayList<String>(paramStrings));
 			String id = IStructureConstants.ACTIVE_METHODS+ activeMethodName;
 			
 			generationValueGetter.generationPointString(parent, IModelingConstants.METHOD_REGISTER,
@@ -959,8 +1040,15 @@ public class StructurePointsHandler{
 					Object fromPort= generationValueGetter.getObject(binding, IStructureConstants.PORT_BINDING_FROM_PORT);
 					Object toPort= generationValueGetter.getObject(binding, IStructureConstants.PORT_BINDING_TO_PORT);
 					
+					if(!portList.contains(fromPort)|| !portList.contains(toPort)){
+						continue;
+					}
+					
 					String toPartName= generationValueGetter.getString(toPort, IModelingElementDefinitions.NAME);
 					String fromPartName= generationValueGetter.getString(fromPort, IModelingElementDefinitions.NAME);
+					
+					String toPartTypeName= generationValueGetter.getString(toPort, IModelingElementDefinitions.TYPE_NAME);
+					String fromPartTypeName= generationValueGetter.getString(fromPort, IModelingElementDefinitions.TYPE_NAME);
 					
 					if(!port.equals(toPort)&& port.equals(fromPort)){
 						if(visitedPorts.contains(toPartName)){
@@ -974,10 +1062,10 @@ public class StructurePointsHandler{
 						}
 						
 						//FIXME FIXME
-						all= all+ toPartName+ "("+ portName+ ");";
+						all= all+ toPartName+ "("+ portNameData+ ");";
 					}
 					
-					if(!port.equals(fromPort)){
+					if(!port.equals(fromPort)&& portType.equals(fromPartTypeName)){
 						if(visitedPorts.contains(fromPartName)){
 							continue;
 						}
@@ -988,9 +1076,9 @@ public class StructurePointsHandler{
 							all= all+ CommonConstants.NEW_LINE;
 						}
 						//FIXME FIXME
-						all= all+ fromPartName+ "("+ portName+ ");";
+						all= all+ fromPartName+ "("+ portNameData+ ");";
 					}else{
-						if(!port.equals(toPort)){
+						if(!port.equals(toPort)&& portType.equals(toPartTypeName)){
 							if(visitedPorts.contains(toPartName)){
 								continue;
 							}
@@ -1002,7 +1090,7 @@ public class StructurePointsHandler{
 							}
 							
 							//FIXME FIXME
-							all= all+ toPartName+ "("+ portName+ ");";
+							all= all+ toPartName+ "("+ portNameData+ ");";
 						}
 					}
 				}
@@ -1014,13 +1102,33 @@ public class StructurePointsHandler{
 			return all.isEmpty()?CommonConstants.BLANK: StringUtil.indent(all, 0);
 		}
 		
-		List<String> calls= new ArrayList<String>();
+		Set<String> calls= new HashSet<String>();
 		for(Object activeMethod: activeMethods){
-			String activeMethodName= generationValueGetter.getString(activeMethod, IModelingElementDefinitions.NAME);
-			calls.add(generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, activeMethodName, portName, Boolean.TRUE));
+			List<?> activePorts = generationValueGetter.getList(activeMethod, IModelingElementDefinitions.ACTIVE_METHOD_PORTS,
+					GenerationArgumentDescriptor.arg(IModelingConstants.ROOT, parent));
+			Set<String> paramStrings= new HashSet<String>();
+			Set<String> paramTypes= new HashSet<String>();
+			for(Object activePort: activePorts){
+				String normalizedActivePortType= generationValueGetter.generationPointString(activePort, IModelingConstants.NORMALIZED_TYPE_NAME);
+				String activePortName= generationValueGetter.getString(activePort, IModelingElementDefinitions.NAME);
+				String parmString = generationValueGetter.use(ICppDefinitions.PARAMETER_ASSIGN_STATEMENET, normalizedActivePortType, activePortName);
+				paramStrings.add(parmString);
+				paramTypes.add(generationValueGetter.getString(activePort, IModelingElementDefinitions.TYPE_NAME));
+			}
+			
+			if(paramStrings.size()<2){
+				if(paramTypes.contains(portType)){
+					String activeMethodName= generationValueGetter.getString(activeMethod, IModelingElementDefinitions.NAME);
+					calls.add(generationValueGetter.use(ICppDefinitions.METHOD_INVOCATION, activeMethodName, portNameData, Boolean.TRUE));
+				}
+			}else{
+				//TODO: active object impementation
+			}
 		}
 		
-		return GenerationUtil.listToGeneratedString(0, 0, calls);
+		String listToGeneratedString = GenerationUtil.listToGeneratedString(0, 0, new ArrayList<Object>(calls));
+		
+		return listToGeneratedString;
 	}
 	
 	private static String getPortEnumName(GenerationPolicyRegistry generationValueGetter, Object parent) {

@@ -21,15 +21,19 @@ package cruise.umple.values;
 import java.lang.reflect.Method;
 
 import cruise.umple.core.GenerationPolicyRegistry;
+import cruise.umple.core.GenerationValueAnnotation;
 
 
 public class MethodDescriptor{
 	private Method fMethod;
 	private Object fInstance;
 	
-	public MethodDescriptor(Method method, Object instance) {
+	public GenerationValueAnnotation fAnnotation;
+	
+	public MethodDescriptor(Method method, Object instance, GenerationValueAnnotation annotation) {
 		this.fMethod = method;
 		this.fInstance= instance;
+		this.fAnnotation= annotation;
 	}
 
 	public Object invoke(Object element, GenerationPolicyRegistry generationValueGetter, Object... arguments){

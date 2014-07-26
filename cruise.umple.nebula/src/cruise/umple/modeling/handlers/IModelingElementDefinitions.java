@@ -36,6 +36,7 @@ public interface IModelingElementDefinitions {
 	public static final String HAS_KEY_MEMBERS= "key"; //$NON-NLS-1$
 	public static final String IS_KEY_MEMBER= "isKeyMemeber"; //$NON-NLS-1$
 	public static final String CONSTRAINTS= "constraints"; //$NON-NLS-1$
+	public static final String ACTIVE_METHOD_PORTS= "activeMEthodPorts"; //$NON-NLS-1$
 	public static final String CONSTRAINT_EXPRESSIONS= "constraintExpressions"; //$NON-NLS-1$
 	public static final String CONSTRAINT_EXPRESSION_TYPE= "constraintExrpessionType"; //$NON-NLS-1$
 	public static final String CONSTRAINT_EXPRESSION_VALUE= "constraintExrpessionValue"; //$NON-NLS-1$

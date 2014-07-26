@@ -152,8 +152,10 @@ public class CPPDependsPointsHandler{
 			setReferenceDetails(generationValueGetter, ICppDefinitions.HEADER_INCLUDES_TRACKER, element, false, declarationContents, librariesIncludes, librariesUses);
 		}
 		
-		return generationValueGetter.use(ICppDefinitions.INCLUDES_DECLARATIONS, declarationContents.toString(), librariesIncludes.toString(), 
+		String use = generationValueGetter.use(ICppDefinitions.INCLUDES_DECLARATIONS, declarationContents.toString(), librariesIncludes.toString(), 
 				librariesUses.toString());
+		
+		return use;
 	}
 
 	@GenerationPoint(generationPoint = ICppDefinitions.BODY_INCLUDES)
@@ -541,6 +543,7 @@ public class CPPDependsPointsHandler{
 	
 	private static List<Object> getIncompleteDelcarations(GenerationPolicyRegistry generationValueGetter,Object modelPackage, Object element) {
 		List<Object> incompleteDeclarations = generationValueGetter.getValues(ICppDefinitions.INCOMPLETE_DECLARATIONS, element);
+		
 		List<Object> incompleteObjects= new ArrayList<Object>();
 		for(Object object: incompleteDeclarations){
 			if(object instanceof SimpleEntry){

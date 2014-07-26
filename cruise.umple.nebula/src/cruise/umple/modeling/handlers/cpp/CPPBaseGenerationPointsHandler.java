@@ -1183,11 +1183,12 @@ public class CPPBaseGenerationPointsHandler{
 	}
 	
 	@GenerationPoint(generationPoint = IModelingElementDefinitions.OPERATION_BODY)
-	public static String operationBody(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element){
+	public static String operationBody(@GenerationRegistry GenerationPolicyRegistry generationValueGetter, @GenerationBaseElement Object element,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent){
 		
 		String all= CommonConstants.BLANK;
 		
-		all = all+ getContraintString(generationValueGetter, element);
+		all = all+ getContraintString(generationValueGetter, parent, element);
 		
 		if(!all.isEmpty()){
 			all= all+ CommonConstants.NEW_LINE;
@@ -1199,9 +1200,11 @@ public class CPPBaseGenerationPointsHandler{
 	
 	@GenerationPoint(generationPoint = IModelingElementDefinitions.CONSTRAINT_BODY)
 	public static String getContraintString(@GenerationRegistry GenerationPolicyRegistry generationValueGetter,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR, IModelingElementDefinitions.INTERFACES_PROCESSOR}) Object parent,
 			@GenerationBaseElement Object element) {
 		String all= CommonConstants.BLANK;
-		List<?> constraints= generationValueGetter.getList(element, IModelingElementDefinitions.CONSTRAINTS);
+		List<?> constraints= generationValueGetter.getList(element, IModelingElementDefinitions.CONSTRAINTS,
+				GenerationArgumentDescriptor.arg(IModelingConstants.ROOT, parent));
 		List<String> conditions= new ArrayList<String>();
 		for(Object constraint: constraints){
 			String current= generationValueGetter.generationPointString(constraint, IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS_CONTENTS,constraint);
@@ -1240,7 +1243,7 @@ public class CPPBaseGenerationPointsHandler{
 		return typeName(typeName);
 	}
 	
-	@GenerationPoint(intercept = {IModelingElementDefinitions.TYPE_NAME, IModelingElementDefinitions.OTHER_END_TYPE_NAME})
+	@GenerationPoint(intercept = {IModelingElementDefinitions.TYPE_NAME, IModelingElementDefinitions.OTHER_END_TYPE_NAME, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_VALUE})
 	public static InterceptorResponse typeName(@WatchedObjectValue String typeName){
 		if(typeName== null){
 			return new InterceptorResponse(CPPTypesConstants.VOID);
@@ -1254,7 +1257,9 @@ public class CPPBaseGenerationPointsHandler{
 			return new InterceptorResponse(CPPTypesConstants.INTEGER);
 		}else if(CommonTypesConstants.BOOLEAN.toUpperCase().equals(typeName.toUpperCase())){
 			return new InterceptorResponse(CPPTypesConstants.BOOL);
-		} 
+		} else if(typeName.equals("null")){ //$NON-NLS-1$
+			return new InterceptorResponse(CPPCommonConstants.NULL);
+		}
 		
 		return null;
 	}
