@@ -815,6 +815,11 @@ public class UmpleBaseGenerationPointsHandler{
 				}
 				
 				String value= generationValueGetter.getString(obj, IModelingElementDefinitions.CONSTRAINT_EXPRESSION_VALUE);
+				
+				generationValueGetter.generationPointString(element, IModelingConstants.NORMALIZED_TYPE_NAME, 
+						GenerationArgumentDescriptor.arg(IModelingConstants.NORMALIZED_TYPE_STRING, value));
+				
+				
 				params.add(value);
 			}
 			

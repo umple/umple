@@ -49,8 +49,6 @@ import cruise.umple.core.GenerationCallback.GenerationStringSegment;
 import cruise.umple.core.GenerationCallback.WatchedObjectValue;
 import cruise.umple.core.GenerationPoint.InterceptorResponse;
 import cruise.umple.core.LoopProcessorAnnotation.LoopProcessorAnnotations;
-import cruise.umple.modeling.handlers.IModelingElementDefinitions;
-import cruise.umple.modeling.handlers.cpp.ICppDefinitions;
 import cruise.umple.templates.GenerationTemplateDelegator;
 import cruise.umple.templates.IGenerationTemplateRegistry;
 import cruise.umple.values.GenerationValueGetterDelegator;
@@ -1315,6 +1313,22 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 		if(_decisionInvocations.get(fieldName)!= null){
 			return this.decisionPoint(classObject, this, fieldName, arguments);
 		}
+		
+		if(classObject instanceof Map){
+			Object object = this.relatedObjects.get(classObject);
+			if(object!= null){
+				return getBoolean(object, fieldName, arguments);
+			}
+			
+			object = ((Map<?, ?>)classObject).get(fieldName);
+			if(object!= null){
+				if(object instanceof Boolean){
+					return ((Boolean)object).booleanValue();
+				}
+				return false;
+			}
+		}
+		
 		boolean value = this.generationValueGetter.getBoolean(classObject, fieldName, arguments);
 		Object processWatchPoints = processWatchPoints(classObject, fieldName, Boolean.valueOf(value), arguments);
 		if(processWatchPoints instanceof Boolean){
@@ -1353,6 +1367,21 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			return 0;
 		}
 		
+		if(classObject instanceof Map){
+			Object object = this.relatedObjects.get(classObject);
+			if(object!= null){
+				return getInt(object, fieldName, arguments);
+			}
+			
+			object = ((Map<?, ?>)classObject).get(fieldName);
+			if(object!= null){
+				if(object instanceof Integer){
+					return ((Integer)object).intValue();
+				}
+				return 0;
+			}
+		}
+		
 		int intValue = this.generationValueGetter.getInt(classObject, fieldName, arguments);
 		
 		Object processWatchPoints = processWatchPoints(classObject, fieldName, new Integer(intValue), arguments);
@@ -1380,6 +1409,20 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 			return null;
 		}
 		
+		Object relatedObject = this.relatedObjects.get(classObject);
+		
+		if(classObject instanceof Map){
+			
+			if(relatedObject!= null){
+				return getString(relatedObject, fieldName, arguments);
+			}
+			
+			Object object = ((Map<?, ?>)classObject).get(fieldName);
+			if(object!= null){
+				return object.toString();
+			}
+		}
+		
 		String stringValue = this.generationValueGetter.getString(classObject, fieldName, arguments);
 		
 		if(!ignoreInterception){
@@ -1388,6 +1431,10 @@ public class GenerationPolicyRegistry implements IGenerationTemplateRegistry, IG
 				this.interceptedObjectsRetriever.setValue(fieldName, processWatchPoints, true, classObject, Boolean.valueOf(ignoreInterception), arguments);
 				return (String) processWatchPoints;
 			}
+		}
+		
+		if(stringValue== null&& relatedObject!= null){
+			stringValue= getString(relatedObject, fieldName, arguments);
 		}
 		
 		this.interceptedObjectsRetriever.setValue(fieldName, stringValue, true, classObject, Boolean.valueOf(ignoreInterception), arguments);

@@ -21,6 +21,7 @@ package cruise.umple.values;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +111,6 @@ public class GenerationValueGetterDelegator implements IGenerationValueGetter{
 				if(obtainedValue== null){
 					continue;
 				}
-				
 				this.argumentRetriever.setValue(fieldName, true, obtainedValue, classObject, arguments);
 				
 				return obtainedValue;
@@ -190,13 +190,24 @@ public class GenerationValueGetterDelegator implements IGenerationValueGetter{
 	private static void addAnnotationDetails(Method method,
 			GenerationValueAnnotation annotation, Object handler) {
 		String fieldName = annotation.fieldName();
-		MethodDescriptor methodDescriptor = new MethodDescriptor(method, handler);
+		MethodDescriptor methodDescriptor = new MethodDescriptor(method, handler, annotation);
 		List<MethodDescriptor> list = fieldDescriptorsMap.get(fieldName);
 		if(list== null){
 			list= new ArrayList<MethodDescriptor>();
 			fieldDescriptorsMap.put(fieldName, list);
 		}
 		list.add(methodDescriptor);
+		
+		Collections.sort(list, new Comparator<MethodDescriptor>() {
+
+			@Override
+			public int compare(MethodDescriptor d1, MethodDescriptor d2) {
+				Integer priority1 = Integer.valueOf(d1.fAnnotation.priority());
+				Integer priority2 = Integer.valueOf(d2.fAnnotation.priority());
+				return priority2.compareTo(priority1);
+			}
+			
+		});
 	}
 
 	@Override
