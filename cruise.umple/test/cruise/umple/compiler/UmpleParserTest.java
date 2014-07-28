@@ -34,6 +34,30 @@ public class UmpleParserTest
   }
   
   @Test
+  public void toplevelExtracode()
+  {
+    assertSimpleParse("001_toplevelExtracode.ump");
+    Assert.assertNotNull(model.getExtraCodes());
+    CodeBlock extraCode = model.getExtraCode(0);
+    Assert.assertNotNull(extraCode);
+    Assert.assertEquals("Day",extraCode.getName());
+    String extraCppCode = extraCode.getCode("RTCpp");
+    Assert.assertEquals("enum Day { MONDAY=0, FRIDAY=1, SUNDAY=2;}", extraCppCode);
+  }
+  
+  @Test
+  public void toplevelExtracodeNoCodeLang()
+  {
+    assertSimpleParse("001_toplevelExtracode_withoutCodeLang.ump");
+    Assert.assertNotNull(model.getExtraCodes());
+    CodeBlock extraCode = model.getExtraCode(0);
+    Assert.assertNotNull(extraCode);
+    String extraJavaCode = extraCode.getCode("");
+    Assert.assertEquals("Day",extraCode.getName());
+    Assert.assertEquals("enum Day { MONDAY=0, FRIDAY=1, SUNDAY=2;}", extraJavaCode);
+  }
+
+  @Test
   public void empty()
   {
     assertParse("001_empty.ump");

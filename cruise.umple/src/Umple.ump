@@ -49,6 +49,10 @@ class UmpleModel
   internal Coordinate initialOffset = new Coordinate(50,30,0,0);
   internal Coordinate classSize = new Coordinate(0,0,109,45);
   internal int maxYLevels = 5;
+  
+  // Top level blocks code contained within a model.
+  // extraCodes will be generated in a single file
+  lazy CodeBlock[] extraCodes;
 
   // data for default association positioning
   internal Coordinate offsetFromEdge = new Coordinate(10,30,0,0);
@@ -275,6 +279,7 @@ class CodeBlock
 
   internal HashMap<String,String> codes = new HashMap<String,String>();
   public static String languageUsed = "";
+  lazy String name;
 }
 
 /*

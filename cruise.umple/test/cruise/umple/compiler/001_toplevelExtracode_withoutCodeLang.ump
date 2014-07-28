@@ -1,0 +1,3 @@
+top Day {
+    enum Day { MONDAY=0, FRIDAY=1, SUNDAY=2;}
+}

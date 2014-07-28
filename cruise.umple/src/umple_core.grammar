@@ -17,7 +17,7 @@ umpleProgram- : ( [[comment]] | [[directive]] | ; )*
 // Directives are the top-level items in an umple file. See manual page [*TypesofDirectives*]
 // A directive is either used to configure the system or else is
 // an actual entity of the system to be modelled or generated
-directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelException]]
+directive- : [[glossary]] | [[generate]] | [[generate_path]] | [[useStatement]] | [[namespace]] | [[traceType]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelExtracode]] | [[toplevelException]] 
 
 // A glossary item is used to fine tune pluralization during code generation
 glossary : glossary { [[word]]* }
@@ -38,6 +38,8 @@ generate_path : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|Struc
 
 // Use statements allow incorporation of other Umple files. See [*UseStatements*]
 useStatement : use [use] ;
+
+toplevelExtracode : top [top] [[moreCode]] 
 
 // Namespaces divide the code into logical groups. See [*NamespaceDirectives*] 
 namespace- : namespace [namespace] ;
