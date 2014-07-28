@@ -1181,7 +1181,7 @@ public class UmpleParserStateMachineTest
     
     assertHasWarning("485_duplicateEventsNoGuards3.ump", 0, 54, new Position("485_duplicateEventsNoGuards3.ump",4,8,34));
     
-    
+    assertNoWarnings("485_duplicateEventsNoGuardsTimed.ump");
   }
   
   @Test

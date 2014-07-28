@@ -1234,7 +1234,9 @@ class UmpleInternalParser
             }
           }
           //System.out.println("added: " + subToken.getValue("event"));
-          unguardedEvents.add(subToken.getValue("event"));
+          
+          if(subToken.getValue("timer") == null)
+          	unguardedEvents.add(subToken.getValue("event"));
         }
     }
     

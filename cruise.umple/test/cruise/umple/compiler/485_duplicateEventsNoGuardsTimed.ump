@@ -1,0 +1,15 @@
+   class Authorizer
+    {
+    
+      validatingPINSM
+      {
+        waitingForDigit
+        {
+          waitingDigit
+          {
+            digit(List d) /{authenticate(d);} ->waitingForDigit;
+          }
+          after(10) /{System.out.println("TIMEOUT");} ->waitingForDigit;
+        }
+      }
+    }
