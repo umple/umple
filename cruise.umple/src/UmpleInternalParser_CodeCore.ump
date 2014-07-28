@@ -27,7 +27,7 @@ class UmpleInternalParser
   
     if (t.is("generate") || t.is("generate_path"))
     {
-    	analyzeGenerate(t);
+      analyzeGenerate(t);
     }
     else if (t.is("glossary"))
     {
@@ -36,6 +36,10 @@ class UmpleInternalParser
     else if (t.is("debug"))
     {
     	model.setDebugMode(true);
+    }
+    else if (t.is("toplevelExtracode"))
+    {
+    	analyzeTopLevelCode(t);
     }
   }
 
@@ -98,6 +102,36 @@ class UmpleInternalParser
       model.addGenerate("Java");
     }
   }  
+
+
+  // Add code to the top level of a file 
+  private void analyzeTopLevelCode(Token topLevelToken){
+	   List<String> codelangs = new ArrayList<String>();
+	   CodeBlock languageSpecificCode = new CodeBlock();
+	   for(Token tkn: topLevelToken.getSubTokens())
+	   {
+		   if(tkn.is("codeLang"))
+		   {
+			   codelangs.add(tkn.getValue());
+		   } 
+		   else if(tkn.is("top")) { // Name of the Top Level Construct
+			   languageSpecificCode.setName(tkn.getValue());
+		   }
+		   else if(tkn.is("code")) {
+			   if(codelangs.isEmpty())
+			   {
+				   languageSpecificCode.setCode(tkn.getValue());
+			   } else {
+				   for(String lang: codelangs)
+				   {
+					   languageSpecificCode.setCode(lang, tkn.getValue());
+				   }
+				   codelangs.clear();
+			   }
+		   }
+	   }
+	   model.addExtraCode(languageSpecificCode);
+   }
 
 
   // Add singular / plural forms of words to the glossary to be used by the code generator

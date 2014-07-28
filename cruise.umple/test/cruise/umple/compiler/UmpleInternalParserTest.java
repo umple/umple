@@ -35,7 +35,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     
     expectedResult = "[multilineComment:][classDefinition][name:Foo][multilineComment:][classDefinition][name:Bar][multilineComment:*][classDefinition][name:Foobar][multilineComment:* ";
     fileToOutputs.put("001_multipleEmptyMultiLineCommentsWithSpaces.ump", expectedResult);
-    
+        
     expectedResult = "[classDefinition][name:Foo][inlineComment:I am a comment above a method.]" + 
     		"[concreteMethodDeclaration][type:void][methodDeclarator]" + 
     		"[methodName:testMethod][parameterList][code:// I am a comment inside a method.\n" +
