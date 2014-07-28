@@ -43,11 +43,11 @@ function generateMenu($buttonSuffix)
         <li class=\"subtitle\"> Generate".$buttonSuffix."</li>
         <li id=\"ttGeneratedCodeType\">
           <select id=\"inputGenerateCode".$buttonSuffix."\" name=\"inputLanguage\" class=\"button\">
-            <option value=\"java:Java\">Java Code</option>
-            <option value=\"javadoc:javadoc\">Java API Doc</option>
-            <option value=\"php:Php\">PHP Code</option>
-            <option value=\"cpp:RTCpp\">C++ Code</option>
-            <option value=\"ruby:Ruby\">Ruby Code</option>
+            <option id=\"genjava\" value=\"java:Java\">Java Code</option>
+            <option id=\"genjavadoc\" value=\"javadoc:javadoc\">Java API Doc</option>
+            <option id=\"genphp\" value=\"php:Php\">PHP Code</option>
+            <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code</option>
+            <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
@@ -56,8 +56,8 @@ function generateMenu($buttonSuffix)
             <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
             <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>                        
             <option value=\"java:Json\">Json</option>
-            <option value=\"sql:Sql\">Sql</option>
-            <option value=\"html:SimpleMetrics\">Simple metrics</option>
+            <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
+            <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple metrics</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>

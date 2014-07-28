@@ -41,7 +41,7 @@ if (isset($_REQUEST['example']) && $_REQUEST["example"] != "") {
       if (file_exists($cachedimage))
       {
         $isCachedExample=true;
-        $diagramtype="&diagramtype=structureDiagram";
+        $diagramtype="&diagramtype=structureDiagram&generateDefault=cpp";
       }    
     }
   }
@@ -92,6 +92,12 @@ if (isset($_REQUEST["nomenu"])) {$showMenu=false;} else {$showMenu=true;}
 
 // readOnly means suppress ability to edit - passed to JavaScript
 $readOnly = isset($_REQUEST["readOnly"]);
+
+//
+$generateDefault="#genclass";
+if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] != "") {
+  $generateDefault="#gen".$_REQUEST['generateDefault'];
+}
 
 $output = readTemporaryFile("ump/" . $filename);
 ?>
@@ -437,7 +443,9 @@ $output = readTemporaryFile("ump/" . $filename);
       <?php if($showMenu) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if($readOnly) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if($showLayout) { ?> true <?php } else { ?> false <?php } ?>,
-      "<?php echo $diagramType ?>"); //
+      "<?php echo $diagramType ?>",
+      "<?php echo $generateDefault ?>"
+      ); //
   </script>
 </body>
 </html>

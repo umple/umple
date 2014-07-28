@@ -878,8 +878,17 @@ Action.loadExample = function loadExample()
   Ajax.sendRequest("scripts/compiler.php",Action.loadExampleCallback,"exampleCode=" + Page.getSelectedExample());
   var exampleName = Page.getSelectedExample().slice(0,-4);
   var diagramType="";
-  if(Page.useGvStateDiagram) diagramType="&diagramtype=state";
-  else if(Page.useStructureDiagram) diagramType="&diagramtype=structure";
+  if(Page.useGvStateDiagram) {
+    diagramType="&diagramtype=state";
+    jQuery("#genjava").prop("selected",true);
+  }
+  else if(Page.useStructureDiagram) {
+    diagramType="&diagramtype=structure&generateDefault=cpp";
+    jQuery("#gencpp").prop("selected",true);
+  }
+  else {
+    jQuery("#genjava").prop("selected",true);
+  }
   
   var largerSelector = "#buttonLarger";
   var smallerSelector = "#buttonSmaller";

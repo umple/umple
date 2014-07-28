@@ -32,7 +32,7 @@ Page.showActions = true;
 Page.modifiedDiagrams = false;
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault)
 { 
   Layout.isDiagramVisible = doShowDiagram;  
   Layout.isTextVisible = doShowText;  
@@ -44,7 +44,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   if(diagramType == "GvState")   
   {
     Page.useGvStateDiagram = true;
-    Page.useEditableClassDiagram = false;
+    Page.useEditableClassDiagram = false; 
   }
   else if(diagramType == "GvClass")   
   {
@@ -54,7 +54,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   else if(diagramType == "structureDiagram")
   {
     Page.useStructureDiagram = true;
-    Page.useEditableClassDiagram = false;
+    Page.useEditableClassDiagram = false;  
   }
 
   jQuery.noConflict();
@@ -73,6 +73,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
 
   Action.loadFile();
+  
+  jQuery(generateDefault).prop("selected",true);
 }
 
 Page.initPaletteArea = function()
@@ -447,15 +449,28 @@ Page.initExamples = function()
   jQuery("#defaultExampleOption").attr("selected",true);
  
   jQuery("#inputExampleType").change(Action.setExampleType);
-  jQuery("#cdModels").attr("selected",true);
-  
+
   jQuery("#inputExample2").change(Action.loadExample);
   jQuery("#defaultExampleOption2").attr("selected",true);
-  jQuery("#itemLoadExamples2").hide();
 
   jQuery("#inputExample3").change(Action.loadExample);
   jQuery("#defaultExampleOption3").attr("selected",true);
-  jQuery("#itemLoadExamples3").hide();
+
+  if (Page.useStructureDiagram) {
+    jQuery("#structureModels").prop("selected",true);
+    jQuery("#itemLoadExamples").hide();
+    jQuery("#itemLoadExamples2").hide();
+  }
+  else if (Page.useGvStateDiagram) {
+    jQuery("#smModels").prop("selected",true);
+    jQuery("#itemLoadExamples").hide();
+    jQuery("#itemLoadExamples3").hide();    
+  }
+  else {
+    jQuery("#cdModels").prop("selected",true); 
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();    
+  }  
 }
 
 Page.highlightItem = function(id)
