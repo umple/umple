@@ -30,5 +30,9 @@ There are two cases. (1) trace the UML construct from its creation and stop when
 
 
 @@example
-@@source manualexamples/TracingConstraint1.ump
+@@source manualexamples/TracingConstraints1.ump
+@@endexample
+
+@@example
+@@source manualexamples/TracingConstraints2.ump
 @@endexample
