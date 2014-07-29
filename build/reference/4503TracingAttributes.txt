@@ -14,7 +14,7 @@ MOTL allows the tracing of attributes at the model level. Attribute tracing can 
 </p>
 
 @@syntax
-[[traceDirective]] [[traceItem]] [[executeClause]] [[traceWhere]] [[traceEntity]]
+[[traceDirective]] [[traceEntity]] [[traceItem]]  [[traceWhere]] 
 
 @@example
 @@source manualexamples/TracingAttributes1.ump
