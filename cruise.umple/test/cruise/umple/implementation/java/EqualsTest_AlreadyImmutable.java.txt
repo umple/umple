@@ -19,9 +19,6 @@ public class Student
   //Helper Variables
   private int cachedHashCode;
   private boolean canSetIntId;
-  private boolean canSetDoubleId;
-  private boolean canSetBooleanId;
-  private boolean canSetStringId;
 
   //------------------------
   // CONSTRUCTOR
@@ -32,11 +29,8 @@ public class Student
     cachedHashCode = -1;
     canSetIntId = true;
     doubleId = aDoubleId;
-    canSetDoubleId = false;
     booleanId = aBooleanId;
-    canSetBooleanId = false;
     stringId = aStringId;
-    canSetStringId = false;
   }
 
   //------------------------

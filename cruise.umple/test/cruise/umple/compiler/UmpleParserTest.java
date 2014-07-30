@@ -16,6 +16,7 @@ import org.junit.*;
 
 import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.*;
+
 import java.io.*;
 
 public class UmpleParserTest

@@ -47,9 +47,7 @@ public class Mentor
   private int x;
 
   //Helper Variables
-  private boolean canSetStr;
   private boolean canSetStr2;
-  private boolean canSetS;
 
   //------------------------
   // CONSTRUCTOR
@@ -58,7 +56,6 @@ public class Mentor
   public Mentor(String aStr, Date aD, int aI, String aId)
   {
     str = aStr;
-    canSetStr = false;
     canSetStr2 = true;
     someName = null;
     lDoub = 0;
@@ -71,7 +68,6 @@ public class Mentor
     q = "chicken";
     resetR();
     s = "123";
-    canSetS = false;
     tt = Date.valueOf("1978-12-25");
     u = Time.valueOf("12:13:14");
     resetV();

@@ -14,7 +14,7 @@
 
   for (Attribute av : uClass.getAttributes())
   {
-    if (av.isImmutable())
+    if (av.isImmutable() && av.isIsLazy())
     {
       if (isFirst)
       {

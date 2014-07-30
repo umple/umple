@@ -1887,7 +1887,7 @@ class AssociationVariable
 		  this.associationTraceItems.add(associationTraceItem);
 	  }
 	  //Helper Variables
-	  this.canSetIsNavigable = another.canSetIsNavigable;
+	  //this.canSetIsNavigable = another.canSetIsNavigable;
   }	
 
   public boolean isReflexive()

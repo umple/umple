@@ -13,9 +13,6 @@ public class Mentor
   //Mentor Attributes
   private String name;
 
-  //Helper Variables
-  private boolean canSetName;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -23,7 +20,6 @@ public class Mentor
   public Mentor(String aName)
   {
     name = aName;
-    canSetName = false;
   }
 
   //------------------------

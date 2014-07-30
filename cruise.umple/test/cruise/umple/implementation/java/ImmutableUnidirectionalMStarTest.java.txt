@@ -18,7 +18,6 @@ public class Student
   private List<Mentor> mentors;
 
   //Helper Variables
-  private boolean canSetNumber;
   private boolean canSetMentors;
 
   //------------------------
@@ -28,7 +27,6 @@ public class Student
   public Student(String aNumber, Mentor... allMentors)
   {
     number = aNumber;
-    canSetNumber = false;
     canSetMentors = true;
     mentors = new ArrayList<Mentor>();
     boolean didAddMentors = setMentors(allMentors);
