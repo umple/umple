@@ -23,6 +23,7 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
  lazy PackageDeclaration packageDeclaration;
  lazy String name;
  lazy String classBody;
+ lazy Boolean isInterface;
 
   @Override
   public boolean visit(ImportDeclaration node) {
@@ -51,6 +52,7 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
     logger.debug("Visiting TypeDeclarations");
     name = node.getName().getFullyQualifiedName();
     String typeDeclarationCode = node.toString();
+    isInterface = node.isInterface();
     classBody = StringHelper.getClassBody(typeDeclarationCode);
     typeDeclaration = node;
     return true; 
@@ -65,6 +67,7 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
   }
 
 }
+ external TypeDeclaration {}
  external PackageDeclaration {}
  external FieldDeclaration {}
  external MethodDeclaration {}

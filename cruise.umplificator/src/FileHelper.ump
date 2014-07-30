@@ -70,9 +70,11 @@ public static void printFilesToUmplify(List<File> srcFiles){
 			   String path="";
 			   if (createSubdirectories)	{	
 				   String subDirectories = (model.getDefaultNamespace() != null && model.getDefaultNamespace().length() > 0) ?model.getDefaultNamespace().replace(".", File.separator) :"";
-				   path = outputFolder + File.separator + subDirectories;
+				   path = outputFolder + File.separator + subDirectories +File.separator;
 			   }
-			   else{ path = outputFolder + File.separator;}
+			   else{
+			    path = outputFolder + File.separator;
+			   }
 			   String filename = path + model.getUmpleFile().getSimpleFileName() + EXTENSIONS[1];
 			   File file = new File(path);
 			   file.mkdirs();
