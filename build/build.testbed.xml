@@ -2,6 +2,7 @@
 <project basedir=".." default="build" name="UmpleCore" >
 
   <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
 
   <!-- ```````````````````````````
     Environment Variables
@@ -21,6 +22,13 @@
   <property name="manualumpfiles.bin.path" value="${manualumpfiles.path}/bin"/>
   <property name="exampleumpfiles.path" value="umpleonline/ump"/>
   <property name="exampleumpfiles.bin.path" value="${exampleumpfiles.path}/bin"/>
+
+  <!-- Options for allUserManualExampleTests target-->
+  <property name="logfile" value="UserManualAndExampleTests_output.txt" />
+  <property name="examplepattern" value="*" />
+  <property name="failfast" value="true" />
+  <property name="threadcount" value="4"/>
+  <property name="cleanonfinish" value="true" />
 
   <import file="_${myenv}.xml" />
   <import file="_template.xml" />
@@ -93,7 +101,7 @@
   </target>
   
   <!-- ```````````````````````````
-    Run the testbed tests for all supported languates
+    Run the testbed tests for all supported languages
   ``````````````````````````` -->
 
   <target name="test">
@@ -163,89 +171,22 @@
     <echo message="RUBY tests completed!"/> 
   </target>
   
-  <!-- ```````````````````````````
-    Under development - user manual tests
-  ``````````````````````````` -->
+  <!-- ``````````````````````````````````````````````
+    User manual example and umpleonline example tests
+  ``````````````````````````````````````````````` -->
   <target name="allUserManualAndExampleTests">
-  
-    <echo>Building User Manual and UmpleOnline Examples</echo>
-    
-    <delete failonerror="false" >
-       <fileset dir="${manualumpfiles.path}/src-gen-umple" />
-       <fileset dir="${manualumpfiles.path}/bin"  />
-       <fileset dir="${exampleumpfiles.path}/src-gen-umple" />
-       <fileset dir="${exampleumpfiles.path}/bin"  />
-    </delete>
-      
-    <foreach target="userManualAndExampleTest" param="manualFile" parallel="false">
-      <path>
-        <fileset dir="${exampleumpfiles.path}" includes="${examplepattern}.ump" />
-        <fileset dir="${manualumpfiles.path}">
-           <include name="${examplepattern}.ump" />
-           <!-- Special cases - temporary until error detection-->
-           <exclude name="E0*.ump" />
-           <exclude name="E1*.ump" />
-           <exclude name="UseStatements1.ump" />
-           <exclude name="WE1xxIdentifierInvalid1.ump" />
-           <exclude name="WE1xxIdentifierInvalid3.ump" />
-           <exclude name="WE1xxIdentifierInvalid5.ump" />
-           <exclude name="WE1xxIdentifierInvalid6.ump" />
-           <exclude name="WE1xxIdentifierInvalid7.ump" />
-         </fileset>        
-       </path>
-    </foreach>  
+    <ant antfile="build/build.exampletests.xml" target="allUserManualAndExampleTests" >
+      <property name="logfile" value="UserManualAndExampleTests_output.txt" />
+      <property name="examplepattern" value="${examplepattern}" />
+      <property name="failfast" value="${failfast}" />
+      <property name="threadcount" value="${threadcount}"/>
+      <property name="cleanonfinish" value="${cleanonfinish}" />
+    </ant>
   </target>
-
-  <target name="userManualAndExampleTest">
-    <sequential>
-      <basename file="${manualFile}" property="manualfileshort" suffix="ump" />
-      <dirname file="${manualFile}" property="exampledir" />
-      <property name="fullump" value="${manualumpfiles.path}/${manualfileshort}.ump" />
-      <echo>Will test ${manualFile} </echo>
-      
-      <!-- Compile in umple -->
-      <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${exampledir}">
-        <arg value="-g" />
-        <arg value="Java" />
-        <arg value="--path" />
-        <arg value="src-gen-umple" />
-        <arg value="${manualfileshort}.ump" />
-      </java>
-
-      <!-- Compile the resulting Java if OK to do so -->
-      <if>
-        <and>
-          <not>
-            <equals arg1="${forcecompile}" arg2="true" />
-          </not>
-          <resourcecontains resource="${manualFile}" substring="@@@skipcompile" />
-        </and>
-        <then>
-          <echo>Skipping Java compile due to presence of @@@skip</echo>
-        </then>
-        <else>
-          <mkdir dir="${exampledir}/bin"  />
-          <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${exampledir}/bin" source="1.7" target="1.7">
-            <src path="${exampledir}/src-gen-umple"/>
-            <classpath refid="manualumpfiles.classpath"/>
-          </javac>
-        </else>
-
-      </if>
-
-      <!-- Delete the generated stuff after success -->
-      <delete failonerror="false" >
-        <fileset dir="${exampledir}/src-gen-umple" />
-        <fileset dir="${exampledir}/bin"  />
-      </delete>
-      
-    </sequential>
-  </target>
-
 
   <!-- ```````````````````````````
-    Build the application
-  ``````````````````````````` -->
+       Build the application
+       ``````````````````````````` -->
   
   <!-- 
     Build
@@ -267,7 +208,5 @@
     <antcall target="compile" />
     <antcall target="test" />
   </target>
-  
-  
 </project>
 

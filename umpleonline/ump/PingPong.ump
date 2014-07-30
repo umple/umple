@@ -51,3 +51,9 @@ Integer startValue;
   cmp1.pOut1 -> cmp2.pIn2;
   cmp2.pOut2 -> cmp1.pIn1;
 }
+
+//$?[End_of_model]$?
+
+/*
+@@@testlanguage=none
+*/

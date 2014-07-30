@@ -145,3 +145,9 @@ class PhoneLine {
 }
 
 strictness ignore 1007;
+
+//$?[End_of_model]$?
+
+/*
+@@@testlanguage=none
+*/

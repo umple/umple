@@ -13,3 +13,5 @@ strictness modelOnly;
 // Any other unparsable 'extra code' in classes will be rejected.
 strictness noExtraCode;
 
+//$?[End_of_model]$?
+// @@@skipcompile - Nothing to compile
