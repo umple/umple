@@ -1,0 +1,26 @@
+E210 Conflict in Methods
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to having two methods with the same signature but different implementation </h2>
+
+<p>Traits can be used in serveral hierarchies without any priority. It means that classes can be composed of several traits and also a trait can be composed of other traits. This brings cases in which two methods with the same signature come from either different traits or a different hierarchy path. If those methods come from two different traits, it is obvious that there is a conflict because those have been implemented for different purposes. On the other hand, if two methods come from two different paths but the source of those methods the same trait, then there is no conflict. However, there is a case in which the source is the same but one of the methods is overridden by traits somewhere in the path. In this case, there is a conflict because now functionality is not unique. The Umple compiler detects these cases and raises this error.  </p>
+
+
+@@example
+@@source manualexamples/E210ConflictMethods1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E210ConflictMethods2.ump
+@@endexample
+
+@@example
+@@source manualexamples/E210ConflictMethods3.ump
+@@endexample
+
+@@example
+@@source manualexamples/E210ConflictMethods4.ump
+@@endexample

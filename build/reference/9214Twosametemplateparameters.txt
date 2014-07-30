@@ -1,0 +1,14 @@
+E214 Two Identical Parameter Names
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to having two identical template parameter names</h2>
+
+<p>When defining traits, it is possible to define template parameters for traits. The names of these parameters should be unique in order to let the compiler perform the correct binding for them. Therefore, when there are two or more template parameters, the Umple compiler detects it as an error.  </p>
+
+
+@@example
+@@source manualexamples/E214Twosametemplateparameters.ump
+@@endexample

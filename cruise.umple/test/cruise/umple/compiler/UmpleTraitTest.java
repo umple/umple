@@ -720,7 +720,7 @@ public class UmpleTraitTest {
 	}
 	@Test	
 	public void TypeParameterTest01() {
-		String code = "class A{isA T< A = String, A = Integer >;}trait T<X,Z>{}";
+		String code = "class A{isA T< X = String, X = Integer >;}trait T<X,Z>{}";
 		UmpleModel model = getModel(code);
 		boolean result = false;
 		try {

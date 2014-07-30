@@ -1,0 +1,11 @@
+// In this example, there is an error because in class "A" there will be two methods with the name "ShowInConsole".
+class A{
+	isA T<show() as ShowInConsole>;
+}
+trait T{
+	isA T1;
+	void show(){/*T*/}
+}
+trait T1{
+	void ShowInConsole(){/*T1*/}
+}

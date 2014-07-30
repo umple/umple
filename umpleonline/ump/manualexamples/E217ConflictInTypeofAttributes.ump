@@ -1,0 +1,23 @@
+// In this example, there is a conflict because in trait "T" there will be two attributes with the same name "data" but with different types which are "B" and "C".
+class A{
+	isA T<X=B>;
+}
+class B{
+	//elements
+}
+class C{
+	//elements
+}
+trait T{
+	isA T1;
+	isA T2;
+}
+trait T1{
+	isA Share<Type = B>;
+}
+trait T2{
+	isA Share<Type = C>;
+}
+trait Share<Type> {
+	Type data;
+}

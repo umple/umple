@@ -1,0 +1,21 @@
+// In this example, there is a conflict in class "A" because method "test" is overridden in trait "T2"
+class A{
+	isA T1;
+	isA T2;
+} 
+trait T1 { 
+	isA M;
+} 
+trait T2 { 
+	isA M;
+	void test(){
+	//special implementation by T2
+	}
+}
+trait M{
+	void test(){
+	//special implementation by M
+	}
+}
+
+

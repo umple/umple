@@ -1,0 +1,14 @@
+E213 Removing While Renaming
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to removing a method from a trait while changing its name</h2>
+
+<p>When traits are used inside of classes or traits, it is possible to add or remove provided methods and also to change their visibility and names. This feature is used to resolve conflicts. In fact, it is used when we do not need some provided methods, we just need one of them, we need different visibilty, or we need a different name. Logically, it is not correct to remove a method while renaming it because the second operation is not going to happen.  </p>
+
+
+@@example
+@@source manualexamples/E213RemovingWhileRenaming.ump
+@@endexample

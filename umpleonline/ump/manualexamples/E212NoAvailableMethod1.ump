@@ -1,0 +1,9 @@
+// In this example, there is an error because trait "T1" tries to remove method "show()" from trait "T2" while it is not available in trait "T2".
+class A{
+	isA T1;
+}
+trait T1{
+	isA T2 <-show()>;
+}
+trait T2{
+}

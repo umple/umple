@@ -1,0 +1,18 @@
+E211 Two or More Modifications
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to two or more modifications of provided methods of traits</h2>
+
+<p>When traits are used inside classes or traits, it is possible to add or remove provided methods. This feature is used to resolve conflicts and also when we do not need some provided methods or just need one of them. Logically, it is not correct to add a method twice or add and then remove a method. These problems are detected by the Umple compiler.  </p>
+
+
+@@example
+@@source manualexamples/E211MoreModifications1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E211MoreModifications2.ump
+@@endexample

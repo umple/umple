@@ -1,0 +1,15 @@
+E204 Self Inheritance
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to self inheritance </h2>
+
+<p>In Umple, traits cannot be used in an explicit or implicit cyclic way. It means that a trait cannot use itself and it also cannot be used in a cyclic hierarchy. This error happens when a trait extends itself.</p>
+
+
+@@example
+@@source manualexamples/E204CyclicUse1.ump
+@@endexample
+

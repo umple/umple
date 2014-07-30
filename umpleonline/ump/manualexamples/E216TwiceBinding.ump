@@ -1,0 +1,13 @@
+// In this example, there is an error because there is two bindings for template parameter "X" in class "A"
+class A{
+	isA T< X = B , X = C >;
+}
+Class B{
+	//elements
+}
+Class C{
+	//elements
+}
+trait T<X,Z>{
+	//elements
+}
