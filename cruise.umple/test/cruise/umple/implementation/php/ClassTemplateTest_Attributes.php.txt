@@ -43,9 +43,7 @@ class Mentor
   private $x;
 
   //Helper Variables
-  private $canSetStr;
   private $canSetStr2;
-  private $canSetS;
 
   //------------------------
   // CONSTRUCTOR
@@ -54,7 +52,6 @@ class Mentor
   public function __construct($aStr, $aD, $aI, $aId)
   {
     $this->str = $aStr;
-    $this->canSetStr = false;
     $this->canSetStr2 = true;
     $this->someName = NULL;
     $this->lDoub = 0;
@@ -67,7 +64,6 @@ class Mentor
     $this->q = "chicken";
     $this->resetR();
     $this->s = "123";
-    $this->canSetS = false;
     $this->tt = date("y-m-d", strtotime("1978-12-25"));
     $this->u = date("h:i:s", strtotime("12:13:14"));
     $this->resetV();

@@ -17,7 +17,6 @@ public class Student
   private Mentor mentor;
 
   //Helper Variables
-  private boolean canSetNumber;
   private boolean canSetMentor;
 
   //------------------------
@@ -27,7 +26,6 @@ public class Student
   public Student(String aNumber, Mentor aMentor)
   {
     number = aNumber;
-    canSetNumber = false;
     canSetMentor = true;
     setMentor(aMentor);
   }

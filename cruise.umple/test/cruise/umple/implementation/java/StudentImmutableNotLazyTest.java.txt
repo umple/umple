@@ -1,0 +1,66 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
+
+package example;
+
+public class Student
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+  private String number;
+  private String number2;
+
+  //Helper Variables
+  private boolean canSetNumber2;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Student(String aNumber)
+  {
+    number = aNumber;
+    canSetNumber2 = true;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setNumber2(String aNumber2)
+  {
+    boolean wasSet = false;
+    if (!canSetNumber2) { return false; }
+    canSetNumber2 = false;
+    number2 = aNumber2;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getNumber()
+  {
+    return number;
+  }
+
+  public String getNumber2()
+  {
+    return number2;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+	  String outputString = "";
+    return super.toString() + "["+
+            "number" + ":" + getNumber()+ "," +
+            "number2" + ":" + getNumber2()+ "]"
+     + outputString;
+  }
+}

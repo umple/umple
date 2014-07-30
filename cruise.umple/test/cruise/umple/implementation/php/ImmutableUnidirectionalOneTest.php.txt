@@ -16,7 +16,6 @@ class Student
   private $mentor;
 
   //Helper Variables
-  private $canSetNumber;
   private $canSetMentor;
 
   //------------------------
@@ -26,7 +25,6 @@ class Student
   public function __construct($aNumber, $aMentor)
   {
     $this->number = $aNumber;
-    $this->canSetNumber = false;
     $this->canSetMentor = true;
     if (!$this->setMentor($aMentor))
     {

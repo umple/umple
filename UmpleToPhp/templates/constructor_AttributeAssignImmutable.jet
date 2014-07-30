@@ -11,4 +11,3 @@
   }
 %>
     $this-><%=gen.translate("attributeOne",av)%> = <%=parameterValue%>;
-    $this-><%=gen.translate("attributeCanSet",av)%> = false;

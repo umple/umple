@@ -26,6 +26,7 @@ public class PhpClassTemplateTest extends ClassTemplateTest
     SampleFileWriter.destroy(pathToInput + "/php/Mentor.php");
     SampleFileWriter.destroy(pathToInput + "/Lamp.php");
     SampleFileWriter.destroy(pathToInput + "/Switch.php");
+    SampleFileWriter.destroy(pathToInput + "/php/Student.php");
   }
   
   
@@ -59,5 +60,9 @@ public class PhpClassTemplateTest extends ClassTemplateTest
 	  System.out.print(actual);
 	  
     SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
+  }
+  @Test 
+  public void immutableNotLazyAttributeConstructor(){
+	  assertUmpleTemplateFor("php/ImmutableNotLazyAttributeConstructor.ump","php/StudentImmutableNotLazyTest.php.txt","Student");
   }
 }

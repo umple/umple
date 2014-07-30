@@ -1,0 +1,9 @@
+generate Php;
+class Student
+{
+  immutable number;
+  lazy immutable number2;
+}
+
+
+  

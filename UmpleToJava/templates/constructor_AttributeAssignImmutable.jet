@@ -3,4 +3,3 @@
   String parameterLookup = av.getValue() == null ? "parameterOne" : "parameterValue";
 %>
     <%=gen.translate("attributeOne",av)%> = <%=gen.translate(parameterLookup,av)%>;
-    <%=gen.translate("attributeCanSet",av)%> = false;

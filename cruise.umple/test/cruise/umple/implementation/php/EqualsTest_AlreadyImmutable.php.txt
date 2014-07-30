@@ -18,9 +18,6 @@ class Student
   //Helper Variables
   private $cachedHashCode;
   private $canSetIntId;
-  private $canSetDoubleId;
-  private $canSetBooleanId;
-  private $canSetStringId;
 
   //------------------------
   // CONSTRUCTOR
@@ -31,11 +28,8 @@ class Student
     $this->cachedHashCode = -1;
     $this->canSetIntId = true;
     $this->doubleId = $aDoubleId;
-    $this->canSetDoubleId = false;
     $this->booleanId = $aBooleanId;
-    $this->canSetBooleanId = false;
     $this->stringId = $aStringId;
-    $this->canSetStringId = false;
   }
 
   //------------------------
