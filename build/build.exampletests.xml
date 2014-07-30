@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="UmpleCore" >
+
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+  <taskdef resource="net/sf/antcontrib/antlib.xml" />
+
+  <property name="myenv" value="cc" />
+
+  <property name="project.output.path" value="temp" />
+  <property name="java.path" value="${project.output.path}/java" />
+  <property name="cpp.path" value="${project.output.path}/cpp" />
+  <property name="php.path" value="${project.output.path}/php" />
+
+  <property name="manualumpfiles.path" value="umpleonline/ump/manualexamples" />
+  <property name="exampleumpfiles.path" value="umpleonline/ump" />
+
+  <import file="_${myenv}.xml" />
+  <import file="_template.xml" />
+
+  <!-- options -->
+  <property name="logfile" value="UserManualAndExampleTests_output.txt" />
+  <property name="examplepattern" value="*" />
+  <property name="failfast" value="true" />
+  <property name="threadcount" value="4"/>
+  <property name="cleanonfinish" value="true" />
+
+  <!-- Entry points -->
+
+  <target name="allUserManualAndExampleTests" depends="startLog,deleteTempFolders,testSetup">
+    <echo>Building User Manual and UmpleOnline Examples</echo>
+    <echo>See ${fulllogfile} for build results</echo>
+
+    <trycatch>
+      <try>
+        <antcall target="doJava" />
+        <antcall target="doCpp" />
+        <antcall target="doPhp" />
+      </try>
+      
+      <finally>
+        <antcall target="finishLog" />
+        <if>
+          <equals arg1="${cleanonfinish}" arg2="true" />
+          <then>
+            <antcall target="deleteTempFolders" />
+          </then>
+        </if>
+        <echo>See build/${logfile} for build results</echo>
+      </finally>
+    </trycatch>
+  </target>
+
+  <target name="javaUserManualAndExampleTests">
+    <property name="mode.notcpp" value="false" />
+    <property name="mode.notphp" value="false" />
+
+    <antcall target="allUserManualAndExampleTests" />
+  </target>
+
+  <target name="cppUserManualAndExampleTests">
+    <property name="mode.notjava" value="false" />
+    <property name="mode.notphp" value="false" />
+
+    <antcall target="allUserManualAndExampleTests" />
+  </target>
+
+  <target name="phpUserManualAndExampleTests">
+    <property name="mode.notjava" value="false" />
+    <property name="mode.notcpp" value="false" />
+
+    <antcall target="allUserManualAndExampleTests" />
+  </target>
+
+  <!-- Targets to generate and compile java-->
+
+  <target name="doJava" unless="mode.notjava">
+    <echo>Generating and compiling Java</echo>
+
+    <fileset dir="${java.path}" includes="*.ump" id="java.ump.files">
+      <!-- Special cases - temporary until error detection-->
+      <exclude name="E0*.ump" />
+      <exclude name="E1*.ump" />
+      <exclude name="UseStatements1.ump" />
+      <exclude name="WE1xxIdentifierInvalid1.ump" />
+      <exclude name="WE1xxIdentifierInvalid3.ump" />
+      <exclude name="WE1xxIdentifierInvalid5.ump" />
+      <exclude name="WE1xxIdentifierInvalid6.ump" />
+      <exclude name="WE1xxIdentifierInvalid7.ump" />
+    </fileset>  
+
+    <pathconvert pathsep="," property="java.ump.file.list" refid="java.ump.files"/>
+
+    <echo>@@@PUT JAVA OUTPUTS HERE@@@</echo>
+    <record name="${fulllogfile}" action="stop" />
+
+    <for list="${java.ump.file.list}" delimiter="," param="umpFile" parallel="true" threadCount="${threadcount}" keepgoing="${failsafe}">
+      <sequential>
+        <ant antfile="${ant.file}" output="@{umpFile}.output" target="generateAndCompileJava">
+          <property name="manualFile" value="@{umpFile}" />
+        </ant> 
+      </sequential>
+    </for>
+
+    <record name="${fulllogfile}" action="start" />
+  </target>
+
+  <target name="generateAndCompileJava">
+    <sequential>
+      <basename file="${manualFile}" property="manualfileshort" suffix="ump" />
+      <property name="fullump" value="${java.path}/${manualfileshort}.ump" />
+      <echo>Will test ${manualfileshort}.ump </echo>
+      
+      <!-- Compile in umple to Java -->
+      <trycatch>
+        <try>
+          <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${java.path}">
+            <arg value="-g" />
+            <arg value="Java" />
+            <arg value="--path" />
+            <arg value="src-gen-umple/${manualfileshort}" />
+            <arg value="${manualfileshort}.ump" />
+          </java>
+        </try>
+
+        <catch>
+          <echo>Failed to generate Java code from ${manualfileshort}.ump</echo>
+          <if>
+            <equals arg1="${failfast}" arg2="true" />
+            <then>
+              <fail message="Failed to generate Java code from ${manualfileshort}.ump"/>
+            </then>
+          </if>
+        </catch>
+      </trycatch>
+
+      <!-- Compile the resulting Java if OK to do so -->
+      <if>
+        <and>
+          <not>
+            <equals arg1="${forcecompile}" arg2="true" />
+          </not>
+          <resourcecontains resource="${manualFile}" substring="@@@skipcompile" />
+        </and>
+        <then>
+          <echo>Skipping Java compile due to presence of @@@skipcompile</echo>
+        </then>
+        <else>
+          <mkdir dir="${java.path}/bin/${manualfileshort}" />
+          <trycatch>
+            <try>
+              <javac debug="true" includeantruntime="false" debuglevel="source,lines,vars" destdir="${java.path}/bin/${manualfileshort}" source="1.7" target="1.7">
+                <src path="${java.path}/src-gen-umple/${manualfileshort}"/>
+              </javac>
+              <echo>Successfully compiled java code generated from ${manualfileshort}.ump</echo>
+            </try>
+
+            <catch>
+              <echo>Failed to compile Java code generated from ${manualfileshort}.ump</echo>
+              <if>
+                <equals arg1="${failfast}" arg2="true" />
+                <then>
+                  <fail message="Failed to compile Java code generated from ${manualfileshort}.ump"/>
+                </then>
+              </if>
+            </catch>
+          </trycatch>
+        </else>
+      </if>
+    </sequential>
+  </target>
+
+  <!-- Targets to generate and compile c++ -->
+
+  <target name="doCpp" unless="mode.notcpp">
+
+    <echo>Generating and compiling Cpp</echo>
+
+    <fileset dir="${cpp.path}" includes="*.ump" id="cpp.ump.files">
+      <!-- Special cases - temporary until error detection-->
+      <exclude name="E0*.ump" />
+      <exclude name="E1*.ump" />
+      <exclude name="UseStatements1.ump" />
+      <exclude name="WE1xxIdentifierInvalid1.ump" />
+      <exclude name="WE1xxIdentifierInvalid3.ump" />
+      <exclude name="WE1xxIdentifierInvalid5.ump" />
+      <exclude name="WE1xxIdentifierInvalid6.ump" />
+      <exclude name="WE1xxIdentifierInvalid7.ump" />
+    </fileset>     
+
+    <pathconvert pathsep="," property="cpp.ump.file.list" refid="cpp.ump.files"/>
+
+    <echo>@@@PUT CPP OUTPUTS HERE@@@</echo>
+    <record name="${fulllogfile}" action="stop" />
+    
+    <for list="${cpp.ump.file.list}" delimiter="," param="umpFile" parallel="true" threadcount="${threadcount}" keepgoing="${failsafe}">
+      <sequential>
+        <ant antfile="${ant.file}" output="@{umpFile}.output" target="generateAndCompileCpp">
+          <property name="manualFile" value="@{umpFile}" />
+        </ant> 
+      </sequential>
+    </for>
+
+    <record name="${fulllogfile}" action="start" />
+  </target>
+
+  <target name="generateAndCompileCpp">
+    <sequential>
+      <basename file="${manualFile}" property="manualfileshort" suffix="ump" />
+      <property name="fullump" value="${manualumpfiles.path}/${manualfileshort}.ump" />
+      <echo>Will test ${manualFile} </echo>
+      
+      <!-- Compile in umple to Cpp -->
+      <trycatch>
+        <try>
+          <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${cpp.path}">
+            <arg value="-g" />
+            <arg value="RTCpp" />
+            <arg value="--path" />
+            <arg value="src-gen-umple/${manualfileshort}" />
+            <arg value="${manualfileshort}.ump" />
+          </java>
+        </try>
+
+        <catch>
+          <echo>Failed to generate C++ code from ${manualfileshort}.ump</echo>
+          <if>
+            <equals arg1="${failfast}" arg2="true" />
+            <then>
+              <fail message="Failed to generate C++ code from ${manualfileshort}.ump" />
+            </then>
+          </if>
+        </catch>
+      </trycatch>
+
+      <!-- Compile the resulting Cpp if OK to do so -->
+      <if>
+        <and>
+          <not>
+            <equals arg1="${forcecompile}" arg2="true" />
+          </not>
+          <resourcecontains resource="${manualFile}" substring="@@@skipcompile" />
+        </and>
+        <then>
+          <echo>Skipping C++ compile due to presence of @@@skip</echo>
+        </then>
+        <else>
+          <mkdir dir="${cpp.path}/bin/${manualfileshort}"  />
+          <exec executable="g++" dir="${cpp.path}/src-gen-umple/${manualfileshort}" outputproperty="cpp.out.log" errorproperty="cpp.error.log">
+            <arg value="-o" />
+            <arg file="${cpp.path}/bin/${manualfileshort}/output.o" /> <!-- TODO change output type to allow for execution -->
+            <arg value="-I" />
+            <arg file="${cpp.path}/src-gen-umple/${manualfileshort}" />
+            <arg value="-std=gnu++11" />
+            <arg value="-fpermissive" />
+            <arg value="-w" />
+            <arg value="${manualfileshort}_Main.cpp" />
+          </exec>
+
+          <available file="${cpp.path}/bin/${manualfileshort}/output.o" property="object.file.found" />
+
+          <if>
+            <equals arg1="${object.file.found}" arg2="true" />
+            <then>
+              <echo>Compiled ${manualfileshort}_Main.cpp successfully</echo>
+            </then>
+
+            <else>
+              <echo>C++ compilation failed on ${manualfileshort}_Main.cpp: ${cpp.error.log}</echo>
+              <if>
+                <equals arg1="${failfast}" arg2="true" />
+                <then>
+                  <fail message="C++ compilation failed on ${manualfileshort}_Main.cpp"/>
+                </then>
+              </if>
+            </else>
+          </if>
+        </else>
+      </if>
+    </sequential>
+  </target>
+
+  <!-- Targets to generate and compile php-->
+
+  <target name="doPhp" unless="mode.notphp">
+
+    <echo>Generating and compiling Php</echo>
+
+    <fileset dir="${php.path}" includes="*.ump" id="php.ump.files">
+      <!-- Special cases - temporary until error detection-->
+      <exclude name="E0*.ump" />
+      <exclude name="E1*.ump" />
+      <exclude name="UseStatements1.ump" />
+      <exclude name="WE1xxIdentifierInvalid1.ump" />
+      <exclude name="WE1xxIdentifierInvalid3.ump" />
+      <exclude name="WE1xxIdentifierInvalid5.ump" />
+      <exclude name="WE1xxIdentifierInvalid6.ump" />
+      <exclude name="WE1xxIdentifierInvalid7.ump" />
+    </fileset> 
+
+    <pathconvert pathsep="," property="php.ump.file.list" refid="php.ump.files"/>
+
+    <echo>@@@PUT PHP OUTPUTS HERE@@@</echo>
+    <record name="${fulllogfile}" action="stop" />
+    
+    <for list="${php.ump.file.list}" delimiter="," param="umpFile" parallel="true" threadCount="${threadcount}" keepgoing="${failsafe}"> 
+      <sequential>
+        <ant antfile="${ant.file}" output="@{umpFile}.output" target="generateAndCompilePhp">
+          <property name="manualFile" value="@{umpFile}" />
+        </ant> 
+        <if>
+          <resourcecontains resource="@{umpFile}.output" substring="PHP compilation failed"/>
+          <then>
+            <fail message="PHP compilation failure with example @{umpFile}"/>
+          </then>
+        </if>
+      </sequential>
+    </for>    
+    <record name="${fulllogfile}" action="start" />
+  </target>
+
+  <target name="generateAndCompilePhp">
+    <sequential>
+      <basename file="${manualFile}" property="manualfileshort" suffix="ump" />
+      <property name="fullump" value="${manualumpfiles.path}/${manualfileshort}.ump" />
+      <echo>Will test ${manualFile} </echo>
+      
+      <!-- Compile in umple to Php -->
+      <trycatch>
+        <try>
+          <java jar="dist/umple.jar" fork="true" failonerror="true" dir="${php.path}">
+            <arg value="-g" />
+            <arg value="Php" />
+            <arg value="--path" />
+            <arg value="src-gen-umple/${manualfileshort}" />
+            <arg value="${manualfileshort}.ump" />
+          </java>
+        </try>
+
+        <catch>
+          <echo>Failed to generate PHP code from ${manualfileshort}.ump</echo>
+          <if>
+            <equals arg1="${failfast}" arg2="true" />
+            <then>
+              <fail message="Failed to generate PHP code from ${manualfileshort}.ump"/>
+            </then>
+          </if>
+        </catch>
+      </trycatch>
+
+      <!-- Compile the resulting Php if OK to do so -->
+      <if>
+        <and>
+          <not>
+            <equals arg1="${forcecompile}" arg2="true" />
+          </not>
+          <resourcecontains resource="${manualFile}" substring="@@@skipcompile" />
+        </and>
+        <then>
+          <echo>Skipping Php lint due to presence of @@@skipcompile</echo>
+        </then>
+        <else>
+          <fileset dir="${php.path}/src-gen-umple/${manualfileshort}" id="php.files">
+            <include name="*.php"/>
+          </fileset>
+          <pathconvert pathsep="," property="file.list" refid="php.files"/>
+          <for list="${file.list}" delimiter="," param="phpFile">
+            <sequential>
+              <trycatch>
+                <try>
+                  <exec executable="php" failonerror="true">
+                    <arg value="-l" />
+                    <arg value="-e" />
+                    <arg file="@{phpFile}" />
+                  </exec>
+                </try>
+
+                <catch>
+                  <echo>PHP compilation failed on files generated from ${manualfileshort}.ump</echo>
+                  <if>
+                    <equals arg1="${failfast}" arg2="true" />
+                    <then>
+                      <fail message="PHP compilation failed on files generated from ${manualfileshort}.ump" />
+                    </then>
+                  </if>
+                </catch>
+              </trycatch>
+            </sequential>
+          </for>
+        </else>
+      </if>
+    </sequential>
+  </target>
+
+  <!-- Setup and teardown targets -->
+
+  <target name="testSetup">
+    <mkdir dir="${project.output.path}" />
+
+    <if>
+      <equals arg1="${failfast}" arg2="true" />
+      <then>
+        <property name="failsafe" value="false" />
+      </then>
+
+      <else>
+        <property name="failsafe" value="true" />
+      </else>
+    </if>
+    <if>
+      <not>
+        <equals arg1="${mode.notjava}" arg2="false" />
+      </not>
+      <then>
+        <mkdir dir="${java.path}" />
+        <mkdir dir="${java.path}/src-gen-umple" />
+        <mkdir dir="${java.path}/bin" />
+        <exec executable="ruby">
+          <arg value="build/get_testable_examples.rb" />
+          <arg value="-i" />
+          <arg value="${manualumpfiles.path}" />
+          <arg value="-i" />
+          <arg value="${exampleumpfiles.path}" />
+          <arg value="-o" />
+          <arg value="${java.path}" />
+          <arg value="-l" />
+          <arg value="java" />
+          <arg value="-s" />
+          <arg value="${examplepattern}" />
+        </exec>
+      </then>
+    </if>
+
+    <if>
+      <not>
+        <equals arg1="${mode.notcpp}" arg2="false" />
+      </not>
+      <then>
+        <mkdir dir="${cpp.path}" />
+        <mkdir dir="${cpp.path}/src-gen-umple" />
+        <mkdir dir="${cpp.path}/bin" />
+        <exec executable="ruby">
+          <arg value="build/get_testable_examples.rb" />
+          <arg value="-i" />
+          <arg value="${manualumpfiles.path}" />
+          <arg value="-i" />
+          <arg value="${exampleumpfiles.path}" />
+          <arg value="-o" />
+          <arg value="${cpp.path}" />
+          <arg value="-l" />
+          <arg value="cpp" />
+          <arg value="-s" />
+          <arg value="${examplepattern}" />
+        </exec>
+      </then>
+    </if>
+
+    <if>
+      <not>
+        <equals arg1="${mode.notphp}" arg2="false" />
+      </not>
+      <then>
+        <mkdir dir="${php.path}" />
+        <mkdir dir="${php.path}/src-gen-umple" />
+        <exec executable="ruby">
+          <arg value="build/get_testable_examples.rb" />
+          <arg value="-i" />
+          <arg value="${manualumpfiles.path}" />
+          <arg value="-i" />
+          <arg value="${exampleumpfiles.path}" />
+          <arg value="-o" />
+          <arg value="${php.path}" />
+          <arg value="-l" />
+          <arg value="php" />
+          <arg value="-s" />
+          <arg value="${examplepattern}" />
+        </exec>
+      </then>
+    </if>
+  </target>
+
+  <target name="deleteTempFolders">
+    <delete dir="${project.output.path}" failonerror="false" />
+  </target>
+
+  <target name="startLog">
+    <property name="fulllogfile" location="build/${logfile}" />
+    <touch file="${fulllogfile}" />
+    <record name="${fulllogfile}" action="start" loglevel="info" />
+  </target>
+
+  <target name="finishLog">
+    <exec executable="ruby">
+      <arg value="build/parallel_output_builder.rb" />
+      <arg value="${fulllogfile}"/>
+      <arg value="${project.output.path}"/>
+    </exec>
+  </target>
+</project>

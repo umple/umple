@@ -101,3 +101,7 @@ class RoleFacilityAccessRight{
   position.association Role__RoleFacilityAccessRight 77,0 28,62;
   position.association Facility__RoleFacilityAccessRight 27,0 163,130;
 }
+
+/*
+@@@testlanguage=java,cpp,php
+*/
