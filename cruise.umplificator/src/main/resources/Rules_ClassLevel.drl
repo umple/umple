@@ -2,6 +2,7 @@ package cruise.umplificator.rules
 
 import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
+import java.util.*;
 
 rule "transform_ImportDeclaration"
 	when
@@ -10,6 +11,30 @@ rule "transform_ImportDeclaration"
 	then
 		Depend depend = new Depend(getImportName(importDeclaration));
 		uClass.addDepend(depend);
+end
+
+
+rule "transform_InheritanceDeclaration_Interfaces"
+	when
+		typeDeclaration : TypeDeclaration(typeDeclaration.superInterfaceTypes().size() > 0)
+		uClass: UmpleClass(typeDeclaration.getName().getIdentifier().equals(uClass.getName()))
+	then
+		List<String> parentInterfaces = getImplementedInterfaces(typeDeclaration);
+	 	for (String interfaceName : parentInterfaces)
+		{
+			UmpleInterface aInterface = new UmpleInterface(interfaceName);
+		    System.out.println(interfaceName);
+			uClass.addParentInterface(aInterface);
+		}
+end
+
+rule "transform_InheritanceDeclaration_SuperClasses"
+	when
+		typeDeclaration : TypeDeclaration(typeDeclaration.getSuperclassType() != null)
+		uClass: UmpleClass(typeDeclaration.getName().getIdentifier().equals(uClass.getName()))
+	then
+		UmpleClass superClass = new UmpleClass(getSuperClassName(typeDeclaration));
+		uClass.setExtendsClass(superClass);
 end
 
 rule "transform_Namespace"
@@ -31,3 +56,35 @@ function String getImportName(ImportDeclaration importDeclaration){
 	}
 	return importName.toString();
 }
+
+function String getSuperClassName(TypeDeclaration typeDecl)
+{
+    Type type = typeDecl.getSuperclassType();
+    String superClassname="";
+	if (type != null)
+	{
+		if (type.isSimpleType())
+		{
+		SimpleType simpleType = (SimpleType) type;
+		superClassname = simpleType.getName().getFullyQualifiedName();
+		}
+	}
+	return superClassname;
+}
+
+function List<String> getImplementedInterfaces(TypeDeclaration typeDeclaration)
+{
+	List<String> names = new ArrayList<String>();
+	List<Type> interfaceTypes = typeDeclaration.superInterfaceTypes();
+	for (Type aType : interfaceTypes)
+	{
+		if (aType !=null && aType.isSimpleType())
+		{
+			SimpleType simpleType = (SimpleType) aType;
+		    String interfaceName = simpleType.getName().getFullyQualifiedName();
+		    names.add(interfaceName);
+		}
+	}
+	return names;
+}
+
