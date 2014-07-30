@@ -1,0 +1,14 @@
+E217 Conflict in Types of Attributes
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to having an attribute from a trait with different types</h2>
+
+<p>We can define template parameters for traits and use them with different bindings in several hierarchy paths. If types of some attributes are based on template parameters,  there is a case in which those are bound with different values. In a case that a trait is going to be used in a diamond form of hierarchy, this can result in a conflict. Note that if the types are the same, then there is no conflict.   </p>
+
+
+@@example
+@@source manualexamples/E217ConflictInTypeofAttributes.ump
+@@endexample

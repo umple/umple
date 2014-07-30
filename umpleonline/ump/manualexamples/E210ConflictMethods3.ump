@@ -1,0 +1,18 @@
+// In this example, there is a no conflict in class "A"
+class A{
+	isA T1;
+	isA T2;
+} 
+trait T1 { 
+	isA M;
+} 
+trait T2 { 
+	isA M;
+}
+trait M{
+	void test(){
+	//special implementation by M
+	}
+}
+
+

@@ -1,0 +1,15 @@
+// In this example, the require method "FinalResult()" in Trait "T" is satisfied by class "A"
+class A{
+	isA T;	
+	internal Integer x;	
+	Integer FinalResult(){
+		return x/100;
+	}
+}
+
+trait T{
+	Integer FinalResult();	
+	void calculate(){
+		//method FinalResult() will be used here;	
+	}	
+}

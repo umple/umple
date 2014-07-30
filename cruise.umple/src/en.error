@@ -113,23 +113,25 @@
 201: 4, "http://umple.org/W201TraitNameSyntax.html", Trait name '{0}' should start with a capital letter ;
 202: 1, "http://umple.org/E202Traitnotdefined.html", The trait named '{0}' is not available. ;
 203: 1, "http://umple.org/E203Nothavinganuniqueidentifier.html", There is a class and a trait with the same name '{0}'. Solution: Please just change the name of trait or class and give it an unique name.;
-204: 1, "http://umple.org/E204CycleAmongTraits.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance.;
-205: 1, "http://umple.org/PageBeingDeveloped.html", There is a conflict for attribute '{0}' in traits or classes '{1}' and '{2}'.;
-206: 1, "http://umple.org/PageBeingDeveloped.html", Trait '{0}' cannot cyclically extend '{1}'.;  
+204: 1, "http://umple.org/E204NotSelfinheritance.html", Trait named '{0}' cannot inherit from itself. Solution: Please check the name of super trait or change your design not to have this inheritance.;
+//205 should be used
+206: 1, "http://umple.org/E206Notcycleintraits.html", Trait '{0}' cannot cyclically extend '{1}'.;  
+//207 should be explored more.
 207: 1, "http://umple.org/PageBeingDeveloped.html", Variable '{0}' inside of the constraint in trait '{1}' is not available in class '{2}' or trait '{1}'.;
-208: 1, "http://umple.org/PageBeingDeveloped.html", Required method '{0}' in trait '{1}' is not available in class '{2}'.;
+208: 1, "http://umple.org/E208Notavailaberequiredmethods.html", Required method '{0}' in trait '{1}' is not available in class '{2}'.;
+//209 should be explored more.
 209: 1, "http://umple.org/PageBeingDeveloped.html", Defined name '{0}' in trait '{1}' is not available in the trait's header.;
-210: 1, "http://umple.org/PageBeingDeveloped.html", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'.;
-211: 1, "http://umple.org/PageBeingDeveloped.html", In modification level of trait '{0}', method '{1}' has been defined two times.;
-212: 1, "http://umple.org/PageBeingDeveloped.html", Method '{0}' is not available in trait '{1}' for modification.;
-213: 1, "http://umple.org/PageBeingDeveloped.html", It is impossible to remove method '{0}' while changing its name.;
-214: 1, "http://umple.org/PageBeingDeveloped.html", It is impossible to have two parameters with the same name '{0}' in trait'{1}'.;
-215: 1, "http://umple.org/PageBeingDeveloped.html", Parameter '{0}' is not available.;
-216: 1, "http://umple.org/PageBeingDeveloped.html", Parameter '{0}' cannot be allocated two times.;
-217: 1, "http://umple.org/PageBeingDeveloped.html", There is a conflict for attribute '{0}' in traits '{1}' because of assigning two different types '{2}' and '{3}'.;
-218: 3, "http://umple.org/PageBeingDeveloped.html", Attribute '{0}' which comes from trait '{1}' is available also in {2} '{3}'.;
-219: 1, "http://umple.org/PageBeingDeveloped.html", Please assign a value for type parameter '{0}' in trait '{1}';
-220: 1, "http://umple.org/PageBeingDeveloped.html", The new name '{0}' for method '{1}' is already available in the trait.;
+210: 1, "http://umple.org/E210conflictinmethods.html", In {0} '{1}', there is a conflict on method '{2}' which comes from two different traits '{3}' and '{4}'.;
+211: 1, "http://umple.org/E211Twoormoremodifications.html", In modification level of trait '{0}', method '{1}' has been defined two times.;
+212: 1, "http://umple.org/E212Notavailablemethods.html", Method '{0}' is not available in trait '{1}' for modification.;
+213: 1, "http://umple.org/E213Removingwhilerenaming.html", It is impossible to remove method '{0}' while changing its name.;
+214: 1, "http://umple.org/E214Twosameparameternames.html", It is impossible to have two parameters with the same name '{0}' in trait'{1}'.;
+215: 1, "http://umple.org/E215NoAvailabletemplateparameter.html", Parameter '{0}' is not available.;
+216: 1, "http://umple.org/E216Twicebindingofaparameter.html", Parameter '{0}' cannot be allocated two times.;
+217: 1, "http://umple.org/E217Conflictintypesofattributes.html", There is a conflict for attribute '{0}' in traits '{1}' because of assigning two different types '{2}' and '{3}'.;
+218: 3, "http://umple.org/W218Conflictinattributes.html", Attribute '{0}' which comes from trait '{1}' is available also in {2} '{3}'.;
+219: 1, "http://umple.org/E219NoBindingforparameters.html", Please assign a value for type parameter '{0}' in trait '{1}';
+220: 1, "http://umple.org/E220Twomethodswitthesamename.html", The new name '{0}' for method '{1}' is already available in the trait.;
 
 
 # Messages relating to deprecated features

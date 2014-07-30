@@ -1,0 +1,18 @@
+// In this example, there is an error because in class "A" method "ShowInConslole" has high priority.
+class A{
+	isA T<show() as ShowInConsole>;
+	isA T1;
+	void ShowInConsole(){
+	//Implementation 
+	}  
+}
+trait T{
+	void show(){
+	//Implementation
+	}
+}
+trait T1{
+	void ShowInScreen(){
+	//Implementation
+	}
+}

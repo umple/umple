@@ -1,0 +1,12 @@
+// In this example, there are two modifications ("add" and "remove") for the method "show()" when trait "T2" is used inside of trait "T1"
+class A{
+	isA T1;
+}
+trait T1{
+	isA T2 <-show(),+show()>;
+}
+trait T2{
+	void show(){
+	//implementation
+	}
+}

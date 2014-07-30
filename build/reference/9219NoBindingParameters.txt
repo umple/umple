@@ -1,0 +1,14 @@
+E219 No Binding for Parameters
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to having two same template parameter names</h2>
+
+<p>When defining traits, it is possible to define template parameters for traits. It means when traits with template parameters are going to be used by classes or traits, they must bind values for the parameters. If there is no binding for a parameter, the Umple compiler raises an error and shows which parameter doesn't have a value.   </p>
+
+
+@@example
+@@source manualexamples/E219NoBindingParameters.ump
+@@endexample

@@ -1,0 +1,22 @@
+E212 Methods Not Available
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to modification of unavailable methods in traits</h2>
+
+<p>When traits are used inside classes or traits, it is possible to add or remove provided methods and also to change visibility and their names. This feature is used to resolve conflicts when we do not need some provided methods, just need one of them, need different visibilty, or need a different name. Logically, it is not correct to do these operations on methods which are not available. These problems are detected by the Umple compiler.  </p>
+
+
+@@example
+@@source manualexamples/E212NoAvailableMethod1.ump
+@@endexample
+
+@@example
+@@source manualexamples/E212NoAvailableMethod2.ump
+@@endexample
+
+@@example
+@@source manualexamples/E212NoAvailableMethod3.ump
+@@endexample

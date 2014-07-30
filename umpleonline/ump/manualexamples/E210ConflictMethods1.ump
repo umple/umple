@@ -1,0 +1,16 @@
+// In this example, there is a conflict in class "A" on the method "test()"
+class A{
+	isA T1;
+	isA T2;
+} 
+trait T1 { 
+	void test(){
+	//special implementation by T1
+	}
+} 
+trait T2 { 
+	void test(){
+	//special implementation by T2
+	}
+}
+

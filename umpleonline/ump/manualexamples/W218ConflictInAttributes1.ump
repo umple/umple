@@ -1,0 +1,10 @@
+// In this example, there is a warning because in class "A" there will be two attributes with the name called "name".
+
+class A{
+	isA T;
+	name;
+}
+trait T{
+	name;
+}
+

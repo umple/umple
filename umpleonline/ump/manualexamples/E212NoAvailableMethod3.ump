@@ -1,0 +1,7 @@
+// In this example, there is an error in class "A" because it tries to change visibility of method "test()" which is not available in trait T. Consider that the method "test()" defined in trait "T" is a required method.
+class A{
+	isA T<test() as private>;
+}
+trait T{
+	void test();
+}

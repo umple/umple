@@ -1,0 +1,14 @@
+E206 Cycle in Traits
+Errors and Warnings
+noreferences
+
+@@description
+
+<h2>Umple semantic error related to a cycle of trait use </h2>
+
+<p>In Umple, traits cannot be used in an explicit or implicit cyclic way. This means that a trait cannot use itself and it also cannot be used in a cyclic hierarchy. This error happens when a hierarchy is created completely based on traits. Moreover, this issue generally arises because of invalid design or error in typing a trait name. </p>
+
+
+@@example
+@@source manualexamples/E206CyclicUse1.ump
+@@endexample

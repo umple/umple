@@ -1,0 +1,11 @@
+// In this example, the required method "FinalResult()" in Trait "T" is not satisfied by class "A"
+class A{
+	isA T;
+}
+
+trait T{
+	Integer FinalResult();	
+	void calculate(){
+		//method FinalResult() will be used here;	
+	}	
+}
