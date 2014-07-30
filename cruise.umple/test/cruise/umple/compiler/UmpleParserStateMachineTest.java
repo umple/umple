@@ -63,6 +63,10 @@ public class UmpleParserStateMachineTest
 	assertHasWarning("100_nonReachableState7.ump", 0, 67, new Position("100_nonReachableState7.ump", 7, 4, 56));
 	for( ErrorMessage er: parser.getParseResult().getErrorMessages())
 		System.out.println(er.getFormattedMessage());
+	
+	assertNoWarnings("100_nonReachableState8.ump");
+	for( ErrorMessage er: parser.getParseResult().getErrorMessages())
+		System.out.println(er.getFormattedMessage());
   }
   
   @Test

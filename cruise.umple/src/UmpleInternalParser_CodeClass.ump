@@ -423,7 +423,15 @@ class UmpleInternalParser
     {
       fatherState = aux.getParentState();
       if(!lp.contains(fatherState))
+      {
           lp.add(fatherState);
+          
+          for ( Transition transition: fatherState.getTransitions())
+          {
+            if(!ls.contains(transition.getNextState()))
+              checkReachableStates(transition.getNextState(), ls, lp);
+          }
+      }
       
       if (fatherState.getStateMachine() == null)
         return;
