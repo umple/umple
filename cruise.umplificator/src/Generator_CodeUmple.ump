@@ -24,7 +24,7 @@ class UmpleToUmpleGenerator
   public void generate()
   {
     CodeGenerator internalGen = generateBasedOn();
-    internalGen.prepare();
+    // internalGen.prepare();
 
     StringBuilder code = new StringBuilder();
     ArrayList<Association> externalAssociations = new ArrayList<Association>();
@@ -39,6 +39,17 @@ class UmpleToUmpleGenerator
         code.append(StringFormatter.format("namespace {0};\n", aNamespace));   
       }
       code.append(StringFormatter.format("\nclass {0}\n{\n", uClass.getName()));
+	  
+	  String  implementedInterfaces="";
+      for (UmpleInterface uInterface : uClass.getParentInterface())
+      {
+         implementedInterfaces += uInterface.getName() + "," ; 
+      }
+      if (implementedInterfaces!= null)
+      {
+          implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
+          code.append(StringFormatter.format("  isA {0};\n", implementedInterfaces));    	  
+      }
 
       if (uClass.getExtendsClass() != null)
       {

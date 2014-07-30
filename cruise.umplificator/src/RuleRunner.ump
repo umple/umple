@@ -113,6 +113,8 @@ depend org.apache.log4j.Logger;
 	   {
 		   kieSession.insert(fieldDeclaration); 
 	   }
+
+	   kieSession.insert(visitor.getTypeDeclaration()); 
 	  
 	   kieSession.insert(visitor.getPackageDeclaration());
 	   return kieSession;

@@ -19,6 +19,7 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
  ImportDeclaration [] importDeclarations;
  MethodDeclaration [] methodDeclarations;
  FieldDeclaration [] fieldDeclarations;
+ lazy TypeDeclaration typeDeclaration;
  lazy PackageDeclaration packageDeclaration;
  lazy String name;
  lazy String classBody;
@@ -51,6 +52,7 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
     name = node.getName().getFullyQualifiedName();
     String typeDeclarationCode = node.toString();
     classBody = StringHelper.getClassBody(typeDeclarationCode);
+    typeDeclaration = node;
     return true; 
   }
   
