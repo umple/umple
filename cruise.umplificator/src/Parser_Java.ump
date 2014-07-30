@@ -13,11 +13,8 @@ class JavaParser {
 	depend java.util.Map;
 	// Logger log4j
 	depend org.apache.log4j.Logger;
-	// Class used 
+	// Class used to visit elements of the Java Class
 	lazy JavaClassVisitor javaVisitor;
-	/*  
-		Parsing Methods
-	*/  
 	
 	 // Parses a complete Java Class
 	 public CompilationUnit parseUnit(String source){
@@ -36,7 +33,7 @@ class JavaParser {
 			logger.debug("Initializing Java Visitor for Compilation Unit");
 			javaVisitor=  new JavaClassVisitor();
 			cu.accept(javaVisitor);
-			
+			// Set compilationUnit
 			return cu;
 	  }
 	  

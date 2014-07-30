@@ -45,7 +45,7 @@ class UmpleToUmpleGenerator
       {
          implementedInterfaces += uInterface.getName() + "," ; 
       }
-      if (implementedInterfaces!= null)
+      if (!implementedInterfaces.equals(""))
       {
           implementedInterfaces = implementedInterfaces.substring(0, implementedInterfaces.length()-1); 
           code.append(StringFormatter.format("  isA {0};\n", implementedInterfaces));    	  

@@ -121,7 +121,7 @@ depend org.apache.log4j.Logger;
     }
   
  	public KieSession insertUmpleClass(UmpleClass uClass){
- 	  logger.debug("RuleRunner.insertUmpleClass - Insert uClass into working memory");
+ 	  logger.debug("RuleRunner.insertUmpleElement - Insert uElement into working memory");
 	  kieSession.insert(uClass);
 	  return kieSession;
   	}  

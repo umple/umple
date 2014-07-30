@@ -46,7 +46,7 @@ public boolean umplifyUmple(File file)
 		    RuleService ruleService = new RuleService (ruleRunner);
 			ruleService.startRuleEngine(currentLevel);
 			//UmpleClass uClass = new UmpleClass(compilationUnitName);
-			ruleRunner.insertUmpleClass(uClass);
+			//ruleRunner.insertUmpleClass(uClass);
 			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
 			ruleRunner.fireAllRules();
 			// generate Umple Code
@@ -83,7 +83,7 @@ public boolean umplifyJava(File file)
 			String compilationUnitName= javaParser.getJavaVisitor().getName();
 			String classBody = javaParser.getJavaVisitor().getClassBody();
 			UmpleClass uClass = new UmpleClass(compilationUnitName);
-			ruleRunner.insertUmpleClass(uClass);
+			ruleRunner.insertUmpleClass(uClass);// Insert uClass into Working Memory
 			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
 			ruleRunner.fireAllRules();
 			uClass.appendExtraCode(classBody);
@@ -109,5 +109,6 @@ public boolean umplifyCPP(File file)
 	logger.error("Not Implemented yet");
     throw new UnsupportedOperationException( "CPP Reverse Eng. will be implemented soon");
 }
+
 
 }

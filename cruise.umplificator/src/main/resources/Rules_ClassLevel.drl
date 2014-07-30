@@ -4,6 +4,26 @@ import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
 import java.util.*;
 
+rule "TOP_isJavaClass"
+	when
+		typeDeclaration: TypeDeclaration(!typeDeclaration.isInterface())
+		uElement: UmpleElement(typeDeclaration.getName().getIdentifier().equals(uElement.getName()))
+	then
+		System.out.print(uElement.getName());
+		UmpleClass uClass = new UmpleClass(uElement.getName());
+		insertLogical(uClass);
+end
+
+rule "TOP_isJavaInterface"
+	when
+		typeDeclaration: TypeDeclaration(typeDeclaration.isInterface())
+		uElement: UmpleElement(typeDeclaration.getName().getIdentifier().equals(uElement.getName()))
+	then
+		System.out.print(uElement.getName());
+		UmpleInterface uInterface = new UmpleInterface(uElement.getName());
+		insertLogical(uInterface);
+end
+
 rule "transform_ImportDeclaration"
 	when
 		importDeclaration: ImportDeclaration()
@@ -13,6 +33,14 @@ rule "transform_ImportDeclaration"
 		uClass.addDepend(depend);
 end
 
+rule "transform_ImportDeclaration_UInterface"
+	when
+		importDeclaration: ImportDeclaration()
+		uInterface: UmpleInterface()
+	then
+		Depend depend = new Depend(getImportName(importDeclaration));
+		uInterface.addDepend(depend);
+end
 
 rule "transform_InheritanceDeclaration_Interfaces"
 	when
@@ -28,6 +56,20 @@ rule "transform_InheritanceDeclaration_Interfaces"
 		}
 end
 
+rule "transform_InheritanceDeclaration_Interfaces_UInterface"
+	when
+		typeDeclaration : TypeDeclaration(typeDeclaration.superInterfaceTypes().size() > 0)
+		uInterface: UmpleInterface(typeDeclaration.getName().getIdentifier().equals(uInterface.getName()))
+	then
+		List<String> parentInterfaces = getImplementedInterfaces(typeDeclaration);
+	 	for (String interfaceName : parentInterfaces)
+		{
+			UmpleInterface aInterface = new UmpleInterface(interfaceName);
+		    System.out.println(interfaceName);
+			uInterface.addExtendsInterface(aInterface);
+		}
+end
+
 rule "transform_InheritanceDeclaration_SuperClasses"
 	when
 		typeDeclaration : TypeDeclaration(typeDeclaration.getSuperclassType() != null)
@@ -38,6 +80,15 @@ rule "transform_InheritanceDeclaration_SuperClasses"
 end
 
 rule "transform_Namespace"
+	when
+		packageDeclaration: PackageDeclaration()
+		uClass: UmpleClass()
+	then
+		uClass.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
+end
+
+
+rule "transform_Namespace_UInterface"
 	when
 		packageDeclaration: PackageDeclaration()
 		uClass: UmpleClass()
