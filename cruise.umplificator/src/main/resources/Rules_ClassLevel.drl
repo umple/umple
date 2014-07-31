@@ -4,25 +4,6 @@ import org.eclipse.jdt.core.dom.*;
 import cruise.umple.compiler.*;
 import java.util.*;
 
-rule "TOP_isJavaClass"
-	when
-		typeDeclaration: TypeDeclaration(!typeDeclaration.isInterface())
-		uElement: UmpleElement(typeDeclaration.getName().getIdentifier().equals(uElement.getName()))
-	then
-		System.out.print(uElement.getName());
-		UmpleClass uClass = new UmpleClass(uElement.getName());
-		insertLogical(uClass);
-end
-
-rule "TOP_isJavaInterface"
-	when
-		typeDeclaration: TypeDeclaration(typeDeclaration.isInterface())
-		uElement: UmpleElement(typeDeclaration.getName().getIdentifier().equals(uElement.getName()))
-	then
-		System.out.print(uElement.getName());
-		UmpleInterface uInterface = new UmpleInterface(uElement.getName());
-		insertLogical(uInterface);
-end
 
 rule "transform_ImportDeclaration"
 	when
@@ -91,9 +72,9 @@ end
 rule "transform_Namespace_UInterface"
 	when
 		packageDeclaration: PackageDeclaration()
-		uClass: UmpleClass()
+		uInterface: UmpleInterface()
 	then
-		uClass.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
+		uInterface.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
 end
 
 //http://svn.apache.org/repos/asf/geronimo/devtools/j2g/trunk/plugins/org.apache.geronimo.devtools.j2g.sources/src/org/apache/geronimo/devtools/j2g/sources/dependence/NodesVisitor.java

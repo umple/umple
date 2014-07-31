@@ -82,8 +82,17 @@ public boolean umplifyJava(File file)
 			// Insert Elements in Working Memory
 			String compilationUnitName= javaParser.getJavaVisitor().getName();
 			String classBody = javaParser.getJavaVisitor().getClassBody();
+			boolean isInterface = javaParser.getJavaVisitor().getIsInterface();
+			if (isInterface)
+			{
+			    UmpleInterface uInterface = new UmpleInterface(compilationUnitName);
+			    // Insert uInterface into Working Memory
+			    ruleRunner.insertUmpleInterface(uInterface);
+			}
 			UmpleClass uClass = new UmpleClass(compilationUnitName);
-			ruleRunner.insertUmpleClass(uClass);// Insert uClass into Working Memory
+			// Insert uClass into Working Memory
+			ruleRunner.insertUmpleClass(uClass);
+			// Insert Java Elements
 			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
 			ruleRunner.fireAllRules();
 			uClass.appendExtraCode(classBody);

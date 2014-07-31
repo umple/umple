@@ -7,9 +7,7 @@ class Umplificator {
 	depend java.io.IOException;
 	depend java.util.List;
 	depend org.apache.commons.io.IOUtils;
-	depend cruise.umple.compiler.UmpleClass;
-	depend cruise.umple.compiler.UmpleFile;
-	depend cruise.umple.compiler.UmpleModel;
+	depend cruise.umple.compiler.*;
 	depend cruise.umplificator.FileHelper;
 	depend cruise.umplificator.parser.JavaParser;
 	depend cruise.umplificator.rules.RuleRunner;
