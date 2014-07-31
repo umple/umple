@@ -83,23 +83,31 @@ public boolean umplifyJava(File file)
 			String compilationUnitName= javaParser.getJavaVisitor().getName();
 			String classBody = javaParser.getJavaVisitor().getClassBody();
 			boolean isInterface = javaParser.getJavaVisitor().getIsInterface();
+
+			UmpleInterface uInterface=null;
+			UmpleClass uClass=null;
 			if (isInterface)
 			{
-			    UmpleInterface uInterface = new UmpleInterface(compilationUnitName);
+			    uInterface = new UmpleInterface(compilationUnitName);
 			    // Insert uInterface into Working Memory
 			    ruleRunner.insertUmpleInterface(uInterface);
+			    uInterface.appendExtraCode(classBody);
 			}
-			UmpleClass uClass = new UmpleClass(compilationUnitName);
-			// Insert uClass into Working Memory
-			ruleRunner.insertUmpleClass(uClass);
+			else {
+				// Insert uClass into Working Memory
+				uClass = new UmpleClass(compilationUnitName);
+				ruleRunner.insertUmpleClass(uClass);
+				uClass.appendExtraCode(classBody);
+			}
 			// Insert Java Elements
 			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
 			ruleRunner.fireAllRules();
-			uClass.appendExtraCode(classBody);
+
 			// generate Umple Code
 			UmpleFile umpleFile = new UmpleFile(file);
 			outputModel = new UmpleModel(umpleFile);
-			outputModel.addUmpleClass(uClass);
+			
+		    if (isInterface) { outputModel.addUmpleInterface(uInterface);} else {  outputModel.addUmpleClass(uClass);};
 		    filesUmplified.add(umpleFile.getSimpleFileName());
 			// generate Umple Code
 			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode);
