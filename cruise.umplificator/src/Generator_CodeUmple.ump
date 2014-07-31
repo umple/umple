@@ -142,11 +142,44 @@ class UmpleToUmpleGenerator
       code.append(StringFormatter.format("  {0} {1} {2} -- {4} {5} {3};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(), myEnd.getClassName(), theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName()));
       code.append("}");
     }
-
+    
+    for (UmpleInterface uInterface : model.getUmpleInterfaces())
+    {
+        generateInterface(uInterface, code);
+    }
+   
     model.setCode(code.toString());
     internalGen.postpare();
   }
-
+  
+   private void generateInterface(UmpleInterface uInterface, StringBuilder code){
+       if (uInterface.hasNamespaces()) {
+         model.setDefaultNamespace( uInterface.getNamespace(0));
+	     code.append(StringFormatter.format("namespace {0};\n",  uInterface.getNamespace(0)));   
+       }  
+	   code.append(StringFormatter.format("\ninterface {0}\n{\n", uInterface.getName()));
+	   String  extendedInterfaces="";
+	   for (UmpleInterface extendedInterface : uInterface.getExtendsInterface())
+	   {
+		   extendedInterfaces += extendedInterface.getName() + "," ; 
+	   }
+	   if (!extendedInterfaces.equals(""))
+	   {
+		   extendedInterfaces = extendedInterfaces.substring(0, extendedInterfaces.length()-1); 
+		   code.append(StringFormatter.format("  isA {0};\n", extendedInterfaces));    	  
+	   }
+	   for (Depend aDepend : uInterface.getDepends())
+	   {
+		   code.append(StringFormatter.format(" depend {0};\n", aDepend.getName()));   
+	   }
+	   if (uInterface.getExtraCode() != null)
+	   {
+		   code.append(uInterface.getExtraCode());
+	   }
+	   code.append("}");
+   }
+   
+   
   private void generateMethod(Method m, StringBuilder code)
   {
     code.append(StringFormatter.format("\n  {0} {1} {2}", m.getModifier().trim(), m.getType(), m.getName()));
