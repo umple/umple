@@ -3,7 +3,7 @@
   {
     <% if (customGetUniquePrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetUniquePrefixCode,gen.translate("getUniqueMethod",av));
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } %>
-<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-%>    return <%=gen.translate("uniqueMap",av)%>.get(<%=gen.translate("parameterOne",av)%>);
+    <% for( TraceItem traceItem : traceItems ) %><%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")%>
+    return <%=gen.translate("uniqueMap",av)%>.get(<%=gen.translate("parameterOne",av)%>);
   }
 

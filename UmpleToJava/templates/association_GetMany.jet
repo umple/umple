@@ -2,10 +2,10 @@
   public <%=gen.translate("type",av)%> <%=gen.translate("getMethod",av)%>(int index)
   {
     <% if (customGetPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetPrefixCode,gen.translate("getMethod",av)); 
-    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %><%= 
+    append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetPrefixCode, "    ")); } %><% for( TraceItem traceItem : traceItems ) %><%= 
 (traceItem!=null&&traceItem.getIsPre()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("associationMany",av)+".get(index)"):"")
 %>
-    <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationMany",av)%>.get(index);<%= 
+    <%=gen.translate("type",av)%> <%=gen.translate("parameterOne",av)%> = <%=gen.translate("associationMany",av)%>.get(index);<% for( TraceItem traceItem : traceItems ) %><%= 
 (traceItem!=null&&traceItem.getIsPost()?"\n"+traceItem.trace(gen, av,"as_g", uClass,gen.translate("parameterOne",av)):"")
 %>
     <% if (customGetPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetPostfixCode,gen.translate("getMethod",av)); 

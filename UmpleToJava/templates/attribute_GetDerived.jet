@@ -2,6 +2,6 @@
 <% if (av.numberOfComments() > 0) { append(stringBuffer, "\n  {0}\n", Comment.format("Attribute Javadoc", av.getComments())); } %><%= umpleSourceFile %>
   public <%=gen.translate("type",av)%> <%= gen.translate("getMethod",av) %>()
   {
-<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-%>    return <%= gen.translate("parameterValue",av) %>;<%addUncaughtExceptionVariables(gen.translate("getMethod",av),av.getPosition().getFilename(),av.getPosition().getLineNumber(),stringBuffer.toString().split("\\n").length-1,1);%>
+    <% for( TraceItem traceItem : traceItems ) %><%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")%>
+    return <%= gen.translate("parameterValue",av) %>;<%addUncaughtExceptionVariables(gen.translate("getMethod",av),av.getPosition().getFilename(),av.getPosition().getLineNumber(),stringBuffer.toString().split("\\n").length-1,1);%>
   }

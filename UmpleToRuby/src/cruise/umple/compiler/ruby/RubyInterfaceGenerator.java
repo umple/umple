@@ -57,79 +57,16 @@ public class RubyInterfaceGenerator implements ILang
     extraCode = uInterface.getExtraCode();
   }
 
+
+    stringBuffer.append(TEXT_2);
+    stringBuffer.append(TEXT_3);
+    stringBuffer.append(gen.translate("packageDefinition",uInterface));
+    
   for (Depend depend : uInterface.getDepends())
   {
     appendln(stringBuffer, "");
     append(stringBuffer, "require '{0}'",depend.getName());
   }
-
-  Boolean hasDate = false;
-  Boolean hasTime = false;
-  for(Constant aConstant : uInterface.getConstants())
-  {
-    if(aConstant.getType().equals("Time"))
-    {
-      hasTime = true;
-    }
-    else if(aConstant.getType().equals("Date"))
-    {
-      hasDate = true;
-    }
-  }
-
-  if(hasDate == true)
-  {
-    appendln(stringBuffer, "");
-    append(stringBuffer, "require 'date'");
-  }
-
-  if(hasTime == true)
-  {
-    appendln(stringBuffer, "");
-    append(stringBuffer, "require 'time'");
-  }
-
-
-    stringBuffer.append(TEXT_2);
-    stringBuffer.append(TEXT_3);
-    stringBuffer.append(gen.translate("packageDefinition",uInterface));
-    stringBuffer.append(TEXT_4);
-    stringBuffer.append(uInterface.getName());
-    stringBuffer.append(TEXT_5);
-
-    if (uInterface.hasConstants()) 
-    { 
-
-      appendln(stringBuffer, "");
-      appendln(stringBuffer,"  # CONSTANT MEMBERS  ");
-        for (Constant aConstant : uInterface.getConstants()) 
-        {
- 	  String constantName = aConstant.getName();
- 	  String constantType =  aConstant.getType();
- 	  String constantValue =  gen.translateInterfaceValue(aConstant.getValue(), constantType);
-          String first = "" + constantName.charAt(0);
-          first = first.toUpperCase();
-          if(constantName.length() > 1)
-          {
-            constantName = first + constantName.substring(1);
-          }
-          else
-          {
-            constantName = first;
-          }
- 
-          if (!(constantValue.equals("")))
-          {
- 	    appendln(stringBuffer, "");
- 	    append(stringBuffer, " {0} = {1};", constantName, constantValue);
-          }
-          else
-          {
- 	    appendln(stringBuffer, "");
- 	    append(stringBuffer, " {0};", constantName);
-          }
-        }
-    }
   
   // TODO: No test failed from removing this
   // for (String anImport : gInterface.getMultiLookup("import"))
@@ -138,7 +75,8 @@ public class RubyInterfaceGenerator implements ILang
   //  append(stringBuffer, "require '{0}'",anImport);
   // }
 
-
+    stringBuffer.append(TEXT_4);
+    stringBuffer.append(uInterface.getName());
     stringBuffer.append(TEXT_5);
     stringBuffer.append(extraCode);
     stringBuffer.append(TEXT_6);

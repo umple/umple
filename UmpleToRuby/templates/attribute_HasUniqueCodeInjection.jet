@@ -2,8 +2,8 @@
   def <%=av.getUmpleClass().getName()%>::<%=gen.translate("hasUniqueMethod",av)%>?(<%=gen.translate("parameterOne", av)%>)
     <% if (customHasUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } %>
     <%=gen.translate("parameterHasUnique",av)%> = <%=gen.translate("getUniqueMethod",av)%>(<%=gen.translate("parameterOne",av)%>) != null;
-<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-%><% if (customHasUniquePostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customHasUniquePostfixCode, "    ")); } 
-%>    <%=gen.translate("parameterHasUnique",av)%>
+    <% for( TraceItem traceItem : traceItems )%><%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")%>
+    <% if (customHasUniquePostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customHasUniquePostfixCode, "    ")); } %>
+    <%=gen.translate("parameterHasUnique",av)%>
   end
   

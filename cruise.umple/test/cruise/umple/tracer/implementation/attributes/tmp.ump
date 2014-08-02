@@ -11,11 +11,4 @@ class Tracer
   trace id, name record "interesting behavior";
   trace id record "Even more interesting";
 
-  // Traces will be triggered for each call to a 'set' method
-  // and twice for id, since there are two trace statements for id  
-  public static void main(String [ ] args) {
-    Student s = new Student();
-    s.setId(9); 
-    s.setName("Tim");
-  }
 }

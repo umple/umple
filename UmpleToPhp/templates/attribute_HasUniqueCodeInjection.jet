@@ -3,7 +3,7 @@
   {
     <% if (customHasUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } %>
     $<%=gen.translate("parameterHasUnique",av)%> = array_key_exists((string)$<%=gen.translate("parameterOne",av)%>, <%=gen.translate("getUniqueMap",av)%>);
-<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+    <% for( TraceItem traceItem : traceItems )%><%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")
 %><% if (customHasUniquePostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customHasUniquePostfixCode, "    ")); } 
 %>    return $<%=gen.translate("parameterHasUnique",av)%>;
   }

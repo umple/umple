@@ -10,7 +10,7 @@
     <% if (customAddPrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPrefixCode,gen.translate("addMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPrefixCode, "    ")); } %>
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
-    boolean <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);<%= 
+    boolean <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);<%for( TraceItem traceItemAssocAdd : traceItemAssocAdds )%><%= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     if (<%=gen.relatedTranslate("parameterIsNew",av)%>)
@@ -20,7 +20,7 @@
     else
     {
       <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
-    }<%= 
+    }<%for( TraceItem traceItemAssocAdd : traceItemAssocAdds )%><%= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     wasAdded = true;
@@ -36,10 +36,10 @@
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePrefixCode, "    ")); } %>
     //Unable to remove <%=gen.translate("parameterOne",av)%>, as it must always have a <%=gen.relatedTranslate("associationOne",av)%>
     if (!this.equals(<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>()))
-    {<%= 
+    {<%for( TraceItem traceItemAssocRemove : traceItemAssocRemoves )%><%= 
 (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
-      <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);<%= 
+      <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);<%for( TraceItem traceItemAssocRemove : traceItemAssocRemoves )%><%= 
 (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
       wasRemoved = true;
