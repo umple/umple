@@ -8,7 +8,7 @@
       continue;
     }
     
-    TraceItem traceItem = av.getTraced("getMethod", uClass);
+    //TraceItem traceItem = av.getTraced("getMethod", uClass);
     
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
@@ -99,7 +99,7 @@
       String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
       String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
       
-      TraceItem traceItem = av.getTraced("getMethod", uClass);
+      //TraceItem traceItem = av.getTraced("getMethod", uClass);
       
       if (customGetPostfixCode != null)
       {

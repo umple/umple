@@ -19,7 +19,7 @@ public class TracerAttributesTest extends TracerStateMachinesTest
 
   //------ Trace Attributes 
 
-  @Test 
+  @Test
   public void SingleAttribute()
   {
     AssertAttr("TraceSingleAttribute.ump","TraceSingleAttribute.");

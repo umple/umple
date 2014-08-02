@@ -145,7 +145,6 @@ public class Mentor
     {
       return wasRemoved;
     }
-
     pupils.remove(aPupil);
     wasRemoved = true;
     return wasRemoved;

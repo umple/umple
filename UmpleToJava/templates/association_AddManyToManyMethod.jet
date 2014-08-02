@@ -12,10 +12,10 @@
       return wasAdded;
     }
 
-<% } %><%= 
+<% } %><%for( TraceItem traceItemAssocAdd : traceItemAssocAdds )%><%= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
-    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);<%= 
+    <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);<%for( TraceItem traceItemAssocAdd : traceItemAssocAdds )%><%= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     if (<%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("indexOfMethod",av)%>(this) != -1)

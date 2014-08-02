@@ -3002,7 +3002,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       continue;
     }
     
-    TraceItem traceItem = av.getTraced("setMethod", uClass);
+    //TraceItem traceItem = av.getTraced("setMethod", uClass);
     
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
@@ -3150,7 +3150,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       continue;
     }
     
-    TraceItem traceItem = av.getTraced("getMethod", uClass);
+    //TraceItem traceItem = av.getTraced("getMethod", uClass);
     
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
@@ -3413,8 +3413,8 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_278);
     stringBuffer.append(TEXT_279);
-    stringBuffer.append( (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-);
+//    stringBuffer.append( (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+//);
      if (customGetUniquePostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customGetUniquePostfixCode, "    ")); } 
 
     stringBuffer.append(TEXT_280);
@@ -3436,8 +3436,8 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
     stringBuffer.append(TEXT_286);
      if (customGetUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_287);
-    stringBuffer.append( (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-);
+//    stringBuffer.append( (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+//);
     stringBuffer.append(TEXT_288);
     stringBuffer.append(gen.translate("uniqueMap",av));
     stringBuffer.append(TEXT_289);
@@ -3464,8 +3464,8 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
     stringBuffer.append(gen.translate("parameterOne",av));
     stringBuffer.append(TEXT_298);
     stringBuffer.append(TEXT_299);
-    stringBuffer.append( (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-);
+//    stringBuffer.append( (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+//);
      if (customHasUniquePostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customHasUniquePostfixCode, "    ")); } 
 
     stringBuffer.append(TEXT_300);
@@ -3485,8 +3485,8 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
     stringBuffer.append(TEXT_305);
      if (customHasUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customHasUniquePrefixCode, "    ")); } 
     stringBuffer.append(TEXT_306);
-    stringBuffer.append( (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-);
+//    stringBuffer.append( (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+//);
     stringBuffer.append(TEXT_307);
     stringBuffer.append(gen.translate("getUniqueMethod",av));
     stringBuffer.append(TEXT_308);
@@ -3506,7 +3506,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
       String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
       
-      TraceItem traceItem = av.getTraced("getMethod", uClass);
+      //TraceItem traceItem = av.getTraced("getMethod", uClass);
       
       if (customGetPostfixCode != null)
       {
@@ -4017,7 +4017,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       continue;
     }
 
-	TraceItem traceItem = av.getTraced("getMethod", uClass);
+	//TraceItem traceItem = av.getTraced("getMethod", uClass);
 
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
@@ -4174,7 +4174,7 @@ appendln(stringBuffer, "  {0}* {0}::theInstance = NULL; //singleton;", uClass.ge
       continue;
     } 
     
-    TraceItem traceItem = av.getTraced("setMethod", uClass);
+    //TraceItem traceItem = av.getTraced("setMethod", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));

@@ -60,7 +60,7 @@
       continue;
     }
     
-    TraceItem traceItem = av.getTraced("constructor",uClass);
+    List<TraceItem> traceItems= av.getTraced("constructor",uClass);
     
     if (av.getIsList())
     {
@@ -94,7 +94,7 @@
       }
     }
     
-    if(traceItem!=null)
+    if(!traceItems.isEmpty())
     {
 %>
     ( new Thread()
@@ -107,10 +107,10 @@
       {
         while( thread.isAlive() )
         {
-          <%= traceItem.trace(gen,av,"at_p",uClass) %>
+          <% for( TraceItem traceItem : traceItems ) %><%= traceItem.trace(gen,av,"at_p",uClass) %>
           try
           {
-            Thread.sleep(<%= traceItem.getPeriodClause() %>);
+            Thread.sleep(<% for( TraceItem traceItem : traceItems ) %><%= traceItem.getPeriodClause() %>);
           }
           catch (InterruptedException e)
           {

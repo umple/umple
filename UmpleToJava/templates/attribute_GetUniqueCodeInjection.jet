@@ -4,9 +4,9 @@
     <% if (customGetUniquePrefixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetUniquePrefixCode,gen.translate("getUniqueMethod",av)); 
     append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } %>
     <%=av.getUmpleClass().getName()%> <%=gen.translate("parameterGetUnique",av)%> = <%=gen.translate("uniqueMap",av)%>.get(<%=gen.translate("parameterOne",av)%>);
-<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
-%><% if (customGetUniquePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetUniquePostfixCode,gen.translate("getUniqueMethod",av)); 
-      append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customGetUniquePostfixCode, "    ")); } 
-%>    return <%=gen.translate("parameterGetUnique",av)%>;
+    <% for( TraceItem traceItem : traceItems ) %><%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")%>
+
+<% if (customGetUniquePostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customGetUniquePostfixCode,gen.translate("getUniqueMethod",av)); 
+    append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customGetUniquePostfixCode, "    ")); } %>    return <%=gen.translate("parameterGetUnique",av)%>;
   }
 

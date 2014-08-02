@@ -3,7 +3,7 @@
   {
     <% if (customGetUniquePrefixCode != null) { append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customGetUniquePrefixCode, "    ")); } %>
     $<%=gen.translate("parameterGetUnique",av)%> = <%=gen.translate("getUniqueMap",av)%>[(string)$<%=gen.translate("parameterOne",av)%>];
-<%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass)+"\n":"")
+    <% for( TraceItem traceItem : traceItems )%><%= (traceItem!=null?traceItem.trace(gen, av,"at_g", uClass):"")
 %><% if (customGetUniquePostfixCode != null) { append(stringBuffer, "{0}\n",GeneratorHelper.doIndent(customGetUniquePostfixCode, "    ")); } 
 %>    return $<%=gen.translate("parameterGetUnique",av)%>;
   }

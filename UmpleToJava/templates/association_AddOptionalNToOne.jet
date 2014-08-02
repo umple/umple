@@ -24,7 +24,7 @@
     }
 
     <%=gen.relatedTranslate("type",av)%> <%=gen.relatedTranslate("parameterExisting",av)%> = <%=gen.translate("parameterOne",av)%>.<%=gen.relatedTranslate("getMethod",av)%>();
-    boolean <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);<%= 
+    boolean <%=gen.relatedTranslate("parameterIsNew",av)%> = <%=gen.relatedTranslate("parameterExisting",av)%> != null && !this.equals(<%=gen.relatedTranslate("parameterExisting",av)%>);<%for( TraceItem traceItemAssocAdd : traceItemAssocAdds )%><%= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     if (<%=gen.relatedTranslate("parameterIsNew",av)%>)
@@ -34,7 +34,7 @@
     else
     {
       <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
-    }<%= 
+    }<%for( TraceItem traceItemAssocAdd : traceItemAssocAdds )%><%= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     wasAdded = true;

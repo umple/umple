@@ -30,7 +30,7 @@
       <% if (customAddPostfixCode != null) { addUncaughtExceptionVariables(stringBuffer.toString().split("\\n").length,customAddPostfixCode,gen.translate("addMethod",av)); 
       append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customAddPostfixCode, "      ")); } %>
       return wasAdded;
-    }<%= 
+    }<%for( TraceItem traceItemAssocAdd : traceItemAssocAdds )%><%= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPre()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
 
@@ -41,7 +41,7 @@
     else
     {
       <%=gen.translate("associationMany",av)%>.add(<%=gen.translate("parameterOne",av)%>);
-    }<%= 
+    }<%for( TraceItem traceItemAssocAdd : traceItemAssocAdds )%><%= 
 (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     wasAdded = true;
@@ -70,10 +70,10 @@
       append(stringBuffer, "\n{0}",GeneratorHelper.doIndent(customRemovePostfixCode, "      ")); } %>
       return wasRemoved;
     }
-<%= 
+<%for( TraceItem traceItemAssocRemove : traceItemAssocRemoves )%><%= 
 (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPre()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
-    <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);<%= 
+    <%=gen.translate("associationMany",av)%>.remove(<%=gen.translate("parameterOne",av)%>);<%for( TraceItem traceItemAssocRemove : traceItemAssocRemoves )%><%= 
 (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 %>
     wasRemoved = true;

@@ -14,7 +14,7 @@ import org.junit.*;
 public class InterfaceTemplateTest extends TemplateTest
 {
   
-  @Test
+  @Test @Ignore
   public void Interface()
   {
     assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest."+ languagePath +".txt","ISomething");

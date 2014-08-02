@@ -14,8 +14,8 @@
     } 
     
     //TraceItem traceItem = av.getTraced("associationAdd", uClass);
-    TraceItem traceItemAssocAdd = av.getTraced("associationAdd", uClass);
-    TraceItem traceItemAssocRemove = av.getTraced("associationRemove", uClass);
+    List<TraceItem> traceItemAssocAdds = av.getTraced("associationAdd", uClass);
+    List<TraceItem> traceItemAssocRemoves = av.getTraced("associationRemove", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));

@@ -150,7 +150,6 @@ public class Mentor
     {
       return wasRemoved;
     }
-
     students.remove(aStudent);
     wasRemoved = true;
     return wasRemoved;
