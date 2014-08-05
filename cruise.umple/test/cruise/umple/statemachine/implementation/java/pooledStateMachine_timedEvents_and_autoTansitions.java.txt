@@ -20,13 +20,13 @@ public class X implements Runnable
   Thread removal;
   
   //enumeration type of messages accepted by X
-  enum MessageType { e1_M, timeouts2Tos3_M, null_M }
+  enum MessageType { timeouts2Tos3_M, null_M }
 
   // Map for a X pooled state machine that allows querying which events are possible in each map
 
   public static final Map<Object, HashSet<MessageType>> stateMessageMap = new HashMap<Object, HashSet<MessageType>>();
   static {
-    stateMessageMap.put(Sm.s1,new HashSet<MessageType>(Arrays.asList(MessageType.e1_M)));
+    stateMessageMap.put(Sm.s1,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
     stateMessageMap.put(Sm.s2,new HashSet<MessageType>(Arrays.asList(MessageType.timeouts2Tos3_M)));
     stateMessageMap.put(Sm.s3,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
   }
@@ -60,24 +60,6 @@ public class X implements Runnable
   public Sm getSm()
   {
     return sm;
-  }
-
-  public boolean _e1()
-  {
-    boolean wasEventProcessed = false;
-    
-    Sm aSm = sm;
-    switch (aSm)
-    {
-      case s1:
-        setSm(Sm.s2);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
   }
 
   private boolean __autotransition1__()
@@ -258,11 +240,6 @@ public class X implements Runnable
   //messages accepted 
   //------------------------------
 
-  public void e1 ()
-  {
-    pool.put(new Message(MessageType.e1_M, null));
-  }
-
   public boolean timeouts2Tos3 ()
   {
     boolean wasAdded = false;
@@ -282,9 +259,6 @@ public class X implements Runnable
       
       switch (m.type)
       {
-        case e1_M:
-          status = _e1();
-          break;
         case timeouts2Tos3_M:
           status = _timeouts2Tos3();
           break; 

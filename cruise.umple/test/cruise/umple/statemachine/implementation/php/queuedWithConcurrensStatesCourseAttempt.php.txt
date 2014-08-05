@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3250 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 class CourseAttempt
 {
@@ -152,33 +152,6 @@ class CourseAttempt
     if ($aCourseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamFinalExam)
     {
       $this->setCourseAttemptSMFinalExam(self::$CourseAttemptSMFinalExamNull);
-      $wasEventProcessed = true;
-    }
-    return $wasEventProcessed;
-  }
-
-  public function lab1Done()
-  {
-    $wasEventProcessed = false;
-    
-    $aCourseAttemptSMLab1 = $this->courseAttemptSMLab1;
-    if ($aCourseAttemptSMLab1 == self::$CourseAttemptSMLab1Lab1)
-    {
-      $this->setCourseAttemptSMLab1(self::$CourseAttemptSMLab1Lab2);
-      $wasEventProcessed = true;
-    }
-    return $wasEventProcessed;
-  }
-
-  public function fail()
-  {
-    $wasEventProcessed = false;
-    
-    $aCourseAttemptSMFinalExam = $this->courseAttemptSMFinalExam;
-    if ($aCourseAttemptSMFinalExam == self::$CourseAttemptSMFinalExamFinalExam)
-    {
-      $this->exitCourseAttemptSMFinalExam();
-      $this->setCourseAttemptSM(self::$CourseAttemptSMFailed);
       $wasEventProcessed = true;
     }
     return $wasEventProcessed;

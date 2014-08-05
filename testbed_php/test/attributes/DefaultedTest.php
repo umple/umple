@@ -31,11 +31,11 @@ class DefaultedTest extends UnitTestCase
     $this->assertEqual(true, $door->resetDateId());
     $this->assertEqual(date(1234),$door->getDateId());
 
-    $this->assertEqual(time(1235),$door->getTimeId());
+    $this->assertEqual(time(1234),$door->getTimeId());
     $this->assertEqual(true, $door->setTimeId(time(5321)));
     $this->assertEqual(time(5321),$door->getTimeId());
     $this->assertEqual(true, $door->resetTimeId());
-    $this->assertEqual(time(1235),$door->getTimeId());
+    $this->assertEqual(time(1234),$door->getTimeId());
 
     $this->assertEqual(false,$door->getBooleanId());
     $this->assertEqual(true, $door->setBooleanId(true));

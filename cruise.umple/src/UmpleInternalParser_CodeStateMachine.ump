@@ -21,6 +21,7 @@ class UmpleInternalParser
   internal Map<State,List<Token>> possiblyUnknownStates = new HashMap<State,List<Token>>();
   internal List<Token> stateNames = null;
   internal List<Token> transitionNames = null;
+  internal List<Token> ignoredTransitions = new ArrayList<Token>();
   
   
   // Allow to declare several active objects within the same class, the name of the generated state-machine
@@ -833,6 +834,8 @@ class UmpleInternalParser
     else
     	isFirst = true;
     
+    checkStateMachineForDuplicateEvents(stateMachineToken);
+    
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
       if(stateToken.is("pooled"))
@@ -846,7 +849,7 @@ class UmpleInternalParser
       }    
       
       //Issue 148
-      if(stateToken.is("standAloneTransition"))
+       if(stateToken.is("standAloneTransition") && !ignoredTransitions.contains(stateToken))
       {
     	  if(stateToken.getValue("event") != null)
     	    analyzeStandAloneTransition(false,stateToken, stateToken.getValue("fromState"), null, sm);
@@ -895,14 +898,14 @@ class UmpleInternalParser
         
         for(Token state : stateToken.getSubTokens())
         {
-        	 if(state.is("standAloneTransition"))
+        	  if(state.is("standAloneTransition") && !ignoredTransitions.contains(state))
              {
            	  analyzeStandAloneTransition(false,state, state.getValue("fromState"), null, sm); 
              }
         }
       }
     }
-    checkStateMachineForDuplicateEvents(stateMachineToken);
+
   }
 
   private void analyzeState(Token stateToken, State fromState)
@@ -930,11 +933,11 @@ class UmpleInternalParser
       {
         fromState.setFinalState(true);
       }
-      else if (subToken.is("transition"))
+	  else if (subToken.is("transition") && !ignoredTransitions.contains(subToken))
       {
         analyzeTransition(false,subToken, fromState, changeType); 
       }
-      else if (subToken.is("autoTransition"))
+      else if (subToken.is("autoTransition") && !ignoredTransitions.contains(subToken))
       {
         analyzeTransition(true,subToken, fromState, changeType);
       }
@@ -1218,14 +1221,17 @@ class UmpleInternalParser
     	//If there is ever a transition past an auto transition, raise an error        
         if(priorAutoTransitionExists){
           setFailedPosition(subToken.getPosition(), 54, subToken.getValue("event"));
+          ignoredTransitions.add(subToken);
         }
         //if a unguarded transition with the same event has been seen,
         // in this state or it's super, raise an error
         if(unguardedEvents.contains(subToken.getValue("event"))){
           setFailedPosition(subToken.getPosition(), 54, subToken.getValue("event"));
+          ignoredTransitions.add(subToken);
         }
         if(superStateEvents.contains(subToken.getValue("event"))){
           setFailedPosition(subToken.getPosition(), 55, subToken.getValue("event"));
+          ignoredTransitions.add(subToken);	
         }
         if(subToken.getValue("guard") == null){
           if((subToken.getValue("event") == null) && (subToken.getValue("timer") == null)){

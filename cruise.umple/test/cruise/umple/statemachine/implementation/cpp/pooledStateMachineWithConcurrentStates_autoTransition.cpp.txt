@@ -1,6 +1,6 @@
 /* EXPERIMENTAL CODE - NON COMPILEABLE VERSION OF C++ */
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3036 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 #include "CourseAttempt.h"
 
@@ -180,37 +180,6 @@
       case finalExam:
         exitCourseAttemptSMFinalExam();
         setCourseAttemptSMFinalExam(Null);
-        wasEventProcessed = true;
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  bool CourseAttempt::lab1Done()
-  {
-    bool wasEventProcessed = false;
-
-    switch (courseAttemptSMLab1)
-    {
-      case lab1:
-        setCourseAttemptSMLab1(lab2);
-        wasEventProcessed = true;
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  bool CourseAttempt::fail()
-  {
-    bool wasEventProcessed = false;
-
-    switch (courseAttemptSMFinalExam)
-    {
-      case finalExam:
-        exitCourseAttemptSMFinalExam();
-        setCourseAttemptSM(failed);
         wasEventProcessed = true;
         break;
     }

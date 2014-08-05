@@ -119,9 +119,9 @@ class NestedStateMachineTest extends UnitTestCase
     $this->assertEqual("StatusOnRunningPlay",$course->getStatusOnRunning());
     
     $course->flip();
-    $this->assertEqual("StatusOff.StatusOffFull",$course->getStatusFullName());
+    $this->assertEqual("StatusOff.StatusOffIdle",$course->getStatusFullName());
     $this->assertEqual("StatusOff",$course->getStatus());
-    $this->assertEqual("StatusOffFull",$course->getStatusOff());
+    $this->assertEqual("StatusOffIdle",$course->getStatusOff());
     $this->assertEqual("StatusOnNull",$course->getStatusOn());
     $this->assertEqual("StatusOnRunningNull",$course->getStatusOnRunning());
     

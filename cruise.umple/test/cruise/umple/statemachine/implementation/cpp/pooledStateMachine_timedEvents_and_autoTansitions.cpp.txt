@@ -53,21 +53,6 @@
     }
   }
 
-  bool X::e1()
-  {
-    bool wasEventProcessed = false;
-
-    switch (sm)
-    {
-      case s1:
-        setSm(s2);
-        wasEventProcessed = true;
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
   bool X::__autotransition1__()
   {
     bool wasEventProcessed = false;
