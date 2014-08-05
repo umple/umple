@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3537 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
 import java.util.*;
@@ -26,7 +26,7 @@ public class CourseAttempt implements Runnable
   Thread removal;
   
   //enumeration type of messages accepted by CourseAttempt
-  enum MessageType { lab1Done_M, fail_M, null_M }
+  enum MessageType { null_M }
 
   // Map for a CourseAttempt pooled state machine that allows querying which events are possible in each map
 
@@ -36,12 +36,12 @@ public class CourseAttempt implements Runnable
     stateMessageMap.put(CourseAttemptSM.failed,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
     stateMessageMap.put(CourseAttemptSM.passed,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
     stateMessageMap.put(CourseAttemptSMLab1.Null,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
-    stateMessageMap.put(CourseAttemptSMLab1.lab1,new HashSet<MessageType>(Arrays.asList(MessageType.lab1Done_M)));
+    stateMessageMap.put(CourseAttemptSMLab1.lab1,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
     stateMessageMap.put(CourseAttemptSMLab1.lab2,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
     stateMessageMap.put(CourseAttemptSMTermProject.Null,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
     stateMessageMap.put(CourseAttemptSMTermProject.termProject,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
     stateMessageMap.put(CourseAttemptSMFinalExam.Null,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
-    stateMessageMap.put(CourseAttemptSMFinalExam.finalExam,new HashSet<MessageType>(Arrays.asList(MessageType.fail_M)));
+    stateMessageMap.put(CourseAttemptSMFinalExam.finalExam,new HashSet<MessageType>(Arrays.asList(MessageType.null_M)));
   }
 
   //------------------------
@@ -187,43 +187,6 @@ public class CourseAttempt implements Runnable
     {
       case finalExam:
         setCourseAttemptSMFinalExam(CourseAttemptSMFinalExam.Null);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean _lab1Done()
-  {
-    boolean wasEventProcessed = false;
-    
-    CourseAttemptSMLab1 aCourseAttemptSMLab1 = courseAttemptSMLab1;
-    switch (aCourseAttemptSMLab1)
-    {
-      case lab1:
-        setCourseAttemptSMLab1(CourseAttemptSMLab1.lab2);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean _fail()
-  {
-    boolean wasEventProcessed = false;
-    
-    CourseAttemptSMFinalExam aCourseAttemptSMFinalExam = courseAttemptSMFinalExam;
-    switch (aCourseAttemptSMFinalExam)
-    {
-      case finalExam:
-        exitCourseAttemptSMFinalExam();
-        setCourseAttemptSM(CourseAttemptSM.failed);
         wasEventProcessed = true;
         break;
       default:
@@ -395,16 +358,6 @@ public class CourseAttempt implements Runnable
   //messages accepted 
   //------------------------------
 
-  public void lab1Done ()
-  {
-    pool.put(new Message(MessageType.lab1Done_M, null));
-  }
-
-  public void fail ()
-  {
-    pool.put(new Message(MessageType.fail_M, null));
-  }
-
   
   @Override
   public void run ()
@@ -415,13 +368,7 @@ public class CourseAttempt implements Runnable
       Message m = pool.getNext();
       
       switch (m.type)
-      {
-        case lab1Done_M:
-          status = _lab1Done();
-          break;
-        case fail_M:
-          status = _fail();
-          break; 
+      { 
         default:
       }
       if(!status)

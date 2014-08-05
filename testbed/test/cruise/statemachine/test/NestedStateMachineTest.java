@@ -132,9 +132,9 @@ public class NestedStateMachineTest
     Assert.assertEquals(CourseI.StatusOnRunning.Play,course.getStatusOnRunning());
     
     course.flip();
-    Assert.assertEquals("Off.Full",course.getStatusFullName());
+    Assert.assertEquals("Off.Idle",course.getStatusFullName());
     Assert.assertEquals(CourseI.Status.Off,course.getStatus());
-    Assert.assertEquals(CourseI.StatusOff.Full,course.getStatusOff());
+    Assert.assertEquals(CourseI.StatusOff.Idle,course.getStatusOff());
     Assert.assertEquals(CourseI.StatusOn.Null,course.getStatusOn());
     Assert.assertEquals(CourseI.StatusOnRunning.Null,course.getStatusOnRunning());
   }  

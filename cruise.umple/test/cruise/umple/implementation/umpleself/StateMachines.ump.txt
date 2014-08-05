@@ -207,7 +207,6 @@ class X17
         }
         S1A {
           exitS1 -> Null;
-          e1 -> S1;
         }
       }
     }

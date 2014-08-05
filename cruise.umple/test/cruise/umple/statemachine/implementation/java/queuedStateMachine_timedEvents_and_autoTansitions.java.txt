@@ -17,7 +17,7 @@ public class X implements Runnable
   private Sm sm;
   
   //enumeration type of messages accepted by X
-  enum MessageType { e1_M, timeouts2Tos3_M }
+  enum MessageType { timeouts2Tos3_M }
   
   MessageQueue queue;
   Thread removal;
@@ -51,24 +51,6 @@ public class X implements Runnable
   public Sm getSm()
   {
     return sm;
-  }
-
-  public boolean _e1()
-  {
-    boolean wasEventProcessed = false;
-    
-    Sm aSm = sm;
-    switch (aSm)
-    {
-      case s1:
-        setSm(Sm.s2);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
   }
 
   private boolean __autotransition1__()
@@ -230,11 +212,6 @@ public class X implements Runnable
   //messages accepted 
   //------------------------------
 
-  public void e1 ()
-  {
-    queue.put(new Message(MessageType.e1_M, null));
-  }
-
   public boolean timeouts2Tos3 ()
   {
     boolean wasAdded = false;
@@ -254,9 +231,6 @@ public class X implements Runnable
       
       switch (m.type)
       {
-        case e1_M:
-          status = _e1();
-          break;
         case timeouts2Tos3_M:
           status = _timeouts2Tos3();
           break; 

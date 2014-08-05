@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.18.0.3250 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
 import java.util.*;
@@ -23,7 +23,7 @@ public class CourseAttempt implements Runnable
   private CourseAttemptSMFinalExam courseAttemptSMFinalExam;
   
   //enumeration type of messages accepted by CourseAttempt
-  enum MessageType { lab1Done_M, fail_M }
+  enum MessageType {  }
   
   MessageQueue queue;
   Thread removal;
@@ -180,43 +180,6 @@ public class CourseAttempt implements Runnable
     return wasEventProcessed;
   }
 
-  public boolean _lab1Done()
-  {
-    boolean wasEventProcessed = false;
-    
-    CourseAttemptSMLab1 aCourseAttemptSMLab1 = courseAttemptSMLab1;
-    switch (aCourseAttemptSMLab1)
-    {
-      case lab1:
-        setCourseAttemptSMLab1(CourseAttemptSMLab1.lab2);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  public boolean _fail()
-  {
-    boolean wasEventProcessed = false;
-    
-    CourseAttemptSMFinalExam aCourseAttemptSMFinalExam = courseAttemptSMFinalExam;
-    switch (aCourseAttemptSMFinalExam)
-    {
-      case finalExam:
-        exitCourseAttemptSMFinalExam();
-        setCourseAttemptSM(CourseAttemptSM.failed);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
   private void exitCourseAttemptSM()
   {
     switch(courseAttemptSM)
@@ -342,16 +305,6 @@ public class CourseAttempt implements Runnable
   //messages accepted 
   //------------------------------
 
-  public void lab1Done ()
-  {
-    queue.put(new Message(MessageType.lab1Done_M, null));
-  }
-
-  public void fail ()
-  {
-    queue.put(new Message(MessageType.fail_M, null));
-  }
-
   
   @Override
   public void run ()
@@ -362,13 +315,7 @@ public class CourseAttempt implements Runnable
       Message m = queue.getNext();
       
       switch (m.type)
-      {
-        case lab1Done_M:
-          status = _lab1Done();
-          break;
-        case fail_M:
-          status = _fail();
-          break; 
+      { 
         default:
       }
       if(!status)

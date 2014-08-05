@@ -1168,7 +1168,7 @@ public class UmpleParserStateMachineTest
     assertNoWarnings("485_duplicateEventsGuardedBeforeGuardless.ump");
     
     //make sure there is a warning when the substate events are guarded
-    assertHasWarning("485_duplicateEventInSuperStateInAllStatesGuardedBelow.ump", 0, 55, new Position("485_duplicateEventInSuperStateInAllStatesGuardedBelow.ump", 6, 8, 73));
+    assertHasWarning("485_duplicateEventInSuperStateInAllStatesGuardedBelow.ump", 0, 55, new Position("485_duplicateEventInSuperStateInAllStatesGuardedBelow.ump", 6, 9, 79));
         
     //make sure a warning is raised when the duplicate event is in all states, no guards
     assertHasWarning("485_duplicateEventInSuperStateInAllStatesAbove.ump", 0, 55, new Position("485_duplicateEventInSuperStateInAllStatesAbove.ump",7,8,92));

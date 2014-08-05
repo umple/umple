@@ -1,17 +1,17 @@
-class X {
-  Integer b = 0;
-  sm {
-    state1 {
-      substate1 {
-        e [b > 1] -> state2;
-      }
-      e -> state3;
-    }
-    state2 {
-      e -> state1;
-    }
-    state3 {
-      e -> state2;
-    }
-  }
-}
+	class X {
+	  Integer b = 0;
+	  sm {
+	    state1 {
+	      substate1 {
+	        e [b > 1] -> state2;
+	      }
+	      e -> state3;
+	    }
+	    state2 {
+	      e -> state1;
+	    }
+	    state3 {
+	      e -> state2;
+	    }
+	  }
+	}

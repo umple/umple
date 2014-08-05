@@ -1,6 +1,6 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.19.0.3552 modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 class X
 {
@@ -40,19 +40,6 @@ class X
     elseif ($this->sm == self::$SmS2) { return "SmS2"; }
     elseif ($this->sm == self::$SmS3) { return "SmS3"; }
     return null;
-  }
-
-  public function e1()
-  {
-    $wasEventProcessed = false;
-    
-    $aSm = $this->sm;
-    if ($aSm == self::$SmS1)
-    {
-      $this->setSm(self::$SmS2);
-      $wasEventProcessed = true;
-    }
-    return $wasEventProcessed;
   }
 
   private function __autotransition1__()
