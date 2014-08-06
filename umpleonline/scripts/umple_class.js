@@ -91,7 +91,7 @@ function UmpleClass()
 
   this.addAttribute = function(typeAndName)
   {
-    var attribute = new UmpleAttribute("","");
+    var attribute = new UmpleAttribute("","","");
     attribute.set(typeAndName);
     this.attributes.push(attribute);
     return this.attributes.length - 1;
@@ -152,67 +152,67 @@ function UmpleClass()
 
   this.setExtendsClass = function(umpleClassId)
   {
-  	this.extendsClass = umpleClassId;
+    this.extendsClass = umpleClassId;
   }
   
   this.removeExtendsClass = function()
   {
-  	this.extendsClass = null;
+    this.extendsClass = null;
   }
   
   // Used by trimOverlap to enable associations to line up properly
   this.borderLines = function()
   {
-  	var classObj = jQuery("#" + this.id);
-  	var width = classObj.width();
-  	var height = classObj.height();
+    var classObj = jQuery("#" + this.id);
+    var width = classObj.width();
+    var height = classObj.height();
 
-  	var topLeft = this.position;
-  	var topRight = this.position.add(new UmplePosition(width,0,0,0));
-  	var bottomLeft = this.position.add(new UmplePosition(0,height,0,0));
-  	var bottomRight = this.position.add(new UmplePosition(width,height,0,0));
+    var topLeft = this.position;
+    var topRight = this.position.add(new UmplePosition(width,0,0,0));
+    var bottomLeft = this.position.add(new UmplePosition(0,height,0,0));
+    var bottomRight = this.position.add(new UmplePosition(width,height,0,0));
 
-  	borders = [];
-  	borders.push(new UmpleLine(topLeft, topRight));
-  	borders.push(new UmpleLine(topLeft, bottomLeft));
-  	borders.push(new UmpleLine(bottomLeft, bottomRight));
-  	borders.push(new UmpleLine(topRight, bottomRight));
-  	
-  	return borders;
+    borders = [];
+    borders.push(new UmpleLine(topLeft, topRight));
+    borders.push(new UmpleLine(topLeft, bottomLeft));
+    borders.push(new UmpleLine(bottomLeft, bottomRight));
+    borders.push(new UmpleLine(topRight, bottomRight));
+    
+    return borders;
   }
          
   this.drawable = function()
   {
     var classDiv = this.drawClass();
-	var generalizationDiv = this.drawGeneralization();
-	var divs = [classDiv,generalizationDiv];
+  var generalizationDiv = this.drawGeneralization();
+  var divs = [classDiv,generalizationDiv];
     return divs;
   }
   
   this.drawClass = function()
   {
-  	var classSel = "#" + this.id;
-  	var existingClassDiv = jQuery(classSel).get();
-  	
-  	if (existingClassDiv == undefined || existingClassDiv == null || existingClassDiv == "")
-  	{
-  	  classDiv = jQuery("<div></div>");
-  	  classDiv.addClass("umpleClass");
-  	}
-  	else
-  	{
-  	  classDiv = jQuery(existingClassDiv);
-  	  removalSel = format("div#{0} .classTable," +
-  	   					  "div#{0} .umpleAttribute," +
-  	   					  "div#{0} .umpleAttributeNew," +
-  	   					  "div#{0} .anchor, " +
-  	   					  "div#{0} .hover", this.id);
-  	  jQuery(removalSel).remove();
-  	}
-  	
-  	classDiv.attr("id", this.id);
-  	  	
-  	var offset = -3.5;
+    var classSel = "#" + this.id;
+    var existingClassDiv = jQuery(classSel).get();
+    
+    if (existingClassDiv == undefined || existingClassDiv == null || existingClassDiv == "")
+    {
+      classDiv = jQuery("<div></div>");
+      classDiv.addClass("umpleClass");
+    }
+    else
+    {
+      classDiv = jQuery(existingClassDiv);
+      removalSel = format("div#{0} .classTable," +
+           "div#{0} .umpleAttribute," +
+           "div#{0} .umpleAttributeNew," +
+           "div#{0} .anchor, " +
+           "div#{0} .hover", this.id);
+      jQuery(removalSel).remove();
+    }
+    
+    classDiv.attr("id", this.id);
+        
+    var offset = -3.5;
     var bottomOffset = -3;
      
     var attributesInnerHtml = '';
@@ -225,13 +225,17 @@ function UmpleClass()
       for (var i=0; i<this.attributes.length; i++)
       { 
         var attr = this.attributes[i];
+
+        var colorStyle = ""
+        if(attr.textColor != "black") colorStyle = format("style='color:{0}'", attr.textColor);
+
         if (Page.isPhotoReady())
         {
-          attributesInnerHtml += format('<div class="umpleAttribute">{0} : {1}</div>',attr.name,attr.type);
+          attributesInnerHtml += format('<div class="umpleAttribute" {3}>{0} : {1}</div>',attr.name,attr.type, colorStyle);
         }
         else
         {
-          attributesInnerHtml += format('<div class="umpleAttribute"><span id="{2}_attribute_{3}" name="attributeEdit" class="editable editableDoubleClick">{0} : {1}</span> <img src="scripts/delete2.jpg" onclick="DiagramEdit.attributeDelete({4}{2}{4},{4}{3}{4})" /></div>',attr.name,attr.type,this.id,i,"'");
+          attributesInnerHtml += format('<div class="umpleAttribute" {5}><span id="{2}_attribute_{3}" name="attributeEdit" class="editable editableDoubleClick">{0} : {1}</span> <img src="scripts/delete2.jpg" onclick="DiagramEdit.attributeDelete({4}{2}{4},{4}{3}{4})" /></div>',attr.name,attr.type,this.id,i,"'",colorStyle);
         }
       }
     } // End of loop adding attributes
@@ -250,7 +254,7 @@ function UmpleClass()
         else if(method.visibility == "protected")
           visibility = "# ";
         else
-          visibility = "+ "; 	//set default visibility to public
+          visibility = "+ ";   //set default visibility to public
 
         var methodtype = (method.type == "" ?  "void" : method.type)
    
@@ -301,7 +305,7 @@ function UmpleClass()
      rowspan+=1;
     if(Page.showMethods)
      rowspan+=1;
-	    
+      
     classInnerHtml +=
       format(
       '<table bgcolor="'+ this.displayColor+
@@ -358,8 +362,8 @@ function UmpleClass()
  
     var existing = classDiv.html();
     classDiv.html(classInnerHtml + existing);
-	
-	return classDiv;
+  
+  return classDiv;
   }
   
   this.drawableClassOutline = function()
@@ -408,19 +412,19 @@ function UmpleClass()
   
   this.drawGeneralization = function()
   {
-  	var parent = UmpleSystem.find(this.extendsClass);
+    var parent = UmpleSystem.find(this.extendsClass);
     if (parent == null)
     {
       return null;
     }
-  	
-  	var umpleGeneralization = new UmpleGeneralization();
-  	umpleGeneralization.childId = this.id;
-  	umpleGeneralization.parentId = parent.id;
-  	umpleGeneralization.childPosition = this.position;
-  	umpleGeneralization.parentPosition = parent.position;
-  	
-  	generalizationDiv = umpleGeneralization.drawable();
+    
+    var umpleGeneralization = new UmpleGeneralization();
+    umpleGeneralization.childId = this.id;
+    umpleGeneralization.parentId = parent.id;
+    umpleGeneralization.childPosition = this.position;
+    umpleGeneralization.parentPosition = parent.position;
+    
+    generalizationDiv = umpleGeneralization.drawable();
   
     return generalizationDiv;
   }
