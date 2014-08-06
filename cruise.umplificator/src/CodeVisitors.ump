@@ -9,21 +9,24 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
  depend cruise.umplificator.StringHelper;
  depend org.eclipse.jdt.core.dom.ASTVisitor;
  depend org.eclipse.jdt.core.dom.TypeDeclaration;
+ depend org.eclipse.jdt.core.dom.EnumDeclaration;
  depend org.eclipse.jdt.core.dom.ImportDeclaration;
  depend org.eclipse.jdt.core.dom.MethodDeclaration;
  depend org.eclipse.jdt.core.dom.FieldDeclaration;
  depend org.eclipse.jdt.core.dom.PackageDeclaration;
- 
+ depend cruise.umple.compiler.CodeBlock;
  depend org.apache.log4j.Logger;
 
  ImportDeclaration [] importDeclarations;
  MethodDeclaration [] methodDeclarations;
  FieldDeclaration [] fieldDeclarations;
  lazy TypeDeclaration typeDeclaration;
+ lazy CodeBlock enumDeclaration;
  lazy PackageDeclaration packageDeclaration;
  lazy String name;
  lazy String classBody;
  lazy Boolean isInterface;
+ lazy Boolean isEnumType;
 
   @Override
   public boolean visit(ImportDeclaration node) {
@@ -65,8 +68,23 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
     packageDeclaration = node;
     return super.visit(node);
   }
+  
+  @Override
+  public boolean visit (EnumDeclaration node) 
+  {
+  	logger.debug("Visiting EnumDeclaration");
+    enumDeclaration = new CodeBlock();
+    name = node.getName().getFullyQualifiedName();
+    String enumDeclarationCode = node.toString();
+    enumDeclaration.setName(name);
+	enumDeclaration.setCode(enumDeclarationCode);
+	
+    isEnumType = true;
+    return false;
+  }
 
 }
+ external EnumDeclaration {}
  external TypeDeclaration {}
  external PackageDeclaration {}
  external FieldDeclaration {}

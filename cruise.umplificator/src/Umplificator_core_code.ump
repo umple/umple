@@ -83,22 +83,26 @@ public boolean umplifyJava(File file)
 			String compilationUnitName= javaParser.getJavaVisitor().getName();
 			String classBody = javaParser.getJavaVisitor().getClassBody();
 			boolean isInterface = javaParser.getJavaVisitor().getIsInterface();
+			boolean isEnumType = javaParser.getJavaVisitor().getIsEnumType();
 
 			UmpleInterface uInterface=null;
 			UmpleClass uClass=null;
-			if (isInterface)
-			{
-			    uInterface = new UmpleInterface(compilationUnitName);
-			    // Insert uInterface into Working Memory
-			    ruleRunner.insertUmpleInterface(uInterface);
-			    uInterface.appendExtraCode(classBody);
+			if (!isEnumType){
+				if (isInterface)
+				{
+				    uInterface = new UmpleInterface(compilationUnitName);
+				    // Insert uInterface into Working Memory
+				    ruleRunner.insertUmpleInterface(uInterface);
+				    uInterface.appendExtraCode(classBody);
+				}
+				else {
+					// Insert uClass into Working Memory
+					uClass = new UmpleClass(compilationUnitName);
+					ruleRunner.insertUmpleClass(uClass);
+					uClass.appendExtraCode(classBody);
+				}
 			}
-			else {
-				// Insert uClass into Working Memory
-				uClass = new UmpleClass(compilationUnitName);
-				ruleRunner.insertUmpleClass(uClass);
-				uClass.appendExtraCode(classBody);
-			}
+
 			// Insert Java Elements
 			ruleRunner.insertJavaElements(javaParser.getJavaVisitor());
 			ruleRunner.fireAllRules();
@@ -107,12 +111,18 @@ public boolean umplifyJava(File file)
 			UmpleFile umpleFile = new UmpleFile(file);
 			outputModel = new UmpleModel(umpleFile);
 			
-		    if (isInterface) { outputModel.addUmpleInterface(uInterface);} else {  outputModel.addUmpleClass(uClass);};
+			if (!isEnumType){
+				if (isInterface) { outputModel.addUmpleInterface(uInterface);} else {  outputModel.addUmpleClass(uClass);};
+			}
+			else {
+		    	// We don't need to apply rules, simply output as it is
+		    	outputModel.addExtraCode(javaParser.getJavaVisitor().getEnumDeclaration());
+		    }
 		    filesUmplified.add(umpleFile.getSimpleFileName());
 			// generate Umple Code
 			FileHelper.writeFile(outputModel, outputFolder,needSubDirectories,testMode);
 		} catch (IOException e) {
-			logger.error("IOException in Umplificator.umplifyUmpleFile");
+			logger.error("IOso Exception in Umplificator.umplifyUmpleFile");
 			logger.error(e.getStackTrace());
 			return false;
 		} 
