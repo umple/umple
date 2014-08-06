@@ -51,9 +51,17 @@ class JsonGenerator
           modifier = "const";
         }
         
+        String traceColor = "black";
+        for( TraceDirective tc : aClass.getAllTraceDirectives() )
+          for( AttributeTraceItem ati : tc.getAttributeTraceItems() )
+            for( UmpleVariable aVar : ati.getUmpleVariables() )
+              if( aVar.getName().equals(attribute.getName()) )
+                traceColor = "red";
+        
         jsonForAttributes += StringFormatter.format(
-            "{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, {0}modifier{0} : {0}{3}{0} }",
-            "\"",attributeType,attribute.getName(),modifier);
+            "{ {0}type{0} : {0}{1}{0}, {0}name{0} : {0}{2}{0}, {0}modifier{0} : {0}{3}{0}, {0}traceColor{0} : {0}{4}{0} }",
+            "\"",attributeType,attribute.getName(),modifier,traceColor);
+        
       }
       for(Method method : aClass.getMethods())
       {

@@ -8,17 +8,26 @@ UmpleAttributeFactory = new Object();
 
 UmpleAttributeFactory.create = function(data)
 {
-  var umpleAttribute = new UmpleAttribute(data.type,data.name);
+  var type = data.type;
+  var name = data.name;
+  var color = data.traceColor;
+  if(color == "") color = "black";
+
+  var umpleAttribute = new UmpleAttribute(type, name, color);
   return umpleAttribute;
 }
 
-function UmpleAttribute(aType,aName)
+function UmpleAttribute(aType,aName,aColor)
 {
   this.type = aType;
   this.name = aName;
-  
+  this.textColor = aColor;
+
+  if(this.aColor === "" || this.aColor === undefined ) this.aColor = "black"; 
+
   this.set = function(input)
   {
+    this.textColor = "black";
     var isExisting = this.type != "" && this.name != "";
     if (isExisting)
     {
@@ -48,6 +57,6 @@ function UmpleAttribute(aType,aName)
   
   this.copy = function()
   {
-    return new UmpleAttribute(this.type,this.name);
+    return new UmpleAttribute(this.type,this.name,this.textColor);
   }
 }

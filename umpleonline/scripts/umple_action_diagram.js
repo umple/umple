@@ -352,8 +352,8 @@ DiagramEdit.attributeNameChanged = function(diagramId,index,oldName,newAttribute
   if(!Action.validateAttributeName(newAttribute))
   {
     Action.updateUmpleDiagram();
-    setTimeout(function() {Page.setFeedbackMessage("UML Attributes must be alphanumeric with an optional type after a colon. &lt;"+(newAttribute.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;")
-)+"&gt is not valid.");},2000);
+    setTimeout(function() {Page.setFeedbackMessage("UML Attributes must be alphanumeric with an optional type after a colon. &lt;"
+      +(newAttribute.split("&").join("&amp;").split( "<").join("&lt;").split(">").join("&gt;"))+"&gt is not valid.");},2000);
     setTimeout(function() {if(true) {Page.setFeedbackMessage("");}},10000);
   }
   else

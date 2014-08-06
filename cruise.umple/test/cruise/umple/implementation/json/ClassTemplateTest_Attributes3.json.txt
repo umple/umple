@@ -1,0 +1,1 @@
+{"umpleClasses":[{"position": {"x": 193, "y": 66, "width": 0, "height": 0}, "attributes": [{ "type" : "String", "name" : "name", "modifier" : "", "traceColor" : "red" }, { "type" : "Integer", "name" : "id", "modifier" : "", "traceColor" : "black" }],"methods": [], "id": "NewClass", "name": "NewClass", "displayColor": "" }], "umpleAssociations":[] }
