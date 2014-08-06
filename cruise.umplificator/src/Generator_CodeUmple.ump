@@ -147,10 +147,24 @@ class UmpleToUmpleGenerator
     {
         generateInterface(uInterface, code);
     }
+    
+    for (CodeBlock codeBlock : model.getExtraCodes())
+    {
+        generateTopExtraCode(codeBlock, code);
+    }
    
     model.setCode(code.toString());
     internalGen.postpare();
   }
+   
+   private void generateTopExtraCode(CodeBlock codeBlock, StringBuilder code){
+	   code.append(StringFormatter.format("\ntop {0}\n{\n", codeBlock.getName()));
+	   if (codeBlock.getCode() != null)
+	   {
+		   code.append(codeBlock.getCode());
+	   }
+	   code.append("}");
+   }
   
    private void generateInterface(UmpleInterface uInterface, StringBuilder code){
        if (uInterface.hasNamespaces()) {
