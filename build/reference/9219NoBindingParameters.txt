@@ -12,3 +12,7 @@ noreferences
 @@example
 @@source manualexamples/E219NoBindingParameters.ump
 @@endexample
+
+@@example
+@@source manualexamples/E219NoBindingParameters1.ump
+@@endexample

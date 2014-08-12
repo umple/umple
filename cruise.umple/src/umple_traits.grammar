@@ -1,6 +1,8 @@
 traitDefinition : trait [name] [[traitParameters]]? { [[traitContent]]* }
 traitContent- : [[comment]] | [[traitDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[abstractMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; | [[exception]] | [[extraCode]]
-traitParameters : < [~parameter] ( , [~parameter] )* >
+traitParameters : < [[traitFullParameters]] ( , [[traitFullParameters]] )* >
+traitFullParameters : [~parameter] ([[traitParametersInterface]])?
+traitParametersInterface- : isA [~tInterface]( & [~tInterface])*
 
 
 
