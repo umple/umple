@@ -1,4 +1,4 @@
-// In this example, there is an error because class "A" doesn't bind a value to template parameters of trait "T" named "Y".
+// In this example, there is an error because class "A" doesn't bind a value to one of the template parameters of trait "T" named "Y".
 class A{
 	isA T<X = B>;
 }

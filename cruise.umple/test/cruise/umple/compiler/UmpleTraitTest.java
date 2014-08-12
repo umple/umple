@@ -749,11 +749,11 @@ public class UmpleTraitTest {
 	
 	@Test
 	public void TypeParameterTest03() {
-		String code = "class A{isA T< X = ABC1, Z=ABC2>;}trait T<X,Z>{X test(Z inData1, X inData2){}}";
+		String code = "class A{isA T< X = B, Z=C>;} class B{} class C{}trait T<X,Z>{X test(Z inData1, X inData2){}}";
 		UmpleModel model = getRunModel(code);
-		Assert.assertEquals("ABC1", model.getUmpleClass("A").getMethod(0).getType());
-		Assert.assertEquals("ABC2", model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType());
-		Assert.assertEquals("ABC1", model.getUmpleClass("A").getMethod(0).getMethodParameter(1).getType());
+		Assert.assertEquals("B", model.getUmpleClass("A").getMethod(0).getType());
+		Assert.assertEquals("C", model.getUmpleClass("A").getMethod(0).getMethodParameter(0).getType());
+		Assert.assertEquals("B", model.getUmpleClass("A").getMethod(0).getMethodParameter(1).getType());
 
 	}
 	
@@ -796,7 +796,20 @@ public class UmpleTraitTest {
 		}	
 	}
 	
-	
+	@Test	
+	public void TypeParameterTest07() {
+		String code = "class A{isA T1;}class B{} trait T1<X,Y>{}";
+		UmpleModel model = getModel(code);
+		boolean result = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			result = e.getMessage().contains("219");
+		} finally {
+			SampleFileWriter.destroy("traitTest.ump");
+			Assert.assertTrue(result);
+		}	
+	}
 	
 	
 
@@ -938,6 +951,43 @@ public class UmpleTraitTest {
 		Assert.assertEquals("B b=new B();", model.getUmpleClass("A").getMethod(0).getMethodBody().getCodeblock().getCode());
 		Assert.assertEquals("A b=new A();", model.getUmpleClass("B").getMethod(0).getMethodBody().getCodeblock().getCode());
 	}	
+
+	@Test
+	public void InterfaceForTemplates001() {
+		String code = "class A{isA T< X = B >;} class B{} trait T<X isA I>{}";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("205");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+	@Test
+	public void InterfaceForTemplates002() {
+		String code = "class A{isA T<X = B1>;} interface I{} trait T<X isA I>{}";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("221");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+
+	@Test
+	public void InterfaceForTemplates003() {
+		String code = "class A{isA T<X = B>;} class B{} interface I{} interface II{} trait T<X isA I & II>{}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleTrait(0).getGeneralTemplateParameter(0).numberOfInterfaces());
+
+	}
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
 	private UmpleModel getRunModel(String inCode) {

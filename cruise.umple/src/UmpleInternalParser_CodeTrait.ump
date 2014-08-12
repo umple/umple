@@ -760,6 +760,8 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
     Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
 	Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
+		checkClassSupportTraitsInterfaces(inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
+		if ( ! getParseResult().getWasSuccess() ) return;
 		tempTraitMethods = gatherConcreteMethods(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
 		if ( ! getParseResult().getWasSuccess() ) return;
 		checkMethodComeFromTraitsIsAvaiableInClass(tempTraitMethods,inClass);
@@ -770,6 +772,42 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 		for (Method method : traitMethods.get(t1)) {
 			method.getComment(2).setText(method.getComment(2).getText()+"'"+inClass.getName()+"' ");
 			inClass.addMethod(method);   
+		}
+	}
+}
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------  
+private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppliedByName, UmpleClass inClass) {
+	if (inGeneralTPAppliedByName == null) return;
+	for (GeneralTemplateParameter gtParameter : model.getUmpleTrait(inGeneralTPAppliedByName.getInheritanceName()).getGeneralTemplateParameters()){
+		String bindingValue= inGeneralTPAppliedByName.getParameterMapping().get(gtParameter.getName());
+		if (bindingValue.equals("Integer") | bindingValue.equals("Float") | bindingValue.equals("String")| bindingValue.equals("Double")| bindingValue.equals("Date")| bindingValue.equals("Time")){
+			if (gtParameter.numberOfInterfaces()>0){
+				getParseResult().addErrorMessage( new ErrorMessage( 221, inClass.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),inClass.getName()) ); 
+			 	return;	
+			}
+			
+		} else {
+			UmpleClass uClass = model.getUmpleClass(bindingValue);
+			if (uClass==null){
+				getParseResult().addErrorMessage( new ErrorMessage( 221, inClass.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),inClass.getName()) ); 
+			 	return;
+			} else{
+				
+				for (String str : gtParameter.getInterfaces()){
+					boolean find = false;
+					for(UmpleInterface uInterface : uClass.getParentInterface()){
+						if (uInterface.getName().equals(str)){
+							find = true;
+						}
+					}
+					if (!find) {
+						getParseResult().addErrorMessage( new ErrorMessage( 205, inClass.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),inClass.getName(), str ) ); 
+					 	return;
+					}
+				}	
+			}	
 		}
 	}
 }
@@ -1097,16 +1135,45 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------Start--------------------------------------	 
   private void checkTypeParametersAvailability() {
 	for (UmpleClass uClass : getModel().getUmpleClasses()) {
-		for (GeneralTPApplied gTPApplied : uClass.getGeneralTPApplieds()) {
+		for (UmpleTrait uTrait : uClass.getExtendsTraits()) {
+			if (uTrait.numberOfGeneralTemplateParameters()>0){
+				boolean find = false;
+				for (GeneralTPApplied gTPApplied : uClass.getGeneralTPApplieds()) {
+					if(gTPApplied.getInheritanceName().equals(uTrait.getName())){
+						find = true;
+					}
+				}
+				if (!find){
+					getParseResult().addErrorMessage( new ErrorMessage( 219, uClass.getPosition(0), uTrait.getGeneralTemplateParameter(0).getName(), uTrait.getName() ) ); 
+				 	return;
+				}
+			}
+		}   	
+    	for (GeneralTPApplied gTPApplied : uClass.getGeneralTPApplieds()) {
+			
 			checkTypeParameterAvailability(gTPApplied);
 		}
 	}
 	for (UmpleTrait uTrait : getModel().getUmpleTraits()) {
+		for (UmpleTrait inTrait : uTrait.getExtendsTraits()) {
+			if (inTrait.numberOfGeneralTemplateParameters()>0){
+				boolean find = false;
+				for (GeneralTPApplied gTPApplied : uTrait.getGeneralTPApplieds()) {
+					if(gTPApplied.getInheritanceName().equals(inTrait.getName())){
+						find = true;
+					}
+				}
+				if (!find){
+					getParseResult().addErrorMessage( new ErrorMessage( 219, uTrait.getPosition(0), inTrait.getGeneralTemplateParameter(0).getName(), inTrait.getName() ) ); 
+				 	return;
+				}
+			}
+		} 
+		
 		for (GeneralTPApplied gTPApplied : uTrait.getGeneralTPApplieds()) {
 			checkTypeParameterAvailability(gTPApplied);
 		}
 	}
-	
  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -1203,16 +1270,21 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------Start--------------------------------------
   private void proccessGeneralTemplateParameters(Token mainToken, UmpleTrait aTrait) {
 	  String name = "";
-	   for (Token subToken : mainToken.getSubTokens()) {
-		  if (subToken.is("parameter")) {
-			  name = subToken.getValue();
-			  GeneralTemplateParameter gtParameter = new GeneralTemplateParameter(name,"");
-			  if (aTrait.hasGeneralTemplateParameter(name)){
-				  getParseResult().addErrorMessage(new ErrorMessage(214,subToken.getPosition(),name,aTrait.getName() ));
-				  return;
-			  }
-			  aTrait.addGeneralTemplateParameter(gtParameter);
-		  }
+	   for (Token subToken : mainToken.getSubTokens()) {		   
+		   if (subToken.is("traitFullParameters")){
+			   name = subToken.getSubToken(0).getValue();
+			   GeneralTemplateParameter gtParameter = new GeneralTemplateParameter(name,"");
+			   if (aTrait.hasGeneralTemplateParameter(name)){
+					  getParseResult().addErrorMessage(new ErrorMessage(214,subToken.getPosition(),name,aTrait.getName() ));
+					  return;
+			   }
+			   for (int i =1;i<subToken.numberOfSubTokens(); i++){
+				   if(subToken.getSubToken(i).is("tInterface")){
+					   gtParameter.addInterface(subToken.getSubToken(i).getValue());
+				   }
+			   }
+			   aTrait.addGeneralTemplateParameter(gtParameter);
+		   }
 	  }
   }
 //---------------------------------end----------------------------------------
