@@ -146,7 +146,7 @@ function UmpleAssociation()
     var currentTwo = this.offsetTwoPosition.add(this.classTwoPosition);
     var intersections1 = [];
     var intersections2 = [];
-    
+
     // find all intersections between the association line and class one borders
     for (var i=0; i<classOneBorders.length; i++)
     {
@@ -164,7 +164,7 @@ function UmpleAssociation()
     // min is the shortest possible association line, and is set to the current
     // line by default
     var min = new UmpleLine(currentOne, currentTwo);
-    
+
     // identify the cutoff point (intersection) on end one that results 
     // in the shortest association line
     var current = new UmpleLine(min.pointOne, min.pointTwo);
@@ -270,7 +270,7 @@ function UmpleAssociation()
     var associationSel = "#" + this.getElementId();
     jQuery(associationSel).remove();
     
-    var associationDiv = jQuery("<div></div>");
+    var associationDiv = this.createBaseJQueryObject();
     associationDiv.addClass("umpleAssociation");
     associationDiv.attr("id", "newassociation");
     
@@ -285,7 +285,7 @@ function UmpleAssociation()
     var associationSel = "#" + this.id;
     jQuery(associationSel).remove();
     
-    var associationDiv = jQuery("<div></div>");
+    var associationDiv = this.createBaseJQueryObject();
     associationDiv.addClass("umpleAssociation");
     associationDiv.attr("id", this.id);
     
@@ -377,7 +377,7 @@ function UmpleAssociation()
     // replace the old association div with a fresh one
     var associationSel = "#" + this.id;
     jQuery(associationSel).remove();
-    var associationDiv = jQuery("<div></div>");
+    var associationDiv = this.createBaseJQueryObject();
     associationDiv.addClass("umpleAssociation");
     associationDiv.attr("id", this.id);
     
@@ -1008,5 +1008,10 @@ function UmpleAssociation()
     //Move the label over by the length of the multiplicity label and a space
     labelPosition.x += 5*multiplicityLength + 6;
     return labelPosition;
+  }
+
+  this.createBaseJQueryObject = function()
+  {
+    return jQuery(format("<div class='{0}'></div>", this.getName()))
   }
 }

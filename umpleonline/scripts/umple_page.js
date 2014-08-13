@@ -20,6 +20,10 @@ Page.codeMirrorOn = false;
 Page.codeMirrorEditor = null;
 Page.hLine = null;
 
+Page.modelLoadingCount = 0;
+Page.layoutLoadingCount = 0;
+Page.canvasLoadingCount = 0;
+
 // Global options
 Page.readOnly = false; // initially allow editing
 Page.useEditableClassDiagram = true;
@@ -549,7 +553,7 @@ Page.selectToggleTool = function(toolSelected)
   {
     DiagramEdit.removeNewClass();
     DiagramEdit.removeNewAssociation();
-    DiagramEdit.removeNewGeneralization();f
+    DiagramEdit.removeNewGeneralization();
   }
   
   Page.enableEditDragAndResize(false);
@@ -654,41 +658,68 @@ Page.hideLoading = function()
   var modelEditor = "#topTextEditor";
   var layoutEditor = "#bottomTextEditor";
   var canvas = "#" + Page.umpleCanvasId();  
+
+  if(Page.modelLoadingCount > 0) Page.modelLoadingCount--;
+  if(Page.layoutLoadingCount > 0) Page.layoutLoadingCount--;
+  if(Page.canvasLoadingCount > 0) Page.canvasLoadingCount--;
+
+  if(Page.modelLoadingCount === 0) jQuery(modelEditor).hideLoading();
+  if(Page.layoutLoadingCount === 0) jQuery(layoutEditor).hideLoading();
+  if(Page.canvasLoadingCount === 0) jQuery(canvas).hideLoading();
   
-  jQuery(modelEditor).hideLoading();
-  jQuery(canvas).hideLoading();
-  jQuery(layoutEditor).hideLoading();
-  jQuery(".bookmarkableUrl").removeClass("disabled");
+  if(Page.modelLoadingCount === 0 
+    && Page.layoutLoadingCount === 0 
+    && Page.canvasLoadingCount === 0)
+  {
+    jQuery(".bookmarkableUrl").removeClass("disabled");
+  }
 }
 
 Page.showModelLoading = function()
 {
   var modelEditor = jQuery("#topTextEditor");
-  if (jQuery("#textEditorColumn").is(":visible"))
+
+  if(Page.modelLoadingCount == 0)
   {
-    modelEditor.showLoading();
+    if (jQuery("#textEditorColumn").is(":visible"))
+    {
+      modelEditor.showLoading();
+    }
+    jQuery(".bookmarkableUrl").addClass("disabled");
   }
-  jQuery(".bookmarkableUrl").addClass("disabled");
+
+  Page.modelLoadingCount++;
 }
 
 Page.showLayoutLoading = function()
 {
   var layoutEditor = jQuery("#bottomTextEditor");
-  if (layoutEditor.is(":visible")) 
+  
+  if(Page.layoutLoadingCount == 0)
   {
-    layoutEditor.showLoading();
+    jQuery(".bookmarkableUrl").addClass("disabled");
+    if (layoutEditor.is(":visible")) 
+    {
+      layoutEditor.showLoading();
+    }
   }
-  jQuery(".bookmarkableUrl").addClass("disabled");
+
+  Page.layoutLoadingCount++;
 }
 
 Page.showCanvasLoading = function()
 {
   var canvas = jQuery("#umpleCanvas");
-  if (canvas.is(":visible"))
+  if(Page.canvasLoadingCount == 0)
   {
-    canvas.showLoading();
+    jQuery(".bookmarkableUrl").addClass("disabled");
+    if (canvas.is(":visible"))
+    {
+      canvas.showLoading();
+    }
   }
-  jQuery(".bookmarkableUrl").addClass("disabled");
+  
+  Page.canvasLoadingCount++;
 }
 
 Page.resetCanvasSize = function()

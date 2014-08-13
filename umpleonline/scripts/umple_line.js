@@ -130,14 +130,14 @@ function UmpleLine(pointA, pointB)
       return null;
     }
     
-    if (slope1 == Infinity)
+    if (slope1 == Infinity || slope1 == -Infinity)
     {
       yIntercept2 = y3 - slope2*x3;
       intersectX = x1;
       intersectY = slope2*intersectX + yIntercept2;
       found = true;
     }
-    else if (slope2 == Infinity)
+    else if (slope2 == Infinity || slope2 == -Infinity)
     {
       yIntercept1 = y1 - slope1*x1;
       intersectX = x3;
