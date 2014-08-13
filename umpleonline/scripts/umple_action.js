@@ -94,14 +94,6 @@ Action.clicked = function(event)
   {
     Action.uigu();
   }
-  else if (action == "Larger")
-  {
-    Layout.umpleCanvasResized(1);
-  }
-  else if (action == "Smaller")
-  {
-    Layout.umpleCanvasResized(-1);
-  }
   else if (action == "Copy")
   {
     Action.showCodeInSeparateWindow();
@@ -943,7 +935,7 @@ Action.moveSelectedClass = function(umpleClass, delta)
   {
     clearTimeout(Action.oldTimeout);
   }
-  Action.oldTimeout = setTimeout(function() {Action.classMoved(Page.selectedClass);}, 1000); 
+  Action.oldTimeout = setTimeout(function() {DiagramEdit.classMoved(Page.selectedClass);}, 1000); 
 }
 
 Action.keyboardShortcut = function(event)
@@ -955,7 +947,7 @@ Action.keyboardShortcut = function(event)
   }
   
   var shortcut = event.which;
-  
+
   if (shortcut == 27)    // escape
   {
     Page.unselectAllToggleTools();
@@ -1894,7 +1886,7 @@ Mousetrap.bind(['g'], function(e){
   {      
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {
-      document.getElementById('buttonAddGeneralization').click();
+      jQuery('#buttonAddGeneralization').click();
     }        
   }  
 });
@@ -1905,7 +1897,7 @@ Mousetrap.bind(['a'], function(e){
   {
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {
-      document.getElementById('buttonAddAssociation').click();
+      jQuery('#buttonAddAssociation').click();
     }
   }
 });
@@ -1916,7 +1908,7 @@ Mousetrap.bind(['c'], function(e){
   {
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {        
-      document.getElementById('buttonAddClass').click();
+      jQuery('#buttonAddClass').click();
     }        
   }
 });

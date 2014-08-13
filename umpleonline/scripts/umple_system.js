@@ -425,6 +425,9 @@ UmpleSystem.redraw = function(umpleClass)
 UmpleSystem.trimOverlappingAssociations = function(umpleClass)
 {
   // trim any association that may now overlap a class
+
+  Page.showLayoutLoading();
+
   for (var i=0; i<UmpleSystem.umpleAssociations.length; i++)
   {
     var umpleAssociation = UmpleSystem.umpleAssociations[i];
@@ -443,6 +446,7 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
       if (!oldOffsetOne.equalsIgnoreSize(umpleAssociation.offsetOnePosition) ||
           !oldOffsetTwo.equalsIgnoreSize(umpleAssociation.offsetTwoPosition))
       {
+        Page.showLayoutLoading();
         // redraw the association
         UmpleSystem.redrawAssociation(umpleAssociation);
         
@@ -455,6 +459,8 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
       }
     }
   }
+
+  Page.hideLoading()
 }
 
 // The following can be deleted

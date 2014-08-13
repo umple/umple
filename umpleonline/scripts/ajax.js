@@ -73,7 +73,7 @@ function AjaxSender(aUrl,aCallback,aPostData)
     callback = (callback) ? callback : Ajax.defaultAjaxHandle;
     
     http.open(method, url, true);
-    http.setRequestHeader('User-Agent','XMLHTTP/1.0');
+
     if (postData)
     {
       http.setRequestHeader('Content-type','application/x-www-form-urlencoded');
