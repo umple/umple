@@ -737,7 +737,7 @@ class UmpleInternalParser
 				}
 			}
 		}
-		checkAllRequiredMethods();
+		checkAllRequiredMethodsAndInterfaces();
 	}	
   }
 //---------------------------------end----------------------------------------
@@ -778,32 +778,27 @@ private void copyMethodsFromTraitToClass(UmpleClass inClass){
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------  
-private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppliedByName, UmpleClass inClass) {
+private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppliedByName, UmpleClassifier inUmpleClassifier) {
 	if (inGeneralTPAppliedByName == null) return;
+	String type = "class";
+	if (inUmpleClassifier instanceof UmpleTrait) {type = "trait";} 
 	for (GeneralTemplateParameter gtParameter : model.getUmpleTrait(inGeneralTPAppliedByName.getInheritanceName()).getGeneralTemplateParameters()){
 		String bindingValue= inGeneralTPAppliedByName.getParameterMapping().get(gtParameter.getName());
 		if (bindingValue.equals("Integer") | bindingValue.equals("Float") | bindingValue.equals("String")| bindingValue.equals("Double")| bindingValue.equals("Date")| bindingValue.equals("Time")){
 			if (gtParameter.numberOfInterfaces()>0){
-				getParseResult().addErrorMessage( new ErrorMessage( 221, inClass.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),inClass.getName()) ); 
+				getParseResult().addErrorMessage( new ErrorMessage( 221, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName()) ); 
 			 	return;	
 			}
 			
 		} else {
 			UmpleClass uClass = model.getUmpleClass(bindingValue);
 			if (uClass==null){
-				getParseResult().addErrorMessage( new ErrorMessage( 221, inClass.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),inClass.getName()) ); 
+				getParseResult().addErrorMessage( new ErrorMessage( 221, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName()) ); 
 			 	return;
 			} else{
-				
 				for (String str : gtParameter.getInterfaces()){
-					boolean find = false;
-					for(UmpleInterface uInterface : uClass.getParentInterface()){
-						if (uInterface.getName().equals(str)){
-							find = true;
-						}
-					}
-					if (!find) {
-						getParseResult().addErrorMessage( new ErrorMessage( 205, inClass.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),inClass.getName(), str ) ); 
+					if (!checkInterfaceImplementationInHeirarchy(uClass,str)) {
+						getParseResult().addErrorMessage( new ErrorMessage( 205, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
 					 	return;
 					}
 				}	
@@ -811,6 +806,17 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 		}
 	}
 }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+ private boolean checkInterfaceImplementationInHeirarchy(UmpleClass inClass,String name) {
+	if (inClass==null) return false;
+    for(UmpleInterface uInterface : inClass.getParentInterface()){
+		if (uInterface.getName().equals(name)){	return true; }
+	}
+	return checkInterfaceImplementationInHeirarchy(inClass.getExtendsClass(),name);
+}
+
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------     
@@ -841,6 +847,8 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
      traitMethods.put(inTrait,methods);
      //----------------------------------------------------------------------------------------
      for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+     	 checkClassSupportTraitsInterfaces(inTrait.getGeneralTPAppliedByName(uTrait.getName()),inTrait);
+ 		 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
      	 tempTraitMethods = gatherConcreteMethods(uTrait,getNewGeneralTPAppliedWithP2P(inTrait,uTrait,inGTPApplied));	 
     	 if ( ! getParseResult().getWasSuccess() ) return traitMethods;
     	 if (CheckMethodComeFromTraitsIsAvaialbleInOtherTraits(traitMethods,tempTraitMethods,inTrait)) return traitMethods;
@@ -1122,8 +1130,9 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 		    }
 		    catch(Exception e){}   	  
 		    */     
-
-		} else {
+        } else if(!isUmpleClass(extendName)){
+        	child.addRequiredInterface(model.getUmpleInterface(extendName));
+        } else {
 			setFailedPosition(pos, 202, extendName);
 			return;
 		}
@@ -1229,15 +1238,30 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
-  private void checkAllRequiredMethods() {
+  private void checkAllRequiredMethodsAndInterfaces() {
 	  if ( getParseResult().getWasSuccess() ) {
 		  for(UmpleClass uClass : getModel().getUmpleClasses()) {
 			  for(UmpleTrait uTrait : uClass.getExtendsTraits())  {
 				recursiveCheckRequiredMethods(uClass,uTrait,uClass.getGeneralTPAppliedByName(uTrait.getName()));
+				recursiveCheckRequiredInterfaces(uClass, uTrait,uTrait.getName());
 			  }
 		  }
 	  }
   }  
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inTrait,String topTrait) {
+	for (UmpleInterface uInterface : inTrait.getRequiredInterfaces()) {
+		if (!checkInterfaceImplementationInHeirarchy(inClass,uInterface.getName())){
+			getParseResult().addErrorMessage(new ErrorMessage(222,inClass.getPosition(0),inClass.getName(),uInterface.getName(),topTrait));
+		    return;
+		}
+	}
+	for (UmpleTrait uTrait : inTrait.getExtendsTraits()) {
+		recursiveCheckRequiredInterfaces(inClass,uTrait,topTrait);
+	}
+}
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
