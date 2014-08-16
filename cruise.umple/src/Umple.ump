@@ -487,6 +487,9 @@ class UmpleTrait {
   //This is used to assign inheritance parameters.
   1 -> * GeneralTPApplied;	
   
+  //This is used to assign required interfaces
+  1 -> * UmpleInterface requiredInterfaces;
+  
   //--- before addDepend { if (depends.contains(aDepend)) { return false; } }  
 
   before setImmutable { if (!canBeImmutable()) { return false; } }

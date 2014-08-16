@@ -31,6 +31,7 @@ public class UmpleTraitTest {
 		SampleFileWriter.destroy("B.java");
 		SampleFileWriter.destroy("C.java");
 		SampleFileWriter.destroy("I.java");
+		SampleFileWriter.destroy("II.java");
 	}
 	
 	@Test 
@@ -987,6 +988,80 @@ public class UmpleTraitTest {
 		UmpleModel model = getRunModel(code);
 		Assert.assertEquals(2, model.getUmpleTrait(0).getGeneralTemplateParameter(0).numberOfInterfaces());
 
+	}
+	
+	@Test
+	public void InterfaceForTemplates004() {
+		String code = "class A{isA T1;} interface I{} trait T<X isA I>{} trait T1{ isA T<X=B>;}";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("221");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+	@Test
+	public void InterfaceForTemplates005() {
+		String code = "class A{isA T1;} class B{} interface I{} trait T<X isA I>{} trait T1{ isA T<X=B>;}";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("205");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+	
+	@Test
+	public void InterfaceForTemplates006() {
+		String code = "class A{isA T<X = C>;} class B{isA I;} class C{isA B;} interface I{} trait T<X isA I >{X ins;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals("C", model.getUmpleClass(0).getAttribute(0).getType());
+
+	}
+	
+	@Test
+	public void RequiredInterfaces001() {
+		String code = "class A{isA T;isA I;} interface I{} interface II{} trait T{isA I;isA II;}";
+		UmpleModel model = getRunModel(code);
+		Assert.assertEquals(2, model.getUmpleTrait(0).numberOfRequiredInterfaces());
+
+	}
+	
+	@Test
+	public void RequiredInterfaces002() {
+		String code = "class A{isA T;} interface I{} trait T{isA I;}";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("222");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}	
+	@Test
+	public void RequiredInterfaces003() {
+		String code = "class A{isA T;} interface I{} trait ST{isA I;}trait T{isA ST;} ";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("222");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
 	}
 //-------------------------------------------------------------------------------------	
 //----------------------- Functional methods for this test case -----------------------
