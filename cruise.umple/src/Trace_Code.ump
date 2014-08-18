@@ -354,7 +354,7 @@ class AttributeTraceItem
             accessor+name      		
             );
         if(getTracerType().equals("Log4j"))
-          message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),"info",message);
+          message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),getTraceDirective().getLogLevel(),message);
         else
           message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
         if(getForClause()!=null)
@@ -473,7 +473,10 @@ class StateMachineTraceItem
         obj,
         name      		
         );
-    message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+    if(getTracerType().equals("Log4j"))
+      message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),getTraceDirective().getLogLevel(),message);
+    else
+      message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
     message = StringFormatter.format(getExtremities(gen, name),message);
     message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
     return message;
@@ -566,7 +569,10 @@ class AssociationTraceItem
             methodname,
             name        
             );
-        message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+        if(getTracerType().equals("Log4j"))
+          message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),getTraceDirective().getLogLevel(),message);
+        else
+          message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
         message = StringFormatter.format(getExtremities(gen, name),message);
         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
         return message;

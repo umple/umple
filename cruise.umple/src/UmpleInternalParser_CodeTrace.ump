@@ -230,6 +230,10 @@ class UmpleInternalParser
       {
         traceAttr.setExecuteClause(token.getValue("trace_execute"));
       }
+      else if( traceToken.is("logLevel") )
+      {
+        traceDirective.setLogLevel(traceToken.getValue());
+      }
     }
     if( traceAttr.numberOfUmpleVariables() > 0 )
       traceDirective.addAttributeTraceItem(traceAttr);
