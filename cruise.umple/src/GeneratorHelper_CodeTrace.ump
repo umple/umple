@@ -27,10 +27,12 @@ private static void postpareTrace(UmpleModel aModel)
   //*******  Methods dealing with different tracers
   //*********************************************** 
   // Process traces based on tracer selected
-  // Current Tracers supported ( Console / File / String ) to be added later ( LTTNG / Dtrace )
+  // Current Tracers supported ( Console / File / String / Log4j ) to be added later ( LTTNG / Dtrace )
   static private boolean generateConsole = true;
   static private boolean generateFile = true;
   static private boolean generateString = true;
+  static private boolean generateLog4j = true ;
+
   public static boolean getWillGenerateString(){
   	return generateString;
   }
@@ -40,7 +42,10 @@ private static void postpareTrace(UmpleModel aModel)
     {
       if(templateLookups.containsKey("dependTracer"))
       {
-        aClass.addDepend(new Depend(StringFormatter.format(templateLookups.get("dependTracer"),td.getTracerType())));
+        if(td.getTracerType().equals("Log4j"))
+          aClass.addDepend(new Depend("org.apache.log4j.Logger"));
+        else
+          aClass.addDepend(new Depend(StringFormatter.format(templateLookups.get("dependTracer"),td.getTracerType())));
       }
       if(templateLookups.containsKey("dependDate"))
       {
@@ -78,6 +83,14 @@ private static void postpareTrace(UmpleModel aModel)
         {
           generateString=false;
           prepareStringTracer(model,templateLookups);
+        }
+      }
+      else if ("Log4j".equals(td.getTracerType()))
+      {
+        if(generateLog4j)
+        {
+          generateLog4j=false;
+          aClass.addAttribute("log", "Logger", "internal", "Logger.getLogger("+aClass.getName()+".class)", false);
         }
       }
     }

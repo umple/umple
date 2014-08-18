@@ -353,7 +353,10 @@ class AttributeTraceItem
             obj,
             accessor+name      		
             );
-        message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+        if(getTracerType().equals("Log4j"))
+          message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),"info",message);
+        else
+          message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
         if(getForClause()!=null)
         {
           message += "\n  "+StringFormatter.format(gen.translate("traceIncrement",this),getForClause());

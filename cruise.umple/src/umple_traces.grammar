@@ -9,14 +9,14 @@
 // See user manual page: [*ModelOrientedTracingLanguage(MOTL)*]
 
 // The tool to output the trace: [*Tracers*]
-traceType : tracer [=tracerType:Console|File|String|Visual] ( , [=tracerType:Console|File|String|Visual] )* ([[tracerOptions]])* ;
+traceType : tracer [=tracerType:Console|File|String|Visual|Log4j] ( , [=tracerType:Console|File|String|Visual|Log4j] )* ([[tracerOptions]])* ;
 //traceType : tracer [=tracerType:Console|File|String|Visual] ( , [=tracerType:Console|File|String|Visual] )* ( [=onoff:on|off] : [[tracerOptions]] ( , [[tracerOptions]] )* )* ( [=verbisty:verbose] )? ( [tracerArgument] )* ;
 tracerOptions- : [[tracerOn]]? [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value] [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value]*
-trcareOn : on:|off:
+tracerOn : on:|off:
 
 trace : [[traceDirective]] | [[traceCase]]
 
-traceDirective : trace [[traceItem]] ( [[executeClause]]|[[traceWhen]]|[[traceFor]]|[[tracePeriod]]|[[traceDuring]]|[[traceCaseActivation]]|[[traceRecord]]|[[traceLevel]] )* ;
+traceDirective : trace [[traceItem]] ( [[executeClause]]|[[traceWhen]]|[[traceFor]]|[[tracePeriod]]|[[traceDuring]]|[[traceCaseActivation]]|[[traceRecord]]|[[traceLevel]]|[[log4jLevel]] )* ;
 
 traceItem- : [[traceEntity]] | [[PreOrPostCondition]]
 traceEntity- : ( [[traceOptions]] )?  [trace_entity] (OPEN_ROUND_BRACKET)? (CLOSE_ROUND_BRACKET)? ( , [trace_entity] (OPEN_ROUND_BRACKET)? (CLOSE_ROUND_BRACKET)? )*
@@ -33,6 +33,7 @@ tracePeriod- : period [trace_period]
 traceDuring- : during [trace_duration]
 traceRecord- : record [[recordEntity]]
 recordEntity- : ( only )? ( " [**trace_record_string] " | [trace_record] ) ( , [trace_record] )*
+log4jLevel- : logLevel [=logLevel:trace|debug|info|warn|error|fatal]
 
 traceCondition- : [LHS] [[conditionRHS]]
 conditionRHS- : [comparison_operator] [RHS]
