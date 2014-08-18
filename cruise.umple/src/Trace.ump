@@ -40,6 +40,7 @@ class UmpleClass
 class TraceDirective
 {
   Integer id = 0;
+  String logLevel = "info";
   String tracerType = {getTracer().getName()}
   1 -> 1 Tracer ;
 
