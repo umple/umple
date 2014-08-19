@@ -170,7 +170,7 @@ class JsonGenerator
         for( TraceDirective tc : aClass.getAllTraceDirectives() )
           for( AssociationTraceItem asi : tc.getAssociationTraceItems() )
             for( AssociationVariable aVar : asi.getAssociationVariables() )
-              if( aVar.getName().equals(aAssoc.getName()) )
+              if( aVar.getName().equals(roleOne) || aVar.getName().equals(roleTwo) )
                 traceColor = "red";
 
       String associationId = "umpleAssociation_" + index;

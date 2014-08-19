@@ -1,0 +1,8 @@
+namespace example;
+
+class A {
+  * -- * B assoc;  
+  trace assoc;
+}
+
+class B {}
