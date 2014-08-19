@@ -353,8 +353,23 @@ class AttributeTraceItem
             obj,
             accessor+name      		
             );
-        if(getTracerType().equals("Log4j"))
-          message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),getTraceDirective().getLogLevel(),message);
+        if(getTracerType().equals("log4j"))
+        {
+          int logCounter = getTraceDirective().numberOfLogLevel();
+          if(logCounter == 0)
+            message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),"info",message);
+          else
+          {
+            String messages = "";
+            for( String level : getTraceDirective().getLogLevel() )
+            {
+              --logCounter;
+              messages += StringFormatter.format(gen.translate("traceTemplatelog4j",this),level,message);
+              if( logCounter > 0 ) messages += "{0}";
+            }
+            message = StringFormatter.format(messages,"\n");;
+          }
+        }
         else
           message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
         if(getForClause()!=null)
@@ -473,8 +488,23 @@ class StateMachineTraceItem
         obj,
         name      		
         );
-    if(getTracerType().equals("Log4j"))
-      message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),getTraceDirective().getLogLevel(),message);
+    if(getTracerType().equals("log4j"))
+    {
+      int logCounter = getTraceDirective().numberOfLogLevel();
+      if(logCounter == 0)
+        message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),"info",message);
+      else
+      {
+        String messages = "";
+        for( String level : getTraceDirective().getLogLevel() )
+        {
+          --logCounter;
+          messages += StringFormatter.format(gen.translate("traceTemplatelog4j",this),level,message);
+          if( logCounter > 0 ) messages += "{0}";
+        }
+        message = StringFormatter.format(messages,"\n");;
+      }
+    }
     else
       message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
     message = StringFormatter.format(getExtremities(gen, name),message);
@@ -569,8 +599,23 @@ class AssociationTraceItem
             methodname,
             name        
             );
-        if(getTracerType().equals("Log4j"))
-          message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),getTraceDirective().getLogLevel(),message);
+        if(getTracerType().equals("log4j"))
+        {
+          int logCounter = getTraceDirective().numberOfLogLevel();
+          if(logCounter == 0)
+            message = StringFormatter.format(gen.translate("traceTemplatelog4j",this),"info",message);
+          else
+          {
+            String messages = "";
+            for( String level : getTraceDirective().getLogLevel() )
+            {
+              --logCounter;
+              messages += StringFormatter.format(gen.translate("traceTemplatelog4j",this),level,message);
+              if( logCounter > 0 ) messages += "{0}";
+            }
+            message = StringFormatter.format(messages,"\n");;
+          }
+        }
         else
           message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
         message = StringFormatter.format(getExtremities(gen, name),message);

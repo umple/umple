@@ -6,6 +6,5 @@ class Tracer
 {
   x;
   int y;
-  trace x logLevel debug;
-  trace y logLevel fatal;
+  trace x logLevel debug,fatal;
 }

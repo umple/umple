@@ -33,7 +33,8 @@ public class Tracer
   public boolean setX(String aX)
   {
     boolean wasSet = false;
-    logger.debug( System.currentTimeMillis()+","+Thread.currentThread().getId()+",Log4jTest2.ump,9,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
+    logger.debug( System.currentTimeMillis()+","+Thread.currentThread().getId()+",Log4jTest3.ump,9,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
+    logger.fatal( System.currentTimeMillis()+","+Thread.currentThread().getId()+",Log4jTest3.ump,9,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
     x = aX;
     wasSet = true;
     return wasSet;
@@ -42,7 +43,6 @@ public class Tracer
   public boolean setY(int aY)
   {
     boolean wasSet = false;
-    logger.fatal( System.currentTimeMillis()+","+Thread.currentThread().getId()+",Log4jTest2.ump,10,Tracer,"+System.identityHashCode(this)+",at_s,y,"+y+","+(""+aY).toString().replace("\n","").replace(",",";") );
     y = aY;
     wasSet = true;
     return wasSet;

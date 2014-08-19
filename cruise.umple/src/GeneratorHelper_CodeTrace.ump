@@ -42,7 +42,7 @@ private static void postpareTrace(UmpleModel aModel)
     {
       if(templateLookups.containsKey("dependTracer"))
       {
-        if(td.getTracerType().equals("Log4j"))
+        if(td.getTracerType().equals("log4j"))
           aClass.addDepend(new Depend("org.apache.log4j.Logger"));
         else
           aClass.addDepend(new Depend(StringFormatter.format(templateLookups.get("dependTracer"),td.getTracerType())));
@@ -85,12 +85,11 @@ private static void postpareTrace(UmpleModel aModel)
           prepareStringTracer(model,templateLookups);
         }
       }
-      else if ("Log4j".equals(td.getTracerType()))
+      else if ("log4j".equals(td.getTracerType()))
       {
         if(generateLog4j)
         {
           generateLog4j=false;
-          aClass.addAttribute("log", "Logger", "internal", "Logger.getLogger("+aClass.getName()+".class)", false);
         }
       }
     }

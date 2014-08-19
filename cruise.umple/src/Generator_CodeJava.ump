@@ -2323,7 +2323,7 @@ class JavaGenerator
     TraceLookupMap.put("accessor","");
     TraceLookupMap.put("indent","    ");
     TraceLookupMap.put("template","{0}Tracer.handle( {1} );");
-    TraceLookupMap.put("templatelog4j","log.{0}( {1} );");
+    TraceLookupMap.put("templatelog4j","logger.{0}( {1} );");
     TraceLookupMap.put("timestamp","System.currentTimeMillis()");
     TraceLookupMap.put("identifier","System.identityHashCode({0})");
     TraceLookupMap.put("thread","Thread.currentThread().getId()");
