@@ -1,6 +1,6 @@
 namespace example;
 
-tracer Log4j;
+tracer log4j;
 
 class Tracer
 {

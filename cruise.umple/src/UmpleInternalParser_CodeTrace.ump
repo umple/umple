@@ -23,6 +23,7 @@ class UmpleInternalParser
   AssociationTraceItem tracedAssoc = null;
   MethodTraceItem mte = null;
   TraceCase tca = null;
+  Boolean loggerAdded = false;
 
   //------------------------------------------
   //----------  Trace analysis Code  ---------
@@ -67,6 +68,11 @@ class UmpleInternalParser
       if(model.getTracer()==null)
       {
         model.setTracer(new Tracer("Console"));
+      }
+      else if( model.getTracer().getName().equals("log4j") && !loggerAdded )
+      {
+        aClass.addAttribute("logger", "Logger", "internal", "Logger.getLogger("+aClass.getName()+".class)", false);
+        loggerAdded = true;
       }
       for( Token traceToken : token.getSubTokens() )
       {
@@ -232,7 +238,7 @@ class UmpleInternalParser
       }
       else if( traceToken.is("logLevel") )
       {
-        traceDirective.setLogLevel(traceToken.getValue());
+        traceDirective.addLogLevel(traceToken.getValue());
       }
     }
     if( traceAttr.numberOfUmpleVariables() > 0 )

@@ -36,16 +36,22 @@ public class JavaLog4jTracerTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Tracer.java");
   }
   
-  @Test
+  @Test //@Ignore
   public void Test1()
   {
     assertUmpleTemplateFor("Log4jTest1.ump","Log4jTest1.java.txt","Tracer",false);
   }
   
-  @Test @Ignore
+  @Test //@Ignore
   public void Test2()
   {
     assertUmpleTemplateFor("Log4jTest2.ump","Log4jTest2.java.txt","Tracer",false);
+  }
+  
+  @Test //@Ignore
+  public void Test3()
+  {
+    assertUmpleTemplateFor("Log4jTest3.ump","Log4jTest3.java.txt","Tracer",false);
   }
   
 }
