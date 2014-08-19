@@ -1,0 +1,10 @@
+namespace example;
+
+tracer log4j;
+
+class Tracer
+{
+  x;
+  int y;
+  trace x logLevel all;
+}
