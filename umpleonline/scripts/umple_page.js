@@ -441,10 +441,8 @@ Page.initCanvasArea = function()
   canvas.blur(function(){Action.focusOn(Page.umpleCanvasId(), false);});
   canvas.delegate("[class$='editableDoubleClick']", 'dblclick', InlineEditor.handleOnClick);
   canvas.delegate("[class$='editableSingleClick']", 'click', InlineEditor.handleOnClick);
-  
-  // remove the jquery resizable handle
-  //jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
-  //jQuery(".ui-icon").removeClass("ui-icon");
+
+  if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
 }
 
 Page.initExamples = function()

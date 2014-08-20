@@ -1,4 +1,7 @@
-body { background-color:White; overflow: auto; overflow-y: scroll; margin: 10px; }
+body { 
+  background-color:White; overflow: auto; overflow-y: scroll; margin-left: 10px;
+  margin-top: 10px; margin-right: 9px; margin-bottom: 10px;
+}
 p, ol, ul, div, h1, h2, h3, h4, b { 
   font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000; 
 }
@@ -15,7 +18,7 @@ p.pagedescription { margin-left:5px; }
 #mainApplication { overflow: hidden; }
 
 #paletteColumn { 
-  box-sizing:border-box; -moz-box-sizing:border-box; border: 1px solid gray; 
+  box-sizing: border-box; -moz-box-sizing: border-box; border: 1px solid gray; 
   background-color: GhostWhite; padding: 1px 1px 1px 1px; -moz-border-radius: 4px; 
   -webkit-border-radius: 4px; border-radius: 4px; 
 }
@@ -149,7 +152,7 @@ input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
 
 /* UMPLE CLASSES, ASSOCIATIONS and GENERALIZATIONS */
 div.umpleClass {
-  padding:0; margin:0; z-index: 1; cursor:move; position: absolute; font-family: arial, serif; 
+  padding:0; margin:0; z-index: 2; cursor:move; position: absolute; font-family: arial, serif; 
   background-color: White;
 }
 div.umpleClass img { vertical-align:middle; margin:0 0 1px 0; }
@@ -181,22 +184,27 @@ div.umpleMethod img { cursor:pointer; }
 div.umpleMethodNew  { margin:1px 1px 0 2px; }
 div.umpleMethodNew span { color:grey; cursor:text; }
 
-div.umpleAssociation { background-color:black; cursor: pointer; z-index: 2; position: absolute; }
+div.umpleLine { background-color: inherit;}
+
+div.umpleAssociation { background-color: inherit; cursor: pointer; z-index: 3; position: absolute; }
+div.umpleAssociationTemp { background-color:black; cursor: pointer; z-index: 1; position: absolute; }
+div.redTracedAssociation { background-color: red; }
+div.untracedAssociation { background-color: black; }
 div.multiplicity { 
-  background-color: transparent; position: absolute; font-size: 8pt; z-index: 2; padding: 0; 
+  background-color: transparent; position: absolute; font-size: 8pt; z-index: 3; padding: 0; 
   margin: 0; border: 0;
 }
-div.role { background-color:transparent; position: absolute; font-size:8pt; z-index:2; }
+div.role { background-color:transparent; position: absolute; font-size:8pt; z-index: 3; }
 div.umpleGeneralization { cursor: pointer; background-color: white; }
 
 /* UMPLE HOVER STYLES  */
 .anchor { 
   border: 1px solid #111111; width: 5px; height: 5px; position: absolute; display: none; 
-  background-color: #777777; z-index: 4; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+  background-color: #777777; z-index: 5; -moz-border-radius: 2px; -webkit-border-radius: 2px;
 }
 .hover { 
   border: 1px solid #777777; width: 5px; height: 5px; position: absolute; display: block;
-  background-color: #AAAAAA; z-index: 3; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+  background-color: #AAAAAA; z-index: 4; -moz-border-radius: 2px; -webkit-border-radius: 2px;
 }
 .focus {  }
 .visibleFocus {

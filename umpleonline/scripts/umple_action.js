@@ -687,11 +687,11 @@ Action.classMouseDown = function(event)
   
   if (Page.selectedItem == "AddAssociation" && DiagramEdit.newAssociation == null)
   {
-  DiagramEdit.createAssociationPartOne(event);
+    DiagramEdit.createAssociationPartOne(event);
   }
   else if (Page.selectedItem == "AddGeneralization" && DiagramEdit.newGeneralization == null)
   {
-  DiagramEdit.createGeneralizationPartOne(event);
+    DiagramEdit.createGeneralizationPartOne(event);
   }
 }
 
@@ -760,7 +760,7 @@ Action.drawClassOutline = function(event, newClass)
 Action.drawAssociationLine = function(event, newAssociation)
 {
   var canvasSelector = "#" + Page.umpleCanvasId();
-  var mousePosition = new UmplePosition(event.pageX - 5, event.pageY + 5,0,0);
+  var mousePosition = new UmplePosition(event.pageX, event.pageY,0,0);
   newAssociation.classTwoPosition = mousePosition.subtract(UmpleSystem.position());
   jQuery(canvasSelector).append(newAssociation.drawable());
 }
@@ -789,7 +789,7 @@ Action.umpleCanvasClicked = function(event)
   
   if (Page.selectedItem == "AddClass")
   {
-    var position = new UmplePosition(Math.round(event.pageX),Math.round(event.pageY) + 1,0,0);
+    var position = new UmplePosition(Math.floor(event.pageX),Math.floor(event.pageY),0,0);
     DiagramEdit.addClass(position);
   }
   else if (Page.selectedItem == "AddAssociation" && DiagramEdit.newAssociation != null)
