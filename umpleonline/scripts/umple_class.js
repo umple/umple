@@ -6,7 +6,7 @@
 
 UmpleClassFactory = new Object();
 UmpleClassFactory.defaultSize = new UmplePosition(0,0,109,41);
-UmpleClassFactory.offsetError = new UmplePosition(-1,-1,0,0);
+UmpleClassFactory.offsetError = new UmplePosition(0,0,0,0);
 
 UmpleClassFactory.create = function(data)
 {

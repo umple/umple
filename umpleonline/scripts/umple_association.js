@@ -22,6 +22,7 @@ UmpleAssociationFactory.create = function(data)
   umpleAssociation.isSymmetricReflexive = (data.isSymmetricReflexive == "true" || data.isSymmetricReflexive == true) ? true : false;
   umpleAssociation.isLeftNavigable = (data.isLeftNavigable == "true" || data.isLeftNavigable == true) ? true : false;
   umpleAssociation.isRightNavigable = (data.isRightNavigable == "true" || data.isRightNavigable == true) ? true : false;
+  umpleAssociation.color = data.isTraced;
   return umpleAssociation;
 }
 
@@ -42,6 +43,7 @@ function UmpleAssociation()
   this.isSymmetricReflexive = false;
   this.isLeftNavigable = true;
   this.isRightNavigable = true;
+  this.color = "black";
   
   this.setClasses = function(aClassOneId,aClassTwoId)
   {
@@ -271,7 +273,7 @@ function UmpleAssociation()
     jQuery(associationSel).remove();
     
     var associationDiv = this.createBaseJQueryObject();
-    associationDiv.addClass("umpleAssociation");
+    associationDiv.addClass("umpleAssociationTemp");
     associationDiv.attr("id", "newassociation");
     
     var line = new UmpleLine(this.classOnePosition.add(this.offsetOnePosition), this.classTwoPosition.add(this.offsetTwoPosition));
@@ -286,7 +288,8 @@ function UmpleAssociation()
     jQuery(associationSel).remove();
     
     var associationDiv = this.createBaseJQueryObject();
-    associationDiv.addClass("umpleAssociation");
+    if(this.color == "red") associationDiv.addClass("redTracedAssociation");
+    else associationDiv.addClass("untracedAssociation");
     associationDiv.attr("id", this.id);
     
     var classOne = UmpleSystem.find(this.classOneId);
@@ -378,7 +381,8 @@ function UmpleAssociation()
     var associationSel = "#" + this.id;
     jQuery(associationSel).remove();
     var associationDiv = this.createBaseJQueryObject();
-    associationDiv.addClass("umpleAssociation");
+    if(this.color == "red") associationDiv.addClass("redTracedAssociation");
+    else associationDiv.addClass("untracedAssociation");
     associationDiv.attr("id", this.id);
     
     // set the class positions
@@ -410,7 +414,6 @@ function UmpleAssociation()
     // set the start and end points of segment two (small line starting at offset two and perpendicular to class wall)
     var segmentTwoStart = this.offsetTwoPosition.add(this.classTwoPosition);
     var segmentTwoEnd = this.offsetTwoPosition.add(this.classTwoPosition).add(new UmplePosition(segmentLength*factorX, segmentLength*factorY,0,0));
-    if(endTwoWall == "South") segmentTwoStart.y = segmentTwoStart.y - 2;
     var segmentTwo = new UmpleLine(segmentTwoStart, segmentTwoEnd);
     
     // add both segments to the div

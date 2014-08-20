@@ -11,7 +11,7 @@ function UmpleLine(pointA, pointB)
 
   this.drawable = function(offset)
   {
-    var line = jQuery("<div></div>");
+    var line = jQuery("<div class='umpleLine'></div>");
 
     var start = UmplePositionFactory.copy(this.pointOne);
     var end = UmplePositionFactory.copy(this.pointTwo);

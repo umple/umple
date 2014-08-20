@@ -126,11 +126,14 @@ UmpleSystem.addClass = function(umpleClass)
    // classObj.touchstart(function(event) { setTimeout(function(){Action.classMouseDown(event);}, 400);} );
     classObj.mouseup(function(event){ Action.classMouseUp(event); });
    // classObj.touchend(function(event){ Action.classMouseUp(event); });
-     if (!Page.readOnly) {classObj.draggable
+     if (!Page.readOnly) 
+     {
+      classObj.draggable
       ({
-          containment:'parent', 
-          stop:function(event,ui){DiagramEdit.classMoved(event.target)}
-      });
+       containment:'parent', 
+       stop:function(event,ui){DiagramEdit.classMoved(event.target
+      )}
+     });
  /*     classObj.resizable
       ({
           minHeight:UmpleClassFactory.defaultSize.height, 
