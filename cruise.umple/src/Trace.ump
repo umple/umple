@@ -46,7 +46,7 @@ class TraceDirective
 
   1 -- 0..* AttributeTraceItem;
   1 -- 0..* StateMachineTraceItem;
-  0..* -- 0..* MethodTraceItem;
+  1 -- 0..* MethodTraceItem;
   1 -- 0..* AssociationTraceItem;
   1 -> 0..* TraceCondition condition;
   1 -- 0..1 TraceRecord;
@@ -80,6 +80,7 @@ interface TraceItem
 class AttributeTraceItem
 {
   isA TraceItem;
+  
   Constraint constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
 
@@ -134,6 +135,7 @@ class StateMachineTraceItem
 class AssociationTraceItem
 {
   isA TraceItem;
+  
   Constraint constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
 
@@ -153,9 +155,20 @@ class AssociationTraceItem
 
 class MethodTraceItem
 {
-  name = null;
-  boolean entry = false;
+  isA TraceItem;
+  
+  Constraint constraint=null;
+  tracerType = {getTraceDirective().getTracerType()}
+  
+  boolean entry = true;
   boolean exit = false;
+  
+  * -- * Method;
+  
+  Position position = null;
+  periodClause = null;
+  Boolean conditionallyWhere = true; 
+  conditionType = "where";
 }
 
 /*

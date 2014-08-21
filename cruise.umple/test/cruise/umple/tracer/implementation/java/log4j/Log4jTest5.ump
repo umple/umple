@@ -1,0 +1,13 @@
+namespace example;
+
+tracer log4j;
+
+class Tracer
+{
+  x;
+  
+  trace method() logLevel error record "logging method entry";
+  
+  void method() {}
+  
+}
