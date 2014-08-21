@@ -44,11 +44,11 @@ class TraceDirective
   String tracerType = {getTracer().getName()}
   1 -> 1 Tracer ;
 
-  1 -- 0..* AttributeTraceItem;
-  1 -- 0..* StateMachineTraceItem;
-  1 -- 0..* MethodTraceItem;
-  1 -- 0..* AssociationTraceItem;
-  1 -> 0..* TraceCondition condition;
+  1 -- * AttributeTraceItem;
+  1 -- * StateMachineTraceItem;
+  1 -- * MethodTraceItem;
+  1 -- * AssociationTraceItem;
+  1 -> * TraceCondition condition;
   1 -- 0..1 TraceRecord;
 }
 
@@ -92,7 +92,7 @@ class AttributeTraceItem
   periodClause = null;
   duringClause = null;
   executeClause = null;
-  0..* -- 0..* UmpleVariable;
+  * -- * UmpleVariable;
 
   Position position = null;
   Boolean conditionallyWhere = true; 
@@ -119,9 +119,9 @@ class StateMachineTraceItem
   int level = -1;
 
   boolean traceStateMachineFlag = false;
-  0..* -- 0..1 StateMachine;
-  0..* -- 0..1 State;
-  0..* -- 0..1 Transition;
+  * -- 0..1 StateMachine;
+  * -- 0..1 State;
+  * -- 0..1 Transition;
 
   Position position = null;
   periodClause = null;
@@ -139,8 +139,8 @@ class AssociationTraceItem
   Constraint constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
 
-  0..* -- 0..* AssociationVariable;
-  0..* -- 0..* Association;
+  * -- * AssociationVariable;
+  * -- * Association;
 
   //default case tracing Cardinality
   boolean traceCardinality = true;
@@ -177,8 +177,8 @@ class MethodTraceItem
 class TraceRecord
 {
   boolean recordOnly = false;
-  0..* -- 0..* Attribute;
-  0..* -- 0..* StateMachine;
+  * -- * Attribute;
+  * -- * StateMachine;
   String[] record;
 }
 

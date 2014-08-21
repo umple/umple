@@ -8,6 +8,11 @@ class Tracer
   
   trace method() logLevel error record "logging method entry";
   
+  trace exit method2() logLevel fatal record "exiting method2";
+  
   void method() {}
   
+  void method2( int x ) {
+    x++;
+  }
 }

@@ -44,6 +44,11 @@ public class Tracer
   {}
 
   public void method(){
+    logger.error( System.currentTimeMillis()+","+Thread.currentThread().getId()+",Log4jTest5.ump,9,Tracer,"+System.identityHashCode(this)+",me_e,method"+",logging method entry" );
+    
+  }
 
-    logger.error( System.currentTimeMillis()+","+Thread.currentThread().getId()+",Log4jTest5.ump,9,Tracer,"+System.identityHashCode(this)+",me_e,method"+",logging method entry" );    
+  public void method2(int x){
+    x++;
+    logger.fatal( System.currentTimeMillis()+","+Thread.currentThread().getId()+",Log4jTest5.ump,11,Tracer,"+System.identityHashCode(this)+",me_x,method2"+",exiting method2" );
   }
