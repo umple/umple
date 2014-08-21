@@ -1735,6 +1735,19 @@ class JavaGenerator
                "      e.printStackTrace();\n"+
                "    }\n"+
                "  }");
+    lookups.put("log4jConfig", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+        "<Configuration>\n"+
+        "  <Appenders>\n"+
+        "    <Console name=\"CONSOLE\" target=\"SYSTEM_OUT\">\n"+
+        "      <PatternLayout pattern=\"%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} -- %msg%n\" />\n"+
+        "    </Console>\n"+
+        "  </Appenders>\n"+
+        "  <Loggers>\n"+
+        "    <Root level=\"INFO\">\n"+
+        "      <AppenderRef ref=\"CONSOLE\"/>\n"+
+        "    </Root>\n"+
+        "  </Loggers>\n"+
+        "</Configuration>");
     lookups.put("handleMethod","public static void handle(String name, String value, String... extra)\n  {\n {0} \n  }");
     lookups.put("ifStatement","  if ( {0} )\n  {\n  {1}\n  }");
     lookups.put("callHandle","{0}.handle(name+\" = \"+value);");

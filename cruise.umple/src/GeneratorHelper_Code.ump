@@ -20,7 +20,9 @@ namespace cruise.umple.compiler;
 class GeneratorHelper
 {
   depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.UmpleCompilerException;
   depend java.util.*;
+  depend java.io.*;
   
   // Following code generation, undo all meta-model internal changes.
   public static void postpare(UmpleModel model)

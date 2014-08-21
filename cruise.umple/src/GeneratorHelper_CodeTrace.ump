@@ -90,6 +90,10 @@ private static void postpareTrace(UmpleModel aModel)
         if(generateLog4j)
         {
           generateLog4j=false;
+          if(model.getTracer().numberOfArgument() == 0)
+          {
+            prepareLog4jTracer(model,templateLookups);
+          }
         }
       }
     }
@@ -155,6 +159,24 @@ private static void postpareTrace(UmpleModel aModel)
       aClass.addCodeInjection(init);
     }
     aClass.createGeneratedClass(model);
+  }
+  
+  public static  void prepareLog4jTracer(UmpleModel model, Map<String,String> lookups){
+    try 
+    {
+      String path = model.getUmpleFile().getPath();
+      StringBuilder logCode = new StringBuilder();
+      logCode.append(lookups.get("log4jConfig"));
+      String modelFilename = path + File.separator + "log4j2.xml";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(logCode.toString());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Log4j2 xml code." + e, e);
+    }
   }
   
   // Process output to force consistency 
