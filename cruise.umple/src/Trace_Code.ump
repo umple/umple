@@ -632,7 +632,6 @@ class MethodTraceItem {
    * @return the message for the trace 
    */
   public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
-    
     for(Method meth: methods)
     {
       if(meth.equals(o))
@@ -700,12 +699,12 @@ class MethodTraceItem {
           message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
         message = StringFormatter.format(getExtremities(gen, name),message);
         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
-        message = "\n" + message;
+        message += "\n";
         return message;
       }
     }
-    return ""; 
- }
+    return "";
+  }
   
   public String getExtremities(CodeTranslator gen, String name){
     return gen.translate(name+":Closed",constraint);

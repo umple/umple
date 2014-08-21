@@ -424,6 +424,7 @@ class UmpleInternalParser
           {
             mte.setExit(true);
             mte.setEntry(false);
+            mte.setConditionallyWhere(false);
           }
         }
       }
