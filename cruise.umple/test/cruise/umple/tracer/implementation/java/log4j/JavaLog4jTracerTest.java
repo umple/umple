@@ -9,6 +9,10 @@
 
 package cruise.umple.tracer.implementation.java.log4j;
 
+import java.io.File;
+
+import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -64,6 +68,8 @@ public class JavaLog4jTracerTest extends TemplateTest
   public void Test5()
   {
     assertLog("Log4jTest5.ump","Log4jTest5.java.txt");
+    // testing if log4j Configuration File was created
+    Assert.assertEquals(true, (new File(pathToInput + "/log4j2.xml")).exists());
   }
   
   public void assertLog(String input, String expected)
