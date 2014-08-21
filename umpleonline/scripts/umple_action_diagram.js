@@ -598,7 +598,10 @@ DiagramEdit.removeNewClass = function()
     var classSelector = "#" + DiagramEdit.newClass.id;
     DiagramEdit.newClass = null;
     jQuery(classSelector).remove();
+    return true;
   }
+
+  return false;
 }
 
 DiagramEdit.removeNewAssociation = function()
@@ -608,7 +611,9 @@ DiagramEdit.removeNewAssociation = function()
     var lineSelector = "#"+DiagramEdit.newAssociation.getElementId();
     jQuery(lineSelector).remove();
     DiagramEdit.newAssociation = null;
+    return true;
   }
+  return false;
 }
 
 DiagramEdit.removeNewGeneralization = function()
@@ -618,5 +623,7 @@ DiagramEdit.removeNewGeneralization = function()
     var lineSelector = "#" + DiagramEdit.newGeneralization.getElementId();
     jQuery(lineSelector).remove();
     DiagramEdit.newGeneralization = null;
+    return true;
   }
+  return false;
 }

@@ -950,7 +950,12 @@ Action.keyboardShortcut = function(event)
 
   if (shortcut == 27)    // escape
   {
-    Page.unselectAllToggleTools();
+    var shortcutDisabled = Page.unselectAllToggleTools();
+
+    if(!shortcutDisabled)
+    {
+      jQuery(".visibleFocus").blur();
+    }
   }
   else if ((shortcut == 8 || shortcut == 46) && jQuery('#umpleCanvasColumn').hasClass('focus'))
   {
@@ -1800,83 +1805,141 @@ else //Non Mac
 
 //Arrow Up
 Mousetrap.bind(['up'], function(e){
+  if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
     Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,-5,0,0));
+    return false; //equivalent to e.preventDefault();
+  }
 });
 Mousetrap.bind(['shift+up'], function(e){
+  if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
     Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,-1,0,0));
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 //Arrow Down
 Mousetrap.bind(['down'], function(e){
+  if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
     Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,5,0,0));
+    return false; //equivalent to e.preventDefault();
+  } 
 });
 Mousetrap.bind(['shift+down'], function(e){
+  if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
     Action.moveSelectedClass(Page.selectedClass, new UmplePosition(0,1,0,0));
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 //Arrow Left
 Mousetrap.bind(['left'], function(e){
-  Action.moveSelectedClass(Page.selectedClass, new UmplePosition(-5,0,0,0));
+  if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
+    Action.moveSelectedClass(Page.selectedClass, new UmplePosition(-5,0,0,0));
+    return false; //equivalent to e.preventDefault();
+  }
 });
 Mousetrap.bind(['shift+left'], function(e){
-  Action.moveSelectedClass(Page.selectedClass, new UmplePosition(-1,0,0,0));
+  if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
+    Action.moveSelectedClass(Page.selectedClass, new UmplePosition(-1,0,0,0));
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 //Arrow Right
 Mousetrap.bind(['right'], function(e){
+  if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
     Action.moveSelectedClass(Page.selectedClass, new UmplePosition(5,0,0,0));
+    return false; //equivalent to e.preventDefault();
+  }
 });
 Mousetrap.bind(['shift+right'], function(e){
+  if(jQuery('#umpleCanvasColumn').hasClass('focus'))
+  {
     Action.moveSelectedClass(Page.selectedClass, new UmplePosition(1,0,0,0));
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 //Functions for changing diagram view - change consistently in umple_page.js
 Mousetrap.bind(['ctrl+e'], function(e){
-  Page.clickShowEditableClassDiagram();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickShowEditableClassDiagram();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 Mousetrap.bind(['ctrl+g'], function(e){
-  Page.clickShowGvClassDiagram();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickShowGvClassDiagram();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 Mousetrap.bind(['ctrl+s'], function(e){
-  Page.clickShowGvStateDiagram();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickShowGvStateDiagram();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 Mousetrap.bind(['ctrl+l'], function(e){
-  Page.clickShowStructureDiagram();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickShowStructureDiagram();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 //Functions for showing and hiding parts of the view
 Mousetrap.bind(['ctrl+t'], function(e){
-  Page.clickShowHideText();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickShowHideText();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 Mousetrap.bind(['ctrl+d'], function(e){
-  Page.clickShowHideCanvas();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickShowHideCanvas();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 Mousetrap.bind(['ctrl+n'], function(e){
-  Page.clickShowHideMenu();
-});
-
-
-//Functions for shrinking and growing the diagram
-Mousetrap.bind(['ctrl+shift+='], function(e){
-  Page.clickButtonlarger();
-});
-
-Mousetrap.bind(['ctrl+shift+-'], function(e){
-  Page.clickButtonSmaller();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickShowHideMenu();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 // Functions for changing what is shown on the diagram
 Mousetrap.bind(['ctrl+a'], function(e){
-  Page.clickToggleAttributes();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickToggleAttributes();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 Mousetrap.bind(['ctrl+m'], function(e){
-  Page.clickToggleMethods();
+  if(jQuery('.focus').length != 0)
+  {
+    Page.clickToggleMethods();
+    return false; //equivalent to e.preventDefault();
+  }
 });
 
 // Functions for editing the diagram - using shift

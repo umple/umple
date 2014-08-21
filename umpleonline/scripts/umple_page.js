@@ -361,7 +361,8 @@ Page.initCodeMirrorEditor = function() {
           "Ctrl-Shift-=": function(cm) {Page.clickButtonlarger()},
           "Ctrl-Shift--": function(cm) {Page.clickButtonSmaller()},
           "Ctrl-A": function(cm) {Page.clickToggleAttributes()},
-          "Ctrl-M": function(cm) {Page.clickToggleMethods()}
+          "Ctrl-M": function(cm) {Page.clickToggleMethods()},
+          "Esc": function(cm) {cm.getInputField().blur()}
           }
         }
       );
@@ -533,9 +534,15 @@ Page.toggleToolItem = function(id, doubleClicked)
 
 Page.unselectAllToggleTools = function()
 {
-  DiagramEdit.removeNewClass();
-  DiagramEdit.removeNewAssociation();
-  DiagramEdit.removeNewGeneralization();
+  var unselected = false;
+  var temp = false;
+
+  temp = DiagramEdit.removeNewClass();
+  if(temp) unselected = true;
+  temp = DiagramEdit.removeNewAssociation();
+  if(temp) unselected = true;
+  temp = DiagramEdit.removeNewGeneralization();
+  if(temp) unselected = true;
   
   var allSelectedItems = "ul.toggle li.selected"; 
   jQuery(allSelectedItems).removeClass("selected highlight");
@@ -543,6 +550,8 @@ Page.unselectAllToggleTools = function()
   setTimeout("Page.enableEditDragAndResize(true);", 500);
   Page.selectedItem = null;
   Page.repeatToolItem = false;
+
+  return unselected;
 }
 
 Page.selectToggleTool = function(toolSelected)
