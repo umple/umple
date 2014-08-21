@@ -154,6 +154,7 @@ public class UmpleParserTracerTest
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  AttributeTraceItem traceAttr1 = traceDirective1.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(0));
+	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr1.getAttribute(1));
 	  Assert.assertEquals(true,traceAttr1.getTraceSet());
 	  Assert.assertEquals(false,traceAttr1.getTraceGet());
   }
@@ -853,16 +854,16 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(2,clazz.numberOfTraceDirectives());
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0), traceDirective2 = clazz.getTraceDirective(1);
 	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getName(),"method1");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getEntry());
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getMethod(0).getName(),"method1");
+	  Assert.assertEquals(true,traceDirective1.getMethodTraceItem(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getExit());
 	  
-	  Assert.assertEquals(traceDirective2.getMethodTraceItem(0).getName(),"method2");
-	  Assert.assertEquals(false,traceDirective2.getMethodTraceItem(0).getEntry());
+	  Assert.assertEquals(traceDirective2.getMethodTraceItem(0).getMethod(0).getName(),"method2");
+	  Assert.assertEquals(true,traceDirective2.getMethodTraceItem(0).getEntry());
 	  Assert.assertEquals(false,traceDirective2.getMethodTraceItem(0).getExit());
   }
   
-  @Test 
+  @Test
   public void traceSingleMethodEntry()
   {
 	  code = "class Tracer { void method1() {}; trace entry method1(); }";
@@ -871,7 +872,7 @@ public class UmpleParserTracerTest
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getName(),"method1");
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getMethod(0).getName(),"method1");
 	  Assert.assertEquals(true,traceDirective1.getMethodTraceItem(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getExit());
   }
@@ -885,7 +886,7 @@ public class UmpleParserTracerTest
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getName(),"method1");
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getMethod(0).getName(),"method1");
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getEntry());
 	  Assert.assertEquals(true,traceDirective1.getMethodTraceItem(0).getExit());
   }
@@ -899,23 +900,21 @@ public class UmpleParserTracerTest
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
-	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getName(),"method1");
-	  Assert.assertEquals(traceDirective1.getMethodTraceItem(1).getName(),"method2");
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getEntry());
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getMethod(0).getName(),"method1");
+	  Assert.assertEquals(traceDirective1.getMethodTraceItem(0).getMethod(1).getName(),"method2");
+	  Assert.assertEquals(true,traceDirective1.getMethodTraceItem(0).getEntry());
 	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(0).getExit());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(1).getEntry());
-	  Assert.assertEquals(false,traceDirective1.getMethodTraceItem(1).getExit());
-	  Assert.assertEquals(0,traceDirective1.numberOfCondition());
   }
   
   //------------------------
   // Trace Cases
   //------------------------
 
-  @Test @Ignore
+  @Test
   public void traceCaseSingleTD()
   {
-	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][trace][traceDirective][tracecase_name:tc1][trace_entity:name][trace][traceDirective][tracecase_act_name:tc1]",true);
+	  assertParse("400_traceCaseSingleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][trace][traceCase][tracecase_name:tc1][traceDirective][trace_entity:name][trace][traceCase][tracecase_act_name:tc1]",true);
+	 
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  Assert.assertEquals(1,clazz.numberOfTraceCases());
 	  TraceCase tc = clazz.getTraceCase(0);
@@ -928,14 +927,12 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals(tc.getActivation(), true);
   }
   
-  @Test @Ignore
+  @Test
   public void traceCaseMultipleTD()
   {
-	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][traceDirective][tracecase_name:tc1][trace_entity:name][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][stringComplexExpression][constraintName][name:name][equalsOp:==][stringComplexExpression][quote:Hamoud][trace][traceDirective][tracecase_act_name:tc1]",true);
+	  assertParse("401_traceCaseMultipleTD.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][attribute][type:Integer][name:id][trace][traceCase][tracecase_name:tc1][traceDirective][trace_entity:name][traceDirective][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][stringComplexExpression][constraintName][name:name][equalsOp:==][stringComplexExpression][quote:Hamoud][trace][traceCase][tracecase_act_name:tc1]",true);
 	  
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
-	  Assert.assertEquals("Integer",clazz.getAttribute("id").getType());
-	  Assert.assertEquals("String",clazz.getAttribute("name").getType());
 	  Assert.assertEquals(1,clazz.numberOfTraceCases());
 	  
 	  TraceCase tc = clazz.getTraceCase(0);
@@ -951,10 +948,10 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)traceAttr2.getAttribute(0),clazz.getAttribute("id"));
   }
     
-  @Test @Ignore
+  @Test
   public void traceCaseDeactivation()
   {
-	  assertParse("403_traceCaseDeactivation.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][trace][traceDirective][traceCase][tracecase_name:tc1][traceDirective][trace_entity:name][trace][traceDirective][traceCase][tracecase_name:tc2][traceDirective][trace_entity:name][traceDirective][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][stringComplexExpression][constraintName][name:name][equalsOp:==][stringComplexExpression][quote:Hamoud][trace][traceDirective][traceCase][tracecase_deact_name:tc1][trace][traceDirective][traceCase][tracecase_deact_name:tc2][deactivate_for:1s]",true);
+	  assertParse("403_traceCaseDeactivation.ump","[classDefinition][name:Tracer][attribute][type:String][name:name][trace][traceCase][tracecase_name:tc1][traceDirective][trace_entity:name][trace][traceCase][tracecase_name:tc2][traceDirective][trace_entity:name][traceDirective][trace_entity:id][traceWhen][conditionType:where][constraintToken][stringExpr][stringComplexExpression][constraintName][name:name][equalsOp:==][stringComplexExpression][quote:Hamoud][trace][traceCase][tracecase_deact_name:tc1][trace][traceCase][tracecase_deact_name:tc2][deactivate_for:1s]",true);
 	  UmpleClass clazz = model.getUmpleClass("Tracer");
 	  TraceCase tc1 = clazz.getTraceCase(0);
 	  TraceCase tc2 = clazz.getTraceCase(1);

@@ -10445,6 +10445,8 @@ if (p != null) {
     {
       for (Method aMethod : uClass.getMethods()) 
       {
+        List<TraceItem> traceItems= aMethod.getTraced("method",uClass);
+        
         if(!aMethod.getExistsInLanguage("Java"))
           continue;
         
@@ -10580,9 +10582,11 @@ if (p != null) {
         else
         {
           appendln(stringBuffer, "{");
+          for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, aMethod,"me_e", uClass):""));
           if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
           appendln(stringBuffer, properMethodBody);
           addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,stringBuffer.toString().split("\\n").length+1-javaline);
+          for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
           appendln(stringBuffer, "  }");
         }
       }

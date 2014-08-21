@@ -1,0 +1,49 @@
+package example;
+import org.apache.log4j.Logger;
+import java.util.Date;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String x;
+  private Logger logger;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aX)
+  {
+    x = aX;
+    logger = Logger.getLogger(Tracer.class);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(String aX)
+  {
+    boolean wasSet = false;
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getX()
+  {
+    return x;
+  }
+
+  public void delete()
+  {}
+
+  public void method(){
+
+    logger.error( System.currentTimeMillis()+","+Thread.currentThread().getId()+",Log4jTest5.ump,9,Tracer,"+System.identityHashCode(this)+",me_e,method"+",logging method entry" );    
+  }

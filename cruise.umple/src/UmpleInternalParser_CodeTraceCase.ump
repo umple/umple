@@ -20,7 +20,6 @@ class UmpleInternalParser
    * Analyzes trace case token and its subtokens (i.e. trace directive tokens)
    */
   public void analyzeTraceCaseToken(UmpleClass aClass, Token token){
-
     TraceCase tca = new TraceCase();
 
     for( Token traceToken : token.getSubTokens() )
@@ -28,6 +27,7 @@ class UmpleInternalParser
       if( traceToken.is("tracecase_name") )
       {
         tca.setName(token.getValue("tracecase_name"));
+        aClass.addTraceCase(tca);
       }
       if( traceToken.is("traceDirective") )
       {
@@ -40,7 +40,6 @@ class UmpleInternalParser
         analyzeTraceCaseActivationToken( aClass , token );
       }
     }
-    aClass.addTraceCase(tca);
   }
 
   public void analyzeTraceCaseActivationToken(UmpleClass aClass, Token token){

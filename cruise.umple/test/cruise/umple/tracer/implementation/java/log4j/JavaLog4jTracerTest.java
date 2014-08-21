@@ -39,25 +39,36 @@ public class JavaLog4jTracerTest extends TemplateTest
   @Test //@Ignore
   public void Test1()
   {
-    assertUmpleTemplateFor("Log4jTest1.ump","Log4jTest1.java.txt","Tracer",false);
+    assertLog("Log4jTest1.ump","Log4jTest1.java.txt");
   }
   
   @Test //@Ignore
   public void Test2()
   {
-    assertUmpleTemplateFor("Log4jTest2.ump","Log4jTest2.java.txt","Tracer",false);
+    assertLog("Log4jTest2.ump","Log4jTest2.java.txt");
   }
   
   @Test //@Ignore
   public void Test3()
   {
-    assertUmpleTemplateFor("Log4jTest3.ump","Log4jTest3.java.txt","Tracer",false);
+    assertLog("Log4jTest3.ump","Log4jTest3.java.txt");
   }
   
   @Test //@Ignore
   public void Test4()
   {
-    assertUmpleTemplateFor("Log4jTest4.ump","Log4jTest4.java.txt","Tracer",false);
+    assertLog("Log4jTest4.ump","Log4jTest4.java.txt");
+  }
+  
+  @Test //@Ignore
+  public void Test5()
+  {
+    assertLog("Log4jTest5.ump","Log4jTest5.java.txt");
+  }
+  
+  public void assertLog(String input, String expected)
+  {
+    assertUmpleTemplateFor(input,expected,"Tracer",false);
   }
   
 }

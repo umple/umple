@@ -262,6 +262,28 @@ class AssociationVariable
 
 }
 
+class Method
+{
+  public List<TraceItem> getTraced(String method, UmpleClass uClass){
+    ArrayList<TraceItem> amis = new ArrayList<TraceItem>();
+
+    for(TraceDirective td: uClass.getAllTraceDirectives())
+    {
+      for(MethodTraceItem ami: td.getMethodTraceItems())
+      {
+        for(Method m : ami.getMethods())
+        {
+          if( m.getName().equals(this.getName()))
+          {
+            amis.add(ami);
+          }
+        }
+      }
+    }
+    return amis;
+  }
+}
+
 class AttributeTraceItem
 {
   depend cruise.umple.util.*;
@@ -589,6 +611,106 @@ class AssociationTraceItem
   {
     return gen.translate(name+":Closed",constraint);
   }
+}
+
+class MethodTraceItem {
+  depend cruise.umple.util.*;
+  depend java.util.*;
+
+  public Boolean getIsPre(){
+    return conditionallyWhere;
+  }
+  public Boolean getIsPost(){
+    return !conditionallyWhere;
+  }
+  /*
+   * @params gen: A code transator
+   * @params o: the current context(i.e.state being traced)
+   * @params methodname: what to call this trace
+   * @params uClass: the current umple class uClass
+   * @params args: if the string is equal to "", the format will be {methodname} {attribute name} to {parameter name}, no argument only returns the argument name, or else the string is passed in the form {methodname} {passed string} to {attribute}
+   * @return the message for the trace 
+   */
+  public String trace(CodeTranslator gen, Object o, String methodname, UmpleClass uClass, String... args){
+    
+    for(Method meth: methods)
+    {
+      if(meth.equals(o))
+      {
+        String type = ((Method)o).getType();
+        String name = "";
+        String extra = "";
+        String obj = "";
+        String accessor = gen.translate("traceAccessor",this);
+        String concatinator = gen.translate("traceConcatinator",this);
+        String comma = concatinator+"\",\""+concatinator;
+        String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7}\"";
+
+        if(o instanceof Method)
+        {
+          name = meth.getName();
+        }
+
+        
+        if(type==null||"".equals(type)||"Boolean".equals(type)||"boolean".equals(type)||"String".equals(type)||"int".equals(type)||"Integer".equals(type)||"float".equals(type)||"Float".equals(type)||"double".equals(type)||"Double".equals(type)||"Time".equals(type)||"Date".equals(type))
+        {
+          obj = name;
+        }
+        else
+        {
+//          obj = name+"(\"+"+StringFormatter.format(gen.translate("traceIdentifier",this),name)+"+\")";
+//          name += gen.translate("traceFormatNonPrimitive",this);
+          obj = name;
+        }
+
+        for(String str: args){
+          extra+=comma+"(\"\"+"+str+")"+gen.translate("traceFormatNonPrimitive",this);
+        }
+        if(getTraceDirective().getTraceRecord()!=null)
+        {
+          for(Attribute record:getTraceDirective().getTraceRecord().getAttributes())
+          {
+            extra+=comma+gen.translate("attribute"+(record.getIsList()?"Many":"One"),record);
+          }
+          if(getTraceDirective().getTraceRecord().numberOfRecord()>0)
+          {
+            extra+= concatinator+"\"";
+            for(String record:getTraceDirective().getTraceRecord().getRecord())
+            {
+              extra+=","+record.replace("\"","");
+            }
+            extra+= "\"";
+          }
+        }
+        String message = messageLayout+extra;
+        message = StringFormatter.format(
+            message,gen.translate("traceTimestamp",this),
+            gen.translate("traceThread",this),
+            getPosition().getFilename().replace("\\","\\\\"),
+            getPosition().getLineNumber(),
+            uClass.getName(),
+            StringFormatter.format(gen.translate("traceIdentifier",this),gen.translate("traceSelf",this)),
+            methodname,
+            accessor+name         
+            );
+        
+        if(getTracerType().equals("log4j"))
+          message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
+        else
+          message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+        message = StringFormatter.format(getExtremities(gen, name),message);
+        message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
+        message = "\n" + message;
+        return message;
+      }
+    }
+    return ""; 
+ }
+  
+  public String getExtremities(CodeTranslator gen, String name){
+    return gen.translate(name+":Closed",constraint);
+  }
+  
 }
 
 // Util class that has common method called from different trace items

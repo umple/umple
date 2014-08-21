@@ -96,7 +96,7 @@ class UmpleInternalParser
     traceDirective = new TraceDirective(model.getTracer());
     traceAttr = new AttributeTraceItem(traceDirective);
     tracedAssoc = new AssociationTraceItem(traceDirective);
-    mte = new MethodTraceItem();
+    mte = new MethodTraceItem(traceDirective);
     TraceRecord traceRecord = null;
     traceDirective.setUmpleClass(aClass);
 
@@ -250,18 +250,22 @@ class UmpleInternalParser
    * Analyze trace record in a trace directive
    */
   private void analyzeTraceRecord(TraceDirective traceDirective, Token token, TraceRecord traceRecord){
+
     String record = token.getValue("trace_record_string");
     Attribute attr = traceDirective.getUmpleClass().getAttribute(token.getValue("trace_record"));
 
-    // trace only what is in the record entity
     if( token.getName().equals("only") )
-      traceRecord.setRecordOnly(true);  
-    // recording a String 
+    {
+      traceRecord.setRecordOnly(true);
+    }
     else if( record != null )
+    {
       traceRecord.addRecord(record);
-    // recording an attribute
+    }
     else if( attr != null )
+    {
       traceRecord.addAttribute(attr);
+    }
   }
 
 
@@ -311,47 +315,63 @@ class UmpleInternalParser
    * returns (1) attribute (2) state machine (3) association (4) method
    */
   private int traceItemType(Token traceToken){
+    UmpleClass aClass = traceDirective.getUmpleClass();
     int traceItemType = -1;
 
     // --- check if attribute
-    UmpleVariable attr = traceDirective.getUmpleClass().getAttribute(traceToken.getValue("trace_entity"));  
-    attr = attr==null?traceDirective.getUmpleClass().getAssociationVariable(traceToken.getValue("trace_entity")):attr;
+    UmpleVariable attr = aClass.getAttribute(traceToken.getValue("trace_entity"));  
+    attr = attr==null?aClass.getAssociationVariable(traceToken.getValue("trace_entity")):attr;
+
     if( attr != null )
+    {
       traceItemType = 1;
+    }
 
     // --- check if state machine
-    for( StateMachine sVar : traceDirective.getUmpleClass().getStateMachines() )
+    for( StateMachine sVar : aClass.getStateMachines() )
     {
       if( traceToken.getValue("trace_entity").equals(sVar.getName()))
+      {
         traceItemType = 2;
+      }
       for( State s : sVar.getStates() )
       {
         if( traceToken.getValue("trace_entity").equals(s.getName()) || traceToken.getValue("trace_entity").equals(sVar.getName()+"."+s.getName()) )
+        {
           traceItemType = 2;
+        }
         for( Transition t : s.getTransitions() )
           if( traceToken.getValue("trace_entity").equals(t.getEvent().getName()))
+          {
             traceItemType = 2;
+          }
       }
     }
 
     // --- check if association
-    for( AssociationVariable aVar : traceDirective.getUmpleClass().getAssociationVariables() )
+    for( AssociationVariable aVar : aClass.getAssociationVariables() )
     {
       if( traceToken.getValue("trace_entity").equals(aVar.getName()))
+      {
         traceItemType = 3;
+      }
     }
 
-    for( Association a : traceDirective.getUmpleClass().getAssociations() )
+    for( Association a : aClass.getAssociations() )
     {
       if( a.getName().contains(traceToken.getValue("trace_entity") ))
+      {
         traceItemType = 3;
+      }
     }
 
     // --- check if method
-    for( Method mVar : traceDirective.getUmpleClass().getMethods() )
+    for( Method mVar : aClass.getMethods() )
     {
       if( traceToken.getValue("trace_entity").equals(mVar.getName()) )
+      {
         traceItemType = 4;
+      }
     }
 
     return traceItemType;
@@ -379,40 +399,36 @@ class UmpleInternalParser
   }
 
   // if trace entity is a method
-  private void analyzeMethodTraceItem(Token traceToken) {
-
-    String methodName = null;
+  private void analyzeMethodTraceItem(Token traceToken){
 
     for( Method mVar : traceDirective.getUmpleClass().getMethods() )
     {
       if( traceToken.getValue("trace_entity").equals(mVar.getName()) )
-        methodName = traceToken.getValue("trace_entity");
+      {
+        mte.setPosition(traceToken.getPosition());
+        mte.addMethod(mVar);
+      }
     }
 
-    if( methodName != null )
+    for(Token sub: traceToken.getParentToken().getSubTokens())
     {
-      if( mte.getName() !=  null)
+      if(sub.is("traceOptions")) 
       {
-        mte = new MethodTraceItem();
-      }
-
-      mte.setName(methodName);
-
-      for(Token sub: traceToken.getParentToken().getSubTokens())
-      {
-        if(sub.is("traceOptions"))
+        for(Token sub2: sub.getSubTokens())
         {
-          for(Token sub2: sub.getSubTokens())
+          if( "entry".equals(sub2.getValue("option")) )
           {
-            if( "entry".equals(sub2.getValue("option")) )
-              mte.setEntry(true);
-            if( "exit".equals(sub2.getValue("option")) )
-              mte.setExit(true);
+            mte.setEntry(true);
+          }
+          if( "exit".equals(sub2.getValue("option")) )
+          {
+            mte.setExit(true);
+            mte.setEntry(false);
           }
         }
       }
-      traceDirective.addMethodTraceItem(mte);
     }
+    traceDirective.addMethodTraceItem(mte);
   }
 
   /**
