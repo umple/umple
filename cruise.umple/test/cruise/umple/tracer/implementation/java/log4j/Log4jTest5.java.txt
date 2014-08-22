@@ -1,9 +1,16 @@
 package example;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.Date;
 
 public class Tracer
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final Logger logger = LogManager.getLogger(Tracer.class);
 
   //------------------------
   // MEMBER VARIABLES
@@ -11,7 +18,6 @@ public class Tracer
 
   //Tracer Attributes
   private String x;
-  private Logger logger;
 
   //------------------------
   // CONSTRUCTOR
@@ -20,7 +26,6 @@ public class Tracer
   public Tracer(String aX)
   {
     x = aX;
-    logger = Logger.getLogger(Tracer.class);
   }
 
   //------------------------

@@ -38,6 +38,7 @@ public class JavaLog4jTracerTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "tracer/java/example");
     SampleFileWriter.destroy(pathToInput + "/cruise");
     SampleFileWriter.destroy(pathToInput + "/Tracer.java");
+    SampleFileWriter.destroy(pathToInput + "/log4j2.xml");
   }
   
   @Test //@Ignore
@@ -68,8 +69,14 @@ public class JavaLog4jTracerTest extends TemplateTest
   public void Test5()
   {
     assertLog("Log4jTest5.ump","Log4jTest5.java.txt");
-    // testing if log4j Configuration File was created
-    Assert.assertEquals(true, (new File(pathToInput + "/log4j2.xml")).exists());
+    //Assert.assertEquals(true, (new File(pathToInput + "/log4j2.xml")).exists());
+  }
+  
+  @Test @Ignore
+  public void TestConfig()
+  {
+    language = null;
+    assertUmpleTemplateFor("TestConfig.ump","log4j2.xml.txt");
   }
   
   public void assertLog(String input, String expected)
