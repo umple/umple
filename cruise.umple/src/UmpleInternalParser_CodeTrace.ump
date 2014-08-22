@@ -71,7 +71,7 @@ class UmpleInternalParser
       }
       else if( model.getTracer().getName().equals("log4j") && !loggerAdded )
       {
-        aClass.addAttribute("logger", "Logger", "internal", "Logger.getLogger("+aClass.getName()+".class)", false);
+        aClass.addAttribute("logger", "Logger", "const", "LogManager.getLogger("+aClass.getName()+".class)", false);
         loggerAdded = true;
       }
       for( Token traceToken : token.getSubTokens() )
