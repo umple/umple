@@ -67,7 +67,8 @@ ToolTips.initTooltips = function()
     jQuery("#" + id).tooltip({
       items: this.tooltipEntries[id][0],
       content: this.tooltipEntries[id][1],
-      show: {delay: 1000}
+      show: {delay: 1000},
+      position: {my:"right", at:"left", of:"#"+id}
     });
   }
 
@@ -88,7 +89,7 @@ ToolTips.initTooltips = function()
       items: dropDownTooltips[id][0],
       content: dropDownTooltips[id][1],
       show: {delay: 1000},
-      position: {my: "center+15% bottom", at:"top", of:"#"+id}
+      position: {my:"center+15% bottom", at:"top", of:"#"+id}
     });
   }
 
