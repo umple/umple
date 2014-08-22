@@ -1,0 +1,11 @@
+class Student {
+  * -- * Student peer;
+  * another -- * Student classmate;
+}
+
+//$?[End_of_model]$?
+
+class Student
+{
+  position 50 30 109 45;
+}

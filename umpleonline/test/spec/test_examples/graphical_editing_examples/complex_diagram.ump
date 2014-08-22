@@ -1,0 +1,31 @@
+class NewClass
+{
+  * -- * NewClass1;
+  * -- * NewClass2;
+  * -- * NewClass3;
+}
+
+class NewClass1
+{
+}
+
+class NewClass2
+{
+   * self role;
+}
+
+class NewClass3
+{
+  isA NewClass2;
+  * -- * NewClass3 roleName;
+}
+
+class NewClass4
+{
+  isA NewClass2;
+}
+
+class NewClass5
+{
+  isA NewClass2;
+}

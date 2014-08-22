@@ -1,0 +1,8 @@
+class Student {
+  
+  isA Mentor;
+}
+
+class Mentor {
+  
+}

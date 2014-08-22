@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." default="build" name="UmpleCore" >
+
+  <!-- ```````````````````````````
+    Environment Variables
+  ``````````````````````````` -->
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  <taskdef resource="net/sf/antcontrib/antlib.xml"/>
+
+  <property name="myenv" value="cc" />
+
+  <property name="project.path" value="umpleonline/test" />
+  <property name="test.output.path" value="dist/qa/testbed_umpleonline" />
+  <property name="test.output.path.full" location="${test.output.path}" />
+  <property name="output.name" value="index.html" />
+
+  <import file="_${myenv}.xml" />
+  <import file="_template.xml" />
+
+  <!-- Options -->
+
+  <property name="tag" value="" />
+  <property name="failfast" value="false" />
+
+  <!-- Entry points -->
+
+  <target name="help">
+    <echo>Using this build script:
+  There are four entry targets for this build script:
+  testUmpleOnlineMain - runs the tests against the public umpleonline (http://cruise.eecs.uottawa.ca/umpleonline/)
+  testUmpleOnlineTest - runs the tests against the test umpleonline (http://cruise.eecs.uottawa.ca/umpleonline/test/)
+  testUmpleOnlineLocal - runs against the local server (http://cruise.local/)
+
+  You can specify a custom hostname with -Dhostname="yourserver" 
+  eg. ant testUmpleOnlineLocal -Dhostname=http://cruise2.local/
+
+  The default mode for this test suite is fail safe. It will run and report all failures.
+  It can be run in fail-fast mode using -Dfailfast=true
+
+  There are feature tags that allow testing of only particular features of the website.
+  The tag can be chosen with -Dtag=featurename. If no feature name is set this way, all tests are run.
+  eg. To run only the options menu tests, add -Dtag=optionsMenu
+
+  Features tested
+  dynamicResizing:           
+    tests the dynamic layout of umpleonline
+  pageLoad:                  
+    tests the url options for umple.php
+  exampleLoading:            
+    tests that all examples load properly
+  diagramEditing:            
+    tests that the graphical editing functionality correctly modify the model
+  positionalDiagramEditing:  
+    tests that the graphical editing functionality leave the positional data of the model intact
+  optionsMenu:               
+    tests that all of the "options" panel menu items work correctly
+    </echo>
+  </target>
+
+  <target name="build">
+    <echo>Please run the "help" target for usage information about this build script</echo>
+  </target>
+
+  <target name="testUmpleOnlineMain">
+    <property name="hostName" value="http://cruise.eecs.uottawa.ca/umpleonline/" />
+    <antcall target="doWebsiteTests" />
+  </target>
+
+  <target name="testUmpleOnlineTest">
+    <property name="hostName" value="http://cruise.eecs.uottawa.ca/umpleonline/test/" />
+    <antcall target="doWebsiteTests" />
+  </target>
+
+  <target name="testUmpleOnlineLocal">
+    <property name="hostName" value="http://cruise.local/" />
+    <antcall target="doWebsiteTests" />
+  </target>
+
+  <!-- The main target that runs the tests -->
+
+  <target name="doWebsiteTests" depends="initTests">
+    <echo>Testing ${hostName}umple.php</echo>
+
+    <antcallback target="runRspec" return="test.result" />
+
+    <antcall target="cleanup" />
+    <antcall target="checkSuccess" />
+
+    <echo>See test output in ${test.output.path}/${output.name}</echo>
+
+  </target>
+
+  <target name="runRspec">
+    <if>
+      <equals arg1="${tag}" arg2=""/>
+      <then>
+        <property name="tagArg" value="~feature:testdebug" />
+        <echo>Running all RSpec tests</echo>
+      </then>
+      <else>
+        <property name="tagArg" value="feature:${tag}" />
+        <echo>Running RSpec tests with tag feature:${tag}</echo>
+      </else>
+    </if>
+
+    <if>
+      <equals arg1="${failfast}" arg2="true" />
+      <then>
+        <property name="failfastOption" value="--fail-fast" />
+      </then>
+      <else>
+        <property name="failfastOption" value="--no-fail-fast" />
+      </else>
+    </if>
+
+    <exec executable="rspec" dir="${project.path}" resultproperty="test.result">
+      <arg value="-f" />
+      <arg value="html" />
+      <arg value="-o" />
+      <arg value="${test.output.path.full}/${output.name}" />
+      <arg value="-t" />
+      <arg value="${tagArg}" />
+      <arg value="${failfastOption}" />
+      <arg value="spec" />
+    </exec>
+  </target>
+
+  <target name="initTests">
+    <echo file="${project.path}/spec/temp_config.txt" level="debug">host_name ${hostName}
+      umpleonline_directory ${basedir}/umpleonline/</echo>
+  </target>
+
+  <target name="checkSuccess">
+    <if>
+      <not>
+        <equals arg1="${test.result}" arg2="0" />
+      </not>
+      <then>
+        <echo>Umpleonline tests failed See ${test.output.path}/${output.name} for details</echo>
+        <fail message="Umpleonline tests failed. See ${test.output.path}/${output.name} for details" />
+      </then>
+      <else>
+        <echo>No failures found</echo>
+      </else>
+    </if>
+  </target>
+
+  <target name="cleanup">
+    <delete file="${project.path}/spec/temp_config.txt" failonerror="false" />
+  </target>
+
+</project>

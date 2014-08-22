@@ -1,0 +1,15 @@
+class Student
+{
+  study
+  {
+    Studying 
+    {
+      gotTired / {doAction()} -> Sleeping;
+    }
+
+    Sleeping 
+    {
+      wokeUp -> Studying;
+    }
+  }
+}

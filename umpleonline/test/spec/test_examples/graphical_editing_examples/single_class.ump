@@ -1,0 +1,10 @@
+class Student {
+  
+}
+
+//$?[End_of_model]$?
+
+class Student
+{
+  position 100 30 109 45;
+}

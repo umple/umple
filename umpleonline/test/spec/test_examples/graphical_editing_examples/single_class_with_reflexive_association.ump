@@ -1,0 +1,11 @@
+class Student {
+  * -- * Student peer;
+}
+
+//$?[End_of_model]$?
+
+class Student
+{
+  position 50 30 109 45;
+  position.association Student__Student:peer 50,45 0,10;
+}

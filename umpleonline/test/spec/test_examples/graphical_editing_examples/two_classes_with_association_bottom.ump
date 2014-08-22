@@ -1,0 +1,20 @@
+class Student {
+  * -- * Mentor;
+}
+
+class Mentor {
+  
+}
+
+//$?[End_of_model]$?
+
+class Student
+{
+  position 81 90 109 45;
+  position.association Mentor__Student 50,45 58,0;
+}
+
+class Mentor
+{
+  position 81 200 109 45;
+}

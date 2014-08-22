@@ -1,0 +1,36 @@
+class ACenter {}
+
+class Left {}
+
+class Top {}
+
+class Right {}
+
+class Bottom {}
+
+//$?[End_of_model]$?
+
+class Top
+{
+  position 138 32 109 45;
+}
+
+class Right
+{
+  position 269 130 109 45;
+}
+
+class Bottom
+{
+  position 138 224 109 45;
+}
+
+class ACenter
+{
+  position 138 130 109 45;
+}
+
+class Left
+{
+  position 10 130 109 45;
+}

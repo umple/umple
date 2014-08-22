@@ -1,0 +1,25 @@
+class Student {
+   
+  study
+  {
+    Studying 
+    {
+      gotTired / {doAction()} -> Sleeping;
+    }
+
+    Sleeping 
+    {
+      wokeUp -> Studying;
+    }
+  }
+
+  [pIn1]
+  active portInMethod {
+
+  }
+
+  [pOut1]
+  active portOutMethod {
+     
+  }
+}
