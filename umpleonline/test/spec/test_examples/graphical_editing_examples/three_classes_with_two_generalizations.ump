@@ -1,0 +1,28 @@
+class Student {
+  
+}
+
+class Mentor {
+  isA Student;
+}
+
+class TeachingAssistant {
+  isA Student;
+}
+
+//$?[End_of_model]$?
+
+class Student
+{
+  position 50 30 109 45;
+}
+
+class Mentor
+{
+  position 50 130 109 45;
+}
+
+class TeachingAssistant
+{
+  position 50 230 109 45;
+}
