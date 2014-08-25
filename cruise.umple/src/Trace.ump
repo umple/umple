@@ -25,6 +25,13 @@ class Tracer
   String name;
   String[] argument;
   Boolean verbosity = false;
+  1 -- * LogConfiguration;
+}
+
+class LogConfiguration
+{
+  String[] level;
+  String[] appender;
 }
 
 class UmpleClass

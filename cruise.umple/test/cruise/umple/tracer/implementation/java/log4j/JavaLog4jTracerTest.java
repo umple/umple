@@ -41,43 +41,47 @@ public class JavaLog4jTracerTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/log4j2.xml");
   }
   
-  @Test //@Ignore
+  @Test
   public void Test1()
   {
     assertLog("Log4jTest1.ump","Log4jTest1.java.txt");
   }
   
-  @Test //@Ignore
+  @Test
   public void Test2()
   {
     assertLog("Log4jTest2.ump","Log4jTest2.java.txt");
   }
   
-  @Test //@Ignore
+  @Test
   public void Test3()
   {
     assertLog("Log4jTest3.ump","Log4jTest3.java.txt");
   }
   
-  @Test //@Ignore
+  @Test
   public void Test4()
   {
     assertLog("Log4jTest4.ump","Log4jTest4.java.txt");
   }
   
-  @Test //@Ignore
+  @Test
   public void Test5()
   {
     assertLog("Log4jTest5.ump","Log4jTest5.java.txt");
-    //Assert.assertEquals(true, (new File(pathToInput + "/log4j2.xml")).exists());
   }
   
   @Test @Ignore
   public void TestConfig()
   {
-    language = null;
     assertUmpleTemplateFor("TestConfig.ump","log4j2.xml.txt");
   }
+  
+  @Test @Ignore
+  public void TestConfigOptions()
+  {
+    assertUmpleTemplateFor("TestConfigOptions.ump","log4j2.xml.txt");
+  } 
   
   public void assertLog(String input, String expected)
   {
