@@ -1735,6 +1735,22 @@ class JavaGenerator
                "      e.printStackTrace();\n"+
                "    }\n"+
                "  }");
+    lookups.put("log4jConfigDefault", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+        "<Configuration>\n"+
+        "  <Appenders>\n"+
+        "    <Console name=\"console\" target=\"SYSTEM_OUT\">\n"+
+        "      <PatternLayout pattern=\"%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n\"/>\n"+
+        "    </Console>\n"+
+        "    <File name=\"file\" fileName=\"logs/trace.log\" immediateFlush=\"false\" append=\"false\">\n"+
+        "      <PatternLayout pattern=\"%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n\"/>\n"+
+        "    </File>\n"+
+        "  </Appenders>\n"+
+        "  <Loggers>\n"+
+        "    <Root level=\"info\">\n"+
+        "      <AppenderRef ref=\"console\"/>\n"+
+        "    </Root>\n"+
+        "  </Loggers>\n"+
+        "</Configuration>");
     lookups.put("log4jConfig", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
         "<Configuration>\n"+
         "  <Appenders>\n"+
