@@ -9,10 +9,11 @@
 // See user manual page: [*ModelOrientedTracingLanguage(MOTL)*]
 
 // The tool to output the trace: [*Tracers*]
-traceType : tracer [=tracerType:Console|File|String|Visual|log4j] ( , [=tracerType:Console|File|String|Visual|log4j] )* ([[tracerOptions]])* ;
+traceType : tracer [=tracerType:Console|File|String|Visual|log4j] ( , [=tracerType:Console|File|String|Visual|log4j] )* [[log4jConfig]]* ([[tracerOptions]])* ;
 //traceType : tracer [=tracerType:Console|File|String|Visual] ( , [=tracerType:Console|File|String|Visual] )* ( [=onoff:on|off] : [[tracerOptions]] ( , [[tracerOptions]] )* )* ( [=verbisty:verbose] )? ( [tracerArgument] )* ;
 tracerOptions- : [[tracerOn]]? [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value] [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value]*
 tracerOn : on:|off:
+log4jConfig : (OPEN_ROUND_BRACKET) [log4jLevel] ( , [log4jLevel] )* (CLOSE_ROUND_BRACKET) = (OPEN_ROUND_BRACKET) [log4jAppender] ( , [log4jAppender] )* (CLOSE_ROUND_BRACKET)
 
 trace : [[traceDirective]] | [[traceCase]]
 

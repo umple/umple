@@ -1738,19 +1738,23 @@ class JavaGenerator
     lookups.put("log4jConfig", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
         "<Configuration>\n"+
         "  <Appenders>\n"+
-        "    <Console name=\"CONSOLE\" target=\"SYSTEM_OUT\">\n"+
+        "    <Console name=\"console\" target=\"SYSTEM_OUT\">\n"+
         "      <PatternLayout pattern=\"%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n\"/>\n"+
         "    </Console>\n"+
-        "    <File name=\"MyFile\" fileName=\"trace.log\" immediateFlush=\"false\" append=\"false\">\n"+
+        "    <File name=\"file\" fileName=\"logs/trace.log\" immediateFlush=\"false\" append=\"false\">\n"+
         "      <PatternLayout pattern=\"%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n\"/>\n"+
         "    </File>\n"+
         "  </Appenders>\n"+
         "  <Loggers>\n"+
-        "    <Root level=\"INFO\">\n"+
-        "      <AppenderRef ref=\"CONSOLE\"/>\n"+
-        "    </Root>\n"+
+        "{0}"+
         "  </Loggers>\n"+
         "</Configuration>");
+    lookups.put("log4jLogger",
+        "    <Root level=\"{0}\">\n"+
+        "{1}"+
+        "    </Root>\n");
+    lookups.put("log4jAppender",
+        "      <AppenderRef ref=\"{0}\"/>\n");
     lookups.put("handleMethod","public static void handle(String name, String value, String... extra)\n  {\n {0} \n  }");
     lookups.put("ifStatement","  if ( {0} )\n  {\n  {1}\n  }");
     lookups.put("callHandle","{0}.handle(name+\" = \"+value);");

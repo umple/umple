@@ -69,6 +69,26 @@ public class UmpleParserTracerTest
   }
   
   @Test
+  public void traceType_log4j()
+  {
+    code = "tracer log4j;";
+    assertParse(code,"[traceType][tracerType:log4j]");
+    Assert.assertEquals("log4j",model.getTraceType());
+  }
+  
+  @Test
+  public void traceType_log4jConfigOptions()
+  {
+    code = "tracer log4j (info,debug)=(console) (error)=(file);";
+    assertParse(code,"[traceType][tracerType:log4j][log4jConfig][log4jLevel:info][log4jLevel:debug][log4jAppender:console][log4jConfig][log4jLevel:error][log4jAppender:file]");
+    Assert.assertEquals("log4j",model.getTraceType());
+    
+    LogConfiguration log = model.getTracer().getLogConfiguration(1);
+    Assert.assertEquals("error",log.getLevel(0));
+    Assert.assertEquals("file",log.getAppender(0));
+  }
+  
+  @Test
   public void traceType_DefaultIsConsole()
   {
 	  code = "class Tracer{x; trace x;}";

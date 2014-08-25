@@ -52,6 +52,23 @@ class UmpleInternalParser
         {
           tracer.setVerbosity(true);
         }
+        else if(subToken.is("log4jConfig"))
+        {
+          LogConfiguration log = new LogConfiguration(tracer);
+          
+          for(Token logToken : subToken.getSubTokens())
+          {
+            if(logToken.is("log4jLevel"))
+            {
+              log.addLevel(logToken.getValue());
+            }
+            if(logToken.is("log4jAppender"))
+            {
+              log.addAppender(logToken.getValue());
+            }
+          }
+          tracer.addLogConfiguration(log);
+        }
       }
       model.setTracer(tracer);
     }
