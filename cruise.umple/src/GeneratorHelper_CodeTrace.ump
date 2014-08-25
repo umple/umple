@@ -95,7 +95,7 @@ private static void postpareTrace(UmpleModel aModel)
         if(generateLog4j)
         {
           generateLog4j=false;
-          if(model.getTracer().numberOfArgument() == 0)
+          if(model.getTracer().hasLogConfigurations())
           {
             prepareLog4jTracer(model,templateLookups);
           }
@@ -186,12 +186,12 @@ private static void postpareTrace(UmpleModel aModel)
     }
   }
   
-  public static String getLogConfigCode(UmpleModel model, Map<String,String> lookups)
-  {
+  public static  String getLogConfigCode(UmpleModel model, Map<String,String> lookups){
     String logCode;
     String loggers = "";
     String appender = "";
-    
+    int monitorInterval = 0;
+
     if(model.getTracer().hasLogConfigurations()==false)
     {
       logCode = lookups.get("log4jConfigDefault");
@@ -205,13 +205,21 @@ private static void postpareTrace(UmpleModel aModel)
         {
           appender += StringFormatter.format(lookups.get("log4jAppender"), logAppender);
         }
-        loggers = lc.getLevel(0);
+        //later to be modified
+        for(String logLevel : lc.getLevel())
+        {
+          loggers = lc.getLevel(0);
+        }
         
+        if(lc.getMonitorInterval() > 0)
+          monitorInterval = lc.getMonitorInterval();
       }
       logCode = StringFormatter.format(lookups.get("log4jLogger"),loggers,appender);
       logCode = StringFormatter.format(lookups.get("log4jConfig"), logCode);
+      
+      if(monitorInterval > 0)
+        logCode = logCode.replace("<Configuration>", StringFormatter.format("<Configuration monitorInterval=\"{0}\">", monitorInterval));
     }
-    
     return logCode;
   }
   
