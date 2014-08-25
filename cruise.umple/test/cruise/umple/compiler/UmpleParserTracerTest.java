@@ -88,6 +88,15 @@ public class UmpleParserTracerTest
     Assert.assertEquals("file",log.getAppender(0));
   }
   
+  @Test //@Ignore
+  public void traceType_log4jMonitorInterval()
+  {
+    code = "tracer log4j monitorInterval=30;";
+    assertParse(code,"[traceType][tracerType:log4j][log4jConfig][monitorInterval:30]");
+    LogConfiguration log = model.getTracer().getLogConfiguration(0);
+    Assert.assertEquals(30,log.getMonitorInterval());
+  }
+  
   @Test
   public void traceType_DefaultIsConsole()
   {

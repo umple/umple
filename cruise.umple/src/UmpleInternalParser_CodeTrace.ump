@@ -66,6 +66,10 @@ class UmpleInternalParser
             {
               log.addAppender(logToken.getValue());
             }
+            if(logToken.is("monitorInterval"))
+            {
+              log.setMonitorInterval(Integer.parseInt(logToken.getValue()));
+            }
           }
           tracer.addLogConfiguration(log);
         }

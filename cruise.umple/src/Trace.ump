@@ -30,6 +30,7 @@ class Tracer
 
 class LogConfiguration
 {
+  Integer monitorInterval = 0;
   String[] level;
   String[] appender;
 }
