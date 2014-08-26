@@ -95,10 +95,7 @@ private static void postpareTrace(UmpleModel aModel)
         if(generateLog4j)
         {
           generateLog4j=false;
-          if(model.getTracer().hasLogConfigurations())
-          {
-            prepareLog4jTracer(model,templateLookups);
-          }
+          prepareLog4jTracer(model,templateLookups);
         }
       }
     }
