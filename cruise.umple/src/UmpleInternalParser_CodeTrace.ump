@@ -92,7 +92,10 @@ class UmpleInternalParser
       }
       else if( model.getTracer().getName().equals("log4j") && !loggerAdded )
       {
-        aClass.addAttribute("logger", "Logger", "const", "LogManager.getLogger("+aClass.getName()+".class)", false);
+        Attribute loggerAttr = new Attribute("logger", "Logger", "const", "LogManager.getLogger("+aClass.getName()+".class)", false, aClass);
+        loggerAttr.addComment( new Comment("log4j version 2") );
+        loggerAttr.addComment( new Comment("requires jars (log4j-api-2.0.1.jar) and (log4j-core-2.0.1.jar)") );
+        aClass.addAttribute(loggerAttr);
         loggerAdded = true;
       }
       for( Token traceToken : token.getSubTokens() )
