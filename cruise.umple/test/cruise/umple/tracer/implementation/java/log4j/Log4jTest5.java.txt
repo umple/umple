@@ -10,6 +10,11 @@ public class Tracer
   // STATIC VARIABLES
   //------------------------
 
+
+  /**
+   * log4j version 2
+   * requires jars (log4j-api-2.0.1.jar) and (log4j-core-2.0.1.jar)
+   */
   public static final Logger logger = LogManager.getLogger(Tracer.class);
 
   //------------------------

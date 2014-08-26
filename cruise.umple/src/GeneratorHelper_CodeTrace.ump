@@ -166,14 +166,12 @@ private static void postpareTrace(UmpleModel aModel)
     aClass.createGeneratedClass(model);
   }
   
-  public static void prepareLog4jTracer(UmpleModel model, Map<String,String> lookups){
+  public static  void prepareLog4jTracer(UmpleModel model, Map<String,String> lookups){
     try 
     {
       String path = model.getUmpleFile().getPath();
       StringBuilder logCode = new StringBuilder();
       logCode.append(getLogConfigCode(model,lookups));
-      System.out.println("xml =");
-      System.out.println(logCode);
       String modelFilename = path + File.separator + "log4j2.xml";
       BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
       bw.write(logCode.toString());
@@ -198,7 +196,6 @@ private static void postpareTrace(UmpleModel aModel)
     }
     else
     {
-      
       for(LogConfiguration lc : model.getTracer().getLogConfigurations())
       {
         for(String logAppender : lc.getAppender())
@@ -210,13 +207,11 @@ private static void postpareTrace(UmpleModel aModel)
         {
           loggers = lc.getLevel(0);
         }
-        
         if(lc.getMonitorInterval() > 0)
           monitorInterval = lc.getMonitorInterval();
       }
       logCode = StringFormatter.format(lookups.get("log4jLogger"),loggers,appender);
       logCode = StringFormatter.format(lookups.get("log4jConfig"), logCode);
-      
       if(monitorInterval > 0)
         logCode = logCode.replace("<Configuration>", StringFormatter.format("<Configuration monitorInterval=\"{0}\">", monitorInterval));
     }
