@@ -77,6 +77,39 @@ rule "transform_Namespace_UInterface"
 		uInterface.addNamespace(packageDeclaration.getName().getFullyQualifiedName());
 end
 
+rule "append_FieldDeclaration"
+	when
+		fieldDeclaration: FieldDeclaration()
+		uClass: UmpleClass()
+	then
+		uClass.appendExtraCode(fieldDeclaration.toString());
+end
+
+rule "append_FieldDeclaration_interfaces"
+	when
+		fieldDeclaration: FieldDeclaration()
+		uInterface: UmpleInterface()
+	then
+		uInterface.appendExtraCode(fieldDeclaration.toString());
+end
+
+rule "append_MethodDeclaration"
+	when
+		method: MethodDeclaration()
+		uClass: UmpleClass()
+	then
+		uClass.appendExtraCode(method.toString());
+end
+
+rule "append_MethodDeclaration_interfaces"
+	when
+		method: MethodDeclaration()
+		uClass: UmpleClass()
+	then
+		uClass.appendExtraCode(method.toString());
+end
+
+
 //http://svn.apache.org/repos/asf/geronimo/devtools/j2g/trunk/plugins/org.apache.geronimo.devtools.j2g.sources/src/org/apache/geronimo/devtools/j2g/sources/dependence/NodesVisitor.java
 function String getImportName(ImportDeclaration importDeclaration){
 	StringBuilder importName =  new StringBuilder();
