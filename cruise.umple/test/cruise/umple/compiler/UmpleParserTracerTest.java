@@ -79,13 +79,14 @@ public class UmpleParserTracerTest
   @Test
   public void traceType_log4jConfigOptions()
   {
-    code = "tracer log4j (info,debug)=(console) (error)=(file);";
-    assertParse(code,"[traceType][tracerType:log4j][log4jConfig][log4jLevel:info][log4jLevel:debug][log4jAppender:console][log4jConfig][log4jLevel:error][log4jAppender:file]");
+    code = "tracer log4j (error)=(console,file);";
+    assertParse(code,"[traceType][tracerType:log4j][log4jConfig][log4jLevel:error][log4jAppender:console][log4jAppender:file]");
     Assert.assertEquals("log4j",model.getTraceType());
     
-    LogConfiguration log = model.getTracer().getLogConfiguration(1);
-    Assert.assertEquals("error",log.getLevel(0));
-    Assert.assertEquals("file",log.getAppender(0));
+    LogConfiguration log = model.getTracer().getLogConfiguration();
+    Assert.assertEquals("error",log.getRootLogger());
+    Assert.assertEquals("console",log.getAppender(0));
+    Assert.assertEquals("file",log.getAppender(1));
   }
   
   @Test //@Ignore
@@ -93,7 +94,7 @@ public class UmpleParserTracerTest
   {
     code = "tracer log4j monitorInterval=30;";
     assertParse(code,"[traceType][tracerType:log4j][log4jConfig][monitorInterval:30]");
-    LogConfiguration log = model.getTracer().getLogConfiguration(0);
+    LogConfiguration log = model.getTracer().getLogConfiguration();
     Assert.assertEquals(30,log.getMonitorInterval());
   }
   

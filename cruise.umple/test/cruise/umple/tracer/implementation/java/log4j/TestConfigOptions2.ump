@@ -1,6 +1,6 @@
 namespace example;
 
-tracer log4j (info)=(file);
+tracer log4j (all)=(console,file) monitorInterval=30;
 
 class Tracer
 {

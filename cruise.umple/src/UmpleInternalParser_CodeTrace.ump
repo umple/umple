@@ -38,6 +38,8 @@ class UmpleInternalParser
     if (token.is("traceType"))
     {
       Tracer tracer = model.getTracer();
+      LogConfiguration log = new LogConfiguration(tracer);
+      
       for(Token subToken: token.getSubTokens())
       {
         if(subToken.is("tracerType"))
@@ -54,13 +56,11 @@ class UmpleInternalParser
         }
         else if(subToken.is("log4jConfig"))
         {
-          LogConfiguration log = new LogConfiguration(tracer);
-          
           for(Token logToken : subToken.getSubTokens())
           {
             if(logToken.is("log4jLevel"))
             {
-              log.addLevel(logToken.getValue());
+              log.setRootLogger(logToken.getValue());
             }
             if(logToken.is("log4jAppender"))
             {
@@ -71,7 +71,7 @@ class UmpleInternalParser
               log.setMonitorInterval(Integer.parseInt(logToken.getValue()));
             }
           }
-          tracer.addLogConfiguration(log);
+          tracer.setLogConfiguration(log);
         }
       }
       model.setTracer(tracer);
