@@ -84,9 +84,10 @@ public class UmpleParserTracerTest
     Assert.assertEquals("log4j",model.getTraceType());
     
     LogConfiguration log = model.getTracer().getLogConfiguration();
-    Assert.assertEquals("error",log.getRootLogger());
-    Assert.assertEquals("console",log.getAppender(0));
-    Assert.assertEquals("file",log.getAppender(1));
+    Assert.assertEquals("info",log.getRootLogger());
+    Assert.assertEquals("console",log.getLoggerAppender(0).getAppender(0));
+    Assert.assertEquals("file",log.getLoggerAppender(0).getAppender(1));
+    Assert.assertEquals("error",log.getLoggerAppender(0).getLevel(0));
   }
   
   @Test //@Ignore

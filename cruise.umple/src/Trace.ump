@@ -31,8 +31,14 @@ class Tracer
 class LogConfiguration
 {
   Integer monitorInterval = 0;
-  String rootLogger = null;
+  String rootLogger = "info";
+  1 -- * LoggerAppender;
+}
+
+class LoggerAppender
+{
   String[] appender;
+  String[] levels;
 }
 
 class UmpleClass

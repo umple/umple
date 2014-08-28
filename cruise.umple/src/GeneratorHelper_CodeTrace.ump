@@ -193,10 +193,17 @@ private static void postpareTrace(UmpleModel aModel)
     {
       LogConfiguration lc = model.getTracer().getLogConfiguration();
       
-      for(String logAppender : lc.getAppender())
+      for(LoggerAppender logApp : lc.getLoggerAppenders())
       {
-        appender += StringFormatter.format(lookups.get("log4jAppender"), logAppender);
+        for(String level : logApp.getLevels())
+        {
+          for(String app : logApp.getAppender())
+          {
+            appender += StringFormatter.format(lookups.get("log4jAppender"),app,level);
+          }
+        }
       }
+      
       rootLogger = lc.getRootLogger();
       monitorInterval = lc.getMonitorInterval();
 

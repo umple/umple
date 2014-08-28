@@ -56,15 +56,21 @@ class UmpleInternalParser
         }
         else if(subToken.is("log4jConfig"))
         {
+          LoggerAppender logApp = new LoggerAppender(log);
+          
           for(Token logToken : subToken.getSubTokens())
           {
-            if(logToken.is("log4jLevel"))
+            if(logToken.is("rootLevel"))
             {
               log.setRootLogger(logToken.getValue());
             }
+            if(logToken.is("log4jLevel"))
+            {
+              logApp.addLevel(logToken.getValue());
+            }
             if(logToken.is("log4jAppender"))
             {
-              log.addAppender(logToken.getValue());
+              logApp.addAppender(logToken.getValue());
             }
             if(logToken.is("monitorInterval"))
             {
