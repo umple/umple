@@ -1770,7 +1770,7 @@ class JavaGenerator
         "{1}"+
         "    </Root>\n");
     lookups.put("log4jAppender",
-        "      <AppenderRef ref=\"{0}\"/>\n");
+        "      <AppenderRef ref=\"{0}\" level=\"{1}\"/>\n");
     lookups.put("handleMethod","public static void handle(String name, String value, String... extra)\n  {\n {0} \n  }");
     lookups.put("ifStatement","  if ( {0} )\n  {\n  {1}\n  }");
     lookups.put("callHandle","{0}.handle(name+\" = \"+value);");
