@@ -1,0 +1,7 @@
+namespace example;
+
+class B
+{
+  int y;
+  trace y;
+}

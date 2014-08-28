@@ -1,0 +1,6 @@
+namespace example;
+
+tracer log4j;
+
+use A.ump;
+use B.ump;
