@@ -70,55 +70,16 @@ public class JavaLog4jTracerTest extends TemplateTest
     assertLog("Log4jTest5.ump","Log4jTest5.java.txt");
   }
   
-  @Test @Ignore
-  public void TestConfig()
+  @Test
+  public void TestModel()
   {
-    aTracer = "log4j";
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-//    assertUmpleTemplateFor("TestConfig.ump","log4j2.xml.txt");
-//    assertGeneratedCodeEquals(pathToInput,"log4j2.xml");
-//    UmpleModel model = createUmpleSystem(pathToInput, "TestConfig.ump");
-//    System.out.println("Code =\n"+model.getCode());
-    assertLog4jConfigurationFile("TestConfig.ump","TestConfig.xml.txt");
-//    Assert.assertEquals(true, (new File(pathToInput + "/log4j2.xml")).exists());
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+    assertUmpleTemplateFor("TestModel.ump","TestModelA.java.txt","A",false);
+    assertUmpleTemplateFor("TestModel.ump","TestModelB.java.txt","B",false);
   }
-  
-  @Test @Ignore
-  public void TestConfigOptions()
-  {
-    assertUmpleTemplateFor("TestConfigOptions.ump","log4j2.xml.txt");
-  } 
-  
-  @Test @Ignore
-  public void TestConfigTmp()
-  {
-    assertUmpleTemplateFor("TestConfigTmp.ump","log4j2.xml.txt");
-  } 
   
   public void assertLog(String input, String expected)
   {
     assertUmpleTemplateFor(input,expected,"Tracer",false);
   }
   
-  public void assertLog4jConfigurationFile(String inputUmpleFile, String logConfigFile)
-  {
-    UmpleModel model = createUmpleSystem(pathToInput, inputUmpleFile);
-    System.out.println("model = \n"+model);
-    model.generate();
-    String actual = model.getCode();
-    File expected = new File(pathToInput, logConfigFile);
-//    System.out.println("a = \n"+actual);
-    SampleFileWriter.assertFileContent(expected,actual);
-  }
 }

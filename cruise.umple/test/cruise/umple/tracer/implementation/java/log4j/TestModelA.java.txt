@@ -1,0 +1,51 @@
+package example;
+
+public class A
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+
+  /**
+   * log4j version 2
+   * requires jars (log4j-api-2.0.1.jar) and (log4j-core-2.0.1.jar)
+   */
+  public static final Logger logger = LogManager.getLogger(A.class);
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //A Attributes
+  private String str;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public A(String aStr)
+  {
+    str = aStr;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStr(String aStr)
+  {
+    boolean wasSet = false;
+    str = aStr;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getStr()
+  {
+    return str;
+  }
+
+  public void delete()
+  {}
