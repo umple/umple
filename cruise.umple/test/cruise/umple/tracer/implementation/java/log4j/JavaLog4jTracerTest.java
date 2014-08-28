@@ -11,13 +11,12 @@ package cruise.umple.tracer.implementation.java.log4j;
 
 import java.io.File;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import cruise.umple.compiler.UmpleModel;
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
@@ -74,7 +73,25 @@ public class JavaLog4jTracerTest extends TemplateTest
   @Test @Ignore
   public void TestConfig()
   {
-    assertUmpleTemplateFor("TestConfig.ump","log4j2.xml.txt");
+    aTracer = "log4j";
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+//    assertUmpleTemplateFor("TestConfig.ump","log4j2.xml.txt");
+//    assertGeneratedCodeEquals(pathToInput,"log4j2.xml");
+//    UmpleModel model = createUmpleSystem(pathToInput, "TestConfig.ump");
+//    System.out.println("Code =\n"+model.getCode());
+    assertLog4jConfigurationFile("TestConfig.ump","TestConfig.xml.txt");
+//    Assert.assertEquals(true, (new File(pathToInput + "/log4j2.xml")).exists());
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
   
   @Test @Ignore
@@ -94,4 +111,14 @@ public class JavaLog4jTracerTest extends TemplateTest
     assertUmpleTemplateFor(input,expected,"Tracer",false);
   }
   
+  public void assertLog4jConfigurationFile(String inputUmpleFile, String logConfigFile)
+  {
+    UmpleModel model = createUmpleSystem(pathToInput, inputUmpleFile);
+    System.out.println("model = \n"+model);
+    model.generate();
+    String actual = model.getCode();
+    File expected = new File(pathToInput, logConfigFile);
+//    System.out.println("a = \n"+actual);
+    SampleFileWriter.assertFileContent(expected,actual);
+  }
 }

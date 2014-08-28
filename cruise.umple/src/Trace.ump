@@ -25,13 +25,13 @@ class Tracer
   String name;
   String[] argument;
   Boolean verbosity = false;
-  1 -- * LogConfiguration;
+  1 -- 0..1 LogConfiguration;
 }
 
 class LogConfiguration
 {
   Integer monitorInterval = 0;
-  String[] level;
+  String rootLogger = null;
   String[] appender;
 }
 
