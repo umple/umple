@@ -1,4 +1,6 @@
 package example;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class A
 {
@@ -18,34 +20,16 @@ public class A
   // MEMBER VARIABLES
   //------------------------
 
-  //A Attributes
-  private String str;
-
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public A(String aStr)
-  {
-    str = aStr;
-  }
+  public A()
+  {}
 
   //------------------------
   // INTERFACE
   //------------------------
-
-  public boolean setStr(String aStr)
-  {
-    boolean wasSet = false;
-    str = aStr;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public String getStr()
-  {
-    return str;
-  }
 
   public void delete()
   {}

@@ -1506,7 +1506,24 @@ class JavaGenerator
       addImports(aClass,genClass);
     }
     
+    if( getModel().getTracer().getName().equals("log4j") )
+    {
+      addLog4jVarImport();
+    }
+    
     addRelatedImports();
+  }
+  
+  private void addLog4jVarImport() {
+    for(UmpleClass umpleClass : getModel().getUmpleClasses())
+    {
+      Attribute loggerAttr = new Attribute("logger", "Logger", "const", "LogManager.getLogger("+umpleClass.getName()+".class)", false, umpleClass);
+      loggerAttr.addComment( new Comment("log4j version 2") );
+      loggerAttr.addComment( new Comment("requires jars (log4j-api-2.0.1.jar) and (log4j-core-2.0.1.jar)") );
+      umpleClass.addAttribute(loggerAttr);
+      umpleClass.addDepend(new Depend("org.apache.logging.log4j.LogManager"));
+      umpleClass.addDepend(new Depend("org.apache.logging.log4j.Logger"));
+    }
   }
 
   public static String typeOf(String aType)

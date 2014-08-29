@@ -9,14 +9,9 @@
 
 package cruise.umple.tracer.implementation.java.log4j;
 
-import java.io.File;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
-import cruise.umple.compiler.UmpleModel;
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
 
