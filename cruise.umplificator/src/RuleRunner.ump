@@ -2,11 +2,9 @@ namespace cruise.umplificator.rules;
 
 class RuleService{
 
-static Logger logger = Logger.getLogger(RuleService.class);
 
 depend java.io.*;
 depend org.kie.api.runtime.KieSession;
-depend org.apache.log4j.Logger;
 depend cruise.umplificator.core.Umplificator.RefactoringLevel;
 
 RuleRunner runner;
@@ -37,8 +35,6 @@ public KieSession startRuleEngine(RefactoringLevel level){
 class RuleRunner
 {
 
-static Logger logger = Logger.getLogger(RuleRunner.class);
-
 depend org.kie.api.KieServices;
 depend org.kie.api.builder.KieBuilder;
 depend org.kie.api.builder.KieFileSystem;
@@ -55,7 +51,6 @@ depend cruise.umple.compiler.UmpleInterface;
 depend org.eclipse.jdt.core.dom.FieldDeclaration;
 depend org.eclipse.jdt.core.dom.ImportDeclaration;
 depend org.eclipse.jdt.core.dom.MethodDeclaration;
-depend org.apache.log4j.Logger;
 
      KieServices kieServices;
      KieContainer kieContainer;

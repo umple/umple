@@ -32,7 +32,8 @@
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar"/>
 	<classpathentry kind="lib" path="/lib/umplificatorplugins/commons-io-2.4.jar"/>
 	<classpathentry kind="lib" path="/lib/umple.jar"/>
-	<classpathentry kind="lib" path="/lib/umplificatorplugins/log4j-1.2.17.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jopt-simple"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="/lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

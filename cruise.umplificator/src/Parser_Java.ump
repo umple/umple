@@ -2,17 +2,12 @@ namespace cruise.umplificator.parser;
 
 
 class JavaParser {
-
-	static Logger logger = Logger.getLogger(JavaParser.class);
-
 	// JDT Dependencies
 	depend org.eclipse.jdt.core.dom.*;
 	depend org.eclipse.jdt.core.JavaCore;
 	depend cruise.umplificator.visitor.JavaClassVisitor;
 	// Java Util Dependencies
 	depend java.util.Map;
-	// Logger log4j
-	depend org.apache.log4j.Logger;
 	// Class used to visit elements of the Java Class
 	lazy JavaClassVisitor javaVisitor;
 	

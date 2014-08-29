@@ -2,8 +2,6 @@ namespace cruise.umplificator.visitor;
 
 class JavaClassVisitor {
 
-static Logger logger = Logger.getLogger(JavaClassVisitor.class);
-
  isA ASTVisitor;
  
  depend cruise.umplificator.StringHelper;
@@ -15,7 +13,6 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
  depend org.eclipse.jdt.core.dom.FieldDeclaration;
  depend org.eclipse.jdt.core.dom.PackageDeclaration;
  depend cruise.umple.compiler.CodeBlock;
- depend org.apache.log4j.Logger;
 
  ImportDeclaration [] importDeclarations;
  MethodDeclaration [] methodDeclarations;
@@ -27,6 +24,8 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
  lazy String classBody;
  lazy Boolean isInterface;
  lazy Boolean isEnumType;
+
+ trace name, classBody, isInterface, isEnumType;
 
   @Override
   public boolean visit(ImportDeclaration node) {
@@ -54,9 +53,7 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
     // Main node to visit
     logger.debug("Visiting TypeDeclarations");
     name = node.getName().getFullyQualifiedName();
-    String typeDeclarationCode = node.toString();
     isInterface = node.isInterface();
-    classBody = StringHelper.getClassBody(typeDeclarationCode);
     typeDeclaration = node;
     return true; 
   }
@@ -78,7 +75,6 @@ static Logger logger = Logger.getLogger(JavaClassVisitor.class);
     String enumDeclarationCode = node.toString();
     enumDeclaration.setName(name);
 	enumDeclaration.setCode(enumDeclarationCode);
-	
     isEnumType = true;
     return false;
   }
