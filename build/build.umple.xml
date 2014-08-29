@@ -218,7 +218,7 @@
       <classpath refid="umplificator.project.classpath"/>
     </javac>
     <copy todir="cruise.umplificator/bin/" overwrite="true">
-	<fileset dir="cruise.umplificator/"><include name="*.properties"/></fileset>
+	<fileset dir="cruise.umplificator/src/main/resources/"><include name="*.xml"/></fileset>
 	<fileset dir="cruise.umplificator/src/main/resources/"><include name="*.drl"/></fileset>
     </copy>
     <delete file="cruise.umple/src/rules.grammar"/>
@@ -283,7 +283,8 @@
             <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/droolsplugins/slf4j-simple-1.7.6.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/commons-io-2.4.jar"/>
 			<zipfileset excludes="META-INF/*.SF" src="dist/umple.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/log4j-1.2.17.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
         </jar>
     </target>
 

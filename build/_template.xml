@@ -29,8 +29,11 @@
     <pathelement location="lib/umplificatorplugins/org.eclipse.osgi_3.9.0.v20130529-1710.jar"/>
     <pathelement location="lib/umplificatorplugins/org.eclipse.jdt.core_3.9.1.v20130905-0837.jar"/>
     <pathelement location="lib/umplificatorplugins/org.eclipse.core.runtime_3.9.0.v20130326-1255.jar"/>
-	<pathelement location="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
+    <pathelement location="lib/umplificatorplugins/com.ibm.icu_50.1.1.v201304230130.jar"/>
     <pathelement location="lib/umplificatorplugins/org.eclipse.cdt.core_5.5.0.201309180223.jar"/>
+    <pathelement location="lib/umplificatorplugins/log4j-core-2.0.1.jar"/>
+    <pathelement location="lib/umplificatorplugins/log4j-api-2.0.1.jar"/>
+
 	  <!-- ```````````````````````````
     DROOLS LIBRARIES FOR THE UMPLIFICATOR
     ``````````````````````````` -->
