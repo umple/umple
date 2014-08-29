@@ -1,7 +1,5 @@
 class Umplificator {
 
-static Logger logger = Logger.getLogger(Umplificator.class);
-
 public boolean umplify(List<File> srcFiles) {
     FileHelper.printFilesToUmplify(srcFiles);
     for (File aFile : srcFiles){
@@ -81,7 +79,6 @@ public boolean umplifyJava(File file)
 			ruleService.startRuleEngine(currentLevel);
 			// Insert Elements in Working Memory
 			String compilationUnitName= javaParser.getJavaVisitor().getName();
-			String classBody = javaParser.getJavaVisitor().getClassBody();
 			boolean isInterface = javaParser.getJavaVisitor().getIsInterface();
 			boolean isEnumType = javaParser.getJavaVisitor().getIsEnumType();
 
@@ -93,13 +90,11 @@ public boolean umplifyJava(File file)
 				    uInterface = new UmpleInterface(compilationUnitName);
 				    // Insert uInterface into Working Memory
 				    ruleRunner.insertUmpleInterface(uInterface);
-				    uInterface.appendExtraCode(classBody);
 				}
 				else {
 					// Insert uClass into Working Memory
 					uClass = new UmpleClass(compilationUnitName);
 					ruleRunner.insertUmpleClass(uClass);
-					uClass.appendExtraCode(classBody);
 				}
 			}
 

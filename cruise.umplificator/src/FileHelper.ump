@@ -8,10 +8,6 @@ depend java.util.List;
 depend cruise.umple.compiler.UmpleModel;
 depend cruise.umplificator.generator.UmpleToUmpleGenerator;
 depend cruise.umple.compiler.exceptions.UmpleCompilerException;
-// Logger log4j
-depend org.apache.log4j.Logger;
-
-static Logger logger = Logger.getLogger(FileHelper.class);
 
 public static final String [] EXTENSIONS = new String [] {".java",".ump"};
 public static final String separator = System.getProperty("line.separator");

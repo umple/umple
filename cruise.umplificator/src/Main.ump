@@ -8,12 +8,8 @@ class UmplificatorMain {
 	depend java.io.File;
 	depend java.util.Arrays;
 	depend java.io.IOException;
-	// Log4j dependencies
-	depend org.apache.log4j.*;
 	// jOPT Simple dependency
 	depend joptsimple.*;
-
-	static Logger logger = Logger.getLogger(UmplificatorMain.class);
   
 	public static void main(String[] args) {
 		 // Configure Logger
@@ -108,8 +104,8 @@ class UmplificatorMain {
       }
   }
 	
-    after constructor {
-    	PropertyConfigurator.configure(getClass().getResource("/log4j.properties"));
-  	}
+    //after constructor {
+    //	PropertyConfigurator.configure(getClass().getResource("/log4j.properties"));
+  	//}
 
 } 

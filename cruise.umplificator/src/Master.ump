@@ -13,6 +13,8 @@ The following instructs the system to inject comments on every class point to th
 strictness allow 1007;
 strictness allow 1008;
 
+tracer log4j root=debug (debug)=(file, console);
+
 generate Java "../src-gen-umple";
 
 use Main.ump;
