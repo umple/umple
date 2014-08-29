@@ -1,5 +1,6 @@
 namespace example;
 
-class B
+class C
 {
+  str;
 }
