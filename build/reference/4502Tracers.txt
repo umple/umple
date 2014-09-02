@@ -3,28 +3,42 @@ Tracing
 noreferences
 
 @@description
-<p>Data collected while tracing ranges from a simple logging mechanism into a more sophisticated tracing mechanism that involves the record of lower level events triggered in user and kernel spaces. Umple provides tracing using different tracers. Tracers can be categorized into two main categories: </p>
+<p>
+MOTL sets the Console to be its default tracer. However, it provides a set of potential tracers that will have an impact on how tracing is injected and how its collected. Modellers can control the model tracer using a tracer directive.
+</p>
+
+<p>
+MOTL tracers can be classified into two main categories: Built in tracers and third party tracers. The main difference between these two categories is that the first category tracers doesn’t require any additional jars imported into your model generated code, while  the later requires jars specific to each tracer.
+</p>
 
 <p>
 <ol>
-<li>Primitive:</li>
+<li>(Built in tracers)</li>
   <ul>
-  <li>Console</li>
-  <li>File</li>
+  <li>Console: trace output will be directed to system error.</li>
+  <li>File: trace output will be directed to trace log file.</li>
   </ul>
 &nbsp;<br />
-<li>Advanced (under development):</li>
+<li>(Third party tracers)</li>
    <ul>
-   <li>LTTNG </li>
-   <li>Dtrace </li>
+   <li>log4j: a well known java tracer. In MOTL, if log4j is selected as a tracer, log4j trace points will be in injected. In addition, an xml file (log4j2.xml) configuration file. </li>
+   <li>LTTNG (Under development)</li>
    </ul>
 </ol>
 </p>
 
 @@syntax
 
-[[traceType]]
+[[traceType]] [[log4jConfig]]
 
 @@example
 @@source manualexamples/Tracers1.ump
+@@endexample
+
+@@example
+@@source manualexamples/Tracers2.ump
+@@endexample
+
+@@example
+@@source manualexamples/Tracers3.ump
 @@endexample
