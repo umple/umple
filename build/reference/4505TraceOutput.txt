@@ -1,0 +1,12 @@
+Trace Output
+Tracing
+noreferences
+
+@@description
+<p>
+Specifying trace directives at the model level will inject trace points in source code generated from the model. MOTL was designed to collect a wide range of information when tracing is triggered at the execution time. 
+</p>
+<p>
+Collected information includes current system time, thread ID, Object hash code, etc. MOTL tracers will output an initial header to indicate each traced field name.
+</p>
+
