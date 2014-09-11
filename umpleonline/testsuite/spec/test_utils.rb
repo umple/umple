@@ -120,7 +120,7 @@ module TestUtils
 
   def self.set_example_directories(umpleonline_dir = "../../umpleonline/")
     const_set(:EXAMPLE_DIRECTORY, umpleonline_dir + "ump/")
-    const_set(:TEST_EXAMPLE_DIRECTORY, umpleonline_dir + "test/spec/test_examples/")
+    const_set(:TEST_EXAMPLE_DIRECTORY, umpleonline_dir + "testsuite/spec/test_examples/")
   end
 
   def select_option_by_value(select_id, option_text)
