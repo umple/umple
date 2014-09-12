@@ -14,7 +14,7 @@ noreferences
 <li>An <a href="AssociationDefinition.html">association</a> such as the one shown here maintains links between objects at run-time. Here the student can get its mentors, and the mentor can find his or her optional student.
 <li>A <a href="isAclause.html">generalization</a>, as in other object-oriented language, sets up inheritance relationships. Umple uses the 'isA' keyword. Here both Student and Mentor inherit the name attribute.
 <li>The <a href="MethodDefinition.html">methods</a> in the example are just normal Java methods. If you generate java from this, compile using javac, and then run the Person class using java, its main program will run.
-<li>You will notice that Student is apparently defined twice. This is a feature of Umple called using 'mixin' technology. All the elements are combined to create the resulting class.
+<li>You will notice that Person is apparently defined twice. This is a feature of Umple called using 'mixin' technology. All the elements are combined to create the resulting class.
 </ul>
 </p>
 
