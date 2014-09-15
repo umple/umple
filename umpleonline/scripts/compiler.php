@@ -267,8 +267,12 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($stateDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
-      $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg";
+      $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
       exec($command);
+			if (!file_exists($thedir . "/stateDiagram.svg") && file_exists("doterr.svg"))
+			{
+				exec("cp " . "./doterr.svg " . $thedir . "/stateDiagram.svg");
+			}
       $svgcode= readTemporaryFile("{$thedir}/stateDiagram.svg");      
       $html = "<a href=\"umpleonline/$thedir/model.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/stateDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
@@ -282,6 +286,10 @@ else if (isset($_REQUEST["umpleCode"]))
       exec("rm -rf " . $thedir . "/classDiagram.svg");
       $command = "/usr/local/bin/dot -Tsvg -Gdpi=63 " . $thedir . "/modelcd.gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
+			if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
+			{
+				exec("cp " . "./doterr.svg " . $thedir . "/classDiagram.svg");
+			}
       $svgcode= readTemporaryFile("{$thedir}/classDiagram.svg");
       $html = "<a href=\"umpleonline/$thedir/modelcd.gv\">Download the GraphViz file for the following</a>&nbsp;<a href=\"umpleonline/$thedir/classDiagram.svg\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
       <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
