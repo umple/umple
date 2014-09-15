@@ -69,6 +69,14 @@ public class UmpleParserTracerTest
   }
   
   @Test
+  public void traceType_JavaAPI()
+  {
+    code = "tracer JavaAPI;";
+    assertParse(code,"[traceType][tracerType:JavaAPI]");
+    Assert.assertEquals("JavaAPI",model.getTraceType());
+  }
+  
+  @Test
   public void traceType_log4j()
   {
     code = "tracer log4j;";
@@ -90,7 +98,7 @@ public class UmpleParserTracerTest
     Assert.assertEquals("error",log.getLoggerAppender(0).getLevel(0));
   }
   
-  @Test //@Ignore
+  @Test
   public void traceType_log4jMonitorInterval()
   {
     code = "tracer log4j monitorInterval=30;";

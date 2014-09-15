@@ -1,0 +1,11 @@
+namespace example;
+
+tracer JavaAPI;
+
+class Tracer
+{
+  x;
+  int y;
+  trace x logLevel config;
+  trace y logLevel severe;
+}

@@ -9,7 +9,7 @@
 // See user manual page: [*ModelOrientedTracingLanguage(MOTL)*]
 
 // The tool to output the trace: [*Tracers*]
-traceType : tracer [=tracerType:Console|File|String|Visual|log4j] ( , [=tracerType:Console|File|String|Visual|log4j] )* [[log4jConfig]]* ([[tracerOptions]])* ;
+traceType : tracer [=tracerType:Console|File|String|Visual|log4j|JavaAPI] ( , [=tracerType:Console|File|String|Visual|log4j|JavaAPI] )* [[log4jConfig]]* ([[tracerOptions]])* ;
 //traceType : tracer [=tracerType:Console|File|String|Visual] ( , [=tracerType:Console|File|String|Visual] )* ( [=onoff:on|off] : [[tracerOptions]] ( , [[tracerOptions]] )* )* ( [=verbisty:verbose] )? ( [tracerArgument] )* ;
 tracerOptions- : [[tracerOn]]? [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value] [=option:Time|time|Thread|thread|File|file|Line|line|Trace|trace|Trigger|trigger|TraceFile|tracefile|TraceLine|traceline|TriggerLine|triggerline|TriggerFile|triggerfile|Class|class|Object|object|Operation|operation|Name|name|Value|value]*
 tracerOn : on:|off:
@@ -34,7 +34,7 @@ tracePeriod- : period [trace_period]
 traceDuring- : during [trace_duration]
 traceRecord- : record [[recordEntity]]
 recordEntity- : ( only )? ( " [**trace_record_string] " | [trace_record] ) ( , [trace_record] )*
-log4jLevel-  : logLevel [=logLevel:trace|debug|info|warn|error|fatal|all] ( , [=logLevel:trace|debug|info|warn|error|fatal] )*
+log4jLevel-  : logLevel [=logLevel:trace|debug|info|warn|error|fatal|all|finest|finer|fine|config|warning|severe] ( , [=logLevel:trace|debug|info|warn|error|fatal|finest|finer|fine|config|warning|severe] )*
 
 traceCondition- : [LHS] [[conditionRHS]]
 conditionRHS- : [comparison_operator] [RHS]
