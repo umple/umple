@@ -1,0 +1,65 @@
+package example;
+import java.util.Date;
+import java.util.logging.*;
+
+public class Tracer
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static final Logger logger = Logger.getLogger(Tracer.class.getName());
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String x;
+  private int y;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aX, int aY)
+  {
+    x = aX;
+    y = aY;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(String aX)
+  {
+    boolean wasSet = false;
+    logger.config( System.currentTimeMillis()+","+Thread.currentThread().getId()+",JavaLogAPITest1.ump,9,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";") );
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setY(int aY)
+  {
+    boolean wasSet = false;
+    logger.severe( System.currentTimeMillis()+","+Thread.currentThread().getId()+",JavaLogAPITest1.ump,10,Tracer,"+System.identityHashCode(this)+",at_s,y,"+y+","+(""+aY).toString().replace("\n","").replace(",",";") );
+    y = aY;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getX()
+  {
+    return x;
+  }
+
+  public int getY()
+  {
+    return y;
+  }
+
+  public void delete()
+  {}

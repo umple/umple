@@ -1511,6 +1511,11 @@ class JavaGenerator
       addLog4jVarImport();
     }
     
+    if( getModel().getTracer().getName().equals("JavaAPI") )
+    {
+      addJavaLogAPIImport();
+    }
+    
     addRelatedImports();
   }
   
@@ -1523,6 +1528,15 @@ class JavaGenerator
       umpleClass.addAttribute(loggerAttr);
       umpleClass.addDepend(new Depend("org.apache.logging.log4j.LogManager"));
       umpleClass.addDepend(new Depend("org.apache.logging.log4j.Logger"));
+    }
+  }
+  
+  private void addJavaLogAPIImport(){
+    for(UmpleClass umpleClass : getModel().getUmpleClasses())
+    {
+      Attribute loggerAttr = new Attribute("logger", "Logger", "const", "Logger.getLogger("+umpleClass.getName()+".class.getName())", false, umpleClass);
+      umpleClass.addAttribute(loggerAttr);
+      umpleClass.addDepend(new Depend("java.util.logging.*"));
     }
   }
 
