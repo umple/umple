@@ -122,10 +122,10 @@ public class GeneratorHelperTest
 	lookups.put("startTime","(int)System.currentTimeMillis()");
 	
     UmpleClass uClass1 = new UmpleClass("firstClass",model);
-    uClass1.addTraceDirective(new TraceDirective(new Tracer("String")));
+    uClass1.addTraceDirective(new TraceDirective(new Tracer("string")));
     UmpleClass uClass2 = new UmpleClass("secondClass",model);
-    uClass2.addTraceDirective(new TraceDirective(new Tracer("String")));
-    model.setTracer(new Tracer("String"));
+    uClass2.addTraceDirective(new TraceDirective(new Tracer("string")));
+    model.setTracer(new Tracer("string"));
     model.addUmpleClass(uClass1);
     model.addUmpleClass(uClass2);
     Assert.assertEquals(true,GeneratorHelper.getWillGenerateString());

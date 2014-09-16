@@ -323,6 +323,7 @@ class AttributeTraceItem
         String accessor = gen.translate("traceAccessor",this);
         String concatinator = gen.translate("traceConcatinator",this);
         String comma = concatinator+"\",\""+concatinator;
+        String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
         String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},\""+concatinator+"{8}";
 
         if(o instanceof Attribute)
@@ -377,10 +378,10 @@ class AttributeTraceItem
             );
         if(getTracerType().equals("log4j"))
           message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("JavaAPI"))
+        else if(getTracerType().equals("javaapi"))
           message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
         else
-          message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+          message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
         if(getForClause()!=null)
         {
           message += "\n  "+StringFormatter.format(gen.translate("traceIncrement",this),getForClause());
@@ -432,6 +433,7 @@ class StateMachineTraceItem
     String accessor = gen.translate("traceAccessor",this);
     String concatinator = gen.translate("traceConcatinator",this);
     String comma = concatinator+"\",\""+concatinator;
+    String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
     String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},{8}";
 
     if(o instanceof Transition)
@@ -499,10 +501,10 @@ class StateMachineTraceItem
         );
     if(getTracerType().equals("log4j"))
       message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-    else if(getTracerType().equals("JavaAPI"))
+    else if(getTracerType().equals("javaapi"))
       message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
     else
-      message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+      message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
     message = StringFormatter.format(getExtremities(gen, name),message);
     message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
     return message;
@@ -548,6 +550,7 @@ class AssociationTraceItem
         String accessor = gen.translate("traceAccessor",this);
         String concatinator = gen.translate("traceConcatinator",this);
         String comma = concatinator+"\",\""+concatinator;
+        String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
         String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7},\"";
 
         if(o instanceof AssociationVariable)
@@ -597,10 +600,10 @@ class AssociationTraceItem
             );
         if(getTracerType().equals("log4j"))
           message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("JavaAPI"))
+        else if(getTracerType().equals("javaapi"))
           message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
         else
-          message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+          message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
         message = StringFormatter.format(getExtremities(gen, name),message);
         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
         return message;
@@ -649,6 +652,7 @@ class MethodTraceItem {
         String accessor = gen.translate("traceAccessor",this);
         String concatinator = gen.translate("traceConcatinator",this);
         String comma = concatinator+"\",\""+concatinator;
+        String tracerName = Character.toUpperCase(getTracerType().charAt(0)) + getTracerType().substring(1);
         String messageLayout = "{0}"+comma+"{1}"+concatinator+"\",{2},{3},{4},\""+concatinator+"{5}"+concatinator+"\",{6},{7}\"";
 
         if(o instanceof Method)
@@ -701,10 +705,10 @@ class MethodTraceItem {
         
         if(getTracerType().equals("log4j"))
           message = TraceItemUtil.prepareLog4jMessages(getTraceDirective(),gen,this,message);
-        else if(getTracerType().equals("JavaAPI"))
+        else if(getTracerType().equals("javaapi"))
           message = TraceItemUtil.prepareJavaLogAPIMessages(getTraceDirective(),gen,this,message);
         else
-          message = StringFormatter.format(gen.translate("traceTemplate",this),getTracerType(),message);
+          message = StringFormatter.format(gen.translate("traceTemplate",this),tracerName,message);
         message = StringFormatter.format(getExtremities(gen, name),message);
         message = GeneratorHelper.doIndent(message,gen.translate("traceIndent",this));
         message += "\n";

@@ -43,7 +43,7 @@ class UmpleInternalParser
       {
         if(subToken.is("tracerType"))
         {
-          tracer = new Tracer(subToken.getValue());
+          tracer = new Tracer(subToken.getValue().toLowerCase());
         }
         else if(subToken.is("tracerArgument"))
         {
@@ -93,7 +93,7 @@ class UmpleInternalParser
     {
       if(model.getTracer()==null)
       {
-        model.setTracer(new Tracer("Console"));
+        model.setTracer(new Tracer("console"));
       }
       for( Token traceToken : token.getSubTokens() )
       {

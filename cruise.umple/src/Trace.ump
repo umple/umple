@@ -17,7 +17,7 @@ namespace cruise.umple.compiler;
 class UmpleModel
 {
   String traceType = {getTracer().getName()}
-  Tracer tracer = new Tracer("Console");
+  Tracer tracer = new Tracer("console");
 }
 
 class Tracer

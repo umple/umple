@@ -49,7 +49,7 @@ public class UmpleParserTracerTest
   {
 	  code = "tracer Console;";
 	  assertParse(code,"[traceType][tracerType:Console]");
-	  Assert.assertEquals("Console",model.getTraceType());
+	  Assert.assertEquals("console",model.getTraceType());
   }
   
   @Test
@@ -57,7 +57,7 @@ public class UmpleParserTracerTest
   {
 	  code = "tracer File;";
 	  assertParse(code,"[traceType][tracerType:File]");
-	  Assert.assertEquals("File",model.getTraceType());
+	  Assert.assertEquals("file",model.getTraceType());
   }
   
   @Test
@@ -65,7 +65,7 @@ public class UmpleParserTracerTest
   {
 	  code = "tracer String;";
 	  assertParse(code,"[traceType][tracerType:String]");
-	  Assert.assertEquals("String",model.getTraceType());
+	  Assert.assertEquals("string",model.getTraceType());
   }
   
   @Test
@@ -73,7 +73,7 @@ public class UmpleParserTracerTest
   {
     code = "tracer JavaAPI;";
     assertParse(code,"[traceType][tracerType:JavaAPI]");
-    Assert.assertEquals("JavaAPI",model.getTraceType());
+    Assert.assertEquals("javaapi",model.getTraceType());
   }
   
   @Test
@@ -112,7 +112,15 @@ public class UmpleParserTracerTest
   {
 	  code = "class Tracer{x; trace x;}";
 	  assertParse(code,"[classDefinition][name:Tracer][attribute][name:x][trace][traceDirective][trace_entity:x]");
-	  Assert.assertEquals("Console",model.getTraceType());
+	  Assert.assertEquals("console",model.getTraceType());
+  }
+  
+  @Test
+  public void traceType_TracerNameCaseInsensitive()
+  {
+	  code = "tracer FILE;";
+	  assertParse(code,"[traceType][tracerType:FILE]");
+	  Assert.assertEquals("file",model.getTraceType());
   }
   	
   //------------------------
