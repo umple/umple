@@ -42,14 +42,15 @@ private static void postpareTrace(UmpleModel aModel)
     {
       if(templateLookups.containsKey("dependTracer"))
       {
-        if(td.getTracerType().equals("log4j") || td.getTracerType().equals("JavaAPI"))
+        if(td.getTracerType().equals("log4j") || td.getTracerType().equals("javaapi"))
         {
 //          aClass.addDepend(new Depend("org.apache.logging.log4j.LogManager"));
 //          aClass.addDepend(new Depend("org.apache.logging.log4j.Logger"));
         }
         else
         {
-          aClass.addDepend(new Depend(StringFormatter.format(templateLookups.get("dependTracer"),td.getTracerType())));
+        	String tracerName = Character.toUpperCase(td.getTracerType().charAt(0)) + td.getTracerType().substring(1);
+          aClass.addDepend(new Depend(StringFormatter.format(templateLookups.get("dependTracer"),tracerName)));
         }
       }
       if(templateLookups.containsKey("dependDate"))
@@ -58,7 +59,7 @@ private static void postpareTrace(UmpleModel aModel)
         dep.setIsInternal(true);
         aClass.addDepend(dep);
       }
-      if ("Console".equals(td.getTracerType()))
+      if ("console".equals(td.getTracerType()))
       {
         if(generateConsole)
         {
@@ -66,7 +67,7 @@ private static void postpareTrace(UmpleModel aModel)
           prepareConsoleTracer(model,templateLookups);
         }
       }
-      else if ("File".equals(td.getTracerType()))
+      else if ("file".equals(td.getTracerType()))
       {
         if(generateFile)
         {
@@ -82,7 +83,7 @@ private static void postpareTrace(UmpleModel aModel)
           prepareFileTracer(model,templateLookups);
         }
       }
-      else if ("String".equals(td.getTracerType()))
+      else if ("string".equals(td.getTracerType()))
       {
         if(generateString)
         {

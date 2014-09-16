@@ -1511,7 +1511,7 @@ class JavaGenerator
       addLog4jVarImport();
     }
     
-    if( getModel().getTracer().getName().equals("JavaAPI") )
+    if( getModel().getTracer().getName().equals("javaapi") )
     {
       addJavaLogAPIImport();
     }
