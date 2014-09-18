@@ -1,0 +1,13 @@
+// this example shows how to trace non api method exit
+// incase of methods with return statement, trace code is 
+// injected before the return
+
+class JavaMethod
+{
+  trace exit method();
+    
+  int method( int x ) {
+    x += 5;
+    return x;
+  }
+}

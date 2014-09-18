@@ -15,14 +15,15 @@ MOTL tracers can be classified into two main categories: Built in tracers and th
 <ol>
 <li>(Built in tracers)</li>
   <ul>
-  <li>Console: trace output will be directed to system error.</li>
-  <li>File: trace output will be directed to trace log file.</li>
+  <li><b>Console</b>: trace output will be directed to system error.</li>
+  <li><b>File</b>: trace output will be directed to trace log file.</li>
+  <li><b>Java Native Logging</b>: Java provides a logging API implemented in its platform. MOTL provides the capability of injecting trace code using Java native logging API.</li>
   </ul>
 &nbsp;<br />
 <li>(Third party tracers)</li>
    <ul>
-   <li>log4j: a well known java tracer. In MOTL, if log4j is selected as a tracer, log4j trace points will be in injected. In addition, an xml file (log4j2.xml) configuration file. </li>
-   <li>LTTNG (Under development)</li>
+   <li><b>log4j</b>: a well known java tracer. In MOTL, if log4j is selected as a tracer, log4j trace points will be in injected. In addition, an xml file (log4j2.xml) configuration file. </li>
+   <li><b>LTTNG</b> (Under development)</li>
    </ul>
 </ol>
 </p>
@@ -41,4 +42,8 @@ MOTL tracers can be classified into two main categories: Built in tracers and th
 
 @@example
 @@source manualexamples/Tracers3.ump
+@@endexample
+
+@@example
+@@source manualexamples/Tracers4.ump
 @@endexample

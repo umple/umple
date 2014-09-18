@@ -1,17 +1,13 @@
 
-// this example generates traces using the log4j tracer
-// Default log4j xml configuration file is generated (log4j2.xml) 
-tracer log4j;
+// this example generates traces using the Java native logging API
+tracer JavaAPI;
 
 class Student
 {
   Integer id;
   name;
-  
-  // trace attribute id with log4j level set to (info)
-  trace id logLevel info;
-
-  // trace attribute id with log4j level set to (error)
-  trace name logLevel error;
+  // trace id with default logging level info
+  trace id;
+  // trace name to logging level severe
+  trace name logLevel severe;
 }
-
