@@ -1,7 +1,10 @@
 
 // this example generates traces using the log4j tracer
-// Default log4j xml configuration file is generated (log4j2.xml) 
-tracer log4j;
+// Customized log4j xml configuration file is generated (log4j2.xml)
+// Root logger level will be debug
+// Info logging level will be written into console output
+// Error logging level will be written into file
+tracer log4j root=debug (info)=(console) (error)=(file);
 
 class Student
 {

@@ -1,0 +1,11 @@
+// this example shows how to trace non api method entry
+
+class JavaMethod
+{
+  trace method();
+    
+  int method( int x ) {
+    x += 5;
+    return x;
+  }
+}

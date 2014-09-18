@@ -1,0 +1,25 @@
+Tracing Methods
+Tracing
+noreferences
+
+@@description
+<p>
+Tracing non api methods is possible using MOTL. Entry and/or exit of methods can be traced.
+</p>
+
+<ul>
+<li><b>Method Entry</b>: trace code is injected at the method entry.</li>
+<li><b>Method Exit</b>: trace code is injected at method exit before return statements if exits.</li>
+</ul>
+</p>
+
+@@syntax
+[[traceDirective]] [[traceItem]] [[traceOption]]
+
+@@example
+@@source manualexamples/TracingMethods1.ump
+@@endexample
+
+@@example
+@@source manualexamples/TracingMethods2.ump
+@@endexample
