@@ -10584,9 +10584,19 @@ if (p != null) {
           appendln(stringBuffer, "{");
           for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPre()?traceItem.trace(gen, aMethod,"me_e", uClass):""));
           if (customPreconditionCode != null) { append(stringBuffer, "\n{0}\n",GeneratorHelper.doIndent(customPreconditionCode, "    "));}
-          appendln(stringBuffer, properMethodBody);
+          
           addUncaughtExceptionVariables(methodName,p.getFilename().replaceAll("\\\\","/").replaceAll("(.*)/",""),p.getLineNumber(),javaline,stringBuffer.toString().split("\\n").length+1-javaline);
-          for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
+          String traceCode = "";
+          if(properMethodBody.contains("return"))
+          {
+          for( TraceItem traceItem : traceItems )traceCode += (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):"");
+            properMethodBody = properMethodBody.replaceAll("return", traceCode + "return");
+          }
+          appendln(stringBuffer, properMethodBody);
+          if(!properMethodBody.contains("return"))
+          {
+            for( TraceItem traceItem : traceItems )append(stringBuffer, (traceItem!=null&&traceItem.getIsPost()?traceItem.trace(gen, aMethod,"me_x", uClass):""));
+          }
           appendln(stringBuffer, "  }");
         }
       }

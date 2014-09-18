@@ -33,11 +33,13 @@ public class TracerTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/attributes/example");
     SampleFileWriter.destroy(pathToInput + "/statemachines/example");
     SampleFileWriter.destroy(pathToInput + "/associations/example");
+    SampleFileWriter.destroy(pathToInput + "/methods/example");
     SampleFileWriter.destroy(pathToInput + "/tracecase/example");
     
     SampleFileWriter.destroy(pathToInput + "/attributes/cruise");
     SampleFileWriter.destroy(pathToInput + "/statemachines/cruise");
     SampleFileWriter.destroy(pathToInput + "/associations/cruise");
+    SampleFileWriter.destroy(pathToInput + "/methods/cruise");
     SampleFileWriter.destroy(pathToInput + "/tracecase/cruise");
   }
 }

@@ -1,0 +1,35 @@
+namespace example;
+
+class Tracer
+{
+  str;
+  
+  trace exit method1();
+  
+  trace exit method2();
+  
+  trace exit method3();
+  
+  void method1() {}
+  
+  int method2( int x ) {
+    x += 5;
+    return x;
+  }
+  
+  int method3(int x) {
+    int y = 1;
+    int z = -1;
+    
+    if( x > 5 )
+    {
+      return y;
+    }
+    else
+    {
+      return z;
+    }
+    
+  }
+  
+}
