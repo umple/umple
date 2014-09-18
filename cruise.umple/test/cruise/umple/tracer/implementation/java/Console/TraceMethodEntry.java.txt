@@ -1,0 +1,53 @@
+package example;
+import cruise.util.ConsoleTracer;
+import java.util.Date;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String str;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aStr)
+  {
+    str = aStr;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStr(String aStr)
+  {
+    boolean wasSet = false;
+    str = aStr;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getStr()
+  {
+    return str;
+  }
+
+  public void delete()
+  {}
+
+  public void method1(){
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMethodEntry.ump,7,Tracer,"+System.identityHashCode(this)+",me_e,method1" );
+    
+  }
+
+  public int method2(int x){
+    ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMethodEntry.ump,9,Tracer,"+System.identityHashCode(this)+",me_e,method2" );
+    x += 5;
+    return x;
+  }

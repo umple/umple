@@ -1,0 +1,68 @@
+import cruise.util.FileTracer;
+import java.util.Date;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String str;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aStr)
+  {
+    str = aStr;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStr(String aStr)
+  {
+    boolean wasSet = false;
+    str = aStr;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getStr()
+  {
+    return str;
+  }
+
+  public void delete()
+  {}
+
+  public void method1(){
+    
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMethodExit.ump,7,Tracer,"+System.identityHashCode(this)+",me_x,method1" );
+  }
+
+  public int method2(int x){
+    x += 5;
+        FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMethodExit.ump,9,Tracer,"+System.identityHashCode(this)+",me_x,method2" );
+return x;
+  }
+
+  public int method3(int x){
+    int y = 1;
+    int z = -1;
+    
+    if( x > 5 )
+    {
+          FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMethodExit.ump,11,Tracer,"+System.identityHashCode(this)+",me_x,method3" );
+return y;
+    }
+    else
+    {
+          FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMethodExit.ump,11,Tracer,"+System.identityHashCode(this)+",me_x,method3" );
+return z;
+    }
+  }

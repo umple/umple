@@ -1,7 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+/*This code was generated using the UMPLE ${last.version} modeling language!*/
 
 package example;
+import cruise.util.FileTracer;
+import java.util.Date;
 
 public class Tracer
 {
@@ -11,36 +13,62 @@ public class Tracer
   //------------------------
 
   //Tracer Attributes
-  private String x;
+  private int id;
+  private String name;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Tracer(String aX)
+  public Tracer()
   {
-    x = aX;
+    id = 0;
+    name = null;
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setX(String aX)
+  public boolean setId(int aId)
   {
     boolean wasSet = false;
-    x = aX;
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",tmp.ump,11,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id+","+(""+aId).toString().replace("\n","").replace(",",";")+",interesting behavior" );
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",tmp.ump,12,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id+","+(""+aId).toString().replace("\n","").replace(",",";")+",Even more interesting" );
+    id = aId;
     wasSet = true;
-    System.out.println("x=" + aX);
     return wasSet;
   }
 
-  public String getX()
+  public boolean setName(String aName)
   {
-    return x;
+    boolean wasSet = false;
+    FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",tmp.ump,11,Tracer,"+System.identityHashCode(this)+",at_s,name,"+name+","+(""+aName).toString().replace("\n","").replace(",",";")+",interesting behavior" );
+    name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getId()
+  {
+    return id;
+  }
+
+  public String getName()
+  {
+    return name;
   }
 
   public void delete()
   {}
 
+
+  public String toString()
+  {
+    String outputString = "";
+    return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
+            "name" + ":" + getName()+ "]"
+     + outputString;
+  }
 }
