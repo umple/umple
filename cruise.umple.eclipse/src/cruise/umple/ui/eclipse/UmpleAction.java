@@ -27,6 +27,7 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.console.*;
 
 import cruise.umple.compiler.*;
+import cruise.umple.compiler.java.*;
 
 /**
  * Our action implements workbench action delegate. The action proxy will be
@@ -56,6 +57,7 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
 	  boolean successfulCompilation;
 	    UmpleModel model;
 	    String pjName ;
+	    JavaClassGenerator.mainMainClass = null;
     try
     {
     	MessageConsole umpleConsole = findConsole("Umple Compile");
