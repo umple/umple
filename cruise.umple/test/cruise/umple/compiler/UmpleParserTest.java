@@ -65,6 +65,13 @@ public class UmpleParserTest
     Assert.assertEquals(0,model.numberOfUmpleClasses());
   }
   
+  //Issue 451
+  @Test
+  public void extraCodeInterfaces()
+  {
+    assertHasWarningsParse("011_extraCodeInterfaces.ump", 1007);
+  }
+
   //Issue 559b
   @Test
   public void multLanguageImplementation()
