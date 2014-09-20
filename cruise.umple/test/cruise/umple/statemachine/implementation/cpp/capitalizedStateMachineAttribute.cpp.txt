@@ -10,9 +10,7 @@
   //------------------------
   
  Garage::Garage()
-  {
-    setGarageDoor(Closed);
-  }
+  {}
   
   //------------------------
   // COPY CONSTRUCTOR
@@ -46,33 +44,9 @@
   string Garage::getGarageDoorStringName (GarageDoor garageDoor)
   {
     switch (garageDoor)  {
-      case 0 : {return "Closed"; break;}
-      case 1 : {return "Opening"; break;}
       default: {return ""; break;}
     }
   }
-
-  bool Garage::pressButton()
-  {
-    bool wasEventProcessed = false;
-
-    switch (garageDoor)
-    {
-      case Closed:
-        turnLightOn();
-        setGarageDoor(Opening);
-        wasEventProcessed = true;
-        break;
-    }
-
-    return wasEventProcessed;
-  }
-
-  void Garage::setGarageDoor(GarageDoor aGarageDoor)
-  {
-    garageDoor = aGarageDoor;
-  }
-  
 
   
   //------------------------

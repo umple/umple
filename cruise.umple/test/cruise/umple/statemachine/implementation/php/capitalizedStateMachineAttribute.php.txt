@@ -1,0 +1,46 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Garage
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Garage State Machines
+  private $GarageDoor;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getGarageDoorFullName()
+  {
+    $answer = $this->getGarageDoor();
+    return $answer;
+  }
+
+  public function getGarageDoor()
+  {
+    return null;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

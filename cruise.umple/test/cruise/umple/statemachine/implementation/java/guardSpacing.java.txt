@@ -15,7 +15,7 @@ public class Garage
 
   //Garage State Machines
   enum GarageDoor { Open, Closing }
-  private GarageDoor GarageDoor;
+  private GarageDoor garageDoor;
 
   //------------------------
   // CONSTRUCTOR
@@ -51,20 +51,20 @@ public class Garage
 
   public String getGarageDoorFullName()
   {
-    String answer = GarageDoor.toString();
+    String answer = garageDoor.toString();
     return answer;
   }
 
   public GarageDoor getGarageDoor()
   {
-    return GarageDoor;
+    return garageDoor;
   }
 
   public boolean pressButton()
   {
     boolean wasEventProcessed = false;
     
-    GarageDoor aGarageDoor = GarageDoor;
+    GarageDoor aGarageDoor = garageDoor;
     switch (aGarageDoor)
     {
       case Open:
@@ -84,7 +84,7 @@ public class Garage
 
   private void setGarageDoor(GarageDoor aGarageDoor)
   {
-    GarageDoor = aGarageDoor;
+    garageDoor = aGarageDoor;
   }
 
   public void delete()

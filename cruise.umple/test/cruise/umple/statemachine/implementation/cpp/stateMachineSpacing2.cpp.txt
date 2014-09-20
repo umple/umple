@@ -34,18 +34,18 @@
 
   string Garage::getGarageDoorFullName()
   {
-    string answer = getGarageDoorStringName(GarageDoor);
+    string answer = getGarageDoorStringName(garageDoor);
     return answer;
   }
   
   Garage::GarageDoor Garage::getGarageDoor()
   {
-    return GarageDoor;
+    return garageDoor;
   }
 
-  string Garage::getGarageDoorStringName (GarageDoor GarageDoor)
+  string Garage::getGarageDoorStringName (GarageDoor garageDoor)
   {
-    switch (GarageDoor)  {
+    switch (garageDoor)  {
       case 0 : {return "Closed"; break;}
       case 1 : {return "Opening"; break;}
       default: {return ""; break;}
@@ -56,7 +56,7 @@
   {
     bool wasEventProcessed = false;
 
-    switch (GarageDoor)
+    switch (garageDoor)
     {
       case Closed:
         turnLightOn();
@@ -70,7 +70,7 @@
 
   void Garage::setGarageDoor(GarageDoor aGarageDoor)
   {
-    GarageDoor = aGarageDoor;
+    garageDoor = aGarageDoor;
   }
   
 
