@@ -745,6 +745,12 @@ class CppGenerator
     boolean hasTimedEvents = false;
     for (StateMachine sm : aClass.getStateMachines())
     {
+      // Make sure state machine name is decapitalized
+      if(Character.isUpperCase(sm.getName().charAt(0))){
+        char firstLetter = Character.toLowerCase(sm.getName().charAt(0));
+        String decapitalizedName = firstLetter + sm.getName().substring(1);
+        sm.setName(decapitalizedName);
+      }
       prepareNestedStatesFor(sm,0);
       hasTimedEvents = prepareTimedEvents(sm) || hasTimedEvents;
     }

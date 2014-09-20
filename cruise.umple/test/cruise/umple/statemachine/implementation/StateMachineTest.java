@@ -19,6 +19,14 @@ import cruise.umple.compiler.Event;
 
 public class StateMachineTest extends StateMachineTemplateTest
 {
+	
+  // CAPITALIZED STATE MACHINE ATTRIBUTE - Issue 627
+  
+  @Test
+  public void CapitalStateMachineAttribute()
+  {
+	assertUmpleTemplateFor("capitalizedStateMachineAttribute.ump",languagePath + "/capitalizedStateMachineAttribute."+ languagePath +".txt","Garage");
+  }
 
   // SIMPLE STATES
 	

@@ -11,7 +11,7 @@ public class Garage
   //------------------------
 
   //Garage State Machines
-  enum GarageDoor { Closed, Opening }
+  enum GarageDoor {  }
   private GarageDoor garageDoor;
 
   //------------------------
@@ -19,9 +19,7 @@ public class Garage
   //------------------------
 
   public Garage()
-  {
-    setGarageDoor(GarageDoor.Closed);
-  }
+  {}
 
   //------------------------
   // INTERFACE
@@ -36,30 +34,6 @@ public class Garage
   public GarageDoor getGarageDoor()
   {
     return garageDoor;
-  }
-
-  public boolean pressButton()
-  {
-    boolean wasEventProcessed = false;
-    
-    GarageDoor aGarageDoor = garageDoor;
-    switch (aGarageDoor)
-    {
-      case Closed:
-        turnLightOn();
-        setGarageDoor(GarageDoor.Opening);
-        wasEventProcessed = true;
-        break;
-      default:
-        // Other states do respond to this event
-    }
-
-    return wasEventProcessed;
-  }
-
-  private void setGarageDoor(GarageDoor aGarageDoor)
-  {
-    garageDoor = aGarageDoor;
   }
 
   public void delete()
