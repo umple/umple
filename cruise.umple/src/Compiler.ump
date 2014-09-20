@@ -137,24 +137,32 @@ class CodeCompiler {
   public static List<UmpleClass> getMainClasses(UmpleModel model)
   {
     List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();
-    for(UmpleClass c:model.getUmpleClasses())
+    for(UmpleClass uClass:model.getUmpleClasses())
     {
-      for(String line:c.getExtraCode().split("\\n"))
+	if (!uClass.hasMethods()) {
+    		continue;
+	}
+      for (Method aMethod : uClass.getMethods()) 
       {
-        if(line.matches(".*(public)[ |\\t]+(static)[ |\\t]+(void)[ |\\t]+(main)[ |\\t]*[(][ |\\t]*(String)[ |\\t]*\\[\\].*"))
-        {
-          mainClasses.add(c);
-          break;
-        }
-        else if(line.matches("(.*)[ |\\t]+void([ |\\t]+)main([ |\\t]*)[(]([ |\\t]*)String[ |\\t]+[a-z|A-Z|0-9|_]+[ |\\t]*\\[[ |\\t]*\\][ |\\t]*[)](.*)"))
-        {
-          mainClasses.add(c);
-          break;
-        }
-      }
         
-      
-    }
+        if(!aMethod.getExistsInLanguage("Java")) {
+          continue;
+        }
+        String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
+        String methodName = aMethod.getName();
+        String methodType = aMethod.getType();
+        
+	if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static"))
+        {
+          mainClasses.add(uClass);
+	}
+
+	} // end for loop for all methods in class
+
+	} // end for loop for all classes in model
+
+
+
     return mainClasses;
   }
 
