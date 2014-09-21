@@ -1,0 +1,6 @@
+interface Cat
+{
+  const legs = 4;
+  meow meowww purrr;
+  void Meow();
+}
