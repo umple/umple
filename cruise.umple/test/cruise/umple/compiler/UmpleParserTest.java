@@ -72,6 +72,26 @@ public class UmpleParserTest
     assertHasWarningsParse("011_extraCodeInterfaces.ump", 1007);
   }
 
+/*
+  @Test
+  public void parseInterfaceCode()
+  {
+	assertParse("011_extraCodeInterfaces.ump");
+  }
+*/
+  
+//Issue 451b
+//A continuation of issue 451, now we're trying to make it so that
+//one instance of extra code in an interface doesn't gobble up the
+//rest of the interface
+/*
+  @Test
+  public void multipleExtraCodeInterfaces()
+  {
+    assertParse("011_multipleExtraCodeInterfaces.ump");
+  }
+*/
+  
   //Issue 559b
   @Test
   public void multLanguageImplementation()
@@ -2421,21 +2441,42 @@ public class UmpleParserTest
   {
     boolean answer = parse(filename);
     Assert.assertEquals(false, answer);
-    Assert.assertEquals(expectedPosition, model.getLastResult().getErrorMessage(0).getPosition());
+    if (model.getLastResult().numberOfErrorMessages() != 0)
+    {
+      Assert.assertEquals(expectedPosition, model.getLastResult().getErrorMessage(0).getPosition());
+    }
+    else
+    {
+      Assert.fail("There were no error messages. Was looking at" + expectedPosition + ".");
+    }
   }
 
   // Assertion for case where we expect parse to fail and care about the position and the error
   public void assertFailedParse(String filename, Position expectedPosition, int expectedError)
   {
     assertFailedParse(filename, expectedPosition);
-    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+    if (parser.getParseResult().numberOfErrorMessages() != 0)
+    {
+      Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+    }
+    else
+    {
+      Assert.fail("There were no error messages. Was looking for " + expectedError + "at" + expectedPosition + ".");
+    }
   }
   
   // Assertion for case where we expect parse to fail and care about the position, the error and the error Index per issue347
   public void assertFailedParse(String filename, Position expectedPosition, int expectedError, int expectedErrorIndex)
   {
     assertFailedParse(filename, expectedPosition);
-    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+    if (parser.getParseResult().numberOfErrorMessages() != 0)
+    {
+      Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+    }
+    else
+    {
+      Assert.fail("There were no error messages. Was looking for " + expectedError + "at" + expectedErrorIndex + ".");
+    }
   }
   
   // Assertion for case where we expect parse to fail care about the error number but not the position
@@ -2443,7 +2484,14 @@ public class UmpleParserTest
   {
     boolean answer = parse(filename);
     Assert.assertEquals(false, answer);
-    Assert.assertEquals(expectedError, model.getLastResult().getErrorMessage(0).getErrorType().getErrorCode());
+    if (model.getLastResult().numberOfErrorMessages() != 0)
+    {
+      Assert.assertEquals(expectedError, model.getLastResult().getErrorMessage(0).getErrorType().getErrorCode());
+    }
+    else
+    {
+      Assert.fail("There were no error messages. Was looking for " + expectedError + ".");
+    }
   }
   
   // Assertion case where we expect warnings at certain positions but don't care about the warning number
@@ -2451,7 +2499,14 @@ public class UmpleParserTest
   {
     boolean answer = parseWarnings(filename);
     Assert.assertEquals(true, answer);
-    Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
+    if (parser.getParseResult().getHasWarnings())
+    {
+      Assert.assertEquals(expectedPosition, parser.getParseResult().getPosition());
+    }
+    else
+    {
+      Assert.fail("There were no error messages. Was looking at " + expectedPosition + ".");
+    }
   }
   
   // Assertion for case where we expect parse to fail and care about the error number and error index per issue347
@@ -2459,14 +2514,28 @@ public class UmpleParserTest
   {
     boolean answer = parse(filename);
     Assert.assertEquals(false, answer);
-    Assert.assertEquals(expectedError, model.getLastResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+    if (model.getLastResult().numberOfErrorMessages() != 0)
+    {
+      Assert.assertEquals(expectedError, model.getLastResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+    }
+    else
+    {
+      Assert.fail("There were no error messages. Was looking for " + expectedError + "at" + expectedErrorIndex + ".");
+    }
   }
   
   // Assertion case where we expect warnings and care about the position and the warning number
   public void assertHasWarningsParse(String filename, Position expectedPosition, int expectedError)
   {
     assertHasWarningsParse(filename, expectedPosition);
-    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+    if (parser.getParseResult().getHasWarnings())
+    {
+      Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+    }
+    else
+    {
+      Assert.fail("There were no warnings. Was looking for " + expectedError + "at" + expectedPosition + ".");
+    }
   }
 
   // Assertion case where we expect warnings and care about the  warning number but not the position
@@ -2474,7 +2543,14 @@ public class UmpleParserTest
   {
     boolean answer = parseWarnings(filename);
     Assert.assertEquals(true, answer);
-    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+    if (parser.getParseResult().getHasWarnings())
+    {
+      Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+    }
+    else
+    {
+      Assert.fail("There were no warnings. Was looking for " + expectedError + ".");
+    }
   }
   
   //Assertion case where we expect warnings and care about the  warning number but not the position
@@ -2482,7 +2558,14 @@ public class UmpleParserTest
   {
     boolean answer = parseWarnings(filename);
     Assert.assertEquals(true, answer);
-    Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+    if (parser.getParseResult().getHasWarnings())
+    {
+      Assert.assertEquals(expectedError, parser.getParseResult().getErrorMessage(expectedErrorIndex).getErrorType().getErrorCode());
+    }
+    else
+    {
+      Assert.fail("There were no warnings. Was looking for " + expectedError + " at " + expectedErrorIndex + ".");
+    }
   }
   
   //Assertion case where we expect no warnings generated
