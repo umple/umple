@@ -84,25 +84,31 @@ public class UmpleParserTest
     assertHasWarningsParse("011_extraCodeInterfaces.ump", 1007);
   }
 
-/*
+//Issue 451
   @Test
   public void parseInterfaceCode()
   {
 	assertParse("011_extraCodeInterfaces.ump");
   }
-*/
+
   
 //Issue 451b
 //A continuation of issue 451, now we're trying to make it so that
 //one instance of extra code in an interface doesn't gobble up the
 //rest of the interface
-/*
   @Test
   public void multipleExtraCodeInterfaces()
   {
     assertParse("011_multipleExtraCodeInterfaces.ump");
   }
-*/
+
+//Issue 451b
+//The issue word for word from the website.
+  @Test
+  public void multipleExtraCodeDoubleDeclaration()
+  {
+    assertParse("011_multipleExtraCodeDoubleDeclaration.ump");
+  }
   
   //Issue 559b
   @Test
@@ -1742,12 +1748,13 @@ public class UmpleParserTest
     assertParse("014_interface_extracode.ump");
   }
   
+  
   @Test
   public void interfaceWithSingleIsA()
   {
     assertParse("014_interfaceImplements.ump");
     UmpleInterface child = model.getUmpleInterface("ISomething");
-	Assert.assertEquals("ISuper", child.getExtendsInterface(0).getName());
+	  Assert.assertEquals("ISuper", child.getExtendsInterface(0).getName());
   }
   
   @Test
