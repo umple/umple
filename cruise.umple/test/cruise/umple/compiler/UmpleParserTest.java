@@ -34,6 +34,18 @@ public class UmpleParserTest
     umpleParserName = "cruise.umple.compiler.UmpleInternalParser";
   }
   
+  
+  @Test
+  public void compositionParseTest() {
+	  assertSimpleParse("011_compositionParseTest_indDef.ump");
+	  assertSimpleParse("011_compositionParseTest_inlineDef.ump");
+  }
+  
+  @Test
+  public void compositionParseTest_DoubleDefinition() {
+	  assertFailedParse("011_compositionParseTest_doubleDirected.ump", 1502);
+  }
+  
   @Test
   public void toplevelExtracode()
   {
@@ -2575,6 +2587,7 @@ public class UmpleParserTest
 	Assert.assertEquals(true, answer);
 	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
+
   
 }
  

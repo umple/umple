@@ -1,0 +1,7 @@
+class A {}  
+ 
+class C {}
+
+association {  
+  0..1 A <@>-<@> * C;  
+} 

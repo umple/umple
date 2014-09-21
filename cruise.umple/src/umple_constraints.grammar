@@ -81,7 +81,7 @@ modelExpr : [~source]? [[modelRelationOp]] [~target]
 modelRelationOp- : [[modelRelationOpAssociation]] | [[modelRelationOpAttribute]] | [[modelRelationOpInheritance]]
 modelRelationOpInheritance : [=subclass:isA] | [=subclass:subclass|child|>>] ( of )? | [=subclass:inherits] ( from )? | [=superclass:parent|superclass|<<] ( of )?
 modelRelationOpAttribute : [=op:has] ( attribute | attr )? [=classification:named|of]?
-modelRelationOpAssociation : [[modelRelationAssociationEnd]]? [=op:--|->|<-] [[modelRelationAssociationEnd]]?
+modelRelationOpAssociation : [[modelRelationAssociationEnd]]? [=op:--|->|<-|-<@>|<@>-] [[modelRelationAssociationEnd]]?
 modelRelationAssociationEnd :  [!bound:(\d+|[*])] ( .. [!bound:(\d+|[*])] )?
 
 

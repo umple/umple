@@ -2330,7 +2330,7 @@ class UmpleInternalParser
   {
     Association association;
     if(navigation != null){
-      boolean isNavigable = "--".equals(navigation);
+      boolean isNavigable = "--".equals(navigation) || "<@>-".equals(navigation) || "-<@>".equals(navigation);
       boolean isFirstNavigable = "<-".equals(navigation) || isNavigable;
       boolean isSecondNavigable = "->".equals(navigation) || isNavigable;
       association = new Association(isFirstNavigable,isSecondNavigable,firstEnd,secondEnd);
@@ -2598,8 +2598,8 @@ class UmpleInternalParser
     
     //manual check as getIsLeftNavigatable() applies for "--" as well
     Token arrowToken = associationToken.getSubToken("arrow");
-    boolean isLeftArrow = arrowToken.getValue().equals("<-");
-    boolean isRightArrow = arrowToken.getValue().equals("->");
+    boolean isLeftArrow = arrowToken.getValue().equals("<-"); // || arrowToken.getValue().equals("<@>-");
+    boolean isRightArrow = arrowToken.getValue().equals("->"); // || arrowToken.getValue().equals("-<@>");
     
     //determine the non-arrow side
     if(isLeftArrow)
@@ -2654,6 +2654,8 @@ class UmpleInternalParser
     boolean looksLikeAssociation = attributeToken.getValue("name").contains("--") || attributeToken.getValue("name").contains("->");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<-") || attributeToken.getValue("name").contains("..");
     looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("*");
+    looksLikeAssociation = looksLikeAssociation || attributeToken.getValue("name").contains("<@>-") || attributeToken.getValue("name").contains("-<@>");
+    
     
     String modifier = attributeToken.getValue("modifier");
     String type = attributeToken.getValue("type");
@@ -2934,6 +2936,8 @@ class UmpleInternalParser
         boolean looksLikeAssociation = sub.getValue("name").contains("--") || sub.getValue("name").contains("->");
         looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
         looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<@>-") || sub.getValue("name").contains("-<@>");
+        
         if(looksLikeAssociation)
         {
           setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));

@@ -1,0 +1,11 @@
+class A {}  
+ 
+class B {
+	 0..1 -<@> * C;   
+}
+
+class C {}
+
+class D {
+	* <@>- * A;
+} 
