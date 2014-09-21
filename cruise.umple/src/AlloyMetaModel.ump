@@ -12,7 +12,7 @@ class AlloyObject {
 					beginEnd.getModifier(),beginEnd.getReferenceToClassName(),beginEnd.getMultiplicity());
      ends[1] = new AssociationEnd(endToOutput.getRoleName(),endToOutput.getClassName(),
 					endToOutput.getModifier(),endToOutput.getReferenceToClassName(),endToOutput.getMultiplicity());
-     return new Association(true,true,ends);
+     return new Association(true,true,false,false,ends);
   }
 }
 

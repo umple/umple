@@ -630,6 +630,8 @@ class Association
   name = null;
   Boolean isLeftNavigable;
   Boolean isRightNavigable;
+  Boolean isLeftComposition;
+  Boolean isRightComposition;
   Coordinate[] positions;
   0..1 -- 2 AssociationEnd ends;
   Position tokenPosition = null;

@@ -2317,7 +2317,7 @@ class UmpleInternalParser
     
     AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
     AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
-    Association assoc = new Association(true, true, leftEnd, rightEnd);
+    Association assoc = new Association(true, true, false, false, leftEnd, rightEnd);
 
     assoc.setTokenPosition(symmetricReflexiveAssociationToken.getPosition());
     assoc.setTokenEndPosition(symmetricReflexiveAssociationToken.getEndPosition());
@@ -2333,9 +2333,11 @@ class UmpleInternalParser
       boolean isNavigable = "--".equals(navigation) || "<@>-".equals(navigation) || "-<@>".equals(navigation);
       boolean isFirstNavigable = "<-".equals(navigation) || isNavigable;
       boolean isSecondNavigable = "->".equals(navigation) || isNavigable;
-      association = new Association(isFirstNavigable,isSecondNavigable,firstEnd,secondEnd);
+      boolean isLeftComposition = "<@>-".equals(navigation);
+      boolean isRightComposition = "-<@>".equals(navigation);
+      association = new Association(isFirstNavigable,isSecondNavigable,isLeftComposition,isRightComposition,firstEnd,secondEnd);
     }else{
-      association = new Association(true, true, firstEnd, secondEnd);
+      association = new Association(true, true, false, false, firstEnd, secondEnd);
     }
     return association;
   }

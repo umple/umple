@@ -1453,6 +1453,8 @@ class Association
 	  this.name = another.getName();
 	  this.isLeftNavigable = another.getIsLeftNavigable();
 	  this.isRightNavigable = another.getIsRightNavigable();
+	  this.isLeftComposition = another.getIsLeftComposition();
+	  this.isRightComposition = another.getIsRightComposition();
 	  this.positions = new ArrayList<Coordinate>();
 	  for (Coordinate coordinate : another.getPositions()) {
 		this.positions.add(coordinate);
@@ -1516,7 +1518,20 @@ class Association
   public String getArrowString()
   {
     String arrow = "--";
-    if (getIsLeftNavigable() && !getIsRightNavigable())
+    if (getIsLeftComposition() && !getIsRightComposition() && getIsLeftNavigable() && getIsRightNavigable()) {
+    	arrow = "<@>-";
+    }
+    else if (!getIsLeftComposition() && getIsRightComposition() && getIsLeftNavigable() && getIsRightNavigable()) {
+    	arrow = "-<@>";
+    }
+    else if ( (!getIsLeftNavigable() || !getIsRightNavigable()) && (getIsLeftComposition() || getIsRightComposition())) {
+    	arrow = "><";
+    } 
+    else if (getIsRightComposition() && getIsLeftComposition())
+    {
+      arrow = "><";
+    }
+    else if (getIsLeftNavigable() && !getIsRightNavigable())
     {
       arrow = "<-";
     }
@@ -1528,6 +1543,7 @@ class Association
     {
       arrow = "><";
     }
+    
     return arrow;
   }
 
@@ -1576,6 +1592,10 @@ class Association
   public boolean isImmutable()
   {
     return this.immutable;
+  }
+  
+  public boolean isComposition() {
+  	return this.isLeftComposition || this.isRightComposition;
   }
 }
 

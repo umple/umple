@@ -1236,6 +1236,17 @@ public class UmpleParserTest
   }
   
   @Test
+  public void compositionType() {
+	  assertSimpleParse("009_externalNamedComposition.ump");
+	  Association as1 = model.getAssociation(0);
+	  Assert.assertTrue(as1.getIsLeftComposition() && !as1.getIsRightComposition() && as1.getIsLeftNavigable() && as1.getIsRightNavigable());
+	  
+	  Association as2 = model.getAssociation(1);
+	  Assert.assertTrue(!as2.getIsLeftComposition() && as2.getIsRightComposition() && as2.getIsLeftNavigable() && as2.getIsRightNavigable());
+	  
+  }
+  
+  @Test
   public void singletonToOneAssociation()
   {
 	  assertHasWarningsParse("009_singletonToOneAssociation.ump", new Position("009_singletonToOneAssociation.ump",3,1,29));

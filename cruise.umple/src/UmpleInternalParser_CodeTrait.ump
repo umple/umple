@@ -584,7 +584,7 @@ class UmpleInternalParser
     
     AssociationEnd leftEnd = new AssociationEnd(null,myType,myModifier,myType,myMult);
     AssociationEnd rightEnd = new AssociationEnd(myName,myType,myModifier,myType,myMult);
-    Association assoc = new Association(false, true, leftEnd, rightEnd);
+    Association assoc = new Association(false, true, false, false, leftEnd, rightEnd);
     aTrait.addAssociation(assoc);
     */
   } 
@@ -927,7 +927,7 @@ private void ApplyTypeParametersToAssociation(AssociationVariable inAssociationV
 	        //----------------------------------------------------------------
 			AssociationEnd leftEnd = new AssociationEnd(lName, inClass.getName(), inAssociationVariable.getRelatedAssociation().getModifier(), inClass.getName(), inAssociationVariable.getRelatedAssociation().getMultiplicity());
 			AssociationEnd rightEnd = new AssociationEnd(rName,relatedClass.getName(), inAssociationVariable.getModifier(),relatedClass.getName(),inAssociationVariable.getMultiplicity());		
-			Association aAssociation = new Association(inAssociationVariable.getRelatedAssociation().getIsNavigable(), inAssociationVariable.getIsNavigable(),leftEnd,rightEnd);
+			Association aAssociation = new Association(inAssociationVariable.getRelatedAssociation().getIsNavigable(), inAssociationVariable.getIsNavigable(),false,false,leftEnd,rightEnd);
 			aAssociation.setName(rName);
 			getModel().addAssociation(aAssociation);	    
 			AssociationEnd myEnd = aAssociation.getEnd(0);
