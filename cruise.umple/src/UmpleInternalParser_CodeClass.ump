@@ -1038,10 +1038,17 @@ class UmpleInternalParser
         setFailedPosition(childToken.getPosition(), 901);
         analyzeConstant(childToken, aInterface);    
       }
-      else if (childToken.is("extraCode"))
+      else if (childToken.is("extraCode") || childToken.is("exception"))
       {
- 	setFailedPosition(childToken.getPosition(), 1007);
-        aInterface.appendExtraCode(childToken.getValue("extraCode"));
+ 	    if (childToken.is("extraCode"))
+ 	    {
+ 	      setFailedPosition(childToken.getPosition(), 1007);
+       	  aInterface.appendExtraCode(childToken.getValue("extraCode"));
+       	}
+       	else if (childToken.is("exception"))
+       	{
+       	  analyzeException(childToken, aInterface);
+      	}
       }
     }
   }
@@ -3026,6 +3033,113 @@ class UmpleInternalParser
       extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
       aClass.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aClass, "Java"));
       aClass.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
+    }
+  }
+  
+  private void analyzeException(Token exception, UmpleInterface aInterface)
+  {
+    Token sub = exception.getSubToken(0);
+    if(sub.is("malformedConstraint"))
+    {
+      setFailedPosition(sub.getPosition(), 1010, sub.getValue("stuff"));
+      aInterface.appendExtraCode("  ["+sub.getValue("stuff")+"]\n");
+    }
+    else if(sub.is("misnamedAttribute"))
+    {
+      if(!Token.isValidIdentifier(sub.getValue("name")))
+      {
+        boolean looksLikeAssociation = sub.getValue("name").contains("--") || sub.getValue("name").contains("->");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<-") || sub.getValue("name").contains("..");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("*");
+        looksLikeAssociation = looksLikeAssociation || sub.getValue("name").contains("<@>-") || sub.getValue("name").contains("-<@>");
+        
+        if(looksLikeAssociation)
+        {
+          setFailedPosition(sub.getPosition(), 132, sub.getValue("name"));
+        }
+        else 
+        {
+          setFailedPosition(sub.getPosition(), 130, sub.getValue("name"));
+        }
+        return;
+      }
+      if(Token.isValidIdentifier(sub.getValue("name"), "[A-Z]"))
+      {
+        setFailedPosition(sub.getPosition(), 131, sub.getValue("name"));
+      }
+      String type = sub.getValue("type");
+      if(type!=null)
+      {
+        if(!Pattern.matches("([a-z]|[A-Z]|_)(\\d|\\w|<|>|,)*", type))
+        {
+          setFailedPosition(sub.getPosition(), 140, type);
+        }
+      }
+    }
+    else if(sub.is("malformedStatement1")||sub.is("malformedStatement2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      if(sub.getValue("innerstuff")!=null)
+      {
+        extraCode += "{"+sub.getValue("innerstuff")+"};";
+      }
+      else
+      {
+        extraCode += ";";
+      }
+
+      CodeBlock cb = new CodeBlock();
+      //String rubyComment = ("# line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aInterface, "Java"));
+      //String otherComment = ("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aInterface, "Java"));
+
+      //cb.setCode(otherComment);
+      //cb.setCode("Ruby", rubyComment);
+
+      aInterface.appendExtraCode(true,cb);
+      aInterface.appendExtraCode("  "+extraCode+"\n");
+
+      setFailedPosition(sub.getPosition(), 1007, sub.getValue("name"));
+    }
+    else if(sub.is("malformedStatemachine1")||sub.is("malformedStatemachine2"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          if(!"".equals(token.getValue())&&!token.getValue().contains(" ")&&!Token.isValidIdentifier(token.getValue()))
+          {
+            setFailedPosition(token.getPosition(), 150, token.getValue("name"));
+          }
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      //aInterface.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aInterface, "Java"));
+      aInterface.appendExtraCode("  "+extraCode+"\n");
+      setFailedPosition(sub.getPosition(), 1006, sub.getValue("name"));
+    }
+    else if(sub.is("malformedMethod"))
+    {
+      String extraCode = "";
+      for(Token token:sub.getSubTokens())
+      {
+        if(token.is("stuff"))
+        {
+          extraCode += token.getValue()+ " ";
+        }
+      }
+      extraCode += "\n  {\n    "+sub.getValue("innerstuff")+"\n  }";
+      //aInterface.appendExtraCode("// line " + exception.getPosition().getLineNumber() + " " + exception.getPosition().getRelativePath(aInterface, "Java"));
+      aInterface.appendExtraCode("  "+extraCode+"\n");
       setFailedPosition(sub.getPosition(), 1008, sub.getValue("name"));
     }
   }

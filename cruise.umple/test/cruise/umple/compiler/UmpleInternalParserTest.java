@@ -23,6 +23,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs = new HashMap<String,String>();
 
     String expectedResult = null;
+    String iExpectedResults = null; // for interface testing
     
     fileToOutputs.put("001_empty.ump", "");
     fileToOutputs.put("001_empty.ump", "");
@@ -175,6 +176,14 @@ public class UmpleInternalParserTest extends UmpleParserTest
     fileToOutputs.put("010_associationClass.ump", "[namespace:example][classDefinition][name:Thing][associationClassDefinition][name:Ticket][extendsName:Thing][attribute][name:name][attribute][type:Integer][name:type][value:1][singleAssociationEnd][bound:*][type:Event][roleName:event][singleAssociationEnd][bound:*][type:Location][extraCode:public int one() {return 1;}][classDefinition][name:Event][classDefinition][name:Location]");
     fileToOutputs.put("010_associationClassNewSyntaxAssociation.ump", "[classDefinition][name:Student][classDefinition][name:CourseSection][associationClassDefinition][name:Registration][association][associationEnd][bound:*][type:Student][arrow:--][associationEnd][bound:*][type:CourseSection][attribute][type:String][name:grade]"); 
     fileToOutputs.put("010_associationClassSeveralAssociationsAttributes.ump", "[classDefinition][name:A][classDefinition][name:B][classDefinition][name:C][classDefinition][name:D][classDefinition][name:E][classDefinition][name:F][associationClassDefinition][name:G][attribute][type:String][name:att1][attribute][type:Integer][name:att2][value:1][singleAssociationEnd][bound:*][type:A][singleAssociationEnd][bound:*][type:B][singleAssociationEnd][bound:*][type:C][attribute][name:att3][singleAssociationEnd][bound:*][type:D][attribute][type:String][name:att4][association][associationEnd][bound:*][type:E][arrow:--][associationEnd][bound:*][type:F][attribute][type:Integer][name:att5]"); 
+    
+    iExpectedResults = "[interfaceDefinition][name:Cat][interfaceMemberDeclaration][constantDeclaration][name:legs][value:4][interfaceMemberDeclaration][exception][malformedStatement1][stuff:meow meowww purrr][interfaceMemberDeclaration][abstractMethodDeclaration][type:void][methodDeclarator][methodName:Meow][parameterList]";
+    fileToOutputs.put("011_multipleExtraCodeInterfaces.ump", iExpectedResults );
+    iExpectedResults = "[interfaceDefinition][name:A][interfaceMemberDeclaration][abstractMethodDeclaration][type:void][methodDeclarator][methodName:FunB][parameterList][interfaceMemberDeclaration][exception][malformedStatement1][stuff:blah blah blah][interfaceMemberDeclaration][abstractMethodDeclaration][type:void][methodDeclarator][methodName:FunA][parameterList]";
+    fileToOutputs.put("011_extraCodeInterfaces.ump", iExpectedResults);
+    iExpectedResults = "[interfaceDefinition][name:A][interfaceMemberDeclaration][exception][malformedStatement1][stuff:constantinople = 1][interfaceMemberDeclaration][exception][malformedStatement1][stuff:constantinople i = 1][interfaceMemberDeclaration][exception][misnamedAttribute][name:dfdfdfdf][interfaceMemberDeclaration][constantDeclaration][name:blah]";
+    fileToOutputs.put( "011_multipleExtraCodeDoubleDeclaration.ump", iExpectedResults );
+    
     fileToOutputs.put("013_inlineComments.ump", "[inlineComment:c 5][inlineComment:c 5b][namespace:example][inlineComment:c 6][inlineComment:c 7][inlineComment:c 7b][inlineComment:c 7c]");
     fileToOutputs.put("013_multilineComments.ump", "[multilineComment:c 1\n  c 1b][multilineComment:c 1c\n  c 1d][multilineComment:c 2][multilineComment:c 2b\n  c 2c][multilineComment:c 2d\n  c 2e][multilineComment:c 2f\n  c 2g][multilineComment:c 3][multilineComment:c 3b\n  c 3c][namespace:example][multilineComment:c 4][multilineComment:c 4b\n  c 4c][multilineComment:c 4d\n  c 4e]");
     fileToOutputs.put("012_attributesAndAssociations.ump", "[namespace:example][classDefinition][name:Mentor][attribute][name:name][inlineAssociation][inlineAssociationEnd][bound:*][arrow:->][associationEnd][bound:*][type:Student][classDefinition][name:Student][attribute][name:number]");
@@ -188,7 +197,7 @@ public class UmpleInternalParserTest extends UmpleParserTest
               "[interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getMethod][parameterList][parameter][type:String][name:name]";
     fileToOutputs.put("014_interface_allMembers.ump", expectedResult);
     fileToOutputs.put("014_interfaceDepend.ump", "[interfaceDefinition][name:IMe][depend:java.util.*]");
-    fileToOutputs.put("014_interface_extracode.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][extraCode:public void getCode();]");
+    fileToOutputs.put("014_interface_extracode.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][exception][malformedStatement1][stuff:public void getCode()]");
     fileToOutputs.put("014_interfaceImplements.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][extendsName:ISuper][interfaceDefinition][name:ISuper]");
     fileToOutputs.put("014_interfaceMultipleImplements.ump", "[interfaceDefinition][name:ISuper][interfaceDefinition][name:IOtherSuper][interfaceDefinition][name:IOther][interfaceMemberDeclaration][extendsName:ISuper][extendsName:IOtherSuper]");
     fileToOutputs.put("015_ClassWithImplementedMethods.ump", "[interfaceDefinition][name:ISomething][interfaceMemberDeclaration][abstractMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][classDefinition][name:Something][attribute][type:implements][name:ISomething][concreteMethodDeclaration][type:String][methodDeclarator][methodName:getCode][parameterList][code:return 0;]");

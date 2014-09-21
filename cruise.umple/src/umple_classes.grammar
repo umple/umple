@@ -33,7 +33,7 @@ associationClassContent- :  [[comment]] | [[classDefinition]] | [[position]] | [
 // followed, then the body will extraCode and passed to the base language
 // See user manual page [*interfaceDefinition*]
 interfaceBody- : [[interfaceMemberDeclaration]]*
-interfaceMemberDeclaration : [[comment]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[extraCode]]
+interfaceMemberDeclaration : [[comment]] | [[constantDeclaration]] | [[constantDeclarationDeprecated]] | [[abstractMethodDeclaration]] | [[position]] | [[displayColor]] | [[isA]] | [[exception]] | [[extraCode]]
 
 // Constants in interfaces (e.g. const String ACONSTANT="aValue";)
 // Note: in Classes const is a modifier
