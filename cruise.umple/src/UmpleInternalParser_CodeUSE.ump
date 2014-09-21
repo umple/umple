@@ -85,7 +85,7 @@ class UmpleInternalParser
     firstEnd.setRoleName(associations.getValue("name"));
     secondEnd.setRoleName(associations.getValue("name"));
     
-    Association ret = new Association(true, true, firstEnd, secondEnd);
+    Association ret = new Association(true, true, false,false,firstEnd, secondEnd);
     model.addAssociation(ret);
     
     unlinkedAssociations.add(ret);

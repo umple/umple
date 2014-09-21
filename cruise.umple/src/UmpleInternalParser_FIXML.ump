@@ -330,7 +330,7 @@ class UmpleInternalParser {
 			m.setBound("1");
 			AssociationEnd leftEnd = new AssociationEnd(uClass.getName()+"_Object",uClass.getName(), "",uClass.getName(), m);
 			AssociationEnd rightEnd = new AssociationEnd(rUClass.getName()+"_Object",rUClass.getName(), "",rUClass.getName(), m);		
-			Association aAssociation = new Association(false, true,leftEnd,rightEnd);
+			Association aAssociation = new Association(false, true,false,false,leftEnd,rightEnd);
 			aAssociation.setName(rUClass.getName()+"_Object");
 			getModel().addAssociation(aAssociation);	    
 			AssociationEnd myEnd = aAssociation.getEnd(0);

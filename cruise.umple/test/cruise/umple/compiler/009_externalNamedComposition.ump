@@ -1,0 +1,24 @@
+
+class A
+{
+}
+
+class B
+{}
+
+class C
+{
+}
+
+class D
+{}
+
+association comp1
+{
+  * A <@>- * B;
+}
+
+association comp2
+{
+  * C -<@> 1 D;
+}

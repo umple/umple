@@ -296,7 +296,7 @@ public class UmpleModelTest
 
     AssociationEnd end2 = new AssociationEnd("",c2.getName(),"","",new Multiplicity());
 
-	Association a = new Association(true,true,end1,end2);
+	Association a = new Association(true,true,false,false,end1,end2);
 
 	
 
@@ -460,7 +460,7 @@ public class UmpleModelTest
 
 	  AssociationEnd end2 = new AssociationEnd("role2",c1.getName(),"","",new Multiplicity());
 
-	  Association a = new Association(true,true,end1,end2);
+	  Association a = new Association(true,true,false,false,end1,end2);
 
 		
 
