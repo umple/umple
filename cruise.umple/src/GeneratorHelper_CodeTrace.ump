@@ -42,7 +42,7 @@ private static void postpareTrace(UmpleModel aModel)
     {
       if(templateLookups.containsKey("dependTracer"))
       {
-        if(td.getTracerType().equals("log4j") || td.getTracerType().equals("javaapi"))
+        if(td.getTracerType().equals("log4j") || td.getTracerType().equals("javaapi") || td.getTracerType().equals("lttngjni"))
         {
 //          aClass.addDepend(new Depend("org.apache.logging.log4j.LogManager"));
 //          aClass.addDepend(new Depend("org.apache.logging.log4j.Logger"));

@@ -1,0 +1,61 @@
+
+package example;
+import java.util.Date;
+import org.lttng.ust.LTTngUst;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String x;
+  private int y;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aX, int aY)
+  {
+    x = aX;
+    y = aY;
+    LTTngUst.init();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setX(String aX)
+  {
+    boolean wasSet = false;
+    LTTngUst.tracepointInt( System.currentTimeMillis()+","+Thread.currentThread().getId()+",LttngTest1.ump,9,Tracer,"+System.identityHashCode(this)+",at_s,x,"+x+","+(""+aX).toString().replace("\n","").replace(",",";"), Thread.currentThread().getId() );
+    x = aX;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setY(int aY)
+  {
+    boolean wasSet = false;
+    LTTngUst.tracepointInt( System.currentTimeMillis()+","+Thread.currentThread().getId()+",LttngTest1.ump,10,Tracer,"+System.identityHashCode(this)+",at_s,y,"+y+","+(""+aY).toString().replace("\n","").replace(",",";"), Thread.currentThread().getId() );
+    y = aY;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getX()
+  {
+    return x;
+  }
+
+  public int getY()
+  {
+    return y;
+  }
+
+  public void delete()
+  {}

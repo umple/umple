@@ -1,0 +1,52 @@
+package example;
+import java.util.Date;
+import org.lttng.ust.LTTngUst;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String str;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aStr)
+  {
+    str = aStr;
+    LTTngUst.init();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStr(String aStr)
+  {
+    boolean wasSet = false;
+    LTTngUst.tracepointInt( System.currentTimeMillis()+","+Thread.currentThread().getId()+",LttngTest2.ump,14,Tracer,"+System.identityHashCode(this)+",at_s,str,"+str+","+(""+aStr).toString().replace("\n","").replace(",",";"), Thread.currentThread().getId() );
+    str = aStr;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getStr()
+  {
+    return str;
+  }
+
+  public void delete()
+  {}
+
+   public static  void main(String [] args){
+    LTTngUst.tracepointInt( System.currentTimeMillis()+","+Thread.currentThread().getId()+",LttngTest2.ump,15,Tracer,"+System.identityHashCode(this)+",me_e,main", Thread.currentThread().getId() );
+    Thread.currentThread().setUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new UmpleExceptionHandler());
+    Tracer t = new Tracer(null);
+    t.setStr("testing lttng tracer");
+  }
