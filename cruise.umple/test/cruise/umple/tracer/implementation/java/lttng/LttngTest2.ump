@@ -1,0 +1,16 @@
+namespace example;
+
+tracer LttngJNI;
+
+class Tracer
+{
+  str;
+  
+  public static void main( String[] args ) {
+    Tracer t = new Tracer(null);
+    t.setStr("testing lttng tracer");
+  }
+
+  trace str;
+  trace main();
+}

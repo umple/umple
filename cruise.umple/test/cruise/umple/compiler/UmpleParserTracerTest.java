@@ -85,6 +85,14 @@ public class UmpleParserTracerTest
   }
   
   @Test
+  public void traceType_lttng()
+  {
+    code = "tracer LttngJNI;";
+    assertParse(code,"[traceType][tracerType:LttngJNI]");
+    Assert.assertEquals("lttngjni",model.getTraceType());
+  }
+  
+  @Test
   public void traceType_log4jConfigOptions()
   {
     code = "tracer log4j (error)=(console,file);";
@@ -501,7 +509,6 @@ public class UmpleParserTracerTest
 	  TraceDirective traceDirective1 = clazz.getTraceDirective(0);
 	  
 	  TraceRecord record = traceDirective1.getTraceRecord();
-	  System.out.println("R = "+record);
 	  Assert.assertEquals((Object)record.getRecord(0),"i am tracing name");
 	  Assert.assertEquals((Object)record.getRecordOnly(),false);
   }
@@ -549,7 +556,6 @@ public class UmpleParserTracerTest
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr1.getAttribute(1));
 	  Assert.assertEquals(traceAttr1.getConditionType(),"where");
 	  
-	  System.out.println("Trace = "+traceDirective2.getAttributeTraceItem(0).getConstraint());
 	  AttributeTraceItem traceAttr2 = traceDirective2.getAttributeTraceItem(0);
 	  Assert.assertEquals((Object)clazz.getAttribute("id"),traceAttr2.getAttribute(0));
 	  Assert.assertEquals((Object)clazz.getAttribute("name"),traceAttr2.getAttribute(1));

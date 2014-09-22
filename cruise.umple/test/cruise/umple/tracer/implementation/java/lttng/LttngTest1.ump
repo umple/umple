@@ -1,0 +1,11 @@
+namespace example;
+
+tracer LttngJNI;
+
+class Tracer
+{
+  x;
+  int y;
+  trace x;
+  trace y;
+}
