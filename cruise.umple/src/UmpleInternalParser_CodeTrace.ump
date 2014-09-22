@@ -421,7 +421,6 @@ class UmpleInternalParser
 
   // if trace entity is a method
   private void analyzeMethodTraceItem(Token traceToken){
-
     for( Method mVar : traceDirective.getUmpleClass().getMethods() )
     {
       if( traceToken.getValue("trace_entity").equals(mVar.getName()) )
@@ -431,6 +430,7 @@ class UmpleInternalParser
       }
     }
 
+    boolean wasSet = false;
     for(Token sub: traceToken.getParentToken().getSubTokens())
     {
       if(sub.is("traceOptions")) 
@@ -440,15 +440,19 @@ class UmpleInternalParser
           if( "entry".equals(sub2.getValue("option")) )
           {
             mte.setEntry(true);
+            wasSet = true;
           }
           if( "exit".equals(sub2.getValue("option")) )
           {
             mte.setExit(true);
-            mte.setEntry(false);
-            mte.setConditionallyWhere(false);
+            wasSet = true;
           }
         }
       }
+    }
+    if(!wasSet)
+    {
+      mte.setEntry(true);
     }
     traceDirective.addMethodTraceItem(mte);
   }

@@ -1,0 +1,14 @@
+namespace example;
+
+class Tracer
+{
+  int method( int x ) {
+    x += 5;
+    return x;
+  }
+  
+}
+
+class Tracer {
+  trace entry,exit method();
+}
