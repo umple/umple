@@ -174,7 +174,7 @@ class MethodTraceItem
   Constraint constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
   
-  boolean entry = true;
+  boolean entry = false;
   boolean exit = false;
   
   * -- * Method;

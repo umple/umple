@@ -633,10 +633,10 @@ class MethodTraceItem {
   depend java.util.*;
 
   public Boolean getIsPre(){
-    return conditionallyWhere;
+    return getEntry();
   }
   public Boolean getIsPost(){
-    return !conditionallyWhere;
+    return getExit();
   }
   /*
    * @params gen: A code transator
