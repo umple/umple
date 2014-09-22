@@ -23,7 +23,7 @@ MOTL tracers can be classified into two main categories: Built in tracers and th
 <li>(Third party tracers)</li>
    <ul>
    <li><b>log4j</b>: a well known java tracer. In MOTL, if log4j is selected as a tracer, log4j trace points will be in injected. In addition, an xml file (log4j2.xml) configuration file. </li>
-   <li><b>LTTNG</b> (Under development)</li>
+   <li><b>Linux Trace Toolkit Next Generation (LTTNG)</b>: Lttng is a well known tracer that allows kernel and userspace tracing. It targets C/C++ programs, however, tracing of Java programs using Lttng is possible through Java Native Interface (JNI). To execute Java programs instrumented with lttng trace points, (liblttng-ust-java.jar) is required.</li>
    </ul>
 </ol>
 </p>
@@ -38,6 +38,10 @@ MOTL tracers can be classified into two main categories: Built in tracers and th
 
 @@example
 @@source manualexamples/Tracers2.ump
+@@endexample
+
+@@example
+@@source manualexamples/Tracers5.ump
 @@endexample
 
 @@example

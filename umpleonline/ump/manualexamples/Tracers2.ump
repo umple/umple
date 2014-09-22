@@ -1,4 +1,3 @@
-
 // this example generates traces using the Java native logging API
 tracer JavaAPI;
 

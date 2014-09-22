@@ -1,0 +1,8 @@
+// this example generates tracespoints using the Lttng tracer
+tracer LttngJNI;
+
+class Student
+{
+  Integer id;
+  trace id;
+}
