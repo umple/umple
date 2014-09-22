@@ -89,6 +89,20 @@ public class JavaToUmpleTest {
 	}
 	
 	@Test
+	public void JavaToUmple_Level0_Interfaces(){
+		String fileName = "RegisterCapable";
+		File javaFile = new File(pathToRoot+fileName+".java"); //INPUT
+		File umpleFile = new File(pathToRoot+fileName+"_Level0.ump"); //OUTPUT
+		// Umplify file. Process must succeed!
+		umplificator.setCurrentLevel(RefactoringLevel.CLASS);
+		assertTrue(umplificator.umplifyElement(javaFile));
+		// Get the output content
+		assertOuputAndFile(umpleFile);
+		// Clean files 
+		filesToDelete.add(fileName);
+	}
+	
+	@Test
 	public void JavaToUmple_Level1(){
 		String fileName = "Test";
 		File javaFile = new File(pathToRoot+fileName+".java"); //INPUT
