@@ -1,0 +1,6 @@
+
+interface RegisterCapable
+{
+ depend test.umplificator;
+public boolean registerForCourse(Course aCourse);
+}
