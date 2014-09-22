@@ -1,4 +1,3 @@
-
 // this example generates traces using the File tracer
 tracer File;
 
@@ -7,4 +6,3 @@ class Student
   Integer id;
   trace id;
 }
-
