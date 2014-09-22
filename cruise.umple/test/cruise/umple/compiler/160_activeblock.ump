@@ -1,0 +1,7 @@
+
+class Lamp {
+  active 
+  {
+    System.out.println("Hello");
+  }
+}

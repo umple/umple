@@ -14,6 +14,21 @@ import org.junit.*;
 public class TokenTest
 {
 
+  @Test
+  public void copy_and_move_all_children()
+  {
+    Token t = new Token("a","1");
+    t.addSubToken(new Token("b","2"));
+    
+    Token oldSelf = t.detach("betterA","better1");
+    Assert.assertEquals(0, t.numberOfSubTokens());
+    Assert.assertEquals(1, oldSelf.numberOfSubTokens());
+    
+    Assert.assertEquals("a", oldSelf.getName());
+    Assert.assertEquals("1", oldSelf.getValue());
+    Assert.assertEquals("betterA", t.getName());
+    Assert.assertEquals("better1", t.getValue());
+  }
   
   @Test
   public void is_empty()
