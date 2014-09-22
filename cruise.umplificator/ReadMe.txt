@@ -26,4 +26,4 @@ Subdirectories:
     test
        All the unit tests (and test files) for the umplificator.
 
-Notes: log4j.properties is used to configure the Logger.
+Notes: log4j2.xml is used to configure the Logger.
