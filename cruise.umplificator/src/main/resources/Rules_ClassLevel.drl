@@ -104,9 +104,9 @@ end
 rule "append_MethodDeclaration_interfaces"
 	when
 		method: MethodDeclaration()
-		uClass: UmpleClass()
+		uInterface: UmpleInterface()
 	then
-		uClass.appendExtraCode(method.toString());
+		uInterface.appendExtraCode(method.toString());
 end
 
 
