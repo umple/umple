@@ -955,7 +955,7 @@ public class UmpleTraitTest {
 
 	@Test
 	public void InterfaceForTemplates001() {
-		String code = "class A{isA T< X = B >;} class B{} trait T<X isA I>{}";
+		String code = "class A{isA T< X = B >;} class B{} interface I{} trait T<X isA I>{}";
 		UmpleModel model = getModel(code);
 		boolean happened = false;
 		try {
@@ -986,7 +986,7 @@ public class UmpleTraitTest {
 	public void InterfaceForTemplates003() {
 		String code = "class A{isA T<X = B>;} class B{} interface I{} interface II{} trait T<X isA I & II>{}";
 		UmpleModel model = getRunModel(code);
-		Assert.assertEquals(2, model.getUmpleTrait(0).getGeneralTemplateParameter(0).numberOfInterfaces());
+		Assert.assertEquals(2, model.getUmpleTrait(0).getGeneralTemplateParameter(0).numberOfInterfacesAndClass());
 
 	}
 	
@@ -1058,6 +1058,50 @@ public class UmpleTraitTest {
 			model.run();	
 		} catch (Exception e) {
 			happened = e.getMessage().contains("222");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	@Test
+	public void semanticAnalysisTemplateRestriction001() {
+		String code = "class A{isA T<X=B>;} class B{} trait T<X isA C>{} ";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("223");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void semanticAnalysisTemplateRestriction002() {
+		String code = "class A{isA T<X=B>;} class B{} class C{} trait T<X isA B&C>{} ";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("224");		
+		} finally {
+			Assert.assertTrue(happened);
+			SampleFileWriter.destroy("traitTest.ump");
+		}
+	}
+	
+	@Test
+	public void semanticAnalysisTemplateRestriction003() {
+		String code = "class A{isA T<X=B>;} class B{} class C{} trait T<X isA C>{} ";
+		UmpleModel model = getModel(code);
+		boolean happened = false;
+		try {
+			model.run();	
+		} catch (Exception e) {
+			happened = e.getMessage().contains("225");		
 		} finally {
 			Assert.assertTrue(happened);
 			SampleFileWriter.destroy("traitTest.ump");

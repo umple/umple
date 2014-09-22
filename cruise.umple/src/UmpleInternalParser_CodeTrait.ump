@@ -723,6 +723,10 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
 
   private void applyTraits(){
+  	   //semantic analysis of traits
+	   //----------------------------------
+	   checkTemplateParametersValidity();
+	   //---------------------------------
   	if (getParseResult().getWasSuccess()) {
 	    for (UmpleClass uClass : getModel().getUmpleClasses()) {
 			if (uClass.hasExtendsTraits()) {
@@ -785,7 +789,7 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 	for (GeneralTemplateParameter gtParameter : model.getUmpleTrait(inGeneralTPAppliedByName.getInheritanceName()).getGeneralTemplateParameters()){
 		String bindingValue= inGeneralTPAppliedByName.getParameterMapping().get(gtParameter.getName());
 		if (bindingValue.equals("Integer") | bindingValue.equals("Float") | bindingValue.equals("String")| bindingValue.equals("Double")| bindingValue.equals("Date")| bindingValue.equals("Time")){
-			if (gtParameter.numberOfInterfaces()>0){
+			if (gtParameter.numberOfInterfacesAndClass()>0){
 				getParseResult().addErrorMessage( new ErrorMessage( 221, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName()) ); 
 			 	return;	
 			}
@@ -795,11 +799,18 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 			if (uClass==null){
 				getParseResult().addErrorMessage( new ErrorMessage( 221, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName()) ); 
 			 	return;
-			} else{
-				for (String str : gtParameter.getInterfaces()){
-					if (!checkInterfaceImplementationInHeirarchy(uClass,str)) {
-						getParseResult().addErrorMessage( new ErrorMessage( 205, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
-					 	return;
+			} else {
+				for (String str : gtParameter.getInterfacesAndClass()){
+					if (getModel().getUmpleClass(str)!=null) {
+						if (!checkClassExtensionInHierarchy(uClass,str)) {
+							getParseResult().addErrorMessage( new ErrorMessage( 225, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
+					 		return;
+						}
+					} else if (getModel().getUmpleInterface(str)!=null){ 
+						if (!checkInterfaceImplementationInHeirarchy(uClass,str)) {
+							getParseResult().addErrorMessage( new ErrorMessage( 205, inUmpleClassifier.getPosition(0),bindingValue, gtParameter.getName(),inGeneralTPAppliedByName.getInheritanceName(),type,inUmpleClassifier.getName(), str ) ); 
+					 		return;
+						}
 					}
 				}	
 			}	
@@ -816,7 +827,17 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 	}
 	return checkInterfaceImplementationInHeirarchy(inClass.getExtendsClass(),name);
 }
-
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start-------------------------------------- 
+  private boolean checkClassExtensionInHierarchy(UmpleClass inClass, String name){
+        if (inClass==null) return false;
+		if (inClass.getName().equals(name)){return true; }
+		if (inClass.hasExtendsClass()) {
+			if (inClass.getExtendsClass().getName().equals(name)){return true; }
+		} else return false;				
+		return checkClassExtensionInHierarchy(inClass.getExtendsClass(),name);
+  }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------     
@@ -1304,7 +1325,7 @@ private void recursiveCheckRequiredInterfaces(UmpleClass inClass,	UmpleTrait inT
 			   }
 			   for (int i =1;i<subToken.numberOfSubTokens(); i++){
 				   if(subToken.getSubToken(i).is("tInterface")){
-					   gtParameter.addInterface(subToken.getSubToken(i).getValue());
+					   gtParameter.addInterfacesAndClass(subToken.getSubToken(i).getValue());
 				   }
 			   }
 			   aTrait.addGeneralTemplateParameter(gtParameter);
@@ -1709,6 +1730,33 @@ private void ApplyExludeIncludeAliasToMethod(Map<UmpleTrait, List<Method>> intra
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
+
+   private void checkTemplateParametersValidity() {
+	   List<String> multipleClasses = new ArrayList<String>();
+	   for ( UmpleTrait uTrait: getModel().getUmpleTraits()) {
+		   for (GeneralTemplateParameter gtParameter : uTrait.getGeneralTemplateParameters()) {
+			   multipleClasses.clear();
+			   for (String str : gtParameter.getInterfacesAndClass()) {
+				   if (getModel().getUmpleClass(str)!=null) {
+					   multipleClasses.add(str);
+					   if (multipleClasses.size()>=2){
+						   getParseResult().addErrorMessage( new ErrorMessage( 224, uTrait.getPosition(0), gtParameter.getName(), uTrait.getName(),multipleClasses.get(0),multipleClasses.get(1) ) ); 
+						   return;
+					   }
+				   } else if (getModel().getUmpleInterface(str)!=null) {
+					   
+				   } else {
+					   getParseResult().addErrorMessage( new ErrorMessage( 223, uTrait.getPosition(0), str, gtParameter.getName(), uTrait.getName()) ); 
+					   return;
+				   }
+			   }
+		   }	
+	   }
+   }
+//---------------------------------end----------------------------------------
+//----------------------------------------------------------------------------   
+//---------------------------------Start--------------------------------------
+
 }
 
 use UmpleInternalParser_FIXML.ump;

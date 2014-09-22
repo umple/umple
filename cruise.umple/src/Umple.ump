@@ -507,7 +507,7 @@ class UmpleTrait {
 class GeneralTemplateParameter {
 	name;
 	type;
-	String[] interfaces;
+	String[] interfacesAndClass;
 	defaultValue = "";
 
 }
