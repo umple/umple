@@ -1,0 +1,16 @@
+class Lamp {
+  active 
+  {
+    System.out.println("Hello");
+  }
+  active
+  {
+    System.out.println("Hello2");
+  }
+}
+
+class Door{
+  active{
+  	System.out.println("Different Active Objects Number");
+  }
+}

@@ -316,21 +316,39 @@ class Token
     return stringSoFar;
   }
   
-    //Issue 200
-   public Token copy()
-   {
-	   Token nToken = new Token(this.getName()+"", this.getValue()+"", 
-			   new Position(getPosition().getFilename(), getPosition().getLineNumber(), getPosition().getCharacterOffset(), getPosition().getOffset()));
-	   
-	   if(this.hasSubTokens())
-         for (Token t : subTokens)
-	     {
-	       nToken.addSubToken(t.copy());    
-	     }
-       
-       return nToken;
-   }
+  // Return a copy of the current token with all its SubTokens
+  // Removes all SubTokens from the current Token and sets new name and value
+  public Token detach(String newName, String newValue){
+    Token nToken = this.shallowCopy();
+    setName(newName);
+    setValue(newValue);
+    ArrayList<Token> subTokenList = new ArrayList<Token>(subTokens);
+    for(Token t : subTokenList)
+    {
+      nToken.addSubToken(t);
+      this.removeSubToken(t);
+    }
+    return nToken;
+  }
   
+  public Token copy(){
+    Token nToken = shallowCopy();
+    for (Token t : subTokens)
+    {
+      nToken.addSubToken(t.copy());    
+    }
+    return nToken;
+  }
+  
+  private Token shallowCopy()
+  {
+    Token nToken = new Token(this.getName()+"", this.getValue()+"");
+    if (nToken.getPosition() != null)
+    {
+      nToken.setPosition(new Position(getPosition().getFilename(), getPosition().getLineNumber(), getPosition().getCharacterOffset(), getPosition().getOffset()));      
+    }
+    return nToken;
+  }
 
 }
 

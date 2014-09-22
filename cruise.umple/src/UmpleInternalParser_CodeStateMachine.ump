@@ -111,64 +111,57 @@ class UmpleInternalParser
   
   private void analyzeActiveObject(Token activeToken, UmpleClassifier uClassifier)
   {
-    analyzeStateMachine(generateActiveStateMachineToken(activeToken), uClassifier);
-    if (numberOfActiveObjects < numberOfActiveObjectsInClass(activeToken.getParentToken(), uClassifier))
+    transformIntoStateMachineToken(activeToken);
+    analyzeStateMachine(activeToken, uClassifier);
+  }
+  
+  // Restructure the [activeDefinition] token into a state machine token with a do activity
+  private void transformIntoStateMachineToken(Token stateMachineToken)
+  {
+    Token activeToken = stateMachineToken.detach("name","stateMachine" + numberOfActiveObjects);
+    Token stateToken = new Token("state","START_TOKEN");
+    Token subState = new Token("state", "START_TOKEN");
+    Token doActivity = new Token("activity", "START_TOKEN");
+
+    stateMachineToken.addSubToken(new Token("{", "STATIC"));
+         
+    stateToken.addSubToken(new Token("stateName","topLevel"));
+    stateToken.addSubToken(new Token("{", "STATIC"));
+    
+    subState.addSubToken(new Token("stateName", getThreadName(activeToken)));
+    subState.addSubToken(new Token("{", "STATIC"));
+    
+    doActivity.addSubToken(new Token("do", "STATIC"));
+    
+    // Add all multilingual code blocks to our do activity
+    int numLangs = 0;
+    List<Token> subTokens = activeToken.getSubTokens(); 
+    for (Token t: subTokens)
     {
-      numberOfActiveObjects++;
+      if(t.is("codeLang"))
+      {
+        doActivity.addSubToken(t.copy());
+        doActivity.addSubToken(new Token("{", "STATIC"));
+        doActivity.addSubToken(activeToken.getSubToken("code",numLangs).copy());
+        doActivity.addSubToken(new Token("}", "STATIC"));
+        numLangs++;
+      }
     }
-    else
+    if (numLangs == 0)
     {
-      numberOfActiveObjects = 1;
+      // If no languages are specified in active block
+      doActivity.addSubToken(new Token("{", "STATIC"));
+      doActivity.addSubToken(activeToken.getSubToken("code",0).copy());
+      doActivity.addSubToken(new Token("}", "STATIC"));
     }
+    
+    subState.addSubToken(doActivity);
+    stateToken.addSubToken(new Token("}", "STATIC"));
+    stateToken.addSubToken(subState);
+    stateToken.addSubToken(new Token("}", "STATIC"));
+    stateMachineToken.addSubToken(stateToken);
+    stateMachineToken.addSubToken(new Token("}", "STATIC"));
   }
-  
-  private Token generateActiveStateMachineToken(Token stateMachineToken)
-  {
-    Token token = new Token("name", "stateMachine" + numberOfActiveObjects);
-    
-    token.addSubToken(new Token("{", "STATIC"));
-    token.addSubToken(generateActiveTopLevelStateToken(stateMachineToken));
-    token.addSubToken(new Token("}", "STATIC"));
-    
-    return token;
-  }
-  
-  private Token generateActiveTopLevelStateToken(Token stateMachineToken)
-  {
-    Token token = new Token("state", "START_TOKEN");
-    
-    token.addSubToken(new Token("stateName", "topLevel"));
-    token.addSubToken(new Token("{", "STATIC"));
-    token.addSubToken(generateActiveStateToken(stateMachineToken));
-    token.addSubToken(new Token("}", "STATIC"));
-    
-    return token;
-  }
-  
-  private Token generateActiveStateToken(Token stateMachineToken)
-  {
-    Token token = new Token("state", "START_TOKEN");
-    
-    token.addSubToken(new Token("stateName", getThreadName(stateMachineToken)));
-    token.addSubToken(new Token("{", "STATIC"));
-    token.addSubToken(generateActivityToken(stateMachineToken));
-    token.addSubToken(new Token("}", "STATIC"));
-    
-    return token;
-  }
-  
-  private Token generateActivityToken(Token stateMachineToken)
-  {
-    Token token = new Token("activity", "START_TOKEN");
-    
-    token.addSubToken(new Token("do", "STATIC"));
-    token.addSubToken(new Token("{", "STATIC"));
-    token.addSubToken(new Token("code", getActiveCode(stateMachineToken)));
-    token.addSubToken(new Token("}", "STATIC"));
-    
-    return token;
-  }
-  
 
   // Analyze state machine related tokens within the context of an Umple class
   private void analyzeStateMachineToken(Token token, UmpleClassifier uClassifier, int analysisStep)
@@ -199,6 +192,7 @@ class UmpleInternalParser
       if (subToken.is("activeDefinition"))
       {
         analyzeActiveObject(subToken, uClassifier);
+        numberOfActiveObjects++;
       }
       
       if (subToken.is("enum") || subToken.is("inlineStateMachine"))

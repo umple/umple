@@ -1,0 +1,9 @@
+
+class Lamp {
+  
+  active Java{
+    System.out.println("Hello");
+  } Cpp{
+    cout << "hello";
+  }
+}

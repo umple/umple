@@ -1415,6 +1415,41 @@ public class UmpleParserStateMachineTest
 		Assert.assertEquals(0, state1.numberOfTransitions());
 		Assert.assertEquals(true, state1.getHasEntryAction());
 	}
+
+  @Test
+  public void activeBlock()
+  {
+    assertParse("160_activeblock.ump", "[classDefinition][name:Lamp][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][code:System.out.println(\"Hello\");]");
+  }
+  
+  @Test
+  public void activeBlock_NamingOverMultiClasses()
+  {
+    assertParse("160_activeBlock_stateMachineNamingWithMultiClasses.ump", "[classDefinition][name:Lamp][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][code:System.out.println(\"Hello\");][stateMachine][name:stateMachine2][state][stateName:topLevel][state][stateName:thread1][activity][code:System.out.println(\"Hello2\");][classDefinition][name:Door][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][code:System.out.println(\"Different Active Objects Number\");]");
+  }
+
+  @Test
+  public void activeBlock_supportingLanguageSpecific()
+  {
+    assertParse("160_activeBlock_supportingLanguageSpecific.ump", "[classDefinition][name:Lamp][stateMachine][name:stateMachine1][state][stateName:topLevel][state][stateName:thread1][activity][codeLang:Java][code:System.out.println(\"Hello\");][codeLang:Cpp][code:cout << \"hello\";]");
+    UmpleClass c = model.getUmpleClass("Lamp");
+    Assert.assertEquals(1, c.numberOfStateMachines());
+    StateMachine sm = c.getStateMachine(0);
+    
+    Assert.assertEquals(1,sm.numberOfStates());
+    State topLevel = sm.getState(0);
+
+    Assert.assertEquals(1, topLevel.numberOfNestedStateMachines());
+    StateMachine threadLevel = topLevel.getNestedStateMachine(0);
+    
+    Assert.assertEquals(1, threadLevel.numberOfStates());
+    State doLevel = threadLevel.getState(0);
+
+    Assert.assertEquals(true, doLevel.hasActivity());
+    Assert.assertEquals("System.out.println(\"Hello\");", doLevel.getActivity().getCodeblock().getCode("Java"));
+    Assert.assertEquals("cout << \"hello\";", doLevel.getActivity().getCodeblock().getCode("Cpp"));
+  }
+
   private void assertParse(String filename, String expectedOutput)
   {
     assertParse(filename, expectedOutput, true);

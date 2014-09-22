@@ -9,7 +9,7 @@
 stateMachineDefinition : statemachine [=queued]? [=pooled]? [name] { [[state]]* }
 stateMachine : [[enum]] | [[inlineStateMachine]] | [[referencedStateMachine]] | [[activeDefinition]] 
 
-activeDefinition : [=active] [name]? [[moreCode]]+
+activeDefinition : [=active] [[codeLangs]] [name]? [[moreCode]]+
 
 //Issue 148
 inlineStateMachine : [=queued]? [=pooled]? [~name] { ( [[comment]] | [[state]] | [[trace]] | [=-||] | [[standAloneTransition]])* }
