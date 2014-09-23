@@ -873,7 +873,7 @@ Page.getErrorMarkup = function(code, language)
     output = code.split("<iframe ")[0];
   }
   else if(language == "html")
-  { // Covers SimpleMetrics and Code Analysis
+  { // Covers SimpleMetrics, StateTables and Code Analysis
     output = code.split("<html xmlns")[0];
   }
   else if(language == "diagramUpdate")
@@ -905,7 +905,7 @@ Page.getGeneratedMarkup = function(code, language)
     output = "<iframe " + output;
   }
   else if(language == "html")
-  { // Covers SimpleMetrics and Code Analysis
+  { // Covers SimpleMetrics, StateTables and Code Analysis
     output = code.split("<html xmlns")[1];
     output = "<html xmlns" + output;
   }
