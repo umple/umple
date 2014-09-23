@@ -54,10 +54,11 @@ function generateMenu($buttonSuffix)
             <option value=\"yumlDiagram:yumlDiagram\">Yuml Class Diagram</option>
             <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram (SVG)</option>
             <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
+            <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>            
             <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>                        
             <option value=\"java:Json\">Json</option>
             <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
-            <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple metrics</option>
+            <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
