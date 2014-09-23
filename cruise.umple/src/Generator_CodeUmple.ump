@@ -413,11 +413,6 @@ class UmpleGenerator
     return "";
   }
 
-  public String translate(String keyName, StateMachine sm)
-  { 
-    return "";
-  }
-
   public String translate(String id, Event e)
   {
     return "";
