@@ -183,6 +183,20 @@ class GvStateDiagramGenerator
   String output = "";
 }
 
+class StateTablesGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String output = "";
+}
+
 class CodeAnalysisGenerator
 {
   isA CodeGeneratorWithSubptions;
@@ -431,6 +445,7 @@ use Generator_CodePapyrus.ump;
 use Generator_CodeXmi.ump;
 use Generator_CodeTextUml.ump;
 use Generator_CodeGvStateDiagram.ump;
+use Generator_CodeStateTables.ump;
 use Generator_CodeSimpleMetrics.ump;
 use Generator_CodeGvClassDiagram.ump;
 use Generator_CodeAlloy.ump;
