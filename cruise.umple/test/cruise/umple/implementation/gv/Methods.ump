@@ -1,0 +1,13 @@
+generate GvClassDiagram -s "showmethods";
+ 
+namespace example;
+
+class User
+{
+  public void insertCard(String cardId){}
+  
+  // Remove the card if inserted
+  private void remove(){}
+  
+  protected List enterPIN( int no1, int no2, int no3, int no4){}
+}
