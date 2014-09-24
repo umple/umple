@@ -25,7 +25,7 @@ class GvClassDiagramGenerator
 digraph "<<=filename>>" {
   size="80,10"
   rankdir="BT"
-  node [shape=record; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
 !>>
   emit graphStart(String filename)(graphStart(UmpleModel.VERSION_NUMBER));
 
@@ -75,10 +75,23 @@ digraph "<<=filename>>" {
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
     code.append("\n  // Class: "+className+"\n");
 
-    code.append("  \""+className+"\" ["+classColor+"shape=record, label=\"{"+className);
-
+    code.append("  \""+className+"\" ["+classColor+"shape=plaintext margin=0 label=");
+    
+    // Different cellpadding for if the class has nothing but the
+    // name because of a glitch in graphviz's graphics
+    if (uClass.getAttributes().size() == 0 && uClass.getMethods().size() == 0) {
+    	code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+    				+"<tr><td><font point-size=\"12\">  "+className);
+	}
+	else {
+		code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"2\">"
+					+"<tr><td cellpadding=\"4\"><font point-size=\"12\">  "+className);
+	}
     if(uClass.getIsAbstract()) {  // add abstract tag
-      code.append("\n&laquo;abstract&raquo;");
+      code.append("\n&laquo;abstract&raquo;"+"  <\font></td></tr>");
+    }
+    else {
+      code.append("  </font></td></tr>");
     }
       
     // Iterate through attributes of the class
@@ -88,11 +101,17 @@ digraph "<<=filename>>" {
       for (Attribute uAttribute : uClass.getAttributes()) {
         if (!uAttribute.isConstant()) 
         {
-          if (isFirst) code.append("|"); // attribute block starter
-          else code.append("\\\n"); // separator between attributes
+          if (isFirst) code.append("<hr/>"); // attribute block starter
+          //else code.append("\\\n"); // separator between attributes
           String isList = uAttribute.getIsList() ? "[]" : ""; //Hello
           String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
-          code.append(""+uAttribute.getName()+"\\ :\\ "+type+isList+"\\l");
+          
+          StringBuilder attrTooltip = new StringBuilder();
+          attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
+          appendTooltipComment(attrTooltip, uAttribute.getComments());          
+          code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
+          				+"<font point-size=\"12\">  "+uAttribute.getName()+" : "
+          				+type+isList+"  </font></td></tr>");
           isFirst = false;
         }
       }
@@ -100,15 +119,15 @@ digraph "<<=filename>>" {
     
     if (hasSuboption("showmethods")) {
       boolean isFirstMethod = true;
-      for (Method uMethod : uClass.getMethods()) {
-      if(isFirstMethod) code.append("|"); // method block starter
-      else code.append("\\\n"); // separator between attributes
-      String accessModifier = "";
-      switch (uMethod.getModifier().trim()) {
-        case "": accessModifier = "+"; break;
-        case "private": accessModifier = "-"; break;
-        case "protected": accessModifier = "#"; break;
-        case "public": accessModifier = "+"; break;
+        for (Method uMethod : uClass.getMethods()) {
+        if (isFirstMethod) code.append("<hr/>"); // method block starter
+        //else code.append("\\\n"); // separator between attributes
+        String accessModifier = "";
+        switch (uMethod.getModifier().trim()) {
+          case "": accessModifier = "+"; break;
+          case "private": accessModifier = "-"; break;
+          case "protected": accessModifier = "#"; break;
+          case "public": accessModifier = "+"; break;
       }
       String parameters = "";
       if(uMethod.hasMethodParameters()) {
@@ -119,26 +138,28 @@ digraph "<<=filename>>" {
       }
       parameters = parameters.replace("<","&lt;").replace(">","&gt;");
       String type = uMethod.getType().replace("<","&lt;").replace(">","&gt;");
-      code.append(accessModifier+uMethod.getName()+"("+parameters+")\\ :\\ "+type+"\\l");
+      
+      StringBuilder methTooltip = new StringBuilder();
+      methTooltip.append(type+" "+uMethod.getName()+"("+parameters+")"+"&#13;");
+      appendTooltipComment(methTooltip, uMethod.getComments());
+      
+      StringBuilder hrefString = new StringBuilder();
+      hrefString.append("javascript:Action.selectMethod('");
+      hrefString.append(uMethod.getName()+"','"+type+"','"+uMethod.getModifier().trim()+"')");
+         
+      code.append("<tr><td align=\"left\" href=\""+hrefString+"\" title=\""+methTooltip+"\">"
+      				+"<font point-size=\"12\">  "+accessModifier+uMethod.getName()
+      				+"("+parameters+") : "+type+"  </font></td></tr>");
       isFirstMethod = false;
       }
     }
 
     // Terminate outputting the class attributes
-    code.append("}\"");
+    code.append("</table>>");
     
     // Output the tooltip : Class name followed by any comment
     code.append(",\n   tooltip=\"class "+className+"\n");
-    for (Comment uComment : uClass.getComments()) {
-      String text= uComment.getText().replace("\"","\\\"");
-      if(text.startsWith(" *")) {
-        code.append(text.substring(2)+"\n");
-      }
-      else
-      {
-        code.append(text+"\n");
-      }
-    }
+    appendTooltipComment(code, uClass.getComments());
     code.append("\"");
 
     // Terminate the class as a whole
@@ -149,8 +170,8 @@ digraph "<<=filename>>" {
     // We know that parents have been output first
     UmpleClass parentClass = uClass.getExtendsClass();
     if(parentClass!= null) {
-      code.append("  \""+className+"\" -> \""+parentClass.getName()+"\"");
-      code.append(" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
+      code.append("  \""+className+"\" -> \""+parentClass.getName()+"\""
+      				+" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
     }
 
     // Add any interface implementations so they are output at the end
@@ -267,5 +288,20 @@ digraph "<<=filename>>" {
       throw new UmpleCompilerException("There was a problem with generating GraphViz Class Diagram code." + e, e);
     }
   } 
+  
+  // Add the comment to a tooltip
+  private void appendTooltipComment(StringBuilder tooltip, List<Comment> comments)
+  {
+    for (Comment uComment : comments) {
+  	  String text= uComment.getText().replace("\"","\\\"");
+  	  if(text.startsWith(" *")) {
+        tooltip.append(text.substring(2)+"&#13;");
+  	  }
+  	  else
+  	  {
+        tooltip.append(text+"&#13;");
+  	  }
+    }
+  }
 }
 
