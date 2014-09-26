@@ -195,7 +195,7 @@ div.multiplicity {
   margin: 0; border: 0;
 }
 div.role { background-color:transparent; position: absolute; font-size:8pt; z-index: 3; }
-div.umpleGeneralization { cursor: pointer; background-color: white; }
+div.umpleGeneralization { cursor: pointer; background-color: black; }
 
 /* UMPLE HOVER STYLES  */
 .anchor { 
