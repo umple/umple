@@ -1160,11 +1160,12 @@ Action.selectMatchingText = function(text)
   return false;
 }
 
-// Code behind highlighting of text
-Action.selectItem = function(searchCursor, nextCursor)
+// Highlights the text of the class that is currently selected.
+Action.selectClass = function(className) 
 {
-	if(Page.codeMirrorOn) {
-    var scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
+  if(Page.codeMirrorOn) {
+    var scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class "+
+       className+"($|\\\s|[{])"));
 
     if(!scursor.findNext()) {
       return; // false
@@ -1178,7 +1179,7 @@ Action.selectItem = function(searchCursor, nextCursor)
     theEnd.line = Page.codeMirrorEditor.lineCount();
     theEnd.ch = 9999;
     
-    scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor,scursor.to());
+    scursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("class [A-Za-z]"),scursor.to());
     
     while(scursor.findNext()) 
     {
@@ -1228,24 +1229,6 @@ Action.selectItem = function(searchCursor, nextCursor)
     return;    //true 
   }
   return;  // false - important do not return a value or it won't work in Firefox/Opera
-}
-
-// Highlights the text of the method that is currently selected.
-Action.selectMethod = function(methodName, type, accessMod)
-{
-	var scursor = new RegExp(accessMod+" "+type+" "+methodName+"(\\\s|[(])");
-	var ncursor = new RegExp("(public|protected|private|class) [A-Za-z]");
-
-	Action.selectItem(scursor, ncursor);
-}
-
-// Highlights the text of the class that is currently selected.
-Action.selectClass = function(className) 
-{
-	var scursor = new RegExp("class "+className+"($|\\\s|[{])");
-	var ncursor = new RegExp("class [A-Za-z]");
-
-	Action.selectItem(scursor, ncursor);
 }
 
 Action.selectStateInClass = function(stateName, classname) 
