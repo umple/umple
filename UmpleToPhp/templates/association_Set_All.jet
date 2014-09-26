@@ -13,7 +13,9 @@
       continue;
     } 
     
-    List<TraceItem> traceItems = av.getTraced("setMethod", uClass);
+    //TraceItem traceItem = av.getTraced("associationAdd", uClass);
+    List<TraceItem> traceItemAssocAdds = av.getTraced("associationAdd", uClass);
+    List<TraceItem> traceItemAssocRemoves = av.getTraced("associationRemove", uClass);
 
     String customSetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("setMethod",av)));
     String customSetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("setMethod",av)));
@@ -308,7 +310,6 @@
     {
       if (addNewLine) { appendln(stringBuffer,""); }
       addNewLine = true;
-      %><%
       %><%@ include file="association_RemoveMany.jet" %><%
     }
 
