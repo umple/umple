@@ -493,10 +493,15 @@ class Method
   
   public boolean getExistsInLanguage(String lang) 
   {
-    if(getMethodBody().getExtraCode(lang)==null)
+    if (!hasMethodBody()){
       return false;
-    else 
-      return true;
+    }
+    CodeBlock codeBlock = getMethodBody().getCodeblock();
+    // Check if another language other than 'lang' is associated with the codeblock
+    if (codeBlock.hasAnAssociatedLanguage() && !codeBlock.hasCode(lang)){
+      return false;
+    }
+    return true;
   }
   public String toString()
   {    
@@ -652,6 +657,25 @@ class CodeBlock
   {
     return codes.containsKey(lang)? codes.get(lang) : "";
   }
+
+  public boolean hasCode(String lang)
+  {
+    return codes.containsKey(lang)? true : false;
+  }
+
+  // Will return true if any language has been associated with this code block
+  public boolean hasAnAssociatedLanguage()
+  {
+    for (String codeLang : codes.keySet())
+    {
+      if (codeLang != "")
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
   public String toString(){
     String out = "";
     for(String next:codes.values())
