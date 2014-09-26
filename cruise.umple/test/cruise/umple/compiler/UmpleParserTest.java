@@ -225,6 +225,47 @@ public class UmpleParserTest
   }
   
   @Test
+  public void methodBodyGenerationMultiLanguage()
+  {
+    assertSimpleParse("001_methodBodyGenerationMultiLanguage.ump");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
+    UmpleClass c = model.getUmpleClass(0);
+    Assert.assertEquals(2, c.numberOfMethods());
+    Method m = c.getMethod(0);
+
+    Assert.assertEquals(false,m.getExistsInLanguage("Php"));
+    Assert.assertEquals(true,m.getExistsInLanguage("Java"));
+    Assert.assertEquals(false,m.getExistsInLanguage("Cpp"));
+    
+    Method m2 = c.getMethod(1);
+    Assert.assertEquals(true,m2.getExistsInLanguage("Php"));
+    Assert.assertEquals(true,m2.getExistsInLanguage("Java"));
+    Assert.assertEquals(true,m2.getExistsInLanguage("Cpp"));
+  }
+  
+  @Test
+  public void codeBlockMultiLanguage()
+  {
+    assertSimpleParse("001_methodBodyGenerationMultiLanguage.ump");
+    Assert.assertEquals(1, model.numberOfUmpleClasses());
+    UmpleClass c = model.getUmpleClass(0);
+    Assert.assertEquals(2, c.numberOfMethods());
+
+    CodeBlock cb1 = c.getMethod(0).getMethodBody().getCodeblock();
+    Assert.assertEquals(true, cb1.hasAnAssociatedLanguage());
+    Assert.assertEquals(true,cb1.hasCode("Java"));
+    Assert.assertEquals(false,cb1.hasCode("Php"));
+    Assert.assertEquals(false,cb1.hasCode("Cpp"));
+    
+    CodeBlock cb2 = c.getMethod(1).getMethodBody().getCodeblock();
+    Assert.assertEquals(false, cb2.hasAnAssociatedLanguage());
+    Assert.assertEquals(false,cb2.hasCode("Java"));
+    Assert.assertEquals(false,cb2.hasCode("Php"));
+    Assert.assertEquals(false,cb2.hasCode("Cpp"));
+  }
+
+  
+  @Test
   public void attributeInlineComment()
   {
 	  assertParse("001_attributeInlineComment.ump");

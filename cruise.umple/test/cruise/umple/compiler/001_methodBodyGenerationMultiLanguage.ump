@@ -1,0 +1,9 @@
+class A{
+  public String doSomething() Java{
+  	return "hello";
+  }
+  
+  public String doAnother(){
+    return "";
+  }
+}
