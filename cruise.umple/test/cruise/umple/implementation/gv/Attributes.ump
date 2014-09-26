@@ -1,9 +1,0 @@
-generate GvClassDiagram;
-namespace example;
-
-class Student
-{
-  name;
-  // Student Id
-  studentId;
-}
