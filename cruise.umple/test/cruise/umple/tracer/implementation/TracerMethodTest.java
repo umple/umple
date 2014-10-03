@@ -34,6 +34,12 @@ public class TracerMethodTest extends TracerTraceCaseTest
   {
     AssertMethod("TraceMethodEntryExit.ump","TraceMethodEntryExit.","Tracer");
   }
+  
+  @Test
+  public void TraceMethodConstraint()
+  {
+    AssertMethod("TraceMethodConstraint.ump","TraceMethodConstraint.","Tracer");
+  }
 
   //----------------------------------------
   

@@ -1,0 +1,51 @@
+package example;
+import cruise.util.FileTracer;
+import java.util.Date;
+
+public class Tracer
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Tracer Attributes
+  private String str;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Tracer(String aStr)
+  {
+    str = aStr;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setStr(String aStr)
+  {
+    boolean wasSet = false;
+    str = aStr;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public String getStr()
+  {
+    return str;
+  }
+
+  public void delete()
+  {}
+
+  public int method(int x){
+    if (x>10)
+    {
+      FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMethodConstraint.ump,7,Tracer,"+System.identityHashCode(this)+",me_e,method"+",x is bigger than 10" );
+    }
+    x += 5;
+    return x;
+  }

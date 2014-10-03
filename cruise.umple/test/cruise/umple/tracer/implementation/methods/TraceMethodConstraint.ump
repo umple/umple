@@ -1,0 +1,14 @@
+namespace example;
+
+class Tracer
+{
+  str;
+  
+  trace method() where [x>10] record "x is bigger than 10";
+    
+  
+  int method( int x ) {
+    x += 5;
+    return x;
+  }
+}

@@ -172,6 +172,7 @@ class UmpleInternalParser
         {
           traceAttr.setConstraint(constraint);
           tracedAssoc.setConstraint(constraint);
+          mte.setConstraint(constraint);
         }
         else
         {
