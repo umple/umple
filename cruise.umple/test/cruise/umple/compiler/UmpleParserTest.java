@@ -1707,6 +1707,26 @@ public class UmpleParserTest
     Assert.assertEquals(6,aClass.numberOfAssociationVariables());
     Assert.assertEquals(5,aClass.numberOfAttributes());
   }
+  
+  @Test
+  public void AssociationClassCreatesKeyIfMissing()
+  {
+    assertParse("010_associationClass.ump");
+
+    AssociationClass aClass = (AssociationClass)model.getUmpleClass("Ticket");
+    Assert.assertEquals("Ticket", aClass.getName());
+    Assert.assertEquals("Event", aClass.getAssociatedTo(0).getEnd(1).getClassName());
+    Assert.assertEquals("event", aClass.getAssociatedTo(0).getEnd(1).getRoleName());
+    Assert.assertEquals("Location", aClass.getAssociatedTo(1).getEnd(1).getClassName());
+    Assert.assertEquals("location", aClass.getAssociatedTo(1).getEnd(1).getRoleName());
+
+    Key key = aClass.getKey();
+    Assert.assertEquals(true, key.isProvided());
+    Assert.assertEquals(2, key.numberOfMembers());
+    Assert.assertEquals("event", key.getMember(0));
+    Assert.assertEquals("location", key.getMember(1));
+    Assert.assertEquals(true, key.getIsInternal());
+  }
 
   @Test
   public void inlineComments()

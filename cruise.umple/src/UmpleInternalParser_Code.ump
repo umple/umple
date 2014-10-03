@@ -8,7 +8,7 @@ http://umple.org/license
 This file contains the implementation details for our internal Umple parser.
 
 This class parses an Umple file into an abstract syntax tree of tokens, which are then
-analyzed into an ubstabce of of Umple meta model.  This meta model instance can then 
+analyzed into an instance of of Umple meta model.  This meta model instance can then 
 be passed to our code generator to generate target implementations such as Java, PHP 
 and Ruby.  It is configured to mostly delegate to helper methods for the following components
 

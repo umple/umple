@@ -151,4 +151,17 @@ public class OneToManyTest
     Assert.assertEquals(null,s2.getMentor());
   }
   
+  @Test
+  public void addDuplicate()
+  {
+    Bus b1 = new Bus(24);
+    @SuppressWarnings("unused")
+    Commuter c1 = new Commuter("Tom");
+    Commuter c2 = new Commuter("Jan");
+    @SuppressWarnings("unused")
+    Seating s1 = new Seating (b1,c2);
+    @SuppressWarnings("unused")
+    Seating s2 = new Seating(b1,c2);
+  }
+  
 }

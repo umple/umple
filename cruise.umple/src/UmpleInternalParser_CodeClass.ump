@@ -357,9 +357,23 @@ class UmpleInternalParser
       checkAttributeConflictImmutableAutounique();
       //Issue 492
       checkNonReachableStates();
+      //Issue 610
+      checkAssociationClassKeys();
     }
   }
   
+  //Issue 610
+  private void checkAssociationClassKeys()
+  {
+    for (UmpleClass uClass:  model.getUmpleClasses())
+    { 
+      if(uClass instanceof AssociationClass) {
+        AssociationClass assocClass = (AssociationClass)uClass;
+        assocClass.addMissingKeyIfNeeded();
+      }
+    }
+  }
+
   //Issue 492
   private void checkNonReachableStates()
   {
@@ -2214,6 +2228,7 @@ class UmpleInternalParser
 
   private void analyzeKey(Token keyToken, UmpleClass aClass)
   {
+
     if (aClass.getKey().isProvided())
     {
       setFailedPosition(keyToken.getPosition(), 7, keyToken.getParentToken().getValue("name"));
@@ -2434,6 +2449,13 @@ class UmpleInternalParser
     }  
   
     Association association = createAssociation(navigation,firstEnd,secondEnd);
+    if (isAssociationClass)
+    {
+      AssociationClass assocClass;
+      assocClass = (AssociationClass) model.getUmpleClass(gParentToken.getValue("name"));
+      if (assocClass == null) { assocClass = (AssociationClass) model.getUmpleClass(parentToken.getValue("name")); }
+      if (assocClass != null) { assocClass.addAssociatedTo(association); }
+    }
     
     if (associationModifier != null && "immutable".equals(associationModifier)){
       association.setImmutable();

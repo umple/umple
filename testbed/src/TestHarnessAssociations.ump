@@ -684,6 +684,17 @@ class MultipleSortedRegistration {
 
 }
 	
+class Bus {  
+	Integer number; 
+}
 
+class Commuter { 
+	name; 
+}
+class Seating {
+  * -- 1 Bus;
+  * -- 1 Commuter;
+  lazy seat;
+}
 
 
