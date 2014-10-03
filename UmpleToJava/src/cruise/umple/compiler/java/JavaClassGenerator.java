@@ -5677,7 +5677,6 @@ for (StateMachine smq : uClass.getStateMachines())
     
     }
     
-    //traceItem = av.getTraced("associationRemove", uClass);
     if (hasRemoveManyTemplateMethod)
     {
       if (addNewLine) { appendln(stringBuffer,""); }
@@ -5739,7 +5738,6 @@ for (StateMachine smq : uClass.getStateMachines())
     
     
     
-    //traceItem = av.getTraced("associationAdd", uClass);
     // How do you dynamically include a file in JET?!?
     if (includeFile == "association_SetUnidirectionalOptionalOne.jet")
     {
