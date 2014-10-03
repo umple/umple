@@ -1,0 +1,16 @@
+namespace cruise.associations;
+
+class Flight 
+{
+  Integer number;
+}
+class Passenger 
+{
+  name;
+}
+
+associationClass Booking 
+{
+  * Flight;
+  * Passenger;
+}

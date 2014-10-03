@@ -853,8 +853,21 @@ class AssociationClass
 {
   public AssociationClass(String name)
   {
-    super(name);
+    this(name, null);
   }
+
+  public void addMissingKeyIfNeeded()
+  {
+    Key key = getKey();
+    if (!key.isProvided())
+    {
+      key = new Key();
+      key.addMember(getAssociatedTo(0).getEnd(1).getRoleName());
+      key.addMember(getAssociatedTo(1).getEnd(1).getRoleName());
+      key.setIsInternal(true);
+      setKey(key);
+    }
+  }  
 }
 
 /*

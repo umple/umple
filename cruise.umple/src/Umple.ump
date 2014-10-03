@@ -311,6 +311,7 @@ class ExtraCode
 class Key
 {
   Boolean isDefault = false;
+  Boolean isInternal = false;
   String[] members;
 }
 
