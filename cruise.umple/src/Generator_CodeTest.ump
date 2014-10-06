@@ -103,15 +103,15 @@ class TestGenerator
 	    		  {
 	    			 if (cs.getNumberOfElements()>0)
 	    			 {
-//                                    for(ConstraintVariable cv:cs)
-//                                    {
-//                                      if(!(cv instanceof ConstraintTree))
-//                                      {//FIXME constraints
-//                                        code.append(StringFormatter.format("a constraint test, fix me"));
-//                                        code.append(StringFormatter.format("AssertTrue: {0}={set{1} = }\n",uClass.getName() , attrName));
-//                                      }
-//                                    }
-	    			 }
+                                    for(ConstraintVariable cv:cs)
+                                    {
+                                      if(!(cv instanceof ConstraintTree))
+                                      {//FIXME constraints
+                                        code.append(StringFormatter.format("a constraint test, fix me"));
+                                        code.append(StringFormatter.format("AssertTrue: {0}={set{1} = }\n",uClass.getName() , attrName));
+                                      }
+                                    }
+              			 }
 	    		  }
 	    	  }
 	    	  
