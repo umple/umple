@@ -606,7 +606,7 @@ class CompositeStructureTokenAnalyzer {
 			   for(Monitor mt : am.getWatchList()) {
 //				   ConstraintTree removeList = new ConstraintTree();
 				   for(BasicConstraint bs : mt.getConstraints()) {					   
-					   for(ConstraintVariable cv:bs)
+					   for(ConstraintVariable cv:bs.getExpressions())
                                            {
                                              if(cv instanceof ConstraintNamed)
                                              {

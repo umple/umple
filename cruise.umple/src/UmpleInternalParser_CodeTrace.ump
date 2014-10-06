@@ -157,7 +157,7 @@ class UmpleInternalParser
         List<Attribute> others = new ArrayList<Attribute>();
         if("after".equals(traceAttr.getConditionType())||"until".equals(traceAttr.getConditionType()))
         {
-          for(ConstraintVariable cv:constraint)
+          for(ConstraintVariable cv:constraint.getExpressions())
           {
             if(cv instanceof ConstraintAttribute)
             {
