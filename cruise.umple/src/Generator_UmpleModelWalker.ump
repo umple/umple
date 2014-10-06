@@ -254,11 +254,11 @@ class UmpleModelWalker {
 					}
 					
 					for(ConstraintTree cnst : clazz.getConstraintTrees()){
-				          for(ConstraintVariable var:cnst)
+/*                                          for(ConstraintVariable var:cnst)
                                           {
                                             visitor.visit(var);       
                                           }
-					}
+*/                                        }
 					
 					for(AssociationVariable aVar : clazz.getAssociationVariables()) {
 						visitor.visit((UmpleVariable)aVar);
