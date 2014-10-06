@@ -1,0 +1,5 @@
+//expect this to throw an error 
+class Student {
+  boolean foo = true;
+  [ foo ]
+}
