@@ -23,7 +23,7 @@ class student
     @initialized = false
     @deleted = false
     @age = a_age
-    if  !(a_age>18) then
+    if a_age<=18 then
       raise RuntimeError, 'Please provide a valid age'
     end
     @initialized = true

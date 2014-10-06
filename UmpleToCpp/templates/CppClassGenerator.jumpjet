@@ -5,6 +5,7 @@
   GeneratedClass gClass = uClass.getGeneratedClass();
   CppGenerator gen = new CppGenerator();
   gen.setModel(model);
+  GeneratorHelper.generator = gen;
    
    String curlyBracket = (gen.translate("packageDefinition",uClass) == "")? "" : "}" ; 
 
@@ -14,13 +15,14 @@
     String operation = StringFormatter.toUnderscore(inject.getOperation());
     String key = inject.getType() + ":" + operation;
     String newCodeToInject = "";
+    String injectCode = inject.getConstraintTree()==null?inject.getCode():inject.getConstraintCode(gen);
     if (codeInjectionMap.containsKey(key))
     {
-      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),inject.getCode());
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),injectCode);
     }
     else
     {
-      newCodeToInject = inject.getCode();
+      newCodeToInject = injectCode;
     }
     codeInjectionMap.put(key,newCodeToInject);
   }

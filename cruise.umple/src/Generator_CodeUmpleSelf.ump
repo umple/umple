@@ -190,7 +190,9 @@ class UmpleSelfGenerator
         code.append(StringFormatter.format("{0}    ", baseSpace));
         if (t.getGuard() != null)
         {
-          code.append(StringFormatter.format("[{0}] ", t.getGuard().getCondition()));
+          JavaGenerator gen = new JavaGenerator();
+          gen.setModel(getModel());
+          code.append(StringFormatter.format("[{0}] ", t.getGuard().getCondition(gen)));
         }
         
         Event event = t.getEvent();

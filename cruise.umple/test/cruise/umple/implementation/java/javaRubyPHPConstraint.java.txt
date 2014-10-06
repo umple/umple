@@ -23,9 +23,9 @@ public class Range
   {
     start = aStart;
     end = aEnd;
-    if ( !(aStart<aEnd))
+    if (aStart>=aEnd)
     {
-      throw new RuntimeException("Please provide a valid start and end");
+      throw new RuntimeException("Please provide a valid end and start");
     }
   }
 
@@ -36,7 +36,7 @@ public class Range
   public boolean setStart(int aStart)
   {
     boolean wasSet = false;
-    if (aStart<end)
+    if (aStart<getEnd())
     {
     start = aStart;
     wasSet = true;
@@ -47,7 +47,7 @@ public class Range
   public boolean setEnd(int aEnd)
   {
     boolean wasSet = false;
-    if (start<aEnd)
+    if (getStart()<aEnd)
     {
     end = aEnd;
     wasSet = true;

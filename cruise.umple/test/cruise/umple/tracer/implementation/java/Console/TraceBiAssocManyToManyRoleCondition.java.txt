@@ -86,7 +86,7 @@ public class Company
     boolean wasAdded = false;
     if (manager.contains(aManager)) { return false; }
     manager.add(aManager);
-    if (manager.size()>100)
+    if (numberOfManager()>100)
     {
       ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager()+","+name );
     }
@@ -127,7 +127,7 @@ public class Company
         manager.add(oldIndex,aManager);
       }
     }
-    if (manager.size()>100)
+    if (numberOfManager()>100)
     {
       ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_r,manager,"+numberOfManager()+","+name );
     }
@@ -143,7 +143,7 @@ public class Company
       if(index > numberOfManager()) { index = numberOfManager() - 1; }
       manager.remove(aManager);
       manager.add(index, aManager);
-    if (manager.size()>100)
+    if (numberOfManager()>100)
     {
       ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager()+","+name );
     }
@@ -161,7 +161,7 @@ public class Company
       if(index > numberOfManager()) { index = numberOfManager() - 1; }
       manager.remove(aManager);
       manager.add(index, aManager);
-    if (manager.size()>100)
+    if (numberOfManager()>100)
     {
       ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager()+","+name );
     }
@@ -170,7 +170,7 @@ public class Company
     else 
     {
       wasAdded = addManagerAt(aManager, index);
-    if (manager.size()>100)
+    if (numberOfManager()>100)
     {
       ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceBiAssocManyToManyRoleCondition.ump,7,Company+Manager,"+System.identityHashCode(this)+",as_a,manager,"+numberOfManager()+","+name );
     }

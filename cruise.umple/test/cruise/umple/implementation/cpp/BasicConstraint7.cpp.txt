@@ -13,7 +13,7 @@
   {
     age = aAge;
     weight = aWeight;
-    if ( !(!((aAge>18))))
+    if ((aAge>18))
     {
       throw "Please provide a valid age";
     }
@@ -46,7 +46,7 @@
   bool student::setAge(const int & aAge)
   {
     bool wasSet = false;
-    if (!((aAge>18)))
+    if ((aAge<=18))
     {
     age = aAge;
     wasSet = true;

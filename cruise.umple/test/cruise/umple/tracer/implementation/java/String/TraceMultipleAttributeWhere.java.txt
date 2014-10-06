@@ -1,7 +1,7 @@
   public boolean setId(int aId)
   {
     boolean wasSet = false;
-    if ("tim".equals(name))
+    if ("tim".equals(getName()))
     {
       StringTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributeWhere.ump,7,Tracer,"+System.identityHashCode(this)+",at_s,id,"+id+","+(""+aId).toString().replace("\n","").replace(",",";") );
     }

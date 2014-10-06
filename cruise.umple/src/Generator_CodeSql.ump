@@ -294,7 +294,7 @@ class SqlGenerator
     return true;
   }
 
-  public String translate(String format, Constraint constraint)
+  public String translate(String format, ConstraintTree constraint)
   {
   	return "{0}";
   }

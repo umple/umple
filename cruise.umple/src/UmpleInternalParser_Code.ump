@@ -239,17 +239,15 @@ class UmpleInternalParser
   //Therefore it is necessary to force a second pass of the analysis for these cases
   private void analyzeDependentTokens(Token t, UmpleClass aClass, int analysisStep)
   {
-    if(analysisStep == 1 || shouldProcessClassAgain)
+    // Methods after this point will occur on analysisStep > 1
+    if (analysisStep <=2 && t.is("invariant"))
+    {
+      shouldProcessAgain = true;
+    }
+    if(analysisStep <= 2 || shouldProcessClassAgain)
     {
       shouldProcessClassAgain = true;
       return;
-    }
-
-    // Methods after this point will occur on analysisStep > 1
-    
-    if (t.is("invariant"))
-    {
-      analyzeInvariant(t,aClass);
     }
     if (t.is("modelConstraintBody"))
     {

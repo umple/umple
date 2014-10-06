@@ -2,7 +2,7 @@
   {
     boolean wasSet = false;
     b = aB;
-    if (a<aB)
+    if (getA()<aB)
     {
       FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributePostCondition.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,b,"+b );
     }
@@ -14,7 +14,7 @@
   {
     boolean wasSet = false;
     c = aC;
-    if (a<b)
+    if (getA()<getB())
     {
       FileTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceMultipleAttributePostCondition.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,c,"+c );
     }

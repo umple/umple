@@ -141,7 +141,7 @@ class RubyGenerator
   }
   
   public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr) {
-    if ("Date".equals(expr.getAttributeType()))
+    if ((expr instanceof ConstraintAttribute)&&"Date".equals(((ConstraintAttribute)expr).getAttribute().getType()))
     {
       return name + ".to_time.to_i";
     }
@@ -908,22 +908,24 @@ class RubyGenerator
     TraceLookupMap.put("thread","Thread.currentThread().getId()");
     TraceLookupMap.put("self","this");
     //
-    ConstraintLookupMap.put("==","=={0}");
-    ConstraintLookupMap.put("accessor","@");
+    ConstraintLookupMap.put("in==","{0}.equals(\"{1}\")");
+    ConstraintLookupMap.put("in!=","!{0}.equals(\"{1}\")");
+    ConstraintLookupMap.put("object==","{0}.equals({1})");
+    ConstraintLookupMap.put("object!=","!{0}.equals({1})");
+    ConstraintLookupMap.put("accessor","");
     ConstraintLookupMap.put("paramaccessor","");
     ConstraintLookupMap.put("exception","raise RuntimeError, \'Please provide a valid {0}\'");
     ConstraintLookupMap.put("ifstatement","if {0} then");
     ConstraintLookupMap.put("end","end");
-    ConstraintLookupMap.put("[]","{1}[{0}]");
-    ConstraintLookupMap.put("concatenate","+{0}");
+    ConstraintLookupMap.put("concatenate","{0}+{1}");
     ConstraintLookupMap.put("initialise","{0}.new");
-    ConstraintLookupMap.put("has",".include?({0})");
-    ConstraintLookupMap.put("hasAll",".include?({0})");
-    ConstraintLookupMap.put("cardinality==",".length=={0}");
-    ConstraintLookupMap.put("cardinality!=",".length!={0}");
-    ConstraintLookupMap.put("cardinality>=",".length>={0}");
-    ConstraintLookupMap.put("cardinality<=",".length<={0}");
-    ConstraintLookupMap.put("cardinality>",".length>{0}");
-    ConstraintLookupMap.put("cardinality<",".length<{0}");
+    ConstraintLookupMap.put("has","{0}.include?({1})");
+    ConstraintLookupMap.put("hasAll","{0}.include?({1})");
+    ConstraintLookupMap.put("cardinality==","{0}=={1}");
+    ConstraintLookupMap.put("cardinality!=","{0}!={1}");
+    ConstraintLookupMap.put("cardinality>=","{0}>={1}");
+    ConstraintLookupMap.put("cardinality<=","{0}<={1}");
+    ConstraintLookupMap.put("cardinality>","{0}>{1}");
+    ConstraintLookupMap.put("cardinality<","{0}<{1}");
 	}  
 }

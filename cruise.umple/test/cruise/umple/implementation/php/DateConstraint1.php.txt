@@ -21,7 +21,7 @@ class X
   {
     $this->d = $aD;
     $this->e = $aE;
-    if ( !(strtotime($aD)>strtotime($aE)))
+    if (strtotime($aD)<=strtotime($aE))
     {
       throw new RuntimeException("Please provide a valid d and e");
     }
@@ -34,7 +34,7 @@ class X
   public function setD($aD)
   {
     $wasSet = false;
-    if (strtotime($aD)>strtotime($e))
+    if (strtotime($aD)>strtotime($this->getE()))
     {
     $this->d = $aD;
     $wasSet = true;
@@ -45,7 +45,7 @@ class X
   public function setE($aE)
   {
     $wasSet = false;
-    if (strtotime($d)>strtotime($aE))
+    if (strtotime($this->getD())>strtotime($aE))
     {
     $this->e = $aE;
     $wasSet = true;

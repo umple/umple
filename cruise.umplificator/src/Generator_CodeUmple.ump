@@ -260,7 +260,9 @@ class UmpleToUmpleGenerator
         code.append(StringFormatter.format("{0}    ", baseSpace));
         if (t.getGuard() != null)
         {
-          code.append(StringFormatter.format("[{0}] ", t.getGuard().getCondition()));
+          JavaGenerator gen = new JavaGenerator();
+          gen.setModel(sm.getUmpleClass().getSourceModel());
+          code.append(StringFormatter.format("[{0}] ", t.getGuard().getCondition(gen)));
         }
         
         Event event = t.getEvent();

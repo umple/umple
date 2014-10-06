@@ -115,7 +115,7 @@ class LightFixture
     $aBulb = $this->bulb;
     if ($aBulb == self::$BulbDimmed)
     {
-      if ($dimmer>99)
+      if ($this->dimmer>99)
       {
         $this->setBulb(self::$BulbOn);
         $wasEventProcessed = true;

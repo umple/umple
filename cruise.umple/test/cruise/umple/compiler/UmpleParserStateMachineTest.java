@@ -448,7 +448,9 @@ public class UmpleParserStateMachineTest
     
     Transition t = on.getTransition(0);
     Assert.assertEquals("push", t.getEvent().getName());
-    Assert.assertEquals("if (brightness<1)\n{", t.getGuard().getCondition(new JavaGenerator()));
+    JavaGenerator gen = new JavaGenerator();
+    gen.setModel(model);
+    Assert.assertEquals("if (getBrightness()<1)\n{", gen.translate("Open",t.getGuard()));
   }
   
   @Test
@@ -467,7 +469,9 @@ public class UmpleParserStateMachineTest
     
     Transition t = on.getTransition(0);
     Assert.assertEquals("push", t.getEvent().getName());
-    Assert.assertEquals("if (brightness<1)\n{", t.getGuard().getCondition(new JavaGenerator()));
+    JavaGenerator gen = new JavaGenerator();
+    gen.setModel(model);
+    Assert.assertEquals("if (getBrightness()<1)\n{", gen.translate("Open",t.getGuard()));
   }
   
   @Test
@@ -1113,7 +1117,9 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("Off", s.getName());
     Transition t = s.getTransition(0);
     Assert.assertEquals(true,t.isAutoTransition());
-    Assert.assertEquals("if (count>10)\n{", t.getGuard().getCondition(new JavaGenerator()));
+	JavaGenerator gen = new JavaGenerator();
+	gen.setModel(model);    
+    Assert.assertEquals("if (getCount()>10)\n{", gen.translate("Open",t.getGuard()));
   }  
 
   @Test
@@ -1132,7 +1138,9 @@ public class UmpleParserStateMachineTest
     
     Transition t = on.getTransition(0);
     Assert.assertEquals("push", t.getEvent().getName());
-    Assert.assertEquals("if (brightness<1)\n{", t.getGuard().getCondition(new JavaGenerator()));
+	JavaGenerator gen = new JavaGenerator();
+	gen.setModel(model);    
+    Assert.assertEquals("if (getBrightness()<1)\n{", gen.translate("Open",t.getGuard()));
 
     Action a1= t.getAction();
     

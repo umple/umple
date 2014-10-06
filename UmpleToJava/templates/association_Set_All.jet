@@ -6,6 +6,8 @@
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   
+    gen.setParameterConstraintName(av.getName());
+
     AssociationVariable relatedAssociation = av.getRelatedAssociation();
 
     if (!av.getIsNavigable())
@@ -487,4 +489,5 @@
       %><%@ include file="association_AddIndexControlFunctions.jet"%><%
     }
   }
+  gen.setParameterConstraintName("");
 %>

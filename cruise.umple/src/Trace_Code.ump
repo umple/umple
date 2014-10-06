@@ -402,7 +402,8 @@ class AttributeTraceItem
    */
   public String getExtremities(CodeTranslator gen, String name)
   {
-    return gen.translate(name+":Closed",constraint);
+    ((SuperCodeGenerator)gen).setParameterConstraintName(name);
+    return gen.translate("Closed",constraint);
   }
 }
 class StateMachineTraceItem

@@ -22,9 +22,9 @@ public class student
   {
     age = aAge;
     weight = aWeight;
-    if ( !(aWeight<3&&aAge>18))
+    if (aWeight>=3||aAge<=18)
     {
-      throw new RuntimeException("Please provide a valid weight and age");
+      throw new RuntimeException("Please provide a valid age and weight");
     }
   }
 
@@ -35,7 +35,7 @@ public class student
   public boolean setAge(int aAge)
   {
     boolean wasSet = false;
-    if (weight<3&&aAge>18)
+    if (getWeight()<3&&aAge>18)
     {
     age = aAge;
     wasSet = true;
@@ -46,7 +46,7 @@ public class student
   public boolean setWeight(int aWeight)
   {
     boolean wasSet = false;
-    if (aWeight<3&&age>18)
+    if (aWeight<3&&getAge()>18)
     {
     weight = aWeight;
     wasSet = true;

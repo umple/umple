@@ -69,7 +69,7 @@ class X8
       flipSwitch -> Dimmed;
     }
     Dimmed {
-      [dimmer>99] entry -> On;
+      [getDimmer()>99] entry -> On;
       flipSwitch -> Off;
       turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Dimmed;
     }
@@ -85,7 +85,7 @@ class X9
   Integer brightness = 0;
   Bulb {
     On {
-      [brightness<1] push -> Off;
+      [getBrightness()<1] push -> Off;
     }
     Off {    }
   }
@@ -96,7 +96,7 @@ class X10
   Integer brightness = 0;
   Bulb {
     On {
-      [brightness<1] push -> Off;
+      [getBrightness()<1] push -> Off;
     }
     Off {    }
   }
@@ -151,7 +151,7 @@ class X15
   Integer brightness = 0;
   Bulb {
     On {
-      [brightness<1] push -> / { blabla } Off;
+      [getBrightness()<1] push -> / { blabla } Off;
     }
     Off {    }
   }

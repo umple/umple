@@ -22,7 +22,7 @@ class Client
   {
     $this->minAge = $aMinAge;
     $this->age = $aAge;
-    if ( !($aAge>$aMinAge))
+    if ($aAge<=$aMinAge)
     {
       throw new RuntimeException("Please provide a valid age and minAge");
     }
@@ -35,7 +35,7 @@ class Client
   public function setMinAge($aMinAge)
   {
     $wasSet = false;
-    if ($age>$aMinAge)
+    if ($this->getAge()>$aMinAge)
     {
     $this->minAge = $aMinAge;
     $wasSet = true;
@@ -46,7 +46,7 @@ class Client
   public function setAge($aAge)
   {
     $wasSet = false;
-    if ($aAge>$minAge)
+    if ($aAge>$this->getMinAge())
     {
     $this->age = $aAge;
     $wasSet = true;

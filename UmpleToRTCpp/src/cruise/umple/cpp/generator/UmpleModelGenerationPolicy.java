@@ -21,6 +21,7 @@ package cruise.umple.cpp.generator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -30,7 +31,15 @@ import cruise.umple.compiler.Attribute;
 import cruise.umple.compiler.CodeBlock;
 import cruise.umple.compiler.CodeInjection;
 import cruise.umple.compiler.Comment;
-import cruise.umple.compiler.Constraint;
+import cruise.umple.compiler.ConstraintAssociation;
+import cruise.umple.compiler.ConstraintAttribute;
+import cruise.umple.compiler.ConstraintLiteral;
+import cruise.umple.compiler.ConstraintMethodParameter;
+import cruise.umple.compiler.ConstraintOperator;
+import cruise.umple.compiler.ConstraintState;
+import cruise.umple.compiler.ConstraintStateMachine;
+import cruise.umple.compiler.ConstraintTree;
+import cruise.umple.compiler.ConstraintUnassignedName;
 import cruise.umple.compiler.ConstraintVariable;
 import cruise.umple.compiler.Depend;
 import cruise.umple.compiler.GenerateTarget;
@@ -277,8 +286,8 @@ public class UmpleModelGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
-	public static List<Constraint> constraints(@GenerationBaseElement UmpleClass element){
-		return element.getConstraints();
+	public static List<ConstraintTree> constraints(@GenerationBaseElement UmpleClass element){
+		return element.getConstraintTrees();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
@@ -296,33 +305,59 @@ public class UmpleModelGenerationPolicy{
 		return constraints;
 	}
 	
-	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
-	public static List<Constraint> constraints(@GenerationBaseElement Attribute element,
-			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
-		List<Constraint> constraints= new ArrayList<Constraint>();
-		for(Constraint constraint: parent.getConstraints()){
-			for(ConstraintVariable expression: constraint.getExpressions()){
-				if(!constraints.contains(constraint)&& element.equals(expression.getAttribute(parent))){
-					constraints.add(constraint);
-				}
+	private static void findAttributeInConstraints(ConstraintVariable constraint, Attribute attribute, List<ConstraintAttribute> constraints){
+		if(constraint instanceof ConstraintTree){
+			findAttributeInConstraints(((ConstraintTree)constraint).getRoot(),attribute,constraints);
+		}
+		else if(constraint instanceof ConstraintOperator){
+			findAttributeInConstraints(((ConstraintOperator)constraint).getLeft(),attribute,constraints);
+			findAttributeInConstraints(((ConstraintOperator)constraint).getRight(),attribute,constraints);
+		}
+		else if(constraint instanceof ConstraintAttribute){
+			Attribute compareTo = ((ConstraintAttribute)constraint).getAttribute();
+			if(attribute.equals(compareTo)){
+				constraints.add((ConstraintAttribute)constraint);
 			}
+		}
+	}
+	
+	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
+	public static List<ConstraintAttribute> constraints(@GenerationBaseElement Attribute element,
+			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
+		List<ConstraintAttribute> constraints= new ArrayList<ConstraintAttribute>();
+		for(ConstraintTree constraint: parent.getConstraintTrees()){
+			findAttributeInConstraints(constraint,element,constraints);
 		}
 		return constraints;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
-	public static List<Constraint> constraints(@GenerationBaseElement ConstraintVariable element){
-		return Arrays.asList(element.getSubConstraint());
+	public static List<ConstraintVariable> constraints(@GenerationBaseElement ConstraintVariable element){
+		if(element instanceof ConstraintTree)
+		{
+			return Arrays.asList(new ConstraintVariable[]{((ConstraintTree)element).getRoot()});
+		}
+		else if(element instanceof ConstraintOperator)
+		{
+			return ((ConstraintOperator)element).getSubConstraints();
+		}
+		else return Collections.emptyList();
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.ATTRIBUTE)
 	public static UmpleVariable constraintAttribute(@GenerationBaseElement ConstraintVariable element){
-		return element.getFoundAttribute();
+		if(element instanceof ConstraintAttribute){
+			return ((ConstraintAttribute)element).getAttribute();
+		}
+		else if(element instanceof ConstraintAssociation){
+			return ((ConstraintAssociation)element).getAssociation();
+		}
+		return null;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSIONS)
-	public static List<ConstraintVariable> constraintExpressions(@GenerationBaseElement Constraint element){
-		return Arrays.asList(element.getExpressions());
+	public static List<ConstraintVariable> constraintExpressions(@GenerationBaseElement ConstraintTree element){
+		return Arrays.asList(new ConstraintVariable[]{((ConstraintTree)element).getRoot()});
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_TYPE)
@@ -332,22 +367,51 @@ public class UmpleModelGenerationPolicy{
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_ATTRIBUTE)
 	public static boolean constraintExpressionIsAttribute(@GenerationBaseElement ConstraintVariable element){
-		return element.getIsAttribute();
+		return element instanceof ConstraintAttribute;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_VALUE)
 	public static String constraintExpressionValue(@GenerationBaseElement ConstraintVariable element){
-		return element.getValue();
+		if(element instanceof ConstraintTree)
+		{
+			return constraintExpressionValue(((ConstraintTree)element).getRoot());
+		}
+		else if(element instanceof ConstraintOperator)
+		{
+			return ((ConstraintOperator)element).getValue();
+		}
+		else if(element instanceof ConstraintAttribute){
+			return ((ConstraintAttribute)element).getAttribute().getName();
+		}
+		else if(element instanceof ConstraintMethodParameter){
+			return ((ConstraintMethodParameter)element).getParameter().getName();
+		}
+		else if(element instanceof ConstraintAssociation){
+			return ((ConstraintAssociation)element).getAssociation().getName();
+		}
+		else if(element instanceof ConstraintLiteral){
+			return ((ConstraintLiteral)element).getValue();
+		}
+		else if(element instanceof ConstraintState){
+			return ((ConstraintState)element).getState().getName();
+		}
+		else if(element instanceof ConstraintStateMachine){
+			return ((ConstraintStateMachine)element).getStateMachine().getName();
+		}
+		else if(element instanceof ConstraintUnassignedName){
+			return ((ConstraintUnassignedName)element).getValue();
+		}
+		else return "";
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_OPERATOR)
 	public static boolean constraintExpressionIsOperator(@GenerationBaseElement ConstraintVariable element){
-		return element.getIsOperator();
+		return element instanceof ConstraintOperator;
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINT_EXPRESSION_IS_PRIMITIVE)
 	public static boolean constraintExpressionIsPrimitive(@GenerationBaseElement ConstraintVariable element){
-		return element.getIsPrimitive();
+		return (element instanceof ConstraintOperator)&&(((ConstraintOperator)element).getValue().equals("=="));
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.IS_SINGLETON)

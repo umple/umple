@@ -359,8 +359,10 @@ node [shape = circle, fixedsize = true, width=.3];
         guard = t.getGuard();
         if (guard == null || hideGuards) guardString = "";
         else {
+          JavaGenerator gen = new JavaGenerator();
+          gen.setModel(getModel());
           guardString = event.isAutoTransition() ? "[" : " ["
-            + guard.getCondition().replaceAll("\"","&quot;")+"]";
+            + guard.getCondition(gen).replaceAll("\"","&quot;")+"]";
         }
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);

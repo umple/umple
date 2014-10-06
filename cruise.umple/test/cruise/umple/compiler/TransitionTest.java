@@ -12,6 +12,7 @@ package cruise.umple.compiler;
 import org.junit.*;
 
 import cruise.umple.compiler.Transition;
+import cruise.umple.util.SampleFileWriter;
 
 public class TransitionTest
 {
@@ -62,14 +63,17 @@ public class TransitionTest
     Transition t3 = Transition.createPlaceholder(too);
 
     t.setGuard(new Guard());
-    t.getGuard().addExpression(new ConstraintVariable("NAME","x"));
+    UmpleClass uClass = new UmpleClass("Blah",new UmpleModel(new UmpleFile(SampleFileWriter.rationalize("test/cruise/umple/compiler"),"700_BasicConstraint3.ump")));
+    Attribute x = new Attribute("x","String","","",false,uClass);
+    Attribute y = new Attribute("y","String","","",false,uClass);
+    t.getGuard().addElement(new ConstraintAttribute(x));
     t2.setGuard(new Guard());
-    t2.getGuard().addExpression(new ConstraintVariable("NAME","x"));
+    t2.getGuard().addElement(new ConstraintAttribute(x));
     Assert.assertEquals(t, t2);
 
     t3.setGuard(new Guard());
-    t3.getGuard().addExpression(new ConstraintVariable("NAME","y"));
-    Assert.assertEquals(false, t.getGuard().getExpression(0).equals(t3.getGuard().getExpression(0)));
+    t3.getGuard().addElement(new ConstraintAttribute(y));
+    Assert.assertEquals(false, t.getGuard().equals(t3.getGuard()));
   
   }
   

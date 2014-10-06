@@ -24,7 +24,7 @@ import java.util.List;
 
 import cruise.umple.compiler.Action;
 import cruise.umple.compiler.Activity;
-import cruise.umple.compiler.Constraint;
+import cruise.umple.compiler.ConstraintTree;
 import cruise.umple.compiler.Event;
 import cruise.umple.compiler.Guard;
 import cruise.umple.compiler.Position;
@@ -174,12 +174,12 @@ public class UmpleStatemachineGenerationPolicy{
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
-	public static List<Constraint> constraints(@GenerationBaseElement Transition element){
+	public static List<ConstraintTree> constraints(@GenerationBaseElement Transition element){
 		Guard guard = element.getGuard();
 		if(guard== null){
 			return Collections.emptyList();
 		}
-		return Arrays.asList(new Constraint[]{guard});
+		return Arrays.asList(new ConstraintTree[]{guard});
 	}
 	
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.LINE_NUMBERS)

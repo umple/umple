@@ -2,7 +2,7 @@
   {
     boolean wasSet = false;
     c = aC;
-    if (a<b)
+    if (getA()<getB())
     {
       ConsoleTracer.handle( System.currentTimeMillis()+","+Thread.currentThread().getId()+",TraceSingleAttributePostCondition.ump,8,Tracer,"+System.identityHashCode(this)+",at_s,c,"+c );
     }

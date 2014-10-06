@@ -13,7 +13,7 @@
   {
     d = aD;
     e = aE;
-    if ( !(aD>aE))
+    if (aD<=aE)
     {
       throw "Please provide a valid d and e";
     }
@@ -46,7 +46,7 @@
   bool X::setD(const string & aD)
   {
     bool wasSet = false;
-    if (aD>e)
+    if (aD>getE())
     {
     d = aD;
     wasSet = true;
@@ -57,7 +57,7 @@
   bool X::setE(const string & aE)
   {
     bool wasSet = false;
-    if (d>aE)
+    if (getD()>aE)
     {
     e = aE;
     wasSet = true;

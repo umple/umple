@@ -21,6 +21,7 @@ class UmpleInternalParser
   internal AssociationVariable[] unlinkedAssociationVariables;
   internal Association[] unlinkedAssociations;
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
+  internal Map<UmpleClassifier,List<Token>> unanalyzedInvariants = new HashMap<UmpleClassifier,List<Token>>();
   internal Map<UmpleClassifier,List<String>> unlinkedExtends = new HashMap<UmpleClassifier,List<String>>();
   internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokens = new HashMap<UmpleClassifier,List<Token>>();
   internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokensInterface = new HashMap <UmpleClassifier, List<Token>>();
@@ -267,6 +268,14 @@ class UmpleInternalParser
     else if (token.is("symmetricReflexiveAssociation"))
     {
       analyzeSymmetricReflexiveAssociation(token,aClass);
+    }
+    else if (token.is("invariant"))
+    {
+      if(!unanalyzedInvariants.containsKey(aClass))
+      {
+        unanalyzedInvariants.put(aClass, new ArrayList<Token>());
+      }
+      unanalyzedInvariants.get(aClass).add(token);
     }    
     else if (token.is("exception"))
     {
@@ -353,12 +362,25 @@ class UmpleInternalParser
       //checkExtendsClass();
       checkAbstractClass();
       
+      analyzeInvariants();
+      
       //Solution to issue 502
       checkAttributeConflictImmutableAutounique();
       //Issue 492
       checkNonReachableStates();
       //Issue 610
       checkAssociationClassKeys();
+    }
+  }
+
+  public void analyzeInvariants()
+  {
+    for(UmpleClassifier uClass:unanalyzedInvariants.keySet())
+    {
+      for(Token invariant:unanalyzedInvariants.get(uClass))
+      {
+        analyzeInvariant(invariant,uClass);
+      }
     }
   }
   
@@ -864,9 +886,10 @@ class UmpleInternalParser
     // Go through all sub-tokens of the class token to add subclasses related to the Umple class.
     for (Token extendsToken : classifierToken.getSubTokens())
     {
-      if (extendsToken.getValue("extendsName") != null)
+      if (extendsToken.getValue("extendsName") != null||extendsToken.getValue("extendsNames")!=null)
       { 
-        extendsList.add(extendsToken.getValue("extendsName"));
+        String name = extendsToken.getValue("extendsName") != null?extendsToken.getValue("extendsName"):extendsToken.getValue("extendsNames");
+        extendsList.add(name);
         extendsTokenList.add(extendsToken); // With this line we really don't need the above, todo: refactor
         unlinkedExtends.put(aClassifier, extendsList);
         unlinkedExtendsTokens.put(aClassifier, extendsTokenList);
@@ -932,10 +955,13 @@ class UmpleInternalParser
     String interfaceName = t.getValue("name");   
     //Check to ensure the name is valid (starts with a letter, and only contains letters, numbers, or underscores
     if (Token.isValidIdentifier(interfaceName, "[A-Za-z|@]") != true) {
-      setFailedPosition(t.getPosition(), 110, interfaceName);
+      if(!interfaceName.matches("[A-Za-z|@]+<.+>"))
+      {
+        setFailedPosition(t.getPosition(), 110, interfaceName);
+      }
     }
     else if ( interfaceName.matches("[a-z].*") ){ // Warn when interface name doesn't start with a capital letter.
-       setFailedPosition(t.getPosition(), 111, interfaceName);
+      setFailedPosition(t.getPosition(), 111, interfaceName);
     }
   
     UmpleInterface newInterface = new UmpleInterface(t.getValue("name"));
@@ -1097,8 +1123,8 @@ class UmpleInternalParser
     {
       boolean isAClass = model.getUmpleClass(e.getValue()) != null;
       boolean isAInterface = model.getUmpleInterface(e.getValue()) != null;
-	  boolean isATrait = model.getUmpleTrait(e.getValue()) != null;
-	  boolean isTraitTypeParameter = model.getUmpleTraitTypeParameter(e.getValue());
+      boolean isATrait = model.getUmpleTrait(e.getValue()) != null;
+      boolean isTraitTypeParameter = model.getUmpleTraitTypeParameter(e.getValue());
 	  
       if (!isATrait && !isAClass && !isAInterface && !isTraitTypeParameter) //item referenced not a class or interface or a trait or a type parameter
       {
@@ -1206,63 +1232,68 @@ class UmpleInternalParser
         continue;
       }
 
-      for (int i=0; i < extendsNames.size();i++){
+      for (int i=0; i < extendsNames.size();i++)
+      {
         String extendName= extendsNames.get(i);
         if (isUmpleClass(extendName))
         {
-              if (isUmpleTrait(extendName) ) {
-		          UmpleTrait parent = model.getUmpleTrait(extendName);     
-		          boolean wasSet = child.addExtendsTrait(parent);
-		          if (!wasSet)
-		          {
-		            Position pos;
-		            try
-		            {
-		              pos = extendsToken.get(i).getPosition();
-		            }
-		            catch(Exception e)
-		            {
-		              pos = new Position("",0,0,0);
-		            }
-					// TODO 1: the error code should be chnaged.            
-		            setFailedPosition(pos, 16, child.getName(), parent.getName());
-		            return;
-		          }
-		          //---
-		          /*
-		          try
-		          {
-		            child.setExtendsToken(extendsToken.get(i));
-		          }
-		          catch(Exception e){}   
-		          */          
-         	 } else {
-	         	 UmpleClass parent = model.getUmpleClass(extendName);     
-	         	 boolean wasSet = child.setExtendsClass(parent);
-	        	  if (!wasSet)
-	         	 {
-	         	   Position pos;
-	         	   try
-	          	  {
-	         	     pos = extendsToken.get(i).getPosition();
-	         	   }
-	          	  catch(Exception e)
-	          	  {
-	          	    pos = new Position("",0,0,0);
-	          	  }
-	          	  setFailedPosition(pos, 16, child.getName(), parent.getName());
-	          	  child.setExtendsToken(extendsToken.get(i));     //Issue 543
-	           	 return;
-	          	}
-	         	 try
-	          	{
-	          	  child.setExtendsToken(extendsToken.get(i));
-	          	  checkExtendsClass();                            //Issue 543
-	          	}
-	         	 catch(Exception e){}
-        	}
+          if (isUmpleTrait(extendName) )
+          {
+            UmpleTrait parent = model.getUmpleTrait(extendName);     
+            boolean wasSet = child.addExtendsTrait(parent);
+            if (!wasSet)
+            {
+              Position pos;
+              try
+              {
+                pos = extendsToken.get(i).getPosition();
+	      }
+	      catch(Exception e)
+	      {
+	        pos = new Position("",0,0,0);
+	      }
+	      // TODO 1: the error code should be chnaged.            
+	      setFailedPosition(pos, 16, child.getName(), parent.getName());
+	      return;
+	    }
+	    //---
+	    /*
+	    try
+	    {
+	      child.setExtendsToken(extendsToken.get(i));
+	    }
+	    catch(Exception e){}   
+	    */          
+          }
+          else
+          {
+            UmpleClass parent = model.getUmpleClass(extendName);     
+	    boolean wasSet = child.setExtendsClass(parent);
+	    if (!wasSet)
+	    {
+	      Position pos;
+	      try
+	      {
+	        pos = extendsToken.get(i).getPosition();
+	      }
+	      catch(Exception e)
+	      {
+	        pos = new Position("",0,0,0);
+	      }
+	      setFailedPosition(pos, 16, child.getName(), parent.getName());
+	      child.setExtendsToken(extendsToken.get(i));     //Issue 543
+	      return;
+	    }
+	    try
+	    {
+	      child.setExtendsToken(extendsToken.get(i));
+	      checkExtendsClass();                            //Issue 543
+	    }
+	    catch(Exception e){}
+          }
         }
-        else {
+        else
+        {
           UmpleInterface uInterface=  model.getUmpleInterface(extendName);
           child.addParentInterface(uInterface);
         }

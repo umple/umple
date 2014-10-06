@@ -93,9 +93,9 @@ interface TraceItem
  */
 class AttributeTraceItem
 {
-  isA TraceItem;
-  
-  Constraint constraint=null;
+  isA TraceItem;  
+
+  ConstraintTree constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
 
   boolean traceSet = false;
@@ -121,7 +121,7 @@ class StateMachineTraceItem
 {
   isA TraceItem;
 
-  Constraint constraint=null;
+  ConstraintTree constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
 
   boolean isIn = false;
@@ -150,7 +150,7 @@ class AssociationTraceItem
 {
   isA TraceItem;
   
-  Constraint constraint=null;
+  ConstraintTree constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
 
   * -- * AssociationVariable;
@@ -171,7 +171,7 @@ class MethodTraceItem
 {
   isA TraceItem;
   
-  Constraint constraint=null;
+  ConstraintTree constraint=null;
   tracerType = {getTraceDirective().getTracerType()}
   
   boolean entry = false;

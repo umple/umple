@@ -8,6 +8,8 @@
       continue;
     }
     
+    gen.setParameterConstraintName(av.getName());
+
     List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
     
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
@@ -112,4 +114,5 @@
       appendln(stringBuffer, "");
     }
   }
+  gen.setParameterConstraintName("");
 %>

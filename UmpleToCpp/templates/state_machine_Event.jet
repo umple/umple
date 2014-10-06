@@ -35,7 +35,7 @@
         State nextState = t.getNextState();
         String tabSpace = t.getGuard() == null ? "        " : "          ";
         
-        String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";
+        String condition = t.getGuard()!=null?gen.translate("Open",t.getGuard()):"if ()\n{";
         if (!"if ()\n{".equals(condition))
         {
           allCases.append(GeneratorHelper.doIndent(condition, "        ")+"\n");

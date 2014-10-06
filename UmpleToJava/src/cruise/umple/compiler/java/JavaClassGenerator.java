@@ -2158,6 +2158,7 @@ public class JavaClassGenerator implements ILang
   GeneratedClass gClass = uClass.getGeneratedClass();
   JavaGenerator gen = new JavaGenerator();
   gen.setModel(model);
+  GeneratorHelper.generator = gen;
 
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
   for (CodeInjection inject : uClass.getCodeInjections())
@@ -2165,13 +2166,14 @@ public class JavaClassGenerator implements ILang
     String operation = StringFormatter.toUnderscore(inject.getOperation());
     String key = inject.getType() + ":" + operation;
     String newCodeToInject = "";
+    String injectCode = inject.getConstraintTree()==null?inject.getCode():inject.getConstraintCode(gen);
     if (codeInjectionMap.containsKey(key))
     {
-      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),inject.getCode());
+      newCodeToInject = StringFormatter.format("{0}\n    {1}",codeInjectionMap.get(key),injectCode);
     }
     else
     {
-      newCodeToInject = inject.getCode();
+      newCodeToInject = injectCode;
     }
     codeInjectionMap.put(key,newCodeToInject);
   }
@@ -3689,6 +3691,8 @@ for (StateMachine smq : uClass.getStateMachines())
     {
       continue;
     }
+
+    gen.setParameterConstraintName(av.getName());    
     
     List<TraceItem> traceItems = av.getTraced("setMethod", uClass);
     
@@ -3858,6 +3862,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     }
   }
+  gen.setParameterConstraintName("");
 
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
@@ -3868,6 +3873,8 @@ for (StateMachine smq : uClass.getStateMachines())
       continue;
     }
     
+    gen.setParameterConstraintName(av.getName());
+
     List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
     
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
@@ -4309,6 +4316,7 @@ for (StateMachine smq : uClass.getStateMachines())
       appendln(stringBuffer, "");
     }
   }
+  gen.setParameterConstraintName("");
 
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
@@ -4319,6 +4327,8 @@ for (StateMachine smq : uClass.getStateMachines())
       continue;
     }
   
+    gen.setParameterConstraintName(av.getName());
+
     List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
 
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("isMethod",av)));
@@ -4415,7 +4425,7 @@ for (StateMachine smq : uClass.getStateMachines())
       
     appendln(stringBuffer, "");
   }
-
+  gen.setParameterConstraintName("");
 
     return stringBuffer.toString();
     } 
@@ -4553,7 +4563,7 @@ for (StateMachine smq : uClass.getStateMachines())
         String tabSpace = t.getGuard() == null ? "        " : "          ";
         StateMachine exitSm = state.exitableStateMachine(nextState);
         
-        String condition = t.getGuard()!=null?t.getGuard().getCondition(gen):"if ()\n{";
+        String condition = t.getGuard()!=null?gen.translate("Open",t.getGuard()):"if ()\n{";
         if (!"if ()\n{".equals(condition))
         {
             addUncaughtExceptionVariables(gen.translate("eventMethod",e),
@@ -5062,7 +5072,9 @@ for (StateMachine smq : uClass.getStateMachines())
       continue;
     }
 
-	List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
+    gen.setParameterConstraintName(av.getName());
+
+    List<TraceItem> traceItems = av.getTraced("getMethod", uClass);
 
     String customGetPrefixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", gen.translate("getMethod",av)));
     String customGetPostfixCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("after", gen.translate("getMethod",av)));
@@ -5233,6 +5245,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     }
  }
+ gen.setParameterConstraintName("");
 
     
   // GENERIC FILE - EDIT IN UmpleToTemplate project, then run "ant -f build.codegen.xml to move into the appropriate projects
@@ -5241,6 +5254,8 @@ for (StateMachine smq : uClass.getStateMachines())
   for (AssociationVariable av : uClass.getAssociationVariables())
   {
   
+    gen.setParameterConstraintName(av.getName());
+
     AssociationVariable relatedAssociation = av.getRelatedAssociation();
 
     if (!av.getIsNavigable())
@@ -8761,6 +8776,7 @@ for (StateMachine smq : uClass.getStateMachines())
     
     }
   }
+  gen.setParameterConstraintName("");
 
     return stringBuffer.toString();
     } 
@@ -8779,6 +8795,7 @@ for (StateMachine smq : uClass.getStateMachines())
     AssociationVariable as = uClass.getAssociationVariable(memberId);
     if (av != null)
     {
+      String avString = av.getIsDerived()?(gen.translate("getMethod",av)+"()"):gen.translate("attributeOne",av);
       canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("attributeCanSet",av)));
       if (av.getIsList())
       {
@@ -8802,18 +8819,18 @@ for (StateMachine smq : uClass.getStateMachines())
       }
       else if ("Integer".equals(av.getType()) || "Boolean".equals(av.getType()) || "Double".equals(av.getType()))
       {
-        checks.append(StringFormatter.format("    if ({0} != compareTo.{0})\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    if ({0} != compareTo.{0})\n",avString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
       }
       else
       {
-        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",avString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
-        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",avString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
@@ -8822,6 +8839,7 @@ for (StateMachine smq : uClass.getStateMachines())
     }
     else if (as != null)
     {
+      String asString = gen.translate("attributeOne",as);
       canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("associationCanSet",as)));
       if (as.isMany())
       {
@@ -8845,11 +8863,11 @@ for (StateMachine smq : uClass.getStateMachines())
       }
       else
       {
-        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",gen.translate("attributeOne",as)));
+        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",asString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
-        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",gen.translate("attributeOne",as)));
+        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",asString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
@@ -8859,24 +8877,26 @@ for (StateMachine smq : uClass.getStateMachines())
     
     if (av != null)
     {
+      String avString = av.getIsDerived()?(gen.translate("getMethod",av)+"()"):gen.translate("attributeOne",av);
       if ("Integer".equals(av.getType()) && !av.getIsList())
       {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + {0};\n",gen.translate("attributeOne",av)));
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + {0};\n",avString));
       }
       else if ("Double".equals(av.getType()) && !av.getIsList())
       {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + (new Double({0})).hashCode();\n",gen.translate("attributeOne",av)));
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + (new Double({0})).hashCode();\n",avString));
       }
       else if ("Boolean".equals(av.getType()) && !av.getIsList())
       {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + ({0} ? 1 : 0);\n",gen.translate("attributeOne",av)));
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + ({0} ? 1 : 0);\n",avString));
       }
       else
       {
-        String attributeType = av.getIsList() ? "attributeMany" : "attributeOne";
-        hash.append(StringFormatter.format("    if ({0} != null)\n",gen.translate(attributeType,av)));
+        String attributeType = av.getIsList() ? "attributeMany" : av.getIsDerived()?"getMethod":"attributeOne";
+        String typeString = gen.translate(attributeType,av)+(av.getIsDerived()?"()":"");
+        hash.append(StringFormatter.format("    if ({0} != null)\n",typeString));
         hash.append(StringFormatter.format("    {\n"));
-        hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",gen.translate(attributeType,av)));
+        hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",typeString));
         hash.append(StringFormatter.format("    }\n"));
         hash.append(StringFormatter.format("    else\n"));
         hash.append(StringFormatter.format("    {\n"));
@@ -10868,6 +10888,7 @@ public String getExceptionHandler(String exceptions) {
 
 public String endAll(String stringBuffer)
 {
+  GeneratorHelper.generator = null;
 
     return stringBuffer.toString();
   }

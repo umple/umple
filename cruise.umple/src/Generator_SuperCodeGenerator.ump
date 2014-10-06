@@ -12,6 +12,10 @@ class SuperCodeGenerator {
 
   public abstract void initializeLangaugeBasedVariables();
 
+  parameterConstraintName = "";
+  Boolean dontDisplayNextAccessor = false;
+  Boolean constraintWithinConstructor = false;
+
   public String getType(UmpleVariable av) {
     String myType = av.getType();
     if (myType == null || myType.length() == 0)
@@ -39,164 +43,174 @@ class SuperCodeGenerator {
       return "INVALID KEYNAME IN TRANSLATE";
     }
   }
+
+  private boolean testForPrimitiveInConstraint(ConstraintVariable variable)
+  {
+    if((variable instanceof ConstraintAttribute)&&(UmpleToPrimitiveMap.containsValue(((ConstraintAttribute)variable).getAttribute().getType())))
+    {
+        return !"String".equals(((ConstraintAttribute)variable).getAttribute().getType());
+    }
+    else if(variable instanceof ConstraintOperator)
+    {
+      return testForPrimitiveInConstraint(((ConstraintOperator)variable).getLeft())||testForPrimitiveInConstraint(((ConstraintOperator)variable).getRight());
+    }
+    else if(variable instanceof ConstraintTree)
+    {
+      return testForPrimitiveInConstraint(((ConstraintTree)variable).getRoot());
+    }
+    return false;
+  }
+
+  public String translate(String id, ConstraintVariable cv)
+  {
+    if("operatorOne".equals(id))
+    {
+      ConstraintVariable left = ((ConstraintOperator)cv).getLeft();
+      if(testForPrimitiveInConstraint(left))
+      {
+        ((ConstraintOperator)cv).correctForPrimitive();
+      }
+      String leftString = (left instanceof ConstraintOperator)?translate(left.getType(),left):translate(left.getType(),left,true);
+      return StringFormatter.format(translate(id,cv,true),leftString);
+    }
+    else if("operatorTwo".equals(id))
+    {
+      ConstraintVariable left = ((ConstraintOperator)cv).getLeft();
+      ConstraintVariable right = ((ConstraintOperator)cv).getRight();
+      if(testForPrimitiveInConstraint(left)||testForPrimitiveInConstraint(right))
+      {
+        ((ConstraintOperator)cv).correctForPrimitive();
+      }
+      String leftString = (left instanceof ConstraintOperator)?translate(left.getType(),left):translate(left.getType(),left,true);
+      String rightString = (right instanceof ConstraintOperator)?translate(right.getType(),right):translate(right.getType(),right,true);
+      String value = translate(id,cv,true);
+      return StringFormatter.format(value,leftString,rightString);
+    }
+    else return translate(id,cv,true);
+  }
+
+  private String translate(String id, ConstraintVariable cv, boolean returnAll)
+  {
+    if("operatorTwo".equals(id)||"operatorOne".equals(id))
+    {
+      String value = ConstraintLookupMap.get(((ConstraintOperator)cv).getValue());
+      String left = ("operatorTwo".equals(id)?"{0}":"");
+      String exact = ((ConstraintOperator)cv).getValue();
+      String right = ("operatorTwo".equals(id)?"{1}":"{0}");
+      return value!=null?value:(left+exact+right);
+    }
+    else if("attribute".equals(id))
+    {
+      ConstraintAttribute attribute = ((ConstraintAttribute)cv);
+      String methodName = "getMethod";
+      String suffix = "("+(attribute.getIndex()!=-1?(""+attribute.getIndex()):"")+")";
+      String prefix = ConstraintLookupMap.get("accessor");
+      if(constraintWithinConstructor||attribute.getName().equals(parameterConstraintName))
+      {
+        methodName = "parameterOne";
+        suffix = "";
+        prefix = ConstraintLookupMap.get("paramaccessor");
+      }
+      if(dontDisplayNextAccessor)
+      {
+        prefix = "";
+        dontDisplayNextAccessor = false;
+      }
+      String name = translate(methodName,attribute.getAttribute());
+      return umpleCVarToLanguagePrimitive(prefix+name+suffix,cv);
+    }
+    else if("associationGet".equals(id))
+    {
+      return ConstraintLookupMap.get("accessor")+translate("getMethod",((ConstraintAssociation)cv).getAssociation())+"("+((ConstraintAssociation)cv).getIndex()+")";
+    }
+    else if("associationList".equals(id))
+    {
+      return ConstraintLookupMap.get("accessor")+translate("getManyMethod",((ConstraintAssociation)cv).getAssociation())+"()";
+    }
+    else if("associationNumberOf".equals(id))
+    {
+      return ConstraintLookupMap.get("accessor")+translate("numberOfMethod",((ConstraintAssociation)cv).getAssociation())+"()";
+    }
+    else if("method parameter".equals(id))
+    {
+      return ConstraintLookupMap.get("accessor")+((ConstraintMethodParameter)cv).getParameter().getName();
+    }
+    else if("state".equals(id))
+    {
+      return translate("stateOne", ((ConstraintState)cv).getState());
+    }
+    else if("statemachine".equals(id))
+    {
+      return translate("getFullMethod",((ConstraintStateMachine)cv).getStateMachine())+"()";
+    }
+    else if("literal".equals(id))
+    {
+      return ((ConstraintLiteral)cv).getValue();
+    }
+    else if("name".equals(id))
+    {
+      String name = "NAME NOT SET BY SUPERGENERATOR";
+      if(cv instanceof ConstraintUnassignedName)
+      {
+        name = ((ConstraintUnassignedName)cv).getValue();
+      }
+      else if(cv instanceof ConstraintAttribute)
+      {
+        name = ((ConstraintAttribute)cv).getName();
+      }
+      if("".equals(name)||dontDisplayNextAccessor)
+      {
+        dontDisplayNextAccessor = false;
+        return name;
+      }
+      else if("this".equals(name))
+      {
+        dontDisplayNextAccessor = true;
+        return ConstraintLookupMap.get("paramaccessor")+name;
+      }
+      else 
+      {
+        return ConstraintLookupMap.get("accessor")+name;
+      }
+    }
+    else if("complex".equals(id))
+    {
+      ConstraintTree tree = (ConstraintTree)cv;
+      if(tree.getRoot()==null)return "";
+      StringBuilder builder = new StringBuilder();
+      if(tree.getDisplayNegation())
+      {
+        builder.append("!");
+      }
+      if(tree.getDisplayBrackets())
+      {
+        builder.append("(");
+      }
+      builder.append(tree.getRoot().getValue(this));
+      if(tree.getDisplayBrackets())
+      {
+        builder.append(")");
+      }
+      return builder.toString();
+    }
+    return "INVALID CONSTRAINT VARIABLE";
+  }
   
   public String umpleCVarToLanguagePrimitive(String name, ConstraintVariable expr)
   {
     return name;
   }
   	
-  public String translate(String format, Constraint constraint)
+  public String translate(String format, ConstraintTree constraint)
   {
     if(constraint==null)
     {
       return "{0}";
     }
-    String expression = "";
-    boolean insertNext = false;
-    boolean strictNext = format.contains("$strict$");
-    boolean plain = format.contains("Plain");
-    int mode = format.contains("allParameterOne")?0:format.contains("$constructor$")?1:2;
-    List<String> names = Arrays.asList(format.split(":")[0].split(","));
-    String previousName = "";
-    for(int i=0;i<constraint.numberOfExpressions();i++)
-    {
-      ConstraintVariable expr = constraint.getExpression(i);
-      if( expr.getType().equals("NAME"))
-      {
-        if(insertNext)
-        {
-          String name = //(!plain?ConstraintLookupMap.get("accessor"):"")+
-        		                      translate(format+":Plain"+(strictNext?"$strict$":""),expr.getSubConstraint());
-          expression = StringFormatter.format(expression,name,previousName);
-          name = umpleCVarToLanguagePrimitive(name, expr);
-          previousName = name;
-          insertNext = false;
-        }
-        else
-        {
-          String name = //(!plain?ConstraintLookupMap.get("accessor"):"")+
-        		                      translate(format+":Plain"+(strictNext?"$strict$":""),expr.getSubConstraint());
-          name = umpleCVarToLanguagePrimitive(name, expr);
-          expression+=name;
-          previousName = name;
-        }
-      }
-      else if(expr.getType().equals("STATE"))
-      {
-        String value = translate("stateOne",(expr).getState());
-        if(insertNext){
-          expression = StringFormatter.format(expression,value,previousName);
-          insertNext = false;
-        }
-        else {
-          expression += value;
-        }
-      } 
-      else if(expr.getType().equals("STATEMACHINE"))
-      {
-        
-        String value = translate("getFullMethod",(expr).getStateMachine());
-        if(insertNext){
-          expression = StringFormatter.format(expression,value,previousName);
-          insertNext = false;
-        }
-        else {
-          expression += value;
-        }
-      }
-      else if( expr.getIsAttribute() )
-      {
-        String value;
-        if(mode==0&&!strictNext)
-        {
-          value = (ConstraintLookupMap.get("paramaccessor"))+getParameterFromConstraint(expr,plain);
-        }
-        else if(mode==2&&names.contains(expr.getValue())&&!strictNext)
-        {
-          value = (ConstraintLookupMap.get("paramaccessor"))+getParameterFromConstraint(expr,plain);
-        }
-        else if(mode==1&&!strictNext)
-        {
-          if(expr.getFoundAttribute()!=null&&(expr.getFoundAttribute().getValue()==null||"".equals(expr.getFoundAttribute().getValue())))
-          {
-            value = (ConstraintLookupMap.get("paramaccessor"))+getParameterFromConstraint(expr,plain);
-          }
-          else
-          {
-            value = (ConstraintLookupMap.get("accessor"))+expr.getValue();
-          }
-        }
-        else 
-        {
-          value = (strictNext?"":ConstraintLookupMap.get("accessor"))+expr.getValue();
-          strictNext=false;
-        }
-        if(insertNext)
-        {
-          expression = StringFormatter.format(expression,value,previousName);
-          insertNext = false;
-        }
-        else
-        {
-          expression += value;
-        }
-      }      
-      else // STATIC OR OPERATOR
-      { 
-        if(expr.getValue().equals("."))
-        {
-          strictNext=true;
-        }
-        if(expr.getIsOperator()) //Operator
-        {
-          String opValue = expr.getValue();
-          if(!expr.getIsPrimitive()&&ConstraintLookupMap.containsKey(opValue))
-          {
-            if(insertNext)
-            {
-              expression = StringFormatter.format(expression,ConstraintLookupMap.get(opValue));
-              insertNext = true;
-            }
-            else 
-            {
-              expression += ConstraintLookupMap.get(opValue);
-              insertNext = true;
-            }
-          }
-          else //Static
-          {
-            if(insertNext)
-            {
-              expression = StringFormatter.format(expression,opValue,previousName);
-              insertNext = false;
-            }
-            else 
-            {
-              expression += opValue;
-            }
-          }
-        }
-        else
-        {
-          if(insertNext)
-          {
-            expression = StringFormatter.format(expression,expr.getValue());
-            insertNext = false;
-          }
-          else
-          {
-            expression += expr.getValue();
-          }
-        }
-      }
-    }
-    if(plain)
+    String expression = constraint.getRoot().getValue(this);
+    if(format.contains("Plain"))
     {
       return expression;
-    }
-    else if(format.contains("Not"))
-    {
-      expression = " !("+expression+")";
     }
     if(format.contains("Closed"))
     {
@@ -209,146 +223,115 @@ class SuperCodeGenerator {
     return StringFormatter.format(ConstraintLookupMap.get("ifstatement")+"\n  {1}\n"+ConstraintLookupMap.get("end"),expression, "{0}");
   }
   
-  public String getParameterFromConstraint(ConstraintVariable expr, Boolean plain)
+  public void prepareConstraint(ConstraintVariable cur, ConstraintTree ac, ConstraintTree head, Map<String, ConstraintTree> setters, Map<String, UmpleClassifier> uClassifiers)
   {
-    if(expr.getFoundAttribute()==null)
+    if(cur == null)return;
+    if(cur instanceof ConstraintAssociation)
     {
-      return expr.getValue();
-    }
-    String value = "";
-    if(!expr.getIsAssociation())
-    {
-      value = translate("parameterOne",(Attribute)expr.getFoundAttribute());
-    }
-    else 
-    {
-      if(expr.getIndex()==-1 )
+      ConstraintAssociation association = ((ConstraintAssociation)cur);
+
+      String methodName = translate("setMethod", association.getAssociation());
+      String addName = translate("addMethod", association.getAssociation());
+
+      if(!setters.containsKey(association.getAssociation().getName()+":"+methodName))
       {
-         value = translate("associationMany",(AssociationVariable)expr.getFoundAttribute());
+        ConstraintTree tempConstraint = new ConstraintTree();
+        setters.put(association.getName()+":"+methodName,tempConstraint);
+        setters.put(association.getName()+":"+addName, tempConstraint);
+        UmpleClassifier uClassifier = association.retrieveClassifier();
+        if(uClassifier!=null)
+        {
+          uClassifiers.put(association.getName(),uClassifier);
+        }
       }
-      else 
-      {
-        value = translate("associationMany",(AssociationVariable)expr.getFoundAttribute());
-        value = StringFormatter.format(ConstraintLookupMap.get("[]"),""+expr.getIndex(), value);
-      }
+      setters.get(association.getName()+":"+methodName).addElementAll(head);
+      setters.get(association.getName()+":"+addName).addElementAll(head);
     }
-    return value;
+    else if(cur instanceof ConstraintAttribute)
+    {
+      ConstraintAttribute attribute = (ConstraintAttribute)cur;
+      String methodName = translate("setMethod", attribute.getAttribute());
+      if(!setters.containsKey(attribute.getName()+":"+methodName))
+      {
+        ConstraintTree tempConstraint = new ConstraintTree();
+        setters.put(attribute.getName()+":"+methodName,tempConstraint);
+        UmpleClassifier uClassifier = attribute.retrieveClassifier();
+        if(uClassifier!=null)
+        {
+          uClassifiers.put(attribute.getName(),uClassifier);
+        }
+      }
+      setters.get(attribute.getName()+":"+methodName).addElementAll(head);
+    }
+    else if(cur instanceof ConstraintTree)
+    {
+      prepareConstraint(((ConstraintTree)cur).getRoot(),(ConstraintTree)cur,head,setters,uClassifiers);
+    }
+    else if(cur instanceof ConstraintOperator)
+    {
+      prepareConstraint(((ConstraintOperator)cur).getLeft(),ac,head,setters,uClassifiers);
+      prepareConstraint(((ConstraintOperator)cur).getRight(),ac,head,setters,uClassifiers);
+    }
   }
-  
+
   public void prepareConstraints(UmpleClass aClass)
   {
-    Constraint constraint = new Constraint();
-    constraint.setNegated(true);
-    constraint.setFormat("$constructor$Closed");
-    constraint.setInject("");
-    constraint.setGen(this);
-    
-    Map<String,Constraint> setters = new HashMap<String,Constraint>();
-    for (Constraint ac : aClass.getConstraints())
-    {      
-      List<ConstraintVariable> alreadyDone = new ArrayList<ConstraintVariable>();
-      boolean isAssociation = false;
+    ConstraintTree constructor = new ConstraintTree();
+    constraintWithinConstructor = false;
+    Map<String,ConstraintTree> setters = new HashMap<String,ConstraintTree>();
+    Map<String,UmpleClassifier> uClassifiers = new HashMap<String, UmpleClassifier>();
+    for (ConstraintTree ac : aClass.getConstraintTrees())
+    {
       CodeInjection before;
-      for (ConstraintVariable cur : ac.getExpressions())
-      {
-        if(cur.getIsAssociation())
-          isAssociation = true;
-        if(!cur.getIsAttribute()  || alreadyDone.contains(cur))
-          continue;
-        if(cur.getSubConstraint()!=null&&cur.getSubConstraint().getExpression(0).getValue().equals("initialise"))
-          continue;
-        alreadyDone.add(cur);
-        
-        String setMethod_code = StringFormatter.format(translate(cur.getValue()+":Open",ac),"");
-        
-        if(cur.getIsAssociation())
-        {
-          String methodName = "";
-          String addName = "";
-          if(cur.getFoundAttribute()==null)
-          {
-            methodName = "set"+cur.getValue();
-            addName = "add"+cur.getValue();
-          }
-          else
-          {
-            methodName = translate("setMethod", (AssociationVariable)cur.getFoundAttribute());
-            addName = translate("addMethod", (AssociationVariable)cur.getFoundAttribute());
-          }
-          if(!setters.containsKey(methodName))
-          {
-            Constraint tempConstraint = new Constraint();
-            tempConstraint.setFormat(cur.getValue()+":Open");
-            tempConstraint.setInject("");
-            tempConstraint.setGen(this);
-            setters.put(methodName,tempConstraint);
-            setters.put(addName, tempConstraint);
-          }
-          setters.get(methodName).mergeWith(ac);
-          setters.get(addName).mergeWith(ac);
-        }
-        else 
-        {
-          String methodName = "";
-          if(cur.getFoundAttribute()==null)
-          {
-            methodName = "set"+cur.getValue();
-          }
-          else
-          {
-            methodName = translate("setMethod", (Attribute)cur.getFoundAttribute());
-          }
-          if(!setters.containsKey(methodName))
-          {
-            Constraint tempConstraint = new Constraint();
-            tempConstraint.setFormat(cur.getValue()+":Open");
-            tempConstraint.setInject("");
-            tempConstraint.setGen(this);
-            setters.put(methodName,tempConstraint);
-          }
-          setters.get(methodName).mergeWith(ac);
-        }
-      }
-      constraint.mergeWith(ac);
+      prepareConstraint(ac.getRoot(),ac,ac,setters,uClassifiers);
+      constructor.addElementAll(ac);
     }
 
-    for(String methodName:setters.keySet())
+    for(String name:setters.keySet())
     {
-      CodeInjection before = new CodeInjection("before", methodName, setters.get(methodName), aClass);
+      int index = name.indexOf(':');
+      parameterConstraintName = name.substring(0,index);
+      String methodName = name.substring(index+1);
+      CodeInjection before = new CodeInjection("before", methodName, translate("Open",setters.get(name)), aClass);
       CodeInjection after = new CodeInjection("after", methodName, ConstraintLookupMap.get("end"), aClass);
       before.setIsInternal(true);
       after.setIsInternal(true);
+      UmpleClassifier classifier = uClassifiers.get(parameterConstraintName);
       aClass.addCodeInjection(before);
       aClass.addCodeInjection(after);
     }
-    if(constraint.numberOfExpressions()>0)
+    if(constructor.getNumberOfElements()>0)
     {
-      constraint.setInject(StringFormatter.format(ConstraintLookupMap.get("exception"),constraint.toString()));
-      CodeInjection constructor = new CodeInjection("after",  "constructor", constraint, aClass);  
-      constructor.setIsInternal(true);
-      aClass.addCodeInjection(constructor);
+      constraintWithinConstructor = true;
+      constructor.negate();
+      String inject = StringFormatter.format(ConstraintLookupMap.get("exception"),constructor.getNamedNames());
+      String ifstatement = translate("Closed",constructor);
+      String complete = StringFormatter.format(ifstatement,inject);
+      CodeInjection cons = new CodeInjection("after",  "constructor", complete, aClass);  
+      cons.setIsInternal(true);
+      aClass.addCodeInjection(cons);
     }
-    
+
     for (Precondition pc : aClass.getPreconditions())
     { 
       String methodName = pc.getMethod().getName();
-      pc.setNegated(true);
-      pc.setGen(this);
-      pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
-      pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception"),pc.toString()));
-      CodeInjection before = new CodeInjection("before", methodName+"Precondition", pc, aClass);         
+      pc.negate();
+      String inject = "  "+StringFormatter.format(ConstraintLookupMap.get("exception"),pc.getNamedNames());
+      String ifstatement = translate("Closed",pc);
+      String complete = StringFormatter.format(ifstatement,inject);
+      CodeInjection before = new CodeInjection("before", methodName+"Precondition", complete, aClass);         
       before.setIsInternal(true);
       aClass.addCodeInjection(before);    
     }
-    
+
     for (Postcondition pc : aClass.getPostconditions())
     { 
       String methodName = pc.getMethod().getName();
-      pc.setNegated(true);
-      pc.setGen(this);
-      pc.setFormat(pc.toString().replace(" ", "").replace("and", "")+":Closed");
-      pc.setInject(StringFormatter.format(ConstraintLookupMap.get("exception"),pc.toString()));
-      CodeInjection before = new CodeInjection("before", methodName+"Postcondition", pc, aClass);         
+      pc.negate();
+      String inject = "  "+StringFormatter.format(ConstraintLookupMap.get("exception"),pc.getNamedNames());
+      String ifstatement = translate("Closed",pc);
+      String complete = StringFormatter.format(ifstatement,inject);
+      CodeInjection before = new CodeInjection("before", methodName+"Postcondition", complete, aClass);         
       before.setIsInternal(true);
       aClass.addCodeInjection(before);    
     }

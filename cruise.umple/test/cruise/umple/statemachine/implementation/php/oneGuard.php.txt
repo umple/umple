@@ -64,7 +64,7 @@ class LightFixture
     $aBulb = $this->bulb;
     if ($aBulb == self::$BulbOn)
     {
-      if ($brightness<1)
+      if ($this->getBrightness()<1)
       {
         $this->setBulb(self::$BulbOff);
         $wasEventProcessed = true;

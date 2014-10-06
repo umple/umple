@@ -25,7 +25,7 @@ class Client
     @deleted = false
     @minAge = a_minAge
     @age = a_age
-    if  !(a_age>a_minAge) then
+    if a_age<=a_minAge then
       raise RuntimeError, 'Please provide a valid age and minAge'
     end
     @initialized = true
@@ -37,7 +37,7 @@ class Client
 
   def set_minAge(a_minAge)
     was_set = false
-    if @age>a_minAge then
+    if get_age()>a_minAge then
     @minAge = a_minAge
     was_set = true
     end
@@ -46,7 +46,7 @@ class Client
 
   def set_age(a_age)
     was_set = false
-    if a_age>@minAge then
+    if a_age>get_minAge() then
     @age = a_age
     was_set = true
     end

@@ -23,7 +23,7 @@ public class X
   {
     d = aD;
     e = aE;
-    if ( !(aD.getTime()>aE.getTime()))
+    if (aD.getTime()<=aE.getTime())
     {
       throw new RuntimeException("Please provide a valid d and e");
     }
@@ -36,7 +36,7 @@ public class X
   public boolean setD(Date aD)
   {
     boolean wasSet = false;
-    if (aD.getTime()>e.getTime())
+    if (aD.getTime()>getE().getTime())
     {
     d = aD;
     wasSet = true;
@@ -47,7 +47,7 @@ public class X
   public boolean setE(Date aE)
   {
     boolean wasSet = false;
-    if (d.getTime()>aE.getTime())
+    if (getD().getTime()>aE.getTime())
     {
     e = aE;
     wasSet = true;

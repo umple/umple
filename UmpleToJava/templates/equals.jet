@@ -11,6 +11,7 @@
     AssociationVariable as = uClass.getAssociationVariable(memberId);
     if (av != null)
     {
+      String avString = av.getIsDerived()?(gen.translate("getMethod",av)+"()"):gen.translate("attributeOne",av);
       canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("attributeCanSet",av)));
       if (av.getIsList())
       {
@@ -34,18 +35,18 @@
       }
       else if ("Integer".equals(av.getType()) || "Boolean".equals(av.getType()) || "Double".equals(av.getType()))
       {
-        checks.append(StringFormatter.format("    if ({0} != compareTo.{0})\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    if ({0} != compareTo.{0})\n",avString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
       }
       else
       {
-        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",avString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
-        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",gen.translate("attributeOne",av)));
+        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",avString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
@@ -54,6 +55,7 @@
     }
     else if (as != null)
     {
+      String asString = gen.translate("attributeOne",as);
       canSet.append(StringFormatter.format("    {0} = false;\n",gen.translate("associationCanSet",as)));
       if (as.isMany())
       {
@@ -77,11 +79,11 @@
       }
       else
       {
-        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",gen.translate("attributeOne",as)));
+        checks.append(StringFormatter.format("    if ({0} == null && compareTo.{0} != null)\n",asString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
-        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",gen.translate("attributeOne",as)));
+        checks.append(StringFormatter.format("    else if ({0} != null && !{0}.equals(compareTo.{0}))\n",asString));
         checks.append(StringFormatter.format("    {\n"));
         checks.append(StringFormatter.format("      return false;\n"));
         checks.append(StringFormatter.format("    }\n"));
@@ -91,24 +93,26 @@
     
     if (av != null)
     {
+      String avString = av.getIsDerived()?(gen.translate("getMethod",av)+"()"):gen.translate("attributeOne",av);
       if ("Integer".equals(av.getType()) && !av.getIsList())
       {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + {0};\n",gen.translate("attributeOne",av)));
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + {0};\n",avString));
       }
       else if ("Double".equals(av.getType()) && !av.getIsList())
       {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + (new Double({0})).hashCode();\n",gen.translate("attributeOne",av)));
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + (new Double({0})).hashCode();\n",avString));
       }
       else if ("Boolean".equals(av.getType()) && !av.getIsList())
       {
-        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + ({0} ? 1 : 0);\n",gen.translate("attributeOne",av)));
+        hash.append(StringFormatter.format("    cachedHashCode = cachedHashCode * 23 + ({0} ? 1 : 0);\n",avString));
       }
       else
       {
-        String attributeType = av.getIsList() ? "attributeMany" : "attributeOne";
-        hash.append(StringFormatter.format("    if ({0} != null)\n",gen.translate(attributeType,av)));
+        String attributeType = av.getIsList() ? "attributeMany" : av.getIsDerived()?"getMethod":"attributeOne";
+        String typeString = gen.translate(attributeType,av)+(av.getIsDerived()?"()":"");
+        hash.append(StringFormatter.format("    if ({0} != null)\n",typeString));
         hash.append(StringFormatter.format("    {\n"));
-        hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",gen.translate(attributeType,av)));
+        hash.append(StringFormatter.format("      cachedHashCode = cachedHashCode * 23 + {0}.hashCode();\n",typeString));
         hash.append(StringFormatter.format("    }\n"));
         hash.append(StringFormatter.format("    else\n"));
         hash.append(StringFormatter.format("    {\n"));

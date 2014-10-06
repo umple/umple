@@ -45,6 +45,8 @@ class GeneratorHelper
     postpareTrace(aClass);
   }
 
+  public static SuperCodeGenerator generator = null;
+
 }
 
 use GeneratorHelper_CodeClass.ump;
