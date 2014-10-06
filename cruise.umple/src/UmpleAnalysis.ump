@@ -1035,7 +1035,7 @@ class NumExprEqualsOpAnalyzer
   }
 }
 
-class NumExprNotEqualsOpAnalyzer
+class NumExprNotequalsOpAnalyzer
 {
   isA Analyzer;
   depend cruise.umple.compiler.*;
