@@ -12,6 +12,7 @@ package cruise.umple.compiler;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ConstraintVariableTest
@@ -55,7 +56,7 @@ public class ConstraintVariableTest
     assertEquals(true,compareTo.equals(expr));
   }
 
-  @Test
+  @Test @Ignore
   public void equals_concernAboutHash()
   {
     assertEquals(true,new ConstraintOperator("+").equals(new ConstraintOperator("+")));
