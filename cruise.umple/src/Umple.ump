@@ -282,7 +282,7 @@ class ConstraintVariable
     1 -> 0..2 ConstraintVariable subConstraints;
     ConstraintVariable left = { numberOfSubConstraints()>0?getSubConstraint(0):null }
     ConstraintVariable right = { numberOfSubConstraints()>1?getSubConstraint(1):null }
-    key { left, right, value }
+    //key { left, right, value }
   }
 
   /*
