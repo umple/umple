@@ -606,24 +606,24 @@ class CompositeStructureTokenAnalyzer {
 			   for(Monitor mt : am.getWatchList()) {
 //				   ConstraintTree removeList = new ConstraintTree();
 				   for(BasicConstraint bs : mt.getConstraints()) {					   
-//					   for(ConstraintVariable cv:bs)
-//                                           {
-//                                             if(cv instanceof ConstraintNamed)
-//                                             {
-//                                               String checkPortName = ((ConstraintNamed)cv).getName();
-//                                               Port portFound = cmpClass.getPort(checkPortName);
-//                                               if(portFound != null)
-//                                               {
-//                                                 PortConstraint pc = mt.getPortConstraint(checkPortName);
-//                                                 if(pc == null)
-//                                                 {
-//                                                   pc = new PortConstraint(portFound);
-//                                                   mt.addPortConstraint(pc);
-////                                                 removeList.add(cv);
-//                                                 }
-//                                               }
-//                                             }
-//                                           }
+					   for(ConstraintVariable cv:bs)
+                                           {
+                                             if(cv instanceof ConstraintNamed)
+                                             {
+                                               String checkPortName = ((ConstraintNamed)cv).getName();
+                                               Port portFound = cmpClass.getPort(checkPortName);
+                                               if(portFound != null)
+                                               {
+                                                 PortConstraint pc = mt.getPortConstraint(checkPortName);
+                                                 if(pc == null)
+                                                 {
+                                                   pc = new PortConstraint(portFound);
+                                                   mt.addPortConstraint(pc);
+//                                                 removeList.add(cv);
+                                                 }
+                                               }
+                                             }
+                                           }
 //					   for(ConstraintVariable cv : removeList) {
 //						   bs.removeExpression(cv);
 //					   }

@@ -2232,10 +2232,10 @@ class ConstraintMethodParameter
   public String getType(){ return "method parameter"; }
 }
 
-//external interface Iterable<ConstraintVariable> {}
+external interface Iterable<ConstraintVariable> {}
 class ConstraintVariable
 {
-//  isA "Iterable<ConstraintVariable>";
+  isA "Iterable<ConstraintVariable>";
   depend java.util.Iterator;
   abstract;
   String getValue(CodeTranslator gen){
