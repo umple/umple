@@ -103,7 +103,7 @@ class TestGenerator
 	    		  {
 	    			 if (cs.getNumberOfElements()>0)
 	    			 {
-                                    for(ConstraintVariable cv:cs.getExpressions())
+                                    for(ConstraintVariable cv:cs)
                                     {
                                       if(!(cv instanceof ConstraintTree))
                                       {//FIXME constraints

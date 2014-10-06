@@ -1785,7 +1785,7 @@ class ConstraintTree
    * Iterator method, override the method from the Iterable<Constraint> interface that all ConstraintVariables inherit from
    * Iterates over all of the root's elements, then returns itself
    */
-  public Iterator<ConstraintVariable> getIterator()
+  public Iterator<ConstraintVariable> iterator()
   {
     final ConstraintTree myself = this;
     return new Iterator<ConstraintVariable>()
@@ -1798,7 +1798,7 @@ class ConstraintTree
         hasReturnedSelf = false;
         if(self.getRoot()!=null)
         {
-          iterator = self.getRoot().getIterator();
+          iterator = self.getRoot().iterator();
         }
       }
       public ConstraintVariable next()
@@ -2115,7 +2115,7 @@ class ConstraintOperator
   /*
    * Iterators over the left, then this, then the right.
    */
-  public Iterator<ConstraintVariable> getIterator()
+  public Iterator<ConstraintVariable> iterator()
   {
     final ConstraintVariable myself = this;
     return new Iterator<ConstraintVariable>()
@@ -2128,7 +2128,7 @@ class ConstraintOperator
         self = myself;
         if(getLeft()!=null)
         {
-          currentIterator = getLeft().getIterator();
+          currentIterator = getLeft().iterator();
         }
       }
 
@@ -2138,7 +2138,7 @@ class ConstraintOperator
         {
           if(getRight()!=null&&!hasReturnedSelf)
           {
-            currentIterator = getRight().getIterator();
+            currentIterator = getRight().iterator();
           }
           else
           {
@@ -2232,27 +2232,13 @@ class ConstraintMethodParameter
   public String getType(){ return "method parameter"; }
 }
 
-//external interface Iterable<ConstraintVariable> {}
+external interface Iterable<ConstraintVariable> {}
 class ConstraintVariable
 {
-//  isA "Iterable<ConstraintVariable>";
+  isA "Iterable<ConstraintVariable>";
   depend java.util.Iterator;
   abstract;
-  public class ConstraintVariableIterable implements Iterable<ConstraintVariable>
-  {
-    ConstraintVariable var;
-    public ConstraintVariableIterable(ConstraintVariable var)
-    {
-      this.var = var;
-    }
-    public Iterator<ConstraintVariable> iterator(){
-      return var.getIterator();
-    }
-  }
-  public Iterable<ConstraintVariable> getExpressions()
-  {
-    return new ConstraintVariableIterable(this);
-  }
+
   String getValue(CodeTranslator gen){
     return gen.translate(getType(),this);
   }
@@ -2260,7 +2246,7 @@ class ConstraintVariable
     return null;
   }
 
-  Iterator<ConstraintVariable> getIterator()
+  Iterator<ConstraintVariable> iterator()
   {
     final ConstraintVariable myself = this;
     return new Iterator<ConstraintVariable>()

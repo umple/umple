@@ -2303,7 +2303,7 @@ class UmpleInternalParser
             {
               tokenMatch = true;
               // throw warning if attribute is initialized
-              if(aAttribute.getValue() != null)
+              if(aAttribute.getValue() != null&&!("null".equals(aAttribute.getValue())||aAttribute.getIsDerived()))
               {
                 setFailedPosition(keyToken.getPosition(), 45, aAttribute.getName(), aClass.getName());
               }

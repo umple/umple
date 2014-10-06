@@ -56,7 +56,7 @@ public class ConstraintVariableTest
     assertEquals(true,compareTo.equals(expr));
   }
 
-  @Test @Ignore
+  @Test
   public void equals_concernAboutHash()
   {
     assertEquals(true,new ConstraintOperator("+").equals(new ConstraintOperator("+")));
