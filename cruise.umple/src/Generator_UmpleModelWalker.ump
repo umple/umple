@@ -254,7 +254,7 @@ class UmpleModelWalker {
 					}
 					
 					for(ConstraintTree cnst : clazz.getConstraintTrees()){
-                                          for(ConstraintVariable var:cnst)
+                                          for(ConstraintVariable var:cnst.getExpressions())
                                           {
                                             visitor.visit(var);       
                                           }

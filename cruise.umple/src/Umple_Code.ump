@@ -1785,7 +1785,7 @@ class ConstraintTree
    * Iterator method, override the method from the Iterable<Constraint> interface that all ConstraintVariables inherit from
    * Iterates over all of the root's elements, then returns itself
    */
-  public Iterator<ConstraintVariable> iterator()
+  public Iterator<ConstraintVariable> getIterator()
   {
     final ConstraintTree myself = this;
     return new Iterator<ConstraintVariable>()
@@ -1798,7 +1798,7 @@ class ConstraintTree
         hasReturnedSelf = false;
         if(self.getRoot()!=null)
         {
-          iterator = self.getRoot().iterator();
+          iterator = self.getRoot().getIterator();
         }
       }
       public ConstraintVariable next()
@@ -2115,7 +2115,7 @@ class ConstraintOperator
   /*
    * Iterators over the left, then this, then the right.
    */
-  public Iterator<ConstraintVariable> iterator()
+  public Iterator<ConstraintVariable> getIterator()
   {
     final ConstraintVariable myself = this;
     return new Iterator<ConstraintVariable>()
@@ -2128,7 +2128,7 @@ class ConstraintOperator
         self = myself;
         if(getLeft()!=null)
         {
-          currentIterator = getLeft().iterator();
+          currentIterator = getLeft().getIterator();
         }
       }
 
@@ -2138,7 +2138,7 @@ class ConstraintOperator
         {
           if(getRight()!=null&&!hasReturnedSelf)
           {
-            currentIterator = getRight().iterator();
+            currentIterator = getRight().getIterator();
           }
           else
           {
@@ -2232,24 +2232,35 @@ class ConstraintMethodParameter
   public String getType(){ return "method parameter"; }
 }
 
-external interface Iterable<ConstraintVariable> {}
+//external interface Iterable<ConstraintVariable> {}
 class ConstraintVariable
 {
-  isA "Iterable<ConstraintVariable>";
+//  isA "Iterable<ConstraintVariable>";
   depend java.util.Iterator;
   abstract;
+  public class ConstraintVariableIterable implements Iterable<ConstraintVariable>
+  {
+    ConstraintVariable var;
+    public ConstraintVariableIterable(ConstraintVariable var)
+    {
+      this.var = var;
+    }
+    public Iterator<ConstraintVariable> iterator(){
+      return var.getIterator();
+    }
+  }
+  public Iterable<ConstraintVariable> getExpressions()
+  {
+    return new ConstraintVariableIterable(this);
+  }
   String getValue(CodeTranslator gen){
     return gen.translate(getType(),this);
   }
   UmpleClassifier retrieveClassifier(){
     return null;
   }
-  public abstract String getType();
 
-  /*
-   * base implementation of the iterator method, it just returns this. This will be overridden by the ConstraintTree and ConstraintOperator classes, as they are the only ones with actual sub constraints to return
-   */
-  public Iterator<ConstraintVariable> iterator()
+  Iterator<ConstraintVariable> getIterator()
   {
     final ConstraintVariable myself = this;
     return new Iterator<ConstraintVariable>()
@@ -2279,6 +2290,9 @@ class ConstraintVariable
       public void remove(){}
     };
   }
+
+
+  public abstract String getType();
 }
 
 class ConstraintState
